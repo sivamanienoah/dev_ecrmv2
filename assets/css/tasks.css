@@ -1,0 +1,69 @@
+#task-page h2 {
+	margin-bottom:20px;
+}
+#task-page {
+	padding:20px 40px;
+	font-family:'Lucida Grande', Helevetica, Arial, sans-serif;
+	font-size:16px;
+}
+.great-task-table {
+	margin-bottom:10px;
+}
+.great-task-table.left {
+	float:left;
+	clear:left;
+}
+.great-task-table.right {
+	float:right;
+	clear:right;
+}
+.great-task-table, .great-task-table td {
+	border-collapse:collapse;
+	border:1px solid #555;
+}
+.great-task-table td {
+	padding:5px;
+}
+.row-header td {
+	background:#444;
+}
+.row-header td.user {
+	font-weight:bold;
+	font-size:18px;
+}
+.great-task-table td a {
+	color:inherit;
+	text-decoration:underline;
+}
+td.task {
+	width:435px;
+}
+td.company {
+	width:145px;
+}
+.due-today {
+	background:orange;
+	color:#333;
+}
+.late {
+	background:pink;
+	color:#000;
+}
+.late-2 {
+	background:url(bg/late-over-day.jpg);
+	color:#000;
+}
+.late-more {
+	background:url(bg/late-over-days.jpg);
+	color:#000;
+}
+.complete {
+	background:limeGreen;
+	color:#333;
+}
+.late .end-date,
+.late-2 .end-date,
+.late-more .end-date {
+	background:red;
+	color:white;
+}
