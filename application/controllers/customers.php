@@ -378,7 +378,7 @@ class Customers extends CI_Controller {
 	
 	function email_1_check($str)
 	{	
-		$qem = $this->db->query("SELECT email_1 FROM crm_customers WHERE email_1 LIKE '%$str%'");
+		$qem = $this->db->query("SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE email_1 LIKE '%$str%'");
 		//echo $this->db->last_query();
 		$email_res = $qem->num_rows();
 		//echo $email_res;
@@ -754,7 +754,7 @@ class Customers extends CI_Controller {
 	{
 		#return false;
 		
-		$q = $this->db->get_where('crm_customers', array('email_1' => $data['email_1']));
+		$q = $this->db->get_where($this->cfg['dbpref'].'customers', array('email_1' => $data['email_1']));
 		$details = $data;
 		//echo $details; exit;
 		unset($details['email_1']);
@@ -782,7 +782,7 @@ class Customers extends CI_Controller {
 			return TRUE;
 		}
 		
-		$this->db->insert('crm_customers', $data);
+		$this->db->insert($this->cfg['dbpref'].'customers', $data);
 		return $this->db->insert_id();
 	}
 	
@@ -794,15 +794,15 @@ class Customers extends CI_Controller {
 		}
 		
 		$this->db->where('custid', $id);
-		$this->db->update('crm_customers', $data);
+		$this->db->update($this->cfg['dbpref'].'customers', $data);
 		
 		$cust = array('custid_fk' => $id, 'custcatid_fk' => 12);
 		$this->db->where($cust);
-		$q = $this->db->get('crm_cust_cat_join');
+		$q = $this->db->get($this->cfg['dbpref'].'cust_cat_join');
 		
 		if ($q->num_rows() < 1)
 		{
-			$this->db->insert('crm_cust_cat_join', $cust);
+			$this->db->insert($this->cfg['dbpref'].'cust_cat_join', $cust);
 		}
 	}
 	
@@ -812,8 +812,8 @@ class Customers extends CI_Controller {
 	 */
 	function update_addresses()
 	{
-		$sql = "SELECT crm_customers.*
-					FROM `crm_customers` , crm_cust_cat_join
+		$sql = "SELECT ".$this->cfg['dbpref']."customers.*
+					FROM `".$this->cfg['dbpref']."customers` , ".$this->cfg['dbpref']."cust_cat_join
 				WHERE custid_fk = custid
 					AND custcatid_fk IN ( 4, 12 )
 					AND LOWER(company) != 'ray white'
@@ -837,7 +837,7 @@ class Customers extends CI_Controller {
 			$this->db->where('add1_line1 !=', '');
 			$this->db->where('custid !=', $row->custid);
 			$this->db->where('add1_state', $row->add1_state);
-			$c = $this->db->get('crm_customers');
+			$c = $this->db->get($this->cfg['dbpref'].'customers');
 			
 			if ($c->num_rows() > 0)
 			{
@@ -895,7 +895,7 @@ class Customers extends CI_Controller {
 		if ($update != 'undefined') {
 			$where = "email_1 = '".$username."' AND `custid` != '".$update."' ";
 			$this->db->where($where);
-			$query = $this->db->get('crm_customers')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
 			//echo $this->db->last_query();
 			if ($query == 0) {
 				$json['msg'] = 'userOk';
@@ -907,7 +907,7 @@ class Customers extends CI_Controller {
 		else {
 			$this->db->where('email_1',$username);
 			//echo $this->db->last_query();			
-			$query = $this->db->get('crm_customers')->num_rows();		
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();		
 			if( $query == 0 ) {  $json['msg'] = 'userOk'; }
 			else { $json['msg'] = 'userNo'; }
 		}
@@ -916,7 +916,7 @@ class Customers extends CI_Controller {
 	
 	function Check_email($username){
 		$this->db->where('email_1',$username);			
-		$query = $this->db->get('crm_customers')->num_rows();	
+		$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();	
 		//echo $this->db->last_query();			
 		if( $query == 0 ) {  echo 'userOk'; }
 		else { echo 'userNo'; }
@@ -926,7 +926,7 @@ class Customers extends CI_Controller {
 	function getCtyRes($newCty,$regionId){
 		$this->db->where('country_name',$newCty);
 		//$this->db->where(array('country_name'=>$newCty,'regionid'=>$regionId));
-		$query = $this->db->get('crm_country')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
 		//echo $this->db->last_query();
 		if($query == 0 ) 
 			echo 'userOk';
@@ -937,7 +937,7 @@ class Customers extends CI_Controller {
 	function getSteRes($newSte,$cntyId){
 		$this->db->where('state_name',$newSte);
 		//$this->db->where(array('state_name'=>$newSte,'countryid'=>$cntyId));
-		$query = $this->db->get('crm_state')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
 		//echo $this->db->last_query();
 		if($query == 0 ) 
 			echo 'userOk';
@@ -948,7 +948,7 @@ class Customers extends CI_Controller {
 	function getLocRes($newLoc,$stId){
 		$this->db->where('location_name',$newLoc);
 		//$this->db->where(array('location_name'=>$newLoc,'stateid'=>$stId));
-		$query = $this->db->get('crm_location')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
 		//echo $this->db->last_query();
 		if($query == 0 ) 
 			echo 'userOk';
@@ -1099,8 +1099,8 @@ function importload(){
 
 	}
 	$strrquired="The Customer First Name or Last Name or Company or Direct Phone or Email any one of the required field is missing <br />";
-	//$checksql="select first_name,last_name,company from crm_customers where first_name='$data[0]' and last_name='$data[1]' and company='$data[3]' and email_1='$data[16]'";
-	$checksql="select first_name,last_name,company from crm_customers where email_1='$data[16]'";
+	//$checksql="select first_name,last_name,company from ".$this->cfg['dbpref']."customers where first_name='$data[0]' and last_name='$data[1]' and company='$data[3]' and email_1='$data[16]'";
+	$checksql="select first_name,last_name,company from ".$this->cfg['dbpref']."customers where email_1='$data[16]'";
 	$rssql=mysql_query($checksql);
 	$numrows=mysql_num_rows($rssql);
 	if($numrows > 0){
@@ -1109,7 +1109,7 @@ function importload(){
 	} else {
 		// REgion
 		if(!empty($data[8])){
-		$checksqlreg="select regionid from crm_region where  region_name='$data[8]'" ;
+		$checksqlreg="select regionid from ".$this->cfg['dbpref']."region where  region_name='$data[8]'" ;
 		$rscheckreg=mysql_query($checksqlreg);
 		$numreg=mysql_num_rows($rscheckreg);
 		if($numreg > 0){
@@ -1121,13 +1121,13 @@ function importload(){
 				$created=date('Y-m-d H:i:s');
 				$modified_by=$user_Detail['userid'];			
 				$modified=date('Y-m-d H:i:s');
-				$sleregins="insert into crm_region(region_name,created_by,modified_by,created,modified) values ('$data[8]','$created_by','$modified_by','$created','$modified')";
+				$sleregins="insert into ".$this->cfg['dbpref']."region(region_name,created_by,modified_by,created,modified) values ('$data[8]','$created_by','$modified_by','$created','$modified')";
 				mysql_query($sleregins);
 				$strreg=mysql_insert_id();
 				
 		 }
 		// Country
-		 $checksqlcunt="select countryid from crm_country where country_name='$data[9]' and regionid='$strreg' ";
+		 $checksqlcunt="select countryid from ".$this->cfg['dbpref']."country where country_name='$data[9]' and regionid='$strreg' ";
 		
 		$rscheckcunt=mysql_query($checksqlcunt);
 		$numcont=mysql_num_rows($rscheckcunt);
@@ -1135,7 +1135,7 @@ function importload(){
 		 $rowscunt=mysql_fetch_array($rscheckcunt);
 		 $strcunt=$rowscunt['countryid'];
 		 } else {
-			$checksqlreg1="select regionid from crm_region where region_name='$data[8]'" ;
+			$checksqlreg1="select regionid from ".$this->cfg['dbpref']."region where region_name='$data[8]'" ;
 		        $rscheckreg1=mysql_query($checksqlreg1);		
 		        $rowsreg1=mysql_fetch_array($rscheckreg1);
 			$regid=$rowsreg1['regionid'];
@@ -1144,20 +1144,20 @@ function importload(){
 				$created=date('Y-m-d H:i:s');
 				$modified_by=$user_Detail['userid'];			
 				$modified=date('Y-m-d H:i:s');
-				$slecountry="insert into crm_country(country_name,regionid,created_by,modified_by,created,modified) values ('$data[9]','$regid','$created_by','$modified_by','$created','$modified')";
+				$slecountry="insert into ".$this->cfg['dbpref']."country(country_name,regionid,created_by,modified_by,created,modified) values ('$data[9]','$regid','$created_by','$modified_by','$created','$modified')";
 				mysql_query($slecountry);
 				$strcunt=mysql_insert_id();
 		 }
 		
 		 // State
-		 $checksqlstate="select stateid from crm_state where state_name='$data[10]' and countryid='$strcunt'" ;
+		 $checksqlstate="select stateid from ".$this->cfg['dbpref']."state where state_name='$data[10]' and countryid='$strcunt'" ;
 		 $rscheckstate=mysql_query($checksqlstate);
 		  $numstate=mysql_num_rows($rscheckstate);
 		 if($numstate > 0 ){
 		 $rowsstate=mysql_fetch_array($rscheckstate);
 		 $strstate=$rowsstate['stateid'];			 
 		 } else {
-			$checksqlsta2="select countryid from crm_country where country_name='$data[9]' and regionid='$strreg'" ;			
+			$checksqlsta2="select countryid from ".$this->cfg['dbpref']."country where country_name='$data[9]' and regionid='$strreg'" ;			
 		        $rscheckreg2=mysql_query($checksqlsta2);		
 		        $rowscountry=mysql_fetch_array($rscheckreg2);
 			 $countryid=$rowscountry['countryid'];
@@ -1166,20 +1166,20 @@ function importload(){
 				$created=date('Y-m-d H:i:s');
 				$modified_by=$user_Detail['userid'];			
 				$modified=date('Y-m-d H:i:s');
-				$slestate="insert into crm_state(state_name,countryid,created_by,modified_by,created,modified) values ('$data[10]','$countryid','$created_by','$modified_by','$created','$modified')";
+				$slestate="insert into ".$this->cfg['dbpref']."state(state_name,countryid,created_by,modified_by,created,modified) values ('$data[10]','$countryid','$created_by','$modified_by','$created','$modified')";
 				mysql_query($slestate);
 				$strstate=mysql_insert_id();
 				
 		 } 
 		// Location
-		 $checksqlloc="select locationid from crm_location where location_name='$data[11]' and stateid='$strstate'" ;		
+		 $checksqlloc="select locationid from ".$this->cfg['dbpref']."location where location_name='$data[11]' and stateid='$strstate'" ;		
 		$rscheckloc=mysql_query($checksqlloc);
 		$numloc=mysql_num_rows($rscheckloc);
 		if($numloc > 0 ){
 		$rowsloc=mysql_fetch_array($rscheckloc);
 		$strlid=$rowsloc['locationid'];			 
 		 } else {
-			$checksqlreg3="select stateid from crm_state where state_name='$data[10]' and countryid='$strcunt'" ;
+			$checksqlreg3="select stateid from ".$this->cfg['dbpref']."state where state_name='$data[10]' and countryid='$strcunt'" ;
 		        $rscheckreg3=mysql_query($checksqlreg3);		
 		        $rowsreg1=mysql_fetch_array($rscheckreg3);
 			$sid=$rowsreg1['stateid'];
@@ -1188,7 +1188,7 @@ function importload(){
 				$created=date('Y-m-d H:i:s');
 				$modified_by=$user_Detail['userid'];			
 				$modified=date('Y-m-d H:i:s');
-				$sleloc="insert into crm_location(location_name,stateid,created_by,modified_by,created,modified) values ('$data[11]','$sid','$created_by','$modified_by','$created','$modified')";
+				$sleloc="insert into ".$this->cfg['dbpref']."location(location_name,stateid,created_by,modified_by,created,modified) values ('$data[11]','$sid','$created_by','$modified_by','$created','$modified')";
 				mysql_query($sleloc);
 				$strlid=mysql_insert_id();
 				
@@ -1201,7 +1201,7 @@ function importload(){
 			$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'; 
 			// Run the preg_match() function on regex against the email address			
 			if (preg_match($regex, $email)) {	
-				 $sql="insert into crm_customers (first_name,last_name,position_title,company,add1_line1,add1_line2,add1_suburb,add1_postcode, add1_region,add1_country,add1_state,add1_location,phone_1,phone_2,phone_3,phone_4, email_1,email_2,email_3,email_4,skype_name,www_1,www_2,comments) values ('$data[0]','$data[1]','$data[2]','$data[3]','$data[4]','$data[5]','$data[6]','$data[7]','$strreg', '$strcunt','$strstate','$strlid','$data[12]','$data[13]','$data[14]','$data[15]', '$data[16]','$data[17]','$data[18]','$data[19]','$data[20]','$data[21]','$data[22]','$data[23]')";
+				 $sql="insert into ".$this->cfg['dbpref']."customers (first_name,last_name,position_title,company,add1_line1,add1_line2,add1_suburb,add1_postcode, add1_region,add1_country,add1_state,add1_location,phone_1,phone_2,phone_3,phone_4, email_1,email_2,email_3,email_4,skype_name,www_1,www_2,comments) values ('$data[0]','$data[1]','$data[2]','$data[3]','$data[4]','$data[5]','$data[6]','$data[7]','$strreg', '$strcunt','$strstate','$strlid','$data[12]','$data[13]','$data[14]','$data[15]', '$data[16]','$data[17]','$data[18]','$data[19]','$data[20]','$data[21]','$data[22]','$data[23]')";
 		         mysql_query($sql);				
 			     $count=$count+1;	
 				

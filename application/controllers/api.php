@@ -41,7 +41,7 @@ class Api extends CI_Controller {
 		$fields = array_keys($this->cust_data);
 		
 		$this->db->select(join(',', $fields));
-		$data = $this->db->get('crm_customers');
+		$data = $this->db->get($this->cfg['dbpref'].'customers');
 		
 		$file_name = time() . '-' . mt_rand(1111, 9999) . '.csv';
 		$file_path = rtrim(dirname(FCPATH), '/') . '/vps_temp_data/' . $file_name;
@@ -117,17 +117,17 @@ class Api extends CI_Controller {
 			{	
 				if (!isset($_GET['testing'])) # are we debugging?
 				{
-					$this->db->insert('crm_customers', $details);
+					$this->db->insert($this->cfg['dbpref'].'customers', $details);
 					if (isset($_GET['realestate']))
 					{
 						$insert_id = $this->db->insert_id();
-						$this->db->insert('crm_cust_cat_join', array('custid_fk' => $insert_id, 'custcatid_fk' => 4));
+						$this->db->insert($this->cfg['dbpref'].'cust_cat_join', array('custid_fk' => $insert_id, 'custcatid_fk' => 4));
 					}	
 				}
 			}
 			else if (count($errors) == 1 && isset($errors['ee']) && $this->empty_first_name($details['email_1'])) # only the email exists, update the rest
 			{
-				$this->db->update('crm_customers', $details, array('email_1' => $details['email_1'], 'first_name' => ''));
+				$this->db->update($this->cfg['dbpref'].'customers', $details, array('email_1' => $details['email_1'], 'first_name' => ''));
 				$status = 'UPDATED';
 			}
 			else
@@ -145,7 +145,7 @@ class Api extends CI_Controller {
     
 	public function existing_email($email)
 	{
-		$q = $this->db->get_where('crm_customers', array('email_1' => $email));
+		$q = $this->db->get_where($this->cfg['dbpref'].'customers', array('email_1' => $email));
 		if ($q->num_rows() > 0)
 		{
 			return TRUE;
@@ -158,7 +158,7 @@ class Api extends CI_Controller {
 	
 	public function empty_first_name($email)
 	{
-		$q = $this->db->get_where('crm_customers', array('email_1' => $email));
+		$q = $this->db->get_where($this->cfg['dbpref'].'customers', array('email_1' => $email));
 		if ($q->num_rows() > 0)
 		{
 			$data = $q->result();

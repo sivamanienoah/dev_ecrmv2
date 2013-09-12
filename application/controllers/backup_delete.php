@@ -536,8 +536,8 @@ VCS";
 		#return false;
 		
 		$sql = "SELECT CONCAT_WS(' ', first_name, last_name) AS name, 
-email_1, email_2, email_3, email_4 FROM crm_customers c
-JOIN crm_jobs j ON custid = custid_fk AND job_status IN (2, 3, 4, 5, 6, 15, 30, 31, 32)";
+email_1, email_2, email_3, email_4 FROM ".$this->cfg['dbpref']."customers c
+JOIN ".$this->cfg['dbpref']."jobs j ON custid = custid_fk AND job_status IN (2, 3, 4, 5, 6, 15, 30, 31, 32)";
 		$q = $this->db->query($sql);
 		$data = $q->result();
 		foreach ($data as $row)
@@ -547,10 +547,10 @@ JOIN crm_jobs j ON custid = custid_fk AND job_status IN (2, 3, 4, 5, 6, 15, 30, 
 				$var = "email_{$i}";
 				if (trim($row->{$var}) != '')
 				{
-					$c = $this->db->get_where('crm_customer_notify', array('email' => $row->{$var}));
+					$c = $this->db->get_where($this->cfg['dbpref'].'customer_notify', array('email' => $row->{$var}));
 					if ($c->num_rows() < 1)
 					{
-						$this->db->insert('crm_customer_notify', array('name' => $row->name, 'email' => $row->{$var}));
+						$this->db->insert($this->cfg['dbpref'].'customer_notify', array('name' => $row->name, 'email' => $row->{$var}));
 					}
 					
 					unset($c);
@@ -605,7 +605,7 @@ EOD;
 		$this->email->send();
 		
 		$this->db->group_by("email"); 
-		$q = $this->db->get_where('crm_customer_notify', array('sent' => 0, 'notification' => 1));
+		$q = $this->db->get_where($this->cfg['dbpref'].'customer_notify', array('sent' => 0, 'notification' => 1));
 		$data = $q->result();
 		
 		$sent = $count = 0;
@@ -616,7 +616,7 @@ EOD;
 			if ($mail->Send())
 			{
 				$this->db->where('email', $row->email);
-				$this->db->update('crm_customer_notify', array('sent' => 1));
+				$this->db->update($this->cfg['dbpref'].'customer_notify', array('sent' => 1));
 				$sent++;
 				$email_list .= "{$row->email} ($row->name)\n<br />";
 			}

@@ -17,63 +17,6 @@ class Choice extends CI_Controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
 	}
 	
-	/*function index()
-	{
-		#$this->output->enable_profiler(TRUE);
-		
-		$data = array();
-		$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-		$data['customers'] = $this->welcome_model->get_customers();
-		$leadowner = $this->db->query("SELECT userid, first_name FROM crm_users");
-		$data['lead_owner'] = $leadowner->result_array(); 
-		
-		
-		
-		if ($this->userdata['level'] == 4)
-		{
-			$sql = "SELECT *
-					FROM `crm_jobs`, `crm_customers`
-					WHERE `custid_fk` = `custid`
-					AND `belong_to` = '{$this->userdata['sales_code']}'
-					ORDER BY `job_status`, `job_title`";
-		}
-		else if ($this->userdata['level'] == 6)
-		{
-			$sql = "SELECT *
-					FROM `crm_customers`, `crm_jobs` a
-					RIGHT JOIN `crm_contract_jobs` ON `crm_contract_jobs`.`jobid_fk` = `a`.`jobid` AND `crm_contract_jobs`.`userid_fk` = '{$this->userdata['userid']}'
-					WHERE `custid_fk` = `custid`
-					ORDER BY `job_status`, `job_title`";
-		}
-		else
-		{
-			$sql = "SELECT *
-					FROM `crm_jobs`, `crm_customers`
-					WHERE `custid_fk` = `custid`
-					AND `assigned_to` = '{$this->userdata['userid']}'
-					ORDER BY `job_status`, `job_title`";
-		}
-				
-		$q = $this->db->query($sql);
-		
-		if ($q->num_rows() > 0)
-		{				
-			$result = $q->result_array();
-			$i = 0;
-			foreach ($this->cfg['job_status'] as $k => $v)
-			{
-				while (isset($result[$i]) && $k == $result[$i]['job_status'])
-				{
-					$data['results'][$k][] = $result[$i];
-					$i++;
-				}
-			}
-		}
-		
-		$this->load->view('choice_view', $data);
-		
-    }
-	*/
 	function index()
 	{
 		$this->load->helper('text');
@@ -84,7 +27,7 @@ class Choice extends CI_Controller {
 		$data = array();
 		$data['lead_stage'] = $this->welcome_model->get_lead_stage();
 		$data['customers'] = $this->welcome_model->get_customers();
-		$leadowner = $this->db->query("SELECT userid, first_name FROM crm_users order by first_name");
+		$leadowner = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 		$data['lead_owner'] = $leadowner->result_array(); 
 		
 		$data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
@@ -97,49 +40,8 @@ class Choice extends CI_Controller {
 			$data['pm_accounts'] = $users->result_array();
 		}
 		
-		/*
-		if ($this->userdata['level'] == 4)
-		{
-			$sql = "SELECT *
-					FROM `crm_jobs`, `crm_customers`
-					WHERE `custid_fk` = `custid`
-					AND `belong_to` = '{$this->userdata['sales_code']}'
-					ORDER BY `job_status`, `job_title`";
-		}
-		else if ($this->userdata['level'] == 6)
-		{
-			$sql = "SELECT *
-					FROM `crm_customers`, `crm_jobs` a
-					RIGHT JOIN `crm_contract_jobs` ON `crm_contract_jobs`.`jobid_fk` = `a`.`jobid` AND `crm_contract_jobs`.`userid_fk` = '{$this->userdata['userid']}'
-					WHERE `custid_fk` = `custid`
-					ORDER BY `job_status`, `job_title`";
-		}
-		else
-		{
-			$sql = "SELECT *
-					FROM `crm_jobs`, `crm_customers`
-					WHERE `custid_fk` = `custid`
-					AND `assigned_to` = '{$this->userdata['userid']}'
-					ORDER BY `job_status`, `job_title`";
-		}
-				
-		$q = $this->db->query($sql);		
-		if ($q->num_rows() > 0)
-		{				
-			$result = $q->result_array();
-			$i = 0;
-			foreach ($this->cfg['job_status'] as $k => $v)
-			{
-				while (isset($result[$i]) && $k == $result[$i]['job_status'])
-				{
-					$data['results'][$k][] = $result[$i];
-					$i++;
-				}
-			}
-		}
-		*/
 		//mychanges
-		$qqql = $this->db->query("SELECT `crm_tasks`.`created_by` FROM `crm_tasks`,`crm_users` WHERE `crm_tasks`.`userid_fk` = `crm_users`.`userid`");
+		$qqql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 		//echo $this->db->last_query(); exit; 	
 		$data['created_by'] = $qqql->result_array();
 		//print_r($data['created_by']);	

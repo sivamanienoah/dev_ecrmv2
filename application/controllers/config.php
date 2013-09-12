@@ -75,9 +75,9 @@ End of Message
 		}
 		
 		$sql = "SELECT *,
-					(SELECT `start_date` FROM `crm_lead_tasks` WHERE leadid = leadid_fk AND status < 100 ORDER BY start_date DESC LIMIT 1) AS next_task_date,
-					(SELECT `task` FROM `crm_lead_tasks` WHERE leadid = leadid_fk ORDER BY start_date LIMIT 1) AS next_task_action
-				FROM `crm_leads`, `crm_customers`
+					(SELECT `start_date` FROM `".$this->cfg['dbpref']."lead_tasks` WHERE leadid = leadid_fk AND status < 100 ORDER BY start_date DESC LIMIT 1) AS next_task_date,
+					(SELECT `task` FROM `".$this->cfg['dbpref']."lead_tasks` WHERE leadid = leadid_fk ORDER BY start_date LIMIT 1) AS next_task_action
+				FROM `".$this->cfg['dbpref']."leads`, `".$this->cfg['dbpref']."customers`
 				WHERE `custid` = `custid_fk`
 				AND `lead_status` = 1
 				{$additional}
@@ -200,8 +200,8 @@ HDOC;
 		}
 		
 		$sql = "SELECT *,
-					(SELECT `start_date` FROM `crm_lead_tasks` WHERE leadid = leadid_fk AND status < 100 ORDER BY start_date DESC LIMIT 1) AS next_task_date,
-					(SELECT `task` FROM `crm_lead_tasks` WHERE leadid = leadid_fk ORDER BY start_date LIMIT 1) AS next_task_action
+					(SELECT `start_date` FROM `".$this->cfg['dbpref']."lead_tasks` WHERE leadid = leadid_fk AND status < 100 ORDER BY start_date DESC LIMIT 1) AS next_task_date,
+					(SELECT `task` FROM `".$this->cfg['dbpref']."lead_tasks` WHERE leadid = leadid_fk ORDER BY start_date LIMIT 1) AS next_task_action
 				FROM `{$this->cfg['dbpref']}_leads`, `{$this->cfg['dbpref']}customers`
 				WHERE `custid` = `custid_fk`
 				AND `lead_status` = 2

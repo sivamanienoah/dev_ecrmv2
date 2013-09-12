@@ -123,7 +123,7 @@ class Dashboard extends CI_Controller {
 		//For Tasks & Projects access - Start here
 			$data['lead_stage'] = $this->welcome_model->get_lead_stage();
 			$data['customers'] = $this->welcome_model->get_customers();
-			$leadowner = $this->db->query("SELECT userid, first_name FROM crm_users order by first_name");
+			$leadowner = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 			$data['lead_owner'] = $leadowner->result_array(); 
 			
 			$data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
@@ -135,7 +135,7 @@ class Dashboard extends CI_Controller {
 			{
 				$data['pm_accounts'] = $users->result_array();
 			}
-			$taskSql = $this->db->query("SELECT `crm_tasks`.`created_by` FROM `crm_tasks`,`crm_users` WHERE `crm_tasks`.`userid_fk` = `crm_users`.`userid`");
+			$taskSql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 			//echo $this->db->last_query(); exit; 	
 			$data['created_by'] = $taskSql->result_array();	
 			//print_r($data['created_by']);	
