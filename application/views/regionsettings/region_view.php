@@ -1,0 +1,245 @@
+<div id="content">
+    <div class="inner">
+		<div class="in-content"> 
+		<?php if(($this->session->userdata('accesspage')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
+			<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Region Details</h2>
+			<?php if ($this->validation->error_string != '') { ?>
+				<div class="form_error">
+					<?php echo  $this->validation->error_string ?>
+				</div>
+			<?php } ?>
+			<p>All mandatory fields marked * must be filled in correctly.</p>
+			<form name="region_form" id="region_form" action="<?php echo  $this->uri->uri_string() ?>" method="post" onsubmit="return checkForm();">
+			
+			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			
+			<table class="layout">
+				<tr>
+					<td width="100">Region:</td>
+					<td width="240"><input type="text" id="region_name" name="region_name" value="<?php echo  $this->validation->region_name ?>" class="textfield width200px required" /> *</td>
+					<td class="error" style="color:red;" id="error1">Region Field required.</td>
+					<td class="checkUser" style="color:green" >Region Name Available.</td>
+					<td class="checkUser1" style="color:red" >Region Name Already Exists.</td>
+					<input type="hidden" class="hiddenUrl"/>
+				</tr>	
+				<tr>
+					<td>Status:</td>
+					<td colspan="3"><input type="checkbox" name="inactive" value="1"<?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the region is inactive .</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<?php if (isset($this_user) && $userdata['userid'] == $this_user) { ?>
+					<td colspan="3">
+						Active Region cannot be modified! Please use my account to update your details.
+					</td>
+					<?php } else if (isset($this_user_level) && $userdata['level'] >= $this_user_level && $userdata['level'] != 0) { ?>
+					<td colspan="3">
+						Your Region level cannot updated similar levels or levels above you.
+					</td>
+					<?php } else { ?>
+					<td style="float:left;">
+					<div class="buttons">
+						<button type="submit" name="update_region" class="positive">								
+						<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Region
+						</button>
+					</div>
+					</td>
+					<?php if ($this->uri->segment(4)) { ?>
+                    <td style="float:left;">
+                        <div class="buttons">
+                            <button type="submit" name="cancel_submit" class="negative">
+                                Cancel
+                            </button>
+                        </div>
+                    </td>
+                    <?php } ?>
+					<td colspan="2">
+						<?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && 1 == 1) { # 1 == 2 do not delete users ?>
+						<!--div class="buttons">
+						    <button type="submit" name="delete_region" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
+							Delete Region
+						    </button>
+						</div-->
+						<?php } else { echo "&nbsp;"; } ?>
+					</td>
+					<?php } ?>
+				</tr>
+			</table>
+		</form>	
+	        <h2>Region List</h2>
+        
+        <form action="regionsettings/region_settings/" method="post" id="cust_search_form">
+		
+			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
+                <tr>
+                    <td>
+                        Search by Region
+                    </td>
+                    <td>
+                        <input type="text" id="search-val" name="cust_search" class="textfield width200px" />
+                    </td>
+                    <td>
+                        <div class="buttons">
+                            <button type="submit" class="search">
+                                
+                                Search
+                            </button>
+                        </div>
+                    </td>
+                    <?php if ($this->uri->segment(4)) { ?>
+                    <td>
+                        <div class="buttons">
+                            <button type="submit" name="cancel_submit" class="negative">
+                                Cancel
+                            </button>
+                        </div>
+                    </td>
+                    <?php } ?>
+                </tr>
+            </table>
+	</form>        
+		<table id="regData-table" class="data-table" border="0" cellpadding="0" cellspacing="0" >
+			<thead>
+				<tr>
+					<th>Region Name</th>
+					<th>Created Date</th>
+					<th>Created By</th>
+					<!--<th>Modified By</th>
+					<th>Modified</th>-->										
+					<th>Status</th>
+					<th>Action</th>
+				</tr>
+			</thead>            
+		<tbody>
+                <?php
+		if (is_array($customers) && count($customers) > 0) { ?>
+			<?php foreach ($customers as $customer) {  ?>
+			<tr>
+                        <td><?php if ($this->session->userdata('edit')==1) {?><a class="edit" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
+                        <td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
+						<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
+						<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
+                        <td><?php echo  $customer['modified'] ;?></td>-->
+                        <td>
+				<?php 
+				if($customer['inactive']==0){
+					echo "Active";
+				} else { echo "Inactive"; }				
+				?>
+			</td> 
+			<td class="actions">
+				<?php if ($this->session->userdata('edit')==1) { ?><a class="edit" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>
+				<?php if ($this->session->userdata('delete')==1) { ?> | <a class="delete" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+			</td>                         
+            </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="7" align="center">No records available to be displayed!</td>
+                    </tr>
+                <?php } ?>
+            </tbody>            
+        </table>
+		<p><?php echo '&nbsp;'; ?></p>
+		<div id="pager1">
+	<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+    <a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+    <input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
+    <a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+    <a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+    <span>No. of Records per page:<?php echo '&nbsp;'; ?> </span><select class="pagesize"> 
+        <option selected="selected" value="10">10</option> 
+        <option value="20">20</option> 
+        <option value="30">30</option> 
+        <option value="40">40</option> 
+    </select> 
+		</div>
+	<?php } else {
+				echo "You have no rights to access this page";
+			} 
+	?>
+    </div>
+	</div>
+	</div>
+<!--<script type="text/javascript" src="assets/js/tablesort.min.js"></script>-->
+<!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
+<script type="text/javascript">
+$('.first').addClass('1');
+$('.prev').addClass('1');
+$('.pagedisplay').addClass('1');
+$('.next').addClass('1');
+$('.last').addClass('1');
+$('.pagesize').addClass('1');
+$(document).ready(function() {
+	$('#error1').hide();
+	$('a.edit').click(function() {
+		$('#error1').hide();
+		var url = $(this).attr('href');
+		$('.in-content').load(url);
+		return false;
+	});
+	$('button.positive').click(function() { 
+		$('#error1').hide();
+		var region  = $("#region_name").val() ;
+		if(region == ""){			
+			$("#error1").show();
+			return false;
+		}
+	});
+	
+	$('button.negative').click(function() {
+	window.location.href="<?php echo  base_url(); ?>regionsettings/region_settings/region"
+	return false;
+	});
+
+	$('button.search').click(function() {
+		var search = $('#search-val').val();
+		$('#error1').hide();
+		var stencode=encodeURIComponent(search);
+		var linkUrl = "regionsettings/region_search/0/"+stencode;
+		//alert(linkUrl);
+		//$('.in-content').load(linkUrl);
+		$('#ui-tabs-3').load(linkUrl,function() {
+			$('#region_form').attr("action","./regionsettings/region");
+		});
+		return false;
+	});
+	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
+    .tablesorterPager({container: $("#pager1"),positionFixed: false});
+});
+
+$('.checkUser').hide();
+    $('.checkUser1').hide();
+    $('#region_name').blur(function(){
+        
+        if( $('#region_name').val().length >= 3 )
+            {
+              var username = $('#region_name').val();
+              getResult(username); 
+            }
+        return false;
+    });
+    function getResult(name){
+        var baseurl = $('.hiddenUrl').val();
+            $.ajax({
+            url : baseurl + 'regionsettings/getResultfromRegion/' + name,
+            cache : false,
+            success : function(response){
+                $('.checkUser').hide();
+                if(response == 'userOk') {$('.checkUser').show(); $('.checkUser1').hide();}
+                else { $('.checkUser').hide(); $('.checkUser1').show();}
+            }
+        });
+	}	
+
+$(function() {
+    
+    $('.data-table tr, .data-table th').hover(
+        function() { $(this).addClass('over'); },
+        function() { $(this).removeClass('over'); }
+    );
+});
+
+</script>

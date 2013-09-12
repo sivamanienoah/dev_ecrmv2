@@ -1,0 +1,69 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/*
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+|
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	http://codeigniter.com/user_guide/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There area two reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+|
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router what URI segments to use if those provided
+| in the URL cannot be matched to a valid route.
+|
+*/
+
+//$route['default_controller'] = "welcome";
+$route['default_controller'] = "dashboard";
+$route['scaffolding_trigger'] = "";
+
+$route['invoice/preview/([0-9]+)'] = "welcome/preview/$1";
+$route['invoice'] = "welcome/quotation/approved";
+$route['invoice/projects'] = "welcome/projects/production";
+$route['invoice/projects/production'] = "welcome/projects/production";
+$route['invoice/projects/completed'] = "welcome/projects/completed";
+$route['invoice/projects/p_cancelled'] = "welcome/projects/p_cancelled";
+$route['invoice/projects/p_onhold'] = "welcome/projects/p_onhold";
+$route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
+$route['invoice/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
+$route['invoice/view_project/([0-9]+)(/.+)?'] = "welcome/view_project/$1$2";
+$route['invoice/package'] = "welcome/package/invoice";
+$route['invoice/billing'] = "welcome/billing";
+
+$route['subscription'] = "welcome/quotation/s_pending";
+$route['subscription/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
+$route['subscription/([a-z_]+)(/.+)?'] = "welcome/quotation/$1$2";
+$route['subscription/package'] = "welcome/package/subscription";
+
+$route['production/?'] = "production/welcome";
+$route['production/package'] = "welcome/package/production";
+$route['404_override'] = '';
+
+
+/* End of file routes.php */
+/* Location: ./application/config/routes.php */
