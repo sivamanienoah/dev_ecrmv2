@@ -550,7 +550,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				
 				$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
-													FROM `".$this->cfg['dbpref']."tasks` AS t, `crm_users` AS u
+													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$update}");
 					$task_owners = $task_owner_name->result_array();
@@ -723,7 +723,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 					$hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
 					$job_url = ($ins['jobid_fk'] != 0) ? $this->config->item('base_url')."welcome/view_quote/{$ins['jobid_fk']}" : '';
 					$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
-													FROM `".$this->cfg['dbpref']."tasks` AS t, `crm_users` AS u
+													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$ins['taskid']}");
 					$task_owners = $task_owner_name->result_array();
@@ -927,7 +927,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		}
 		else
 		{
-			$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`crm_users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`
+			$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`
 					FROM `".$this->cfg['dbpref']."tasks`, `".$this->cfg['dbpref']."users`
 					WHERE `".$this->cfg['dbpref']."tasks`.`taskid` IN ({$_POST['id_set']})
 					AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid` 
@@ -961,9 +961,8 @@ function add_job_task($update = 'NO', $random = 'NO')
 				FROM `".$this->cfg['dbpref']."tasks`, `".$this->cfg['dbpref']."users`
 				WHERE `".$this->cfg['dbpref']."tasks`.`jobid_fk` = ?
 				AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
-				ORDER BY `crm_tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";				
+				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";				
 		$q = $this->db->query($sql, array('jobid_fk' => $jobid));
-		//echo $this->db->last_query();exit;
 		$data = $q->result_array();	
 
 		$html = '';
@@ -1016,7 +1015,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		$res1 = $dd1->result();
 		
 		$task_remarks = nl2br($array['remarks']);
-		$select = "SELECT ".$this->cfg['dbpref']."users.first_name,".$this->cfg['dbpref']."users.userid FROM crm_users WHERE crm_users.userid=".$array['created_by'];	
+		$select = "SELECT ".$this->cfg['dbpref']."users.first_name,".$this->cfg['dbpref']."users.userid FROM ".$this->cfg['dbpref']."users WHERE ".$this->cfg['dbpref']."users.userid=".$array['created_by'];	
 		$dd = $this->db->query($select);
 		$res = $dd->result();
 		#$$html = $this->session->set_userdata('taskownerid', $res[0]->userid);		
@@ -1274,11 +1273,11 @@ EOD;
 	function set_task_status($type = 'job')
 	{
 		$this->load->model('user_model');
-		$task_table = 'crm_tasks';
+		$task_table = $this->cfg['dbpref'].'tasks';
 		$fk = 'jobid_fk';
 		if ($type == 'lead')
 		{
-			$task_table = 'crm_lead_tasks';
+			$task_table = $this->cfg['dbpref'].'lead_tasks';
 			$fk = 'leadid_fk';
 		}
 		
@@ -1287,7 +1286,7 @@ EOD;
 		//mychanges
 			$taskstat = $_POST['task_status'];	
 			/*if($taskstat == 100) {
-				$task_table = 'crm_tasks';
+				$task_table = $this->cfg['dbpref'].'tasks';
 				$ud = array();
 				$ud['status'] = 100;
 				$ud['actualend_date'] = date('Y-m-d H:i:s');
@@ -1332,7 +1331,7 @@ EOD;
 				$end_date=date('d-m-Y', strtotime($end_date));
 				$completed_date=date('l, jS F y h:iA', strtotime($upd['marked_complete']));
 				$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
-													FROM `crm_tasks` AS t, `crm_users` AS u
+													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$taskid}");
 				$task_owners = $task_owner_name->result_array();
@@ -1591,7 +1590,7 @@ EOD;
 					$json['marked_100pct'] = TRUE;
 				}else { // Added For task set completion
 					if($taskstat!='0'){
-					$task_table = 'crm_tasks';
+					$task_table = $this->cfg['dbpref'].'tasks';
 					$ud = array();
 					$ud['status'] = $taskstat;
 					$ud['actualstart_date'] = date('Y-m-d H:i:s');
@@ -1618,7 +1617,7 @@ EOD;
 				$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
 				$taskStatusToEmail=$task_owner[0]['email'];
 				$task_owner_mail = $this->db->query("SELECT u.email,u.first_name,u.last_name,t.remarks
-													FROM `crm_tasks` AS t, `crm_users` AS u
+													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.created_by ={$task_createdby}
 													AND t.taskid ={$taskid}");
@@ -1859,7 +1858,7 @@ EOD;
 			{
 				// update
 				$this->db->where('taskid', $update);
-				$this->db->update('crm_lead_tasks', $ins);
+				$this->db->update($this->cfg['dbpref'].'lead_tasks', $ins);
 				
 				$ins['user_label'] = $_POST['user_label'];
 				$ins['status'] = $ins['is_complete'] = 0;
@@ -1869,7 +1868,7 @@ EOD;
 			}
 			else if ($update == 'NO')
 			{
-				if ( ! $this->db->insert('crm_lead_tasks', $ins))
+				if ( ! $this->db->insert($this->cfg['dbpref'].'lead_tasks', $ins))
 				{
 					$json['error'] = TRUE;
 					$json['errormsg'] = 'Task insert error';
@@ -1892,11 +1891,11 @@ EOD;
 	 */
 	function get_lead_tasks($jobid)
 	{
-		$sql = "SELECT *, `crm_lead_tasks`.`start_date` AS `start_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`
-				FROM `crm_lead_tasks`, `crm_users`
-				WHERE `crm_lead_tasks`.`leadid_fk` = ?
-				AND `crm_lead_tasks`.`userid_fk` = `crm_users`.`userid`
-				ORDER BY `crm_lead_tasks`.`is_complete`, `crm_lead_tasks`.`status`, `crm_lead_tasks`.`start_date`";
+		$sql = "SELECT *, `".$this->cfg['dbpref']."lead_tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`
+				FROM `".$this->cfg['dbpref']."lead_tasks`, `".$this->cfg['dbpref']."users`
+				WHERE `".$this->cfg['dbpref']."lead_tasks`.`leadid_fk` = ?
+				AND `".$this->cfg['dbpref']."lead_tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+				ORDER BY `".$this->cfg['dbpref']."lead_tasks`.`is_complete`, `".$this->cfg['dbpref']."lead_tasks`.`status`, `".$this->cfg['dbpref']."lead_tasks`.`start_date`";
 				
 		$q = $this->db->query($sql, array('jobid_fk' => $jobid));
 		$data = $q->result_array();
@@ -1918,7 +1917,7 @@ EOD;
 	{
 		$this->db->order_by('due_date', 'asc');
 		$this->db->order_by('position', 'asc');
-		$q = $this->db->get_where('crm_milestones', array('jobid_fk' => $jobid));
+		$q = $this->db->get_where($this->cfg['dbpref'].'milestones', array('jobid_fk' => $jobid));
 		
 		$rows = $q->result();
 		
@@ -1935,7 +1934,7 @@ EOD;
 	function save_job_overview($jobid)
 	{
 		$this->db->where('jobid_fk', $jobid);
-		$this->db->delete('crm_milestones');
+		$this->db->delete($this->cfg['dbpref'].'milestones');
 		
 		$mc = count($_POST['milestone']);
 		for ($i = 0; $i < $mc; $i++)
@@ -1952,7 +1951,7 @@ EOD;
 			$ins['status'] = $_POST['milestone_status'][$i];
 			$ins['position'] = $i;
 			
-			$this->db->insert('crm_milestones', $ins);
+			$this->db->insert($this->cfg['dbpref'].'milestones', $ins);
 		}
 		
 		echo $this->get_job_overview($jobid, TRUE);
@@ -1965,7 +1964,7 @@ EOD;
 		{
 			$status_select_1 = ($row->status == 1) ? ' selected="selected"' : '';
 			$status_select_2 = ($row->status == 2) ? ' selected="selected"' : '';
-			$qa = $this->db->query("select lead_assign, belong_to from crm_jobs where jobid = '".$row->jobid_fk."' ");
+			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."jobs where jobid = '".$row->jobid_fk."' ");
 			$lead_details = $qa->row_array();
 			//echo "<pre>"; print_r($lead_details);
 			if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || $lead_details['lead_assign'] == $this->userdata['userid']) {
@@ -2024,7 +2023,7 @@ EOD;
 		
 		$json['error'] = 'Record Insert Failed!';
 		
-		if ($this->db->insert('crm_quality_control', $data))
+		if ($this->db->insert($this->cfg['dbpref'].'quality_control', $data))
 		{
 			$json['error'] = FALSE;
 		}
@@ -2064,7 +2063,7 @@ EOD;
 	}
 	function get_packages($hostingid=0){
 		if($hostingid==0) return false;
-		$q=$this->db->query("SELECT * FROM crm_hosting_package HP, crm_package P WHERE P.package_id=HP.packageid_fk && HP.hostingid_fk={$hostingid} && P.status='active'");
+		$q=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."hosting_package HP, ".$this->cfg['dbpref']."package P WHERE P.package_id=HP.packageid_fk && HP.hostingid_fk={$hostingid} && P.status='active'");
 		$r=$q->result_array();
 		if(sizeof($r)>0) echo json_encode($r[0]);
 		else return false;
