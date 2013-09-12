@@ -35,8 +35,8 @@ class Hosting extends CI_Controller {
 	{
 		if ($this->session->userdata('delete')==1) {
 			$this->hosting_model->delete_account($id);
-			$this->db->delete('crm_hosting_package', array('hostingid_fk' => $id));
-			$this->db->delete('crm_dns', array('hostingid' => $id));
+			$this->db->delete($this->cfg['dbpref'].'hosting_package', array('hostingid_fk' => $id));
+			$this->db->delete($this->cfg['dbpref'].'dns', array('hostingid' => $id));
 			$this->session->set_flashdata('confirm', array('Hosting Account Deleted!'));
 			redirect('hosting');
 		} else {
@@ -55,10 +55,10 @@ class Hosting extends CI_Controller {
             $this->session->set_flashdata('confirm', array('Hosting Account Deleted!'));
             redirect('hosting/');
         }
-		$q=$this->db->query("SELECT * FROM crm_hosting_package WHERE hostingid_fk='{$id}'");
+		$q=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."hosting_package WHERE hostingid_fk='{$id}'");
 		$data['packageid_fk']=$q->result_array();
 		
-		$q=$this->db->query("SELECT * FROM crm_package WHERE status='active'");
+		$q=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."package WHERE status='active'");
 		$data['package']=$q->result_array();
 		
         $rules['domain_name'] = "trim|required|callback_domain_check";
@@ -128,22 +128,11 @@ class Hosting extends CI_Controller {
 			{
 				$update_data['domain_expiry'] = NULL;
 			}
-			/*
-			$packageid_fk=$this->input->post('packageid_fk');
-			//echo"<pre>"; print_r($packageid_fk); exit;
-			$this->db->query("DELETE FROM crm_hosting_package WHERE hostingid_fk='{$id}'");
-			if(is_array($packageid_fk))
-			foreach($packageid_fk as $val){
-				$duedate='';
-				foreach($data['packageid_fk'] as $v){
-					if($v['packageid_fk']==$val) $duedate=$v['due_date'];
-				}
-				$this->db->insert('crm_hosting_package', array('hostingid_fk'=>$id, 'packageid_fk'=>$val, 'due_date'=>$duedate));
-			} */
+
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 if ($this->hosting_model->update_account($id, $update_data)) {
 					//delete and again inserting into crm_hosting_package - Starts here
-						$this->db->query("DELETE FROM crm_hosting_package WHERE hostingid_fk='{$id}'");
+						$this->db->query("DELETE FROM ".$this->cfg['dbpref']."hosting_package WHERE hostingid_fk='{$id}'");
 						$packageid_fk = $this->input->post('packageid_fk');
 						if(is_array($packageid_fk))
 						foreach($packageid_fk as $val){
@@ -152,12 +141,12 @@ class Hosting extends CI_Controller {
 								if($v['packageid_fk'] == $val) $duedate = $v['due_date'];
 							}
 							$update_packageid = array(packageid_fk => $val);
-							//$this->db->update('crm_hosting_package', $update_packageid, array('hostingid_fk'=>$id));
+							//$this->db->update($this->cfg['dbpref'].'hosting_package', $update_packageid, array('hostingid_fk'=>$id));
 							if ($val != 0) { 
-								$this->db->insert('crm_hosting_package', array('hostingid_fk'=>$id, 'packageid_fk'=>$val, 'due_date'=>$duedate));
+								$this->db->insert($this->cfg['dbpref'].'hosting_package', array('hostingid_fk'=>$id, 'packageid_fk'=>$val, 'due_date'=>$duedate));
 							}
 						} 
-					//delete and again inserting into crm_hosting_package - Ends here
+					//delete and again inserting into hosting_package - Ends here
                     $this->session->set_flashdata('confirm', array('Account Details Updated!'));
                     //redirect('hosting/add_account/update/' . $id);
                     redirect('hosting/');
@@ -166,7 +155,7 @@ class Hosting extends CI_Controller {
                 if ($newid = $this->hosting_model->insert_account($update_data)) {
 					//inserting into crm_hosting_package - Starts here
 						$packageid_fk=$this->input->post('packageid_fk');
-						//$this->db->query("DELETE FROM crm_hosting_package WHERE hostingid_fk='{$id}'");
+						//$this->db->query("DELETE FROM ".$this->cfg['dbpref']."hosting_package WHERE hostingid_fk='{$id}'");
 						if(is_array($packageid_fk))
 						foreach($packageid_fk as $val){
 							$duedate='0000-00-00';
@@ -174,10 +163,10 @@ class Hosting extends CI_Controller {
 								if($v['packageid_fk']==$val) $duedate=$v['due_date'];
 							}
 							if ($val != 0) { 
-								$this->db->insert('crm_hosting_package', array('hostingid_fk'=>$newid, 'packageid_fk'=>$val, 'due_date'=>	$duedate));
+								$this->db->insert($this->cfg['dbpref'].'hosting_package', array('hostingid_fk'=>$newid, 'packageid_fk'=>$val, 'due_date'=>	$duedate));
 							}
 						}
-					//inserting into crm_hosting_package - Ends here
+					//inserting into hosting_package - Ends here
                     $this->session->set_flashdata('confirm', array('New Account Added!'));
                     // redirect('hosting/add_account/update/' . $newid);
 					redirect('hosting/');
@@ -256,7 +245,7 @@ class Hosting extends CI_Controller {
     }
 	function hosts($custid=''){
 		if($custid<=0) redirect('hosting/');
-		$sql="SELECT * FROM `crm_hosting` as H WHERE H.custid_fk='{$custid}'ORDER BY H.domain_name";
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H WHERE H.custid_fk='{$custid}'ORDER BY H.domain_name";
 		$rows = $this->db->query($sql);
 		$data['hosting']=$rows->result_array();
 		$data['hosts']='HOSTS';
@@ -269,12 +258,12 @@ class Hosting extends CI_Controller {
 			$d=explode('-',$_POST['due_date']);
 			if(sizeof($d)>0){
 			 $due_date=$d[2].'-'.$d[1].'-'.$d[0];
-			 $this->db->query("UPDATE crm_hosting_package SET due_date='{$due_date}' WHERE packageid_fk={$_POST['packageid']} &&  hostingid_fk={$hostingid}");
+			 $this->db->query("UPDATE ".$this->cfg['dbpref']."hosting_package SET due_date='{$due_date}' WHERE packageid_fk={$_POST['packageid']} &&  hostingid_fk={$hostingid}");
 			 $this->session->set_flashdata('confirm', array('Package Details Updated!'));
 			 redirect('hosting/due_date/'.$hostingid);
 			}
 		}
-		$q=$this->db->query("SELECT * FROM crm_hosting_package HP, crm_package P, crm_hosting H WHERE HP.packageid_fk=P.package_id AND HP.hostingid_fk={$hostingid} AND H.hostingid={$hostingid}");
+		$q=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."hosting_package HP, ".$this->cfg['dbpref']."package P, ".$this->cfg['dbpref']."hosting H WHERE HP.packageid_fk=P.package_id AND HP.hostingid_fk={$hostingid} AND H.hostingid={$hostingid}");
 		$data['pack']=$q->result_array();
 		$data['hostingid']=$hostingid;$data['packageid']=$packageid;
 		$this->load->view('package_due_date',$data);

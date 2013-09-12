@@ -17,7 +17,7 @@ class hosting_cron extends CI_Controller {
 	{	
 		$today = date('Y-m-d'); 
 		$endDate = date('Y-m-d', strtotime("+30 days"));
-		// $hosting_exp = $this->db->query(" SELECT hostingid, domain_expiry, domain_name, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk FROM crm_hosting where domain_expiry between '".$today."' AND '".$endDate."' ");
+		// $hosting_exp = $this->db->query(" SELECT hostingid, domain_expiry, domain_name, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk FROM ".$this->cfg['dbpref']."hosting where domain_expiry between '".$today."' AND '".$endDate."' ");
 		$hosting_exp = $this->db->query(" SELECT hostingid, domain_name, domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3 order by hostingid ");
 		//echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
@@ -37,7 +37,7 @@ class hosting_cron extends CI_Controller {
 			$cust_id = $member['custid_fk'];
 			$exp_dt = $member['domain_expiry'];
 			$domainName = $member['domain_name'];
-			$cust = $this->db->query("select first_name, last_name, company, email_1 from crm_customers where custid = $cust_id");
+			$cust = $this->db->query("select first_name, last_name, company, email_1 from ".$this->cfg['dbpref']."customers where custid = $cust_id");
 			$data['customer'] = $cust->row_array();
 			$cust_name = $data['customer']['first_name'] . " " . $data['customer']['last_name'] . " - " . $data['customer']['company'];
 			$cust_email = $data['customer']['email_1'];
@@ -136,7 +136,7 @@ class hosting_cron extends CI_Controller {
 	{
 		$today = date('Y-m-d'); 
 		$endDate = date('Y-m-d', strtotime("+30 days"));
-		$hosting_exp = $this->db->query(" SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff FROM crm_hosting where expiry_date <='".$endDate."' AND domain_status != 3 order by hostingid ");
+		$hosting_exp = $this->db->query(" SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3 order by hostingid ");
 		//echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
 		
