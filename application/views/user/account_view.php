@@ -1,5 +1,4 @@
 <?php require (APPPATH . 'views/tpl/header.php'); ?>
-
 <div id="content">
 	 
     <div class="inner">
