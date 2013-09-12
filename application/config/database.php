@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'dev_newecrm';
+$db['default']['username'] = 'dev_ecrmv2';
+$db['default']['password'] = 'Ecr@vm2';
+$db['default']['database'] = 'dev_ecrmv2';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
