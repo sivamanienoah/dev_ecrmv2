@@ -75,7 +75,7 @@ class Data_forms extends CI_Controller {
 		
 		//status
 		$this->db->where('job_status', $id);
-		$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		$this->load->view('helper/lead_stage_edit', $data);
 	}
