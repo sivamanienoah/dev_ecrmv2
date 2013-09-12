@@ -1500,7 +1500,7 @@ $('#charts_info3').delegate('.grid-close','click',function(){
 });
 
 $('#current-lead-report').change(function() {
-	var statusVar = 'statusVar='+$(this).val()+','+'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>';
+	var statusVar = 'statusVar='+$(this).val()+','+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 	var baseurl = '<?php echo $this->config->item('base_url') ?>';
 	$.ajax({
 	type: 'GET',
