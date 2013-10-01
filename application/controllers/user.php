@@ -12,6 +12,7 @@ class User extends CI_Controller {
         $this->load->model('role_model');
         $this->load->library('validation');
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->cfg = $this->config->item('crm');
     }
     
     public function index($limit = 0, $search = false)
@@ -426,7 +427,7 @@ class User extends CI_Controller {
 	
 	function getUserResult($email,$update){
 		if ($update != 'undefined') {
-			$emailid = $this->db->query("select email from crm_users where email = '".$email."' and userid != '".$update."' ");
+			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
 			if ($emailid == 1) {
 				echo 'userOk';
 			}
@@ -436,7 +437,7 @@ class User extends CI_Controller {
 		}
 		else {
 			$this->db->where('email',$email);
-			$query = $this->db->get('crm_users')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
 			if ($query == 0) echo 'userOk';
 			else echo 'userNo';
 		}	
@@ -444,7 +445,7 @@ class User extends CI_Controller {
 	
 	function getUserDetFromDb($users){
 		//echo $users;
-		$query = $this->db->query("select userid, first_name, last_name from crm_users where userid in ($users) ORDER BY first_name");
+		$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
 		$user_res = $query->result_array();
 		//print_r($user_res);
 		//$res = '<select>';
@@ -531,12 +532,12 @@ class User extends CI_Controller {
 		$data['current_log_date'] = date('l, jS F y', strtotime($log_date));
 		
 		# now get the logs for the user on that day
-		$sql = "SELECT *, DATE_FORMAT(`crm_logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
-				FROM crm_logs
-				LEFT JOIN `crm_jobs` ON `crm_jobs`.`jobid` = `crm_logs`.`jobid_fk`
-				WHERE DATE(`crm_logs`.`date_created`) = ?
+		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
+				FROM ".$this->cfg['dbpref']."logs
+				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `userid_fk` = ?
-				ORDER BY `crm_logs`.`date_created`";
+				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
 			
 		$q = $this->db->query($sql, array($log_date, $log_user['userid']));
 		$rs = $q->result_array();
@@ -639,7 +640,7 @@ EOD;
 		
 			$where = "email = '".$username."' AND `userid` != '".$update."' ";
 			$this->db->where($where);
-			$query = $this->db->get('crm_users')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
 			//echo $this->db->last_query();
 			if ($query == 0) {
 				echo 'userOk';
@@ -650,7 +651,7 @@ EOD;
 		}
 		else {	
 			$this->db->where('email',$username);
-			$query = $this->db->get('crm_users')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
 			if( $query == 0 ) echo 'userOk';
 			else echo 'userNo';
 		}	
@@ -658,7 +659,7 @@ EOD;
 	public function loadRegions()
 	{
 	    $output = '';
-		$region_query = $this->db->query("SELECT regionid,region_name FROM crm_region");
+		$region_query = $this->db->query("SELECT regionid,region_name FROM ".$this->cfg['dbpref']."region");
 		foreach ($region_query->result() as $regions)
 		{
 			if($id == $regions->regionid)
@@ -672,14 +673,14 @@ EOD;
 	{
 	    $output = '';
 		
-		$rs = $this->db->query("select region_id from crm_levels_region where user_id='{$uid}'");
+		$rs = $this->db->query("select region_id from ".$this->cfg['dbpref']."levels_region where user_id='{$uid}'");
 		$r_ids = $rs->result();	 
 		$user_reg = array();
 		foreach($r_ids as $reg_id) {
 			$user_reg[] = $reg_id->region_id;
 		}
 		//print_r($user_reg);		die();
-		$region_query = $this->db->query("SELECT regionid,region_name FROM crm_region");
+		$region_query = $this->db->query("SELECT regionid,region_name FROM ".$this->cfg['dbpref']."region");
 		
 		foreach ($region_query->result() as $regions)
 		{		
@@ -701,7 +702,7 @@ EOD;
 	{
 	    $output = '';
 		
-		$sql = 'SELECT countryid,country_name FROM crm_region r INNER JOIN crm_country c ON r.regionid = c.regionid WHERE c.regionid IN('.$region_id.')';
+		$sql = 'SELECT countryid,country_name FROM '.$this->cfg['dbpref'].'region r INNER JOIN '.$this->cfg['dbpref'].'country c ON r.regionid = c.regionid WHERE c.regionid IN('.$region_id.')';
 		$country_query = $this->db->query($sql);
 		foreach ($country_query->result() as $countrys)
 		{
@@ -716,13 +717,13 @@ EOD;
 	public function editloadCountrys($regionid,$uid)
 	{
 	    $output = '';
-		$cs = $this->db->query("select country_id from crm_levels_country where user_id='{$uid}'");
+		$cs = $this->db->query("select country_id from ".$this->cfg['dbpref']."levels_country where user_id='{$uid}'");
 		$c_ids = $cs->result();	
 		$user_con = array();
 		foreach($c_ids as $con_id) {
 			$user_con[] = $con_id->country_id;
 		}		
-		$country_query = $this->db->query('SELECT countryid,country_name FROM crm_country WHERE regionid IN('.$regionid.')');
+		$country_query = $this->db->query('SELECT countryid,country_name FROM '.$this->cfg['dbpref'].'country WHERE regionid IN('.$regionid.')');
 		foreach ($country_query->result() as $countries)
 		{	
 			
@@ -742,7 +743,7 @@ EOD;
 	public function loadStates($country_id)
 	{
 	    $output = '';
-		$sql = 'SELECT stateid,state_name FROM crm_state r INNER JOIN crm_country c ON r.countryid = c.countryid WHERE c.countryid IN('.$country_id.')';
+		$sql = 'SELECT stateid,state_name FROM '.$this->cfg['dbpref'].'state r INNER JOIN '.$this->cfg['dbpref'].'country c ON r.countryid = c.countryid WHERE c.countryid IN('.$country_id.')';
 		$state_query = $this->db->query($sql);
 		foreach ($state_query->result() as $states)
 		{
@@ -757,13 +758,13 @@ EOD;
 	public function editloadStates($countryid,$uid)
 	{
 	    $output = '';
-		$ss = $this->db->query("select state_id from crm_levels_state where user_id='{$uid}'");
+		$ss = $this->db->query("select state_id from ".$this->cfg['dbpref']."levels_state where user_id='{$uid}'");
 		$s_ids = $ss->result();	
 		$user_stat = array();
 		foreach($s_ids as $sta_id) {
 			$user_stat[] = $sta_id->state_id;
 		}			
-		$state_query = $this->db->query('SELECT stateid,state_name FROM crm_state WHERE countryid IN('.$countryid.')');
+		$state_query = $this->db->query('SELECT stateid,state_name FROM '.$this->cfg['dbpref'].'state WHERE countryid IN('.$countryid.')');
 		foreach ($state_query->result() as $states)
 		{	
 			
@@ -783,7 +784,7 @@ EOD;
 	public function loadLocations($state_id)
 	{
 	    $output = '';
-		$sql = 'SELECT locationid,location_name FROM crm_location r INNER JOIN crm_state c ON r.stateid = c.stateid WHERE c.stateid IN('.$state_id.')';
+		$sql = 'SELECT locationid,location_name FROM '.$this->cfg['dbpref'].'location r INNER JOIN '.$this->cfg['dbpref'].'state c ON r.stateid = c.stateid WHERE c.stateid IN('.$state_id.')';
 		$location_query = $this->db->query($sql);
 		foreach ($location_query->result() as $location)
 		{
@@ -797,13 +798,13 @@ EOD;
 	public function editloadLocations($state_id,$uid)
 	{
 	    $output = '';
-		$ls = $this->db->query("select location_id from crm_levels_location where user_id='{$uid}'");
+		$ls = $this->db->query("select location_id from ".$this->cfg['dbpref']."levels_location where user_id='{$uid}'");
 		$l_ids = $ls->result();	
 		$user_loc = array();
 		foreach($l_ids as $l_id) {
 			$user_loc[] = $l_id->location_id;
 		}		
-		$location_query = $this->db->query('SELECT locationid,location_name FROM crm_location WHERE stateid IN('.$state_id.')');
+		$location_query = $this->db->query('SELECT locationid,location_name FROM '.$this->cfg['dbpref'].'location WHERE stateid IN('.$state_id.')');
 		foreach ($location_query->result() as $locations)
 		{	
 			

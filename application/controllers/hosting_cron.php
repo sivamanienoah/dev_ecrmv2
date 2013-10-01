@@ -8,6 +8,7 @@ class hosting_cron extends CI_Controller {
         parent::__construct();
 		//$this->login_model->check_login();
 		//$this->userdata = $this->session->userdata('logged_in_user');
+		$this->cfg = $this->config->item('crm');
         $this->load->model('customer_model');
         $this->load->library('validation');
 		$this->load->library('email');
@@ -156,7 +157,7 @@ class hosting_cron extends CI_Controller {
 			$cust_id = $member['custid_fk'];
 			$exp_dt = $member['expiry_date'];
 			$domainName = $member['domain_name'];
-			$cust = $this->db->query("select first_name, last_name, company, email_1 from crm_customers where custid = $cust_id");
+			$cust = $this->db->query("select first_name, last_name, company, email_1 from ".$this->cfg['dbpref']."customers where custid = $cust_id");
 			$data['customer'] = $cust->row_array();
 			$cust_name = $data['customer']['first_name'] . " " . $data['customer']['last_name'] . " - " . $data['customer']['company'];
 			$cust_email = $data['customer']['email_1'];

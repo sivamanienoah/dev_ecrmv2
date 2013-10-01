@@ -13,6 +13,7 @@ class Role extends CI_Controller {
         $this->load->model('master_model');     
         $this->load->library('validation');
 		$this->userdata = $this->session->userdata('logged_in_role');
+		$this->cfg = $this->config->item('crm');
 
     }
     
@@ -230,12 +231,12 @@ class Role extends CI_Controller {
 		$data['current_log_date'] = date('l, jS F y', strtotime($log_date));
 		
 		# now get the logs for the role on that day
-		$sql = "SELECT *, DATE_FORMAT(`crm_logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
-				FROM crm_logs
-				LEFT JOIN `crm_jobs` ON `crm_jobs`.`jobid` = `crm_logs`.`jobid_fk`
-				WHERE DATE(`crm_logs`.`date_created`) = ?
+		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
+				FROM ".$this->cfg['dbpref']."logs
+				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `roleid_fk` = ?
-				ORDER BY `crm_logs`.`date_created`";
+				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
 			
 		$q = $this->db->query($sql, array($log_date, $log_role['roleid']));
 		$rs = $q->result_array();

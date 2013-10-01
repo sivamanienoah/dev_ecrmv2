@@ -36,11 +36,11 @@ class Request extends CI_Controller {
 			$contract_join = '';
 			//if ($this->userdata['level'] == 6)
 			//{
-				//$contract_join = "JOIN `crm_contract_jobs` ON `crm_contract_jobs`.`jobid_fk` = `a`.`jobid` AND `crm_contract_jobs`.`userid_fk` = '{$this->userdata['userid']}'";
+				//$contract_join = "JOIN `".$this->cfg['dbpref']."contract_jobs` ON `".$this->cfg['dbpref']."contract_jobs`.`jobid_fk` = `a`.`jobid` AND `".$this->cfg['dbpref']."contract_jobs`.`userid_fk` = '{$this->userdata['userid']}'";
 			//}
 			
 			$sql = "SELECT *
-					FROM `crm_customers`, `crm_jobs` a
+					FROM `".$this->cfg['dbpref']."customers`, `".$this->cfg['dbpref']."jobs` a
 					{$contract_join}
 					WHERE `custid_fk` = `custid`
 					AND job_status IN (1,2,3,4,5,6,7,8,9,10,11,12)
@@ -50,7 +50,7 @@ class Request extends CI_Controller {
 						OR `custid_fk`
 						IN (
 							SELECT `custid`
-							FROM `crm_customers`
+							FROM `".$this->cfg['dbpref']."customers`
 							WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%'
 							OR `first_name` LIKE '%{$keyword}%'
 							OR `last_name` LIKE '%{$keyword}%'

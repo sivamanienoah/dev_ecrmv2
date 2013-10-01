@@ -60,7 +60,7 @@ class Manage_lead_stage extends CI_Controller {
 		
 		//for status
 		$this->db->where('job_status', $id);
-		$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
         {
@@ -104,7 +104,7 @@ class Manage_lead_stage extends CI_Controller {
 				$this->db->select('sequence');
 				$this->db->order_by("sequence", "DESC");
 				$this->db->limit('1');
-				$query = $this->db->get('crm_lead_stage');
+				$query = $this->db->get($this->cfg['dbpref'].'lead_stage');
 				
 				if($query->num_rows() > 0) {
 					$res = $query->row_array(); //return the row as an associative array
@@ -253,7 +253,7 @@ class Manage_lead_stage extends CI_Controller {
         {
 			//for status
 			$this->db->where('job_status', $_POST['lead_stage_id']);
-			$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 			
 			if ($_POST['status'] == "") {
 				if ($data['cb_status']==0) {
@@ -302,7 +302,7 @@ class Manage_lead_stage extends CI_Controller {
 			else
 			{
 				$this->db->where('job_status', $_POST['lead_stage_id']);
-				$stat = $this->db->get('crm_jobs')->num_rows();
+				$stat = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 				if ($stat==0)
 				{
 					$this->db->where('lead_stage_id', $_POST['lead_stage_id']);

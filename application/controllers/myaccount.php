@@ -11,6 +11,7 @@ class Myaccount extends CI_Controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('user_model');
         $this->load->library('validation');
+		$this->cfg = $this->config->item('crm');
         
     }
     
@@ -211,7 +212,7 @@ class Myaccount extends CI_Controller {
 		$ins['time_spent'] = $_POST['time_spent'];
 		$ins['date_created'] = date('Y-m-d H:i:s');
 		
-		if ($this->db->insert('crm_logs', $ins))
+		if ($this->db->insert($this->cfg['dbpref'].'logs', $ins))
 		{
 			echo "{error: false}";
 		}

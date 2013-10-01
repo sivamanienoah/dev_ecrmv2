@@ -7,6 +7,7 @@ class Package extends CI_Controller {
 		$this->login_model->check_login();
 		$this->load->model('package_model');
         $this->load->library('validation');
+		$this->cfg = $this->config->item('crm');
 	}
 	function index($limit = 0, $search = false){
 		$data['accounts'] = $this->package_model->result_list($limit, $search);
@@ -75,7 +76,7 @@ class Package extends CI_Controller {
 		}
 	}
 	function is_available($package_name){
-		$query = $this->db->query("SELECT * FROM crm_package WHERE package_name='{$package_name}'");
+		$query = $this->db->query("SELECT * FROM ".$this->cfg['dbpref']."package WHERE package_name='{$package_name}'");
 		if($query->num_rows()>0) {$this->validation->set_message('is_available', 'Package name already available in database'); return false;}
 		else return true;
 	}
@@ -137,7 +138,7 @@ class Package extends CI_Controller {
 			if ($this->input->post('toDB') == 'update') {
 				
 				if ($this->package_model->update($id, $data)) {
-					if($this->input->post('package_flag')=='inactive'){ $this->db->query("UPDATE crm_package SET status='inactive' WHERE typeid_fk='{$id}'");}
+					if($this->input->post('package_flag')=='inactive'){ $this->db->query("UPDATE ".$this->cfg['dbpref']."package SET status='inactive' WHERE typeid_fk='{$id}'");}
                     $this->session->set_flashdata('confirm', array('Package Type Updated!'));
                     redirect('package/type');
                 }
@@ -182,7 +183,7 @@ class Package extends CI_Controller {
 	}
 	
 	function isavailable($package_name){
-		$query = $this->db->query("SELECT * FROM crm_package_type WHERE package_name='{$package_name}'");
+		$query = $this->db->query("SELECT * FROM ".$this->cfg['dbpref']."package_type WHERE package_name='{$package_name}'");
 		if($query->num_rows()>0) {$this->validation->set_message('isavailable', 'Package name already available in database'); return false;}
 		else return true;
 	}

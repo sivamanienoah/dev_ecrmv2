@@ -125,11 +125,11 @@ class Item_mgmt extends CI_Controller {
 		//echo $cat_up; exit;
 		if($cat_up == 'undefined') {
 			$this->db->where('cat_name', $catname);
-			$query = $this->db->get('crm_additional_cats')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'additional_cats')->num_rows();
 		} else {
 			$this->db->where('cat_name', $catname);
 			$this->db->where('cat_id !=', $cat_up);
-			$query = $this->db->get('crm_additional_cats')->num_rows();
+			$query = $this->db->get($this->cfg['dbpref'].'additional_cats')->num_rows();
 		}
 		//echo $this->db->last_query();
 		if($query == 0 ) 

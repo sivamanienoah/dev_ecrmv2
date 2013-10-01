@@ -22,8 +22,8 @@ class Welcome extends CI_Controller {
             $restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'";
         }
 		$sql = "SELECT *
-                FROM  `crm_jobs` AS J, `crm_customers` AS C
-				LEFT JOIN crm_hosting as H ON C.custid=H.custid_fk
+                FROM  `".$this->cfg['dbpref']."jobs` AS J, `".$this->cfg['dbpref']."customers` AS C
+				LEFT JOIN ".$this->cfg['dbpref']."hosting as H ON C.custid=H.custid_fk
 				WHERE C.`custid` = J.`custid_fk`
 				AND J.`job_status` IN (4, 5, 15)
 				{$restrict}
@@ -46,7 +46,7 @@ class Welcome extends CI_Controller {
 			$temp[]=0;
 			foreach($result as $val) { $temp[]=$val['jobid'];}
 			$temp=implode(',',$temp);
-			$sql="SELECT * FROM `crm_hosting_job` J WHERE jobid_fk IN ({$temp})";
+			$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting_job` J WHERE jobid_fk IN ({$temp})";
 			$rows = $this->db->query($sql);
 			$data['hosting']=$rows->result_array();
 			

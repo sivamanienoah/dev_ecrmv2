@@ -18,15 +18,13 @@ class Tasks extends CI_Controller {
 	public function index($extend = FALSE)
 	{	
 		//mychanges
-		$qqql = $this->db->query("SELECT `crm_tasks`.`created_by` FROM `crm_tasks`,`crm_users` WHERE `crm_tasks`.`userid_fk` = `crm_users`.`userid`");
-		//echo $this->db->last_query(); exit; 	
+		$qqql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 		$data['created_by'] = $qqql->result_array();
-		
 			
 		$res = $this->get_daily_tasks($extend);
 		//echo "<pre>"; print_r($res); exit;
 		foreach($res[0] as $r) {
-			$jjj = $this->db->query("SELECT `created_by` FROM `crm_tasks` WHERE `taskid`=".$r['taskid']);
+			$jjj = $this->db->query("SELECT `created_by` FROM `".$this->cfg['dbpref']."tasks` WHERE `taskid`=".$r['taskid']);
 			$data['userid_fk'] = $jjj->result_array();						
 		}
 		$data['results'] = $res[0];
@@ -63,7 +61,7 @@ class Tasks extends CI_Controller {
 			$data['user_accounts'] = $users->result_array();
 		}
 		
-		$cq = $this->db->get('crm_contract_jobs');
+		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 		
 		$temp_cont = $cq->result_array();
 		
@@ -79,7 +77,7 @@ class Tasks extends CI_Controller {
 		$data['project'] = $project->result_array();
 
 		//mychanges
-			$qqql = $this->db->query("SELECT `crm_tasks`.`created_by`,`crm_tasks`.`userid_fk` FROM `crm_tasks`,`crm_users` WHERE `crm_tasks`.`userid_fk` = `crm_users`.`userid`");
+			$qqql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`,`".$this->cfg['dbpref']."tasks`.`userid_fk` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 			//echo $this->db->last_query(); exit; 	
 			$data['created_by'] = $qqql->result_array();
 		$this->load->view('tasks/main_view', $data);
@@ -108,19 +106,19 @@ class Tasks extends CI_Controller {
 		
 		$today = date('Y-m-d', $now);
 
-		  $sql = "SELECT crm_jobs.jobid as jobid, `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, `crm_tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`crm_tasks`.`start_date`) AS `start_date`, DATE(`crm_tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`crm_tasks`.`actualend_date`) AS `actualend_date`, `crm_tasks`.`approved` AS `approved`, `crm_tasks`.`require_qc` AS `require_qc`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`, `crm_tasks`.`created_by` AS `created_byid`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `crm_tasks`.priority AS `priority`
-				FROM `crm_tasks`
-					JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid`
-					JOIN `crm_users` AS us ON `crm_tasks`.`created_by` = us.`userid` AND `crm_tasks`.`is_complete` = 0 
-					LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`					
-					LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
+		  $sql = "SELECT ".$this->cfg['dbpref']."jobs.jobid as jobid, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
+						DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
+						`".$this->cfg['dbpref']."tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."tasks`.`status` AS `status`, `".$this->cfg['dbpref']."tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `".$this->cfg['dbpref']."tasks`.priority AS `priority`
+				FROM `".$this->cfg['dbpref']."tasks`
+					JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+					JOIN `".$this->cfg['dbpref']."users` AS us ON `".$this->cfg['dbpref']."tasks`.`created_by` = us.`userid` AND `".$this->cfg['dbpref']."tasks`.`is_complete` = 0 
+					LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."jobs`.`jobid`					
+					LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."jobs`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
-					`crm_tasks`.`created_by` = '{$uid}' OR `crm_tasks`.`userid_fk` = '{$uid}'
+					`".$this->cfg['dbpref']."tasks`.`created_by` = '{$uid}' OR `".$this->cfg['dbpref']."tasks`.`userid_fk` = '{$uid}'
 					
 					";
 				
@@ -173,48 +171,48 @@ class Tasks extends CI_Controller {
 		
 		if (is_numeric($search_user))
 		{
-			$user_search = " AND `crm_users`.`userid` = '{$search_user}'";
+			$user_search = " AND `".$this->cfg['dbpref']."users`.`userid` = '{$search_user}'";
 		}
 		
-		$sql = "SELECT `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, DATE(`crm_tasks`.`start_date`) AS `start_date`, `crm_tasks`.`approved` AS `approved`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$monday}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$monday}'), '1', '0') AS `due_today`,
-						DATEDIFF(`crm_tasks`.`end_date`, `crm_tasks`.`start_date`) + 1 AS `duration`,
-						DATEDIFF('{$monday}', `crm_tasks`.`start_date`) AS `start_offset`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`
-				FROM `crm_tasks`
-				LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`
-				JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid` 
-				LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
+		$sql = "SELECT `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`,
+						DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('{$monday}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) = DATE('{$monday}'), '1', '0') AS `due_today`,
+						DATEDIFF(`".$this->cfg['dbpref']."tasks`.`end_date`, `".$this->cfg['dbpref']."tasks`.`start_date`) + 1 AS `duration`,
+						DATEDIFF('{$monday}', `".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_offset`,
+						`".$this->cfg['dbpref']."tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."tasks`.`status` AS `status`, `".$this->cfg['dbpref']."tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`
+				FROM `".$this->cfg['dbpref']."tasks`
+				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."jobs`.`jobid`
+				JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid` 
+				LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."jobs`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
 				(
-					( DATE(`crm_tasks`.`end_date`) BETWEEN '{$monday}' AND '{$friday}' )
+					( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) BETWEEN '{$monday}' AND '{$friday}' )
 						OR
-					( DATE(`crm_tasks`.`start_date`) BETWEEN '{$monday}' AND '{$friday}' )
+					( DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) BETWEEN '{$monday}' AND '{$friday}' )
 				)
 				{$user_search}
 				
 				UNION
 				
-				SELECT `crm_lead_tasks`.`taskid` AS `taskid`, `crm_lead_tasks`.`task` AS `task`, DATE(`crm_lead_tasks`.`start_date`) AS `start_date`, `crm_lead_tasks`.`approved` AS `approved`,
-						DATE(`crm_lead_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`,
-						DATEDIFF( DATE(`crm_lead_tasks`.`end_date`), DATE('{$monday}') ) AS `delayed`,
-						IF ( DATE(`crm_lead_tasks`.`end_date`) = DATE('{$monday}'), '1', '0') AS `due_today`,
-						DATEDIFF(`crm_lead_tasks`.`end_date`, `crm_lead_tasks`.`start_date`) + 1 AS `duration`,
-						DATEDIFF('{$monday}', `crm_lead_tasks`.`start_date`) AS `start_offset`,
-						`crm_lead_tasks`.`hours` AS `hours`, `crm_lead_tasks`.`mins` AS `mins`, `crm_lead_tasks`.`status` AS `status`, `crm_lead_tasks`.`is_complete` AS `is_complete`, `crm_lead_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_lead_tasks`.`leadid_fk` AS `jobid`, 'YES' AS `leadid`
-				FROM `crm_lead_tasks`
-				LEFT JOIN `crm_leads` ON `crm_lead_tasks`.`leadid_fk` = `crm_leads`.`leadid`
-				JOIN `crm_users` ON `crm_lead_tasks`.`userid_fk` = `crm_users`.`userid` 
-				LEFT JOIN `crm_customers` ON `crm_leads`.`custid_fk` = `crm_customers`.`custid`
+				SELECT `".$this->cfg['dbpref']."lead_tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."lead_tasks`.`task` AS `task`, DATE(`".$this->cfg['dbpref']."lead_tasks`.`start_date`) AS `start_date`, `".$this->cfg['dbpref']."lead_tasks`.`approved` AS `approved`,
+						DATE(`".$this->cfg['dbpref']."lead_tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."lead_tasks`.`end_date`), DATE('{$monday}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."lead_tasks`.`end_date`) = DATE('{$monday}'), '1', '0') AS `due_today`,
+						DATEDIFF(`".$this->cfg['dbpref']."lead_tasks`.`end_date`, `".$this->cfg['dbpref']."lead_tasks`.`start_date`) + 1 AS `duration`,
+						DATEDIFF('{$monday}', `".$this->cfg['dbpref']."lead_tasks`.`start_date`) AS `start_offset`,
+						`".$this->cfg['dbpref']."lead_tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."lead_tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."lead_tasks`.`status` AS `status`, `".$this->cfg['dbpref']."lead_tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."lead_tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."lead_tasks`.`leadid_fk` AS `jobid`, 'YES' AS `leadid`
+				FROM `".$this->cfg['dbpref']."lead_tasks`
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."lead_tasks`.`leadid_fk` = `".$this->cfg['dbpref']."leads`.`leadid`
+				JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."lead_tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid` 
+				LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."leads`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
 				(
-					( DATE(`crm_lead_tasks`.`end_date`) BETWEEN '{$monday}' AND '{$friday}' )
+					( DATE(`".$this->cfg['dbpref']."lead_tasks`.`end_date`) BETWEEN '{$monday}' AND '{$friday}' )
 						OR
-					( DATE(`crm_lead_tasks`.`start_date`) BETWEEN '{$monday}' AND '{$friday}' )
+					( DATE(`".$this->cfg['dbpref']."lead_tasks`.`start_date`) BETWEEN '{$monday}' AND '{$friday}' )
 				)
 				{$user_search}
 				
@@ -233,96 +231,6 @@ class Tasks extends CI_Controller {
 	 */
 	private function search_user_tasks($search_from_date = '', $search_to_date = '', $task_search = '')
 	{
-		/*$now = time();
-		
-		if (isset($_GET['from']))
-		{
-			$from_date = explode('-', $_GET['from']);
-			if ($from_date_stamp = mktime(0, 0, 0, $from_date[1], $from_date[0], $from_date[2]))
-			{
-				$now = $from_date_stamp;
-			}
-		}
-		
-		$today=$monday = date('Y-m-d', $now);
-		$friday = date('Y-m-d', strtotime('next ' . date('l', $now)) - 86400);
-		$search="( DATE(`crm_tasks`.`end_date` AND `is_complete` = 0) >= '{$today}') OR  ( DATE(`crm_tasks`.`end_date`) <= '{$today}'  AND `is_complete` = 0) OR (DATE(`crm_tasks`.`start_date`) < '{$today}' AND DATE(`crm_tasks`.`end_date`) > '{$today}' AND `is_complete` = 0)";
-		$search1="( DATE(`crm_lead_tasks`.`end_date`) >= '{$today}' AND `is_complete` = 0) OR ( DATE(`crm_lead_tasks`.`end_date`) <= '{$today}'   AND `is_complete` = 0) OR (DATE(`crm_lead_tasks`.`start_date`) < '{$today}' AND DATE(`crm_lead_tasks`.`end_date`) > '{$today}' AND `is_complete` = 0)";
-	
-		if (preg_match('/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/', $search_from_date))
-		{
-			$search_from_date = explode('-', $search_from_date);
-			if ($search_from_date_stamp = mktime(0, 0, 0, $search_from_date[1], $search_from_date[0], $search_from_date[2]))
-			{
-				$monday = date('Y-m-d', $search_from_date_stamp);
-			}
-			$search="( DATE(`crm_tasks`.`end_date`) <= '{$friday}' )	AND	( DATE(`crm_tasks`.`end_date`) >= '{$monday}' )";
-			$search1="( DATE(`crm_lead_tasks`.`end_date`) <= '{$friday}' )	AND	( DATE(`crm_lead_tasks`.`end_date`) >= '{$monday}' )";
-		}
-		
-		if (preg_match('/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/', $search_to_date))
-		{
-			$search_to_date = explode('-', $search_to_date);
-			if ($search_to_date_stamp = mktime(0, 0, 0, $search_to_date[1], $search_to_date[0], $search_to_date[2]))
-			{
-				$friday = date('Y-m-d', $search_to_date_stamp);
-			}
-			$search="( DATE(`crm_tasks`.`end_date`) <= '{$friday}' )	AND	( DATE(`crm_tasks`.`end_date`) >= '{$monday}' )";
-			$search1="( DATE(`crm_lead_tasks`.`end_date`) <= '{$friday}' )	AND	( DATE(`crm_lead_tasks`.`end_date`) >= '{$monday}' )";
-		}
-		
-		$user_search = '';
-		
-		if (is_numeric($search_user))
-		{
-			$user_search = " AND `crm_users`.`userid` = '{$search_user}'";
-		}
-		$sql = "SELECT `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, `crm_users`.`first_name` AS `created`, `crm_tasks`.`remarks` AS `remark`, DATE(`crm_tasks`.`start_date`) AS `start_date`, DATE(`crm_tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`crm_tasks`.`actualend_date`) AS `actualend_date`,  `crm_tasks`.`approved` AS `approved`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`,`crm_tasks`.`created_by` AS `created_byid`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						DATEDIFF(`crm_tasks`.`end_date`, `crm_tasks`.`start_date`) + 1 AS `duration`,
-						DATEDIFF('{$today}', `crm_tasks`.`start_date`) AS `start_offset`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 0 AS lead
-				FROM `crm_tasks`
-				LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`
-				JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid` OR `crm_tasks`.`created_by` = `crm_users`.`userid`
-				LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
-				WHERE
-				(
-					{$search}	
-				)
-				{$user_search}
-				";
-				/*
-				UNION
-				
-				SELECT `crm_lead_tasks`.`taskid` AS `taskid`, `crm_lead_tasks`.`task` AS `task`, DATE(`crm_lead_tasks`.`start_date`) AS `start_date`, `crm_lead_tasks`.`approved` AS `approved`,
-						DATE(`crm_lead_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`,
-						DATEDIFF( DATE(`crm_lead_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_lead_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						DATEDIFF(`crm_lead_tasks`.`end_date`, `crm_lead_tasks`.`start_date`) + 1 AS `duration`,
-						DATEDIFF('{$today}', `crm_lead_tasks`.`start_date`) AS `start_offset`,
-						`crm_lead_tasks`.`hours` AS `hours`, `crm_lead_tasks`.`mins` AS `mins`, `crm_lead_tasks`.`status` AS `status`, `crm_lead_tasks`.`is_complete` AS `is_complete`, `crm_lead_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, 0 AS `jobid`, `crm_lead_tasks`.`leadid_fk` AS lead
-				FROM `crm_lead_tasks`
-				LEFT JOIN `crm_leads` ON `crm_lead_tasks`.`leadid_fk` = `crm_leads`.`leadid`
-				JOIN `crm_users` ON `crm_lead_tasks`.`userid_fk` = `crm_users`.`userid`
-				LEFT JOIN `crm_customers` ON `crm_leads`.`custid_fk` = `crm_customers`.`custid`
-				WHERE
-				(
-					{$search1}
-				)
-				{$user_search}
-				ORDER BY `end_date` ASC				
-				";*/
-				/*
-		$q = $this->db->query($sql);
-		$data = $q->result_array();
-		
-		return array($monday, $friday, $data, $now);
-		*/
 		
 		//echo "$task_search";
 		
@@ -330,7 +238,7 @@ class Tasks extends CI_Controller {
 		//echo $search_from_date;
 
 		if ((!empty($search_from_date)) && (!empty($search_to_date))) {
-			$varStart_date = "AND `crm_tasks`.`start_date` BETWEEN '".date("Y-m-d",strtotime($search_from_date))."' AND '".date("Y-m-d",strtotime($search_to_date))."' ";
+			$varStart_date = "AND `".$this->cfg['dbpref']."tasks`.`start_date` BETWEEN '".date("Y-m-d",strtotime($search_from_date))."' AND '".date("Y-m-d",strtotime($search_to_date))."' ";
 		}
 		else {
 			$varStart_date = "";
@@ -353,51 +261,51 @@ class Tasks extends CI_Controller {
 		$today = date('Y-m-d', $now);
 		//echo $task_search;
 		if ($task_search == 0) {
-			$sql = "SELECT crm_jobs.jobid as jobid, `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, `crm_tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`crm_tasks`.`start_date`) AS `start_date`, DATE(`crm_tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`crm_tasks`.`actualend_date`) AS `actualend_date`, `crm_tasks`.`approved` AS `approved`, `crm_tasks`.`require_qc` AS `require_qc`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`, `crm_tasks`.`created_by` AS `created_byid`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `crm_tasks`.priority AS `priority`
-				FROM `crm_tasks`
-					JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid`
-					JOIN `crm_users` AS us ON `crm_tasks`.`created_by` = us.`userid` AND `crm_tasks`.`is_complete` = 0 
-					LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`					
-					LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
+			$sql = "SELECT ".$this->cfg['dbpref']."jobs.jobid as jobid, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
+						DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
+						`".$this->cfg['dbpref']."tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."tasks`.`status` AS `status`, `".$this->cfg['dbpref']."tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `".$this->cfg['dbpref']."tasks`.priority AS `priority`
+				FROM `".$this->cfg['dbpref']."tasks`
+					JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+					JOIN `".$this->cfg['dbpref']."users` AS us ON `".$this->cfg['dbpref']."tasks`.`created_by` = us.`userid` AND `".$this->cfg['dbpref']."tasks`.`is_complete` = 0 
+					LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."jobs`.`jobid`					
+					LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."jobs`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
-					(`crm_tasks`.`created_by` = '{$uid}' OR `crm_tasks`.`userid_fk` = '{$uid}') {$varStart_date}
+					(`".$this->cfg['dbpref']."tasks`.`created_by` = '{$uid}' OR `".$this->cfg['dbpref']."tasks`.`userid_fk` = '{$uid}') {$varStart_date}
 					";
 		}
 		else if ($task_search == 1) {
-			$sql = "SELECT crm_jobs.jobid as jobid, `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, `crm_tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`crm_tasks`.`start_date`) AS `start_date`, DATE(`crm_tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`crm_tasks`.`actualend_date`) AS `actualend_date`, `crm_tasks`.`approved` AS `approved`, `crm_tasks`.`require_qc` AS `require_qc`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`, `crm_tasks`.`created_by` AS `created_byid`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `crm_tasks`.priority AS `priority`
-				FROM `crm_tasks`
-					JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid`
-					JOIN `crm_users` AS us ON `crm_tasks`.`created_by` = us.`userid` AND `crm_tasks`.`is_complete` = 1
-					LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`					
-					LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
+			$sql = "SELECT ".$this->cfg['dbpref']."jobs.jobid as jobid, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
+						DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
+						`".$this->cfg['dbpref']."tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."tasks`.`status` AS `status`, `".$this->cfg['dbpref']."tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `".$this->cfg['dbpref']."tasks`.priority AS `priority`
+				FROM `".$this->cfg['dbpref']."tasks`
+					JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+					JOIN `".$this->cfg['dbpref']."users` AS us ON `".$this->cfg['dbpref']."tasks`.`created_by` = us.`userid` AND `".$this->cfg['dbpref']."tasks`.`is_complete` = 1
+					LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."jobs`.`jobid`					
+					LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."jobs`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
-					(`crm_tasks`.`created_by` = '{$uid}' OR `crm_tasks`.`userid_fk` = '{$uid}') {$varStart_date}
+					(`".$this->cfg['dbpref']."tasks`.`created_by` = '{$uid}' OR `".$this->cfg['dbpref']."tasks`.`userid_fk` = '{$uid}') {$varStart_date}
 					";
 		}
 		else {
-			 $sql = "SELECT crm_jobs.jobid as jobid, `crm_tasks`.`taskid` AS `taskid`, `crm_tasks`.`task` AS `task`, `crm_tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`crm_tasks`.`start_date`) AS `start_date`, DATE(`crm_tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`crm_tasks`.`actualend_date`) AS `actualend_date`, `crm_tasks`.`approved` AS `approved`, `crm_tasks`.`require_qc` AS `require_qc`,
-						DATE(`crm_tasks`.`end_date`) AS `end_date`, CONCAT(`crm_users`.`first_name`, ' ', `crm_users`.`last_name`) AS `user_label`, `crm_tasks`.`created_by` AS `created_byid`,
-						DATEDIFF( DATE(`crm_tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
-						IF ( DATE(`crm_tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
-						`crm_tasks`.`hours` AS `hours`, `crm_tasks`.`mins` AS `mins`, `crm_tasks`.`status` AS `status`, `crm_tasks`.`is_complete` AS `is_complete`, `crm_tasks`.`userid_fk` AS `userid_fk`,
-						`crm_customers`.`company` AS `company`, `crm_tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `crm_tasks`.priority AS `priority`
-				FROM `crm_tasks`
-					JOIN `crm_users` ON `crm_tasks`.`userid_fk` = `crm_users`.`userid`
-					JOIN `crm_users` AS us ON `crm_tasks`.`created_by` = us.`userid`
-					LEFT JOIN `crm_jobs` ON `crm_tasks`.`jobid_fk` = `crm_jobs`.`jobid`					
-					LEFT JOIN `crm_customers` ON `crm_jobs`.`custid_fk` = `crm_customers`.`custid`
+			 $sql = "SELECT ".$this->cfg['dbpref']."jobs.jobid as jobid, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
+						DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
+						DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('{$today}') ) AS `delayed`,
+						IF ( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) = DATE('{$today}'), '1', '0') AS `due_today`,
+						`".$this->cfg['dbpref']."tasks`.`hours` AS `hours`, `".$this->cfg['dbpref']."tasks`.`mins` AS `mins`, `".$this->cfg['dbpref']."tasks`.`status` AS `status`, `".$this->cfg['dbpref']."tasks`.`is_complete` AS `is_complete`, `".$this->cfg['dbpref']."tasks`.`userid_fk` AS `userid_fk`,
+						`".$this->cfg['dbpref']."customers`.`company` AS `company`, `".$this->cfg['dbpref']."tasks`.`jobid_fk` AS `jobid`, 'NO' AS `leadid`, `".$this->cfg['dbpref']."tasks`.priority AS `priority`
+				FROM `".$this->cfg['dbpref']."tasks`
+					JOIN `".$this->cfg['dbpref']."users` ON `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+					JOIN `".$this->cfg['dbpref']."users` AS us ON `".$this->cfg['dbpref']."tasks`.`created_by` = us.`userid`
+					LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."jobs`.`jobid`					
+					LEFT JOIN `".$this->cfg['dbpref']."customers` ON `".$this->cfg['dbpref']."jobs`.`custid_fk` = `".$this->cfg['dbpref']."customers`.`custid`
 				WHERE
-					(`crm_tasks`.`created_by` = '{$uid}' OR `crm_tasks`.`userid_fk` = '{$uid}') {$varStart_date}
+					(`".$this->cfg['dbpref']."tasks`.`created_by` = '{$uid}' OR `".$this->cfg['dbpref']."tasks`.`userid_fk` = '{$uid}') {$varStart_date}
 					";
 		
 		}
@@ -413,7 +321,7 @@ class Tasks extends CI_Controller {
 	{
 		
 		//mychanges
-		$qqql = $this->db->query("SELECT `crm_tasks`.`created_by`FROM `crm_tasks`,`crm_users` WHERE `crm_tasks`.`userid_fk` = `crm_users`.`userid`");
+		$qqql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 		//echo $this->db->last_query(); exit; 	
 		$data['created_by'] = $qqql->result_array();
 		//print_r($data['created_by']);		
@@ -425,7 +333,7 @@ class Tasks extends CI_Controller {
 		
 		foreach($res[0] as $r) {
 		//print_r($r);
-			$jjj = $this->db->query("SELECT `created_by` FROM `crm_tasks` WHERE `taskid`=".$r['taskid']);
+			$jjj = $this->db->query("SELECT `created_by` FROM `".$this->cfg['dbpref']."tasks` WHERE `taskid`=".$r['taskid']);
 			$data['userid_fk'] = $jjj->result_array();
 		}
 		//$data['start_date_stamp'] = $res[3];

@@ -7,7 +7,8 @@ public $userdata;
 	{
         parent::__construct();
 		$this->login_model->check_login();
-		$this->userdata = $this->session->userdata('logged_in_user');				
+		$this->userdata = $this->session->userdata('logged_in_user');	
+		$this->cfg = $this->config->item('crm');		
 		$this->load->model('report/report_lead_region_model');
         $this->load->model('report/report_active_lead_model');        
         $this->load->model('welcome_model');
@@ -28,7 +29,7 @@ public $userdata;
     	$data['customers'] = $this->welcome_model->get_customers();	
 		$data['regions'] = $this->regionsettings_model->region_list('','');		
     	$data['report'] = $this->get_lead_report();
-    	$user = $this->db->query("SELECT userid, first_name FROM crm_users order by first_name");
+    	$user = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 		$data['user'] = $user->result_array();
 		$this->load->vars($data);
     	$this->load->view('report/report_active_lead');		   	    	   	

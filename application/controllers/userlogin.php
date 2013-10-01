@@ -6,7 +6,8 @@ class Userlogin extends CI_Controller {
 	{
        parent::__construct();	 
         $this->load->model('role_model');  		 
-        $this->load->model('regionsettings_model');  		 
+        $this->load->model('regionsettings_model'); 
+		$this->cfg = $this->config->item('crm');		
     }
     function Userlogin() {
        
@@ -22,7 +23,7 @@ class Userlogin extends CI_Controller {
         */
 	
         $sessionId = $this->session->userdata('session_id');
-		$sql = "DELETE   FROM `crm_sessions` WHERE `session_id` = ?";
+		$sql = "DELETE   FROM `".$this->cfg['dbpref']."sessions` WHERE `session_id` = ?";
         $this->db->query($sql, array($sessionId));
         $this->session->set_userdata('logged_in', FALSE);
         $this->session->set_userdata('logged_in_user', FALSE);

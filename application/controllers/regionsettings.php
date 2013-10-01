@@ -10,6 +10,7 @@ class Regionsettings extends CI_Controller {
 		$this->login_model->check_login();        
         $this->load->model('regionsettings_model');
         $this->load->library('validation');
+		$this->cfg = $this->config->item('crm');
 		
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
@@ -145,7 +146,7 @@ class Regionsettings extends CI_Controller {
 				$update_data['modified']=date('Y-m-d H:i:s');
 				
 			$this->db->where('region_name',$update_data['region_name']);
-            $query = $this->db->get('crm_region')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
             if($query == 0 ) {
 		    if ($this->regionsettings_model->insert_region($update_data)) {                    
                     $this->session->set_flashdata('confirm', array('Region Details Updated!'));
@@ -248,7 +249,7 @@ class Regionsettings extends CI_Controller {
 				unset($update_data['regionid']);
 				
 			$this->db->where('state_name',$update_data['state_name']);
-            $query = $this->db->get('crm_state')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
             if($query == 0 ) {	
 				
 				if ($this->regionsettings_model->insert_state($update_data)) {  
@@ -503,7 +504,7 @@ class Regionsettings extends CI_Controller {
 				$update_data['modified']=date('Y-m-d H:i:s');
 				
 			$this->db->where('country_name',$update_data['country_name']);
-            $query = $this->db->get('crm_country')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
             if($query == 0 ) {	
 				
 				if ($this->regionsettings_model->insert_country($update_data)) {                    
@@ -655,7 +656,7 @@ class Regionsettings extends CI_Controller {
 				unset($update_data['countryid']);	
 				
 			$this->db->where('location_name',$update_data['location_name']);
-            $query = $this->db->get('crm_location')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
             if($query == 0 ) {	
 				
 				if ($this->regionsettings_model->insert_location($update_data)) {		
@@ -925,7 +926,7 @@ class Regionsettings extends CI_Controller {
 				$update_data['modified']=date('Y-m-d H:i:s');
 			
 			$this->db->where('level_name',$update_data['level_name']);
-            $query = $this->db->get('crm_levels')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'levels')->num_rows();
             if($query == 0 ) {
 				
 		    if ($this->regionsettings_model->insert_level($update_data)) { 
@@ -1045,14 +1046,14 @@ class Regionsettings extends CI_Controller {
 	function getResultfromdb($username){
             
             $this->db->where('level_name',$username);
-            $query = $this->db->get('crm_levels')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'levels')->num_rows();
             if($query == 0 ) echo 'userOk';
             else echo 'userNo';
         }
 	function getResultfromRegion($username){
             
             $this->db->where('region_name',$username);
-            $query = $this->db->get('crm_region')->num_rows();
+            $query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
             if($query == 0 ) echo 'userOk';
             else echo 'userNo';
         }
