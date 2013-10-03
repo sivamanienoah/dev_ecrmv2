@@ -702,7 +702,7 @@ class Welcome_model extends Common_model {
 		
 		$userdata = $this->session->userdata('logged_in_user'); 
 		$userid=$userdata['userid'];
-		$query = $this->db->get_where('crm_deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
+		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
 		$get = $query->row_array();		
 		$milename = $get['invoice_no'];
 		$amount = $get['amount'];
