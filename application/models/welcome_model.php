@@ -4,7 +4,10 @@ class Welcome_model extends Common_model {
     
     public function __construct()
     {
-       parent::__construct();
+		parent::__construct();
+		$this->load->helper('lead_stage_helper');
+		$this->stg = getLeadStage();
+		$this->stages = @implode('","', $this->stg);
     }
     
     /**
@@ -296,7 +299,8 @@ class Welcome_model extends Common_model {
 	{
 	    $this->db->select('*');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_stage');
-	    $jobStatus = array(13,14,15,16);
+	    // $jobStatus = array(13,14,15,16);
+		$jobStatus = $this->pjt_stg;
 	    $this->db->where_in('lead_stage_id', $jobStatus);
 	    $lead_stage_pjt = $this->db->get();
 	    $leadsjob =  $lead_stage_pjt->result_array();

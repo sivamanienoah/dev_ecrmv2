@@ -7,18 +7,11 @@ if ( ! function_exists('getLeadStage'))
 		$CI = get_instance();
 		$cfg = $CI->config->item('crm');
 		
-		$CI->db->select('sequence');
-		$CI->db->from($cfg['dbpref'].'lead_stage');
-		$CI->db->where('is_sale', 1);
-		$sql = $CI->db->get();
-		$res = $sql->row_array();
-
-		
 		$CI = get_instance();
 		$CI->db->select('lead_stage_id');
 		$CI->db->from($cfg['dbpref'].'lead_stage');
-		$CI->db->where('sequence >=', 0);
-		$CI->db->where('sequence <', $res['sequence']);
+		$CI->db->where('status', 1);
+		$CI->db->order_by('sequence');
 		$sql1 = $CI->db->get();
 		$res1 = $sql1->result_array();
 		
@@ -27,7 +20,23 @@ if ( ! function_exists('getLeadStage'))
 		}
 		return $stg;
 		
-	}	
+	}
+	
+	function getLeadStageName()
+	{	
+		$CI = get_instance();
+		$cfg = $CI->config->item('crm');
+		$CI->db->select('lead_stage_id, lead_stage_name');
+		$CI->db->from($cfg['dbpref'].'lead_stage');
+		$CI->db->where('status', 1);
+		$CI->db->order_by('sequence');
+		$sql = $CI->db->get();
+		// echo $CI->db->last_query(); exit;
+		$res = $sql->result_array();
+		// echo "<pre>"; print_r($res1); exit;
+		return $res;
+		
+	}
 }
 
 /* End of file lead_stage_helper.php */

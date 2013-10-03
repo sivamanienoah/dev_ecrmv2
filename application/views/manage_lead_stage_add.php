@@ -17,20 +17,6 @@
                     <td>Lead Stage: * </td>
 					<td><input type="text" name="lead_stage_name" value="<?php echo $this->validation->lead_stage_name; ?>" class="textfield width200px" /></td>
 				</tr>
-				<!--<tr>
-                    <td>Sequence: * </td>
-					<td><select name = "sequence" style="width:70px">
-							<option value="">Select </option>
-							<?php for($i=1;$i<51;$i++) { ?>
-								<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-							<?php } ?>
-						</select> 
-					</td>
-				</tr>-->
-				<tr>
-                    <td>Is Sale: </td>
-					<td><input type="checkbox" name="is_sale" value="1"></td>
-				</tr>
 				<tr>
 					<td>Status</td>
 					<td>
@@ -54,9 +40,9 @@
 				</tr>
 				</table>
 				
-            
 			<?php } else { echo "You have no rights to access this page"; } ?>
 		</form>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
+
 <?php require (APPPATH . 'views/tpl/footer.php'); ?>

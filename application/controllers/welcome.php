@@ -3865,6 +3865,8 @@ VCS Admin";*/
 				//$to = array('angelo@at68.com.au');
 		//send_email('arunmani4u@gmail.com,sarunkumar@enoahisolution.com', 'VCS Payment Notice', 'Hi', 'admin@enoahisolution.com', 'VCS Admin');
 		//@mail('arunmani4u@gmail.com,sarunkumar@enoahisolution.com', 'VCS Payment notification', 'HI', "From:admin@enoahisolution.com");
+		$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+		
 		$email_body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

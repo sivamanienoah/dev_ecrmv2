@@ -12,7 +12,6 @@
 	<select class="textfield width300px" name="job_status" id="general_convert_quote_status" style="width:298px;">
 		<?php foreach ($lead_stage as $stage) { ?>
                <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['job_status'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> ><?php echo  $stage['lead_stage_name'] ?></option>
-			   <?php if ($stage['is_sale'] == 1 ) break;?>
          <?	} ?>
 	</select>					
 

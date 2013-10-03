@@ -52,12 +52,12 @@ class Manage_lead_stage extends CI_Controller {
 		$this->validation->set_rules($rules);
 		$fields['lead_stage_name'] = 'Lead Stage';
 		$fields['sequence'] = 'Sequence';
-		$fields['is_sale'] = 'Sale';
 		$fields['status'] = 'Status';
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
+		$data['lead_stage'] = $this->manage_lead_stage_model->get_leadStage($search = false);
 		//for status
 		$this->db->where('job_status', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
@@ -88,9 +88,9 @@ class Manage_lead_stage extends CI_Controller {
 			}
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
             {
-                //update
+                unset($update_data['sequence']);
+				//update
                 $this->db->where('lead_stage_id', $id);
-                
                 if ($this->db->update("{$this->cfg['dbpref']}_" . 'lead_stage', $update_data))
                 {
                     $this->session->set_flashdata('confirm', array('Lead Stage Details Updated!'));
@@ -120,6 +120,7 @@ class Manage_lead_stage extends CI_Controller {
 		}
 		$this->load->view('manage_lead_stage_add', $data);
 	}
+	
 	function leadStg_delete($update, $id)
 	{
 		if ($this->session->userdata('delete')==1)
@@ -157,24 +158,27 @@ class Manage_lead_stage extends CI_Controller {
             foreach ($query->result_array() as $row)
             {
 				if(!empty($row['lead_stage_name'])) {
-				if ($row['status'] == 1) $stat = "Active"; else $stat = "Inactive";
-				if ($row['is_sale'] == 1) $is_sale = "<img src=assets/img/lead_stage_tick.png height='12' width='12' >"; else $is_sale = "";
-                $html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="lead-stage" width="40%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="6%">' . $stat . '</td><td width="6%" align="center">' . $is_sale . '</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
+					if ($row['status'] == 1) $stat = "Active"; else $stat = "Inactive";
+					if ($this->session->userdata('edit')==1)
+						$edit = "<a href='manage_lead_stage/leadStg_add/update/".$row['lead_stage_id']."'>Edit</a>";
+					else 
+						$edit = "Edit";
+					if ($this->session->userdata('delete')==1)
+						$dele = "<a href='javascript:void(0)' onclick='checkStatus(".$row['lead_stage_id'].");'>Delete</a>";
+					else 
+						$dele = "Delete";
+					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="data-table btm-none" width="100%"><tr><td class="lead-stage" width="40%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="60px">' . $stat . '</td><td width="55px">'. $edit .' | '. $dele .'</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
 				} else {
-				$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td></tr></table></li>';
+					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td></tr></table></li>';
 				}
-                
             }
-			
             $json['error'] = false;
             $json['html'] = $html;
-
         }
         else
         {
             $json['error'] = false;
             $json['html'] = '';
-            
         }
 		
         if ($return)
@@ -266,7 +270,6 @@ class Manage_lead_stage extends CI_Controller {
 			}
 			
 			$ins['lead_stage_name'] = $_POST['lead_stage_name'];
-			$ins['is_sale'] = $_POST['is_sale'];
 			
 			$this->db->where('lead_stage_id', $_POST['lead_stage_id']);
 			if ($this->db->update($this->cfg['dbpref'] . 'lead_stage', $ins))
@@ -331,5 +334,19 @@ class Manage_lead_stage extends CI_Controller {
 			echo json_encode($json);
 		}
     }
+	
+	function ajax_check_status_lead_stage() {
+		$id = $_POST['data'];
+		$this->db->where('job_status', $id);
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
 
 }

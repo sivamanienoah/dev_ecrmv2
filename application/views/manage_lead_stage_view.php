@@ -17,9 +17,9 @@ $(document).ready(function() {
 			// use the helper function hover to bind a mouseover and mouseout event 
 				$(this) 
 					.hover(function() { 
-						leadStgOverEdit($(this)); 
+						// leadStgOverEdit($(this)); 
 					}, function() { 
-						leadStgOutEdit($(this)); 
+						// leadStgOutEdit($(this)); 
 					}); 
 		}, function() { 
 				// unbind the mouseover and mouseout events 
@@ -34,9 +34,9 @@ $(document).ready(function() {
 			// use the helper function hover to bind a mouseover and mouseout event 
 				$(this) 
 					.hover(function() { 
-						leadStgOverDel($(this)); 
+						// leadStgOverDel($(this)); 
 					}, function() { 
-						leadStgOutDel($(this)); 
+						// leadStgOutDel($(this)); 
 					}); 
 		}, function() { 
 				// unbind the mouseover and mouseout events 
@@ -123,7 +123,8 @@ var msg = '<div class="q-modal-leadstg-edit">Loading Content.<br />';
 msg += '<img src="assets/img/indicator.gif" alt="wait" /></div>';
 
 function leadStgEdit(obj) {
-    var lead_stg_id = obj.parent().attr('id').replace(/^leadst\-/, '');
+    // var lead_stg_id = obj.parent().attr('id').replace(/^leadst\-/, '');
+    var lead_stg_id = obj;
     $.blockUI({
         message:msg,
         css: {width: '550px', marginLeft: '50%', left: '-250px', padding: '20px 0 20px 20px', top: '25%', border: 'none', cursor: 'default'},
@@ -172,7 +173,8 @@ function processLeadStgEdit() {
 }
 
 function leadStgDelete(obj) {
-    var lead_stg_id = obj.parent().attr('id').replace(/^leadst\-/, '');
+    // var lead_stg_id = obj.parent().attr('id').replace(/^leadst\-/, '');
+    var lead_stg_id = obj;
     $.blockUI({
         message:'<br /><h5>Are you sure?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processLeadStgDelete('+lead_stg_id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDelEdit(); return false;">No</button></div></div>',
 		css:{width:'440px'}
@@ -203,6 +205,36 @@ function processLeadStgDelete(id) {
     );
 }
 
+function checkStatus(id) {
+	var formdata = {'data':id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
+	$.ajax({
+		type: "POST",
+		url: '<?php echo base_url(); ?>manage_lead_stage/ajax_check_status_lead_stage/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			$('#dialog-message-'+id).empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				$('#errmsg-'+id).show();
+				$('#errmsg-'+id).append("One or more leads currently assigned for this Lead Stage. This cannot be deleted.");
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				var r=confirm("Are You Sure Want to Delete?")
+				if (r==true) {
+				  window.location.href = 'manage_lead_stage/leadStg_delete/update/'+id;
+				} else {
+					return false;
+				}
+			}
+		}                                                                                       
+	});
+return false;
+}
+
+
 function cancelDelEdit() {
     $.unblockUI();
 }
@@ -222,11 +254,14 @@ function cancelDelEdit() {
 	</h2>
 
 	<?php if($this->session->userdata('accesspage')==1) { ?>
+	<div class="leadstg_note">
+		To change the order of the lead stage, select and drag the lead stage and drop to the position in which you want the lead stage to appear.
+	</div>
 	<table cellpadding="0" cellspacing="0" class="lead-stg-list" width="100%">
 		<tr>
 			<th width="40%">Lead Stage</th>
-			<th width="6%">Status</th>
-			<th width="6%">Is Sale</th>
+			<th width="60px">Status</th>
+			<th width="55px">Action</th>
 			<th></th>
 		</tr>
 	</table>

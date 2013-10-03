@@ -2,7 +2,8 @@
 $cfg = $this->config->item('crm');
 
 $vid=$this->session->userdata['logged_in_user']['role_id'];
-$viewlead = getleadaccess($vid);
+$viewLeads = getAccess(51, $vid);
+$viewTasks = getAccess(108, $vid);
 
 
 if ($this->session->userdata('logged_in') == TRUE) {
@@ -33,7 +34,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <link rel="stylesheet" href="assets/css/smoothness/ui.all.css?q=2" type="text/css" />
 <link rel="stylesheet" href="assets/css/ui-lightness/jquery-ui-1.7.2.custom.css?q=1" type="text/css" />
 <!-- link rel="stylesheet" media="screen" href="assets/css/jquery.timepickr.css" type="text/css" / -->
-<?php if(($viewlead['view']==1) && ($this->uri->segment(1) == 'dashboard')) { ?>
+<?php if(($viewLeads['view']==1) && ($this->uri->segment(1) == 'dashboard')) { ?>
 <link rel="stylesheet" type="text/css" href="assets/css/jquery.jqplot.min.css" />
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="assets/js/excanvas.min.js"></script><![endif]-->
 	<!--[if IE]>

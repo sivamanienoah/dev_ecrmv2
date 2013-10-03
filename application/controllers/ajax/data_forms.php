@@ -51,6 +51,7 @@ class Data_forms extends CI_Controller {
 		$this->load->view('helper/quote_item_edit', $data);
 	}
 	
+	//not need
 	function lead_stg_form($id = 0)
 	{
 		$this->load->helper('text');
