@@ -109,8 +109,8 @@ class Manage_service extends CI_Controller {
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
 		//for status
-		$this->db->where('lead_source', $id);
-		$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+		$this->db->where($this->cfg['dbpref'].'lead_source', $id);
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
         {
@@ -194,7 +194,7 @@ class Manage_service extends CI_Controller {
 		
 		//for status
 		$this->db->where('job_category', $id);
-		$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_pdt']))
         {
@@ -318,7 +318,7 @@ class Manage_service extends CI_Controller {
 		
 		//for status
 		$this->db->where('division', $id);
-		$data['cb_status'] = $this->db->get('crm_jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_dvsn']))
         {
@@ -433,8 +433,8 @@ class Manage_service extends CI_Controller {
 	//function for checking the status 
 	function ajax_check_status() {
 		$leadId = $_POST['data'];
-		$this->db->where('lead_source', $leadId);
-		$query = $this->db->get('crm_jobs')->num_rows();
+		$this->db->where($this->cfg['dbpref'].'lead_source', $leadId);
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -448,7 +448,7 @@ class Manage_service extends CI_Controller {
 	function ajax_check_status_division() {
 		$id = $_POST['data'];
 		$this->db->where('division', $id);
-		$query = $this->db->get('crm_jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -462,7 +462,7 @@ class Manage_service extends CI_Controller {
 	function ajax_check_status_job_category() {
 		$id = $_POST['data'];
 		$this->db->where('job_category', $id);
-		$query = $this->db->get('crm_jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
