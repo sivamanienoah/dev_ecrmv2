@@ -261,13 +261,7 @@ class Welcome extends CI_Controller {
 		# restrict contractors
 		
 		$cnt_join1 = '';$cnt_join='';
-		/*
-		if ($this->userdata['level'] == 6)
-		{
-			$cnt_join1 = " `crm_contract_jobs` AS CJ, ";
-			$cnt_join=" AND CJ.`jobid_fk` = J.`jobid` AND CJ.`userid_fk` = '{$this->userdata['userid']}'";
-		}
-		*/
+		
 		if (is_numeric($job_status))
 		{
 			$job_status = "`job_status` = '{$job_status}'";
@@ -284,8 +278,8 @@ class Welcome extends CI_Controller {
 		$usid = $this->session->userdata['logged_in_user']['userid'];
 		if (($this->session->userdata['logged_in_user']['role_id'] != '1') && ($this->session->userdata['logged_in_user']['level'] != 1)) {
 		//echo "tst"; exit;
-			$sql = "SELECT *, LS.lead_stage_name, SUM(`crm_items`.`item_price`) AS `project_cost`,
-				(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
+			$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
+				(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
 				FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
 				
 				LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
@@ -312,8 +306,8 @@ class Welcome extends CI_Controller {
 				
 				$leadowner_query = "AND J.belong_to = '".$usid."'";
 				//for lead owner query.
-				$leadownerquery = "SELECT *, LS.lead_stage_name, SUM(`crm_items`.`item_price`) AS `project_cost`,
-								(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
+				$leadownerquery = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
+								(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
 								FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
 								
 								LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
@@ -334,8 +328,8 @@ class Welcome extends CI_Controller {
 				//$data['records'] = $rows->result_array();
 		}
 		else {
-			$sql = "SELECT *, LS.lead_stage_name, SUM(`crm_items`.`item_price`) AS `project_cost`,
-					(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
+			$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
+					(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
                 FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
 				
 				LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
@@ -353,12 +347,12 @@ class Welcome extends CI_Controller {
 		$temp[]=0;
 		foreach($data['records'] as $val) { $temp[]=$val['jobid']; }
 		$temp=implode(',',$temp);
-		$sql="SELECT * FROM `crm_hosting_job` J WHERE jobid_fk IN ({$temp})";
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting_job` J WHERE jobid_fk IN ({$temp})";
 		$rows = $this->db->query($sql);
 		$data['hosting']=$rows->result_array();
 		$data['customers'] = $this->welcome_model->get_customers();
 		$data['page_heading'] = $page_label;
-		$leadowner = $this->db->query("SELECT userid, first_name FROM crm_users order by first_name");
+		$leadowner = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 		$data['lead_owner'] = $leadowner->result_array();
 		$data['regions'] = $this->regionsettings_model->region_list();
 		//echo "<pre>"; print_r($data['lead_owner']); exit;
@@ -422,28 +416,16 @@ class Welcome extends CI_Controller {
 		if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 && $_POST['keyword']!='Project No, Project Title, Name or Company') {
 			$search.=" AND (J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
 		}
-				
-		/*$sql = "SELECT *, SUM(`crm_items`.`item_price`) AS `project_cost`,
-				(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-                FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J,`{$this->cfg['dbpref']}customers` AS C
-				LEFT JOIN crm_hosting as H ON C.custid=H.custid_fk
-				
-                WHERE C.`custid` = J.`custid_fk`
-				AND C.`add1_region` IN(".$this->session->userdata['region_id'].")
-				AND C.`add1_country` IN(".$this->session->userdata['countryid'].")
-				AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$search}
-                GROUP BY `jobid`
-				ORDER BY `belong_to`, `date_created`";*/
 		
 		$varSessionId = $this->userdata['userid']; //Current Session Id.
 		//echo $this->userdata['role_id'];
 		//Fetching Project Team Members.
-		$sqlcj = "SELECT jobid_fk as jobid FROM `crm_contract_jobs` WHERE `userid_fk` = '".$varSessionId."'";
+		$sqlcj = "SELECT jobid_fk as jobid FROM `".$this->cfg['dbpref']."contract_jobs` WHERE `userid_fk` = '".$varSessionId."'";
 		$rowscj = $this->db->query($sqlcj);
 		$data['jobids'] = $rowscj->result_array();
 
 		//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
-		$sqlJobs = "SELECT jobid FROM `crm_jobs` WHERE `assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."'";
+		$sqlJobs = "SELECT jobid FROM `".$this->cfg['dbpref']."jobs` WHERE `assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."'";
 		$rowsJobs = $this->db->query($sqlJobs);
 		$data['jobids1'] = $rowsJobs->result_array();
 
@@ -465,20 +447,9 @@ class Welcome extends CI_Controller {
 		    //echo "test"; exit;
 			$pjts = " AND (`jobid` in (".$varRes."))";
 		}
-
-		/*$sql = "SELECT *, SUM(`crm_items`.`item_price`) AS `project_cost`, 
-				(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-                FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J,`{$this->cfg['dbpref']}customers` AS C
-				LEFT JOIN crm_hosting as H ON C.custid=H.custid_fk
-				
-                WHERE C.`custid` = J.`custid_fk`
-				AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$search}{$pjts}
-
-                GROUP BY `jobid`
-				ORDER BY `belong_to`, `date_created`"; 
-			*/
-		$sql = "SELECT *, SUM(`crm_items`.`item_price`) AS `project_cost`, U.first_name as fnm, U.last_name as lnm, C.first_name as cfname, C.last_name as clname, 
-		(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
+		
+		$sql = "SELECT *, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`, U.first_name as fnm, U.last_name as lnm, C.first_name as cfname, C.last_name as clname, 
+		(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
 		FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}customers` AS C, `{$this->cfg['dbpref']}jobs` AS J
 		Left Join `{$this->cfg['dbpref']}users` AS U ON J.`assigned_to` = U.userid
 		WHERE C.`custid` = J.`custid_fk`
@@ -498,13 +469,6 @@ class Welcome extends CI_Controller {
 			//print_r($val);
 		}
 		//exit;
-		/*$temp[]=0;
-		foreach($data['records'] as $val) { $temp[]=$val['jobid'];}
-		$temp=implode(',',$temp);
-		$sql="SELECT * FROM `crm_hosting_job` J WHERE jobid_fk IN ({$temp})";
-		$rows = $this->db->query($sql);
-		$data['hosting']=$rows->result_array();
-		*/
 		
 		$data['page_heading'] = $page_label;
         if ($return === TRUE){
@@ -535,14 +499,14 @@ class Welcome extends CI_Controller {
                 WHERE `custid` = `custid_fk` AND `jobid` = '{$id}' LIMIT 1"; */
 		
 		$sql = "SELECT *
-				FROM crm_customers AS cus
-				left join crm_jobs as jb on jb.custid_fk = cus.custid
-				left join crm_region as reg on reg.regionid = cus.add1_region
-				left join crm_country as cnty on cnty.countryid = cus.add1_country
-				left join crm_state as ste on ste.stateid = cus.add1_state
-				left join crm_location as locn on locn.locationid = cus.add1_location
-				left join crm_expect_worth as exw on exw.expect_worth_id = jb.expect_worth_id
-				left join crm_lead_stage as ls on ls.lead_stage_id = jb.job_status
+				FROM ".$this->cfg['dbpref']."customers AS cus
+				left join ".$this->cfg['dbpref']."jobs as jb on jb.custid_fk = cus.custid
+				left join ".$this->cfg['dbpref']."region as reg on reg.regionid = cus.add1_region
+				left join ".$this->cfg['dbpref']."country as cnty on cnty.countryid = cus.add1_country
+				left join ".$this->cfg['dbpref']."state as ste on ste.stateid = cus.add1_state
+				left join ".$this->cfg['dbpref']."location as locn on locn.locationid = cus.add1_location
+				left join ".$this->cfg['dbpref']."expect_worth as exw on exw.expect_worth_id = jb.expect_worth_id
+				left join ".$this->cfg['dbpref']."lead_stage as ls on ls.lead_stage_id = jb.job_status
 				where jb.jobid = '{$id}'
 				LIMIT 1";		
         $q = $this->db->query($sql);
@@ -554,7 +518,7 @@ class Welcome extends CI_Controller {
             $data['view_quotation'] = true;
 			
 			$this->db->where('jobid_fk', $result[0]['jobid']);
-			$cq = $this->db->get('crm_contract_jobs');
+			$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 			
 			$temp_cont = $cq->result_array();
 			
@@ -665,11 +629,11 @@ HDOC;
 					$data['payment_data'] = $payment_terms->result_array();
 				}
 			}
-			$this->db->select('crm_deposits.*');
-			$this->db->select('crm_expected_payments.project_milestone_name AS payment_term');
+			$this->db->select($this->cfg['dbpref'].'deposits.*');
+			$this->db->select($this->cfg['dbpref'].'expected_payments.project_milestone_name AS payment_term');
 			$this->db->from($this->cfg['dbpref'] . 'deposits');
-			$this->db->where('crm_deposits.jobid_fk', $data['quote_data']['jobid']);
-			$this->db->join('crm_expected_payments', 'crm_deposits.map_term = crm_expected_payments.expectid', 'left');
+			$this->db->where($this->cfg['dbpref'].'deposits.jobid_fk', $data['quote_data']['jobid']);
+			$this->db->join($this->cfg['dbpref'].'expected_payments', $this->cfg['dbpref'].'deposits.map_term = '.$this->cfg['dbpref'].'expected_payments.expectid', 'left');
 			$this->db->order_by('depositid', 'asc');
 			//$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
 			$deposits = $this->db->get();
@@ -995,7 +959,7 @@ On behalf of the client and from supplied business details including official tr
             $data['view_quotation'] = true;
 			
 			$this->db->where('jobid_fk', $result[0]['jobid']);
-			$cq = $this->db->get('crm_contract_jobs');
+			$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 			
 			$temp_cont = $cq->result_array();
 			
@@ -1125,18 +1089,18 @@ HDOC;
 			$data['job_dev_qc_history'] = $this->welcome_model->get_qc_history($id, 1);
 			$data['hosting']=$this->ajax_hosting_load($id);
 			
-			$actual_worths = $this->db->query("SELECT SUM(`crm_items`.`item_price`) AS `project_cost`
+			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
 								FROM `{$this->cfg['dbpref']}items`
 								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
 			//echo $this->db->last_query(); exit;
 			$data['actual_worth'] = $actual_worths->result_array();	
 
 			$lead_owners = $this->db->query("SELECT ua.userid, ja.belong_to, ua.first_name AS uafn, ua.last_name AS ualn
-													FROM crm_jobs AS ja
-													JOIN crm_users AS ua ON ua.userid = ja.belong_to
+													FROM ".$this->cfg['dbpref']."jobs AS ja
+													JOIN ".$this->cfg['dbpref']."users AS ua ON ua.userid = ja.belong_to
 													WHERE ja.jobid = '{$id}'");
 			$data['lead_owner'] = $lead_owners->result_array(); 
-			$query = $this->db->query("SELECT u.first_name FROM crm_jobs j JOIN crm_users as u ON j.belong_to = u.userid WHERE j.jobid = 66");
+			$query = $this->db->query("SELECT u.first_name FROM ".$this->cfg['dbpref']."jobs j JOIN ".$this->cfg['dbpref']."users as u ON j.belong_to = u.userid WHERE j.jobid = 66");
 			$data['lead_owns'] = $lead_owners->result_array();
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			/**
@@ -2242,16 +2206,16 @@ HDOC;
 			$errors[] = 'Invalid deposit date supplied';
 		}
 		
-		$exp_amt = $this->db->query("select amount from crm_expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
+		$exp_amt = $this->db->query("select amount from ".$this->cfg['dbpref']."expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
 		$expect_payment = $exp_amt->row_array();
 		
 		if (!isset($update)) {
-			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from crm_deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
+			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
 			$received_payment = $tot_rec_amt->row_array();
 			$temp_tot_amt = $_POST['pr_date_2'] + $received_payment['tot_amt'];
 			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
 		} else {
-			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from crm_deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' AND depositid != '".$update."' ");
+			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' AND depositid != '".$update."' ");
 			$received_payment = $tot_rec_amt->row_array();
 			$temp_tot_amt = $_POST['pr_date_2'] + $received_payment['tot_amt'];
 			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
@@ -2290,11 +2254,11 @@ HDOC;
 				$deposit_date = date('Y-m-d', $dd); 
 				//mychanges
 				$jid = $_POST['pr_form_jobid']; //16 
-				$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
 				$jres = $jsql->result();
 				$worthid = $jres[0]->expect_worth_id;
 				
-				$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");			
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
 				$eres = $expect_worth->result();			
 				$symbol = $eres[0]->expect_worth_name;
 				
@@ -2308,7 +2272,7 @@ HDOC;
 				$qlogs = $this->db->query($logs);
 			}
 			else {
-				$this->db->query("update crm_expected_payments set received = 0 where expectid = '".$eid."' AND jobid_fk = '".$_POST['pr_form_jobid']."' ");
+				$this->db->query("update ".$this->cfg['dbpref']."expected_payments set received = 0 where expectid = '".$eid."' AND jobid_fk = '".$_POST['pr_form_jobid']."' ");
 				//echo $this->db->last_query();
 				$updatepayment = array(
 					'jobid_fk' => $_POST['pr_form_jobid'],
@@ -2326,11 +2290,11 @@ HDOC;
 				
 				//mychanges	
 				$jid = $_POST['pr_form_jobid']; //16 
-				$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
 				$jres = $jsql->result();
 				$worthid = $jres[0]->expect_worth_id;
 				
-				$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");			
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
 				$eres = $expect_worth->result();			
 				$symbol = $eres[0]->expect_worth_name;
 				$dd = strtotime($updatepayment['deposit_date']);
@@ -2347,10 +2311,10 @@ HDOC;
 			}
 			if (isset($_POST['deposit_map_field']) && $_POST['deposit_map_field'] > 0 && preg_match('/^[0-9]+$/', $_POST['deposit_map_field']))
 			{
-				$statusQuery = $this->db->query("select sum(amount) as tot_amt from crm_deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
+				$statusQuery = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
 				$payment_status = $statusQuery->row_array();
 				
-				$statusQueryExpect = $this->db->query("select amount from crm_expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
+				$statusQueryExpect = $this->db->query("select amount from ".$this->cfg['dbpref']."expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
 				$payment_status_expect = $statusQueryExpect->row_array();
 				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) {
 					$this->db->where('expectid', $_POST['deposit_map_field']);
@@ -2363,7 +2327,7 @@ HDOC;
 			}
 			
 			$output = '';
-			$recieve_query = $this->db->query("SELECT `crm_deposits` . * , `crm_expected_payments`.`project_milestone_name` AS payment_term FROM (`crm_deposits`) LEFT JOIN `crm_expected_payments` ON `crm_deposits`.`map_term` = `crm_expected_payments`.`expectid` WHERE `crm_deposits`.`jobid_fk` = ".$_POST['pr_form_jobid']." ORDER BY `depositid` ASC");
+			$recieve_query = $this->db->query("SELECT `".$this->cfg['dbpref']."deposits` . * , `".$this->cfg['dbpref']."expected_payments`.`project_milestone_name` AS payment_term FROM (`".$this->cfg['dbpref']."deposits`) LEFT JOIN `".$this->cfg['dbpref']."expected_payments` ON `".$this->cfg['dbpref']."deposits`.`map_term` = `".$this->cfg['dbpref']."expected_payments`.`expectid` WHERE `".$this->cfg['dbpref']."deposits`.`jobid_fk` = ".$_POST['pr_form_jobid']." ORDER BY `depositid` ASC");
 			
 			//$data['receive'] = $recieve_query1->result_array();
 			//$this->load->view('welcome_view_project', $data);
@@ -2418,16 +2382,16 @@ HDOC;
 	function received_payment_terms_delete($jid)
 	{
 		//mychanges
-			$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
-			$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
 			$eres = $expect_worth->result();
 			$symbol = $eres[0]->expect_worth_name;		
 		
 		$userdata = $this->session->userdata('logged_in_user'); 
 		$userid=$userdata['userid'];
-		$query = $this->db->get_where('crm_deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
+		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
 		$get = $query->row_array();		
 		$milename = $get['invoice_no'];
 		$amount = $get['amount'];
@@ -2440,7 +2404,7 @@ HDOC;
         //$qlogs = $this->db->query($logs);
 	
 		$output = '';
-		$recieve_query = $this->db->query("SELECT `crm_deposits` . * , `crm_expected_payments`.`project_milestone_name` AS payment_term FROM (`crm_deposits`) LEFT JOIN `crm_expected_payments` ON `crm_deposits`.`map_term` = `crm_expected_payments`.`expectid` WHERE `crm_deposits`.`jobid_fk` = ".$jid." ORDER BY `depositid` ASC");
+		$recieve_query = $this->db->query("SELECT `".$this->cfg['dbpref']."deposits` . * , `".$this->cfg['dbpref']."expected_payments`.`project_milestone_name` AS payment_term FROM (`".$this->cfg['dbpref']."deposits`) LEFT JOIN `".$this->cfg['dbpref']."expected_payments` ON `".$this->cfg['dbpref']."deposits`.`map_term` = `".$this->cfg['dbpref']."expected_payments`.`expectid` WHERE `".$this->cfg['dbpref']."deposits`.`jobid_fk` = ".$jid." ORDER BY `depositid` ASC");
 		
 		//$data['receive'] = $recieve_query1->result_array();
 		//echo "<pre> sdkjfdsk"; print_r($data); die();
@@ -2575,11 +2539,11 @@ HDOC;
 				
 				//mychanges
 				$jid = $_POST['sp_form_jobid']; //16 
-				$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
 				$jres = $jsql->result();
 				$worthid = $jres[0]->expect_worth_id;
 				
-				$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");			
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
 				$eres = $expect_worth->result();			
 				$symbol = $eres[0]->expect_worth_name;
 				
@@ -2597,7 +2561,7 @@ HDOC;
 					
 				} else {
 										
-					$chkstatus = $this->db->query("select received from crm_expected_payments where expectid = '".$update."' and jobid_fk = '".$_POST['sp_form_jobid']."'");
+					$chkstatus = $this->db->query("select received from ".$this->cfg['dbpref']."expected_payments where expectid = '".$update."' and jobid_fk = '".$_POST['sp_form_jobid']."'");
 					$pay_status = $chkstatus->row_array();
 					if ($pay_status['received'] != 1) {
 						$userdata = $this->session->userdata('logged_in_user');
@@ -2633,7 +2597,7 @@ HDOC;
 					'payment_terms' => 1
 				);
 				$this->db->update($this->cfg['dbpref'] . 'jobs', $data, array('jobid' => $_POST['sp_form_jobid']));
-				$ajax_select = $this->db->query("SELECT expectid, expected_date, amount, project_milestone_name, received FROM crm_expected_payments WHERE jobid_fk = ".$_POST['sp_form_jobid']." order by expectid ");
+				$ajax_select = $this->db->query("SELECT expectid, expected_date, amount, project_milestone_name, received FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk = ".$_POST['sp_form_jobid']." order by expectid ");
 				$output = '';
 				$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
 					//$output .= '<h3>Payment Milestone Terms</h3>';
@@ -2708,14 +2672,14 @@ HDOC;
 	function payment_terms_delete($jid)
 	{
 		//mychanges			
-			$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id; 
-			$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
 			$eres = $expect_worth->result();
 			$symbol = $eres[0]->expect_worth_name;
 		
-		$ajax_select = $this->db->query("SELECT expectid, expected_date, amount, project_milestone_name, received FROM crm_expected_payments WHERE jobid_fk = ".$jid." order by expectid ");
+		$ajax_select = $this->db->query("SELECT expectid, expected_date, amount, project_milestone_name, received FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk = ".$jid." order by expectid ");
 		$output = '';
 		$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
 			//$output .= '<h3>Payment Milestone Terms</h3>';
@@ -2860,7 +2824,7 @@ VCS Admin";*/
         {
 			if($status>0) {
 				//Lead Status History - Start here
-				$lead_history = $this->db->query('SELECT job_status, lead_status, actual_worth_amount from crm_jobs where jobid = '.$jobid.'');
+				$lead_history = $this->db->query('SELECT job_status, lead_status, actual_worth_amount from ".$this->cfg['dbpref']."jobs where jobid = '.$jobid.'');
 				$lead_status_history = $lead_history->row_array();
 				$lead_his['jobid'] = $jobid;
 				$lead_his['dateofchange'] = date('Y-m-d H:i:s');
@@ -2890,12 +2854,12 @@ VCS Admin";*/
 						$ins['userid_fk'] = $this->userdata['userid'];
 						$ins['jobid_fk'] = $jobid;
 						$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no, j.job_title
-																	FROM `crm_jobs` AS j, `crm_users` AS u
+																	FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 																	WHERE u.userid = j.lead_assign
 																	AND j.jobid ='.$jobid);
 						$disarray=$getlead_assign_email->result_array();
 						$getlead_owner_email = $this->db->query('SELECT j.belong_to, j.jobid, u.userid, u.email
-																	FROM `crm_jobs` AS j, `crm_users` AS u
+																	FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 																	WHERE u.userid = j.belong_to
 																	AND j.jobid ='.$jobid);
 						$lowner=$getlead_owner_email->result_array();
@@ -3024,18 +2988,7 @@ VCS Admin";*/
         {
  			$update['job_status'] = $status;
 			//For Hosting
-			/*
-			$hosting=explode(',',$hostingid);
-			if($hosting!=0) {
-				$this->db->query("DELETE FROM crm_hosting_job WHERE jobid_fk='{$jobid}'");
-				foreach($hosting as $val){
-					if($val==0) continue;
-					$sql=array('jobid_fk'=>$jobid, 'hostingid_fk'=>$val);
-					$q=$this->db->get_where('crm_hosting_job', $sql);
-					if ($q->num_rows() > 0) continue;
-					$this->db->insert('crm_hosting_job', $sql);
-				}
-			}*/
+
 			if($status>0){
 				//if (in_array($the_job['job_status'], array(0, 1, 2, 3, 15, 21, 22)) && in_array($status, array(4, 5, 6, 7, 8)))
 				//{
@@ -3135,14 +3088,14 @@ VCS Admin";*/
 			$locid = $data['quote_data']['add1_location'];
 			//for new level concept - start here
 
-			$query = $this->db->query("SELECT `user_id` FROM crm_levels_region WHERE `region_id` = $regid && level_id not in(5,4,3) ");
+			$query = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_region WHERE `region_id` = $regid && level_id not in(5,4,3) ");
 			//echo $this->db->last_query();
-			$cntryquery = $this->db->query("SELECT `user_id` FROM crm_levels_country WHERE `country_id` = $cntryid && level_id not in(5,4,2) ");
+			$cntryquery = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_country WHERE `country_id` = $cntryid && level_id not in(5,4,2) ");
 			//echo $this->db->last_query();
-			$stequery = $this->db->query("SELECT `user_id` FROM crm_levels_state WHERE `state_id` = $steid && level_id not in(5,3,2)");
-			$locquery = $this->db->query("SELECT `user_id` FROM crm_levels_location WHERE `location_id` = $locid && level_id not in(4,3,2)");
+			$stequery = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_state WHERE `state_id` = $steid && level_id not in(5,3,2)");
+			$locquery = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_location WHERE `location_id` = $locid && level_id not in(4,3,2)");
 			
-			$globalusers = $this->db->query("SELECT userid as user_id FROM crm_users WHERE level in(1)");
+			$globalusers = $this->db->query("SELECT userid as user_id FROM ".$this->cfg['dbpref']."users WHERE level in(1)");
 			//echo $this->db->last_query();
 
 			$regUserList = $query->result_array();
@@ -3164,14 +3117,14 @@ VCS Admin";*/
 			//echo "<pre>"; print_r($userList); exit;
 			$userList = implode(',', $userList);
 			//echo $userList; exit;
-			$query = $this->db->query("select userid, first_name, last_name from crm_users where userid in ($userList) order by first_name");
+			$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($userList) order by first_name");
 			$data['lead_assign_edit'] = $query->result_array();
 			//for new level concept - end here
 			
 			$expect_worths = $this->db->query("SELECT expect_worth_id,expect_worth_name FROM {$this->cfg['dbpref']}expect_worth");
 			$data['expect_worth'] = $expect_worths->result_array();
 			
-			$actual_worths = $this->db->query("SELECT SUM(`crm_items`.`item_price`) AS `project_cost`
+			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
 								FROM `{$this->cfg['dbpref']}items`
 								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
 			$data['actual_worth'] = $actual_worths->result_array();					
@@ -3372,13 +3325,13 @@ VCS Admin";*/
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk'] = $id;
 					$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no
-										FROM `crm_jobs` AS j, `crm_users` AS u
+										FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 										WHERE u.userid = j.lead_assign
 										AND j.jobid ='.$id);
 					$disarray=$getlead_assign_email->result_array();
 					
 					$getlead_owner_email = $this->db->query('SELECT j.belong_to, j.jobid, u.userid, u.email
-										FROM `crm_jobs` AS j, `crm_users` AS u
+										FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 										WHERE u.userid = j.belong_to
 										AND j.jobid ='.$id);
 					$lowner=$getlead_owner_email->result_array();
@@ -3590,17 +3543,15 @@ VCS Admin";*/
 			$ins['userid_fk'] = $this->userdata['userid'];
 			$ins['jobid_fk'] = $jobid;
 			$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no, u.first_name, u.last_name
-								FROM `crm_jobs` AS j, `crm_users` AS u
+								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 								WHERE u.userid = j.lead_assign
 								AND j.jobid ='.$jobid);
 			$lead_assign_mail=$getlead_assign_email->result_array();
 			$getlead_owner_email = $this->db->query('SELECT j.belong_to, j.jobid, u.userid, u.email
-								FROM `crm_jobs` AS j, `crm_users` AS u
+								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 								WHERE u.userid = j.belong_to
 								AND j.jobid ='.$jobid);
 			$lowner=$getlead_owner_email->result_array();
-			//echo "<pre>"; print_r($lowner); echo "</pre>"; 
-			//print_r($disarray);exit;
 			
 			$inserts['userid_fk'] = $this->userdata['userid'];
 			$inserts['jobid_fk'] = $jobid;
@@ -3695,12 +3646,12 @@ VCS Admin";*/
 			$ins['userid_fk'] = $this->userdata['userid'];
 			$ins['jobid_fk'] = $jobid;
 			$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no, u.first_name, u.last_name
-								FROM `crm_jobs` AS j, `crm_users` AS u
+								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 								WHERE u.userid = j.lead_assign
 								AND j.jobid ='.$jobid);
 			$lead_assign_mail=$getlead_assign_email->result_array();
 			$getlead_owner_email = $this->db->query('SELECT j.belong_to, j.jobid, u.userid, u.first_name, u.last_name, u.email
-								FROM `crm_jobs` AS j, `crm_users` AS u
+								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 								WHERE u.userid = j.belong_to
 								AND j.jobid ='.$jobid);
 			$lowner=$getlead_owner_email->result_array();
@@ -3899,12 +3850,12 @@ VCS Admin";*/
 			}
 			
 			$cust_details = $this->db->query('SELECT  j.jobid, c.first_name,c.last_name,c.company
-							FROM `crm_jobs` AS j, `crm_customers` AS c
+							FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'customers` AS c
 							WHERE c.custid = j.custid_fk
 							AND j.jobid ='.$insert_id);
 			$customer=$cust_details->result_array();
 			$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no
-								FROM `crm_jobs` AS j, `crm_users` AS u
+								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
 								WHERE u.userid = j.lead_assign
 								AND j.jobid ='.$insert_id);
 			$lassign=$getlead_assign_email->result_array();
@@ -4158,14 +4109,14 @@ body {
 	
 	function getPjtIdFromdb($pjtid) {
 		$this->db->where('pjt_id',$pjtid);
-		$query = $this->db->get('crm_jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		if($query == 0 ) echo 'userOk';
 		else echo 'userNo';
 	}
 	
 	function getPjtValFromdb($pjtval) {
 		$this->db->where('actual_worth_amount', $pjtval);
-		$query = $this->db->get('crm_jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		if($query == 0 ) echo 'userOk';
 		else echo 'userNo';
 	}
@@ -4594,7 +4545,7 @@ body {
 			//print_r($contractors); echo "test";exit;
 			$project_member = array();
 			$result = array();
-			$project_member = $this->db->query("SELECT userid_fk FROM crm_contract_jobs WHERE jobid_fk = " .$_POST['jobid']); 
+			$project_member = $this->db->query("SELECT userid_fk FROM ".$this->cfg['dbpref']."contract_jobs WHERE jobid_fk = " .$_POST['jobid']); 
 			foreach ($project_member->result() as $project_mem)
 			{
 				$result[] = $project_mem->userid_fk;
@@ -4611,11 +4562,11 @@ body {
 				{
 					if (preg_match('/^[0-9]+$/', $con))
 					{
-						$this->db->insert('crm_contract_jobs', array('jobid_fk' => $_POST['jobid'], 'userid_fk' => $con));
+						$this->db->insert($this->cfg['dbpref'].'contract_jobs', array('jobid_fk' => $_POST['jobid'], 'userid_fk' => $con));
 					}
 				}
 				$user_id_for_mail = implode ("," , $new_project_member_insert);
-				$query_for_mail = $this->db->query("SELECT email,first_name FROM crm_users u WHERE u.userid IN(".$user_id_for_mail.")");
+				$query_for_mail = $this->db->query("SELECT email,first_name FROM ".$this->cfg['dbpref']."users u WHERE u.userid IN(".$user_id_for_mail.")");
 				//echo $this->db->last_query();
 				foreach ($query_for_mail->result() as $mail_id)
 				{			
@@ -4630,7 +4581,7 @@ body {
 				//echo "frist delelte";
 				$user_id_for_mail = implode("," , $new_project_member_delete);	
 				//echo "Delete : ",$user_id_for_mail;				
-				$query_for_mail = $this->db->query("SELECT email, first_name FROM crm_users u WHERE u.userid IN(".$user_id_for_mail.")");
+				$query_for_mail = $this->db->query("SELECT email, first_name FROM ".$this->cfg['dbpref']."users u WHERE u.userid IN(".$user_id_for_mail.")");
 				//echo $this->db->last_query();
 				foreach ($query_for_mail->result() as $mail_id)
 				{
@@ -4641,7 +4592,7 @@ body {
 				//$pm = explode(",", $_POST['project-mem']);
 				$this->db->where('jobid_fk', $_POST['jobid']);
 				$this->db->where_in('userid_fk', $new_project_member_delete);
-			    $this->db->delete('crm_contract_jobs');
+			    $this->db->delete($this->cfg['dbpref'].'contract_jobs');
 				//echo $this->db->last_query();
 			}
 			echo '{status: "OK"}';
@@ -4650,7 +4601,7 @@ body {
 		{
 		    $members_id = $_POST['project-mem'];
 			$members = explode(',', $_POST['project-mem']);				
-			$query_for_mail = $this->db->query("SELECT email, first_name FROM crm_users u WHERE u.userid IN(".$members_id.")");
+			$query_for_mail = $this->db->query("SELECT email, first_name FROM ".$this->cfg['dbpref']."users u WHERE u.userid IN(".$members_id.")");
 			//echo $this->db->last_query();
 			foreach ($query_for_mail->result() as $mail_id)
 			{
@@ -4659,7 +4610,7 @@ body {
 				 $log_email_content1 = $this->get_user_mail($mail , $first_name, $type = "remove");
 			}
 			$this->db->where_in('jobid_fk', $_POST['jobid']);
-			$this->db->delete('crm_contract_jobs');
+			$this->db->delete($this->cfg['dbpref'].'contract_jobs');
 			//echo $this->db->last_query();
 		}
 		else
@@ -4670,7 +4621,7 @@ body {
 	
 	public function get_user_mail($mail, $first_name, $mail_type) 
 	{	  
-	    $project_title = $this->db->query("SELECT job_title FROM crm_jobs j WHERE j.jobid = ".$_POST['jobid']);
+	    $project_title = $this->db->query("SELECT job_title FROM ".$this->cfg['dbpref']."jobs j WHERE j.jobid = ".$_POST['jobid']);
 		$test = $project_title->result(); 
 		$project_name = $test[0]->job_title;
 		$log_email_content = '';
@@ -4802,10 +4753,10 @@ body {
 		}
 	}
 	public function ajax_hosting_load($jobid=false){
-		$query = $this->db->query("SELECT hostingid_fk FROM crm_hosting_job WHERE jobid_fk='{$jobid}'");
+		$query = $this->db->query("SELECT hostingid_fk FROM ".$this->cfg['dbpref']."hosting_job WHERE jobid_fk='{$jobid}'");
 		$t=array();
 		foreach($query->result_array() as $v) $t[]=$v['hostingid_fk'];
-		$sql="SELECT * FROM crm_hosting as H, crm_jobs as J WHERE J.custid_fk=H.custid_fk && J.jobid={$jobid}";
+		$sql="SELECT * FROM ".$this->cfg['dbpref']."hosting as H, ".$this->cfg['dbpref']."jobs as J WHERE J.custid_fk=H.custid_fk && J.jobid={$jobid}";
 		$query = $this->db->query($sql);
 		
 		$temp='';
@@ -4834,10 +4785,10 @@ body {
 		if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 && $_POST['keyword']!='Invoice No, Job Title, Name or Company') {
 			$search.=" AND (J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
 		}
-		$sql = "SELECT *, SUM(`crm_items`.`item_price`) AS `project_cost`,
-					(SELECT SUM(`amount`) FROM `crm_deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-                FROM `crm_items`, `crm_customers` AS C, `crm_jobs` AS J, crm_hosting as H
-				WHERE J.job_status IN ({$arr}) AND C.`custid` = J.`custid_fk` AND `jobid` = `crm_items`.`jobid_fk` && H.custid_fk=C.custid
+		$sql = "SELECT *, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
+					(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
+                FROM `".$this->cfg['dbpref']."items`, `".$this->cfg['dbpref']."customers` AS C, `".$this->cfg['dbpref']."jobs` AS J, ".$this->cfg['dbpref']."hosting as H
+				WHERE J.job_status IN ({$arr}) AND C.`custid` = J.`custid_fk` AND `jobid` = `".$this->cfg['dbpref']."items`.`jobid_fk` && H.custid_fk=C.custid
 					{$search}
                 GROUP BY `jobid`
 				ORDER BY `belong_to`, `date_created`";
@@ -4847,11 +4798,11 @@ body {
 		$temp[]=0;
 		foreach($records as $val) { $temp[]=$val['custid'];}
 		$temp=implode(',',$temp);
-		$sql="SELECT * FROM `crm_hosting_package` as P, crm_hosting as H WHERE P.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})";
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting_package` as P, ".$this->cfg['dbpref']."hosting as H WHERE P.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})";
 		$rows = $this->db->query($sql);
 		$hosting=$rows->result_array();
 		
-		$rows = $this->db->query("SELECT * FROM `crm_hosting_job` as J, crm_hosting as H WHERE J.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})");
+		$rows = $this->db->query("SELECT * FROM `".$this->cfg['dbpref']."hosting_job` as J, ".$this->cfg['dbpref']."hosting as H WHERE J.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})");
 		$jobs=$rows->result_array();
 		
 		$j_temp=array();
@@ -4861,7 +4812,7 @@ body {
 		}
 		$data['JOBS']=$j_temp;
 		
-		$rows = $this->db->query("SELECT * FROM `crm_package`  WHERE  status='active'");
+		$rows = $this->db->query("SELECT * FROM `".$this->cfg['dbpref']."package`  WHERE  status='active'");
 		$data['packages']=$rows->result_array();
 		$p_temp=array();
 		foreach($hosting as $key=>$val){
@@ -4892,13 +4843,13 @@ body {
 	
 	function generate_invoice(){
 		if(isset($_POST['auto_generate']) && $_POST['auto_generate']=='auto_generate'){
-			$sql1="SELECT *, DATE_SUB(DATE_ADD( NOW() , INTERVAL P.duration MONTH ) ,INTERVAL 1 DAY) AS expiry FROM crm_package P, crm_hosting as H
-					RIGHT JOIN crm_hosting_package HP ON HP.hostingid_fk=H.hostingid
+			$sql1="SELECT *, DATE_SUB(DATE_ADD( NOW() , INTERVAL P.duration MONTH ) ,INTERVAL 1 DAY) AS expiry FROM ".$this->cfg['dbpref']."package P, ".$this->cfg['dbpref']."hosting as H
+					RIGHT JOIN ".$this->cfg['dbpref']."hosting_package HP ON HP.hostingid_fk=H.hostingid
 					WHERE P.package_id=HP.packageid_fk && P.status='active' && HP.due_date<NOW()
 					";
 			$rows1=$this->db->query($sql1);
-			$sql = "SELECT * FROM `crm_customers` AS C, `crm_jobs` AS J, crm_hosting as H
-					RIGHT JOIN crm_hosting_job HJ ON HJ.hostingid_fk=H.hostingid
+			$sql = "SELECT * FROM `".$this->cfg['dbpref']."customers` AS C, `".$this->cfg['dbpref']."jobs` AS J, ".$this->cfg['dbpref']."hosting as H
+					RIGHT JOIN ".$this->cfg['dbpref']."hosting_job HJ ON HJ.hostingid_fk=H.hostingid
 					WHERE J.job_status IN (4,5,6,7,25) AND C.`custid` = J.`custid_fk`  && H.custid_fk=C.custid  
 					";
 			$rows = $this->db->query($sql);
@@ -4913,11 +4864,11 @@ body {
 			}
 			$h2=array_diff($h1,$h);
 			if(sizeof($h2)>0){
-				$q="INSERT INTO `crm_jobs` (`jobid`, `job_title`, `job_desc`, `job_category`, `invoice_no`, `custid_fk`, `date_quoted`, `date_invoiced`, `job_status`, `complete_status`, `assigned_to`, `date_start`, `date_due`, `date_created`, `date_modified`, `created_by`, `account_manager`, `in_csr`, `belong_to`, `division`, `payment_terms`, `invoice_downloaded`, `log_view_status`, `invoice_status`) VALUES ";
+				$q="INSERT INTO `".$this->cfg['dbpref']."jobs` (`jobid`, `job_title`, `job_desc`, `job_category`, `invoice_no`, `custid_fk`, `date_quoted`, `date_invoiced`, `job_status`, `complete_status`, `assigned_to`, `date_start`, `date_due`, `date_created`, `date_modified`, `created_by`, `account_manager`, `in_csr`, `belong_to`, `division`, `payment_terms`, `invoice_downloaded`, `log_view_status`, `invoice_status`) VALUES ";
 				$i=1;$s2=array();
-				$q1="INSERT INTO `crm_hosting_job` (`jobid_fk`, `hostingid_fk`) VALUES ";
-				$q2="INSERT INTO `crm_items` (`itemid` ,`jobid_fk` ,`item_position` ,`item_desc` ,`item_price` ,`hours` ,`ledger_code`) VALUES ";
-				$tq=$this->db->query("SELECT (SELECT MAX(jobid) FROM crm_jobs) as maxid,(SELECT MAX(invoice_no) FROM crm_jobs) as maxinv");
+				$q1="INSERT INTO `".$this->cfg['dbpref']."hosting_job` (`jobid_fk`, `hostingid_fk`) VALUES ";
+				$q2="INSERT INTO `".$this->cfg['dbpref']."items` (`itemid` ,`jobid_fk` ,`item_position` ,`item_desc` ,`item_price` ,`hours` ,`ledger_code`) VALUES ";
+				$tq=$this->db->query("SELECT (SELECT MAX(jobid) FROM ".$this->cfg['dbpref']."jobs) as maxid,(SELECT MAX(invoice_no) FROM ".$this->cfg['dbpref']."jobs) as maxinv");
 				$tqr=$tq->result_array();
 				$t=array();
 				foreach($rows1->result_array() as $val){
@@ -4968,8 +4919,7 @@ body {
 		if(!empty($JOBS) && sizeof($JOBS)>0) {
 			$jobs=implode(',',$JOBS);
 			
-			$r=$this->db->query("SELECT * FROM  crm_hosting_job H LEFT JOIN crm_jobs J ON J.jobid=H.jobid_fk WHERE J.jobid IN ({$jobs}) && H.jobid_fk IN ({$jobs});");
-			//echo "SELECT * FROM  crm_hosting_job H LEFT JOIN crm_jobs J ON J.jobid=H.jobid_fk WHERE J.jobid IN ({$jobs}) && H.jobid_fk IN ({$jobs});";exit;
+			$r=$this->db->query("SELECT * FROM  ".$this->cfg['dbpref']."hosting_job H LEFT JOIN ".$this->cfg['dbpref']."jobs J ON J.jobid=H.jobid_fk WHERE J.jobid IN ({$jobs}) && H.jobid_fk IN ({$jobs});");
 			$temp_arr=array();
 			if(sizeof($r->result_array())>0)
 			foreach($r->result_array() as $v1){
@@ -4981,14 +4931,14 @@ body {
 			foreach($r->result_array() as $v){
 				if(in_array($v['jobid'],$dumm_job)) continue;
 				$dumm_job[]=$v['jobid'];
-				$tq=$this->db->query("SELECT (SELECT MAX(jobid) FROM crm_jobs) as maxid,(SELECT MAX(invoice_no) FROM crm_jobs) as maxinv");
+				$tq=$this->db->query("SELECT (SELECT MAX(jobid) FROM ".$this->cfg['dbpref']."jobs) as maxid,(SELECT MAX(invoice_no) FROM ".$this->cfg['dbpref']."jobs) as maxinv");
 				$tqr=$tq->result_array();
 				$jobid=$v['jobid'];
 				
 				$ins['invoice_no']='00'.((float)$tqr[0]['maxinv']+1);
 				if(!empty($temp_arr[$jobid])){
 					$tem=implode(',',$temp_arr[$jobid]);
-					$tq1=$this->db->query("SELECT * FROM crm_package P LEFT JOIN crm_hosting_package HP ON HP.packageid_fk=P.package_id LEFT JOIN crm_hosting H ON H.hostingid=HP.hostingid_fk  WHERE HP.hostingid_fk IN ({$tem}) && P.status='active' ");
+					$tq1=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."package P LEFT JOIN ".$this->cfg['dbpref']."hosting_package HP ON HP.packageid_fk=P.package_id LEFT JOIN ".$this->cfg['dbpref']."hosting H ON H.hostingid=HP.hostingid_fk  WHERE HP.hostingid_fk IN ({$tem}) && P.status='active' ");
 					$tqr1=$tq1->result_array();
 				}
 				$domain=array();
@@ -5011,12 +4961,12 @@ body {
 				$ins['date_due']=date('Y-m-d H:i:s',(time()+($tqr1[0]['duration']*30*24*60*60)-86400));
 				$ins['date_created']=date('Y-m-d H:i:s');
 				$ins['created_by']=-1;
-				$this->db->insert('crm_jobs', $ins) ;
+				$this->db->insert($this->cfg['dbpref'].'jobs', $ins) ;
 				
 				if(!empty($temp_arr[$jobid])){
-				$query='INSERT INTO crm_hosting_job (jobid_fk, hostingid_fk) VALUES ';
+				$query='INSERT INTO '.$this->cfg['dbpref'].'hosting_job (jobid_fk, hostingid_fk) VALUES ';
 				$s=array();
-				$this->db->delete("crm_hosting_job", array('jobid_fk' => $ins['jobid']));
+				$this->db->delete($this->cfg['dbpref']."hosting_job", array('jobid_fk' => $ins['jobid']));
 				$s[]=' ('.$ins['jobid'].','.$val['hostingid'].')';
 			
 				$s=implode(',',$s);
@@ -5024,7 +4974,7 @@ body {
 				if(strlen($query)>0) $this->db->query($query);
 				
 				$i=1;$t=array();$s1=array();
-				$q1="INSERT INTO `crm_items` (`itemid` ,`jobid_fk` ,`item_position` ,`item_desc` ,`item_price` ,`hours` ,`ledger_code`) VALUES ";
+				$q1="INSERT INTO `".$this->cfg['dbpref']."items` (`itemid` ,`jobid_fk` ,`item_position` ,`item_desc` ,`item_price` ,`hours` ,`ledger_code`) VALUES ";
 				$s1[]=' (NULL, '.$ins['jobid'].','.$i++.',"Thank you for entrusting eNoah  iSolution with your web technology requirements.
 \nPlease see below an itemised breakdown of our service offering to you:",0, NULL, 0)';
 				foreach($tqr1 as $tk){
@@ -5040,7 +4990,7 @@ body {
 				}
 				}
 			}
-			$this->db->query("UPDATE crm_jobs SET invoice_status=1, date_due=NOW() WHERE jobid IN ({$jobs})");
+			$this->db->query("UPDATE ".$this->cfg['dbpref']."jobs SET invoice_status=1, date_due=NOW() WHERE jobid IN ({$jobs})");
 		}
 		if(isset($_POST['send']) && $_POST['send']=='send'){
 			if(isset($_POST['jobs'])) {
@@ -5125,7 +5075,7 @@ body {
 		if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 && $_POST['keyword']!='Invoice No, Job Title, Name or Company') {
 			$search.=" AND (J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.email_1 LIKE '%{$_POST['keyword']}%'|| C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
 		}
-		$sql = "SELECT * FROM `crm_customers` AS C, `crm_jobs` AS J, crm_hosting as H
+		$sql = "SELECT * FROM `".$this->cfg['dbpref']."customers` AS C, `".$this->cfg['dbpref']."jobs` AS J, ".$this->cfg['dbpref']."hosting as H
 				WHERE J.job_status IN ({$arr}) AND C.`custid` = J.`custid_fk`  && H.custid_fk=C.custid
 					{$search} {$criteria}
                 GROUP BY `jobid`
@@ -5135,10 +5085,10 @@ body {
 		$temp[]=0;
 		foreach($records as $val) { $temp[]=$val['custid'];}
 		$temp=implode(',',$temp);
-		$sql="SELECT * FROM `crm_hosting_package` as P, crm_hosting as H WHERE P.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})";
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting_package` as P, ".$this->cfg['dbpref']."hosting as H WHERE P.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})";
 		$rows = $this->db->query($sql);
 		$hosting=$rows->result_array();
-		$rows = $this->db->query("SELECT * FROM `crm_hosting_job` as J, crm_hosting as H WHERE J.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})");
+		$rows = $this->db->query("SELECT * FROM `".$this->cfg['dbpref']."hosting_job` as J, ".$this->cfg['dbpref']."hosting as H WHERE J.hostingid_fk=H.hostingid && H.custid_fk IN ({$temp})");
 		$jobs=$rows->result_array();
 		$j_temp=array();
 		foreach($jobs as $key=>$val){
@@ -5146,7 +5096,7 @@ body {
 			$j_temp[$v][]=$val['hostingid_fk'];
 		}
 		$data['JOBS']=$j_temp;
-		$rows = $this->db->query("SELECT * FROM `crm_package`  WHERE  status='active'");
+		$rows = $this->db->query("SELECT * FROM `".$this->cfg['dbpref']."package`  WHERE  status='active'");
 		$data['packages']=$rows->result_array();
 		$p_temp=array();
 		foreach($hosting as $key=>$val){
@@ -5179,14 +5129,14 @@ body {
 	
 	function retrieveRecord($jobid) {
 		//mychanges
-			$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jobid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jobid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
-			$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
 			$eres = $expect_worth->result();
 			$symbol = $eres[0]->expect_worth_name;
 			
-		$query_drop = "SELECT * FROM crm_expected_payments WHERE jobid_fk =".$jobid; 
+		$query_drop = "SELECT * FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk =".$jobid; 
 		$received_drop = $this->db->query($query_drop); 
 		$array_drop = array();
 		$i = 0;
@@ -5210,14 +5160,14 @@ body {
 	//For Edit Functionality - Edit Received Payments.
 	function retrieveRecordEdit($jobid, $eid) {
 		//mychanges
-			$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jobid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jobid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
-			$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
 			$eres = $expect_worth->result();
 			$symbol = $eres[0]->expect_worth_name;
 			
-		$query_drop = "SELECT * FROM crm_expected_payments WHERE jobid_fk =".$jobid." order by expectid"; 
+		$query_drop = "SELECT * FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk =".$jobid." order by expectid"; 
 		$received_drop = $this->db->query($query_drop); 
 		$array_drop = array();
 		$i = 0;
