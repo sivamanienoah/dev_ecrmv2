@@ -6,6 +6,7 @@ class Hosting extends CI_Controller {
 	{
 		parent::__construct();
 		$this->login_model->check_login();
+		$this->cfg = $this->config->item('crm');
 		$this->load->model('hosting_model');
         $this->load->model('customer_model');
 		$this->load->model('package_model');

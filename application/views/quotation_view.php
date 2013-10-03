@@ -259,6 +259,7 @@ foreach($hosting as $val){
 		document.getElementById('advance_search').style.display = 'none';	
 	<?php } ?>
 	var sturl = "welcome/advance_filter_search/";
+	
 	$('#advance_search_results').load(sturl);
 
 //For Advance Filters functionality.
@@ -427,7 +428,7 @@ $(function(){
 	$('.my-own-tasks.unappr').load('tasks/index/extend #unapprove-user-<?php echo $userdata['userid'] ?>', {}, function(){
 		$i++;LoadCheck($i);
 	});
-});
+}); 
 
 function LoadCheck($v){
 	if($v==2) {

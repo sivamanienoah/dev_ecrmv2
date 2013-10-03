@@ -401,6 +401,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 </div>
 <script type="text/javascript">
 $(function(){
+ alert("test"); return false;
 	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {}, loadEditTables);
 	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});

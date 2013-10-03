@@ -4,7 +4,7 @@ function currency_convert()
 	$CI  = get_instance();
 	$cfg = $CI->config->item('crm'); /// load config
 	
-	$query = $CI->db->get('crm_expect_worth');
+	$query = $CI->db->get($CI->cfg['dbpref'].'expect_worth');
 	$res = $query->result();
 	if(!empty($res)){
 		foreach ($res as $cur)

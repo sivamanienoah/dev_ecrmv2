@@ -2824,18 +2824,18 @@ VCS Admin";*/
         {
 			if($status>0) {
 				//Lead Status History - Start here
-				$lead_history = $this->db->query('SELECT job_status, lead_status, actual_worth_amount from ".$this->cfg['dbpref']."jobs where jobid = '.$jobid.'');
-				$lead_status_history = $lead_history->row_array();
+				$lead_history = $this->db->query('SELECT job_status, lead_status, actual_worth_amount from '.$this->cfg['dbpref'].'jobs where jobid = '.$jobid.'');
+				$lead_stage_history = $lead_history->row_array();
 				$lead_his['jobid'] = $jobid;
 				$lead_his['dateofchange'] = date('Y-m-d H:i:s');
-				$lead_his['previous_status'] = $lead_status_history['job_status'];
+				$lead_his['previous_status'] = $lead_stage_history['job_status'];
 				$lead_his['changed_status'] = $status;
-				$lead_his['lead_status'] = $lead_status_history['lead_status'];
+				$lead_his['lead_status'] = $lead_stage_history['lead_status'];
 				$lead_his['modified_by'] = $this->userdata['userid'];
 				//Lead Status History - End here
 				
 				//get the actual worth amt for the lead
-				$actWorthAmt = $lead_status_history['actual_worth_amount']; 
+				$actWorthAmt = $lead_stage_history['actual_worth_amount']; 
 				
 				//Check the actual worth amount.
 				if($status == '13' && $actWorthAmt == '0.00') {
@@ -2878,8 +2878,8 @@ VCS Admin";*/
 						// insert the new log
 						$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
 						
-						// insert the lead status history
-						$this->db->insert('lead_status_history', $lead_his);
+						// insert the lead stage history
+						$this->db->insert('lead_stage_history', $lead_his);
 						
 						$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 						$dis['date_created'] = date('Y-m-d H:i:s');
@@ -3533,9 +3533,9 @@ VCS Admin";*/
 			$this->db->where('jobid', $_POST['jobid_edit']);
             if ($this->db->update($this->cfg['dbpref'] . 'jobs', $ins))			
             {
-			$his['lead_status'] = $_POST['lead_status']; //lead_status_history - lead_status update
+			$his['lead_status'] = $_POST['lead_status']; //lead_stage_history - lead_status update
 			$this->db->where('jobid', $jobid);
-			$this->db->update('lead_status_history', $his);
+			$this->db->update('lead_stage_history', $his);
 			// ($_POST['lead_owner_edit_hidden'] ==  $_POST['lead_owner_edit']) for lead owner edit mail settings.
 		if(($_POST['lead_assign_edit_hidden'] ==  $_POST['lead_assign_edit'])) {
 		
@@ -3816,14 +3816,14 @@ VCS Admin";*/
 				$invoice_no = (int) $insert_id;
 				$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 				
-				//history - lead_status_history
+				//history - lead_stage_history
 				$lead_hist['jobid'] = $insert_id;
 				$lead_hist['dateofchange'] = date('Y-m-d H:i:s');
 				$lead_hist['previous_status'] = 1;
 				$lead_hist['changed_status'] = 1;
 				$lead_hist['lead_status'] = 1;
 				$lead_hist['modified_by'] = $this->userdata['userid'];
-				$this->db->insert('lead_status_history', $lead_hist);
+				$this->db->insert('lead_stage_history', $lead_hist);
 				
 				$this->db->where('jobid', $insert_id);
 				$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));

@@ -281,7 +281,7 @@ class Welcome_model extends Common_model {
 	public function get_lead_stat_history($id)
 	{
 	    $this->db->select('lsh.dateofchange, us.first_name, us.last_name, ls.lead_stage_name');
-	    $this->db->from($this->cfg['dbpref'].'lead_status_history lsh');
+	    $this->db->from($this->cfg['dbpref'].'lead_stage_history lsh');
 	    $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = lsh.changed_status', 'LEFT');
 	    $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = lsh.modified_by', 'LEFT');
 		$this->db->where("jobid", $id);

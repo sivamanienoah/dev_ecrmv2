@@ -217,8 +217,10 @@
 				if($masterId!=NULL && $masterId !='') {
 				$ci =&get_instance(); 
 				$ci->load->database(); 
-				//$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from crm_masters  as vm where vm.master_parent_id ='.$masterId .' order by vm.master_parent_id desc,vm.masterid asc');
-				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from crm_masters  as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.masterid asc');
+				$this->cfg = $this->config->item('crm');
+				
+				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$this->cfg['dbpref'].'masters  as vm where vm.master_parent_id ='.$masterId .' order by vm.master_parent_id desc,vm.masterid asc');
+				
 				$SubMenuitms = $ci->db->get();
 				//echo $ci->db->last_query();				 
 				$submenus = $SubMenuitms->result_array();
@@ -242,7 +244,9 @@
 				if($string!=NULL && $string !='') {
 					$ci =&get_instance(); 
 					$ci->load->database(); 
-					$ci->db->select('vm.master_parent_id ,mrl.view,mrl.add,mrl.edit,mrl.delete from crm_masters as vm JOIN  master_roles as mrl on mrl.masterid= vm.master_parent_id  where vm.controller_name ="'.$string.'" and mrl.role_id="'.$id.'" ');
+					$this->cfg = $this->config->item('crm');
+					
+					$ci->db->select('vm.master_parent_id ,mrl.view,mrl.add,mrl.edit,mrl.delete from '.$this->cfg['dbpref'].'masters as vm JOIN  master_roles as mrl on mrl.masterid= vm.master_parent_id  where vm.controller_name ="'.$string.'" and mrl.role_id="'.$id.'" ');
 					$ci->db->limit('1','0');
 					$masterId = $ci->db->get();
 					//echo $ci->db->last_query();				 

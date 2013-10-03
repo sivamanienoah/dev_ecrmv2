@@ -2653,10 +2653,10 @@ $(window).load(function(){
 					<?php
 						//mychanges
 						$jid = $this->uri->segment(3); //16 
-						$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+						$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
 						$jres = $jsql->result();
 						$worthid = $jres[0]->expect_worth_id;
-						$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+						$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
 						$eres = $expect_worth->result();
 						$symbol = $eres[0]->expect_worth_name;
 						
@@ -2764,10 +2764,10 @@ $(window).load(function(){
 						<?php 
 						//mychanges
 			$jid = $this->uri->segment(3); //16 
-			$jsql = $this->db->query("select expect_worth_id from crm_jobs where jobid='$jid'");
+			$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
-			$expect_worth = $this->db->query("select expect_worth_name from crm_expect_worth where expect_worth_id='$worthid'");
+			$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
 			$eres = $expect_worth->result();
 			$symbol = $eres[0]->expect_worth_name;
 			
