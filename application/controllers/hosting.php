@@ -131,7 +131,7 @@ class Hosting extends CI_Controller {
 
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 if ($this->hosting_model->update_account($id, $update_data)) {
-					//delete and again inserting into crm_hosting_package - Starts here
+					//delete and again inserting into hosting_package - Starts here
 						$this->db->query("DELETE FROM ".$this->cfg['dbpref']."hosting_package WHERE hostingid_fk='{$id}'");
 						$packageid_fk = $this->input->post('packageid_fk');
 						if(is_array($packageid_fk))
@@ -153,7 +153,7 @@ class Hosting extends CI_Controller {
                 }
             } else {
                 if ($newid = $this->hosting_model->insert_account($update_data)) {
-					//inserting into crm_hosting_package - Starts here
+					//inserting into hosting_package - Starts here
 						$packageid_fk=$this->input->post('packageid_fk');
 						//$this->db->query("DELETE FROM ".$this->cfg['dbpref']."hosting_package WHERE hostingid_fk='{$id}'");
 						if(is_array($packageid_fk))
