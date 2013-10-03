@@ -77,27 +77,11 @@ class Customer_model extends Common_model {
         if ($search != false)
         {
             $search = mysql_real_escape_string(urldecode($search));
-            
-            /*$sql = "SELECT *
-                    FROM `{$this->login_model->cfg['dbpref']}_customers as CUST`
-					LEFT JOIN crm_region as REG ON CUST.add1_region = REG.regionid
-					LEFT JOIN crm_country as COUN ON CUST.add1_country = COUN.countryid
-                    WHERE
-                    {$restrict_search}
-                    (
-                        CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%$search%'
-                        OR `first_name` LIKE '%$search%'
-                        OR `last_name` LIKE '%$search%'
-                        OR `company` LIKE '%$search%'
-                        OR `email_1` LIKE '%$search%'
-                        OR `add1_region` LIKE '%$search%'
-                        OR `add1_country` LIKE '%$search%'
-                    )";*/
-					
+ 					
 			$sql = "SELECT *
                     FROM ".$this->cfg['dbpref']."customers as CUST
-					LEFT JOIN crm_region as REG ON CUST.add1_region = REG.regionid
-					LEFT JOIN crm_country as COUN ON CUST.add1_country = COUN.countryid
+					LEFT JOIN ".$this->cfg['dbpref']."region as REG ON CUST.add1_region = REG.regionid
+					LEFT JOIN ".$this->cfg['dbpref']."country as COUN ON CUST.add1_country = COUN.countryid
                     WHERE
                     {$restrict_search}
                     (
@@ -111,15 +95,6 @@ class Customer_model extends Common_model {
         else
         {
             $offset = mysql_real_escape_string($offset);
-            
-            /*$sql = "SELECT *
-                    FROM `{$this->login_model->cfg['dbpref']}_customers`
-                    {$restrict}
-                    LIMIT {$offset}, 20";*/
-			/*$sql = "SELECT CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name
-					FROM crm_customers AS CUST LEFT JOIN crm_region as REG ON CUST.add1_region = REG.regionid
-					LEFT JOIN crm_country as COUN ON CUST.add1_country = COUN.countryid {$restrict}
-                    LIMIT {$offset}, 20";*/
 					
 			$sql = "SELECT CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name
 					FROM ".$this->cfg['dbpref']."customers AS CUST 
