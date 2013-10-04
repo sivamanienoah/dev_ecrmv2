@@ -1,4 +1,4 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <?php   $region_ids = implode(',', $region_id); ?>
 <?php    $country_ids = implode(',', $country_id); ?>
 <?php    $state_ids = implode(',', $state_id); ?>
