@@ -450,7 +450,7 @@ class User extends CI_Controller {
 		//print_r($user_res);
 		//$res = '<select>';
 		$res = '';
-		$res .= "<option value='0'>Please Select</option>";
+		$res .= "<option value='not_select'>Please Select</option>";
 		foreach($user_res as $user) {
 			$res .= "<option value=".$user['userid'].">".$user['first_name']." ".$user['last_name']."</option>";
 		}
