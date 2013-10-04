@@ -1,4 +1,4 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div class="q-container">
 	<div class="q-details">
 		<div class="q-cust">
