@@ -589,6 +589,15 @@ if ( ! function_exists('_parse_attributes'))
 	}
 }
 
+if ( ! function_exists('theme_url'))
+{
+   function theme_url(){
+		$ci  = &get_instance(); 
+		$cfg = $ci->config->item('crm');
+		$theme_path = APPPATH."views/themes/".$cfg['theme'];
+		return $theme_path;
+   }
+}
 
 /* End of file url_helper.php */
 /* Location: ./system/helpers/url_helper.php */
