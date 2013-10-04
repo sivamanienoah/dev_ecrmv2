@@ -1,4 +1,5 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php 
+require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 	 
     <div class="inner">
