@@ -64,7 +64,7 @@ class Manage_lead_stage extends CI_Controller {
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
         {
-            $item_data = $this->db->get_where("{$this->cfg['dbpref']}_" . 'lead_stage', array('lead_stage_id' => $id));
+            $item_data = $this->db->get_where("{$this->cfg['dbpref']}" . 'lead_stage', array('lead_stage_id' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
             {

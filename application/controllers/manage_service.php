@@ -109,7 +109,7 @@ class Manage_service extends CI_Controller {
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
 		//for status
-		$this->db->where($this->cfg['dbpref'].'lead_source', $id);
+		$this->db->where('lead_source', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
@@ -198,7 +198,7 @@ class Manage_service extends CI_Controller {
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_pdt']))
         {
-            $item_data = $this->db->get_where("job_categories", array('cid' => $id));
+            $item_data = $this->db->get_where($this->cfg['dbpref']."job_categories", array('cid' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
             {
@@ -225,7 +225,7 @@ class Manage_service extends CI_Controller {
                 //update
                 $this->db->where('cid', $id);
                 
-                if ($this->db->update("job_categories", $update_data))
+                if ($this->db->update($this->cfg['dbpref']."job_categories", $update_data))
                 {	
                     $this->session->set_flashdata('confirm', array('Product Details Updated!'));
                 }
@@ -233,7 +233,7 @@ class Manage_service extends CI_Controller {
             else
             {
                 //insert
-                $this->db->insert("job_categories", $update_data);
+                $this->db->insert($this->cfg['dbpref']."job_categories", $update_data);
                 $this->session->set_flashdata('confirm', array('New Product Added!'));
                 
             }
@@ -244,7 +244,7 @@ class Manage_service extends CI_Controller {
 			$file = fopen($filename, "w");
 			fwrite($file, '<?php');
 			fwrite($file, "\n");
-			fwrite($file, '$config["vps"]["job_categories"] = array(');
+			fwrite($file, '$config["crm"]["job_categories"] = array(');
 			fwrite($file, "\n");
 			for($k=0;$k<count($get_jobscat);$k++) {
 				fwrite($file, $get_jobscat[$k]['cid']);
@@ -268,7 +268,7 @@ class Manage_service extends CI_Controller {
 		{
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 			{
-				$this->db->delete("job_categories", array('cid' => $id));
+				$this->db->delete($this->cfg['dbpref']."job_categories", array('cid' => $id));
 				$this->session->set_flashdata('confirm', array('Product Deleted.!'));
 				$get_jobscat = $this->manage_service_model->get_list_active(job_categories);
 				//echo "<pre>"; print_r($data['get_jobscat']);
@@ -322,7 +322,7 @@ class Manage_service extends CI_Controller {
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_dvsn']))
         {
-			$item_data = $this->db->get_where("sales_divisions", array('div_id' => $id));
+			$item_data = $this->db->get_where($this->cfg['dbpref']."sales_divisions", array('div_id' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
             {
@@ -349,7 +349,7 @@ class Manage_service extends CI_Controller {
                 //update
                 $this->db->where('div_id', $id);
                 
-                if ($this->db->update("sales_divisions", $update_data))
+                if ($this->db->update($this->cfg['dbpref']."sales_divisions", $update_data))
                 {	
                     $this->session->set_flashdata('confirm', array('Division Details Updated!'));
                 }
@@ -357,7 +357,7 @@ class Manage_service extends CI_Controller {
             else
             {
                 //insert
-                $this->db->insert("sales_divisions", $update_data);
+                $this->db->insert($this->cfg['dbpref']."sales_divisions", $update_data);
                 $this->session->set_flashdata('confirm', array('New Division Added!'));
             }
 				//write into array
@@ -433,7 +433,7 @@ class Manage_service extends CI_Controller {
 	//function for checking the status 
 	function ajax_check_status() {
 		$leadId = $_POST['data'];
-		$this->db->where($this->cfg['dbpref'].'lead_source', $leadId);
+		$this->db->where('lead_source', $leadId);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
 		if($query == 0) {
