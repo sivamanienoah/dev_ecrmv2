@@ -1,4 +1,4 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
  
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
  
