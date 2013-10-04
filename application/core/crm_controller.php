@@ -7,6 +7,7 @@ class crm_controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->cfg = $this->config->item('crm');
 	}
 }
 // END Controller class
