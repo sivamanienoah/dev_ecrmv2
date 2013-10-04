@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require (APPPATH . 'views/tpl/header.php');
+require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
 //echo baseurl();
 ?>
