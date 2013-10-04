@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Request extends CI_Controller {
+class Request extends crm_controller {
 	
 	public $cfg;
 	public $userdata;
@@ -9,7 +9,6 @@ class Request extends CI_Controller {
 	{
 		parent::__construct();
 		$this->login_model->check_login();
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
 	}
 	

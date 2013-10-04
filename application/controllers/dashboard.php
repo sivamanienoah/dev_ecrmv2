@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Dashboard extends CI_Controller {
+class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
 
@@ -14,7 +14,6 @@ class Dashboard extends CI_Controller {
 		$this->load->model('welcome_model');
 		$this->load->helper('custom_helper');
 		$this->load->helper('lead_stage_helper');
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
 	}
 	

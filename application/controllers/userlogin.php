@@ -1,13 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Userlogin extends CI_Controller {
+class Userlogin extends crm_controller {
 
      public function __construct()
 	{
        parent::__construct();	 
         $this->load->model('role_model');  		 
         $this->load->model('regionsettings_model'); 
-		$this->cfg = $this->config->item('crm');		
     }
     function Userlogin() {
        

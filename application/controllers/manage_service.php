@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Manage_service extends CI_Controller {
+class Manage_service extends crm_controller {
 	
 	public $cfg;
 	public $userdata;
@@ -10,7 +10,6 @@ class Manage_service extends CI_Controller {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_service_model');
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     

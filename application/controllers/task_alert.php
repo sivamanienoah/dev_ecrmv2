@@ -1,5 +1,5 @@
 <?php
-class task_alert extends CI_Controller {
+class task_alert extends crm_controller {
     
 	public $userdata;
 	

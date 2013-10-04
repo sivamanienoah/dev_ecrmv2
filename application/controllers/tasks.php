@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Tasks extends CI_Controller {
+class Tasks extends crm_controller {
     
 	public $userdata;
 	public $cfg;
@@ -12,7 +12,6 @@ class Tasks extends CI_Controller {
 		//$this->login_model->check_login(array(0, 1, 2, 3, 5, 4, 6));
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
-		$this->cfg = $this->config->item('crm');
     }
 	
 	public function index($extend = FALSE)

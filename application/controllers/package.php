@@ -1,13 +1,12 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Package extends CI_Controller {
+class Package extends crm_controller {
 	function Package()
 	{
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->load->model('package_model');
         $this->load->library('validation');
-		$this->cfg = $this->config->item('crm');
 	}
 	function index($limit = 0, $search = false){
 		$data['accounts'] = $this->package_model->result_list($limit, $search);

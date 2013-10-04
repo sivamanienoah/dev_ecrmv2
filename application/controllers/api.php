@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Api extends CI_Controller {
+class Api extends crm_controller {
 	
 	public $cfg;
 	
@@ -31,7 +31,6 @@ class Api extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->cfg = $this->config->item('crm');
 	}
 	
 	public function index() {	}

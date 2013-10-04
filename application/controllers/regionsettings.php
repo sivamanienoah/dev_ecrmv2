@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Regionsettings extends CI_Controller {
+class Regionsettings extends crm_controller {
     
 	public $userdata;
 	
@@ -10,8 +10,6 @@ class Regionsettings extends CI_Controller {
 		$this->login_model->check_login();        
         $this->load->model('regionsettings_model');
         $this->load->library('validation');
-		$this->cfg = $this->config->item('crm');
-		
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     

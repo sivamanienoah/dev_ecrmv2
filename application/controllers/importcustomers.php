@@ -1,5 +1,5 @@
 <?php
-class ImportCustomers extends CI_Controller {
+class ImportCustomers extends crm_controller {
     
 	public $userdata;
 	private $import_dryrun = FALSE;

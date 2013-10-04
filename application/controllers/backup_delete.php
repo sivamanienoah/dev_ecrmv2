@@ -11,7 +11,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  * @author Asanka Dewage
  * @copyright Copyright (c) 2008 Visiontech Solutions
  */
-class Backup extends CI_Controller {
+class Backup extends crm_controller {
 	
 	var $cfg;
 	var $userdata;
@@ -19,7 +19,6 @@ class Backup extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->library('email');
 		$this->email->initialize($config);

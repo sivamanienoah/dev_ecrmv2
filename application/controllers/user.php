@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class User extends CI_Controller {
+class User extends crm_controller {
     
 	public $userdata;
 	
@@ -12,7 +12,6 @@ class User extends CI_Controller {
         $this->load->model('role_model');
         $this->load->library('validation');
 		$this->userdata = $this->session->userdata('logged_in_user');
-		$this->cfg = $this->config->item('crm');
     }
     
     public function index($limit = 0, $search = false)

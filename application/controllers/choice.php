@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Choice extends CI_Controller {
+class Choice extends crm_controller {
 	
 	var $cfg;
 	var $userdata;
@@ -13,7 +13,6 @@ class Choice extends CI_Controller {
 		$this->login_model->check_login();
 		$this->load->model('regionsettings_model');
 		$this->load->model('welcome_model');
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
 	}
 	

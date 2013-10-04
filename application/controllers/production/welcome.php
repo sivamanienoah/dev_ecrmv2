@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Welcome extends crm_controller {
 	
 	var $cfg;
 	var $userdata;
@@ -9,7 +9,6 @@ class Welcome extends CI_Controller {
 	{
 		parent::Controller();
 		$this->login_model->check_login();
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
 	}
 	

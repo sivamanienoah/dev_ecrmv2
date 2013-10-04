@@ -1,5 +1,5 @@
 <?php
-class leadsdue_cron extends CI_Controller {
+class leadsdue_cron extends crm_controller {
     
 	public $userdata;
 	

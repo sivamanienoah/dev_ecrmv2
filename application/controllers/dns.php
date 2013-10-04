@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Dns extends CI_Controller {
+class Dns extends crm_controller {
 
 	function Dns()
 	{

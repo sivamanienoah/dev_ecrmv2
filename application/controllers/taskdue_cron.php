@@ -1,5 +1,5 @@
 <?php
-class taskdue_cron extends CI_Controller {
+class taskdue_cron extends crm_controller {
     
 	public $userdata;
 	

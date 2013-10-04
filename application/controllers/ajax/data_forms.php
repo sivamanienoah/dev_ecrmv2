@@ -1,13 +1,12 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Data_forms extends CI_Controller {
+class Data_forms extends crm_controller {
 
 	public $cfg;
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->cfg = $this->config->item('crm');
 		$this->load->model('regionsettings_model');
 	}
 	

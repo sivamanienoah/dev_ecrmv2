@@ -1,12 +1,11 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Hosting extends CI_Controller {
+class Hosting extends crm_controller {
 
 	function Hosting()
 	{
 		parent::__construct();
 		$this->login_model->check_login();
-		$this->cfg = $this->config->item('crm');
 		$this->load->model('hosting_model');
         $this->load->model('customer_model');
 		$this->load->model('package_model');

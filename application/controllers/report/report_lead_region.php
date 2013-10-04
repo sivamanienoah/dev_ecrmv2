@@ -1,5 +1,5 @@
 <?php
-class report_lead_region extends CI_Controller {
+class report_lead_region extends crm_controller {
     
 	public $userdata;
 	
@@ -8,7 +8,6 @@ class report_lead_region extends CI_Controller {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
-		$this->cfg = $this->config->item('crm');
         $this->load->model('report/report_lead_region_model');
         $this->load->model('welcome_model');
         $this->load->model('regionsettings_model');        

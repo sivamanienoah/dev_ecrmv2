@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Master extends CI_Controller {
+class Master extends crm_controller {
     
 	public $userdata;
 	
@@ -11,7 +11,6 @@ class Master extends CI_Controller {
 		$this->login_model->check_login();        
         $this->load->model('master_model');
         $this->load->library('validation');
-		$this->cfg = $this->config->item('crm');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     

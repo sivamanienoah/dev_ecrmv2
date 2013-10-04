@@ -1,5 +1,5 @@
 <?php
-class report_least_active_lead extends CI_Controller {
+class report_least_active_lead extends crm_controller {
     
 public $userdata;
 	
@@ -8,7 +8,6 @@ public $userdata;
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
-		$this->cfg = $this->config->item('crm');		
 		$this->load->model('report/report_lead_region_model');
         $this->load->model('report/report_least_active_lead_model');        
         $this->load->model('welcome_model');

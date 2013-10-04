@@ -1,5 +1,5 @@
 <?php
-class hosting_cron extends CI_Controller {
+class hosting_cron extends crm_controller {
     
 	public $userdata;
 	
@@ -8,7 +8,6 @@ class hosting_cron extends CI_Controller {
         parent::__construct();
 		//$this->login_model->check_login();
 		//$this->userdata = $this->session->userdata('logged_in_user');
-		$this->cfg = $this->config->item('crm');
         $this->load->model('customer_model');
         $this->load->library('validation');
 		$this->load->library('email');
