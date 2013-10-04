@@ -227,7 +227,7 @@
 		}?>
 	</div>
 </div>
-<?php require (APPPATH . 'views/tpl/footer.php'); ?>
+<?php require (theme_url(). '/tpl/footer.php'); ?>
 <script type="text/javascript"> 
 $(document).ready(function() {
 $('.error').hide();

@@ -54,4 +54,4 @@ $(function(){
 	$('.pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: 0});
 });
 </script>
-<?php require (APPPATH . 'views/tpl/footer.php'); ?>
+<?php require (theme_url(). '/tpl/footer.php'); ?>

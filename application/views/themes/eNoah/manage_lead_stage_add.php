@@ -1,4 +1,4 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php require (theme_url() . '/tpl/header.php'); ?>
 <div id="content">
     <div class="inner">
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
@@ -45,4 +45,4 @@
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 
-<?php require (APPPATH . 'views/tpl/footer.php'); ?>
+<?php require (theme_url(). '/tpl/footer.php'); ?>

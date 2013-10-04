@@ -40,4 +40,4 @@
 		</form>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
-<?php require (APPPATH . 'views/tpl/footer.php'); ?>
+<?php require (theme_url(). '/tpl/footer.php'); ?>

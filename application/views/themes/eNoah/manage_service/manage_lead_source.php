@@ -157,6 +157,6 @@ function timerfadeout() {
 </script>
 
 <?php
-require (APPPATH . 'views/tpl/footer.php');
+require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
 ?>
