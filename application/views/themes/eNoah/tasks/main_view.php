@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require VIEWPATH . 'tpl/header.php'; 
+require (theme_url().'/tpl/header.php'); 
 ?>
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
