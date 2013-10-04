@@ -1,4 +1,4 @@
-<?php require (APPPATH . 'views/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
  <?php //echo '<pre>'; print_r($masters); echo '</pre>'; ?>
 <div id="content">
     <div class="inner">
