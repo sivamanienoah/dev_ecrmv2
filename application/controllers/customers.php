@@ -1194,7 +1194,7 @@ function importload(){
 				
 		 }
 		 }
-		if(empty($data[0]) || empty($data[1]) || empty($data[3])|| empty($data[8]) || empty($data[16]) ) {
+		if(empty($data[0]) || empty($data[1]) || empty($data[3])|| empty($data[8]) || empty($data[9]) || empty($data[10])|| empty($data[11]) || empty($data[16]) ) {
 		  $strdupdata1=$data[0] ."<br>";			            
 		} else {
 			$email = $data[16]; // Invalid email address 
