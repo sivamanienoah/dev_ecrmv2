@@ -195,7 +195,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			if($menu_items['0'] == 84) { //customer
 			   $addImpCus = $menu_items[9];
 			}
-			if($menu_items['0'] == 118) { //reports
+			if($menu_items['0'] == 113) { //reports
 			   $viewReport = $menu_items[8];			   
 			}
 		}  	 
