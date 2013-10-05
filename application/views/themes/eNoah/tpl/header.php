@@ -56,26 +56,29 @@ if ($this->session->userdata('logged_in') == TRUE) {
 
 <div id="page">
 
-	<div class="header">
-
-<div id="logo">
-		<a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt="" /></a>
-</div>
-<?php //echo '<pre>'; print_r($userdata); echo '</pre>'; ?>
-
-<div id="user-status">
-	<?php
-	if ($this->session->userdata('logged_in') == TRUE) {
-	?>
-		<p id="user">
-			<?php echo  ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | <?php echo  $userdata['name'] ?> &nbsp; <a href="userlogin/">Sign out?</a>
-		</p>
-	<?php } else { ?>
-	
-		<p id="user"><a href="userlogin/">Login</a></p>
-		
-	<?php } ?>
-	<p class="date-time"><?php echo  date('l jS F Y') ?> <span class="msg-highlight"></span></p>
+<div class="header">
+	<div id="logo"><a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt=""/></a></div>
+	<div class="row-two">
+		<div class="client-logo">
+			<?php 
+			if (getClientLogo()) {
+				$cilentLogo = getClientLogo();
+			?>
+			<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="assets/img/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
+			<?php	
+			} else {
+			?>
+			<a href="dashboard"><img src="" /></a>
+			<?php } ?>
+		</div>
+		<div id="user-status">
+			<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
+				<p id="user"><?php echo  ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | <?php echo  $userdata['name'] ?> &nbsp; <a href="userlogin/">Sign out?</a></p>
+			<?php } else { ?>
+				<p id="user"><a href="userlogin/">Login</a></p>
+			<?php } ?>
+			<p class="date-time"><?php echo  date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
+		</div>
 	</div>
 </div>
 	
