@@ -265,7 +265,7 @@ class Welcome_model extends Common_model {
 		$this->db->select('sequence, lead_stage_id');
 		$this->db->from($this->cfg['dbpref'] . 'lead_stage');
 		$this->db->where("status",1);
-		$this->db->where("is_sale", 1);
+		// $this->db->where("is_sale", 1);
 		$ls = $this->db->get();
 		$res = $ls->row_array();
 		
@@ -531,10 +531,13 @@ class Welcome_model extends Common_model {
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			
-			if($stage[0] != 'null' && $stage[0] != '0'){		
-				$this->db->where_in('j.job_status',$stage); 
+			if($stage[0] != 'null'){		
+				// $this->db->where_in('j.job_status',$stage);
+				$this->db->where("j.lead_status", 4);
+				$this->db->where_in("j.pjt_status", $stage);
 			} else {
-				$this->db->where('j.jobid != "null" AND j.job_status IN (13,14,15,16)');
+				// $this->db->where("j.jobid != 'null' AND j.job_status IN ('".$this->pjt_stages."')");
+				$this->db->where("j.jobid != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
 			}
 			
 			if($customer[0] != 'null' && $customer[0] != '0'){		
@@ -552,7 +555,6 @@ class Welcome_model extends Common_model {
 			$this->db->order_by("j.jobid", "desc");
 		}
 		else {
-			
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -561,7 +563,7 @@ class Welcome_model extends Common_model {
 			$data['jobids'] = $rowscj->result_array();
 
 			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
-			$sqlJobs = "SELECT jobid FROM `".$this->cfg['dbpref']."jobs` WHERE (`assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."') AND job_status in (13,14,15,16) ";
+			$sqlJobs = "SELECT jobid FROM `vps3_jobs` WHERE (`assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."') AND lead_status IN ('4') AND pjt_status !='0' ";
 			$rowsJobs = $this->db->query($sqlJobs);
 			//echo $this->db->last_query();
 			$data['jobids1'] = $rowsJobs->result_array();
@@ -577,24 +579,22 @@ class Welcome_model extends Common_model {
 			$result_ids = array_unique($res);
 			$curusid= $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.complete_status,
-			j.date_start, j.date_due,
-			c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.complete_status,j.date_start, j.date_due,			c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'customers as c');		
 			$this->db->join($this->cfg['dbpref'] . 'jobs as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->where_in('j.jobid', $result_ids);
 			
 			
-			if($stage[0] != 'null' && $stage[0] != '0') {
-				$this->db->where_in('j.job_status',$stage); 
-				$this->db->where('j.belong_to', $curusid);
+			if($stage[0] != 'null') {
+				$this->db->where("j.lead_status", 4);
+				$this->db->where_in("j.pjt_status", $stage);
 			} else {
-				$this->db->where('j.job_status IN (13,14,15,16)');
+				$this->db->where("j.jobid != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
 			}
 			
 			if($customer[0] != 'null' && $customer[0] != '0') {		
-				$this->db->where_in('j.custid_fk',$customer);				
+				$this->db->where_in('j.custid_fk',$customer);		
 			}
 			
 			if($pm[0] != 'null' && $pm[0] != '0') {		
@@ -609,6 +609,7 @@ class Welcome_model extends Common_model {
 			
 		}
 		$query = $this->db->get();
+		// echo $this->db->last_query();
 		
 		$pjts =  $query->result_array();		
 		return $pjts;

@@ -72,7 +72,11 @@ $config['crm']['tasks_search']  = array(
                                     1 => 'Completed',
 									-1 => 'All'
                                 );
-								
+
+$config['crm']['max_allowed_users'] = array(
+											0=>27
+											);
+											
 $config['crm']['director_emails']  = array(
                                     'Admin' => 'rshankar@enoahisolution.com',
                                    );		

@@ -1,76 +1,27 @@
-<?php
-
-$hostingid=array();
-if(!empty($packages)) {
-	
+<?php require (theme_url().'/tpl/header.php'); ?>
+<style type="text/css">
+.choice-box {
+    width:260px;
+    padding:15px;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    background:#a8cb17;
+    float:left;
+    margin:0 35px 30px 0;
+	color:#a8cb17;
+	cursor:pointer;
+	position:relative;
+	color:#fefffd;
+	font-weight:bold;
 }
-else {
-	if(!empty($hosting)){
-		foreach($hosting as $val){
-			$v=$val['hostingid_fk'];$k=$val['jobid_fk'];
-			$hostingid[$k]=$v;
-		}
-	}
+.choice-box img {
+	position:absolute;
+	right:5px;
+	top:-20px;
 }
-if(!empty($packages)){
-	$pack=array();
-	foreach($packages as $val){
-		$t=$val['package_id'];
-		$pack[$t]=$val['package_name'];	
-	}
-}
-?><?php require ('tpl/header.php'); ?>
+</style>
+<?php $controller_uri = 'invoice'; ?>
 <div id="content">
-	<script type="text/javascript" src="assets/js/j-tip.js?q=8"></script>
-	<style type="text/css">
-	#JT {
-		position:absolute;
-		background:#333;
-	}
-	#JT_close_left {
-		padding:5px 0 0 10px;
-	}
-	#JT_copy {
-		padding-left:10px;
-	}
-	.myjob {
-		background:#222;
-	}
-	.csr-option-wrap {
-		display:block;
-		width:auto;
-		overflow:visible;
-		position:relative;
-	}
-	.csr-option-wrap .in-csr {
-		display:block;
-		position:absolute;
-		top:-2px;
-		left:-27px;
-	}
-	</style>
-	<?php
-	if ($this->uri->segment(1) == 'invoice')
-	{
-		include ('tpl/invoice_submenu.php');
-		$controller_uri = 'invoice';
-	}
-	elseif ($this->uri->segment(1) == 'subscription')
-	{
-		include ('tpl/subscription_submenu.php');
-		$controller_uri = 'subscription';
-	}
-	elseif ($this->uri->segment(1) == 'production')
-	{
-		include ('tpl/production_submenu.php');
-		$controller_uri = 'production/welcome';
-	}
-	else
-	{
-		include ('tpl/quotation_submenu.php');
-		$controller_uri = 'welcome';
-	}
-	?>
 	<div class="inner">
 		<?php  	if($this->session->userdata('accesspage')==1) {   ?>
 		<form action="" method="post" style="float:right;">
@@ -90,33 +41,68 @@ if(!empty($packages)){
                         </div>
                     </td>
                 </tr>
-				<?php if(!empty($packages)){ ?>
-				<tr>
-					<td>
-                        Filter By Package
-                    </td>
-					<td>
-					<select name="pack_name" class="textfield width180px">
-					<?php
-					if(!empty($pack)){
-						(isset($_POST['pack_name'])) ? $pk_nm= $_POST['pack_name']:$pk_nm=0;
-						($pk_nm==-1)? $s=' selected="selected"':$s='';
-						echo '<option value="0">All Packages</option>';
-						echo '<option value="-1" '.$s.'>No Packages</option>';
-						foreach($pack as $k=>$v) {
-							($pk_nm==$k)? $s=' selected="selected"':$s='';
-							echo '<option value="'.$k.'" '.$s.'>'.$v.'</option>';
-						}
-					}					
-					?>
-					</select>
-					</td>
-				</tr>
-				<?php } ?>
             </table>
 		</form>
 		
 	    <h2><?php echo $page_heading ?></h2>
+		
+		<a class="choice-box" onclick="advanced_filter_pjt();" >
+			Advanced Filters
+			<img src="assets/img/icon_view_leads.png" class="icon leads" />
+		</a>
+		
+		<div id="advance_search_pjt" style="float:left; width:100%;" >
+		
+		<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
+		
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
+			<thead>
+				<tr>
+					<th>By Project Status Wise</th>
+					<th>By Project Manager Wise</th>
+					<th>By Customer Wise</th>
+				</tr>	
+			</thead>
+			<tbody>
+			<tr>	
+				<td>
+					<select style="width:230px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
+						<option value="1">Project In Progress</option>
+						<option value="2">Project Completed</option>
+						<option value="3">Project Onhold</option>
+						<option value="4">Inactive</option>
+					</select> 
+				</td>
+				
+				<td>
+					<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
+						<?php foreach($pm_accounts as $pm_acc) {?>
+						<option value="<?php echo $pm_acc['userid']; ?>">
+						<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
+						<?php } ?>
+					</select> 
+				</td>
+				
+				<td>
+					<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
+						<?php foreach($customers as $customer) {?>
+						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr align="right" >
+				<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
+				<input type="submit" class="positive" name="advance_pjt" value="Search" /></td>
+			
+			</tr>
+			</tbody>
+			</table>
+		</form>
+	</div>
+		<div class="clearfix"></div>
 		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -124,15 +110,16 @@ if(!empty($packages)){
 		<table border="0" cellpadding="0" cellspacing="0" class="data-table" style="width:1200px !important;">
             
             <thead>
-					<th width="60">Action</th>
-					<th width="50">Project No.</th>
-					<th width="70">Project ID</th>
-					<th width="120">Project Title</th>
-					<th width="120" class="cust-data">Customer</th>
-					<th width="120">Project Manager</th>
-					<th width="60">Planned Start Date</th>
-					<th width="60">Planned End Date</th>					
-					<th width="50">Project Status</th>
+				<th width="60">Action</th>
+				<th width="50">Project No.</th>
+				<th width="70">Project ID</th>
+				<th width="120">Project Title</th>
+				<th width="120" class="cust-data">Customer</th>
+				<th width="120">Project Manager</th>
+				<th width="60">Planned Start Date</th>
+				<th width="60">Planned End Date</th>	
+				<th width="40">Project Completion</th>
+				<th width="90">Project Status</th>
             </thead>
             
             <tbody>
@@ -190,6 +177,27 @@ if(!empty($packages)){
 						<td><?php if ($record['date_due'] == "") echo "-"; else echo  date('d-m-Y', strtotime($record['date_due'])) ?></td>
 						
 						<td class="actions" align="center"><?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?></td>
+						
+						<td class="actions" align="center">
+							<?php
+							switch ($record['pjt_status'])
+								{
+									case 1:
+										$pjtstat = 'Project In Progress';
+									break;
+									case 2:
+										$pjtstat = 'Project Completed ';
+									break;
+									case 3:
+										$pjtstat = 'Project Onhold';
+									break;
+									case 4:
+										$pjtstat = 'Inactive';
+									break;
+								}
+							 echo $pjtstat;
+							 ?>
+						</td>
 					</tr>
 						<?php
 					} 
@@ -214,77 +222,69 @@ if(!empty($packages)){
 <!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
 <script type="text/javascript">
 $(function(){
-
     $(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
 	//.tablesorterPager({container: $("#pager"), positionFixed: false});
     $('.data-table tr, .data-table th').hover(
         function() { $(this).addClass('over'); },
         function() { $(this).removeClass('over'); }
     );
-
-	$('.project-cost-toggle').change(function(){
-		
-		if ($(this).is(':checked'))	$('.project-item-cost-toggle').attr('checked', true);
-		else $('.project-item-cost-toggle').removeAttr('checked', false);
-		calculateProjectTotals();
-	});
-	
-	calculateProjectTotals();
-	
-	$('.project-item-cost-toggle, #adjust_for_deposits').change(calculateProjectTotals);
 });
 
-function calculateProjectTotals()
-{
-	var adjust_deposits = $('#adjust_for_deposits').is(':checked');
-	var the_totals = 0;
-	$('.project-item-cost-toggle:checked').each(function(){
-		var tempTotal = parseFloat($(this).siblings('span').text());
-		var tempDeposits = parseFloat($(this).siblings('em').text());
-		if (adjust_deposits && !isNaN(tempDeposits)) tempTotal -= tempDeposits;
-		the_totals += parseFloat(tempTotal);
-	});
-	$('.project-cost-total').text('$' + number_format(the_totals, 2, '.', ','));
+//For Projects
+var pjtstage = $("#pjt_stage").val(); 
+var pm_acc = $("#pm_acc").val(); 
+var cust = $("#customer1").val(); 
+var keyword = $("#keywordpjt").val(); 
+//alert(keyword);
+if(keyword == "Project No, Project Title, Name or Company")
+	keyword = 'null';
+
+if (document.getElementById('advance_search_pjt'))
+	document.getElementById('advance_search_pjt').style.display = 'none';
+
+	function advanced_filter_pjt(){
+	$('#advance_search_pjt').slideToggle('slow');
+	var  keyword = $("#keywordpjt").val();
+	var status = document.getElementById('advance_search_pjt').style.display;
+	
+	if(status == 'none') {
+		var pjtstage = $("#pjt_stage").val(); 
+		var pm_acc = $("#pm_acc").val(); 
+		var cust = $("#customer1").val(); 
+	}
+	else   {
+		$("#pjt_stage").val("");
+		$("#pm_acc").val("");
+		$("#customer1").val("");
+	}
 }
 
-function number_format(number, decimals, dec_point, thousands_sep) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +     bugfix by: Michael White (http://getsprink.com)
-    // +     bugfix by: Benjamin Lupton
-    // +     bugfix by: Allan Jensen (http://www.winternet.no)
-    // +    revised by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
-    // +     bugfix by: Howard Yeend
-    // +    revised by: Luke Smith (http://lucassmith.name)
-    // +     bugfix by: Diogo Resende
-    // +     bugfix by: Rival
-    // +      input by: Kheang Hok Chin (http://www.distantia.ca/)
-    // +   improved by: davook
-    // +   improved by: Brett Zamir (http://brett-zamir.me)
-    // +      input by: Jay Klehr
-    // +   improved by: Brett Zamir (http://brett-zamir.me)
-    // +      input by: Amir Habibi (http://www.residence-mixte.com/)
-    // +     bugfix by: Brett Zamir (http://brett-zamir.me)
-    var n = !isFinite(+number) ? 0 : +number, 
-        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-        s = '',
-        toFixedFix = function (n, prec) {
-            var k = Math.pow(10, prec);
-            return '' + Math.round(n * k) / k;
-        };
-    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-    if (s[0].length > 3) {
-        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-    }
-    if ((s[1] || '').length < prec) {
-        s[1] = s[1] || '';
-        s[1] += new Array(prec - s[1].length + 1).join('0');
-    }
-    return s.join(dec);
-}
+$('#advanceFilters_pjt').submit(function() {	
+	var pjtstage = $("#pjt_stage").val(); 
+	var pm_acc = $("#pm_acc").val(); 
+	var cust = $("#customer1").val(); 
+	var  keyword = $("#keywordpjt").val(); 
+	if(keyword == "Project No, Project Title, Name or Company")
+	keyword = 'null';
+	document.getElementById('ad_filter').style.display = 'block';	
+	var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	//alert(sturl);
+	$('#ad_filter').load(sturl);	
+	return false;
+});
+
+$('#pjt_search_form').submit(function() {	
+		var  keyword = $("#keywordpjt").val(); 
+		if(keyword == "Project No, Project Title, Name or Company")
+		keyword = 'null';
+		var pjtstage = $("#pjt_stage").val(); 
+		var pm_acc = $("#pm_acc").val(); 
+		var cust = $("#customer1").val();  
+		//document.getElementById('ad_filter').style.display = 'block';
+		var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+		$('#ad_filter').load(sturl);
+		return false;
+});
+
 </script>
 <?php require ('tpl/footer.php'); ?>

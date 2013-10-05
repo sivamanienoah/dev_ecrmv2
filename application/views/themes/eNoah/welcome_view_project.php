@@ -33,7 +33,7 @@ $(document).ready(function() {
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
 	$("#show-con").hide();
 	$("#show-btn").click(function(){
-		$("#show-con").slideToggle("slow"); //$("#show-con").slideDown();	
+	$("#show-con").slideToggle("slow"); //$("#show-con").slideDown();	
 	return false;
 	});
 	$('.payment-profile-button').click(function() {
@@ -1956,28 +1956,6 @@ $(window).load(function(){
     <div class="inner q-view">
 		<div class="right-communication">
 			
-			<!--
-			<form action="request" method="post" style="margin-bottom:2px;">
-				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-					<tr>
-						<td>
-							Project Search
-						</td>
-						<td>
-							<input type="text" name="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width200px pjt-search" />				
-						</td>
-						<td>
-							<div class="buttons">
-								<button type="submit" class="positive">
-									
-									Search
-								</button>
-							</div>
-						</td>
-					</tr>
-				</table>
-			</form>
-			-->
 			<?php
 			if (isset($jobs_under_type))
 			{
@@ -2024,7 +2002,6 @@ $(window).load(function(){
 				?>
 				<div style="overflow:hidden;">
 					
-					<!--<p class="right" style="padding-left:15px;">Add your time in minutes <input type="text" name="log_minutes" id="log_minutes" class="textfield" style="width:40px;" /></p>-->
 					<p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p>
 					<div class="button-container">
 						<div class="buttons">
@@ -2350,6 +2327,29 @@ $(window).load(function(){
 					<?php } ?>
 				</div>	
 			</form>
+			<form>
+				<div>
+					<div style="float:left;">
+						<h5><label class="project-val">Project Status</label>&nbsp;&nbsp;
+						<select name="pjt_status" id="pjt_status" class="textfield" style="width:138px;">
+							<option value="1"  <?php if($quote_data['pjt_status'] == 1) echo 'selected="selected"'; ?>>Project In Progress</option>
+							<option value="2"  <?php if($quote_data['pjt_status'] == 2) echo 'selected="selected"'; ?>>Project Completed</option>
+							<option value="3"  <?php if($quote_data['pjt_status'] == 3) echo 'selected="selected"'; ?>>Project Onhold</option>
+							<option value="4"  <?php if($quote_data['pjt_status'] == 4) echo 'selected="selected"'; ?>>Inactive</option>
+                        </select>
+						<input type="hidden" class="hiddenUrl"/>
+						</h5>
+					</div>					
+					<?php if ($chge_access == 1) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 124px;" onclick="setProjectStatus(); return false;">
+							Set Project Status
+						</button>
+						<div id="resmsg" class="error-msg"></div>
+					</div>
+					<?php } ?>
+				</div>	
+			</form>
 			<div class="action-buttons" style="overflow:hidden;">
 				<?php
 				
@@ -2595,7 +2595,7 @@ $(window).load(function(){
 			 */
 			// if ( in_array($userdata['level'], array(0,1,4)))
 			
-			include 'tpl/status_change_project.php';
+			// include 'tpl/status_change_project.php';
 			
 			?>
 			</div>
@@ -3642,6 +3642,8 @@ function paymentProfileDelete(eid) {
 function timerfadeout() {
 	$('#paymentfadeout').fadeOut();
 	$('#rec_paymentfadeout').fadeOut();
+	$('#resmsg, #pjt_val_errormsg, #checkVal1, #checkVal').fadeOut();
+	$('#pjt_id_errormsg, .checkUser, #id-existsval').fadeOut();
 }
 <!--Add Payment Terms Delete function Ends here -->
 

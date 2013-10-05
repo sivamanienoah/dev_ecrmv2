@@ -368,114 +368,24 @@ class Welcome extends crm_controller {
 	
 	/*For Project Module -- Start here*/
 	
-	public function projects($type = 'draft', $return = FALSE, $tab='')
-	{	//echo $_POST['keyword'];  exit;
-		$page_label = '';
-		//echo $type; exit;
-		//$this->load->plugin('phpmailer');
-		$this->load->library('email');
+	public function projects($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false')
+	{	
+		// echo $pjtstage. " ". $pm_acc . " ". $cust. " ".$keyword;
+		$data['page_heading'] = "Projects - Lists";
+		// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
 		
-		$this->load->helper('text');
-		
-		$data['quote_section'] = $type;
-		
-		switch ($type)
-        {
-            case 'draft':
-                $job_status = 0;
-                $page_label = 'Quotation List - New Leads';
-                break;
-            case 'production':
-				$job_status = 13;
-                $page_label = 'Project- In Progress';
-                break;
-			case 'completed':
-                $job_status = 14;
-                $page_label = 'Project- Completed';
-                break;
-			case 'p_cancelled':
-                $job_status = 15;
-                $page_label = 'Project- Cancelled';
-                break;
-			case 'p_onhold':
-                $job_status = 16;
-                $page_label = 'Project- Onhold';
-                break;
-            default:
-                $job_status = 0;
-                $page_label = 'Quotation List - New Leads';
-        }
-		//$job_status = 13; // - Projects stage
-		if (is_numeric($job_status))
+		$data['pm_accounts'] = array();
+		//Here "WHERE" condition used for Fetching the Project Managers.
+		$users = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>3));
+		if ($users->num_rows() > 0)
 		{
-			$job_status = "`job_status` = '{$job_status}'";
+			$data['pm_accounts'] = $users->result_array();
 		}
-		$search='';
-		
-		if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 && $_POST['keyword']!='Project No, Project Title, Name or Company') {
-			$search.=" AND (J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
-		}
-		
-		$varSessionId = $this->userdata['userid']; //Current Session Id.
-		//echo $this->userdata['role_id'];
-		//Fetching Project Team Members.
-		$sqlcj = "SELECT jobid_fk as jobid FROM `".$this->cfg['dbpref']."contract_jobs` WHERE `userid_fk` = '".$varSessionId."'";
-		$rowscj = $this->db->query($sqlcj);
-		$data['jobids'] = $rowscj->result_array();
+		$data['customers'] = $this->welcome_model->get_customers();
 
-		//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
-		$sqlJobs = "SELECT jobid FROM `".$this->cfg['dbpref']."jobs` WHERE `assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."'";
-		$rowsJobs = $this->db->query($sqlJobs);
-		$data['jobids1'] = $rowsJobs->result_array();
-
-		$data = array_merge_recursive($data['jobids'], $data['jobids1']);
-
-		$res[] = 0;
-		if (is_array($data) && count($data) > 0) { 
-			foreach ($data as $data) {
-				$res[] = $data['jobid'];
-			}
-		}
-		$result = array_unique($res);
-
-		$varRes = implode(",",$result);
-		//echo $this->userdata['role_id']; 
-		$rle = $this->userdata['role_id']; 
-		//echo $rle; exit;
-		if ($rle !=1 && $rle !=2) {
-		    //echo "test"; exit;
-			$pjts = " AND (`jobid` in (".$varRes."))";
-		}
-		
-		$sql = "SELECT *, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`, U.first_name as fnm, U.last_name as lnm, C.first_name as cfname, C.last_name as clname, 
-		(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-		FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}customers` AS C, `{$this->cfg['dbpref']}jobs` AS J
-		Left Join `{$this->cfg['dbpref']}users` AS U ON J.`assigned_to` = U.userid
-		WHERE C.`custid` = J.`custid_fk`
-		AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$pjts}{$custid1}{$search}
-
-		GROUP BY `jobid`
-		ORDER BY `belong_to`, `date_created`";			
-		
-		$rows = $this->db->query($sql);
-		$data['records'] = $rows->result_array();
-		//print_r($data); exit;
-		
-		//echo "<pre>"; print_r($data['records']); exit;
-		
-
-		foreach($data['records'] as $val) {
-			//print_r($val);
-		}
-		//exit;
-		
-		$data['page_heading'] = $page_label;
-        if ($return === TRUE){
-			return $data['records'];
-		}
-		else{
-			$this->load->view('projects_view', $data);
-		}
+		$data['records'] = $this->welcome_model->get_projects_results($pjtstage = 'null', $pm_acc = 'null', $cust = 'null', $keyword = 'null');
+		// echo $this->db->last_query();
+		$this->load->view('projects_view', $data);
 	}
 	
 	
@@ -698,12 +608,13 @@ HDOC;
 			2.	$pm_acc is a Project Manager ids.   
 			3.	$cust is a Customers ids.(custid_fk)
 			*****************************************/
-		if ($keyword == 'false') {
+		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
-		} 
+		}
 		$getProjects = $this->welcome_model->get_projects_results($pjtstage, $pm_acc, $cust, $keyword);	
 		//echo "<pre>"; print_r($getProjects); exit;
 		$data['pjts_data'] = $getProjects;
+		$data['records'] = $getProjects;
 		
 		$this->load->view('projects_view_inprogress', $data);
 	}
