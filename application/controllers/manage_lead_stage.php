@@ -90,7 +90,7 @@ class Manage_lead_stage extends crm_controller {
                 unset($update_data['sequence']);
 				//update
                 $this->db->where('lead_stage_id', $id);
-                if ($this->db->update("{$this->cfg['dbpref']}_" . 'lead_stage', $update_data))
+                if ($this->db->update("{$this->cfg['dbpref']}" . 'lead_stage', $update_data))
                 {
                     $this->session->set_flashdata('confirm', array('Lead Stage Details Updated!'));
                     redirect('manage_lead_stage');
@@ -112,7 +112,7 @@ class Manage_lead_stage extends crm_controller {
 				
 				// echo $this->db->last_query(); print_r($update_data); exit;
                 //insert
-                $this->db->insert("{$this->cfg['dbpref']}_" . 'lead_stage', $update_data);
+                $this->db->insert("{$this->cfg['dbpref']}" . 'lead_stage', $update_data);
                 $this->session->set_flashdata('confirm', array('New Lead Stage Added!'));
                 redirect('manage_lead_stage');
             }

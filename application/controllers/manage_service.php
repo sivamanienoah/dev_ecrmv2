@@ -72,8 +72,26 @@ class Manage_service extends crm_controller {
         }
     }
 	
+	//for search currency
+	function search_currency()
+	{
+        if (isset($_POST['cancel_submit']))
+		{
+            redirect('manage_service/manage_expt_worth_cur');
+        }
+		else if ($name = $this->input->post('cust_search'))
+		{	
+            redirect('manage_service/manage_expt_worth_cur/0/' . rawurlencode($name));
+        }
+		else
+		{
+            redirect('manage_service/manage_expt_worth_cur');
+        }
+    }
+	
 	//for sales divisions listing page
-	function manage_sales($limit, $search = FALSE) {
+	function manage_sales($limit, $search = FALSE) 
+	{
 		$data['page_heading'] = 'Manage Sales Divisions';
 		
 		//$data['sales_divisions'] = $this->cfg['sales_divisions'];
@@ -83,7 +101,8 @@ class Manage_service extends crm_controller {
 	}
 	
 	//for lead source listing page
-	function manage_leadSource($limit, $search = FALSE) {
+	function manage_leadSource($limit, $search = FALSE) 
+	{
 		$data['page_heading'] = 'Manage Lead Source';
 		
 		//$data['sales_divisions'] = $this->cfg['sales_divisions'];
@@ -92,8 +111,19 @@ class Manage_service extends crm_controller {
 		$this->load->view('manage_service/manage_lead_source', $data);
 	}
 	
+	//for Expected Worth - Currency Listing Page
+	function manage_expt_worth_cur($limit, $search = FALSE) 
+	{
+		$data['page_heading'] = 'Manage Currency';
+		
+		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);
+		
+		$this->load->view('manage_service/manage_expect_worth_cur', $data);
+	}
+	
 	//for Lead Source
-	function ls_add($update = false, $id = false) {
+	function ls_add($update = false, $id = false) 
+	{
 		
 		$this->load->library('validation');
         $data = array();
@@ -156,6 +186,7 @@ class Manage_service extends crm_controller {
 		}
 		$this->load->view('manage_service/manage_lead_source_add', $data);
 	}
+	
 	function ls_delete($update, $id)
 	{
 		if ($this->session->userdata('delete')==1)
@@ -178,7 +209,8 @@ class Manage_service extends crm_controller {
 	}
 	
 	//for service requirement
-	function ser_add($update = false, $id = false) {
+	function ser_add($update = false, $id = false) 
+	{
 		$this->load->library('validation');
         $data = array();
         
@@ -261,6 +293,7 @@ class Manage_service extends crm_controller {
 		}
 		$this->load->view('manage_service/manage_service_req_add', $data);
 	}
+	
 	function ser_delete($update, $id) 
 	{	
 		if ($this->session->userdata('delete')==1)
@@ -301,7 +334,8 @@ class Manage_service extends crm_controller {
 	}
 	
 	//for sales divisions
-	function division_add($update = false, $id = false) {
+	function division_add($update = false, $id = false) 
+	{
 		
 		$this->load->library('validation');
         $data = array();
@@ -385,6 +419,7 @@ class Manage_service extends crm_controller {
 		}
 		$this->load->view('manage_service/manage_sales_division_add', $data);
 	}
+	
 	function division_delete($update, $id) 
 	{
 		if ($this->session->userdata('delete')==1)
@@ -430,7 +465,8 @@ class Manage_service extends crm_controller {
 	
 	
 	//function for checking the status 
-	function ajax_check_status() {
+	function ajax_check_status() 
+	{
 		$leadId = $_POST['data'];
 		$this->db->where('lead_source', $leadId);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
@@ -444,7 +480,8 @@ class Manage_service extends crm_controller {
 		exit;
 	}
 	
-	function ajax_check_status_division() {
+	function ajax_check_status_division() 
+	{
 		$id = $_POST['data'];
 		$this->db->where('division', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
@@ -458,7 +495,8 @@ class Manage_service extends crm_controller {
 		exit;
 	}
 	
-	function ajax_check_status_job_category() {
+	function ajax_check_status_job_category() 
+	{
 		$id = $_POST['data'];
 		$this->db->where('job_category', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
@@ -469,6 +507,171 @@ class Manage_service extends crm_controller {
 			$res['html'] .= "NO";
 		}
 		echo json_encode($res);
+		exit;
+	}
+	
+	function ajax_check_status_currency() 
+	{
+		$id = $_POST['data'];
+		$this->db->where('expect_worth_id', $id);
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
+
+	//for currency adding
+	function expect_worth_cur_add($update = false, $id = false) 
+	{
+		// echo "<pre>"; print_r($_POST); exit;
+		$this->load->library('validation');
+        $data = array();
+		
+        $data['getAllCurrency'] = $this->manage_service_model->get_all_currency();
+		$rules['country_name'] = "trim|required";
+		
+		$this->validation->set_rules($rules);
+		$fields['country_name'] = 'Country Name';
+		$fields['cur_name'] = 'Currency Name';
+		$fields['status'] = 'Status';
+		$fields['is_default'] = 'Default Currency';
+		
+		$this->validation->set_fields($fields);
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+		
+		if ($this->validation->run() != false)
+        {
+			// all good
+            foreach($fields as $key => $val)
+            {
+                $update_data[$key] = $this->input->post($key);
+            }
+            //check before insert.
+			$this->db->where('expect_worth_name', $_POST['cur_short_name']);
+			$query = $this->db->get($this->cfg['dbpref'].'expect_worth')->num_rows();
+			if($query == 0) {
+				//insert
+				$ins = array();
+				$ins['expect_worth_name'] = $_POST['cur_short_name'];
+				$ins['cur_name'] = $_POST['cur_name'];
+				if (!empty($_POST['status'])) {
+					$ins['status'] = $_POST['status'];
+				}
+				if (!empty($_POST['is_default'])) {
+					$ins['is_default'] = $_POST['is_default'];
+				}
+				// echo "<pre>"; print_r($ins); exit;
+				// $this->db->insert("{$this->cfg['dbpref']}" . 'expect_worth', $ins);
+				$insert_currency = $this->manage_service_model->insert_new_currency($ins);
+				$this->session->set_flashdata('confirm', array('New Currency Type Added!'));
+			} else {
+				$this->session->set_flashdata('login_errors', array('Currency Type Already Exists!'));
+				redirect('manage_service/expect_worth_cur_add');
+			}
+			redirect('manage_service/manage_expt_worth_cur');
+		}
+		$this->load->view('manage_service/manage_expect_worth_cur_add', $data);
+	}
+	
+	//for currency type edit
+	function expect_worth_cur_edit($update = false, $id = false) 
+	{
+		// echo "<pre>"; print_r($_POST); exit;
+				
+		$this->load->library('validation');
+        $data = array();
+        
+		$rules['expect_worth_name'] = "trim|required";
+		
+		$this->validation->set_rules($rules);
+		$fields['expect_worth_name'] = 'Currency Type';
+		$fields['status'] = 'Status';
+		$fields['is_default'] = 'Default Currency';
+		
+		$this->validation->set_fields($fields);
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+		
+		//for status
+		$this->db->where('expect_worth_id', $id);
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
+        {
+            $item_data = $this->db->get_where("{$this->cfg['dbpref']}" . 'expect_worth', array('expect_worth_id' => $id));
+            if ($item_data->num_rows() > 0) $src = $item_data->result_array();
+            if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
+            {
+                if (isset($this->validation->$k)) $this->validation->$k = $v;
+            }
+        }
+		
+		if ($this->validation->run() != false)
+        {
+			// all good
+            foreach($fields as $key => $val)
+            {
+                $update_data[$key] = $this->input->post($key);
+            }
+            if ($update_data['status'] == "") {
+				if ($data['cb_status']==0) {
+					$update_data['status'] = 0;
+				} else {
+					$update_data['status'] = 1;
+				}
+			}
+			if ($update_data['is_default'] == 1) {
+				$update_data['status'] = 1;
+			}
+			if ($update_data['is_default']=='') {
+				unset($update_data['is_default']);
+			}
+            if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
+            {
+                //update
+				$updt_cur = $this->manage_service_model->updt_exist_currency($update_data, $id);
+				if ($updt_cur)
+                {
+                    $this->session->set_flashdata('confirm', array('Currency Type Updated!'));
+                    redirect('manage_service/manage_expt_worth_cur');
+                }
+            }
+		}
+		$this->load->view('manage_service/manage_expect_worth_cur_edit', $data);
+		
+	}
+	
+	//for currency type - delete
+	function cur_type_delete($update, $id)
+	{
+		if ($this->session->userdata('delete')==1)
+		{
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
+			{
+				$this->db->delete("{$this->cfg['dbpref']}expect_worth", array('expect_worth_id' => $id));
+				$this->db->delete("{$this->cfg['dbpref']}currency_rate", array('from' => $id));
+				$this->session->set_flashdata('confirm', array('Currency Type Deleted!'));
+				redirect('manage_service/manage_expt_worth_cur');
+			}
+			else {
+				$this->session->set_flashdata('login_errors', array("Error Occured!."));
+				redirect('manage_service/manage_expt_worth_cur');
+			}
+		}
+		else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!."));
+			redirect('manage_service/manage_expt_worth_cur');
+		}
+	}
+	
+	function get_cur_name() 
+	{
+		$result = $this->manage_service_model->getCurName($_POST['data']);
+		echo json_encode($result);
 		exit;
 	}
 	
