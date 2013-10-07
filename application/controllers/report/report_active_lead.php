@@ -15,6 +15,14 @@ public $userdata;
         $this->load->library('validation');
 		$this->load->library('email');
 		$this->load->helper('custom_helper');
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id = '1';
+			$this->default_cur_name = 'USD';
+		}
     }
     
     public function index()
@@ -152,7 +160,7 @@ public $userdata;
 					$status = 'Dropped';
     			$this->excel->getActiveSheet()->setCellValue('I'.$i, $status);
     			
-    			$amt_converted = $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+    			$amt_converted = $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
     			
     			
     			$this->excel->getActiveSheet()->setCellValue('J'.$i, $amt_converted);

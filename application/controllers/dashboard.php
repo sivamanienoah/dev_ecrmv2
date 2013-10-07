@@ -3,7 +3,7 @@ class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
 
-	function Dashboard()
+	function __construct()
 	{
 		parent::__construct();
 		//$this->load->library('excel');
@@ -15,6 +15,16 @@ class Dashboard extends crm_controller {
 		$this->load->helper('custom_helper');
 		$this->load->helper('lead_stage_helper');
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->pjt_stg = array(0,1,2,3);
+		$this->pjt_stages = @implode("','", $this->pjt_stg);
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id = '1';
+			$this->default_cur_name = 'USD';
+		}
 	}
 	
 	function index()
@@ -46,7 +56,7 @@ class Dashboard extends crm_controller {
 					$lead_reg[$region_name] = empty($lead_reg[$region_name])?0:$lead_reg[$region_name];
 					//$lead_reg[$region_name] += $lead->expect_worth_amount;
 					
-					$lead_reg[$region_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+					$lead_reg[$region_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
 				}
 			} else {
 				switch($userdata['level']) {
@@ -55,7 +65,7 @@ class Dashboard extends crm_controller {
 						{
 							$country_name = trim($lead->country_name);
 							$lead_reg[$country_name] = empty($lead_reg[$country_name])?0:$lead_reg[$country_name];
-							$lead_reg[$country_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+							$lead_reg[$country_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
 						}
 					break;
 					case 3:
@@ -63,7 +73,7 @@ class Dashboard extends crm_controller {
 						{
 							$state_name = trim($lead->state_name);
 							$lead_reg[$state_name] = empty($lead_reg[$state_name])?0:$lead_reg[$state_name];
-							$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+							$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
 						}
 					break;
 					case 4:
@@ -72,7 +82,7 @@ class Dashboard extends crm_controller {
 						{
 							$location_name = trim($lead->location_name);
 							$lead_reg[$location_name] = empty($lead_reg[$location_name])?0:$lead_reg[$location_name];
-							$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+							$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
 						}
 					break;
 				}
@@ -93,7 +103,7 @@ class Dashboard extends crm_controller {
 		$monthArr = array();
 		$totalSum = 0;
 		foreach ($data['getClosedJobid'] as $value) {
-			$value['expect_worth_amount'] = $this->conver_currency($value['expect_worth_amount'], $rates[$value['expect_worth_id']][1]);
+			$value['expect_worth_amount'] = $this->conver_currency($value['expect_worth_amount'], $rates[$value['expect_worth_id']][$this->default_cur_id]);
 			$sql = "SELECT jobid,dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE jobid = '".$value['jobid']."' AND changed_status IN ('13','14','16') ORDER BY dateofchange ASC LIMIT 1";
 			$rows = $this->db->query($sql);
 			$res_query = $rows->row_array();
@@ -220,7 +230,7 @@ class Dashboard extends crm_controller {
 		$res['html'] .= '<table cellspacing="0" id="'.$dt_id.'" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th width=62px;>Lead No.</th><th width=210px;>Lead Title </th><th width=145px;>Customer</th><th width=145px;>Lead Owner</th><th width=145px;>Lead Assignee</th><th width=105px;>Lead Indicator</th><th width=85px;>Expected Worth (USD)</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		if (isset($data['getLeadDetail']) && count($data['getLeadDetail'])) :
 			foreach($data['getLeadDetail'] as $leadDet) {
-			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][1]);
+			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>
@@ -263,7 +273,7 @@ class Dashboard extends crm_controller {
 			$lead_det['cflname'] = $lead_info->cfname.' '.$lead_info->clname;		
 			$lead_det['expect_worth_amount'] = $lead_info->expect_worth_name." ".$lead_info->expect_worth_amount;	
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
-			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][1]);
+			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$lead_table_output .=  "<tr><td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
 			<td><a href='".base_url()."/welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']."</a></td>
 			<td>".$lead_det['cflname']."</td><td>".$lead_det['owrfirst_name']."</td>
@@ -298,7 +308,7 @@ class Dashboard extends crm_controller {
 			$lead_det['cflname'] = $lead_info->cfname.' '.$lead_info->clname;		
 			$lead_det['expect_worth_amount'] = $lead_info->expect_worth_name." ".$lead_info->expect_worth_amount;	
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
-			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][1]);
+			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$lead_table_output .=  "<tr>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']. "</a></td>
@@ -337,7 +347,7 @@ class Dashboard extends crm_controller {
 			$lead_det['usrfname'] = $lead_info->usrfname;
 			$lead_det['cflname'] = $lead_info->cfname.' '.$lead_info->clname;
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
-			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][1]);
+			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$assignee_table_output .=  "<tr>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']."</a></td>
@@ -503,8 +513,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
 						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
 						/* converting to USD */
-						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
-						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
+						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
+						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						
@@ -528,8 +538,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $res[$j]['owrfname'].' '.$res[$j]['owrlname']);
 						$this->excel->getActiveSheet()->setCellValue('E'.$i, $res[$j]['assifname'].' '.$res[$j]['assilname']);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $res[$j]['lead_indicator']);
-						$amt_converted = $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][1]);
-						$total_amt_converted += $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][1]);
+						$amt_converted = $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][$this->default_cur_id]);
+						$total_amt_converted += $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][$this->default_cur_id]);
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;					  
 					}
@@ -548,8 +558,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
 						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
-						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
-						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
+						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
+						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;
 					}
@@ -570,8 +580,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['owrfname'].' '.$lead['owrlname']);
 						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['assifname'].' '.$lead['assilname']);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
-						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
-						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][1]);
+						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
+						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;
 					}
@@ -713,7 +723,7 @@ class Dashboard extends crm_controller {
 		
 		if (isset($data['leadDeta']) && count($data['leadDeta'])) :
 			foreach($data['leadDeta'] as $leadDet) {
-				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][1]);
+				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>

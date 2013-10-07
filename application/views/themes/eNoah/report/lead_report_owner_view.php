@@ -1,7 +1,17 @@
+<?php
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$GLOBALS['default_cur_ids'] = $default_currency['expect_worth_id'];
+	$GLOBALS['default_cur_names'] = $default_currency['expect_worth_name'];
+} else {
+	$GLOBALS['default_cur_ids'] = '1';
+	$GLOBALS['default_cur_names'] = 'USD';
+}
+?>
 <?php $cfg = $this->config->item('crm'); ?>
 <?php $userdata = $this->session->userdata('logged_in_user'); 
 //echo $this->session->userdata('viewlead');
-
 ?>
 <div id="ad_filter" class="clear">
 <div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
@@ -65,7 +75,7 @@ if($num>0)
 				
 				$content .= "<td align = 'right'>";
 				//$content .= $lead->expect_worth_amount;				 
-				$amt_converted = conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][1]);
+				$amt_converted = conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$GLOBALS['default_cur_ids']]);
 				$content .= $amt_converted;
 				$content .= "</td>";
 				$amount += $amt_converted;

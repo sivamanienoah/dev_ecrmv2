@@ -1,3 +1,14 @@
+<?php
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_name = $default_currency['expect_worth_name'];
+} else {
+	$default_cur_id = '1';
+	$default_cur_name = 'USD';
+}
+?>
 <div id="ad_filter" class="clear">
 <div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>	
 	        	
@@ -50,7 +61,7 @@
 									</td>
 									<td align = 'right'>
 										<?php 
-											$amt_converted = conver_currency($leads->expect_worth_amount,$rates[$leads->expect_worth_id][1]);
+											$amt_converted = conver_currency($leads->expect_worth_amount,$rates[$leads->expect_worth_id][$default_cur_id]);
 											$total+=$amt_converted;
 											echo empty($leads->expect_worth_amount)?'':$amt_converted;
 										?>
