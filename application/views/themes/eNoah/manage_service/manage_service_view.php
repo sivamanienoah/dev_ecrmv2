@@ -82,7 +82,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				</td>
 				<td><?php echo $jobs['category']; ?></td>
 				<td>
-					<?php if ($jobs['status'] == 1) echo "Active"; else echo "Inactive"; ?>
+					<?php if ($jobs['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					<div class="dialog-err pull-right" id="dialog-message-<?php echo $jobs['cid']; ?>" style="display:none"></div>
 				</td>
 			</tr>

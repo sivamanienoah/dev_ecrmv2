@@ -70,8 +70,8 @@
 						<?php if($this->session->userdata('edit')==1) {?><a href="package/delete_packagename/<?php echo  $account['package_id'] ?>" onclick="return confirm('Are you sure you want to delete?')" ><?php echo "Delete"; ?></a><?php } else { echo "Delete"; }?>
 						</td>
 						<td><?php if($this->session->userdata('edit')==1) { ?><a href="package/update/<?php echo  $account['type_id'] ?>"><?php echo $account['PACK_NAME'] ?></a><?php } else { echo $account['PACK_NAME']; }?></td>
-						<td><?php echo  $account['duration'] ?></td>
-						<td><?php echo  $account['status'] ?></td>
+						<td><?php echo $account['duration'] ?></td>
+						<td><?php if ($account['status'] == 'active') echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
                     </tr>
                     <?php } ?>
                 <?php } else { ?>

@@ -125,8 +125,8 @@
                         <td>
 				<?php 
 				if($customer['inactive']==0){
-					echo "Active";
-				} else { echo "Inactive"; }				
+					echo "<span class=label-success>Active</span>";
+				} else { echo "<span class=label-warning>Inactive</span>"; }				
 				?>
 			</td> 
 			<td class="actions">

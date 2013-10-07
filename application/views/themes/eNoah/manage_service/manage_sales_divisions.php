@@ -72,7 +72,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				</td>
 				<td><?php echo $sales['division_name']; ?></td>
 				<td>
-					<?php if ($sales['status'] == 1) echo "Active"; else echo "Inactive"; ?>
+					<?php if ($sales['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					<div class="dialog-err pull-right" id="dialog-message-<?php echo $sales['div_id'] ?>" style="display:none"></div>
 				</td>
 			</tr>

@@ -82,7 +82,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				</td>
 				<td><?php echo $source['lead_source_name']; ?></td>
 				<td>
-					<?php if ($source['status'] == 1) echo "Active"; else echo "Inactive"; ?>
+					<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['lead_source_id'] ?>" style="display:none"></div>
 				</td>
 			</tr>

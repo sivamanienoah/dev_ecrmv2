@@ -61,9 +61,9 @@ require (theme_url().'/tpl/header.php'); ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
                         <td><?php if($this->session->userdata('edit')==1){ ?><a href="role/add_role/update/<?php echo  $customer['id'] ?>"><?php echo  $customer['name'];?></a><?php } else { echo $customer['name']; }?></td>
-                        <td><?php if($customer['inactive'] ==1) echo 'Inactive';else echo 'Active';?></td>
+                        <td><?php if($customer['inactive'] ==1) echo '<span class=label-warning>Inactive</span>';else echo '<span class=label-success>Active</span>';?></td>
 						<td><?php if($this->session->userdata('edit')==1){ ?><a href="role/add_role/update/<?php echo  $customer['id'] ?>"><?php echo  "Edit";?></a><?php } else { echo "Edit"; }?>
-						<?php if($customer['id']!=1 && $customer['id'] !=2) { ?> 
+						<?php if($customer['id']!=1 && $customer['id'] !=2 && $customer['id'] !=3) { ?>
                         <?php if($this->session->userdata('delete')==1){ ?> | <a href="role/delete_role/<?php echo $customer['id'] ?>"onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php }  } ?></td>				 
                     </tr>
                     <?php } ?>

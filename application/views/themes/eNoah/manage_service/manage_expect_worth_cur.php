@@ -82,7 +82,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<td><?php echo $source['expect_worth_name']; ?></td>
 				<td><?php echo $source['cur_name']; ?></td>
 				<td>
-					<?php if ($source['status'] == 1) echo "Active"; else echo "Inactive"; ?>					
+					<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>					
 				</td>
 				<td>
 					<?php if ($source['is_default']==1) { ?><img src="assets/img/tick.png" alt="Default Currency" style="width:14px; height:14px" /> <?php } ?>

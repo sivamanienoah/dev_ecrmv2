@@ -61,9 +61,10 @@
 				<tr>
                         <td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo  $account['type_id'] ?>"><?php echo $account['package_name'] ?></a><?php } else echo $account['package_name'] ?></td>
                         <td><?php echo  $account['type_months'] ?></td>
-                        <td><?php echo  $account['package_flag'] ?></td>
+                        <td><?php if ($account['package_flag'] == 'active') echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
 						<td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo  $account['type_id'] ?>">Edit</a> <?php } else { echo "Edit"; } ?>
-							<?php if($this->session->userdata('delete')==1){ ?> | <a href="package/delete/<?php echo  $account['type_id'] ?>" onclick="return confirm('Are you sure you want to delete?')" >Delete</a><?php } ?></td>
+						<?php if($this->session->userdata('delete')==1){ ?> | <a href="package/delete/<?php echo  $account['type_id'] ?>" onclick="return confirm('Are you sure you want to delete?')" >Delete</a><?php } ?>
+						</td>
                     </tr>
                     <?php } ?>
                 <?php } else { ?>

@@ -157,7 +157,7 @@ class Manage_lead_stage extends crm_controller {
             foreach ($query->result_array() as $row)
             {
 				if(!empty($row['lead_stage_name'])) {
-					if ($row['status'] == 1) $stat = "Active"; else $stat = "Inactive";
+					if ($row['status'] == 1) $stat = "<span class=label-success>Active</span>"; else $stat = "<span class=label-warning>Inactive</span>";
 					if ($this->session->userdata('edit')==1)
 						$edit = "<a href='manage_lead_stage/leadStg_add/update/".$row['lead_stage_id']."'>Edit</a>";
 					else 
