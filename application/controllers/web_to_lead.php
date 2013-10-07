@@ -88,7 +88,7 @@ class web_to_lead extends crm_controller {
 		if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
         {
 			$insert_id = $this->db->insert_id();
-echo $insert_id."ASDfsdfasdf";
+			//echo $insert_id."ASDfsdfasdf";
 			$invoice_no = (int) $insert_id;
 			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 
@@ -100,7 +100,7 @@ echo $insert_id."ASDfsdfasdf";
 			echo 2;
 			exit;
 		}
-		echo 1;
+		echo 'fasdfsdf'.1;
 		exit;
 	}	
 	
