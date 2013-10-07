@@ -227,7 +227,7 @@ class Dashboard extends crm_controller {
 				$dt_id = "example_pie3";
 			break;
 		}	
-		$res['html'] .= '<table cellspacing="0" id="'.$dt_id.'" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th width=62px;>Lead No.</th><th width=210px;>Lead Title </th><th width=145px;>Customer</th><th width=145px;>Lead Owner</th><th width=145px;>Lead Assignee</th><th width=105px;>Lead Indicator</th><th width=85px;>Expected Worth (USD)</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		$res['html'] .= '<table cellspacing="0" id="'.$dt_id.'" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th width=62px;>Lead No.</th><th width=210px;>Lead Title </th><th width=145px;>Customer</th><th width=145px;>Lead Owner</th><th width=145px;>Lead Assignee</th><th width=105px;>Lead Indicator</th><th width=85px;>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		if (isset($data['getLeadDetail']) && count($data['getLeadDetail'])) :
 			foreach($data['getLeadDetail'] as $leadDet) {
 			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
@@ -262,7 +262,7 @@ class Dashboard extends crm_controller {
         $lead_table_output .= "<div class='dashbrd charts-info-block'>";	
         $lead_table_output .= "<input id='lead-owner-username' type='hidden' value='".$username."'/>";			
 		$lead_table_output .= '<a id="lead-ownner-export" class="export-btn">Export to Excel</a>';
-		$lead_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-dependency-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth (USD)</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		$lead_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-dependency-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
 		{
 			$lead_det['invoice_no'] = $lead_info->invoice_no;
@@ -297,7 +297,7 @@ class Dashboard extends crm_controller {
 		$lead_table_output .= "<div class='dashbrd charts-info-block'>";	
 		$lead_table_output .= '<a id="lead-current-activity-export" class="export-btn export-btn1" >Export to Excel</a>';
 		$lead_table_output .= "<input id='lead-no' type='hidden' name='".$leadname."' value='".$jobid."'/>";
-		$lead_table_output .=  '<table cellspacing="0" id="leads-current-activity-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth (USD)</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		$lead_table_output .=  '<table cellspacing="0" id="leads-current-activity-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
 		{
 			$lead_det['invoice_no'] = $lead_info->invoice_no;
@@ -337,7 +337,7 @@ class Dashboard extends crm_controller {
         $assignee_table_output .= "<div class='dashbrd charts-info-block'>";
 		$assignee_table_output .= "<input id='lead-assignee-username' type='hidden' value='".$username."'/>";		
 		$assignee_table_output .= '<a id="lead-assignee-export" class="export-btn">Export to Excel</a>';
-		$assignee_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-assignee-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth (USD)</th></thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		$assignee_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-assignee-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th></thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
 		{
 			$lead_det['jobid'] = $lead_info->jobid;
@@ -371,7 +371,7 @@ class Dashboard extends crm_controller {
 		$data['getCurrentActivityTable'] = $this->dashboard_model->getCurrentActivityLeads($isSelect, $cusId);
 		$weekly_monthly_repo .= '<table class="dashboard-heads" id="weekly-monthly-table" cellspacing="0" cellpadding="10px;" border="0" width="100%">';
 		$rates = $this->get_currency_rates();
-		$weekly_monthly_repo .= '<thead><tr><th>Lead Title</th><th>Estimated Worth (USD)</th><th>Lead Owner</th><th>Lead Assignee</th></tr></thead><tbody>';
+		$weekly_monthly_repo .= '<thead><tr><th>Lead Title</th><th>Estimated Worth ('.$this->default_cur_name.')</th><th>Lead Owner</th><th>Lead Assignee</th></tr></thead><tbody>';
 		foreach($data['getCurrentActivityTable'] as $lead_info)
 		{
 			$lead_det['job_title'] = '<a onclick="getCurrentLeadActivity('. $lead_info['jobid'].','."'".$lead_info['job_title']."'".')" >'. $lead_info['job_title'].'</a>';
@@ -492,7 +492,7 @@ class Dashboard extends crm_controller {
 			$this->excel->getActiveSheet()->setCellValue('D1', 'Lead Owner');
 			$this->excel->getActiveSheet()->setCellValue('E1', 'Lead Assignee');
 			$this->excel->getActiveSheet()->setCellValue('F1', 'Lead Indicator');
-			$this->excel->getActiveSheet()->setCellValue('G1', 'Expected Worth (USD)');
+			$this->excel->getActiveSheet()->setCellValue('G1', 'Expected Worth ('.$this->default_cur_name.')');
 			
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -660,7 +660,6 @@ class Dashboard extends crm_controller {
 		//return $amount*$val;
 	}
 
-	
 	public function showLeadDetails() {
 		$gid = $_POST['gid'];
 	    $type = $_POST['type'];
@@ -680,7 +679,6 @@ class Dashboard extends crm_controller {
 				$data['leadDeta'] = $this->dashboard_model->getIndiLeads($cusId, $ind);
 				$heading = "Lead Indicator - ".$ind;
 				$tid = "example_bar1";
-				$worth = "Expected Worth (USD)";
 				$linkurl = "welcome/view_quote/";
 			break;
 			
@@ -688,18 +686,9 @@ class Dashboard extends crm_controller {
 				$data['leadDeta'] = $this->dashboard_model->leadAgingLeads($cusId, $gid);
 				$heading = "Leads Aging";
 				$tid = "example_line1";
-				$worth = "Expected Worth (USD)";
 				$linkurl = "welcome/view_quote/";
 			break;
-			
-			case "line2":
-				$data['leadDeta'] = $this->getClosedJobLeadDetail($gid);
-				//$data['leadDeta'] = $this->dashboard_model->closedLeadDet($clsjobs);
-				$heading = "Closed Opportunities";
-				$tid = "example_line2";
-				$worth = "Actual Worth (USD)";
-				$linkurl = "invoice/view_project/";
-			break;
+
 		}
 		
 		$res['html'] .= '<div class="dash-section dash-section1"><h5>'.$heading.'</h5><div class="grid-close"></div></div>';
@@ -714,16 +703,64 @@ class Dashboard extends crm_controller {
 			$res['html'] .= '<a id="lead-aging-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
 			$res['html'] .= "<input id='least-active-type' type='hidden' value='".$type."'/>";
 		}
-		if($type == 'line2') {
-			$res['html'] .= '<a id="closed-oppor-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
-			$res['html'] .= "<input id='cls-oppr-type' type='hidden' value='".$type."'/>";
-		}
 		
-		$res['html'] .= '<table cellspacing="0" id='.$tid.' class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>'.$worth.'</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		$res['html'] .= '<table cellspacing="0" id='.$tid.' class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		
 		if (isset($data['leadDeta']) && count($data['leadDeta'])) :
 			foreach($data['leadDeta'] as $leadDet) {
 				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
+				$res['html'] .= '<tr>
+								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>
+								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
+								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
+								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
+								 <td>'.$leadDet['lead_indicator'].'</td>
+								 <td text align="right">'.number_format($amt_converted, 2, '.', '').'</td>
+								 </tr>';
+			}		
+		endif;
+		$res['html'] .= '</tbody>';
+		$res['html'] .= '<tfoot><tr><td text align=right colspan="6">Total:</td><td align="right"></td></tr></tfoot>';
+		$res['html'] .= '</table><div class="clear"></div></div>';
+		echo json_encode($res);
+		exit;
+	}
+	
+	//for closed opportunities
+	public function showLeadDetails_cls() {
+		$gid = $_POST['gid'];
+	    $type = $_POST['type'];
+		$cusId = $this->level_restriction();
+		$rates = $this->get_currency_rates();
+		$res = array();
+		
+		$data['leadDeta'] = $this->getClosedJobLeadDetail($gid);
+		//$data['leadDeta'] = $this->dashboard_model->closedLeadDet($clsjobs);
+		$heading = "Closed Opportunities";
+		$tid = "example_line2";
+		
+		$res['html'] .= '<div class="dash-section dash-section1"><h5>'.$heading.'</h5><div class="grid-close"></div></div>';
+		$res['html'] .= "<div class='dashbrd charts-info-block'>";
+		$rates = $this->get_currency_rates();
+		//for excel
+
+		$res['html'] .= '<a id="closed-oppor-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
+		$res['html'] .= "<input id='cls-oppr-type' type='hidden' value='".$type."'/>";
+
+		$res['html'] .= '<table cellspacing="0" id='.$tid.' class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Actual Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		
+		if (isset($data['leadDeta']) && count($data['leadDeta'])) :
+			foreach($data['leadDeta'] as $leadDet) {
+				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
+				switch($leadDet['pjt_status']) {
+					case 0:
+						$linkurl = "welcome/view_quote/";
+					break;
+					case 1:
+						$linkurl = "invoice/view_project/";
+					break;
+				}
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>

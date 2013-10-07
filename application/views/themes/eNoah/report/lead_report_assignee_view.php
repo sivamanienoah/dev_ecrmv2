@@ -144,7 +144,7 @@ function createTable($content,$reg)
 	$table .= "<th>Lead Indicator</th>";
 	$table .= "<th>Lead Stage</th>";
 	$table .= "<th>Status</th>";
-	$table .= "<th>Expected Worth (USD)</th>";
+	$table .= "<th>Expected Worth (".$GLOBALS['default_cur_names'].")</th>";
 	$table .= "</tr>";
 	$table .= "</thead>";
 	$table .= $content;

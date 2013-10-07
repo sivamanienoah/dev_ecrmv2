@@ -133,7 +133,7 @@ class report_lead_region extends crm_controller {
 			$this->excel->getActiveSheet()->setCellValue('G1', 'Lead Indicator');
 			$this->excel->getActiveSheet()->setCellValue('H1', 'Lead Stage');
 			$this->excel->getActiveSheet()->setCellValue('I1', 'Status');
-			$this->excel->getActiveSheet()->setCellValue('J1', 'Expected Worth (USD)');
+			$this->excel->getActiveSheet()->setCellValue('J1', 'Expected Worth ('.$this->default_cur_name.')');
 
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);

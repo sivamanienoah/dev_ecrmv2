@@ -25,7 +25,7 @@ if (get_default_currency()) {
 							<th>Lead Indicator</th>
 							<th>Lead Stage</th>
 							<th>Status</th>
-							<th>Expected Worth (USD)</th>
+							<th>Expected Worth (<?php echo $default_cur_name; ?>)</th>
 						</tr>
 					</thead>
 					
