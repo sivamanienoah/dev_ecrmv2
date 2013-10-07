@@ -96,6 +96,9 @@ class web_to_lead extends crm_controller {
 			$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));
 
 			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
+		} else {
+			echo 2;
+			exit;
 		}
 		echo 1;
 		exit;
