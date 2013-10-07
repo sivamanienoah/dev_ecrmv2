@@ -636,6 +636,7 @@ $('.checkUser').hide();
             }
         return false;
     });
+	
     function getResult(name, email1) {
 	//alert(email1);
         var baseurl = $('.hiddenUrl').val();

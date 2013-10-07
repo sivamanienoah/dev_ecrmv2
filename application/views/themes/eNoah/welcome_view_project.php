@@ -1149,6 +1149,7 @@ function setProjectId() {
 		//alert('Please Enter Project ID!');
 		$('#pjt_id_errormsg').text('Please Enter Project ID!');
 		$('#pjt_id_errormsg').show();
+		setTimeout('timerfadeout()', 2000);
 		return false;
 	} else {
 			$.blockUI({
@@ -1165,6 +1166,7 @@ function setProjectId() {
                 if(response == 'userOk') {	
 					$('.checkUser').show(); 
 					$('.checkUser1').hide();
+					setTimeout('timerfadeout()', 2000);
 					$.get(
 						'ajax/production/set_project_id/' + curr_job_id + '/' + pjtId,
 						{},
@@ -1193,6 +1195,7 @@ function setProjectId() {
 					$().unblock();
 					$('.checkUser').hide(); 
 					$('.checkUser1').show();
+					setTimeout('timerfadeout()', 2000);
 					//$("#submitid").attr("disabled", "disabled");
 				}
             }
@@ -1209,6 +1212,7 @@ function setProjectVal() {
 		//alert('Please Enter Project Value!');
 		$('#pjt_val_errormsg').text('Please Enter Project Value!');
 		$('#pjt_val_errormsg').show();
+		setTimeout('timerfadeout()', 3000);
 		return false;
 	} else {
 			$.blockUI({
@@ -1225,6 +1229,7 @@ function setProjectVal() {
                 if(response == 'userOk') {	
 					$('#checkVal').show(); 
 					$('#checkVal1').hide();
+					setTimeout('timerfadeout()', 3000);
 					$.get(
 						'ajax/production/set_project_value/' + curr_job_id + '/' + pjt_value,
 						{},
@@ -1250,6 +1255,7 @@ function setProjectVal() {
 					$().unblock();
 					$('#checkVal').hide(); 
 					$('#checkVal1').show();
+					setTimeout('timerfadeout()', 3000);
 				}
             }
         });
@@ -1257,7 +1263,7 @@ function setProjectVal() {
 }
 
 
-function setProjectStatusDate(date_type) {	
+function setProjectStatusDate(date_type) {
 	$("#errmsg, #errmsg_start_dt").hide();
 	//alert (date_type); exit;
 	<?php

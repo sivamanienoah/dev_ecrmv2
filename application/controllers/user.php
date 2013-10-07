@@ -40,16 +40,14 @@ class User extends crm_controller {
             //$this->pagination->initialize($config);
             
             //$data['pagination'] = $this->pagination->create_links();
-        } 
-        
+        }
+		$data['max_allow_user'] = $this->cfg['max_allowed_users'][0];
         $this->load->view('user/list_view', $data);
         
     }
     
     public function add_user($update = false, $id = false, $ajax = false)
 	{
-	    
-
         /*if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_user'])) {
             
             // check to see if this customer has a job on the system before deleting
@@ -316,7 +314,8 @@ class User extends crm_controller {
                 
             } else {
                 //insert
-                if ($newid = $this->user_model->insert_user($update_data)) {
+				$newid = $this->user_model->insert_user($update_data);
+                if ($newid != 'max_users') {
                    // echo "<pre>"; print_r($update_data); exit;
 				    $user_ids = $this->db->insert_id();
 					$level_id = $update_data['level'];
@@ -416,7 +415,10 @@ class User extends crm_controller {
                         echo json_encode($json);
                     }
                     
-                }
+                } else if ($newid == 'max_users') {
+					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
+					redirect('user/');
+				}
                 
             }
 			
@@ -424,13 +426,17 @@ class User extends crm_controller {
         
     }
 	
-	function getUserResult($email,$update){
-		if ($update != 'undefined') {
+	function getUserResult($email,$update)
+	{
+		if ($update != 'undefined') 
+		{
 			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
-			if ($emailid == 1) {
+			if ($emailid == 1) 
+			{
 				echo 'userOk';
 			}
-			else {
+			else 
+			{
 				echo 'userNo';
 			}	
 		}
@@ -442,7 +448,8 @@ class User extends crm_controller {
 		}	
 	}
 	
-	function getUserDetFromDb($users){
+	function getUserDetFromDb($users)
+	{
 		//echo $users;
 		$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
 		$user_res = $query->result_array();
@@ -457,7 +464,25 @@ class User extends crm_controller {
 		echo $res;
 	}
 	
-	function delete_user($id = false){
+	function ajax_check_status_user() 
+	{
+		$id = $_POST['data'];
+		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")"; 
+		$this->db->where($where);
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		// echo $this->db->last_query(); exit;
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	function delete_user($id = false)
+	{
 	if ($this->session->userdata('delete')==1) {
 		$this->login_model->check_login();
 					
@@ -633,7 +658,8 @@ EOD;
 		return FALSE;
 	}
 	
-	function getUserfromdb($username, $update){
+	function getUserfromdb($username, $update)
+	{
 	//echo $update;
 		if ($update != 'undefined') {
 		
@@ -655,6 +681,7 @@ EOD;
 			else echo 'userNo';
 		}	
 	}
+	
 	public function loadRegions()
 	{
 	    $output = '';
@@ -668,6 +695,7 @@ EOD;
 		}
 		echo $output;
 	}
+	
 	public function editloadRegions($uid)
 	{
 	    $output = '';
@@ -713,6 +741,7 @@ EOD;
 		}
 		echo $output;
 	}
+	
 	public function editloadCountrys($regionid,$uid)
 	{
 	    $output = '';
@@ -794,6 +823,7 @@ EOD;
 		}
 		echo $output;
 	}
+	
 	public function editloadLocations($state_id,$uid)
 	{
 	    $output = '';
@@ -817,7 +847,8 @@ EOD;
 		
 	}
 	
-	public function checkcountry() {
+	public function checkcountry() 
+	{
 		$region_load = $_POST['region_load']; 
 		$explode_region = explode(',',$region_load);
 		
@@ -837,7 +868,9 @@ EOD;
 		//print_r($array_regionload);
 		echo json_encode($json); exit;
 	}
-	public function checkstate() {
+	
+	public function checkstate() 
+	{
 		$region_load = $_POST['region_load'];
 		$explode_region = explode(',',$region_load);
 
@@ -867,7 +900,9 @@ EOD;
 		}
 		echo json_encode($json); exit;
 	}
-	public function checklocation() {
+	
+	public function checklocation() 
+	{
 		$region_load = $_POST['region_load'];
 		$explode_region = explode(',',$region_load);
 

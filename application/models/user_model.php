@@ -6,14 +6,15 @@ class User_model extends Common_model {
        parent::__construct();
     }
     
-    function user_list($offset, $search, $order_field = 'last_name', $order_type = 'asc') {
-        
-        if ($search != false) {	
+    function user_list($offset, $search, $order_field = 'last_name', $order_type = 'asc') 
+	{
+        if ($search != false) 
+		{	
             $search = urldecode($search);
 			
 			$sql = "SELECT a.*,b.level_id,b.level_name,c.id,c.name
                     FROM {$this->cfg['dbpref']}users as a
-					LEFT JOIN ".$this->cfg['dbpref']."levels as b ON b.level_id = a.level LEFT JOIN roles as c ON c.id = a.role_id
+					LEFT JOIN ".$this->cfg['dbpref']."levels as b ON b.level_id = a.level LEFT JOIN ".$this->cfg['dbpref']."roles as c ON c.id = a.role_id
                     WHERE
                     (
                         CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%$search%'
@@ -26,41 +27,53 @@ class User_model extends Common_model {
             $offset = mysql_real_escape_string($offset);
 			$sql = "select a.*,b.level_id,b.level_name,c.id,c.name from ".$this->cfg['dbpref']."users as a LEFT JOIN ".$this->cfg['dbpref']."levels as b ON b.level_id = a.level LEFT JOIN ".$this->cfg['dbpref']."roles as c ON c.id = a.role_id ORDER BY a.first_name";
 		}	
-			
 		
 		$customers = $this->db->query($sql);
         return $customers->result_array();
     }
     
-    function user_count() {
+    function user_count() 
+	{
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'users');
     }
     
-    function get_user($id) {
-         if(!$id)
+    function get_user($id) 
+	{
+        if(!$id)
         {
             return false;
-        }else{
+        }
+		else
+		{
 			$customer = $this->db->get_where($this->cfg['dbpref'] . 'users', array('userid' => $id), 1);
 			return $customer->result_array();
 		}
-        
     }
     
-    function update_user($id, $data) {
+    function update_user($id, $data) 
+	{
         $this->db->where('userid', $id);
         return $this->db->update($this->cfg['dbpref'] . 'users', $data);
-        
     }
     
-    function insert_user($data) {
-        
-        if ( $this->db->insert($this->cfg['dbpref']. 'users', $data) ) {
-            return $this->db->insert_id();
-        } else {
-            return false;
-        }
-        
+    function insert_user($data)
+	{
+		$availed_users = check_max_users();
+		if ( $this->cfg['max_allowed_users'][0] > $availed_users['avail_users'] )
+		{
+			if ( $this->db->insert($this->cfg['dbpref']. 'users', $data) ) {
+				return $this->db->insert_id();
+			} 
+			else 
+			{
+				return false;
+			}
+		}
+		else 
+		{
+			$max_user = "max_users";
+			return $max_user;
+		}
     }
 	
 	//for new level settings concepts
@@ -108,9 +121,8 @@ class User_model extends Common_model {
 		 }
 	}
 	
-function get_userslist($regid, $cntryid, $steid, $locid)
+	function get_userslist($regid, $cntryid, $steid, $locid)
     {
-
 		$query = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_region WHERE `region_id` = $regid && level_id not in(5,4,3) ");
 		$cntryquery = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_country WHERE `country_id` = $cntryid && level_id not in(5,4,2) ");
 		$stequery = $this->db->query("SELECT `user_id` FROM ".$this->cfg['dbpref']."levels_state WHERE `state_id` = $steid && level_id not in(5,3,2)");
@@ -134,17 +146,17 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 		$userList = array_unique($users);
 		$userList = (array_values($userList));
 		return $userList;
-    }    
-    function delete_user($id) {
-        
+    }
+	
+    function delete_user($id) 
+	{
         $this->db->where('userid', $id);
         return $this->db->delete($this->cfg['dbpref'] . 'users');
-        
     }
 	
 	//function for ACL\
 	
-	  public function has_role( $user, $role )
+	public function has_role( $user, $role )
     {
         $this->db->join( $this->cfg['dbpref'].'user_roles ur', 'users.id = ur.users_id' );
         $this->db->join( $this->cfg['dbpref'].'roles r', 'r.id = ur.roles_id' );
@@ -171,11 +183,13 @@ function get_userslist($regid, $cntryid, $steid, $locid)
         return ( $token === $this->reset_code );
     }
 	
-	public function addremarks($remarks,$userid,$taskid){
+	public function addremarks($remarks,$userid,$taskid)
+	{
 		$this->db->query("INSERT INTO `".$this->cfg['dbpref']."taskremarks`(`remarks`,`taskid`,`userid`,`createdon`) VALUES('".$remarks."','".$taskid."','".$userid."',now())");
 	}
 	
-	public function updatedby($taskid) {
+	public function updatedby($taskid) 
+	{
 		$this->db->select('created_by');
 		$this->db->from($this->cfg['dbpref'].'tasks');
 		$this->db->where('taskid',$taskid);
@@ -183,13 +197,16 @@ function get_userslist($regid, $cntryid, $steid, $locid)
         $id=  $idd->result_array();
 		return $id;
 	}
-    function update_level($data,$id,$levelid) {		
+	
+    function update_level($data,$id,$levelid) 
+	{		
 		$this->delete_level_dependant($id);
 		$this->level_dependant_insert($id,$data,$levelid);		
 		return $id;
-  	}	
-	function delete_level_dependant($id = null){
-
+  	}
+	
+	function delete_level_dependant($id = null)
+	{
 		$this->db->where('user_id',$id);
 		$this->db->delete($this->cfg['dbpref'] . 'levels_region') ;
 		$this->db->where('user_id', $id);
@@ -199,7 +216,9 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 		$this->db->where('user_id', $id);
 		return $this->db->delete($this->cfg['dbpref'] . 'levels_location'); 		
 	}
-    function level_dependant_insert($userId = null,$data,$levelid){		
+	
+    function level_dependant_insert($userId = null,$data,$levelid)
+	{		
 		if(!empty($data['region'])) {	
 				for($i=0;$i<count($data['region']);$i++){				
 					$dataRegion = array();
@@ -212,8 +231,9 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 				}
 		}
 			 
-			 if(!empty($data['country'])) {
-			 	 for($i=0;$i<count($data['country']);$i++){
+		if(!empty($data['country'])) {
+			for($i=0;$i<count($data['country']);$i++)
+			{
 				$dataRegion = array();
 				$dataRegion['country_id'] =$data['country'][$i];
 				$dataRegion['user_id'] =$userId;
@@ -221,10 +241,12 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 				if($levelid != 1) {
 					$this->db->insert($this->cfg['dbpref'] . 'levels_country', $dataRegion);
 				}
-			 }
-			 }
-			 if(!empty($data['state'])) {
-			 	 for($i=0;$i<count($data['state']);$i++){
+			}
+		}
+		
+		if(!empty($data['state'])) {
+			for($i=0;$i<count($data['state']);$i++)
+			{
 				$dataRegion = array();
 				$dataRegion['state_id'] =$data['state'][$i];
 				$dataRegion['user_id'] =$userId;
@@ -232,10 +254,12 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 				if($levelid != 1) {
 					$this->db->insert($this->cfg['dbpref'] . 'levels_state', $dataRegion);
 				}
-			 }	
-			 }
-			if(!empty($data['location'])) {			 
-			 for($i=0;$i<count($data['location']);$i++){
+			}	
+		}
+		
+		if(!empty($data['location'])) {			 
+			for($i=0;$i<count($data['location']);$i++)
+			{
 				$dataRegion = array();
 				$dataRegion['location_id'] =$data['location'][$i];
 				$dataRegion['user_id'] =$userId;
@@ -243,11 +267,13 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 				if($levelid != 1) {
 					$this->db->insert($this->cfg['dbpref']. 'levels_location', $dataRegion); 
 				}
-			 }
-			 }
+			}
+		}
 	
 	}
-	public function checkcountrylevel3($regionid,$explode_country) {
+	
+	public function checkcountrylevel3($regionid,$explode_country) 
+	{
 		$flag = 0;		
 			$query = $this->db->query("select * from ".$this->cfg['dbpref']."country where regionid='".$regionid."' AND countryid IN ($explode_country)");
 			if($query->num_rows() > 0) {
@@ -255,7 +281,9 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 			} 	
 		return $flag;
 	}
-	public function checkstatelevel4($countryid,$state_load) {
+	
+	public function checkstatelevel4($countryid,$state_load) 
+	{
 		$flag = 0;		
 			$query = $this->db->query("select * from ".$this->cfg['dbpref']."state where countryid='".$countryid."' AND stateid IN ($state_load)");
 			if($query->num_rows() > 0) {
@@ -263,14 +291,15 @@ function get_userslist($regid, $cntryid, $steid, $locid)
 			} 	
 		return $flag;
 	}
-	public function checklocationlevel5($stateid,$location_load) {	
+	
+	public function checklocationlevel5($stateid,$location_load) 
+	{	
 		$flag = 0;		
 			$query = $this->db->query("select * from ".$this->cfg['dbpref']."location where stateid='".$stateid."' AND locationid IN ($location_load)");
 			if($query->num_rows() > 0) {
 				$flag = 1;
 			} 	
 		return $flag;
-
 	}
 }
 

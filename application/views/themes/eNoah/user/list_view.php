@@ -1,5 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
+<?php $availed_users = check_max_users(); ?>
+<?php  #echo $max_allow_user ." ". $availed_users['avail_users']; ?>
 <div id="content">
     <div class="inner">
     <?php if($this->session->userdata('accesspage')==1) { ?>       
@@ -28,7 +29,7 @@
 					<?php if($this->session->userdata('add')==1) { ?>
 					<td valign="middle";>
 						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='user/add_user'">
+							<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='user/add_user'" <?php } ?> >
 								Add New User
 							</button>
 						</div>
@@ -47,6 +48,7 @@
             </table>
 		</form>
         
+		<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
         <table border="0" cellpadding="0" cellspacing="0" class="data-table">
             
             <thead>
@@ -56,6 +58,7 @@
                     <th>Phone</th>
                     <th>Roles</th>
                     <th>Level</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -76,10 +79,13 @@
 						</td>
                         <td><?php echo  $customer['phone'] ?></td>
                         <td><?php echo  $customer['name'] ?></td>
-                        <!--<td><?php echo $customer['level'] ?></td>-->
+                        <!--<td><?php //echo $customer['level'] ?></td>-->
                         <td><?php echo  $customer['level_name'] ?></td>
-						<td><?php if($this->session->userdata('edit')==1){ ?><a href="user/add_user/update/<?php echo $customer['userid'] ?>"><?php echo "Edit"; ?></a><?php } else { echo "Edit"; } ?>  
-							<?php if($this->session->userdata('delete')==1){ ?> | <a href="user/delete_user/<?php echo $customer['userid'] ?>" onclick="return confirm('Are you sure you want to delete?')" ><?php echo "Delete"; ?></a><?php } ?>	
+                        <td><?php if ($customer['inactive'] == 0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
+						<td>
+							<?php if($this->session->userdata('edit')==1) { ?>
+								<a href="user/add_user/update/<?php echo $customer['userid'] ?>"><?php echo "Edit"; ?></a><?php } else { echo "Edit"; } ?>  
+							<?php if($this->session->userdata('delete')==1) { ?> | <a href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['userid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
 						</td>
                     </tr>
                     <?php } ?>
@@ -119,5 +125,40 @@ $(function(){
         function() { $(this).removeClass('over'); }
     );
 });
+
+function checkStatus(id) {
+	var formdata = { 'data':id, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
+	$.ajax({
+		type: "POST",
+		url: '<?php echo base_url(); ?>user/ajax_check_status_user/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			//$("#loadingImage").show();
+			$('#dialog-err-msg').empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				//alert("You can't Delete the Lead source!. \n This Source is used in Leads.");
+				$('#dialog-err-msg').show();
+				$('#dialog-err-msg').append('One of more leads currently mapped to this user. This cannot be deleted.');
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				var r=confirm("Are You Sure Want to Delete?")
+				if (r==true) {
+				  window.location.href = 'user/delete_user/'+id;
+				} else {
+					return false;
+				}
+			}
+		}          
+	});
+return false;
+}
+
+function timerfadeout() {
+	$('.dialog-err').fadeOut();
+}
 </script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
