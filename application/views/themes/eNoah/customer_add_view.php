@@ -1,6 +1,5 @@
 <?php require ('tpl/header.php'); ?>
 <?php
-
 if($this->validation->add1_region != 0) 
 echo '<input type="hidden" name="region_update" id="region_update" value="'.$this->validation->add1_region.'" />';
 if($this->validation->add1_country != 0)

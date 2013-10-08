@@ -9,7 +9,7 @@
     </div>
     <div class="inner">
 	<?php if($this->session->userdata('addImpCus')==1) { ?>
-    	<form action="customers/importload" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
+    	<form action="customers/importload" method="post" enctype="multipart/form-data" >
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
