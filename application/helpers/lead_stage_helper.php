@@ -33,7 +33,7 @@ if ( ! function_exists('getLeadStage'))
 		$sql = $CI->db->get();
 		// echo $CI->db->last_query(); exit;
 		$res = $sql->result_array();
-		// echo "<pre>"; print_r($res1); exit;
+		// echo "<pre>"; print_r($res); exit;
 		return $res;
 		
 	}

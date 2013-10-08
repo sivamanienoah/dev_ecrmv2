@@ -640,9 +640,11 @@ $('.checkUser').hide();
     function getResult(name, email1) {
 	//alert(email1);
         var baseurl = $('.hiddenUrl').val();
-	      $.ajax({
-            url : baseurl + 'user/getUserResult/'+name+'/'+email1,
-            cache : false,
+		$.ajax({
+			type: 'POST',
+            url : baseurl + 'user/getUserResult/',
+            data: 'email='+name+'&email1='+email1+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',
+
             success : function(response){
                 $('.checkUser').hide();
                 if(response == 'userOk') {	

@@ -1,4 +1,15 @@
 <?php
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_name = $default_currency['expect_worth_name'];
+} else {
+	$default_cur_id = '1';
+	$default_cur_name = 'USD';
+}
+?>
+<?php
 ob_start();
 $userdata = $this->session->userdata('logged_in_user');
 require ('tpl/header.php'); 
@@ -19,20 +30,20 @@ require ('tpl/header.php');
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <?php 
 // For Chart Title
-if ($userdata['level']==1) {
-	$chart_title = "Leads By Region Wise";
-}
-else if ($userdata['level']==2) {
-	$chart_title = "Leads By Country Wise";
-}
-else if ($userdata['level']==3) {
-	$chart_title = "Leads By State Wise";
-}
-else if ($userdata['level']==4){
-	$chart_title = "Leads By Location Wise";
-}
-else {
-	$chart_title = "Leads By Location Wise";
+switch ($userdata['level']) {
+    case 1:
+        $chart_title = "Leads By Region Wise";
+	break;
+    case 2:
+        $chart_title = "Leads By Country Wise";
+	break;
+    case 3:
+        $chart_title = "Leads By State Wise";
+	break;
+	case 4:
+	case 5:
+        $chart_title = "Leads By Location Wise";
+	break;
 }
 ?>
 <?php } ?>
@@ -91,7 +102,6 @@ td.task {
 }
 </style>
 <?php } ?>
-
 <div id="content">
 	<div class="inner">
 	<?php if($this->session->userdata('viewlead')==1) { ?>
@@ -132,7 +142,7 @@ td.task {
 						<table class="dashboard-heads table_grid" cellspacing="0" cellpadding="10px;" border="0" width="100%">
 							<thead>
 								<tr>
-									<th>Lead Title</th><th>Estimated Worth (USD)</th><th>Lead Owner</th><th>Lead Assignee</th>
+									<th>Lead Title</th><th>Estimated Worth (<?php echo $default_cur_name; ?>)</th><th>Lead Owner</th><th>Lead Assignee</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -164,7 +174,7 @@ td.task {
 				<!--<div id="lineimg"><button type="button">PDF</button></div>-->
 			</div>
 			<div class="pull-right dash-section">
-				<h5>Closed Opportunities - Cumulative Sales: $ <?php echo $totClosedOppor; ?></h5>
+				<h5>Closed Opportunities - Cumulative Sales: <?php echo $totClosedOppor ." ".$default_cur_name; ?></h5>
 				<div id="line2" class="plot"></div>
 				<!--<div id="line2img"><button type="button">PDF</button></div>-->
 			</div>
@@ -503,7 +513,7 @@ $s1 = implode(',', $lead_stage);
 $s2 = "";
 foreach($LeadsRegionwise as $key => $value){
 	//$reg_leads[] = "['".$getRegLead['region_name'].'('.$getRegLead['lead_values'].')'."'".','.$getRegLead['lead_values']."]";
-	$s2 .= "['".$key."(".$value." USD)',".$value."],";
+	$s2 .= "['".$key."(".$value." ".$default_cur_name.".)',".$value."],";
 }
 
 //For LeadsIndicator
@@ -1270,7 +1280,7 @@ $(document).ready(function(){
 			var formdata = { 'gid':pointIndex, 'type':'line2','<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
 			$.ajax({
 				type: "POST",
-				url: '<?php echo base_url(); ?>dashboard/showLeadDetails/',
+				url: '<?php echo base_url(); ?>dashboard/showLeadDetails_cls/',
 				dataType:"json",                                                                
 				data: formdata,
 				cache: false,
