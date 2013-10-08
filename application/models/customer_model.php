@@ -351,6 +351,29 @@ class Customer_model extends crm_model {
         }
         return $i;
     }
+	
+	function primary_mail_check($mail) {
+		$qem = $this->db->query("SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE email_1 LIKE '%$email%'");
+		return $qem->num_rows();
+	}
+	function get_customer_data($mail) {
+		$q = $this->db->get_where($this->cfg['dbpref'].'customers', array('email_1' => mail));
+		return $q->row_array();
+	}
+	function get_customer_insert_id($data) {
+		$this->db->insert($this->cfg['dbpref'].'customers', $data);
+		return $this->db->insert_id();
+	}
+	function customer_update($id, $data) {
+		$this->db->where('custid', $id);
+		$this->db->update($this->cfg['dbpref'].'customers', $data);		
+		$cust = array('custid_fk' => $id, 'custcatid_fk' => 12);
+		$this->db->where($cust);
+		$q = $this->db->get($this->cfg['dbpref'].'cust_cat_join');		
+		if ($q->num_rows() < 1)
+		$this->db->insert($this->cfg['dbpref'].'cust_cat_join', $cust);
+	}
+	
     
 }
 
