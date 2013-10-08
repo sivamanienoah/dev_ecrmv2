@@ -104,7 +104,7 @@ class Dashboard extends crm_controller {
 		$totalSum = 0;
 		foreach ($data['getClosedJobid'] as $value) {
 			$value['expect_worth_amount'] = $this->conver_currency($value['expect_worth_amount'], $rates[$value['expect_worth_id']][$this->default_cur_id]);
-			$sql = "SELECT jobid,dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE jobid = '".$value['jobid']."' AND changed_status IN ('13','14','16') ORDER BY dateofchange ASC LIMIT 1";
+			$sql = "SELECT jobid, dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE jobid = '".$value['jobid']."' AND changed_status = 4 ORDER BY dateofchange DESC LIMIT 1";
 			$rows = $this->db->query($sql);
 			$res_query = $rows->row_array();
 			if(!empty($res_query)) {
@@ -900,7 +900,7 @@ class Dashboard extends crm_controller {
 		
 		$jb = array();
 		foreach ($data['jobid'] as $value) {
-			$sql = "SELECT jobid, dateofchange FROM ".$this->cfg['dbpref']."lead_status_history WHERE jobid = '".$value['jobid']."' AND changed_status IN ('13','14','16') ORDER BY dateofchange ASC LIMIT 1";
+			$sql = "SELECT jobid, dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE jobid = '".$value['jobid']."' AND changed_status = 4 ORDER BY dateofchange DESC LIMIT 1";
 			$rows = $this->db->query($sql);
 			//echo $this->db->last_query(); 
 			$res_query = $rows->row_array();
