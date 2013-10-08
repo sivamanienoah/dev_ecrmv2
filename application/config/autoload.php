@@ -134,7 +134,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('common_model','login_model');
+$autoload['model'] = array('login_model');
 
 /* End of file autoload.php */
 /* Location: ./application/config/autoload.php */
