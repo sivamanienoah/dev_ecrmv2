@@ -308,7 +308,7 @@ class Manage_service extends crm_controller {
 				$file = fopen($filename, "w");
 				fwrite($file, '<?php');
 				fwrite($file, "\n");
-				fwrite($file, '$config["vps"]["job_categories"] = array(');
+				fwrite($file, '$config["crm"]["job_categories"] = array(');
 				fwrite($file, "\n");
 				for($k=0;$k<count($get_jobscat);$k++) {
 					fwrite($file, $get_jobscat[$k]['cid']);
@@ -399,7 +399,7 @@ class Manage_service extends crm_controller {
 				$file = fopen($filename, "w");
 				fwrite($file, '<?php');
 				fwrite($file, "\n");
-				fwrite($file, '$config["vps"]["sales_divisions"] = array(');
+				fwrite($file, '$config["crm"]["sales_divisions"] = array(');
 				fwrite($file, "\n");
 				for($k=0;$k<count($get_salesDiv);$k++) {
 					fwrite($file, '"');
