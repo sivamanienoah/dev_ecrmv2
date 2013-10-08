@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Report_lead_region_model extends Common_model {
+class Report_lead_region_model extends crm_model {
     
     function Country_model() {
         parent::__construct();

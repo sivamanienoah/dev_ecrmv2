@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Taskdue_model extends CI_Model {
+class Taskdue_model extends crm_model {
 	
 	function Taskdue_model() {
 

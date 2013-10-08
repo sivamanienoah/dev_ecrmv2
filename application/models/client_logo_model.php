@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class client_logo_model extends Common_model {
+class client_logo_model extends crm_model {
     
     function __construct() 
 	{

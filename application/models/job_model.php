@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class job_model extends Common_model {
+class job_model extends crm_model {
     
 	public $cfg;
 	

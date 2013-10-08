@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Role_model extends Common_model {
+class Role_model extends crm_model {
     
     function Role_model() {        
         parent::__construct();     

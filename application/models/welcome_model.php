@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome_model extends Common_model {
+class Welcome_model extends crm_model {
     
     public function __construct()
     {

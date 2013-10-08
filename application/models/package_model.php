@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Package_model extends Common_model {
+class Package_model extends crm_model {
     function Package_model() {
         parent::__construct();
     }

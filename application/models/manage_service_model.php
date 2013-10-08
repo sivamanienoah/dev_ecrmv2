@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class manage_service_model extends Common_model {
+class manage_service_model extends crm_model {
     
     function Manage_service_model() {
        parent::__construct();

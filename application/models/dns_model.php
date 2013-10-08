@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Dns_model extends Common_model {
+class Dns_model extends crm_model {
     function Dns_model() {
         parent::__construct();
     }

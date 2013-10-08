@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Region_model extends Common_model {
+class Region_model extends crm_model {
     
     function Region_model() {
         

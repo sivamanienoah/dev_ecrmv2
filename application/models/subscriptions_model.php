@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Subscriptions_model extends Common_model {
+class Subscriptions_model extends crm_model {
     
     public $userdata;
     

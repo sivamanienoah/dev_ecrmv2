@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Task_alert_model extends Common_model {
+class Task_alert_model extends crm_model {
 	
 	function Taskdue_model() {
 

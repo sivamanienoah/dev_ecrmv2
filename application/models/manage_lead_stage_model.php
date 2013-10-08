@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Manage_lead_stage_model extends Common_model {
+class Manage_lead_stage_model extends crm_model {
     
     function Manage_lead_stage_model() {
         parent::__construct();

@@ -1,6 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Hosting_model extends Common_model {
+class Hosting_model extends crm_model {
     
     function Hosting_model() {
 
