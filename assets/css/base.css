@@ -1266,14 +1266,30 @@ ul.ui-sortable li{
 	padding: 1px 4px 2px;
     background-color: #468847;
 	color: #fff;
-	font-weight: bold;
 }
 .label-warning {
 	border-radius: 3px 3px 3px 3px;
 	padding: 1px 4px 2px;
     background-color: #F89406;
 	color: #fff;
-	font-weight: bold;
+}
+.label-wip {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #006fc0;
+	color: #fff;
+}
+.label-complete {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #F89406;
+	color: #fff;
+}
+.label-inactive {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #c0504d;
+	color: #fff;
 }
 /*Clearfix*/
 .clearfix:after {
