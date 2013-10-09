@@ -427,31 +427,27 @@ class User extends crm_controller {
     }
 	
 	// function getUserResult($email,$update)
-	function getUserResult()
-	{
-	echo "<pre>"; print_r($_POST); exit;
-		if ($update != 'undefined') 
-		{
+	function getUserResult() {	
+		$email = $_POST['email']; 
+		$update = $_POST['email1'];
+
+		if ($update != 'undefined') {
 			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
 			if ($emailid == 1) 
-			{
 				echo 'userOk';
-			}
 			else 
-			{
 				echo 'userNo';
-			}	
-		}
-		else {
+		} else {
 			$this->db->where('email',$email);
 			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-			if ($query == 0) echo 'userOk';
-			else echo 'userNo';
+			if ($query == 0) 
+				echo 'userOk';
+			else 
+				echo 'userNo';
 		}	
 	}
 	
-	function getUserDetFromDb($users)
-	{
+	function getUserDetFromDb($users) {
 		//echo $users;
 		$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
 		$user_res = $query->result_array();
