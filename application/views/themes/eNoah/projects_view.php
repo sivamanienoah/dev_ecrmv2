@@ -183,16 +183,16 @@
 							switch ($record['pjt_status'])
 								{
 									case 1:
-										$pjtstat = 'Project In Progress';
+										$pjtstat = '<span class=label-wip>Project In Progress</span>';
 									break;
 									case 2:
-										$pjtstat = 'Project Completed ';
+										$pjtstat = '<span class=label-success>Project Completed</span>';
 									break;
 									case 3:
-										$pjtstat = 'Project Onhold';
+										$pjtstat = '<span class=label-warning>Project Onhold</span>';
 									break;
 									case 4:
-										$pjtstat = 'Inactive';
+										$pjtstat = '<span class=label-inactive>Inactive</span>';
 									break;
 								}
 							 echo $pjtstat;

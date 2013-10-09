@@ -99,7 +99,7 @@
 							<?php
 							$list_location = ($this->uri->segment(3)) ? '/' . $this->uri->segment(3) : '';
 							echo (($this->session->userdata('delete')==1) && $record['invoice_downloaded'] != 1) ? ' | <a href="welcome/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure?\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
-							echo (($this->session->userdata('accesspage')==1)) && $record['job_status'] > 3) ? ' | <a href="quotation/invoice_data_zip/' . $record['jobid'] . '">Get Invoice</a>' : '' ?></td>
+							echo (($this->session->userdata('accesspage')==1) && $record['job_status'] > 3) ? ' | <a href="quotation/invoice_data_zip/' . $record['jobid'] . '">Get Invoice</a>' : '' ?></td>
 						</tr>
 						<?php } ?>
 					<?php } else { ?>
@@ -140,7 +140,7 @@
 				</table>
 			</form>
 		</div-->
-<?php } else { echo "You are not authrorized to view this page. "}?>
+<?php } else { echo "You are not authrorized to view this page."; } ?>
 	</div>
 </div>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>

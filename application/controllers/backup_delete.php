@@ -416,7 +416,6 @@ VCS";
 				//$log_data = explode('--visiontechdigital.com', $body);
 					$log_data=explode('--enoahisolution.com', $body)
 					//print_r($info);
-					
 					if (trim($log_data[0]) != '')
 					{
 						$log_data[0] = strip_tags($log_data[0]);

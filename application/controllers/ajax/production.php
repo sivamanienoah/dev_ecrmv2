@@ -94,12 +94,7 @@ class Production extends crm_controller {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Email Template</title>
 <style type="text/css">
-body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
+body { margin: 0px; }
 </style>
 </head>
 
@@ -174,10 +169,6 @@ body {
 		if($this->email->send()){
 			 echo $successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
-	 
-	 
-		
-			
 	}
 	
 	public function set_project_id($jobid, $pjtId)
@@ -383,7 +374,7 @@ body {
 		echo json_encode($data);
 	}
 	
-	
+	//unwanted function
 	public function get_csr_status($job_id = 0)
 	{
 		$q = $this->db->get_where($this->cfg['dbpref'].'jobs', array('jobid' => $job_id));
@@ -401,6 +392,7 @@ body {
 		echo json_encode($json);
 	}
 	
+	//unwanted function
 	public function set_csr_status()
 	{
 		$jobid = 0;
@@ -431,6 +423,38 @@ body {
 		}
 		
 		echo json_encode($json);
+	}
+	
+	public function set_project_status() {
+		$data['error'] = FALSE;
+		
+		if ($_POST['pjt_stat'] == "") {
+			$data['error'] = 'Value must not be Null value!';
+		} else {
+			switch ($_POST['pjt_stat'])
+			{
+				case 1:
+					$log_status = 'The Project moved to In Progress';
+				break;
+				case 2:
+					$log_status = 'The Project moved to Completed ';
+				break;
+				case 3:
+					$log_status = 'The Project moved to Onhold';
+				break;
+				case 4:
+					$log_status = 'The Project moved to Inactive';
+				break;
+			}
+			if ($this->db->update($this->cfg['dbpref'].'jobs', array('pjt_status' => $_POST['pjt_stat']), array('jobid' => $_POST['job_id'])))
+				$ins['userid_fk'] = $this->userdata['userid'];
+				$ins['jobid_fk'] = $_POST['job_id'];
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
+				// inset the new log
+				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+		}
+		echo json_encode($data);
 	}
     
 }

@@ -612,7 +612,7 @@ HDOC;
 			$keyword = 'null';
 		}
 		$getProjects = $this->welcome_model->get_projects_results($pjtstage, $pm_acc, $cust, $keyword);	
-		//echo "<pre>"; print_r($getProjects); exit;
+
 		$data['pjts_data'] = $getProjects;
 		$data['records'] = $getProjects;
 		

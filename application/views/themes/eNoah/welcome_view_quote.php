@@ -127,11 +127,7 @@ function addLog() {
 		return false;
 	}
 	
-	if (current_job_status < 2 && $('#email_to_customer').is(':checked') && $('#attach_pdf').is(':checked')) {
-		if (!window.confirm('This job is not yet converted to a quotaion.\nAre you sure you want to send this PDF?')) {
-			return false;
-		}
-	}
+
 	
 	if ($('#log_stickie').is(':checked')) {
 		if (!window.confirm('Are you sure you want to highlight this log as a Stickie?')) {
@@ -254,6 +250,7 @@ function addLog() {
 	)
 }
 
+//unwanted function
 var client_message = 'Hi <?php echo  (isset($quote_data) && trim($quote_data['first_name']) != '') ? $quote_data['first_name'] : 'There' ?>,\n\nWe are now pleased to forward to you our formal project proposal for:\n\n<?php echo $cfg['job_status'][$quote_data['job_status']] ?> #<?php echo $quote_data['invoice_no'], ', ', str_replace("'", "\'", $quote_data['job_title']) ?>\n\nIf you wish to proceed with our Lead, please reply to this email stating the following: "Lead Approved - Please Proceed" and one of our friendly staff will be in touch with you to finalise your order.\n\nThank you.';
 
 function prepareForClient() {
@@ -868,9 +865,9 @@ function getPMProfileImage()
 			);
 }
 
+//unwanted function
 function getProjectCSR()
 {
-	
 	$.getJSON(
 				'ajax/production/get_csr_status/' + curr_job_id,
 				{},
@@ -887,7 +884,7 @@ function getProjectCSR()
 				}
 			);
 }
-
+//unwanted function
 function manageCSRStatus(status)
 {
 	if (status == 1)
@@ -905,7 +902,7 @@ function manageCSRStatus(status)
 	$('.project-csr-change:visible').hide(200);
 }
 
-
+//unwanted function
 /* function to add the auto log */
 function qcOKlog() {
 	var msg = "eCRM QC Officer Log Check - All Appears OK";
@@ -917,6 +914,7 @@ function qcOKlog() {
 	$('#add-log-submit-button').click();
 }
 
+//unwanted function
 function setProjectCSR()
 {
 	var in_csr = ($('#project-csr-include-tick').is(':checked')) ? 1 : 0;
@@ -1345,16 +1343,7 @@ $(window).load(function(){
 					<textarea name="signature" class="textfield width99pct" rows="4" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
 					<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
 				</div>
-				<?php
-				if (in_array($quote_data['job_status'], array(21, 22)))
-				{
-					?>
-				<div class="idle-declined">
-					This is a quotation that is either idle or declined.
-				</div>
-					<?php
-				}
-				?>
+				
 				<div style="overflow:hidden;">
 					
 					<!--<p class="right" style="padding-left:15px;">Add your time in minutes <input type="text" name="log_minutes" id="log_minutes" class="textfield" style="width:40px;" /></p>-->
@@ -1671,8 +1660,6 @@ $(window).load(function(){
            <?php //echo '<pre>'; print_r($actual_worth); echo '</pre>'; ?>
                 <div class="q-init-details">
                     <p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
-                    <!--p><label>Description</label></p>
-                    <p><textarea name="job_desc" id="job_desc_edit" class="textfield width300px height100px"><?php echo  htmlentities($quote_data['job_desc'], ENT_QUOTES) ?></textarea></p-->
 					<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
                     <p class="clearfix"><label>Service Requirement </label>  <span><?php echo $cfg['job_categories'][$quote_data['job_category']] ?></span></p>
 					<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
@@ -1684,22 +1671,31 @@ $(window).load(function(){
 								$amount = $actual_worth[0]['project_cost']; 
 								echo $amount; 
 							?>
-					
-					
-					</span></p>
+					</span>
+					</p>
 					<p class="clearfix"><label>Division </label><span><?php echo $cfg['sales_divisions'][$quote_data['division']] ?></span></p>
 					<p class="clearfix"><label>Lead Owner </label> <span><?php echo $lead_owner[0]['uafn'];?></span></p>
 					<p class="clearfix"><label>Lead Assigned To </label><span><?php echo  $quote_data['first_name'] ?></span></p>
 					<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
 					<p class="clearfix"><label>Lead Status </label>
-						<span> <?php 
-									if($quote_data['lead_status'] == 1) 
-										echo 'Active';
-									else if($quote_data['lead_status'] == 2)
-										echo 'OnHold';
-									else if($quote_data['lead_status'] == 3)
-										echo 'Dropped';
-								?>
+						<span> 
+							<?php 
+								switch ($quote_data['lead_status'])
+								{
+									case 1:
+										echo $status = 'Active';
+									break;
+									case 2:
+										echo $status = 'On Hold';
+									break;
+									case 3:
+										echo $status = 'Dropped';
+									break;
+									case 4:
+										echo $status = 'Closed';
+									break;
+								}
+							?>
 						</span>
 					</p>
 					<p class="clearfix"><label>Lead Stage </label><span><?php echo $quote_data['lead_stage_name'] ?></span></p>
@@ -1710,10 +1706,6 @@ $(window).load(function(){
                 </div>
             </form>
             <?php } ?>
-			
-			
-			
-			
 			
 				<?php
 				
@@ -1730,38 +1722,7 @@ $(window).load(function(){
 					
 					<?php
 				}
-				if(in_array($userdata['level'], array(0,1,4))){
-				?>
-				<!--div class="buttons" style="overflow:hidden; padding-bottom:10px;">
-						<button type="submit" class="positive" 
-						onclick="document.location.href = '<?php// echo $this->config->item('base_url') ?>welcome/copy_quote/<?php// echo $quote_data['jobid'] ?>'">Copy quote</button>
-				</div-->
-				<?php
-				}
-				
-				if ( in_array($userdata['level'], array(0,1,4)) && in_array($quote_data['job_status'], array(1003)) )
-				{
-				?>
-				
-				<form name="contractor-assign">
-					
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
-					<h5 class="project-lead-label">Assign contractors</h5> &nbsp;&nbsp;
-					<a href="#" onclick="$(this).siblings('div:hidden').show(); return false;">Show</a>
-					
-					<div style="display:none;">
-						<div class="list-contractors">
-							<?php echo $contractor_list ?>
-						</div>
-						
-						<div class="buttons">
-							<button type="submit" class="positive" onclick="setContractorJob(); return false;">Set Contractors</button>
-						</div>
-					</div>
-				</form>
-				<?php
-				}
+
 				?>
 			</div>
 					

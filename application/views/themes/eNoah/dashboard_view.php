@@ -12,7 +12,7 @@ if (get_default_currency()) {
 <?php
 ob_start();
 $userdata = $this->session->userdata('logged_in_user');
-require ('tpl/header.php'); 
+require ('tpl/header.php');
 //echo baseurl();
 ?>
 <?php if($this->session->userdata('viewlead')==1) { ?>

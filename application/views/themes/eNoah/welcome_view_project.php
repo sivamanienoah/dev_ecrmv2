@@ -8,7 +8,7 @@
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript">var this_is_home = true;</script>
-<!-- script type="text/javascript" src="assets/js/jquery.timepickr.min.js"></script -->
+
 
 <!--Code Added for the Pagination in Comments Section -- Starts Here-->
 <script type="text/javascript">
@@ -22,8 +22,7 @@ $(document).ready(function() {
 		//alert( previousValue ); // alerts previous value
 		//previousValue = mySelect.val(); // save so it can be referenced next time
 	});
-    // var lead = $("#project_lead option:selected").val(); 
-    // $("#previous-project-manager").val(lead);  
+
 	$("#lead_log_list")
 	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
     .tablesorterPager({container: $("#pager"),positionFixed: false});
@@ -33,8 +32,8 @@ $(document).ready(function() {
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
 	$("#show-con").hide();
 	$("#show-btn").click(function(){
-	$("#show-con").slideToggle("slow"); //$("#show-con").slideDown();	
-	return false;
+		$("#show-con").slideToggle("slow"); //$("#show-con").slideDown();	
+		return false;
 	});
 	$('.payment-profile-button').click(function() {
 		$('#rec_paymentfadeout').hide();
@@ -73,32 +72,27 @@ $(document).ready(function() {
 <!--Code Added for the Pagination in Comments Section--Ends Here-->
 
 <script type="text/javascript">  
-  $().ready(function() {  
-   $('#add').click(function() {  
-   $('#project-member').val($('#select1').val());	
-    return !$('#select1 option:selected').remove().appendTo('#select2'); 
-    
-   });  
-   $('#remove').click(function() {  
-    $('#project-member').val($('#select2').val());
-    return !$('#select2 option:selected').remove().appendTo('#select1');  
-	
-   });  
+$().ready(function() {  
+	$('#add').click(function() {  
+		$('#project-member').val($('#select1').val());	
+		return !$('#select1 option:selected').remove().appendTo('#select2'); 
+	});  
+	$('#remove').click(function() {  
+		$('#project-member').val($('#select2').val());
+		return !$('#select2 option:selected').remove().appendTo('#select1');  
+	});  
    /* when double clicking on select1 project member will added to select 2 */
-   $('#select1').dblclick(function() {
-		 $('#project-member').val($('#select1').val());
-		return !$('#select1 option:selected').remove().appendTo('#select2');  
-			
+	$('#select1').dblclick(function() {
+		$('#project-member').val($('#select1').val());
+		return !$('#select1 option:selected').remove().appendTo('#select2');  	
    });
    /* when double clicking on select2 project member will added to select 1 */
-   $('#select2').dblclick(function() {
-       $('#project-member').val($('#select2').val());
-       return !$('#select2 option:selected').remove().appendTo('#select1');  
-	  
+	$('#select2').dblclick(function() {
+		$('#project-member').val($('#select2').val());
+		return !$('#select2 option:selected').remove().appendTo('#select1');  
    });
-  });
+});
 </script>
-
 
 <script type="text/javascript">
 
@@ -259,7 +253,6 @@ function addLog() {
 						alert(data.errormsg);
 					} else {
 						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
-						//$('.log-container').prepend(data.html).children('.log:first').slideDown(400);
 						$('#job_log').val('');
 						$('.user-addresses input[type="checkbox"]:checked, #attach_pdf, #email_to_customer, #log_stickie, #ignore_content_policy').each(function(){
 							$(this).attr('checked', false);
@@ -302,9 +295,7 @@ function prepareForClient() {
 
 function setPaymentRecievedTerms() {
 	$('#pr_form_jobid').val(curr_job_id);
-	// $(".payment-terms-mini-view1").css("display","none");
-	// $(".payment-received-mini-view1").css("display","block");
-	//var invoice_total = parseFloat($('#sp_form_invoice_total').val());
+	
 	var valid_date = true;
 	var date_entered = true;
 	var errors = [];
@@ -315,35 +306,12 @@ function setPaymentRecievedTerms() {
 	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
     var pdate2 = $.trim($('#pr_date_3').val());	
 	
-	////($.trim($('#pr_date_3').val()) != '' && ! $('#pr_date_3').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-	/*if (
-			(!pdate2 || pdate2 < today)	&& 	pdate2 != ''	
-	   )
-	{
-		valid_date = false;
-	}	*/
-	/*if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )*/
-	if (
-			($.trim($('#pr_date_1').val()) == '')
-			&& ($.trim($('#pr_date_2').val()) == '')
-			&& ($.trim($('#pr_date_3').val()) == '')
-	   )
-	{
+	if (($.trim($('#pr_date_1').val()) == '') && ($.trim($('#pr_date_2').val()) == '') && ($.trim($('#pr_date_3').val()) == '')) {
 		date_entered = false;
 	}
-	
-		
 	if (valid_date == false) {
 		errors.push('You have selected an invalid date');
 	}
-	
-	/*if (date_entered == false) {
-		errors.push('All fields are empty !!! \nPlease enter the values.');
-	}*/
     if(($.trim($('#pr_date_1').val()) == '')) {
 	    errors.push('<p>Enter Invoice Number.</p>');
 	}
@@ -356,21 +324,13 @@ function setPaymentRecievedTerms() {
 	if($('.deposit_map_field').val() == 0) {
 	   errors.push('<p>Map payment term.</p>');
 	}
-	/* 
-	if(($.trim($('#pr_date_4').val()) == '')) {
-		errors.push('Please Enter Comments.');
-	}
-	 */
 	
 	if (errors.length > 0) {
-		// alert(errors.join('\n'));
 		$('#rec_paymentfadeout').show();
 		$('#rec_paymentfadeout').html(errors.join(''));
-		
 		setTimeout('timerfadeout()', 8000);
 		return false;
 	} else {
-		
 		$.blockUI({
             message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
@@ -404,11 +364,7 @@ function setPaymentRecievedTerms() {
 }
 
 function updatePaymentRecievedTerms(pdid, eid) {
-	//$('#paymentfadeout').hide();
 	$('#pr_form_jobid').val(curr_job_id);
-	//$(".payment-terms-mini-view1").css("display","none");
-	//$(".payment-received-mini-view1").css("display","block");
-	//var invoice_total = parseFloat($('#sp_form_invoice_total').val());	
 	var valid_date = true;
 	var date_entered = true;
 	var errors = [];
@@ -418,40 +374,15 @@ function updatePaymentRecievedTerms(pdid, eid) {
 	var yyyy = today.getFullYear();
 	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
     var pdate2 = $.trim($('#pr_date_3').val());	
-	////($.trim($('#pr_date_3').val()) != '' && ! $('#pr_date_3').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-	/*if (
-			(!pdate2 || pdate2 < today)	&& 	pdate2 != ''	
-	   )
-	{
-		valid_date = false;
-	} */	
-	/*if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )*/
-	if (
-			   ($.trim($('#pr_date_1').val()) == '')
-			&& ($.trim($('#pr_date_2').val()) == '')
-			&& ($.trim($('#pr_date_3').val()) == '')
-	   )
-	{
+	
+	if ( ($.trim($('#pr_date_1').val()) == '') && ($.trim($('#pr_date_2').val())  == '') && ($.trim($('#pr_date_3').val()) == '') ) {
 		date_entered = false;
 	}
-	
-	/*if ($('#sp_form_jobid').val() == 0) { 
-		errors.push('Invoice not properly loaded!');
-	}*/
-	
 	
 	if (valid_date == false) {
 		errors.push('You have selected an invalid date');
 	}
-	
-	/*if (date_entered == false) {
-		errors.push('All fields are empty !!! \nPlease enter the values.');
-	}*/
-    if(($.trim($('#pr_date_1').val()) == '')) {
+	if(($.trim($('#pr_date_1').val()) == '')) {
 	    errors.push('<p>Enter Invoice Number.</p>');
 	}
 	if(($.trim($('#pr_date_2').val()) == '')) {
@@ -463,19 +394,13 @@ function updatePaymentRecievedTerms(pdid, eid) {
 	if($('.deposit_map_field').val() == 0) {
 	   errors.push('<p>Map payment term.</p>');
 	}
-	/*if(($.trim($('#pr_date_4').val()) == '')) {
-		errors.push('Please Enter Comments.');
-	} */
-	
 	if (errors.length > 0) {
 		//alert(errors.join('\n'));
 		$('#rec_paymentfadeout').show();
 		$('#rec_paymentfadeout').html(errors.join(''));
 		setTimeout('timerfadeout()', 8000);
 		return false;
-		
 	} else {
-		
 		$.blockUI({
             message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
@@ -495,24 +420,19 @@ function updatePaymentRecievedTerms(pdid, eid) {
 					} else {
 						$('.payment-recieved-view:visible').slideUp(400);
 						$('.payment-received-mini-view1').html(data.msg);
-						//document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 						$('#update-payment-recieved-terms').remove();
 						paymentReceivedView();
 					}
 				$.unblockUI();
-				//$('#payment-recieved-terms')[0].reset();
-				//$('#update-payment-recieved-terms').remove();
 			}
 			,'json'
 		);
-		
 	}
 	$('.payment-received-mini-view1').css('display', 'block');
 }
 function loadPaymentTerms() {
 		$.post( 
 			'welcome/retrieveRecord/'+curr_job_id,
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
 			function(data) {
 							
 					if (data.error) 
@@ -525,26 +445,19 @@ function loadPaymentTerms() {
 					}
 			}
 		);
-		
 }
 //function for load the payment terms every time click the 'Add Payment Terms' button
 function loadPayment() {
-		$.post( 
-			'welcome/payment_terms_delete/'+curr_job_id,
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
-			function(data) {
-							
-					if (data.error) 
-					{
-						alert(data.errormsg);
-					} 
-					else 
-					{
-						$('.payment-terms-mini-view1').html(data);	
-					}
+	$.post( 
+		'welcome/payment_terms_delete/'+curr_job_id,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('.payment-terms-mini-view1').html(data);	
 			}
-		);
-		
+		}
+	);
 }
 function setProjectPaymentTerms() {
 
@@ -562,35 +475,14 @@ function setProjectPaymentTerms() {
 	var yyyy = today.getFullYear();
 	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
     var pdate2 = $.trim($('#sp_date_2').val());	
-	//alert(today + pdate2);
-	/*if (
-			(!pdate2 || pdate2 < today)	&& pdate2 != ''	
-	   )
-	{
-	alert("tresssss");
-		valid_date = false;
-	} */
-	
-	/*if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )*/
-	if (
-			($.trim($('#sp_date_1').val()) == '')
-			&& ($.trim($('#sp_date_2').val()) == '')
-			&& ($.trim($('#sp_date_3').val()) == '')
-	   )
-	{
+
+	if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
 		date_entered = false;
 	}
 	
 	if ($('#sp_form_jobid').val() == 0) { 
 		errors.push('Invoice not properly loaded!');
 	}
-	/*if (date_entered == false) {
-		errors.push('All fields are empty !!! \nPlease enter the values.');
-	}*/
 	if(($.trim($('#sp_date_1').val()) == '')) {
 	    errors.push('<p>Enter Payment Milestone Name.</p>');
 	}
@@ -609,17 +501,11 @@ function setProjectPaymentTerms() {
 		$('#rec_paymentfadeout').show();
 		$('#rec_paymentfadeout').html(errors.join(''));
 		return false;
-		
 	} else {
-		
 		$.blockUI({
             message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
         });
-		/*$('.payment-table').block({
-            message:'<h3>Processing</h3>',
-			css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
-        });*/
 		
 		var form_data = $('#set-payment-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
@@ -627,22 +513,12 @@ function setProjectPaymentTerms() {
 			'welcome/set_payment_terms',
 			form_data,
 			function(data) {
-							//alert(typeof(data)); return false;
-			//$('.payment-view-datatable').html(data);
-				//if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-					    //alert(data.output);
-						$('.payment-profile-view:visible').slideUp(400);
-						$('.payment-terms-mini-view1').html(data);
-						//document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-					}
-				//} 
-				//else {
-				//	alert('Unexpected response from server!');
-				//}
-				//$('.payment-table').unblock();
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.payment-profile-view:visible').slideUp(400);
+					$('.payment-terms-mini-view1').html(data);
+				}
 				$.unblockUI();
 				$('#set-payment-terms')[0].reset();
 			}
@@ -670,24 +546,8 @@ function updateProjectPaymentTerms(eid) {
 	
 	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
     var pdate2 = $.trim($('#sp_date_2').val());	
-	/*if (
-			(!pdate2 || pdate2 < today)	&& pdate2 != ''	
-	   )
-	{
-		valid_date = false;
-	}*/
 	
-	/*if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )*/
-	if (
-			($.trim($('#sp_date_1').val()) == '')
-			&& ($.trim($('#sp_date_2').val()) == '')
-			&& ($.trim($('#sp_date_3').val()) == '')
-	   )
-	{
+	if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
 		date_entered = false;
 	}
 	
@@ -728,117 +588,18 @@ function updateProjectPaymentTerms(eid) {
 					if (data.error) {
 						alert(data.errormsg);
 					} else {
-					    //alert(data.output);
 						$('.payment-profile-view:visible').slideUp(400);
 						$('.payment-terms-mini-view1').html(data);
 					}
 				$.unblockUI();
 				$('#update-payment-terms').remove();
-				//$('#payment-profile-view').load('test'); 
 				paymentProfileView();
-				//$('').show();
 			}
 		);
 		
 	}
-	
 	$('.payment-terms-mini-view1').css('display', 'block');
 }
-//Update functionality for set payment terms Ends here
-/*
-function setPaymentTerms() {
-	
-	$('#sp_form_jobid').val(curr_job_id);
-	
-	var invoice_total = parseFloat($('#sp_form_invoice_total').val());
-	
-	var perc1 = parseInt($('#sp_perc_1').val());
-	var perc2 = parseInt($('#sp_perc_2').val());
-	var perc3 = parseInt($('#sp_perc_3').val());
-	
-	if (isNaN(perc1)) perc1 = 0;
-	if (isNaN(perc2)) perc2 = 0;
-	if (isNaN(perc3)) perc3 = 0;
-	
-	var perc_total = perc1 + perc2 + perc3;
-	
-	var valid_date = true;
-	var date_entered = true;
-	var errors = [];
-	
-	if (
-			($.trim($('#sp_date_1').val()) != '' && ! $('#sp_date_1').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-			|| ($.trim($('#sp_date_2').val()) != '' && ! $('#sp_date_2').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-			|| ($.trim($('#sp_date_3').val()) != '' && ! $('#sp_date_3').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-	   )
-	{
-		valid_date = false;
-	}
-	
-	if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )
-	{
-		date_entered = false;
-	}
-	
-	if ($('#sp_form_jobid').val() == 0) {
-		errors.push('Invoice not properly loaded!');
-	}
-	
-	if (isNaN(invoice_total) || invoice_total < 1) {
-		errors.push('Invoice total not properly captured!');
-	}
-	
-	if (perc_total != 100) {
-		errors.push('Make sure the percentage values add up to 100%');
-	}
-	
-	if (valid_date == false) {
-		errors.push('You have an invalid date');
-	}
-	
-	if (date_entered == false) {
-		errors.push('You need to enter dates relating to the percentage values');
-	}
-	
-	if (errors.length > 0) {
-		
-		alert(errors.join('\n'));
-		return false;
-		
-	} else {
-		
-		$.blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
-		
-		var form_data = $('#set-payment-terms').serialize();
-		
-		$.post(
-			'welcome/set_payment_terms',
-			form_data,
-			function(data) {
-				if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('.payment-profile-view:visible').slideUp(400);
-						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-					}
-				} else {
-					alert('Unexpected response from server!')
-				}
-				$.unblockUI();
-			},
-			'json'
-		);
-		
-	}
-}*/
 
 function addDepositPayment() {
 	$('#deposit_form_jobid').val(curr_job_id);
@@ -896,17 +657,6 @@ function checkForAccounts() {
 		deposit_form_block = true;
 	}
 }
-/*
-function fullScreenLogs() {
-	var fsl_height = parseInt($(window).height()) - 80;
-	fsl_height = fsl_height + 'px';
-	$.blockUI({
-		message:$('.log-container'),
-		css: {background:'#fff', border: '1px solid #999', padding:'4px', height:fsl_height, color:'#000000', width:'600px', overflow:'auto', top:'40px', left:'50%', marginLeft:'-300px'},
-		overlayCSS:  {backgroundColor:'#fff', opacity:0.9}
-	});
-	$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
-}*/
 
 function fullScreenLogs() {
 	var fsl_height = parseInt($(window).height()) - 80;
@@ -918,7 +668,6 @@ function fullScreenLogs() {
 	});
 	$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
 }
-
 
 function runAjaxFileUpload() {
 	var _uid = new Date().getTime();
@@ -1089,11 +838,9 @@ var job_project_manager = '<?php echo $quote_data['assigned_to'] ?>';
 function setProjectLead() {
 	$('#pjt_lead_errormsg').hide();
 	var pl_user = $('#project_lead').val(); 
-	var previous_manager = $("#previous-project-manager").val();
-	//var lead = $("#project_lead option:selected").val(); //alert("old " + previous_manager +" New :" + pl_user); 
+	var previous_manager = $("#previous-project-manager").val(); 
 	
 	if (pl_user == 0) {
-		// alert('Please Select Project Manager!');
 		$('#pjt_lead_errormsg').text('Please Select Project Manager!');
 		$('#pjt_lead_errormsg').show();
 		return false;
@@ -1177,8 +924,6 @@ function setProjectId() {
 								if (data.error == false) {
 									$('h5.project-id-label span').text(pjtId);
 									$().unblock();
-									//$('h6.actual-project-' + d_class + '-label span').text(date_val);
-									//$('.project-lead-change:visible').hide(200);
 								} else {
 									alert(data.error);
 								}
@@ -1190,13 +935,11 @@ function setProjectId() {
 							}
 						}
 					);
-					//$("#submitid").removeAttr("disabled");
 				} else {
 					$().unblock();
 					$('.checkUser').hide(); 
 					$('.checkUser1').show();
 					setTimeout('timerfadeout()', 2000);
-					//$("#submitid").attr("disabled", "disabled");
 				}
             }
         });
@@ -1209,7 +952,6 @@ function setProjectVal() {
 	$('#pjt_val_errormsg, .checkVal1, .checkVal').hide();
 	var pjt_value = $('#pjt_value').val()
 	if (pjt_value == 0) {
-		//alert('Please Enter Project Value!');
 		$('#pjt_val_errormsg').text('Please Enter Project Value!');
 		$('#pjt_val_errormsg').show();
 		setTimeout('timerfadeout()', 3000);
@@ -1262,29 +1004,44 @@ function setProjectVal() {
 	}
 }
 
+//update the project status.
+function setProjectStatus() {
+	var pjt_stat = $('#pjt_status').val()
+	$.blockUI({
+		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+	});
+	var baseurl = $('.hiddenUrl').val();
+	$.ajax({
+		type: 'POST',
+		url: 'ajax/production/set_project_status/',
+		dataType: 'json',
+		data: 'pjt_stat='+pjt_stat+'&job_id='+curr_job_id+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',
+		success: function(data) {
+			if (data.error == false) {
+				$('#resmsg').show();
+				$('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
+				$().unblock();
+			} else {
+				$('#resmsg').show();
+				$('#resmsg').html("<span class='ajx_failure_msg'>Error in Updation</span>.");
+				$().unblock();
+			}
+		}
+	});
+	setTimeout('timerfadeout()', 3000);
+}
 
 function setProjectStatusDate(date_type) {
 	$("#errmsg, #errmsg_start_dt").hide();
-	//alert (date_type); exit;
-	<?php
-	//if (isset($userdata) && $userdata['level'] > 1)
-	//{
-		?>
-		/*alert('Only Administrators can change project dates!');
-		return false;*/
-		<?php
-	//}
-	?>
+	
 	var set_date_type, date_val, d_class;
 	
-	if (date_type == 'start')
-	{
+	if (date_type == 'start') {
 		set_date_type = 'start';
 		date_val = $('#project-start-date').val();
 		d_class = 'startdate';
-	}
-	else
-	{
+	} else {
 		set_date_type = 'end';
 		date_val = $('#project-due-date').val();
 		d_class = 'deadline';
@@ -1315,8 +1072,6 @@ function setProjectStatusDate(date_type) {
 							$('h6.project-' + d_class + '-label span').text(date_val);
 							$('.project-' + d_class + '-change:visible').hide(200);
 						} else {
-							//alert(data.error);
-							//showing error message As DOM type
 							if (set_date_type == 'start') {
 								$("#errmsg_start_dt").text(data.error);
 								$("#errmsg_start_dt").show();
@@ -1326,8 +1081,6 @@ function setProjectStatusDate(date_type) {
 							}
 						}
 					} else {
-						//alert('Updating faild, please try again.');
-						//showing error message As DOM type
 						if (set_date_type == 'start') {
 							$("#errmsg_start_dt").text('Updating faild, please try again.');
 							$("#errmsg_start_dt").show();
@@ -1337,8 +1090,6 @@ function setProjectStatusDate(date_type) {
 						}
 					}
 				} catch (e) {
-					//alert('Invalid response, your session may have timed out.');
-					//showing error message As DOM type
 					if (set_date_type == 'start') {
 						$("#errmsg_start_dt").text('Invalid response, your session may have timed out.');
 						$("#errmsg_start_dt").show();
@@ -1368,11 +1119,8 @@ function actualSetProjectStatusDate(date_type) {
 		date_val = $('#actual-project-due-date').val();
 		d_class = 'deadline';
 	}
-	//alert(date_val); return false;
 	var pr_date = $('#project_lead').val()
-	//alert(pr_date); return false;
 	if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
-		//alert('Please enter actual ' + set_date_type + ' date');
 		if (set_date_type == 'start') {
 			$("#errmsg_actual_start_dt").text('Please enter actual ' + set_date_type + ' date');
 			$("#errmsg_actual_start_dt").show();
@@ -1393,8 +1141,6 @@ function actualSetProjectStatusDate(date_type) {
 							$('h6.actual-project-' + d_class + '-label span').text(date_val);
 							$('.actual-project-' + d_class + '-change:visible').hide(200);
 						} else {
-							//alert(data.error);
-							//showing error message As DOM type
 							if (set_date_type == 'start') {
 								$("#errmsg_actual_start_dt").text(data.error);
 								$("#errmsg_actual_start_dt").show();
@@ -1404,7 +1150,6 @@ function actualSetProjectStatusDate(date_type) {
 							}
 						}
 					} else {
-						//alert('Updating faild, please try again.');
 						if (set_date_type == 'start') {
 							$("#errmsg_actual_start_dt").text('Updating faild, please try again.');
 							$("#errmsg_actual_start_dt").show();
@@ -1414,7 +1159,6 @@ function actualSetProjectStatusDate(date_type) {
 						}
 					}
 				} catch (e) {
-					//alert('Invalid response, your session may have timed out.');
 					if (set_date_type == 'start') {
 						$("#errmsg_actual_start_dt").text('Invalid response, your session may have timed out.');
 						$("#errmsg_actual_start_dt").show();
@@ -1427,7 +1171,6 @@ function actualSetProjectStatusDate(date_type) {
 		);
 	}
 }
-
 
 
 function whatAreStickies() {
@@ -1506,6 +1249,7 @@ function getPMProfileImage()
 			);
 }
 
+//unwanted function
 function getProjectCSR()
 {
 	
@@ -1996,16 +1740,7 @@ $(window).load(function(){
 					<textarea name="signature" class="textfield width99pct" rows="4" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
 					<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
 				</div>
-				<?php
-				if (in_array($quote_data['job_status'], array(21, 22)))
-				{
-					?>
-				<div class="idle-declined">
-					This is a quotation that is either idle or declined.
-				</div>
-					<?php
-				}
-				?>
+				
 				<div style="overflow:hidden;">
 					
 					<p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p>
@@ -2358,9 +2093,8 @@ $(window).load(function(){
 			</form>
 			<div class="action-buttons" style="overflow:hidden;">
 				<?php
-				
-				include VIEWPATH . 'tpl/user_accounts_options.php';
-				//include VIEWPATH . 'tpl/user_accounts_pm.php';
+				// include VIEWPATH . 'tpl/user_accounts_options.php';
+				require (theme_url().'/tpl/user_accounts_options.php');
 				
 				// you can only edit this if this is not an invoice
 				
