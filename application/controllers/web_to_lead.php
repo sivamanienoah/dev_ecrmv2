@@ -76,14 +76,15 @@ class web_to_lead extends crm_controller {
 		$ins['lead_assign']         = 118;
 		$ins['expect_worth_id']     = 1;
 		$ins['expect_worth_amount'] = '0.00';
-		$ins['belong_to']           = 118; // lead owner
-		$ins['division']         = 'ENOAH-IND';
+		$ins['belong_to']           = 59; // lead owner
+		//$ins['division']         = 'ENOAH-IND';
+		$ins['division']         = 1;
 		$ins['date_created']        = date('Y-m-d H:i:s');
 		$ins['date_modified']       = date('Y-m-d H:i:s');
 		$ins['job_status']          = 1;
 		$ins['lead_indicator']   = 'HOT';
-		$ins['created_by']          = 118;
-		$ins['modified_by']         = 118;
+		$ins['created_by']          = 59;
+		$ins['modified_by']         = 59;
 		$ins['lead_status']         = 1;
 		if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
         {
@@ -100,7 +101,6 @@ class web_to_lead extends crm_controller {
 			echo 2;
 			exit;
 		}
-		echo 'fasdfsdf'.1;
 		exit;
 	}	
 	
