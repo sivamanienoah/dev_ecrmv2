@@ -525,8 +525,7 @@ class Welcome_model extends crm_model {
 		$pm = explode(',',$pm_acc);
 		//print_r($customer); exit;
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status,
-			c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'jobs as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
