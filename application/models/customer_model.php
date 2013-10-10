@@ -353,17 +353,72 @@ class Customer_model extends crm_model {
     }
 	
 	function primary_mail_check($mail) {
-		$qem = $this->db->query("SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE email_1 LIKE '%$email%'");
+		$qem = $this->db->query("SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE email_1 LIKE '%$mail%'");
 		return $qem->num_rows();
 	}
+	//unwanted function
+	/*	function primary_mail_check($mail, $update) {
+		$where = "email_1 = '".$username."' AND `custid` != '".$update."' ";
+		$this->db->where($where);
+		$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+		return $query;
+	}*/
 	function get_customer_data($mail) {
 		$q = $this->db->get_where($this->cfg['dbpref'].'customers', array('email_1' => mail));
 		return $q->row_array();
 	}
+	
+	function check_csl($table, $cnt_name, $id){
+		$this->db->where($cnt_name,$id);
+		$num_row = $this->db->get($this->cfg['dbpref'].$table)->num_rows();
+		return $num_row;
+	}
+	
+	function get_rscl_id($id, $cond, $table_name, $ch_name){		
+		if( empty($id) && empty($cond) ) {
+			$whr_cond = array($table_name.'_name'=>$ch_name);
+		} else {
+			$whr_cond = array($table_name.'_name'=>$ch_name, $cond=>$id);
+		}
+		$this->db->select($table_name.'id');
+		$results = $this->db->get_where($this->cfg['dbpref'].$table_name, $whr_cond)->row_array();
+		if(!empty($results)) {
+			$strreg = $results[$table_name.'id'];
+		} else {
+			$user_Detail = $this->session->userdata('logged_in_user');
+			if($table_name == 'region') {
+				$args = array(
+					$table_name.'_name' => $ch_name,
+					'created_by' => $user_Detail['userid'],
+					'modified_by' => $user_Detail['userid'],
+					'created' => date('Y-m-d H:i:s'),
+					'modified' => date('Y-m-d H:i:s')
+				);
+			} else {						
+				$args = array(
+					$cond => $id,
+					$table_name.'_name' => $ch_name,
+					'created_by' => $user_Detail['userid'],
+					'modified_by' => $user_Detail['userid'],
+					'created' => date('Y-m-d H:i:s'),
+					'modified' => date('Y-m-d H:i:s')
+				);	
+			}
+			$this->db->insert($this->cfg['dbpref'].$table_name, $args); 
+			$strreg = $this->db->insert_id();
+		}
+		return $strreg;				
+	}
+	
+	function insert_customer_upload($data) {
+		$this->db->insert($this->cfg['dbpref'].'customers', $data);
+	}
+	
 	function get_customer_insert_id($data) {
 		$this->db->insert($this->cfg['dbpref'].'customers', $data);
 		return $this->db->insert_id();
 	}
+	
 	function customer_update($id, $data) {
 		$this->db->where('custid', $id);
 		$this->db->update($this->cfg['dbpref'].'customers', $data);		
