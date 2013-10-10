@@ -791,7 +791,7 @@ class Customers extends crm_controller {
 	}	
 
 	
-	/* Import Load Function this fuction import customer list from CSV file
+	/* Import Load Function this fuction import customer list from CSV, XLS & XLSX files
 	Starts here
 	Dated on 29-01-2013
 	*/
@@ -804,7 +804,7 @@ class Customers extends crm_controller {
 		$objReader = new Excel_read();
 		if(isset($_FILES['card_file']['tmp_name'])) {
 			$strextension=explode(".",$_FILES['card_file']['name']);			
-		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="CSV") {	 		
+		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {	 		
 			$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);	
 			for($i=2; $i<count($impt_data); $i++) {				
 				if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['I']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['Q'])) {
@@ -845,7 +845,7 @@ class Customers extends crm_controller {
 			//echo "<pre>"; print_r($data); exit;			
 			$this->load->view('success_import_view', $data);
 		 	} else {
-		 		$page['error'] = '<p class="error">Please Upload CSV File only!</p>';
+		 		$page['error'] = '<p class="error">Please Upload CSV, XLS File only!</p>';
 		    	$this->load->view('customer_import_view', $page);		
 		 	}
 		} else {
