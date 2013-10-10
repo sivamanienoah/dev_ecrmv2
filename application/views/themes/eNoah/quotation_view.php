@@ -65,7 +65,7 @@ td.task {
 	
 ?>
 <div class="inner">
-<?php// if($this->session->userdata('accesspage')==1) {   ?>
+<?php // if($this->session->userdata('accesspage')==1) {   ?>
 <form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
 	
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -175,17 +175,19 @@ foreach($hosting as $val){
 				
 				<td>
 					<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-					<?php foreach ($lead_owner as $owner){ ?>
+					<?php foreach ($lead_owner as $owner){ 
+						if(!empty($owner['first_name'])) {?>
 					<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-					<?php } ?>
+					<?php } } ?>
 					</select> 
 				</td>
 				
 				<td>
 					<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
-						<?php foreach ($lead_owner as $owner) { ?>
+						<?php foreach ($lead_owner as $owner) { 
+							if(!empty($owner['first_name'])) {?>
 							<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-						<?php } ?>
+						<?php } } ?>
 					</select> 
 				</td>
 			</tr>
@@ -198,9 +200,10 @@ foreach($hosting as $val){
 			<tr>
 				<td>
 					<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
-						<?php foreach ($regions as $reg) { ?>
+						<?php foreach ($regions as $reg) { 
+							if(!empty($reg['region_name'])) {?>
 							<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
-						<?php } ?>
+						<?php } } ?>
 					</select> 
 				</td>
 				<td id="country_row">
@@ -353,21 +356,18 @@ $('#regionname').change(function() {
 });
 
 function loadCountry() {
-	var region_id = $("#regionname").val(); 
+	var region_id = $("#regionname").val();
 	$.post( 
 		'choice/loadCountrys/'+ region_id,
-		{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
+		{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {										
 			if (data.error) 
-			{
-				alert(data.errormsg);
-			} 
+			alert(data.errormsg);
 			else 
-			{
-				$("select#countryname").html(data);
-			}
+			$("select#countryname").html(data);
 		}
 	);
+	
 }
 
 //For States
@@ -378,20 +378,18 @@ $('#countryname').change(function() {
 
 function loadState() {
 	var coun_id = $("#countryname").val();
-	$.post( 
-		'choice/loadStates/'+ coun_id,
-		{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
-		function(data) {										
-			if (data.error) 
-			{
+	if(coun_id != '') {
+		$.post( 
+			'choice/loadStates/'+ coun_id,
+			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			function(data) {										
+				if (data.error) 
 				alert(data.errormsg);
-			} 
-			else 
-			{
+				else 
 				$("select#statename").html(data);
 			}
-		}
-	);
+		);
+	}
 }
 
 //For Locations
@@ -401,20 +399,18 @@ $('#statename').change(function() {
 
 function loadLocations() {
 	var st_id = $("#statename").val();
-	$.post( 
-		'choice/loadLocns/'+ st_id,
-		{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
-		function(data) {										
-			if (data.error) 
-			{
+	if(st_id != '') {
+		$.post( 
+			'choice/loadLocns/'+ st_id,
+			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			function(data) {										
+				if (data.error) 
 				alert(data.errormsg);
-			} 
-			else 
-			{
+				else 
 				$("select#locname").html(data);
 			}
-		}
-	);
+		);
+	}
 }
 
 </script>
@@ -422,6 +418,7 @@ function loadLocations() {
 
 $(function(){
 	$i=0;
+	//alert(<?php echo $userdata['userid'] ?>);
 	$('.my-own-tasks.appr').load('tasks/index/extend #user-<?php echo $userdata['userid'] ?>', {}, function(){
 		$i++;LoadCheck($i);
 	});

@@ -11,6 +11,7 @@ class Welcome extends crm_controller {
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('welcome_model');
+		$this->load->model('customer_model');
 		$this->load->model('job_model');
 		$this->load->model('regionsettings_model');
 		$this->load->helper('text');
@@ -22,22 +23,18 @@ class Welcome extends crm_controller {
     /*
 	 * Redirect user to quotation list
 	 */
-	public function index()
-    {
+	public function index() {
 		redirect('welcome/quotation');
     }
 	
-	public function add_lead(){
-	 
-	    //Create Customer 
-		
+	public function add_lead() {
+	    //Create Customer 		
 		if(sizeof($_POST)==0){
 		    echo 0;
 			return false;
 		}
 		
-		if(!empty($_POST['contact_us'])){
-		
+		if(!empty($_POST['contact_us'])){		
 			$ins_cus['first_name']     = $_POST['firstname']; 
 			$ins_cus['last_name']      = $_POST['lastname']; 
 			$ins_cus['company']        = $_POST['organization']; 
@@ -46,21 +43,17 @@ class Welcome extends crm_controller {
 			$ins_cus['email_2']        = $_POST['businessemail']; 
 			$ins_cus['phone_1']        = $_POST['phonenumber'];
 			$ins_cus['add1_line1']     = $_POST['address'];
-			$ins_cus['comments']       = $_POST['message'];
-		
-		}else{
-		
-		$ins_cus['first_name']    = $_POST['name']; 
-		$ins_cus['email_1']       = $_POST['email']; 
-		$ins_cus['company']       = $_POST['company']; 
-		$ins_cus['comments']      = $_POST['content']; 
-	 
+			$ins_cus['comments']       = $_POST['message'];		
+		} else {		
+			$ins_cus['first_name']    = $_POST['name']; 
+			$ins_cus['email_1']       = $_POST['email']; 
+			$ins_cus['company']       = $_POST['company']; 
+			$ins_cus['comments']      = $_POST['content']; 	 
 	    }
-	 
-		$this->db->insert($this->cfg['dbpref'] . 'customers', $ins_cus);
-		$insert_id = $this->db->insert_id();
-
-	    //
+	 	//insert customer and retrive last insert id
+	 	$insert_id = $this->customer_model->get_customer_insert_id($ins_cus);
+		
+	    //Create Jobs
 		$ins['job_title']           = 'Ask the Expert';
 		$ins['custid_fk']           = $insert_id;
 		$ins['job_category']        = $_POST['job_category'];
@@ -77,16 +70,13 @@ class Welcome extends crm_controller {
 		$ins['created_by']          = 59;
 		$ins['modified_by']         = 59;
 		$ins['lead_status']         = 1;
-		if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
-        {
-			$insert_id = $this->db->insert_id();
-
-			$invoice_no = (int) $insert_id;
+		
+		$new_job_id = $this->welcome_model->insert_job($ins);
+		if (!empty($new_job_id)) {
+			$invoice_no = (int) $new_job_id;
 			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
-
-			$this->db->where('jobid', $insert_id);
-			$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));
-
+			$up_args = array('invoice_no' => $invoice_no);
+			$this->welcome_model->update_job($insert_id, $up_args);
 			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
 		}
 		echo 1;
@@ -99,52 +89,33 @@ class Welcome extends crm_controller {
 	 * Quotes are created with Ajax functions
 	 * @access public
 	 */
-	public function new_quote($lead = FALSE, $customer = FALSE)
-	{
-		if (is_numeric($lead))
-		{
+	public function new_quote($lead = FALSE, $customer = FALSE) {
+		if (is_numeric($lead)) {
 			$lead_details = $this->welcome_model->get_lead($lead);			
 			$data['existing_lead'] = $lead;
 			$data['existing_lead_service'] = $lead_details['belong_to'];
 		}
 		
 		if (is_numeric($customer))
-		{
-			$data['lead_customer'] = $customer;
-		}
-		
+		$data['lead_customer'] = $customer;
+	
 		/* additional item list */
 		$data['item_mgmt_add_list'] = $data['item_mgmt_saved_list'] = array();
-		
-		$this->db->order_by('cat_id');
-		$q = $this->db->get($this->cfg['dbpref'] . 'additional_cats');
-		$data['categories'] = $q->result_array();
-		
+		$data['categories'] = $this->welcome_model->get_categories();
 		$c = count($data['categories']);
-		
-		for ($i = 0; $i < $c; $i++)
-		{
-			$this->db->where('item_type', $data['categories'][$i]['cat_id']);
-			$q = $this->db->get($this->cfg['dbpref'] . 'additional_items');
-			$data['categories'][$i]['records'] = $q->result_array();
-		}
-		$qa = $this->db->query("SELECT * FROM {$this->cfg['dbpref']}package WHERE status='active'");
-		$data['package'] = $qa->result_array();
-		
-		$lead_sources = $this->db->query("SELECT * FROM {$this->cfg['dbpref']}lead_source where status=1");
-		$data['lead_source'] = $lead_sources->result_array();
-		
-		if($this->userdata['role_id'] != 1) {
-		$lead_assigns = $this->db->query("SELECT userid,first_name FROM {$this->cfg['dbpref']}users WHERE level = '{$this->userdata['level']}'");
-		//$data['lead_assign'] = $lead_assigns->result_array();
+		for ($i = 0; $i < $c; $i++) {
+			$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
+		}		
+		$data['package'] = $this->welcome_model->get_package();
+		$data['lead_source'] = $this->welcome_model->get_lead_sources();
+				
+		/*if($this->userdata['role_id'] != 1) {
+			$data['lead_assign'] = $this->welcome_model->get_lead_assign($this->userdata['level']);
 		} else {
-		$lead_assigns = $this->db->query("SELECT userid,first_name FROM {$this->cfg['dbpref']}users");
-		//$data['lead_assign'] = $lead_assigns->result_array();
-		}
+			$data['lead_assign'] = $this->welcome_model->get_lead_assign();
+		}*/
 		
-		$expect_worths = $this->db->query("SELECT expect_worth_id,expect_worth_name FROM {$this->cfg['dbpref']}expect_worth");
-		$data['expect_worth'] = $expect_worths->result_array();
-
+		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
 		$this->load->view('welcome_view', $data);
 	}
 	
@@ -153,13 +124,10 @@ class Welcome extends crm_controller {
 	 * @access public
 	 * @param string $type - specify the list you want to display
 	 */
-	public function quotation($type = 'draft', $return = FALSE, $tab='')
-    { 
-		//echo "$type"; exit;
-		//echo $this->session->userdata['logged_in_user']['role_id']; exit;
+	public function quotation($type = 'draft', $return = FALSE, $tab='') { 
+
 		$this->load->helper('text');
 		$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-		//echo "<pre>"; print_r($data['regions']); exit;
 		/*
 		if ($this->userdata['level'] == 5 && in_array($type, array('draft', 'list', 'quote', 'pending')))
 		{
@@ -167,9 +135,7 @@ class Welcome extends crm_controller {
 		}
 		*/
 		$data['quote_section'] = $type;
-		//echo $type;
-        switch ($type)
-        {		
+        switch ($type) {		
             case 'draft':
                 $job_status = "`job_status` IN (1,2,3,4,5,6,7,8,9,10,11,12)";
                 $page_label = 'Leads List' ;
@@ -245,210 +211,95 @@ class Welcome extends crm_controller {
         }
 		
 		$restrict = '';
-		/*
-        if ($this->userdata['level'] == 4)
-        {
-			$restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'";
-        }
-		*/
-		/*
-        if ($job_status == 0) {
-            $restrict .= " AND `created_by` = '{$this->userdata['userid']}'";
-        }
-		*/
+		/* if ($this->userdata['level'] == 4)
+        $restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'"; 
+		if ($job_status == 0)
+        $restrict .= " AND `created_by` = '{$this->userdata['userid']}'"; 
+        */
 		
-		# restrict contractors
-		
-		$cnt_join1 = '';$cnt_join='';
-		
+		# restrict contractors		
+		$cnt_join1 = '';$cnt_join='';		
 		if (is_numeric($job_status))
-		{
-			$job_status = "`job_status` = '{$job_status}'";
-		}
+		$job_status = "`job_status` = '{$job_status}'";
 		if(!empty($_POST['pack_name']))
-			$job_status = "`job_status` = '{$_POST['pack_name']}'";			
+		$job_status = "`job_status` = '{$_POST['pack_name']}'";			
 			
 		if($_POST['keyword'] != 'Lead No, Job Title, Name or Company') {
 			if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 ) {
 				$search.=" AND ( J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
 			}
 		}
-		#$this->output->enable_profiler(TRUE);
 		$usid = $this->session->userdata['logged_in_user']['userid'];
 		if (($this->session->userdata['logged_in_user']['role_id'] != '1') && ($this->session->userdata['logged_in_user']['level'] != 1)) {
-		//echo "tst"; exit;
-			$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-				(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-				FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
-				
-				LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
-				
-                WHERE C.`custid` = J.`custid_fk`
-				AND C.`add1_region` IN(".$this->session->userdata['region_id'].")";
-				if($this->session->userdata['countryid'] != '') {
-				$sql .= " AND C.`add1_country` IN(".$this->session->userdata['countryid'].")";
-				}
-				if($this->session->userdata['stateid'] != '') {
-				$sql .= " AND C.`add1_state`  IN(".$this->session->userdata['stateid'].") ";
-				}
-				if($this->session->userdata['locationid'] != '') {
-				$sql .= " AND C.`add1_location` IN(".$this->session->userdata['locationid'].") ";
-				}
-				//$sql .= "OR (J.belong_to = '".$curusid."' AND  J.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12))";
-				$sql .= " AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} 
-                GROUP BY `jobid`
-				ORDER BY `belong_to`, `date_created`";
-
-				$rows = $this->db->query($sql);
-				$res1 = $rows->result_array();
-				//echo "<pre>"; print_r($res1); exit; 
-				
-				$leadowner_query = "AND J.belong_to = '".$usid."'";
-				//for lead owner query.
-				$leadownerquery = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-								(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-								FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
-								
-								LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
-								WHERE C.`custid` = J.`custid_fk`";
-								$leadownerquery .= " AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} {$leadowner_query}
-								GROUP BY `jobid`
-								ORDER BY `belong_to`, `date_created`";
-				
-				
-				$leadowner_rows = $this->db->query($leadownerquery);
-				$res2 = $leadowner_rows->result_array(); 
-				//echo "<pre>"; print_r($res2); exit; //echo $leadownerquery; exit;
-				$records = array_merge_recursive($res1, $res2);
-				//echo "<pre>"; print_r($records);  echo "***";
-				$record = array_map("unserialize", array_unique(array_map("serialize", $records)));
-				$data['records'] = $record;
-				//$rows = $this->db->query($sql);
-				//$data['records'] = $rows->result_array();
+			$res1 = $this->welcome_model->get_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
+			$res2 =  $this->welcome_model->get_leadowner_results($usid, $cnt_join1, $job_status, $cnt_join, $search, $restrict);
+			$records = array_merge_recursive($res1, $res2);
+			$record = array_map("unserialize", array_unique(array_map("serialize", $records)));
+			$data['records'] = $record;
+		} else {
+			$data['records'] = $this->welcome_model->get_another_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
 		}
-		else {
-			$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-					(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-                FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
-				
-				LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
-                WHERE C.`custid` = J.`custid_fk` ";
-
-				$sql .= " AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} 
-                GROUP BY `jobid`
-				ORDER BY `belong_to`, `date_created`";
-				
-				$rows = $this->db->query($sql);
-				$data['records'] = $rows->result_array();
-				//echo "<pre>"; print_r($data['records']); exit;
-		}
-		//echo "<pre>"; print_r($data['records']); exit;
 		$temp[]=0;
-		foreach($data['records'] as $val) { $temp[]=$val['jobid']; }
+		foreach($data['records'] as $val) {
+			$temp[]=$val['jobid']; 
+		}
 		$temp=implode(',',$temp);
-		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting_job` J WHERE jobid_fk IN ({$temp})";
-		$rows = $this->db->query($sql);
-		$data['hosting']=$rows->result_array();
+		$data['hosting'] = $this->welcome_model->get_hosting_job($temp);
 		$data['customers'] = $this->welcome_model->get_customers();
 		$data['page_heading'] = $page_label;
-		$leadowner = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['lead_owner'] = $leadowner->result_array();
+		$order_by = 'first_name';
+		$data['lead_owner'] = $this->welcome_model->get_lead_owner($order_by);
 		$data['regions'] = $this->regionsettings_model->region_list();
-		//echo "<pre>"; print_r($data['lead_owner']); exit;
-        if ($return === TRUE){
+        if ($return === TRUE) {
 			return $data['records'];
-		}
-		
-		else{
+		} else {
 			$this->load->view('quotation_view', $data);
-		}
-				
+		}	
 	}
-	
-	
+
 	/*For Project Module -- Start here*/
 	
-	public function projects($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false')
-	{	
-		// echo $pjtstage. " ". $pm_acc . " ". $cust. " ".$keyword;
+	public function projects($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false') {	
 		$data['page_heading'] = "Projects - Lists";
-		// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
-		
+		// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();		
 		$data['pm_accounts'] = array();
-		//Here "WHERE" condition used for Fetching the Project Managers.
-		$users = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>3));
-		if ($users->num_rows() > 0)
-		{
-			$data['pm_accounts'] = $users->result_array();
-		}
+		$leadowner_byrole = $this->welcome_model->get_leadowner_byrole(3);
+		if(!empty($leadowner_byrole))
+		$data['pm_accounts'] = $leadowner_byrole;
 		$data['customers'] = $this->welcome_model->get_customers();
-
 		$data['records'] = $this->welcome_model->get_projects_results($pjtstage = 'null', $pm_acc = 'null', $cust = 'null', $keyword = 'null');
-		// echo $this->db->last_query();
 		$this->load->view('projects_view', $data);
 	}
 	
 	
-	public function view_project($id = 0, $quote_section = '')
-	{	
+	public function view_project($id = 0, $quote_section = '') {	
         $this->load->helper('text');
 		$this->load->helper('fix_text');
-		
 		$usernme = $this->session->userdata('logged_in_user');
 		$uid = $usernme['userid'];
-		
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
 			$data['chge_access'] = 1;
 		} else {
 			$data['chge_access'] = $this->welcome_model->get_jobid($id, $uid);
 		}
-		//echo $data['chge_access']; 
-		/*$sql = "SELECT *
-                FROM `{$this->cfg['dbpref']}customers`, `{$this->cfg['dbpref']}jobs`
-                WHERE `custid` = `custid_fk` AND `jobid` = '{$id}' LIMIT 1"; */
-		
-		$sql = "SELECT *
-				FROM ".$this->cfg['dbpref']."customers AS cus
-				left join ".$this->cfg['dbpref']."jobs as jb on jb.custid_fk = cus.custid
-				left join ".$this->cfg['dbpref']."region as reg on reg.regionid = cus.add1_region
-				left join ".$this->cfg['dbpref']."country as cnty on cnty.countryid = cus.add1_country
-				left join ".$this->cfg['dbpref']."state as ste on ste.stateid = cus.add1_state
-				left join ".$this->cfg['dbpref']."location as locn on locn.locationid = cus.add1_location
-				left join ".$this->cfg['dbpref']."expect_worth as exw on exw.expect_worth_id = jb.expect_worth_id
-				left join ".$this->cfg['dbpref']."lead_stage as ls on ls.lead_stage_id = jb.job_status
-				where jb.jobid = '{$id}'
-				LIMIT 1";		
-        $q = $this->db->query($sql);
-		//echo $this->db->last_query();
-        if ($q->num_rows() > 0)
-        {
-            $result = $q->result_array();
-            $data['quote_data'] = $result[0];
-            $data['view_quotation'] = true;
-			
-			$this->db->where('jobid_fk', $result[0]['jobid']);
-			$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
-			
-			$temp_cont = $cq->result_array();
-			
+		$result = $this->welcome_model->get_quote_data($id);
+		if(!empty($result)) {
+			$data['quote_data'] = $result[0];
+			$data['view_quotation'] = true;
+			$temp_cont = $this->welcome_model->get_contract_jobs($result[0]['jobid']);
 			$data['assigned_contractors'] = array();
-			
-			foreach ($temp_cont as $tc)
-			{
+			foreach ($temp_cont as $tc) {
 				$data['assigned_contractors'][] = $tc['userid_fk'];
 			}
-            
-            $data['log_html'] = '';
-			
+            $data['log_html'] = '';	
+            		
 			/* sub menus are based on the URI segment - for invoices, we redirect to the correct URI */
-			if (in_array($data['quote_data']['job_status'], array(4, 5, 6, 7)) && $this->uri->segment(1) != 'invoice')
-			{
+			if (in_array($data['quote_data']['job_status'], array(4, 5, 6, 7)) && $this->uri->segment(1) != 'invoice') {
 				redirect('invoice/view_quote/' . $data['quote_data']['jobid']);
 				exit();
 			}
 			
-			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid']))
-			{
+			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$this->db->where('jobid', $data['quote_data']['jobid']);
 				$this->db->update($this->cfg['dbpref'] . 'jobs', $log_view_status);
@@ -1009,7 +860,8 @@ HDOC;
 													FROM ".$this->cfg['dbpref']."jobs AS ja
 													JOIN ".$this->cfg['dbpref']."users AS ua ON ua.userid = ja.belong_to
 													WHERE ja.jobid = '{$id}'");
-			$data['lead_owner'] = $lead_owners->result_array(); 
+			$data['lead_owner'] = $lead_owners->result_array();
+			
 			$query = $this->db->query("SELECT u.first_name FROM ".$this->cfg['dbpref']."jobs j JOIN ".$this->cfg['dbpref']."users as u ON j.belong_to = u.userid WHERE j.jobid = 66");
 			$data['lead_owns'] = $lead_owners->result_array();
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);

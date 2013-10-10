@@ -59,10 +59,14 @@ class Choice extends crm_controller {
 	{
 	    $output = '';
 		$data = $this->welcome_model->getcountry_list($region_id);
+		if(!empty($data)) {
 		foreach($data as $country) {
 		    $output .= '<option value="'.$country['countryid'].'">'.$country['country_name'].'</option>';
 		}
-		echo $output;
+		} else {
+			$output = '';
+		}
+		echo $output;exit;
 	}
 	
 	//For States
