@@ -9,11 +9,13 @@
  *  ulang tanpa sepengetahuan Author 
  *  ======================================= 
  */  
-require_once APPPATH."/Classes/PHPExcel.php"; 
+// require_once "PHPExcel/IOFactory.php"; 
+require_once "PHPExcel.php"; 
  
 class Excel extends PHPExcel { 
     public function __construct() { 
         parent::__construct(); 
-    } 
+    }
+	
 }
 ?>
