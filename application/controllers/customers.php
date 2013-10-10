@@ -731,13 +731,8 @@ class Customers extends crm_controller {
 		// echo $html;
 	// }
 	
-	function view_subscriptions($id)
-	{
-		$data = array(
-				'id' => $id,
-				'cfg' => $this->config->item('crm')
-			);
-		
+	/*function view_subscriptions($id) {
+		$data = array('id' => $id, 'cfg' => $this->config->item('crm'));		
 		$this->load->view('subscriptions/customer_subscriptions_view', $data);
 	}
 	
@@ -745,348 +740,119 @@ class Customers extends crm_controller {
 		$update = $_POST['email'];
 		$username = $_POST['username'];
 		if ($update != 'undefined') {
-			$where = "email_1 = '".$username."' AND `custid` != '".$update."' ";
-			$this->db->where($where);
-			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
-			//echo $this->db->last_query();
-			if ($query == 0) {
-				$json['msg'] = 'userOk';
-			}
-			else {
-				$json['msg'] = 'userNo';
-			}
-		}
-		else {
-			$this->db->where('email_1',$username);
-			//echo $this->db->last_query();			
-			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();		
-			if( $query == 0 ) {  $json['msg'] = 'userOk'; }
+			$res = $this->customer_model->primary_mail_check($username,$update);
+			if ($res == 0)
+			$json['msg'] = 'userOk';
+			else
+			$json['msg'] = 'userNo';
+		} else {
+			$res = $this->customer_model->primary_mail_check($username);	
+			if( $res == 0 ) {  $json['msg'] = 'userOk'; }
 			else { $json['msg'] = 'userNo'; }
 		}
 		echo json_encode($json); exit;
 	}
+	*/
 	
-	function Check_email($username){
-		$this->db->where('email_1',$username);			
-		$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();	
-		//echo $this->db->last_query();			
-		if( $query == 0 ) {  echo 'userOk'; }
-		else { echo 'userNo'; }
+	//checking primary_mail in customer table
+	function Check_email($mail){
+		$res = $this->customer_model->primary_mail_check($mail);
+		if($res == 0)
+		echo 'userOk';
+		else
+		echo 'userNo';
 	}
 	
-	//Function for checking the Existing Country, State & Location in Customers page. -- Starts here
+	//Function for checking the Existing Country for adding new customers page.
 	function getCtyRes($newCty,$regionId){
-		$this->db->where('country_name',$newCty);
-		//$this->db->where(array('country_name'=>$newCty,'regionid'=>$regionId));
-		$query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
-		//echo $this->db->last_query();
-		if($query == 0 ) 
-			echo 'userOk';
+		$res = $this->customer_model->check_csl('country', 'country_name', $newCty);
+		if($res == 0 ) 
+		echo 'userOk';
 		else 
-			echo 'userNo';
+		echo 'userNo';
 	}
 	
+	//Function for checking the Existing State for adding new customers page.
 	function getSteRes($newSte,$cntyId){
-		$this->db->where('state_name',$newSte);
-		//$this->db->where(array('state_name'=>$newSte,'countryid'=>$cntyId));
-		$query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
-		//echo $this->db->last_query();
-		if($query == 0 ) 
-			echo 'userOk';
+		$res = $this->customer_model->check_csl('state', 'state_name', $newSte);
+		if($res == 0 ) 
+		echo 'userOk';
 		else 
-			echo 'userNo';
+		echo 'userNo';
 	}
 	
+	//Function for checking the Existing Location for adding new customers page.
 	function getLocRes($newLoc,$stId){
-		$this->db->where('location_name',$newLoc);
-		//$this->db->where(array('location_name'=>$newLoc,'stateid'=>$stId));
-		$query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
-		//echo $this->db->last_query();
-		if($query == 0 ) 
-			echo 'userOk';
+		$res = $this->customer_model->check_csl('location', 'location_name', $newLoc);
+		if($res == 0 )  
+		echo 'userOk';
 		else 
-			echo 'userNo';
+		echo 'userNo';
 	}	
-//Function for checking the Existing Country, State & Location in Customers page. -- Ends here
-	
-/* Import Load Function this fuction import customer list from CSV file
-Starts here
-Dated on 29-01-2013
-*/
-		
-function importload(){
-	$this->login_model->check_login();		
-        $page['error'] = $page['msg'] = '';		
-		if (isset($_FILES['card_file']) && is_uploaded_file($_FILES['card_file']['tmp_name']))  
-	          { //starts here
-		        $strfname=$_FILES['card_file']['name'];
-		        $strextension=explode(".",$strfname);
-		        //echo $strextension[1];
-	 if ($strextension[1]=="csv" || $strextension[1]=="CSV")
-	{
-		$filename = mt_rand(111, 999) . microtime() . '.csv';
-                move_uploaded_file($_FILES['card_file']['tmp_name'], 'vps_temp_data/' . $filename);
-		
-	$row = 1;
-	$rows = array();
-	$count=0;
-	$handle = fopen('vps_temp_data/' . $filename, 'r');
-        //$handle=fopen($file_path,"r");
-	$delimiter = ',';
-	
-	while (($data = fgetcsv($handle, 1000, $delimiter )) !== FALSE) {
-		if (!($columnheadings == "false") && ($row == 1)) {
-			$headingTexts = $data;
-			$headingTextscnt=count($headingTexts);
 
-		} elseif (!($columnheadings == "false")) {
-			foreach ($data as $key => $value) {
-				unset($data[$key]);
-				$data[$key] = $value;
-		}
-              
-              for($i=0;$i<$headingTextscnt;$i++){
-                $Emailheading=strtoupper($headingTexts[$i]);
-               // print($Emailheading);
-	  
-                if($Emailheading=="FIRSTNAME")
-                  {
+	
+	/* Import Load Function this fuction import customer list from CSV file
+	Starts here
+	Dated on 29-01-2013
+	*/
 			
-		      $rows[$i]['first_name'] = $data[0];
-                  }
-		   if($Emailheading=="LASTNAME")
-                  {
-			  $rows[$i]['last_name'] = $data[1];
-                    // $stremail=$data[$i];
-                  }
-		if($Emailheading=="POSITION")
-                  {
-			  $rows[$i]['position_title'] = $data[2];
-                    
-                  }
-                  if($Emailheading=="COMPANY")
-                  {
-			  $rows[$i]['company'] = $data[3];
-                    // $stremail=$data[$i];
-                  }
-
-		/*if($Emailheading=="ADDRESS")
-                  {
-			  $customers[$i]['abn'] = $data[4];
-                    // $stremail=$data[$i];
-                  }*/
-
-		   if($Emailheading=="ADDRESS LINE 1")
-                  {
-			  $rows[$i]['add1_line1'] = $data[4];
-                    // $stremail=$data[$i];
-                  }
-		  	   
-		  
-		  if($Emailheading=="ADDRESS LINE 2")
-                  {
-			  $rows[$i]['add1_line2'] = $data[5];
-                    // $stremail=$data[$i];
-                  }
-		      
-		  if($Emailheading=="SUBURB")
-                  {
-			  $rows[$i]['add1_suburb'] = $data[6];
-                    // $stremail=$data[$i];
-                  }
-		  
-		  if($Emailheading=="POSTCODE"){
-			$rows[$i]['add1_postcode']=$data[7];
-		}
-		if($Emailheading=="REGION"){
-			$rows[$i]['add1_region']=$data[8];
-		}
-		if($Emailheading=="COUNTRY"){
-		$rows[$i]['add1_country']=$data[9];
-			       }
-		if($Emailheading=="STATE"){
-		   $rows[$i]['add1_state']=$data[10];
-			       }
-		if($Emailheading=="LOCATION"){
-		$rows[$i]['add1_location']=$data[11];
-			       }
-		if($Emailheading=="DIRECT PHONE"){
-		  $rows[$i]['phone_1']=$data[12];
-			       }
-		
-		if($Emailheading=="WORK PHONE"){
-		  $rows[$i]['phone_2']=$data[13];
-			       }
-		if($Emailheading=="MOBILE PHONE"){
-		$rows[$i]['phone_3']=$data[14];
-		}       
-		if($Emailheading=="Fax Line"){
-		$customers[$i]['phone_4']=$data[15];		       
-		}
-		if($Emailheading=="PRIMARY EMAIL"){
-	            $rows[$i]['email_1']=$data[16];
-		 }
-		if($Emailheading=="SECONDARY EMAIL1"){
-		  $rows[$i]['email_2']=$data[17];
-			       }
-		if($Emailheading=="SECONDARY EMAIL2"){
-		$rows[$i]['email_3']=$data[18];
-			       }
-		if($Emailheading=="SECONDARY EMAIL3"){
-		  $rows[$i]['email_4']=$data[19];
-		}
-	       
-		if($Emailheading=="SKYPE NAME"){
-		  $rows[$i]['skype_name']=$data[20];
-		}
-		if($Emailheading=="WEB"){
-		$rows[$i]['www_1']=$data[21];
-			       }
-		if($Emailheading=="SECONDARY WEB"){
-		  $rows[$i]['www_2']=$data[22];
-			       }
-		if($Emailheading=="COMMENTS"){
-		$rows[$i]['comments']=$data[23];
-	       }
-
-	}
-	$strrquired="The Customer First Name or Last Name or Company or Direct Phone or Email any one of the required field is missing <br />";
-	//$checksql="select first_name,last_name,company from ".$this->cfg['dbpref']."customers where first_name='$data[0]' and last_name='$data[1]' and company='$data[3]' and email_1='$data[16]'";
-	$checksql="select first_name,last_name,company from ".$this->cfg['dbpref']."customers where email_1='$data[16]'";
-	$rssql=mysql_query($checksql);
-	$numrows=mysql_num_rows($rssql);
-	if($numrows > 0){
-	 $strdupdata.=$data[0]."<Br/>";	
-	 $strdupdata_email.=$data[16]."<Br/>";
-	} else {
-		// REgion
-		if(!empty($data[8])){
-		$checksqlreg="select regionid from ".$this->cfg['dbpref']."region where  region_name='$data[8]'" ;
-		$rscheckreg=mysql_query($checksqlreg);
-		$numreg=mysql_num_rows($rscheckreg);
-		if($numreg > 0){
-		 $rowsreg=mysql_fetch_array($rscheckreg);
-		 $strreg=$rowsreg['regionid'];
-		 } else {
-				$user_Detail = $this->session->userdata('logged_in_user');
-				$created_by=$user_Detail['userid'];			
-				$created=date('Y-m-d H:i:s');
-				$modified_by=$user_Detail['userid'];			
-				$modified=date('Y-m-d H:i:s');
-				$sleregins="insert into ".$this->cfg['dbpref']."region(region_name,created_by,modified_by,created,modified) values ('$data[8]','$created_by','$modified_by','$created','$modified')";
-				mysql_query($sleregins);
-				$strreg=mysql_insert_id();
-				
-		 }
-		// Country
-		 $checksqlcunt="select countryid from ".$this->cfg['dbpref']."country where country_name='$data[9]' and regionid='$strreg' ";
-		
-		$rscheckcunt=mysql_query($checksqlcunt);
-		$numcont=mysql_num_rows($rscheckcunt);
-		if($numcont > 0 ){
-		 $rowscunt=mysql_fetch_array($rscheckcunt);
-		 $strcunt=$rowscunt['countryid'];
-		 } else {
-			$checksqlreg1="select regionid from ".$this->cfg['dbpref']."region where region_name='$data[8]'" ;
-		        $rscheckreg1=mysql_query($checksqlreg1);		
-		        $rowsreg1=mysql_fetch_array($rscheckreg1);
-			$regid=$rowsreg1['regionid'];
-			        $user_Detail = $this->session->userdata('logged_in_user');
-				$created_by=$user_Detail['userid'];			
-				$created=date('Y-m-d H:i:s');
-				$modified_by=$user_Detail['userid'];			
-				$modified=date('Y-m-d H:i:s');
-				$slecountry="insert into ".$this->cfg['dbpref']."country(country_name,regionid,created_by,modified_by,created,modified) values ('$data[9]','$regid','$created_by','$modified_by','$created','$modified')";
-				mysql_query($slecountry);
-				$strcunt=mysql_insert_id();
-		 }
-		
-		 // State
-		 $checksqlstate="select stateid from ".$this->cfg['dbpref']."state where state_name='$data[10]' and countryid='$strcunt'" ;
-		 $rscheckstate=mysql_query($checksqlstate);
-		  $numstate=mysql_num_rows($rscheckstate);
-		 if($numstate > 0 ){
-		 $rowsstate=mysql_fetch_array($rscheckstate);
-		 $strstate=$rowsstate['stateid'];			 
-		 } else {
-			$checksqlsta2="select countryid from ".$this->cfg['dbpref']."country where country_name='$data[9]' and regionid='$strreg'" ;			
-		        $rscheckreg2=mysql_query($checksqlsta2);		
-		        $rowscountry=mysql_fetch_array($rscheckreg2);
-			 $countryid=$rowscountry['countryid'];
-			        $user_Detail = $this->session->userdata('logged_in_user');
-				$created_by=$user_Detail['userid'];			
-				$created=date('Y-m-d H:i:s');
-				$modified_by=$user_Detail['userid'];			
-				$modified=date('Y-m-d H:i:s');
-				$slestate="insert into ".$this->cfg['dbpref']."state(state_name,countryid,created_by,modified_by,created,modified) values ('$data[10]','$countryid','$created_by','$modified_by','$created','$modified')";
-				mysql_query($slestate);
-				$strstate=mysql_insert_id();
-				
-		 } 
-		// Location
-		 $checksqlloc="select locationid from ".$this->cfg['dbpref']."location where location_name='$data[11]' and stateid='$strstate'" ;		
-		$rscheckloc=mysql_query($checksqlloc);
-		$numloc=mysql_num_rows($rscheckloc);
-		if($numloc > 0 ){
-		$rowsloc=mysql_fetch_array($rscheckloc);
-		$strlid=$rowsloc['locationid'];			 
-		 } else {
-			$checksqlreg3="select stateid from ".$this->cfg['dbpref']."state where state_name='$data[10]' and countryid='$strcunt'" ;
-		        $rscheckreg3=mysql_query($checksqlreg3);		
-		        $rowsreg1=mysql_fetch_array($rscheckreg3);
-			$sid=$rowsreg1['stateid'];
-			        $user_Detail = $this->session->userdata('logged_in_user');
-				$created_by=$user_Detail['userid'];			
-				$created=date('Y-m-d H:i:s');
-				$modified_by=$user_Detail['userid'];			
-				$modified=date('Y-m-d H:i:s');
-				$sleloc="insert into ".$this->cfg['dbpref']."location(location_name,stateid,created_by,modified_by,created,modified) values ('$data[11]','$sid','$created_by','$modified_by','$created','$modified')";
-				mysql_query($sleloc);
-				$strlid=mysql_insert_id();
-				
-		 }
-		 }
-		if(empty($data[0]) || empty($data[1]) || empty($data[3])|| empty($data[8]) || empty($data[9]) || empty($data[10])|| empty($data[11]) || empty($data[16]) ) {
-		  $strdupdata1=$data[0] ."<br>";			            
-		} else {
-			$email = $data[16]; // Invalid email address 
-			$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'; 
-			// Run the preg_match() function on regex against the email address			
-			if (preg_match($regex, $email)) {	
-				 $sql="insert into ".$this->cfg['dbpref']."customers (first_name,last_name,position_title,company,add1_line1,add1_line2,add1_suburb,add1_postcode, add1_region,add1_country,add1_state,add1_location,phone_1,phone_2,phone_3,phone_4, email_1,email_2,email_3,email_4,skype_name,www_1,www_2,comments) values ('$data[0]','$data[1]','$data[2]','$data[3]','$data[4]','$data[5]','$data[6]','$data[7]','$strreg', '$strcunt','$strstate','$strlid','$data[12]','$data[13]','$data[14]','$data[15]', '$data[16]','$data[17]','$data[18]','$data[19]','$data[20]','$data[21]','$data[22]','$data[23]')";
-		         mysql_query($sql);				
-			     $count=$count+1;	
-				
-			} else { 
-				$strinvalidemail=$data[0] ."<br>";
+	function importload(){
+		$count = 0;
+		$this->load->library('excel_read');
+		$this->login_model->check_login();		
+	    $page['error'] = $page['msg'] = '';	
+		$objReader = new Excel_read();
+		if(isset($_FILES['card_file']['tmp_name'])) {
+			$strextension=explode(".",$_FILES['card_file']['name']);			
+		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="CSV") {	 		
+			$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);	
+			for($i=2; $i<count($impt_data); $i++) {				
+				if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['I']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['Q'])) {
+					$empty_error[] = $impt_data[$i]['A'];
+				} else {
+					if(!empty($impt_data[$i]['A']) && !empty($impt_data[$i]['B']) && !empty($impt_data[$i]['I']) && !empty($impt_data[$i]['J']) && !empty($impt_data[$i]['K']) && !empty($impt_data[$i]['L']) && !empty($impt_data[$i]['Q'])) {
+						$numrows = $this->customer_model->primary_mail_check($impt_data[$i]['Q']);						
+						if($numrows != 0){
+							$email_exit[] = $impt_data[$i]['Q'];
+						} else {							
+							// Region
+							if(!empty($impt_data[$i]['I']))
+							$strreg = $this->customer_model->get_rscl_id('', '', 'region', ucwords(strtolower($impt_data[$i]['I'])));							
+							// Country
+							if(!empty($impt_data[$i]['J']))
+							$strcunt = $this->customer_model->get_rscl_id($strreg, 'regionid', 'country', ucwords(strtolower($impt_data[$i]['J'])));							
+							// State
+							if(!empty($impt_data[$i]['K']))
+							$strstate = $this->customer_model->get_rscl_id($strcunt, 'countryid', 'state', ucwords(strtolower($impt_data[$i]['K'])));							
+							// Location
+							if(!empty($impt_data[$i]['L']))
+							$strlid = $this->customer_model->get_rscl_id($strstate, 'stateid', 'location', ucwords(strtolower($impt_data[$i]['L'])));
+							if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $impt_data[$i]['Q'])) {
+								$args = array( 'first_name' => $impt_data[$i]['A'], 'last_name' => $impt_data[$i]['B'], 'position_title' => $impt_data[$i]['C'], 'company' => $impt_data[$i]['D'], 'add1_line1' => $impt_data[$i]['E'], 'add1_line2' => $impt_data[$i]['F'], 'add1_suburb' => $impt_data[$i]['G'], 'add1_postcode' => $impt_data[$i]['H'], 'add1_region' => $strreg, 'add1_country' => $strcunt, 'add1_state' => $strstate, 'add1_location' => $strlid, 'phone_1' => $impt_data[$i]['M'], 'phone_2' => $impt_data[$i]['N'], 'phone_3' => $impt_data[$i]['O'], 'phone_4' => $impt_data[$i]['P'], 'email_1' => $impt_data[$i]['Q'], 'email_2' => $impt_data[$i]['R'], 'email_3' => $impt_data[$i]['S'], 'email_4' => $impt_data[$i]['T'], 'skype_name' => $impt_data[$i]['U'], 'www_1' => $impt_data[$i]['V'], 'www_2' => $impt_data[$i]['W'], 'comments' => $impt_data[$i]['X'] );
+								$this->customer_model->insert_customer_upload($args);
+								$count=$count+1;
+							} else {
+								$email_invalid[]= $impt_data[$i]['Q'];
+							}
+						}
+					}
+				}
 			}
-			
-	       }
-	}
-	$rows[] = $data;
-	} else {
-	$rows[] = $data;
-	}	
-     	$row++;
-	}
-	fclose($handle);
-	 $data['invalidemail']=$strinvalidemail;
-	 $data['succcount']=$count;
-	 $data['required']=$strdupdata1;
-	 $data['dups']=$strdupdata;	
-	 $data['dupsemail']=$strdupdata_email;
-	 $this->load->view('success_import_view', $data);
-	} else {
-	$page['error'] = '<p class="error">Please Upload CSV File only!</p>';
-	    $this->load->view('customer_import_view', $page);	   
-        }
-        } // ends here
-	else if (isset($_FILES['card_file']))
-	{
-            $page['error'] = '<p class="error">Please Upload the file!</p>';
-	    $this->load->view('customer_import_view', $page);
-        }
-}
-/*Ends here*/    
+			$data['invalidemail']=$email_invalid;
+			$data['succcount']=$count;
+			$data['dupsemail']=$email_exit;
+			$data['empty_error']=$empty_error;				
+			//echo "<pre>"; print_r($data); exit;			
+			$this->load->view('success_import_view', $data);
+		 	} else {
+		 		$page['error'] = '<p class="error">Please Upload CSV File only!</p>';
+		    	$this->load->view('customer_import_view', $page);		
+		 	}
+		} else {
+			$page['error'] = '<p class="error">Please Upload the file!</p>';
+			$this->load->view('customer_import_view', $page);
+		}
+	/*Ends here*/ 
+	}   
 }
 ?>
