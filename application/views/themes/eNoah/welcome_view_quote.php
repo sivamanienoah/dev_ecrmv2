@@ -32,7 +32,9 @@ if (x=='Lead No, Job Title, Name or Company')
 }
 </script>
 <div class="comments-log-container" style= "display:none;">
-	<?php if ($log_html != "") { ?>
+	<?php 
+		if ($log_html != "") { 
+	?>
 			<table width="100%" class="log-container"> 
 				<tbody>
 				<?php 
@@ -40,7 +42,11 @@ if (x=='Lead No, Job Title, Name or Company')
 				?>				
 				</tbody> 
 			</table>
-	<?php } else { echo "No Comments Found."; }?>
+	<?php 
+		} else { 
+			echo "No Comments Found."; 
+		}
+	?>
 </div>
 
 <!--Code Added for the Pagination in Comments Section--Ends Here-->
@@ -1745,8 +1751,6 @@ $(window).load(function(){
 				<li><a href="#jv-tab-4" >Tasks</a></li>
 				<li><a href="#jv-tab-4-5">Milestones</a></li>
 				<li><a href="#jv-tab-5">Customer</a></li>
-				<li style="display:none"><a href="#jv-tab-6">Reminders</a></li>
-				<li style="display:none"><a href="#jv-tab-7">URLs</a></li>
 				<li style="display:none"><a href="#jv-tab-8">QC</a></li>
 				<li><a href="#jv-tab-9">Query</a></li>
 				
@@ -2544,45 +2548,7 @@ $(window).load(function(){
 				</form>
 			</div><!-- id: jv-tab-5 end -->
 			
-			<div id="jv-tab-6">
-				<form id="set-reminders">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					Remind
-					<select id="remind-user">
-						<?php
-						//echo $remind_options;
-						
-						
-							echo $remind_options_all;
-					
-						?>
-					</select>
-					to
-					<input type="text" id="remind-about" class="textfield" />
-					on
-					<input type="text" id="remind-date" class="textfield" />
-				</form>
-			</div><!-- id: jv-tab-6 end -->
-			
-			<div id="jv-tab-7">
-				<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<p>Add URL to this job (full URL including http://)</p>
-					<p><input type="text" class="textfield" id="job-add-url" style="margin:0; width:250px;" /></p>
-					<p>Details (optional)</p>
-					<p><textarea id="job-url-content" class="textfield" style="margin:0; width:250px;"></textarea></p>
-					<div class="buttons">
-						<button type="submit" class="positive" onclick="addURLtoJob(); return false;">Add</button>
-					</div>
-				</form>
-				<ul id="job-url-list">
-				<?php echo $job_urls_html ?>
-				</ul>
-			</div><!-- id: jv-tab-7 end -->
+
 			<div id="jv-tab-8">
 				<form id="qc-checklist-dev" style="overflow:hidden; margin-bottom:15px; zoom:1;" onsubmit="return false">
 				
@@ -2617,7 +2583,7 @@ $(window).load(function(){
 				</form>
 				<script>
 				var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
-				$(function(){
+				$(function() {
 					$('#jv-tab-8 .task-list-item input:checkbox').change(function(){
 						if ($(this).is(':checked'))
 						{

@@ -272,16 +272,18 @@ class Welcome extends crm_controller {
 	}
 	
 	
-	public function view_project($id = 0, $quote_section = '') {	
+	public function view_project($id = 0, $quote_section = '') {
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
 		$uid = $usernme['userid'];
+		
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
 			$data['chge_access'] = 1;
 		} else {
 			$data['chge_access'] = $this->welcome_model->get_jobid($id, $uid);
 		}
+		
 		$result = $this->welcome_model->get_quote_data($id);
 		if(!empty($result)) {
 			$data['quote_data'] = $result[0];

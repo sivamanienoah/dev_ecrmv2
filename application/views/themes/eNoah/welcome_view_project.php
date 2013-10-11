@@ -32,7 +32,7 @@ $(document).ready(function() {
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
 	$("#show-con").hide();
 	$("#show-btn").click(function(){
-		$("#show-con").slideToggle("slow"); //$("#show-con").slideDown();	
+		$("#show-con").slideToggle("slow"); 
 		return false;
 	});
 	$('.payment-profile-button').click(function() {
@@ -281,18 +281,6 @@ function addLog() {
 	)
 }
 
-var client_message = 'Hi <?php echo  (isset($quote_data) && trim($quote_data['first_name']) != '') ? $quote_data['first_name'] : 'There' ?>,\n\nWe are now pleased to forward to you our formal project proposal for:\n\n<?php echo $cfg['job_status'][$quote_data['job_status']] ?> #<?php echo $quote_data['invoice_no'], ', ', str_replace("'", "\'", $quote_data['job_title']) ?>\n\nIf you wish to proceed with our quotation, please reply to this email stating the following: "Quotation Approved - Please Proceed" and one of our friendly staff will be in touch with you to finalise your order.\n\nThank you.';
-
-function prepareForClient() {
-	$('#job_log').val(client_message);
-	$('#attach_pdf').attr('checked', true);
-	$('#email_to_customer').attr('checked', true);
-	$('#multiple-client-emails:hidden').slideDown(400)
-				.children('input[type=checkbox]:first').attr('checked', true);
-	$('#requesting_client_approval').val('1');
-	return false;
-}
-
 function setPaymentRecievedTerms() {
 	$('#pr_form_jobid').val(curr_job_id);
 	
@@ -430,26 +418,23 @@ function updatePaymentRecievedTerms(pdid, eid) {
 	}
 	$('.payment-received-mini-view1').css('display', 'block');
 }
+
 function loadPaymentTerms() {
-		$.post( 
-			'welcome/retrieveRecord/'+curr_job_id,
-			function(data) {
-							
-					if (data.error) 
-					{
-						alert(data.errormsg);
-					} 
-					else 
-					{
-						$('.deposit_map_field').html(data);	
-					}
+	$.post( 
+		'welcome/retrieveRecord/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('.deposit_map_field').html(data);	
 			}
-		);
+		}
+	);
 }
 //function for load the payment terms every time click the 'Add Payment Terms' button
 function loadPayment() {
 	$.post( 
-		'welcome/payment_terms_delete/'+curr_job_id,
+		'welcome/payment_terms_delete/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
 			if (data.error) {
 				alert(data.errormsg);
@@ -459,6 +444,7 @@ function loadPayment() {
 		}
 	);
 }
+
 function setProjectPaymentTerms() {
 
 	$('#sp_form_jobid').val(curr_job_id);
@@ -620,12 +606,11 @@ function addDepositPayment() {
 			'welcome/add_deposit_payments',
 			form_data,
 			function(data) {
-				if (typeof(data) == 'object'){
+				if (typeof(data) == 'object') {
 					if (data.error) {
 						alert(data.errormsg);
 					} else {
 						$('.add-deposit-view:visible').slideUp(400);
-						//document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 					}
 				} else {
 					alert('Unexpected response from server!')
@@ -637,25 +622,6 @@ function addDepositPayment() {
 		
 	}
 	return false;
-}
-
-var deposit_form_block = true;
-<?php
-if (isset($userdata) && $userdata['level'] == 5)
-{
-	?>
-	deposit_form_block = true;
-	<?php
-}
-?>
-function checkForAccounts() {
-	if (!deposit_form_block) {
-		$('#set-deposits').block({
-            message:'<h4>Accounting Access Only</h4>',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333', width:'200px', top:'10px'}
-        });
-		deposit_form_block = true;
-	}
 }
 
 function fullScreenLogs() {
@@ -862,8 +828,6 @@ function setProjectLead() {
 							{
 								window.location.href = window.location.href;
 							}
-  							// set profile image
-							getPMProfileImage();
 						} else { 
 							alert(data.error);
 						}
@@ -945,7 +909,6 @@ function setProjectId() {
         });
 	}
 }
-
 
 //updating the project value.
 function setProjectVal() {
@@ -1229,63 +1192,8 @@ function downloadCustomPDF()
 	return false;
 }
 
-function getPMProfileImage()
-{
-	var pm_profile = $('#project_lead option:selected').val();
-	$.getJSON(
-				'ajax/production/get_pm_profile/' + pm_profile,
-				{},
-				function(data)
-				{
-					if (typeof(data) == 'object' && data.path != '')
-					{
-						$('#pm-profile-image').html('<img src="' + data.path + '" />');
-					}
-					else
-					{
-						$('#pm-profile-image').html('');
-					}
-				}
-			);
-}
 
-//unwanted function
-function getProjectCSR()
-{
-	
-	$.getJSON(
-				'ajax/production/get_csr_status/' + curr_job_id,
-				{},
-				function(data)
-				{
-					var csr_status = 0;
-					
-					if (typeof(data) == 'object')
-					{
-						csr_status = data.in_csr;
-					}
-					
-					manageCSRStatus(csr_status);
-				}
-			);
-}
 
-function manageCSRStatus(status)
-{
-	if (status == 1)
-	{
-		$('#project-in-csr-icon').html('<img src="assets/img/dollar-large.png" alt="In CSR" />');
-		$('#project-csr-include-tick').attr('checked', true);
-		$('h5.project-csr-label span').text('[ Included in CSR ]');
-	}
-	else
-	{
-		$('#project-in-csr-icon').html('');
-		$('#project-csr-include-tick').attr('checked', false);
-		$('h5.project-csr-label span').text('[ NOT Included in CSR ]');
-	}
-	$('.project-csr-change:visible').hide(200);
-}
 
 <?php
 if (isset($userdata) && $userdata['level'] < 2)
@@ -1304,26 +1212,6 @@ function qcOKlog() {
 	
 }
 
-function setProjectCSR()
-{
-	var in_csr = ($('#project-csr-include-tick').is(':checked')) ? 1 : 0;
-	$.post(
-			'ajax/production/set_csr_status/',
-			{'in_csr': in_csr, 'jobid': curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-			function(data)
-			{
-				var csr_status = 0;
-					
-				if (typeof(data) == 'object')
-				{
-					csr_status = data.in_csr;
-				}
-				
-				manageCSRStatus(csr_status);
-			},
-			'json'
-	);
-}
 
 <?php
 }
@@ -1369,22 +1257,22 @@ $(function(){
 	
 	
 	$("#job-view-tabs").tabs({
-								selected: 1,
-								show: function (event, ui) {
-									if (ui.index == 3)
-									{
-										loadExistingTasks();
-									}
-									else if (ui.index == 4)
-									{
-										populateJobOverview();
-									}
-									else if (ui.index == 9)
-									{
-										populatePackage();
-									}
-								}
-							});
+		selected: 1,
+		show: function (event, ui) {
+			if (ui.index == 3)
+			{
+				loadExistingTasks();
+			}
+			else if (ui.index == 4)
+			{
+				populateJobOverview();
+			}
+			else if (ui.index == 9)
+			{
+				populatePackage();
+			}
+		}
+	});
 	
 	$('#job-url-list li a:not(.file-delete)').livequery(function(){
 		$(this).click(function(){
@@ -1392,12 +1280,6 @@ $(function(){
 			return false;
 		});
 	});
-	
-	// get CSR status
-	getProjectCSR();
-	
-	// set profile picture
-	getPMProfileImage();
 	
 	try {
 		var sb_ol = $('.status-bar').offset().left;
@@ -1444,8 +1326,7 @@ $(function(){
 		document.location = _new_location.replace('{{jobid}}', $(this).val());
 	});
 	
-	
-	
+
 	$('#job_log').siblings().hide();
 	
 	$('#job_log').focus(function(){
@@ -1456,8 +1337,7 @@ $(function(){
 		}
 	});
 	
-	
-	
+
 	/* job tasks character limit */
 	$('#job-task-desc').keyup(function(){
 		var desc_len = $(this).val();
@@ -1578,19 +1458,13 @@ function setContractorJob()
 {
 	$("div#errMsgPjtNulMem").hide();
 	var contractors = [];
-	//$('#select2 select:selected').each(function(){
-		//contractors.push($(this).val());
-	//});
 	
 	var p = $('#project-member').val()
-	//alert($('#project-member').val()); //return false;
-	//alert($('#select2').val());
 	
 	var arr = new Array;
 	$("#select2 option").each ( function() {
 		arr.push ( $(this).val() );
 	});
-	//alert ( arr );
 	
 	if (arr.length === 0) {
 		$("div#errMsgPjtNulMem").show();
@@ -1620,15 +1494,9 @@ function setContractorJob()
 		},
 		'json'
 	);
-	//}
-	//return false;
+
 }
 
-/*
-$(window).load(function(){
-	setInterval(get_silent_logs, 60 * 2000);
-});
-*/
 
 </script>
 
@@ -1639,22 +1507,6 @@ $(window).load(function(){
 #jv-tab-8 .task-list-item tr.complete td {
 	background:green;
 	color:#fff;
-}
-.project-csr-change {
-	display:none;
-}
-#project-in-csr-icon {
-	padding:8px 5px 5px 10px;
-}
-#pm-profile-image {
-	padding:1px 5px 5px;
-}
-#pm-profile-image img {
-	border:1px solid #999;
-}
-.project-csr-label span {
-	font-size:11px;
-	font-weight:normal;
 }
 .email-set-options {
 	padding:8px 0 6px;
@@ -1674,63 +1526,10 @@ $(window).load(function(){
 
 <div id="content">
     <?php
-	//echo $chge_access;
-	
-	if ($this->session->userdata('logged_in') == true)
-	{
-		if ($this->uri->segment(1) == 'invoice')
-		{
-			if(in_array($userdata['level'], array(0,1,4))){
-			include ('tpl/invoice_submenu.php');
-			}
-			$controller_uri = 'invoice';
-		}
-		else
-		{
-			if(in_array($userdata['level'], array(0,1,4))){
-			include ('tpl/quotation_submenu.php');
-			}
-			$controller_uri = 'welcome';
-		}
-	}
-	
-	/**
-	 * this is useful for all the date instances
-	 */
-	$date_used = $quote_data['date_created'];
-	if (in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)) && $quote_data['date_invoiced'] != '')
-	{
-		$date_used = $quote_data['date_invoiced'];
-	}
+		$date_used = $quote_data['date_created']; 
 	?>
     <div class="inner q-view">
-		<div class="right-communication">
-			
-			<?php
-			if (isset($jobs_under_type))
-			{
-				?>
-			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post" class="jump-to-job">
-			
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-				<select name="jump_to_job" class="textfield width300px">
-					<?php
-					foreach($jobs_under_type as $job_ut)
-					{
-						?>
-					<option value="<?php echo $job_ut['jobid'] ?>"<?php if ($job_ut['jobid'] == $quote_data['jobid']) echo ' selected="selected"' ?>><?php echo $job_ut['job_title'], ' - ', $job_ut['company'] ?></option>
-						<?php
-					}
-					?>
-				</select>
-				<p>Jump to a job</p>
-			</form>
-				<?php
-			}
-			?>
-			
-			
+		<div class="right-communication">		
 			<form id="comm-log-form">
 			
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1751,23 +1550,12 @@ $(window).load(function(){
 					</div>
 				
 				</div>
-				<?php
-				// you only send this to a client if you are an admin + only if the status is quotation
-				if (isset($userdata) && isset($quote_data) && $quote_data['job_status'] < 3)
-				{ 
-					?>
-				<p><a href="#" onclick="prepareForClient(); return false;">Send quote to client</a></p>
-					<?php
-				}
-				?>
 			
 			<?php
-			//print_r($userdata); 
 			if (isset($userdata))
 			{
-				?>
+			?>
 				<div class="email-set-options" style="overflow:hidden;">
-					
 					<table border="0" cellpadding="0" cellspacing="0" class="client-comm-options">
 						<tr>
 							<td rowspan="2" class="action-td" valign="top" align="right"><a href="#" onclick="addClientCommOptions(); $(this).blur(); return false;">Communicate<br />to Client via</td>
@@ -1833,7 +1621,6 @@ $(window).load(function(){
 					</script>
 					
 					<?php if (isset($userdata)){ ?>
-					<!--<input type="checkbox" name="attach_pdf" id="attach_pdf" /> <label for="attach_pdf" class="normal">Attach document as PDF</label> &nbsp; -->
 					
 					<table border="0" cellpadding="0" cellspacing="0" style="display:none;" class="download-invoice-option-log">
 						<tr>
@@ -1896,16 +1683,13 @@ $(window).load(function(){
 					</p>
 					
 				</div>
-				<?php
+			<?php
 			}
 			?>
 			
 				<div class="user-addresses">
 					<p><label>Email to:</label></p>
 					<?php
-					//echo "<pre>"; print_r($user_accounts);
-					//print_r($list_users);
-					//print_r($contract_users);
 				    $restrict1[] = 0;
 					if (is_array($contract_users) && count($contract_users) > 0) { 
 						foreach ($contract_users as $data) {
@@ -1913,7 +1697,6 @@ $(window).load(function(){
 						}
 					}
 					//echo "<pre>"; print_r($restrict1);
-					
 					
 					$r_users = implode(",",$list_users);
 					$restrict = explode(",",$r_users);
@@ -1935,7 +1718,7 @@ $(window).load(function(){
 
 							for($j=0; $j<count($final_restrict_user); $j++) {
 							//echo $restrict[$j];
-							//echo "<br> " . $usid;
+
 							if($usid == $final_restrict_user[$j]) {
 									echo '<span class="user">' .
 									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" class="' . $is_pm . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label>' .
@@ -1945,7 +1728,9 @@ $(window).load(function(){
 							
 						}
 					}
-					else { echo "No user found"; } 
+					else {
+						echo "No user found";
+					} 
 					?>
 				</div>
 			</form>
@@ -1965,9 +1750,7 @@ $(window).load(function(){
 				?>
 			</span>
 			<h4>Job History</h4>
-			<!--<div class="log-container">
-				<?php //echo $log_html ?>
-			</div>-->
+
 			<!--Code Changes for Pagination in Comments Section -- Starts here -->
 			<?php if ($log_html != "") { ?>
 			<table width="100%" id="lead_log_list" class="log-container"> 
@@ -1996,31 +1779,25 @@ $(window).load(function(){
 					<option value="40">40</option> 
 				</select> 
 			</div>
-			<?php } else { echo "No Comments Found."; }?>
+			<?php }	else {
+				echo "No Comments Found."; 
+				}
+			?>
 			<!--Code Changes for Pagination in Comments Section -- Ends here -->
 		</div>
 		
-        <div class="pull-left side1">
+        <div class="pull-left side1"> 
 			<h2 class="job-title">
 				<?php
-				if (is_file(dirname(FCPATH) . '/assets/img/sales/' . $quote_data['belong_to'] . '.jpg'))
-				{
-					?>
-					<img src="assets/img/sales/<?php echo $quote_data['belong_to'] ?>.jpg" title="<?php echo $quote_data['belong_to'] ?>" />
-					<?php
-				}
-				
-				echo htmlentities($quote_data['job_title'], ENT_QUOTES);
+					echo htmlentities($quote_data['job_title'], ENT_QUOTES);
 				?>
 			</h2>
 			<?php
-			if (isset($quote_data['pjt_id'])) {
-				$varPjtId = $quote_data['pjt_id'];
-			}
+				if (isset($quote_data['pjt_id'])) {
+					$varPjtId = $quote_data['pjt_id'];
+				}
 			?>
-			
 			<form>
-			
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
 				<div>
@@ -2031,21 +1808,20 @@ $(window).load(function(){
 						</h5>
 					</div>					
 					<?php if ($chge_access == 1) { ?>
-					<div class="buttons">
-						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectId(); return false;">
-							Set Project ID
-						</button>
-					</div>
-					<div class="error-msg">
-						<span id="pjt_id_errormsg" style="color:red"></span>
-						<span class="checkUser" style="color:green">Project Id Saved.</span>
-						<span class="checkUser1" id="id-existsval" style="color:red">Project Id Already Exists.</span>
-					</div>
+						<div class="buttons">
+							<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectId(); return false;">
+								Set Project ID
+							</button>
+						</div>
+						<div class="error-msg">
+							<span id="pjt_id_errormsg" style="color:red"></span>
+							<span class="checkUser" style="color:green">Project Id Saved.</span>
+							<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
+						</div>
 					<?php } ?>
 				</div>	
 			</form>
 			<form>
-			
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Value</label>&nbsp;&nbsp;
@@ -2093,12 +1869,8 @@ $(window).load(function(){
 			</form>
 			<div class="action-buttons" style="overflow:hidden;">
 				<?php
-				// include VIEWPATH . 'tpl/user_accounts_options.php';
 				require (theme_url().'/tpl/user_accounts_options.php');
-				
-				// you can only edit this if this is not an invoice
-				
-					?>
+				?>
 				
 				<form name="project_assign" id="project-assign">
 				
@@ -2113,10 +1885,10 @@ $(window).load(function(){
 												else echo 'Not Set';
 												}
 										else echo 'Not Set'; ?> 
-                                ]</span></h5>
+                                ]</span>
+								</h5>
 								<?php
-								if ($chge_access == 1)
-								{
+								if ($chge_access == 1) {
 								?>
 								<p><a href="#" onclick="$('.project-lead-change:hidden').show(200); return false;">Change?</a></p>
 								<div class="project-lead-change">
@@ -2133,35 +1905,9 @@ $(window).load(function(){
 									</div>
 									<input type="hidden" value="" id="previous-project-manager"/>
 								</div>
-									<?php
+								<?php
 								}
 								?>
-							</td>
-							<td valign="top">
-								<!-- person image -->
-								<div id="pm-profile-image"></div>
-							</td>
-						</tr>
-						<tr>
-							<!--<td valign="top">
-								<h5 class="project-csr-label">Project Priority <br />
-								<span class="small">[ Included in CSR ]</span></h5>
-
-								<p><a href="#" onclick="$('.project-csr-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-csr-change">
-									Include in CSR &nbsp; <input type="checkbox" name="project_csr_include" id="project-csr-include-tick" />
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectCSR(); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-csr-change:visible').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-
-							</td>-->
-							<td valign="top">
-								<!-- dollar!! -->
-								<div id="project-in-csr-icon"></div>
 							</td>
 						</tr>
 					</table>
@@ -2262,83 +2008,56 @@ $(window).load(function(){
 					</table>
 					
 				</form>
-				<?php 
-				// you can only edit this if this is not an invoice
-				/*
-				if (isset($userdata) && in_array($userdata['level'], array(0,1,4)) && isset($quote_data) && in_array($quote_data['job_status'], array(0, 1, 2, 3, 15, 21, 22)))
-				{
-					?>
-					<div class="buttons" style="overflow:hidden; padding-bottom:10px;">
-						<button type="submit" class="positive" onclick="document.location.href = '<?php echo $this->config->item('base_url') ?>welcome/edit_quote/<?php echo $quote_data['jobid'] ?>'">Edit this document</button>
-					</div>
-					
-					<?php
-				}*/
-
-				?>
-				<!--<div class="buttons" style="overflow:hidden; padding-bottom:10px;">
-						<button type="submit" class="positive" 
-						onclick="document.location.href = '<?php //echo $this->config->item('base_url') ?>welcome/copy_quote/<?php //echo $quote_data['jobid'] ?>'">Copy quote</button>
-				</div>-->
-
+				
 				<form name="contractor-assign">
-					
+				
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
 					<h5 class="project-lead-label">Assign Project Team</h5>
-					<!--<a href="#" onclick="$(this).siblings('div:hidden').show(); return false;">Show</a>-->
 					<p><a href="javascript:void(0);" id="show-btn">Show</a></p>
 										
-					<!--<div style="display:none;">-->
 					<div id="show-con">
-					<?php if ($chge_access == 1) {?>
-						<div class="list-contractors">
-							<?php //echo $contractor_list ?>
-							<div style="float:left;">
-								<span style="padding-left: 55px;">Members</span><br />
-								
-								<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
-							</div>
-							<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
-							
-								<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
-								<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
-								<input type="hidden" value ="" id="project-member" name="project-member"/>
-							
-							</div>
-							<div style="float:left;">
-								<span style="padding-left: 45px;">Project Team</span><br />
-								<select multiple="multiple" name="select2" id="select2" ><?php echo $contractor_list_select2 ?></select>
-							</div>
-						</div>
-					<?php } 
-							else { ?>
-							<span style="padding-left: 45px;">Project Team</span><br />
-							<select id="select3" multiple="multiple"><?php echo $contractor_list_select2 ?></select>
-					<?php		
-							}
-					?>
 						<?php if ($chge_access == 1) { ?>
-						<div class="buttons" style="clear:both;">
-							<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>
-							<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
-						</div>
-						<?php } ?>
+							<div class="list-contractors">
+								<?php //echo $contractor_list ?>
+								<div style="float:left;">
+									<span style="padding-left: 55px;">Members</span><br />
+									<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
+								</div>
+								
+								<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
+									<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
+									<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
+									<input type="hidden" value ="" id="project-member" name="project-member"/>
+								</div>
+								<div style="float:left;">
+									<span style="padding-left: 45px;">Project Team</span><br />
+									<select multiple="multiple" name="select2" id="select2" ><?php echo $contractor_list_select2 ?></select>
+								</div>
+							</div>
+						<?php 
+						} else { 
+						?>
+								<span style="padding-left: 45px;">Project Team</span><br />
+								<select id="select3" multiple="multiple"><?php echo $contractor_list_select2 ?></select>
+						<?php		
+						}
+						?>
+						<?php 
+							if ($chge_access == 1) { 
+						?>
+							<div class="buttons" style="clear:both;">
+								<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>
+								<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
+							</div>
+						<?php 
+						} 
+						?>
 					</div>
 				</form>
 
 			</div>
-			<div>		
-			<?php
-			/**
-			 * This will include the select box that changes the status of a job
-			 */
-			// if ( in_array($userdata['level'], array(0,1,4)))
-			
-			// include 'tpl/status_change_project.php';
-			
-			?>
-			</div>
+
 			<div>
 				<p id="temp">&nbsp;</p>
 				<ul id="job-view-tabs">
@@ -2348,7 +2067,6 @@ $(window).load(function(){
 					<li><a href="#jv-tab-4" >Tasks</a></li>
 					<li><a href="#jv-tab-4-5">Milestones</a></li>
 					<li><a href="#jv-tab-5">Customer</a></li>
-					<li style="display:none;"><a href="#jv-tab-6">Reminders</a></li>
 					<li><a href="#jv-tab-7">URLs</a></li>
 				</ul>
 			</div>
@@ -2367,26 +2085,25 @@ $(window).load(function(){
 				<?php				
 				if ($quote_data['payment_terms'] == 0 || $quote_data['payment_terms'] == 1)
 				{
-					?>
+				?>
 					<div class="payment-profile-view" id="payment-profile-view" style="float:left;"><br/>
 						<form id="set-payment-terms">
 						
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
 						<table class="payment-table">
-						<tr>
-						<td>
-							<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
-							<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
-							<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
-							<div class="buttons">
-								<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
-							</div>
-							<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-							<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-						</td>
-						</tr>
-						</tr>
+							<tr>
+								<td>
+									<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
+									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
+									<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
+									</div>
+									<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
+									<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+								</td>
+							</tr>
 						</table>
 						</form>
 					</div>
@@ -2463,12 +2180,9 @@ $(window).load(function(){
 						}
 						$output .= '</div>';
 					    echo $output;
-					?>
-						<!--payment received starts here -->
-					<?php			
-					//if (isset($deposits_data))
-					//{
 						?>
+						<!--payment received starts here -->
+
 						<div class="payment-recieved-view" id="payment-recieved-view" style="display:none;float:left;"><br/>
 						<form id="payment-recieved-terms">
 						
@@ -2477,15 +2191,7 @@ $(window).load(function(){
 							<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
 							<p>Amount Recieved *<input type="text" name="pr_date_2" onkeypress="return isNumberKey(event)" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span></p>
 							<p>Date Recieved *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
-							<?php
-							/*$pt_select_box .= '<option value="0"> &nbsp; </option>';
-							foreach ($payment_data  as $pd) 
-							{
-								$payment_amount = number_format($pd['amount'], 2, '.', ',');
-								$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
-								$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
-							}*/
-							?>
+							
 							<?php if (isset($pt_select_box)) { ?>
 							<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
 							<?php } 
@@ -2503,13 +2209,13 @@ $(window).load(function(){
 					    </div>
 						<?php 
 						//mychanges
-			$jid = $this->uri->segment(3); //16 
-			$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
-			$jres = $jsql->result();
-			$worthid = $jres[0]->expect_worth_id;
-			$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
-			$eres = $expect_worth->result();
-			$symbol = $eres[0]->expect_worth_name;
+						$jid = $this->uri->segment(3); //16 
+						$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
+						$jres = $jsql->result();
+						$worthid = $jres[0]->expect_worth_id;
+						$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
+						$eres = $expect_worth->result();
+						$symbol = $eres[0]->expect_worth_name;
 			
 						$output = '';
 						$output .= '<div class="payment-received-mini-view1" style="float:left; display:none; margin-top:5px;">';
@@ -2556,73 +2262,14 @@ $(window).load(function(){
 						echo $output;
 						?>
 					<!--payment received ends here -->
-				
-					<?php
+				<?php
 				}
 				?>
-				<?php
-				//if (isset($quote_data) && in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)))
-				//{
-					?>
-				<!--<div class="add-deposit-view">
-					<?php
-					if (isset($deposits_data) && $sensitive_information_allowed)
-					{
-						?>
-						<div class="payments-history">
-							<h3>Payment profile history</h3>
-							<?php
-							foreach ($deposits_data as $depd)
-							{
-								?>
-								<p><span class="amount">$<?php echo number_format($depd['amount'], 2, '.', ',') ?></span> on <?php echo date('d-m-Y', strtotime($depd['deposit_date'])), '.'; if ($depd['comments'] != '') echo " ({$depd['comments']})"; ?></p>
-								<?php
-							}
-							?>
-						</div>
-						<?php
-					}
-					if ($sensitive_information_allowed)
-					{
-					?> 
-						<form id="set-deposits">
-							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-							<p>Deposit amount<br /><input type="text" name="deposit_amount_add" id="deposit_amount_add" class="textfield width200px" /></p>
-							<?php
-							if (isset($pt_select_box))
-							{
-								?>
-							<p>Map to a payment term<br /><select name="deposit_map_field" style="width:210px;"><?php echo $pt_select_box ?></select></p>
-								<?php
-							}
-							?>
-							<p>Deposit Date<br /><input type="text" name="deposit_date" id="deposit_date" class="textfield  width200px pick-date" /></p>
-							<p>Comments<br /><input type="text" name="deposit_comments" id="deposit_comments" class="textfield  width200px" /></p>
-							<?php if(in_array($userdata['level'], array(0,1,5))){?>
-							<div class="buttons">
-								<button type="submit" class="positive" onclick="addDepositPayment(); return false;">Add Deposit</button>
-							</div>
-							<?php } ?>
-							<input type="hidden" name="deposit_form_jobid" id="deposit_form_jobid" value="0" />
-							<input type="hidden" name="belong_to" value="<?php echo $quote_data['belong_to'] ?>" />
-						</form>
-						<?php
-					}
-					?>
-				</div>-->
-					<?php
-				//}
-				?>
-					
+	
 				</div><!-- class:q-view-main-top end -->
 			</div><!-- id: jv-tab-1 end -->
 			<div id="jv-tab-2"> 
-				<?php
-				//if (in_array($userdata['level'], array(0,1,4,5)))
-				//{
-					?>
-				<!--<p style="text-align:right;"><a href="#" onclick="$('.download-invoice-option').slideToggle('fast'); return false;"><img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a></p>-->
-				<!-- Changes done for Google chrome toggle issue-->
+				
 				<p style="text-align:right;"><a href="#" onclick="downloadCustomPDF(); return false;">
 					<img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a>
 				</p>
@@ -2631,35 +2278,7 @@ $(window).load(function(){
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
 					<table border="0" cellpadding="0" cellspacing="0">
-						<!--
-						<tr>
-							<td>
-								&nbsp;Use a custom date<br />
-								<input type="text" class="textfield width200px pick-date" name="use_custom_date" value="<?php //echo date('d-m-Y', strtotime($date_used)) ?>" readonly="readonly" />
-							</td>
-							<td>
-								&nbsp;Adjust current payment due<br />
-								<input type="text" class="textfield width200px" name="balance_due" value="" id="new-balance-due" />
-								<input type="hidden" name="ex_balance_due" value="" id="ex-balance-due" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;Don't attach content policy<br />
-								<input type="checkbox" name="ignore_content_policy" />
-							</td>
-							<td>
-								&nbsp;Add a description - 100 characters<br />
-								<input type="text" class="textfield width250px" name="custom_description" value="" maxlength="100" />
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="downloadCustomPDF(); return false;">Download PDF</button>
-								</div>
-							</td>
-						</tr>-->
+						
 						<tr style="display:none;">
 							<td>
 								&nbsp;Use a custom date<br />
@@ -2684,21 +2303,19 @@ $(window).load(function(){
 						</tr>
 					</table>
 				</form>
-				<?php
-				//}
-				?>
+
 				<div class="q-container">
 					<div class="q-details">
 						<div class="q-top-head">
-							<div class="q-cust<?php if(isset($quote_data) && $quote_data['division'] == 'SYNG') echo ' syng-gray' ?>">
-								<h3 class="q-id"><em><?php echo  (isset($quote_data)) ? $cfg['job_status_label'][$quote_data['job_status']] : 'Draft' ?></em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
+							<div class="q-cust">
+								<h3 class="q-id"><em>Project</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
 								<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
 								<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 								<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
 								<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
 								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
 							</div>
-							<?php //$cfg['quote_header'] ?><!-- end q-self -->
+							
 							<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
 						</div>
 						<div class="q-quote-items">
@@ -2707,7 +2324,6 @@ $(window).load(function(){
 						</div>
 					</div>
 				</div>
-				<?php //if (in_array($userdata['level'], array(0,1,4,5))){?>
 				<div class="q-sub-total<?php if ( ! $sensitive_information_allowed) echo ' display-none' ?>">
 					<table class="width565px" cellpadding="0" cellspacing="0" border="0">
 						<tr>
@@ -2729,7 +2345,7 @@ $(window).load(function(){
 						</tr>
 					</table>
 				</div>
-				<?php //} ?>
+
 			</div><!-- id: jv-tab-2 end -->
 			
 			<div id="jv-tab-3">
@@ -2740,14 +2356,12 @@ $(window).load(function(){
 					<div id="upload-container">
 						<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
 						<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
-						<!-- input type="button" value="Upload File" onclick="runAjaxFileUpload();" / -->
 					</div>
 					<ul id="job-file-list">
 					<?php echo $job_files_html ?>
 					</ul>
 				</form>
 				
-				<!--<div id="lead_result"></div>-->
 			</div><!-- id: jv-tab-3 end -->
 			
 			<div id="jv-tab-4">
@@ -2785,21 +2399,6 @@ $(window).load(function(){
 								?>
 								</select>
 							</td>
-							<!--
-							<td>
-								Hours
-							</td>
-							<td>
-								<input name="task_hours" type="text" class="textfield width100px" /> Hours and
-								<select name="task_mins" class="textfield">
-									<option value="0">0</option>
-									<option value="15">15</option>
-									<option value="30">30</option>
-									<option value="45">45</option>
-								</select>
-								Mins
-							</td>
-							-->
 						</tr>
 						
 						<tr>
@@ -2814,31 +2413,6 @@ $(window).load(function(){
 							</td>
 							<td>
 								<input type="text" name="task_end_date" class="textfield pick-date width100px" />
-								<!--
-								&nbsp;
-								<select name="task_end_hour" class="textfield">
-								<?php
-								$time_range = array(
-												'10:00:00'	=> '10:00AM',
-												'11:00:00'	=> '11:00AM',
-												'12:00:00'	=> '12:00PM',
-												'13:00:00'	=> '1:00PM',
-												'14:00:00'	=> '2:00PM',
-												'15:00:00'	=> '3:00PM',
-												'16:00:00'	=> '4:00PM',
-												'17:00:00'	=> '5:00PM',
-												'18:00:00'	=> '6:00PM',
-												'19:00:00'	=> '7:00PM'
-											 );
-								foreach ($time_range as $k => $v)
-								{
-									$selected = ($k == '17:00:00') ? ' selected="selected"' : '';
-									echo "
-									<option value=\"{$k}\"{$selected}>{$v}</option>";
-								}
-								?>
-								</select>
-								-->
 							</td>
 							
 						</tr>
@@ -2846,15 +2420,6 @@ $(window).load(function(){
 							<td>Remarks</td>
 							<td colspan="3"><textarea name="remarks" id="task-remarks" class="task-remarks" width="420px"></textarea></td>
 						</tr>
-						<!--
-						<tr>
-							<td>&nbsp;</td>
-							<td colspan=3>
-								Require checklist before completion : <input type="checkbox" name="require_qc" /><br>
-								Priority Support : <input type="checkbox" name="priority" />
-							</td>
-						</tr>
-						-->
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
@@ -2957,38 +2522,6 @@ $(window).load(function(){
 						</tr>
 					</table>
 				<!-- edit task end -->
-				</form>
-				
-				<form onsubmit="return false;" class="display-none" id="task-require-qc-cover">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<table border="0" cellpadding="0" cellspacing="0" class="the-task-require-qc">
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_1" /> &nbsp; <span>Is it working has intended - as per invoice or logged instruction?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_2" /> &nbsp; <span>Has it been checked for errors - is it working on other browsers/computers?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_3" /> &nbsp; <span>Does the item visually match the rest of the design/styling?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_4" /> &nbsp; <span>Is it up to Visiontech Standard - will it get approved in a design critique by the Assistant Art Director?</span>
-							<input type="hidden" name="hidden_taskid" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="submitFullCompleteStatus();">Proceed</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" class="negative" onclick="$.unblockUI(); $('#jv-tab-4').unblock();">Cancel</button>
-								</div>
-							</td>
-						</tr>
-					</table>
 				</form>
 				
 			</div><!-- id: jv-tab-4 end -->
@@ -3295,28 +2828,6 @@ $(window).load(function(){
 				</form>
 			</div><!-- id: jv-tab-5 end -->
 			
-			<div id="jv-tab-6">
-				<form id="set-reminders">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					Remind
-					<select id="remind-user">
-						<?php
-						//echo $remind_options;
-						if ($userdata['level'] < 2)
-						{
-							//echo $remind_options_all;
-						}
-						?>
-					</select>
-					to
-					<input type="text" id="remind-about" class="textfield" />
-					on
-					<input type="text" id="remind-date" class="textfield" />
-				</form>
-			</div><!-- id: jv-tab-6 end -->
-			
 			<div id="jv-tab-7">
 				<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
 				
@@ -3353,7 +2864,7 @@ function paymentProfileEdit(eid) {
 	//alert(eid);
 	$(".payment-profile-view").show();
 	var jid = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
-	setTimeout('timerfadeout()', 3000);
+	setTimeout('timerfadeout()', 2000);
 	var url = "welcome/agreedPaymentEdit/"+eid+"/"+jid;
 	$('#payment-profile-view').load(url);
 }
@@ -3418,14 +2929,12 @@ function paymentReceivedView() {
 }
 
 //mychanges
- function isNumberKey(evt)
-       {
-          var charCode = (evt.which) ? evt.which : event.keyCode;
-          if (charCode != 46 && charCode > 31 
-            && (charCode < 48 || charCode > 57))
-             return false;
-
-          return true;
-       }
+function isNumberKey(evt) {
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+	return false;
+	else
+	return true;
+}
 <!--Add Received Payment Terms Delete function Ends here.-->
 </script>

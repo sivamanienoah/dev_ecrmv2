@@ -983,7 +983,7 @@ class Welcome_model extends crm_model {
     	$this->db->where('jb.jobid', $id);
 		$this->db->limit(1);
 		$results = $this->db->get();
-        return $results;
+        return $results->result_array();
     }
     
     function get_contract_jobs($id) {
