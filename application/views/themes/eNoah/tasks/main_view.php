@@ -2,7 +2,8 @@
 ob_start();
 require (theme_url().'/tpl/header.php'); 
 ?>
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<!--script type="text/javascript" src="assets/js/blockui.v2.js"></script-->
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript">var curr_job_id = 0;</script>
 <script type="text/javascript" src="assets/js/tasks.js?q=9"></script>
