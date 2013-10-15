@@ -18,6 +18,11 @@ class Welcome extends crm_controller {
 		$this->load->library('email');
 		$this->email->initialize($config);
 		$this->email->set_newline("\r\n");
+		
+		$this->load->helper('lead_stage_helper');
+		$this->stg = getLeadStage();
+		$this->stg_name = getLeadStageName();
+		$this->stages = @implode('","', $this->stg);
 	}
 	
     /*
@@ -48,11 +53,10 @@ class Welcome extends crm_controller {
 			$ins_cus['first_name']    = $_POST['name']; 
 			$ins_cus['email_1']       = $_POST['email']; 
 			$ins_cus['company']       = $_POST['company']; 
-			$ins_cus['comments']      = $_POST['content']; 	 
+			$ins_cus['comments']      = $_POST['content'];
 	    }
 	 	//insert customer and retrive last insert id
 	 	$insert_id = $this->customer_model->get_customer_insert_id($ins_cus);
-		
 	    //Create Jobs
 		$ins['job_title']           = 'Ask the Expert';
 		$ins['custid_fk']           = $insert_id;
@@ -70,7 +74,6 @@ class Welcome extends crm_controller {
 		$ins['created_by']          = 59;
 		$ins['modified_by']         = 59;
 		$ins['lead_status']         = 1;
-		
 		$new_job_id = $this->welcome_model->insert_job($ins);
 		if (!empty($new_job_id)) {
 			$invoice_no = (int) $new_job_id;
@@ -124,137 +127,55 @@ class Welcome extends crm_controller {
 	 * @access public
 	 * @param string $type - specify the list you want to display
 	 */
-	public function quotation($type = 'draft', $return = FALSE, $tab='') { 
-
+	public function quotation($type = 'draft', $return = FALSE, $tab='') {
+		
 		$this->load->helper('text');
-		$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-		/*
-		if ($this->userdata['level'] == 5 && in_array($type, array('draft', 'list', 'quote', 'pending')))
-		{
-			$type = 'approved';
-		}
-		*/
-		$data['quote_section'] = $type;
-        switch ($type) {		
-            case 'draft':
-                $job_status = "`job_status` IN (1,2,3,4,5,6,7,8,9,10,11,12)";
-                $page_label = 'Leads List' ;
-                break;
-            case 'list':
-                $job_status = 1;
-                $page_label = 'Quotation List - Estimates';
-                break;
-			case 'ongoing':
-				$job_status = 15;
-				$page_label = 'Ongoing Quotations - "Bill Later" Clients';
-				break;
-            case 'quote':
-                $job_status = 2;
-                $page_label = 'Quotation List';
-                break;
-            case 'pending':
-                $job_status = 3;
-                $page_label = 'Quotation List - Pending Approval';
-                break;
-            case 'approved':
-			//echo "$job_status"; exit;
-				$job_status = 4;
-                $page_label = 'Invoice List - Pending Payment';
-                break;
-			case 'production':
-                $job_status = 5;
-                $page_label = 'Invoices - In Production';
-                break;
-			case 'settlement':
-                $job_status = 6;
-                $page_label = 'Invoices - Completed, Awaiting Settlement';
-                break;
-			case 'completed':
-                $job_status = 7;
-                $page_label = 'Invoices - Settled';
-                break;
-			case 'idle':
-                $job_status = 21;
-                $page_label = 'Idle Quotations';
-                break;
-			case 'declined':
-                $job_status = 22;
-                $page_label = 'Declined Quotations';
-                break;
-			case 'cancelled':
-                $job_status = 25;
-                $page_label = 'Cancelled Invoices';
-                break;
-			case 's_pending':
-                $job_status = 30;
-                $page_label = 'Pending Payment';
-                break;
-			case 's_settled':
-                $job_status = 31;
-                $page_label = 'Settled Invoices';
-                break;
-			case 's_cancelled':
-                $job_status = 32;
-                $page_label = 'Cancelled Invoices';
-                break;
-			case 's_myob':
-				$job_status = "`invoice_downloaded` = 0 AND `job_status` IN (30,31)";
-				$page_label = 'Invoices to be Downloaded';
-				break;
-			case 'myob':
-				$job_status = "`invoice_downloaded` = 0 AND `job_status` IN (4,5,6,7)";
-				$page_label = 'Invoices to be Downloaded';
-				break;
-            default:
-                $job_status = "`job_status` IN (0,1,2,3,4,5,6,7,8,9,10,11,12)";
-                $page_label = 'Lead List ';
-        }
+
+		$data['lead_stage'] = $this->stg_name;
+		$data['quote_section'] = $type;	
+
+		// $job_status = "`job_status` IN (1,2,3,4,5,6,7,8,9,10,11,12)";
+		$job_status = "`job_status` IN ('".$this->stg."')";
+		$page_label = 'Leads List' ;
+
 		
 		$restrict = '';
-		/* if ($this->userdata['level'] == 4)
-        $restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'"; 
-		if ($job_status == 0)
-        $restrict .= " AND `created_by` = '{$this->userdata['userid']}'"; 
-        */
-		
+
 		# restrict contractors		
-		$cnt_join1 = '';$cnt_join='';		
-		if (is_numeric($job_status))
-		$job_status = "`job_status` = '{$job_status}'";
-		if(!empty($_POST['pack_name']))
-		$job_status = "`job_status` = '{$_POST['pack_name']}'";			
+		
 			
 		if($_POST['keyword'] != 'Lead No, Job Title, Name or Company') {
 			if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 ) {
 				$search.=" AND ( J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
 			}
 		}
-		$usid = $this->session->userdata['logged_in_user']['userid'];
-		if (($this->session->userdata['logged_in_user']['role_id'] != '1') && ($this->session->userdata['logged_in_user']['level'] != 1)) {
-			$res1 = $this->welcome_model->get_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
-			$res2 =  $this->welcome_model->get_leadowner_results($usid, $cnt_join1, $job_status, $cnt_join, $search, $restrict);
-			$records = array_merge_recursive($res1, $res2);
-			$record = array_map("unserialize", array_unique(array_map("serialize", $records)));
-			$data['records'] = $record;
-		} else {
-			$data['records'] = $this->welcome_model->get_another_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
-		}
-		$temp[]=0;
-		foreach($data['records'] as $val) {
-			$temp[]=$val['jobid']; 
-		}
-		$temp=implode(',',$temp);
-		$data['hosting'] = $this->welcome_model->get_hosting_job($temp);
+		// $usid = $this->session->userdata['logged_in_user']['userid'];
+		// if (($this->session->userdata['logged_in_user']['role_id'] != '1') && ($this->session->userdata['logged_in_user']['level'] != 1)) {
+			// $res1 = $this->welcome_model->get_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
+			// $res2 =  $this->welcome_model->get_leadowner_results($usid, $cnt_join1, $job_status, $cnt_join, $search, $restrict);
+			// $records = array_merge_recursive($res1, $res2);
+			// $record = array_map("unserialize", array_unique(array_map("serialize", $records)));
+			// $data['records'] = $record;
+		// } else {
+			// $data['records'] = $this->welcome_model->get_another_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
+		// }
+		// $temp[]=0;
+		
+		// foreach($data['records'] as $val) {
+			// $temp[]=$val['jobid']; 
+		// }
+		// $temp=implode(',',$temp);
+		// $data['hosting'] = $this->welcome_model->get_hosting_job($temp);
 		$data['customers'] = $this->welcome_model->get_customers();
-		$data['page_heading'] = $page_label;
 		$order_by = 'first_name';
 		$data['lead_owner'] = $this->welcome_model->get_lead_owner($order_by);
 		$data['regions'] = $this->regionsettings_model->region_list();
         if ($return === TRUE) {
-			return $data['records'];
+			// return $data['records'];
 		} else {
-			$this->load->view('quotation_view', $data);
+			// $this->load->view('quotation_view', $data);
 		}	
+		$this->load->view('quotation_view', $data);
 	}
 
 	/*For Project Module -- Start here*/
@@ -263,9 +184,9 @@ class Welcome extends crm_controller {
 		$data['page_heading'] = "Projects - Lists";
 		// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();		
 		$data['pm_accounts'] = array();
-		$leadowner_byrole = $this->welcome_model->get_leadowner_byrole(3);
-		if(!empty($leadowner_byrole))
-		$data['pm_accounts'] = $leadowner_byrole;
+		$pjt_managers = $this->welcome_model->get_user_byrole(3);
+		if(!empty($pjt_managers))
+		$data['pm_accounts'] = $pjt_managers;
 		$data['customers'] = $this->welcome_model->get_customers();
 		$data['records'] = $this->welcome_model->get_projects_results($pjtstage = 'null', $pm_acc = 'null', $cust = 'null', $keyword = 'null');
 		$this->load->view('projects_view', $data);
@@ -294,13 +215,14 @@ class Welcome extends crm_controller {
 				$data['assigned_contractors'][] = $tc['userid_fk'];
 			}
             $data['log_html'] = '';	
-            		
-			/* sub menus are based on the URI segment - for invoices, we redirect to the correct URI */
-			if (in_array($data['quote_data']['job_status'], array(4, 5, 6, 7)) && $this->uri->segment(1) != 'invoice') {
-				redirect('invoice/view_quote/' . $data['quote_data']['jobid']);
-				exit();
-			}
-			
+	
+
+
+
+
+
+
+	
 			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$this->db->where('jobid', $data['quote_data']['jobid']);
@@ -335,18 +257,17 @@ class Welcome extends crm_controller {
 					
 					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';
 					
-/*                    $table = <<<HDOC
-<div class="log{$stick_class}">
-    <p class="data">
-        <span>{$fancy_date}</span>
-    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
-    </p>
-    <p class="desc">
-        {$log_content}
-    </p>
-</div>
-HDOC;
-*/
+
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 $table = <<<HDOC
 <tr id="log" class="log{$stick_class}">
 <td id="log" class="log{$stick_class}">
@@ -373,12 +294,9 @@ HDOC;
 			}
 			
 			$data['pm_accounts'] = array();
-			//Here "WHERE" condition used for Fetching the Project Managers.
-			$users = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>3));
-			if ($users->num_rows() > 0)
-			{
-				$data['pm_accounts'] = $users->result_array();
-			}
+			$pjt_managers = $this->welcome_model->get_user_byrole(3);
+			if(!empty($pjt_managers))
+			$data['pm_accounts'] = $pjt_managers;
 			
 			if ($data['quote_data']['payment_terms'] == 1)
 			{
@@ -439,7 +357,7 @@ HDOC;
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->welcome_model->get_contract_users($id);	
-			$data['get_lead_stage_projects'] = $this->welcome_model->get_lead_stage_projects();
+			// $data['get_lead_stage_projects'] = $this->welcome_model->get_lead_stage_projects();
             $this->load->view('welcome_view_project', $data);
 			
         }
@@ -494,6 +412,7 @@ HDOC;
     /*
      * Create the quote based on the submission from web_Dev form
      */
+	// unwanted function
     public function ajax_webdev_quote()
     {
         if (isset($_POST['web_number_of_pages']) && (int) $_POST['web_number_of_pages'] > 0 && isset($_POST['jobid']) && $_POST['jobid'] > 0)
@@ -1093,7 +1012,7 @@ HDOC;
 	 *
 	 */
 	function add_log()
-	{
+	{ 
         if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content']))
         {
 			$this->load->helper('text');
@@ -1160,7 +1079,6 @@ HDOC;
 							}
 						}
 						
-						//$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name']);
 						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
 						$received_by .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
 					}
@@ -1185,10 +1103,7 @@ HDOC;
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -1325,10 +1240,10 @@ body {
 					{
 						//$log_email_content .= "\n\n\n{$job[0]['job_title']} - {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}" .
 												//"\n".$this->config->item('base_url')."welcome/view_quote/{$_POST['jobid']}";
-												$dis['date_created'] = date('Y-m-d H:i:s');
-														$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+						$dis['date_created'] = date('Y-m-d H:i:s');
+						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 		
-						               // $log_email_content = <<<HDOCHDOC;
+					   // $log_email_content = <<<HDOCHDOC;
 		
 					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -1337,10 +1252,7 @@ body {
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -1614,10 +1526,7 @@ HDOC;
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -1766,10 +1675,7 @@ body {
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -2600,16 +2506,7 @@ VCS Admin";*/
 				
 				//get the actual worth amt for the lead
 				$actWorthAmt = $lead_stage_history['actual_worth_amount']; 
-				
-				//Check the actual worth amount.
-				if($status == '13' && $actWorthAmt == '0.00') {
-					echo "{error:true, errormsg:'Actual Worth Amount Must be greater than Zero.'}";
-					exit;
-				}
-				//SET THE PROPOSAL SENT DATE FOR THE LEAD.
-				if($status == '7') {
-					$update['proposal_sent_date'] = date('Y-m-d H:i:s');
-				}
+							
 				$update['job_status'] = $status;
 				
 					$this->db->where('jobid', $jobid);
@@ -2633,11 +2530,8 @@ VCS Admin";*/
 						$status_query = $this->db->query('SELECT lead_stage_name FROM '.$this->cfg['dbpref'] . 'lead_stage WHERE lead_stage_id ='.$status.' ');
 						$status_res=$status_query->result_array();
 						$ins['log_content'] = "Status Changed to:" .' '. urldecode($status_res[0]['lead_stage_name']) .' ' . 'Sucessfully for the Lead - ' .$disarray[0]['job_title']. ' ';
-						if ($status_res[0]['lead_stage_name']!='Project Charter Approved. Convert to Projects In Progress') {
-							$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res[0]['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$jobid.'>' .$disarray[0]['job_title']. ' </a>';
-						} else {
-							$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res[0]['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'>' .$disarray[0]['job_title']. ' </a>';
-						}
+						
+						$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res[0]['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$jobid.'>' .$disarray[0]['job_title']. ' </a>';
 						
 						// insert the new log
 						$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
@@ -2656,10 +2550,7 @@ VCS Admin";*/
 							<title>Email Template</title>
 							<style type="text/css">
 							body {
-								margin-left: 0px;
-								margin-top: 0px;
-								margin-right: 0px;
-								margin-bottom: 0px;
+								margin: 0px;
 							}
 							</style>
 							</head>
@@ -2737,6 +2628,119 @@ VCS Admin";*/
             echo "{error:true, errormsg:'Invalid Lead ID or Stage!'}";
         }
     }
+	//Closed lead - move to project
+	public function ajax_update_lead_status($jobid)
+    {
+		$this->load->model('user_model');
+        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid))
+        {
+					
+			$update['pjt_status'] = 1;
+			// $update['is_project'] = 1;
+			$update['modified_by'] = $this->userdata['userid'];
+			$update['date_modified'] = date('Y-m-d H:i:s');
+			$this->db->where('jobid', $jobid);
+			if ($this->db->update($this->cfg['dbpref'] . 'jobs', $update))
+			{	
+				$lead_tit = $this->welcome_model->get_job_title($jobid);
+				// echo $this->db->last_query(); print_r($lead_tit);exit;
+				$ins['userid_fk'] = $this->userdata['userid'];
+				$ins['jobid_fk'] = $jobid;
+
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				
+				$ins['log_content'] = 'The Lead "'.$lead_tit['job_title'].'" is Successfully Moved to Project.';
+				
+				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'> ' .$lead_tit['job_title'].' </a> is Successfully Moved to Project.';
+				
+				// insert the new log
+				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+				
+				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$dis['date_created'] = date('Y-m-d H:i:s');
+				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+				
+				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+					<html xmlns="http://www.w3.org/1999/xhtml">
+					<head>
+					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+					<title>Email Template</title>
+					<style type="text/css">
+					body {
+						margin: 0px;
+					}
+					</style>
+					</head>
+
+					<body>
+					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+					<tr><td bgcolor="#FFFFFF">
+					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+					  <tr>
+						<td style="padding:15px; border-bottom:2px #5a595e solid;">
+							<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+						</td>
+					  </tr>
+					  <tr>
+						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead To Project Change Notification Message</h3></td>
+					  </tr>
+
+					  <tr>
+						<td>
+						<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+						<p style="background: none repeat scroll 0 0 #4B6FB9;
+						border-bottom: 1px solid #CCCCCC;
+						color: #FFFFFF;
+						margin: 0;
+						padding: 4px;">
+							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
+						<p style="padding: 4px;">'.
+							$ins_email['log_content_email'].'<br /><br />
+							'.$this->userdata['signature'].'<br />
+						</p>
+					</div>
+					</td>
+					  </tr>
+
+					   <tr>
+						<td>&nbsp;</td>
+					  </tr>
+					  <tr>
+						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+					  </tr>
+					</table>
+					</td>
+					</tr>
+					</table>
+					</body>
+					</html>';							
+			//$mydata=$q->row();
+			$from=$this->userdata['email'];
+			$arrEmails = $this->config->item('crm');
+			$arrSetEmails=$arrEmails['director_emails'];
+			
+			$admin_mail=implode(',',$arrSetEmails);
+			
+			$subject='Lead to Project Change Notification';
+			$this->email->from($from,$user_name);
+			$this->email->to($disarray[0]['email'] .','. $lowner[0]['email']);
+			$this->email->bcc($admin_mail);
+			$this->email->subject($subject);
+			$this->email->message($log_email_content);
+			$this->email->send(); 
+			echo "{error:false}";
+			}
+			else
+			{
+				echo "{error:true, errormsg:'Database update failed!'}";
+			}	
+        }
+        else
+			{
+				echo "{error:true, errormsg:'Invalid Lead ID or Stage!'}";
+			}
+    }
+
     
     /*
      * Update the project to a given status
@@ -2791,15 +2795,7 @@ VCS Admin";*/
         if ( ($data['quote_data'] = $this->job_model->get_job($id)) !== FALSE )
         {
             $data['edit_quotation'] = true;
-			/*
-			if ($this->userdata['level'] == 4 && $data['quote_data']['belong_to'] != $this->userdata['sales_code'])
-			{
-				$this->session->set_flashdata('login_errors', array("You are not allwed to view/edit this document!"));
-				$referer = (preg_match('/^http/', $_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : $this->config->item('base_url') . 'welcome/quotation';
-				header('Location:' . $referer);
-				exit();
-			}
-			8/
+
 			/**
 			 * Check to see if this has already been downloaded by accounts
 			 */
@@ -3117,10 +3113,7 @@ VCS Admin";*/
 						<title>Email Template</title>
 						<style type="text/css">
 						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
+							margin: 0px;
 						}
 						</style>
 						</head>
@@ -3275,7 +3268,7 @@ VCS Admin";*/
 			$ins['date_modified'] = date('Y-m-d H:i:s');
 			$ins['modified_by'] = $this->userdata['userid'];
 			/* belong to assigned editing the lead owner */
-			$ins['belong_to'] = $_POST['lead_owner_edit'];
+			// $ins['belong_to'] = $_POST['lead_owner_edit'];
 		/* for onhold reason insert */	
 			$inse['log_content'] = "Lead Onhold Reason: "; 
 			$inse['log_content'] .= $_POST['reason'];
@@ -3334,10 +3327,7 @@ VCS Admin";*/
 				<title>Email Template</title>
 				<style type="text/css">
 				body {
-					margin-left: 0px;
-					margin-top: 0px;
-					margin-right: 0px;
-					margin-bottom: 0px;
+					margin: 0px;
 				}
 				</style>
 				</head>
@@ -3439,10 +3429,7 @@ VCS Admin";*/
 				<title>Email Template</title>
 				<style type="text/css">
 				body {
-					margin-left: 0px;
-					margin-top: 0px;
-					margin-right: 0px;
-					margin-bottom: 0px;
+					margin: 0px;
 				}
 				</style>
 				</head>
@@ -3589,13 +3576,17 @@ VCS Admin";*/
 				$lead_hist['modified_by'] = $this->userdata['userid'];
 				$this->db->insert('lead_stage_history', $lead_hist);
 				
+				//history - lead_status_history
+				$lead_stat_hist['jobid'] = $insert_id;
+				$lead_stat_hist['dateofchange'] = date('Y-m-d H:i:s');
+				$lead_stat_hist['changed_status'] = 1;
+				$lead_stat_hist['modified_by'] = $this->userdata['userid'];
+				$this->db->insert('lead_status_history', $lead_stat_hist);
 				$this->db->where('jobid', $insert_id);
 				$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));
 				
 				$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
-				
-				
-				
+
 				$json['error'] = false;
                 $json['fancy_insert_id'] = $invoice_no;
                 $json['insert_id'] = $insert_id;
@@ -3638,10 +3629,7 @@ VCS Admin";*/
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -3986,12 +3974,20 @@ body {
 			
 			$this->excel->getActiveSheet()->setCellValue('P'.$i, $excelarr['lead_indicator']);
 			
-			if($excelarr['lead_status'] == 1)
-			$status = 'Active';
-			else if($excelarr['lead_status'] == 2)
-			$status = 'On Hold';
-			else 
-			$status = 'Dropped';
+			switch ($excelarr['lead_status']) {
+				case 1:
+					$status = 'Active';
+				break;
+				case 2:
+					$status = 'On Hold';
+				break;
+				case 3:
+					$status = 'Dropped';
+				break;
+				case 4:
+					$status = 'Closed';
+				break;
+			}
 			
 			$this->excel->getActiveSheet()->setCellValue('Q'.$i, $status);
 
@@ -4127,34 +4123,25 @@ body {
             $sale_amount = 0;
             foreach ($q->result_array() as $row)
             {
-				//if ($price_allowed == FALSE)
-				//{
-					//$row['item_price'] = 0;
-				//}
 				
-                if (is_numeric($row['item_price']) && $row['item_price'] != 0)
-                {
+                if (is_numeric($row['item_price']) && $row['item_price'] != 0) {
                     $sale_amount += $row['item_price'];
-				$row['item_price'] = '$' . number_format($row['item_price'], 2, '.', ',');
-				$row['item_price'] = preg_replace('/^\$\-/', '-$', $row['item_price']);
-			}
-                else
-                {
+					$row['item_price'] = '$' . number_format($row['item_price'], 2, '.', ',');
+					$row['item_price'] = preg_replace('/^\$\-/', '-$', $row['item_price']);
+				} else {
                     $row['item_price'] = '';
                 }
 				
-                if ($row['hours'] > 0)
-                {
-			$row['hours'] = 'Hours : ' . $row['hours'];
-		}
-                else
-                {
+                if ($row['hours'] > 0) {
+					$row['hours'] = 'Hours : ' . $row['hours'];
+				} else {
                     $row['hours'] = '';
                 }
+				
 				if(!empty($row['item_price'])) {
-                $html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
 				} else {
-				$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
 				}
                 
             }
@@ -4336,9 +4323,9 @@ body {
 				//echo $this->db->last_query();
 				foreach ($query_for_mail->result() as $mail_id)
 				{			
-					    $mail = $mail_id->email;
-						$first_name = $mail_id->first_name;
-						$log_email_content1 = $this->get_user_mail($mail , $first_name, $type = "insert");
+					$mail = $mail_id->email;
+					$first_name = $mail_id->first_name;
+					$log_email_content1 = $this->get_user_mail($mail , $first_name, $type = "insert");
 						
 				}
 			}
@@ -4398,10 +4385,7 @@ body {
 <title>Email Template</title>
 <style type="text/css">
 body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 </style>
 </head>
@@ -4484,7 +4468,7 @@ body {
 			
 	}
 	
-	// TO BE MOVED TO A CRON JOB
+	// TO BE MOVED TO A CRON JOB - unwanted function
 	public function create_subscription_invoices()
 	{
 		error_reporting(E_ALL);
@@ -4497,7 +4481,7 @@ body {
 			$this->create_subscription_invoice_for_customer($customer['custid'], $customer);
 		}
 	}
-	
+	// unwanted function
 	public function create_subscription_invoice_for_customer($cust_id, $customer)
 	{
 		$this->load->model('subscriptions_model');
@@ -4518,6 +4502,7 @@ body {
 			
 		}
 	}
+	// unwanted function
 	public function ajax_hosting_load($jobid=false){
 		$query = $this->db->query("SELECT hostingid_fk FROM ".$this->cfg['dbpref']."hosting_job WHERE jobid_fk='{$jobid}'");
 		$t=array();
@@ -4532,6 +4517,7 @@ body {
 		}
 		return $temp;
 	}
+	// unwanted function
 	function package($tab=''){
 		switch($tab){
 			case 'quotation':
@@ -4606,7 +4592,7 @@ body {
 		//echo '<pre>';print_r($p_temp);print_r($j_temp);echo '</pre>';
 		$this->load->view('quotation_view',$data);
 	}
-	
+	// unwanted function
 	function generate_invoice(){
 		if(isset($_POST['auto_generate']) && $_POST['auto_generate']=='auto_generate'){
 			$sql1="SELECT *, DATE_SUB(DATE_ADD( NOW() , INTERVAL P.duration MONTH ) ,INTERVAL 1 DAY) AS expiry FROM ".$this->cfg['dbpref']."package P, ".$this->cfg['dbpref']."hosting as H
@@ -4826,6 +4812,7 @@ body {
 		}
 		redirect('invoice/billing/');
 	}
+	// unwanted function
 	function billing($tab=''){
 			$arr=array(4,5,6,7,25);
 			$arr=implode(',',$arr);
