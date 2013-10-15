@@ -14,20 +14,40 @@ $usernme = $this->session->userdata('logged_in_user');
 }
 </style>
 <link rel="stylesheet" href="assets/css/jquery.autocomplete.css" type="text/css" />
-<script type="text/javascript" src="assets/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<!--script type="text/javascript" src="assets/js/jquery.autocomplete.js"></script-->
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/vps.js?q=13"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
 var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
 nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
+$(function() {
+	$( "#cust_name" ).autocomplete({
+		minLength: 2, 
+		source: function(request, response) {
+			$.ajax({ 
+				url: "hosting/ajax_customer_search",
+				data: { 'cust_name': $("#cust_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+				type: "POST",
+				dataType: 'json',
+				async: false,
+				success: function(data) {
+					response( data );
+				}
+			});
+		},
+        select: function(event, ui) {
+            $('#cust_id').val(ui.item.id);
 
-$(document).ready(
-	function(){
-		$("#cust_name").autocomplete("hosting/ajax_customer_search/", { minChars:2 }).result(function(event, data, formatted) {
-			$('#cust_id').val(data[1]);
-		});
+        } 
+	});
+});
+
+$(document).ready(function() {
+		//$("#cust_name").autocomplete("hosting/ajax_customer_search/", { minChars:2 }).result(function(event, data, formatted) {
+			//$('#cust_id').val(data[1]);
+		//});
 		$('input.pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 		
 		$('input[name="domain_mgmt"]').change(function(){
@@ -45,11 +65,7 @@ $(document).ready(
 		}
 		
 		$('.modal-new-cust').click(function(){
-				$.blockUI({
-							message:nc_form_msg,
-							css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default'},
-							overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
-						});
+				$.blockUI({message: nc_form_msg, css: {width: '690px', marginLeft: '50%', left: '-345px', position: 'absolute', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default'},overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}});
 				$.get(
 					'ajax/data_forms/new_customer_form',
 					{},
@@ -66,6 +82,7 @@ $(document).ready(
 		});
 	}
 );
+
 </script>
 <div id="content">
     <!--<div id="left-menu">
