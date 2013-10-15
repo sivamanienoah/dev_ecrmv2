@@ -386,7 +386,7 @@ class Customer_model extends crm_model {
 			$strreg = $results[$table_name.'id'];
 		} else {
 			$user_Detail = $this->session->userdata('logged_in_user');
-			if($table_name == 'region') {
+			if( empty($id) && empty($cond) ) {
 				$args = array(
 					$table_name.'_name' => $ch_name,
 					'created_by' => $user_Detail['userid'],

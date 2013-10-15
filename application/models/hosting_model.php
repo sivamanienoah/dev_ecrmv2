@@ -80,16 +80,45 @@ class Hosting_model extends crm_model {
         return $this->db->update($this->cfg['dbpref'].'hosting', $data);
     }
     function insert_account($data) {
-		//echo "<pre>"; echo "model"; print_r($data); exit;
         if ( $this->db->insert($this->cfg['dbpref'].'hosting', $data) ) {
             return $this->db->insert_id();
         } else {
             return false;
         }
     }
-    function delete_account($id) {
-        $this->db->where('hostingid', $id);
-        return $this->db->delete($this->cfg['dbpref'].'hosting');
+    
+    //Below function used for delete a row from table - MAR
+    function delete_row($table, $cond, $id) {
+        $this->db->where($cond, $id);
+        return $this->db->delete($this->cfg['dbpref'].$table);
+    }
+    
+    function get_row_bycond($table, $cond, $id) {
+    	$res = $this->db->get_where($this->cfg['dbpref'].$table, array($cond => $id));
+        return $res->result_array();
+    }
+    function insert_row($table, $param) {
+    	$this->db->insert($this->cfg['dbpref'].$table, $param);
+    }
+    
+    function get_hosting($custid) {
+    	$this->db->order_by('domain_name', "asc");
+    	$res = $this->db->get_where($this->cfg['dbpref'].'hosting', array('custid_fk' => $custid));
+        return $res->result_array();
+    }
+	
+    function update_row($table, $data, $cond) {
+    	$this->db->where($cond);
+		$this->db->update($this->cfg['dbpref'].$table, $data);
+    }
+    
+    function get_host_hp($hostingid) {
+    	$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'hosting_package as HP');
+		$this->db->join($this->cfg['dbpref'].'package as P', 'HP.packageid_fk=P.package_id');
+		$cond = array('HP.hostingid_fk' => $hostingid, 'H.hostingid' => $hostingid);
+		$this->db->where('jb.jobid', $cond);
+    	return $this->db->get()->result_array();
     }
 }
 ?>
