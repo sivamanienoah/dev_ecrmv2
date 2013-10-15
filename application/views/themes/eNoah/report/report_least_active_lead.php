@@ -1,52 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<style>
-td.task {
-	width:557px;
-}
-.great-task-table, .great-task-table td {
-	border-color:#888;
-}
-.row-header td.user {
-	font-size:12px;
-}
-/* end over-ride */
-
-.choice-box {
-    width:260px;
-    padding:15px;
-    -moz-border-radius:8px;
-    -webkit-border-radius:8px;
-    background:#a8cb17;
-    float:left;
-    margin:0 35px 30px 0;
-	color:#a8cb17;
-	cursor:pointer;
-	position:relative;
-	color:#fefffd;
-	font-weight:bold;
-}
-.choice-box img {
-	position:absolute;
-	right:5px;
-	top:-20px;
-}
-.choice-box img.quote, .choice-box img.leads {
-	top:-22px;
-}
-.choice-box:hover {
-	background:#888;
-	color:#fff;
-	text-decoration:none;
-}
-.right-edge {
-    margin-right:0;
-}
-.bottom-edge {
-    margin-bottom:0;
-}
-
-</style>
 <div id="content">
 	 
     <div class="inner">

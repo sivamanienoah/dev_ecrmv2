@@ -1,25 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<style type="text/css">
-.choice-box {
-    width:260px;
-    padding:15px;
-    -moz-border-radius:8px;
-    -webkit-border-radius:8px;
-    background:#a8cb17;
-    float:left;
-    margin:0 35px 30px 0;
-	color:#a8cb17;
-	cursor:pointer;
-	position:relative;
-	color:#fefffd;
-	font-weight:bold;
-}
-.choice-box img {
-	position:absolute;
-	right:5px;
-	top:-20px;
-}
-</style>
+
 <?php $controller_uri = 'invoice'; ?>
 <div id="content">
 	<div class="inner">

@@ -1,71 +1,17 @@
 <?php
 ob_start();
-require ('tpl/header.php'); 
-//echo baseurl();
+require (theme_url().'/tpl/header.php'); 
+// echo base_url();
 ?>
 
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
-<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<style type="text/css">
-@import url(assets/css/tasks.css?q=1);
-
-/* over-ride tasks */
-td.task {
-	width:557px;
-}
-.great-task-table, .great-task-table td {
-	border-color:#888;
-}
-.row-header td.user {
-	font-size:12px;
-}
-/* end over-ride */
-
-.choice-box {
-    width:260px;
-    padding:15px;
-    -moz-border-radius:8px;
-    -webkit-border-radius:8px;
-    background:#a8cb17;
-    float:left;
-    margin:0 35px 30px 0;
-	color:#a8cb17;
-	cursor:pointer;
-	position:relative;
-	color:#fefffd;
-	font-weight:bold;
-}
-.choice-box img {
-	position:absolute;
-	right:5px;
-	top:-20px;
-}
-.choice-box img.quote, .choice-box img.leads {
-	top:-22px;
-}
-.choice-box:hover {
-	background:#888;
-	color:#fff;
-	text-decoration:none;
-}
-.right-edge {
-    margin-right:0;
-}
-.bottom-edge {
-    margin-bottom:0;
-}
-
-</style>
 
 <div id="content">
 <?php //echo '<pre>'; print_r($customers); echo '</pre>'; ?>
-<?php
-	if($this->uri->segment(1)=='production') include 'tpl/production_submenu.php'; 
-	
-?>
+
 <div class="inner">
-<?php // if($this->session->userdata('accesspage')==1) {   ?>
+<?php if($this->session->userdata('accesspage')==1) {   ?>
 <form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
 	
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -81,7 +27,6 @@ td.task {
 			<td>
 				<div class="buttons">
 					<button type="submit" class="positive">
-						
 						Search
 					</button>
 				</div>
@@ -93,7 +38,7 @@ td.task {
 $hostingid=array();
 if(!empty($hosting)){
 foreach($hosting as $val){
-	$v=$val['hostingid_fk'];$k=$val['jobid_fk'];
+	echo 'asd' . $v=$val['hostingid_fk'];$k=$val['jobid_fk'];
 	$hostingid[$k]=$v;
 }
 }
@@ -102,27 +47,6 @@ foreach($hosting as $val){
 <h2><?php if ($this->uri->segment(1) == 'production') echo 'Production ' ?>Lead Dashboard</h2>
 	
 <div style="margin-top:30px;">
-<?php
-
-//if (in_array($userdata['level'], array(0,1,2,3,4,6)))
-//{
-	//if ($this->uri->segment(1) != 'production' && in_array($userdata['level'], array(0,1,4)))
-	//{
-	?>
-	<div style="float:left; display:none;" >
-	<a class="choice-box" href="welcome/new_quote">
-		Create a New Lead
-		<img src="assets/img/icon_create_quote.png" class="icon quote" />
-	</a>
-	<a  class="choice-box" href="leads">
-		View Sales Leads
-		<img src="assets/img/icon_view_leads.png" class="icon leads" />
-	</a>
-	<a style = "display:none" class="choice-box right-edge" href="invoice">
-		View Invoices Pending Deposit
-		<img src="assets/img/icon_pending_deposit.png" class="icon pending" />
-	</a>
-	</div>
 	<a class="choice-box" onclick="advanced_filter();" >
 		Advanced Filters
 		<img src="assets/img/icon_view_leads.png" class="icon leads" />
@@ -148,11 +72,11 @@ foreach($hosting as $val){
 			<tr>	
 				<td>
 					<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
-					<?php foreach($lead_stage as $ls) { ?>
-						<?php if($ls['lead_stage_id'] <= 12) { ?>
-							<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-						<?php } //if condition- end here. ?>
-					<?php } ?>					
+						<?php foreach($lead_stage as $ls) { ?>
+						
+								<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+								
+						<?php } ?>					
 					</select> 
 				</td>
 
@@ -176,9 +100,10 @@ foreach($hosting as $val){
 				<td>
 					<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 					<?php foreach ($lead_owner as $owner){ 
-						if(!empty($owner['first_name'])) {?>
-					<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-					<?php } } ?>
+						if(!empty($owner['first_name'])) { ?>
+						<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+					<?php } 
+					} ?>
 					</select> 
 				</td>
 				
@@ -228,18 +153,17 @@ foreach($hosting as $val){
 			<input type="submit" class="positive" name="advance" value="Search" />
 			
 			</tr>
-			</tbody></table></div>
+			</tbody></table>
+			</div>
 		</form>
 	</div>
 	<div id="advance_search_results" style="clear:both" ></div>
-<?php
-	//}
-?>  
-	
+
 </div>
-<?php //} } else{
-	//echo "You have no rights to access this page";
-//}?>
+<?php } else {
+			echo "You have no rights to access this page";
+		}
+?>
 </div>
 
 </div>
@@ -361,13 +285,13 @@ function loadCountry() {
 		'choice/loadCountrys/'+ region_id,
 		{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {										
-			if (data.error) 
-			alert(data.errormsg);
-			else 
-			$("select#countryname").html(data);
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$("select#countryname").html(data);
+			}
 		}
 	);
-	
 }
 
 //For States
@@ -383,10 +307,11 @@ function loadState() {
 			'choice/loadStates/'+ coun_id,
 			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
-				if (data.error) 
-				alert(data.errormsg);
-				else 
-				$("select#statename").html(data);
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$("select#statename").html(data);
+				}
 			}
 		);
 	}
@@ -404,10 +329,11 @@ function loadLocations() {
 			'choice/loadLocns/'+ st_id,
 			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
-				if (data.error) 
-				alert(data.errormsg);
-				else 
-				$("select#locname").html(data);
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$("select#locname").html(data);
+				}
 			}
 		);
 	}
@@ -436,5 +362,5 @@ function LoadCheck($v){
 }
 </script>
 <?php
-require ('tpl/footer.php');
+require (theme_url().'/tpl/footer.php'); 
 ob_end_flush();
