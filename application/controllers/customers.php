@@ -814,20 +814,21 @@ class Customers extends crm_controller {
 						$numrows = $this->customer_model->primary_mail_check($impt_data[$i]['Q']);						
 						if($numrows != 0){
 							$email_exit[] = $impt_data[$i]['Q'];
-						} else {							
-							// Region
-							if(!empty($impt_data[$i]['I']))
-							$strreg = $this->customer_model->get_rscl_id('', '', 'region', ucwords(strtolower($impt_data[$i]['I'])));							
-							// Country
-							if(!empty($impt_data[$i]['J']))
-							$strcunt = $this->customer_model->get_rscl_id($strreg, 'regionid', 'country', ucwords(strtolower($impt_data[$i]['J'])));							
-							// State
-							if(!empty($impt_data[$i]['K']))
-							$strstate = $this->customer_model->get_rscl_id($strcunt, 'countryid', 'state', ucwords(strtolower($impt_data[$i]['K'])));							
-							// Location
-							if(!empty($impt_data[$i]['L']))
-							$strlid = $this->customer_model->get_rscl_id($strstate, 'stateid', 'location', ucwords(strtolower($impt_data[$i]['L'])));
+						} else {
 							if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $impt_data[$i]['Q'])) {
+								// Region
+								if(!empty($impt_data[$i]['I']))
+								$strreg = $this->customer_model->get_rscl_id('', '', 'region', ucwords(strtolower($impt_data[$i]['I'])));							
+								// Country
+								if(!empty($impt_data[$i]['J']))
+								$strcunt = $this->customer_model->get_rscl_id($strreg, 'regionid', 'country', ucwords(strtolower($impt_data[$i]['J'])));							
+								// State
+								if(!empty($impt_data[$i]['K']))
+								$strstate = $this->customer_model->get_rscl_id($strcunt, 'countryid', 'state', ucwords(strtolower($impt_data[$i]['K'])));							
+								// Location
+								if(!empty($impt_data[$i]['L']))
+								$strlid = $this->customer_model->get_rscl_id($strstate, 'stateid', 'location', ucwords(strtolower($impt_data[$i]['L'])));
+								//insert customers here
 								$args = array( 'first_name' => $impt_data[$i]['A'], 'last_name' => $impt_data[$i]['B'], 'position_title' => $impt_data[$i]['C'], 'company' => $impt_data[$i]['D'], 'add1_line1' => $impt_data[$i]['E'], 'add1_line2' => $impt_data[$i]['F'], 'add1_suburb' => $impt_data[$i]['G'], 'add1_postcode' => $impt_data[$i]['H'], 'add1_region' => $strreg, 'add1_country' => $strcunt, 'add1_state' => $strstate, 'add1_location' => $strlid, 'phone_1' => $impt_data[$i]['M'], 'phone_2' => $impt_data[$i]['N'], 'phone_3' => $impt_data[$i]['O'], 'phone_4' => $impt_data[$i]['P'], 'email_1' => $impt_data[$i]['Q'], 'email_2' => $impt_data[$i]['R'], 'email_3' => $impt_data[$i]['S'], 'email_4' => $impt_data[$i]['T'], 'skype_name' => $impt_data[$i]['U'], 'www_1' => $impt_data[$i]['V'], 'www_2' => $impt_data[$i]['W'], 'comments' => $impt_data[$i]['X'] );
 								$this->customer_model->insert_customer_upload($args);
 								$count=$count+1;
