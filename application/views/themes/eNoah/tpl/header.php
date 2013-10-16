@@ -42,10 +42,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <link rel="stylesheet" href="assets/css/demo_table.css" type="text/css" />
 <link rel="stylesheet" href="assets/css/quote.css?q=21" type="text/css" />
 <link rel="stylesheet" href="assets/css/smoothness/ui.all.css?q=2" type="text/css" />
-<link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" />
-
-<!--link rel="stylesheet" href="assets/css/ui-lightness/jquery-ui-1.7.2.custom.css?q=1" type="text/css" />
-<link rel="stylesheet" media="screen" href="assets/css/jquery.timepickr.css" type="text/css" / -->
+<!--link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" /latest-->
+<link rel="stylesheet" href="assets/css/ui-lightness/jquery-ui-1.7.2.custom.css?q=1" type="text/css" />
 
 <?php if(($viewLeads['view']==1) && ($this->uri->segment(1) == 'dashboard')) { ?>
 <link rel="stylesheet" type="text/css" href="assets/css/jquery.jqplot.min.css" />
@@ -57,12 +55,11 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <?php } else { ?>
-<!--  script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script -->
-<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script>
+<!--script type="text/javascript" src="assets/js/jquery.min.js"></script-->
 <?php } ?>
-
-<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
-
+<!--script type="text/javascript" src="assets/js/jquery-ui.js"></script-latest-->
+<script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 

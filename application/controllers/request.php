@@ -9,7 +9,11 @@ class Request extends crm_controller {
 	{
 		parent::__construct();
 		$this->login_model->check_login();
+
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->load->helper('lead_stage_helper');
+		$this->stg = getLeadStage();
+		$this->stages = @implode('","', $this->stg);
 	}
 	
 	function index()
@@ -42,7 +46,7 @@ class Request extends crm_controller {
 					FROM `".$this->cfg['dbpref']."customers`, `".$this->cfg['dbpref']."jobs` a
 					{$contract_join}
 					WHERE `custid_fk` = `custid`
-					AND job_status IN (1,2,3,4,5,6,7,8,9,10,11,12)
+					AND job_status IN ("'.$this->stages.'")
 					AND (
 						`job_title` LIKE '%{$keyword}%'
 						OR `invoice_no` LIKE '%{$keyword}%'

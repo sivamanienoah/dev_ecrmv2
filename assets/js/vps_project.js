@@ -43,16 +43,12 @@ function scrollElem(parentElem, tragetElem) {
     var pScroll = pOffset - divOffset;
     $(parentElem).animate({scrollTop: '+=' + pScroll + 'px'}, 1000);
 }
+
 function js_urlencode(str) {
 	return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
 }
+
 function convertProjectStatus(job_stat) {
-	//dynamically bring the hostname and project folder name.
-	var hstname = window.location.host;
-	var pathname = window.location.pathname;
-	var pth=pathname.split("/");
-	
-	//alert('project status'); return false;
     var qstatus = $('#general_convert_quote_status').val();
 	//alert(qstatus); return false;
 	$hosting=0;
@@ -60,40 +56,20 @@ function convertProjectStatus(job_stat) {
 		$hosting+=','+$(this).val();
 	});
 	if (window.confirm('Are you sure? You want to Adjust Project Stage?')) {
-        var msg;
-        if (qstatus == 13) {
-            msg = 'The Project moved to In Progress';
-        } else if (qstatus == 14) {
-			if (job_stat < 89) {
-				alert('You cannot change the project stage if the Project is not at least 90% complete!');
-				return false;
-			}
-			else {
-				msg = 'The Project moved to Completed';
-			}
-        } else if (qstatus == 15) {
-            msg = 'The Project moved to Cancelled';
-		} else if (qstatus == 16) {
-			msg = 'The Project moved to On Hold';
-        }
-		else {
-            alert('Invalid Project Status Supplied!');
-            return false;
-        }
+        var msg = "Status Successfully Changed.";
+
         $.blockUI({
             message:'<h2>Processing your request...</h2>'
         });
-		//alert('http://' + hstname + '/' + pth[1] + '/welcome/ajax_update_project/' + quote_id + '/' + qstatus + '/' + encodeURI(msg)+'/'+$hosting);
-		//$.getJSON('http://50.63.40.194/esmart/welcome/ajax_update_quote/' + quote_id + '/' + qstatus + '/' + encodeURI(msg)+'/'+$hosting,
-		//$.getJSON('http://localhost/ecrmv2/welcome/ajax_update_project/' + quote_id + '/' + qstatus + '/' + encodeURI(msg)+'/'+$hosting,
-		//$.getJSON('http://' + hstname + '/' + '/welcome/ajax_update_project/' + quote_id + '/' + qstatus + '/' + encodeURI(msg)+'/'+$hosting,
+
 		$.getJSON('welcome/ajax_update_project/' + quote_id + '/' + qstatus + '/' + encodeURI(msg)+'/'+$hosting,
             function(data){
 				if (typeof(data) == 'object'){
                     if (data.error) {
                        $.unblockUI();
                     } else {
-                        reloadWithMessage(msg);
+                        reloadWithMessagePjt(msg);
+
                     }
                 } else {
                     alert('Unexpected response from server!')
@@ -104,18 +80,8 @@ function convertProjectStatus(job_stat) {
     return false;
 }
 
-function reloadWithMessage(str) {
-	//dynamically bring the hostname and project folder name.
-	var hstname = window.location.host;
-	var pathname = window.location.pathname;
-	var pth=pathname.split("/");
-    //$.get('http://50.63.40.194/esmart/ajax/request/set_flash_data/' + str,{},function(data){
-    //$.get('http://localhost/ecrmv2/ajax/request/set_flash_data/' + str,{},function(data){
-    //$.get('http://' + hstname + '/' + pth[1] + '/ajax/request/set_flash_data/' + str,{},function(data){
+function reloadWithMessagePjt(str) {
     $.get('ajax/request/set_flash_data/' + str,{},function(data){
-		//document.location = 'http://50.63.40.194/esmart/welcome/view_quote/' + quote_id;
-		//document.location = 'http://localhost/ecrmv2/invoice/view_project/' + quote_id;
-		//document.location = 'http://' + hstname + '/' + '/invoice/view_project/' + quote_id;
 		document.location = 'invoice/view_project/' + quote_id;
 		$.unblockUI();
     });

@@ -4,8 +4,8 @@ class Welcome extends crm_controller {
 	
 	public $cfg;
 	public $userdata;
-	function __construct()
-	{
+	
+	function __construct() {
 		parent::__construct();
 		
 		$this->login_model->check_login();
@@ -32,59 +32,222 @@ class Welcome extends crm_controller {
 		redirect('welcome/quotation');
     }
 	
-	public function add_lead() {
-	    //Create Customer 		
-		if(sizeof($_POST)==0){
-		    echo 0;
-			return false;
-		}
+	/*
+	 * List all the Leads based on levels
+	 * @access public
+	 */
+	public function quotation($type = 'draft', $tab='') {
+
+		$page_label = 'Leads List' ;
 		
-		if(!empty($_POST['contact_us'])){		
-			$ins_cus['first_name']     = $_POST['firstname']; 
-			$ins_cus['last_name']      = $_POST['lastname']; 
-			$ins_cus['company']        = $_POST['organization']; 
-			$ins_cus['position_title'] = $_POST['title']; 
-			$ins_cus['email_1']        = $_POST['email']; 
-			$ins_cus['email_2']        = $_POST['businessemail']; 
-			$ins_cus['phone_1']        = $_POST['phonenumber'];
-			$ins_cus['add1_line1']     = $_POST['address'];
-			$ins_cus['comments']       = $_POST['message'];		
-		} else {		
-			$ins_cus['first_name']    = $_POST['name']; 
-			$ins_cus['email_1']       = $_POST['email']; 
-			$ins_cus['company']       = $_POST['company']; 
-			$ins_cus['comments']      = $_POST['content'];
-	    }
-	 	//insert customer and retrive last insert id
-	 	$insert_id = $this->customer_model->get_customer_insert_id($ins_cus);
-	    //Create Jobs
-		$ins['job_title']           = 'Ask the Expert';
-		$ins['custid_fk']           = $insert_id;
-		$ins['job_category']        = $_POST['job_category'];
-		//$ins['lead_source']       = '';
-		$ins['lead_assign']         = 59;
-		$ins['expect_worth_id']     = 5;
-		$ins['expect_worth_amount'] = '0.00';
-		$ins['belong_to']           = 59; // lead owner
-		// $ins['division']         = $_POST['job_division'];
-		$ins['date_created']        = date('Y-m-d H:i:s');
-		$ins['date_modified']       = date('Y-m-d H:i:s');
-		$ins['job_status']          = 1;
-		// $ins['lead_indicator']   = $_POST['lead_indicator'];
-		$ins['created_by']          = 59;
-		$ins['modified_by']         = 59;
-		$ins['lead_status']         = 1;
-		$new_job_id = $this->welcome_model->insert_job($ins);
-		if (!empty($new_job_id)) {
-			$invoice_no = (int) $new_job_id;
-			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
-			$up_args = array('invoice_no' => $invoice_no);
-			$this->welcome_model->update_job($insert_id, $up_args);
-			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
-		}
-		echo 1;
-		exit;
+		$data['lead_stage'] = $this->stg_name;
+		$data['customers'] = $this->welcome_model->get_customers();
+		$data['lead_owner'] = $this->welcome_model->get_users();
+		$data['regions'] = $this->regionsettings_model->region_list();
+		
+		$this->load->view('quotation_view', $data);
 	}
+	
+	/*
+	 * Display the Lead
+	 * @access public
+	 * @param int $id - Job Id
+	 */
+	public function view_quote($id = 0, $quote_section = '') {
+        $this->load->helper('text');
+		$this->load->helper('fix_text');
+		
+		$usid = $this->session->userdata('logged_in_user');
+		
+		$getLeadDet = $this->welcome_model->get_lead_detail($id);
+
+		if(!empty($getLeadDet)) {
+            $data['quote_data'] = $getLeadDet[0];
+            $data['view_quotation'] = true;
+			$data['user_accounts'] = $this->welcome_model->get_users();
+
+			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid']))
+			{
+				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
+				$logViewStatus = $this->welcome_model->updt_log_view_status($id, $log_view_status);
+			}
+            
+			$data['log_html'] = '';
+			$getLogs = $this->welcome_model->get_logs($id);
+            
+            if (!empty($getLogs)) {
+                $log_data = $getLogs;
+                $this->load->helper('url');
+                
+                foreach ($log_data as $ld) {
+                    $this->db->where('userid', $ld['userid_fk']);
+                    $user = $this->db->get($this->cfg['dbpref'] . 'users');
+                    $user_data = $user->result_array();
+					
+					if (count($user_data) < 1)
+					{
+						echo '<!-- ', print_r($ld, TRUE), ' -->'; 
+						continue;
+					}
+                    
+                    $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $ld['log_content'])))), 'url', TRUE));
+                    
+					$fancy_date = date('l, jS F y h:iA', strtotime($ld['date_created']));
+					
+					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';					
+					
+//Code Changes for the Pagination in Comments Section -- Starts here.
+$table = <<<HDOC
+<tr id="log" class="log{$stick_class}">
+<td id="log" class="log{$stick_class}">
+<p class="data log{$stick_class}">
+        <span class="log{$stick_class}">{$fancy_date}</span>
+    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
+    </p>
+    <p class="desc log{$stick_class}">
+        {$log_content}
+    </p>
+</td>
+</tr>
+HDOC;
+//Code Changes for the Pagination in Comments Section -- Ends here.
+                    $data['log_html'] .= $table;
+					unset($table, $user_data, $user, $log_content);
+                }
+            }
+			
+			/**
+			 * Get files associated with this job
+			 **/
+			$fcpath = dirname(FCPATH) . '/';
+			$f_dir = $fcpath . 'vps_data/' . $id . '/';
+			$data['job_files_html'] = $this->welcome_model->get_job_files($f_dir, $fcpath,$data['quote_data']);
+			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
+			
+			/**
+			 * Get URLs associated with this job
+			 */
+			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
+			
+			/*
+			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
+								FROM `{$this->cfg['dbpref']}items`
+								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
+			// echo $this->db->last_query(); exit;
+			$data['actual_worth'] = $actual_worths->result_array();	
+			*/
+
+			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
+			
+			$this->load->view('welcome_view_quote', $data);
+        } else {
+            echo "Quote does not exist or if you are an account manager you may not be authorised to view this";
+        }
+    }
+	
+	 /*
+     * provides the list of items
+     * that belong to a given job
+     * @param jobid
+     * @param itemid (latest intsert)
+     * @return echo json string
+     */
+    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false)
+    {
+	$this->load->helper('text');
+	$this->load->helper('fix_text');
+        
+        $this->db->where('jobid_fk', $jobid);
+        $this->db->order_by('item_position', 'asc');
+        $q = $this->db->get($this->cfg['dbpref'] . 'items');
+
+        #define the users who can see the prices
+		//$price_allowed = ( in_array($this->userdata['level'], array(0, 1, 2, 4, 5)) ) ? TRUE : FALSE;
+        
+        if ($q->num_rows() > 0)
+        {
+            $html = '';
+            $sale_amount = 0;
+            foreach ($q->result_array() as $row)
+            {
+				
+                if (is_numeric($row['item_price']) && $row['item_price'] != 0) {
+                    $sale_amount += $row['item_price'];
+					$row['item_price'] = '$' . number_format($row['item_price'], 2, '.', ',');
+					$row['item_price'] = preg_replace('/^\$\-/', '-$', $row['item_price']);
+				} else {
+                    $row['item_price'] = '';
+                }
+				
+                if ($row['hours'] > 0) {
+					$row['hours'] = 'Hours : ' . $row['hours'];
+				} else {
+                    $row['hours'] = '';
+                }
+				
+				if(!empty($row['item_price'])) {
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
+				} else {
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
+				}
+                
+            }
+			
+            
+            $json['sale_amount'] = '$' . number_format($sale_amount, 2, '.', ',');
+            $json['gst_amount'] = ($sale_amount > 0) ? '$' . number_format($sale_amount/10, 2, '.', ',') : '$0.00';
+			
+            $json['total_inc_gst'] = '$' . number_format($sale_amount*1.1, 2, '.', ',');
+            $json['numeric_total_inc_gst'] = $sale_amount*1.1;
+			
+            $json['error'] = false;
+            $json['html'] = $html;
+			
+			$json['deposits'] = $json['deposit_balance'] = '$0.00';
+			$deposit_total = 0;
+			
+			$this->db->where('jobid_fk', $jobid);
+			$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
+			//if ($deposits->num_rows() > 0 && $price_allowed)
+			if ($deposits->num_rows() > 0)
+			{
+				$deposits_data = $deposits->result_array();
+				foreach ($deposits_data as $dd)
+				{
+					$deposit_total += $dd['amount'];
+				}
+				
+				$json['deposits'] = '$' . number_format($deposit_total, 2, '.', ',');
+			}
+			
+			$json['deposit_balance'] = '$' . number_format($json['numeric_total_inc_gst'] - $deposit_total, 2, '.', ',');
+			$json['deposit_balance'] = preg_replace('/^\$\-/', '-$', $json['deposit_balance']);
+            
+        }
+        else
+        {
+            
+            $json['sale_amount'] = '0.00';
+            $json['gst_amount'] = '0.00';
+            $json['total_inc_gst'] = '0.00';
+            $json['error'] = false;
+            $json['html'] = '';
+            
+        }
+        
+        $json['itemid'] = $itemid;
+		
+        if ($return)
+        {
+            return json_encode($json);
+        }
+        else
+        {
+            echo json_encode($json);
+        }
+        
+    }
+	
 	
     /*
 	 * Create a new quote
@@ -122,61 +285,7 @@ class Welcome extends crm_controller {
 		$this->load->view('welcome_view', $data);
 	}
 	
-	/*
-	 * List quotations
-	 * @access public
-	 * @param string $type - specify the list you want to display
-	 */
-	public function quotation($type = 'draft', $return = FALSE, $tab='') {
-		
-		$this->load->helper('text');
-
-		$data['lead_stage'] = $this->stg_name;
-		$data['quote_section'] = $type;	
-
-		// $job_status = "`job_status` IN (1,2,3,4,5,6,7,8,9,10,11,12)";
-		$job_status = "`job_status` IN ('".$this->stg."')";
-		$page_label = 'Leads List' ;
-
-		
-		$restrict = '';
-
-		# restrict contractors		
-		
-			
-		if($_POST['keyword'] != 'Lead No, Job Title, Name or Company') {
-			if(isset($_POST['keyword']) && strlen($_POST['keyword'])>0 ) {
-				$search.=" AND ( J.invoice_no='{$_POST['keyword']}' || J.job_title LIKE '%{$_POST['keyword']}%' || C.company LIKE '%{$_POST['keyword']}%' || C.first_name LIKE '%{$_POST['keyword']}%' || C.last_name='{$_POST['keyword']}' )";
-			}
-		}
-		// $usid = $this->session->userdata['logged_in_user']['userid'];
-		// if (($this->session->userdata['logged_in_user']['role_id'] != '1') && ($this->session->userdata['logged_in_user']['level'] != 1)) {
-			// $res1 = $this->welcome_model->get_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
-			// $res2 =  $this->welcome_model->get_leadowner_results($usid, $cnt_join1, $job_status, $cnt_join, $search, $restrict);
-			// $records = array_merge_recursive($res1, $res2);
-			// $record = array_map("unserialize", array_unique(array_map("serialize", $records)));
-			// $data['records'] = $record;
-		// } else {
-			// $data['records'] = $this->welcome_model->get_another_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict);
-		// }
-		// $temp[]=0;
-		
-		// foreach($data['records'] as $val) {
-			// $temp[]=$val['jobid']; 
-		// }
-		// $temp=implode(',',$temp);
-		// $data['hosting'] = $this->welcome_model->get_hosting_job($temp);
-		$data['customers'] = $this->welcome_model->get_customers();
-		$order_by = 'first_name';
-		$data['lead_owner'] = $this->welcome_model->get_lead_owner($order_by);
-		$data['regions'] = $this->regionsettings_model->region_list();
-        if ($return === TRUE) {
-			// return $data['records'];
-		} else {
-			// $this->load->view('quotation_view', $data);
-		}	
-		$this->load->view('quotation_view', $data);
-	}
+	
 
 	/*For Project Module -- Start here*/
 	
@@ -216,13 +325,6 @@ class Welcome extends crm_controller {
 			}
             $data['log_html'] = '';	
 	
-
-
-
-
-
-
-	
 			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$this->db->where('jobid', $data['quote_data']['jobid']);
@@ -256,16 +358,6 @@ class Welcome extends crm_controller {
 					$fancy_date = date('l, jS F y h:iA', strtotime($ld['date_created']));
 					
 					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';
-					
-
-					
-					
-					
-					
-					
-					
-					
-					
 					
 					
 $table = <<<HDOC
@@ -339,9 +431,9 @@ HDOC;
 			/**
 			 * Get Dev QC q's
 			 */
-			$data['dev_qc_list'] = $this->welcome_model->get_qc_list(1);
-			$data['is_qc_complete'] = $this->welcome_model->get_qc_complete_status($id, 1);
-			$data['job_dev_qc_history'] = $this->welcome_model->get_qc_history($id, 1);
+			// $data['dev_qc_list'] = $this->welcome_model->get_qc_list(1);
+			// $data['is_qc_complete'] = $this->welcome_model->get_qc_complete_status($id, 1);
+			// $data['job_dev_qc_history'] = $this->welcome_model->get_qc_history($id, 1);
 			$data['hosting']=$this->ajax_hosting_load($id);
 			/**
 			 * If we get a type,
@@ -611,199 +703,7 @@ On behalf of the client and from supplied business details including official tr
 		} */					
 		
 	}
-    /*
-	 * Display the quote
-	 * @access public
-	 * @param int $id - Job Id
-	 */
-	public function view_quote($id = 0, $quote_section = '')
-	{
-        $this->load->helper('text');
-		$this->load->helper('fix_text');
-		
-		$usid = $this->session->userdata('logged_in_user');
-		//echo "<pre>"; print_r($usid); exit;
-			$sql = "SELECT *,cus.first_name as cfn,cus.last_name as cln,reg.regionid,coun.countryid,st.stateid,loc.locationid
-                FROM {$this->cfg['dbpref']}customers AS cus, {$this->cfg['dbpref']}jobs AS j,{$this->cfg['dbpref']}expect_worth AS ew, {$this->cfg['dbpref']}lead_source AS ls, {$this->cfg['dbpref']}users AS u, {$this->cfg['dbpref']}lead_stage AS lst,
-				{$this->cfg['dbpref']}region as reg,
-				{$this->cfg['dbpref']}country as coun, 
-				{$this->cfg['dbpref']}state as st ,
-				{$this->cfg['dbpref']}location as loc 
-				
-                WHERE cus.custid = j.custid_fk AND j.expect_worth_id = ew.expect_worth_id AND j.lead_source = ls.lead_source_id  AND j.lead_assign = u.userid AND jobid = '{$id}' AND j.job_status = lst.lead_stage_id  AND reg.regionid = cus.add1_region AND coun.countryid = cus.add1_country AND st.stateid = cus.add1_state AND loc.locationid  =  cus.add1_location LIMIT 1"; 
-				//exit;			
-        $q = $this->db->query($sql);
-		//echo $this->db->last_query(); exit;
-        if ($q->num_rows() > 0)
-        {
-            $result = $q->result_array();
-            $data['quote_data'] = $result[0];
-            $data['view_quotation'] = true;
-			
-			$this->db->where('jobid_fk', $result[0]['jobid']);
-			$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
-			
-			$temp_cont = $cq->result_array();
-			
-			$data['assigned_contractors'] = array();
-			
-			foreach ($temp_cont as $tc)
-			{
-				$data['assigned_contractors'][] = $tc['userid_fk'];
-			}
-            
-            $data['log_html'] = '';
-			
-
-			
-			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid']))
-			{
-				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
-				$this->db->where('jobid', $data['quote_data']['jobid']);
-				$this->db->update($this->cfg['dbpref'] . 'jobs', $log_view_status);
-			}
-            
-            $this->db->where('jobid_fk', $data['quote_data']['jobid']);
-            $this->db->order_by('date_created', 'desc');
-            $logs = $this->db->get($this->cfg['dbpref'] . 'logs');
-            
-            if ($logs->num_rows() > 0)
-            {
-                $log_data = $logs->result_array();
-                $this->load->helper('url');
-                
-                foreach ($log_data as $ld)
-                {
-                    
-                    $this->db->where('userid', $ld['userid_fk']);
-                    $user = $this->db->get($this->cfg['dbpref'] . 'users');
-                    $user_data = $user->result_array();
-					
-					if (count($user_data) < 1)
-					{
-						echo '<!-- ', print_r($ld, TRUE), ' -->'; 
-						continue;
-					}
-                    
-                    $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $ld['log_content'])))), 'url', TRUE));
-                    
-					$fancy_date = date('l, jS F y h:iA', strtotime($ld['date_created']));
-					
-					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';					
-					
-                    /*$table = <<<HDOC
-<div class="log{$stick_class}">
-    <p class="data">
-        <span>{$fancy_date}</span>
-    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
-    </p>
-    <p class="desc">
-        {$log_content}
-    </p>
-</div>
-HDOC;*/
-//Code Changes for the Pagination in Comments Section -- Starts here.
-$table = <<<HDOC
-<tr id="log" class="log{$stick_class}">
-<td id="log" class="log{$stick_class}">
-<p class="data log{$stick_class}">
-        <span class="log{$stick_class}">{$fancy_date}</span>
-    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
-    </p>
-    <p class="desc log{$stick_class}">
-        {$log_content}
-    </p>
-</td>
-</tr>
-HDOC;
-//Code Changes for the Pagination in Comments Section -- Ends here.
-                    $data['log_html'] .= $table;
-					unset($table, $user_data, $user, $log_content);
-                }
-            }
-			
-			$data['user_accounts'] = array();
-			
-			$users = $this->db->get($this->cfg['dbpref'] . 'users');
-			if ($users->num_rows() > 0)
-			{
-				$data['user_accounts'] = $users->result_array();
-			}
-			
-			if ($data['quote_data']['payment_terms'] == 1)
-			{
-				$this->db->where('jobid_fk', $data['quote_data']['jobid']);
-				$this->db->order_by('expected_date', 'asc');
-				$this->db->order_by('percentage', 'desc');
-				$payment_terms = $this->db->get($this->cfg['dbpref'] . 'expected_payments');
-				$data['payment_data'] = array();
-				if ($payment_terms->num_rows() > 0)
-				{
-					$data['payment_data'] = $payment_terms->result_array();
-				}
-			}
-			
-			$this->db->where('jobid_fk', $data['quote_data']['jobid']);
-			$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
-			if ($deposits->num_rows() > 0)
-			{
-				$data['deposits_data'] = $deposits->result_array();
-			}
-			
-			/**
-			 * Get files associated with this job
-			 */
-			$fcpath = dirname(FCPATH) . '/';
-			$f_dir = $fcpath . 'vps_data/' . $id . '/';
-			$data['job_files_html'] = $this->welcome_model->get_job_files($f_dir, $fcpath,$data['quote_data']);
-			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
-			
-			/**
-			 * Get URLs associated with this job
-			 */
-			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
-			
-			/**
-			 * Get Dev QC q's
-			 */
-			$data['dev_qc_list'] = $this->welcome_model->get_qc_list(1);
-			$data['is_qc_complete'] = $this->welcome_model->get_qc_complete_status($id, 1);
-			$data['job_dev_qc_history'] = $this->welcome_model->get_qc_history($id, 1);
-			$data['hosting']=$this->ajax_hosting_load($id);
-			
-			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
-								FROM `{$this->cfg['dbpref']}items`
-								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
-			//echo $this->db->last_query(); exit;
-			$data['actual_worth'] = $actual_worths->result_array();	
-
-			$lead_owners = $this->db->query("SELECT ua.userid, ja.belong_to, ua.first_name AS uafn, ua.last_name AS ualn
-													FROM ".$this->cfg['dbpref']."jobs AS ja
-													JOIN ".$this->cfg['dbpref']."users AS ua ON ua.userid = ja.belong_to
-													WHERE ja.jobid = '{$id}'");
-			$data['lead_owner'] = $lead_owners->result_array();
-			
-			$query = $this->db->query("SELECT u.first_name FROM ".$this->cfg['dbpref']."jobs j JOIN ".$this->cfg['dbpref']."users as u ON j.belong_to = u.userid WHERE j.jobid = 66");
-			$data['lead_owns'] = $lead_owners->result_array();
-			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
-			/**
-			 * If we get a type,
-			 * we can get the list of jobs too
-			 */
-			 //echo $quote_section;
-			if ($quote_section != '')
-			{
-				//$data['jobs_under_type'] = $this->quotation($quote_section, TRUE);
-			}
-			
-		  $this->load->view('welcome_view_quote', $data);
-        }
-        else
-        {
-            echo "Quote does not exist or if you are an account manager you may not be authorised to view this";
-        }
-        
-    }
+    
 	
 	/*
      * View the quote by itself
@@ -4098,108 +3998,7 @@ body {
             }
         }
     }
-    /*
-     * provides the list of items
-     * that belong to a given job
-     * @param jobid
-     * @param itemid (latest intsert)
-     * @return echo json string
-     */
-    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false)
-    {
-	$this->load->helper('text');
-	$this->load->helper('fix_text');
-        
-        $this->db->where('jobid_fk', $jobid);
-        $this->db->order_by('item_position', 'asc');
-        $q = $this->db->get($this->cfg['dbpref'] . 'items');
-
-        #define the users who can see the prices
-		//$price_allowed = ( in_array($this->userdata['level'], array(0, 1, 2, 4, 5)) ) ? TRUE : FALSE;
-        
-        if ($q->num_rows() > 0)
-        {
-            $html = '';
-            $sale_amount = 0;
-            foreach ($q->result_array() as $row)
-            {
-				
-                if (is_numeric($row['item_price']) && $row['item_price'] != 0) {
-                    $sale_amount += $row['item_price'];
-					$row['item_price'] = '$' . number_format($row['item_price'], 2, '.', ',');
-					$row['item_price'] = preg_replace('/^\$\-/', '-$', $row['item_price']);
-				} else {
-                    $row['item_price'] = '';
-                }
-				
-                if ($row['hours'] > 0) {
-					$row['hours'] = 'Hours : ' . $row['hours'];
-				} else {
-                    $row['hours'] = '';
-                }
-				
-				if(!empty($row['item_price'])) {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
-				} else {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
-				}
-                
-            }
-			
-            
-            $json['sale_amount'] = '$' . number_format($sale_amount, 2, '.', ',');
-            $json['gst_amount'] = ($sale_amount > 0) ? '$' . number_format($sale_amount/10, 2, '.', ',') : '$0.00';
-			
-            $json['total_inc_gst'] = '$' . number_format($sale_amount*1.1, 2, '.', ',');
-            $json['numeric_total_inc_gst'] = $sale_amount*1.1;
-			
-            $json['error'] = false;
-            $json['html'] = $html;
-			
-			$json['deposits'] = $json['deposit_balance'] = '$0.00';
-			$deposit_total = 0;
-			
-			$this->db->where('jobid_fk', $jobid);
-			$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
-			//if ($deposits->num_rows() > 0 && $price_allowed)
-			if ($deposits->num_rows() > 0)
-			{
-				$deposits_data = $deposits->result_array();
-				foreach ($deposits_data as $dd)
-				{
-					$deposit_total += $dd['amount'];
-				}
-				
-				$json['deposits'] = '$' . number_format($deposit_total, 2, '.', ',');
-			}
-			
-			$json['deposit_balance'] = '$' . number_format($json['numeric_total_inc_gst'] - $deposit_total, 2, '.', ',');
-			$json['deposit_balance'] = preg_replace('/^\$\-/', '-$', $json['deposit_balance']);
-            
-        }
-        else
-        {
-            
-            $json['sale_amount'] = '0.00';
-            $json['gst_amount'] = '0.00';
-            $json['total_inc_gst'] = '0.00';
-            $json['error'] = false;
-            $json['html'] = '';
-            
-        }
-        
-        $json['itemid'] = $itemid;
-		
-        if ($return)
-        {
-            return json_encode($json);
-        }
-        else
-        {
-            echo json_encode($json);
-        }
-        
-    }
+   
     
     /*
      * saves the new positions items
@@ -5125,6 +4924,63 @@ body {
 			<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
 			<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
 		</form>';
+	}
+	
+	/*
+	*Lead from eNoah Website
+	*/
+	public function add_lead() {
+	    //Create Customer 		
+		if(sizeof($_POST)==0){
+		    echo 0;
+			return false;
+		}
+		
+		if(!empty($_POST['contact_us'])){		
+			$ins_cus['first_name']     = $_POST['firstname']; 
+			$ins_cus['last_name']      = $_POST['lastname']; 
+			$ins_cus['company']        = $_POST['organization']; 
+			$ins_cus['position_title'] = $_POST['title']; 
+			$ins_cus['email_1']        = $_POST['email']; 
+			$ins_cus['email_2']        = $_POST['businessemail']; 
+			$ins_cus['phone_1']        = $_POST['phonenumber'];
+			$ins_cus['add1_line1']     = $_POST['address'];
+			$ins_cus['comments']       = $_POST['message'];		
+		} else {		
+			$ins_cus['first_name']    = $_POST['name']; 
+			$ins_cus['email_1']       = $_POST['email']; 
+			$ins_cus['company']       = $_POST['company']; 
+			$ins_cus['comments']      = $_POST['content'];
+	    }
+	 	//insert customer and retrive last insert id
+	 	$insert_id = $this->customer_model->get_customer_insert_id($ins_cus);
+	    //Create Jobs
+		$ins['job_title']           = 'Ask the Expert';
+		$ins['custid_fk']           = $insert_id;
+		$ins['job_category']        = $_POST['job_category'];
+		//$ins['lead_source']       = '';
+		$ins['lead_assign']         = 59;
+		$ins['expect_worth_id']     = 5;
+		$ins['expect_worth_amount'] = '0.00';
+		$ins['belong_to']           = 59; // lead owner
+		// $ins['division']         = $_POST['job_division'];
+		$ins['date_created']        = date('Y-m-d H:i:s');
+		$ins['date_modified']       = date('Y-m-d H:i:s');
+		$ins['job_status']          = 1;
+		// $ins['lead_indicator']   = $_POST['lead_indicator'];
+		$ins['created_by']          = 59;
+		$ins['modified_by']         = 59;
+		$ins['lead_status']         = 1;
+		$new_job_id = $this->welcome_model->insert_job($ins);
+		if (!empty($new_job_id)) {
+			$invoice_no = (int) $new_job_id;
+			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
+			$up_args = array('invoice_no' => $invoice_no);
+			$this->welcome_model->update_job($insert_id, $up_args);
+			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
+		}
+		echo 1;
+		exit;
 	}
 }
 ?>

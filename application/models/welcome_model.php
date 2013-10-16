@@ -13,12 +13,9 @@ class Welcome_model extends crm_model {
     /**
      * get the lead details
      */
-    public function get_lead($leadid, $belong_to = FALSE)
-    {
+    public function get_lead($leadid, $belong_to = FALSE) {
 		$owner_only = ($belong_to == FALSE) ? '' : " AND `belong_to` = '" . mysql_real_escape_string($belong_to) . "' ";
-        $sql = "SELECT *
-					FROM `{$this->cfg['dbpref']}leads`, `{$this->cfg['dbpref']}customers`
-					WHERE `custid` = `custid_fk` AND `leadid` = ? {$owner_only} LIMIT 1";
+        $sql = "SELECT * FROM `{$this->cfg['dbpref']}leads`, `{$this->cfg['dbpref']}customers` WHERE `custid` = `custid_fk` AND `leadid` = ? {$owner_only} LIMIT 1";
 			
 		$q = $this->db->query($sql, array($leadid));
         
@@ -32,6 +29,56 @@ class Welcome_model extends crm_model {
             return FALSE;
         }
     }
+	
+	/*
+	*Get the Lead Detail
+	*/
+	public function get_lead_detail($leadid) {
+	
+		$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_category, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
+		j.proposal_expected_date, j.proposal_sent_date, j.log_view_status, c.*, c.first_name AS cfn, c.last_name AS cln, rg.region_name, coun.country_name, 
+		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
+		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name');
+		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
+		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
+		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
+		$this->db->join($this->cfg['dbpref'] . 'users as own', 'own.userid = j.belong_to');
+		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
+		$this->db->join($this->cfg['dbpref'] . 'country as coun', 'coun.countryid = c.add1_country');
+		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = c.add1_state');
+		$this->db->join($this->cfg['dbpref'] . 'location as loc', 'loc.locationid = c.add1_location');
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
+		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'] . 'lead_source as lsrc', 'lsrc.lead_source_id = j.lead_source');
+		$this->db->where('j.jobid = "'.$leadid.'" AND j.job_status IN ("'.$this->stages.'")');
+		$this->db->where('j.pjt_status', 0);
+		
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); exit;
+	    $res =  $sql->result_array();
+	    return $res;
+	}
+	
+	function get_users() {
+    	$this->db->select('userid,first_name,level,role_id,inactive');
+    	$this->db->order_by('first_name', "asc");
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+		// echo $this->db->last_query();exit; 
+		return $q->result_array();
+    }
+	
+	function updt_log_view_status($id, $log) {
+		$this->db->where('jobid', $id);
+		return $this->db->update($this->cfg['dbpref'] . 'jobs', $log);
+	}
+	
+	function get_logs($id) {
+		$this->db->order_by('date_created', 'desc');
+		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
+		return $query->result_array();
+	}
     
     public function get_job($filter = array())
     {
@@ -176,8 +223,7 @@ class Welcome_model extends crm_model {
 			</td></tr>
 			';
 	   }
-		  
-        
+
         return $data['query_files1_html'];
     }
     public function get_job_urls($jobid)
@@ -206,47 +252,7 @@ class Welcome_model extends crm_model {
         return $html;
         
     }
-	
-	/**
-	 * $type 1 = web dev, 2 = web design, 3 = graphic design
-	 */
-	// unwanted function
-	public function get_qc_list($type = 1)
-	{
-		$q = $this->db->get_where($this->cfg['dbpref'].'quality_checklist', array('qc_type' => $type));
-		return $q->result_array();
-	}
-    // unwanted function
-	public function get_qc_complete_status($jobid, $type = 1)
-	{
-		$this->db->limit(1);
-		$this->db->order_by('date', 'desc');
-		$q = $this->db->get_where($this->cfg['dbpref'].'quality_control', array('jobid_fk' => $jobid, 'qc_type' => $type));
-		
-		if ($q->num_rows() > 0)
-		{
-			$data = $q->row();
-			if ($data->is_complete == 1)
-			{
-				return $data->id;
-			}
-		}
-		
-		return FALSE;
-	}
-	// unwanted function
-	public function unset_qc_complete_status($qcid)
-	{
-		$this->db->where('id', $qcid);
-		return $this->db->update($this->cfg['dbpref'].'quality_control', array('is_complete' => 0));
-	}
-	// unwanted function
-	public function get_qc_history($jobid, $type = 1)
-	{
-		$this->db->order_by('date', 'desc');
-		$q = $this->db->get_where($this->cfg['dbpref'].'quality_control', array('jobid_fk' => $jobid, 'qc_type' => $type));
-		return $q->result_array();
-	}
+
 	
 	public function get_lead_stage()
 	{
@@ -929,60 +935,9 @@ class Welcome_model extends crm_model {
     	return $q->result_array();
     }
     
-    function get_lead_results($args, $job_status, $cnt_join, $search, $restrict) {
-    	$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-		(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-		FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$args} `{$this->cfg['dbpref']}customers` AS C
-		LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk WHERE C.`custid` = J.`custid_fk` AND C.`add1_region` IN(".$this->session->userdata['region_id'].")";
-		if($this->session->userdata['countryid'] != '') {
-		$sql .= " AND C.`add1_country` IN(".$this->session->userdata['countryid'].")";
-		}
-		if($this->session->userdata['stateid'] != '') {
-		$sql .= " AND C.`add1_state`  IN(".$this->session->userdata['stateid'].") ";
-		}
-		if($this->session->userdata['locationid'] != '') {
-		$sql .= " AND C.`add1_location` IN(".$this->session->userdata['locationid'].") ";
-		}
-		//$sql .= "OR (J.belong_to = '".$curusid."' AND  J.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12))";
-		$sql .= " AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} 
-        GROUP BY `jobid` ORDER BY `belong_to`, `date_created`";
-		$rows = $this->db->query($sql);
-		return $rows->result_array();
-    }
-    function get_leadowner_results($usid, $cnt_join1, $job_status, $cnt_join, $search, $restrict) {
-    	$lead_cond = "AND J.belong_to = '".$usid."'";
-    	$leadownerquery = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-		(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-		FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
-		LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk
-		WHERE C.`custid` = J.`custid_fk` AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} {$lead_cond}
-		GROUP BY `jobid` ORDER BY `belong_to`, `date_created`";
-		$leadowner_rows = $this->db->query($leadownerquery);
-		return $leadowner_rows->result_array(); 
-    }
-    function get_another_lead_results($cnt_join1, $job_status, $cnt_join, $search, $restrict) {
-    	$sql = "SELECT *, LS.lead_stage_name, SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`,
-		(SELECT SUM(`amount`) FROM `".$this->cfg['dbpref']."deposits` WHERE `jobid_fk` = `jobid` GROUP BY jobid) AS `deposits`
-        FROM `{$this->cfg['dbpref']}items`, `{$this->cfg['dbpref']}jobs` AS J, `{$this->cfg['dbpref']}lead_stage` as LS, {$cnt_join1} `{$this->cfg['dbpref']}customers` AS C
-		LEFT JOIN `{$this->cfg['dbpref']}hosting` as H ON C.custid=H.custid_fk WHERE C.`custid` = J.`custid_fk` AND LS.lead_stage_id = J.job_status AND `jobid` = `{$this->cfg['dbpref']}items`.`jobid_fk` AND {$job_status}{$cnt_join} {$search} {$restrict} 
-        GROUP BY `jobid` ORDER BY `belong_to`, `date_created`";
-		$rows = $this->db->query($sql);
-		echo $this->db->last_query();
-		return $rows->result_array();	
-    }
-    
-    
-	function get_lead_owner($order) {
-    	$this->db->select('userid,first_name');
-    	if(!empty($order))
-    	$this->db->order_by($order, "asc");
-		$q = $this->db->get($this->cfg['dbpref'] . 'users');
-		//echo $this->db->last_query();exit; 
-		return $q->result_array();
-    }
     
     function get_user_byrole($role_id) {
-    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>$role_id))->result_array();
+    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
     	return $users;
     }
     

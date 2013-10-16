@@ -2011,55 +2011,8 @@ EOD;
 		return $html;
 	}
 	
-	function confirm_qc_check()
-	{
-		$data['jobid_fk'] = $_POST['jobid'];
-		$data['is_complete'] = ($_POST['complete'] == 'yes') ? 1 : 0;
-		$data['userid_fk'] = $this->userdata['userid'];
-		$data['date'] = date('Y-m-d H:i:s');
-		$data['qc_type'] = $_POST['qc_type'];
-		$data['event_data'] = (isset($_POST['event_data'])) ? $_POST['event_data'] : NULL;
-		
-		$json['error'] = 'Record Insert Failed!';
-		
-		if ($this->db->insert($this->cfg['dbpref'].'quality_control', $data))
-		{
-			$json['error'] = FALSE;
-		}
-		
-		echo json_encode($json);
-	}
+
 	
-	function undo_qc_check()
-	{
-		$this->load->model('welcome_model');
-		$is_complete = $this->welcome_model->get_qc_complete_status((int) $_POST['jobid'], (int) $_POST['qc_type']);
-		
-		if ($this->userdata['is_pm'] != 1 )
-		{
-			$json['error'] = 'Only the production manager OR the managing director can cancel the QC list!';
-			echo json_encode($json);
-			exit;
-		}
-		
-		if ($is_complete !== FALSE && is_numeric($is_complete))
-		{
-			if ($this->welcome_model->unset_qc_complete_status($is_complete))
-			{
-				$json['error'] = FALSE;
-			}
-			else
-			{
-				$json['error'] = 'Record Update Failed!';
-			}
-		}
-		else
-		{
-			$json['error'] = 'This job QC is not marked complete!';
-		}
-		
-		echo json_encode($json);
-	}
 	function get_packages($hostingid=0){
 		if($hostingid==0) return false;
 		$q=$this->db->query("SELECT * FROM ".$this->cfg['dbpref']."hosting_package HP, ".$this->cfg['dbpref']."package P WHERE P.package_id=HP.packageid_fk && HP.hostingid_fk={$hostingid} && P.status='active'");

@@ -374,45 +374,6 @@ body { margin: 0px; }
 		echo json_encode($data);
 	}
 	
-	//unwanted function
-	public function get_csr_status($job_id = 0)
-	{
-		$q = $this->db->get_where($this->cfg['dbpref'].'jobs', array('jobid' => $job_id));
-		
-		$json['in_csr'] = 0;
-		if ($q->num_rows() > 0)
-		{
-			$data = $q->row();
-			if ($data->in_csr == 1)
-			{
-				$json['in_csr'] = 1;
-			}
-		}
-		
-		echo json_encode($json);
-	}
-	
-	//unwanted function
-	public function set_csr_status()
-	{
-		$jobid = 0;
-		$ins['in_csr'] = 0;
-		
-		if (isset($_POST['in_csr']) && $_POST['in_csr'] == 1)
-		{
-			$ins['in_csr'] = 1;
-		}
-		
-		if (isset($_POST['jobid']))
-		{
-			$jobid = (int) $_POST['jobid'];
-		}
-		
-		$this->db->where('jobid', $jobid);
-		$this->db->update($this->cfg['dbpref'].'jobs', $ins);
-		
-		$this->get_csr_status($jobid);
-	}
 	
 	public function get_pm_profile($profile_id = 0)
 	{

@@ -2,6 +2,7 @@
 ?>
 
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<!--script type="text/javascript" src="assets/js/jquery.blockUI.js"></script-->
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/vps.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
@@ -71,7 +72,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 </style>
 <script type="text/javascript">
 var unid = <?php  echo $userdata['userid'] ; ?>;
-var belong_to = <?php echo $lead_owner[0]['belong_to'] ; ?>;
+var belong_to = <?php echo $quote_data['belong_to'] ; ?>;
 var lead_assign = <?php echo $quote_data['lead_assign'] ; ?>;
 var role_id = <?php echo $userdata['role_id'] ; ?>;
 	
@@ -81,7 +82,7 @@ job_categories['not_select'] = '';
 job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
 <?php } ?>
 
-var hourly_rate = <?php echo  $cfg['hourly_rate'] ?>;
+var hourly_rate = <?php echo $cfg['hourly_rate'] ?>;
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
@@ -162,7 +163,6 @@ function addLog() {
 	if ($('#attach_pdf').is(':checked')) {
 		form_data.attach_pdf = true;
 	}
-	
 	
 	if ($('#ignore_content_policy').is(':checked')) {
 		form_data.ignore_content_policy = true;
@@ -269,157 +269,6 @@ function prepareForClient() {
 	return false;
 }
 
-function setPaymentTerms() {
-	
-	$('#sp_form_jobid').val(curr_job_id);
-	
-	var invoice_total = parseFloat($('#sp_form_invoice_total').val());
-	
-	var perc1 = parseInt($('#sp_perc_1').val());
-	var perc2 = parseInt($('#sp_perc_2').val());
-	var perc3 = parseInt($('#sp_perc_3').val());
-	
-	if (isNaN(perc1)) perc1 = 0;
-	if (isNaN(perc2)) perc2 = 0;
-	if (isNaN(perc3)) perc3 = 0;
-	
-	var perc_total = perc1 + perc2 + perc3;
-	
-	var valid_date = true;
-	var date_entered = true;
-	var errors = [];
-	
-	if (
-			($.trim($('#sp_date_1').val()) != '' && ! $('#sp_date_1').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-			|| ($.trim($('#sp_date_2').val()) != '' && ! $('#sp_date_2').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-			|| ($.trim($('#sp_date_3').val()) != '' && ! $('#sp_date_3').val().match(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/))
-	   )
-	{
-		valid_date = false;
-	}
-	
-	if (
-			($.trim($('#sp_date_1').val()) == '' && perc1 > 0)
-			|| ($.trim($('#sp_date_2').val()) == '' && perc2 > 0)
-			|| ($.trim($('#sp_date_3').val()) == '' && perc3 > 0)
-	   )
-	{
-		date_entered = false;
-	}
-	
-	if ($('#sp_form_jobid').val() == 0) {
-		errors.push('Invoice not properly loaded!');
-	}
-	
-	if (isNaN(invoice_total) || invoice_total < 1) {
-		errors.push('Invoice total not properly captured!');
-	}
-	
-	if (perc_total != 100) {
-		errors.push('Make sure the percentage values add up to 100%');
-	}
-	
-	if (valid_date == false) {
-		errors.push('You have an invalid date');
-	}
-	
-	if (date_entered == false) {
-		errors.push('You need to enter dates relating to the percentage values');
-	}
-	
-	if (errors.length > 0) {
-		
-		alert(errors.join('\n'));
-		return false;
-		
-	} else {
-		
-		$.blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
-		
-		var form_data = $('#set-payment-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-		
-		$.post(
-			'welcome/set_payment_terms',
-			form_data,
-			function(data) {
-				if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('.payment-profile-view:visible').slideUp(400);
-						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-					}
-				} else {
-					alert('Unexpected response from server!')
-				}
-				$.unblockUI();
-			},
-			'json'
-		);
-		
-	}
-}
-
-/*function addDepositPayment() {
-	$('#deposit_form_jobid').val(curr_job_id);
-	var dep_amount = $('#deposit_amount_add').val();
-	if (!dep_amount.match(/^[0-9]+(\.[0-9]{1,2})?$/))
-	{
-		alert('Invalid amount supplied!');
-		return false;
-	} else {
-		
-		$.blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
-		
-		var form_data = $('#set-deposits').serialize();
-		
-		$.post(
-			'welcome/add_deposit_payments',
-			form_data,
-			function(data) {
-				if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('.add-deposit-view:visible').slideUp(400);
-						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-					}
-				} else {
-					alert('Unexpected response from server!')
-				}
-				$.unblockUI();
-			},
-			'json'
-		);
-		
-	}
-	return false;
-}
-
-var deposit_form_block = true;
-<?php
-if (isset($userdata) && $userdata['level'] == 5)
-{
-	?>
-	deposit_form_block = true;
-	<?php
-}
-?>
-function checkForAccounts() {
-	if (!deposit_form_block) {
-		$('#set-deposits').block({
-            message:'<h4>Accounting Access Only</h4>',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333', width:'200px', top:'10px'}
-        });
-		deposit_form_block = true;
-	}
-} */
 
 function fullScreenLogs() {
 	var fsl_height = parseInt($(window).height()) - 80;
@@ -871,42 +720,6 @@ function getPMProfileImage()
 			);
 }
 
-//unwanted function
-function getProjectCSR()
-{
-	$.getJSON(
-				'ajax/production/get_csr_status/' + curr_job_id,
-				{},
-				function(data)
-				{
-					var csr_status = 0;
-					
-					if (typeof(data) == 'object')
-					{
-						csr_status = data.in_csr;
-					}
-					
-					manageCSRStatus(csr_status);
-				}
-			);
-}
-//unwanted function
-function manageCSRStatus(status)
-{
-	if (status == 1)
-	{
-		$('#project-in-csr-icon').html('<img src="assets/img/dollar-large.png" alt="In CSR" />');
-		$('#project-csr-include-tick').attr('checked', true);
-		$('h5.project-csr-label span').text('[ Included in CSR ]');
-	}
-	else
-	{
-		$('#project-in-csr-icon').html('');
-		$('#project-csr-include-tick').attr('checked', false);
-		$('h5.project-csr-label span').text('[ NOT Included in CSR ]');
-	}
-	$('.project-csr-change:visible').hide(200);
-}
 
 //unwanted function
 /* function to add the auto log */
@@ -920,27 +733,6 @@ function qcOKlog() {
 	$('#add-log-submit-button').click();
 }
 
-//unwanted function
-function setProjectCSR()
-{
-	var in_csr = ($('#project-csr-include-tick').is(':checked')) ? 1 : 0;
-	$.post(
-			'ajax/production/set_csr_status/',
-			{'in_csr': in_csr, 'jobid': curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-			function(data)
-			{
-				var csr_status = 0;
-					
-				if (typeof(data) == 'object')
-				{
-					csr_status = data.in_csr;
-				}
-				
-				manageCSRStatus(csr_status);
-			},
-			'json'
-	);
-}
 
 
 $(function(){
@@ -1001,9 +793,6 @@ $(function(){
 			return false;
 		});
 	});
-	
-	// get CSR status
-	getProjectCSR();
 	
 	// set profile picture
 	getPMProfileImage();
@@ -1211,22 +1000,11 @@ function setContractorJob()
 	return false;
 }
 
-/*
-$(window).load(function(){
-	setInterval(get_silent_logs, 60 * 2000);
-});
-*/
 
 </script>
 
 <style type="text/css">
-#jv-tab-8 .task-list-item td {
-	padding:2px 10px;
-}
-#jv-tab-8 .task-list-item tr.complete td {
-	background:green;
-	color:#fff;
-}
+
 .project-csr-change {
 	display:none;
 }
@@ -1260,7 +1038,6 @@ $(window).load(function(){
 </style>
 
 <div id="content">
-<?php //echo "<pre>"; print_r($lead_owner); echo "</pre>" ?>
     <?php
 	if ($this->session->userdata('logged_in') == true)
 	{
@@ -1340,7 +1117,7 @@ $(window).load(function(){
 			?>
 			
 		<?php 
-		if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
+		if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
 			<form id="comm-log-form">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1441,37 +1218,6 @@ $(window).load(function(){
 					}
 					</script>
 					
-					<?php if (isset($userdata) && in_array($userdata['level'], array(0,1,4,5))) { ?>
-					<!--<input type="checkbox" name="attach_pdf" id="attach_pdf" /> <label for="attach_pdf" class="normal">Attach document as PDF</label> &nbsp;
-					
-					<table border="0" cellpadding="0" cellspacing="0" style="display:none;" class="download-invoice-option-log">
-						<tr>
-							<td>
-								&nbsp;Use a custom date<br />
-								<input type="text" class="textfield width200px pick-date" name="use_custom_date" value="<?php echo date('d-m-Y', strtotime($date_used)) ?>" readonly="readonly" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;Adjust current payment due<br />
-								<input type="text" class="textfield width200px" name="balance_due" value="" id="new-balance-due-log" />
-								<input type="hidden" name="ex_balance_due" value="" id="ex-balance-due-log" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;<input type="checkbox" name="ignore_content_policy" id="ignore_content_policy" /> <label for="ignore_content_policy" class="normal">Don't attach content policy to PDF</label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;Add a description - 100 characters<br />
-								<input type="text" class="textfield width250px" name="custom_description" value="" maxlength="100" />
-							</td>
-						</tr>
-					</table>
-					<br /> -->
-					<?php } ?>
 					<input type="checkbox" name="email_to_customer" id="email_to_customer" /> <label for="email_to_customer" class="normal">Email Client</label>
 					<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
 					<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
@@ -1510,61 +1256,17 @@ $(window).load(function(){
 			?>
 			
 				<div class="user-addresses">
-					<!--<p><label>Email to:</label>
 					<?php
-						if (isset($userdata) && $userdata['level'] == 1)
-						{
-							?>
-							&nbsp; <input type="checkbox" name="enable_post_profile" value="1" id="enable_post_profile" /> <label for="enable_post_profile">Enable "Post to Staff Profile" (does not work yet!)</label>
-							<?php
-						}
-						?>
-					</p>-->
-					<?php
-					$post_profile_options = '';
-					
-					if (isset($userdata) && $userdata['level'] < 3)
-					{
-						$post_profile_record = array(
-												"-5" => 'Critical Error',
-												"-4" => 'Substantial Error',
-												"-3" => 'General Error',
-												"-2" => 'Warning',
-												"-1" => 'Notice',
-												"0" => 'Do not post',
-												"1" => 'Good',
-												"2" => 'Very Good',
-												"3" => 'Great Work',
-												"4" => 'Excellent Work',
-												"5" => 'Outstanding Work'
-											);
-					
-						foreach ($post_profile_record as $ppk => $ppv)
-						{
-							$ppk_selected = ($ppk == 0) ? ' selected="selected"' : '';
-							$post_profile_options .= "<option value=\"{$ppk}\" class=\"ppcol{$ppk}\"{$ppk_selected}>{$ppv} ({$ppk})</option>";
-						}
-					}
-					//echo "<pre>"; print_r($user_accounts);
-					//echo "<pre>"; print_r($lead_owner); echo "</pre>";
-					//echo "<pre>";print_r($quote_data);
-					//echo "Lead Owner : ".$quote_data['lead_owns'];
+				
+					// echo "<pre>"; print_r($user_accounts);
+
 					/* check the condition if role_id = 1 (admin) and role_id = 2 (management)  and leadowner and lead assigned to  */
 					if (count($user_accounts)) foreach ($user_accounts as $ua)
 					{
-						if (
-							( ($ua['level'] == 4 && $ua['sales_code'] == $quote_data['belong_to']) || $ua['level'] != 4 )
-							&&
-							( ($ua['level'] == 6 && in_array($ua['userid'], $assigned_contractors)) || $ua['level'] != 6)
-							&&
-							( $ua['inactive'] != 1)
-							&&  (($quote_data['belong_to'] == $ua['userid']) || ($ua['role_id'] == 1) || ($ua['role_id'] == 2) || ($quote_data['lead_assign'] == $ua['userid']) || ($quote_data['assigned_to'] == $ua['userid']))
-						   )
-						{
-							$is_pm = ($ua['is_pm'] == 1) ? ' production-manager-user' : '';
+						if ( (($ua['level'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
 							echo '<span class="user">' .
-									'<input type="checkbox" name="email-log-' . $ua['userid'] . '" id="email-log-' . $ua['userid'] . '" class="' . $is_pm . '" /> <label for="email-log-' . $ua['userid'] . '">' . $ua['first_name'] . ' ' . $ua['last_name'] . '</label>' .
-									'<select name="post_profile_' . $ua['userid'] . '" class="post-profile-select">' . $post_profile_options . '</select></span>';
+							'<input type="checkbox" name="email-log-' . $ua['userid'] . '" id="email-log-' . $ua['userid'] . '" /> <label for="email-log-' . $ua['userid'] . '">' . $ua['first_name'] . ' ' . $ua['last_name'] . '</label>
+							</span>';
 						}
 					}
 					?>
@@ -1663,7 +1365,7 @@ $(window).load(function(){
 				<?php //} ?>	
 				
 				
-           <?php //echo '<pre>'; print_r($actual_worth); echo '</pre>'; ?>
+           <?php //echo 'asdf<pre>'; print_r($actual_worth); echo '</pre>'; ?>
                 <div class="q-init-details">
                     <p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
 					<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
@@ -1671,7 +1373,7 @@ $(window).load(function(){
 					<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 					<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 							<?php
-								if($quote_data['actual_worth_amount'] != '0.00') 
+								if($quote_data['actual_worth_amount'] != '0.00')
 								$amount = $quote_data['actual_worth_amount'];
 								else 
 								$amount = $actual_worth[0]['project_cost']; 
@@ -1680,8 +1382,8 @@ $(window).load(function(){
 					</span>
 					</p>
 					<p class="clearfix"><label>Division </label><span><?php echo $cfg['sales_divisions'][$quote_data['division']] ?></span></p>
-					<p class="clearfix"><label>Lead Owner </label> <span><?php echo $lead_owner[0]['uafn'];?></span></p>
-					<p class="clearfix"><label>Lead Assigned To </label><span><?php echo  $quote_data['first_name'] ?></span></p>
+					<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
+					<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
 					<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
 					<p class="clearfix"><label>Lead Status </label>
 						<span> 
@@ -1719,7 +1421,7 @@ $(window).load(function(){
 				
 				
 				//print_r($quote_data);
-				if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
+				if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
 				{
 					?>
 					<div class="buttons" style="overflow:hidden; padding-bottom:10px; margin:10px 0 0;">
@@ -1731,27 +1433,16 @@ $(window).load(function(){
 
 				?>
 			</div>
-					
-			<?php
-			/**
-			 * This will include the select box that changes the status of a job
-			 */
-			// if ( in_array($userdata['level'], array(0,1,4)) && in_array($quote_data['job_status'], array(1003)))
-			//include 'tpl/status_change_menu.php';
-			
-			?>
 			
 			<p id="temp">&nbsp;</p>
 			<ul id="job-view-tabs">
 				
-				<!--li><a href="#jv-tab-1">Accounts</a></li-->
 				<li><a href="#jv-tab-001">Lead History</a></li>
 				<li><a href="#jv-tab-2">Estimate</a></li>
 				<li><a href="#jv-tab-3" >Files</a></li>
 				<li><a href="#jv-tab-4" >Tasks</a></li>
 				<li><a href="#jv-tab-4-5">Milestones</a></li>
 				<li><a href="#jv-tab-5">Customer</a></li>
-				<li style="display:none"><a href="#jv-tab-8">QC</a></li>
 				<li><a href="#jv-tab-9">Query</a></li>
 				
 				
@@ -1769,140 +1460,8 @@ $(window).load(function(){
 					<?php } ?>
 				</table>
 			</div>
-			<div id="jv-tab-1" style ="display:none";>
-				<div class="q-view-main-top">
-					<?php
-					if ($quote_data['payment_terms'] == 1 && isset($payment_data) && isset($userdata) && $userdata['level'] < 6)
-					{
-						
-						?>
-						<div class="payment-terms-mini-view">
-							<h3>Agreed Payment Terms</h3>
-							<?php
-							$pdi = 1;
-							$pt_select_box = '<option value="0"> &nbsp; </option>';
-							foreach ($payment_data as $pd)
-							{
-								$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
-								$payment_amount = number_format($pd['amount'], 2, '.', ',');
-								$payment_received = '';
-								if ($pd['received'] == 1)
-								{
-									$payment_received = '<img src="assets/img/vcs-payment-received.gif" alt="received" />';
-								}
-								echo "<p><strong>Payment #{$pdi}</strong> &raquo; {$pd['percentage']}% by {$expected_date} = \${$payment_amount} {$payment_received}</p>";
-								$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . "\${$payment_amount} - {$pd['percentage']}% by {$expected_date}" . '</option>';
-								$pdi ++;
-							}
-							?>
-						</div>
-						<?php
-					}
-					?>
-					
-					<p>
-					<?php
-					if ($quote_data['payment_terms'] == 0 && $quote_data['job_status'] > 3 && $quote_data['job_status'] < 6 && isset($userdata) && $userdata['level'] < 3)
-					{
-						?>
-						<a href="#" onclick="$('.payment-profile-view').slideToggle(); return false;">Set Payment Terms</a>
-						<?php
-					}
-					?>
-					<?php
-					/*
-					if (isset($quote_data) && $quote_data['job_status'] > 3 && isset($userdata) && ($userdata['level'] < 3 || $userdata['level'] == 5))
-					{
-						?>
-						<!-- &nbsp;&nbsp; | &nbsp;&nbsp; <a href="quotation/invoice_data_zip/<?php echo  $quote_data['jobid'] ?>">Get MYOB data</a> -->
-						&nbsp;&nbsp; | &nbsp;&nbsp; <a href="#" onclick="$('.add-deposit-view').slideToggle(400, checkForAccounts); return false;">Deposits and Payment Profile</a>
-						<?php
-					}
-					*/
-					?>
-					</p>
-				<?php
-				if ($quote_data['payment_terms'] == 0 && $quote_data['job_status'] < 6)
-				{
-					?>
-					<div class="payment-profile-view">
-						<form id="set-payment-terms">
-						
-							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						
-							<p>Payment #1 <input type="text" name="sp_date_1" id="sp_date_1" class="textfield pick-date" /> <input type="text" name="sp_perc_1" class="textfield" id="sp_perc_1" size="3" value="" /> % <span id="sp_subt_view1"></span></p>
-							<p>Payment #2 <input type="text" name="sp_date_2" id="sp_date_2" class="textfield pick-date" /> <input type="text" name="sp_perc_2" class="textfield" id="sp_perc_2" size="3" value="" /> % <span id="sp_subt_view2"></span></p>
-							<p>Payment #3 <input type="text" name="sp_date_3" id="sp_date_3" class="textfield pick-date" /> <input type="text" name="sp_perc_3" class="textfield" id="sp_perc_3" size="3" value="" /> % <span id="sp_subt_view3"></span></p>
-							<div class="buttons">
-								<button type="submit" class="positive" onclick="setPaymentTerms(); return false;">Set Payment Terms</button>
-							</div>
-							<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-							<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-						</form>
-					</div>
-					<?php
-				}
-				?>
-				<?php
-				if (isset($quote_data) && in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)))
-				{
-					?>
-				<div class="add-deposit-view">
-					<?php
-					if (isset($deposits_data) && $sensitive_information_allowed)
-					{
-						?>
-						<div class="payments-history">
-							<h3>Payment profile history</h3>
-							<?php
-							foreach ($deposits_data as $depd)
-							{
-								?>
-								<p><span class="amount">$<?php echo number_format($depd['amount'], 2, '.', ',') ?></span> on <?php echo date('d-m-Y', strtotime($depd['deposit_date'])), '.'; if ($depd['comments'] != '') echo " ({$depd['comments']})"; ?></p>
-								<?php
-							}
-							?>
-						</div>
-						<?php
-					}
-					if ($sensitive_information_allowed)
-					{
-					?>
-						<form id="set-deposits">
-							
-							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						
-							<p>Deposit amount<br /><input type="text" name="deposit_amount_add" id="deposit_amount_add" class="textfield width200px" /></p>
-							<?php
-							if (isset($pt_select_box))
-							{
-								?>
-							<p>Map to a payment term<br /><select name="deposit_map_field" style="width:210px;"><?php echo $pt_select_box ?></select></p>
-								<?php
-							}
-							?>
-							<p>Deposit Date<br /><input type="text" name="deposit_date" id="deposit_date" class="textfield  width200px pick-date" /></p>
-							<p>Comments<br /><input type="text" name="deposit_comments" id="deposit_comments" class="textfield  width200px" /></p>
-							<?php if(in_array($userdata['level'], array(0,1,5))){?>
-							<div class="buttons">
-								<button type="submit" class="positive" onclick="addDepositPayment(); return false;">Add Deposit</button>
-							</div>
-							<?php } ?>
-							<input type="hidden" name="deposit_form_jobid" id="deposit_form_jobid" value="0" />
-							<input type="hidden" name="belong_to" value="<?php echo $quote_data['belong_to'] ?>" />
-						</form>
-						<?php
-					}
-					?>
-				</div>
-					<?php
-				}
-				?>
-					
-				</div><!-- class:q-view-main-top end -->
-			</div><!-- id: jv-tab-1 end -->
+			
 			<div id="jv-tab-2">
-
 				<!--<p style="text-align:right;"><a href="#" onclick="$('.download-invoice-option').slideToggle('fast'); return false;"><img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a></p> -->
 				<!-- Changes done for Google chrome toggle issue-->
 				<p style="text-align:right;"><a href="#" onclick="downloadCustomPDF(); return false;">
@@ -1979,7 +1538,7 @@ $(window).load(function(){
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
-				<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
+				<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
 					<div id="upload-container">
 						<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
 						<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
@@ -1998,7 +1557,7 @@ $(window).load(function(){
 			</div><!-- id: jv-tab-3 end -->
 			
 			<div id="jv-tab-4">
-			<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
+			<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
 				<form id="set-job-task" onsubmit="return false;">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -2240,7 +1799,7 @@ $(window).load(function(){
 							<input type="hidden" name="hidden_taskid" />
 							</td>
 						</tr>
-						<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 ) { ?>
+						<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 ) { ?>
 						<tr>
 							<td>
 								<div class="buttons">
@@ -2297,7 +1856,7 @@ $(window).load(function(){
 						<tbody>
 						</tbody>
 					</table>
-					<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
+					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
 					<div class="buttons">
 						<button type="submit" class="positive" onclick="addMilestoneField();">Add New</button>
 						<button type="submit" class="positive" onclick="saveMilestones();">Save List</button>
@@ -2536,241 +2095,64 @@ $(window).load(function(){
 						</td>
 					</tr>
 					
-					<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 ) { ?>
-					<!--<tr>
-						<td>&nbsp;</td>
-						<td><a style="background:#B6D04A;color: #FFFFFF;outline: medium none;padding: 4px 8px;" href="customers/add_customer/update/<?php echo $quote_data['custid'] ?>">Edit Customer Details</a></td>
-					</tr>-->
-						<?php
-					}
-					?>
 				</table>
 				</form>
 			</div><!-- id: jv-tab-5 end -->
-			
-
-			<div id="jv-tab-8">
-				<form id="qc-checklist-dev" style="overflow:hidden; margin-bottom:15px; zoom:1;" onsubmit="return false">
 				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<div class="dev-checklist-control"<?php if ($is_qc_complete != FALSE) echo ' style="display:none;"' ?>>
-						<table border="0" class="task-list-item" id="qc-checklist-dev-items">
-							<?php
-							foreach ($dev_qc_list as $dqc)
-							{
-								?>
-							<tr>
-								<td><?php echo $dqc['question'] ?></td>
-								<td><input type="checkbox" name="dev_qc<?php echo $dqc['questionid'] ?>" value="<?php echo $dqc['question'] ?>" /></td>
-							</tr>
-								<?php
-							}
-							?>
-						</table>
-						<div class="buttons">
-							<button type="submit" class="positive" onclick="confirmDevQC();">Submit</button>
-						</div>
-					</div>
-					
-					<div class="dev-checklist-info"<?php if ($is_qc_complete == FALSE) echo ' style="display:none;"' ?>>
-						<p class="qc-complete">This job has been marked as QC completed.</p>
-						<div class="buttons">
-							<button type="submit" class="negative" onclick="undoDevQC();">Cancel QC confirmation</button>
-						</div>
-					</div>
-					
-				</form>
-				<script>
-				var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
-				$(function() {
-					$('#jv-tab-8 .task-list-item input:checkbox').change(function(){
-						if ($(this).is(':checked'))
-						{
-							$(this).parent().parent().addClass('complete');
-						}
-						else
-						{
-							$(this).parent().parent().removeClass('complete');
-						}
-					});
-				});
-				
-				function confirmDevQC()
-				{
-					var project_manager = parseInt(job_project_manager);
-					
-					if (isNaN(project_manager) || parseInt(project_manager) == 0)
-					{
-						alert('Project manager is not selected for this job!\nPlease organise a project manager before confirming QC for the job.');
-						return false;
-					}
-					
-					if (isNaN(parseInt(job_complete_percentage)) || parseInt(job_complete_percentage) < 90)
-					{
-						alert('You cannot complete QC if the job is not at least 90% complete!');
-						return false;
-					}
-					
-					var incomplete = '';
-					$('#qc-checklist-dev-items input:not(:checked)').each(function(){
-						incomplete += '\n- ' + $(this).val();
-					});
-					
-					if (incomplete == '')
-					{
-						if (window.confirm('All the items have been checked.\nBy selecting "OK" you are confirming that\nthe Quality Control checklist has been verified.'))
-						{
-							$('#jv-tab-8').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-							$.post(
-									'ajax/request/confirm_qc_check/',
-									{jobid: curr_job_id, qc_type: 1, complete: 'yes','<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-									function(data)
-									{
-										if ( ! data.error)
-										{
-											$('#qc-checklist-dev .dev-checklist-control').hide();
-											$('#qc-checklist-dev .dev-checklist-info').show();
-											
-											// all good! Place a log
-											var msg = "All the quality control items have been checked and verified for this job.\nIt is OK to send a link to the client.";
-											// get adrian@ (6)
-											$('#job_log').val(msg);
-											$('.user .production-manager-user, #email-log-'+project_manager).attr('checked', true);
-											addLog();
-										}
-										else
-										{
-											alert(data.error);
-										}
-										
-										// unblock the UI
-										$('#jv-tab-8').unblock();
-									},
-									'json'
-							);
-						}
-					}
-					else
-					{
-						if (window.confirm('There are incomplete items on the list.\n Would you like to notify the staff and place a log?'))
-						{
-							$('#job_log').focus().val('There are incomplete items on the list.\nJob:' + qc_job_title + '\n' +  incomplete);
-							$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-						}
-						
-						$.post(
-								'ajax/request/confirm_qc_check/',
-								{jobid: curr_job_id, qc_type: 1, complete: 'no', event_data: incomplete,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-								function(data)
-								{
-									
-								}
-						);
-					}
-					
-					return false;
-				}
-				
-				function undoDevQC()
-				{
-					if (window.confirm('Are you sure?'))
-					{
-						$('#jv-tab-8').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-							$.post(
-									'ajax/request/undo_qc_check/',
-									{jobid: curr_job_id, qc_type: 1,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-									function(data)
-									{
-										if ( ! data.error)
-										{
-											$('#qc-checklist-dev .dev-checklist-control').show();
-											$('#qc-checklist-dev .dev-checklist-info').hide();
-										}
-										else
-										{
-											alert(data.error);
-										}
-										$('#jv-tab-8').unblock();
-									},
-									'json'
-							);
-					}
-				}
-				</script>
-			</div><!-- id: jv-tab-8 end -->
-			<!-- id: jv-tab-9 start -->
-			<?php //echo "<pre>"; print_r($quote_data); ?>
-			<div id="jv-tab-9">		
+			<div id="jv-tab-9"> <!-- id: jv-tab-9 start -->
 						
 			<div id="querylead_form" style="border:0px solid;" >
-			<form id="querylead" name="querylead" method="post" onsubmit="return QueryAjaxFileUpload();">
-			
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-			<h3>Query</h3>
-			<table id="querylead_table" class="layout add_query" style="display: none">								
-				<tr>
-					<td width="120">Query:</td>
-					<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
-					<td width="300"><textarea name="query" id="query" cols="20" rows="3" ></textarea></td>
-				</tr>
-				<tr>
-				<td width="120">Attachment File:</td>
-				<td><input type="file" class="textfield" id="query_file" name="query_file" /></td>
-				</tr>
-				<tr><td>
-				<input type="submit" name="query_sub" value="Submit" class="positive" />
-				<input type="button" name="query_sub" value="Cancel" class="cancel" />
-				</td></tr>
-			</table>
-			<?php if ($lead_owner[0]['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
-			<div class="buttons task-init  toggler">
-				<button type="button" class="positive" onclick="$('#querylead_table').slideToggle();">Raise Query</button>
-			</div>
-			<?php } ?>
-			<table id="lead_query_list" class="existing-query-list">
-			<thead> </thead>
-				<!--<tbody id="querylist"></tbody>-->
-				<tbody id="query-file-list"><tr id="querylist"></tr><?php echo $query_files1_html; ?></tbody>
-			</table>
-			<!--<div class="existing-query-list">
-			<p><?php #echo '&nbsp;'; ?> </p>
-				<ul id="querylist"></ul>
-				<ul id="query-file-list"><?php #echo $query_files1_html; ?></ul>
-			</div>
-			<script>
-				$(function(){
-
-				$('ul#query-file-list').easyPaginate({
-				});
-
-				});    
-			</script>-->
-			<?php if (!empty($query_files1_html)) { ?>
-			<div id="pager1">
-				<?php echo '&nbsp;';?>
-				<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-				<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-				<select class="pagesize"> 
-					<option selected="selected" value="10">10</option> 
-					<option value="20">20</option> 
-					<option value="30">30</option> 
-					<option value="40">40</option> 
-				</select> 
-			</div>
-			<?php } ?>
-			</form>
+				<form id="querylead" name="querylead" method="post" onsubmit="return QueryAjaxFileUpload();">
+				
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					
+					<h3>Query</h3>
+					<table id="querylead_table" class="layout add_query" style="display: none">								
+						<tr>
+							<td width="120">Query:</td>
+							<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
+							<td width="300"><textarea name="query" id="query" cols="20" rows="3" ></textarea></td>
+						</tr>
+						<tr>
+							<td width="120">Attachment File:</td>
+							<td><input type="file" class="textfield" id="query_file" name="query_file" /></td>
+						</tr>
+						<tr>
+							<td>
+								<input type="submit" name="query_sub" value="Submit" class="positive" />
+								<input type="button" name="query_sub" value="Cancel" class="cancel" />
+							</td>
+						</tr>
+					</table>
+					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
+						<div class="buttons task-init  toggler">
+							<button type="button" class="positive" onclick="$('#querylead_table').slideToggle();">Raise Query</button>
+						</div>
+					<?php } ?>
+					
+					<table id="lead_query_list" class="existing-query-list">
+					<thead> </thead>
+						<tbody id="query-file-list"><tr id="querylist"></tr><?php echo $query_files1_html; ?></tbody>
+					</table>
+					
+					<?php if (!empty($query_files1_html)) { ?>
+						<div id="pager1">
+							<?php echo '&nbsp;';?>
+							<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+							<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+							<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
+							<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+							<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+							<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
+							<select class="pagesize"> 
+								<option selected="selected" value="10">10</option> 
+								<option value="20">20</option> 
+								<option value="30">30</option> 
+								<option value="40">40</option> 
+							</select> 
+						</div>
+					<?php } ?>
+				</form>
 			</div>
 			<script>
 				$(function(){
@@ -2781,52 +2163,6 @@ $(window).load(function(){
 			</script>
 			
 		</div>
-		
-		
-			
-			<!-- id: jv-tab-9 end -->
-			<!--<?php //if($this->uri->segment(4)=='package')  { ?>
-			<div id="jv-tab-9">
-				<form id="Package">
-				<table class="layout">
-					<tr><td width="120">Package Name:</td>
-						<td width="300"><input type="text" id="package_name" value="" class="textfield width200px" readonly="readonly"/></td>
-					</tr>
-					<tr><td>Package Price:</td>
-						<td><input type="text" id="package_price" value="" class="textfield width200px" readonly="readonly"/></td>
-					</tr>
-					<tr><td>Duration:</td>
-						<td><input type=text id="duration" class="textfield width200px" readonly="readonly"></td>
-					</tr>
-					<tr>
-						<td>Quotation details : </td>
-						<td><textarea id="details" rows="10" cols="60" readonly="readonly"></textarea></td>
-					</tr>
-				</table>
-				</form>
-				<script>
-				function populatePackage()
-				{
-					$('#jv-tab-9').block({message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-					});
-					$v=$('#hosting option:selected').val();
-					if($v>0){
-					$.getJSON('ajax/request/get_packages/' + $v,{},function(detail){
-						if(detail.error!=''){
-							$('#Package #package_name').val(detail.package_name);
-							$('#Package #package_price').val(detail.package_price);
-							$('#Package #duration').val(detail.duration+' Months');
-							$('#Package #details').val(detail.details);
-						}
-						$('#jv-tab-9').unblock();
-					});
-					}
-					else $('#jv-tab-9').unblock();
-				}
-				</script>
-			</div><!-- id: jv-tab-9 end -->
-			<?php //} ?>
         </div>
 	</div>
 </div>

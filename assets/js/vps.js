@@ -43,63 +43,49 @@ function populateQuote(jobid, nosort) {
         )
     }
 }
+
 function scrollElem(parentElem, tragetElem) {
     var divOffset = $(parentElem).offset().top;
     var pOffset = $(tragetElem).offset().top;
     var pScroll = pOffset - divOffset;
     $(parentElem).animate({scrollTop: '+=' + pScroll + 'px'}, 1000);
 }
+
 function js_urlencode(str) {
 	return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
 }
-function convertQuoteStatus() {
 
+function convertQuoteStatus() {
     var qstatus = $('#general_convert_quote_status').val();
-	$hosting=0;
-	$('#hosting option:selected').each(function(){
-		$hosting+=','+$(this).val();
+	
+	$.blockUI({
+		message:'<h2>Processing your request...</h2>'
 	});
-        $.blockUI({
-            message:'<h2>Processing your request...</h2>'
-        });
-		//alert('http://192.168.0.235:85/vcs/welcome/ajax_update_quote/' + quote_id + '/' + qstatus + '/' +$hosting);
-		$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus,
-            function(data){
-				if (typeof(data) == 'object') {
-                    if (data.error) {
-						alert(data.errormsg);
-						$.unblockUI();
-						window.location.href = "welcome/edit_quote" + "/" + quote_id +"/";
-						//alert('status Changed');
-                    } else {
-						//alert(qstatus);
-						if (qstatus == 13) {
-							//alert('test'); return false;
-							reloadWithMessage('Lead is Successfully Converted to Project!',qstatus);
-						} else {
-							reloadWithMessage('Status Changed Successfully',qstatus);
-						}
-                    }
-                } else {
-                    alert('Unexpected response from server!')
-                    $.unblockUI();
-                }
-            });
-   
-} 
+	
+	$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus,
+	function(data) {
+		if (typeof(data) == 'object') {
+			if (data.error) {
+				alert(data.errormsg);
+				$.unblockUI();
+				window.location.href = "welcome/edit_quote" + "/" + quote_id +"/";
+				//alert('status Changed');
+			} else {
+				reloadWithMessage('Status Changed Successfully', qstatus);
+			}
+		} else {
+			alert('Unexpected response from server!')
+			$.unblockUI();
+		}
+	});
+}
+
 
 function reloadWithMessage(str, statusid) {
-if (statusid == 13) {
 	$.get('ajax/request/set_flash_data/' + str,{},function(data){
-			document.location.href = 'invoice/view_project/' + quote_id + '/';
-			$.unblockUI();
-		});
-} else {
-		$.get('ajax/request/set_flash_data/' + str,{},function(data){
-			document.location.href = 'welcome/view_quote/' + quote_id;
-			$.unblockUI();
-		});
-	}	
+		document.location.href = 'welcome/view_quote/' + quote_id;
+		$.unblockUI();
+	});
 }
 /**
  * Quotation overlay
