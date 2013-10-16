@@ -971,11 +971,6 @@ class Welcome_model extends crm_model {
 		return $rows->result_array();	
     }
     
-    function get_hosting_job($job_ids) {
-    	$this->db->where_in('jobid_fk', $job_ids);
-    	$q = $this->db->get($this->cfg['dbpref'] . 'hosting_job');
-    	return $q->result_array();
-    }
     
 	function get_lead_owner($order) {
     	$this->db->select('userid,first_name');

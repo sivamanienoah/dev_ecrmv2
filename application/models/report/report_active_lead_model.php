@@ -5,14 +5,16 @@ class Report_active_lead_model extends crm_model {
     public function __construct() {
         
         parent::__construct();
-        
+		$this->load->helper('lead_stage_helper');
+		$this->stg = getLeadStage();
+		
     }
     
     public function getActiveLead($options = array())
     {
     	
     	$isSelect=7;
-    	$job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
+    	// $job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
     	
     	if(!empty($options['cust_id'])){   		
     		$this->db->where_in('cust.custid',$options['cust_id']);
@@ -108,8 +110,7 @@ class Report_active_lead_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status','INNER');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');   		
-   		$this->db->where_in('jb.job_status',$job_status);
-		//$this->db->where('jb.lead_status',1);
+   		$this->db->where_in('jb.job_status', $this->stg);
 		//$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
 		$this->db->where('jb.lead_status',1);   	
 		$query = $this->db->get();

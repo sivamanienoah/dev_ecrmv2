@@ -4,11 +4,13 @@ class Report_lead_region_model extends crm_model {
     
     function Country_model() {
         parent::__construct();
+		$this->load->helper('lead_stage_helper');
+		$this->stg = getLeadStage();
     }
     
     public function getLeadReportByRegion($options = array())
     {
-    	$job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
+    	// $job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
     	$order_by = 'reg.region_name';
     	
     	if(!empty($options['cust_id'])){    		
@@ -107,7 +109,7 @@ class Report_lead_region_model extends crm_model {
     	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status','INNER');    	
     	$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = jb.expect_worth_id','INNER');
     	$this->db->join($this->cfg['dbpref'].'users mu','mu.userid = jb.modified_by','LEFT');
-    	$this->db->where_in('jb.job_status',$job_status);
+    	$this->db->where_in('jb.job_status', $this->stg);
     	$this->db->order_by($order_by,'ASC');
     	$this->db->where('lead_status',1);
 
