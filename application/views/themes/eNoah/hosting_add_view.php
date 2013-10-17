@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); 
+<?php require (theme_url().'/tpl/header.php'); 
 $p=array();
 if(!empty($packageid_fk)){
 	foreach($packageid_fk as $val){
@@ -206,7 +206,7 @@ $(document).ready(function() {
 		}?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>
 <script type="text/javascript">
 function ndf_cancel() {
     $.unblockUI();

@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <style type="text/css">
 #lead-init-form {
@@ -727,7 +727,7 @@ function ajaxDeleteFile(path, el) {
 				
 				<?php
 				$quote_data['assigned_to'] = $quote_data['belong_to'];
-				include VIEWPATH . 'tpl/user_accounts_options.php';
+				include theme_url() . '/tpl/user_accounts_options.php';
 				?>
 				<div id="jv-tab-4">
 					<form id="set-job-task" onsubmit="return false;">
@@ -802,7 +802,7 @@ function ajaxDeleteFile(path, el) {
 							<tr>
 								<td colspan="4">
 									<div class="buttons">
-										<button type="submit" class="positive" onclick="addNewTask();">Add</button>
+										<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 									</div>
 									<div class="buttons">
 										<button type="submit" class="negative" onclick="$('.toggler').slideToggle(1000);">Cancel</button>
@@ -1151,4 +1151,4 @@ function ajaxDeleteFile(path, el) {
 		
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

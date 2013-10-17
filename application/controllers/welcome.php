@@ -80,13 +80,11 @@ class Welcome extends crm_controller {
                 $this->load->helper('url');
                 
                 foreach ($log_data as $ld) {
-                    $this->db->where('userid', $ld['userid_fk']);
-                    $user = $this->db->get($this->cfg['dbpref'] . 'users');
-                    $user_data = $user->result_array();
+					$user_data = $this->welcome_model->get_user_data_by_id($ld['userid_fk']);
 					
 					if (count($user_data) < 1)
 					{
-						echo '<!-- ', print_r($ld, TRUE), ' -->'; 
+						echo '<!-- ', print_r($ld, TRUE), ' -->';
 						continue;
 					}
                     
@@ -130,11 +128,13 @@ HDOC;
 			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
 			
 			/*
+			//this code will be reuse for calculate the actual worth of project
 			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
 								FROM `{$this->cfg['dbpref']}items`
 								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
 			// echo $this->db->last_query(); exit;
 			$data['actual_worth'] = $actual_worths->result_array();	
+			echo "<pre>"; print_r($data['actual_worth']);
 			*/
 
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
@@ -152,25 +152,18 @@ HDOC;
      * @param itemid (latest intsert)
      * @return echo json string
      */
-    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false)
-    {
-	$this->load->helper('text');
-	$this->load->helper('fix_text');
+    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false) {
+		
+		$this->load->helper('text');
+		$this->load->helper('fix_text');
+		
+		$quote = $this->welcome_model->get_quote_items($jobid);
         
-        $this->db->where('jobid_fk', $jobid);
-        $this->db->order_by('item_position', 'asc');
-        $q = $this->db->get($this->cfg['dbpref'] . 'items');
-
-        #define the users who can see the prices
-		//$price_allowed = ( in_array($this->userdata['level'], array(0, 1, 2, 4, 5)) ) ? TRUE : FALSE;
-        
-        if ($q->num_rows() > 0)
-        {
+        if (!empty($quote)) {
             $html = '';
             $sale_amount = 0;
-            foreach ($q->result_array() as $row)
-            {
-				
+            foreach ($quote as $row) {
+			
                 if (is_numeric($row['item_price']) && $row['item_price'] != 0) {
                     $sale_amount += $row['item_price'];
 					$row['item_price'] = '$' . number_format($row['item_price'], 2, '.', ',');
@@ -192,7 +185,6 @@ HDOC;
 				}
                 
             }
-			
             
             $json['sale_amount'] = '$' . number_format($sale_amount, 2, '.', ',');
             $json['gst_amount'] = ($sale_amount > 0) ? '$' . number_format($sale_amount/10, 2, '.', ',') : '$0.00';
@@ -202,50 +194,19 @@ HDOC;
 			
             $json['error'] = false;
             $json['html'] = $html;
-			
-			$json['deposits'] = $json['deposit_balance'] = '$0.00';
-			$deposit_total = 0;
-			
-			$this->db->where('jobid_fk', $jobid);
-			$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
-			//if ($deposits->num_rows() > 0 && $price_allowed)
-			if ($deposits->num_rows() > 0)
-			{
-				$deposits_data = $deposits->result_array();
-				foreach ($deposits_data as $dd)
-				{
-					$deposit_total += $dd['amount'];
-				}
-				
-				$json['deposits'] = '$' . number_format($deposit_total, 2, '.', ',');
-			}
-			
-			$json['deposit_balance'] = '$' . number_format($json['numeric_total_inc_gst'] - $deposit_total, 2, '.', ',');
-			$json['deposit_balance'] = preg_replace('/^\$\-/', '-$', $json['deposit_balance']);
-            
-        }
-        else
-        {
-            
+        } else {
             $json['sale_amount'] = '0.00';
             $json['gst_amount'] = '0.00';
             $json['total_inc_gst'] = '0.00';
             $json['error'] = false;
             $json['html'] = '';
-            
         }
-        
-        $json['itemid'] = $itemid;
-		
-        if ($return)
-        {
-            return json_encode($json);
-        }
-        else
-        {
-            echo json_encode($json);
-        }
-        
+			$json['itemid'] = $itemid;
+			
+			if ($return)
+			return json_encode($json);
+			else
+			echo json_encode($json);
     }
 	
 	
@@ -272,7 +233,7 @@ HDOC;
 		for ($i = 0; $i < $c; $i++) {
 			$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
 		}		
-		$data['package'] = $this->welcome_model->get_package();
+		// $data['package'] = $this->welcome_model->get_package();
 		$data['lead_source'] = $this->welcome_model->get_lead_sources();
 				
 		/*if($this->userdata['role_id'] != 1) {
@@ -650,7 +611,7 @@ On behalf of the client and from supplied business details including official tr
 	
 	public function lead_fileupload_details($jobid, $filename, $userid) {
 	   
-	   $querys = "INSERT INTO ".$this->cfg['dbpref']."_lead_files (lead_files_name,lead_files_created_by,lead_files_created_on,jobid) 
+	   $querys = "INSERT INTO ".$this->cfg['dbpref']."lead_files (lead_files_name,lead_files_created_by,lead_files_created_on,jobid) 
 		VALUES('".$filename."','".$userid."','".date('Y-m-d H:i:s')."','".$jobid."')";		
 		$q = $this->db->query($querys);
 		

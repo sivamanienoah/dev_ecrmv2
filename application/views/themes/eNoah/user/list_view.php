@@ -5,7 +5,7 @@
     <div class="inner">
     <?php if($this->session->userdata('accesspage')==1) { ?>       
         <h2>User Database</h2>
-        <p class="pagination"><?php //echo  $pagination ?></p>
+
         <form action="user/search/" method="post" id="cust_search_form">
 			
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />

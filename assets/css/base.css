@@ -1149,6 +1149,12 @@ width:100%; background:#fff;}
     border:1px solid #fbc2c4;
     color:#d12f19;
 }
+.cancel {
+    background-color: #D8D8D8;
+    border: 1px solid #CCCCCC;
+    color: #565656;
+    cursor: pointer;
+}
 #funnelimg button:hover, #pieimg button:hover, button.positive:hover, .buttons a.positive:hover, input.positive:hover{
 	 background: url("../img/toolbar_hover.png") repeat-x scroll 0 bottom #5174BE;
 	 color:#fff;
@@ -1329,3 +1335,7 @@ html[xmlns] .clearfix {
 	height: 1%;
 }
 .log-container .log .bgBlue{background:#4B6FB9 !important; background-image:none; color: #FFFFFF;}
+
+.existing-query-list {
+    clear: left;
+}

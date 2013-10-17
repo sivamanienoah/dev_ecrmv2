@@ -12,7 +12,7 @@ function addTaskToggle(opt)
 	}
 }
 
-function addNewTask(random)
+function addNewTask(random,ci_csrf_token,csrf_hasf)
 {
 	var errors = [],
 	job_task = $('#job-task-desc').val(),
@@ -67,7 +67,7 @@ function addNewTask(random)
 	
 	$.post(
 		'ajax/request/add_lead_task' + random_task_url,
-		{'leadid': lead_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date},
+		{'leadid': lead_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date,'ci_csrf_token':csrf_hasf},
 		function (data)
 		{
 			if (data.error)

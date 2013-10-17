@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
     <div id="left-menu">
@@ -54,4 +54,4 @@
 }?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

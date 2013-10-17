@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require VIEWPATH . 'tpl/header.php'; 
+require theme_url() . '/tpl/header.php'; 
 ?>
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <script type="text/javascript">var curr_job_id = 0;</script>
@@ -46,7 +46,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
     <div class="inner" id="jv-tab-4">
 	
 		<?php
-		include VIEWPATH . 'tpl/user_accounts_options.php';
+		include theme_url() . '/tpl/user_accounts_options.php';
 		//echo '<pre>'; print_r($project); echo '</pre>';
 		?>
 		<h2>Tasks</h2>
@@ -141,7 +141,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask('random');">Add</button>
+									<button type="submit" class="positive" onclick="addNewTask('random','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 								</div>
 								<div class="buttons">
 									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
@@ -454,6 +454,6 @@ function loadEditTables(){
 }
 </script>
 <?php
-require VIEWPATH . 'tpl/footer.php';
+require theme_url() . '/tpl/footer.php';
 ob_end_flush();
 ?>

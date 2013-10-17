@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 	<div class="inner">
 		
@@ -61,4 +61,4 @@ function get_file_list()
 
 $(window).load(function(){ get_file_list(); });
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

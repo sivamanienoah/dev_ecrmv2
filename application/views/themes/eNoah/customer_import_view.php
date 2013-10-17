@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <?php $this->userdata = $this->session->userdata('logged_in_user'); ?>
 <?php 
 	//echo $this->session->userdata('addImpCus');
@@ -64,4 +64,4 @@
 		}?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

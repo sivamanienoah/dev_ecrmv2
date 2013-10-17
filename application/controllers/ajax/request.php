@@ -67,8 +67,11 @@ class Request extends crm_controller {
 	 */
 	public function file_upload($jobid, $date, $upby, $type = 'job')
 	{	
-	
+		
 		/**
+		$jobid = $this->input->post('jobid');
+		$date = $this->input->post('date');
+		$upby = $this->input->post('userid');
 		 * we need to know errors
 		 * not the stupid ilisys restricted open_base_dir errors
 		 */
@@ -80,7 +83,7 @@ class Request extends crm_controller {
 		$dir_type = ($type == 'lead') ? '/vps_lead_data/' : '/vps_data/';
 		
 		$f_dir = dirname(FCPATH) . $dir_type . $jobid;
-		
+		echo $f_dir; exit;
 		if (!is_dir($f_dir))
 		{
 			mkdir($f_dir);
@@ -1931,7 +1934,7 @@ EOD;
 	}
 	
 	function save_job_overview($jobid)
-	{
+	{	
 		$this->db->where('jobid_fk', $jobid);
 		$this->db->delete($this->cfg['dbpref'].'milestones');
 		
@@ -1952,7 +1955,6 @@ EOD;
 			
 			$this->db->insert($this->cfg['dbpref'].'milestones', $ins);
 		}
-		
 		echo $this->get_job_overview($jobid, TRUE);
 	}
 	

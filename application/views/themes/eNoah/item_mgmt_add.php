@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
     <?php //include 'tpl/item_mgmt_submenu.php' ?>
@@ -104,4 +104,4 @@ $(function(){
           return true;
        }
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

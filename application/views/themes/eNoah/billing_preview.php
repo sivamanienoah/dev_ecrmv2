@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php');?>
+<?php require (theme_url().'/tpl/header.php');?>
 
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
@@ -1438,7 +1438,7 @@ $(window).load(function(){
 			<div class="action-buttons" style="overflow:hidden;">
 				<?php
 				
-				include VIEWPATH . 'tpl/user_accounts_options.php';
+				include theme_url() . '/tpl/user_accounts_options.php';
 				
 				// you can only edit this if this is not an invoice
 				if (isset($userdata) && in_array($userdata['level'], array(0,1,2,4)) && isset($quote_data) && in_array($quote_data['job_status'], array(4, 5, 6, 7, 8, 15, 25)))
@@ -1942,7 +1942,7 @@ $(window).load(function(){
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask();">Add</button>
+									<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 								</div>
 								<div class="buttons">
 									<button type="submit" class="negative" onclick="addTaskToggle('off');">Cancel</button>
@@ -2553,4 +2553,4 @@ $(window).load(function(){
 	</div>
 </div>
 
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

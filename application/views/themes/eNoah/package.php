@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 	<?php //include 'tpl/hosting_submenu.php'; ?>
 	<div class="inner hosting-section">
@@ -87,4 +87,4 @@
 		}?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

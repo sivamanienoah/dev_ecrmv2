@@ -46,7 +46,7 @@ class Hosting extends crm_controller {
             $this->session->set_flashdata('confirm', array('Hosting Account Deleted!'));
             redirect('hosting/');
         }
-        //echo "<pre>"; print_r($_POST); exit;
+
 		$data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
 		$data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
         $rules['domain_name'] = "trim|required|callback_domain_check";

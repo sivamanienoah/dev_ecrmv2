@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <?php //echo "<pre>"; $arr = implode(",", $dupsemail);print_r( $arr);exit; ?>
 <div id="content">
     <!--<div id="left-menu">
@@ -28,4 +28,4 @@
 	?> 
 	
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

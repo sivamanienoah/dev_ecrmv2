@@ -65,9 +65,14 @@ class Welcome_model extends crm_model {
     	$this->db->select('userid,first_name,level,role_id,inactive');
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
-		// echo $this->db->last_query();exit; 
 		return $q->result_array();
     }
+	
+	function get_user_data_by_id($ld) {
+		$this->db->where('userid', $ld);
+		$user = $this->db->get($this->cfg['dbpref'] . 'users');
+		return $user->result_array();
+	}
 	
 	function updt_log_view_status($id, $log) {
 		$this->db->where('jobid', $id);
@@ -80,6 +85,12 @@ class Welcome_model extends crm_model {
 		return $query->result_array();
 	}
     
+	function get_quote_items($jobid) {
+		$this->db->where('jobid_fk', $jobid);
+        $this->db->order_by('item_position', 'asc');
+        $sql = $this->db->get($this->cfg['dbpref'] . 'items');
+		return $sql->result_array();
+	}
     public function get_job($filter = array())
     {
         if (count($filter))

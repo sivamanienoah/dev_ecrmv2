@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <link rel="stylesheet" href="assets/css/jquery.autocomplete.css" type="text/css" />
 <script type="text/javascript" src="assets/js/jquery.autocomplete.js"></script>
@@ -1047,4 +1047,4 @@ function openDragItems() {
     
 }
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

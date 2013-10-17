@@ -8,7 +8,7 @@ if(!empty($packages)){
 		$pack_price[$t]=$val['package_price'];
 	}
 }
-?><?php require ('tpl/header.php'); ?>
+?><?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 <script type="text/javascript" src="assets/js/j-tip.js?q=8"></script>
 <style type="text/css">
@@ -284,4 +284,4 @@ if ((s[1] || '').length < prec) {
 return s.join(dec);
 }
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

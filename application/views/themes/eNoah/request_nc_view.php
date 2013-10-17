@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
     <?php if ($this->login_model->check_login_status(array(6))) { ?>
@@ -106,4 +106,4 @@
 		</form>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

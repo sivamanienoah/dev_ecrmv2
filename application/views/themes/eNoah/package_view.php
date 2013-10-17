@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 	<?php if($this->session->userdata('accesspage')==1){ ?>
 	<div class="inner hosting-section">
@@ -80,4 +80,4 @@
 			echo "You have no rights to access this page";
 		}?>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

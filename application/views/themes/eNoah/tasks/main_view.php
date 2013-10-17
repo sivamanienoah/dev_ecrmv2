@@ -48,7 +48,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
     <div class="inner" id="jv-tab-4">
 	
 		<?php
-		include VIEWPATH . 'tpl/user_accounts_options.php';
+		include theme_url() . '/tpl/user_accounts_options.php';
 		//echo '<pre>'; print_r($project); echo '</pre>';
 		?>
 		<h2>Tasks</h2>
@@ -156,7 +156,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask('random');">Add</button>
+									<button type="submit" class="positive" onclick="addNewTask('random','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 								</div>
 								<div class="buttons">
 									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
@@ -402,8 +402,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 </div>
 <script type="text/javascript">
 $(function(){
- alert("test"); return false;
-	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {}, loadEditTables);
+	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}, loadEditTables);
 	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
@@ -476,7 +475,7 @@ function loadEditTables(){
 		$('#jv-tab-4').unblock();
 		return;
 	}
-	$.post('ajax/request/get_random_tasks',{'id_set': taskids.join(',')},function(data){
+	$.post('ajax/request/get_random_tasks',{'id_set': taskids.join(','),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},function(data){
 		if (data != '')	{
 			$('form.random-task-tables').html(data);
 		}
@@ -485,6 +484,6 @@ function loadEditTables(){
 }
 </script>
 <?php
-require VIEWPATH . 'tpl/footer.php';
+require theme_url() . '/tpl/footer.php';
 ob_end_flush();
 ?>

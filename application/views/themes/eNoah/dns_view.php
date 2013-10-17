@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <script>
 $(function(){
 	$('input.pick-date').datepicker({dateFormat: 'dd-mm-yy'});
@@ -260,4 +260,4 @@ $(function(){
 		<?php } ?>
 	</div> <!--sriram-->
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
 	<div class="inner"> <h1>Site is under Construction.</h1>
@@ -41,4 +41,4 @@ window.onload = function() {
 	document.forms[0].email.focus();
 }
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

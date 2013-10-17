@@ -12,7 +12,7 @@ if (get_default_currency()) {
 <?php
 ob_start();
 $userdata = $this->session->userdata('logged_in_user');
-require ('tpl/header.php');
+require (theme_url().'/tpl/header.php');
 //echo baseurl();
 ?>
 <?php if($this->session->userdata('viewlead')==1) { ?>
@@ -220,7 +220,7 @@ switch ($userdata['level']) {
 			
 		<div class="all-tasks random-task" style="margin-bottom:20px;" id="jv-tab-4"></div>
 		<?php
-			include VIEWPATH . 'tpl/user_accounts_options.php';
+			include theme_url() . '/tpl/user_accounts_options.php';
 			$uio = $userdata['userid'];
 			foreach($created_by as $value) {
 				$b[] = $value[created_by];						
@@ -1951,6 +1951,6 @@ function loadEditTables(){
 }
 </script>
 <?php
-require ('tpl/footer.php');
+require (theme_url().'/tpl/footer.php');
 ob_end_flush();
 ?>

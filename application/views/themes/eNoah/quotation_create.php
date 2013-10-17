@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
 	<script type="text/javascript" src="assets/js/j-tip.js?q=1"></script>
 	<style type="text/css">
@@ -155,4 +155,4 @@ $(function(){
     );
 });
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

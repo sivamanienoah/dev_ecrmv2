@@ -374,7 +374,7 @@ body { margin: 0px; }
 		echo json_encode($data);
 	}
 	
-	
+	//unwanted function
 	public function get_pm_profile($profile_id = 0)
 	{
 		$json['path'] = '';

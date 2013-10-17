@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
 <div id="content">
@@ -86,4 +86,4 @@ $(function(){
     );
 });
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

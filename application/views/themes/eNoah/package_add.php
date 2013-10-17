@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1 && $this->uri->segment(3)=="") || ($this->session->userdata('edit')==1 && $this->uri->segment(2) == 'add' && is_numeric($this->uri->segment(3)))) { ?>
@@ -110,4 +110,4 @@
 		}?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

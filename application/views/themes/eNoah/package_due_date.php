@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <style type="text/css">
 #domain-expiry-date {
 		display:none;
@@ -94,4 +94,4 @@ $(document).ready(function(){
 	<?php } else echo "You have no rights to access this page"; ?>	
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

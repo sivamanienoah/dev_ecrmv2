@@ -1,5 +1,4 @@
-<?php require ('tpl/header.php'); 
-?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <!--script type="text/javascript" src="assets/js/jquery.blockUI.js"></script-->
@@ -51,25 +50,7 @@ if (x=='Lead No, Job Title, Name or Company')
 </div>
 
 <!--Code Added for the Pagination in Comments Section--Ends Here-->
-<style>
-.existing-query-list {
-    clear: left;
-}
-.cancel {
-    background-color: #D8D8D8;
-    border: 1px solid #CCCCCC;
-    color: #565656;
-    cursor: pointer;
-}
-ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
-	ol#pagination li{
-		float:left;
-		list-style:none;
-		cursor:pointer;
-		margin:0 0 0 .5em;
-		}
-	ol#pagination li.current{color:#f00;font-weight:bold;}
-</style>
+
 <script type="text/javascript">
 var unid = <?php  echo $userdata['userid'] ; ?>;
 var belong_to = <?php echo $quote_data['belong_to'] ; ?>;
@@ -284,9 +265,7 @@ function fullScreenLogs() {
 function runAjaxFileUpload() {
 //alert("test"); return false;
 	var date = '<?php echo date('Y-m-d H:i:s');  ?>';
-	//var url = 'ajax/request/file_upload/<?php echo $quote_data['jobid'] ?>/'+ date +'/'+ userid + '/';
 	var _uid = new Date().getTime();
-	//alert(url); return false;
 	$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
 	$.ajaxFileUpload
 	(
@@ -553,40 +532,6 @@ function ajaxDeleteJobURL(id, el) {
 
 var job_project_manager = '<?php echo $quote_data['assigned_to'] ?>';
 
-function setProjectLead() {
-	var pl_user = $('#project_lead').val()
-	if (pl_user == 0) {
-		alert('User must be selected!');
-		return false;
-	} else {
-		$.get(
-			'ajax/production/set_project_lead/' + curr_job_id + '/' + pl_user,
-			{},
-			function(_data) {
-				try {
-					eval ('var data = ' + _data);
-					if (typeof(data) == 'object') {
-						if (data.error == false) {
-							job_project_manager = pl_user;
-							$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-							$('.project-lead-change:visible').hide(200);
-							
-							// set profile image
-							getPMProfileImage();
-						} else {
-							alert(data.error);
-						}
-					} else {
-						alert('Updating faild, please try again.');
-					}
-				} catch (e) {
-					alert('Invalid response, your session may have timed out.');
-				}
-			}
-		);
-	}
-}
-
 
 function setProjectStatusDate(date_type) {	
 	
@@ -701,28 +646,7 @@ function downloadCustomPDF()
 	return false;
 }
 
-function getPMProfileImage()
-{
-	var pm_profile = $('#project_lead option:selected').val();
-	$.getJSON(
-				'ajax/production/get_pm_profile/' + pm_profile,
-				{},
-				function(data)
-				{
-					if (typeof(data) == 'object' && data.path != '')
-					{
-						$('#pm-profile-image').html('<img src="' + data.path + '" />');
-					}
-					else
-					{
-						$('#pm-profile-image').html('');
-					}
-				}
-			);
-}
 
-
-//unwanted function
 /* function to add the auto log */
 function qcOKlog() {
 	var msg = "eCRM QC Officer Log Check - All Appears OK";
@@ -773,18 +697,14 @@ $(function(){
 	$("#job-view-tabs").tabs({
 								selected: 0,
 								show: function (event, ui) {
-									if (ui.index == 2)
+									if (ui.index == 3)
 									{
 										loadExistingTasks();
 									}
-									else if (ui.index == 3)
+									else if (ui.index == 4)
 									{
 										populateJobOverview();
 									}
-									//else if (ui.index == 9)
-									//{
-										//populatePackage();
-									//}
 								}
 							});
 	
@@ -793,50 +713,6 @@ $(function(){
 			window.open(this.href);
 			return false;
 		});
-	});
-	
-	// set profile picture
-	getPMProfileImage();
-	
-	
-	try {
-		var sb_ol = $('.status-bar').offset().left;
-		$('.status-bar').mousemove(function(e){
-			var wd = e.clientX - sb_ol;
-			$('.over', $(this)).css({width: wd + 'px', opacity:0.5});
-		});
-		
-		$('.status-bar').bind('mouseleave', function(e){
-			$('.over', $(this)).stop().animate({opacity:0}, 600);
-		});
-		
-		$('.status-bar a').click(function(){
-			var pos = $(this).attr('rel');
-			if (window.confirm('Are you sure that you want to change\nthe status to ' + pos * 10 +'% completion?'))
-			{
-				updateJobStatus(pos);
-			}
-			$('.status-bar span.over').fadeOut();
-			return false;
-		});
-	} catch (e) { if (window.console) console.log(e); }
-	
-	<?php
-	if (is_numeric($quote_data['complete_status']))
-	{
-		echo "updateVisualStatus('" . (int) $quote_data['complete_status'] . "');\n";
-	}
-	?>
-	
-	$('#enable_post_profile').click(function(){
-		if ($(this).is(':checked'))
-		{
-			$('.post-profile-select').show();
-		}
-		else
-		{
-			$('.post-profile-select').hide();
-		}
 	});
 	
 	$('.jump-to-job select').change(function(){
@@ -854,8 +730,6 @@ $(function(){
 			$(this).removeClass('gray-text');
 		}
 	});
-	
-	
 	
 	/* job tasks character limit */
 	$('#job-task-desc').keyup(function(){
@@ -934,43 +808,6 @@ $(function(){
 	
 });
 
-var job_complete_percentage;
-
-function updateJobStatus(status) {
-	$('.status-bar').block({
-            message:'<img src="assets/img/ajax-loader.gif" />',
-			css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-        });
-	$.get(
-		'ajax/request/update_job_status/',
-		{jobid: curr_job_id, job_status: status,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-		function(_data) {
-			try {
-				eval('data = ' + _data);
-				if (typeof(data) == 'object') {
-					if (data.error == false) {
-						pos_just_completed = true;
-						status = status * 10;
-						updateVisualStatus(status);
-					} else {
-						alert(data.error);
-					}
-				} else {
-					alert('Your session timed out!');
-				}
-			} catch (e) {
-				alert('Your session timed out!');
-			}
-			$('.status-bar').unblock();
-		}
-	);
-}
-
-function updateVisualStatus(status) {
-	$('h3.status-title .small em strong').html(status);
-	$('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
-	job_complete_percentage = status;
-}
 
 function setContractorJob()
 {
@@ -1094,7 +931,7 @@ function setContractorJob()
 					</tr>
 				</table>
 			</form>
-		
+		 
 			<?php
 			if (isset($jobs_under_type))
 			{
@@ -1374,11 +1211,11 @@ function setContractorJob()
 					<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 					<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 							<?php
-								if($quote_data['actual_worth_amount'] != '0.00')
-								$amount = $quote_data['actual_worth_amount'];
+								if($quote_data['actual_worth_amount'] == '0.00')
+								$amount = '0.00';
 								else 
-								$amount = $actual_worth[0]['project_cost']; 
-								echo $amount; 
+								$amount = $quote_data['actual_worth_amount'];
+								echo $quote_data['expect_worth_name'] . ' ' .$amount;
 							?>
 					</span>
 					</p>
@@ -1418,9 +1255,8 @@ function setContractorJob()
 			
 				<?php
 				
-				include VIEWPATH . 'tpl/user_accounts_options.php';
-				
-				
+				include theme_url() . '/tpl/user_accounts_options.php';
+								
 				//print_r($quote_data);
 				if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
 				{
@@ -1437,19 +1273,15 @@ function setContractorJob()
 			
 			<p id="temp">&nbsp;</p>
 			<ul id="job-view-tabs">
-				
-				<li><a href="#jv-tab-001">Lead History</a></li>
+				<li><a href="#jv-tab-1">Lead History</a></li>
 				<li><a href="#jv-tab-2">Estimate</a></li>
-				<li><a href="#jv-tab-3" >Files</a></li>
-				<li><a href="#jv-tab-4" >Tasks</a></li>
-				<li><a href="#jv-tab-4-5">Milestones</a></li>
-				<li><a href="#jv-tab-5">Customer</a></li>
-				<li><a href="#jv-tab-9">Query</a></li>
-				
-				
-				<?php if($this->uri->segment(4)=='package') echo '<li><a href="#jv-tab-9">Package</a></li>'; ?>
+				<li><a href="#jv-tab-3">Files</a></li>
+				<li><a href="#jv-tab-4">Tasks</a></li>
+				<li><a href="#jv-tab-5">Milestones</a></li>
+				<li><a href="#jv-tab-6">Customer</a></li>
+				<li><a href="#jv-tab-7">Query</a></li>
 			</ul>
-			<div id="jv-tab-001">
+			<div id="jv-tab-1">
 				<table class="data-table">
 					<tr ><th>Stage Name</th><th>Modified By</th><th>Modified On</th></tr>
 					<?php foreach($lead_stat_history as $ldsh) { ?>
@@ -1644,7 +1476,7 @@ function setContractorJob()
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask();">Add</button>
+									<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 								</div>
 								<div class="buttons">
 									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
@@ -1817,7 +1649,7 @@ function setContractorJob()
 				
 			</div><!-- id: jv-tab-4 end -->
 			
-			<div id="jv-tab-4-5">
+			<div id="jv-tab-5">
 				<form id="milestone-management" onsubmit="return false;">
 				
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1887,7 +1719,7 @@ function setContractorJob()
 						}
 						var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 					
-					$('#jv-tab-4-5').block({
+					$('#jv-tab-5').block({
 										message:'<img src="assets/img/ajax-loader.gif" />',
 										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
 									});
@@ -1902,7 +1734,7 @@ function setContractorJob()
 								$('#milestone-data tbody').html(detail);
 								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 							}
-							$('#jv-tab-4-5').unblock();
+							$('#jv-tab-5').unblock();
 						}
 					);
 					return false;
@@ -1927,7 +1759,7 @@ function setContractorJob()
 					
 					var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 					
-					$('#jv-tab-4-5').block({
+					$('#jv-tab-5').block({
 										message:'<img src="assets/img/ajax-loader.gif" />',
 										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
 									});
@@ -1942,7 +1774,7 @@ function setContractorJob()
 								$('#milestone-data tbody').html(detail);
 								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 							}
-							$('#jv-tab-4-5').unblock();
+							$('#jv-tab-5').unblock();
 						}
 					);
 				}
@@ -1978,7 +1810,7 @@ function setContractorJob()
 				
 				function populateJobOverview()
 				{
-					$('#jv-tab-4-5').block({
+					$('#jv-tab-5').block({
 										message:'<img src="assets/img/ajax-loader.gif" />',
 										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
 									});
@@ -1992,14 +1824,14 @@ function setContractorJob()
 								$('#milestone-data tbody').html(detail);
 								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 							}
-							$('#jv-tab-4-5').unblock();
+							$('#jv-tab-5').unblock();
 						}
 					);
 				}
 				</script>
 			</div>
 			<?php //echo '<pre>'; print_r($quote_data); echo '</pre>'; ?>
-			<div id="jv-tab-5">
+			<div id="jv-tab-6">
 				<form id="customer-detail-read-only" onsubmit="return false;">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -2098,9 +1930,9 @@ function setContractorJob()
 					
 				</table>
 				</form>
-			</div><!-- id: jv-tab-5 end -->
+			</div><!-- id: jv-tab-6 end -->
 				
-			<div id="jv-tab-9"> <!-- id: jv-tab-9 start -->
+			<div id="jv-tab-7"> <!-- id: jv-tab-7 start -->
 						
 			<div id="querylead_form" style="border:0px solid;" >
 				<form id="querylead" name="querylead" method="post" onsubmit="return QueryAjaxFileUpload();">
@@ -2120,7 +1952,7 @@ function setContractorJob()
 						</tr>
 						<tr>
 							<td>
-								<input type="submit" name="query_sub" value="Submit" class="positive" />
+								<input type="submit" name="query_sub" value="Submit" class="positive submitpositive" />
 								<input type="button" name="query_sub" value="Cancel" class="cancel" />
 							</td>
 						</tr>
@@ -2168,4 +2000,4 @@ function setContractorJob()
 	</div>
 </div>
 
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

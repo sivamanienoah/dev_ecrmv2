@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 
 <?php #echo "<pre>"; print_r($quote_data); exit; ?>
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
@@ -2423,7 +2423,7 @@ function setContractorJob()
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask();">Add</button>
+									<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
 								</div>
 								<div class="buttons">
 									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
@@ -2850,7 +2850,7 @@ function setContractorJob()
 	</div>
 </div>
 
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.checkUser').hide();

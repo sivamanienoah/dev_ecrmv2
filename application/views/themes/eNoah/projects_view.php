@@ -267,4 +267,4 @@ $('#pjt_search_form').submit(function() {
 });
 
 </script>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>

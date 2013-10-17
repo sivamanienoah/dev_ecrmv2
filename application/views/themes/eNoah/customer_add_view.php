@@ -1,4 +1,4 @@
-<?php require ('tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <?php
 if($this->validation->add1_region != 0) 
 echo '<input type="hidden" name="region_update" id="region_update" value="'.$this->validation->add1_region.'" />';
@@ -198,7 +198,7 @@ $usernme = $this->session->userdata('logged_in_user');
 		}?>
 	</div>
 </div>
-<?php require ('tpl/footer.php'); ?>
+<?php require (theme_url().'/tpl/footer.php'); ?>
 <script>
 if(document.getElementById('region_update')) {
 var reg = document.getElementById('region_update').value;
