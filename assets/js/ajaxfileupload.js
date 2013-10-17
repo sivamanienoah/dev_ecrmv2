@@ -29,12 +29,12 @@ jQuery.extend({
 
             return io			
     },
-    createUploadForm: function(id, fileElementId)
+    createUploadForm: function(id, fileElementId ,ci_csrf_token)
 	{
 		//create form	
 		var formId = 'jUploadForm' + id;
 		var fileId = 'jUploadFile' + id;
-		var form = $('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');	
+		var form = $('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"><input type="hidden" name="ci_csrf_token" value="'+ci_csrf_token+'" /></form>');	
 		var oldElement = $('#' + fileElementId);
 		var newElement = $(oldElement).clone();
 		$(oldElement).attr('id', fileId);
@@ -51,8 +51,9 @@ jQuery.extend({
     ajaxFileUpload: function(s) {
         // TODO introduce global settings, allowing the client to modify them for all requests, not only timeout		
         s = jQuery.extend({}, jQuery.ajaxSettings, s);
+		var ci_csrf_token = s.data.ci_csrf_token;
         var id = new Date().getTime()        
-		var form = jQuery.createUploadForm(id, s.fileElementId);
+		var form = jQuery.createUploadForm(id, s.fileElementId,ci_csrf_token);
 		var io = jQuery.createUploadIframe(id, s.secureuri);
 		var frameId = 'jUploadFrame' + id;
 		var formId = 'jUploadForm' + id;		
