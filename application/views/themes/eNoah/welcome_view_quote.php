@@ -295,6 +295,7 @@ function runAjaxFileUpload() {
 			secureuri:false,
 			fileElementId:'ajax_file_uploader',
 			dataType: 'json',
+			data:{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			success: function (data, status)
 			{
 				//alert(data.date);
