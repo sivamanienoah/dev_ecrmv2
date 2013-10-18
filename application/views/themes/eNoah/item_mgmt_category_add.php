@@ -63,15 +63,14 @@ $(document).ready(function() {
 	function valid() {
 		var catname = $("#cat_name").val();
 		var catupdt = $("#cat_updt").val();
-		//alert(cat_up); return false;
 		$.ajax({
-			type: "POST",
 			url: "item_mgmt/checkcategoryname",
-			data: {category: catname, cat_up:catupdt,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			data: {category: catname, cat_up: catupdt,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			type: "POST",
+			dataType: 'json',
 			success: function(data){
 				if(data == 'fail') {
 					$('.errmsg').show();
-					//alert('Category Name Already Exist');
 					return false;
 				} else {
 					document.formone.submit();

@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
+
 <div id="content">
 	<?php //include 'tpl/item_mgmt_submenu.php' ?>
 	<div class="inner q-view">
@@ -19,14 +18,13 @@
 		</tr>
 		</table>
 		<?php
-		$menu = '<ul id="job-view-tabs">';
-		$data = '';
-
-		foreach ($categories as $cat)
-		{
-			$menu .= "<li><a href=\"#cat_{$cat['cat_id']}\">{$cat['cat_name']}</a></li>";
+		echo '<div id="quote-tabs"><ul id="job-view-tabs">';
+		foreach ($categories as $cat) {
+			echo '<li><a href="#cat_'.$cat['cat_id'].'">'.$cat['cat_name'].'</a></li>';
+		}
+		echo '</ul>';
+		foreach ($categories as $cat) {
 			$records = $cat['records'];
-			ob_start();
 			?>
 		<div id="cat_<?php echo $cat['cat_id'] ?>">
 			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
@@ -63,11 +61,10 @@
 			</table>
 		</div>
 			<?php
-			$data .= ob_get_clean();
 		}
-		$menu .= '</ul>';
+		echo '</div>';
 		
-		echo $menu, $data;
+		//echo $menu;
 		?>
 		
 		<?php } else{
@@ -77,7 +74,7 @@
 </div>
 <script type="text/javascript">
 $(function(){
-	$("#job-view-tabs").tabs();
+	$("#quote-tabs").tabs();
     $(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
 	//.tablesorterPager({container: $("#pager"), positionFixed: false});
     $('.data-table tr').hover(
