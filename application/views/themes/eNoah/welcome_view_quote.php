@@ -375,6 +375,7 @@ function QueryAjaxFileUpload() {
 			secureuri:false,
 			fileElementId:'query_file',
 			dataType: 'json',
+			data:{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			success: function (data, status)
 			{
 				if(typeof(data.error) != 'undefined')
@@ -406,7 +407,7 @@ function QueryAjaxFileUpload() {
 						if(typeof(data.file_name) != 'undefined')
 						{
 						if(data.file_name != 'undefined') {
-							fname = '<a href="vps_data/query/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a>';
+							fname = '<a href="crm_data/query/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a>';
 							
 						} } else {
 							fname = 'File Not Attached';
@@ -417,7 +418,7 @@ var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="t
 	_file_link += '<tr><td>Date</td><td class="item user-name" rel="59" width="100">'+data.up_date+'</td>';
 	_file_link += '<td width="80">'+reply+' By</td><td class="item hours-mins" rel="4:0">'+data.firstname+' '+data.lastname+'</td></tr>';
 	_file_link += '<tr><td colspan="1" valign="top">File Name</td><td colspan="3">'+fname+'</td></tr>';
-	_file_link += '<tr><td	colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm()">Reply</button></td></tr></table></td>';
+	_file_link += '<tr><td	colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('+data.replay_id+')">Reply</button></td></tr></table></td>';
 
 						<?php
 						if ($userdata['level'] > 1) echo '_del_link = "";';
