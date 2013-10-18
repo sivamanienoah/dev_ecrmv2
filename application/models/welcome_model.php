@@ -166,12 +166,13 @@ class Welcome_model extends crm_model {
                     } else {
                       $out = $fz . ' Bytes';
                     }
-                    
-                    $data['job_files_html'] .= '<a href="' . str_replace($fcpath, '', $jf) . '" onclick="window.open(this.href); return false;">' . str_replace($f_dir, '', $jf) . '</a> <span>' . $out . '</span>';
+					
+                    $data['job_files_html'] .= '<a href="crm_data/' . str_replace($fcpath, '', $jf) . '" onclick="window.open(this.href); return false;">' . str_replace($f_dir, '', $jf) . '</a> <span>' . $out . '</span>';
 		    $data['job_files_html'] .='</li>';
                 }
             }
         }
+		
 		
         return $data['job_files_html'];
     }
