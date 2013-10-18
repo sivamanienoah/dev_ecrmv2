@@ -315,9 +315,9 @@ h3 .small {
 	color:#fff;
 	text-decoration:none;
 }
-#job-view-tabs li.ui-tabs-selected a {
-	background:#3B5998;
-	color:#fff;
+#job-view-tabs li.ui-tabs-selected a ,.ui-state-active a{
+	background:#3B5998 !important;
+	color:#fff !important;
 }
 .q-view .ui-tabs-panel {
 	border-top:1px solid #cacaca;
