@@ -135,6 +135,7 @@ class Welcome_model extends crm_model {
         if (is_dir($f_dir))
         {
             $job_files = glob($f_dir . '*.*');
+			
             if (is_array($job_files) && count($job_files))
             {
                 foreach ($job_files as $jf)
@@ -165,7 +166,7 @@ class Welcome_model extends crm_model {
                 }
             }
         }
-        
+		
         return $data['job_files_html'];
     }
     public function get_query_files_list($jobid)
@@ -178,7 +179,7 @@ class Welcome_model extends crm_model {
 		
 		$results = $this->db->query($query_tab);
 		$results = $results->result_array();
-		$path = 'vps_data/query/' . $jobid. '/';
+		$path = 'crm_data/query/' . $jobid. '/';
 		
 		foreach($results as $result) {	
 			if($result['replay_query'] == 0) {
