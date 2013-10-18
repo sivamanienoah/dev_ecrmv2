@@ -2036,27 +2036,32 @@ EOD;
 	 */
 	public function query_file_upload($jobid, $lead_query, $status, $type = 'job')
 	{	
+	
 		/**
 		 * we need to know errors
 		 * not the stupid ilisys restricted open_base_dir errors
 		 */
-		error_reporting(E_ERROR);
-		
+		//error_reporting(E_ERROR);
 		
 		$json['error'] = '';
 		$json['msg'] = '';
 		
-		//$dir_type = ($type == 'lead') ? '/vps_lead_data/' : '/vps_data/query/';
-		
-		//$f_dir = dirname(FCPATH) . $dir_type . $jobid;
-		
-		$f_dir = UPLOAD_PATH . $jobid;
+		$f_dir = UPLOAD_PATH .'query/'; 
 		
 		if (!is_dir($f_dir))
 		{
 			mkdir($f_dir);
 			chmod($f_dir, 0777);
 		}
+		
+		$f_dir = $f_dir.$jobid; 
+		
+		if (!is_dir($f_dir))
+		{
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
 		
 		if (isset($_FILES['query_file']) && is_uploaded_file($_FILES['query_file']['tmp_name']))
 		{
@@ -2093,45 +2098,23 @@ EOD;
 						$st = $status[0];
 						$rep_to = $status[1];
 					}
-						$userdata = $this->session->userdata('logged_in_user');
+					
+					//print "first =>".$rep_to; exit
+					
+					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
-					$query = "INSERT INTO ".$this->cfg['dbpref']."_lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
+					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
 					VALUES(".$jobid.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);
+					
+					$insert_id = $this->db->insert_id();
 					
 							$json['up_date'] = date('d-m-Y');
 							$json['lead_query'] = $lead_query;
 							$json['firstname'] = $user[0]['first_name'];
 							$json['lastname'] = $user[0]['last_name'];
+							$json['replay_id'] = $insert_id;
 					//echo $this->db->last_query();
-					/*if($q) {						
-						$url = base_url();
-						$attachment_url = $url.'vps_data/query/'.$jobid.'/'.$filename;
-						$to = $customer[0]['email_1'];
-						$subject = 'Query Lead Converstion';
-						$from = $user[0]['email'];
-						$from_name = $user[0]['first_name'];
-
-						$this->load->plugin('phpmailer');
-						$this->load->library('email');
-						$this->email->initialize($config);
-						$this->email->set_newline("\r\n");
-						$this->email->from($from, $from_name);
-						$this->email->to($to);
-						$this->email->subject($subject);
-						$this->email->message($msg);	
-						//$this->email->AddAttachment($attachment_url);			
-						$ok = $this->email->send();
-						if($ok) {
-							$json['up_date'] = date('d-m-Y');
-							$json['lead_query'] = $lead_query;
-							$json['firstname'] = $user[0]['first_name'];
-							$json['lastname'] = $user[0]['last_name'];
-							$json['mail_msg'] = "Successfully send the mail";	
-						}
-						else 
-						$json['mail_msg'] = "Mail Sending Problem";
-					}	*/
 				
 				}
 				$fz = filesize($full_path);
@@ -2174,16 +2157,16 @@ EOD;
 						$st = $status[0];
 						$rep_to = $status[1];
 					}
-						$userdata = $this->session->userdata('logged_in_user');
-						$lead_query = addslashes($lead_query);
-					$query = "INSERT INTO ".$this->cfg['dbpref']."_lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
+										
+					$userdata = $this->session->userdata('logged_in_user');
+					$lead_query = addslashes($lead_query);
+					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
 					VALUES(".$jobid.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);	
-			
-			//$query = "INSERT INTO ".$this->cfg['dbpref']."_lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
-					//VALUES(".$jobid.",'59','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','abc@mail.com','cba@mail.com','query','0')";		
-					//$q = $this->db->query($query);
 					
+					$insert_id = $this->db->insert_id();
+			
+			$json['replay_id'] = $insert_id;				
 			$json['up_date'] = date('d-m-Y');
 			$json['lead_query'] = str_replace('\\', '', $lead_query);
 			$json['firstname'] = $user[0]['first_name'];
