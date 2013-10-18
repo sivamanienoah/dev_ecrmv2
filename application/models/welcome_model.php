@@ -74,6 +74,12 @@ class Welcome_model extends crm_model {
 		return $user->result_array();
 	}
 	
+	function get_client_data_by_id($cid) {
+		$this->db->where('custid', $cid);
+		$client = $this->db->get($this->cfg['dbpref'] . 'customers');
+		return $client->result_array();
+	}
+	
 	function updt_log_view_status($id, $log) {
 		$this->db->where('jobid', $id);
 		return $this->db->update($this->cfg['dbpref'] . 'jobs', $log);
