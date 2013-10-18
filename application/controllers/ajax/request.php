@@ -161,11 +161,12 @@ class Request extends crm_controller {
 		$userdata = $this->session->userdata('logged_in_user');
 	$userid = $userdata['userid']; 
 	$ex = explode('/',urldecode($_POST['file_path'])); 
+	
 	$jobid = $ex[2]; 
 	$filename = $ex[3]; //filename
 		if (isset($_POST['file_path']))
 		{
-			$path = dirname(FCPATH) . urldecode($_POST['file_path']);
+			 $path = UPLOAD_PATH.urldecode($_POST['file_path']); 
 			if (is_file($path))
 			{
 				if (@unlink($path))
