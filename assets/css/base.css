@@ -706,12 +706,6 @@ color:#595959;
 	-o-border-radius:10px;
 	-webkit-border-radius:10px;
 }
-.q-cust.syng-gray {
-	background:url(../img/cust-detail-gray-back.jpg?q=1);
-}
-.q-details .q-cust.syng-gray h3 {
-	color:#535353;
-}
 .q-cust p {
 	font-weight:bold;
 	overflow:hidden;
@@ -727,9 +721,7 @@ color:#595959;
     float: left;
     font-style: normal;
     width: 60px;}
-.q-cust.syng-gray p em {
-	color:#535353;
-}
+
 .q-details h3 em {
 	font-style:normal;
 }
@@ -1338,4 +1330,19 @@ html[xmlns] .clearfix {
 
 .existing-query-list {
     clear: left;
+}
+
+.email-set-options {
+	padding:8px 0 6px;
+	margin-bottom:10px;
+	border-bottom:1px solid #757575;
+	border-top:1px solid #757575;
+}
+.client-comm-options {
+	float:right;
+	width:185px;
+}
+.client-comm-options .action-td {
+	padding-right:4px;
+	padding-top:2px;
 }

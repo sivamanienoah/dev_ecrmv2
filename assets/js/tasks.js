@@ -263,7 +263,6 @@ function loadExistingTasks()
 		{},
 		function(data)
 		{
-			
 			$('.existing-task-list').append(data);
 			$('#jv-tab-4').unblock();
 		}
@@ -275,7 +274,7 @@ function loadExistingTasks()
 var _task_require_qc = false;
 
 function setTaskStatus(taskid, el)
-{
+{	
 	//dynamically bring the hostname and project folder name.
 	var hstname = window.location.host;
 	var pathname = window.location.pathname;
@@ -366,8 +365,6 @@ function setTaskStatus(taskid, el)
 					}
 					else if (data.task_delete)
 					{
-						
-						//if (window.location.href == 'http://192.168.0.235:85/vcsupgrade/tasks/all/')
 						//if (window.location.href == 'http://localhost/ecrmv2/tasks/all/')
 						if (window.location.href == 'http://' + hstname + '/' + pth[1] + '/tasks/all/')
 						{

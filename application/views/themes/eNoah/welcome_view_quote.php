@@ -63,7 +63,6 @@ job_categories['not_select'] = '';
 job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
 <?php } ?>
 
-var hourly_rate = <?php echo $cfg['hourly_rate'] ?>;
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
@@ -237,19 +236,6 @@ function addLog() {
 	)
 }
 
-//unwanted function
-var client_message = 'Hi <?php echo  (isset($quote_data) && trim($quote_data['first_name']) != '') ? $quote_data['first_name'] : 'There' ?>,\n\nWe are now pleased to forward to you our formal project proposal for:\n\n<?php echo $cfg['job_status'][$quote_data['job_status']] ?> #<?php echo $quote_data['invoice_no'], ', ', str_replace("'", "\'", $quote_data['job_title']) ?>\n\nIf you wish to proceed with our Lead, please reply to this email stating the following: "Lead Approved - Please Proceed" and one of our friendly staff will be in touch with you to finalise your order.\n\nThank you.';
-
-function prepareForClient() {
-	$('#job_log').val(client_message);
-	$('#attach_pdf').attr('checked', true);
-	$('#email_to_customer').attr('checked', true);
-	$('#multiple-client-emails:hidden').slideDown(400)
-				.children('input[type=checkbox]:first').attr('checked', true);
-	$('#requesting_client_approval').val('1');
-	return false;
-}
-
 
 function fullScreenLogs() {
 	var fsl_height = parseInt($(window).height()) - 80;
@@ -355,7 +341,8 @@ function ajaxDeleteFile(path, el) {
 		);
 	}
 }
-function getReplyForm(id){
+
+function getReplyForm(id) {
 	$('#querylead_table').slideToggle();
 	document.getElementById('query_form').innerHTML = "<input type='text' value='replay-"+id+"' name='replay-"+id+"' id='replay' />";
 }
@@ -532,8 +519,7 @@ function ajaxDeleteJobURL(id, el) {
 
 var job_project_manager = '<?php echo $quote_data['assigned_to'] ?>';
 
-
-function setProjectStatusDate(date_type) {	
+function setProjectStatusDate(date_type) {
 	
 	<?php
 	if (isset($userdata) && $userdata['level'] > 1)
@@ -589,7 +575,6 @@ function setProjectStatusDate(date_type) {
 }
 
 
-
 function whatAreStickies() {
 	var msg = 'Stickies are logs that are important.\nInformation that is vital to the job.\nInformtion that you need to find quickily without reading through all the communication.\nA URL, FTP/MySQL details, Important changes etc.';
 	alert(msg);
@@ -601,51 +586,6 @@ function whatIsSignature() {
 	alert(msg);
 	return false;
 }
-
-function downloadCustomPDF()
-{
-	var errors = [];
-	var custom_date = $('.download-invoice-option input[name="use_custom_date"]').val();
-	var required_balance = $('#new-balance-due').val();
-	var total_balance = $('#ex-balance-due').val();
-	
-	if ( ! /^[0-9]{2}\-[0-9]{2}\-[0-9]{4}$/.test(custom_date))
-	{
-		errors.push('Invalid date format provided!');
-	}
-	
-	if (/[^0-9\.]/.test(required_balance))
-	{
-		errors.push('Payment due should be a numeric value.');
-	}
-	
-	if (parseFloat(required_balance) > parseFloat(total_balance))
-	{
-		errors.push('Requested value should be less than or equal to the payment due.');
-	}
-	
-	if (errors.length > 0)
-	{
-		alert(errors.join('\n'));
-		return false;
-	}
-	else
-	{
-		var pdf_url = '<?php echo $this->config->item('base_url') ?>welcome/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE/TRUE/FALSE/output-<?php echo $quote_data['invoice_no'] ?>/template/';
-		
-		if ($('.download-invoice-option input[name="ignore_content_policy"]').is(':checked'))
-		{
-			pdf_url = pdf_url + 'FALSE';
-		}
-		
-		$('.download-invoice-option').attr('action', pdf_url);
-		$('.download-invoice-option').attr('onsubmit', '');
-		$('.download-invoice-option').submit().slideUp('fast').attr('onsubmit', 'return false;');
-	}
-	
-	return false;
-}
-
 
 /* function to add the auto log */
 function qcOKlog() {
@@ -713,12 +653,6 @@ $(function(){
 			window.open(this.href);
 			return false;
 		});
-	});
-	
-	$('.jump-to-job select').change(function(){
-		var _new_location = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{jobid}}', $_SERVER['REQUEST_URI']) ?>';
-		//alert(_new_location); return false;
-		document.location = _new_location.replace('{{jobid}}', $(this).val());
 	});
 	
 	$('#job_log').siblings().hide();
@@ -837,72 +771,11 @@ function setContractorJob()
 	
 	return false;
 }
-
-
 </script>
-
-<style type="text/css">
-
-.project-csr-change {
-	display:none;
-}
-#project-in-csr-icon {
-	padding:8px 5px 5px 10px;
-}
-#pm-profile-image {
-	padding:1px 5px 5px;
-}
-#pm-profile-image img {
-	border:1px solid #999;
-}
-.project-csr-label span {
-	font-size:11px;
-	font-weight:normal;
-}
-.email-set-options {
-	padding:8px 0 6px;
-	margin-bottom:10px;
-	border-bottom:1px solid #757575;
-	border-top:1px solid #757575;
-}
-.client-comm-options {
-	float:right;
-	width:185px;
-}
-.client-comm-options .action-td {
-	padding-right:4px;
-	padding-top:2px;
-}
-</style>
 
 <div id="content">
     <?php
-	if ($this->session->userdata('logged_in') == true)
-	{
-		if ($this->uri->segment(1) == 'invoice')
-		{
-			if(in_array($userdata['level'], array(0,1,4))){
-	 
-			}
-			$controller_uri = 'invoice';
-		}
-		else
-		{
-			if(in_array($userdata['level'], array(0,1,4))){
-			//include ('tpl/quotation_submenu.php');
-			}
-			$controller_uri = 'welcome';
-		}
-	}
-	
-	/**
-	 * this is useful for all the date instances
-	 */
-	$date_used = $quote_data['date_created'];
-	if (in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)) && $quote_data['date_invoiced'] != '')
-	{
-		$date_used = $quote_data['date_invoiced'];
-	}
+		$date_used = $quote_data['date_created'];
 	?>
 	
     <div class="inner q-view">
@@ -931,33 +804,10 @@ function setContractorJob()
 					</tr>
 				</table>
 			</form>
-		 
-			<?php
-			if (isset($jobs_under_type))
-			{
-				?>
-			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post" class="jump-to-job">
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				<select name="jump_to_job" class="textfield width300px">
-					<?php
-					foreach($jobs_under_type as $job_ut)
-					{
-					?>
-					<option value="<?php echo $job_ut['jobid'] ?>"<?php if ($job_ut['jobid'] == $quote_data['jobid']) echo ' selected="selected"' ?>><?php echo $job_ut['job_title'], ' - ', $job_ut['company'] ?></option>
-					<?php
-					}
-					?>
-				</select>
-				<p>Jump to a job</p>
-			</form>
-				<?php
-			}
-			?>
 			
 		<?php 
 		if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
 			<form id="comm-log-form">
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<textarea name="job_log" id="job_log" class="textfield width99pct height100px gray-text">Click to view options</textarea>
 				<div style="position:relative;">
@@ -976,18 +826,9 @@ function setContractorJob()
 					</div>
 				
 				</div>
-				<?php
-				// you only send this to a client if you are an admin + only if the status is quotation
-				if (isset($userdata) && $userdata['level'] < 2 && isset($quote_data) && $quote_data['job_status'] < 3)
-				{
-					?>
-					<!-- <p><a href="#" onclick="prepareForClient(); return false;">Send quote to client</a></p> -->
-					<?php
-				}
-				?>
-			
+							
 			<?php
-			if (isset($userdata) && in_array($userdata['level'], array(0,1,2,3,4,5)))
+			if (isset($userdata))
 			{
 				?>
 				<div class="email-set-options" style="overflow:hidden;">
@@ -1095,8 +936,6 @@ function setContractorJob()
 			
 				<div class="user-addresses">
 					<?php
-				
-					// echo "<pre>"; print_r($user_accounts);
 
 					/* check the condition if role_id = 1 (admin) and role_id = 2 (management)  and leadowner and lead assigned to  */
 					if (count($user_accounts)) foreach ($user_accounts as $ua)
@@ -1128,9 +967,7 @@ function setContractorJob()
 				?>
 			</span>
 			<h4>Comments</h4>
-			<!--<div class="log-container">
-				<?php #echo $log_html ?>
-			</div>-->
+
 			<!--Code Changes for Pagination in Comments Section -- Starts here -->
 			<?php if ($log_html != "") { ?>
 			<table width="100%" id="lead_log_list" class="log-container"> 
@@ -1159,115 +996,92 @@ function setContractorJob()
 					<option value="40">40</option> 
 				</select> 
 			</div>
-			<?php } else { echo "No Comments Found."; }?>
+			<?php } else { echo "No Comments Found."; } ?>
 			<!--Code Changes for Pagination in Comments Section -- Ends here -->
 		</div>
-		
-        <div class="side1">
+
+		<div class="side1">
 			<h2 class="job-title">
 				<?php
-				if (is_file(dirname(FCPATH) . '/assets/img/sales/' . $quote_data['belong_to'] . '.jpg'))
-				{
-					?>
-					<img src="assets/img/sales/<?php echo $quote_data['belong_to'] ?>.jpg" title="<?php echo $quote_data['belong_to'] ?>" />
-					<?php
-				}
-				
-				echo htmlentities($quote_data['job_title'], ENT_QUOTES);
+					echo htmlentities($quote_data['job_title'], ENT_QUOTES);
 				?>
 			</h2>
 			
 			<div class="action-buttons" style="overflow:hidden;">
-			
-			
-			<?php if (isset($quote_data)) { ?>
-			<?php //echo '<pre>'; print_r($quote_data); echo '</pre>'; ?>	
-			<?php //if(in_array($userdata['level'], array(0,1,4))){?>
-				<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
-					<table>
-						<tr>
-							<td valign="top" width="300">
-								<h6 class="project-startdate-label">Proposal Expected Date &raquo;<span><?php if ($quote_data['proposal_expected_date'] != '') echo date('d-m-Y', strtotime($quote_data['proposal_expected_date'])); else echo 'Not Set'; ?></span></h6>		
-							</td>
-						</tr>
-						<!--<tr>		
-							<td valign="top" width="300">
-								<h6 class="project-deadline-label">Proposal Sent Date &raquo; <span><?php #if ($quote_data['proposal_sent_date'] != '') echo date('d-m-Y', strtotime($quote_data['proposal_sent_date'])); else echo 'Not Set'; ?></span></h6>
-							</td>
-						</tr>-->
-						
-					</table>
+				
+				<?php if (isset($quote_data)) { ?>
+					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
+						<table>
+							<tr>
+								<td valign="top" width="300">
+									<h6 class="project-startdate-label">Proposal Expected Date &raquo;<span><?php if ($quote_data['proposal_expected_date'] != '') echo date('d-m-Y', strtotime($quote_data['proposal_expected_date'])); else echo 'Not Set'; ?></span></h6>		
+								</td>
+							</tr>
+						</table>
+					</form>
+					<?php //} ?>	
 					
-				</form>
-				<?php //} ?>	
-				
-				
-           <?php //echo 'asdf<pre>'; print_r($actual_worth); echo '</pre>'; ?>
-                <div class="q-init-details">
-                    <p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
-					<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
-                    <p class="clearfix"><label>Service Requirement </label>  <span><?php echo $cfg['job_categories'][$quote_data['job_category']] ?></span></p>
-					<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
-					<p class="clearfix"><label>Actual worth of Deal </label>  <span>
-							<?php
-								if($quote_data['actual_worth_amount'] == '0.00')
-								$amount = '0.00';
-								else 
-								$amount = $quote_data['actual_worth_amount'];
-								echo $quote_data['expect_worth_name'] . ' ' .$amount;
-							?>
-					</span>
-					</p>
-					<p class="clearfix"><label>Division </label><span><?php echo $cfg['sales_divisions'][$quote_data['division']] ?></span></p>
-					<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
-					<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
-					<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
-					<p class="clearfix"><label>Lead Status </label>
-						<span> 
-							<?php 
-								switch ($quote_data['lead_status'])
-								{
-									case 1:
-										echo $status = 'Active';
-									break;
-									case 2:
-										echo $status = 'On Hold';
-									break;
-									case 3:
-										echo $status = 'Dropped';
-									break;
-									case 4:
-										echo $status = 'Closed';
-									break;
-								}
-							?>
+					<div class="q-init-details">
+						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
+						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
+						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $cfg['job_categories'][$quote_data['job_category']] ?></span></p>
+						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
+						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
+								<?php
+									if($quote_data['actual_worth_amount'] == '0.00')
+									$amount = '0.00';
+									else 
+									$amount = $quote_data['actual_worth_amount'];
+									echo $quote_data['expect_worth_name'] . ' ' .$amount;
+								?>
 						</span>
-					</p>
-					<p class="clearfix"><label>Lead Stage </label><span><?php echo $quote_data['lead_stage_name'] ?></span></p>
-					<?php if($quote_data['lead_status'] == 2) { ?>
-					<p class="clearfix"><label>Reason for OnHold </label><span><?php echo $quote_data['lead_hold_reason'] ?></span></p>
-					<?php } ?>
-                    <input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
-                </div>
-            </form>
-            <?php } ?>
-			
-				<?php
+						</p>
+						<p class="clearfix"><label>Division </label><span><?php echo $cfg['sales_divisions'][$quote_data['division']] ?></span></p>
+						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
+						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
+						<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
+						<p class="clearfix"><label>Lead Status </label>
+							<span> 
+								<?php 
+									switch ($quote_data['lead_status'])
+									{
+										case 1:
+											echo $status = 'Active';
+										break;
+										case 2:
+											echo $status = 'On Hold';
+										break;
+										case 3:
+											echo $status = 'Dropped';
+										break;
+										case 4:
+											echo $status = 'Closed';
+										break;
+									}
+								?>
+							</span>
+						</p>
+						<p class="clearfix"><label>Lead Stage </label><span><?php echo $quote_data['lead_stage_name'] ?></span></p>
+						<?php if($quote_data['lead_status'] == 2) { ?>
+							<p class="clearfix"><label>Reason for OnHold </label><span><?php echo $quote_data['lead_hold_reason'] ?></span></p>
+						<?php } ?>
+						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
+					</div>
+				</form>
+				<?php } ?>
 				
-				include theme_url() . '/tpl/user_accounts_options.php';
-								
-				//print_r($quote_data);
-				if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
-				{
-					?>
+				<?php
+					include theme_url() . '/tpl/user_accounts_options.php';
+
+					if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
+					{
+				?>
 					<div class="buttons" style="overflow:hidden; padding-bottom:10px; margin:10px 0 0;">
 						<button type="submit" class="positive" onclick="document.location.href = '<?php echo $this->config->item('base_url') ?>welcome/edit_quote/<?php echo $quote_data['jobid'] ?>'">Edit this Lead</button>
 					</div>
-					
-					<?php
-				}
-
+				<?php
+					}
 				?>
 			</div>
 			
@@ -1282,77 +1096,40 @@ function setContractorJob()
 				<li><a href="#jv-tab-7">Query</a></li>
 			</ul>
 			<div id="jv-tab-1">
-				<table class="data-table">
-					<tr ><th>Stage Name</th><th>Modified By</th><th>Modified On</th></tr>
-					<?php foreach($lead_stat_history as $ldsh) { ?>
-						<tr>
-							<td><?php echo $ldsh['lead_stage_name']; ?></td>
-							<td><?php echo $ldsh['first_name'] . " " . $ldsh['last_name']; ?></td>
-							<td><?php echo date('d-m-Y', strtotime($ldsh['dateofchange'])); ?></td>
-						</tr>
-					<?php } ?>
-				</table>
+					<table class="data-table">
+						<tr ><th>Stage Name</th><th>Modified By</th><th>Modified On</th></tr>
+						<?php foreach($lead_stat_history as $ldsh) { ?>
+							<tr>
+								<td><?php echo $ldsh['lead_stage_name']; ?></td>
+								<td><?php echo $ldsh['first_name'] . " " . $ldsh['last_name']; ?></td>
+								<td><?php echo date('d-m-Y', strtotime($ldsh['dateofchange'])); ?></td>
+							</tr>
+						<?php } ?>
+					</table>
 			</div>
 			
 			<div id="jv-tab-2">
-				<!--<p style="text-align:right;"><a href="#" onclick="$('.download-invoice-option').slideToggle('fast'); return false;"><img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a></p> -->
-				<!-- Changes done for Google chrome toggle issue-->
-				<p style="text-align:right;"><a href="#" onclick="downloadCustomPDF(); return false;">
-					<img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a>
-				</p>
-			
-				<form class="download-invoice-option" style="display:none;" action="welcome/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE" method="post" target="_blank" onsubmit="return false;">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<table border="0" cellpadding="0" cellspacing="0">
-						<tr style="display:none;">
-							<td>
-								&nbsp;Use a custom date<br />
-								<input type="text" class="textfield width200px pick-date" name="use_custom_date" value="<?php echo date('d-m-Y', strtotime($date_used)) ?>" readonly="readonly" />
-							</td>
-							<td>
-								&nbsp;Adjust current payment due<br />
-								<input type="text" class="textfield width200px" name="balance_due" value="" id="new-balance-due" />
-								<input type="hidden" name="ex_balance_due" value="" id="ex-balance-due" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="buttons" style="margin-bottom:0px;"> asdf
-									<button type="submit" class="positive" onclick="downloadCustomPDF(); return false;">Download PDF</button>
-								</div>
-							</td>
-							<td style="display:none;">
-								<input type="checkbox" checked="checked" name="ignore_content_policy" />
-								Don't attach content policy
-							</td>
-						</tr>
-					</table>
-					
-				</form>	
-				
 				<div class="q-container">
 					<div class="q-details">
 						<div class="q-top-head">
-							<div class="q-cust<?php if(isset($quote_data) && $quote_data['division'] == 'SYNG') echo ' syng-gray' ?>">
-								<h3 class="q-id"><em><?php //echo  (isset($quote_data)) ? $cfg['job_status_label'][$quote_data['job_status']] : 'Draft' ?>Lead</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
+							<div class="q-cust">
+								<h3 class="q-id"><em>Lead</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
 								<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
 								<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 								<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['cfn'] . ' ' . $quote_data['cln'] : '' ?></span></p>
 								<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
 								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
 							</div>
-							<?php //$cfg['quote_header'] ?><!-- end q-self -->
 							<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
 						</div>
+						
 						<div class="q-quote-items">
 							<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
 							<ul id="q-sort-items"></ul>
 						</div>
 					</div>
 				</div>
-				<?php //if (in_array($userdata['level'], array(0,1,4,5))){?>
+
 				<div class="q-sub-total">
 					<table class="width565px" cellpadding="0" cellspacing="0" border="0">
 						<tr>
@@ -1366,16 +1143,13 @@ function setContractorJob()
 			</div><!-- id: jv-tab-2 end -->
 			
 			<div id="jv-tab-3">
-			
 				<form name="ajax_file_upload">
-				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
 				<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
 					<div id="upload-container">
 						<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
 						<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
-						<!-- input type="button" value="Upload File" onclick="runAjaxFileUpload();" / -->
 					</div>
 				<?php } ?>
 					<ul id="job-file-list">
@@ -1384,142 +1158,102 @@ function setContractorJob()
 					?>
 					</ul>
 				</form>
-					
+
 				<div id="lead_result"></div>
-				
 			</div><!-- id: jv-tab-3 end -->
 			
 			<div id="jv-tab-4">
-			<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
-				<form id="set-job-task" onsubmit="return false;">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-				<?php
+				<?php 
+				if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { 
+				?>
+					<form id="set-job-task" onsubmit="return false;">
+						
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						
+						<?php
 							$uio = $userdata['userid'];
 							foreach($created_by as $value) {
 								$b[] = $value[created_by];						
 							}
-							?>
-					<h3>Tasks</h3>
-					<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
-						
-						<tr>
-							<td colspan="4">
-								<strong>All fields are required!</strong>
-							</td>
-						</tr>
-						
-						<tr>
-							<td valign="top">
-								<br /><br />Task Desc
-							</td>
-							<td colspan="3">
-								<strong><span id="task-desc-countdown">1000</span></strong> characters left.<br />
-								<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="hidden" class="edit-task-owner textfield"></td>
-						</tr>
-						<tr>
-							<td>
-								Allocate to
-							</td>
-							<td>
-								<select name="task_user" class="edit-task-allocate textfield width100px">
-								<?php
-								echo $remind_options, $remind_options_all, $contractor_options;
-								?>
-								</select>
-							</td>
-						</tr>				
-						<tr>
-							<td>
-								Planned Start Date
-							</td>
+						?>
+						<h3>Tasks</h3>
+						<table border="0" cellpadding="0" cellspacing="0" class="task-add toggler">
+							<tr>
+								<td colspan="4"><strong>All fields are required!</strong></td>
+							</tr>
+							<tr>
+								<td valign="top"><br /><br />Task Desc</td>
+								<td colspan="3">
+									<strong><span id="task-desc-countdown">1000</span></strong> characters left.<br />
+									<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td><input type="hidden" class="edit-task-owner textfield"></td>
+							</tr>
+							<tr>
+								<td>Allocate to</td>
+								<td>
+									<select name="task_user" class="edit-task-allocate textfield width100px">
+										<?php
+										echo $remind_options, $remind_options_all, $contractor_options;
+										?>
+									</select>
+								</td>
+							</tr>				
+							<tr>
+								<td>Planned Start Date</td>
+								<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" /></td>
+								<td>Planned End Date</td>
+								<td><input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" /></td>
+							</tr>						
+							<tr>
+								<td>Remarks</td>
+								<td colspan="3"><textarea name="remarks" id="task-remarks" class="task-remarks" width="420px"></textarea></td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
+									</div>
+									<div class="buttons">
+										<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
+									</div>
+								</td>
+							</tr>
+						</table>
 							
-							<td>
-								<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
-							</td>
-							<td>
-								Planned End Date
-							</td>
-							<td>
-									<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />								
-							
-								&nbsp;
-								<!--<select name="task_end_hour" class="textfield edit-end-hour">
-								<?php
-								/*foreach ($time_range as $k => $v)
-								{
-									$selected = '';
-									echo "
-									<option value=\"{$k}\"{$selected}>{$v}</option>";
-								}*/
-								?>
-								</select>-->
-							</td>
-						</tr>						
+						<div class="buttons task-init  toggler">
+							<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>
+						</div>
 						
-						<!--<tr>
-							<td>&nbsp;</td>
-							<td colspan=3>
-								Require checklist before completion : <input type="checkbox" name="require_qc" /><br>
-								Priority Support : <input type="checkbox" name="priority" />
-							</td>
-						</tr>-->
-						<tr>
-							<td>Remarks</td>
-							<td colspan="3"><textarea name="remarks" id="task-remarks" class="task-remarks" width="420px"></textarea></td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
-								</div>
-							</td>
-						</tr>
-					</table>
+						<br /><br />
+					</form>
+				<?php 
+				} 
+				?>
+				<div class="existing-task-list">
+					<h4>Existing Tasks</h4>
+				</div>
 					
-					<div class="buttons task-init  toggler">
-						<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>
-					</div>
-					<br /><br />
-					<?php } ?>
-					<div class="existing-task-list">
-						
-						<h4>Existing Tasks</h4>
-						
-					</div>
-				</form>
-				
 				<form id="edit-job-task" onsubmit="return false;">
 				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-				<!-- edit task -->
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+
 					<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
-						
 						<tr>
 							<td colspan="4">
-							<?php
-							$uio = $userdata['userid'];
-							foreach($created_by as $value) {
-								$b[] = $value[created_by];						
-							}
-							?>
+								<?php
+								$uio = $userdata['userid'];
+								foreach($created_by as $value) {
+									$b[] = $value[created_by];						
+								}
+								?>
 								<strong>All fields are required!</strong>
 							</td>
 						</tr>
-						
 						<tr>
-							<td valign="top" width="80">
-								<br /><br />Task
-							</td>
+							<td valign="top" width="80"><br /><br />Task</td>
 							<td colspan="3">
 								<strong><span id="edit-task-desc-countdown">1000</span></strong> characters left.<br />
 								<textarea name="job_task" class="edit-job-task-desc width420px"></textarea>
@@ -1529,72 +1263,30 @@ function setContractorJob()
 							<td>Task Owner</td>
 							<td><input type="text" class="edit-task-owner textfield" readonly></td>
 						</tr>
-						
-						
-						
+
 						<tr>
-							<td>
-								Allocate to
-							</td>
+							<td>Allocate to</td>
 							<td>
 								<select name="task_user" class="edit-task-allocate textfield width100px">
-								<?php
-								echo $remind_options, $remind_options_all, $contractor_options;
-								?>
+									<?php
+										echo $remind_options, $remind_options_all, $contractor_options;
+									?>
 								</select>
 							</td>
-						</tr>						
-						
-						
-							<!--<td>
-								Hours
-							</td>
-							<td>
-								<input name="task_hours" type="text" class="edit-task-hours textfield width100px" /> Hours and
-								<select name="task_mins" class="edit-task-mins textfield">
-									<option value="0">0</option>
-									<option value="15">15</option>
-									<option value="30">30</option>
-									<option value="45">45</option>
-								</select>
-								Mins
-							</td>-->
-										
+						</tr>
+
 						<tr>
-							<td>
-								Planned Start Date
-							</td>
-							
-							<td>
-								<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
-							</td>							
-							
-							<td>
-								Planned End Date
-							</td>
-							<td>
-							  <input type="text" name="task_end_date" class="edit-end-date textfield width100px" readonly />
-	
-							</td>
+							<td>Planned Start Date</td>
+							<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" /></td>
+							<td>Planned End Date</td>
+							<td><input type="text" name="task_end_date" class="edit-end-date textfield width100px" readonly /></td>
 						</tr>
 						<tr>
 							<td>Actual Start Date</td>
 							<td><input type="text" name="task_actualstart_date" class="edit-actualstart-date textfield pick-date width100px" /></td>
 							<td>Actual End Date</td>
 							<td class="actualend-date"><input type="text" class="edit-actualend-date textfield" readonly></td>
-						</tr>						
-						<!--<tr>
-							<td>&nbsp;</td>
-							<td colspan="3">
-								Require checklist before completion <input type="checkbox" name="require_qc" class="task-require-qc" />
-							</td>
 						</tr>
-						<tr>
-							<td>&nbsp;</td>
-							<td colspan="3">
-								Priority <input type="checkbox" name="priority" class="priority" />
-							</td>
-						</tr>-->
 						<tr>
 							<td>Remarks</td>
 							<td colspan="3"><textarea name="remarks" class="edit-task-remarks" width="420px"></textarea></td>
@@ -1612,41 +1304,6 @@ function setContractorJob()
 					</table>
 				<!-- edit task end -->
 				</form>
-				
-				<form onsubmit="return false;" class="display-none" id="task-require-qc-cover">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<table border="0" cellpadding="0" cellspacing="0" class="the-task-require-qc">
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_1" /> &nbsp; <span>Is it working has intended - as per invoice or logged instruction?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_2" /> &nbsp; <span>Has it been checked for errors - is it working on other browsers/computers?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_3" /> &nbsp; <span>Does the item visually match the rest of the design/styling?</span></td>
-						</tr>
-						<tr>
-							<td class="qc-task-item-1" style="color:#ccc;"><input type="checkbox" name="qc_item_id_4" /> &nbsp; <span>Is it up to eNoah Standard - will it get approved in a design critique by the Assistant Art Director?</span>
-							<input type="hidden" name="hidden_taskid" />
-							</td>
-						</tr>
-						<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 ) { ?>
-						<tr>
-							<td>
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="submitFullCompleteStatus();">Proceed</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" class="negative" onclick="$.unblockUI(); $('#jv-tab-4').unblock();">Cancel</button>
-								</div>
-							</td>
-						</tr>
-						<?php } ?>
-					</table>
-				</form>
-				
 			</div><!-- id: jv-tab-4 end -->
 			
 			<div id="jv-tab-5">
@@ -1699,304 +1356,301 @@ function setContractorJob()
 				</form>
 				
 				<script type="text/javascript">
-				var milestones_cached_row = false;
-				function addMilestoneField()
-				{
-					if ( ! milestones_cached_row)
+					var milestones_cached_row = false;
+					function addMilestoneField()
 					{
-						milestones_cached_row = $('#milestone-clone tr:first');
+						if ( ! milestones_cached_row)
+						{
+							milestones_cached_row = $('#milestone-clone tr:first');
+						}
+						
+						milestones_cached_row.clone().appendTo('#milestone-data tbody');
+						$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 					}
 					
-					milestones_cached_row.clone().appendTo('#milestone-data tbody');
-					$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-				}
-				
-				function removeMilestoneRow(el)
-				{
-					var agree=confirm("Are you sure you want to delete this file?");
-						if (agree) {
-							$(el).parent().parent().remove();
-						}
-						var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-					
-					$('#jv-tab-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					
-					$.post(
-						'ajax/request/save_job_overview/' + curr_job_id,
-						data,
-						function(detail)
-						{
-							if ($.trim(detail) != '')
-							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-							}
-							$('#jv-tab-5').unblock();
-						}
-					);
-					return false;
-				}
-				
-				function saveMilestones()
-				{
-					var error = false;
-					
-					$('#milestone-data tbody tr').each(function(){
-						if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
-						{
-							error = 'All milestones and dates are required!';
-						}
-					});
-					
-					if (error)
+					function removeMilestoneRow(el)
 					{
-						alert(error);
-						return;
-					}
-					
-					var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-					
-					$('#jv-tab-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					
-					$.post(
-						'ajax/request/save_job_overview/' + curr_job_id,
-						data,
-						function(detail)
-						{
-							if ($.trim(detail) != '')
-							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+						var agree=confirm("Are you sure you want to delete this file?");
+							if (agree) {
+								$(el).parent().parent().remove();
 							}
-							$('#jv-tab-5').unblock();
-						}
-					);
-				}
-				
-				function emailMilestones()
-				{
-					var obj = $('#milestone-data tbody tr');
-					
-					if (obj.length == 0)
-					{
-						alert('No records are there to email!');
+							var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+						
+						$('#jv-tab-5').block({
+											message:'<img src="assets/img/ajax-loader.gif" />',
+											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+										});
+						
+						$.post(
+							'ajax/request/save_job_overview/' + curr_job_id,
+							data,
+							function(detail)
+							{
+								if ($.trim(detail) != '')
+								{
+									$('#milestone-data tbody').html(detail);
+									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+								}
+								$('#jv-tab-5').unblock();
+							}
+						);
 						return false;
 					}
-					var email_data = '';
-					obj.each(function(){
-						var ddate = $('.milestone-date input', $(this)).val();
-						var mstone = $('.milestone input', $(this)).val();
-						var mstat = $('.milestone-status select option:selected', $(this)).val();
+					
+					function saveMilestones()
+					{
+						var error = false;
 						
-						email_data += ddate + ' : ' + mstone;
-						if (mstat == 2)
-						{
-							email_data += ' [completed]';
-						}
-						email_data += '\n';
-					});
-					
-					$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
-					$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-					
-					return false;
-				}
-				
-				function populateJobOverview()
-				{
-					$('#jv-tab-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					$.get(
-						'ajax/request/get_job_overview/' + curr_job_id,
-						{},
-						function(detail)
-						{
-							if ($.trim(detail) != '')
+						$('#milestone-data tbody tr').each(function(){
+							if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
 							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+								error = 'All milestones and dates are required!';
 							}
-							$('#jv-tab-5').unblock();
+						});
+						
+						if (error)
+						{
+							alert(error);
+							return;
 						}
-					);
-				}
+						
+						var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+						
+						$('#jv-tab-5').block({
+											message:'<img src="assets/img/ajax-loader.gif" />',
+											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+										});
+						
+						$.post(
+							'ajax/request/save_job_overview/' + curr_job_id,
+							data,
+							function(detail)
+							{
+								if ($.trim(detail) != '')
+								{
+									$('#milestone-data tbody').html(detail);
+									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+								}
+								$('#jv-tab-5').unblock();
+							}
+						);
+					}
+					
+					function emailMilestones()
+					{
+						var obj = $('#milestone-data tbody tr');
+						
+						if (obj.length == 0)
+						{
+							alert('No records are there to email!');
+							return false;
+						}
+						var email_data = '';
+						obj.each(function(){
+							var ddate = $('.milestone-date input', $(this)).val();
+							var mstone = $('.milestone input', $(this)).val();
+							var mstat = $('.milestone-status select option:selected', $(this)).val();
+							
+							email_data += ddate + ' : ' + mstone;
+							if (mstat == 2)
+							{
+								email_data += ' [completed]';
+							}
+							email_data += '\n';
+						});
+						
+						$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
+						$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
+						
+						return false;
+					}
+					
+					function populateJobOverview()
+					{
+						$('#jv-tab-5').block({
+											message:'<img src="assets/img/ajax-loader.gif" />',
+											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+										});
+						$.get(
+							'ajax/request/get_job_overview/' + curr_job_id,
+							{},
+							function(detail)
+							{
+								if ($.trim(detail) != '')
+								{
+									$('#milestone-data tbody').html(detail);
+									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+								}
+								$('#jv-tab-5').unblock();
+							}
+						);
+					}
 				</script>
-			</div>
-			<?php //echo '<pre>'; print_r($quote_data); echo '</pre>'; ?>
+			</div><!-- id: jv-tab-5 end -->
+
 			<div id="jv-tab-6">
 				<form id="customer-detail-read-only" onsubmit="return false;">
 				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-				<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
-					<tr>
-						<td width="120"><label>First name</label></td>
-						<td><b><?php echo $quote_data['cfn'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Last Name</label></td>
-						<td><b><?php echo $quote_data['cln'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Position</label></td>
-						<td><b><?php echo $quote_data['position_title'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Company</label></td>
-						<td><b><?php echo $quote_data['company'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Address Line 1</label></td>
-						<td><b><?php echo $quote_data['add1_line1'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Address Line 2</label></td>
-						<td><b><?php echo $quote_data['add1_line2'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Suburb</label></td>
-						<td><b><?php echo $quote_data['add1_suburb'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Region</label></td>
-						<td><b><?php echo $quote_data['region_name'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Country</label></td>
-						<td><b><?php echo $quote_data['country_name'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>State</label></td>
-						<td><b><?php echo $quote_data['state_name'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Location</label></td>
-						<td><b><?php echo $quote_data['location_name'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Post code</label></td>
-						<td><b><?php echo $quote_data['add1_postcode'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Direct Phone</label></td>
-						<td><b><?php echo $quote_data['phone_1'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Work Phone</label></td>
-						<td><b><?php echo $quote_data['phone_2'] ?></b></td>
-					</tr>
-						<tr>
-						<td><label>Mobile Phone</label></td>
-						<td><b><?php echo $quote_data['phone_3'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Fax Line</label></td>
-						<td><b><?php echo $quote_data['phone_4'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Email</label></td>
-						<td><b><?php echo $quote_data['email_1'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Secondary Email</label></td>
-						<td><b><?php echo $quote_data['email_2'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Email 3</label></td>
-						<td><b><?php echo $quote_data['email_3'] ?></b></td>
-					</tr>
-					<tr>
-						<td><label>Email 4</label></td>
-						<td><b><?php echo $customer_tab[0]['email_4'] ?></b></td>
-					</tr>
-						<tr>
-						<td><label>Web</label></td>
-						<td><p>&nbsp; <?php echo auto_link($quote_data['www_1']) ?></p>
-						</td>
-					</tr>
-					<tr>
-						<td><label>Secondary Web</label></td>
-						<td><p>&nbsp; <?php echo auto_link($quote_data['www_2']) ?>
-						</td>
-					</tr>
-					
-				</table>
-				</form>
-			</div><!-- id: jv-tab-6 end -->
-				
-			<div id="jv-tab-7"> <!-- id: jv-tab-7 start -->
-						
-			<div id="querylead_form" style="border:0px solid;" >
-				<form id="querylead" name="querylead" method="post" onsubmit="return QueryAjaxFileUpload();">
-				
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
-					<h3>Query</h3>
-					<table id="querylead_table" class="layout add_query" style="display: none">								
+					<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
 						<tr>
-							<td width="120">Query:</td>
-							<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
-							<td width="300"><textarea name="query" id="query" cols="20" rows="3" ></textarea></td>
+							<td width="120"><label>First name</label></td>
+							<td><b><?php echo $quote_data['cfn'] ?></b></td>
 						</tr>
 						<tr>
-							<td width="120">Attachment File:</td>
-							<td><input type="file" class="textfield" id="query_file" name="query_file" /></td>
+							<td><label>Last Name</label></td>
+							<td><b><?php echo $quote_data['cln'] ?></b></td>
 						</tr>
 						<tr>
-							<td>
-								<input type="submit" name="query_sub" value="Submit" class="positive submitpositive" />
-								<input type="button" name="query_sub" value="Cancel" class="cancel" />
+							<td><label>Position</label></td>
+							<td><b><?php echo $quote_data['position_title'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Company</label></td>
+							<td><b><?php echo $quote_data['company'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Address Line 1</label></td>
+							<td><b><?php echo $quote_data['add1_line1'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Address Line 2</label></td>
+							<td><b><?php echo $quote_data['add1_line2'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Suburb</label></td>
+							<td><b><?php echo $quote_data['add1_suburb'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Region</label></td>
+							<td><b><?php echo $quote_data['region_name'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Country</label></td>
+							<td><b><?php echo $quote_data['country_name'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>State</label></td>
+							<td><b><?php echo $quote_data['state_name'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Location</label></td>
+							<td><b><?php echo $quote_data['location_name'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Post code</label></td>
+							<td><b><?php echo $quote_data['add1_postcode'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Direct Phone</label></td>
+							<td><b><?php echo $quote_data['phone_1'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Work Phone</label></td>
+							<td><b><?php echo $quote_data['phone_2'] ?></b></td>
+						</tr>
+							<tr>
+							<td><label>Mobile Phone</label></td>
+							<td><b><?php echo $quote_data['phone_3'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Fax Line</label></td>
+							<td><b><?php echo $quote_data['phone_4'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Email</label></td>
+							<td><b><?php echo $quote_data['email_1'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Secondary Email</label></td>
+							<td><b><?php echo $quote_data['email_2'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Email 3</label></td>
+							<td><b><?php echo $quote_data['email_3'] ?></b></td>
+						</tr>
+						<tr>
+							<td><label>Email 4</label></td>
+							<td><b><?php echo $customer_tab[0]['email_4'] ?></b></td>
+						</tr>
+							<tr>
+							<td><label>Web</label></td>
+							<td><p>&nbsp; <?php echo auto_link($quote_data['www_1']) ?></p>
+							</td>
+						</tr>
+						<tr>
+							<td><label>Secondary Web</label></td>
+							<td><p>&nbsp; <?php echo auto_link($quote_data['www_2']) ?>
 							</td>
 						</tr>
 					</table>
-					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
-						<div class="buttons task-init  toggler">
-							<button type="button" class="positive" onclick="$('#querylead_table').slideToggle();">Raise Query</button>
-						</div>
-					<?php } ?>
-					
-					<table id="lead_query_list" class="existing-query-list">
-					<thead> </thead>
-						<tbody id="query-file-list"><tr id="querylist"></tr><?php echo $query_files1_html; ?></tbody>
-					</table>
-					
-					<?php if (!empty($query_files1_html)) { ?>
-						<div id="pager1">
-							<?php echo '&nbsp;';?>
-							<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-							<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-							<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-							<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-							<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-							<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-							<select class="pagesize"> 
-								<option selected="selected" value="10">10</option> 
-								<option value="20">20</option> 
-								<option value="30">30</option> 
-								<option value="40">40</option> 
-							</select> 
-						</div>
-					<?php } ?>
 				</form>
-			</div>
-			<script>
-				$(function(){
-					$(".cancel").click(function(){
-						$('#querylead_table').slideToggle();
+			</div><!-- id: jv-tab-6 end -->
+				
+			<div id="jv-tab-7"><!-- id: jv-tab-7 start -->
+				<div id="querylead_form" style="border:0px solid;" >
+					<form id="querylead" name="querylead" method="post" onsubmit="return QueryAjaxFileUpload();">
+					
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						
+						<h3>Query</h3>
+						<table id="querylead_table" class="layout add_query" style="display: none">								
+							<tr>
+								<td width="120">Query:</td>
+								<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
+								<td width="300"><textarea name="query" id="query" cols="20" rows="3" ></textarea></td>
+							</tr>
+							<tr>
+								<td width="120">Attachment File:</td>
+								<td><input type="file" class="textfield" id="query_file" name="query_file" /></td>
+							</tr>
+							<tr>
+								<td>
+									<input type="submit" name="query_sub" value="Submit" class="positive submitpositive" />
+									<input type="button" name="query_sub" value="Cancel" class="cancel" />
+								</td>
+							</tr>
+						</table>
+						<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
+							<div class="buttons task-init  toggler">
+								<button type="button" class="positive" onclick="$('#querylead_table').slideToggle();">Raise Query</button>
+							</div>
+						<?php } ?>
+						
+						<table id="lead_query_list" class="existing-query-list">
+							<thead> </thead>
+							<tbody id="query-file-list"><tr id="querylist"></tr><?php echo $query_files1_html; ?></tbody>
+						</table>
+						
+						<?php if (!empty($query_files1_html)) { ?>
+							<div id="pager1">
+								<?php echo '&nbsp;';?>
+								<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+								<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+								<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
+								<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+								<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
+								<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
+								<select class="pagesize"> 
+									<option selected="selected" value="10">10</option> 
+									<option value="20">20</option> 
+									<option value="30">30</option> 
+									<option value="40">40</option> 
+								</select> 
+							</div>
+						<?php } ?>
+					</form>
+				</div>
+				<script>
+					$(function(){
+						$(".cancel").click(function(){
+							$('#querylead_table').slideToggle();
+						})
 					})
-				})
-			</script>
-			
+				</script>
+			</div>
 		</div>
-        </div>
 	</div>
 </div>
 

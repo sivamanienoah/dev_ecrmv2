@@ -18,7 +18,6 @@ job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
 <?php } ?>
 
 
-
 var item_inventory = [];
 <?php foreach ($cfg['item_inventory'] as $iv_key => $iv_val) { ?>
 item_inventory[<?php echo  $iv_key ?>] = ['<?php echo  str_replace("'", "\'", $iv_val['desc']) ?>', '<?php echo  str_replace("'", "\'", $iv_val['hours']) ?>'];

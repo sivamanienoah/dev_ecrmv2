@@ -217,6 +217,7 @@ HDOC;
 	 * @access public
 	 */
 	public function new_quote($lead = FALSE, $customer = FALSE) {
+	
 		if (is_numeric($lead)) {
 			$lead_details = $this->welcome_model->get_lead($lead);			
 			$data['existing_lead'] = $lead;
@@ -227,29 +228,19 @@ HDOC;
 		$data['lead_customer'] = $customer;
 	
 		/* additional item list */
-		$data['item_mgmt_add_list'] = $data['item_mgmt_saved_list'] = array();
+		// $data['item_mgmt_add_list'] = $data['item_mgmt_saved_list'] = array();
 		$data['categories'] = $this->welcome_model->get_categories();
 		$c = count($data['categories']);
 		for ($i = 0; $i < $c; $i++) {
 			$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
-		}		
-		// $data['package'] = $this->welcome_model->get_package();
+		}
 		$data['lead_source'] = $this->welcome_model->get_lead_sources();
-				
-		/*if($this->userdata['role_id'] != 1) {
-			$data['lead_assign'] = $this->welcome_model->get_lead_assign($this->userdata['level']);
-		} else {
-			$data['lead_assign'] = $this->welcome_model->get_lead_assign();
-		}*/
-		
+
 		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
 		$this->load->view('welcome_view', $data);
 	}
-	
-	
 
 	/*For Project Module -- Start here*/
-	
 	public function projects($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false') {	
 		$data['page_heading'] = "Projects - Lists";
 		// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();		
@@ -625,8 +616,7 @@ On behalf of the client and from supplied business details including official tr
 	*Mail converstations send to customer and user
 	*
 	*/
-	public function send_mail_query($jobid, $filename, $msg){
-		
+	public function send_mail_query($jobid, $filename, $msg) {
 		$qry = "SELECT first_name, last_name, email FROM ".$this->cfg['dbpref']."users WHERE userid=".$this->session->userdata['logged_in_user']['userid'];
 		$users = $this->db->query($qry);
 		$user = $users->result_array();
@@ -635,41 +625,17 @@ On behalf of the client and from supplied business details including official tr
 		$customers = $this->db->query($qry1);
 		$customer = $customers->result_array();
 		
-		$query = "INSERT INTO ".$this->cfg['dbpref']."_lead_query (job_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from) 
+		$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from) 
 		VALUES(".$jobid.",'".$msg."','".$filename."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."')";		
 		$q = $this->db->query($query);
-		//echo $this->db->last_query();
-		/*if($q) {
-			$url = base_url();
-			$attachment_url = $url.'vps_data/query/'.$jobid.'/'.$filename;
-			$to = $customer[0]['email_1'];
-			$subject = 'Query Lead Converstion';
-			$from = $user[0]['email'];
-			$from_name = $user[0]['first_name'];
-			
-			$this->load->plugin('phpmailer');
-			$this->load->library('email');
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$this->email->from($from, $from_name);
-			$this->email->to($to);
-			$this->email->subject($subject);
-			$this->email->message($msg);	
-			//$this->email->AddAttachment($attachment_url);			
-			$ok = $this->email->send();
-			if($ok)
-			echo "Successfully send the mail";	
-			else 
-			echo "Mail Sending Problem";
-		} */					
-		
 	}
-    
 	
 	/*
-     * View the quote by itself
-     * Optionally generate PDF
-     */
+	 * View the quote by itself
+	 * Optionally generate PDF
+	 */
+	 
+	/* 
     public function view_plain_quote($id = 0, $pdf = FALSE, $stream_pdf = TRUE, $invoice = FALSE, $name_override = '', $template = '', $content_policy = TRUE)
     {
 		$this->login_model->check_login();
@@ -865,7 +831,7 @@ On behalf of the client and from supplied business details including official tr
         }
         
     }
-	
+	*/
 	
 	/**
 	 * Adds a log to a job
@@ -873,7 +839,7 @@ On behalf of the client and from supplied business details including official tr
 	 *
 	 */
 	function add_log()
-	{ 
+	{
         if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content']))
         {
 			$this->load->helper('text');
@@ -1037,7 +1003,7 @@ body {
 							$content_policy = FALSE;
 						}
 						
-						$this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', $content_policy);
+						// $this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', $content_policy);
 							
 
 
@@ -1296,8 +1262,7 @@ HDOC;
 	
 	function pjt_add_log()
 	{
-        if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content']))
-        {
+        if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
 			
@@ -1460,10 +1425,8 @@ body {
 							$content_policy = FALSE;
 						}
 						
-						$this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', $content_policy);
-							
-
-
+						// $this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', $content_policy);
+						
 						if (file_exists($full_file_path))
 						{
 							//$pdf_file_attach= array($full_file_path, $temp_file_name . '.pdf');
@@ -4535,7 +4498,7 @@ body {
 						if (isset($_POST['ignore_content_policy']))	{
 							$content_policy = FALSE;
 						}
-						$this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', false);
+						// $this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', false);
 						if (file_exists($full_file_path)) {
 							$pdf_file_attach[] = array($full_file_path, $temp_file_name . '.pdf');
 						}

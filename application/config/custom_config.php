@@ -16,7 +16,6 @@ $config['crm']['app_date']      = '16.08.2013';
 $config['crm']['dbpref']        = 'crms_';
 $config['crm']['theme']         = 'eNoah';
 $config['crm']['data']          = 'vps3_data';
-$config['crm']['hourly_rate']   = 18;
 
 $config['crm']['sales_codes']   = array(
 									'MS' => 'Manoj Sherman',

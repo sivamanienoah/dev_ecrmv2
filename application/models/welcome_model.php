@@ -919,13 +919,7 @@ class Welcome_model extends crm_model {
 		$q = $this->db->get($this->cfg['dbpref'] . 'additional_items');
 		return $q->result_array();
     }
-  	
-    function get_package() {
-    	$this->db->where('status', 'active');
-		$q = $this->db->get($this->cfg['dbpref'] . 'package');
-    	return $q->result_array();
-    }
-    
+  	   
     function get_lead_sources() {
     	$this->db->where('status', 1);
 		$q = $this->db->get($this->cfg['dbpref'] . 'lead_source');
