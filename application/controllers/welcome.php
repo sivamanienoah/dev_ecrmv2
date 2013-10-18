@@ -117,8 +117,8 @@ HDOC;
 			/**
 			 * Get files associated with this job
 			 **/
-			$fcpath = dirname(FCPATH) . '/';
-			$f_dir = $fcpath . 'vps_data/' . $id . '/';
+			$fcpath = UPLOAD_PATH; 
+		    $f_dir = $fcpath . 'files/' . $id . '/'; 
 			$data['job_files_html'] = $this->welcome_model->get_job_files($f_dir, $fcpath,$data['quote_data']);
 			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
 			
