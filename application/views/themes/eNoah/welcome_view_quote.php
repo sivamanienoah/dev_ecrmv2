@@ -263,7 +263,7 @@ function fullScreenLogs() {
 }
 
 function runAjaxFileUpload() {
-//alert("test"); return false;
+// alert("test"); return false;
 	var date = '<?php echo date('Y-m-d H:i:s');  ?>';
 	var _uid = new Date().getTime();
 	$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
@@ -302,10 +302,10 @@ function runAjaxFileUpload() {
 							var lead_details = "welcome/lead_fileupload_details/<?php echo $quote_data['jobid'] ?>/"+data.file_name+ "/" +userid;														
 							$('#lead_result').load(lead_details);
 						}
-						var _file_link = '<a href="vps_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
-						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/vps_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
+						var _file_link = '<a href="crm_data/files/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
+						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/crm_data/files<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
 						if(role_id == 1 || lead_assign == unid || belong_to == unid ) {
-						 var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/vps_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
+						 var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/crm_data/files<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
 						}
 						$('#'+_uid).html(_del_link + _file_link);
 					}
