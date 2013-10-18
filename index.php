@@ -18,6 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
+	define('SITE_FILE_PATH', dirname(__FILE__));
 	define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
@@ -33,7 +34,7 @@ if (defined('ENVIRONMENT'))
 	switch (ENVIRONMENT)
 	{
 		case 'development':
-			// error_reporting(E_ALL);
+			 // error_reporting(E_ALL);
 			error_reporting(0);
 		break;
 	
