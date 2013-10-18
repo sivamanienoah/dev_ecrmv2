@@ -51,12 +51,12 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	<!--[if IE]>
     	<script src="assets/js/html5shiv.js"></script>
 	<![endif]-->
-<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery-1.9.1-min.js"></script>
 <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <?php } else { ?>
-<script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script>
-<!--script type="text/javascript" src="assets/js/jquery.min.js"></script-->
+<!--script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script-->
+<script type="text/javascript" src="assets/js/jquery-1.9.1-min.js"></script>
 <?php } ?>
 <!--script type="text/javascript" src="assets/js/jquery-ui.js"></script-latest-->
 <script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script>
