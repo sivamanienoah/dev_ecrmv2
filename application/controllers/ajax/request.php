@@ -67,7 +67,7 @@ class Request extends crm_controller {
 	 */
 	public function file_upload($jobid, $date, $upby, $type = 'job')
 	{	
-		
+		//echo UPLOAD_PATH .'application/'. $jobid; exit;
 		/**
 		$jobid = $this->input->post('jobid');
 		$date = $this->input->post('date');
@@ -80,15 +80,22 @@ class Request extends crm_controller {
 		$json['error'] = '';
 		$json['msg'] = '';
 		
-		$dir_type = ($type == 'lead') ? '/vps_lead_data/' : '/vps_data/';
+		$f_dir = UPLOAD_PATH.'files/';
 		
-		$f_dir = dirname(FCPATH) . $dir_type . $jobid;
-		echo $f_dir; exit;
 		if (!is_dir($f_dir))
 		{
 			mkdir($f_dir);
 			chmod($f_dir, 0777);
 		}
+		
+		$f_dir = $f_dir.$jobid;
+		
+		if (!is_dir($f_dir))
+		{
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
 		
 		if (isset($_FILES['ajax_file_uploader']) && is_uploaded_file($_FILES['ajax_file_uploader']['tmp_name']))
 		{
@@ -2034,12 +2041,15 @@ EOD;
 		 */
 		error_reporting(E_ERROR);
 		
+		
 		$json['error'] = '';
 		$json['msg'] = '';
 		
-		$dir_type = ($type == 'lead') ? '/vps_lead_data/' : '/vps_data/query/';
+		//$dir_type = ($type == 'lead') ? '/vps_lead_data/' : '/vps_data/query/';
 		
-		$f_dir = dirname(FCPATH) . $dir_type . $jobid;
+		//$f_dir = dirname(FCPATH) . $dir_type . $jobid;
+		
+		$f_dir = UPLOAD_PATH . $jobid;
 		
 		if (!is_dir($f_dir))
 		{
