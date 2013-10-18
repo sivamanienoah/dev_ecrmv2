@@ -7,9 +7,10 @@
 <script type="text/javascript" src="assets/js/vps.js?q=13"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
-<?php $userdata = $this->session->userdata('logged_in_user');
+<?php 
+$userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
- ?>
+?>
 var curr_job_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var job_categories = [];
 job_categories['not_select'] = '';

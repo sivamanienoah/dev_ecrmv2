@@ -122,10 +122,10 @@ function addLog() {
 		}
 	}
 	
-	var email_set = '';
-	$('.user-addresses input[type="checkbox"]:checked').each(function(){
-		email_set += $(this).attr('id') + ':';
-	});
+	var email_set = 'ssriram@enoahisolution.com';
+	// $('.user-addresses input[type="checkbox"]:checked').each(function(){
+		// email_set += $(this).attr('id') + ':';
+	// });
 	
 	
 	$.blockUI({
@@ -154,9 +154,9 @@ function addLog() {
 		form_data.time_spent = submit_log_minutes;
 	}
 	
-	form_data.use_custom_date = $('.download-invoice-option-log input[name="use_custom_date"]').val();
-	form_data.balance_due = $('.download-invoice-option-log input[name="balance_due"]').val();
-	form_data.custom_description = $('.download-invoice-option-log input[name="custom_description"]').val();
+	// form_data.use_custom_date = $('.download-invoice-option-log input[name="use_custom_date"]').val();
+	// form_data.balance_due = $('.download-invoice-option-log input[name="balance_due"]').val();
+	// form_data.custom_description = $('.download-invoice-option-log input[name="custom_description"]').val();
 	
 	
 	if ($('#email_to_customer').is(':checked')) {
@@ -189,12 +189,6 @@ function addLog() {
 		}
 	}
 	
-	if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null && form_data.attach_pdf != true) {
-		if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
-			$.unblockUI();
-			return false;
-		}
-	}
 	$.post(
 		'welcome/add_log',
 		form_data,
@@ -1087,15 +1081,16 @@ function setContractorJob()
 			</div>
 			
 			<p id="temp">&nbsp;</p>
-			<ul id="job-view-tabs">
-				<li><a href="#jv-tab-1">Lead History</a></li>
-				<li><a href="#jv-tab-2">Estimate</a></li>
-				<li><a href="#jv-tab-3">Files</a></li>
-				<li><a href="#jv-tab-4">Tasks</a></li>
-				<li><a href="#jv-tab-5">Milestones</a></li>
-				<li><a href="#jv-tab-6">Customer</a></li>
-				<li><a href="#jv-tab-7">Query</a></li>
-			</ul>
+
+				<ul id="job-view-tabs">
+					<li><a href="#jv-tab-1">Lead History</a></li>
+					<li><a href="#jv-tab-2">Estimate</a></li>
+					<li><a href="#jv-tab-3">Files</a></li>
+					<li><a href="#jv-tab-4">Tasks</a></li>
+					<li><a href="#jv-tab-5">Milestones</a></li>
+					<li><a href="#jv-tab-6">Customer</a></li>
+					<li><a href="#jv-tab-7">Query</a></li>
+				</ul>
 			<div id="jv-tab-1">
 					<table class="data-table">
 						<tr ><th>Stage Name</th><th>Modified By</th><th>Modified On</th></tr>
