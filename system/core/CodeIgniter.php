@@ -297,7 +297,6 @@
  * ------------------------------------------------------
  */
 	$EXT->_call_hook('pre_controller');
-print "xcvx------------ysfgfdgggggyy-";
 /*
  * ------------------------------------------------------
  *  Instantiate the requested controller
