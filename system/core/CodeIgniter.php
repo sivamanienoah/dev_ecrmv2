@@ -64,7 +64,6 @@
 		require(APPPATH.'config/constants.php');
 	}
 
-	print "---------"; exit;
 	
 /*
  * ------------------------------------------------------
@@ -98,7 +97,7 @@
 	{
 		get_config(array('subclass_prefix' => $assign_to_config['subclass_prefix']));
 	}
-
+ print "dzvcxzfvvvxvcv -----"; exit;
 /*
  * ------------------------------------------------------
  *  Set a liberal script execution time limit
