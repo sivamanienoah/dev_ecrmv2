@@ -5,7 +5,7 @@ class Dashboard extends CRM_controller {
 
 	
 	function __construct()
-	{
+	{ 
 		echo "asdfjlkasjdflk"; exit;
 		parent::__construct();
 		//$this->load->library('excel');
