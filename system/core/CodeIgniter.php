@@ -64,7 +64,6 @@
 		require(APPPATH.'config/constants.php');
 	}
 
-	
 /*
  * ------------------------------------------------------
  *  Define a custom error handler so we can log PHP errors
@@ -97,7 +96,7 @@
 	{
 		get_config(array('subclass_prefix' => $assign_to_config['subclass_prefix']));
 	}
- 
+
 /*
  * ------------------------------------------------------
  *  Set a liberal script execution time limit
@@ -123,7 +122,7 @@
  * ------------------------------------------------------
  */
 	$EXT =& load_class('Hooks', 'core');
-print "dzvcxzfvvvxvcv ----222-"; exit;
+
 /*
  * ------------------------------------------------------
  *  Is there a "pre_system" hook?
