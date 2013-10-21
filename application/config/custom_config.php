@@ -208,6 +208,5 @@ navigate through the gallery.",
                                                'price' => 175
                                             ),
                                 );
-								
-print "dfgdgdgdgdd------------";exit;
+
 ?>
