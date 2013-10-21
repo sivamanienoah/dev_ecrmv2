@@ -97,7 +97,7 @@
 	{
 		get_config(array('subclass_prefix' => $assign_to_config['subclass_prefix']));
 	}
- print "dzvcxzfvvvxvcv -----"; exit;
+ 
 /*
  * ------------------------------------------------------
  *  Set a liberal script execution time limit
@@ -123,7 +123,7 @@
  * ------------------------------------------------------
  */
 	$EXT =& load_class('Hooks', 'core');
-
+print "dzvcxzfvvvxvcv -----"; exit;
 /*
  * ------------------------------------------------------
  *  Is there a "pre_system" hook?
