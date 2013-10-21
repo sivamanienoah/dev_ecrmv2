@@ -5,157 +5,106 @@ class Manage_service extends crm_controller {
 	public $cfg;
 	public $userdata;
 	
-	function __construct()
-	{
+	function __construct() {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_service_model');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     
-    function index($limit, $search = FALSE)
-    {
+    function index($limit, $search = FALSE) {
         $data['page_heading'] = 'Manage Service / Product';
-		
-		//$data['job_categories'] = $this->cfg['job_categories'];
-		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);
-		
+		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);		
         $this->load->view('manage_service/manage_service_view', $data); 
     }
 	
-	function search()
-	{
-        if (isset($_POST['cancel_submit']))
-		{
+	function search(){
+		$cancel = $this->input->post('cancel_submit');
+        if (isset($cancel)) {
             redirect('manage_service/');
-        }
-		else if ($name = $this->input->post('cust_search'))
-		{
+        } else if ($name = $this->input->post('cust_search')) {
             redirect('manage_service/index/0/' . rawurlencode($name));
-        }
-		else
-		{
+        } else {
             redirect('manage_service/');
         }
-        
     }
 	
-	function search_lead()
-	{
-        if (isset($_POST['cancel_submit']))
-		{
+	function search_lead() {
+		$cancel = $this->input->post('cancel_submit');
+        if (isset($cancel)) {
             redirect('manage_service/manage_leadSource');
-        }
-		else if ($name = $this->input->post('cust_search'))
-		{	
+        } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_leadSource/0/' . rawurlencode($name));
-        }
-		else
-		{
+        } else {
             redirect('manage_service/manage_leadSource');
         }
     }
 	
-	function search_sales()
-	{
-        if (isset($_POST['cancel_submit']))
-		{
+	function search_sales() {
+		$cancel = $this->input->post('cancel_submit');
+        if (isset($cancel)) {
             redirect('manage_service/manage_sales');
-        }
-		else if ($name = $this->input->post('cust_search'))
-		{	
+        } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_sales/0/' . rawurlencode($name));
-        }
-		else
-		{
+        } else {
             redirect('manage_service/manage_sales');
         }
     }
 	
 	//for search currency
-	function search_currency()
-	{
-        if (isset($_POST['cancel_submit']))
-		{
+	function search_currency() {
+		$cancel = $this->input->post('cancel_submit');
+        if (isset($cancel)) {
             redirect('manage_service/manage_expt_worth_cur');
-        }
-		else if ($name = $this->input->post('cust_search'))
-		{	
+        } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_expt_worth_cur/0/' . rawurlencode($name));
-        }
-		else
-		{
+        } else {
             redirect('manage_service/manage_expt_worth_cur');
         }
     }
 	
 	//for sales divisions listing page
-	function manage_sales($limit, $search = FALSE) 
-	{
+	function manage_sales($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Sales Divisions';
-		
-		//$data['sales_divisions'] = $this->cfg['sales_divisions'];
 		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
-		
 		$this->load->view('manage_service/manage_sales_divisions', $data);
 	}
 	
 	//for lead source listing page
-	function manage_leadSource($limit, $search = FALSE) 
-	{
+	function manage_leadSource($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Lead Source';
-		
-		//$data['sales_divisions'] = $this->cfg['sales_divisions'];
-		$data['get_lead_source'] = $this->manage_service_model->get_lead_source($search);
-		
+		$data['get_lead_source'] = $this->manage_service_model->get_lead_source($search);		
 		$this->load->view('manage_service/manage_lead_source', $data);
 	}
 	
 	//for Expected Worth - Currency Listing Page
-	function manage_expt_worth_cur($limit, $search = FALSE) 
-	{
-		$data['page_heading'] = 'Manage Currency';
-		
-		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);
-		
+	function manage_expt_worth_cur($limit, $search = FALSE) {
+		$data['page_heading'] = 'Manage Currency';		
+		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);		
 		$this->load->view('manage_service/manage_expect_worth_cur', $data);
 	}
 	
 	//for Lead Source
-	function ls_add($update = false, $id = false) 
-	{
-		
+	function ls_add($update = false, $id = false) {		
 		$this->load->library('validation');
-        $data = array();
-        
-		$rules['lead_source_name'] = "trim|required";
-		
+        $data = array();        
+		$rules['lead_source_name'] = "trim|required";		
 		$this->validation->set_rules($rules);
 		$fields['lead_source_name'] = 'Lead Source';
-		$fields['status'] = 'Status';
-		
+		$fields['status'] = 'Status';		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		
-		//for status
-		$this->db->where('lead_source', $id);
-		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
-		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
-        {
-            $item_data = $this->db->get_where("{$this->cfg['dbpref']}" . 'lead_source', array('lead_source_id' => $id));
-            if ($item_data->num_rows() > 0) $src = $item_data->result_array();
-            if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
-            {
+        $data['cb_status'] = $this->manage_service_model->get_num_row('lead_source', array('lead_source_id' => $id));
+        $update_item = $this->input->post('update_item');
+		//if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($update_item)) {	
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {	
+            $src = $this->manage_service_model->get_row('lead_source', array('lead_source_id' => $id));
+            if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v) {
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
-        }
-		
-		if ($this->validation->run() != false)
-        {
-			// all good
-            foreach($fields as $key => $val)
-            {
+        }		
+		if ($this->validation->run() != false) {
+            foreach($fields as $key => $val) {
                 $update_data[$key] = $this->input->post($key);
             }
             if ($update_data['status'] == "") {
@@ -165,21 +114,13 @@ class Manage_service extends crm_controller {
 					$update_data['status'] = 1;
 				}
 			}
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-            {
-                //update
-                $this->db->where('lead_source_id', $id);
-                
-                if ($this->db->update("{$this->cfg['dbpref']}" . 'lead_source', $update_data))
-                {
+            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+                if ($this->manage_service_model->update_row('lead_source', array('lead_source_id' => $id), $update_data)) {
                     $this->session->set_flashdata('confirm', array('Lead Source Details Updated!'));
                     redirect('manage_service/manage_leadSource');
                 }
-            }
-            else
-            {
-                //insert
-                $this->db->insert("{$this->cfg['dbpref']}" . 'lead_source', $update_data);
+            } else {
+                $this->manage_service_model->insert_row('lead_source',$update_data);
                 $this->session->set_flashdata('confirm', array('New Lead Source Added!'));
                 redirect('manage_service/manage_leadSource');
             }
@@ -187,30 +128,24 @@ class Manage_service extends crm_controller {
 		$this->load->view('manage_service/manage_lead_source_add', $data);
 	}
 	
-	function ls_delete($update, $id)
-	{
-		if ($this->session->userdata('delete')==1)
-		{
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-			{
-				$this->db->delete("{$this->cfg['dbpref']}lead_source", array('lead_source_id' => $id));
+	function ls_delete($update, $id) {
+		if ($this->session->userdata('delete')==1) {
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+				$this->manage_service_model->delete_row('lead_source',array('lead_source_id' => $id));
 				$this->session->set_flashdata('confirm', array('Lead Source Deleted!'));
 				redirect('manage_service/manage_leadSource');
-			}
-			else {
+			} else {
 				$this->session->set_flashdata('login_errors', array("Error Occured!."));
 				redirect('manage_service/manage_leadSource');
 			}
-		}
-		else {
+		} else {
 			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!."));
 			redirect('manage_service/manage_leadSource');
 		}
 	}
 	
 	//for service requirement
-	function ser_add($update = false, $id = false) 
-	{
+	function ser_add($update = false, $id = false) {
 		$this->load->library('validation');
         $data = array();
         
