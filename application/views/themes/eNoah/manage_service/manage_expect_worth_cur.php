@@ -2,23 +2,13 @@
 ob_start();
 require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
+//print_r($this->uri->segment(2)); exit;
 //echo baseurl();
 ?>
 <div id="content">
 	<div class="inner">	
 	<h2><?php echo $page_heading; ?></h2>
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-	<!--<div style="margin:15px 0 0 0;">
-		<div class="pull-left" style="margin: 3px 10px 15px 0;"> <h3> Lead Source </h3> </div>
-		<?php if($this->session->userdata('add')==1) { ?>
-			<div class="pull-left buttons"> 
-				<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ls_add'">
-					Add New Lead Source
-				</button>
-			</div>
-		<?php } ?>
-	</div>-->
-	
 	<form action="manage_service/search_currency/" method="post" id="cust_search_form">
 		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 			<tr>

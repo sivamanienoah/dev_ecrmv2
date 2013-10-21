@@ -8,17 +8,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<div class="inner">	
 	<h2><?php echo $page_heading; ?></h2>
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-	<!--<div style="margin:15px 0 0 0;">
-		<div class="pull-left" style="margin: 3px 10px 15px 0;"> <h3> Lead Source </h3> </div>
-		<?php if($this->session->userdata('add')==1) { ?>
-			<div class="pull-left buttons"> 
-				<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ls_add'">
-					Add New Lead Source
-				</button>
-			</div>
-		<?php } ?>
-	</div>-->
-	
+
 	<form action="manage_service/search_lead/" method="post" id="cust_search_form">
 	
 		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -128,12 +118,10 @@ function checkStatus(leadSrc_id) {
 		data: formdata,
 		cache: false,
 		beforeSend:function(){
-			//$("#loadingImage").show();
 			$('#dialog-message-'+leadSrc_id).empty();
 		},
 		success: function(response) {
 			if (response.html == 'NO') {
-				//alert("You can't Delete the Lead source!. \n This Source is used in Leads.");
 				$('#dialog-message-'+leadSrc_id).show();
 				$('#dialog-message-'+leadSrc_id).append('One of more leads currently mapped to this lead source. This cannot be deleted.');
 				setTimeout('timerfadeout()', 4000);
