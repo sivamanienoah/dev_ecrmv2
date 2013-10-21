@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class crm_loader extends CI_Loader {
+class CRM_loader extends CI_Loader {
 
 	var $template = '';
 	var $data = array();

@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class crm_model extends CI_Model {
+class CRM_model extends CI_Model {
 	/**
 	 * Constructor
 	 */
