@@ -7,9 +7,6 @@ class Dashboard extends CI_Controller {
 	
 	function __construct()
 	{
-	
-	print "cfbccbbv"; exit;
-	
 		parent::__construct();
 		//$this->load->library('excel');
 		$this->login_model->check_login();
