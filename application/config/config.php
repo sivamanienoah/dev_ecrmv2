@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-error_reporting(E_ALL);
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -57,7 +57,7 @@ $config['uri_protocol']	= 'AUTO';
 | http://codeigniter.com/user_guide/general/urls.html
 */
 
-$config['url_suffix'] = 'index.php';
+$config['url_suffix'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -356,6 +356,8 @@ $config['rewrite_short_tags'] = FALSE;
 |
 */
 $config['proxy_ips'] = '';
+
+print "sdgsdfdsfdsfg"; exit;
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
