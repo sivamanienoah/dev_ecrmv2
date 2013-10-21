@@ -16,6 +16,9 @@
 */
 $config['base_url']	= "http://".$_SERVER['HTTP_HOST']."/dev/projects/ecrmv2/";;
 
+
+ print "dfgdfgdg"; exit;
+
 /*
 |--------------------------------------------------------------------------
 | Index File
