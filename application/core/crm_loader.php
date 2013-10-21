@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/*class crm_loader extends CI_Loader {
+class crm_loader extends CI_Loader {
 
 	var $template = '';
 	var $data = array();
@@ -19,7 +19,7 @@
 	 * @param $data			Any data you wish to pass to the template, in a data array just like the views
 	 * @param $return		If you want to just get the template contents set to true
 	 */
-/*	function theme($template = '', $data = array(), $return = FALSE)
+	function theme($template = '', $data = array(), $return = FALSE)
 	{
 		if ($template == '')
 		{
@@ -62,7 +62,7 @@
 	 * 
 	 * @see /system/libraries/CI_Loader#view($view, $vars, $return)
 	 */
-/*	function view($view, $vars = array(), $return = FALSE){		
+	function view($view, $vars = array(), $return = FALSE){		
 
 		$ci   = &get_instance(); 
 		$cfg  = $ci->config->item('crm');
