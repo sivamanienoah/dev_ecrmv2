@@ -164,7 +164,7 @@
  * ------------------------------------------------------
  */
 	$URI =& load_class('URI', 'core');
-print "xcvx-------------0000000000-";
+
 /*
  * ------------------------------------------------------
  *  Instantiate the routing class and set the routing
@@ -178,7 +178,7 @@ print "xcvx-------------0000000000-";
 	{
 		$RTR->_set_overrides($routing);
 	}
-
+print "xcvx-------------=========-";
 /*
  * ------------------------------------------------------
  *  Instantiate the output class
