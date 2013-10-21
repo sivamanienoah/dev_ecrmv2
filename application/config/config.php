@@ -357,5 +357,7 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+ print SITE_FILE_PATH; exit; 
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
