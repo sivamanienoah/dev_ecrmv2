@@ -7,6 +7,7 @@ class crm_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('mysql_real_escape');
 		$this->cfg = $this->config->item('crm');
 	}
 }
