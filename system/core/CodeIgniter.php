@@ -198,7 +198,7 @@
 			exit;
 		}
 	}
-print "xcvx-------------dfgdfgdfgfdgfg==-";
+
 /*
  * -----------------------------------------------------
  * Load the security class for xss and csrf support
@@ -228,7 +228,7 @@ print "xcvx-------------dfgdfgdfgfdgfg==-";
  */
 	// Load the base controller class
 	require BASEPATH.'core/Controller.php';
-
+print "xcvx-------------cccccccccccccccccc=-";
 	function &get_instance()
 	{
 		return CI_Controller::get_instance();
