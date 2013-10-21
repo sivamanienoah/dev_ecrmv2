@@ -1,4 +1,7 @@
 <?php
+
+print "dfgfdggdfgdg custom congig----------------"; exit;
+
 require ('sales_divisions.ini');
 require ('job_categories.ini');
 
