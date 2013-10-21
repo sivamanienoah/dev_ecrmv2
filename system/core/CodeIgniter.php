@@ -123,7 +123,7 @@
  * ------------------------------------------------------
  */
 	$EXT =& load_class('Hooks', 'core');
-print "dzvcxzfvvvxvcv -----"; exit;
+print "dzvcxzfvvvxvcv ----222-"; exit;
 /*
  * ------------------------------------------------------
  *  Is there a "pre_system" hook?
