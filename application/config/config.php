@@ -357,6 +357,6 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
-require (SITE_FILE_PATH.'/application/core/CRM_controller.php');
+//require (SITE_FILE_PATH.'/application/core/CRM_controller.php');
 /* End of file config.php */
 /* Location: ./application/config/config.php */
