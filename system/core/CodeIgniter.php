@@ -178,7 +178,7 @@
 	{
 		$RTR->_set_overrides($routing);
 	}
-print "xcvx-------------=========-";
+
 /*
  * ------------------------------------------------------
  *  Instantiate the output class
@@ -198,7 +198,7 @@ print "xcvx-------------=========-";
 			exit;
 		}
 	}
-
+print "xcvx-------------dfgdfgdfgfdgfg==-";
 /*
  * -----------------------------------------------------
  * Load the security class for xss and csrf support
