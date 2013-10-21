@@ -30,13 +30,14 @@
  */
  
  
+ 
 if (defined('ENVIRONMENT'))
 {
 	switch (ENVIRONMENT)
 	{
 		case 'development':
-			// error_reporting(E_ALL);
-			error_reporting(0);
+			 error_reporting(E_ALL);
+			//error_reporting(0);
 		break;
 	
 		case 'testing':
