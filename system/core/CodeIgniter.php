@@ -228,7 +228,7 @@
  */
 	// Load the base controller class
 	require BASEPATH.'core/Controller.php';
-print "xcvx-------------cccccccccccccccccc=-";
+
 	function &get_instance()
 	{
 		return CI_Controller::get_instance();
@@ -397,7 +397,7 @@ print "xcvx-------------cccccccccccccccccc=-";
 	{
 		$CI->db->close();
 	}
-
+print "xcvx-------------eeeeeeeeeeeeeeeee=-";
 
 /* End of file CodeIgniter.php */
 /* Location: ./system/core/CodeIgniter.php */
