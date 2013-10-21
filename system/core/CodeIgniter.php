@@ -64,6 +64,8 @@
 		require(APPPATH.'config/constants.php');
 	}
 
+	print "---------"; exit;
+	
 /*
  * ------------------------------------------------------
  *  Define a custom error handler so we can log PHP errors
