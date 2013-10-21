@@ -37,8 +37,6 @@
 |
 */
 
- print "fgfdggfhgh---------"; exit;
-
 $autoload['packages'] = array();
 
 
