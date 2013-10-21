@@ -360,7 +360,7 @@
 		call_user_func_array(array(&$CI, $method), array_slice($URI->rsegments, 2));
 	}
 
-
+print "xcvx------------yyyyyyyyyyyyyy-";
 	// Mark a benchmark end point
 	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_end');
 
@@ -397,7 +397,7 @@
 	{
 		$CI->db->close();
 	}
-print "xcvx-------------eeeeeeeeeeeeeeeee=-";
+
 
 /* End of file CodeIgniter.php */
 /* Location: ./system/core/CodeIgniter.php */
