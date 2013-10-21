@@ -143,7 +143,7 @@
 	{
 		$CFG->_assign_to_config($assign_to_config);
 	}
-print "xcvx-------------222222346364-";
+
 /*
  * ------------------------------------------------------
  *  Instantiate the UTF-8 class
@@ -164,7 +164,7 @@ print "xcvx-------------222222346364-";
  * ------------------------------------------------------
  */
 	$URI =& load_class('URI', 'core');
-
+print "xcvx-------------0000000000-";
 /*
  * ------------------------------------------------------
  *  Instantiate the routing class and set the routing
