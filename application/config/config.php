@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= "http://".$_SERVER['HTTP_HOST']."/dev/projects/ecrmv2/";;
+$config['base_url']	= "http://".$_SERVER['HTTP_HOST']."/dev/projects/ecrmv2/";
 
 /*
 |--------------------------------------------------------------------------
