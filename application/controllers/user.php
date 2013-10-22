@@ -13,6 +13,11 @@ class User extends crm_controller {
         $this->load->library('validation');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
+
+	/*
+	*@User List
+	*
+	*/
     
     public function index($limit = 0, $search = false)
 	{
@@ -24,81 +29,62 @@ class User extends crm_controller {
 		$current = $this->session->userdata('user_sort');
 		$data['user_sort'] = $current;
 		
-		
 		$this->login_model->check_login();
-		
         $data['customers'] = $this->user_model->user_list($limit, $search, $current[0], $current[1]);
         
-       //$data['pagination'] = '';
         if ($search == false) {
-            //$this->load->library('pagination');
-            
             $config['base_url'] = $this->config->item('base_url') . 'user/index/';
             $config['total_rows'] = (string) $this->user_model->user_count();
-            //$config['per_page'] = '35';
-            
-            //$this->pagination->initialize($config);
-            
-            //$data['pagination'] = $this->pagination->create_links();
         }
 		$data['max_allow_user'] = $this->cfg['max_allowed_users'][0];
         $this->load->view('user/list_view', $data);
-        
     }
-    
+
+	/*
+	*@Add User
+	*
+	*/
+
     public function add_user($update = false, $id = false, $ajax = false)
 	{
-        /*if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_user'])) {
-            
-            // check to see if this customer has a job on the system before deleting
-            // to do
-            
-            $this->user_model->delete_user($id);
-            $this->session->set_flashdata('confirm', array('User Account Deleted!'));
-            redirect('user/'); 
-        }*/
-        
-        $rules['first_name'] = "trim|required";
-		$rules['last_name'] = "trim|required";
+	
+        $rules['first_name']   = "trim|required";
+		$rules['last_name']    = "trim|required";
         if ($this->input->post('new_user') || $this->input->post('update_password')) {
             $rules['password'] = "trim|required|min_length[6]";
         }
-        $rules['level'] = "required|callback_level_check";
+        $rules['level']   = "required|callback_level_check";
 		$rules['role_id'] = "required|callback_level_check";
-		$rules['email'] = "trim|required|valid_email";
+		$rules['email']   = "trim|required|valid_email";
 		
-		$this->validation->set_rules($rules);
+		$this->validation->set_rules($rules); // validation rules
 		
-		$fields['first_name'] = "First Name";
-		$fields['last_name'] = "Last Name";
-        $fields['phone'] = "Telephone";
-        $fields['mobile'] = "Mobile";
-		$fields['email'] = "Email Address";
-		$fields['role_id'] = "Role";
-		$fields['sales_code'] = 'Sales Code';
-		//$fields['key'] = "Office Key Status";
-		//$fields['bldg_key'] = "Building Key Status";
-		$fields['password'] = "Password";
-		$fields['level'] = "User Level";
-		$fields['inactive'] = 'Inactive';
+		$fields['first_name']  = "First Name";
+		$fields['last_name']   = "Last Name";
+        $fields['phone']       = "Telephone";
+        $fields['mobile']      = "Mobile";
+		$fields['email']       = "Email Address";
+		$fields['role_id']     = "Role";
+		$fields['sales_code']  = 'Sales Code';
+		$fields['password']    = "Password";
+		$fields['level']       = "User Level";
+		$fields['inactive']    = 'Inactive';
+		
 		// insert new level settings concepts
-		$fields1['region'] = 'region';
-		$fields1['country'] = 'country';
-		$fields1['state'] = 'state';
-		$fields1['location'] = 'location';
+		$fields1['region']     = 'region';
+		$fields1['country']    = 'country';
+		$fields1['state']      = 'state';
+		$fields1['location']   = 'location';
 		
+		// validation rules
 		$this->validation->set_fields($fields);
-        
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
         
         $data = '';
         $data['roles']=$this->role_model->role_list();
 		$data['levels'] = $this->user_model->get_levels();
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_user'])) {
-
             $customer = $this->user_model->get_user($id);
-			//echo "hi" . "<pre>"; print_r($customer); exit;
-			
             $data['this_user'] = $customer[0]['userid'];
 			$data['this_user_level'] = $customer[0]['level'];
 
@@ -110,9 +96,7 @@ class User extends crm_controller {
 		
 		if ($this->validation->run() == false) {
             if ($ajax == false) {
-			//echo "<pre>"; print_r($data);
                 $this->load->view('user/add_view', $data);
-                //$this->load->view('user/add_view', $customer);
             } else {
                 $json['error'] = true;
                 $json['ajax_error_str'] = $this->validation->error_string;
@@ -120,7 +104,6 @@ class User extends crm_controller {
             }
 			
 		} else {
-			
 			// all good
             foreach($fields as $key => $val) {
                 $update_data[$key] = $this->input->post($key);
@@ -129,7 +112,6 @@ class User extends crm_controller {
 			foreach($fields1 as $key => $val) {
                 $update_data1[$key] = $this->input->post($key);
             }
-		
 			
             if ($this->input->post('new_user') || $this->input->post('update_password')) {
                 $update_data['password'] = sha1($update_data['password']);
@@ -140,7 +122,6 @@ class User extends crm_controller {
             }
             
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-                //echo "<pre>"; print_r($update_data); exit;
 				$user_ids = $this->uri->segment(4);
 				$level_id = $update_data['level'];
 				
@@ -224,7 +205,6 @@ class User extends crm_controller {
 						$this->email->bcc($admin_mail);
 						$this->email->subject($subject);
 						$this->email->message($log_email_content);
-
 						$this->email->send(); 
 		}   
 		
@@ -305,7 +285,7 @@ class User extends crm_controller {
 						$this->email->message($log_email_content);
 
 						$this->email->send(); 
-		}
+		           }
                     $this->session->set_flashdata('confirm', array('User Details Updated!'));
                     redirect('user/add_user/update/' . $id);
                     
@@ -400,13 +380,8 @@ class User extends crm_controller {
 		$this->email->send(); 
 				  
                     if ($ajax == false) {
-						
-
                         $this->session->set_flashdata('confirm', array('New User Added!'));
                         redirect('user/');
-						 
-						
-						
                     } else {
                         $json['error'] = false;
                         $json['custid'] = $newid;
@@ -426,93 +401,79 @@ class User extends crm_controller {
         
     }
 	
-	// function getUserResult($email,$update)
+	/*
+	*@ Find exist email address by ajax
+	*
+	*/
+	
 	function getUserResult() {	
-		$email = $_POST['email']; 
-		$update = $_POST['email1'];
-
-		if ($update != 'undefined') {
-			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
-			if ($emailid == 1) 
-				echo 'userOk';
-			else 
-				echo 'userNo';
-		} else {
-			$this->db->where('email',$email);
-			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-			if ($query == 0) 
-				echo 'userOk';
-			else 
-				echo 'userNo';
-		}	
+		$data =	real_escape_array($this->input->post());
+		$this->user_model->find_exist_email($data);
 	}
+
+	/*
+	*@Get User for Lead Assigned To
+	*
+	*/
 	
 	function getUserDetFromDb($users) {
-		//echo $users;
-		$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
-		$user_res = $query->result_array();
-		//print_r($user_res);
-		//$res = '<select>';
-		$res = '';
-		$res .= "<option value='not_select'>Please Select</option>";
-		foreach($user_res as $user) {
-			$res .= "<option value=".$user['userid'].">".$user['first_name']." ".$user['last_name']."</option>";
-		}
-		//$res .= "</select>";
-		echo $res;
+		$this->user_model->getUserLeadAssigned($users);
 	}
+	
+	
+	/*
+	*@Check User Status
+	*
+	*/
 	
 	function ajax_check_status_user() 
 	{
-		$id = $_POST['data'];
-		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")"; 
-		$this->db->where($where);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
-		// echo $this->db->last_query(); exit;
-		$res = array();
-		if($query == 0) {
-			$res['html'] .= "YES";
-		} else {
-			$res['html'] .= "NO";
-		}
-		echo json_encode($res);
-		exit;
+		$data =	real_escape_array($this->input->post()); // escape special characters
+		$this->user_model->check_user_status($data);
 	}
+	
+	/*
+	*@Delete User
+	*
+	*/
 	
 	function delete_user($id = false)
 	{
-	if ($this->session->userdata('delete')==1) {
-		$this->login_model->check_login();
-					
-			if ($this->user_model->delete_user($id)) {
-				$this->session->set_flashdata('confirm', array('User Account Deleted!'));
+		if ($this->session->userdata('delete')==1) {
+				$this->login_model->check_login();
+				if ($this->user_model->delete_user($id)) {
+					$this->session->set_flashdata('confirm', array('User Account Deleted!'));
+					redirect('user');
+				}
+		} else {
+				$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
 				redirect('user');
-			}
-	} else {
-		$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-		redirect('user');
 		}
 	}
     
+	/*
+	*@Search User
+	*
+	*/
+	
     public function search()
 	{
         $this->login_model->check_login();
-		
-        if (isset($_POST['cancel_submit'])) {
-            
+		$data =	real_escape_array($this->input->post()); // escape special characters
+        if (isset($data['cancel_submit'])) {
             redirect('user/');
-            
-        } else if ($name = $this->input->post('cust_search')) {
-            
+        } else if ($name = $data['cust_search']) {
             redirect('user/index/0/' . $name);
-            
         } else {
-		
             redirect('user/');
-            
         }
-        
     }
+
+
+	/*
+	*@Method : Check Level
+	*@module : User
+	*/
     
     public function level_check($str)
 	{
@@ -524,9 +485,13 @@ class User extends crm_controller {
         }
     }
 	
+	/*
+	*@ Method :log History
+	*@ module : User
+	*/
+
 	public function log_history($user = 0)
 	{
-		#$this->output->enable_profiler(TRUE);
 		$log_user = $this->user_model->get_user($user);
 		
 		if (count($log_user) > 0)
@@ -637,12 +602,18 @@ EOD;
 		
 		$this->load->view('user/log_list_view', $data);
 	}
-	
+
+
+	/*
+	*@ Method : Check Date
+	*@ module : User
+	*/
+
 	public function check_date($date)
 	{
 		if ($date)
 		{
-			$date_parts = explode('-', $date);
+			$date_parts = @explode('-', $date);
 			if (count($date_parts) == 3)
 			{
 				$time = mktime(0, 0, 0, $date_parts[1], $date_parts[0], $date_parts[2]);
@@ -655,10 +626,14 @@ EOD;
 		
 		return FALSE;
 	}
+
+	/*
+	*@ Method : Use Check Exist User
+	*@ User Controller 
+	*/
 	
 	function getUserfromdb($username, $update)
 	{
-	//echo $update;
 		if ($update != 'undefined') {
 		
 			$where = "email = '".$username."' AND `userid` != '".$update."' ";
@@ -821,9 +796,18 @@ EOD;
 		}
 		echo $output;
 	}
+
+	/*
+	*@Method : load Locations
+	*@User Controller 
+	*/
 	
 	public function editloadLocations($state_id,$uid)
 	{
+		$data      = real_escape_array(array("state_id"=>$state_id,"uid"=>$uid)); // escape special characters
+		$state_id  = (int)$data['state_id']; 
+		$uid       = (int)$data['uid'];
+		
 	    $output = '';
 		$ls = $this->db->query("select location_id from ".$this->cfg['dbpref']."levels_location where user_id='{$uid}'");
 		$l_ids = $ls->result();	
@@ -834,27 +818,30 @@ EOD;
 		$location_query = $this->db->query('SELECT locationid,location_name FROM '.$this->cfg['dbpref'].'location WHERE stateid IN('.$state_id.')');
 		foreach ($location_query->result() as $locations)
 		{	
-			
 			if(in_array($locations->locationid,$user_loc)){
 				$output .= '<option value="'.$locations->locationid.'" selected = "selected" >'.$locations->location_name.'</option>';
 			}else{
 				$output .= '<option value="'.$locations->locationid.'">'.$locations->location_name.'</option>';
-				}
+			}
 		}
 		echo $output;
 		
 	}
+
+	/*
+	*@Method : Check Country
+	*@User Controller 
+	*/
 	
 	public function checkcountry() 
 	{
-		$region_load = $_POST['region_load']; 
-		$explode_region = explode(',',$region_load);
-		
-		$country_load = $_POST['country_load'];
-		$explode_country = explode(',',$country_load);
+
+		$data             =	real_escape_array($this->input->post()); // escape special characters
+		$explode_region   = @explode(',',$data['region_load']);
+		$explode_country  = @explode(',',$data['country_load']);
 		
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$country_load);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
 			if($check_country_query == 0) {
 				$json['msg'] = 'noans'; 
 				break;
@@ -862,24 +849,24 @@ EOD;
 				$json['msg'] = 'success';
 			}
 		}
-		//$array_regionload[] = explode(',',$region_load); 
-		//print_r($array_regionload);
 		echo json_encode($json); exit;
 	}
+
+	/*
+	*@Method : Check State
+	*@User Controller 
+	*/
 	
 	public function checkstate() 
 	{
-		$region_load = $_POST['region_load'];
-		$explode_region = explode(',',$region_load);
-
-		$country_load = $_POST['country_load'];
-		$explode_country = explode(',',$country_load);
-		
-		$state_load = $_POST['state_load'];
-		$explode_state = explode(',',$state_load);
+	
+		$data             =	real_escape_array($this->input->post()); // escape special characters
+		$explode_region   = @explode(',',$data['region_load']);
+		$explode_country  = @explode(',',$data['country_load']);
+		$explode_state    = @explode(',',$data['state_load']);
 		
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$country_load);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
 			if($check_country_query == 0) {
 				$json['countrymsg'] = 'noans'; 
 				break;
@@ -887,8 +874,9 @@ EOD;
 				$json['countrymsg'] = 'success';
 			}
 		}
+		
 		for($j=0;$j<count($explode_country);$j++) {
-			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$state_load);
+			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$data['state_load']);
 			if($check_state_query == 0) {
 				$json['statemsg'] = 'nostate'; 
 				break;
@@ -896,25 +884,27 @@ EOD;
 				$json['statemsg'] = 'success';
 			}
 		}
+		
 		echo json_encode($json); exit;
+		
 	}
+	
+	
+	/*
+	*@Method : Check Location
+	*@User Controller 
+	*/
 	
 	public function checklocation() 
 	{
-		$region_load = $_POST['region_load'];
-		$explode_region = explode(',',$region_load);
-
-		$country_load = $_POST['country_load'];
-		$explode_country = explode(',',$country_load);
-		
-		$state_load = $_POST['state_load'];
-		$explode_state = explode(',',$state_load);
-		
-		$location_load = $_POST['location_load'];
-		$explode_location = explode(',',$location_load);
+		$data             =	real_escape_array($this->input->post()); // escape special characters
+		$explode_region   = @explode(',',$data['region_load']);
+		$explode_country  = @explode(',',$data['country_load']);
+		$explode_state    = @explode(',',$data['state_load']);
+		$explode_location = @explode(',',$data['location_load']);
 		
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$country_load);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
 			if($check_country_query == 0) {
 				$json['countrymsg'] = 'noans'; 
 				break;
@@ -922,8 +912,9 @@ EOD;
 				$json['countrymsg'] = 'success';
 			}
 		}
+		
 		for($j=0;$j<count($explode_country);$j++) {
-			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$state_load);
+			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$data['state_load']);
 			if($check_state_query == 0) {
 				$json['statemsg'] = 'nostate'; 
 				break;
@@ -931,8 +922,9 @@ EOD;
 				$json['statemsg'] = 'success';
 			}
 		}
+		
 		for($k=0;$k<count($explode_state);$k++) {
-			$check_location_query = $this->user_model->checklocationlevel5($explode_state[$k],$location_load);
+			$check_location_query = $this->user_model->checklocationlevel5($explode_state[$k],$data['location_load']);
 			if($check_location_query == 0) {
 				$json['locationmsg'] = 'noloc'; 
 				break;
