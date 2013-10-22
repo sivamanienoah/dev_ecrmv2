@@ -269,7 +269,6 @@ class Customer_model extends crm_model {
 		$this->db->select('email_1');
 		$this->db->like('email_1', $mail, 'both');
 		$res = $this->db->get($this->cfg['dbpref'].'customers');
-		echo $this->db->last_query(); 
         return $res->num_rows();
 	}
 
