@@ -6,6 +6,7 @@ class CRM_Controller extends CI_Controller {
 	 */
 	public function __construct()
 	{
+		echo "dfasdfasdf"; exit;
 		parent::__construct();
 		//$this->load->helper('mysql_real_escape');
 		$this->cfg = $this->config->item('crm');
