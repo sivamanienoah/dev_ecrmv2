@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
- print "vbcbvcbcbcbcbc"; exit;
+ print "vbcbvcbcbcbcbc123"; exit;
 
 class crm_controller extends CI_Controller {
 	/**
