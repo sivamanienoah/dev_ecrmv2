@@ -228,11 +228,12 @@ class Hosting extends crm_controller {
 		if($hostingid==0) 
 		redirect('hosting/');
 		//$data = real_escape_array($_POST);
-		$duedate = $this->input->post('Add_duedate');
-		if(isset($duedate) && $duedate == 'edit') {
-			if($this->input->post('due_date')=='') 
-			$this->input->post('due_date')='00-00-0000';
-			$d=explode('-',$this->input->post('due_date'));
+		$add_duedate = $this->input->post('Add_duedate');
+		$duedate = $this->input->post('due_date');
+		if(isset($add_duedate) && $add_duedate == 'edit') {
+			if($duedate == '') 
+			$duedate = '00-00-0000';
+			$d=explode('-',$duedate);
 			if(sizeof($d)>0){
 				$due_date=$d[2].'-'.$d[1].'-'.$d[0];
 				$cond = array('packageid_fk' => $this->input->post('packageid'), 'hostingid_fk' => $hostingid);
