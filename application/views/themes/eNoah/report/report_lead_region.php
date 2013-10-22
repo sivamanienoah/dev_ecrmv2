@@ -200,7 +200,7 @@ $(function(){
 		var locname = $('#locname').val();
 		locname = locname+"";
 		
-		$('#report_grid').load(base_url+'report/report_lead_region/get_lead_report',{start_date:start_date,end_date:end_date,stage:stage,customer:customer,worth:worth,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname},function(){
+		$('#report_grid').load(base_url+'report/report_lead_region/get_lead_report',{start_date:start_date,end_date:end_date,stage:stage,customer:customer,worth:worth,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},function(){
 			$('#advance').show();
 			$('#load').hide();	
 		});
@@ -219,6 +219,7 @@ $(function(){
 		var region_id = $("#regionname").val(); 
 		$.post( 
 			'choice/loadCountrys/'+ region_id,
+			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
 				if (data.error) 
 				{
@@ -242,6 +243,7 @@ $(function(){
 		var coun_id = $("#countryname").val();
 		$.post( 
 			'choice/loadStates/'+ coun_id,
+			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
 				if (data.error) 
 				{
@@ -264,6 +266,7 @@ $(function(){
 		var st_id = $("#statename").val();
 		$.post( 
 			'choice/loadLocns/'+ st_id,
+			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
 				if (data.error) 
 				{
