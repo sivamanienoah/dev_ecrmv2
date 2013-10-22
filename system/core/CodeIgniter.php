@@ -241,7 +241,7 @@
 	{
 		require APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
 	}
- echo "I amdfss hererasd" ; exit;
+
 	// Load the local application controller
 	// Note: The Router class automatically validates the controller path using the router->_validate_request().
 	// If this include fails it means that the default controller in the Routes.php file is not resolving to something valid.
@@ -251,7 +251,7 @@
 	}
 
 	include(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().'.php');
-
+ echo "I amdsadfss hererasd" ; exit;
 	// Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
 
