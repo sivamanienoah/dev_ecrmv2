@@ -227,6 +227,7 @@
  * ------------------------------------------------------
  *
  */
+ echo "I am hererasd" ; exit;
 	// Load the base controller class
 	require BASEPATH.'core/Controller.php';
 
@@ -291,7 +292,7 @@
 			show_404("{$class}/{$method}");
 		}
 	}
-echo "I am hererasd" ; exit;
+
 /*
  * ------------------------------------------------------
  *  Is there a "pre_controller" hook?
