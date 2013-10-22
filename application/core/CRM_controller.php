@@ -1,12 +1,11 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class CRM_controller extends CI_Controller {
+class crm_controller extends CI_Controller {
 	/**
 	 * Constructor
 	 */
 	public function __construct()
 	{
-		echo "CRM_Controller"; exit;
 		parent::__construct();
 		$this->load->helper('mysql_real_escape');
 		$this->cfg = $this->config->item('crm');
