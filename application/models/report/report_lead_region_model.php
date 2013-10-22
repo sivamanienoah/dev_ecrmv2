@@ -8,8 +8,7 @@ class Report_lead_region_model extends crm_model {
 		$this->stg = getLeadStage();
     }
     
-    public function getLeadReportByRegion($options = array())
-    {
+    public function getLeadReportByRegion($options = array()) {
     	// $job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
     	$order_by = 'reg.region_name';
     	
