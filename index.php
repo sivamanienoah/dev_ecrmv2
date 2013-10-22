@@ -1,5 +1,5 @@
 <?php
-
+echo "i am here"; exit;
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
