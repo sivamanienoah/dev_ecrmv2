@@ -227,13 +227,15 @@ class Hosting extends crm_controller {
 	function due_date($hostingid=0,$packageid=0) {
 		if($hostingid==0) 
 		redirect('hosting/');
-		if(isset($_POST['Add_duedate']) && $_POST['Add_duedate']=='edit') {
-			if($_POST['due_date']=='') 
-			$_POST['due_date']='00-00-0000';
-			$d=explode('-',$_POST['due_date']);
+		//$data = real_escape_array($_POST);
+		$duedate = $this->input->post('Add_duedate');
+		if(isset($duedate) && $duedate == 'edit') {
+			if($this->input->post('due_date')=='') 
+			$this->input->post('due_date')='00-00-0000';
+			$d=explode('-',$this->input->post('due_date'));
 			if(sizeof($d)>0){
 				$due_date=$d[2].'-'.$d[1].'-'.$d[0];
-				$cond = array('packageid_fk' => $_POST['packageid'], 'hostingid_fk' => $hostingid);
+				$cond = array('packageid_fk' => $this->input->post('packageid'), 'hostingid_fk' => $hostingid);
 				$data = array('due_date' => $due_date);
 				$this->hosting_model->update_row('hosting_package', $data, $cond);
 				$this->session->set_flashdata('confirm', array('Package Details Updated!'));
