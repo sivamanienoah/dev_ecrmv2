@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Dashboard extends CRM_Controller {
+class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
 
