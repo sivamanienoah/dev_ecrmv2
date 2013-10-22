@@ -3,8 +3,7 @@ class report_active_lead extends crm_controller {
     
 public $userdata;
 	
-    function __construct()
-	{
+    function __construct() {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');	
@@ -25,26 +24,19 @@ public $userdata;
 		}
     }
     
-    public function index()
-    {  
+    public function index() {  
     	$data = array();
-
-    	//$data['res'] = $this->report_active_lead_model->getActiveLead();
-    	
-    	
     	$data['lead_stage'] = $this->welcome_model->get_lead_stage();
     	$data['customers'] = $this->welcome_model->get_customers();	
 		$data['regions'] = $this->regionsettings_model->region_list('','');		
     	$data['report'] = $this->get_lead_report();
-    	$user = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['user'] = $user->result_array();
+		$data['user'] = $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
 		$this->load->vars($data);
     	$this->load->view('report/report_active_lead');		   	    	   	
     }
 
     
-    public function get_lead_report()
-    {  	
+    public function get_lead_report() {  	
     	
     	$data =array();
     	$options = array();
@@ -55,8 +47,7 @@ public $userdata;
 		$options['owner'] = $this->input->post('owner');
 		$options['stage'] = $this->input->post('stage');
 		$options['start_date'] = $this->input->post('start_date');
-		$options['worth'] = $this->input->post('worth');
-		
+		$options['worth'] = $this->input->post('worth');		
 		$options['regionname'] = $this->input->post('regionname');		
 		$options['countryname'] = $this->input->post('countryname');		
 		$options['statename'] = $this->input->post('statename');		
@@ -64,26 +55,24 @@ public $userdata;
 		
    		if($this->userdata['level'] >1){
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						
-		}
-		
+		}		
     	//$res = $this->report_lead_assignee_model->getLeadReportByAssignee($options);
     	$res = $this->report_active_lead_model->getActiveLead($options);   	
     	
     	$data['res'] = $res['res'];
     	$data['num'] = $res['num'];
-    	if($data['num']>0){
+    	if($data['num']>0) {
 	    	currency_convert();
 	    	$data['rates'] = $this->get_currency_rates();
     	}
     	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
    			$this->load->view('report/active_lead_report_view',$data);
-		}else{
+		} else {
     		return $this->load->view('report/active_lead_report_view',$data,true);
 		}
     }
    
-    public function excelExport()
-    {
+    public function excelExport() {
     	$options = array();
     	$options['customer'] = $this->input->post('customer');
     	$options['range'] = $this->input->post('range');
@@ -92,8 +81,7 @@ public $userdata;
 		$options['owner'] = $this->input->post('owner');
 		$options['stage'] = $this->input->post('stage');
 		//$options['start_date'] = $this->input->post('start_date');
-		$options['worth'] = $this->input->post('worth');
-		
+		$options['worth'] = $this->input->post('worth');		
 		$options['regionname'] = $this->input->post('regionname');
 		$options['countryname'] = $this->input->post('countryname');
 		$options['statename'] = $this->input->post('statename');
@@ -104,17 +92,14 @@ public $userdata;
 		}
 		
     	$res = $this->report_active_lead_model->getActiveLead($options);  	
-    	if($res['num']>0)
-    	{
+    	if($res['num']>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
 			//activate worksheet number 1
 			$this->excel->setActiveSheetIndex(0);
 			//name the worksheet
-			$this->excel->getActiveSheet()->setTitle('Leads');
-											
-			//set cell A1 content with some text
-			
+			$this->excel->getActiveSheet()->setTitle('Leads');											
+			//set cell A1 content with some text			
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Lead No.');
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Lead Title');
 			$this->excel->getActiveSheet()->setCellValue('C1', 'Customer');
@@ -125,11 +110,9 @@ public $userdata;
 			$this->excel->getActiveSheet()->setCellValue('H1', 'Lead Stage');
 			$this->excel->getActiveSheet()->setCellValue('I1', 'Status');
 			$this->excel->getActiveSheet()->setCellValue('J1', 'Expected Worth ('.$this->default_cur_name.')');
-
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
-			$i=2;
-		
+			$i=2;		
     		/*To build columns*/
 			$leads = $res['res'];
 			//currency_convert();
@@ -140,13 +123,10 @@ public $userdata;
     		$cnt = 0;$st=2;$end = 3;
     		$gross = 0;
     		$amt = 0;
-    		foreach($leads as $lead) {		
-    			
-    			
+    		foreach($leads as $lead) {
     			$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead->invoice_no);
     			$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead->job_title);
     			$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead->cust_first_name.' '.$lead->cust_last_name);
-    			
     			$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead->region_name);
     			$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead->ownrfname.' '.$lead->ownrlname);
     			$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead->usrfname.' '.$lead->usrlname);
@@ -159,33 +139,23 @@ public $userdata;
 				else 
 					$status = 'Dropped';
     			$this->excel->getActiveSheet()->setCellValue('I'.$i, $status);
-    			
     			$amt_converted = $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
-    			
-    			
     			$this->excel->getActiveSheet()->setCellValue('J'.$i, $amt_converted);
     			$amt += $amt_converted; 
     			$i++;
-    			
-    			$cnt++;    			
-    			
+    			$cnt++;  
     		}
     		/*To build columns ends*/
-			
     		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-    		
     		/*Gross total starts*/
     		$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Total (USD)');
     		$this->excel->getActiveSheet()->setCellValue('J'.$i, $amt);
-    				
     		$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
     		$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getFont()->setBold(true);
     		/*Gross total ends*/
-    		
     		//make the font become bold
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
-			//merge cell A1 until D1
-			
+			//merge cell A1 until D1			
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
@@ -197,16 +167,12 @@ public $userdata;
 			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(25);
-			
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
-			
-			
 			$filename='Active_lead_report.xls'   ; //save our workbook as this file name
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
-						 
 			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
 			//if you want to save it as .XLSX Excel 2007 format
 			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
@@ -216,21 +182,18 @@ public $userdata;
     	redirect('/report/report_active_lead/');
     }
     
-	public function get_currency_rates()
-	{
+	public function get_currency_rates() {
 		$currency_rates = $this->report_active_lead_model->get_currency_rate();
     	$rates = array();
     	if(!empty($currency_rates)){
-    		foreach ($currency_rates as $currency)
-    		{
+    		foreach ($currency_rates as $currency) {
     			$rates[$currency->from][$currency->to] = $currency->value;
     		}
     	}
     	return $rates;
 	}
 	
-	public function conver_currency($amount,$val)
-	{
+	public function conver_currency($amount,$val) {
 		return round($amount*$val);
 	}
 }

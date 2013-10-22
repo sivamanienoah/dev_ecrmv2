@@ -3,8 +3,7 @@ class report_least_active_lead extends crm_controller {
     
 public $userdata;
 	
-    function __construct()
-	{
+    function __construct() {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
@@ -25,26 +24,20 @@ public $userdata;
 		}
     }
     
-    public function index()
-    {  
+    public function index() {  
     	$data = array();
-
-    	//$data['res'] = $this->report_active_lead_model->getActiveLead();
-    	
-    	
+    	//$data['res'] = $this->report_active_lead_model->getActiveLead();    	
     	$data['lead_stage'] = $this->welcome_model->get_lead_stage();
     	$data['customers'] = $this->welcome_model->get_customers();	
 		$data['regions'] = $this->regionsettings_model->region_list('','');		
     	$data['report'] = $this->get_lead_report();
-    	$user = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['user'] = $user->result_array();
+    	$data['user'] = $this->report_least_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
 		$this->load->vars($data);
     	$this->load->view('report/report_least_active_lead');		   	    	   	
     }
 
     
-    public function get_lead_report()
-    {  	
+    public function get_lead_report() { 	
     	
     	$data =array();
     	$options = array();
@@ -55,8 +48,7 @@ public $userdata;
 		$options['owner'] = $this->input->post('owner');
 		$options['stage'] = $this->input->post('stage');
 		$options['start_date'] = $this->input->post('start_date');
-		$options['worth'] = $this->input->post('worth');
-		
+		$options['worth'] = $this->input->post('worth');		
 		$options['regionname'] = $this->input->post('regionname');		
 		$options['countryname'] = $this->input->post('countryname');		
 		$options['statename'] = $this->input->post('statename');		
@@ -64,11 +56,9 @@ public $userdata;
 		
    		if($this->userdata['level'] >1){
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						
-		}
-		
+		}		
     	//$res = $this->report_lead_assignee_model->getLeadReportByAssignee($options);
-    	$res = $this->report_least_active_lead_model->getLeastActiveLead($options);   	
-    	
+    	$res = $this->report_least_active_lead_model->getLeastActiveLead($options);  
     	$data['res'] = $res['res'];
     	$data['num'] = $res['num'];
     	if($data['num']>0){
@@ -77,13 +67,12 @@ public $userdata;
     	}
     	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
    			$this->load->view('report/least_active_lead_report_view',$data);
-		}else{
+		} else {
     		return $this->load->view('report/least_active_lead_report_view',$data,true);
 		}
     }
    
-    public function excelExport()
-    {
+    public function excelExport() {
     	$options = array();
     	$options['customer'] = $this->input->post('customer');
     	//$options['range'] = $this->input->post('range');
@@ -93,28 +82,23 @@ public $userdata;
 		$options['stage'] = $this->input->post('stage');
 		$options['start_date'] = $this->input->post('start_date');
 		$options['worth'] = $this->input->post('worth');
-		
 		$options['regionname'] = $this->input->post('regionname');
 		$options['countryname'] = $this->input->post('countryname');
 		$options['statename'] = $this->input->post('statename');
 		$options['locname'] = $this->input->post('locname');
 
-    	if($this->userdata['level'] >1){
+    	if($this->userdata['level'] >1) {
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						
 		}
-		
     	$res = $this->report_least_active_lead_model->getLeastActiveLead($options);  	
-    	if($res['num']>0)
-    	{
+    	if($res['num']>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
 			//activate worksheet number 1
 			$this->excel->setActiveSheetIndex(0);
 			//name the worksheet
-			$this->excel->getActiveSheet()->setTitle('Leads');
-											
-			//set cell A1 content with some text
-			
+			$this->excel->getActiveSheet()->setTitle('Leads');											
+			//set cell A1 content with some text			
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Lead No.');
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Lead Title');
 			$this->excel->getActiveSheet()->setCellValue('C1', 'Customer');
@@ -128,8 +112,7 @@ public $userdata;
 
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
-			$i=2;
-		
+			$i=2;		
     		/*To build columns*/
 			$leads = $res['res'];
 			//currency_convert();
@@ -200,9 +183,7 @@ public $userdata;
 			
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
-			
-			
-			$filename='Least_active_lead_report.xls'   ; //save our workbook as this file name
+			$filename='Least_active_lead_report.xls'; //save our workbook as this file name
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
@@ -216,8 +197,7 @@ public $userdata;
     	redirect('/report/report_least_active_lead/');
     }
     
-	public function get_currency_rates()
-	{
+	public function get_currency_rates() {
 		$currency_rates = $this->report_least_active_lead_model->get_currency_rate();
     	$rates = array();
     	if(!empty($currency_rates)){
@@ -229,8 +209,7 @@ public $userdata;
     	return $rates;
 	}
 	
-	public function conver_currency($amount,$val)
-	{
+	public function conver_currency($amount,$val) {
 		return round($amount*$val);
 	}
 }

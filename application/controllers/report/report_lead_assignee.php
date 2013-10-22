@@ -10,6 +10,7 @@ public $userdata;
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('report/report_lead_assignee_model');
         $this->load->model('report/report_lead_region_model');
+        $this->load->model('report/report_active_lead_model');
         $this->load->model('welcome_model');
         $this->load->model('regionsettings_model');        
         $this->load->library('validation');
@@ -34,17 +35,14 @@ public $userdata;
     	$data['customers'] = $this->welcome_model->get_customers();	
 		$data['regions'] = $this->regionsettings_model->region_list();		
     	$data['report'] = $this->get_lead_report();
-    	$user = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['user'] = $user->result_array();
-		
+    	$data['user'] = $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
 		$this->load->vars($data);    	 	
     	$this->load->view('report/report_lead_assignee');
     	    	   	
     }
 
     
-    public function get_lead_report()
-    {
+    public function get_lead_report() {
     	$data =array();
     	$options = array();
     	$options['customer'] = $this->input->post('customer');
@@ -79,8 +77,7 @@ public $userdata;
 		}    	
     }
    
-    public function excelExport()
-    {
+    public function excelExport() {
     	$options = array();
     	$options['customer'] = $this->input->post('customer');
 		$options['end_date'] = $this->input->post('end_date');
@@ -229,8 +226,7 @@ public $userdata;
     	redirect('/report/report_lead_region/');
     }
     
-	public function get_currency_rates()
-	{
+	public function get_currency_rates() {
 		$currency_rates = $this->report_lead_assignee_model->get_currency_rate();
     	$rates = array();
     	if(!empty($currency_rates)){
@@ -242,8 +238,7 @@ public $userdata;
     	return $rates;
 	}
 	
-	public function conver_currency($amount,$val)
-	{
+	public function conver_currency($amount,$val) {
 		return round($amount*$val);
 	}
 }

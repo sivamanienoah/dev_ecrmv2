@@ -9,6 +9,7 @@ class report_lead_region extends crm_controller {
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('report/report_lead_region_model');
+        $this->load->model('report/report_active_lead_model');
         $this->load->model('welcome_model');
         $this->load->model('regionsettings_model');        
         $this->load->library('validation');
@@ -24,25 +25,18 @@ class report_lead_region extends crm_controller {
 		}
     }
     
-    public function index()
-    {  
-    	$data = array();   	
-    	
+    public function index() {  
+    	$data = array();
     	$data['lead_stage'] = $this->welcome_model->get_lead_stage();
     	$data['customers'] = $this->welcome_model->get_customers();	
 		$data['regions'] = $this->regionsettings_model->region_list();		
     	$data['report'] = $this->get_lead_report();
-    	$user = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['user'] = $user->result_array();
-		
+    	$data['user'] = $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
 		$this->load->vars($data);    	 	
     	$this->load->view('report/report_lead_region');
-    	    	   	
     }
 
-    
-    public function get_lead_report()
-    {
+    public function get_lead_report() {
     	$data =array();
     	$options = array();
     	$options['customer'] = $this->input->post('customer');
