@@ -203,8 +203,7 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-echo "i am hereee"; exit;
 require_once BASEPATH.'core/CodeIgniter.php';
- print "dzvcxzfvvvxvcv 11111111"; exit;
+echo "i am hhhereee"; exit;
 /* End of file index.php */
 /* Location: ./index.php */
