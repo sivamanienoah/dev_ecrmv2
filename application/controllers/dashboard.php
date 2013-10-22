@@ -2,12 +2,12 @@
 class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
-
+echo "dfasdfasdf"; exit;
 	
 	function __construct()
 	{ 
 	
-	echo "dfasdfasdf"; exit;
+	
 		parent::__construct();
 		//$this->load->library('excel');
 		$this->login_model->check_login();
