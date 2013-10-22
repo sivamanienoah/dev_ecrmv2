@@ -179,7 +179,7 @@
 	{
 		$RTR->_set_overrides($routing);
 	}
-echo "I am herer" ; exit;
+
 /*
  * ------------------------------------------------------
  *  Instantiate the output class
@@ -291,7 +291,7 @@ echo "I am herer" ; exit;
 			show_404("{$class}/{$method}");
 		}
 	}
-
+echo "I am hererasd" ; exit;
 /*
  * ------------------------------------------------------
  *  Is there a "pre_controller" hook?
