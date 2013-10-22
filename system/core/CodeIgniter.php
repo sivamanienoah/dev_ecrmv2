@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-echo "I am herer" ; exit;
+
 /**
  * CodeIgniter
  *
@@ -179,7 +179,7 @@ echo "I am herer" ; exit;
 	{
 		$RTR->_set_overrides($routing);
 	}
-
+echo "I am herer" ; exit;
 /*
  * ------------------------------------------------------
  *  Instantiate the output class
