@@ -1,5 +1,5 @@
 <?php
-echo "i am here"; exit;
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -203,7 +203,7 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-
+echo "i am here"; exit;
 require_once BASEPATH.'core/CodeIgniter.php';
  print "dzvcxzfvvvxvcv 11111111"; exit;
 /* End of file index.php */
