@@ -1,13 +1,11 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-class Dashboard extends CI_Controller {
+class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
 
 	
 	function __construct()
 	{ 
-	
-		print "gbgfbgfbghfh"; exit;
 	
 		parent::__construct();
 		//$this->load->library('excel');
