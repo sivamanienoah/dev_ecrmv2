@@ -51,8 +51,9 @@ class Item_mgmt extends crm_controller {
 		$this->validation->set_rules($rules);		
 		$fields['cat_name'] = 'Category Name';		
 		$this->validation->set_fields($fields);        
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');        
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($this->input->post('update_item'))) {
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+        $update_item = $this->input->post('update_item');        
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($update_item)) {
         	$customer = $this->item_mgmt_model->get_row_bycond('additional_cats', array('cat_id' => $id));
         	if (isset($customer) && is_array($customer) && count($customer) > 0) {
         		foreach ($customer[0] as $k => $v) {
