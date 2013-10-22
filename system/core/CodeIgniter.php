@@ -230,7 +230,7 @@
 
 	// Load the base controller class
 	require BASEPATH.'core/Controller.php';
- echo "I ams hererasd" ; exit;
+
 	function &get_instance()
 	{
 		return CI_Controller::get_instance();
@@ -241,7 +241,7 @@
 	{
 		require APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
 	}
-
+ echo "I amdfss hererasd" ; exit;
 	// Load the local application controller
 	// Note: The Router class automatically validates the controller path using the router->_validate_request().
 	// If this include fails it means that the default controller in the Routes.php file is not resolving to something valid.
