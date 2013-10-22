@@ -17,7 +17,8 @@ class Request extends crm_controller {
 	}
 	
 	function index()
-	{	//$var = $_POST['quoteid'];
+	{	
+		// echo $var = $_POST['quoteid']; exit;
 		
 		$data['results'] = array();
 		if (isset($_POST['keyword']) && trim($_POST['keyword']) != '' && ($_POST['keyword'] != 'Lead No, Job Title, Name or Company'))
@@ -25,35 +26,22 @@ class Request extends crm_controller {
 			$keyword = mysql_real_escape_string($_POST['keyword']);
 			
 			$restrict = '';
-			//if ($this->userdata['level'] == 4)
-			//{
-				//$restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'";
-			//}
-			/*
-			if ($job_status == 0) {
-				$restrict .= " AND `created_by` = '{$this->userdata['userid']}'";
-			}
-			*/
-			
+
 			# restrict contractors
 			$contract_join = '';
-			//if ($this->userdata['level'] == 6)
-			//{
-				//$contract_join = "JOIN `".$this->cfg['dbpref']."contract_jobs` ON `".$this->cfg['dbpref']."contract_jobs`.`jobid_fk` = `a`.`jobid` AND `".$this->cfg['dbpref']."contract_jobs`.`userid_fk` = '{$this->userdata['userid']}'";
-			//}
 			
 			$sql = "SELECT *
-					FROM `".$this->cfg['dbpref']."customers`, `".$this->cfg['dbpref']."jobs` a
+					FROM ".$this->cfg['dbpref']."customers, ".$this->cfg['dbpref']."jobs a
 					{$contract_join}
 					WHERE `custid_fk` = `custid`
-					AND job_status IN ("'.$this->stages.'")
+					AND job_status IN ('".$this->stages."')
 					AND (
 						`job_title` LIKE '%{$keyword}%'
 						OR `invoice_no` LIKE '%{$keyword}%'
 						OR `custid_fk`
 						IN (
 							SELECT `custid`
-							FROM `".$this->cfg['dbpref']."customers`
+							FROM ".$this->cfg['dbpref']."customers
 							WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%'
 							OR `first_name` LIKE '%{$keyword}%'
 							OR `last_name` LIKE '%{$keyword}%'
@@ -64,7 +52,7 @@ class Request extends crm_controller {
 					ORDER BY `job_status`, `job_title`";
 					
 			$q = $this->db->query($sql);
-			//echo $this->db->last_query();
+			// echo $this->db->last_query();
 			if ($q->num_rows() > 0)
 			{				
 				$result = $q->result_array();
@@ -82,10 +70,6 @@ class Request extends crm_controller {
 				{
 					$this->session->set_flashdata('header_messages', array('Only one result found! You have been redirect to the job.'));
 					
-					//$status_type = (in_array($result[0]['job_status'], array(4,5,6,7,8,25))) ? 'invoice' : 'welcome';
-					//$status_type = (in_array($result[0]['job_status'])) ? 'invoice' : 'welcome';
-					
-					//redirect($status_type . '/view_quote/' . $result[0]['jobid']);
 					redirect('welcome/view_quote/' . $result[0]['jobid'] . '/draft');
 				}
 				else 
@@ -99,10 +83,8 @@ class Request extends crm_controller {
 				$this->session->set_flashdata('header_messages', array('No record found!'));
 				redirect('welcome/view_quote/' . $_POST['quoteid'] . '/draft');
 			}
-		} 
-		
+		}
 		$this->load->view('quotation_create', $data);
-	}
-	
+	}	
 }
 ?>

@@ -137,7 +137,7 @@ class Dashboard extends crm_controller {
 			$leadowner = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 			$data['lead_owner'] = $leadowner->result_array(); 
 			
-			$data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
+			// $data['lead_stage_pjt'] = $this->welcome_model->get_lead_stage_pjt();
 			$data['regions'] = $this->regionsettings_model->region_list();
 			$data['pm_accounts'] = array();
 			//Here "WHERE" condition used for Fetching the Project Managers.

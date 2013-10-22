@@ -19,9 +19,9 @@ class Request extends crm_controller {
 
     }
     
-    function set_flash_data($str, $type = 'header_messages')
-    {
-        $this->session->set_flashdata($type, array($str));
+    function set_flash_data($type = 'header_messages')
+    {	
+        $this->session->set_flashdata($type, array($this->input->post('str')));
     }
 	
 	/**

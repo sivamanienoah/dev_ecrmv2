@@ -1,8 +1,8 @@
 function showMSG(str) {
     $('#user-status .msg-highlight').html(str).effect('highlight', {}, 2500);
 } 
-function showMSGS(str) {
- $.get('ajax/request/set_flash_data/' + str,{},function(data){
+function showMSGS(str, ci_csrf_token, csrf_hash) {
+	$.post('ajax/request/set_flash_data/','str='+str+'&ci_csrf_token='+csrf_hash, function(data){
 		document.location.href = 'welcome/edit_quote/' + quote_id;
 		$.unblockUI();
     });
@@ -55,23 +55,23 @@ function js_urlencode(str) {
 	return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
 }
 
-function convertQuoteStatus() {
+function convertQuoteStatus(csrf_token,csrf_hash) {
     var qstatus = $('#general_convert_quote_status').val();
 	
 	$.blockUI({
 		message:'<h2>Processing your request...</h2>'
 	});
 	
-	$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus,
+	$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus + '/' + csrf_token, + '/' + csrf_hash,
 	function(data) {
 		if (typeof(data) == 'object') {
 			if (data.error) {
 				alert(data.errormsg);
 				$.unblockUI();
-				window.location.href = "welcome/edit_quote" + "/" + quote_id +"/";
+				window.location.href = "welcome/edit_quote" + "/" + quote_id +"/"+ csrf_token +"/"+ csrf_hash+"/";
 				//alert('status Changed');
 			} else {
-				reloadWithMessage('Status Changed Successfully', qstatus);
+				reloadWithMessage('Status Changed Successfully', csrf_token, csrf_hash);
 			}
 		} else {
 			alert('Unexpected response from server!')
@@ -80,9 +80,9 @@ function convertQuoteStatus() {
 	});
 }
 
-function reloadWithMessage(str, statusid) {
-	$.get('ajax/request/set_flash_data/' + str,{},function(data){
-		document.location.href = 'welcome/view_quote/' + quote_id;
+function reloadWithMessage(str, ci_csrf_token, csrf_hash) {
+	$.post('ajax/request/set_flash_data/','str='+str+'&ci_csrf_token='+csrf_hash,function(data){
+		document.location.href = 'welcome/edit_quote/' + quote_id;
 		$.unblockUI();
-	});
+    });
 }

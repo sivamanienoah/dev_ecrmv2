@@ -199,7 +199,8 @@ class Hosting extends crm_controller {
             redirect('hosting/');
         }
     }
-    function ajax_customer_search() {
+   
+	/*function ajax_customer_search() {
         if ($this->input->post('cust_name')) {
             $result = $this->customer_model->customer_list(0, $this->input->post('cust_name'));
             $i=0;
@@ -215,6 +216,17 @@ class Hosting extends crm_controller {
             }
         }
         echo json_encode($res); exit;
+    }*/
+	
+	function ajax_customer_search()
+    {
+        if ($this->input->post('q')) {
+            $result = $this->customer_model->customer_list(0, $this->input->post('q'));
+            if (count($result) > 0) foreach ($result as $cust) {
+                $company = (trim($cust['company']) == '') ? '' : " - " . $cust['company'];
+                echo "{$cust['first_name']} {$cust['last_name']}{$company}|{$cust['custid']}|{$cust['add1_region']}|{$cust['add1_country']}|{$cust['add1_state']}|{$cust['add1_location']}\n";
+            }
+        }
     }
     
 	function hosts($custid='') {

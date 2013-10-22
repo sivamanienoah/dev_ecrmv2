@@ -62,12 +62,11 @@ $('#excel').click(function() {
 		<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', $quote_section ?>">View</a><?php } else echo "View"; ?>
 			<?php 
 			if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) {
-			echo ($filter_result['invoice_downloaded'] != 1) ? ' | <a href="welcome/edit_quote/' . $filter_result['jobid'] . '">Edit</a>' : '' ?>
+			echo ' | <a href="welcome/edit_quote/' . $filter_result['jobid'] . '">Edit</a>'; ?>
 			<?php } ?> 
 			<?php
 			if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
-			$list_location = ($this->uri->segment(3)) ? '/' . $this->uri->segment(3) : '';
-			echo (($this->session->userdata('deletelead')==1) && $filter_result['invoice_downloaded'] != 1) ? ' | <a href="welcome/delete_quote/' . $filter_result['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
+			echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['jobid'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
 			} ?>
 		</td>
 		<td>		

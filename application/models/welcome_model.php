@@ -37,7 +37,8 @@ class Welcome_model extends crm_model {
 	
 		$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_category, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
-		j.proposal_expected_date, j.proposal_sent_date, j.log_view_status, c.*, c.first_name AS cfn, c.last_name AS cln, rg.region_name, coun.country_name, 
+		j.proposal_expected_date, j.proposal_sent_date, j.log_view_status, j.lead_hold_reason, 
+		c.*, c.first_name AS cfn, c.last_name AS cln, rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name');
 		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
@@ -63,6 +64,16 @@ class Welcome_model extends crm_model {
 	
 	function get_users() {
     	$this->db->select('userid,first_name,level,role_id,inactive');
+    	$this->db->order_by('first_name', "asc");
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+		return $q->result_array();
+    }
+	
+	function get_userlist($userList) {
+    	$this->db->select('userid,first_name,last_name,level,role_id,inactive');
+		$this->db->where('inactive', 0);
+		if(!empty($userList))
+		$this->db->where_in('userid', $userList);
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
@@ -97,6 +108,7 @@ class Welcome_model extends crm_model {
         $sql = $this->db->get($this->cfg['dbpref'] . 'items');
 		return $sql->result_array();
 	}
+	
     public function get_job($filter = array())
     {
         if (count($filter))
@@ -176,6 +188,7 @@ class Welcome_model extends crm_model {
 		
         return $data['job_files_html'];
     }
+	
     public function get_query_files_list($jobid)
     {
 		
@@ -245,6 +258,7 @@ class Welcome_model extends crm_model {
 
         return $data['query_files1_html'];
     }
+	
     public function get_job_urls($jobid)
     {
         $sql = "SELECT *
@@ -271,10 +285,54 @@ class Welcome_model extends crm_model {
         return $html;
         
     }
-
 	
-	public function get_lead_stage()
-	{
+	public function get_lead_det($jid) {
+	    $this->db->select('job_status, invoice_no, job_title, lead_assign, belong_to, lead_status, actual_worth_amount, custid_fk');
+	    $this->db->from($this->cfg['dbpref'] . 'jobs');
+	    $this->db->where('jobid', $jid);
+	    $lead_history = $this->db->get();
+	    return $leads =  $lead_history->row_array();
+	}
+	
+	function updt_lead_stg_status($id, $updt) {
+		$this->db->where('jobid', $id);
+		return $this->db->update($this->cfg['dbpref'] . 'jobs', $updt);
+	}
+	
+	function get_lead_stg_name($id) {
+		$query = $this->db->get_where($this->cfg['dbpref'].'lead_stage', array('lead_stage_id' => $id));
+		return $query->row_array();
+	}
+	
+	function insert_row($tbl, $ins) {
+		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+    }
+	
+	function insert_row_return_id($tbl, $ins) {
+		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+		return $this->db->insert_id();
+    }
+	
+	function update_row($tbl, $ins, $jid) {
+		$this->db->where('jobid', $jid);
+		$this->db->update($this->cfg['dbpref'] . $tbl, $ins);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+    }
+	
+	function update_row_item($tbl, $ins, $jid) {
+		$this->db->where('itemid', $jid);
+		$this->db->update($this->cfg['dbpref'] . $tbl, $ins);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+    }
+	
+	function get_expect_worths() {
+    	$this->db->select('expect_worth_id, expect_worth_name');
+		$this->db->where('status', 1);
+    	$q = $this->db->get($this->cfg['dbpref'] . 'expect_worth');
+    	return $q->result_array();
+    }
+		
+	public function get_lead_stage() {
 	    $this->db->select('*');
 	    $this->db->from($this->cfg['dbpref'].'lead_stage');
 	    // $this->db->limit(13);
@@ -285,6 +343,39 @@ class Welcome_model extends crm_model {
 	    // echo $this->db->last_query(); exit;
 	    return $leads;
 	}
+	
+	//$rcsl(region, country, state, location)
+	function get_lvl_users($tbl, $rcsl, $rcsl_id, $lvl_id) {
+		$this->db->select('user_id');
+		$this->db->from($this->cfg['dbpref'] . $tbl);
+		$this->db->where($rcsl, $rcsl_id);
+		$this->db->where_not_in('level_id', $lvl_id);
+		$sql = $this->db->get();
+		return $res = $sql->result_array();
+    }
+	
+	function get_lvlOne_users() {
+		$this->db->select('userid as user_id');
+		$this->db->from($this->cfg['dbpref'] . 'users');
+		$this->db->where('level', 1);
+		$sql = $this->db->get();
+		return $res = $sql->result_array();
+    }
+	
+	function get_customer_det($cid) {
+	    $this->db->select('first_name, last_name, company, email_1');
+	    $this->db->from($this->cfg['dbpref'] . 'customers');
+	    $this->db->where('custid', $cid);
+	    $cust_det = $this->db->get();
+	    return $cust_det->row_array();
+	}
+	
+	function get_item_position($jid) {
+		$this->db->select_max('item_position');
+		$query = $this->db->get_where($this->cfg['dbpref'].'items', array('jobid_fk' => $jid));
+		return $query->result_array();
+	}
+	
 	//unwanted function
 	public function get_lead_stage_projects()
 	{
@@ -320,20 +411,6 @@ class Welcome_model extends crm_model {
 	    // echo $this->db->last_query(); exit;
 	    return $lead_sh;
 	}
-	
-	//unwanted function
-	public function get_lead_stage_pjt()
-	{
-	    $this->db->select('*');
-	    $this->db->from($this->cfg['dbpref'] . 'lead_stage');
-	    // $jobStatus = array(13,14,15,16);
-		$jobStatus = $this->pjt_stg;
-	    $this->db->where_in('lead_stage_id', $jobStatus);
-	    $lead_stage_pjt = $this->db->get();
-	    $leadsjob =  $lead_stage_pjt->result_array();
-	    return $leadsjob;
-	}
-	
 	
 	public function get_customers()
 	{
@@ -911,6 +988,7 @@ class Welcome_model extends crm_model {
     	$this->db->insert($this->cfg['dbpref'] . 'jobs', $ins);
     	return $this->db->insert_id();
     }
+	
     function update_job($insert_id, $up_args) {
     	$this->db->where('jobid', $insert_id);
 		$this->db->update($this->cfg['dbpref'] . 'jobs', $up_args);
@@ -933,7 +1011,12 @@ class Welcome_model extends crm_model {
 		$q = $this->db->get($this->cfg['dbpref'] . 'lead_source');
 		return $q->result_array();
     }
-    
+	
+	function get_user_byrole($role_id) {
+    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
+    	return $users;
+    }
+	
     function get_lead_assign($level) {
     	$this->db->select('userid', 'first_name');
     	if(!empty($level))
@@ -942,18 +1025,7 @@ class Welcome_model extends crm_model {
     	return $q->result_array();
     }
     
-    function get_expect_worths() {
-    	$this->db->select('expect_worth_id', 'expect_worth_name');
-    	$q = $this->db->get($this->cfg['dbpref'] . 'expect_worth');
-    	return $q->result_array();
-    }
-    
-    
-    function get_user_byrole($role_id) {
-    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
-    	return $users;
-    }
-    
+   
     function get_quote_data($id) {
     	$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');

@@ -2,7 +2,6 @@
 // this section needs to identical to what you see on the 'welcome_view.php' view file
 // only change the status if the invoice is not settled	
 ?>
-	<?php //echo '<pre>'; print_r($quote_data); echo '</pre>'; exit;?>
 <form id="change-quote-status"<?php if (!isset($quote_data)) echo ' class="display-none"' ?>>
 
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -17,7 +16,7 @@
 
 	<div class="quote-invoice convert">
 		<div class="buttons">
-			<button type="submit" class="positive" onclick="convertQuoteStatus(); return false;">Set</button>
+			<button type="submit" class="positive" onclick="convertQuoteStatus('<?php echo $this->security->get_csrf_token_name(); ?>','<?php echo $this->security->get_csrf_hash(); ?>'); return false;">Set</button>
 		</div>
 	</div>
 </form>

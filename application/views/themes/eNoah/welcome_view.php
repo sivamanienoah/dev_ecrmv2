@@ -192,11 +192,14 @@ function getUserForLeadAssign(regId,cntryId,stId,locId) {
 
 
 function get_user_infm(users){
-	//alert(users);
+	// alert(users); return false;
 	var baseurl = $('.hiddenUrl').val();
+	var data = users
 	$.ajax({
-	url : baseurl + 'user/getUserDetFromDb/'+users,
+		type: "POST",
+		url : baseurl + 'user/getUserDetFromDb/',
 		cache : false,
+		data: { user: users },
 		success : function(response){
 		//alert(response);
 			if(response != '') {
@@ -420,7 +423,6 @@ function addItem() {
                         $('#q-sort-items').sortable('refresh');
                         scrollElem('.q-container', '#q-sort-items li#qi-'+res.itemid);
                         $('#item_title, #item_price, #item_desc, #hours, #item_section').val('');
-                        $('#keep_item').attr('checked', false);
                     } else {
                         alert(res.errormsg);
                     }
@@ -592,18 +594,17 @@ function editQuoteDetails() {
         // get form data
         var form_data = $('#quote-edit-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
         // add cutomer id
-		
+		var csrf_token = '<?php echo $this->security->get_csrf_token_name() ?>';
+		var csrf_hasf = '<?php echo $this->security->get_csrf_hash() ?>';
         $.post(
             'welcome/ajax_edit_quote',
             form_data,
             function (res) {
 				if (typeof (res) == 'object') {				
                     if (res.error == false) {
-						showMSGS('Details successfully updated!');
+						showMSGS('Details Successfully Updated!', csrf_token, csrf_hasf);
                         // good to go
-                        //$('.q-id span').html(res.fancy_jobid);
                         $('.q-title').html(res.job_title);
-                        //$('.q-desc').html(res.job_desc);
                         $('.q-service-type span').html(job_categories[res.job_category]);
                         
                     } else {
@@ -1257,10 +1258,12 @@ h3 .small {
 					
 					<p>
 						<select name="lead_status" id="lead_status" class="textfield width300px" onchange="getReason(this.value);">
-						<option value="1"  <?php if(in_array($quote_data['lead_status'] == 1)) echo 'selected="selected"'; ?>>Active</option>
+						<option value="1"  <?php if($quote_data['lead_status'] == 1) echo 'selected="selected"'; ?>>Active</option>
 						<option value="2"  <?php if($quote_data['lead_status'] == 2) echo 'selected="selected"'; ?>>OnHold</option>
 						<option value="3"  <?php if($quote_data['lead_status'] == 3) echo 'selected="selected"'; ?>>Dropped</option>
+						<option value="4"  <?php if($quote_data['lead_status'] == 4) echo 'selected="selected"'; ?>>Closed</option>
                         </select>
+						<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
                     </p>
 					<script>
 					//if(document.getElementById('lead_status').value == 2)
@@ -1287,9 +1290,16 @@ h3 .small {
 						<?php } ?>
 					
                     <input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
-                    <div class="buttons clearfix">
+                    <div style="width:170px;">
+                    <div class="buttons clearfix pull-left">
                         <button type="submit" class="positive" onclick="editQuoteDetails(); return false;">Save</button>
                     </div>
+					<?php if($quote_data['lead_status'] == 4) { ?>
+						<div class="buttons clearfix pull-right">
+							<button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button>
+						</div>
+					<?php } ?>
+					</div>
                     <!--div class="buttons">
                         <button type="submit" onclick="$('#quote-edit-form').slideUp(400); return false;">Done</button>
                     </div-->
@@ -1317,10 +1327,6 @@ h3 .small {
                             <td class="width100px">
                                 <p><label>Item price</label></p>
                                 <p><input type="text" name="item_price" id="item_price" class="textfield width80px" /></p>
-                            </td>
-                            <td>
-                                <!--<p><label>Add to additional items?</label></p>
-                                <p><input type="checkbox" name="keep_item" id="keep_item" /></p>-->
                             </td>
                         </tr>
                     </table>
@@ -1440,7 +1446,19 @@ h3 .small {
 							<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
 						</div>
 						<!-- end q-self -->
-						<p><img src="assets/img/qlogo.png?q=1" alt="" /></p>
+						<?php 
+							if (getClientLogo()) {
+							$cilentLogo = getClientLogo();
+						?>
+							<p><img src="assets/img/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" width="155" height="50"/></p>
+						<?php 
+							}
+							else {
+						?>
+							<p><img src="" alt="" /></p>
+						<?php
+							}
+						?>
 					</div><!-- q-top-head -->
                     
                     <div class="q-quote-items">
@@ -1818,8 +1836,37 @@ $(function(){
 });
 	
 });
+function is_project() {
+	// alert(curr_job_id); return false;
+    
+	$.blockUI({
+		message:'<h2>Processing your request...</h2>'
+	});
+	$.getJSON('welcome/ajax_update_lead_status/' + curr_job_id,
+		function(data){
+			if (typeof(data) == 'object') {
+				if (data.error) {
+					alert(data.errormsg);
+					$.unblockUI();
+					window.location.href = "welcome/edit_quote" + "/" + curr_job_id +"/";
+					//alert('status Changed');
+				} else {
+					//alert(qstatus);
+					reloadWithMessagePjt('Lead Successfully moved to Project', curr_job_id);
+				}
+			} else {
+				alert('Unexpected response from server!')
+				$.unblockUI();
+			}
+		});
+   
+}
+
+function reloadWithMessagePjt(str, statusid) {
+	$.get('ajax/request/set_flash_data/' + str,{},function(data){
+		document.location.href = 'invoice/view_project/' + curr_job_id;
+		$.unblockUI();
+	});
+}
 </script>
-
-
-
 <?php require (theme_url().'/tpl/footer.php'); ?>
