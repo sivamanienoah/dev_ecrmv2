@@ -227,10 +227,10 @@
  * ------------------------------------------------------
  *
  */
- echo "I am hererasd" ; exit;
+
 	// Load the base controller class
 	require BASEPATH.'core/Controller.php';
-
+ echo "I ams hererasd" ; exit;
 	function &get_instance()
 	{
 		return CI_Controller::get_instance();
