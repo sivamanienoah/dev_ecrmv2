@@ -44,11 +44,12 @@ $route['scaffolding_trigger'] = "";
 
 $route['invoice/preview/([0-9]+)'] = "welcome/preview/$1";
 $route['invoice'] = "welcome/quotation/approved";
+/*
 $route['invoice/projects'] = "welcome/projects/production";
 $route['invoice/projects/production'] = "welcome/projects/production";
 $route['invoice/projects/completed'] = "welcome/projects/completed";
 $route['invoice/projects/p_cancelled'] = "welcome/projects/p_cancelled";
-$route['invoice/projects/p_onhold'] = "welcome/projects/p_onhold";
+$route['invoice/projects/p_onhold'] = "welcome/projects/p_onhold"; */
 $route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
 $route['invoice/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
 $route['invoice/view_project/([0-9]+)(/.+)?'] = "welcome/view_project/$1$2";

@@ -103,7 +103,7 @@ class Welcome extends crm_controller {
 		$usid = $this->session->userdata('logged_in_user');
 		
 		$getLeadDet = $this->welcome_model->get_lead_detail($id);
-
+		
 		if(!empty($getLeadDet)) {
             $data['quote_data'] = $getLeadDet[0];
             $data['view_quotation'] = true;
@@ -200,7 +200,7 @@ HDOC;
 		$this->load->helper('fix_text');
 		
 		$quote = $this->welcome_model->get_quote_items($jobid);
-        
+
         if (!empty($quote)) {
             $html = '';
             $sale_amount = 0;
@@ -685,6 +685,16 @@ body {
 				$ins['lead_assign'] = $data['lead_assign_edit_hidden'];
 			}
 			
+			// for lead status history - starts here
+			if($_POST['lead_status'] != $_POST['lead_status_hidden']) {
+				$lead_stat_hist['jobid'] = $_POST['jobid_edit'];
+				$lead_stat_hist['dateofchange'] = date('Y-m-d H:i:s');
+				$lead_stat_hist['changed_status'] = $_POST['lead_status'];
+				$lead_stat_hist['modified_by'] = $this->userdata['userid'];
+				$insert_lead_stat_his = $this->welcome_model->insert_row('lead_status_history', $lead_stat_hist);
+			}
+			// for lead status history - ends here	
+			
 			/* lead owner starts here */
 			if($data['lead_owner_edit_hidden'] == null || $data['lead_owner_edit_hidden'] == 0) {
 				$ins['belong_to'] = $data['lead_owner_edit'];
@@ -1033,8 +1043,7 @@ body {
 						</tr>
 						</table>
 						</body>
-						</html>';							
-				//$mydata=$q->row();
+						</html>';
 				$from=$this->userdata['email'];
 				$arrEmails = $this->config->item('crm');
 				$arrSetEmails=$arrEmails['director_emails'];
@@ -1214,10 +1223,10 @@ body {
 	}
 	
 	/**
-	 * Delets a lead from the list
+	 * Deletes lead from the list
 	 */
 	function delete_quote($id) {
-		
+
 		if ($this->session->userdata('delete')==1) {
 			if ($id > 0) {
 			
@@ -1225,23 +1234,134 @@ body {
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
-
 				$delete_job = $this->welcome_model->delete_lead('jobs', $id);
-				$delete_item = $this->welcome_model->delete_row('items', $id);
-				$delete_log = $this->welcome_model->delete_row('logs', $id);
-				$delete_task = $this->welcome_model->delete_row('tasks', $id);
-				$delete_file = $this->welcome_model->delete_row('lead_file', $id);
-				$delete_query = $this->welcome_model->delete_row('lead_query', $id);
+				if ($delete_job) {
+					$delete_item = $this->welcome_model->delete_row('items', 'jobid_fk', $id);
+					$delete_log = $this->welcome_model->delete_row('logs', 'jobid_fk', $id);
+					$delete_task = $this->welcome_model->delete_row('tasks', 'jobid_fk', $id);
+					$delete_file = $this->welcome_model->delete_row('lead_files', 'jobid', $id);
+					$delete_query = $this->welcome_model->delete_row('lead_query', 'job_id', $id);
+					
+					# Lead Delete Mail Notification
+					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead No.' .$lead_det['invoice_no']. ' ';
+
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$dis['date_created'] = date('Y-m-d H:i:s');
+					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+					
+					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+						<html xmlns="http://www.w3.org/1999/xhtml">
+						<head>
+						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+						<title>Email Template</title>
+						<style type="text/css">
+						body {
+							margin: 0px;
+						}
+						</style>
+						</head>
+
+						<body>
+						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+						<tr><td bgcolor="#FFFFFF">
+						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+						  <tr>
+							<td style="padding:15px; border-bottom:2px #5a595e solid;">
+								<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+							</td>
+						  </tr>
+						  <tr>
+							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Deleted Notification Message
+						</h3></td>
+						  </tr>
+
+						  <tr>
+							<td>
+							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+							<p style="background: none repeat scroll 0 0 #4B6FB9;
+							border-bottom: 1px solid #CCCCCC;
+							color: #FFFFFF;
+							margin: 0;
+							padding: 4px;">
+								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
+							<p style="padding: 4px;">'.
+								$ins['log_content'].'<br /><br />
+								'.$this->userdata['signature'].'<br />
+							</p>
+						</div>
+						</td>
+						  </tr>
+
+						   <tr>
+							<td>&nbsp;</td>
+						  </tr>
+						  <tr>
+							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+						  </tr>
+						</table>
+						</td>
+						</tr>
+						</table>
+						</body>
+						</html>';							
+					//$mydata=$q->row();
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+					$mangement_email = $arrEmails['management_emails'];
+					$mgmt_mail = implode(',',$mangement_email);
+					$admin_mail=implode(',',$arrSetEmails);
+					
+					$subject='Lead Delete Notification';
+					$this->email->from($from,$user_name);
+					$this->email->to($mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email']);
+					$this->email->bcc($admin_mail);
+					$this->email->subject($subject);
+					$this->email->message($log_email_content);
+					$this->email->send(); 
+					$this->session->set_flashdata('confirm', array("Item deleted from the system"));
+					redirect('welcome/quotation');
+				} else {
+					$this->session->set_flashdata('login_errors', array("Error in Deletion."));
+					redirect('welcome/quotation');
+				}
+			} else {
+				$this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
+				redirect('welcome/quotation');
+			}
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('welcome/quotation');
+		}
+		
+	}
+	
+	//Closed lead - move to project
+	public function ajax_update_lead_status($jobid) 
+	{
+        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid))
+        {
+			$update['pjt_status'] = 1;
+			$update['modified_by'] = $this->userdata['userid'];
+			$update['date_modified'] = date('Y-m-d H:i:s');
+			
+			$updt_job = $this->welcome_model->update_row('jobs', $update, $jobid);
+			
+			if ($updt_job) {	
+			
+				$lead_det = $this->welcome_model->get_lead_det($jobid);
+				$ins['userid_fk'] = $this->userdata['userid'];
+				$ins['jobid_fk'] = $jobid;
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				$ins['log_content'] = 'The Lead "'.$lead_det['job_title'].'" is Successfully Moved to Project.';
+				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'> ' .$lead_det['job_title'].' </a> is Successfully Moved to Project.';
+
+				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
+				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
-				# Lead Delete Mail Notification
-
-				$disarray=$getlead_assign_email->result_array();
-				$lowner=$getlead_owner_email->result_array();
-			
-			
-				$ins['log_content'] = 'Lead Deleted Sucessfully - Lead No.' .$disarray[0]['invoice_no']. ' ';
-				// inset the new log
-
+				// insert the new log
+				$insert_log = $this->welcome_model->insert_row('logs', $ins);
+				
 				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
@@ -1268,8 +1388,7 @@ body {
 						</td>
 					  </tr>
 					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Deleted Notification Message
-	</h3></td>
+						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead To Project Change Notification Message</h3></td>
 					  </tr>
 
 					  <tr>
@@ -1282,7 +1401,7 @@ body {
 						padding: 4px;">
 							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
 						<p style="padding: 4px;">'.
-							$ins['log_content'].'<br /><br />
+							$ins_email['log_content_email'].'<br /><br />
 							'.$this->userdata['signature'].'<br />
 						</p>
 					</div>
@@ -1300,34 +1419,32 @@ body {
 					</tr>
 					</table>
 					</body>
-					</html>';							
-				//$mydata=$q->row();
-				$from=$this->userdata['email'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				$mangement_email = $arrEmails['management_emails'];
-				$mgmt_mail = implode(',',$mangement_email);
-				$admin_mail=implode(',',$arrSetEmails);
-				
-				$subject='Lead Delete Notification';
-				$this->email->from($from,$user_name);
-				//print_r($lowner);exit;
-				$this->email->to($mgmt_mail.','.$disarray[0]['email'].','.$lowner[0]['email']);
-				$this->email->bcc($admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($log_email_content);
-				$this->email->send(); 
-				$this->session->set_flashdata('confirm', array("Item deleted from the system"));
-				redirect('welcome/quotation' . $list);
-			} else {
-				$this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
-				redirect('welcome/quotation');
+					</html>';
+			$from=$this->userdata['email'];
+			$arrEmails = $this->config->item('crm');
+			$arrSetEmails=$arrEmails['director_emails'];
+			
+			$admin_mail=implode(',',$arrSetEmails);
+			
+			$subject='Lead to Project Change Notification';
+			$this->email->from($from,$user_name);
+			$this->email->to($lead_assign_mail[0]['email'] .','. $lead_owner[0]['email']);
+			$this->email->bcc($admin_mail);
+			$this->email->subject($subject);
+			$this->email->message($log_email_content);
+			$this->email->send(); 
+			echo "{error:false}";
 			}
-		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-			redirect('welcome/quotation');
-		}
-	}
+			else
+			{
+				echo "{error:true, errormsg:'Database update failed!'}";
+			}	
+        }
+        else
+			{
+				echo "{error:true, errormsg:'Invalid Lead ID or Stage!'}";
+			}
+    }
 	
 	/*
 	 *Exporting data(leads) to the excel

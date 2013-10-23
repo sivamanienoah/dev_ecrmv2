@@ -1,10 +1,8 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<?php #echo "<pre>"; print_r($quote_data); exit; ?>
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/vps.js?q=13"></script>
-<script type="text/javascript" src="assets/js/vps_project.js?q=13"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript">var this_is_home = true;</script>
@@ -102,7 +100,7 @@ job_categories['not_select'] = '';
 job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
 <?php } ?>
 
-var hourly_rate = <?php echo  $cfg['hourly_rate'] ?>;
+
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
@@ -241,7 +239,7 @@ function addLog() {
 		}
 	}
 	$.post(
-		'welcome/pjt_add_log',
+		'project/pjt_add_log',
 		form_data,
 		function(_data){
 		//alert(_data);
@@ -327,7 +325,7 @@ function setPaymentRecievedTerms() {
 		var form_data = $('#payment-recieved-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
 		$.post( 
-			'welcome/add_project_received_payments',
+			'project/add_project_received_payments',
 			form_data,
 			function(data) {
 					if (data.error) {
@@ -397,7 +395,7 @@ function updatePaymentRecievedTerms(pdid, eid) {
 		var form_data = $('#update-payment-recieved-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
 		$.post( 
-			'welcome/add_project_received_payments/'+pdid+'/'+eid,
+			'project/add_project_received_payments/'+pdid+'/'+eid,
 			form_data,
 			function(data) {
 					if (data.error) {
@@ -421,7 +419,7 @@ function updatePaymentRecievedTerms(pdid, eid) {
 
 function loadPaymentTerms() {
 	$.post( 
-		'welcome/retrieveRecord/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		'project/retrieveRecord/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
 			if (data.error) {
 				alert(data.errormsg);
@@ -434,7 +432,7 @@ function loadPaymentTerms() {
 //function for load the payment terms every time click the 'Add Payment Terms' button
 function loadPayment() {
 	$.post( 
-		'welcome/payment_terms_delete/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		'project/payment_terms_delete/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
 			if (data.error) {
 				alert(data.errormsg);
@@ -496,7 +494,7 @@ function setProjectPaymentTerms() {
 		var form_data = $('#set-payment-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
 		$.post( 
-			'welcome/set_payment_terms',
+			'project/set_payment_terms',
 			form_data,
 			function(data) {
 				if (data.error) {
@@ -568,7 +566,7 @@ function updateProjectPaymentTerms(eid) {
 		var form_data = $('#update-payment-terms').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
 		$.post( 
-			'welcome/set_payment_terms/'+eid,
+			'project/set_payment_terms/'+eid,
 			form_data,
 			function(data) {
 					if (data.error) {
@@ -603,7 +601,7 @@ function addDepositPayment() {
 		var form_data = $('#set-deposits').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
 		$.post(
-			'welcome/add_deposit_payments',
+			'project/add_deposit_payments',
 			form_data,
 			function(data) {
 				if (typeof(data) == 'object') {
@@ -668,7 +666,7 @@ function runAjaxFileUpload() {
 					else
 					{	
 						if(data.msg == 'File successfully uploaded!') {
-							var lead_details = "welcome/lead_fileupload_details/<?php echo $quote_data['jobid'] ?>/"+data.file_name+ "/" +userid;														
+							var lead_details = "project/lead_fileupload_details/<?php echo $quote_data['jobid'] ?>/"+data.file_name+ "/" +userid;														
 							$('#lead_result').load(lead_details);
 						}
 						//alert(data.msg);
@@ -870,7 +868,7 @@ function setProjectId() {
 			
 			var baseurl = $('.hiddenUrl').val();
             $.ajax({
-            url : baseurl + 'welcome/getPjtIdFromdb/' + pjtId,
+            url : baseurl + 'project/getPjtIdFromdb/' + pjtId,
             cache : false,
             success : function(response){
                 $('.checkUser').hide();
@@ -927,7 +925,7 @@ function setProjectVal() {
 			
 			var baseurl = $('.hiddenUrl').val();
             $.ajax({
-            url : baseurl + 'welcome/getPjtValFromdb/' + pjt_value,
+            url : baseurl + 'project/getPjtValFromdb/' + pjt_value,
             cache : false,
             success : function(response){
                 $('#checkVal').hide();
@@ -1177,7 +1175,7 @@ function downloadCustomPDF()
 	}
 	else
 	{
-		var pdf_url = '<?php echo $this->config->item('base_url') ?>welcome/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE/TRUE/FALSE/output-<?php echo $quote_data['invoice_no'] ?>/template/';
+		var pdf_url = '<?php echo $this->config->item('base_url') ?>project/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE/TRUE/FALSE/output-<?php echo $quote_data['invoice_no'] ?>/template/';
 		
 		if ($('.download-invoice-option input[name="ignore_content_policy"]').is(':checked'))
 		{
@@ -1479,7 +1477,7 @@ function setContractorJob()
 	
 	var data = {'contractors': contractors.join(','), 'jobid': curr_job_id, 'project-mem': p,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
 	$.post(
-		'welcome/ajax_set_contractor_for_job',
+		'project/ajax_set_contractor_for_job',
 		data,
 		function(xd)
 		{
@@ -1719,7 +1717,7 @@ function setContractorJob()
 							for($j=0; $j<count($final_restrict_user); $j++) {
 							//echo $restrict[$j];
 
-							if($usid == $final_restrict_user[$j]) {
+								if($usid == $final_restrict_user[$j]) {
 									echo '<span class="user">' .
 									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" class="' . $is_pm . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label>' .
 									'<select name="post_profile_' . $user_accounts[$i]['userid'] . '" class="post-profile-select">' . $post_profile_options . '</select></span>'; 
@@ -2273,7 +2271,7 @@ function setContractorJob()
 				<p style="text-align:right;"><a href="#" onclick="downloadCustomPDF(); return false;">
 					<img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a>
 				</p>
-				<form class="download-invoice-option" style="display:none;" action="welcome/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE" method="post" target="_blank" onsubmit="return false;">
+				<form class="download-invoice-option" style="display:none;" action="project/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE" method="post" target="_blank" onsubmit="return false;">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
@@ -2865,13 +2863,13 @@ function paymentProfileEdit(eid) {
 	$(".payment-profile-view").show();
 	var jid = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 	setTimeout('timerfadeout()', 2000);
-	var url = "welcome/agreedPaymentEdit/"+eid+"/"+jid;
+	var url = "project/agreedPaymentEdit/"+eid+"/"+jid;
 	$('#payment-profile-view').load(url);
 }
 
 function paymentProfileView() {
 	setTimeout('timerfadeout()', 2000);
-	var url = "welcome/agreedPaymentView";
+	var url = "project/agreedPaymentView";
 	$('#payment-profile-view').load(url);
 }
 <!--Add Payment Terms Edit function Ends here -->
@@ -2882,7 +2880,7 @@ function paymentProfileDelete(eid) {
 	if (agree) {
 		var jid = "<?php echo $quote_data['jobid'] ?>";
 		setTimeout('timerfadeout()', 2000);
-		var url = "welcome/agreedPaymentDelete/"+eid+"/"+jid;
+		var url = "project/agreedPaymentDelete/"+eid+"/"+jid;
 		$('.payment-terms-mini-view1').load(url);
 	}
 	else {
@@ -2903,7 +2901,7 @@ function paymentReceivedEdit(pdid) {
 	//alert(pdid); return false;
 	$(".payment-recieved-view").show(); 
 	var jid = <?php echo $quote_data['jobid'] ?>;
-	var pdurl = "welcome/paymentEdit/"+pdid+"/"+jid;
+	var pdurl = "project/paymentEdit/"+pdid+"/"+jid;
 	$('.payment-recieved-view').load(pdurl);
 }
 <!--Add Received Payment Terms Edit function Ends here.-->
@@ -2914,7 +2912,7 @@ function paymentReceivedDelete(eid,map) {
 	if (agree) {
 		var jid = "<?php echo $quote_data['jobid'] ?>";
 		setTimeout('timerfadeout()', 2000);
-		var url = "welcome/receivedPaymentDelete/"+eid+"/"+jid+"/"+map;
+		var url = "project/receivedPaymentDelete/"+eid+"/"+jid+"/"+map;
 		$('.payment-received-mini-view1').load(url);
 	}
 	else {
@@ -2924,7 +2922,7 @@ function paymentReceivedDelete(eid,map) {
 
 
 function paymentReceivedView() {
-	var url = "welcome/PaymentView";
+	var url = "project/PaymentView";
 	$('#payment-recieved-view').load(url);
 }
 

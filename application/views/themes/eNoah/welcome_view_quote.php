@@ -3,7 +3,7 @@
 <script type="text/javascript" src="assets/js/blockui.v2.js"></script>
 <!--script type="text/javascript" src="assets/js/jquery.blockUI.js"></script-->
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/vps.js?q=13"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript" src="assets/js/easypaginate.js"></script>
@@ -618,19 +618,19 @@ $(function(){
 	});
 	
 	
-	$("#job-view-tabs").tabs({
-								selected: 0,
-								show: function (event, ui) {
-									if (ui.index == 3)
-									{
-										loadExistingTasks();
-									}
-									else if (ui.index == 4)
-									{
-										populateJobOverview();
-									}
-								}
-							});
+	$("#lead_tab").tabs({
+						selected: 0,
+						show: function (event, ui) {
+							if (ui.index == 3)
+							{
+								loadExistingTasks();
+							}
+							else if (ui.index == 4)
+							{
+								populateJobOverview();
+							}
+						}
+					});
 	
 	$('#job-url-list li a:not(.file-delete)').livequery(function(){
 		$(this).click(function(){
@@ -1046,7 +1046,7 @@ function setContractorJob()
 			</div>
 			
 			<p id="temp">&nbsp;</p>
-
+			<div id="lead_tab">
 				<ul id="job-view-tabs">
 					<li><a href="#jv-tab-1">Lead History</a></li>
 					<li><a href="#jv-tab-2">Estimate</a></li>
@@ -1612,6 +1612,7 @@ function setContractorJob()
 				</script>
 			</div>
 		</div>
+	   </div>
 	</div>
 </div>
 

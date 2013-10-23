@@ -1,44 +1,11 @@
-<?php
-	
-	//echo "<pre>"; print_r($pjts_data); exit
-?>
 <div id="content">
 	<script type="text/javascript" src="assets/js/j-tip.js?q=8"></script>
-	<style type="text/css">
-	#JT {
-		position:absolute;
-		background:#333;
-	}
-	#JT_close_left {
-		padding:5px 0 0 10px;
-	}
-	#JT_copy {
-		padding-left:10px;
-	}
-	.myjob {
-		background:#222;
-	}
-	.csr-option-wrap {
-		display:block;
-		width:auto;
-		overflow:visible;
-		position:relative;
-	}
-	.csr-option-wrap .in-csr {
-		display:block;
-		position:absolute;
-		top:-2px;
-		left:-27px;
-	}
-	</style>
-		
+	
 	<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-		<?php //echo"<pre>"; print_r($data); ?>
+
 		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-table">
-            <?php $controller_uri = 'invoice'; ?>
             <thead>
                 <tr>
 					<th width="60">Action</th>
@@ -63,14 +30,14 @@
 					?>
 							<tr>
 								<td class="actions" align="center">
-									<a href="<?php echo  $controller_uri ?>/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">View</a>
+									<a href="view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">View</a>
 									<?php
 									echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="welcome/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; 
 									?>
 								</td>
 								<td class="actions">
 									<div>
-										<a style="color:#A51E04; text-decoration:none;" href="<?php echo  $controller_uri ?>/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a>
+										<a style="color:#A51E04; text-decoration:none;" href="view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a>
 									</div>
 								</td>
 								<td class="actions"><?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?></td>

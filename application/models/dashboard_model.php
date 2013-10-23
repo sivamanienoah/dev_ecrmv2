@@ -241,6 +241,7 @@ class Dashboard_model extends crm_model {
 				$where_level = " AND custid_fk IN ('".$cusId."')";
 			}
 		}
+		$stg = '"'.$this->stages.'"';
 		$age_query = $this->db->query("SELECT 
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$thirtyDays."' AND '".$todayDate."' THEN DATE(date_created) END) as '0-30 Days',
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$sixtyDays."' AND '".$thirtyOneDays."' THEN DATE(date_created) END) as '31-60 Days',
@@ -250,7 +251,7 @@ class Dashboard_model extends crm_model {
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$oneEightyDays."' AND '".$oneFiftyOneDays."' THEN DATE(date_created) END) as '151-180 Days',
 		COUNT(CASE WHEN DATE(date_created) < '".$oneEightyOneDays."' THEN DATE(date_created) END) as 'Above181 Days'
 		FROM ".$this->cfg['dbpref']."jobs
-		WHERE job_status BETWEEN 1 AND 12
+		WHERE job_status IN (".$stg.")
 		AND lead_status=1".$where_level);
 		return $age_query->row_array();
 	}
@@ -317,10 +318,10 @@ class Dashboard_model extends crm_model {
 		
 		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'jobs jb');
-		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
-		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
-		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', 'LEFT');
+		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to', 'LEFT');
+		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign', 'LEFT');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', 'LEFT');
 		$this->db->where_in('jb.job_status', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
@@ -499,7 +500,7 @@ class Dashboard_model extends crm_model {
 		return $ste_query;
 	}
 	
-	//For States
+	//For Locations
 	public function getLocations($uid, $lvlid) {
 		$this->db->select('location_id');
 		$this->db->from($this->cfg['dbpref'].'levels_location');
@@ -538,9 +539,9 @@ class Dashboard_model extends crm_model {
 		$curYear = date("Y");
 		$frm_dt = $curYear."-04-01";
 		$to_dt = ($curYear+1)."-03-31";
-		$this->db->select('`jobid` , `expect_worth_id` , actual_worth_amount as expect_worth_amount');
-		$this->db->from('`'.$this->cfg['dbpref'].'jobs`');
-		$this->db->where('`lead_status`', 4);
+		$this->db->select('jobid , expect_worth_id, actual_worth_amount as expect_worth_amount');
+		$this->db->from($this->cfg['dbpref'].'jobs');
+		$this->db->where('lead_status', 4);
 		if ($this->userdata['level']!= 1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
@@ -569,6 +570,7 @@ class Dashboard_model extends crm_model {
 			$this->db->order_by('jb.jobid', 'desc');
 			$query = $this->db->get();
 			$rest_query =  $query->result_array();
+			echo $this->db->last_query(); exit;
 			return $rest_query;
 		} else {
 			return "no records";

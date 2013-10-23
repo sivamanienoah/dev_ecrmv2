@@ -16,7 +16,7 @@ $usernme = $this->session->userdata('logged_in_user');
 <link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" />
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/vps.js?q=13"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
 var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';

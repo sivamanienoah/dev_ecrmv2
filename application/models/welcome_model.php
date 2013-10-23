@@ -11,7 +11,7 @@ class Welcome_model extends crm_model {
     }
     
     /**
-     * get the lead details
+     * get the lead details //unwanted
      */
     public function get_lead($leadid, $belong_to = FALSE) {
 		$owner_only = ($belong_to == FALSE) ? '' : " AND `belong_to` = '" . mysql_real_escape_string($belong_to) . "' ";
@@ -63,7 +63,6 @@ class Welcome_model extends crm_model {
 	}
 	
 	function get_lead_all_detail($id) {
-		// SELECT * FROM `crms_jobs`, `crms_customers`, `crms_lead_stage` WHERE `custid` = `custid_fk` AND lead_stage_id = job_status AND `jobid` = '97' LIMIT 1
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
@@ -84,6 +83,7 @@ class Welcome_model extends crm_model {
 	
 	function get_users() {
     	$this->db->select('userid,first_name,level,role_id,inactive');
+		$this->db->where('inactive', 0);
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
@@ -103,6 +103,28 @@ class Welcome_model extends crm_model {
 		$this->db->where('userid', $ld);
 		$user = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $user->result_array();
+	}
+	
+	function get_user_byrole($role_id) {
+    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
+    	return $users;
+    }
+	
+	function get_customers() {
+	    $this->db->select('custid, first_name, last_name, company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers');
+		$this->db->order_by("first_name", "asc");
+	    $customers = $this->db->get();
+	    $customers=  $customers->result_array();
+	    return $customers;
+	}
+	
+	function get_customer_det($cid) {
+	    $this->db->select('first_name, last_name, company, email_1');
+	    $this->db->from($this->cfg['dbpref'] . 'customers');
+	    $this->db->where('custid', $cid);
+	    $cust_det = $this->db->get();
+	    return $cust_det->row_array();
 	}
 	
 	function get_client_data_by_id($cid) {
@@ -128,43 +150,6 @@ class Welcome_model extends crm_model {
         $sql = $this->db->get($this->cfg['dbpref'] . 'items');
 		return $sql->result_array();
 	}
-	
-    public function get_job($filter = array())
-    {
-        if (count($filter))
-        {
-            $where  = '';
-            $bind = array();
-            
-            foreach ($filter as $k => $v)
-            {
-                $where .= "AND `{$k}` = ? ";
-                $bind[] = $v;
-            }
-            
-            $sql = "SELECT *
-                    FROM `".$this->cfg['dbpref']."jobs`, `".$this->cfg['dbpref']."customers`
-                    WHERE `custid` = `custid_fk`
-                    {$where}
-                    LIMIT 1";
-                    
-            $q = $this->db->query($sql, $bind);
-            
-            if ($q->num_rows() > 0)
-            {
-                $data = $q->result_array();
-                return $data[0];
-            }
-            else
-            {
-                return FALSE;
-            }
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
     
     public function get_job_files($f_dir, $fcpath, $lead_details)
     {
@@ -204,8 +189,7 @@ class Welcome_model extends crm_model {
                 }
             }
         }
-		
-		
+
         return $data['job_files_html'];
     }
 	
@@ -380,15 +364,7 @@ class Welcome_model extends crm_model {
 		$this->db->where('level', 1);
 		$sql = $this->db->get();
 		return $res = $sql->result_array();
-    }
-	
-	function get_customer_det($cid) {
-	    $this->db->select('first_name, last_name, company, email_1');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
-	    $this->db->where('custid', $cid);
-	    $cust_det = $this->db->get();
-	    return $cust_det->row_array();
-	}
+    }	
 	
 	function get_item_position($jid) {
 		$this->db->select_max('item_position');
@@ -397,11 +373,34 @@ class Welcome_model extends crm_model {
 	}
 	
 	function delete_lead($tbl, $lead_id) {
-		$this->db->where('jobid', $jid);
+		$this->db->where('jobid', $lead_id);
+		$this->db->delete($this->cfg['dbpref'] . $tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
+
+	function delete_row($tbl, $condn, $lead_id) {
+		$this->db->where($condn, $lead_id);
 		$this->db->delete($this->cfg['dbpref'] . $tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
 	
+	function get_categories() {
+    	$this->db->order_by('cat_id');
+		$q = $this->db->get($this->cfg['dbpref'] . 'additional_cats');
+		return $q->result_array();
+    }
+    
+	function get_cat_records($id) {
+		$this->db->where('item_type', $id);
+		$q = $this->db->get($this->cfg['dbpref'] . 'additional_items');
+		return $q->result_array();
+    }
+  	   
+    function get_lead_sources() {
+    	$this->db->where('status', 1);
+		$q = $this->db->get($this->cfg['dbpref'] . 'lead_source');
+		return $q->result_array();
+    }
 	//unwanted function
 	public function get_lead_stage_projects()
 	{
@@ -438,42 +437,7 @@ class Welcome_model extends crm_model {
 	    return $lead_sh;
 	}
 	
-	public function get_customers()
-	{
-	    $this->db->select('custid, first_name, last_name, company');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
-		$this->db->order_by("first_name", "asc");
-	    $customers = $this->db->get();
-	    $customers=  $customers->result_array();
-	    return $customers;
-	}
-	
-	public function get_jobid($jid, $uid)
-	{
-	    $res = $this->db->query("SELECT lead_assign, assigned_to, belong_to FROM `".$this->cfg['dbpref']."jobs` WHERE (jobid = '".$jid."' && (lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."'))");
-	    $res1 = $res->result_array();
-		if (empty($res1)) {
-			$chge_access = 0;
-		}
-		else {
-			$chge_access = 1;
-		}
-		return $chge_access;
-	}
-	
-	public function get_list_users($jid)
-	{
-	    $query = $this->db->query("SELECT lead_assign, assigned_to, belong_to FROM `".$this->cfg['dbpref']."jobs` WHERE jobid = '".$jid."' ");
-	    $list_users = $query->row_array();
-		return $list_users;
-	}
-	
-	public function get_contract_users($jid)
-	{
-	    $query = $this->db->query("SELECT userid_fk FROM `".$this->cfg['dbpref']."contract_jobs` WHERE jobid_fk = '".$jid."' ");
-	    $contract_users = $query->result_array();
-		return $contract_users;
-	}
+	//unwanted
 	public function get_customers_id()
 	{
 		$this->db->select('custid');
@@ -657,111 +621,12 @@ class Welcome_model extends crm_model {
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		
-		$customers =  $query->result_array();       
-		return $customers;
-	}
-	
-	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage, $pm_acc, $cust, $keyword)
-	{
-		$userdata = $this->session->userdata('logged_in_user');
-		//echo "<pre>"; print_r($userdata);
-		$stage = explode(',',$pjtstage);
-		$customer = explode(',',$cust);
-		$pm = explode(',',$pm_acc);
-		//print_r($customer); exit;
-		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
-			$this->db->from($this->cfg['dbpref'] . 'jobs as j');
-			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
-			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
-			
-			if($stage[0] != 'null'){		
-				// $this->db->where_in('j.job_status',$stage);
-				$this->db->where("j.lead_status", 4);
-				$this->db->where_in("j.pjt_status", $stage);
-			} else {
-				// $this->db->where("j.jobid != 'null' AND j.job_status IN ('".$this->pjt_stages."')");
-				$this->db->where("j.jobid != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
-			}
-			
-			if($customer[0] != 'null' && $customer[0] != '0'){		
-				$this->db->where_in('j.custid_fk',$customer); 
-			}
-			
-			if($pm[0] != 'null' && $pm[0] != '0'){		
-				$this->db->where_in('j.assigned_to',$pm); 
-			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){	
-				
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.job_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
-			}
-			$this->db->order_by("j.jobid", "desc");
-		}
-		else {
-			$varSessionId = $this->userdata['userid']; //Current Session Id.
-
-			//Fetching Project Team Members.
-			$sqlcj = "SELECT jobid_fk as jobid FROM `".$this->cfg['dbpref']."contract_jobs` WHERE `userid_fk` = '".$varSessionId."'";
-			$rowscj = $this->db->query($sqlcj);
-			$data['jobids'] = $rowscj->result_array();
-
-			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
-			$sqlJobs = "SELECT jobid FROM `".$this->cfg['dbpref']."jobs` WHERE (`assigned_to` = '".$varSessionId."' OR `lead_assign` = '".$varSessionId."' OR `belong_to` = '".$varSessionId."') AND lead_status IN ('4') AND pjt_status !='0' ";
-			$rowsJobs = $this->db->query($sqlJobs);
-			//echo $this->db->last_query();
-			$data['jobids1'] = $rowsJobs->result_array();
-
-			$data = array_merge_recursive($data['jobids'], $data['jobids1']);
-
-			$res[] = 0;
-			if (is_array($data) && count($data) > 0) { 
-				foreach ($data as $data) {
-					$res[] = $data['jobid'];
-				}
-			}
-			$result_ids = array_unique($res);
-			$curusid= $this->session->userdata['logged_in_user']['userid'];
-			
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.complete_status,j.date_start, j.date_due, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
-			$this->db->from($this->cfg['dbpref'] . 'customers as c');		
-			$this->db->join($this->cfg['dbpref'] . 'jobs as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
-			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
-			$this->db->where_in('j.jobid', $result_ids);
-			
-			
-			if($stage[0] != 'null') {
-				$this->db->where("j.lead_status", 4);
-				$this->db->where_in("j.pjt_status", $stage);
-			} else {
-				$this->db->where("j.jobid != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
-			}
-			
-			if($customer[0] != 'null' && $customer[0] != '0') {		
-				$this->db->where_in('j.custid_fk',$customer);		
-			}
-			
-			if($pm[0] != 'null' && $pm[0] != '0') {		
-				$this->db->where_in('j.assigned_to',$pm); 
-			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.job_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
-			}
-
-			$this->db->order_by("j.jobid", "desc");
-			
-		}
-		$query = $this->db->get();
-		// echo $this->db->last_query();
-		
-		$pjts =  $query->result_array();		
-		return $pjts;
+		$res =  $query->result_array();       
+		return $res;
 	}
 	
 	
-	
+	//project
 	public function assign_lists($stage, $customer, $worth, $owner, $keyword)
 	{
 		$userdata = $this->session->userdata('logged_in_user');
@@ -1020,28 +885,6 @@ class Welcome_model extends crm_model {
 		$this->db->update($this->cfg['dbpref'] . 'jobs', $up_args);
     }
     
-	function get_categories() {
-    	$this->db->order_by('cat_id');
-		$q = $this->db->get($this->cfg['dbpref'] . 'additional_cats');
-		return $q->result_array();
-    }
-    
-	function get_cat_records($id) {
-		$this->db->where('item_type', $id);
-		$q = $this->db->get($this->cfg['dbpref'] . 'additional_items');
-		return $q->result_array();
-    }
-  	   
-    function get_lead_sources() {
-    	$this->db->where('status', 1);
-		$q = $this->db->get($this->cfg['dbpref'] . 'lead_source');
-		return $q->result_array();
-    }
-	
-	function get_user_byrole($role_id) {
-    	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
-    	return $users;
-    }
 	
     function get_lead_assign($level) {
     	$this->db->select('userid', 'first_name');
@@ -1051,28 +894,7 @@ class Welcome_model extends crm_model {
     	return $q->result_array();
     }
     
-   
-    function get_quote_data($id) {
-    	$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].'customers as cus');
-		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.custid_fk = cus.custid', 'left');
-    	$this->db->join($this->cfg['dbpref'].'region as reg', 'reg.regionid = cus.add1_region', 'left');
-    	$this->db->join($this->cfg['dbpref'].'country as cnty', 'cnty.countryid = cus.add1_country', 'left');
-    	$this->db->join($this->cfg['dbpref'].'state as ste', 'ste.stateid = cus.add1_state', 'left');
-    	$this->db->join($this->cfg['dbpref'].'location as locn ', 'locn.locationid = cus.add1_location', 'left');
-    	$this->db->join($this->cfg['dbpref'].'expect_worth as exw', 'exw.expect_worth_id = jb.expect_worth_id', 'left');
-    	$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = jb.job_status', 'left');
-    	$this->db->where('jb.jobid', $id);
-		$this->db->limit(1);
-		$results = $this->db->get();
-        return $results->result_array();
-    }
-    
-    function get_contract_jobs($id) {
-    	$this->db->where('jobid_fk', $id);
-		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
-		return $cq->result_array();
-    }
+
 }
 
 ?>

@@ -9,7 +9,7 @@ require (theme_url().'/tpl/header.php');
 <script type="text/javascript" src="assets/js/tasks.js?q=9"></script>
 
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/vps.js?q=13"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/easypaginate.js"></script>
 <style type="text/css">

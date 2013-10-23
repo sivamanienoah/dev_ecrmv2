@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<?php $controller_uri = 'invoice'; ?>
 <div id="content">
 	<div class="inner">
 		<?php  	if($this->session->userdata('accesspage')==1) {   ?>
@@ -116,36 +115,31 @@
 					?>
                     <tr>
 						<td class="actions" align="center">
-							<a href="<?php echo  $controller_uri ?>/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">
+							<a href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">
 								View
 							</a>
 							<?php
-								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="welcome/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
+								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['jobid'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
 							?>
 						</td>
 						
                         <td class="actions">
 							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="<?php echo  $controller_uri ?>/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
 							</div>
 						</td>
 						
 						<td class="actions">
 							<?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?>
-							<!--<a href="<?php //echo $controller_uri ?>/view_project/<?php //echo $record['jobid'], '/', $quote_section ?>" title="<?php //echo $record['pjt_id'] ?>"> <?php //if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { ?> </a><?php //echo "-"; } ?>-->
 						</td>
 						
                         <td class="actions">
-							<!--<a href="<?php echo  $controller_uri ?>/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>" title="<?php echo  $record['job_title'] ?>"><?php echo character_limiter($record['job_title'], 35) ?></a>-->
+							<!--<a href="/view_project/<?php echo $record['jobid'], '/', $quote_section ?>" title="<?php echo  $record['job_title'] ?>"><?php echo character_limiter($record['job_title'], 35) ?></a>-->
 							<?php echo character_limiter($record['job_title'], 35) ?>
 						</td>
 						
                         <td class="cust-data">
-							<span style="color:none">
-							<!--<a href="customers/add_customer/update/<?php //echo $record['custid'] ?>" style="text-decoration:underline;"><?php //echo $record['cfname'] . ' ' . $record['clname'] ?></a>-->
-							<?php echo $record['cfname'] . ' ' . $record['clname'] ?>
-							</span> - 
-							<?php echo $record['company'] ?>
+							<span style="color:none"><?php echo $record['cfname'] . ' ' . $record['clname'] ?></span> - <?php echo $record['company'] ?>
 						</td>
 						
 						<td class="cust-data">
@@ -199,11 +193,10 @@
 	</div>
 </div>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
+
 <script type="text/javascript">
 $(function(){
     $(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
-	//.tablesorterPager({container: $("#pager"), positionFixed: false});
     $('.data-table tr, .data-table th').hover(
         function() { $(this).addClass('over'); },
         function() { $(this).removeClass('over'); }
@@ -247,7 +240,7 @@ $('#advanceFilters_pjt').submit(function() {
 	if(keyword == "Project No, Project Title, Name or Company")
 	keyword = 'null';
 	document.getElementById('ad_filter').style.display = 'block';	
-	var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 	//alert(sturl);
 	$('#ad_filter').load(sturl);	
 	return false;
@@ -260,8 +253,7 @@ $('#pjt_search_form').submit(function() {
 		var pjtstage = $("#pjt_stage").val(); 
 		var pm_acc = $("#pm_acc").val(); 
 		var cust = $("#customer1").val();  
-		//document.getElementById('ad_filter').style.display = 'block';
-		var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 		$('#ad_filter').load(sturl);
 		return false;
 });
