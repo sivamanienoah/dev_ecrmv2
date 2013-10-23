@@ -38,7 +38,7 @@ class Welcome_model extends crm_model {
 		$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_category, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
 		j.proposal_expected_date, j.proposal_sent_date, j.log_view_status, j.lead_hold_reason, 
-		c.*, c.first_name AS cfn, c.last_name AS cln, rg.region_name, coun.country_name, 
+		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name');
 		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
@@ -61,6 +61,26 @@ class Welcome_model extends crm_model {
 	    $res =  $sql->result_array();
 	    return $res;
 	}
+	
+	function get_lead_all_detail($id) {
+		// SELECT * FROM `crms_jobs`, `crms_customers`, `crms_lead_stage` WHERE `custid` = `custid_fk` AND lead_stage_id = job_status AND `jobid` = '97' LIMIT 1
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
+		$this->db->where('jobid', $id);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+		{
+			$data = $query->result_array();
+			return $data[0];
+		}
+		else
+		{
+			return FALSE;
+		}
+}
 	
 	function get_users() {
     	$this->db->select('userid,first_name,level,role_id,inactive');
@@ -374,6 +394,12 @@ class Welcome_model extends crm_model {
 		$this->db->select_max('item_position');
 		$query = $this->db->get_where($this->cfg['dbpref'].'items', array('jobid_fk' => $jid));
 		return $query->result_array();
+	}
+	
+	function delete_lead($tbl, $lead_id) {
+		$this->db->where('jobid', $jid);
+		$this->db->delete($this->cfg['dbpref'] . $tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
 	
 	//unwanted function
