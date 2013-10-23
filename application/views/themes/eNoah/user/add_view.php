@@ -559,8 +559,8 @@ var urlsegment =  "<?php echo $this->uri->segment(3); ?>";
 		var edit_userid =  "<?php echo $this->uri->segment(4); ?>";
 		//var country_id = $("#country_load").val();
 		$.post( 
-			'user/editloadCountrys/'+regionid+'/'+edit_userid+'/',
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/editloadCountrys/',
+			{'regionid':regionid,'uid':edit_userid,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
 					if (data.error) 
 					{
@@ -579,10 +579,9 @@ var urlsegment =  "<?php echo $this->uri->segment(3); ?>";
 	function editloadState(country_id) {
 		var edit_userid =  "<?php echo $this->uri->segment(4); ?>";
 		var country_id = $("#country_load").val();
-		//var state_id = $("#state_load").val();
 		$.post( 
-			'user/editloadStates/'+country_id+'/'+edit_userid+'/',
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/editloadStates/',
+			{'country_id':country_id,'uid':edit_userid,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {		
 					if (data.error) 
 					{
@@ -603,8 +602,8 @@ var urlsegment =  "<?php echo $this->uri->segment(3); ?>";
 		var state_id = $("#state_load").val();
 		//var loc_id = $("#location_load").val();
 		$.post( 
-			'user/editloadLocations/'+state_id+'/'+edit_userid+'/',
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/editloadLocations/',
+			{'state_id':state_id,'uid':edit_userid,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {
 					if (data.error) 
 					{
@@ -685,8 +684,8 @@ $('.checkUser').hide();
 		var region_id = $("#region_load").val();
 		//var country_id = $("#country_load").val();
 		$.post( 
-			'user/loadCountrys/'+ region_id,
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/loadCountrys/',
+			{'region_id':region_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {										
 					if (data.error) 
 					{
@@ -703,8 +702,8 @@ $('.checkUser').hide();
 		var country_id = $("#country_load").val();
 		//var state_id = $("#state_load").val();
 		$.post( 
-			'user/loadStates/'+ country_id,
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/loadStates/',
+			{'country_id':country_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {		
 					if (data.error) 
 					{
@@ -721,8 +720,8 @@ $('.checkUser').hide();
 		var state_id = $("#state_load").val();
 		//var loc_id = $("#location_load").val();
 		$.post( 
-			'user/loadLocations/'+ state_id,
-			{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			'user/loadLocations/',
+			{'state_id':state_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(data) {
 					if (data.error) 
 					{
@@ -940,7 +939,7 @@ function last() {
 			type: 'POST',
 			url: 'user/checkcountry',
 			dataType:'json',
-			data: 'region_load='+region_load+'&country_load='+country_load+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_token_name(); ?>',
+			data: 'region_load='+region_load+'&country_load='+country_load+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',
 			success:function(data){		
 				if(data.msg == 'noans'){
 					alert('Please select valuable country');
