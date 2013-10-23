@@ -12,7 +12,6 @@ class Welcome extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('welcome_model');
 		$this->load->model('customer_model');
-		$this->load->model('job_model');
 		$this->load->model('regionsettings_model');
 		$this->load->helper('text');
 		$this->load->library('email');
@@ -103,7 +102,7 @@ class Welcome extends crm_controller {
 		
 		$usid = $this->session->userdata('logged_in_user');
 		
-		$getLeadDet = $this->welcome_model->get_lead_detail($id);
+		$getLeadDet = $this->welcome_model->get_lead_all_detail($id);
 
 		if(!empty($getLeadDet)) {
             $data['quote_data'] = $getLeadDet[0];
@@ -597,8 +596,8 @@ body {
 	 *  Set the quote editing interface
 	 */
     function edit_quote($id = 0) {
-        if ( ($data['quote_data'] = $this->job_model->get_job($id)) !== FALSE )
-        {
+        if ( ($data['quote_data'] = $this->welcome_model->get_lead_all_detail($id)) !== FALSE )
+        {	
             $data['edit_quotation'] = true;
 
 			$data['categories'] = $this->welcome_model->get_categories();
@@ -937,7 +936,7 @@ body {
     {
 		$this->load->model('user_model');	
 		
-        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->job_model->get_job($jobid))
+        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->welcome_model->get_lead_all_detail($jobid))
         {
 			if($status>0) {
 				//Lead Status History - Start here
@@ -1222,39 +1221,27 @@ body {
 		if ($this->session->userdata('delete')==1) {
 			if ($id > 0) {
 			
-				$lead_det = $this->welcome_model->get_lead_det($id); //after update.
+				$lead_det = $this->welcome_model->get_lead_det($id);
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
+
+				$delete_job = $this->welcome_model->delete_lead('jobs', $id);
 				$delete_item = $this->welcome_model->delete_row('items', $id);
 				$delete_log = $this->welcome_model->delete_row('logs', $id);
 				$delete_task = $this->welcome_model->delete_row('tasks', $id);
 				$delete_file = $this->welcome_model->delete_row('lead_file', $id);
 				$delete_query = $this->welcome_model->delete_row('lead_query', $id);
-				$delete_job = $this->welcome_model->delete_row('jobs', $id);
 				
 				# Lead Delete Mail Notification
-				
-				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $id;
-				$getlead_assign_email = $this->db->query('SELECT j.lead_assign, j.jobid, u.userid, u.email, j.invoice_no
-								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
-								WHERE u.userid = j.lead_assign
-								AND j.jobid ='.$id);
+
 				$disarray=$getlead_assign_email->result_array();
-			
-				$getlead_owner_email = $this->db->query('SELECT j.belong_to, j.jobid, u.userid, u.email
-								FROM `'.$this->cfg['dbpref'].'jobs` AS j, `'.$this->cfg['dbpref'].'users` AS u
-								WHERE u.userid = j.belong_to
-								AND j.jobid ='.$id);
 				$lowner=$getlead_owner_email->result_array();
-				//print_r($disarray);exit;
 			
-				$ins['date_created'] = date('Y-m-d H:i:s');
 			
 				$ins['log_content'] = 'Lead Deleted Sucessfully - Lead No.' .$disarray[0]['invoice_no']. ' ';
 				// inset the new log
-				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+
 				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
