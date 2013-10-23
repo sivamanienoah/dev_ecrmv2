@@ -47,6 +47,7 @@ class User extends crm_controller {
 
     public function add_user($update = false, $id = false, $ajax = false)
 	{
+		$post_data =	real_escape_array($this->input->post());
 	
         $rules['first_name']   = "trim|required";
 		$rules['last_name']    = "trim|required";
@@ -83,7 +84,7 @@ class User extends crm_controller {
         $data = '';
         $data['roles']=$this->role_model->role_list();
 		$data['levels'] = $this->user_model->get_levels();
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_user'])) {
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_user'])) {
             $customer = $this->user_model->get_user($id);
             $data['this_user'] = $customer[0]['userid'];
 			$data['this_user_level'] = $customer[0]['level'];
@@ -130,7 +131,7 @@ class User extends crm_controller {
                 if ($this->user_model->update_user($id, $update_data)) {
 				
 				
-		 if($_POST['role_id'] == $_POST['role_change_mail']) 
+		 if($post_data['role_id'] == $post_data['role_change_mail']) 
 		{
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -208,7 +209,7 @@ class User extends crm_controller {
 						$this->email->send(); 
 		}   
 		
-		if($_POST['level'] == $_POST['level_change_mail']) 
+		if($post_data['level'] == $post_data['level_change_mail']) 
 		{
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -343,7 +344,7 @@ class User extends crm_controller {
 								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
 							<p style="padding: 4px;">New user Created -'.$update_data['first_name']. '  '.$update_data['last_name']. '<br /> User Login Details<br /><br />
 							Login URL : '.$this->config->item('base_url').' <br />User Login email id : '.$update_data['email'].'<br />
-							Password : '.$_POST['password'].' <br />
+							Password : '.$post_data['password'].' <br />
 							'.$this->userdata['signature'].'<br />
 							</p>
 						</div>
@@ -493,7 +494,6 @@ class User extends crm_controller {
 	public function log_history($user = 0)
 	{
 		$log_user = $this->user_model->get_user($user);
-		
 		if (count($log_user) > 0)
 		{
 			if ( ! in_array($this->userdata['level'], array(0, 1)) && $log_user[0]['userid'] != $this->userdata['userid'])
@@ -510,44 +510,26 @@ class User extends crm_controller {
 		}
 		
 		$log_date = $this->check_date($this->input->post('log_date'));
-		
 		if ( ! $log_date)
 		{
 			$log_date = date('Y-m-d');
 		}
 		
 		$data['current_log_date'] = date('l, jS F y', strtotime($log_date));
-		
-		# now get the logs for the user on that day
-		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
-				FROM ".$this->cfg['dbpref']."logs
-				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
-				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
-				AND `userid_fk` = ?
-				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
-			
-		$q = $this->db->query($sql, array($log_date, $log_user['userid']));
-		$rs = $q->result_array();
-		
-		$data['log_user_name'] = $log_user['first_name'] . ' ' . $log_user['last_name'];
-		
-		$data['log_set'] = '';
-		
-		$time_total = 0;
+		$rs                       = $this->user_model->log_history($log_date,$log_user); // Get Log History	
+		$data['log_user_name']    = $log_user['first_name'] . ' ' . $log_user['last_name'];
+		$data['log_set']          = '';
+		$time_total               = 0;
 		
 		foreach ($rs as $row)
 		{
 			$log_content = nl2br($row['log_content']);
-			
 			$numerc_time = (int) $row['time_spent'];
-			
 			$time_total += $numerc_time;
-			
 			if ( ! isset($row['job_title']))
 			{
 				$row['job_title'] = 'General Task';
 			}
-			
 			$row_time_spent = '';
 			if ($numerc_time > 0)
 			{
@@ -564,26 +546,25 @@ class User extends crm_controller {
 				}
 			}
 			
-			$data['log_set'] .= <<< EOD
-	<div class="log">
-		<p class="data">
-		    <span>{$row['fancy_date']} <strong>{$row_time_spent}</strong></span>
-		{$data['log_user_name']} - {$row['job_title']}
-		</p>
-		<p class="desc">
-		{$log_content}
-		</p>
-	</div>
-EOD;
+			$data['log_set'] .= '
+			<div class="log">
+				<p class="data">
+					<span>'.$row["fancy_date"].'<strong>{$row_time_spent}</strong></span>
+					'.$data["log_user_name"].' - '.$row["job_title"].'
+				</p>
+				<p class="desc">
+					'.$log_content.'
+				</p>
+			</div>';
+			
 		}
 		
-		$hours_spent = floor( $time_total / 60);
+		$hours_spent    = floor( $time_total / 60);
 		$remainder_mins = $time_total - ($hours_spent * 60);
-		
-		$mins_spent = '';
+		$mins_spent     = '';
 		if ($remainder_mins > 0)
 		{
-			$mins_spent = "{$remainder_mins} Mins";
+			$mins_spent  = "{$remainder_mins} Mins";
 		}
 		
 		if ($hours_spent > 0)
@@ -594,12 +575,10 @@ EOD;
 		{
 			$data['total_time_spent'] = ($mins_spent != '') ? "Total Time: {$mins_spent}" : '';
 		}
-		
 		if ($data['log_set'] == '')
 		{
 			$data['log_set'] = '<h4>No logs available for this date!</h4>';
 		}
-		
 		$this->load->view('user/log_list_view', $data);
 	}
 
@@ -634,167 +613,77 @@ EOD;
 	
 	function getUserfromdb($username, $update)
 	{
-		if ($update != 'undefined') {
-		
-			$where = "email = '".$username."' AND `userid` != '".$update."' ";
-			$this->db->where($where);
-			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-			//echo $this->db->last_query();
-			if ($query == 0) {
-				echo 'userOk';
-			}
-			else {
-				echo 'userNo';
-			}
-		}
-		else {	
-			$this->db->where('email',$username);
-			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-			if( $query == 0 ) echo 'userOk';
-			else echo 'userNo';
-		}	
+		 $this->user_model->getUserfromdb($username, $update);
 	}
+	
+	/*
+	*@ Method : Load Regions
+	*@ User Controller 
+	*/
 	
 	public function loadRegions()
 	{
-	    $output = '';
-		$region_query = $this->db->query("SELECT regionid,region_name FROM ".$this->cfg['dbpref']."region");
-		foreach ($region_query->result() as $regions)
-		{
-			if($id == $regions->regionid)
-				$output .= '<option value="'.$regions->regionid.'" selected = "selected" >'.$regions->region_name.'</option>';
-			else
-				$output .= '<option value="'.$regions->regionid.'">'.$regions->region_name.'</option>';
-		}
-		echo $output;
+		$this->user_model->get_regions();
 	}
+	
+	/*
+	*@Method : Edit Load Regions
+	*@User Controller 
+	*/
 	
 	public function editloadRegions($uid)
 	{
-	    $output = '';
-		
-		$rs = $this->db->query("select region_id from ".$this->cfg['dbpref']."levels_region where user_id='{$uid}'");
-		$r_ids = $rs->result();	 
-		$user_reg = array();
-		foreach($r_ids as $reg_id) {
-			$user_reg[] = $reg_id->region_id;
-		}
-		//print_r($user_reg);		die();
-		$region_query = $this->db->query("SELECT regionid,region_name FROM ".$this->cfg['dbpref']."region");
-		
-		foreach ($region_query->result() as $regions)
-		{		
-			
-			if(in_array($regions->regionid,$user_reg)){
-				$output .= '<option value="'.$regions->regionid.'" selected = "selected" >'.$regions->region_name.'</option>';
-			}else{
-				$output .= '<option value="'.$regions->regionid.'">'.$regions->region_name.'</option>';
-				}
-		}
-		echo $output;
+	   $this->user_model->get_loadregionsByuserId($uid);
 	}
 	
 	/* 
-	 * Adding User Page 
-	 * loading country
+	 *Adding User Page 
+	 *loading country
+	 *@User Controller 
 	 */
-	public function loadCountrys($region_id)
+	public function loadCountrys()
 	{
-	    $output = '';
-		
-		$sql = 'SELECT countryid,country_name FROM '.$this->cfg['dbpref'].'region r INNER JOIN '.$this->cfg['dbpref'].'country c ON r.regionid = c.regionid WHERE c.regionid IN('.$region_id.')';
-		$country_query = $this->db->query($sql);
-		foreach ($country_query->result() as $countrys)
-		{
-		    if($cid == $countrys->countryid)
-				$output .= '<option value="'.$countrys->countryid.'" selected = "selected">'.$countrys->country_name.'</option>';
-			else 
-				$output .= '<option value="'.$countrys->countryid.'">'.$countrys->country_name.'</option>';
-			
-		}
-		echo $output;
+		$data = real_escape_array($this->input->post()); 
+		$this->user_model->get_loadCountrysByRegionid($data['region_id']);
 	}
 	
-	public function editloadCountrys($regionid,$uid)
+	/*
+	*@Method : Edit Load Regions
+	*@User Controller 
+	*/
+	
+	public function editloadCountrys()
 	{
-	    $output = '';
-		$cs = $this->db->query("select country_id from ".$this->cfg['dbpref']."levels_country where user_id='{$uid}'");
-		$c_ids = $cs->result();	
-		$user_con = array();
-		foreach($c_ids as $con_id) {
-			$user_con[] = $con_id->country_id;
-		}		
-		$country_query = $this->db->query('SELECT countryid,country_name FROM '.$this->cfg['dbpref'].'country WHERE regionid IN('.$regionid.')');
-		foreach ($country_query->result() as $countries)
-		{	
-			
-			if(in_array($countries->countryid,$user_con)){
-				$output .= '<option value="'.$countries->countryid.'" selected = "selected" >'.$countries->country_name.'</option>';
-			}else{
-				$output .= '<option value="'.$countries->countryid.'">'.$countries->country_name.'</option>';
-				}
-		}
-		echo $output;
-		
+		  $data = real_escape_array($this->input->post()); 
+	      $this->user_model->edit_loadCountrys($data['regionid'],$data['uid']);
 	}
 	/* 
 	 * Adding User Page 
 	 * loading state
 	 */
-	public function loadStates($country_id)
+	public function loadStates()
 	{
-	    $output = '';
-		$sql = 'SELECT stateid,state_name FROM '.$this->cfg['dbpref'].'state r INNER JOIN '.$this->cfg['dbpref'].'country c ON r.countryid = c.countryid WHERE c.countryid IN('.$country_id.')';
-		$state_query = $this->db->query($sql);
-		foreach ($state_query->result() as $states)
-		{
-			if($sid == $states->stateid)
-				$output .= '<option value="'.$states->stateid.'" selected = "selected">'.$states->state_name.'</option>';
-			else
-			    $output .= '<option value="'.$states->stateid.'">'.$states->state_name.'</option>';
-		}
-		echo $output;
+		$data = real_escape_array($this->input->post()); 
+		$this->user_model->get_load_state($data['country_id']);
 	}
-	
-	public function editloadStates($countryid,$uid)
+
+	/* 
+	 * Adding User Page 
+	 * edit loading state
+	 */
+	public function editloadStates()
 	{
-	    $output = '';
-		$ss = $this->db->query("select state_id from ".$this->cfg['dbpref']."levels_state where user_id='{$uid}'");
-		$s_ids = $ss->result();	
-		$user_stat = array();
-		foreach($s_ids as $sta_id) {
-			$user_stat[] = $sta_id->state_id;
-		}			
-		$state_query = $this->db->query('SELECT stateid,state_name FROM '.$this->cfg['dbpref'].'state WHERE countryid IN('.$countryid.')');
-		foreach ($state_query->result() as $states)
-		{	
-			
-			if(in_array($states->stateid,$user_stat)){
-				$output .= '<option value="'.$states->stateid.'" selected = "selected" >'.$states->state_name.'</option>';
-			}else{
-				$output .= '<option value="'.$states->stateid.'">'.$states->state_name.'</option>';
-				}
-		}
-		echo $output;
-		
+		$data = real_escape_array($this->input->post()); 
+	    $this->user_model->edit_loadstate($data['country_id'],$data['uid']);
 	}
 	/* 
 	 * Adding User Page 
 	 * loading location
 	 */
-	public function loadLocations($state_id)
+	public function loadLocations()
 	{
-	    $output = '';
-		$sql = 'SELECT locationid,location_name FROM '.$this->cfg['dbpref'].'location r INNER JOIN '.$this->cfg['dbpref'].'state c ON r.stateid = c.stateid WHERE c.stateid IN('.$state_id.')';
-		$location_query = $this->db->query($sql);
-		foreach ($location_query->result() as $location)
-		{
-		    if($loc_id == $location->locationid)	
-				$output .= '<option value="'.$location->locationid.'" selected = "selected">'.$location->location_name.'</option>';
-			else 
-				$output .= '<option value="'.$location->locationid.'">'.$location->location_name.'</option>';
-		}
-		echo $output;
+		 $data = real_escape_array($this->input->post());
+		 $this->user_model->get_loadLocations($data['state_id']);
 	}
 
 	/*
@@ -802,30 +691,12 @@ EOD;
 	*@User Controller 
 	*/
 	
-	public function editloadLocations($state_id,$uid)
+	public function editloadLocations()
 	{
-		$data      = real_escape_array(array("state_id"=>$state_id,"uid"=>$uid)); // escape special characters
-		$state_id  = (int)$data['state_id']; 
-		$uid       = (int)$data['uid'];
-		
-	    $output = '';
-		$ls = $this->db->query("select location_id from ".$this->cfg['dbpref']."levels_location where user_id='{$uid}'");
-		$l_ids = $ls->result();	
-		$user_loc = array();
-		foreach($l_ids as $l_id) {
-			$user_loc[] = $l_id->location_id;
-		}		
-		$location_query = $this->db->query('SELECT locationid,location_name FROM '.$this->cfg['dbpref'].'location WHERE stateid IN('.$state_id.')');
-		foreach ($location_query->result() as $locations)
-		{	
-			if(in_array($locations->locationid,$user_loc)){
-				$output .= '<option value="'.$locations->locationid.'" selected = "selected" >'.$locations->location_name.'</option>';
-			}else{
-				$output .= '<option value="'.$locations->locationid.'">'.$locations->location_name.'</option>';
-			}
-		}
-		echo $output;
-		
+		$data      = real_escape_array($this->input->post()); // escape special characters
+		$state_id  = $data['state_id']; 
+		$uid       = $data['uid'];
+		$this->user_model->editloadLocations($state_id,$uid);
 	}
 
 	/*
@@ -835,7 +706,6 @@ EOD;
 	
 	public function checkcountry() 
 	{
-
 		$data             =	real_escape_array($this->input->post()); // escape special characters
 		$explode_region   = @explode(',',$data['region_load']);
 		$explode_country  = @explode(',',$data['country_load']);
