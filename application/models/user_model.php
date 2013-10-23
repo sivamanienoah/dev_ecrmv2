@@ -11,7 +11,6 @@ class User_model extends crm_model {
         if ($search != false) 
 		{	
             $search = urldecode($search);
-			
 			$sql = "SELECT a.*,b.level_id,b.level_name,c.id,c.name
                     FROM {$this->cfg['dbpref']}users as a
 					LEFT JOIN ".$this->cfg['dbpref']."levels as b ON b.level_id = a.level LEFT JOIN ".$this->cfg['dbpref']."roles as c ON c.id = a.role_id
@@ -29,6 +28,7 @@ class User_model extends crm_model {
 		}	
 		
 		$customers = $this->db->query($sql);
+		
         return $customers->result_array();
     }
     
@@ -301,6 +301,74 @@ class User_model extends crm_model {
 			} 	
 		return $flag;
 	}
+	
+	/*
+	* @ Find exist Email Address
+	*
+	*/
+
+	public function find_exist_email($data){	
+
+		$email  =  $data['email'];
+		$update =  $data['email1'];
+	
+		if ($update != 'undefined') {
+			
+			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
+			if ($emailid == 1){ 
+				echo 'userOk';
+			}else{ 
+				echo 'userNo';
+			}
+
+		} else {
+			$this->db->where('email',$email);
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+			if ($query == 0) 
+				echo 'userOk';
+			else 
+				echo 'userNo';
+		}	
+	}
+	
+	/*
+	* @Get User for Lead Assigned To
+	*
+	*/
+
+   public function getUserLeadAssigned($users)
+   {
+   
+   		$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
+		$user_res = $query->result_array();
+		$res = '';
+		$res .= "<option value='not_select'>Please Select</option>";
+		foreach($user_res as $user) {
+			$res .= "<option value=".$user['userid'].">".$user['first_name']." ".$user['last_name']."</option>";
+		}
+		echo $res;
+   }
+  
+	/*
+	*@Check User Status
+	*
+	*/
+  
+	public function check_user_status($data=array()){
+		$id = $data['data'];
+		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")"; 
+		$this->db->where($where);
+		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+    }
+  
 }
 
 ?>
