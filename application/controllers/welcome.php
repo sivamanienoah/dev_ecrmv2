@@ -102,7 +102,7 @@ class Welcome extends crm_controller {
 		
 		$usid = $this->session->userdata('logged_in_user');
 		
-		$getLeadDet = $this->welcome_model->get_lead_all_detail($id);
+		$getLeadDet = $this->welcome_model->get_lead_detail($id);
 
 		if(!empty($getLeadDet)) {
             $data['quote_data'] = $getLeadDet[0];
