@@ -363,27 +363,7 @@ HDOC;
 		echo json_encode($data);
 	}
 	
-	/**
-	 * Update the job status
-	 * based on the request
-	 */
-	function update_job_status()
-	{
-		$json['error'] = FALSE;
-		$jobid = $_GET['jobid'];
-		$job_status = $_GET['job_status'] * 10;
-		
-		if (!is_numeric($jobid) || $job_status % 10 != 0 || $job_status > 100)
-		{
-			$json['error'] = 'Invalid details supplied!';
-		}
-		else
-		{
-			$this->db->where('jobid', $jobid);
-			$this->db->update($this->cfg['dbpref'].'jobs', array('complete_status' => $job_status)); 
-		}
-		echo json_encode($json);
-	}
+	
 	
 	/**
 	 * Add job task for a user

@@ -204,7 +204,7 @@ function get_user_infm(users){
 		//alert(response);
 			if(response != '') {
 				$("#lead_assign").html(response);
-			} 
+			}
 		}
 	});
 }

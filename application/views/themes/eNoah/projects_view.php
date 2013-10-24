@@ -2,7 +2,10 @@
 
 <div id="content">
 	<div class="inner">
-		<?php  	if($this->session->userdata('accesspage')==1) {   ?>
+		<?php
+		if($this->session->userdata('accesspage')==1) 
+		{
+		?>
 		<form action="" method="post" style="float:right;">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
@@ -80,11 +83,11 @@
 			</tbody>
 			</table>
 		</form>
-	</div>
+		</div>
 		<div class="clearfix"></div>
 		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<div id="ad_filter" style="overflow:scroll; height:400px;" >
 		<table border="0" cellpadding="0" cellspacing="0" class="data-table" style="width:1200px !important;">
             
@@ -103,19 +106,14 @@
             
             <tbody>
 				<?php
-				if (!isset($quote_section))
-				{
-					$quote_section = '';
-				}
-				
-					if (is_array($records) && count($records) > 0) { ?>
+				if (is_array($records) && count($records) > 0) { 
+				?>
                     <?php
 					foreach ($records as $record) {
-						
 					?>
                     <tr>
 						<td class="actions" align="center">
-							<a href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">
+							<a href="project/view_project/<?php echo  $record['jobid'] ?>">
 								View
 							</a>
 							<?php
@@ -125,7 +123,7 @@
 						
                         <td class="actions">
 							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['jobid'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
 							</div>
 						</td>
 						
@@ -134,7 +132,6 @@
 						</td>
 						
                         <td class="actions">
-							<!--<a href="/view_project/<?php echo $record['jobid'], '/', $quote_section ?>" title="<?php echo  $record['job_title'] ?>"><?php echo character_limiter($record['job_title'], 35) ?></a>-->
 							<?php echo character_limiter($record['job_title'], 35) ?>
 						</td>
 						
@@ -173,22 +170,29 @@
 							 ?>
 						</td>
 					</tr>
-						<?php
+					<?php
 					} 
 					?>
-                <?php } else { ?>
-                    <tr>
-                        <td align="center" colspan="9">No records available to be displayed!</td>
-                    </tr>
-                <?php } ?>
+                <?php 
+				} 
+				else 
+				{ ?>
+                <tr>
+                    <td align="center" colspan="9">No records available to be displayed!</td>
+                </tr>
+                <?php 
+				} 
+				?>
             </tbody>
-            
         </table>
 		</div>
 		</form>
-		<?php } else { 
+		<?php 
+		} 
+		else 
+		{ 
 			echo "You have no rights to access this page";
-			}
+		}
 		?>
 	</div>
 </div>

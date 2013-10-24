@@ -14,8 +14,6 @@ class Welcome extends crm_controller {
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
 		$this->load->helper('text');
-		$this->load->library('email');
-		$this->email->initialize($config);
 		$this->email->set_newline("\r\n");
 		
 		$this->load->helper('lead_stage_helper');

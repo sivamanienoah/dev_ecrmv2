@@ -13,7 +13,8 @@ class Welcome_model extends crm_model {
     /**
      * get the lead details //unwanted
      */
-    public function get_lead($leadid, $belong_to = FALSE) {
+    public function get_lead($leadid, $belong_to = FALSE) 
+	{
 		$owner_only = ($belong_to == FALSE) ? '' : " AND `belong_to` = '" . mysql_real_escape_string($belong_to) . "' ";
         $sql = "SELECT * FROM `{$this->cfg['dbpref']}leads`, `{$this->cfg['dbpref']}customers` WHERE `custid` = `custid_fk` AND `leadid` = ? {$owner_only} LIMIT 1";
 			
@@ -62,7 +63,8 @@ class Welcome_model extends crm_model {
 	    return $res;
 	}
 	
-	function get_lead_all_detail($id) {
+	function get_lead_all_detail($id) 
+	{
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
@@ -79,7 +81,7 @@ class Welcome_model extends crm_model {
 		{
 			return FALSE;
 		}
-}
+	}
 	
 	function get_users() {
     	$this->db->select('userid,first_name,level,role_id,inactive');
@@ -317,9 +319,9 @@ class Welcome_model extends crm_model {
 		return $this->db->insert_id();
     }
 	
-	function update_row($tbl, $ins, $jid) {
+	function update_row($tbl, $updt, $jid) {
 		$this->db->where('jobid', $jid);
-		$this->db->update($this->cfg['dbpref'] . $tbl, $ins);
+		$this->db->update($this->cfg['dbpref'] . $tbl, $updt);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
 	

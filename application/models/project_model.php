@@ -108,7 +108,7 @@ class Project_model extends crm_model {
 			if($pm[0] != 'null' && $pm[0] != '0') {		
 				$this->db->where_in('j.assigned_to',$pm); 
 			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
+			if($keyword != 'Project No, Project Title, Name or Company' && $keyword != 'null'){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.job_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
@@ -123,7 +123,7 @@ class Project_model extends crm_model {
 	}
 	
 	//get the access for changing the project id, project manager, assigning project members
-	public function get_jobid($id, $uid)
+	public function get_access($id, $uid)
 	{
 		$this->db->select('lead_assign, assigned_to, belong_to');
 		$this->db->where('jobid', $id);
@@ -139,7 +139,7 @@ class Project_model extends crm_model {
 		return $chge_access;
 	}
 	
-	//get the lead or project overall details
+	//get overall details for lead or project 
 	function get_quote_data($id) {
     	$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
@@ -157,7 +157,8 @@ class Project_model extends crm_model {
     }
 	
 	//get the project assigned members
-	function get_contract_jobs($id) {
+	function get_contract_jobs($id) 
+	{
     	$this->db->where('jobid_fk', $id);
 		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 		return $cq->result_array();
@@ -245,24 +246,28 @@ class Project_model extends crm_model {
 		return $contract_users->result_array();
 	}
 	
-	function updt_log_view_status($id, $log) {
+	function updt_log_view_status($id, $log) 
+	{
 		$this->db->where('jobid', $id);
 		return $this->db->update($this->cfg['dbpref'] . 'jobs', $log);
 	}
 	
-	function get_logs($id) {
+	function get_logs($id) 
+	{
 		$this->db->order_by('date_created', 'desc');
 		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
 		return $query->result_array();
 	}
 	
-	function get_user_data_by_id($ld) {
-		$this->db->where('userid', $ld);
-		$user = $this->db->get($this->cfg['dbpref'] . 'users');
+	function get_user_data_by_id($tbl, $condn) 
+	{
+		$this->db->where($condn);
+		$user = $this->db->get($this->cfg['dbpref'] . $tbl);
 		return $user->result_array();
 	}
 	
-	function get_users() {
+	function get_users() 
+	{
     	$this->db->select('userid,first_name,level,role_id,inactive');
 		$this->db->where('inactive', 0);
     	$this->db->order_by('first_name', "asc");
@@ -270,14 +275,16 @@ class Project_model extends crm_model {
 		return $q->result_array();
     }
 	
-	function get_payment_terms($id) {
+	function get_payment_terms($id) 
+	{
 		$this->db->where('jobid_fk', $id);
 		$this->db->order_by('expectid', 'asc');
 		$payment_terms = $this->db->get($this->cfg['dbpref'] . 'expected_payments');
 		return $payment_terms->result_array();
 	}
 	
-	function get_deposits_data($id) {
+	function get_deposits_data($id) 
+	{
 		$this->db->select($this->cfg['dbpref'].'deposits.*');
 		$this->db->select($this->cfg['dbpref'].'expected_payments.project_milestone_name AS payment_term');
 		$this->db->from($this->cfg['dbpref'] . 'deposits');
@@ -287,6 +294,60 @@ class Project_model extends crm_model {
 		$deposits = $this->db->get();
 		return $deposits->result_array();
 	}
+	
+	function insert_row($tbl, $ins) 
+	{
+		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+    }
+	
+	function get_userlist($userList) 
+	{
+    	$this->db->select('userid,first_name,last_name,email,level,role_id,inactive');
+		if(!empty($userList))
+		$this->db->where_in('userid', $userList);
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+		return $q->result_array();
+    }
+	
+	public function get_lead_det($id) 
+	{
+	    $this->db->select('job_status, invoice_no, job_title, lead_assign, belong_to, lead_status, actual_worth_amount, custid_fk');
+	    $this->db->from($this->cfg['dbpref'] . 'jobs');
+	    $this->db->where('jobid', $id);
+	    $lead_det = $this->db->get();
+	    return $leads =  $lead_det->row_array();
+	}
+	
+	//not used
+	function delete_row($tbl, $condn, $lead_id) 
+	{
+		$this->db->where($condn, $lead_id);
+		$this->db->delete($this->cfg['dbpref'] . $tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
+	
+	function delete_contract_job($tbl, $condn, $uid)
+	{	
+		$this->db->where($condn);
+		$this->db->where_in('userid_fk', $uid);
+		$this->db->delete($this->cfg['dbpref'] . $tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
+	
+	public function chk_status($tbl, $condn) 
+	{		
+		$this->db->where($condn);
+		$sql = $this->db->get($this->cfg['dbpref'] . $tbl);
+        return ($sql->num_rows() > 0) ? TRUE : FALSE;
+    }
+	
+	function update_row($tbl, $updt, $condn) 
+	{
+		$this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+    }
+
+
 }
 
 ?>

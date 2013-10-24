@@ -129,10 +129,6 @@ function addLog() {
 		form_data.log_stickie = true;
 	}
 	
-	if ($('#attach_pdf').is(':checked')) {
-		form_data.attach_pdf = true;
-	}
-	
 	if ($('#ignore_content_policy').is(':checked')) {
 		form_data.ignore_content_policy = true;
 	}
@@ -142,11 +138,6 @@ function addLog() {
 	{
 		form_data.time_spent = submit_log_minutes;
 	}
-	
-	// form_data.use_custom_date = $('.download-invoice-option-log input[name="use_custom_date"]').val();
-	// form_data.balance_due = $('.download-invoice-option-log input[name="balance_due"]').val();
-	// form_data.custom_description = $('.download-invoice-option-log input[name="custom_description"]').val();
-	
 	
 	if ($('#email_to_customer').is(':checked')) {
 		form_data.email_to_customer = true;
@@ -192,7 +183,7 @@ function addLog() {
 						//$('.log-container').prepend(data.html).children('.log:first').slideDown(400);
 						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
 						$('#job_log').val('');
-						$('.user-addresses input[type="checkbox"]:checked, #attach_pdf, #email_to_customer, #log_stickie, #ignore_content_policy').each(function(){
+						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie, #ignore_content_policy').each(function(){
 							$(this).attr('checked', false);
 						});
 						$('#log_minutes').val('');
@@ -334,9 +325,7 @@ function QueryAjaxFileUpload() {
 	var _uid = new Date().getTime();
 	var query = $('#query').val();
 	var replay = $('#replay').val();
-	 
-	//alert(replay);
-	//return false;
+
 	var reply = "";
 	var fname = "";
 	//document.getElementById('querylead_form').style.display = "none";
@@ -381,12 +370,6 @@ function QueryAjaxFileUpload() {
 					}
 					else
 					{
-						//if(data.msg == 'File successfully uploaded!'){
-							//var mail_url = "welcome/send_mail_query/<?php echo $quote_data['jobid'] ?>/"+data.file_name+'/'+encodeURIComponent(query);														
-							//$('#mail_results').load(mail_url);						
-						//}
-						//alert(data.mail_msg);	
-						//alert(data.file_name);
 						if(typeof(data.file_name) != 'undefined')
 						{
 						if(data.file_name != 'undefined') {
@@ -501,64 +484,6 @@ function ajaxDeleteJobURL(id, el) {
 	)
 }
 
-var job_project_manager = '<?php echo $quote_data['assigned_to'] ?>';
-
-function setProjectStatusDate(date_type) {
-	
-	<?php
-	if (isset($userdata) && $userdata['level'] > 1)
-	{
-		?>
-		alert('Only Administrators can change project dates!');
-		return false;
-		<?php
-	}
-	?>
-	var set_date_type, date_val, d_class;
-	
-	if (date_type == 'start')
-	{
-		set_date_type = 'start';
-		date_val = $('#project-start-date').val();
-		d_class = 'startdate';
-	}
-	else
-	{
-		set_date_type = 'end';
-		date_val = $('#project-due-date').val();
-		d_class = 'deadline';
-	}
-	
-	var pr_date = $('#project_lead').val()
-	if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
-		alert('Please insert a valid date!');
-		return false;
-	} else {
-		$.get(
-			'ajax/production/set_project_status_date/' + curr_job_id + '/' + set_date_type + '/' + date_val,
-			{},
-			function(_data) {
-				try {
-					eval ('var data = ' + _data);
-					if (typeof(data) == 'object') {
-						if (data.error == false) {
-							$('h6.project-' + d_class + '-label span').text(date_val);
-							$('.project-' + d_class + '-change:visible').hide(200);
-						} else {
-							alert(data.error);
-						}
-					} else {
-						alert('Updating faild, please try again.');
-					}
-				} catch (e) {
-					alert('Invalid response, your session may have timed out.');
-				}
-			}
-		);
-	}
-}
-
-
 function whatAreStickies() {
 	var msg = 'Stickies are logs that are important.\nInformation that is vital to the job.\nInformtion that you need to find quickily without reading through all the communication.\nA URL, FTP/MySQL details, Important changes etc.';
 	alert(msg);
@@ -586,10 +511,7 @@ function qcOKlog() {
 
 $(function(){
 	
-	$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M' });
-	$('#set-deposits .pick-date, .download-invoice-option .pick-date, .download-invoice-option-log .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
 	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -7, maxDate: '+12M'});
-	//$('.milestone-date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 	
 	$('.task-list-item').livequery(function(){
 		$(this).hover(
@@ -606,14 +528,6 @@ $(function(){
 			$('#additional_client_emails').val('');
 			$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
 				.slideUp(400);
-		}
-	});
-	
-	$('#attach_pdf').change(function(){
-		if ($(this).is(':checked'))	{
-			$('.download-invoice-option-log:not(:visible)').slideDown(400);
-		} else {
-			$('.download-invoice-option-log:visible').slideUp(400);
 		}
 	});
 	
@@ -725,36 +639,6 @@ $(function(){
 });
 	
 });
-
-
-function setContractorJob()
-{
-	var contractors = [];
-	$('.list-contractors input:checked').each(function(){
-		contractors.push($(this).val());
-	});
-	
-	var data = {'contractors': contractors.join(','), 'jobid': curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
-	
-	$.post(
-		'welcome/ajax_set_contractor_for_job',
-		data,
-		function(xd)
-		{
-			if (xd.error)
-			{
-				alert(xd.error);
-			}
-			else if (xd.status == 'OK')
-			{
-				document.location.reload();
-			}
-		},
-		'json'
-	);
-	
-	return false;
-}
 </script>
 
 <div id="content">
@@ -777,7 +661,6 @@ function setContractorJob()
 				
 				<div style="overflow:hidden;">
 					
-					<!--<p class="right" style="padding-left:15px;">Add your time in minutes <input type="text" name="log_minutes" id="log_minutes" class="textfield" style="width:40px;" /></p>-->
 					<p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p>
 					<div class="button-container">
 						<div class="buttons">

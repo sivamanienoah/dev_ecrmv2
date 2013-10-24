@@ -809,9 +809,9 @@ function setProjectLead() {
 		$('#pjt_lead_errormsg').show();
 		return false;
 	} else {
-		$.get(
-			'ajax/production/set_project_lead/' + curr_job_id + '/' + pl_user + '/' + previous_manager,
-			{},
+		$.post(
+			'project/set_project_lead/',
+			{'jobid':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			
 			function(data) {
 				try {
@@ -865,20 +865,22 @@ function setProjectId() {
 				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 			});
-			
+
 			var baseurl = $('.hiddenUrl').val();
             $.ajax({
-            url : baseurl + 'project/getPjtIdFromdb/' + pjtId,
+			type: "POST",
+            url : baseurl + 'project/chkPjtIdFromdb/',
             cache : false,
+			data: { pjt_id: pjtId, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
             success : function(response){
                 $('.checkUser').hide();
-                if(response == 'userOk') {	
+                if(response == 'Ok') {	
 					$('.checkUser').show(); 
 					$('.checkUser1').hide();
 					setTimeout('timerfadeout()', 2000);
-					$.get(
-						'ajax/production/set_project_id/' + curr_job_id + '/' + pjtId,
-						{},
+					$.post(
+						'project/set_project_id/',
+						{pjt_id: pjtId, job_id: curr_job_id, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 						function(_data) {
 							try {
 							eval ('var data = ' + _data);
@@ -909,10 +911,11 @@ function setProjectId() {
 }
 
 //updating the project value.
-function setProjectVal() {
+function setProjectVal() 
+{
 	$('#pjt_val_errormsg, .checkVal1, .checkVal').hide();
-	var pjt_value = $('#pjt_value').val()
-	if (pjt_value == 0) {
+	var pjtValue = $('#pjt_value').val()
+	if (pjtValue == 0) {
 		$('#pjt_val_errormsg').text('Please Enter Project Value!');
 		$('#pjt_val_errormsg').show();
 		setTimeout('timerfadeout()', 3000);
@@ -925,17 +928,19 @@ function setProjectVal() {
 			
 			var baseurl = $('.hiddenUrl').val();
             $.ajax({
-            url : baseurl + 'project/getPjtValFromdb/' + pjt_value,
+			type: "POST",
+            url : baseurl + 'project/chkPjtValFromdb/',
             cache : false,
-            success : function(response){
+			data: { pjt_val: pjtValue, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' },
+            success : function(response) {
                 $('#checkVal').hide();
-                if(response == 'userOk') {	
+                if(response == 'Ok') {	
 					$('#checkVal').show(); 
 					$('#checkVal1').hide();
 					setTimeout('timerfadeout()', 3000);
-					$.get(
-						'ajax/production/set_project_value/' + curr_job_id + '/' + pjt_value,
-						{},
+					$.post(
+						'project/set_project_value/',
+						{ pjt_val: pjtValue, job_id: curr_job_id, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' },
 						function(_data) {
 							try {
 							eval ('var data = ' + _data);
@@ -975,7 +980,7 @@ function setProjectStatus() {
 	var baseurl = $('.hiddenUrl').val();
 	$.ajax({
 		type: 'POST',
-		url: 'ajax/production/set_project_status/',
+		url: 'project/set_project_status/',
 		dataType: 'json',
 		data: 'pjt_stat='+pjt_stat+'&job_id='+curr_job_id+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',
 		success: function(data) {
@@ -1420,9 +1425,9 @@ function updateJobStatus(status) {
             message:'<img src="assets/img/ajax-loader.gif" />',
 			css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
         });
-	$.get(
-		'ajax/request/update_job_status/',
-		{jobid: curr_job_id, job_status: status},
+	$.post(
+		'project/update_job_status/',
+		{jobid: curr_job_id, job_status: status, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(_data) {
 			try {
 				eval('data = ' + _data);
@@ -1473,7 +1478,7 @@ function setContractorJob()
 		contractors.push($(this).val());
 	});
 	
-	//alert(contractors); return false;
+	// alert(p); return false;
 	
 	var data = {'contractors': contractors.join(','), 'jobid': curr_job_id, 'project-mem': p,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
 	$.post(
