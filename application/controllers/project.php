@@ -634,5 +634,151 @@ body { margin: 0px; }
 			 echo $successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
 	}
+	
+	/*
+	 *Set the Planned Project START & END Date.
+	 */
+	public function set_project_status_date()
+	{	
+		$updt_data = real_escape_array($this->input->post());
+	
+		$data['error'] = FALSE;
+
+		$timestamp = strtotime($updt_data['date']);
+		
+		if ($updt_data['date_type'] != 'start' && $updt_data['date_type'] != 'end')
+		{
+			$data['error'] = 'Invalid date status supplied!';
+		}
+		else if ( ! $timestamp)
+		{
+			$data['error'] = 'Invalid date supplied!';
+		}
+		else
+		{
+			if ($updt_data['date_type'] == 'start')
+			{	 
+				$wh_condn = array('jobid'=>$updt_data['jobid'], 'date_due <'=>date('Y-m-d H:i:s', $timestamp));
+				$chk_stat = $this->project_model->chk_status('jobs', $wh_condn);
+				if($chk_stat)
+				{ 
+					$data['error'] = 'Planned Project Start Date Must be Equal or Earlier than the Planned Project End Date!';
+				}
+				else 
+				{ 
+					$wh_condn = array('jobid'=>$updt_data['jobid']);
+					$updt = array('date_start'=>date('Y-m-d H:i:s', $timestamp));
+					$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+				}
+			}
+			else
+			{	
+				if ($updt_data['date_type'] == 'end') 
+				{
+					$chk_stat_start = $this->project_model->get_lead_det($updt_data['jobid']);
+					
+					if (!empty($chk_stat_start['date_start']))
+					{
+						if($chk_stat_start['date_start'] > date('Y-m-d H:i:s', $timestamp))
+						{
+							$data['error'] = 'Planned Project End Date Must be Equal or Later than the Planned Project Start Date!';
+						} 
+						else 
+						{
+							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$updt = array('date_due'=>date('Y-m-d H:i:s', $timestamp));
+							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+						}
+					} 
+					else 
+					{
+						$data['error'] = 'Planned Project Start Date Must be Filled!';
+					}
+					
+				}
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	/*
+	 *Set the Actual Project START & END Date.
+	 */
+	public function actual_set_project_status_date()
+	{
+		$updt_data = real_escape_array($this->input->post());
+
+		$data['error'] = FALSE;
+		
+		$timestamp = strtotime($updt_data['date']);
+		
+		if ($updt_data['date_type'] != 'start' && $updt_data['date_type'] != 'end')
+		{
+			$data['error'] = 'Invalid date status supplied!';
+		}
+		else if ( ! $timestamp )
+		{
+			$data['error'] = 'Invalid date supplied!';
+		}
+		else
+		{
+			$chk_status = $this->project_model->get_lead_det($updt_data['jobid']);
+			
+			if ($updt_data['date_type'] == 'start')
+			{
+				if (!empty($chk_status['date_start'])) 
+				{	
+					if($chk_status['date_start'] > date('Y-m-d H:i:s', $timestamp)) 
+					{ 
+						$data['error'] = 'Actual Project Start Date Must be Equal or Later than the Planned Project Start Date!';
+					}
+					else 
+					{	
+						if (!empty($chk_status['actual_date_due'])) 
+						{
+							if ($chk_status['actual_date_due'] < date('Y-m-d H:i:s', $timestamp))
+							{
+								$data['error'] = 'Actual Project Start Date Must be Equal or Earlier than the Actual Project End Date!';
+							}
+						} 
+						else 
+						{
+							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));
+							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+						}
+					}
+				} 
+				else 
+				{
+					$data['error'] = 'Planned Project Start Date Must be Filled!';
+				}
+			}
+			else
+			{	
+				if ($updt_data['date_type'] == 'end') 
+				{
+					if (!empty($chk_status['actual_date_start'])) 
+					{
+						if($chk_status['actual_date_start'] > date('Y-m-d H:i:s', $timestamp)) 
+						{
+							$data['error'] = 'Actual Project End Date Must be Equal or Later than the Actual Project Start Date!';
+						} 
+						else 
+						{
+							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$updt = array('actual_date_due'=>date('Y-m-d H:i:s', $timestamp));
+							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+						}
+					} 
+					else 
+					{
+						$data['error'] = 'Actual Project Start Date Must be Filled!';
+					}
+				}		
+			}
+		}
+		echo json_encode($data);
+	}
 }
 ?>

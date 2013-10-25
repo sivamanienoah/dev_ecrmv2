@@ -59,7 +59,8 @@ class Project_model extends crm_model {
 			}
 			$this->db->order_by("j.jobid", "desc");
 		}
-		else {
+		else 
+		{
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -140,7 +141,8 @@ class Project_model extends crm_model {
 	}
 	
 	//get overall details for lead or project 
-	function get_quote_data($id) {
+	function get_quote_data($id) 
+	{
     	$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
 		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.custid_fk = cus.custid', 'left');
@@ -311,7 +313,7 @@ class Project_model extends crm_model {
 	
 	public function get_lead_det($id) 
 	{
-	    $this->db->select('job_status, invoice_no, job_title, lead_assign, belong_to, lead_status, actual_worth_amount, custid_fk');
+	    $this->db->select('*');
 	    $this->db->from($this->cfg['dbpref'] . 'jobs');
 	    $this->db->where('jobid', $id);
 	    $lead_det = $this->db->get();
@@ -346,7 +348,6 @@ class Project_model extends crm_model {
 		$this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
-
 
 }
 

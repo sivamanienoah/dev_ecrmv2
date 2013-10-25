@@ -38,7 +38,7 @@ class Welcome_model extends crm_model {
 	
 		$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_category, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
-		j.proposal_expected_date, j.proposal_sent_date, j.log_view_status, j.lead_hold_reason, 
+		j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, 
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name');
@@ -465,7 +465,7 @@ class Welcome_model extends crm_model {
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
-			j.proposal_sent_date, c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref']. 'jobs as j');
 			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'")');
@@ -524,7 +524,7 @@ class Welcome_model extends crm_model {
 			
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
-			j.proposal_sent_date, c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'] . 'jobs as j');
 			
@@ -634,8 +634,8 @@ class Welcome_model extends crm_model {
 		$userdata = $this->session->userdata('logged_in_user');
 		 //print_r($userdata['userid']);
 		 $this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
-		j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.proposal_expected_date,
-		j.proposal_sent_date, c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+		j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.proposal_expected_date, 
+		c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 		us.last_name as usslname, ls.lead_stage_name,ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'] . 'customers as c');		
 		$this->db->join($this->cfg['dbpref'] . 'jobs as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		

@@ -1027,9 +1027,9 @@ function setProjectStatusDate(date_type) {
 		}
 		return false;
 	} else {
-		$.get(
-			'ajax/production/set_project_status_date/' + curr_job_id + '/' + set_date_type + '/' + date_val,
-			{},
+		$.post(
+			'project/set_project_status_date/',
+			{'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(_data) {
 				try {
 					eval ('var data = ' + _data);
@@ -1096,9 +1096,9 @@ function actualSetProjectStatusDate(date_type) {
 		}
 		return false; 
 	} else {
-		$.get(
-			'ajax/production/actual_set_project_status_date/' + curr_job_id + '/' + set_date_type + '/' + date_val,
-			{},
+		$.post(
+			'project/actual_set_project_status_date/',
+			{'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(_data) { //alert(_data);
 				try {
 					eval ('var data = ' + _data);

@@ -192,8 +192,8 @@ HDOC;
      * @param itemid (latest intsert)
      * @return echo json string
      */
-    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false) {
-		
+    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false) 
+	{
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
@@ -256,8 +256,8 @@ HDOC;
 	 * Quotes are created with Ajax functions
 	 * @access public
 	 */
-	public function new_quote($lead = FALSE, $customer = FALSE) {
-	
+	public function new_quote($lead = FALSE, $customer = FALSE) 
+	{
 		if (is_numeric($lead)) {
 			$lead_details = $this->welcome_model->get_lead($lead);			
 			$data['existing_lead'] = $lead;
@@ -489,6 +489,37 @@ body {
             echo json_encode($result);
 		}
     }
+	
+	/*
+	 *Set the Expected proposal date for the lead.
+	 *@jobid
+	 */
+	public function set_proposal_date()
+	{
+		$updt_data = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+		
+		$timestamp = strtotime($updt_data['date']);
+		
+		if ($updt_data['date_type'] != 'start')
+		{
+			$data['error'] = 'Invalid date status supplied!';
+		}
+		else if ( ! $timestamp)
+		{
+			$data['error'] = 'Invalid date supplied!';
+		}
+		else
+		{
+			if ($updt_data['date_type'] == 'start')
+			{
+				$updt['proposal_expected_date'] = date('Y-m-d H:i:s', $timestamp);
+				$updt_date = $this->welcome_model->update_row('jobs', $updt, $updt_data['jobid']);
+			}		
+		}
+		echo json_encode($data);
+	}
 	
 	/*
      * adds an item to the lead based on the ajax request
@@ -1523,22 +1554,6 @@ body {
 			if($excelarr['proposal_expected_date'] != null) {
 				$this->excel->getActiveSheet()->setCellValue('M'.$i, date('d-m-Y', strtotime($excelarr['proposal_expected_date'])));
 			}		
-			if($excelarr['proposal_sent_date'] != null) {				
-				//$this->excel->getActiveSheet()->setCellValue('N'.$i, date('d-m-Y', strtotime($excelarr['proposal_sent_date'])));
-			}
-			
-			$date1 = $excelarr['proposal_sent_date'];
-			$date2 = $excelarr['proposal_expected_date'];
-			if($date1 != '' && $date2 != '')
-			{
-				$diff = abs(strtotime($date2) - strtotime($date1));
-				$years = floor($diff / (365*60*60*24));
-				$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
-				$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-			} else {
-				$days = '-';
-			}
-			// $this->excel->getActiveSheet()->setCellValue('O'.$i, $days);
 			
 			$this->excel->getActiveSheet()->setCellValue('N'.$i, $excelarr['lead_indicator']);
 			

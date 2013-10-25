@@ -1067,18 +1067,9 @@ h3 .small {
 								</div>
 							</td>
 						</tr>
-						<!--<tr>
-							<td valign="top" width="300">
-								<h6 class="project-deadline-label">Proposal Sent Date &raquo; <span><?php #if ($quote_data['proposal_sent_date'] != '') echo date('d-m-Y', strtotime($quote_data['proposal_sent_date'])); else echo 'Not Set'; ?></span></h6>
-							</td>
-						</tr>-->
-						
 					</table>
-					
 				</form>
-				
-				
-				
+
             <form action="" method="post" id="quote-edit-form" onsubmit="return false;">
                 <div> 
                     <p><label>Lead Title</label></p>
@@ -1627,21 +1618,14 @@ function setProjectStatusDate(date_type) {
 		date_val = $('#project-start-date').val();
 		d_class = 'startdate';
 	}
-	else
-	{
-		set_date_type = 'end';
-		date_val = $('#project-due-date').val();
-		d_class = 'deadline';
-	}
-	
-	var pr_date = $('#project_lead').val()
+
 	if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
 		alert('Please insert a valid date!');
 		return false;
 	} else {
-		$.get(
-			'ajax/production/set_proposal_date/' + curr_job_id + '/' + set_date_type + '/' + date_val,
-			{},
+		$.post(
+			'welcome/set_proposal_date/',
+			{'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(_data) {
 				try {
 					eval ('var data = ' + _data);
@@ -1663,9 +1647,7 @@ function setProjectStatusDate(date_type) {
 	}
 }
 
-
 $(function(){
-	
 	
 	$('#project-date-assign, #proposal_expected_date, .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -7, maxDate: '+12M'});
 	
