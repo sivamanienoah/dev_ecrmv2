@@ -348,6 +348,26 @@ class Project_model extends crm_model {
 		$this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
+	
+	//get expected payment details for the project.
+	public function get_expect_payment_terms($id) 
+	{
+    	$this->db->select('expm.expectid, expm.expected_date, expm.amount, expm.project_milestone_name, expm.received, jb.expect_worth_id, exnm.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
+		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.jobid = expm.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = jb.expect_worth_id', 'left');
+    	$this->db->where('expm.jobid_fk', $id);
+    	$this->db->order_by('expm.expectid');
+		$results = $this->db->get();
+        return $results->result_array();
+    }
+	
+	//get the payment term details.
+	function get_payment_term_det($eid, $jid)
+	{
+		$query = $this->db->get_where($this->cfg['dbpref'].'expected_payments', array('expectid' => $eid, 'jobid_fk' => $jid ));
+		return $query->row_array();
+	}
 
 }
 

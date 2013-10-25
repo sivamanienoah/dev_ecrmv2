@@ -97,9 +97,8 @@ $().ready(function() {
 var job_categories = [];
 job_categories['not_select'] = '';
 <?php foreach ($cfg['job_categories'] as $jck => $jcv) { ?>
-job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
+	job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
 <?php } ?>
-
 
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;
@@ -152,12 +151,6 @@ function addLog() {
 		return false;
 	}
 	
-	if (current_job_status < 2 && $('#email_to_customer').is(':checked') && $('#attach_pdf').is(':checked')) {
-		if (!window.confirm('This job is not yet converted to a quotaion.\nAre you sure you want to send this PDF?')) {
-			return false;
-		}
-	}
-	
 	if ($('#log_stickie').is(':checked')) {
 		if (!window.confirm('Are you sure you want to highlight this log as a Stickie?')) {
 			return false;
@@ -182,24 +175,12 @@ function addLog() {
 		form_data.log_stickie = true;
 	}
 	
-	if ($('#attach_pdf').is(':checked')) {
-		form_data.attach_pdf = true;
-	}
-	
-	
-	if ($('#ignore_content_policy').is(':checked')) {
-		form_data.ignore_content_policy = true;
-	}
-	
+
 	/* add minutes to the log */
 	if (submit_log_minutes)
 	{
 		form_data.time_spent = submit_log_minutes;
 	}
-	
-	form_data.use_custom_date = $('.download-invoice-option-log input[name="use_custom_date"]').val();
-	form_data.balance_due = $('.download-invoice-option-log input[name="balance_due"]').val();
-	form_data.custom_description = $('.download-invoice-option-log input[name="custom_description"]').val();
 	
 	
 	if ($('#email_to_customer').is(':checked')) {
@@ -232,7 +213,7 @@ function addLog() {
 		}
 	}
 	
-	if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null && form_data.attach_pdf != true) {
+	if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
 		if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
 			$.unblockUI();
 			return false;
@@ -252,14 +233,13 @@ function addLog() {
 					} else {
 						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
 						$('#job_log').val('');
-						$('.user-addresses input[type="checkbox"]:checked, #attach_pdf, #email_to_customer, #log_stickie, #ignore_content_policy').each(function(){
+						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
 							$(this).attr('checked', false);
 						});
 						$('#log_minutes').val('');
 						$('#additional_client_emails').val('');
 						$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
 							.slideUp(400);
-						$('.download-invoice-option-log:visible').slideUp(400);
 						if (data.status_updated) {
 							document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 						}
@@ -419,7 +399,7 @@ function updatePaymentRecievedTerms(pdid, eid) {
 
 function loadPaymentTerms() {
 	$.post( 
-		'project/retrieveRecord/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		'project/retrieve_record/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
 			if (data.error) {
 				alert(data.errormsg);
@@ -432,7 +412,7 @@ function loadPaymentTerms() {
 //function for load the payment terms every time click the 'Add Payment Terms' button
 function loadPayment() {
 	$.post( 
-		'project/payment_terms_delete/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		'project/retrieve_payment_terms/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
 			if (data.error) {
 				alert(data.errormsg);
@@ -670,8 +650,8 @@ function runAjaxFileUpload() {
 							$('#lead_result').load(lead_details);
 						}
 						//alert(data.msg);
-						var _file_link = '<a href="vps_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
-						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/vps_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
+						var _file_link = '<a href="crm_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
+						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/crm_data/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
 						<?php
 						if ( $userdata['role_id'] == 1 || $lead_details['belong_to'] == $userdata['userid'] || $lead_details['lead_assign'] == $userdata['userid'] || $lead_details['assigned_to'] == $userdata['userid'] )  {  echo '_del_link;'; } 
 						?>
@@ -1151,60 +1131,12 @@ function whatIsSignature() {
 	return false;
 }
 
-function downloadCustomPDF()
-{
-	var errors = [];
-	var custom_date = $('.download-invoice-option input[name="use_custom_date"]').val();
-	var required_balance = $('#new-balance-due').val();
-	var total_balance = $('#ex-balance-due').val();
-	
-	if ( ! /^[0-9]{2}\-[0-9]{2}\-[0-9]{4}$/.test(custom_date))
-	{
-		errors.push('Invalid date format provided!');
-	}
-	
-	if (/[^0-9\.]/.test(required_balance))
-	{
-		errors.push('Payment due should be a numeric value.');
-	}
-	
-	if (parseFloat(required_balance) > parseFloat(total_balance))
-	{
-		errors.push('Requested value should be less than or equal to the payment due.');
-	}
-	
-	if (errors.length > 0)
-	{
-		alert(errors.join('\n'));
-		return false;
-	}
-	else
-	{
-		var pdf_url = '<?php echo $this->config->item('base_url') ?>project/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE/TRUE/FALSE/output-<?php echo $quote_data['invoice_no'] ?>/template/';
-		
-		if ($('.download-invoice-option input[name="ignore_content_policy"]').is(':checked'))
-		{
-			pdf_url = pdf_url + 'FALSE';
-		}
-		
-		$('.download-invoice-option').attr('action', pdf_url);
-		$('.download-invoice-option').attr('onsubmit', '');
-		$('.download-invoice-option').submit().slideUp('fast').attr('onsubmit', 'return false;');
-	}
-	
-	return false;
-}
-
-
-
-
 <?php
-if (isset($userdata) && $userdata['level'] < 2)
+if (isset($userdata))
 {
 ?>
 /* function to add the auto log */
 function qcOKlog() {
-	
 	var msg = "VCS QC Officer Log Check - All Appears OK";
 	
 	if (!window.confirm('Are you sure you want to stamp the OK log?\n"' + msg + '"')) return false;
@@ -1212,25 +1144,15 @@ function qcOKlog() {
 	$('.user .production-manager-user').attr('checked', true);
 	$('#job_log').val(msg);
 	$('#add-log-submit-button').click();
-	
 }
-
-
 <?php
 }
 ?>
-
-$(function(){
-	
-	//$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M' });
+$(function() {
 	$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
-	//$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
 	$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
-	//$('#update-payment-terms #	').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M' });
-	$('#set-deposits .pick-date, .download-invoice-option .pick-date, .download-invoice-option-log .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
-	//$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -7, maxDate: '+12M'});
+	$('#set-deposits .pick-date, .pick-date, .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
 	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
-	//$('.milestone-date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 	
 	$('.task-list-item').livequery(function(){
 		$(this).hover(
@@ -1249,15 +1171,6 @@ $(function(){
 				.slideUp(400);
 		}
 	});
-	
-	$('#attach_pdf').change(function(){
-		if ($(this).is(':checked'))	{
-			$('.download-invoice-option-log:not(:visible)').slideDown(400);
-		} else {
-			$('.download-invoice-option-log:visible').slideUp(400);
-		}
-	});
-	
 	
 	$("#job-view-tabs").tabs({
 		selected: 1,
@@ -1623,36 +1536,7 @@ function setContractorJob()
 					}
 					</script>
 					
-					<?php if (isset($userdata)){ ?>
-					
-					<table border="0" cellpadding="0" cellspacing="0" style="display:none;" class="download-invoice-option-log">
-						<tr>
-							<td>
-								&nbsp;Use a custom date<br />
-								<input type="text" class="textfield width200px pick-date" name="use_custom_date" value="<?php echo date('d-m-Y', strtotime($date_used)) ?>" readonly="readonly" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;Adjust current payment due<br />
-								<input type="text" class="textfield width200px" name="balance_due" value="" id="new-balance-due-log" />
-								<input type="hidden" name="ex_balance_due" value="" id="ex-balance-due-log" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;<input type="checkbox" name="ignore_content_policy" id="ignore_content_policy" /> <label for="ignore_content_policy" class="normal">Don't attach content policy to PDF</label>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								&nbsp;Add a description - 100 characters<br />
-								<input type="text" class="textfield width250px" name="custom_description" value="" maxlength="100" />
-							</td>
-						</tr>
-					</table>
-					<br />
-					<?php } ?>
+
 					<input type="checkbox" name="email_to_customer" id="email_to_customer" /> <label for="email_to_customer" class="normal">Email Client</label>
 					<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
 					<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
@@ -2272,41 +2156,6 @@ function setContractorJob()
 				</div><!-- class:q-view-main-top end -->
 			</div><!-- id: jv-tab-1 end -->
 			<div id="jv-tab-2"> 
-				
-				<p style="text-align:right;"><a href="#" onclick="downloadCustomPDF(); return false;">
-					<img src="assets/img/download_pdf.gif?q=1" alt="Download PDF" /></a>
-				</p>
-				<form class="download-invoice-option" style="display:none;" action="project/view_plain_quote/<?php echo $quote_data['jobid'] ?>/TRUE" method="post" target="_blank" onsubmit="return false;">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<table border="0" cellpadding="0" cellspacing="0">
-						
-						<tr style="display:none;">
-							<td>
-								&nbsp;Use a custom date<br />
-								<input type="text" class="textfield width200px pick-date" name="use_custom_date" value="<?php echo date('d-m-Y', strtotime($date_used)) ?>" readonly="readonly" />
-							</td>
-							<td>
-								&nbsp;Adjust current payment due<br />
-								<input type="text" class="textfield width200px" name="balance_due" value="" id="new-balance-due" />
-								<input type="hidden" name="ex_balance_due" value="" id="ex-balance-due" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="downloadCustomPDF(); return false;">Download PDF</button>
-								</div>
-							</td>
-							<td style="display:none;">
-								<input type="checkbox" checked="checked" name="ignore_content_policy" />
-								Don't attach content policy
-							</td>
-						</tr>
-					</table>
-				</form>
-
 				<div class="q-container">
 					<div class="q-details">
 						<div class="q-top-head">
@@ -2868,7 +2717,7 @@ function paymentProfileEdit(eid) {
 	$(".payment-profile-view").show();
 	var jid = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 	setTimeout('timerfadeout()', 2000);
-	var url = "project/agreedPaymentEdit/"+eid+"/"+jid;
+	var url = "project/payment_term_edit/"+eid+"/"+jid;
 	$('#payment-profile-view').load(url);
 }
 

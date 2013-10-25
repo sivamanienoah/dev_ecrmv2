@@ -1,0 +1,1205 @@
+	
+	
+	
+	
+	
+	/*For Project Module -- End here*/
+
+function pjt_add_log()
+	{
+        if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content'])) {
+			$this->load->helper('text');
+			$this->load->helper('fix_text');
+			
+			$this->db->where('jobid', $_POST['jobid']);
+			$job_details = $this->db->get($this->cfg['dbpref'] . 'jobs');
+            
+            if ($job_details->num_rows() > 0) 
+            {
+				$job = $job_details->result_array();
+				//$this->db->insert_id();
+                $this->db->select('first_name, last_name, email');
+                $this->db->where('userid', $_POST['userid']);
+                $user = $this->db->get($this->cfg['dbpref'] . 'users');
+                $user_data = $user->result_array();
+				
+				
+				$this->db->where('custid', $job[0]['custid_fk']);
+				$client_details = $this->db->get($this->cfg['dbpref'] . 'customers');
+				$client = $client_details->result_array();
+				
+                $this->load->helper('url');
+				
+				$emails = trim($_POST['emailto'], ':');
+				
+				//$send_to = array();
+				$successful = $received_by = '';
+				
+				if ($emails != '' || isset($_POST['email_to_customer']))
+				{
+					$emails = explode(':', $emails);
+					$mail_id = array();
+					foreach ($emails as $mail)
+					{
+						$mail_id[] = str_replace('email-log-', '', $mail);
+					}
+					
+					
+					$data['user_accounts'] = array();
+					$this->db->where_in('userid', $mail_id);
+					$users = $this->db->get($this->cfg['dbpref'] . 'users');
+					
+					if ($users->num_rows() > 0)
+					{
+						$data['user_accounts'] = $users->result_array();
+					}
+					foreach ($data['user_accounts'] as $ua)
+					{
+						# default email
+						$to_user_email = $ua['email'];
+						
+						if (strstr($ua['add_email'], '@') && ! (isset($_POST['email_to_customer']) && isset($_POST['client_email_address']) && isset($_POST['client_full_name'])))
+						{
+							
+							if ($ua['use_both_emails'] == 1)
+							{
+								$to_user_email = $ua['add_email'];
+							}
+							else if ($ua['use_both_emails'] == 2)
+							{
+								//$send_to[] = array($ua['add_email'], $ua['first_name'] . ' ' . $ua['last_name']);
+								$send_to[]= array($ua['add_email'], $ua['first_name'] . ' ' . $ua['last_name'],'');
+							}
+						}
+						
+						//$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name']);
+						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
+						$received_by .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
+					}
+					$successful = 'This log has been emailed to:<br />';
+					
+					$log_subject = "eCRM Notification - {$job[0]['job_title']} [ref#{$job[0]['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					
+					/*$log_email_content = "--visiontechdigital.com\n\n" .
+												$_POST['log_content'] .
+												"\n\n--\n" . $this->userdata['signature'];
+						*/							
+				/*	$log_email_content = "--enoahisolution.com\n\n" .
+												$_POST['log_content'] .
+					
+											"\n\n--\n" . $this->userdata['signature'];*/	
+		
+				
+				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Email Template</title>
+<style type="text/css">
+body {
+	margin: 0px;
+}
+</style>
+</head>
+
+<body>
+<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+<tr><td bgcolor="#FFFFFF">
+<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr>
+    <td style="padding:15px; border-bottom:2px #5a595e solid;">
+		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+	</td>
+  </tr>
+  <tr>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
+  </tr>
+
+  <tr>
+    <td>
+	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+    <p style="background: none repeat scroll 0 0 #4B6FB9;
+    border-bottom: 1px solid #CCCCCC;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 4px;">
+        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
+    <p style="padding: 4px;">'.
+        $_POST['log_content'].'<br /><br />
+		This log has been emailed to:<br />
+		'.$received_by.'<br /><br />
+		'.$this->userdata['signature'].'<br />
+    </p>
+</div>
+</td>
+  </tr>
+
+   <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>';												
+											
+											
+					$pdf_file_attach = array();
+
+					$json['debug_info'] = '';
+					
+					if (isset($_POST['attach_pdf']))
+					{
+						
+						$temp_file_prefix = ($job[0]['job_status'] < 4) ? 'quotation' : 'invoice';
+						$temp_file_name = $temp_file_prefix . '-' . $job[0]['invoice_no'];
+						$temp_file_path =  $temp_file_name;
+					
+						$full_file_path = dirname(FCPATH) . '/vps_data/' . $temp_file_path . '.pdf';
+						$path="vps_data/".$temp_file_path .'.pdf';
+						$full_url_path = base_url().$path;
+						//$json['debug_info'] .= 'file attach requested - ';
+						
+						$content_policy = TRUE;
+						if (isset($_POST['ignore_content_policy']))
+						{
+							$content_policy = FALSE;
+						}
+						
+						// $this->view_plain_quote($job[0]['jobid'], TRUE, FALSE, FALSE, $temp_file_path, '', $content_policy);
+						
+						if (file_exists($full_file_path))
+						{
+							//$pdf_file_attach= array($full_file_path, $temp_file_name . '.pdf');
+							//$json['debug_info'] .= ' -- attachment set';
+						}
+					}
+					if (isset($_POST['email_to_customer']) && isset($_POST['client_email_address']) && isset($_POST['client_full_name']))
+					{
+						// we're emailing the client, so remove the VCS log  prefix
+						$log_subject = preg_replace('/^eNoah Notification \- /', '', $log_subject);
+						
+						
+						//$json['debug_info'] .= 'email to cust init > ';
+						
+						for ($cei = 1; $cei < 5; $cei ++)
+						{
+							if (isset($_POST['client_emails_' . $cei]))
+							{
+								//$json['debug_info'] .= 'loop through - ' . $cei;
+								
+								//$send_to[] = array($_POST['client_emails_' . $cei], '');
+								$send_to[] = array($_POST['client_emails_' . $cei], '');
+								$received_by .= $_POST['client_emails_' . $cei] . ', ';
+							}
+						}
+						
+						if (isset($_POST['additional_client_emails']) && trim($_POST['additional_client_emails']) != '')
+						{
+							//$json['debug_info'] .= ' > adiitional posts';
+							$additional_client_emails = explode(',', trim($_POST['additional_client_emails'], ' ,'));
+							if (is_array($additional_client_emails)) foreach ($additional_client_emails as $aces)
+							{
+								$aces = trim($aces);
+								if (preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $aces))
+								{
+									//$json['debug_info'] .= ' > adiitional add - ' . $aces;
+									
+									//$send_to[] = array($aces, '');
+									$send_to[] = array($aces, '');
+									$received_by .= $aces . ', ';
+								}
+							}
+						}
+						
+						// if the email goes to client - and the PDF attached, we need to CC accounts
+						# removed as per request by George - 16-07-2009
+						if (count($pdf_file_attach))
+						{
+							//$send_to[] = array('accounts@visiontechdigital.com', '');
+							//$received_by .= 'accounts@visiontechdigital.com, ';
+							//$send_to = array('jranand@enoahisolution.com', '');
+							//$send_to[] = array('vgovindaraju@enoahisolution.com', 'Arunkumar');
+							//$received_by .= 'jranand@enoahisolution.com, ';
+						}
+						
+					}
+					else
+					{
+						//$log_email_content .= "\n\n\n{$job[0]['job_title']} - {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}" .
+												//"\n".$this->config->item('base_url')."welcome/view_quote/{$_POST['jobid']}";
+												$dis['date_created'] = date('Y-m-d H:i:s');
+														$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+		
+						               // $log_email_content = <<<HDOCHDOC;
+		
+					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Email Template</title>
+<style type="text/css">
+body {
+	margin: 0px;
+}
+</style>
+</head>
+
+<body>
+<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+<tr><td bgcolor="#FFFFFF">
+<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr>
+    <td style="padding:15px; border-bottom:2px #5a595e solid;">
+		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+	</td>
+  </tr>
+  <tr>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
+  </tr>
+
+  <tr>
+    <td>
+	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+    <p style="background: none repeat scroll 0 0 #4B6FB9;
+    border-bottom: 1px solid #CCCCCC;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 4px;">
+        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
+    <p style="padding: 4px;">'.
+        $_POST['log_content'].'<br /><br />
+		This log has been emailed to:<br />
+		'.$received_by.'<br /><br />
+		'.$this->userdata['signature'].'<br />
+    </p>
+</div>
+</td>
+  </tr>
+
+   <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>';						
+										
+					}
+
+					$json['status_updated'] = false;
+					if (isset($_POST['requesting_client_approval']) &&  $job[0]['job_status'] < 3)
+					{
+						$this->db->where('jobid', $_POST['jobid']);
+						if ($this->db->update($this->cfg['dbpref'] . 'jobs', array('job_status' => '3')))
+						{
+							$json['status_updated'] = true;
+						}
+					}
+					//print_r($user_data);
+					//$this->email->from('jranand@enoahisolution.com','Anand');
+					//$this->email->to('jranand@enoahisolution.com','Anand');
+					//$send_to = array('rkumaran@enoahisolution.com', 'Kumaran');
+					//$send_to = array('jranand@enoahisolution.com', 'JR Anand');
+					//$send_to[] = array('sarunkumar@enoahisolution.com', 'Arunkumar');
+					$this->email->from($user_data[0]['email'],$user_data[0]['first_name']);
+					//$this->email->from('sarunkumar@enoahisolution.com','Arunkumar');
+					foreach($send_to as $recps){
+						$arrRecs[]=$recps[0];
+					}
+					$senders=implode(',',$arrRecs);
+					$this->email->to($senders);
+					$this->email->subject($log_subject);
+					$this->email->message($log_email_content);
+					if(!empty($full_url_path)){
+					$this->email->attach($full_file_path);
+					}
+					if($this->email->send()){
+						$successful .= trim($received_by, ', ');
+					}
+					else{
+						echo 'failure';
+					}
+					
+					/*if (send_email($send_to, $log_subject, $log_email_content, $user_data[0]['email'], $user_data[0]['first_name'] . ' ' . $user_data[0]['last_name'], '', '', $pdf_file_attach))
+					{
+						$successful .= trim($received_by, ', ');
+					}
+					*/
+					
+					
+					
+					
+					if (isset($full_file_path) && is_file($full_file_path)) unlink ($full_file_path);
+					
+					if ($successful == 'This log has been emailed to:<br />')
+					{
+						$successful = '';
+					}
+					else
+					{
+						$successful = '<br /><br />' . $successful;
+					}
+				}
+			
+				$ins['jobid_fk'] = $_POST['jobid'];
+				
+				// use this to update the view status
+				$ins['userid_fk'] = $upd['log_view_status'] = $_POST['userid'];
+				
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				$ins['log_content'] = $_POST['log_content'] . $successful;
+				
+				$stick_class = '';
+				if (isset($_POST['log_stickie']))
+				{
+					$ins['stickie'] = 1;
+					$stick_class = ' stickie';
+				}
+				
+				if (isset($_POST['time_spent']))
+				{
+					$ins['time_spent'] = (int) $_POST['time_spent'];
+				}
+				
+				// inset the new log
+				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+				
+				// update the jobs table
+				$this->db->where('jobid', $ins['jobid_fk']);
+				$this->db->update($this->cfg['dbpref'] . 'jobs', $upd);
+                
+                $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $_POST['log_content'])))), 'url', TRUE)) . $successful;
+                
+				$fancy_date = date('l, jS F y h:iA', strtotime($ins['date_created']));
+				
+                /*$table = <<<HDOC
+<div class="log{$stick_class}" style="display:none;">
+    <p class="data">
+        <span>{$fancy_date}</span>
+    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
+    </p>
+    <p class="desc">
+        {$log_content}
+    </p>
+</div>
+HDOC;
+*/
+$table = <<<HDOC
+<tr id="log" class="log{$stick_class}">
+<td id="log" class="log">
+<p class="data">
+        <span>{$fancy_date}</span>
+    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
+    </p>
+    <p class="desc">
+        {$log_content}
+    </p>
+</td>
+</tr>
+HDOC;
+				
+                $json['error'] = FALSE;
+                $json['html'] = $table;
+				
+                echo json_encode($json);
+				
+            }
+            else
+            {
+                echo "{error:true, errormsg:'Post insert failed'}";
+            }
+        }
+        else
+        {
+            echo "{error:true, errormsg:'Invalid data supplied'}";
+        }
+    }
+    
+
+function add_project_received_payments($update = false, $eid = false)
+	{	
+		//echo $eid; echo "<pre>"; print_r($_POST); exit;
+		$errors = array();
+		
+		if (isset($_POST['pr_date_2']) && !preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $_POST['pr_date_2']))
+		{
+			$errors[] = 'Invalid deposit amount';
+		}
+		
+		if (!isset($_POST['pr_form_jobid']) || (int) $_POST['pr_form_jobid'] == 0)
+		{
+			$errors[] = 'Invalid job ID supplied';
+		}
+		
+		if (!isset($_POST['pr_date_3']) || !preg_match('/^[0-9]{2}\-[0-9]{2}\-[0-9]{4}$/', $_POST['pr_date_3']) || strtotime($_POST['pr_date_3']) == FALSE)
+		{
+			$errors[] = 'Invalid deposit date supplied';
+		}
+		
+		$exp_amt = $this->db->query("select amount from ".$this->cfg['dbpref']."expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
+		$expect_payment = $exp_amt->row_array();
+		
+		if (!isset($update)) {
+			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
+			$received_payment = $tot_rec_amt->row_array();
+			$temp_tot_amt = $_POST['pr_date_2'] + $received_payment['tot_amt'];
+			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
+		} else {
+			$tot_rec_amt = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' AND depositid != '".$update."' ");
+			$received_payment = $tot_rec_amt->row_array();
+			$temp_tot_amt = $_POST['pr_date_2'] + $received_payment['tot_amt'];
+			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
+		}	
+		//echo $this->db->last_query(); exit;
+
+		if ($temp_tot_amt > $expect_payment['amount']) {
+			//$errors[] = 'Error: Received Payment should not be greater than Expected Payment.';
+			$errors[] = 'Error: As per payment milestone value of '.$expect_payment['amount'].', pending amount to be received is only '.$remaining_amt.'. Amount entered is higher than this value.';
+		}	
+		
+		if (count($errors))
+		{	
+			$json['error'] = true;
+			$json['errormsg'] = join($errors);
+			echo json_encode($json);
+			//echo "{error:true, errormsg:'" . join('\n', $errors) . "'}";
+			//echo "<script>alert(' " . join('\n', $errors) . " ');</script>"; exit;
+		}
+		else
+		{	
+			$data = array(
+							'jobid_fk' => $_POST['pr_form_jobid'],
+							'invoice_no' => $_POST['pr_date_1'],
+							'amount' => $_POST['pr_date_2'],
+							'deposit_date' => date('Y-m-d H:i:s', strtotime($_POST['pr_date_3'])),
+							'comments' => $_POST['pr_date_4'],
+							'payment_received' => 1,
+							'map_term' => $_POST['deposit_map_field']
+						  );
+			
+			if ($update == "") {
+				$this->db->insert($this->cfg['dbpref'] . 'deposits', $data);
+				
+				$dd = strtotime($_POST['pr_date_3']);
+				$deposit_date = date('Y-m-d', $dd); 
+				//mychanges
+				$jid = $_POST['pr_form_jobid']; //16 
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+				$jres = $jsql->result();
+				$worthid = $jres[0]->expect_worth_id;
+				
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
+				$eres = $expect_worth->result();			
+				$symbol = $eres[0]->expect_worth_name;
+				
+				$userdata = $this->session->userdata('logged_in_user');
+				$userid = $userdata['userid'];					
+				$jobid = $data['jobid_fk'];
+				$filename = 'Invoice No: '.$data['invoice_no'].'  Amount: '.$symbol.' '.$data['amount'].'  Deposit Date: '.$deposit_date.' Map term:'.$data['map_term']; //filename
+				
+				$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs)
+				VALUES('".$jobid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is created.' ,'".$filename."')";                 
+				$qlogs = $this->db->query($logs);
+			}
+			else {
+				$this->db->query("update ".$this->cfg['dbpref']."expected_payments set received = 0 where expectid = '".$eid."' AND jobid_fk = '".$_POST['pr_form_jobid']."' ");
+				//echo $this->db->last_query();
+				$updatepayment = array(
+					'jobid_fk' => $_POST['pr_form_jobid'],
+					'invoice_no' => $_POST['pr_date_1'],
+					'amount' => $_POST['pr_date_2'],
+					'deposit_date' => date('Y-m-d H:i:s', strtotime($_POST['pr_date_3'])),
+					'comments' => $_POST['pr_date_4'],
+					'userid_fk' => $this->userdata['userid'],
+					'payment_received' => 1,
+					'map_term' => $_POST['deposit_map_field']
+				);
+				$this->db->where('depositid', $update);
+				$this->db->where('jobid_fk', $_POST['pr_form_jobid']);
+				$this->db->update($this->cfg['dbpref'] . 'deposits', $updatepayment);
+				
+				//mychanges	
+				$jid = $_POST['pr_form_jobid']; //16 
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+				$jres = $jsql->result();
+				$worthid = $jres[0]->expect_worth_id;
+				
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
+				$eres = $expect_worth->result();			
+				$symbol = $eres[0]->expect_worth_name;
+				$dd = strtotime($updatepayment['deposit_date']);
+				$deposit_date = date('Y-m-d', $dd);
+				$userdata = $this->session->userdata('logged_in_user');
+				$userid = $userdata['userid'];					
+				$jobid = $updatepayment['jobid_fk'];
+				$filename = 'Invoice No: '.$updatepayment['invoice_no'].'  Amount: '.$symbol.' '.$updatepayment['amount'].'  Deposit Date: '.$deposit_date.' Map term:'.$updatepayment['map_term']; //filename
+				
+				$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs)
+				VALUES('".$jobid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is updated.' ,'".$filename."')";                 
+				$qlogs = $this->db->query($logs);
+				//echo $this->db->last_query();
+			}
+			if (isset($_POST['deposit_map_field']) && $_POST['deposit_map_field'] > 0 && preg_match('/^[0-9]+$/', $_POST['deposit_map_field']))
+			{
+				$statusQuery = $this->db->query("select sum(amount) as tot_amt from ".$this->cfg['dbpref']."deposits where jobid_fk = '".$_POST['pr_form_jobid']."' AND map_term = '".$_POST['deposit_map_field']."' ");
+				$payment_status = $statusQuery->row_array();
+				
+				$statusQueryExpect = $this->db->query("select amount from ".$this->cfg['dbpref']."expected_payments where jobid_fk = '".$_POST['pr_form_jobid']."' AND expectid = '".$_POST['deposit_map_field']."' ");
+				$payment_status_expect = $statusQueryExpect->row_array();
+				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) {
+					$this->db->where('expectid', $_POST['deposit_map_field']);
+					$this->db->update($this->cfg['dbpref'] . 'expected_payments', array('received' => 1));
+				}
+				else {
+					$this->db->where('expectid', $_POST['deposit_map_field']);
+					$this->db->update($this->cfg['dbpref'] . 'expected_payments', array('received' => 2));
+				}
+			}
+			
+			$output = '';
+			$recieve_query = $this->db->query("SELECT `".$this->cfg['dbpref']."deposits` . * , `".$this->cfg['dbpref']."expected_payments`.`project_milestone_name` AS payment_term FROM (`".$this->cfg['dbpref']."deposits`) LEFT JOIN `".$this->cfg['dbpref']."expected_payments` ON `".$this->cfg['dbpref']."deposits`.`map_term` = `".$this->cfg['dbpref']."expected_payments`.`expectid` WHERE `".$this->cfg['dbpref']."deposits`.`jobid_fk` = ".$_POST['pr_form_jobid']." ORDER BY `depositid` ASC");
+			
+			//$data['receive'] = $recieve_query1->result_array();
+			//$this->load->view('welcome_view_project', $data);
+			$output .= '<div class="payment-received-mini-view2" style="margin-top:5px;">';
+			$pdi = 1;
+			$output .= '<option value="0"> &nbsp; </option>';
+			$output .= "<p><h6>Payment History</h6></p>";
+			$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+			$output .= "<thead>";
+			$output .= "<tr align='left'>";
+			$output .= "<th class='header'>Invoice No</th>";
+			$output .= "<th class='header'>Date Received</th>";
+			$output .= "<th class='header'>Amt Received</th>";
+			$output .= "<th class='header'>Payment Term</th>";
+			$output .= "<th class='header'>Action</th>";
+			$output .= "</tr>";
+			$output .= "</thead>";
+			foreach ($recieve_query->result_array() as $dd)
+			{
+				$expected_date = date('d-m-Y', strtotime($dd['deposit_date']));
+				$payment_amount = number_format($dd['amount'], 2, '.', ',');
+				$amount_recieved += $dd['amount'];
+				$payment_received = '';
+				if ($dd['payment_received'] == 1)
+				{
+					$payment_received = '<img src="assets/img/vcs-payment-received.gif" alt="received" />';
+				}
+				$output .= "<tr align='left'>";
+				$output .= "<td>".$dd['invoice_no']."</td>";
+				$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
+				$output .= "<td> ".$symbol.' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+				$output .= "<td>".$dd['payment_term']."</td>";
+				$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
+				$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+				$output .= "</tr>";
+			}
+			$output .= "<tr>";
+			$output .= "<td></td>";
+			$output .= "<td><b>Total Payment: </b> </td><td colspan='2'><b>".$symbol.' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+			$output .= "</tr>";
+			$output .= "</table>";
+			$output .= "</div>";
+			//echo $output;
+			//echo "{error:false}";
+			$json['error'] = false;
+			$json['msg'] = $output;
+			echo json_encode($json);
+		}
+		
+	}
+	
+	function received_payment_terms_delete($jid)
+	{
+		//mychanges
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+			$jres = $jsql->result();
+			$worthid = $jres[0]->expect_worth_id;
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
+			$eres = $expect_worth->result();
+			$symbol = $eres[0]->expect_worth_name;		
+		
+		$userdata = $this->session->userdata('logged_in_user'); 
+		$userid=$userdata['userid'];
+		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
+		$get = $query->row_array();		
+		$milename = $get['invoice_no'];
+		$amount = $get['amount'];
+		$map_term = $get['map_term'];
+		$expectdate = date('Y-m-d',strtotime($get['deposit_date']));	
+		$filename = 'Invoice No: '.$milename.'  Amount: '.$symbol.' '.$amount.'  Deposit Date: '.$expectdate.' Map Term: '.$map_term; 
+		
+		//$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs)
+        //VALUES('".$jid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is deleted.' ,'".$filename."')";                 
+        //$qlogs = $this->db->query($logs);
+	
+		$output = '';
+		$recieve_query = $this->db->query("SELECT `".$this->cfg['dbpref']."deposits` . * , `".$this->cfg['dbpref']."expected_payments`.`project_milestone_name` AS payment_term FROM (`".$this->cfg['dbpref']."deposits`) LEFT JOIN `".$this->cfg['dbpref']."expected_payments` ON `".$this->cfg['dbpref']."deposits`.`map_term` = `".$this->cfg['dbpref']."expected_payments`.`expectid` WHERE `".$this->cfg['dbpref']."deposits`.`jobid_fk` = ".$jid." ORDER BY `depositid` ASC");
+		
+		//$data['receive'] = $recieve_query1->result_array();
+		//echo "<pre> sdkjfdsk"; print_r($data); die();
+		//$this->load->view('welcome_view_project', $data);
+		$output .= '<div class="payment-received-mini-view2" style="margin-top:5px;">';
+		//$output .= '<h3>Payment Recieved</h3>';
+		$pdi = 1;
+		$output .= '<option value="0"> &nbsp; </option>';
+		$output .= "<p><h6>Payment History</h6></p>";
+		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+		$output .= "<thead>";
+		$output .= "<tr align='left'>";
+		$output .= "<th class='header'>Invoice No</th>";
+		$output .= "<th class='header'>Date Received</th>";
+		$output .= "<th class='header'>Amt Received</th>";
+		$output .= "<th class='header'>Payment Term</th>";
+		$output .= "<th class='header'>Action</th>";
+		$output .= "</tr>";
+		$output .= "</thead>";
+		foreach ($recieve_query->result_array() as $dd)
+		{
+			$expected_date = date('d-m-Y', strtotime($dd['deposit_date']));
+			$payment_amount = number_format($dd['amount'], 2, '.', ',');
+			$amount_recieved += $dd['amount'];
+			$payment_received = '';
+			if ($dd['payment_received'] == 1)
+			{
+				$payment_received = '<img src="assets/img/vcs-payment-received.gif" alt="received" />';
+			}
+			$output .= "<tr align='left'>";
+			$output .= "<td>".$dd['invoice_no']."</td>";
+			$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
+			$output .= "<td> ".$symbol.' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+			$output .= "<td>".$dd['payment_term']."</td>";
+			$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
+			$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+			$output .= "</tr>";
+		}
+		$output .= "<tr>";
+		$output .= "<td></td>";
+		$output .= "<td><b>Total Payment: </b> </td><td colspan='2'><b>".$symbol.' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+		$output .= "</tr>";
+		$output .= "</table>";
+		$output .= "</div>";
+		echo $output;
+	}
+	
+	/**
+	 * sets the payment terms
+	 * for the invoice
+	 */
+	function set_payment_terms($update = false)
+	{
+		
+		$errors = array();
+		$today = time();
+		
+		//$perc1 = (int) $_POST['sp_perc_1'];
+		//$perc2 = (int) $_POST['sp_perc_2'];
+		//$perc3 = (int) $_POST['sp_perc_3'];
+		
+		$pdate1 = $_POST['sp_date_1'];
+		$pdate2 = strtotime($_POST['sp_date_2']);
+		$pdate3 = $_POST['sp_date_3'];
+		
+		//$total =  $perc1 + $perc2 + $perc3;
+		
+		/*if ($total != 100)
+		{
+			$errors[] = 'Make sure the percentage values add up to 100%';
+		}*/
+		
+		/*if (
+			($perc1 > 0 && (!$pdate1 || $pdate1 < $today)) ||
+			($perc2 > 0 && (!$pdate2 || $pdate2 < $today)) ||
+			($perc3 > 0 && (!$pdate3 || $pdate3 < $today))
+		   )*/
+		/*if (
+			(!$pdate2 || $pdate2 < $today)			
+		   )
+		{
+			$errors[] = 'You have supplied invalid dates';
+		}*/
+		
+		if (count($errors))
+		{
+			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
+		}
+		else
+		{
+			$job_updated = FALSE;
+			
+			/*if ($perc1 > 0)
+			{
+				$amount1 = round(($_POST['sp_form_invoice_total'] / 100) * $perc1, 2);
+				$expected_date1 = date('Y-m-d', $pdate1);
+				$data1 = array(
+					'jobid_fk' => $_POST['sp_form_jobid'],
+					'percentage' => $perc1,
+					'amount' => $amount1,
+					'expected_date' => $expected_date1
+				);
+				$this->db->insert($this->cfg['dbpref'] . 'expected_payments', $data1);
+				$job_updated = TRUE;
+			}
+			
+			if ($perc2 > 0)
+			{
+				$amount2 = round(($_POST['sp_form_invoice_total'] / 100) * $perc2, 2);
+				$expected_date2 = date('Y-m-d', $pdate2);
+				$data2 = array(
+					'jobid_fk' => $_POST['sp_form_jobid'],
+					'percentage' => $perc2,
+					'amount' => $amount2,
+					'expected_date' => $expected_date2
+				);
+				$this->db->insert($this->cfg['dbpref'] . 'expected_payments', $data2);
+				$job_updated = TRUE;
+			}
+			
+			if ($perc3 > 0)
+			{*/
+				//$amount3 = round(($_POST['sp_form_invoice_total'] / 100) * $perc3, 2);
+				$expected_date = date('Y-m-d', $pdate2);
+				$data3 = array(
+					'jobid_fk' => $_POST['sp_form_jobid'],
+					'percentage' => '0',
+					'amount' => $pdate3,
+					'expected_date' => $expected_date,
+					'project_milestone_name' => $pdate1
+				);
+				
+				//mychanges
+				$jid = $_POST['sp_form_jobid']; //16 
+				$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+				$jres = $jsql->result();
+				$worthid = $jres[0]->expect_worth_id;
+				
+				$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");			
+				$eres = $expect_worth->result();			
+				$symbol = $eres[0]->expect_worth_name;
+				
+				if ($update == "") {
+					$this->db->insert($this->cfg['dbpref'] . 'expected_payments', $data3);
+					
+					$userdata = $this->session->userdata('logged_in_user');
+					$userid = $userdata['userid'];					
+					$jobid = $data3['jobid_fk'];
+					$filename = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$symbol.' '.$data3['amount'].'  Expected Date: '.$data3['expected_date']; //filename
+					
+					$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs)
+                    VALUES('".$jobid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is created.' ,'".$filename."')";                 
+                    $qlogs = $this->db->query($logs);
+					
+				} else {
+										
+					$chkstatus = $this->db->query("select received from ".$this->cfg['dbpref']."expected_payments where expectid = '".$update."' and jobid_fk = '".$_POST['sp_form_jobid']."'");
+					$pay_status = $chkstatus->row_array();
+					if ($pay_status['received'] != 1) {
+						$userdata = $this->session->userdata('logged_in_user');
+						$userid = $userdata['userid'];					
+						$jobid = $data3['jobid_fk'];
+						$filename = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$symbol.' '.$data3['amount'].'  Expected Date: '.$data3['expected_date']; //filename
+						
+						$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs)
+						VALUES('".$jobid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is updated.' ,'".$filename."')";                 
+						$qlogs = $this->db->query($logs);
+						
+						$updatepayment = array(
+						'amount' => $pdate3,
+						'expected_date' => $expected_date,
+						'project_milestone_name' => $pdate1
+					);
+					$this->db->where('expectid', $update);
+					$this->db->where('jobid_fk', $_POST['sp_form_jobid']);
+					$this->db->update($this->cfg['dbpref'] . 'expected_payments', $updatepayment);
+					}
+					else {
+						echo "<span id=paymentfadeout><h6>Received Payment cannot be Edited!</h6></span>";
+					}	
+					//echo $this->db->last_query();
+				}	
+				$job_updated = TRUE;
+			//}
+			
+			
+			if ($job_updated)
+			{
+				$data = array(
+					'payment_terms' => 1
+				);
+				$this->db->update($this->cfg['dbpref'] . 'jobs', $data, array('jobid' => $_POST['sp_form_jobid']));
+				$ajax_select = $this->db->query("SELECT expectid, expected_date, amount, project_milestone_name, received FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk = ".$_POST['sp_form_jobid']." order by expectid ");
+				$output = '';
+				$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
+					//$output .= '<h3>Payment Milestone Terms</h3>';
+				$pdi = 1;
+				$pt_select_box = '';
+				$pt_select_box .= '<option value="0"> &nbsp; </option>';
+				$output .= "<table width='100%' class='payment_tbl'>
+				<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
+				<tr>
+				<td><img src=assets/img/payment-received.jpg height='10' width='10' > Payment Received</td>
+				<td><img src=assets/img/payment-pending.jpg height='10' width='10' > Partial Payment</td>
+				<td><img src=assets/img/payment-due.jpg height='10' width='10' > Payment Due</td>
+				</tr>
+				</table>";
+				$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+				$output .= "<thead>";
+				$output .= "<tr align='left'>";
+				$output .= "<th class='header'>Payment Milestone</th>";
+				$output .= "<th class='header'>Milestone Date</th>";
+				$output .= "<th class='header'>Amount</th>";
+				$output .= "<th class='header'>Status</th>";
+				$output .= "<th class='header'>Action</th>";
+				$output .= "</tr>";
+				$output .= "</thead>";
+				foreach ($ajax_select->result_array() as $pd)
+				{
+					$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
+					$payment_amount = number_format($pd['amount'], 2, '.', ',');
+					$total_amount_recieved += $pd['amount'];
+					$payment_received = '';
+					if ($pd['received'] == 0)
+					{
+						$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
+					}
+					else if ($pd['received'] == 1)
+					{
+						$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
+					}
+					else
+					{
+						$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
+					}							
+					$output .= "<tr>";
+					$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
+					$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
+					$output .= "<td align='left'> ".$symbol.' '.number_format($pd['amount'], 2, '.', ',')."</td>";
+					$output .= "<td align='center'>".$payment_received."</td>";
+					$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
+					$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid']."); return false;' >Delete</a></td>";
+					$output .= "</tr>";
+					//echo "<p><strong>Payment #{$pdi}</strong> &raquo; {$pd['percentage']}% by {$expected_date} = \${$payment_amount} {$payment_received}</p>";
+					$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
+					$pdi ++;
+				}
+				$output .= "<tr>";
+				$output .= "<td></td>";
+				$output .= "<td><b>Total Milestone Payment : </b></td><td><b>".$symbol.' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
+				$output .= "</tr>";
+				$output .= "</table>";
+				$output .= '</div>';
+				echo $output;
+			}
+			else
+			{
+				echo "{error:true, errormsg:'Percentage update failed'}";
+			}
+			
+		}
+		
+	}
+	
+	
+	/**
+	 * Add the deposits to the relavant job
+	 */
+	function add_deposit_payments()
+	{
+		$errors = array();
+		
+		if (isset($_POST['deposit_amount_add']) && !preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $_POST['deposit_amount_add']))
+		{
+			$errors[] = 'Invalid deposit amount';
+		}
+		
+		if (!isset($_POST['deposit_form_jobid']) || (int) $_POST['deposit_form_jobid'] == 0)
+		{
+			$errors[] = 'Invalid job ID supplied';
+		}
+		
+		if (!isset($_POST['deposit_date']) || !preg_match('/^[0-9]{2}\-[0-9]{2}\-[0-9]{4}$/', $_POST['deposit_date']) || strtotime($_POST['deposit_date']) == FALSE)
+		{
+			$errors[] = 'Invalid deposit date supplied';
+		}
+		
+		if (count($errors))
+		{
+			echo "{error:true, errormsg:'" . join('\n', $errors) . "'}";
+		}
+		else
+		{
+			$data = array(
+					'jobid_fk' => $_POST['deposit_form_jobid'],
+					'amount' => $_POST['deposit_amount_add'],
+					'deposit_date' => date('Y-m-d H:i:s', strtotime($_POST['deposit_date'])),
+					'comments' => $_POST['deposit_comments']
+					);
+			
+			$this->db->insert($this->cfg['dbpref'] . 'deposits', $data);
+			
+			if (isset($_POST['deposit_map_field']) && $_POST['deposit_map_field'] > 0 && preg_match('/^[0-9]+$/', $_POST['deposit_map_field']))
+			{
+				$this->db->where('expectid', $_POST['deposit_map_field']);
+				$this->db->update($this->cfg['dbpref'] . 'expected_payments', array('received' => 1));
+			}
+			
+			if (isset($_POST['belong_to']) && $_POST['belong_to'] == 'AT68')
+			{
+				/*$job_data = $this->welcome_model->get_job(array('jobid' => $_POST['deposit_form_jobid']));
+				$msg = "Hi Angelo,
+
+We have received a payment of \${$_POST['deposit_amount_add']} on {$_POST['deposit_date']} for the following job:
+
+{$job_data['job_title']} - {$job_data['first_name']} {$job_data['last_name']} - {$job_data['company']}
+
+Thanks you.
+
+VCS Admin";*/
+				//$this->load->plugin('phpmailer');
+				//$to = array('angelo@at68.com.au');
+				//send_email($to, 'VCS Payment Notice', $msg, 'admin@enoahisolution.com', 'VCS Admin');
+				//@mail('asanka@visiontechdigital.com', 'VCS Payment notification', $msg, "From:admin@enoahisolution.com");
+			}
+			
+			echo "{error:false}";
+		}
+		
+	}
+	
+
+
+ /*
+     * Update the project to a given status
+     * @access public
+     * @param jobid
+     * @param status => desired status
+     * @return echo json string
+     */
+     public function ajax_update_project($jobid = 0, $status = 0, $log_status = '', $hostingid = 0)
+	{
+		//echo $jobid; exit;
+        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->job_model->get_job($jobid))
+        {
+ 			$update['job_status'] = $status;
+			//For Hosting
+
+			if($status>0){
+				//if (in_array($the_job['job_status'], array(0, 1, 2, 3, 15, 21, 22)) && in_array($status, array(4, 5, 6, 7, 8)))
+				//{
+					$update['date_invoiced'] = $update['date_modified'] = date('Y-m-d H:i:s');
+				//}
+				$this->db->where('jobid', $jobid);
+				if ($this->db->update($this->cfg['dbpref'] . 'jobs', $update))
+				{ //echo $this->db->last_query(); exit;
+					$ins['userid_fk'] = $this->userdata['userid'];
+					$ins['jobid_fk'] = $jobid;
+					
+					$ins['date_created'] = date('Y-m-d H:i:s');
+					$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
+					// inset the new log
+					$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+					echo "{error:false}";
+				}
+				else
+				{
+					echo "{error:true, errormsg:'Database update failed!'}";
+				}
+			}
+			else echo "{error:false}";
+        }
+        else
+        {
+            echo "{error:true, errormsg:'Invalid quote ID or Status!'}";
+        }
+    }
+
+
+	
+	
+	//For Edit Functionality - Edit Received Payments.
+	function retrieveRecordEdit($jobid, $eid) {
+		//mychanges
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jobid'");
+			$jres = $jsql->result();
+			$worthid = $jres[0]->expect_worth_id;
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
+			$eres = $expect_worth->result();
+			$symbol = $eres[0]->expect_worth_name;
+			
+		$query_drop = "SELECT * FROM ".$this->cfg['dbpref']."expected_payments WHERE jobid_fk =".$jobid." order by expectid"; 
+		$received_drop = $this->db->query($query_drop); 
+		$array_drop = array();
+		$i = 0;
+		$pt_select_box = '';
+		$pt_select_box .= '<option value="0"> &nbsp; </option>';
+		foreach ($received_drop->result() as $value)
+		{
+		    //echo $eid ." ". $array_drop[$i]['expectid'];
+		    //echo "tee".$eid."<br/>";
+			$array_drop[$i]['jobid_fk'] = $value->jobid_fk;
+			$array_drop[$i]['amount'] = $value->amount;
+			$array_drop[$i]['expectid'] = $value->expectid;
+			$payment_amount = number_format($value->amount, 2, '.', ',');
+			$array_drop[$i]['expected_date'] = date('d-m-Y', strtotime($value->expected_date));
+			$array_drop[$i]['project_milestone_name'] = $value->project_milestone_name;
+			if($eid ==  $array_drop[$i]['expectid']) {
+				$pt_select_box .= '<option selected ="selected" value="'.$array_drop[$i]['expectid'].'">' . $array_drop[$i]['project_milestone_name'] .' '.$symbol." {$payment_amount} by {$array_drop[$i]['expected_date']}" . '</option>';
+			}
+			else {
+				$pt_select_box .= '<option value="'.$array_drop[$i]['expectid'].'">' . $array_drop[$i]['project_milestone_name'].' '.$symbol." {$payment_amount} by {$array_drop[$i]['expected_date']}" . '</option>';
+			}
+			$i++;
+		}
+		return $pt_select_box;
+	}
+	
+		
+	function agreedPaymentView() {
+		echo '<script type="text/javascript">
+		$(function(){
+				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
+			});
+		function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+		</script>
+		<br /><form id="set-payment-terms">
+		<table class="payment-table">
+		<tr>
+			<td>
+				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
+				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
+				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<div class="buttons">
+					<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
+				</div>
+				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
+				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+			</td>
+		</tr>
+		</table>
+		</form>';
+	}
+	
+	function agreedPaymentDelete($eid, $jid) {
+		//echo $eid . " " . $jid; exit;
+		$payment_details_delete = $this->welcome_model->Del_paymentDet($eid, $jid);
+		if ($payment_details_delete == 0) {
+			$msg = "Received Payment cannot be Deleted!";
+			echo "<span id=paymentfadeout><h6>Received Payments cannot be Deleted!</h6></span>";
+			//echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+		} else {
+			$userdata = $this->session->userdata('logged_in_user');
+			$userid = $userdata['userid'];
+			$jobid = $jid;
+			$filename = $ex[3]; //filename
+		
+			$msg = "Payment Deleted!";
+			echo "<span id=paymentfadeout><h6>Payment Deleted!</h6></span>";
+			//echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+		}
+		$this->payment_terms_delete($jid);
+	}
+	
+	//Payment Received Edit function - Starts here.
+	function paymentEdit($pdid,$jid) {
+		//echo $pdid; exit;
+		$received_payment_details = $this->welcome_model->get_receivedpaymentDet($pdid,$jid);
+		//echo "<pre>"; print_r($received_payment_details); exit;
+		$eid = $received_payment_details['map_term'];
+		//echo "<pre>"; print_r($received_payment_details);
+		$received_deposit_date = date('d-m-Y', strtotime($received_payment_details['deposit_date']));
+		$updt = $this->retrieveRecordEdit($jid, $eid);
+		echo '<br />
+			<script>
+				$(function(){
+					$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+				});
+				function isNumberKey(evt)
+				{
+				  var charCode = (evt.which) ? evt.which : event.keyCode;
+				  if (charCode != 46 && charCode > 31 
+					&& (charCode < 48 || charCode > 57))
+					 return false;
+
+				  return true;
+				}
+			</script>
+			<form id="update-payment-recieved-terms">
+			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" value="'.$received_payment_details['invoice_no'].'" class="textfield width200px" /> </p>
+			<p>Amount Recieved *<input type="text" onkeypress="return isNumberKey(event)" name="pr_date_2" id="pr_date_2" value="'.$received_payment_details['amount'].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+			<p>Date Recieved *<input type="text" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px pick-date" /> </p>
+			
+			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
+
+			<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" >'.$received_payment_details['comments'].'</textarea> </p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="updatePaymentRecievedTerms('.$pdid.','.$eid.'); return false;" >Update Payment</button>
+			</div>
+			<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
+			<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
+		</form>';
+	}
+	
+	function receivedPaymentDelete($pdid, $jid, $map) {
+		//echo $pdid . " " . $jid; exit;
+		$receivedPayment_details_delete = $this->welcome_model->Del_receivedPaymentDet($pdid, $jid, $map);
+		if ($receivedPayment_details_delete == 0) {
+			$msg = "Error Occured!";
+			echo "<span id=paymentfadeout><h6>Error Occured!</h6></span>";
+			//echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+		} else {
+			$msg = "Received Payment Deleted!";
+			echo "<span id=paymentfadeout><h6>Received Payment Deleted!</h6></span>";
+			//echo '<script type="text/javascript">alert("' . $msg . '"); </script>';
+		}
+		$this->received_payment_terms_delete($jid);
+	}
+	
+	function PaymentView() {
+		echo '<script type="text/javascript">
+		$(function(){
+			$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+		});
+		function isNumberKey(evt)
+        {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+        }
+	   </script>
+		<br /><form id="payment-recieved-terms">
+			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
+			<p>Amount Recieved *<input onkeypress="return isNumberKey(event)" type="text" name="pr_date_2" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+			<p>Date Recieved *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
+			
+			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
+
+			<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="setPaymentRecievedTerms(); return false;">Add Payment</button>
+			</div>
+			<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
+			<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
+		</form>';
+	}
+	

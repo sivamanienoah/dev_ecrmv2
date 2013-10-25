@@ -670,11 +670,7 @@ class Welcome_model extends crm_model {
 		 return $customers;
 	}
 	
-	//Payment Milestone edit functionality.
-	function get_paymentDet($eid, $jid) {
-		$query = $this->db->get_where($this->cfg['dbpref'].'expected_payments', array('expectid' => $eid, 'jobid_fk' => $jid ));
-		return $query->row_array();
-	}
+	
 	
 	function Del_paymentDet($eid, $jid) {
 		$query = $this->db->query("select received from ".$this->cfg['dbpref']."expected_payments where expectid = '".$eid."' and jobid_fk = '".$jid."'");

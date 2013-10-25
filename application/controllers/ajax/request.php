@@ -2154,8 +2154,6 @@ EOD;
 			
 			
 		}
-		
-		
 		echo json_encode($json);
 	}
 }
