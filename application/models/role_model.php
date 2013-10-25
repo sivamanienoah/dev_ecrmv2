@@ -5,8 +5,9 @@
  *
  * Provides a Manage User Role.
  *
- * @class 		Role_model
+ * @class Name 	Role_model
  * @extends		crm_model
+ * @classes     Model
  * @author 		eNoah
  */
 

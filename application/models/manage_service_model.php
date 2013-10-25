@@ -1,12 +1,31 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manage Service Model
+ *
+ * @class 		manage_service_model
+ * @extends		crm_model (application/core)
+ * @classes     Model
+ * @author 		eNoah
+ */
+
 class manage_service_model extends crm_model {
     
+	/*
+	*@construct
+	*@Manage Service Model
+	*/
+	
     function Manage_service_model() {
        parent::__construct();
     }
+
+	/*
+	*@Get Job Category for Search
+	*@Manage Service Model
+	*/
 	
-	function get_jobscategory($search = FALSE) {
+	public function get_jobscategory($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'job_categories');
 		if ($search != false) {
@@ -17,8 +36,15 @@ class manage_service_model extends crm_model {
 		$cate =  $query->result_array();
 		return $cate;
     }
+
+	/*
+	*@Get Job Category for Search
+	*@Method  get_salesDivisions
+	*@table   sales_divisions
+	*/
 	
-	function get_salesDivisions($search = FALSE) {
+	public function get_salesDivisions($search = FALSE) {
+	
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'sales_divisions');
 		if ($search != false) {
@@ -29,14 +55,26 @@ class manage_service_model extends crm_model {
 		$divs =  $query->result_array();
 		return $divs;
     }
+
+	/*
+	*@Check Active Status
+	*@Method  get_list_active
+	*/
 	
-	function get_list_active($tbl_name) {
+	public function get_list_active($tbl_name) {
 		$query = $this->db->get_where($tbl_name, array('status' => 1));
 		$activeLists = $query->result_array();
 		return $activeLists;
 	}
+
+	/*
+	*@Check Active Status
+	*@Method  get_list_active
+	*@table   lead_source
+	*/
+
 	
-	function get_lead_source($search = FALSE) {
+	public function get_lead_source($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'lead_source');
 		if ($search != false) {
@@ -48,19 +86,34 @@ class manage_service_model extends crm_model {
 		return $leads;
     }
 	
-	function get_expect_worth_cur($search = FALSE) {
+
+	/*
+	*@Get Currency Name (e.g USD,AUD)
+	*@Method  get_expect_worth_cur
+	*@table   expect_worth
+	*/
+
+	public function get_expect_worth_cur($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'expect_worth');
 		if ($search != false) {
 			$search = urldecode($search);
 			$this->db->like('expect_worth_name', $search);
 		}
-		$query = $this->db->get();
+		$query  = $this->db->get();
 		$expect =  $query->result_array();
 		return $expect;
     }
+
+
+	/*
+	*@Get all Currency (e.g USD,AUD)
+	*@Method  get_all_currency
+	*@table   currency_all
+	*/
+
 	
-	function get_all_currency() {
+	public function get_all_currency() {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'currency_all');
 		$query = $this->db->get();
@@ -68,7 +121,13 @@ class manage_service_model extends crm_model {
 		return $cur;
     }
 	
-	function insert_new_currency($ins) {
+	/*
+	*@Insert New Currency Record
+	*@Method  insert_new_currency
+	*@table   expect_worth
+	*/
+	
+	public function insert_new_currency($ins) {
 		$this->db->insert("{$this->cfg['dbpref']}" . 'expect_worth', $ins);
 		$last_ins_id = $this->db->insert_id();
 		if (array_key_exists('is_default', $ins)) {
@@ -78,8 +137,14 @@ class manage_service_model extends crm_model {
 			$this->db->truncate($this->cfg['dbpref'].'currency_rate');
 		}
     }
+
+	/*
+	*@Update Exist Currency
+	*@Method  insert_new_currency
+	*@table   expect_worth
+	*/
 	
-	function updt_exist_currency($updt, $id) {
+	public function updt_exist_currency($updt, $id) {
 		$res = $this->db->update($this->cfg['dbpref'].'expect_worth', $updt, "expect_worth_id = ".$id." ");
 		if (array_key_exists('is_default', $updt)) {
 			$data[is_default] = 0;
@@ -89,8 +154,14 @@ class manage_service_model extends crm_model {
 		}
 		return $res;
     }
+
+	/*
+	*@Get Currency Name By id
+	*@Method  getCurName
+	*@table   currency_all
+	*/
 	
-	function getCurName($id) {
+	public function getCurName($id) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'currency_all');
 		$this->db->where('cur_id', $id);
@@ -98,27 +169,52 @@ class manage_service_model extends crm_model {
 		$res =  $query->row_array();
 		return $res;
     }
-   
-	function get_row($table, $cond) {
+
+	/*
+	*@Get row record for dynamic table
+	*@Method  get_row
+	*/
+	
+	public function get_row($table, $cond) {
     	$res = $this->db->get_where($this->cfg['dbpref'].$table, $cond);
         return $res->result_array();
     }
+
+	/*
+	*@Get row count for dynamic table
+	*@Method  get_num_row
+	*/
 	
-    function get_num_row($table, $cond) {
+    public function get_num_row($table, $cond) {
     	$res = $this->db->get_where($this->cfg['dbpref'].$table, $cond);
         return $res->num_rows();
     }
+
+	/*
+	*@Update Row for dynamic table
+	*@Method  update_row
+	*/
     
-    function update_row($table, $cond, $data) {
+    public function update_row($table, $cond, $data) {
     	$this->db->where($cond);
 		return $this->db->update($this->cfg['dbpref'].$table, $data);
     }
+
+	/*
+	*@Insert Row for dynamic table
+	*@Method  insert_row
+	*/
     
-	function insert_row($table, $param) {
+	public function insert_row($table, $param) {
     	$this->db->insert($this->cfg['dbpref'].$table, $param);
     }
+
+	/*
+	*@Delete Row for dynamic table
+	*@Method  insert_row
+	*/
     
-	function delete_row($table, $cond) {
+	public function delete_row($table, $cond) {
         $this->db->where($cond);
         return $this->db->delete($this->cfg['dbpref'].$table);
     }
