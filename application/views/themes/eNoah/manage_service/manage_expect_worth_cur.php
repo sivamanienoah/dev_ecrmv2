@@ -10,6 +10,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<h2><?php echo $page_heading; ?></h2>
 	<?php if($this->session->userdata('accesspage')==1) { ?>
 	<form action="manage_service/search_currency/" method="post" id="cust_search_form">
+		<input type='hidden' name='<?php echo $this->security->get_csrf_token_name(); ?>' value='<?php echo $this->security->get_csrf_hash(); ?>' />
 		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 			<tr>
 				<td>
