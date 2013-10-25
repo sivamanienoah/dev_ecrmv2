@@ -1,12 +1,33 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Role Model
+ *
+ * Provides a Manage User Role.
+ *
+ * @class 		Role_model
+ * @extends		crm_model
+ * @author 		eNoah
+ */
+
+
 class Role_model extends crm_model {
     
+	/*
+	*@construct
+	*@Role Model
+	*/
+	
     function Role_model() {        
         parent::__construct();     
     }
+
+	/*
+	*@Get Role List
+	*@Role Model
+	*/
     
-    function role_list($offset, $search) {
+    public function role_list($offset, $search) {
         
         $this->db->order_by('inactive', 'asc');
         $this->db->order_by('name', 'asc');
@@ -16,18 +37,26 @@ class Role_model extends crm_model {
             $this->db->like('name', $search);
         
         }
-        $customers = $this->db->get($this->cfg['dbpref'].'roles', 35, $offset);
+        $customers = $this->db->get($this->cfg['dbpref'].'roles', 35, $offset); 
         return $customers->result_array();
         
     }
+
+	/*
+	*@Count of Role Record
+	*@Role Model
+	*/
     
-    function role_count() {
-        
+    public function role_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'].'roles');
-        
     }
+
+	/*
+	*@Get role record by role id
+	*@Role Model
+	*/
     
-    function get_role($id) {
+    public function get_role($id) {
          if(!$id){
             return false;
         }else{			
@@ -42,8 +71,13 @@ class Role_model extends crm_model {
 		}        
     }
 	 
-    
-    function update_role($id, $data) {
+
+	/*
+	*@Update Role Record By Role Id
+	*@Role Model
+	*/
+	 
+    public function update_role($id, $data) {
         
 		$dataRole = array();
 		$dataRole['name'] = $data['name'];
@@ -51,7 +85,7 @@ class Role_model extends crm_model {
 		$dataRole['modified'] = $data['modified'];
         $this->db->where('id', $id);
 			
-		 if ( $this->db->update('roles', $dataRole)) {
+		 if ( $this->db->update($this->cfg['dbpref'].'roles', $dataRole)) {
 		 
 			$this->db->where('role_id', $id);
 			$this->db->delete($this->cfg['dbpref'].'master_roles');
@@ -92,8 +126,13 @@ class Role_model extends crm_model {
         }
         
     }
+
+	/*
+	*@Insert Role Record
+	*@Role Model
+	*/
     
-    function insert_role($data) {
+    public function insert_role($data) {
 	 
 		$dataRole = array();
 		$dataRole['name'] = $data['name'];
@@ -135,15 +174,23 @@ class Role_model extends crm_model {
             return false;
         }        
     }
+
+	/*
+	*@Delete Role Record
+	*@Role Model
+	*/
     
-    function delete_role($id) {
+    public function delete_role($id) {
         
         $this->db->where('id', $id);
         return $this->db->delete($this->cfg['dbpref'].'roles');
         
     }
 	
-	//function for ACL\
+	/*
+	*@Get Role Name & Role Id 
+	*@Role Model
+	*/
 	
     public function has_role( $role, $role )
     {
@@ -152,17 +199,32 @@ class Role_model extends crm_model {
         return $this->get_by( array( 'r.name' => $role, 'ur.roles_id' => $role ) );
     }
 
+	/*
+	*@Find out Exist Fields 
+	*@Role Model
+	*/
+	
     public function field_exists( $field )
     {
         return $this->db->field_exists( $field, $this->config->item('role_table', 'acl_auth') );
     }
 
 
-
+	/*
+	*@Check security token
+	*@Role Model
+	*/
+	
     public function check_token( $token )
     {
         return ( $token === $this->reset_code );
     }
+	
+	/*
+	*@Get Module List
+	*@Role Model
+	*/
+	
 	public function UserModuleList($userId) {
 	
 	$this->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to,mrl.role_id,vm.order_id,mrl.id as masreroleid,mrl.view,mrl.add,mrl.edit,mrl.delete');
@@ -176,8 +238,13 @@ class Role_model extends crm_model {
 		$menuItems = $Menuitms->result_array();
 		return $menuItems;
 	}
+
+	/*
+	*@Page Tree for Update User role Details 
+	*@Role Model
+	*/
 	
-	function pageTree($id = false) {
+	public function pageTree($id = false) {
  
 		if(!empty($id)){
 			$idcondition = "rl.id=mrl.role_id and rl.id=".$id;
@@ -191,8 +258,12 @@ class Role_model extends crm_model {
 			$this->db->where('vm.inactive', 0);				
 			$customers = $this->db->get();			
 		}else{				 
-		    $sql = "SELECT * FROM ".$this->cfg['dbpref']."masters where master_parent_id=0 ORDER BY master_parent_id desc,masterid asc";				
-			$customers = $this->db->query($sql, array($log_date, $log_user['userid']));		
+		   $this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'masters');
+			$this->db->where('master_parent_id',0);
+			$this->db->order_by('masterid', 'asc');
+			$customers = $this->db->get();
+			//$customers = $this->db->query($sql, array($log_date, $log_user['userid']));		
 		}		
 		 
 		$vertices= $customers->result_array();
@@ -266,10 +337,16 @@ class Role_model extends crm_model {
 		return $ul;
 	}
 
-	function getSubtreeUL(array $subtreeRoot, $level = 0)
+	
+	/*
+	*@Update Role Details 
+	*@Role Model
+	*/
+	
+	public function getSubtreeUL(array $subtreeRoot, $level = 0)
 	{	
-	$html ='';
-	$all= $add=$edit=$delete=$view='';
+	    $html ='';
+	    $all= $add=$edit=$delete=$view='';
 		$html = '<div style="width:1000px; padding:5px;">
 		<div style="width:500px;">
 		<div style="background:url(\'assets/img/folder.png\') no-repeat 3px;  padding-left:25px; height:24px; line-height:24px; ">
@@ -291,21 +368,39 @@ class Role_model extends crm_model {
 		if ($subtreeRoot['view'] == 1){
 			$view= ' checked="checked"';
 		} 
-		//if(empty($subtreeRoot['children'])){
-			$html .='<span style="width:400px;"> <input  type="checkbox" id="checkp" class="check" '.$all.' name ="full"> &nbsp;All &nbsp;
-				<input type="checkbox"   name ="add['.$subtreeRoot['id'].']"'.$add.'  value="1"> &nbsp;Add &nbsp; 
-				<input type="checkbox"    name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View  &nbsp;
-				<input type="checkbox"   name ="edit['.$subtreeRoot['id'].']" '.$edit.' value="1" > &nbsp;Edit  &nbsp;
-				<input type="checkbox"   name ="delete['.$subtreeRoot['id'].']" '.$delete.'  value="1"> &nbsp;Delete &nbsp;</span></div></div> </div>';
-			//}
-		foreach ($subtreeRoot['children'] as $child) {
-		
-			$html .= '<ul style="padding-left:30px;list-style:none"><li>'.$this->getSubtreeUL($child, $level + 1);
-				$html .='</li></ul>';
+		$html .='<span style="width:400px;"> <input  type="checkbox" id="checkp" class="check" '.$all.' name ="full"> &nbsp;All &nbsp;
+			<input type="checkbox"   name ="add['.$subtreeRoot['id'].']"'.$add.'  value="1"> &nbsp;Add &nbsp; 
+			<input type="checkbox"    name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View  &nbsp;
+			<input type="checkbox"   name ="edit['.$subtreeRoot['id'].']" '.$edit.' value="1" > &nbsp;Edit  &nbsp;
+			<input type="checkbox"   name ="delete['.$subtreeRoot['id'].']" '.$delete.'  value="1"> &nbsp;Delete &nbsp;</span></div></div> </div>';
+		if(sizeof($subtreeRoot['children'])>0){
+			foreach ($subtreeRoot['children'] as $child) {
+				$html .= '<ul style="padding-left:30px;list-style:none"><li>'.$this->getSubtreeUL($child, $level + 1);
+					$html .='</li></ul>';
+			}
 		}
 		return $html;
 	}
-    
+
+	/*
+	*@Role Log History 
+	*@Role Model
+	*/
+	
+	public function log_history($log_date,$log_role){
+	
+			# now get the logs for the role on that day
+			$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
+					FROM ".$this->cfg['dbpref']."logs
+					LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+					WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
+					AND `roleid_fk` = ?
+					ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
+				
+			$q = $this->db->query($sql, array($log_date, $log_role['roleid']));
+			$rs = $q->result_array();
+	
+	}
 }
 
 ?>
