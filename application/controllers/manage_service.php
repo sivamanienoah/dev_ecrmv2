@@ -17,7 +17,7 @@ class Manage_service extends crm_controller {
 	public $userdata;
 	
 	/*
-	*@construct
+	*@Constructor
 	*@Manage Service
 	*/
 	

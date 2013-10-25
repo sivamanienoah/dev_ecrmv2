@@ -1,34 +1,44 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * My Profile
+ *
+ * @class 		Myaccount
+ * @extends		crm_controller (application/core/CRM_Controller.php)
+ * @Menu        My Profile
+ * @author 		eNoah
+ * @Controller
+ */
 
 class Myaccount extends crm_controller {
     
 	public $userdata;
 	
-    function Myaccount() {
-        
+	/*
+	*@Constructor
+	*@My Account
+	*/
+	
+    public function Myaccount() {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('user_model');
         $this->load->library('validation');
-        
     }
     
-    function index() {
-       //echo "<pre>"; print_r($_POST); 
+	
+	/*
+	*@Login user Details
+	*@Method   index
+	*/
+	
+   public function index() {
+	
         $rules['first_name'] = "trim|required";
-		$rules['last_name'] = "trim|required";
-        //if ($this->input->post('update_password'))
-		//{
-            //$rules['password'] = "trim|required|min_length[6]|matches[pass_conf]";
-            //$rules['pass_conf'] = "trim|required";
-            //$rules['oldpassword'] = "trim|required";
-        //}
-		$rules['email'] = "trim|required|valid_email";
-		$rules['add_email'] = "trim|valid_email";
-		//$rules['use_both_emails'] = "trim|required|numeric";
-		$rules['signature'] = "trim|required";
-		
+		$rules['last_name']  = "trim|required";
+		$rules['email']      = "trim|required|valid_email";
+		$rules['add_email']  = "trim|valid_email";
+		$rules['signature']  = "trim|required";
 		$this->validation->set_rules($rules);
 		
 		$fields['first_name']      = "First Name";
@@ -44,13 +54,9 @@ class Myaccount extends crm_controller {
 		$fields['signature']       = "Email Signature";
 		
 		$this->validation->set_fields($fields);
-        
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-        
         $customer = $this->session->userdata('logged_in_user');
         $userdata = $this->user_model->get_user($customer['userid']);
-		//echo $userdata[0]['password'];
-		//echo ($this->input->post('oldpassword'));
 		
         if (is_array($userdata) && count($userdata) > 0) 
 		foreach ($userdata[0] as $k => $v)
@@ -203,22 +209,20 @@ class Myaccount extends crm_controller {
         
     }
 	
-	function add_log()
+	/*
+	*@Insert log record
+	*@Method   add_log
+	*/
+	
+	public function add_log()
 	{
-		$ins['jobid_fk'] = 0;
-		$ins['userid_fk'] = $this->userdata['userid'];
-		$ins['log_content'] = $_POST['log_content'];
-		$ins['time_spent'] = $_POST['time_spent'];
+		$post_data           = real_escape_array($this->input->post());
+		$ins['jobid_fk']     = 0;
+		$ins['userid_fk']    = $this->userdata['userid'];
+		$ins['log_content']  = $post_data['log_content'];
+		$ins['time_spent']   = $post_data['time_spent'];
 		$ins['date_created'] = date('Y-m-d H:i:s');
-		
-		if ($this->db->insert($this->cfg['dbpref'].'logs', $ins))
-		{
-			echo "{error: false}";
-		}
-		else
-		{
-			echo "{error: true}";
-		}
+		$this->user_model->add_log($ins);
 	}
     
 }
