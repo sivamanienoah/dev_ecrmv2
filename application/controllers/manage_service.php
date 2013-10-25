@@ -1,24 +1,51 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manage service
+ *
+ * @class 		Manage_service
+ * @extends		crm_controller (application/core/CRM_Controller.php)
+ * @parent      User Module
+ * @Menu        Service Catalogue
+ * @author 		eNoah
+ * @Controller
+ */
+
 class Manage_service extends crm_controller {
 	
 	public $cfg;
 	public $userdata;
 	
-	function __construct() {
+	/*
+	*@construct
+	*@Manage Service
+	*/
+	
+	public function __construct() {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_service_model');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     
-    function index($limit, $search = FALSE) {
+	/*
+	*@Get Service categories List
+	*@Method index
+	*/
+	
+    public function index($limit, $search = FALSE) {
+	
         $data['page_heading'] = 'Manage Service / Product';
 		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);		
         $this->load->view('manage_service/manage_service_view', $data); 
     }
 	
-	function search(){
+	/*
+	*@Search manage service
+	*@Method index
+	*/
+	
+	public function search(){
 		$cancel = $this->input->post('cancel_submit');
         if (isset($cancel)) {
             redirect('manage_service/');
@@ -28,8 +55,14 @@ class Manage_service extends crm_controller {
             redirect('manage_service/');
         }
     }
+
+	/*
+	*@Search Lead Sources 
+	*@Method  search_lead
+	*/
 	
-	function search_lead() {
+	public function search_lead() {
+	
 		$cancel = $this->input->post('cancel_submit');
         if (isset($cancel)) {
             redirect('manage_service/manage_leadSource');
@@ -39,8 +72,13 @@ class Manage_service extends crm_controller {
             redirect('manage_service/manage_leadSource');
         }
     }
+
+	/*
+	*@Search Seles divisions
+	*@Method  search_sales
+	*/
 	
-	function search_sales() {
+	public function search_sales() {
 		$cancel = $this->input->post('cancel_submit');
         if (isset($cancel)) {
             redirect('manage_service/manage_sales');
@@ -50,11 +88,16 @@ class Manage_service extends crm_controller {
             redirect('manage_service/manage_sales');
         }
     }
+
+	/*
+	*@For search currency
+	*@Method  search_sales
+	*/
 	
-	//for search currency
-	function search_currency() {
-		$cancel = $this->input->post('cancel_submit');
-        if (isset($cancel)) {
+	public function search_currency() {
+		
+	   $cancel = $this->input->post('cancel_submit'); 
+	   if (!empty($cancel)) {
             redirect('manage_service/manage_expt_worth_cur');
         } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_expt_worth_cur/0/' . rawurlencode($name));
@@ -62,30 +105,46 @@ class Manage_service extends crm_controller {
             redirect('manage_service/manage_expt_worth_cur');
         }
     }
+
+	/*
+	*@For sales divisions listing page
+	*@Method  manage_sales
+	*/
 	
-	//for sales divisions listing page
-	function manage_sales($limit, $search = FALSE) {
+	public function manage_sales($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Sales Divisions';
 		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
 		$this->load->view('manage_service/manage_sales_divisions', $data);
 	}
-	
-	//for lead source listing page
-	function manage_leadSource($limit, $search = FALSE) {
+
+	/*
+	*@For lead source listing page
+	*@Method   manage_leadSource
+	*/
+
+	public function manage_leadSource($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Lead Source';
 		$data['get_lead_source'] = $this->manage_service_model->get_lead_source($search);		
 		$this->load->view('manage_service/manage_lead_source', $data);
 	}
+
+	/*
+	*@For Expected Worth - Currency Listing Page
+	*@Method   manage_expt_worth_cur
+	*/
 	
-	//for Expected Worth - Currency Listing Page
-	function manage_expt_worth_cur($limit, $search = FALSE) {
+	public function manage_expt_worth_cur($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Currency';		
 		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);		
 		$this->load->view('manage_service/manage_expect_worth_cur', $data);
 	}
+
+	/*
+	*@For Add Lead Source
+	*@Method   ls_add
+	*/
 	
-	//for Lead Source
-	function ls_add($update = false, $id = false) {		
+	public function ls_add($update = false, $id = false) {		
 		$this->load->library('validation');
         $data = array();        
 		$rules['lead_source_name'] = "trim|required";		
@@ -127,8 +186,13 @@ class Manage_service extends crm_controller {
 		}
 		$this->load->view('manage_service/manage_lead_source_add', $data);
 	}
+
+	/*
+	*@For Delete Lead Source
+	*@Method   ls_delete
+	*/
 	
-	function ls_delete($update, $id) {
+	public function ls_delete($update, $id) {
 		if ($this->session->userdata('delete')==1) {
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 				$this->manage_service_model->delete_row('lead_source',array('lead_source_id' => $id));
@@ -143,17 +207,22 @@ class Manage_service extends crm_controller {
 			redirect('manage_service/manage_leadSource');
 		}
 	}
+
+	/*
+	*@For Add service requirement
+	*@Method   ser_add
+	*/
 	
-	//for service requirement
-	function ser_add($update = false, $id = false) {
+	public function ser_add($update = false, $id = false) {
+	
 		$this->load->library('validation');
-        $data = array();
-        
+        $data              = array();
+        $post_data         = real_escape_array($this->input->post());
 		$rules['category'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
 		$fields['category'] = 'Product';
-		$fields['status'] = 'Status';
+		$fields['status']   = 'Status';
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
@@ -162,7 +231,7 @@ class Manage_service extends crm_controller {
 		$this->db->where('job_category', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_pdt']))
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
         {
             $item_data = $this->db->get_where($this->cfg['dbpref']."job_categories", array('cid' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
@@ -204,7 +273,9 @@ class Manage_service extends crm_controller {
                 
             }
 			//write the array
-			$get_jobscat = $this->manage_service_model->get_list_active(job_categories);
+			
+			$table_name = $this->cfg['dbpref'].'job_categories'; // table Name 
+			$get_jobscat = $this->manage_service_model->get_list_active($table_name);
 			//echo "<pre>"; print_r($data['get_jobscat']);
 			$filename = APPPATH."config/job_categories.ini";
 			$file = fopen($filename, "w");
@@ -228,8 +299,13 @@ class Manage_service extends crm_controller {
 		}
 		$this->load->view('manage_service/manage_service_req_add', $data);
 	}
+
+	/*
+	*@For Delete service requirement
+	*@Method   ser_delete
+	*/
 	
-	function ser_delete($update, $id) 
+	public function ser_delete($update, $id) 
 	{	
 		if ($this->session->userdata('delete')==1)
 		{
@@ -237,8 +313,7 @@ class Manage_service extends crm_controller {
 			{
 				$this->db->delete($this->cfg['dbpref']."job_categories", array('cid' => $id));
 				$this->session->set_flashdata('confirm', array('Product Deleted.!'));
-				$get_jobscat = $this->manage_service_model->get_list_active(job_categories);
-				//echo "<pre>"; print_r($data['get_jobscat']);
+				$get_jobscat = $this->manage_service_model->get_list_active($this->cfg['dbpref']."job_categories");
 				$filename = APPPATH."config/job_categories.ini";
 				$file = fopen($filename, "w");
 				fwrite($file, '<?php');
@@ -267,14 +342,18 @@ class Manage_service extends crm_controller {
 			redirect('manage_service/');
 		}
 	}
+
+	/*
+	*@For add sales divisions
+	*@Method   division_add
+	*/
 	
-	//for sales divisions
-	function division_add($update = false, $id = false) 
+	public function division_add($update = false, $id = false) 
 	{
 		
 		$this->load->library('validation');
-        $data = array();
-        
+        $data         = array();
+        $post_data    = real_escape_array($this->input->post());
 		$rules['division_name'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
@@ -288,7 +367,7 @@ class Manage_service extends crm_controller {
 		$this->db->where('division', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_dvsn']))
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_dvsn']))
         {
 			$item_data = $this->db->get_where($this->cfg['dbpref']."sales_divisions", array('div_id' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
@@ -355,7 +434,12 @@ class Manage_service extends crm_controller {
 		$this->load->view('manage_service/manage_sales_division_add', $data);
 	}
 	
-	function division_delete($update, $id) 
+	/*
+	*@For delete sales divisions
+	*@Method   division_add
+	*/
+
+	public function division_delete($update, $id) 
 	{
 		if ($this->session->userdata('delete')==1)
 		{
@@ -364,7 +448,6 @@ class Manage_service extends crm_controller {
 				$this->db->delete("sales_divisions", array('div_id' => $id));
 				$this->session->set_flashdata('confirm', array('Division Deleted.!'));
 				$get_salesDiv = $this->manage_service_model->get_list_active(sales_divisions);
-				//echo "<pre>"; print_r($data['get_jobscat']);
 				$filename = APPPATH."config/sales_divisions.ini";
 					$file = fopen($filename, "w");
 					fwrite($file, '<?php');
@@ -398,11 +481,15 @@ class Manage_service extends crm_controller {
 		}
 	}
 	
+	/*
+	*@For ajax check status
+	*@Method   ajax_check_status
+	*/
 	
-	//function for checking the status 
-	function ajax_check_status() 
+	public function ajax_check_status() 
 	{
-		$leadId = $_POST['data'];
+		$post_data  = real_escape_array($this->input->post());
+		$leadId     = $post_data['data'];
 		$this->db->where('lead_source', $leadId);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
@@ -414,10 +501,16 @@ class Manage_service extends crm_controller {
 		echo json_encode($res);
 		exit;
 	}
+
+	/*
+	*@For ajax check status (sales divisions)
+	*@Method   ajax_check_status_division
+	*/
 	
-	function ajax_check_status_division() 
+	public function ajax_check_status_division() 
 	{
-		$id = $_POST['data'];
+		$post_data  = real_escape_array($this->input->post());
+		$id         = $post_data['data'];
 		$this->db->where('division', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
@@ -429,10 +522,16 @@ class Manage_service extends crm_controller {
 		echo json_encode($res);
 		exit;
 	}
+
+	/*
+	*@For ajax check status (job category)
+	*@Method   ajax_check_status_job_category
+	*/
 	
-	function ajax_check_status_job_category() 
+	public function ajax_check_status_job_category() 
 	{
-		$id = $_POST['data'];
+		$post_data  = real_escape_array($this->input->post());
+		$id         = $post_data['data'];
 		$this->db->where('job_category', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
@@ -445,9 +544,15 @@ class Manage_service extends crm_controller {
 		exit;
 	}
 	
-	function ajax_check_status_currency() 
+	/*
+	*@For ajax check status (currency)
+	*@Method   ajax_check_status_currency
+	*/
+	
+	public function ajax_check_status_currency() 
 	{
-		$id = $_POST['data'];
+		$post_data  = real_escape_array($this->input->post());
+		$id = $post_data['data'];
 		$this->db->where('expect_worth_id', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
 		$res = array();
@@ -460,21 +565,24 @@ class Manage_service extends crm_controller {
 		exit;
 	}
 
-	//for currency adding
-	function expect_worth_cur_add($update = false, $id = false) 
+	/*
+	*@For currency adding
+	*@Method   expect_worth_cur_add
+	*/
+	
+	public function expect_worth_cur_add($update = false, $id = false) 
 	{
-		// echo "<pre>"; print_r($_POST); exit;
 		$this->load->library('validation');
-        $data = array();
-		
+        $data                   = array();
+		$post_data              = real_escape_array($this->input->post());
         $data['getAllCurrency'] = $this->manage_service_model->get_all_currency();
-		$rules['country_name'] = "trim|required";
+		$rules['country_name']  = "trim|required";
 		
 		$this->validation->set_rules($rules);
 		$fields['country_name'] = 'Country Name';
-		$fields['cur_name'] = 'Currency Name';
-		$fields['status'] = 'Status';
-		$fields['is_default'] = 'Default Currency';
+		$fields['cur_name']     = 'Currency Name';
+		$fields['status']       = 'Status';
+		$fields['is_default']   = 'Default Currency';
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
@@ -487,21 +595,19 @@ class Manage_service extends crm_controller {
                 $update_data[$key] = $this->input->post($key);
             }
             //check before insert.
-			$this->db->where('expect_worth_name', $_POST['cur_short_name']);
+			$this->db->where('expect_worth_name', $post_data['cur_short_name']);
 			$query = $this->db->get($this->cfg['dbpref'].'expect_worth')->num_rows();
 			if($query == 0) {
 				//insert
 				$ins = array();
-				$ins['expect_worth_name'] = $_POST['cur_short_name'];
-				$ins['cur_name'] = $_POST['cur_name'];
-				if (!empty($_POST['status'])) {
-					$ins['status'] = $_POST['status'];
+				$ins['expect_worth_name'] = $post_data['cur_short_name'];
+				$ins['cur_name'] = $post_data['cur_name'];
+				if (!empty($post_data['status'])) {
+					$ins['status'] = $post_data['status'];
 				}
-				if (!empty($_POST['is_default'])) {
-					$ins['is_default'] = $_POST['is_default'];
+				if (!empty($post_data['is_default'])) {
+					$ins['is_default'] = $post_data['is_default'];
 				}
-				// echo "<pre>"; print_r($ins); exit;
-				// $this->db->insert("{$this->cfg['dbpref']}" . 'expect_worth', $ins);
 				$insert_currency = $this->manage_service_model->insert_new_currency($ins);
 				$this->session->set_flashdata('confirm', array('New Currency Type Added!'));
 			} else {
@@ -513,10 +619,14 @@ class Manage_service extends crm_controller {
 		$this->load->view('manage_service/manage_expect_worth_cur_add', $data);
 	}
 	
-	//for currency type edit
-	function expect_worth_cur_edit($update = false, $id = false) 
+	
+	/*
+	*@For currency type edit
+	*@Method   expect_worth_cur_edit
+	*/
+	
+	public function expect_worth_cur_edit($update = false, $id = false) 
 	{
-		// echo "<pre>"; print_r($_POST); exit;
 				
 		$this->load->library('validation');
         $data = array();
@@ -580,8 +690,12 @@ class Manage_service extends crm_controller {
 		
 	}
 	
-	//for currency type - delete
-	function cur_type_delete($update, $id)
+	/*
+	*@For currency type - delete
+	*@Method   cur_type_delete
+	*/
+	
+	public function cur_type_delete($update, $id)
 	{
 		if ($this->session->userdata('delete')==1)
 		{
@@ -603,9 +717,15 @@ class Manage_service extends crm_controller {
 		}
 	}
 	
-	function get_cur_name() 
+	/*
+	*@Get Currenecy Name
+	*@Method   get_cur_name
+	*/
+	
+	public function get_cur_name() 
 	{
-		$result = $this->manage_service_model->getCurName($_POST['data']);
+		$post_data              = real_escape_array($this->input->post());
+		$result 				= $this->manage_service_model->getCurName($post_data['data']);
 		echo json_encode($result);
 		exit;
 	}
