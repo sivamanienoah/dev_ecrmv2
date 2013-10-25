@@ -464,7 +464,8 @@ class User extends crm_controller {
         if (isset($data['cancel_submit'])) {
             redirect('user/');
         } else if ($name = $data['cust_search']) {
-            redirect('user/index/0/' . $name);
+
+            redirect('user/index/0/' . remove_special_chars($name));
         } else {
             redirect('user/');
         }
