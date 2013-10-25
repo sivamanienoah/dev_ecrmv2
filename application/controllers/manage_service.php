@@ -47,7 +47,7 @@ class Manage_service extends crm_controller {
 	
 	public function search(){
 		$cancel = $this->input->post('cancel_submit');
-        if (isset($cancel)) {
+        if (!empty($cancel)) {
             redirect('manage_service/');
         } else if ($name = $this->input->post('cust_search')) {
             redirect('manage_service/index/0/' . rawurlencode($name));
@@ -64,7 +64,7 @@ class Manage_service extends crm_controller {
 	public function search_lead() {
 	
 		$cancel = $this->input->post('cancel_submit');
-        if (isset($cancel)) {
+        if (!empty($cancel)) {
             redirect('manage_service/manage_leadSource');
         } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_leadSource/0/' . rawurlencode($name));
@@ -80,7 +80,7 @@ class Manage_service extends crm_controller {
 	
 	public function search_sales() {
 		$cancel = $this->input->post('cancel_submit');
-        if (isset($cancel)) {
+        if (!empty($cancel)) {
             redirect('manage_service/manage_sales');
         } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_sales/0/' . rawurlencode($name));
