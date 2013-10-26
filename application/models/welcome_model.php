@@ -701,11 +701,7 @@ class Welcome_model extends crm_model {
 		return $this->db->affected_rows();
 	}
 	
-	function get_receivedpaymentDet($pdid, $jid) {
-		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
-		return $query->row_array();
-	}
-	
+
 	function Del_receivedPaymentDet($pdid, $jid, $map) {
 		//mychanges
 		$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");

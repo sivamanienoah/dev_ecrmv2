@@ -612,7 +612,7 @@ body { margin: 0px; }
 </tr>
 </table>
 </body>
-</html>';	
+</html>';
 		
 		if($mail_type == "new_manager")
 		{
@@ -627,7 +627,6 @@ body { margin: 0px; }
 		$send_to = $email;
 		$this->email->from('webmaster@enoahisolution.com','Webmaster');
 		$this->email->to($send_to);
-		// $this->email->mailtype='html';
 		$this->email->subject($log_subject);
 		$this->email->message($log_email_content);
 		if($this->email->send()){
@@ -847,6 +846,225 @@ body { margin: 0px; }
 	}
 	
 	/*
+	 *edit the payment term
+	 */
+	function payment_term_edit($eid, $jid)
+	{
+		$payment_details = $this->project_model->get_payment_term_det($eid,$jid);
+		
+		$expected_date = date('d-m-Y', strtotime($payment_details['expected_date']));
+		
+		echo '
+		<script>
+			$(function(){
+				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
+			});
+		function isNumberKey(evt)
+		{
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+		}
+		</script>
+		<form id="update-payment-terms">
+		<table class="payment-table">
+			<tr>
+				<td>
+				<br />
+				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$payment_details[project_milestone_name].'" class="textfield width200px" /> </p>
+				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" /> </p>
+				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$payment_details[amount].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<div class="buttons">
+					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
+				</div>
+				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
+				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+				</td>
+			</tr>
+		</table>
+		</form>';
+	}
+	
+	/**
+	 * sets the payment terms
+	 * for the project
+	 */
+	function set_payment_terms($update = false)
+	{
+		$errors = array();
+		$today = time();
+		
+		$data = real_escape_array($this->input->post());
+		
+		$pdate1 = $data['sp_date_1'];
+		$pdate2 = strtotime($data['sp_date_2']);
+		$pdate3 = $data['sp_date_3'];
+
+		if (count($errors))
+		{
+			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
+		}
+		else
+		{
+			$job_updated = FALSE;
+			$expected_date = date('Y-m-d', $pdate2);
+			$data3 = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 		'project_milestone_name' => $pdate1);
+			
+			$payment_details = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']);
+
+			if ($update == "") 
+			{
+				// $this->db->insert($this->cfg['dbpref'] . 'expected_payments', $data3);
+				$ins_exp_pay = $this->project_model->insert_row('expected_payments' $data3);
+				
+				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$data3['expected_date'];
+				
+				$ins['jobid_fk']      = $data['sp_form_jobid'];
+				$ins['userid_fk']     = $this->userdata['userid'];
+				$ins['date_created']  = date('Y-m-d H:i:s');
+				$ins['log_content']   = $pay_det;
+				$ins['attached_docs'] = $pay_det;
+				$insert_logs = $this->project_model->insert_row('logs', $ins);
+			} 
+			else 
+			{				
+				$pay_status = $this->project_model->get_payment_term_det($update, $data['sp_form_jobid']);
+				
+				if ($pay_status['received'] != 1) 
+				{
+					$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$data3['expected_date'];
+					
+					$ins['jobid_fk']      = $data['sp_form_jobid'];
+					$ins['userid_fk']     = $this->userdata['userid'];
+					$ins['date_created']  = date('Y-m-d H:i:s');
+					$ins['log_content']   = $pay_det;
+					$ins['attached_docs'] = $pay_det;
+					$insert_logs = $this->project_model->insert_row('logs', $ins);
+					
+					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1);
+					$wh_condn = array('expectid' => $update, 'jobid_fk' => $data['sp_form_jobid']);
+					$updt_pay = $this->project_model->update_row('expected_payments', $updatepayment, $wh_condn);
+					
+				}
+				else
+				{
+					echo "<span id=paymentfadeout><h6>Received Payment cannot be Edited!</h6></span>";
+				}	
+			}	
+			$job_updated = TRUE;
+
+			if ($job_updated)
+			{
+
+				$up = array('payment_terms'=>1);
+				$wh_condn = array('jobid' => $data['sp_form_jobid']);
+				$this->project_model->update_row('jobs', $up, $wh_condn);
+				
+				$payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
+
+				$output = '';
+				$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
+				$pdi = 1;
+				$pt_select_box = '';
+				$pt_select_box .= '<option value="0"> &nbsp; </option>';
+				$output .= "<table width='100%' class='payment_tbl'>
+				<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
+				<tr>
+				<td><img src=assets/img/payment-received.jpg height='10' width='10' > Payment Received</td>
+				<td><img src=assets/img/payment-pending.jpg height='10' width='10' > Partial Payment</td>
+				<td><img src=assets/img/payment-due.jpg height='10' width='10' > Payment Due</td>
+				</tr>
+				</table>";
+				$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+				$output .= "<thead>";
+				$output .= "<tr align='left'>";
+				$output .= "<th class='header'>Payment Milestone</th>";
+				$output .= "<th class='header'>Milestone Date</th>";
+				$output .= "<th class='header'>Amount</th>";
+				$output .= "<th class='header'>Status</th>";
+				$output .= "<th class='header'>Action</th>";
+				$output .= "</tr>";
+				$output .= "</thead>";
+				foreach ($payment_det as $pd)
+				{
+					$total_amount_recieved += $pd['amount'];
+					$payment_received = '';
+					if ($pd['received'] == 0)
+					{
+						$payment_received = '<img src="assets/img/payment-due.jpg" alt="due" height="10" width="10" />';
+					}
+					else if ($pd['received'] == 1)
+					{
+						$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
+					}
+					else
+					{
+						$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
+					}							
+					$output .= "<tr>";
+					$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
+					$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
+					$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
+					$output .= "<td align='center'>".$payment_received."</td>";
+					$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
+					$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid']."); return false;' >Delete</a></td>";
+					$output .= "</tr>";
+					$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \$ ".number_format($pd['amount'], 2, '.', ',')." by ".date('d-m-Y', strtotime($pd['expected_date']))." " . '</option>';
+					$pdi ++;
+				}
+				$output .= "<tr>";
+				$output .= "<td></td>";
+				$output .= "<td><b>Total Milestone Payment : </b></td><td><b>".$pd['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
+				$output .= "</tr>";
+				$output .= "</table>";
+				$output .= '</div>';
+				echo $output;
+			}
+			else
+			{
+				echo "{error:true, errormsg:'Percentage update failed'}";
+			}
+		}
+	}
+	
+	function agreedPaymentView() 
+	{
+		echo '<script type="text/javascript">
+		$(function(){
+				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
+			});
+		function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+		</script>
+		<br /><form id="set-payment-terms">
+		<table class="payment-table">
+		<tr>
+			<td>
+				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
+				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
+				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<div class="buttons">
+					<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
+				</div>
+				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
+				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+			</td>
+		</tr>
+		</table>
+		</form>';
+	}
+	
+	/*
 	 *retrieve the payment terms in payment received form(Map to a payment term - Dropdown)
 	 *@params - jobid
 	 */
@@ -866,46 +1084,67 @@ body { margin: 0px; }
 		echo $pt_select_box;
 	}
 	
-	/*
-	 *edit the payment term
-	 */
-	function payment_term_edit($eid, $jid)
+	//Payment Received Edit function
+	function paymentEdit($pdid,$jid) 
 	{
-		$payment_details = $this->project_model->get_payment_term_det($eid,$jid);
-		$expected_date = date('d-m-Y', strtotime($payment_details['expected_date']));
-		echo '
+		$received_payment_details = $this->project_model->get_receivedpaymentDet($pdid,$jid);
+		$eid = $received_payment_details['map_term'];
+		$received_deposit_date = date('d-m-Y', strtotime($received_payment_details['deposit_date']));
+		$updt = $this->retrieveRecordEdit($jid, $eid);
+		echo '<br />
 			<script>
-			$(function(){
-				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
-			});
-		function isNumberKey(evt)
-		{
-          var charCode = (evt.which) ? evt.which : event.keyCode;
-          if (charCode != 46 && charCode > 31 
-            && (charCode < 48 || charCode > 57))
-             return false;
+				$(function(){
+					$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+				});
+				function isNumberKey(evt)
+				{
+				  var charCode = (evt.which) ? evt.which : event.keyCode;
+				  if (charCode != 46 && charCode > 31 
+					&& (charCode < 48 || charCode > 57))
+					 return false;
 
-          return true;
-		}
+				  return true;
+				}
 			</script>
-		    <form id="update-payment-terms">
-			<table class="payment-table">
-			<tr>
-				<td>
-				<br />
-				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$payment_details[project_milestone_name].'" class="textfield width200px" /> </p>
-				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" /> </p>
-				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$payment_details[amount].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-				<div class="buttons">
-					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
-				</div>
-				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-				</td>
-			</tr>
-			</table>
-			</form>';
+			<form id="update-payment-recieved-terms">
+			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" value="'.$received_payment_details['invoice_no'].'" class="textfield width200px" /> </p>
+			<p>Amount Recieved *<input type="text" onkeypress="return isNumberKey(event)" name="pr_date_2" id="pr_date_2" value="'.$received_payment_details['amount'].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+			<p>Date Recieved *<input type="text" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px pick-date" /> </p>
+			
+			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
+
+			<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" >'.$received_payment_details['comments'].'</textarea> </p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="updatePaymentRecievedTerms('.$pdid.','.$eid.'); return false;" >Update Payment</button>
+			</div>
+			<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
+			<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
+		</form>';
 	}
+	
+	//For Edit Functionality - Edit Received Payments.
+	function retrieveRecordEdit($jobid, $eid) 
+	{		
+		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jobid);
+		
+		$pt_select_box = '';
+		$pt_select_box .= '<option value="0"> &nbsp; </option>';
+		foreach ($expect_payment_terms as $ext)
+		{
+			// $payment_amount = number_format($value->amount, 2, '.', ',');
+			if($eid ==  $ext['expectid'])
+			{	
+				$pt_select_box .= '<option selected ="selected" value="'.$ext['expectid'].'">' . $ext['project_milestone_name'] .' '.$ext['expect_worth_name']." ".number_format($ext['amount'], 2, '.', ',')." by ".$ext['expected_date']." " . '</option>';
+			}
+			else 
+			{
+				$pt_select_box .= '<option value="'.$ext['expectid'].'">' . $ext['project_milestone_name'].' '.$ext['expect_worth_name']." ".number_format($ext['amount'], 2, '.', ',')." by  ".$ext['expected_date']." " . '</option>';
+			}
+		}
+		return $pt_select_box;
+	}
+	
+	
 
 }
 ?>

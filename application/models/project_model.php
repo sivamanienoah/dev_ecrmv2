@@ -368,6 +368,13 @@ class Project_model extends crm_model {
 		$query = $this->db->get_where($this->cfg['dbpref'].'expected_payments', array('expectid' => $eid, 'jobid_fk' => $jid ));
 		return $query->row_array();
 	}
+	
+	function get_receivedpaymentDet($pdid, $jid) 
+	{
+		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
+		return $query->row_array();
+	}
+	
 
 }
 
