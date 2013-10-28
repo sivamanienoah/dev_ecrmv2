@@ -293,7 +293,7 @@ class Welcome_model extends crm_model {
     }
 	
 	public function get_lead_det($jid) {
-	    $this->db->select('job_status, invoice_no, job_title, lead_assign, belong_to, lead_status, actual_worth_amount, custid_fk');
+	    $this->db->select('*');
 	    $this->db->from($this->cfg['dbpref'] . 'jobs');
 	    $this->db->where('jobid', $jid);
 	    $lead_history = $this->db->get();

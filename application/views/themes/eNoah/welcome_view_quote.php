@@ -83,10 +83,12 @@ function addLog() {
 			return false;
 		}
 		else
+
 		{//alert(log_minutes); return false;
 			submit_log_minutes = log_minutes;
 		}
 	}
+
 	
 	var client_emails = true;
 	if ($('#email_to_customer').is(':checked')) {
@@ -111,10 +113,10 @@ function addLog() {
 		}
 	}
 	
-	var email_set = 'ssriram@enoahisolution.com';
-	// $('.user-addresses input[type="checkbox"]:checked').each(function(){
-		// email_set += $(this).attr('id') + ':';
-	// });
+	var email_set = '';
+	$('.user-addresses input[type="checkbox"]:checked').each(function(){
+		email_set += $(this).attr('id') + ':';
+	});
 	
 	
 	$.blockUI({
@@ -125,13 +127,12 @@ function addLog() {
 	
 	var form_data = {'userid':userid, 'jobid':quote_id, 'log_content':the_log, 'emailto':email_set,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
 
+
 	if ($('#log_stickie').is(':checked')) {
 		form_data.log_stickie = true;
 	}
 	
-	if ($('#ignore_content_policy').is(':checked')) {
-		form_data.ignore_content_policy = true;
-	}
+
 	
 	/* add minutes to the log */
 	if (submit_log_minutes)
@@ -139,6 +140,7 @@ function addLog() {
 		form_data.time_spent = submit_log_minutes;
 	}
 	
+
 	if ($('#email_to_customer').is(':checked')) {
 		form_data.email_to_customer = true;
 		form_data.client_email_address = $('#client_email_address').val();
@@ -169,10 +171,17 @@ function addLog() {
 		}
 	}
 	
+if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
+		if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
+			$.unblockUI();
+			return false;
+		}
+	}
 	$.post(
 		'welcome/add_log',
 		form_data,
 		function(_data){
+
 		try {
 				var data;
 				eval('data = ' + _data);
@@ -180,17 +189,17 @@ function addLog() {
 					if (data.error) {
 						alert(data.errormsg);
 					} else {
-						//$('.log-container').prepend(data.html).children('.log:first').slideDown(400);
+						
 						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
 						$('#job_log').val('');
-						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie, #ignore_content_policy').each(function(){
+						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
 							$(this).attr('checked', false);
 						});
 						$('#log_minutes').val('');
 						$('#additional_client_emails').val('');
 						$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
 							.slideUp(400);
-						$('.download-invoice-option-log:visible').slideUp(400);
+						
 						if (data.status_updated) {
 							document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 						}

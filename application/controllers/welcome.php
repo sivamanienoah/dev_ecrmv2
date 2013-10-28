@@ -1601,38 +1601,29 @@ body {
 	 * based on post data
 	 *
 	 */
-	function add_log() 
+	function add_log()
 	{
-
-
-        if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content']))
-        {
+		$data_log = real_escape_array($this->input->post());
+		
+        if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
 			
-			$this->db->where('jobid', $_POST['jobid']);
-			$job_details = $this->db->get($this->cfg['dbpref'] . 'jobs');
+			$job_details = $this->welcome_model->get_lead_det($data_log['jobid']);
             
-            if ($job_details->num_rows() > 0) 
+            if (count($job_details) > 0) 
             {
+				$user_data = $this->welcome_model->get_user_data_by_id($data_log['userid']);
 
-				$job = $job_details->result_array();
-
-				$user_data = $this->welcome_model->get_user_data_by_id($_POST['userid']);
-
-
-			
-				$client = $this->welcome_model->get_client_data_by_id($job[0]['custid_fk']);
+				$client = $this->welcome_model->get_client_data_by_id($job_details['custid_fk']);
 				
                 $this->load->helper('url');
 				
-				$emails = trim($_POST['emailto'], ':');
-
-
-				//$send_to = array();
+				$emails = trim($data_log['emailto'], ':');
+				
 				$successful = $received_by = '';
 				
-				if ($emails != '' || isset($_POST['email_to_customer']))
+				if ($emails != '' || isset($data_log['email_to_customer']))
 				{
 					$emails = explode(':', $emails);
 					$mail_id = array();
@@ -1641,12 +1632,10 @@ body {
 						$mail_id[] = str_replace('email-log-', '', $mail);
 					}
 
-					
 					$data['user_accounts'] = array();
 					$this->db->where_in('userid', $mail_id);
 					$users = $this->db->get($this->cfg['dbpref'] . 'users');
-
-					// echo "<pre>"; echo "asdf ";  $emails; print_r($users); exit;
+					
 					if ($users->num_rows() > 0)
 					{
 						$data['user_accounts'] = $users->result_array();
@@ -1656,7 +1645,7 @@ body {
 						# default email
 						$to_user_email = $ua['email'];
 						
-						if (strstr($ua['add_email'], '@') && ! (isset($_POST['email_to_customer']) && isset($_POST['client_email_address']) && isset($_POST['client_full_name'])))
+						if (strstr($ua['add_email'], '@') && ! (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name'])))
 						{
 							
 							if ($ua['use_both_emails'] == 1)
@@ -1669,15 +1658,14 @@ body {
 							}
 						}
 
-						
 						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
+						
 						$received_by .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
 					}
 					$successful = 'This log has been emailed to:<br />';
 					
-					$log_subject = "eCRM Notification - {$job[0]['job_title']} [ref#{$job[0]['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					$log_subject = "eCRM Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
 					
-				
 				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -1700,7 +1688,7 @@ body {
 	</td>
   </tr>
   <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Lead Notification Message</h3></td>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Notification Message</h3></td>
   </tr>
 
   <tr>
@@ -1713,7 +1701,7 @@ body {
     padding: 4px;">
         <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
     <p style="padding: 4px;">'.
-        $_POST['log_content'].'<br /><br />
+        $data_log['log_content'].'<br /><br />
 		This log has been emailed to:<br />
 		'.$received_by.'<br /><br />
 		'.$this->userdata['signature'].'<br />
@@ -1736,26 +1724,24 @@ body {
 </html>';												
 
 					$json['debug_info'] = '';
-
-
-					if (isset($_POST['email_to_customer']) && isset($_POST['client_email_address']) && isset($_POST['client_full_name']))
+					
+					if (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name']))
 					{
 						// we're emailing the client, so remove the VCS log  prefix
-						$log_subject = preg_replace('/^eNoah Notification \- /', '', $log_subject);
+						$log_subject = preg_replace('/^eSmart Notification \- /', '', $log_subject);
 						
 						for ($cei = 1; $cei < 5; $cei ++)
 						{
-							if (isset($_POST['client_emails_' . $cei]))
+							if (isset($data_log['client_emails_' . $cei]))
 							{
-								//$send_to[] = array($_POST['client_emails_' . $cei], '');
-								$send_to[] = array($_POST['client_emails_' . $cei], '');
-								$received_by .= $_POST['client_emails_' . $cei] . ', ';
+								$send_to[] = array($data_log['client_emails_' . $cei], '');
+								$received_by .= $data_log['client_emails_' . $cei] . ', ';
 							}
 						}
 						
-						if (isset($_POST['additional_client_emails']) && trim($_POST['additional_client_emails']) != '')
+						if (isset($data_log['additional_client_emails']) && trim($data_log['additional_client_emails']) != '')
 						{
-							$additional_client_emails = explode(',', trim($_POST['additional_client_emails'], ' ,'));
+							$additional_client_emails = explode(',', trim($data_log['additional_client_emails'], ' ,'));
 							if (is_array($additional_client_emails)) foreach ($additional_client_emails as $aces)
 							{
 								$aces = trim($aces);
@@ -1765,17 +1751,14 @@ body {
 									$received_by .= $aces . ', ';
 								}
 							}
-
-						}
-						
+						}					
 					}
 					else
 					{
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-
-		
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+						
+						$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -1793,11 +1776,11 @@ body {
 <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
   <tr>
     <td style="padding:15px; border-bottom:2px #5a595e solid;">
-	<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
 	</td>
   </tr>
   <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Lead Notification Message</h3></td>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
   </tr>
 
   <tr>
@@ -1810,7 +1793,7 @@ body {
     padding: 4px;">
         <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
     <p style="padding: 4px;">'.
-        $_POST['log_content'].'<br /><br />
+        $data_log['log_content'].'<br /><br />
 		This log has been emailed to:<br />
 		'.$received_by.'<br /><br />
 		'.$this->userdata['signature'].'<br />
@@ -1831,11 +1814,12 @@ body {
 </table>
 </body>
 </html>';						
-
+	
 					}
 
-					$this->email->from($user_data[0]['email'],$user_data[0]['first_name']);
-					foreach($send_to as $recps)
+					$this->email->from($user_data[0]['email'], $user_data[0]['first_name']);
+
+					foreach($send_to as $recps) 
 					{
 						$arrRecs[]=$recps[0];
 					}
@@ -1843,9 +1827,9 @@ body {
 					$this->email->to($senders);
 					$this->email->subject($log_subject);
 					$this->email->message($log_email_content);
-					if(!empty($full_url_path)){
-
-					$this->email->attach($full_file_path);
+					if(!empty($full_url_path))
+					{
+						$this->email->attach($full_file_path);
 					}
 					if($this->email->send())
 					{
@@ -1868,24 +1852,24 @@ body {
 					}
 				}
 			
-				$ins['jobid_fk'] = $_POST['jobid'];
+				$ins['jobid_fk'] = $data_log['jobid'];
 				
 				// use this to update the view status
-				$ins['userid_fk'] = $upd['log_view_status'] = $_POST['userid'];
+				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
 				
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = $_POST['log_content'] . $successful;
+				$ins['log_content'] = $data_log['log_content'] . $successful;
 				
 				$stick_class = '';
-				if (isset($_POST['log_stickie']))
+				if (isset($data_log['log_stickie']))
 				{
 					$ins['stickie'] = 1;
 					$stick_class = ' stickie';
 				}
 				
-				if (isset($_POST['time_spent']))
+				if (isset($data_log['time_spent']))
 				{
-					$ins['time_spent'] = (int) $_POST['time_spent'];
+					$ins['time_spent'] = (int) $data_log['time_spent'];
 				}
 				
 				// inset the new log
@@ -1895,7 +1879,7 @@ body {
 				$this->db->where('jobid', $ins['jobid_fk']);
 				$this->db->update($this->cfg['dbpref'] . 'jobs', $upd);
                 
-                $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $_POST['log_content'])))), 'url', TRUE)) . $successful;
+                $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
                 
 				$fancy_date = date('l, jS F y h:iA', strtotime($ins['date_created']));
 				
@@ -1912,6 +1896,7 @@ $table = <<<HDOC
 </td>
 </tr>
 HDOC;
+				
                 $json['error'] = FALSE;
                 $json['html'] = $table;
 				
