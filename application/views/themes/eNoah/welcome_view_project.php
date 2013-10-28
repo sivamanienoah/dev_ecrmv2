@@ -565,44 +565,8 @@ function updateProjectPaymentTerms(eid) {
 	$('.payment-terms-mini-view1').css('display', 'block');
 }
 
-function addDepositPayment() {
-	$('#deposit_form_jobid').val(curr_job_id);
-	var dep_amount = $('#deposit_amount_add').val();
-	if (!dep_amount.match(/^[0-9]+(\.[0-9]{1,2})?$/))
-	{
-		alert('Invalid amount supplied!');
-		return false;
-	} else {
-		$.blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
-		
-		var form_data = $('#set-deposits').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-		
-		$.post(
-			'project/add_deposit_payments',
-			form_data,
-			function(data) {
-				if (typeof(data) == 'object') {
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('.add-deposit-view:visible').slideUp(400);
-					}
-				} else {
-					alert('Unexpected response from server!')
-				}
-				$.unblockUI();
-			},
-			'json'
-		);
-		
-	}
-	return false;
-}
-
-function fullScreenLogs() {
+function fullScreenLogs() 
+{
 	var fsl_height = parseInt($(window).height()) - 80;
 	fsl_height = fsl_height + 'px';
 	$.blockUI({
@@ -613,7 +577,8 @@ function fullScreenLogs() {
 	$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
 }
 
-function runAjaxFileUpload() {
+function runAjaxFileUpload() 
+{
 	var _uid = new Date().getTime();
 	$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
 	$.ajaxFileUpload
@@ -1151,7 +1116,7 @@ function qcOKlog() {
 $(function() {
 	$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
-	$('#set-deposits .pick-date, .pick-date, .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
+	$('.pick-date, .pick-date, .pick-date, .milestone_date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
 	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
 	$('.task-list-item').livequery(function(){
@@ -1364,7 +1329,8 @@ function updateJobStatus(status) {
 	);
 }
 
-function updateVisualStatus(status) {
+function updateVisualStatus(status) 
+{
 	$('h3.status-title .small em strong').html(status);
 	$('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
 	job_complete_percentage = status;
@@ -1410,35 +1376,8 @@ function setContractorJob()
 		},
 		'json'
 	);
-
 }
-
-
 </script>
-
-<style type="text/css">
-#jv-tab-8 .task-list-item td {
-	padding:2px 10px;
-}
-#jv-tab-8 .task-list-item tr.complete td {
-	background:green;
-	color:#fff;
-}
-.email-set-options {
-	padding:8px 0 6px;
-	margin-bottom:10px;
-	border-bottom:1px solid #757575;
-	border-top:1px solid #757575;
-}
-.client-comm-options {
-	float:right;
-	width:185px;
-}
-.client-comm-options .action-td {
-	padding-right:4px;
-	padding-top:2px;
-}
-</style>
 
 <div id="content">
     <?php
@@ -2072,7 +2011,6 @@ function setContractorJob()
 
 						<div class="payment-recieved-view" id="payment-recieved-view" style="display:none;float:left;"><br/>
 						<form id="payment-recieved-terms">
-						
 							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
 							<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
@@ -2704,7 +2642,8 @@ function setContractorJob()
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
 <script type="text/javascript">
-$(document).ready(function() {
+$(document).ready(function() 
+{
 	$('.checkUser').hide();
     $('.checkUser1').hide();
 	$('#checkVal').hide();
@@ -2712,7 +2651,8 @@ $(document).ready(function() {
 });
 
 <!--Add Payment Terms Edit function Starts here -->
-function paymentProfileEdit(eid) {
+function paymentProfileEdit(eid) 
+{
 	//alert(eid);
 	$(".payment-profile-view").show();
 	var jid = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
@@ -2721,7 +2661,8 @@ function paymentProfileEdit(eid) {
 	$('#payment-profile-view').load(url);
 }
 
-function paymentProfileView() {
+function paymentProfileView() 
+{
 	setTimeout('timerfadeout()', 2000);
 	var url = "project/agreedPaymentView";
 	$('#payment-profile-view').load(url);
@@ -2729,20 +2670,24 @@ function paymentProfileView() {
 <!--Add Payment Terms Edit function Ends here -->
 
 <!--Add Payment Terms Delete function Starts here -->
-function paymentProfileDelete(eid) {
+function paymentProfileDelete(eid) 
+{
 	var agree=confirm("Are you sure you want to delete this file?");
-	if (agree) {
+	if (agree) 
+	{
 		var jid = "<?php echo $quote_data['jobid'] ?>";
 		setTimeout('timerfadeout()', 2000);
 		var url = "project/agreedPaymentDelete/"+eid+"/"+jid;
 		$('.payment-terms-mini-view1').load(url);
 	}
-	else {
+	else 
+	{
 		return false;
 	}
 }
 
-function timerfadeout() {
+function timerfadeout()
+{
 	$('#paymentfadeout').fadeOut();
 	$('#rec_paymentfadeout').fadeOut();
 	$('#resmsg, #pjt_val_errormsg, #checkVal1, #checkVal').fadeOut();
@@ -2751,8 +2696,8 @@ function timerfadeout() {
 <!--Add Payment Terms Delete function Ends here -->
 
 <!--Add Received Payment Terms Edit function Starts here -->
-function paymentReceivedEdit(pdid) {
-	//alert(pdid); return false;
+function paymentReceivedEdit(pdid) 
+{
 	$(".payment-recieved-view").show(); 
 	var jid = <?php echo $quote_data['jobid'] ?>;
 	var pdurl = "project/paymentEdit/"+pdid+"/"+jid;

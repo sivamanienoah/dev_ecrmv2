@@ -1,6 +1,7 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Project_model extends crm_model {
+class Project_model extends crm_model 
+{
     
     public function __construct()
     {
@@ -11,20 +12,22 @@ class Project_model extends crm_model {
     }
     
 	
-	function get_user_byrole($role_id) {
+	function get_user_byrole($role_id) 
+	{
     	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
     	return $users;
     }
 	
-	function get_customers() {
+	function get_customers() 
+	{
 	    $this->db->select('custid, first_name, last_name, company');
 	    $this->db->from($this->cfg['dbpref'] . 'customers');
 		$this->db->order_by("first_name", "asc");
 	    $customers = $this->db->get();
-	    $customers=  $customers->result_array();
+	    $customers =  $customers->result_array();
 	    return $customers;
 	}
-	
+
 	//advance search functionality for projects in home page.
 	public function get_projects_results($pjtstage, $pm_acc, $cust, $keyword) {	
 		$userdata = $this->session->userdata('logged_in_user');
@@ -270,7 +273,7 @@ class Project_model extends crm_model {
 	
 	function get_users() 
 	{
-    	$this->db->select('userid,first_name,level,role_id,inactive');
+    	$this->db->select('userid, first_name, level, role_id, inactive');
 		$this->db->where('inactive', 0);
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
@@ -294,6 +297,7 @@ class Project_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expected_payments', $this->cfg['dbpref'].'deposits.map_term = '.$this->cfg['dbpref'].'expected_payments.expectid', 'left');
 		$this->db->order_by('depositid', 'asc');
 		$deposits = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		return $deposits->result_array();
 	}
 	
@@ -304,7 +308,7 @@ class Project_model extends crm_model {
 	
 	function get_userlist($userList) 
 	{
-    	$this->db->select('userid,first_name,last_name,email,level,role_id,inactive');
+    	$this->db->select('userid, first_name, last_name, email, level, role_id, inactive');
 		if(!empty($userList))
 		$this->db->where_in('userid', $userList);
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
@@ -320,10 +324,9 @@ class Project_model extends crm_model {
 	    return $leads =  $lead_det->row_array();
 	}
 	
-	//not used
-	function delete_row($tbl, $condn, $lead_id) 
+	function delete_row($tbl, $condn) 
 	{
-		$this->db->where($condn, $lead_id);
+		$this->db->where($condn);
 		$this->db->delete($this->cfg['dbpref'] . $tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
@@ -343,7 +346,7 @@ class Project_model extends crm_model {
         return ($sql->num_rows() > 0) ? TRUE : FALSE;
     }
 	
-	function update_row($tbl, $updt, $condn) 
+	function update_row($tbl, $updt, $condn)
 	{
 		$this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
@@ -365,7 +368,13 @@ class Project_model extends crm_model {
 	//get the payment term details.
 	function get_payment_term_det($eid, $jid)
 	{
-		$query = $this->db->get_where($this->cfg['dbpref'].'expected_payments', array('expectid' => $eid, 'jobid_fk' => $jid ));
+		$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid);
+		$this->db->select('expm.expectid, expm.amount, expm.expected_date, expm.received, expm.project_milestone_name, j.expect_worth_id, exnm.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
+		$this->db->join($this->cfg['dbpref'].'jobs as j', 'j.jobid = expm.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = j.expect_worth_id', 'left');
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
 		return $query->row_array();
 	}
 	
@@ -375,6 +384,16 @@ class Project_model extends crm_model {
 		return $query->row_array();
 	}
 	
+	function get_deposits_amt($condn) 
+	{	
+		$this->db->select('sum(amount) as tot_amt');
+		$this->db->where('jobid_fk', $condn['jobid_fk']);
+		$this->db->where('map_term', $condn['map_term']);
+		if(!empty($condn['depositid']))
+		$this->db->where('depositid !=', $condn['depositid']);
+		$query = $this->db->get($this->cfg['dbpref'].'deposits');
+		return $query->row_array();
+	}
 
 }
 

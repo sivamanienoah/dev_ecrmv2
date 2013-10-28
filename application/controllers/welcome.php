@@ -1601,7 +1601,10 @@ body {
 	 * based on post data
 	 *
 	 */
-	function add_log() {
+	function add_log() 
+	{
+
+
         if (isset($_POST['jobid']) && isset($_POST['userid']) && isset($_POST['log_content']))
         {
 			$this->load->helper('text');
@@ -1612,15 +1615,19 @@ body {
             
             if ($job_details->num_rows() > 0) 
             {
+
 				$job = $job_details->result_array();
 
 				$user_data = $this->welcome_model->get_user_data_by_id($_POST['userid']);
+
+
 			
 				$client = $this->welcome_model->get_client_data_by_id($job[0]['custid_fk']);
 				
                 $this->load->helper('url');
 				
 				$emails = trim($_POST['emailto'], ':');
+
 
 				//$send_to = array();
 				$successful = $received_by = '';
@@ -1633,10 +1640,12 @@ body {
 					{
 						$mail_id[] = str_replace('email-log-', '', $mail);
 					}
+
 					
 					$data['user_accounts'] = array();
 					$this->db->where_in('userid', $mail_id);
 					$users = $this->db->get($this->cfg['dbpref'] . 'users');
+
 					// echo "<pre>"; echo "asdf ";  $emails; print_r($users); exit;
 					if ($users->num_rows() > 0)
 					{
@@ -1659,6 +1668,7 @@ body {
 								$send_to[]= array($ua['add_email'], $ua['first_name'] . ' ' . $ua['last_name'],'');
 							}
 						}
+
 						
 						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
 						$received_by .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
@@ -1727,6 +1737,7 @@ body {
 
 					$json['debug_info'] = '';
 
+
 					if (isset($_POST['email_to_customer']) && isset($_POST['client_email_address']) && isset($_POST['client_full_name']))
 					{
 						// we're emailing the client, so remove the VCS log  prefix
@@ -1754,6 +1765,7 @@ body {
 									$received_by .= $aces . ', ';
 								}
 							}
+
 						}
 						
 					}
@@ -1761,6 +1773,7 @@ body {
 					{
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+
 		
 					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -1821,23 +1834,9 @@ body {
 
 					}
 
-					$json['status_updated'] = false;
-					echo $_POST['requesting_client_approval']; exit;
-					if (isset($_POST['requesting_client_approval']) &&  $job[0]['job_status'] < 3)
-					{
-						$this->db->where('jobid', $_POST['jobid']);
-						if ($this->db->update($this->cfg['dbpref'] . 'jobs', array('job_status' => '3')))
-						{
-							$json['status_updated'] = true;
-						}
-					}
-					//$this->email->from('jranand@enoahisolution.com','Anand');
-					//$this->email->to('jranand@enoahisolution.com','Anand');
-					//$send_to = array('rkumaran@enoahisolution.com', 'Kumaran');
-					//$send_to = array('jranand@enoahisolution.com', 'JR Anand');
-					//$send_to[] = array('sarunkumar@enoahisolution.com', 'Arunkumar');
 					$this->email->from($user_data[0]['email'],$user_data[0]['first_name']);
-					foreach($send_to as $recps){
+					foreach($send_to as $recps)
+					{
 						$arrRecs[]=$recps[0];
 					}
 					$senders=implode(',',$arrRecs);
@@ -1845,12 +1844,15 @@ body {
 					$this->email->subject($log_subject);
 					$this->email->message($log_email_content);
 					if(!empty($full_url_path)){
+
 					$this->email->attach($full_file_path);
 					}
-					if($this->email->send()){
+					if($this->email->send())
+					{
 						$successful .= trim($received_by, ', ');
 					}
-					else{
+					else
+					{
 						echo 'failure';
 					}
 					
@@ -1910,7 +1912,6 @@ $table = <<<HDOC
 </td>
 </tr>
 HDOC;
-				
                 $json['error'] = FALSE;
                 $json['html'] = $table;
 				

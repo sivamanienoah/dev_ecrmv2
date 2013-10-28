@@ -780,7 +780,9 @@ body { margin: 0px; }
 		echo json_encode($data);
 	}
 	
-	//for edit and delete functionality
+	/*
+	 *For Expected Payment terms
+	 */
 	function retrieve_payment_terms($jid)
 	{
 		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jid);
@@ -807,34 +809,37 @@ body { margin: 0px; }
 		$output .= "<th class='header'>Action</th>";
 		$output .= "</tr>";
 		$output .= "</thead>";
-		foreach ($expect_payment_terms as $exp)
+		if (count($expect_payment_terms>0))
 		{
-			$expected_date = date('d-m-Y', strtotime($exp['expected_date']));
-			$payment_amount = number_format($exp['amount'], 2, '.', ',');
-			$total_amount_recieved += $exp['amount'];
-			$payment_received = '';
-			if ($exp['received'] == 0)
+			foreach ($expect_payment_terms as $exp)
 			{
-				$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
+				$expected_date = date('d-m-Y', strtotime($exp['expected_date']));
+				$payment_amount = number_format($exp['amount'], 2, '.', ',');
+				$total_amount_recieved += $exp['amount'];
+				$payment_received = '';
+				if ($exp['received'] == 0)
+				{
+					$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
+				}
+				else if ($exp['received'] == 1)
+				{
+					$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
+				}
+				else
+				{
+					$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
+				}							
+				$output .= "<tr>";
+				$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
+				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
+				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
+				$output .= "<td align='center'>".$payment_received."</td>";
+				$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' >Edit</a> | ";
+				$output .= "<a class='edit' onclick='paymentProfileDelete(".$exp['expectid']."); return false;' >Delete</a></td>";
+				$output .= "</tr>";
+				$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
+				$expi ++;
 			}
-			else if ($exp['received'] == 1)
-			{
-				$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-			}
-			else
-			{
-				$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-			}							
-			$output .= "<tr>";
-			$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
-			$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
-			$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
-			$output .= "<td align='center'>".$payment_received."</td>";
-			$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' >Edit</a> | ";
-			$output .= "<a class='edit' onclick='paymentProfileDelete(".$exp['expectid']."); return false;' >Delete</a></td>";
-			$output .= "</tr>";
-			$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
-			$expi ++;
 		}
 		$output .= "<tr>";
 		$output .= "<td></td>";
@@ -850,7 +855,7 @@ body { margin: 0px; }
 	 */
 	function payment_term_edit($eid, $jid)
 	{
-		$payment_details = $this->project_model->get_payment_term_det($eid,$jid);
+		$payment_details = $this->project_model->get_payment_term_det($eid, $jid);
 		
 		$expected_date = date('d-m-Y', strtotime($payment_details['expected_date']));
 		
@@ -917,18 +922,16 @@ body { margin: 0px; }
 
 			if ($update == "") 
 			{
-				// $this->db->insert($this->cfg['dbpref'] . 'expected_payments', $data3);
-				$ins_exp_pay = $this->project_model->insert_row('expected_payments' $data3);
+				$ins_exp_pay = $this->project_model->insert_row('expected_payments', $data3);
 				
-				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$data3['expected_date'];
+				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
 				
 				$ins['jobid_fk']      = $data['sp_form_jobid'];
 				$ins['userid_fk']     = $this->userdata['userid'];
 				$ins['date_created']  = date('Y-m-d H:i:s');
 				$ins['log_content']   = $pay_det;
-				$ins['attached_docs'] = $pay_det;
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
-			} 
+			}
 			else 
 			{				
 				$pay_status = $this->project_model->get_payment_term_det($update, $data['sp_form_jobid']);
@@ -941,7 +944,6 @@ body { margin: 0px; }
 					$ins['userid_fk']     = $this->userdata['userid'];
 					$ins['date_created']  = date('Y-m-d H:i:s');
 					$ins['log_content']   = $pay_det;
-					$ins['attached_docs'] = $pay_det;
 					$insert_logs = $this->project_model->insert_row('logs', $ins);
 					
 					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1);
@@ -988,32 +990,35 @@ body { margin: 0px; }
 				$output .= "<th class='header'>Action</th>";
 				$output .= "</tr>";
 				$output .= "</thead>";
-				foreach ($payment_det as $pd)
+				if (count($payment_det>0))
 				{
-					$total_amount_recieved += $pd['amount'];
-					$payment_received = '';
-					if ($pd['received'] == 0)
+					foreach ($payment_det as $pd)
 					{
-						$payment_received = '<img src="assets/img/payment-due.jpg" alt="due" height="10" width="10" />';
+						$total_amount_recieved += $pd['amount'];
+						$payment_received = '';
+						if ($pd['received'] == 0)
+						{
+							$payment_received = '<img src="assets/img/payment-due.jpg" alt="due" height="10" width="10" />';
+						}
+						else if ($pd['received'] == 1)
+						{
+							$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
+						}
+						else
+						{
+							$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
+						}							
+						$output .= "<tr>";
+						$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
+						$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
+						$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
+						$output .= "<td align='center'>".$payment_received."</td>";
+						$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
+						$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid']."); return false;' >Delete</a></td>";
+						$output .= "</tr>";
+						$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \$ ".number_format($pd['amount'], 2, '.', ',')." by ".date('d-m-Y', strtotime($pd['expected_date']))." " . '</option>';
+						$pdi ++;
 					}
-					else if ($pd['received'] == 1)
-					{
-						$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-					}
-					else
-					{
-						$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-					}							
-					$output .= "<tr>";
-					$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
-					$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
-					$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
-					$output .= "<td align='center'>".$payment_received."</td>";
-					$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
-					$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid']."); return false;' >Delete</a></td>";
-					$output .= "</tr>";
-					$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \$ ".number_format($pd['amount'], 2, '.', ',')." by ".date('d-m-Y', strtotime($pd['expected_date']))." " . '</option>';
-					$pdi ++;
 				}
 				$output .= "<tr>";
 				$output .= "<td></td>";
@@ -1030,6 +1035,44 @@ body { margin: 0px; }
 		}
 	}
 	
+	/*
+	 *Delete the expected payment
+	 *@params expect_id, job_id
+	 */
+	function agreedPaymentDelete($eid, $jid)
+	{
+		$stat = $this->project_model->get_payment_term_det($eid, $jid);
+		
+		if ($stat['received'] == 0)
+		{
+			//log details
+			$ins['jobid_fk'] = $jid;
+			$ins['userid_fk'] = $this->userdata['userid'];
+			$ins['date_created'] = date('Y-m-d H:i:s');
+			$ins['log_content'] = 'Project Milestone Name: '.$stat['project_milestone_name'].'  Amount: '.$stat['expect_worth_name'].' '.$stat['amount'].'  is deleted on '.date('Y-m-d');
+			
+			//delete the record
+			$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid, 'received' => 0);
+			$del = $this->project_model->delete_row('expected_payments', $wh_condn);
+			if ($del)
+			{
+				//insert the log
+				$insert_logs = $this->project_model->insert_row('logs', $ins);
+				echo "<span id=paymentfadeout><h6>Payment Deleted!</h6></span>";
+			}
+			else
+			{
+				echo "<span id=paymentfadeout><h6>Error In Deletion!</h6></span>";
+			}
+		}
+		else
+		{
+			echo "<span id=paymentfadeout><h6>Received Payments cannot be Deleted!</h6></span>";
+		}
+		$this->retrieve_payment_terms($jid);
+	}
+	
+	//list the expected payments
 	function agreedPaymentView() 
 	{
 		echo '<script type="text/javascript">
@@ -1084,10 +1127,209 @@ body { margin: 0px; }
 		echo $pt_select_box;
 	}
 	
+	/**
+	 * add & edit the received payments for the project
+	 * @params received payment id, expected payment id
+	 */
+	function add_project_received_payments($update = false, $eid = false)
+	{
+		$errors = array();
+		$updt_data = real_escape_array($this->input->post());
+		
+		if (isset($updt_data['pr_date_2']) && !preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $updt_data['pr_date_2']))
+		{
+			$errors[] = 'Invalid deposit amount';
+		}
+		
+		if (!isset($updt_data['pr_form_jobid']) || (int) $updt_data['pr_form_jobid'] == 0)
+		{
+			$errors[] = 'Invalid job ID supplied';
+		}
+		
+		if (!isset($updt_data['pr_date_3']) || !preg_match('/^[0-9]{2}\-[0-9]{2}\-[0-9]{4}$/', $updt_data['pr_date_3']) || strtotime($updt_data['pr_date_3']) == FALSE)
+		{
+			$errors[] = 'Invalid deposit date supplied';
+		}
+		
+		$expect_payment = $this->project_model->get_payment_term_det($updt_data['deposit_map_field'], $updt_data['pr_form_jobid']);
+		
+		$det = $this->project_model->get_quote_data($updt_data['pr_form_jobid']);
+		
+		if (!isset($update))
+		{
+			$wh_condn = array('map_term'=>$updt_data['deposit_map_field'], 'jobid_fk'=>$updt_data['pr_form_jobid']);
+			$received_payment = $this->project_model->get_deposits_amt($wh_condn);
+				
+			$temp_tot_amt = $updt_data['pr_date_2'] + $received_payment['tot_amt'];
+			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
+		} 
+		else 
+		{
+			$wh_condn = array('map_term'=>$updt_data['deposit_map_field'], 'jobid_fk'=>$updt_data['pr_form_jobid'], 'depositid'=>$update);
+			$received_payment = $this->project_model->get_deposits_amt($wh_condn);
+			
+			$temp_tot_amt = $updt_data['pr_date_2'] + $received_payment['tot_amt'];
+			$remaining_amt = $expect_payment['amount'] - $received_payment['tot_amt'];
+		}
+
+		if ($temp_tot_amt > $expect_payment['amount']) 
+		{
+			$errors[] = 'Error: As per payment milestone value of '.$expect_payment['amount'].', pending amount to be received is only '.$remaining_amt.'. Amount entered is higher than this value.';
+		}	
+		
+		if (count($errors))
+		{	
+			$json['error'] = true;
+			$json['errormsg'] = join($errors);
+			echo json_encode($json);
+		}
+		else
+		{	
+			$ins_data = array('jobid_fk' => $updt_data['pr_form_jobid'], 'invoice_no' => $updt_data['pr_date_1'], 'amount' => $updt_data['pr_date_2'],
+						  'deposit_date' => date('Y-m-d H:i:s', strtotime($updt_data['pr_date_3'])), 'comments' => $updt_data['pr_date_4'], 
+						  'payment_received' => 1, 'map_term' => $updt_data['deposit_map_field']);
+			
+			if ($update == "")
+			{
+				$inst_data = $this->project_model->insert_row('deposits', $ins_data);
+				
+				$dd = strtotime($updt_data['pr_date_3']);
+				$deposit_date = date('Y-m-d', $dd);				
+
+				$log_data['jobid_fk'] = $updt_data['pr_form_jobid'];
+				$log_data['userid_fk'] = $this->userdata['userid'];
+				$log_data['date_created'] = date('Y-m-d H:i:s');
+				$log_data['log_content'] = 'Invoice No: '.$updt_data['pr_date_1'].'  Amount: '.$det[0]['expect_worth_name'].' '.$updt_data['pr_date_2'].' Deposit Date: '.$deposit_date.' is Created.';
+				
+				$inst_logs = $this->project_model->insert_row('logs', $log_data);
+			}
+			else 
+			{
+				$wh_condn = array('expectid'=>$eid, 'jobid_fk'=>$updt_data['pr_form_jobid']);
+				$updt = array('received'=>0);
+				$updt_row = $this->project_model->update_row("expected_payments", $updt, $wh_condn);
+				
+				$updatepayment = array('jobid_fk' => $updt_data['pr_form_jobid'], 'invoice_no' => $updt_data['pr_date_1'], 'amount' => $updt_data['pr_date_2'], 'deposit_date' => date('Y-m-d H:i:s', strtotime($updt_data['pr_date_3'])), 'comments' => $updt_data['pr_date_4'], 'userid_fk' => $this->userdata['userid'], 'payment_received' => 1, 'map_term' => $updt_data['deposit_map_field']);
+				
+				$wh_condn1 = array('depositid'=>$update, 'jobid_fk'=>$updt_data['pr_form_jobid']);
+				$updt_exp_pay = $this->project_model->update_row("deposits", $updatepayment, $wh_condn1);
+				
+				$dd = strtotime($updatepayment['deposit_date']);
+				$deposit_date = date('Y-m-d', $dd);
+				
+				$log_data['jobid_fk'] = $updt_data['pr_form_jobid'];
+				$log_data['userid_fk'] = $this->userdata['userid'];
+				$log_data['date_created'] = date('Y-m-d H:i:s');
+				$log_data['log_content'] = 'Invoice No: '.$updatepayment['invoice_no'].'  Amount: '.$det[0]['expect_worth_name'].' '.$updatepayment['amount'].' Deposit Date: '.$deposit_date;
+				
+				$inst_logs = $this->project_model->insert_row('logs', $log_data);
+			}
+			if (isset($updt_data['deposit_map_field']) && $updt_data['deposit_map_field'] > 0 && preg_match('/^[0-9]+$/', $updt_data['deposit_map_field']))
+			{				
+				$wh_condn = array('map_term'=>$updt_data['deposit_map_field'], 'jobid_fk'=>$updt_data['pr_form_jobid']);
+				$payment_status = $this->project_model->get_deposits_amt($wh_condn);
+				
+				$payment_status_expect = $this->project_model->get_payment_term_det($updt_data['deposit_map_field'], $updt_data['pr_form_jobid']);
+				
+				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) 
+				{
+					$this->db->where('expectid', $updt_data['deposit_map_field']);
+					$this->db->update($this->cfg['dbpref'] . 'expected_payments', array('received' => 1));
+				}
+				else 
+				{
+					$this->db->where('expectid', $updt_data['deposit_map_field']);
+					$this->db->update($this->cfg['dbpref'] . 'expected_payments', array('received' => 2));
+				}
+			}
+
+			$deposit_data = $this->project_model->get_deposits_data($updt_data['pr_form_jobid']);
+			
+			$output = '';
+			$output .= '<div class="payment-received-mini-view2" style="margin-top:5px;">';
+			$pdi = 1;
+			$output .= '<option value="0"> &nbsp; </option>';
+			$output .= "<p><h6>Payment History</h6></p>";
+			$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+			$output .= "<thead>";
+			$output .= "<tr align='left'>";
+			$output .= "<th class='header'>Invoice No</th>";
+			$output .= "<th class='header'>Date Received</th>";
+			$output .= "<th class='header'>Amt Received</th>";
+			$output .= "<th class='header'>Payment Term</th>";
+			$output .= "<th class='header'>Action</th>";
+			$output .= "</tr>";
+			$output .= "</thead>";
+			foreach ($deposit_data as $dd)
+			{
+				$expected_date = date('d-m-Y', strtotime($dd['deposit_date']));
+				$payment_amount = number_format($dd['amount'], 2, '.', ',');
+				$amount_recieved += $dd['amount'];
+				$payment_received = '';
+				if ($dd['payment_received'] == 1)
+				{
+					$payment_received = '<img src="assets/img/crm-payment-received.gif" alt="received" />';
+				}
+				$output .= "<tr align='left'>";
+				$output .= "<td>".$dd['invoice_no']."</td>";
+				$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
+				$output .= "<td> ".$det[0]['expect_worth_name'].' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+				$output .= "<td>".$dd['payment_term']."</td>";
+				$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
+				$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+				$output .= "</tr>";
+			}
+			$output .= "<tr>";
+			$output .= "<td></td>";
+			$output .= "<td><b>Total Payment: </b> </td><td colspan='2'><b>".$det[0]['expect_worth_name'].' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+			$output .= "</tr>";
+			$output .= "</table>";
+			$output .= "</div>";
+
+			$json['error'] = false;
+			$json['msg'] = $output;
+			echo json_encode($json);
+		}
+	}
+	
+	//List the received payment view.
+	function PaymentView()
+	{
+		echo '<script type="text/javascript">
+		$(function(){
+			$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+		});
+		function isNumberKey(evt)
+		{
+		  var charCode = (evt.which) ? evt.which : event.keyCode;
+		  if (charCode != 46 && charCode > 31 
+			&& (charCode < 48 || charCode > 57))
+			 return false;
+
+		  return true;
+		}
+	   </script>
+		<br />
+		<form id="payment-recieved-terms">
+			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
+			<p>Amount Recieved *<input onkeypress="return isNumberKey(event)" type="text" name="pr_date_2" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+			<p>Date Recieved *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
+			
+			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
+
+			<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="setPaymentRecievedTerms(); return false;">Add Payment</button>
+			</div>
+			<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
+			<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
+		</form>';
+	}
+	
 	//Payment Received Edit function
 	function paymentEdit($pdid,$jid) 
 	{
-		$received_payment_details = $this->project_model->get_receivedpaymentDet($pdid,$jid);
+		$received_payment_details = $this->project_model->get_receivedpaymentDet($pdid, $jid);
 		$eid = $received_payment_details['map_term'];
 		$received_deposit_date = date('d-m-Y', strtotime($received_payment_details['deposit_date']));
 		$updt = $this->retrieveRecordEdit($jid, $eid);
@@ -1131,7 +1373,6 @@ body { margin: 0px; }
 		$pt_select_box .= '<option value="0"> &nbsp; </option>';
 		foreach ($expect_payment_terms as $ext)
 		{
-			// $payment_amount = number_format($value->amount, 2, '.', ',');
 			if($eid ==  $ext['expectid'])
 			{	
 				$pt_select_box .= '<option selected ="selected" value="'.$ext['expectid'].'">' . $ext['project_milestone_name'] .' '.$ext['expect_worth_name']." ".number_format($ext['amount'], 2, '.', ',')." by ".$ext['expected_date']." " . '</option>';
@@ -1144,7 +1385,471 @@ body { margin: 0px; }
 		return $pt_select_box;
 	}
 	
-	
+	function receivedPaymentDelete($pdid, $jid, $map) 
+	{
+		$rec_det = $this->project_model->get_receivedpaymentDet($pdid, $jid);//get the details for inserting logs
+		
+		$wh_condn = array('depositid'=>$pdid, 'jobid_fk'=>$jid, 'payment_received'=>1);
+		$stat = $this->project_model->delete_row('deposits', $wh_condn);		
+		
+		if ($stat) 
+		{
+			$det = $this->project_model->get_quote_data($jid);			
 
+			$inst_log['jobid_fk'] = $jid;
+			$inst_log['userid_fk'] = $this->userdata['userid'];
+			$inst_log['date_created'] = date('Y-m-d H:i:s');
+			$inst_log['log_content'] = 'Invoice No: '.$rec_det['invoice_no'].'  Amount: '.$det[0]['expect_worth_name'].' '.$rec_det['amount'].'  Deposit Date: '.date('Y-m-d',strtotime($rec_det['deposit_date']));
+			
+			$inse = $this->project_model->insert_row('logs', $inst_log);
+			
+			$wh_condn = array('map_term'=>$map, 'jobid_fk'=>$jid);
+			$payment_status = $this->project_model->get_deposits_amt($wh_condn);
+
+			$payment_status_expect = $this->project_model->get_payment_term_det($map, $jid);
+			
+			$rec = $this->project_model->get_payment_term_det($map, $jid);
+
+			
+			if ($rec['received'] == 2) 
+			{ //echo "rec 2 " . $payment_status['tot_amt'];
+				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) {
+					$updt = array('received' => 1);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+				} else if ($payment_status['tot_amt'] == 'null' || $payment_status['tot_amt'] == '') {
+					$updt = array('received' => 0);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);				
+				} else {
+					$updt = array('received' => 2);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);	
+				}
+			} 
+			else if ($rec['received'] == 1) 
+			{ //echo "rec 1 " . $payment_status['tot_amt'];
+				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) {
+					$updt = array('received' => 1);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+				} else if ($payment_status['tot_amt'] == 'null' || $payment_status['tot_amt'] == '') {
+					$updt = array('received' => 0);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+				} else {
+					$updt = array('received' => 2);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+				}
+			} 
+			else 
+			{ //echo "rec else " . $payment_status['tot_amt'];
+				if ($payment_status['tot_amt'] >= $payment_status_expect['amount']) {
+					$updt = array('received' => 1);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+				} else if ($payment_status['tot_amt'] == 'null' || $payment_status['tot_amt'] == '') {
+					$updt = array('received' => 0);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);					
+				} else {
+					$updt = array('received' => 2);
+					$wh_condn = array('expectid' => $map, 'jobid_fk' => $jid);
+					$updt_id = $this->project_model->update_row('expected_payments', $updt, $wh_condn);					
+				}
+			}
+			echo "<span id=paymentfadeout><h6>Received Payment Deleted!</h6></span>";
+		} 
+		else 
+		{
+			echo "<span id=paymentfadeout><h6>Error Occured!</h6></span>";
+		}
+		$this->received_payment_terms_delete($jid);
+	}
+	
+	//list the received payments
+	function received_payment_terms_delete($jid)
+	{
+		//mychanges
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+			$jres = $jsql->result();
+			$worthid = $jres[0]->expect_worth_id;
+			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
+			$eres = $expect_worth->result();
+			$symbol = $eres[0]->expect_worth_name;		
+		
+		$userdata = $this->session->userdata('logged_in_user'); 
+		$userid=$userdata['userid'];
+		$query = $this->db->get_where($this->cfg['dbpref'].'deposits', array('depositid' => $pdid, 'jobid_fk' => $jid ));
+		$get = $query->row_array();		
+		$milename = $get['invoice_no'];
+		$amount = $get['amount'];
+		$map_term = $get['map_term'];
+		$expectdate = date('Y-m-d',strtotime($get['deposit_date']));	
+		$filename = 'Invoice No: '.$milename.'  Amount: '.$symbol.' '.$amount.'  Deposit Date: '.$expectdate.' Map Term: '.$map_term; 
+		
+	
+		$output = '';
+		$recieve_query = $this->db->query("SELECT `".$this->cfg['dbpref']."deposits` . * , `".$this->cfg['dbpref']."expected_payments`.`project_milestone_name` AS payment_term FROM (`".$this->cfg['dbpref']."deposits`) LEFT JOIN `".$this->cfg['dbpref']."expected_payments` ON `".$this->cfg['dbpref']."deposits`.`map_term` = `".$this->cfg['dbpref']."expected_payments`.`expectid` WHERE `".$this->cfg['dbpref']."deposits`.`jobid_fk` = ".$jid." ORDER BY `depositid` ASC");
+
+		$output .= '<div class="payment-received-mini-view2" style="margin-top:5px;">';
+
+		$pdi = 1;
+		$output .= '<option value="0"> &nbsp; </option>';
+		$output .= "<p><h6>Payment History</h6></p>";
+		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+		$output .= "<thead>";
+		$output .= "<tr align='left'>";
+		$output .= "<th class='header'>Invoice No</th>";
+		$output .= "<th class='header'>Date Received</th>";
+		$output .= "<th class='header'>Amt Received</th>";
+		$output .= "<th class='header'>Payment Term</th>";
+		$output .= "<th class='header'>Action</th>";
+		$output .= "</tr>";
+		$output .= "</thead>";
+		foreach ($recieve_query->result_array() as $dd)
+		{
+			$expected_date = date('d-m-Y', strtotime($dd['deposit_date']));
+			$payment_amount = number_format($dd['amount'], 2, '.', ',');
+			$amount_recieved += $dd['amount'];
+			$payment_received = '';
+			if ($dd['payment_received'] == 1)
+			{
+				$payment_received = '<img src="assets/img/vcs-payment-received.gif" alt="received" />';
+			}
+			$output .= "<tr align='left'>";
+			$output .= "<td>".$dd['invoice_no']."</td>";
+			$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
+			$output .= "<td> ".$symbol.' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+			$output .= "<td>".$dd['payment_term']."</td>";
+			$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
+			$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+			$output .= "</tr>";
+		}
+		$output .= "<tr>";
+		$output .= "<td></td>";
+		$output .= "<td><b>Total Payment: </b> </td><td colspan='2'><b>".$symbol.' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+		$output .= "</tr>";
+		$output .= "</table>";
+		$output .= "</div>";
+		echo $output;
+	}
+	
+	//adding log
+	function pjt_add_log()
+	{
+		$data_log = real_escape_array($this->input->post());
+		
+        if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
+			$this->load->helper('text');
+			$this->load->helper('fix_text');
+			
+			$job_details = $this->project_model->get_lead_det($data_log['jobid']);
+            
+            if (count($job_details) > 0) 
+            {
+				$wh_condn = array('userid'=>$data_log['userid']);
+				$user_data = $this->project_model->get_user_data_by_id('users', $wh_condn);
+				
+				$wh_condn_cust = array('custid'=>$job_details['custid_fk']);
+				$client = $this->project_model->get_user_data_by_id('customers', $wh_condn_cust);
+				
+                $this->load->helper('url');
+				
+				$emails = trim($data_log['emailto'], ':');
+				
+				$successful = $received_by = '';
+				
+				if ($emails != '' || isset($data_log['email_to_customer']))
+				{
+					$emails = explode(':', $emails);
+					$mail_id = array();
+					foreach ($emails as $mail)
+					{
+						$mail_id[] = str_replace('email-log-', '', $mail);
+					}
+
+					$data['user_accounts'] = array();
+					$this->db->where_in('userid', $mail_id);
+					$users = $this->db->get($this->cfg['dbpref'] . 'users');
+					
+					if ($users->num_rows() > 0)
+					{
+						$data['user_accounts'] = $users->result_array();
+					}
+					foreach ($data['user_accounts'] as $ua)
+					{
+						# default email
+						$to_user_email = $ua['email'];
+						
+						if (strstr($ua['add_email'], '@') && ! (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name'])))
+						{
+							
+							if ($ua['use_both_emails'] == 1)
+							{
+								$to_user_email = $ua['add_email'];
+							}
+							else if ($ua['use_both_emails'] == 2)
+							{
+								$send_to[]= array($ua['add_email'], $ua['first_name'] . ' ' . $ua['last_name'],'');
+							}
+						}
+
+						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
+						$received_by .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
+					}
+					$successful = 'This log has been emailed to:<br />';
+					
+					$log_subject = "eCRM Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					
+				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Email Template</title>
+<style type="text/css">
+body {
+	margin: 0px;
+}
+</style>
+</head>
+
+<body>
+<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+<tr><td bgcolor="#FFFFFF">
+<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr>
+    <td style="padding:15px; border-bottom:2px #5a595e solid;">
+		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+	</td>
+  </tr>
+  <tr>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
+  </tr>
+
+  <tr>
+    <td>
+	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+    <p style="background: none repeat scroll 0 0 #4B6FB9;
+    border-bottom: 1px solid #CCCCCC;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 4px;">
+        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
+    <p style="padding: 4px;">'.
+        $data_log['log_content'].'<br /><br />
+		This log has been emailed to:<br />
+		'.$received_by.'<br /><br />
+		'.$this->userdata['signature'].'<br />
+    </p>
+</div>
+</td>
+  </tr>
+
+   <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>';												
+
+					$json['debug_info'] = '';
+					
+					if (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name']))
+					{
+						// we're emailing the client, so remove the VCS log  prefix
+						$log_subject = preg_replace('/^eNoah Notification \- /', '', $log_subject);
+						
+						for ($cei = 1; $cei < 5; $cei ++)
+						{
+							if (isset($data_log['client_emails_' . $cei]))
+							{
+								$send_to[] = array($data_log['client_emails_' . $cei], '');
+								$received_by .= $data_log['client_emails_' . $cei] . ', ';
+							}
+						}
+						
+						if (isset($data_log['additional_client_emails']) && trim($data_log['additional_client_emails']) != '')
+						{
+							$additional_client_emails = explode(',', trim($data_log['additional_client_emails'], ' ,'));
+							if (is_array($additional_client_emails)) foreach ($additional_client_emails as $aces)
+							{
+								$aces = trim($aces);
+								if (preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $aces))
+								{
+									$send_to[] = array($aces, '');
+									$received_by .= $aces . ', ';
+								}
+							}
+						}					
+					}
+					else
+					{
+						$dis['date_created'] = date('Y-m-d H:i:s');
+						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+						
+						$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Email Template</title>
+<style type="text/css">
+body {
+	margin: 0px;
+}
+</style>
+</head>
+
+<body>
+<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
+<tr><td bgcolor="#FFFFFF">
+<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+  <tr>
+    <td style="padding:15px; border-bottom:2px #5a595e solid;">
+		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
+	</td>
+  </tr>
+  <tr>
+    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
+  </tr>
+
+  <tr>
+    <td>
+	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
+    <p style="background: none repeat scroll 0 0 #4B6FB9;
+    border-bottom: 1px solid #CCCCCC;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 4px;">
+        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
+    <p style="padding: 4px;">'.
+        $data_log['log_content'].'<br /><br />
+		This log has been emailed to:<br />
+		'.$received_by.'<br /><br />
+		'.$this->userdata['signature'].'<br />
+    </p>
+</div>
+</td>
+  </tr>
+
+   <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>';						
+	
+					}
+
+					$this->email->from($user_data[0]['email'], $user_data[0]['first_name']);
+
+					foreach($send_to as $recps) 
+					{
+						$arrRecs[]=$recps[0];
+					}
+					$senders=implode(',',$arrRecs);
+					$this->email->to($senders);
+					$this->email->subject($log_subject);
+					$this->email->message($log_email_content);
+					if(!empty($full_url_path))
+					{
+						$this->email->attach($full_file_path);
+					}
+					if($this->email->send())
+					{
+						$successful .= trim($received_by, ', ');
+					}
+					else
+					{
+						echo 'failure';
+					}
+					
+					if (isset($full_file_path) && is_file($full_file_path)) unlink ($full_file_path);
+					
+					if ($successful == 'This log has been emailed to:<br />')
+					{
+						$successful = '';
+					}
+					else
+					{
+						$successful = '<br /><br />' . $successful;
+					}
+				}
+			
+				$ins['jobid_fk'] = $data_log['jobid'];
+				
+				// use this to update the view status
+				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
+				
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				$ins['log_content'] = $data_log['log_content'] . $successful;
+				
+				$stick_class = '';
+				if (isset($data_log['log_stickie']))
+				{
+					$ins['stickie'] = 1;
+					$stick_class = ' stickie';
+				}
+				
+				if (isset($data_log['time_spent']))
+				{
+					$ins['time_spent'] = (int) $data_log['time_spent'];
+				}
+				
+				// inset the new log
+				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+				
+				// update the jobs table
+				$this->db->where('jobid', $ins['jobid_fk']);
+				$this->db->update($this->cfg['dbpref'] . 'jobs', $upd);
+                
+                $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
+                
+				$fancy_date = date('l, jS F y h:iA', strtotime($ins['date_created']));
+				
+$table = <<<HDOC
+<tr id="log" class="log{$stick_class}">
+<td id="log" class="log">
+<p class="data">
+        <span>{$fancy_date}</span>
+    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
+    </p>
+    <p class="desc">
+        {$log_content}
+    </p>
+</td>
+</tr>
+HDOC;
+				
+                $json['error'] = FALSE;
+                $json['html'] = $table;
+				
+                echo json_encode($json);
+				
+            }
+            else
+            {
+                echo "{error:true, errormsg:'Post insert failed'}";
+            }
+        }
+        else
+        {
+            echo "{error:true, errormsg:'Invalid data supplied'}";
+        }
+    }
+	
 }
 ?>

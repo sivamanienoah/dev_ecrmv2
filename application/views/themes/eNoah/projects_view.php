@@ -236,7 +236,8 @@ if (document.getElementById('advance_search_pjt'))
 	}
 }
 
-$('#advanceFilters_pjt').submit(function() {	
+$('#advanceFilters_pjt').submit(function() 
+{	
 	var pjtstage = $("#pjt_stage").val(); 
 	var pm_acc = $("#pm_acc").val(); 
 	var cust = $("#customer1").val(); 

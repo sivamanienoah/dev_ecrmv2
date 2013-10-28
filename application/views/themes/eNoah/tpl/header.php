@@ -27,7 +27,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<base href="<?php echo  $this->config->item('base_url'); ?>" />
+<base href="<?php echo $this->config->item('base_url'); ?>">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 	<?php
@@ -56,10 +56,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <?php } else { ?>
 <script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script>
-<!--script type="text/javascript" src="assets/js/jquery-1.9.1-min.js"></script-->
-<!--script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script-->
+<!--script type="text/javascript" src="assets/js/jquery-1.9.1-min.js"></script>
+<script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script-->
 <?php } ?>
-<!--script type="text/javascript" src="assets/js/jquery-ui.js"></script-latest-->
 <script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/tablesort.pager.js"></script>

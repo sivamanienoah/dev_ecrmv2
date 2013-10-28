@@ -1200,6 +1200,7 @@ $(function(){
 				</form>
 				
 				<script type="text/javascript">
+					var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
 					var milestones_cached_row = false;
 					function addMilestoneField()
 					{
