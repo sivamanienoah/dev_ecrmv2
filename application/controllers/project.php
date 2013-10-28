@@ -1851,5 +1851,24 @@ HDOC;
         }
     }
 	
+	/**
+	 *uploading files - creating log
+	 */
+	public function lead_fileupload_details($jobid, $filename, $userid) {
+	   
+		$lead_files['lead_files_name'] = $filename;
+		$lead_files['lead_files_created_by'] = $userid;
+		$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+		$lead_files['jobid'] = $jobid;
+		$insert_logs = $this->project_model->insert_row('lead_files', $lead_files);
+		
+		$logs['jobid_fk'] = $jobid;
+		$logs['userid_fk'] = $this->userdata['userid'];
+		$logs['date_created'] = date('Y-m-d H:i:s');
+		$logs['log_content'] = $filename.' is added.';
+		$logs['attached_docs'] = $filename;
+		$insert_logs = $this->project_model->insert_row('logs', $logs);
+	}
+	
 }
 ?>
