@@ -58,11 +58,4 @@
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 <?php require (theme_url(). '/tpl/footer.php'); ?>
-<script type="text/javascript">
-	function toggleCheckbox(obj) {
-		if(obj.checked) 
-			document.getElementById("no_of_days").disabled = false;
-		else 
-			document.getElementById("no_of_days").disabled = true;
-	}
-</script>
+<script type="text/javascript" src="assets/js/notifications/notifications.js"></script>

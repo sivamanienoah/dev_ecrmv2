@@ -58,19 +58,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--/Inner div -->
 </div><!--/Content div -->
-<script>
-<?php if($this->session->userdata('accesspage')==1) { ?>
-$(function() {
-	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-<?php } ?>
-</script>
-
+<script type="text/javascript" src="assets/js/notifications/notifications.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
