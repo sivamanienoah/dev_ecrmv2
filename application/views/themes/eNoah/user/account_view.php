@@ -66,51 +66,14 @@ require (theme_url().'/tpl/header.php'); ?>
 						<input type="text" name="email" value="<?php echo  $this->validation->email ?>" class="textfield width200px" /> &nbsp; (This is your login email)
 					</td>
 				</tr>
-				<!--<tr>
-					<td>Additional Email:</td>
-					<td><input type="text" name="add_email" value="<?php echo  $this->validation->add_email ?>" class="textfield width200px required" /></td>
-                    <td>VCS Logs:</td>
-					<td>
-                        <select name="use_both_emails" class="textfield width200px">
-							<?php /*
-							$both_emails = array(
-												0 => 'Just email to my main email account',
-												1 => 'Only email to this additional address',
-												2 => 'Email both addresses'
-											);
-							foreach ($both_emails as $key => $val) {
-								?>
-								<option value="<?php echo  $key ?>"<?php echo  ($this->validation->use_both_emails == $key) ? ' selected="selected"' : '' ?>><?php echo  $val ?></option>
-								<?php
-							} */
-							?>
-                        </select>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td colspan="3">
-						<p><strong>Important:</strong> This VCS log setting is only applied when the client emails are not selected when logging<br /> and when you have a valid additional email set-up in your 'My Account' area.</p>
-					</td>
-				</tr>-->
+				
 				<tr>
 					<td>Signature:</td>
 					<td colspan="3">
 						<textarea name="signature" class="textfield width300px" rows="6"><?php echo  $this->validation->signature ?></textarea>
 					</td>
 				</tr>
-				<!--<tr class="hide-passwords">
-					<td>Password:</td>
-					<td><input type="password" name="password" value="" class="textfield width200px" /> *</td>
-                    <td>Confirm Password:</td>
-                    <td><input type="password" name="pass_conf" value="" class="textfield width200px" /> *</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td><input type="checkbox" name="update_password" value="1" style="vertical-align:middle;" onclick="showPassFields($(this));" /> Update password?</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-				</tr>-->
+				
 				<tr>
 					<td>Old Password:</td>
 					<td><input type="password" name="oldpassword" value="" class="textfield width200px" /> </td>
