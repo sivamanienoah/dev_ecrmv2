@@ -588,6 +588,7 @@ function runAjaxFileUpload()
 			secureuri:false,
 			fileElementId:'ajax_file_uploader',
 			dataType: 'json',
+			data:{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			success: function (data, status)
 			{
 				if(typeof(data.error) != 'undefined')
@@ -646,6 +647,7 @@ function ajaxDeleteFile(path, el) {
 	if (window.confirm('Are you sure you want to delete this file?')) {
 		path = js_urlencode(path);
 		$(el).parent().hide('slow');
+			
 		$.post(
 			'ajax/request/file_delete/',
 			{file_path : path,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
