@@ -1,5 +1,5 @@
 <?php
-
+// not need
 if ( isset($quote_data) )
 {
 	$js = $quote_data['complete_status'];
