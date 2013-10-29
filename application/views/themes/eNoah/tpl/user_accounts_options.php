@@ -66,14 +66,4 @@ if (count($pm_accounts)) foreach ($pm_accounts as $pm)
 		$pl_sel = ' selected="selected"';
 	}
 	$pm_options .= '<option value="' . $pm['userid'] . '"' . $pl_sel . '>' . $pm_id_name[$pm['userid']] . '</option>';
-	/*
-	if ($userdata['userid'] == $pm['userid'])
-	{
-		$remind_options = '<option value="' . $pm['userid'] . '">Me</option>';
-	}
-	else 
-	{
-		$remind_options_all .= '<option value="' . $pm['userid'] . '">' . $pm_id_name[$pm['userid']] . '</option>';
-	}
-	*/
 }
