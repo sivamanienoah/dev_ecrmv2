@@ -523,16 +523,17 @@ class Regionsettings_model extends crm_model {
 	*/
 	
 	public function getstate_list($val) {       
-	 
-		$userdata = $this->session->userdata('logged_in_user');
 
+		$userdata = $this->session->userdata('logged_in_user');		
+	
 		//restriction for state
 		$this->db->select('state_id');
 		$this->db->from($this->cfg['dbpref'].'levels_state');
 		$this->db->where('level_id',$userdata['level']);
 		$this->db->where('user_id',$userdata['userid']);
-		$ste_details   = $this->db->get();
+		$ste_query   = $this->db->get();
 		$ste_details = $ste_query->result_array();
+		
 		if(sizeof($ste_details)>0){
 			foreach($ste_details as $ste)
 			{
@@ -550,7 +551,7 @@ class Regionsettings_model extends crm_model {
 			$this->db->where_in('stateid', $states_ids);
 		}
 		$customers = $this->db->get($this->cfg['dbpref'] . 'state');
-		
+
 		return $customers->result_array();	
     }
 	
