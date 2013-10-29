@@ -1,0 +1,121 @@
+<?php $cfg = $this->config->item('crm'); ?>
+<?php $userdata = $this->session->userdata('logged_in_user'); 
+//echo $this->session->userdata('viewlead');
+?>
+<script>
+$('#excel').click(function() {
+	//mychanges
+	/*
+	var stage = "<?php echo $stage; ?>";
+	var customer = "<?php echo $customer; ?>";
+	var leadassignee = "<?php echo $leadassignee; ?>";
+	var regionname = "<?php echo $regionname; ?>";
+	var countryname = "<?php echo $countryname; ?>";
+	var statename = "<?php echo $statename; ?>";
+	var locname = "<?php echo $locname; ?>";
+	var worth = "<?php echo $worth; ?>";
+	var owner = "<?php echo $owner; ?>";
+	var keyword = "<?php echo $keyword; ?>";
+	*/	
+	var sturl = "welcome/excelExport/";
+	document.location.href = sturl;
+	//$('#advance_search_results').load(sturl);	
+	return false;
+});
+
+</script>
+<div style="text-align:right; padding-bottom:5px; padding-right:0px;" >
+	<a id="excel" class="export-btn">Export to Excel</a>
+</div>
+
+<div id="ad_filter" style="overflow:scroll; height:400px; width:960px;" >
+<table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-table lead-table">
+<thead>
+	<tr>
+	<th width="90">Action</th>
+	<th width="50">Lead No.</th>
+	<th>Lead Title</th>
+	<th>Customer</th>
+	<th>Region</th>
+	<th>Lead Owner</th>
+	<th>Lead Assigned To</th>
+	<th>Expected Worth</th>
+	<th>Lead Stage</th>
+	<th>Lead Indicator</th>
+	<th>Status</th>
+	
+	</tr>
+	</thead>
+	<tbody>
+	<?php 
+		if(!empty($filter_results)) 
+		{
+			foreach($filter_results as $filter_result) 
+			{
+	?>
+			<tr>
+				<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'] ?>">View</a><?php } else echo "View"; ?>
+				<?php 
+				if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) {
+				echo ' | <a href="welcome/edit_quote/' . $filter_result['jobid'] . '">Edit</a>'; ?>
+				<?php } ?> 
+				<?php
+				if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
+				echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['jobid'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
+				} ?>
+				</td>
+				<td>		
+				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', 'draft' ?>">		
+				<?php echo $filter_result['invoice_no']; ?></a> 
+				</td>
+				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', 'draft' ?>"><?php echo $filter_result['job_title']; ?></a> </td>
+					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
+				<td><?php echo $filter_result['region_name']; ?></td>
+				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
+				<td><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
+				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
+				<td><?php echo $filter_result['lead_stage_name']; ?></td>
+				<td><?php echo $filter_result['lead_indicator']; ?></td>
+				<td>		
+					<?php 
+						switch ($filter_result['lead_status'])
+						{
+							case 1:
+								echo $status = 'Active';
+							break;
+							case 2:
+								echo $status = 'On Hold';
+							break;
+							case 3:
+								echo $status = 'Dropped';
+							break;
+							case 4:
+								echo $status = 'Closed';
+							break;
+						}
+					?>
+				</td>
+			</tr> 
+	<?php 
+			} 
+		} 
+		else 
+		{
+	?>
+		<tr align="center" ><td colspan="17"> No Results Found.</td></tr>
+	<?php 
+	}
+	?>
+</tbody>
+</table>
+</div>
+<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $(".lead-table").tablesorter({widthFixed: false, widgets: ['zebra']});
+    $('.data-table tr, .data-table th').hover(
+        function() { $(this).addClass('over'); },
+        function() { $(this).removeClass('over'); }
+    );
+});
+</script>
