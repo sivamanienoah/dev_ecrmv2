@@ -14,36 +14,31 @@ $contractor_options = '';
 if (count($user_accounts)) foreach ($user_accounts as $ua)
 {
 	$ua_id_name[$ua['userid']] = $ua['first_name'] . ' ' . $ua['last_name'];
-	
-	
-		$cl_checked = '';
-		$cl_checked1 = '';
+	$cl_checked = '';
+	$cl_checked1 = '';
 		
-		if (isset($assigned_contractors) && is_array($assigned_contractors) && in_array($ua['userid'], $assigned_contractors))
-		{
-			$contractor_name = ($userdata['userid'] == $ua['userid']) ? 'Me' : $ua_id_name[$ua['userid']];
-			
-			$cl_checked = ' checked="checked"';
-			$cl_checked1 = ' selected="selected"';
-			
-				$contractor_options .= '<option value="' . $ua['userid'] . '">' . $contractor_name . '</option>';
-				//For listing the assigned contractors in the 2nd Multiple SELECT BOX in project_view_quote.php
-				$contractor_list_selecttemp2 .= '<option value="' . $ua['userid'] . '"' .$cl_checked1.'>' . $ua_id_name[$ua['userid']] . '</option>';
-				$assignContractors = $ua['userid'];	
+	if (isset($assigned_contractors) && is_array($assigned_contractors) && in_array($ua['userid'], $assigned_contractors))
+	{
+		$contractor_name = ($userdata['userid'] == $ua['userid']) ? 'Me' : $ua_id_name[$ua['userid']];
 		
-		}
+		$cl_checked = ' checked="checked"';
+		$cl_checked1 = ' selected="selected"';
 		
-		$contractor_list .= '<label><input type="checkbox" value="' . $ua['userid'] . '" name="contractor_job[]" ' . $cl_checked . ' /> ' . $ua_id_name[$ua['userid']] . '</label>';
-		//1st Multiple Select Box in project_view_quote.php
-		if (trim($assignContractors) != trim($ua['userid'])){
-			$contractor_list_select1 .= '<option value="' . $ua['userid'] . '">' . $ua_id_name[$ua['userid']] . '</option>';
-		}
-		$i++;
-		//2nd Multiple Select Box in project_view_quote.php
-		$contractor_list_select2 = $contractor_list_selecttemp2;
+		$contractor_options .= '<option value="' . $ua['userid'] . '">' . $contractor_name . '</option>';
+		//For listing the assigned contractors in the 2nd Multiple SELECT BOX in project_view_quote.php
+		$contractor_list_selecttemp2 .= '<option value="' . $ua['userid'] . '"' .$cl_checked1.'>' . $ua_id_name[$ua['userid']] . '</option>';
+		$assignContractors = $ua['userid'];	
+	}
 	
-	
-	
+	$contractor_list .= '<label><input type="checkbox" value="' . $ua['userid'] . '" name="contractor_job[]" ' . $cl_checked . ' /> ' . $ua_id_name[$ua['userid']] . '</label>';
+	//1st Multiple Select Box in project_view_quote.php
+	if (trim($assignContractors) != trim($ua['userid'])){
+		$contractor_list_select1 .= '<option value="' . $ua['userid'] . '">' . $ua_id_name[$ua['userid']] . '</option>';
+	}
+	$i++;
+	//2nd Multiple Select Box in project_view_quote.php
+	$contractor_list_select2 = $contractor_list_selecttemp2;
+
 	$pl_sel = '';
 	if (isset($quote_data) && $quote_data['assigned_to'] == $ua['userid'])
 	{

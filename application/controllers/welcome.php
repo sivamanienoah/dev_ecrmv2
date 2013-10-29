@@ -180,7 +180,7 @@ HDOC;
 
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			
-			$data['job_categories'] = $this->welcome_model->get_job_categories();
+			$data['job_cate'] = $this->welcome_model->get_job_categories();
 			
 			$this->load->view('leads/welcome_view_quote', $data);
         }

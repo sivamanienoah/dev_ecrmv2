@@ -125,7 +125,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 		 unset($trees[$k]);		 
 			}
 		}
-	
+	$class = '';
 		$ul='<div style="clear:both;"></div>';
 		if($searchSubMenu==NULL){
 			$ul .='<ul class="menuStyle"><li style="list-style:none"><a href="dashboard" '.$class.' >Home</a></li>';

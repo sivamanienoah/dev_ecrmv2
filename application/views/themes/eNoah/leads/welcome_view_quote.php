@@ -772,7 +772,6 @@ $(function(){
 			
 				<div class="user-addresses">
 					<?php
-
 					/* check the condition if role_id = 1 (admin) and role_id = 2 (management)  and leadowner and lead assigned to  */
 					if (count($user_accounts)) foreach ($user_accounts as $ua)
 					{

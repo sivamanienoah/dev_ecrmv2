@@ -1328,17 +1328,17 @@ html[xmlns] .clearfix {
 }
 .log-container .log .bgBlue{background:#4B6FB9 !important; background-image:none; color: #FFFFFF;}
 
-.existing-query-list {
-    clear: left;
-}
+.existing-query-list { clear: left; }
 
-.email-set-options {
+.email-set-options 
+{
 	padding:8px 0 6px;
 	margin-bottom:10px;
 	border-bottom:1px solid #757575;
 	border-top:1px solid #757575;
 }
-.client-comm-options {
+.client-comm-options 
+{
 	float:right;
 	width:185px;
 }
