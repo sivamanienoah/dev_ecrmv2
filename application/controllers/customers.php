@@ -22,15 +22,11 @@ class Customers extends crm_controller {
 		$current = $this->session->userdata('customer_sort');
 		$data['current_sort'] = $current;
         $data['customers'] = $this->customer_model->customer_list($limit, rawurldecode($search), $current[0], $current[1]);
-        
-		// $data['pagination'] = '';
-        if ($search == false) {
-			// $this->load->library('pagination');            
+
+        if ($search == false) 
+		{           
 			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
 			$config['total_rows'] = (string) $this->customer_model->customer_count();
-			//$config['per_page'] = '20';
-			// $this->pagination->initialize($config);
-			// $data['pagination'] = $this->pagination->create_links();
         }
         $this->load->view('customer_view', $data);
     }
@@ -113,15 +109,9 @@ class Customers extends crm_controller {
 		$this->validation->set_fields($fields);
         
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		
-		// $data['categories'] = $this->customer_model->category_list();
-		// $data['sales_agents'] = $this->customer_model->sales_agent_list();
-		
         
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_customer'])) {
             $customer = $this->customer_model->get_customer($id);
-			// $data['category_data'] = $this->customer_model->customer_categories($id);
-			// $data['sales_agent_data'] = $this->customer_model->customer_sales_agent($id);
 			
 			if ($this->userdata['level'] == 4 && !in_array($this->userdata['userid'], $data['sales_agent_data'])) {
 				$this->session->set_flashdata('access_error', 'You are not listed with this particular customer!');
@@ -154,11 +144,7 @@ class Customers extends crm_controller {
 					$update_data[$key] = $_POST[$key];
 				}
             }
-          //  echo "<pre>"; print_r($update_data);
-			// $categories = $this->input->post('customer_category');
-			// $sales_agents = $this->input->post('customer_sales_agent');
-			
-			
+
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 
 				// set exported back to NULL so it will be exported to addressbook
@@ -387,78 +373,7 @@ class Customers extends crm_controller {
         } else {
             redirect('customers/');
         }
-    }
-	
-	function category() {
-		$this->login_model->check_login();
-		$data['categories'] = $this->customer_model->category_list();
-		$this->load->view('customer_category_view', $data);
-	}
-    
-	function add_category($update = false, $id = false) {
-		$this->login_model->check_login();		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_category'])) {
-            $this->customer_model->delete_category($id);
-            $this->session->set_flashdata('confirm', array('Customer Record Deleted!'));
-            redirect('customers/');
-        }        
-        $rules['category_name'] = "trim|required";		
-		$this->validation->set_rules($rules);		
-		$fields['category_name'] = "Category Name";
-		$fields['cat_comments'] = "Description";
-		
-		$this->validation->set_fields($fields);        
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-        
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_customer'])) {
-            $customer = $this->customer_model->get_category($id);
-            if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
-        }		
-		if ($this->validation->run() == false) {			
-            $this->load->view('customer_category_add_view');			
-		} else {			
-			// all good
-            foreach($fields as $key => $val) {
-                if ($this->input->post($key)) {
-					$update_data[$key] = $this->input->post($key);
-				}
-            }
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-                //update
-                if ($this->customer_model->update_category($id, $update_data)) {
-                    
-                    $this->session->set_flashdata('confirm', array('Category Details Updated!'));
-                    redirect('customers/add_category/update/' . $id);
-                    
-                }
-            } else {
-				// check
-				if ($this->customer_model->get_category($this->input->post('category_name'), 'category_name')) {
-					$this->session->set_flashdata('login_errors', array('This category already exists, please select another name!'));
-					redirect('customers/add_category/');
-					exit();
-				}				
-                //insert
-                if ($newid = $this->customer_model->insert_category($update_data)) {
-                    $this->session->set_flashdata('confirm', array('New Category Added!'));
-                    redirect('customers/add_category/update/' . $newid);
-                }
-            }
-		}
-	}
-	
-	function delete_category($id = false) {
-		if ($this->session->userdata('delete')==1){
-			$this->customer_model->delete_category($id);
-			$this->session->set_flashdata('confirm', array('Category Record Deleted!'));
-			redirect('customers/category');
-		}else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-			redirect('customers/category');
-		}	
-	}	
+    }	
 	
     function import() {
 		$this->login_model->check_login();		
@@ -651,102 +566,6 @@ class Customers extends crm_controller {
 		return TRUE;
 		$this->customer_model->customer_update($id,$data);
 	}
-	//unwanted function
-	/**
-	 * Update addresses of RE clients
-	 * Imported to the system
-	 */
-	// function update_addresses()
-	// {
-		// $sql = "SELECT ".$this->cfg['dbpref']."customers.*
-					// FROM `".$this->cfg['dbpref']."customers` , ".$this->cfg['dbpref']."cust_cat_join
-				// WHERE custid_fk = custid
-					// AND custcatid_fk IN ( 4, 12 )
-					// AND LOWER(company) != 'ray white'
-					// AND company != ''
-					// AND (add1_line1 IS NULL OR add1_line1 = '')";
-		// $q = $this->db->query($sql);
-		
-		// $html = '
-		// <style type="text/css">
-		// body { margin: 0; padding: 10px; font-family: Monaco, "Lucida Grande", Arial; font-size: 12px; }
-		// table, td { border: 1px solid #444; border-collapse: collapse; font-size: 12px; }
-		// td { padding: 4px; }
-		// </style>
-		// <table border="0" cellpadding="0" cellspacing="0">';
-		
-		// $data = $q->result();
-		// foreach ($data as $row)
-		// {
-			// $this->db->limit(1);
-			// $this->db->like('company', $row->company);
-			// $this->db->where('add1_line1 !=', '');
-			// $this->db->where('custid !=', $row->custid);
-			// $this->db->where('add1_state', $row->add1_state);
-			// $c = $this->db->get($this->cfg['dbpref'].'customers');
-			
-			// if ($c->num_rows() > 0)
-			// {
-				// $rs = $c->row();
-				
-				// $html .= "
-				// <tr>
-					// <td>{$row->first_name}</td>
-					// <td>{$row->last_name}</td>
-					// <td>{$row->company}</td>
-					// <td>{$row->add1_line1}</td>
-					// <td>{$row->add1_line2}</td>
-					// <td>{$row->add1_suburb}</td>
-					// <td>{$row->add1_state}</td>
-					// <td>{$row->add1_postcode}</td>
-					// <td>{$row->add1_country}</td>
-					// <td>{$row->phone_1}</td>
-				// </tr>
-				// <tr>
-					// <td>{$rs->first_name}</td>
-					// <td>{$rs->last_name}</td>
-					// <td>{$rs->company}</td>
-					// <td>{$rs->add1_line1}</td>
-					// <td>{$rs->add1_line2}</td>
-					// <td>{$rs->add1_suburb}</td>
-					// <td>{$rs->add1_state}</td>
-					// <td>{$rs->add1_postcode}</td>
-					// <td>{$rs->add1_country}</td>
-					// <td>{$rs->phone_1}</td>
-				// </tr>
-				// <tr>
-					// <td colspan=\"10\"></td>
-				// </tr>";
-			// }
-		// }
-		
-		// $html .= '</table>';
-		
-		// echo $html;
-	// }
-	
-	/*function view_subscriptions($id) {
-		$data = array('id' => $id, 'cfg' => $this->config->item('crm'));		
-		$this->load->view('subscriptions/customer_subscriptions_view', $data);
-	}
-	
-	function getResultfromdb($username, $update){
-		$update = $_POST['email'];
-		$username = $_POST['username'];
-		if ($update != 'undefined') {
-			$res = $this->customer_model->primary_mail_check($username,$update);
-			if ($res == 0)
-			$json['msg'] = 'userOk';
-			else
-			$json['msg'] = 'userNo';
-		} else {
-			$res = $this->customer_model->primary_mail_check($username);	
-			if( $res == 0 ) {  $json['msg'] = 'userOk'; }
-			else { $json['msg'] = 'userNo'; }
-		}
-		echo json_encode($json); exit;
-	}
-	*/
 	
 	//checking primary_mail in customer table
 	function Check_email($mail){
@@ -785,10 +604,9 @@ class Customers extends crm_controller {
 	}	
 
 	
-	/* Import Load Function this fuction import customer list from CSV, XLS & XLSX files
-	Starts here
-	Dated on 29-01-2013
-	*/
+	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
+	 *	Starts here Dated on 29-01-2013
+	 */
 			
 	function importload(){
 		$count = 0;

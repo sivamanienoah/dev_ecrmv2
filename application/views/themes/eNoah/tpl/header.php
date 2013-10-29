@@ -218,7 +218,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	foreach($menu_items_vals as $menu_items) {		 
 		//echo "<pre>";print_r($menu_items);
 		$strcmp = strcmp(strtolower($this->uri->segment(1)), strtolower($menu_items[3]));	
-		if(($strcmp==0 && $i==0 )) { 
+		if(($strcmp==0 && $i==0 )) 
+		{ 
 			$i+=1;
 			$parent_id = $menu_items['1'];
 			$master_id = $menu_items['0'];
@@ -229,36 +230,41 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$access_limit['links'] =$menu_items[4];
 			$access_limit['name'] =$menu_items[2];
 		}
-		if($menu_items['0'] == 51) { //leads
+		if($menu_items['0'] == 51)  //leads
+		{ 
 		   $viewLead = $menu_items[8];
 		   $addLead = $menu_items[9];
 		   $editLead = $menu_items[10];
 		   $deleteLead = $menu_items[11];
 		}
-		if($menu_items['0'] == 108) { //Tasks
+		if($menu_items['0'] == 108) //Tasks
+		{ 
 		   $viewTask = $menu_items[8];
 		   $addTask = $menu_items[9];
 		   $editTask = $menu_items[10];
 		   $deleteTask = $menu_items[11];
 		}
-		if($menu_items['0'] == 110) { //Projects
+		if($menu_items['0'] == 110) //Projects
+		{ 
 		   $viewPjt = $menu_items[8];
 		   $addPjt = $menu_items[9];
 		   $editPjt = $menu_items[10];
 		   $deletePjt = $menu_items[11];
 		}
-		if($menu_items['0'] == 84) { //customer
+		if($menu_items['0'] == 84) //customer
+		{ 
 		   $addImpCus = $menu_items[9];
 		}
 	}  	 
 	//echo $this->uri->segment(1);
-	if(!isset($master_id)) {
-			$masters=formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
-			$master_id= $masters[0]['master_parent_id'];
-			$access_limit['view'] =$masters[0]['view'];
-			$access_limit['add'] =$masters[0]['add'];
-			$access_limit['edit'] =$masters[0]['edit'];
-			$access_limit['delete'] =$masters[0]['delete'];
+	if(!isset($master_id)) 
+	{
+		$masters=formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
+		$master_id= $masters[0]['master_parent_id'];
+		$access_limit['view'] =$masters[0]['view'];
+		$access_limit['add'] =$masters[0]['add'];
+		$access_limit['edit'] =$masters[0]['edit'];
+		$access_limit['delete'] =$masters[0]['delete'];
 	}
 		
 	echo $menulistss =  formSubMenuList($master_id);
