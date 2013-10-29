@@ -30,14 +30,14 @@
 					?>
 							<tr>
 								<td class="actions" align="center">
-									<a href="view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">View</a>
+									<a href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>">View</a>
 									<?php
-									echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="welcome/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; 
+									echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; 
 									?>
 								</td>
 								<td class="actions">
 									<div>
-										<a style="color:#A51E04; text-decoration:none;" href="view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a>
+										<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo  $record['jobid'], '/', $quote_section ?>"><?php echo  $record['invoice_no'] ?></a>
 									</div>
 								</td>
 								<td class="actions"><?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?></td>
