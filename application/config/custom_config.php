@@ -1,6 +1,4 @@
 <?php
-// require ('sales_divisions.ini');
-// require ('job_categories.ini');
 
 /*
 *
