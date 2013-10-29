@@ -274,7 +274,7 @@ class Role extends crm_controller {
 					$data['log_set'] .= 
 					'<div class="log">
 						<p class="data">
-							<span>'.$row["fancy_date"].'<strong>{$row_time_spent}</strong></span>
+							<span>'.$row["fancy_date"].'</span>
 						'.$data["log_role_name"].' - '.$row["job_title"].'
 						</p>
 						<p class="desc">

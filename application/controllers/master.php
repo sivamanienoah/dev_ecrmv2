@@ -257,11 +257,11 @@ class Master extends crm_controller {
 					$row_time_spent = " - Time Spent: {$the_mins} Mins";
 				}
 			}
-			
+			<?php //<span>{$row['fancy_date']} <strong>{$row_time_spent}</strong></span> ?>
 			$data['log_set'] .= <<< EOD
 	<div class="log">
 		<p class="data">
-		    <span>{$row['fancy_date']} <strong>{$row_time_spent}</strong></span>
+		    <span>{$row['fancy_date']}</span>
 		{$data['log_master_name']} - {$row['job_title']}
 		</p>
 		<p class="desc">

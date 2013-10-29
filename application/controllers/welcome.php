@@ -263,15 +263,6 @@ HDOC;
 	 */
 	public function new_quote($lead = FALSE, $customer = FALSE) 
 	{
-		if (is_numeric($lead)) {
-			$lead_details = $this->welcome_model->get_lead($lead);			
-			$data['existing_lead'] = $lead;
-			$data['existing_lead_service'] = $lead_details['belong_to'];
-		}
-		
-		if (is_numeric($customer))
-		$data['lead_customer'] = $customer;
-	
 		/* additional item list */
 		// $data['item_mgmt_add_list'] = $data['item_mgmt_saved_list'] = array();
 		$data['categories'] = $this->welcome_model->get_categories();
