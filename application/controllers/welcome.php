@@ -42,7 +42,7 @@ class Welcome extends crm_controller {
 		$data['lead_owner'] = $this->welcome_model->get_users();
 		$data['regions'] = $this->regionsettings_model->region_list($offset = false, $search = false);
 		
-		$this->load->view('quotation_view', $data);
+		$this->load->view('leads/quotation_view', $data);
 	}
 	
 	/*
@@ -86,7 +86,7 @@ class Welcome extends crm_controller {
 		$data['locname'] = $locname;
 		$data['keyword'] = $keyword;
 
-		$this->load->view('advance_filter_view', $data);	
+		$this->load->view('leads/advance_filter_view', $data);	
 	}
 	
 	/*
@@ -182,7 +182,7 @@ HDOC;
 			
 			$data['job_categories'] = $this->welcome_model->get_job_categories();
 			
-			$this->load->view('welcome_view_quote', $data);
+			$this->load->view('leads/welcome_view_quote', $data);
         }
 		else 
 		{
@@ -275,7 +275,7 @@ HDOC;
 		$data['job_cate'] = $this->welcome_model->get_job_categories();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		
-		$this->load->view('welcome_view', $data);
+		$this->load->view('leads/welcome_view', $data);
 	}
 	
 	/**
@@ -333,7 +333,7 @@ HDOC;
 			$data['job_cate'] = $this->welcome_model->get_job_categories();
 			$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 			
-            $this->load->view('welcome_view', $data);
+            $this->load->view('leads/welcome_view', $data);
         }
         else
         {
