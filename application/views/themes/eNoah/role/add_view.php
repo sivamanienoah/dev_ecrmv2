@@ -1,20 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
- 
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
- 
- 
-<script type="text/javascript">
-$(document).ready(function() {
- $('.check').click(function() { 
-        if ($(this).is(':checked')) {
-		    $(this).parent().find('input:checkbox').attr('checked', 'checked');
-        }else{
-		 $(this).parent().find('input:checkbox').attr('checked', '');
-		}
-    });
-
-});
-</script> 	
+<script type="text/javascript" src="assets/js/role/add_view.js"></script>
 <div id="content">
  
     <div class="inner"> 
