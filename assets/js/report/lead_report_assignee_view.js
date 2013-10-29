@@ -23,7 +23,7 @@ $(function(){
 		
 		var url = base_url+"report/report_lead_assignee/excelExport";
 		var form = $('<form action="' + url + '" method="post">' +
-		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="<?php echo $this->security->get_csrf_hash(); ?>" />'+
+		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 		  '<input type="hidden" name="start_date" value="' +start_date+ '" />' +
 		  '<input type="hidden" name="end_date" value="' +end_date+ '" />' +
 		  '<input type="hidden" name="stage" value="' +stage+ '" />' +
