@@ -9,27 +9,6 @@ class Welcome_model extends crm_model {
 		$this->stg = getLeadStage();
 		$this->stages = @implode('","', $this->stg);
     }
-    
-    /**
-     * get the lead details //unwanted
-     */
-    public function get_lead($leadid, $belong_to = FALSE) 
-	{
-		$owner_only = ($belong_to == FALSE) ? '' : " AND `belong_to` = '" . mysql_real_escape_string($belong_to) . "' ";
-        $sql = "SELECT * FROM `{$this->cfg['dbpref']}leads`, `{$this->cfg['dbpref']}customers` WHERE `custid` = `custid_fk` AND `leadid` = ? {$owner_only} LIMIT 1";
-			
-		$q = $this->db->query($sql, array($leadid));
-        
-        if ($q->num_rows() > 0)
-        {
-            $result = $q->result_array();
-            return $result[0];
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
 	
 	/*
 	*Get the Lead Detail
