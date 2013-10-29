@@ -1814,7 +1814,7 @@ if(keyword == "Project No, Project Title, Name or Company")
 if (document.getElementById('advance_search_pjt'))
 	document.getElementById('advance_search_pjt').style.display = 'none';	
 
-var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 //alert(sturl);	
 $('#advance_search_results_pjts').load(sturl);
 	
@@ -1845,7 +1845,7 @@ $('#advanceFilters_pjt').submit(function() {
 	if(keyword == "Project No, Project Title, Name or Company")
 	keyword = 'null';
 	document.getElementById('advance_search_results_pjts').style.display = 'block';	
-	var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 	//alert(sturl);
 	$('#advance_search_results_pjts').load(sturl);	
 	return false;
@@ -1858,8 +1858,7 @@ $('#pjt_search_form').submit(function() {
 		var pjtstage = $("#pjt_stage").val(); 
 		var pm_acc = $("#pm_acc").val(); 
 		var cust = $("#customer1").val();  
-		//document.getElementById('ad_filter').style.display = 'block';
-		var sturl = "welcome/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 		$('#advance_search_results_pjts').load(sturl);
 		return false;
 });
@@ -1869,7 +1868,7 @@ $('#pjt_search_form').submit(function() {
 //For Tasks
 /*mychanges*/
 $(function(){
-	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {}, loadEditTables);
+	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}, loadEditTables);
 	$('#set-job-task .pick-date, #search-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
 	
 	$('#task_search_user').val('<?php echo $userdata['userid']; ?>');
