@@ -50,15 +50,7 @@ class Customers extends crm_controller {
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_customer'])) {
             
             // check to see if this customer has a job on the system before deleting
-			$jobs = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
-			// $leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
-			
-			if ($jobs->num_rows() > 0) 
-			{
-				$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting invoice records!'));
-				redirect('customers/add_customer/update/' . $id);
-				exit();
-			}
+			$leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
 			
 			if ($leads->num_rows() > 0) 
 			{
@@ -122,14 +114,14 @@ class Customers extends crm_controller {
         
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
-		$data['categories'] = $this->customer_model->category_list();
-		$data['sales_agents'] = $this->customer_model->sales_agent_list();
+		// $data['categories'] = $this->customer_model->category_list();
+		// $data['sales_agents'] = $this->customer_model->sales_agent_list();
 		
         
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_customer'])) {
             $customer = $this->customer_model->get_customer($id);
-			$data['category_data'] = $this->customer_model->customer_categories($id);
-			$data['sales_agent_data'] = $this->customer_model->customer_sales_agent($id);
+			// $data['category_data'] = $this->customer_model->customer_categories($id);
+			// $data['sales_agent_data'] = $this->customer_model->customer_sales_agent($id);
 			
 			if ($this->userdata['level'] == 4 && !in_array($this->userdata['userid'], $data['sales_agent_data'])) {
 				$this->session->set_flashdata('access_error', 'You are not listed with this particular customer!');
@@ -163,8 +155,8 @@ class Customers extends crm_controller {
 				}
             }
           //  echo "<pre>"; print_r($update_data);
-			$categories = $this->input->post('customer_category');
-			$sales_agents = $this->input->post('customer_sales_agent');
+			// $categories = $this->input->post('customer_category');
+			// $sales_agents = $this->input->post('customer_sales_agent');
 			
 			
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
