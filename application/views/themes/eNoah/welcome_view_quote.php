@@ -48,8 +48,9 @@ var role_id = <?php echo $userdata['role_id'] ; ?>;
 	
 var job_categories = [];
 job_categories['not_select'] = '';
-<?php foreach ($cfg['job_categories'] as $jck => $jcv) { ?>
-job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
+
+<?php foreach ($job_cate as $job) { ?>
+job_categories[<?php echo $job["cid"] ?>] = '<?php echo $job["category"] ?>';
 <?php } ?>
 
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
@@ -860,7 +861,7 @@ $(function(){
 					<div class="q-init-details">
 						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
-						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $cfg['job_categories'][$quote_data['job_category']] ?></span></p>
+						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['job_category'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 								<?php
@@ -872,7 +873,7 @@ $(function(){
 								?>
 						</span>
 						</p>
-						<p class="clearfix"><label>Division </label><span><?php echo $cfg['sales_divisions'][$quote_data['division']] ?></span></p>
+						<p class="clearfix"><label>Division </label><span><?php echo $quote_data['division_name'] ?></span></p>
 						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
 						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
 						<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
@@ -954,7 +955,7 @@ $(function(){
 								<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 								<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['cfn'] . ' ' . $quote_data['cln'] : '' ?></span></p>
 								<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
+								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $quote_data['job_category'] : '' ?></span></p>
 							</div>
 							<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
 						</div>

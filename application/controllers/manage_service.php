@@ -272,8 +272,9 @@ class Manage_service extends crm_controller {
                 $this->session->set_flashdata('confirm', array('New Product Added!'));
                 
             }
-			//write the array
 			
+
+			/* //write the array
 			$table_name = $this->cfg['dbpref'].'job_categories'; // table Name 
 			$get_jobscat = $this->manage_service_model->get_list_active($table_name);
 			//echo "<pre>"; print_r($data['get_jobscat']);
@@ -294,7 +295,8 @@ class Manage_service extends crm_controller {
 			fwrite($file, ');');
 			fwrite($file, "\n");
 			fwrite($file, '?>');
-			fclose($file);
+			fclose($file); */
+
 			redirect('manage_service/');
 		}
 		$this->load->view('manage_service/manage_service_req_add', $data);
@@ -314,7 +316,7 @@ class Manage_service extends crm_controller {
 				$this->db->delete($this->cfg['dbpref']."job_categories", array('cid' => $id));
 				$this->session->set_flashdata('confirm', array('Product Deleted.!'));
 				$get_jobscat = $this->manage_service_model->get_list_active($this->cfg['dbpref']."job_categories");
-				$filename = APPPATH."config/job_categories.ini";
+				/* $filename = APPPATH."config/job_categories.ini";
 				$file = fopen($filename, "w");
 				fwrite($file, '<?php');
 				fwrite($file, "\n");
@@ -331,7 +333,7 @@ class Manage_service extends crm_controller {
 				fwrite($file, ');');
 				fwrite($file, "\n");
 				fwrite($file, '?>');
-				fclose($file);
+				fclose($file); */
 				redirect('manage_service/');
 			} else {
 				$this->session->set_flashdata('login_errors', array("Error Occured!."));
@@ -407,7 +409,7 @@ class Manage_service extends crm_controller {
                 $this->db->insert($this->cfg['dbpref']."sales_divisions", $update_data);
                 $this->session->set_flashdata('confirm', array('New Division Added!'));
             }
-				//write into array
+				/* //write into array
 				$get_salesDiv = $this->manage_service_model->get_list_active(sales_divisions);
 				$filename = APPPATH."config/sales_divisions.ini";
 				$file = fopen($filename, "w");
@@ -428,7 +430,7 @@ class Manage_service extends crm_controller {
 				fwrite($file, ');');
 				fwrite($file, "\n");
 				fwrite($file, '?>');
-				fclose($file);
+				fclose($file); */
 				redirect('manage_service/manage_sales');
 		}
 		$this->load->view('manage_service/manage_sales_division_add', $data);
@@ -448,7 +450,7 @@ class Manage_service extends crm_controller {
 				$this->db->delete("sales_divisions", array('div_id' => $id));
 				$this->session->set_flashdata('confirm', array('Division Deleted.!'));
 				$get_salesDiv = $this->manage_service_model->get_list_active(sales_divisions);
-				$filename = APPPATH."config/sales_divisions.ini";
+				/* $filename = APPPATH."config/sales_divisions.ini";
 					$file = fopen($filename, "w");
 					fwrite($file, '<?php');
 					fwrite($file, "\n");
@@ -467,7 +469,7 @@ class Manage_service extends crm_controller {
 					fwrite($file, ');');
 					fwrite($file, "\n");
 					fwrite($file, '?>');
-					fclose($file);
+					fclose($file); */
 					
 					redirect('manage_service/manage_sales');
 			}

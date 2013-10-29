@@ -1,6 +1,6 @@
 <?php
-require ('sales_divisions.ini');
-require ('job_categories.ini');
+// require ('sales_divisions.ini');
+// require ('job_categories.ini');
 
 /*
 *
@@ -77,11 +77,11 @@ $config['crm']['max_allowed_users'] = array(
 											);
 											
 $config['crm']['director_emails']  = array(
-                                    'Admin' => 'rshankar@enoahisolution.com',
+                                    'Admin' => 'ssriram@enoahisolution.com',
                                    );		
 
 $config['crm']['management_emails'] = array(
-									'Senior Management' => 'rshankar@enoahisolution.com',
+									'Senior Management' => 'ssriram@enoahisolution.com',
 								    );
 
 # keep in sync with above
@@ -208,5 +208,4 @@ navigate through the gallery.",
                                                'price' => 175
                                             ),
                                 );
-
 ?>

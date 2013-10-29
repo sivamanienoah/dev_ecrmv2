@@ -94,7 +94,8 @@ class Welcome extends crm_controller {
 	 * @access public
 	 * @param int $id - Job Id
 	 */
-	public function view_quote($id = 0, $quote_section = '') {
+	public function view_quote($id = 0, $quote_section = '') 
+	{
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		
@@ -179,8 +180,12 @@ HDOC;
 
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			
+			$data['job_categories'] = $this->welcome_model->get_job_categories();
+			
 			$this->load->view('welcome_view_quote', $data);
-        } else {
+        }
+		else 
+		{
             echo "Quote does not exist or if you are an account manager you may not be authorised to view this";
         }
     }
@@ -276,9 +281,77 @@ HDOC;
 		}
 		$data['lead_source'] = $this->welcome_model->get_lead_sources();
 		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
+		$data['job_cate'] = $this->welcome_model->get_job_categories();
+		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		
 		$this->load->view('welcome_view', $data);
 	}
+	
+	/**
+	 *  Set the quote editing interface
+	 */
+    function edit_quote($id = 0) 
+	{
+        if ( ($data['quote_data'] = $this->welcome_model->get_lead_all_detail($id)) !== FALSE )
+        {	
+            $data['edit_quotation'] = true;
+
+			$data['categories'] = $this->welcome_model->get_categories();
+			
+			$c = count($data['categories']);
+
+			for ($i = 0; $i < $c; $i++) {
+				$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
+			}
+			
+			$data['lead_source_edit'] = $this->welcome_model->get_lead_sources();
+			
+			$regid = $data['quote_data']['add1_region'];
+			$cntryid = $data['quote_data']['add1_country'];
+			$steid = $data['quote_data']['add1_state'];
+			$locid = $data['quote_data']['add1_location'];
+			
+			//for new level concept - start here
+			$reg_lvl_id = array(5,4,3);
+			$cont_lvl_id = array(5,4,2);
+			$ste_lvl_id = array(5,3,2);
+			$loc_lvl_id = array(4,3,2);
+			
+			$regUserList = $this->welcome_model->get_lvl_users('levels_region', 'region_id', $regid, $reg_lvl_id);
+			$cntryUserList = $this->welcome_model->get_lvl_users('levels_country', 'country_id', $cntryid, $cont_lvl_id);
+			$steUserList = $this->welcome_model->get_lvl_users('levels_state', 'state_id', $steid, $ste_lvl_id);
+			$locUserList = $this->welcome_model->get_lvl_users('levels_location', 'location_id', $locid, $loc_lvl_id);
+			$globalUserList = $this->welcome_model->get_lvlOne_users();
+
+			$userList = array_merge_recursive($regUserList, $cntryUserList, $steUserList, $locUserList, $globalUserList);
+			$users[] = 0;
+			foreach($userList as $us)
+			{
+				$users[] = $us['user_id'];
+			}	
+			
+			$userList = array_unique($users);
+			$userList = array_values($userList);
+
+			// $userList = implode(',', $userList);
+			$data['lead_assign_edit'] = $this->welcome_model->get_userlist($userList);
+			//for new level concept - end here
+			
+			$data['expect_worth'] = $this->welcome_model->get_expect_worths();
+			$data['lead_stage'] = $this->welcome_model->get_lead_stage();
+			$data['job_cate'] = $this->welcome_model->get_job_categories();
+			$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+			
+            $this->load->view('welcome_view', $data);
+        }
+        else
+        {
+            $this->session->set_flashdata('header_messages', array("Status Changed Successfully."));
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+            //redirect('welcome/quotation');
+        }
+        
+    }
 	
 	/**
 	 * Initiates and create the quote based on an ajax request
@@ -619,69 +692,6 @@ body {
                 return FALSE;
             }
         }
-    }
-	
-	/**
-	 *  Set the quote editing interface
-	 */
-    function edit_quote($id = 0) {
-        if ( ($data['quote_data'] = $this->welcome_model->get_lead_all_detail($id)) !== FALSE )
-        {	
-            $data['edit_quotation'] = true;
-
-			$data['categories'] = $this->welcome_model->get_categories();
-			
-			$c = count($data['categories']);
-
-			for ($i = 0; $i < $c; $i++) {
-				$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
-			}
-			
-			$data['lead_source_edit'] = $this->welcome_model->get_lead_sources();
-			
-			$regid = $data['quote_data']['add1_region'];
-			$cntryid = $data['quote_data']['add1_country'];
-			$steid = $data['quote_data']['add1_state'];
-			$locid = $data['quote_data']['add1_location'];
-			
-			//for new level concept - start here
-			$reg_lvl_id = array(5,4,3);
-			$cont_lvl_id = array(5,4,2);
-			$ste_lvl_id = array(5,3,2);
-			$loc_lvl_id = array(4,3,2);
-			
-			$regUserList = $this->welcome_model->get_lvl_users('levels_region', 'region_id', $regid, $reg_lvl_id);
-			$cntryUserList = $this->welcome_model->get_lvl_users('levels_country', 'country_id', $cntryid, $cont_lvl_id);
-			$steUserList = $this->welcome_model->get_lvl_users('levels_state', 'state_id', $steid, $ste_lvl_id);
-			$locUserList = $this->welcome_model->get_lvl_users('levels_location', 'location_id', $locid, $loc_lvl_id);
-			$globalUserList = $this->welcome_model->get_lvlOne_users();
-
-			$userList = array_merge_recursive($regUserList, $cntryUserList, $steUserList, $locUserList, $globalUserList);
-			$users[] = 0;
-			foreach($userList as $us)
-			{
-				$users[] = $us['user_id'];
-			}	
-			
-			$userList = array_unique($users);
-			$userList = array_values($userList);
-
-			// $userList = implode(',', $userList);
-			$data['lead_assign_edit'] = $this->welcome_model->get_userlist($userList);
-			//for new level concept - end here
-			
-			$data['expect_worth'] = $this->welcome_model->get_expect_worths();
-			$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-			
-            $this->load->view('welcome_view', $data);
-        }
-        else
-        {
-            $this->session->set_flashdata('header_messages', array("Status Changed Successfully."));
-			header('Location: ' . $_SERVER['HTTP_REFERER']);
-            //redirect('welcome/quotation');
-        }
-        
     }
 	
 	/**

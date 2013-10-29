@@ -14,10 +14,10 @@ $usernme = $this->session->userdata('logged_in_user');
 var curr_job_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var job_categories = [];
 job_categories['not_select'] = '';
-<?php foreach ($cfg['job_categories'] as $jck => $jcv) { ?>
-job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
-<?php } ?>
 
+<?php foreach ($job_cate as $job) { ?>
+job_categories[<?php echo $job["cid"] ?>] = '<?php echo $job["category"] ?>';
+<?php } ?>
 
 var item_inventory = [];
 <?php foreach ($cfg['item_inventory'] as $iv_key => $iv_val) { ?>
@@ -965,15 +965,13 @@ h3 .small {
                         </select>
                     </p>
                     <p><label>Service Requirement</label></p>
-                    
 					<p><select name="job_category" id="job_category" class="textfield width300px" onchange="$('.q-service-type span').html(job_categories[$(this).val()]);">
                             <option value="not_select">Please Select</option>
-                        <?php foreach ($cfg['job_categories'] as $jck => $jcv) {
-							if (! in_array($jck, $cfg['inactive_job_categories'])) {
-							?>
-                            <option value="<?php echo  $jck ?>"><?php echo  $jcv ?></option>
-                        <?
-							}
+                        <?php 
+						foreach ($job_cate as $job) { 
+						?>
+                            <option value="<?php echo $job['cid'] ?>"><?php echo $job['category'] ?></option>
+                        <?php
 						}
 						?>
                         </select>
@@ -1003,11 +1001,11 @@ h3 .small {
 						<select name="job_division" id="job_division" class="textfield width300px">
 							<option value="not_select">Please Select</option>
                             <?php
-							foreach ($cfg['sales_divisions'] as $sck => $scv)
+							foreach ($sales_divisions as $sa_div)
 							{
-								?>
-								<option value="<?php echo $sck ?>"><?php echo $scv ?></option>
-								<?php
+							?>
+								<option value="<?php echo $sa_div['div_id'] ?>"><?php echo $sa_div['division_name'] ?></option>
+							<?php
 							}
 							?>
                         </select>
@@ -1071,20 +1069,18 @@ h3 .small {
 				</form>
 
             <form action="" method="post" id="quote-edit-form" onsubmit="return false;">
-                <div> 
+                <div>
                     <p><label>Lead Title</label></p>
                     <p><input type="text" name="job_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?>" /></p>
-                    <!--p><label>Description</label></p>
-                    <p><textarea name="job_desc" id="job_desc_edit" class="textfield width300px height100px"><?php echo  htmlentities($quote_data['job_desc'], ENT_QUOTES) ?></textarea></p-->
 					<p><label>Lead Source</label></p>
                     <p><select name="lead_source_edit" id="lead_source_edit" class="textfield width300px">
                             <option value="not_select">Please Select</option>
-                        <?php foreach ($lead_source_edit as $leadedit) {
-							
-							?>
+                        <?php 
+						foreach ($lead_source_edit as $leadedit) 
+						{
+						?>
                             <option value="<?php echo  $leadedit['lead_source_id'] ?>"<?php echo  ($quote_data['lead_source'] == $leadedit['lead_source_id']) ? ' selected="selected"' : '' ?>><?php echo  $leadedit['lead_source_name'] ?></option>
                         <?php
-							
 						}
 						?>
                         </select>
@@ -1092,13 +1088,13 @@ h3 .small {
                     <p><label>Service Requirement</label></p>
                     <p><select name="job_category" id="job_category_edit" class="textfield width300px">
                             <option value="not_select">Please Select</option>
-                        <?php foreach ($cfg['job_categories'] as $jck => $jcv) {
-							if (! in_array($jck, $cfg['inactive_job_categories'])) {
-							?>
-                            <option value="<?php echo  $jck ?>"<?php echo  ($quote_data['job_category'] == $jck) ? ' selected="selected"' : '' ?>><?php echo  $jcv ?></option>
-                        <?php
+						<?php 
+							foreach ($job_cate as $job) 
+							{ 
+						?>
+							<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['job_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
+						<?php
 							}
-						}
 						?>
                         </select>
                     </p>
@@ -1134,11 +1130,11 @@ h3 .small {
 							<option value="not_select">Please Select</option>
                             <?php
 							
-							foreach ($cfg['sales_divisions'] as $sck => $scv)
+							foreach ($sales_divisions as $sa_div)
 							{								
-								?>
-								<option value="<?php echo $sck ?>"<?php echo ($quote_data['division'] == $sck) ? ' selected="selected"' : '' ?>><?php echo $scv ?></option>
-								<?php								
+							?>
+								<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
+							<?php								
 							}
 							?>
                         </select>
@@ -1434,7 +1430,7 @@ h3 .small {
 							<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 							<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
 							<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-							<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
+							<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $quote_data['job_category'] : '' ?></span></p>
 						</div>
 						<!-- end q-self -->
 						<?php 

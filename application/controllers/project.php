@@ -158,7 +158,7 @@ class Project extends crm_controller {
 			$data['list_users'] = $this->project_model->get_list_users($id);
 			
 			//For list the particular project team member in the welcome_view_project page.
-			$data['contract_users'] = $this->project_model->get_contract_users($id);	
+			$data['contract_users'] = $this->project_model->get_contract_users($id);
 
             $this->load->view('welcome_view_project', $data);
         }

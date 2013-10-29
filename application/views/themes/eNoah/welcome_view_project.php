@@ -96,9 +96,11 @@ $().ready(function() {
 
 var job_categories = [];
 job_categories['not_select'] = '';
+/*
 <?php foreach ($cfg['job_categories'] as $jck => $jcv) { ?>
 	job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
-<?php } ?>
+<?php } ?> 
+*/
 
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;
@@ -2067,7 +2069,7 @@ function setContractorJob()
 						<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 						<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
 						<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-						<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
+						<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $quote_data['job_category'] : '' ?></span></p>
 					</div>
 					
 					<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
