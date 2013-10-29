@@ -12,7 +12,6 @@ $userdata = $this->session->userdata('logged_in_user');
 	<form action="manage_service/search_lead/" method="post" id="cust_search_form">
 	
 		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	
 		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 			<tr>
 				<td>
