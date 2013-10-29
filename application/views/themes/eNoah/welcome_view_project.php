@@ -259,9 +259,9 @@ function addLog() {
 	)
 }
 
-function setPaymentRecievedTerms() {
+function setPaymentRecievedTerms() 
+{
 	$('#pr_form_jobid').val(curr_job_id);
-	
 	var valid_date = true;
 	var date_entered = true;
 	var errors = [];
@@ -309,18 +309,15 @@ function setPaymentRecievedTerms() {
 			form_data,
 			function(data) {
 					if (data.error) {
-						//alert(data.errormsg);
 						setTimeout('timerfadeout()', 8000);
 						$('#rec_paymentfadeout').show();
 						$('#rec_paymentfadeout').html(data.errormsg);
 					} else {
 						$('.payment-recieved-view:visible').slideUp(400);
 						$('.payment-received-mini-view1').html(data.msg);
-						//document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 						$('#payment-recieved-terms')[0].reset();
 					}
 				$.unblockUI();
-				//$('#payment-recieved-terms')[0].reset();
 			}
 			,'json'
 		);
@@ -329,7 +326,8 @@ function setPaymentRecievedTerms() {
 	$('.payment-received-mini-view1').css('display', 'block');
 }
 
-function updatePaymentRecievedTerms(pdid, eid) {
+function updatePaymentRecievedTerms(pdid, eid) 
+{
 	$('#pr_form_jobid').val(curr_job_id);
 	var valid_date = true;
 	var date_entered = true;
@@ -397,7 +395,8 @@ function updatePaymentRecievedTerms(pdid, eid) {
 	$('.payment-received-mini-view1').css('display', 'block');
 }
 
-function loadPaymentTerms() {
+function loadPaymentTerms() 
+{
 	$.post( 
 		'project/retrieve_record/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
@@ -409,8 +408,10 @@ function loadPaymentTerms() {
 		}
 	);
 }
+
 //function for load the payment terms every time click the 'Add Payment Terms' button
-function loadPayment() {
+function loadPayment() 
+{
 	$.post( 
 		'project/retrieve_payment_terms/'+curr_job_id,{'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(data) {
@@ -423,12 +424,11 @@ function loadPayment() {
 	);
 }
 
-function setProjectPaymentTerms() {
-
+function setProjectPaymentTerms() 
+{
 	$('#sp_form_jobid').val(curr_job_id);
 	$(".payment-terms-mini-view1").css("display","block");
-	$(".payment-received-mini-view1").css("display","none");
-	//var invoice_total = parseFloat($('#sp_form_invoice_total').val());	
+	$(".payment-received-mini-view1").css("display","none");	
 	var valid_date = true;
 	var date_entered = true;
 	var errors = [];
@@ -492,13 +492,12 @@ function setProjectPaymentTerms() {
 }
 
 //Update functionality for set payment terms Starts here.
-function updateProjectPaymentTerms(eid) {
-	//alert(eid); return false;
+function updateProjectPaymentTerms(eid) 
+{
 	$('#rec_paymentfadeout').hide();
 	$('#sp_form_jobid').val(curr_job_id);
 	$(".payment-terms-mini-view1").css("display","block");
 	$(".payment-received-mini-view1").css("display","none");
-	//var invoice_total = parseFloat($('#sp_form_invoice_total').val());	
 	var valid_date = true;
 	var date_entered = true;
 	var errors = [];
@@ -643,8 +642,10 @@ function runAjaxFileUpload()
 	return false;
 }
 
-function ajaxDeleteFile(path, el) {
-	if (window.confirm('Are you sure you want to delete this file?')) {
+function ajaxDeleteFile(path, el) 
+{
+	if (window.confirm('Are you sure you want to delete this file?')) 
+	{
 		path = js_urlencode(path);
 		$(el).parent().hide('slow');
 			
@@ -671,26 +672,8 @@ function ajaxDeleteFile(path, el) {
 	}
 }
 
-function get_silent_logs() {
-	var timestamp = $('div.log-container div.log:first p.data span').text();
-	var url = 'ajax/request/get_new_logs/' + curr_job_id + '/' + timestamp;
-	$.get(
-		url,
-		{},
-		function(_data) {
-			try {
-				eval ('var data = ' + _data);
-			} catch (e) {}
-			if (typeof(data) == 'object')
-			{
-				$('div.log-container').prepend(data.log_html);
-				$('div.log-container div.log:first:hidden').slideDown(300);
-			}
-		}
-	)
-}
-
-function addURLtoJob() {
+function addURLtoJob() 
+{
 	var url = $.trim($('#job-add-url').val());
 	var cont = $.trim($('#job-url-content').val());
 	if (url == '') {
@@ -1621,7 +1604,8 @@ function setContractorJob()
 				?>
 			</h2>
 			<?php
-				if (isset($quote_data['pjt_id'])) {
+				if (isset($quote_data['pjt_id'])) 
+				{
 					$varPjtId = $quote_data['pjt_id'];
 				}
 			?>
@@ -1847,7 +1831,6 @@ function setContractorJob()
 					<div id="show-con">
 						<?php if ($chge_access == 1) { ?>
 							<div class="list-contractors">
-								<?php //echo $contractor_list ?>
 								<div style="float:left;">
 									<span style="padding-left: 55px;">Members</span><br />
 									<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
@@ -1936,15 +1919,6 @@ function setContractorJob()
 						</form>
 					</div>
 					<?php
-						//mychanges
-						$jid = $this->uri->segment(3); //16 
-						$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
-						$jres = $jsql->result();
-						$worthid = $jres[0]->expect_worth_id;
-						$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
-						$eres = $expect_worth->result();
-						$symbol = $eres[0]->expect_worth_name;
-						
 						$output = '';
 						$output .= '<div class="payment-terms-mini-view1" style="display:block; float:left; margin-top:5px;">';
 					    if(!empty($payment_data))
@@ -1991,18 +1965,17 @@ function setContractorJob()
 								$output .= "<tr>";
 								$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
 								$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
-								$output .= "<td align='left'> ".$symbol.' '.number_format($pd['amount'], 2, '.', ',')."</td>";
+								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
 								$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
 								$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid'].");' >Delete</a></td>";
 								$output .= "</tr>";
-								//echo "<p><strong>Payment #{$pdi}</strong> &raquo; {$pd['percentage']}% by {$expected_date} = \${$payment_amount} {$payment_received}</p>";
 								$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
 								$pdi ++;
 							}
 							$output .= "<tr>";
 							$output .= "<td></td>";
-							$output .= "<td colspan='0'><b>Total Milestone Payment :</b></td><td><b>".$symbol.' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
+							$output .= "<td colspan='0'><b>Total Milestone Payment :</b></td><td><b>".$pd['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
 							$output .= "</tr>";
 							$output .= "</table>";
 						}
@@ -2035,21 +2008,11 @@ function setContractorJob()
 						</form>
 					    </div>
 						<?php 
-						//mychanges
-						$jid = $this->uri->segment(3); //16 
-						$jsql = $this->db->query("select expect_worth_id from crms_jobs where jobid='$jid'");
-						$jres = $jsql->result();
-						$worthid = $jres[0]->expect_worth_id;
-						$expect_worth = $this->db->query("select expect_worth_name from crms_expect_worth where expect_worth_id='$worthid'");
-						$eres = $expect_worth->result();
-						$symbol = $eres[0]->expect_worth_name;
-			
+		
 						$output = '';
 						$output .= '<div class="payment-received-mini-view1" style="float:left; display:none; margin-top:5px;">';
 						if(!empty($deposits_data))
 						{
-							//echo "<pre>"; print_r($deposits_data); exit;
-							//$output .= '<h3>Payment Recieved</h3>';
 							$pdi = 1;
 							$output .= '<option value="0"> &nbsp; </option>';
 							$output .= "<p><h6>Payment History</h6></p>";
@@ -2060,7 +2023,6 @@ function setContractorJob()
 							$output .= "<th class='header'>Date Received</th>";
 							$output .= "<th class='header'>Amt Received</th>";
 							$output .= "<th class='header'>Payment Term</th>";
-							//$output .= "<th class='header'>Status</th>";
 							$output .= "<th class='header'>Action</th>";
 							$output .= "</tr>";
 							$output .= "</thead>";
@@ -2072,7 +2034,7 @@ function setContractorJob()
 								$output .= "<tr align='left'>";
 								$output .= "<td>".$dd['invoice_no']."</td>";
 								$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
-								$output .= "<td> ".$symbol.' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+								$output .= "<td> ".$dd['expect_worth_name'].' '.number_format($dd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td>".$dd['payment_term']."</td>";
 								$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
 								$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
@@ -2080,10 +2042,9 @@ function setContractorJob()
 							}
 							$output .= "<tr>";
 							$output .= "<td></td>";
-							$output .= "<td><b>Total Payment: </b></td><td colspan='2'><b>".$symbol.' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+							$output .= "<td><b>Total Payment: </b></td><td colspan='2'><b>".$dd['expect_worth_name'].' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
 							$output .= "</tr>";
 							$output .= "</table>";
-						   
 						}
 						$output .= "</div>";
 						echo $output;
@@ -2093,553 +2054,552 @@ function setContractorJob()
 				}
 				?>
 	
-				</div><!-- class:q-view-main-top end -->
-			</div><!-- id: jv-tab-1 end -->
-			<div id="jv-tab-2"> 
-				<div class="q-container">
-					<div class="q-details">
-						<div class="q-top-head">
-							<div class="q-cust">
-								<h3 class="q-id"><em>Project</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
-								<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
-								<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
-								<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
-								<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
-							</div>
-							
-							<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
-						</div>
-						<div class="q-quote-items">
-							<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
-							<ul id="q-sort-items"></ul>
-						</div>
+		</div><!-- class:q-view-main-top end -->
+	</div><!-- id: jv-tab-1 end -->
+	
+	<div id="jv-tab-2"> 
+		<div class="q-container">
+			<div class="q-details">
+				<div class="q-top-head">
+					<div class="q-cust">
+						<h3 class="q-id"><em>Project</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
+						<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
+						<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
+						<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
+						<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
+						<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $cfg['job_categories'][$quote_data['job_category']] : '' ?></span></p>
 					</div>
+					
+					<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
 				</div>
-				<div class="q-sub-total<?php if ( ! $sensitive_information_allowed) echo ' display-none' ?>">
-					<table class="width565px" cellpadding="0" cellspacing="0" border="0">
-						<tr>
-							<td width="160">Sale Amount <span id="sale_amount"></span></td>
-							<td width="120" align="right">GST <span id="gst_amount"></span></td>
-							<td width="20">&nbsp;</td>
-							<td align="right">Total inc GST <span id="total_inc_gst"></span></td>
-						</tr>
-					</table>
+				<div class="q-quote-items">
+					<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
+					<ul id="q-sort-items"></ul>
 				</div>
-				<!--<div class="q-sub-total<?php //if (! in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)) || ! $sensitive_information_allowed) echo ' display-none' ?>">-->
-				<div class="q-sub-total<?php if ( ! $sensitive_information_allowed) echo ' display-none' ?>">
-					<table class="width565px" cellpadding="0" cellspacing="0" border="0">
-						<tr>
-							<td width="160">&nbsp;</td>
-							<td width="120" align="right">Deposits <span id="deposit_amount"></span></td>
-							<td width="20">&nbsp;</td>
-							<td align="right">Balance Due <span id="balance_amount"></span></td>
-						</tr>
-					</table>
-				</div>
+			</div>
+		</div>
+		<div class="q-sub-total<?php if ( ! $sensitive_information_allowed) echo ' display-none' ?>">
+			<table class="width565px" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td width="160">Sale Amount <span id="sale_amount"></span></td>
+					<td width="120" align="right">GST <span id="gst_amount"></span></td>
+					<td width="20">&nbsp;</td>
+					<td align="right">Total inc GST <span id="total_inc_gst"></span></td>
+				</tr>
+			</table>
+		</div>
 
-			</div><!-- id: jv-tab-2 end -->
+		<div class="q-sub-total<?php if ( ! $sensitive_information_allowed) echo ' display-none' ?>">
+			<table class="width565px" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td width="160">&nbsp;</td>
+					<td width="120" align="right">Deposits <span id="deposit_amount"></span></td>
+					<td width="20">&nbsp;</td>
+					<td align="right">Balance Due <span id="balance_amount"></span></td>
+				</tr>
+			</table>
+		</div>
+
+	</div><!-- id: jv-tab-2 end -->
 			
-			<div id="jv-tab-3">
-				<form name="ajax_file_upload">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<div id="upload-container">
-						<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
-						<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
-					</div>
-					<ul id="job-file-list">
-					<?php echo $job_files_html ?>
-					</ul>
-				</form>
-				
-			</div><!-- id: jv-tab-3 end -->
+	<div id="jv-tab-3">
+		<form name="ajax_file_upload">
+		
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<div id="upload-container">
+				<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
+				<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
+			</div>
+			<ul id="job-file-list">
+			<?php echo $job_files_html ?>
+			</ul>
+		</form>
+		
+	</div><!-- id: jv-tab-3 end -->
 			
-			<div id="jv-tab-4">
-				<form id="set-job-task" onsubmit="return false;">
+	<div id="jv-tab-4">
+		<form id="set-job-task" onsubmit="return false;">
+		
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<h3>Tasks</h3>
+			<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
 				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<tr>
+					<td colspan="4">
+						<strong>All fields are required!</strong>
+					</td>
+				</tr>
 				
-					<h3>Tasks</h3>
-					<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
-						
-						<tr>
-							<td colspan="4">
-								<strong>All fields are required!</strong>
-							</td>
-						</tr>
-						
-						<tr>
-							<td valign="top">
-								<br /><br />Task
-							</td>
-							<td colspan="3">
-								<strong><span id="task-desc-countdown">240</span></strong> characters left.<br />
-								<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Allocate to
-							</td>
-							<td>
-								<select name="task_user" class="textfield width100px">
-								<?php
-								//echo $remind_options, $remind_options_all, $contractor_options;
-								echo $remind_options, $remind_options_all;
-								?>
-								</select>
-							</td>
-						</tr>
-						
-						<tr>
-							<td>
-								Planned Start Date
-							</td>
-							<td>
-								<input type="text" name="task_start_date" class="textfield pick-date width100px" />
-							</td>
-							<td>
-								Planned End Date
-							</td>
-							<td>
-								<input type="text" name="task_end_date" class="textfield pick-date width100px" />
-							</td>
-							
-						</tr>
-						<tr>
-							<td>Remarks</td>
-							<td colspan="3"><textarea name="remarks" id="task-remarks" class="task-remarks" width="420px"></textarea></td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
-								</div>
-							</td>
-						</tr>
-					</table>
-					<div class="buttons task-init  toggler">
-						<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>
-					</div>
-					
-					<div class="existing-task-list">
-						<br /><br />
-						<h4>Existing Tasks</h4>
-					</div>
-				</form>
+				<tr>
+					<td valign="top">
+						<br /><br />Task
+					</td>
+					<td colspan="3">
+						<strong><span id="task-desc-countdown">240</span></strong> characters left.<br />
+						<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Allocate to
+					</td>
+					<td>
+						<select name="task_user" class="textfield width100px">
+						<?php
+						//echo $remind_options, $remind_options_all, $contractor_options;
+						echo $remind_options, $remind_options_all;
+						?>
+						</select>
+					</td>
+				</tr>
 				
-				<form id="edit-job-task" onsubmit="return false;">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-				<!-- edit task -->
-					<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
-						
-						<tr>
-							<td colspan="4">
-								<strong>All fields are required!</strong>
-							</td>
-						</tr>
-						
-						<tr>
-							<td valign="top" width="80">
-								<br /><br />Task
-							</td>
-							<td colspan="3">
-								<strong><span id="edit-task-desc-countdown">240</span></strong> characters left.<br />
-								<textarea name="job_task" class="edit-job-task-desc width420px"></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Allocate to
-							</td>
-							<td>
-								<select name="task_user" class="edit-task-allocate textfield width100px">
-								<?php
-								echo $remind_options, $remind_options_all, $contractor_options;
-								?>
-								</select>
-							</td>
-							
-						</tr>
-						
-						<tr>
-							<td>
-								Planned Start Date
-							</td>
-							<td>
-								<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
-							</td>
-							<td>
-								Planned End Date
-							</td>
-							<td>
-								<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />
-							</td>
-						</tr>
-						
-						<tr>
-							<td>
-								Actual Start Date
-							</td>
-							<td>
-								<input type="text" name="edit-actualstart-date" class="edit-actualstart-date textfield pick-date width100px" />
-							</td>
-							<td>
-								Actual End Date
-							</td>
-							<td>
-								<input type="text" name="edit-actualend-date" class="edit-actualend-date textfield pick-date width100px" />
-							</td>
-						</tr>
-						<tr>
-							<td>Remarks</td>
-							<td colspan="3"><textarea name="remarks" id="edit-task-remarks" class="edit-task-remarks" width="420px"></textarea></td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="editTask();">Edit</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button>
-								</div>
-							</td>
-						</tr>
-					</table>
-				<!-- edit task end -->
-				</form>
-				
-			</div><!-- id: jv-tab-4 end -->
-			
-			<div id="jv-tab-4-5">
-				<form id="milestone-management" onsubmit="return false;">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<h3>Milestones</h3>
-					<table id="milestone-clone" style="display:none;">
-						<tr>
-							<td class="milestone">
-								<input type="text" name="milestone[]" class="textfield width250px" />
-							</td>
-							<td class="milestone-date">
-								<input type="text" name="milestone_date[]" class="textfield width80px pick-date" />
-							</td>
-							<td class="milestone-status">
-								<select name="milestone_status[]" class="textfield width80px">
-									<option value="0">Scheduled</option>
-									<option value="1">In Progress</option>
-									<option value="2">Completed</option>
-								</select>
-							</td>
-							<td class="milestone-action" valign="middle">
-								&nbsp; <a href="#" onclick="removeMilestoneRow(this); return false;">Remove</a>
-							</td>
-						</tr>
-					</table>
+				<tr>
+					<td>
+						Planned Start Date
+					</td>
+					<td>
+						<input type="text" name="task_start_date" class="textfield pick-date width100px" />
+					</td>
+					<td>
+						Planned End Date
+					</td>
+					<td>
+						<input type="text" name="task_end_date" class="textfield pick-date width100px" />
+					</td>
 					
-					<table id="milestone-data">
-						<thead>
-							<tr>
-								<th align="left">Item</th>
-								<th>Date</th>
-								<th>Status</th>
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-					
-					<div class="buttons">
-						<button type="submit" class="positive" onclick="addMilestoneField();">Add New</button>
-						<button type="submit" class="positive" onclick="saveMilestones();">Save List</button>
-						<button type="submit" class="positive" onclick="emailMilestones();">Email Timeline</button>
-					</div>
-					
-				</form>
-				
-				<script type="text/javascript">
-				var milestones_cached_row = false;
-				function addMilestoneField()
-				{
-					if ( ! milestones_cached_row)
-					{
-						milestones_cached_row = $('#milestone-clone tr:first');
-					}
-					
-					milestones_cached_row.clone().appendTo('#milestone-data tbody');
-					$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-				}
-				
-				function removeMilestoneRow(el)
-				{
-					var agree=confirm("Are you sure you want to delete this milestone?");
-						if (agree) {
-							$(el).parent().parent().remove();
-						}
-						var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-					
-					$('#jv-tab-4-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					
-					$.post(
-						'ajax/request/save_job_overview/' + curr_job_id,
-						data,
-						function(detail)
-						{
-							if ($.trim(detail) != '')
-							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-							}
-							$('#jv-tab-4-5').unblock();
-						}
-					);
-					return false;
-				}
-				
-				function saveMilestones()
-				{
-					var error = false;
-					
-					$('#milestone-data tbody tr').each(function(){
-						if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
-						{
-							error = 'All milestones and dates are required!';
-						}
-					});
-					
-					if (error)
-					{
-						alert(error);
-						return;
-					}
-					
-					var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-					
-					$('#jv-tab-4-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					
-					$.post(
-						'ajax/request/save_job_overview/' + curr_job_id,
-						data,
-						function(detail)
-						{
-							if ($.trim(detail) != '')
-							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-							}
-							$('#jv-tab-4-5').unblock();
-						}
-					);
-				}
-				
-				function emailMilestones()
-				{
-					var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
-					var obj = $('#milestone-data tbody tr');
-					
-					if (obj.length == 0)
-					{
-						alert('No records are there to email!');
-						return false;
-					}
-					var email_data = '';
-					obj.each(function(){
-						var ddate = $('.milestone-date input', $(this)).val();
-						var mstone = $('.milestone input', $(this)).val();
-						var mstat = $('.milestone-status select option:selected', $(this)).val();
-						
-						email_data += ddate + ' : ' + mstone;
-						if (mstat == 2)
-						{
-							email_data += ' [completed]';
-						}
-						email_data += '\n';
-					});
-					
-					$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
-					$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-					
-					return false;
-				}
-				
-				function populateJobOverview()
-				{
-					$('#jv-tab-4-5').block({
-										message:'<img src="assets/img/ajax-loader.gif" />',
-										css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-									});
-					$.get(
-						'ajax/request/get_job_overview/' + curr_job_id,
-						{},
-						function(detail)
-						{
-							if ($.trim(detail) != '')
-							{
-								$('#milestone-data tbody').html(detail);
-								$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-							}
-							$('#jv-tab-4-5').unblock();
-						}
-					);
-				}
-				</script>
+				</tr>
+				<tr>
+					<td>Remarks</td>
+					<td colspan="3"><textarea name="remarks" id="task-remarks" class="task-remarks" width="420px"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="addNewTask('','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
+						</div>
+						<div class="buttons">
+							<button type="submit" class="negative" onclick="$('.toggler').slideToggle();">Cancel</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="buttons task-init  toggler">
+				<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>
 			</div>
 			
-			<div id="jv-tab-5">
-			<?php //echo"<pre>"; print_r($quote_data); exit; ?>
-				<form id="customer-detail-read-only" onsubmit="return false;">
+			<div class="existing-task-list">
+				<br /><br />
+				<h4>Existing Tasks</h4>
+			</div>
+		</form>
+		
+		<form id="edit-job-task" onsubmit="return false;">
+		
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+		<!-- edit task -->
+			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
 				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<tr>
+					<td colspan="4">
+						<strong>All fields are required!</strong>
+					</td>
+				</tr>
 				
-				<table class="tabbed-cust-layout" cellspacing="0" cellpadding="0">
-					<tr>
-						<td width="120"><label><b>First Name:</b></label></td>
-						<td><b><?php echo $quote_data['first_name'] ?></b></td>
-					</tr>
+				<tr>
+					<td valign="top" width="80">
+						<br /><br />Task
+					</td>
+					<td colspan="3">
+						<strong><span id="edit-task-desc-countdown">240</span></strong> characters left.<br />
+						<textarea name="job_task" class="edit-job-task-desc width420px"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Allocate to
+					</td>
+					<td>
+						<select name="task_user" class="edit-task-allocate textfield width100px">
+						<?php
+						echo $remind_options, $remind_options_all, $contractor_options;
+						?>
+						</select>
+					</td>
 					
-					<tr>
-						<td><label><b>Last Name:</b></label></td>
-						<td><b><?php echo $quote_data['last_name'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Position:</b></label></td>
-						<td><b><?php echo $quote_data['position_title'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Company:</b></label></td>
-						<td><b><?php echo $quote_data['company'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Address Line 1:</b></label></td>
-						<td><b><?php echo $quote_data['add1_line1'] ?></b></td>
-					</tr>
-						
-					<tr>
-						<td><label><b>Address Line 2:</b></label></td>
-						<td><b><?php echo $quote_data['add1_line2'] ?></b></td>
-					</tr>
-						
-					<tr>
-						<td><label><b>Suburb:</b></label></td>
-						<td><b><?php echo $quote_data['add1_suburb'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Region:</b></label></td>
-						<td><b><?php echo $quote_data['region_name'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Country:</b></label></td>
-						<td><b><?php echo $quote_data['country_name'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>State:</b></label></td>
-						<td><b><?php echo $quote_data['state_name'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Location:</b></label></td>
-						<td><b><?php echo $quote_data['location_name'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Post code:</b></label></td>
-						<td><b><?php echo $quote_data['add1_postcode'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Direct Phone:</b></label></td>
-						<td><b><?php echo $quote_data['phone_1'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Work Phone:</b></label></td>
-						<td><b><?php echo $quote_data['phone_2'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Mobile Phone:</b></label></td>
-						<td><b><?php echo $quote_data['phone_3'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Fax Line:</b></label></td>
-						<td><b><?php echo $quote_data['phone_4'] ?></b></td>
-					</tr>
-
-					<tr>
-						<td><label><b>Email:</b></label></td>
-						<td><b><?php echo $quote_data['email_1'] ?></b></td>
-					</tr>
-
-					<tr>
-						<td><label><b>Secondary Email:</b></label></td>
-						<td><b><?php echo $quote_data['email_2'] ?></b></td>
-					</tr>
-
-					<tr>
-						<td><label><b>Email 3:</b></label></td>
-						<td><b><?php echo $quote_data['email_3'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Email 4:</b></label></td>
-						<td><b><?php echo $quote_data['email_4'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Web:</b></label></td>
-						<td><b><?php echo $quote_data['www_1'] ?></b></td>
-					</tr>
-					
-					<tr>
-						<td><label><b>Secondary Web:</b></label></td>
-						<td><b><?php echo $quote_data['www_2'] ?></b></td>
-					</tr>
-				</table>
-				</form>
-			</div><!-- id: jv-tab-5 end -->
+				</tr>
+				
+				<tr>
+					<td>
+						Planned Start Date
+					</td>
+					<td>
+						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
+					</td>
+					<td>
+						Planned End Date
+					</td>
+					<td>
+						<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						Actual Start Date
+					</td>
+					<td>
+						<input type="text" name="edit-actualstart-date" class="edit-actualstart-date textfield pick-date width100px" />
+					</td>
+					<td>
+						Actual End Date
+					</td>
+					<td>
+						<input type="text" name="edit-actualend-date" class="edit-actualend-date textfield pick-date width100px" />
+					</td>
+				</tr>
+				<tr>
+					<td>Remarks</td>
+					<td colspan="3"><textarea name="remarks" id="edit-task-remarks" class="edit-task-remarks" width="420px"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="editTask();">Edit</button>
+						</div>
+						<div class="buttons">
+							<button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		<!-- edit task end -->
+		</form>
+		
+	</div><!-- id: jv-tab-4 end -->
 			
-			<div id="jv-tab-7">
-				<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<p>Add URL to this job (full URL including http://)</p>
-					<p><input type="text" class="textfield" id="job-add-url" style="margin:0; width:250px;" /></p>
-					<p>Details (optional)</p>
-					<p><textarea id="job-url-content" class="textfield" style="margin:0; width:250px;"></textarea></p>
-					<div class="buttons">
-						<button type="submit" class="positive" onclick="addURLtoJob(); return false;">Add</button>
-					</div>
-				</form>
-				<ul id="job-url-list">
-				<?php echo $job_urls_html ?>
-				</ul>
-			</div><!-- id: jv-tab-7 end -->
+	<div id="jv-tab-4-5">
+		<form id="milestone-management" onsubmit="return false;">
+		
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<h3>Milestones</h3>
+			<table id="milestone-clone" style="display:none;">
+				<tr>
+					<td class="milestone">
+						<input type="text" name="milestone[]" class="textfield width250px" />
+					</td>
+					<td class="milestone-date">
+						<input type="text" name="milestone_date[]" class="textfield width80px pick-date" />
+					</td>
+					<td class="milestone-status">
+						<select name="milestone_status[]" class="textfield width80px">
+							<option value="0">Scheduled</option>
+							<option value="1">In Progress</option>
+							<option value="2">Completed</option>
+						</select>
+					</td>
+					<td class="milestone-action" valign="middle">
+						&nbsp; <a href="#" onclick="removeMilestoneRow(this); return false;">Remove</a>
+					</td>
+				</tr>
+			</table>
 			
-        </div>
+			<table id="milestone-data">
+				<thead>
+					<tr>
+						<th align="left">Item</th>
+						<th>Date</th>
+						<th>Status</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="addMilestoneField();">Add New</button>
+				<button type="submit" class="positive" onclick="saveMilestones();">Save List</button>
+				<button type="submit" class="positive" onclick="emailMilestones();">Email Timeline</button>
+			</div>
+			
+		</form>
+		
+		<script type="text/javascript">
+			var milestones_cached_row = false;
+			function addMilestoneField()
+			{
+				if ( ! milestones_cached_row)
+				{
+					milestones_cached_row = $('#milestone-clone tr:first');
+				}
+				
+				milestones_cached_row.clone().appendTo('#milestone-data tbody');
+				$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+			}
+			
+			function removeMilestoneRow(el)
+			{
+				var agree=confirm("Are you sure you want to delete this milestone?");
+					if (agree) {
+						$(el).parent().parent().remove();
+					}
+					var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+				
+				$('#jv-tab-4-5').block({
+									message:'<img src="assets/img/ajax-loader.gif" />',
+									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+								});
+				
+				$.post(
+					'ajax/request/save_job_overview/' + curr_job_id,
+					data,
+					function(detail)
+					{
+						if ($.trim(detail) != '')
+						{
+							$('#milestone-data tbody').html(detail);
+							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+						}
+						$('#jv-tab-4-5').unblock();
+					}
+				);
+				return false;
+			}
+			
+			function saveMilestones()
+			{
+				var error = false;
+				
+				$('#milestone-data tbody tr').each(function(){
+					if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
+					{
+						error = 'All milestones and dates are required!';
+					}
+				});
+				
+				if (error)
+				{
+					alert(error);
+					return;
+				}
+				
+				var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+				
+				$('#jv-tab-4-5').block({
+									message:'<img src="assets/img/ajax-loader.gif" />',
+									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+								});
+				
+				$.post(
+					'ajax/request/save_job_overview/' + curr_job_id,
+					data,
+					function(detail)
+					{
+						if ($.trim(detail) != '')
+						{
+							$('#milestone-data tbody').html(detail);
+							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+						}
+						$('#jv-tab-4-5').unblock();
+					}
+				);
+			}
+			
+			function emailMilestones()
+			{
+				var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
+				var obj = $('#milestone-data tbody tr');
+				
+				if (obj.length == 0)
+				{
+					alert('No records are there to email!');
+					return false;
+				}
+				var email_data = '';
+				obj.each(function(){
+					var ddate = $('.milestone-date input', $(this)).val();
+					var mstone = $('.milestone input', $(this)).val();
+					var mstat = $('.milestone-status select option:selected', $(this)).val();
+					
+					email_data += ddate + ' : ' + mstone;
+					if (mstat == 2)
+					{
+						email_data += ' [completed]';
+					}
+					email_data += '\n';
+				});
+				
+				$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
+				$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
+				
+				return false;
+			}
+			
+			function populateJobOverview()
+			{
+				$('#jv-tab-4-5').block({
+									message:'<img src="assets/img/ajax-loader.gif" />',
+									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+								});
+				$.get(
+					'ajax/request/get_job_overview/' + curr_job_id,
+					{},
+					function(detail)
+					{
+						if ($.trim(detail) != '')
+						{
+							$('#milestone-data tbody').html(detail);
+							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+						}
+						$('#jv-tab-4-5').unblock();
+					}
+				);
+			}
+		</script>
 	</div>
+			
+	<div id="jv-tab-5">
+		<form id="customer-detail-read-only" onsubmit="return false;">
+		
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+		<table class="tabbed-cust-layout" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="120"><label><b>First Name:</b></label></td>
+				<td><b><?php echo $quote_data['first_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Last Name:</b></label></td>
+				<td><b><?php echo $quote_data['last_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Position:</b></label></td>
+				<td><b><?php echo $quote_data['position_title'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Company:</b></label></td>
+				<td><b><?php echo $quote_data['company'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Address Line 1:</b></label></td>
+				<td><b><?php echo $quote_data['add1_line1'] ?></b></td>
+			</tr>
+				
+			<tr>
+				<td><label><b>Address Line 2:</b></label></td>
+				<td><b><?php echo $quote_data['add1_line2'] ?></b></td>
+			</tr>
+				
+			<tr>
+				<td><label><b>Suburb:</b></label></td>
+				<td><b><?php echo $quote_data['add1_suburb'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Region:</b></label></td>
+				<td><b><?php echo $quote_data['region_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Country:</b></label></td>
+				<td><b><?php echo $quote_data['country_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>State:</b></label></td>
+				<td><b><?php echo $quote_data['state_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Location:</b></label></td>
+				<td><b><?php echo $quote_data['location_name'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Post code:</b></label></td>
+				<td><b><?php echo $quote_data['add1_postcode'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Direct Phone:</b></label></td>
+				<td><b><?php echo $quote_data['phone_1'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Work Phone:</b></label></td>
+				<td><b><?php echo $quote_data['phone_2'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Mobile Phone:</b></label></td>
+				<td><b><?php echo $quote_data['phone_3'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Fax Line:</b></label></td>
+				<td><b><?php echo $quote_data['phone_4'] ?></b></td>
+			</tr>
+
+			<tr>
+				<td><label><b>Email:</b></label></td>
+				<td><b><?php echo $quote_data['email_1'] ?></b></td>
+			</tr>
+
+			<tr>
+				<td><label><b>Secondary Email:</b></label></td>
+				<td><b><?php echo $quote_data['email_2'] ?></b></td>
+			</tr>
+
+			<tr>
+				<td><label><b>Email 3:</b></label></td>
+				<td><b><?php echo $quote_data['email_3'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Email 4:</b></label></td>
+				<td><b><?php echo $quote_data['email_4'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Web:</b></label></td>
+				<td><b><?php echo $quote_data['www_1'] ?></b></td>
+			</tr>
+			
+			<tr>
+				<td><label><b>Secondary Web:</b></label></td>
+				<td><b><?php echo $quote_data['www_2'] ?></b></td>
+			</tr>
+		</table>
+		</form>
+	</div><!-- id: jv-tab-5 end -->
+			
+	<div id="jv-tab-7">
+		<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
+		
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<p>Add URL to this job (full URL including http://)</p>
+			<p><input type="text" class="textfield" id="job-add-url" style="margin:0; width:250px;" /></p>
+			<p>Details (optional)</p>
+			<p><textarea id="job-url-content" class="textfield" style="margin:0; width:250px;"></textarea></p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="addURLtoJob(); return false;">Add</button>
+			</div>
+		</form>
+		<ul id="job-url-list">
+			<?php echo $job_urls_html ?>
+		</ul>
+	</div><!-- id: jv-tab-7 end -->
+</div>
+</div>
 </div>
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
@@ -2655,7 +2615,6 @@ $(document).ready(function()
 <!--Add Payment Terms Edit function Starts here -->
 function paymentProfileEdit(eid) 
 {
-	//alert(eid);
 	$(".payment-profile-view").show();
 	var jid = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 	setTimeout('timerfadeout()', 2000);
@@ -2722,7 +2681,8 @@ function paymentReceivedDelete(eid,map) {
 }
 
 
-function paymentReceivedView() {
+function paymentReceivedView() 
+{
 	var url = "project/PaymentView";
 	$('#payment-recieved-view').load(url);
 }

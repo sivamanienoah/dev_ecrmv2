@@ -132,7 +132,8 @@ class Project extends crm_controller {
 			
 			if ($data['quote_data']['payment_terms'] == 1)
 			{
-				$data['payment_data'] = $this->project_model->get_payment_terms($data['quote_data']['jobid']);
+				// $data['payment_data'] = $this->project_model->get_payment_terms($data['quote_data']['jobid']);
+				$data['payment_data'] = $this->project_model->get_expect_payment_terms($data['quote_data']['jobid']);
 			}
 			
 			$deposits = $this->project_model->get_deposits_data($data['quote_data']['jobid']);
@@ -1187,7 +1188,7 @@ body { margin: 0px; }
 		{	
 			$ins_data = array('jobid_fk' => $updt_data['pr_form_jobid'], 'invoice_no' => $updt_data['pr_date_1'], 'amount' => $updt_data['pr_date_2'],
 						  'deposit_date' => date('Y-m-d H:i:s', strtotime($updt_data['pr_date_3'])), 'comments' => $updt_data['pr_date_4'], 
-						  'payment_received' => 1, 'map_term' => $updt_data['deposit_map_field']);
+						  'userid_fk' => $this->userdata['userid'], 'payment_received' => 1, 'map_term' => $updt_data['deposit_map_field']);
 			
 			if ($update == "")
 			{

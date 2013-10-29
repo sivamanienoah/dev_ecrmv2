@@ -543,7 +543,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$update}");
-					$task_owners = $task_owner_name->result_array();
+				$task_owners = $task_owner_name->result_array();
 
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
@@ -682,10 +682,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 				$this->email->subject($subject);
 				$this->email->message($email_body_task_content);
 				$this->email->send();
-				
-				
-				
-				
+
 			}
 			else if ($update == 'NO')
 			{
@@ -707,7 +704,6 @@ function add_job_task($update = 'NO', $random = 'NO')
 					$creator = $this->user_model->get_user($this->userdata['userid']);
 					$creator = $creator[0];
 					$task_owner = $this->user_model->get_user($ins['userid_fk']);
-					//$task_owner = $task_owner[0];
 					$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
 					$taskSetToEmail=$task_owner[0]['email'];
 					$hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
@@ -1131,19 +1127,14 @@ EOD;
 				}
 		}
 		
-		if($uid==$taskcid){
-			//$pl_sel = '';			
-			//$taskuserid= '<option value="1">' . $array['user_label'] . '</option>';
-			
+		if($uid==$taskcid) {			
 			$taskuserid=$array['user_label'];
 			$taskuserid_read="";
 		} else {
 			$taskuserid=$array['user_label'];
 			$taskuserid_read ="read";
 		}
-				
-		/*ends*/ 
-		
+
 		
 		$qc_required = (isset($array['require_qc'])) ? $array['require_qc'] : '0';
 		foreach($data['lead_assign'] as $val) {
@@ -1275,14 +1266,7 @@ EOD;
 		$taskid = (isset($_POST['taskid'])) ? $_POST['taskid'] : 0;
 		//mychanges
 			$taskstat = $_POST['task_status'];	
-			/*if($taskstat == 100) {
-				$task_table = $this->cfg['dbpref'].'tasks';
-				$ud = array();
-				$ud['status'] = 100;
-				$ud['actualend_date'] = date('Y-m-d H:i:s');
-				$this->db->where('taskid', $taskid);
-				$this->db->update($task_table, $ud);			
-			} */
+
 		//mychanges ends
 		$q = $this->db->get_where($task_table, array('taskid' => $taskid));
 		
@@ -1828,11 +1812,6 @@ EOD;
 		{
 			$errors[] = 'Valid leadid is required!';
 		}
-				
-		/*if ($update != 'NO')
-		{
-			$errors[] = 'Only the production manager can edit the tasks!';
-		}*/
 		
 		if (count($errors) > 0)
 		{

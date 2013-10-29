@@ -290,14 +290,14 @@ class Project_model extends crm_model
 	
 	function get_deposits_data($id) 
 	{
-		$this->db->select($this->cfg['dbpref'].'deposits.*');
-		$this->db->select($this->cfg['dbpref'].'expected_payments.project_milestone_name AS payment_term');
-		$this->db->from($this->cfg['dbpref'] . 'deposits');
-		$this->db->where($this->cfg['dbpref'].'deposits.jobid_fk', $id);
-		$this->db->join($this->cfg['dbpref'].'expected_payments', $this->cfg['dbpref'].'deposits.map_term = '.$this->cfg['dbpref'].'expected_payments.expectid', 'left');
+		$this->db->select('de.*, exp.project_milestone_name AS payment_term, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'] . 'deposits as de');
+		$this->db->join($this->cfg['dbpref'].'expected_payments as exp', 'exp.expectid = de.map_term', 'left');
+		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.jobid = de.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = jb.expect_worth_id', 'left');
+		$this->db->where('de.jobid_fk', $id);
 		$this->db->order_by('depositid', 'asc');
 		$deposits = $this->db->get();
-		// echo $this->db->last_query(); exit;
 		return $deposits->result_array();
 	}
 	

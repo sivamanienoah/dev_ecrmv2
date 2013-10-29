@@ -423,25 +423,6 @@ var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="t
 	return false;
 }
 
-function get_silent_logs() {
-	var timestamp = $('div.log-container div.log:first p.data span').text();
-	var url = 'ajax/request/get_new_logs/' + curr_job_id + '/' + timestamp;
-	$.get(
-		url,
-		{},
-		function(_data) {
-			try {
-				eval ('var data = ' + _data);
-			} catch (e) {}
-			if (typeof(data) == 'object')
-			{
-				$('div.log-container').prepend(data.log_html);
-				$('div.log-container div.log:first:hidden').slideDown(300);
-			}
-		}
-	)
-}
-
 function addURLtoJob() {
 	var url = $.trim($('#job-add-url').val());
 	var cont = $.trim($('#job-url-content').val());
@@ -493,13 +474,15 @@ function ajaxDeleteJobURL(id, el) {
 	)
 }
 
-function whatAreStickies() {
+function whatAreStickies() 
+{
 	var msg = 'Stickies are logs that are important.\nInformation that is vital to the job.\nInformtion that you need to find quickily without reading through all the communication.\nA URL, FTP/MySQL details, Important changes etc.';
 	alert(msg);
 	return false;
 }
 
-function whatIsSignature() {
+function whatIsSignature() 
+{
 	var msg = 'This is your signature!\nThis will be attached to any log that you email through.\nGo to "My Account" page to set your signature.';
 	alert(msg);
 	return false;
