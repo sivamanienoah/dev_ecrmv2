@@ -357,11 +357,13 @@ class Regionsettings extends crm_controller {
 	*/
 	
 	public function getState($value,$id,$updt) {
+	
 		$data=array();
 		$data = $this->regionsettings_model->getstate_list($value);
 		$opt = '';
 		$opt .= '<select name="add1_state" id="add1_state" onchange="getLocation(this.value)" class="textfield width200px">';
 		$opt .= '<option value="0">Select State</option>';
+
 		foreach($data as $state){
 			if($id == $state['stateid']) 
 			$opt .= '<option value="'.$state['stateid'].'" selected = "selected" >'.$state['state_name'].'</option>';			

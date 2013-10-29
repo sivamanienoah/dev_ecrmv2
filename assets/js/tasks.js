@@ -218,9 +218,11 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
+	var param =	{'jobid': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner };
+	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,
-		{'jobid': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner },
+		param,
 		function (data)
 		{
 			if (data.error)
@@ -275,6 +277,9 @@ var _task_require_qc = false;
 
 function setTaskStatus(taskid, el)
 {	
+
+	var params = {};
+
 	//dynamically bring the hostname and project folder name.
 	var hstname = window.location.host;
 	var pathname = window.location.pathname;
@@ -288,7 +293,8 @@ function setTaskStatus(taskid, el)
 	/* just set as complete */
 	if (typeof el == 'string' && el == 'complete')
 	{
-		var params = {'taskid': taskid, 'set_as_complete': true};
+		params = {'taskid': taskid, 'set_as_complete': true};
+		params[csrf_token_name] = csrf_hash_token;
 	}
 	else if (typeof el == 'string' && el == 'delete') /* delete task */
 	{
@@ -299,7 +305,8 @@ function setTaskStatus(taskid, el)
 		}
 		else
 		{
-			var params = {'taskid': taskid, 'delete_task': true};
+			params = {'taskid': taskid, 'delete_task': true};
+			params[csrf_token_name] = csrf_hash_token;
 		}
 	}
 	else /* set the status */
@@ -328,7 +335,8 @@ function setTaskStatus(taskid, el)
 			notifyPM = 'YES';
 		}
 		//alert(task_status_val);
-		var params = {'taskid': taskid, 'task_status': task_status_val, 'notify_pm': notifyPM};
+		params = {'taskid': taskid, 'task_status': task_status_val, 'notify_pm': notifyPM};
+		params[csrf_token_name] = csrf_hash_token;
 	}
 	$.post(
 			'ajax/request/set_task_status',
