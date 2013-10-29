@@ -215,7 +215,7 @@ class Master extends crm_controller {
 		# now get the logs for the master on that day
 		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
 				FROM ".$this->cfg['dbpref']."logs
-				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
 				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `masterid_fk` = ?
 				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";

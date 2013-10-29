@@ -25,7 +25,7 @@ class Leadsdue_model extends crm_model {
     	$this->db->where_in('jb.job_status', $this->stg);
     	$this->db->where('lead_status',1);
     	$this->db->where('jb.proposal_expected_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)');
-    	$query = $this->db->get($this->cfg['dbpref'].'jobs jb');
+    	$query = $this->db->get($this->cfg['dbpref'].'leads jb');
 
     	//echo $this->db->last_query();
 

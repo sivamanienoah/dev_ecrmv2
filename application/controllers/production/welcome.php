@@ -21,7 +21,7 @@ class Welcome extends crm_controller {
             $restrict .= " AND `belong_to` = '{$this->userdata['sales_code']}'";
         }
 		$sql = "SELECT *
-                FROM  `".$this->cfg['dbpref']."jobs` AS J, `".$this->cfg['dbpref']."customers` AS C
+                FROM  `".$this->cfg['dbpref']."leads` AS J, `".$this->cfg['dbpref']."customers` AS C
 				LEFT JOIN ".$this->cfg['dbpref']."hosting as H ON C.custid=H.custid_fk
 				WHERE C.`custid` = J.`custid_fk`
 				AND J.`job_status` IN (4, 5, 15)

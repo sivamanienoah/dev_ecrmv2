@@ -21,7 +21,8 @@ class Manage_service extends crm_controller {
 	*@Manage Service
 	*/
 	
-	public function __construct() {
+	public function __construct() 
+	{
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_service_model');
@@ -33,8 +34,8 @@ class Manage_service extends crm_controller {
 	*@Method index
 	*/
 	
-    public function index($limit, $search = FALSE) {
-	
+    public function index($limit, $search = FALSE) 
+	{
         $data['page_heading'] = 'Manage Service / Product';
 		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);		
         $this->load->view('manage_service/manage_service_view', $data); 
@@ -229,7 +230,7 @@ class Manage_service extends crm_controller {
 		
 		//for status
 		$this->db->where('job_category', $id);
-		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
         {
@@ -367,7 +368,7 @@ class Manage_service extends crm_controller {
 		
 		//for status
 		$this->db->where('division', $id);
-		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_dvsn']))
         {
@@ -493,7 +494,7 @@ class Manage_service extends crm_controller {
 		$post_data  = real_escape_array($this->input->post());
 		$leadId     = $post_data['data'];
 		$this->db->where('lead_source', $leadId);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -514,7 +515,7 @@ class Manage_service extends crm_controller {
 		$post_data  = real_escape_array($this->input->post());
 		$id         = $post_data['data'];
 		$this->db->where('division', $id);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -535,7 +536,7 @@ class Manage_service extends crm_controller {
 		$post_data  = real_escape_array($this->input->post());
 		$id         = $post_data['data'];
 		$this->db->where('job_category', $id);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -556,7 +557,7 @@ class Manage_service extends crm_controller {
 		$post_data  = real_escape_array($this->input->post());
 		$id = $post_data['data'];
 		$this->db->where('expect_worth_id', $id);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -645,7 +646,7 @@ class Manage_service extends crm_controller {
 		
 		//for status
 		$this->db->where('expect_worth_id', $id);
-		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item']))
         {

@@ -902,7 +902,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		}
 	}
 	
-	/* get tasks without jobs */
+	/* get tasks without leads */
 	function get_random_tasks()
 	{
 		$html = '';
@@ -1932,7 +1932,7 @@ EOD;
 		{
 			$status_select_1 = ($row->status == 1) ? ' selected="selected"' : '';
 			$status_select_2 = ($row->status == 2) ? ' selected="selected"' : '';
-			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."jobs where jobid = '".$row->jobid_fk."' ");
+			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."leads where jobid = '".$row->jobid_fk."' ");
 			$lead_details = $qa->row_array();
 			//echo "<pre>"; print_r($lead_details);
 			if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || $lead_details['lead_assign'] == $this->userdata['userid']) {
@@ -2046,7 +2046,7 @@ EOD;
 					$users = $this->db->query($qry);
 					$user = $users->result_array();
 
-					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."jobs WHERE jobid=".$jobid.")";
+					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE jobid=".$jobid.")";
 					$customers = $this->db->query($qry1);
 					$customer = $customers->result_array();
 					if($status == 'query') {
@@ -2105,7 +2105,7 @@ EOD;
 					$users = $this->db->query($qry);
 					$user = $users->result_array();
 
-					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."jobs WHERE jobid=".$jobid.")";
+					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE jobid=".$jobid.")";
 					$customers = $this->db->query($qry1);
 					$customer = $customers->result_array();
 					if($status == 'query') {

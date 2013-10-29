@@ -72,7 +72,7 @@ if ( ! function_exists('proposal_expect_end_msg') )
 		$CI->db->where('jb.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$day.' DAY)) ');
 		$CI->db->where('jb.lead_status', 1);
 		$CI->db->where('jb.lead_assign', $userdata['userid']);
-		$sql = $CI->db->get($cfg['dbpref'].'jobs as jb');
+		$sql = $CI->db->get($cfg['dbpref'].'leads as jb');
 
 		// echo $CI->db->last_query(); exit;
 		

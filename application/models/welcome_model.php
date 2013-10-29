@@ -42,7 +42,7 @@ class Welcome_model extends crm_model {
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.category as job_category, sadiv.division_name');
-		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
 		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
@@ -68,7 +68,7 @@ class Welcome_model extends crm_model {
 	function get_lead_all_detail($id) 
 	{
 		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
 		$this->db->where('jobid', $id);
@@ -316,7 +316,7 @@ class Welcome_model extends crm_model {
 	public function get_lead_det($jid) 
 	{
 	    $this->db->select('*');
-	    $this->db->from($this->cfg['dbpref'] . 'jobs');
+	    $this->db->from($this->cfg['dbpref'] . 'leads');
 	    $this->db->where('jobid', $jid);
 	    $lead_history = $this->db->get();
 	    return $leads =  $lead_history->row_array();
@@ -325,7 +325,7 @@ class Welcome_model extends crm_model {
 	function updt_lead_stg_status($id, $updt) 
 	{
 		$this->db->where('jobid', $id);
-		return $this->db->update($this->cfg['dbpref'] . 'jobs', $updt);
+		return $this->db->update($this->cfg['dbpref'] . 'leads', $updt);
 	}
 	
 	function get_lead_stg_name($id) 
@@ -479,7 +479,7 @@ class Welcome_model extends crm_model {
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
-			$this->db->from($this->cfg['dbpref']. 'jobs as j');
+			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'")');
 			$this->db->where('j.pjt_status', 0);
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
@@ -538,7 +538,7 @@ class Welcome_model extends crm_model {
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
-			$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			
 			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');		
 			$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
@@ -650,7 +650,7 @@ class Welcome_model extends crm_model {
 		c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 		us.last_name as usslname, ls.lead_stage_name,ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'] . 'customers as c');		
-		$this->db->join($this->cfg['dbpref'] . 'jobs as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
+		$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
 		$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
 		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
@@ -763,13 +763,13 @@ class Welcome_model extends crm_model {
     
     //Insert new Job - Below functions are created by MAR
     function insert_job($ins) {
-    	$this->db->insert($this->cfg['dbpref'] . 'jobs', $ins);
+    	$this->db->insert($this->cfg['dbpref'] . 'leads', $ins);
     	return $this->db->insert_id();
     }
 	
     function update_job($insert_id, $up_args) {
     	$this->db->where('jobid', $insert_id);
-		$this->db->update($this->cfg['dbpref'] . 'jobs', $up_args);
+		$this->db->update($this->cfg['dbpref'] . 'leads', $up_args);
     }
     
     function get_lead_assign($level) {

@@ -37,7 +37,7 @@ class Project_model extends crm_model
 
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
-			$this->db->from($this->cfg['dbpref'] . 'jobs as j');
+			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			
@@ -77,7 +77,7 @@ class Project_model extends crm_model
 			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
 			$this->db->where("lead_status", 4);
 			$this->db->where("pjt_status !=", 0);
-			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'jobs');
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
 			$data['jobids1'] = $rowsJobs->result_array();
 
 			$data = array_merge_recursive($data['jobids'], $data['jobids1']);
@@ -93,7 +93,7 @@ class Project_model extends crm_model
 			
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_status, j.pjt_id, j.assigned_to, j.complete_status,j.date_start, j.date_due, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'customers as c');		
-			$this->db->join($this->cfg['dbpref'] . 'jobs as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
+			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->where_in('j.jobid', $result_ids);
 			
@@ -132,7 +132,7 @@ class Project_model extends crm_model
 		$this->db->select('lead_assign, assigned_to, belong_to');
 		$this->db->where('jobid', $id);
 		$this->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
-		$sql = $this->db->get($this->cfg['dbpref'] . 'jobs');
+		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
 		$res1 = $sql->result_array();
 		if (empty($res1)) {
 			$chge_access = 0;
@@ -148,7 +148,7 @@ class Project_model extends crm_model
 	{
     	$this->db->select('*,jbcat.category as job_category');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
-		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.custid_fk = cus.custid', 'left');
+		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.custid_fk = cus.custid', 'left');
     	$this->db->join($this->cfg['dbpref'].'region as reg', 'reg.regionid = cus.add1_region', 'left');
     	$this->db->join($this->cfg['dbpref'].'country as cnty', 'cnty.countryid = cus.add1_country', 'left');
     	$this->db->join($this->cfg['dbpref'].'state as ste', 'ste.stateid = cus.add1_state', 'left');
@@ -240,7 +240,7 @@ class Project_model extends crm_model
 	{
 		$this->db->select('lead_assign, assigned_to, belong_to');
 		$this->db->where('jobid', $id);
-		$list_users = $this->db->get($this->cfg['dbpref'] . 'jobs');
+		$list_users = $this->db->get($this->cfg['dbpref'] . 'leads');
 		return $list_users->row_array();
 	}
 	
@@ -255,7 +255,7 @@ class Project_model extends crm_model
 	function updt_log_view_status($id, $log) 
 	{
 		$this->db->where('jobid', $id);
-		return $this->db->update($this->cfg['dbpref'] . 'jobs', $log);
+		return $this->db->update($this->cfg['dbpref'] . 'leads', $log);
 	}
 	
 	function get_logs($id) 
@@ -294,7 +294,7 @@ class Project_model extends crm_model
 		$this->db->select('de.*, exp.project_milestone_name AS payment_term, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'] . 'deposits as de');
 		$this->db->join($this->cfg['dbpref'].'expected_payments as exp', 'exp.expectid = de.map_term', 'left');
-		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.jobid = de.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.jobid = de.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = jb.expect_worth_id', 'left');
 		$this->db->where('de.jobid_fk', $id);
 		$this->db->order_by('depositid', 'asc');
@@ -319,7 +319,7 @@ class Project_model extends crm_model
 	public function get_lead_det($id) 
 	{
 	    $this->db->select('*');
-	    $this->db->from($this->cfg['dbpref'] . 'jobs');
+	    $this->db->from($this->cfg['dbpref'] . 'leads');
 	    $this->db->where('jobid', $id);
 	    $lead_det = $this->db->get();
 	    return $leads =  $lead_det->row_array();
@@ -358,7 +358,7 @@ class Project_model extends crm_model
 	{
     	$this->db->select('expm.expectid, expm.expected_date, expm.amount, expm.project_milestone_name, expm.received, jb.expect_worth_id, exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
-		$this->db->join($this->cfg['dbpref'].'jobs as jb', 'jb.jobid = expm.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.jobid = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = jb.expect_worth_id', 'left');
     	$this->db->where('expm.jobid_fk', $id);
     	$this->db->order_by('expm.expectid');
@@ -372,7 +372,7 @@ class Project_model extends crm_model
 		$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid);
 		$this->db->select('expm.expectid, expm.amount, expm.expected_date, expm.received, expm.project_milestone_name, j.expect_worth_id, exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
-		$this->db->join($this->cfg['dbpref'].'jobs as j', 'j.jobid = expm.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref'].'leads as j', 'j.jobid = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = j.expect_worth_id', 'left');
 		$this->db->where($wh_condn);
 		$query = $this->db->get();

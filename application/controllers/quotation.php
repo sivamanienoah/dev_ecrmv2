@@ -19,7 +19,7 @@ class Quotation extends crm_controller {
 	function invoice_data_zip($jobid)
 	{
 		$this->db->where('jobid', $jobid);
-		$job_details = $this->db->get($this->cfg['dbpref'] . 'jobs');
+		$job_details = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		if ($job_details->num_rows() > 0)
 		{
@@ -33,7 +33,7 @@ class Quotation extends crm_controller {
 			$this->zip->add_data($job_details[0]['custid_fk'] . '_CUSTOMER_DATA.csv', $cust_data);
 			
 			$this->db->where('jobid', $jobid);
-			$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_downloaded' => '1'));
+			$this->db->update($this->cfg['dbpref'] . 'leads', array('invoice_downloaded' => '1'));
 			
 			$this->zip->download($job_details[0]['invoice_no'] . '_myob_data.zip'); 
 		}
@@ -89,7 +89,7 @@ class Quotation extends crm_controller {
 		$csv_titles[41] = "Card ID";
 		
 		$this->db->where('jobid', $jobid);
-		$job_details = $this->db->get($this->cfg['dbpref'] . 'jobs');
+		$job_details = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		if ($job_details->num_rows() > 0)
 		{

@@ -174,7 +174,7 @@ class Project extends crm_controller {
 		$data = real_escape_array($this->input->post());
 
 		$wh_condn = array('pjt_id'=>$data['pjt_id']);
-		$stat = $this->project_model->chk_status('jobs', $wh_condn);
+		$stat = $this->project_model->chk_status('leads', $wh_condn);
 		if( $stat == 0 ) 
 		echo 'Ok';
 		else
@@ -195,7 +195,7 @@ class Project extends crm_controller {
 		{
 			$wh_condn = array('jobid' => $updt['job_id']);
 			$updt = array('pjt_id' => $updt['pjt_id']);
-			$updt_id = $this->project_model->update_row('jobs', $updt, $wh_condn);
+			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
 			$data['error'] = 'Project Id Not Updated.';
 		}
@@ -207,7 +207,7 @@ class Project extends crm_controller {
 		$data = real_escape_array($this->input->post());
 
 		$wh_condn = array('actual_worth_amount'=>$data['pjt_val']);
-		$stat = $this->project_model->chk_status('jobs', $wh_condn);
+		$stat = $this->project_model->chk_status('leads', $wh_condn);
 		if( $stat == 0 ) 
 		echo 'Ok';
 		else
@@ -228,7 +228,7 @@ class Project extends crm_controller {
 		{
 			$wh_condn = array('jobid' => $updt['job_id']);
 			$updt = array('actual_worth_amount' => $updt['pjt_val']);
-			$updt_id = $this->project_model->update_row('jobs', $updt, $wh_condn);
+			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
 			$data['error'] = 'Project Value Not Updated.';
 		}
@@ -268,7 +268,7 @@ class Project extends crm_controller {
 
 			$wh_condn = array('jobid' => $updt['job_id']);
 			$updt = array('pjt_status' => $updt['pjt_stat']);
-			$updt_pjt = $this->project_model->update_row('jobs', $updt, $wh_condn);
+			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
 			
 			if($updt_pjt==0)
 			{
@@ -305,7 +305,7 @@ class Project extends crm_controller {
 		{
 			$wh_condn = array('jobid' => $jobid);
 			$updt = array('complete_status' => $job_status);
-			$updt_stat = $this->project_model->update_row('jobs', $updt, $wh_condn);
+			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_stat==0)
 			{
 				$data['error'] = 'Project Completion Status Not Updated.';
@@ -545,7 +545,7 @@ body {
 		{
 			$wh_condn = array('jobid' => $data_pm['jobid']);
 			$updt = array('assigned_to' => $data_pm['new_pm']);
-			$updt_stat = $this->project_model->update_row('jobs', $updt, $wh_condn);
+			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
 		echo json_encode($data);	 
 	}
@@ -659,7 +659,7 @@ body { margin: 0px; }
 			if ($updt_data['date_type'] == 'start')
 			{	 
 				$wh_condn = array('jobid'=>$updt_data['jobid'], 'date_due <'=>date('Y-m-d H:i:s', $timestamp));
-				$chk_stat = $this->project_model->chk_status('jobs', $wh_condn);
+				$chk_stat = $this->project_model->chk_status('leads', $wh_condn);
 				if($chk_stat)
 				{ 
 					$data['error'] = 'Planned Project Start Date Must be Equal or Earlier than the Planned Project End Date!';
@@ -668,7 +668,7 @@ body { margin: 0px; }
 				{ 
 					$wh_condn = array('jobid'=>$updt_data['jobid']);
 					$updt = array('date_start'=>date('Y-m-d H:i:s', $timestamp));
-					$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 				}
 			}
 			else
@@ -687,7 +687,7 @@ body { margin: 0px; }
 						{
 							$wh_condn = array('jobid'=>$updt_data['jobid']);
 							$updt = array('date_due'=>date('Y-m-d H:i:s', $timestamp));
-							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
 					} 
 					else 
@@ -745,7 +745,7 @@ body { margin: 0px; }
 						{
 							$wh_condn = array('jobid'=>$updt_data['jobid']);
 							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));
-							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
 					}
 				} 
@@ -768,7 +768,7 @@ body { margin: 0px; }
 						{
 							$wh_condn = array('jobid'=>$updt_data['jobid']);
 							$updt = array('actual_date_due'=>date('Y-m-d H:i:s', $timestamp));
-							$updt_date = $this->project_model->update_row('jobs', $updt, $wh_condn);
+							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
 					} 
 					else 
@@ -964,7 +964,7 @@ body { margin: 0px; }
 
 				$up = array('payment_terms'=>1);
 				$wh_condn = array('jobid' => $data['sp_form_jobid']);
-				$this->project_model->update_row('jobs', $up, $wh_condn);
+				$this->project_model->update_row('leads', $up, $wh_condn);
 				
 				$payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
 
@@ -1473,7 +1473,7 @@ body { margin: 0px; }
 	function received_payment_terms_delete($jid)
 	{
 		//mychanges
-			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."jobs where jobid='$jid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."leads where jobid='$jid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
 			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
@@ -1813,9 +1813,9 @@ body {
 				// inset the new log
 				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
 				
-				// update the jobs table
+				// update the leads table
 				$this->db->where('jobid', $ins['jobid_fk']);
-				$this->db->update($this->cfg['dbpref'] . 'jobs', $upd);
+				$this->db->update($this->cfg['dbpref'] . 'leads', $upd);
                 
                 $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
                 

@@ -170,7 +170,7 @@ class Dns extends crm_controller {
 	}
 	function jobs($jobid=''){
 		if($jobid<=0) redirect('hosting/');
-		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H, `".$this->cfg['dbpref']."jobs` as J WHERE J.jobid={$jobid} AND H.custid_fk=J.custid_fk ORDER BY H.domain_name";
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H, `".$this->cfg['dbpref']."leads` as J WHERE J.jobid={$jobid} AND H.custid_fk=J.custid_fk ORDER BY H.domain_name";
 		$rows = $this->db->query($sql);
 		$data['hosting']=$rows->result_array();
 		$data['jobs']='JOBS';

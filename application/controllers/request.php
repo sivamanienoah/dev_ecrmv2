@@ -31,7 +31,7 @@ class Request extends crm_controller {
 			$contract_join = '';
 			
 			$sql = "SELECT *
-					FROM ".$this->cfg['dbpref']."customers, ".$this->cfg['dbpref']."jobs a
+					FROM ".$this->cfg['dbpref']."customers, ".$this->cfg['dbpref']."leads a
 					{$contract_join}
 					WHERE `custid_fk` = `custid`
 					AND job_status IN ('".$this->stages."')

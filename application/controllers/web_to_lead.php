@@ -86,7 +86,7 @@ class web_to_lead extends crm_controller {
 		$ins['created_by']          = 59;
 		$ins['modified_by']         = 59;
 		$ins['lead_status']         = 1;
-		if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
+		if ($this->db->insert($this->cfg['dbpref'] . 'leads', $ins))
         {
 			$insert_id = $this->db->insert_id();
 			//echo $insert_id."ASDfsdfasdf";
@@ -94,7 +94,7 @@ class web_to_lead extends crm_controller {
 			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 
 			$this->db->where('jobid', $insert_id);
-			$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));
+			$this->db->update($this->cfg['dbpref'] . 'leads', array('invoice_no' => $invoice_no));
 
 			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
 		} else {

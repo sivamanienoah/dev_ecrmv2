@@ -83,7 +83,7 @@ class Subscriptions_model extends crm_model {
 		$ins['job_status'] = 30;
 		$ins['created_by'] = 28;
 		
-		if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
+		if ($this->db->insert($this->cfg['dbpref'] . 'leads', $ins))
 		        {
 			$insert_id = $this->db->insert_id();
 			
@@ -92,7 +92,7 @@ class Subscriptions_model extends crm_model {
 			//$invoice_no = 'VTS' . $invoice_no; MYOB CANNOT HANDLE LONGER NUMBERS
 			
 			$this->db->where('jobid', $insert_id);
-			$this->db->update($this->cfg['dbpref'] . 'jobs', array('invoice_no' => $invoice_no));
+			$this->db->update($this->cfg['dbpref'] . 'leads', array('invoice_no' => $invoice_no));
 			
 			foreach ($items as $k=>$item)
 			{

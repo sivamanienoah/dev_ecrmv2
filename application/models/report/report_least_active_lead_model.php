@@ -82,7 +82,7 @@ class Report_least_active_lead_model extends crm_model {
 			$this->db->where($where);
 		} 
     	$this->db->select('jb.*,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname,cust.first_name as cust_first_name,cust.last_name as cust_last_name,cust.company,cust.add1_region,reg.region_name,ls.lead_stage_name');
-		$this->db->from($this->cfg['dbpref'].'jobs jb');
+		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid','INNER');
     	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid','INNER');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');

@@ -396,7 +396,7 @@ HDOC;
 			$ins['modified_by'] = $this->userdata['userid'];
 			$ins['lead_status'] = 1;
 			
-			if ($this->db->insert($this->cfg['dbpref'] . 'jobs', $ins))
+			if ($this->db->insert($this->cfg['dbpref'] . 'leads', $ins))
             {
 				$insert_id = $this->db->insert_id();
 				
@@ -421,7 +421,7 @@ HDOC;
 				$insert_lead_stat_his = $this->welcome_model->insert_row('lead_status_history', $lead_stat_hist);
 				
 				$inv_no['invoice_no'] = $invoice_no;
-				$updt_job = $this->welcome_model->update_row('jobs', $inv_no, $insert_id);
+				$updt_job = $this->welcome_model->update_row('leads', $inv_no, $insert_id);
 				
 				// $this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
 
@@ -588,7 +588,7 @@ body {
 			if ($updt_data['date_type'] == 'start')
 			{
 				$updt['proposal_expected_date'] = date('Y-m-d H:i:s', $timestamp);
-				$updt_date = $this->welcome_model->update_row('jobs', $updt, $updt_data['jobid']);
+				$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['jobid']);
 			}		
 		}
 		echo json_encode($data);
@@ -769,7 +769,7 @@ body {
 			/* end proposal adjust date insert */
 			$jobid = $data['jobid_edit'];
 			
-			$updt_job = $this->welcome_model->update_row('jobs', $ins, $data['jobid_edit']);
+			$updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
 			if ($updt_job)
 			{				
 				$his['lead_status'] = $data['lead_status']; //lead_stage_history - lead_status update
@@ -1273,7 +1273,7 @@ body {
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
-				$delete_job = $this->welcome_model->delete_lead('jobs', $id);
+				$delete_job = $this->welcome_model->delete_lead('leads', $id);
 				if ($delete_job) {
 					$delete_item = $this->welcome_model->delete_row('items', 'jobid_fk', $id);
 					$delete_log = $this->welcome_model->delete_row('logs', 'jobid_fk', $id);
@@ -1384,7 +1384,7 @@ body {
 			$update['modified_by'] = $this->userdata['userid'];
 			$update['date_modified'] = date('Y-m-d H:i:s');
 			
-			$updt_job = $this->welcome_model->update_row('jobs', $update, $jobid);
+			$updt_job = $this->welcome_model->update_row('leads', $update, $jobid);
 			
 			if ($updt_job) {	
 			
@@ -1885,9 +1885,9 @@ body {
 				// inset the new log
 				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
 				
-				// update the jobs table
+				// update the leads table
 				$this->db->where('jobid', $ins['jobid_fk']);
-				$this->db->update($this->cfg['dbpref'] . 'jobs', $upd);
+				$this->db->update($this->cfg['dbpref'] . 'leads', $upd);
                 
                 $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
                 

@@ -29,7 +29,7 @@ class proposal_expected_date_cron extends crm_controller
 			
 			foreach ($result as $res) {
 				$expe = $this->db->query(" SELECT jb.jobid, jb.job_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners, CONCAT(ass.first_name, ' ', ass.last_name) as assign, ass.email
-				FROM vps3_jobs as jb 
+				FROM '".$this->cfg['dbpref']."'leads as jb 
 				LEFT JOIN `vps3_users` as own ON `own`.`userid` = `jb`.`belong_to`
 				LEFT JOIN `vps3_users` as ass ON `ass`.`userid` = `jb`.`lead_assign`
 				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND jb.lead_assign='".$res['userid']."' order by jb.jobid ");

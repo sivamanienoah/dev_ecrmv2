@@ -534,14 +534,14 @@ class User_model extends crm_model {
     /*
 	*@Check User Status
 	*@Method   check_user_status
-	*@table    jobs
+	*@table    leads
 	*/
   
 	public function check_user_status($data=array()){
 		$id = $data['data'];
 		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")"; 
 		$this->db->where($where);
-		$query = $this->db->get($this->cfg['dbpref'].'jobs')->num_rows();
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
 			$res['html'] .= "YES";
@@ -556,7 +556,7 @@ class User_model extends crm_model {
 	/*
 	*@Select Log History 
 	*@Method   log_history
-	*@table    logs,jobs,
+	*@table    logs,leads,
 	*/
 	
 	public function log_history($log_date,$log_user){
@@ -564,7 +564,7 @@ class User_model extends crm_model {
 		# now get the logs for the user on that day
 		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
 				FROM ".$this->cfg['dbpref']."logs
-				LEFT JOIN `".$this->cfg['dbpref']."jobs` ON `".$this->cfg['dbpref']."jobs`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
 				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `userid_fk` = ?
 				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";

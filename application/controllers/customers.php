@@ -50,16 +50,18 @@ class Customers extends crm_controller {
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_customer'])) {
             
             // check to see if this customer has a job on the system before deleting
-			$jobs = $this->db->get_where($this->login_model->cfg['dbpref'] . 'jobs', array('custid_fk' => $id));
-			$leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
+			$jobs = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
+			// $leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
 			
-			if ($jobs->num_rows() > 0) {
+			if ($jobs->num_rows() > 0) 
+			{
 				$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting invoice records!'));
 				redirect('customers/add_customer/update/' . $id);
 				exit();
 			}
 			
-			if ($leads->num_rows() > 0) {
+			if ($leads->num_rows() > 0) 
+			{
 				$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting lead records!'));
 				redirect('customers/add_customer/update/' . $id);
 				exit();

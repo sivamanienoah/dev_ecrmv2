@@ -105,7 +105,7 @@ class Report_lead_owner_model extends crm_model {
     	$this->db->order_by('u.userid','ASC');
     	$this->db->where('lead_status',1);
 		
-    	$query = $this->db->get($this->cfg['dbpref'].'jobs jb');
+    	$query = $this->db->get($this->cfg['dbpref'].'leads jb');
     	//echo $this->db->last_query();
     	$result['res'] = $query->result();
     	$result['num'] = $query->num_rows();    	
