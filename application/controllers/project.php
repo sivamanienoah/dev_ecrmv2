@@ -36,7 +36,7 @@ class Project extends crm_controller {
 		$data['pm_accounts'] = $pjt_managers;
 		$data['customers'] = $this->project_model->get_customers();
 		$data['records'] = $this->project_model->get_projects_results($pjtstage = 'null', $pm_acc = 'null', $cust = 'null', $keyword = 'null');
-		$this->load->view('projects_view', $data);
+		$this->load->view('projects/projects_view', $data);
     }
 	
 	/*
@@ -55,7 +55,7 @@ class Project extends crm_controller {
 		$data['pjts_data'] = $getProjects;
 		$data['records'] = $getProjects;
 		
-		$this->load->view('projects_view_inprogress', $data);
+		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
 	/*
@@ -160,7 +160,7 @@ class Project extends crm_controller {
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 
-            $this->load->view('welcome_view_project', $data);
+            $this->load->view('projects/welcome_view_project', $data);
         }
         else
         {
