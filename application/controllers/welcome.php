@@ -40,7 +40,7 @@ class Welcome extends crm_controller {
 		$data['lead_stage'] = $this->stg_name;
 		$data['customers'] = $this->welcome_model->get_customers();
 		$data['lead_owner'] = $this->welcome_model->get_users();
-		$data['regions'] = $this->regionsettings_model->region_list();
+		$data['regions'] = $this->regionsettings_model->region_list($offset = false, $search = false);
 		
 		$this->load->view('quotation_view', $data);
 	}

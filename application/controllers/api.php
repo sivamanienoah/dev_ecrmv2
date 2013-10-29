@@ -120,7 +120,7 @@ class Api extends crm_controller {
 					if (isset($_GET['realestate']))
 					{
 						$insert_id = $this->db->insert_id();
-						$this->db->insert($this->cfg['dbpref'].'cust_cat_join', array('custid_fk' => $insert_id, 'custcatid_fk' => 4));
+						// $this->db->insert($this->cfg['dbpref'].'cust_cat_join', array('custid_fk' => $insert_id, 'custcatid_fk' => 4));
 					}	
 				}
 			}

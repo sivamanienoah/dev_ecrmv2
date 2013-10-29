@@ -158,7 +158,7 @@ class Welcome_model extends crm_model {
 	
 	function updt_log_view_status($id, $log) {
 		$this->db->where('jobid', $id);
-		return $this->db->update($this->cfg['dbpref'] . 'jobs', $log);
+		return $this->db->update($this->cfg['dbpref'] . 'leads', $log);
 	}
 	
 	function get_logs($id) {

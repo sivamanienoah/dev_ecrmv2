@@ -3,7 +3,7 @@
 <div id="content">
 	 
     <div class="inner">
-		<?php if($this->session->userdata('viewReport')==1){?>
+		<?php if($this->session->userdata('accesspage')==1){?>
 			
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 			

@@ -54,7 +54,7 @@ $('#excel').click(function() {
 			{
 	?>
 			<tr>
-				<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', $quote_section ?>">View</a><?php } else echo "View"; ?>
+				<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'] ?>">View</a><?php } else echo "View"; ?>
 				<?php 
 				if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) {
 				echo ' | <a href="welcome/edit_quote/' . $filter_result['jobid'] . '">Edit</a>'; ?>

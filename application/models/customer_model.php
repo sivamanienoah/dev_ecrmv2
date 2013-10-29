@@ -100,7 +100,7 @@ class Customer_model extends crm_model {
     }
        
     function get_customer($id) {
-        $this->db->join($this->cfg['dbpref'].'cust_cat_join', 'custid = custid_fk', 'left');
+        // $this->db->join($this->cfg['dbpref'].'cust_cat_join', 'custid = custid_fk', 'left');
         $customer = $this->db->get_where($this->cfg['dbpref'].'customers', array('custid' => $id), 1);
         if ($customer->num_rows() > 0) {
             return $customer->result_array();
@@ -136,7 +136,8 @@ class Customer_model extends crm_model {
         }
     }
     
-    function category_list()  {
+    function category_list()  
+	{
         $this->db->order_by("custcatid", "asc"); 
         $customers = $this->db->get($this->cfg['dbpref'].'customer_categories');       
         $cats = $customers->result_array();        
@@ -195,19 +196,19 @@ class Customer_model extends crm_model {
     }
     
     function update_customer($id, $data, $categories = array(), $sales_agents = array()) {
-        $this->db->delete($this->cfg['dbpref'] . 'cust_cat_join', array('custid_fk' => $id));
+        /* $this->db->delete($this->cfg['dbpref'] . 'cust_cat_join', array('custid_fk' => $id));
         if ($this->userdata['level'] != 4) {    
             $this->db->delete($this->cfg['dbpref'] . 'cust_user_join', array('custid_fk' => $id));
         } else {
             $this->db->delete($this->cfg['dbpref'] . 'cust_user_join', array('custid_fk' => $id, 'userid_fk' => $this->userdata['userid']));
-        }
+        } */
         
-        if (is_array($categories) && count($categories)) foreach ($categories as $category) {
+        /* if (is_array($categories) && count($categories)) foreach ($categories as $category) {
             @$this->db->insert($this->cfg['dbpref'] . 'cust_cat_join', array('custid_fk' => $id, 'custcatid_fk' => $category));
         }
         if (is_array($sales_agents) && count($sales_agents)) foreach ($sales_agents as $sa) {
             @$this->db->insert($this->cfg['dbpref'] . 'cust_user_join', array('custid_fk' => $id, 'userid_fk' => $sa));
-        }
+        } */
         $this->db->where('custid', $id);
         return $this->db->update($this->cfg['dbpref'] . 'customers', $data);
     }
@@ -220,12 +221,12 @@ class Customer_model extends crm_model {
     function insert_customer($data, $categories = array(), $sales_agents = array()) {
         if ( $this->db->insert($this->cfg['dbpref'] . 'customers', $data) ) {
             $insert_id = $this->db->insert_id();
-            if (is_array($categories) && count($categories)) foreach ($categories as $category) {
+            /* if (is_array($categories) && count($categories)) foreach ($categories as $category) {
                 @$this->db->insert($this->cfg['dbpref'].'cust_cat_join', array('custid_fk' => $insert_id, 'custcatid_fk' => $category));
             }
             if (is_array($sales_agents) && count($sales_agents)) foreach ($sales_agents as $sa) {
                 @$this->db->insert($this->cfg['dbpref'].'cust_user_join', array('custid_fk' => $insert_id, 'userid_fk' => $sa));
-            }
+            } */
             return $insert_id;
         } else {
             return false;
@@ -240,17 +241,19 @@ class Customer_model extends crm_model {
         }
     }
     
-    function delete_customer($id) {
+    function delete_customer($id) 
+	{
         $this->db->where('custid', $id);
         $this->db->delete($this->cfg['dbpref'] . 'customers');        
-        $this->db->where('custid_fk', $id);
+        /* $this->db->where('custid_fk', $id);
         $this->db->delete($this->cfg['dbpref'] . 'cust_cat_join');        
         $this->db->where('custid_fk', $id);
-        $this->db->delete($this->cfg['dbpref'] . 'cust_user_join');        
+        $this->db->delete($this->cfg['dbpref'] . 'cust_user_join'); */        
         return TRUE;
     }
     
-    function delete_category($id) {
+    function delete_category($id) 
+	{
         $this->db->where('custcatid', $id);
         return $this->db->delete($this->cfg['dbpref'] . 'customer_categories');
     }
@@ -332,11 +335,11 @@ class Customer_model extends crm_model {
 	function customer_update($id, $data) {
 		$this->db->where('custid', $id);
 		$this->db->update($this->cfg['dbpref'].'customers', $data);		
-		$cust = array('custid_fk' => $id, 'custcatid_fk' => 12);
+		/* $cust = array('custid_fk' => $id, 'custcatid_fk' => 12);
 		$this->db->where($cust);
 		$q = $this->db->get($this->cfg['dbpref'].'cust_cat_join');		
 		if ($q->num_rows() < 1)
-		$this->db->insert($this->cfg['dbpref'].'cust_cat_join', $cust);
+		$this->db->insert($this->cfg['dbpref'].'cust_cat_join', $cust) */;
 	}
 	
     

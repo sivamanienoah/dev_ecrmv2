@@ -250,20 +250,15 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		if($menu_items['0'] == 84) { //customer
 		   $addImpCus = $menu_items[9];
 		}
-		if($menu_items['0'] == 113) { //reports
-		   $viewReport = $menu_items[8];			   
-		}
 	}  	 
 	//echo $this->uri->segment(1);
-	if(!isset($master_id)) {		
-	 
+	if(!isset($master_id)) {
 			$masters=formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
 			$master_id= $masters[0]['master_parent_id'];
 			$access_limit['view'] =$masters[0]['view'];
 			$access_limit['add'] =$masters[0]['add'];
 			$access_limit['edit'] =$masters[0]['edit'];
 			$access_limit['delete'] =$masters[0]['delete'];
-			 
 	}
 		
 	echo $menulistss =  formSubMenuList($master_id);
@@ -286,7 +281,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['editPjt'] = $editPjt;
 	$array['deletePjt'] = $deletePjt;
 	$array['addImpCus'] = $addImpCus;
-	$array['viewReport'] = $viewReport;
 	$this->session->set_userdata($array);
 		
 	?>
