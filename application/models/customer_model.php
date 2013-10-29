@@ -135,12 +135,12 @@ class Customer_model extends crm_model {
         }
     }
     
-    function update_customer($id, $data, $categories = array(), $sales_agents = array()) {
+    function update_customer($id, $data) {
         $this->db->where('custid', $id);
         return $this->db->update($this->cfg['dbpref'] . 'customers', $data);
     }
     
-    function insert_customer($data, $categories = array(), $sales_agents = array()) {
+    function insert_customer($data) {
         if ( $this->db->insert($this->cfg['dbpref'] . 'customers', $data) ) {
             $insert_id = $this->db->insert_id();
             return $insert_id;

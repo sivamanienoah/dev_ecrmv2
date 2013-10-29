@@ -10,7 +10,6 @@ $ua_id_name = array();
 $remind_options = ''; // let's use this same loop to set the reminder groups
 $remind_options_all = ''; // this is for admins
 $contractor_options = '';
-
 if (count($user_accounts)) foreach ($user_accounts as $ua)
 {
 	$ua_id_name[$ua['userid']] = $ua['first_name'] . ' ' . $ua['last_name'];

@@ -274,7 +274,7 @@ class Project_model extends crm_model
 	
 	function get_users() 
 	{
-    	$this->db->select('userid, first_name, level, role_id, inactive');
+    	$this->db->select('userid, first_name, last_name, level, role_id, inactive');
 		$this->db->where('inactive', 0);
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');

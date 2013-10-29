@@ -40,26 +40,8 @@ class Customers extends crm_controller {
 	}
     
     function add_customer($update = false, $id = false, $ajax = false) {
-		$data['regions'] = $this->regionsettings_model->region_list($limit, $search);
-		//if (isset($_POST) && count($_POST)) $this->session->set_userdata('post_array', $_POST);
 		
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_customer'])) {
-            
-            // check to see if this customer has a job on the system before deleting
-			$leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
-			
-			if ($leads->num_rows() > 0) 
-			{
-				$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting lead records!'));
-				redirect('customers/add_customer/update/' . $id);
-				exit();
-			}
-            
-            $this->customer_model->delete_customer($id);
-            $this->session->set_flashdata('confirm', array('Customer Record Deleted!'));
-            redirect('customers/');
-            
-        }
+		$data['regions'] = $this->regionsettings_model->region_list($limit=false, $search=false);
         
         $rules['first_name'] = "trim|required";
 		$rules['last_name'] = "trim|required";
@@ -151,7 +133,7 @@ class Customers extends crm_controller {
 				$update_data['exported'] = NULL;
 				
                 //update
-                if ($this->customer_model->update_customer($id, $update_data, $categories, $sales_agents)) {
+                if ($this->customer_model->update_customer($id, $update_data)) {
 				
 				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -239,7 +221,7 @@ class Customers extends crm_controller {
 				# add the sales agent
 
                 //insert
-                if ($newid = $this->customer_model->insert_customer($update_data, $categories, $sales_agents)) {
+                if ($newid = $this->customer_model->insert_customer($update_data)) {
 				
 				    $user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -319,22 +301,22 @@ class Customers extends crm_controller {
 		$this->email->send(); 
 				
                     
-                    if ($ajax == false) {
-                        $this->session->set_flashdata('confirm', array('New Customer Added!'));
-                        redirect('customers/add_customer/update/' . $newid);
-                    } else {
-                        $json['error'] = false;
-                        $json['custid'] = $newid;
-						$json['cust_name1'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name') . ' - ' . $this->input->post('company');
-                        $json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
-                        $json['cust_email'] = $this->input->post('email_1');
-						$json['cust_company'] = $this->input->post('company');
-						$json['cust_reg'] = $this->input->post('add1_region');
-						$json['cust_cntry'] = $this->input->post('add1_country');
-						$json['cust_ste'] = $this->input->post('add1_state');
-						$json['cust_locn'] = $this->input->post('add1_location');
-                        echo json_encode($json);
-                    }
+		if ($ajax == false) {
+			$this->session->set_flashdata('confirm', array('New Customer Added!'));
+			redirect('customers/add_customer/update/' . $newid);
+		} else {
+			$json['error'] = false;
+			$json['custid'] = $newid;
+			$json['cust_name1'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name') . ' - ' . $this->input->post('company');
+			$json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
+			$json['cust_email'] = $this->input->post('email_1');
+			$json['cust_company'] = $this->input->post('company');
+			$json['cust_reg'] = $this->input->post('add1_region');
+			$json['cust_cntry'] = $this->input->post('add1_country');
+			$json['cust_ste'] = $this->input->post('add1_state');
+			$json['cust_locn'] = $this->input->post('add1_location');
+			echo json_encode($json);
+		}
                     
                 }
                 
@@ -353,12 +335,27 @@ class Customers extends crm_controller {
 	}
 	
 	
-	function delete_customer($id = false) {
-		if ($this->session->userdata('delete')==1){
-			$this->customer_model->delete_customer($id);
-			$this->session->set_flashdata('confirm', array('Customer Record Deleted!'));
-			redirect('customers');
-		} else {
+	function delete_customer($id = false) 
+	{
+		if ($this->session->userdata('delete')==1) 
+		{	
+			if (preg_match('/^[0-9]+$/', $id)) 
+			{
+				// check to see if this customer has a job on the system before deleting
+				$leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
+				if ($leads->num_rows() > 0) 
+				{
+					$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting lead records!'));
+					redirect('customers');
+					exit();
+				}
+				$this->customer_model->delete_customer($id);
+				$this->session->set_flashdata('confirm', array('Customer Record Deleted!'));
+				redirect('customers');
+			}
+		}
+		else 
+		{
 			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
 			redirect('customers');
 		}

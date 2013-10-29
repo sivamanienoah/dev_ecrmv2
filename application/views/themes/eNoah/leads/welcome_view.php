@@ -1393,7 +1393,8 @@ h3 .small {
 			 * This will include the select box that changes the status of a job
 			 */
 			if (isset($edit_quotation))
-			include 'tpl/status_change_menu.php';
+				// include '../tpl/status_change_menu.php';
+				require (theme_url().'/tpl/status_change_menu.php');
 			?>
            
 			
