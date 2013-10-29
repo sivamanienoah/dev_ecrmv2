@@ -2,8 +2,6 @@
 ob_start();
 require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
-//print_r($this->uri->segment(2)); exit;
-//echo baseurl();
 ?>
 <div id="content">
 	<div class="inner">	
@@ -101,55 +99,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--Inner div - close here -->
 </div><!--Content div - close here -->
-<script>
-<?php if($this->session->userdata('accesspage')==1) { ?>
-$(function() {
-	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-<?php } ?>
-
-function checkStatus(id) {
-	var formdata = { 'data':id, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
-	$.ajax({
-		type: "POST",
-		url: '<?php echo base_url(); ?>manage_service/ajax_check_status_currency/',
-		dataType:"json",                                                                
-		data: formdata,
-		cache: false,
-		beforeSend:function(){
-			//$("#loadingImage").show();
-			$('#dialog-message-'+id).empty();
-		},
-		success: function(response) {
-			if (response.html == 'NO') {
-				//alert("You can't Delete the Lead source!. \n This Source is used in Leads.");
-				$('#dialog-message-'+id).show();
-				$('#dialog-message-'+id).append('One of more leads currently mapped to this currency. This cannot be deleted.');
-				setTimeout('timerfadeout()', 4000);
-			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'manage_service/cur_type_delete/update/'+id;
-				} else {
-					return false;
-				}
-			}
-		}                                                                                       
-	});
-return false;
-}
-
-function timerfadeout() {
-	$('.dialog-err').fadeOut();
-}
-
-</script>
-
+<script type="text/javascript" src="assets/js/manage_service/manage_expect_worth_cur.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

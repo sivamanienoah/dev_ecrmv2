@@ -53,33 +53,4 @@
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 <?php require (theme_url(). '/tpl/footer.php'); ?>
-<script type="text/javascript">
-	$( "#country_name" ).change(function() {
-		var cur_id = $("#country_name").val();
-		var formdata = { 'data':cur_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
-		$.ajax({
-			type: "POST",
-			url: '<?php echo base_url(); ?>manage_service/get_cur_name/',
-			dataType:"json",                                                                
-			data: formdata,
-			cache: false,
-			beforeSend:function(){
-				$('#cur_name').empty();
-				$('#cur_short_name').empty();
-			},
-			success: function(response) {
-				// alert(response.cur_name);
-				$('#cur_name').val(response.cur_name);
-				$('#cur_short_name').val(response.cur_short_name);
-			}                                                                                       
-		});
-		return false;
-	});
-	
-	document.getElementById("is_default").disabled = true;
-	
-	function toggleCheckbox(obj) {
-		if(obj.checked){document.getElementById("is_default").disabled = false;}
-		else{document.getElementById("is_default").disabled = true;} 
-	}
-</script>
+<script type="text/javascript" src="assets/js/manage_service/manage_expect_worth_cur_add.js"></script>

@@ -97,52 +97,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--Inner div - close here -->
 </div><!--Content div - close here -->
-<script>
-<?php if($this->session->userdata('accesspage')==1) { ?>
-$(function() {
-	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-<?php } ?>
-
-function checkStatus(id) {
-	var formdata = { 'data':id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
-	$.ajax({
-		type: "POST",
-		url: '<?php echo base_url(); ?>manage_service/ajax_check_status_division/',
-		dataType:"json",                                                                
-		data: formdata,
-		cache: false,
-		beforeSend:function(){
-			$('#dialog-message-'+id).empty();
-		},
-		success: function(response) {
-			if (response.html == 'NO') {
-				// alert("You can't Delete the Sales Division!. \n This Division is used in Leads.");
-				$('#dialog-message-'+id).show();
-				$('#dialog-message-'+id).append("One or more leads currently assigned for this sales division. This cannot be deleted.");
-				setTimeout('timerfadeout()', 4000);
-			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'manage_service/division_delete/update/'+id;
-				} else {
-					return false;
-				}
-			}
-		}                                                                                       
-	});
-return false;
-}
-
-function timerfadeout() {
-	$('.dialog-err').fadeOut();
-}
-</script>
+<script type="text/javascript" src="assets/js/manage_service/manage_sales_divisions.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

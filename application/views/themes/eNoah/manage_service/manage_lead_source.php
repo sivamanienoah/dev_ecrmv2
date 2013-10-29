@@ -97,53 +97,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--Inner div - close here -->
 </div><!--Content div - close here -->
-<script>
-<?php if($this->session->userdata('accesspage')==1) { ?>
-$(function() {
-	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-<?php } ?>
-
-function checkStatus(leadSrc_id) {
-	var formdata = { 'data':leadSrc_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' }
-	$.ajax({
-		type: "POST",
-		url: '<?php echo base_url(); ?>manage_service/ajax_check_status/',
-		dataType:"json",                                                                
-		data: formdata,
-		cache: false,
-		beforeSend:function(){
-			$('#dialog-message-'+leadSrc_id).empty();
-		},
-		success: function(response) {
-			if (response.html == 'NO') {
-				$('#dialog-message-'+leadSrc_id).show();
-				$('#dialog-message-'+leadSrc_id).append('One of more leads currently mapped to this lead source. This cannot be deleted.');
-				setTimeout('timerfadeout()', 4000);
-			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'manage_service/ls_delete/update/'+leadSrc_id;
-				} else {
-					return false;
-				}
-			}
-		}                                                                                       
-	});
-return false;
-}
-
-function timerfadeout() {
-	$('.dialog-err').fadeOut();
-}
-
-</script>
-
+<script type="text/javascript" src="assets/js/manage_service/manage_lead_source.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
