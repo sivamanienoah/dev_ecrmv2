@@ -550,7 +550,7 @@ $(function(){
 		$(this).__tabs(a, b, c, d, e, f);
 	};
 	
-	$("#lead_tab").tabs({
+	$("#lead_tab").tabs({ 
 						selected: 0,
 						show: function (event, ui) {
 							if (ui.index == 3)
