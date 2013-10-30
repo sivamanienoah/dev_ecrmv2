@@ -1,14 +1,16 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
-<!--script type="text/javascript" src="assets/js/jquery.blockUI.js"></script-->
+<!--script type="text/javascript" src="assets/js/blockui.v2.js"></script-->
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript" src="assets/js/easypaginate.js"></script>
+<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
+<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
-<!--Code Added for the Pagination in Comments Section -- Starts Here-->
+<!--Code Added for the Pagination in Comments Section- Starts Here-->
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#lead_log_list")
@@ -18,6 +20,21 @@ $(document).ready(function() {
 	$("#lead_query_list")
 	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
+	
+	/*
+	$('.table_grid').dataTable({
+		"iDisplayLength": 5,
+		"sPaginationType": "full_numbers",
+		"aaSorting": [],
+		"bPaginate": true,
+		"bInfo": false,
+		"bFilter": false,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": false,
+		"bAutoWidth": false,
+	});
+	*/
 });
 </script>
 <div class="comments-log-container" style= "display:none;">
@@ -38,7 +55,7 @@ $(document).ready(function() {
 	?>
 </div>
 
-<!--Code Added for the Pagination in Comments Section--Ends Here-->
+<!--Code Added for the Pagination in Comments Section-Ends Here-->
 
 <script type="text/javascript">
 var unid = <?php  echo $userdata['userid'] ; ?>;
@@ -338,9 +355,7 @@ function QueryAjaxFileUpload() {
 
 	var reply = "";
 	var fname = "";
-	//document.getElementById('querylead_form').style.display = "none";
 	if($.trim($('#query').val()) == '') {
-		//alert('Please Enter Query');
 		return false;						
 	}
 	if(replay == 'query') {
@@ -390,7 +405,7 @@ function QueryAjaxFileUpload() {
 						}
 						
 			
-var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15"><tbody><tr><td valign="top" width="80">Query '+reply+'</td><td colspan="3" class="task">'+data.lead_query+'</td></tr>';	
+var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15"><tbody><tr><td valign="top" width="80">Query '+reply+'</td><td colspan="3" class="task">'+decodeURIComponent(data.lead_query)+'</td></tr>';	
 	_file_link += '<tr><td>Date</td><td class="item user-name" rel="59" width="100">'+data.up_date+'</td>';
 	_file_link += '<td width="80">'+reply+' By</td><td class="item hours-mins" rel="4:0">'+data.firstname+' '+data.lastname+'</td></tr>';
 	_file_link += '<tr><td colspan="1" valign="top">File Name</td><td colspan="3">'+fname+'</td></tr>';
@@ -524,6 +539,16 @@ $(function(){
 		}
 	});
 	
+
+	$.fn.__tabs = $.fn.tabs;
+	$.fn.tabs = function (a, b, c, d, e, f) {
+		var base = location.href.replace(/#.*$/, '');
+		$('ul>li>a[href^="#"]', this).each(function () {
+			var href = $(this).attr('href');
+			$(this).attr('href', base + href);
+		});
+		$(this).__tabs(a, b, c, d, e, f);
+	};
 	
 	$("#lead_tab").tabs({
 						selected: 0,
@@ -789,8 +814,7 @@ $(function(){
 			<span style="float:right;"> 
 				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
 				|
-				<!--<a href="#" onclick="$('.log-container > :not(.stickie)').toggle(); return false;">view/hide stickies</a>-->
-				<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
+				<a href="#" onclick="$('.log > :not(.stickie),#pager').toggle(); return false;">View/Hide Stickies</a>
 				<?php 
 				if (isset($userdata) && $userdata['level']==1 && $userdata['role_id']==1)
 				{
@@ -803,7 +827,7 @@ $(function(){
 			</span>
 			<h4>Comments</h4>
 
-			<!--Code Changes for Pagination in Comments Section -- Starts here -->
+			<!--Code Changes for Pagination in Comments Section- Starts here -->
 			<?php if ($log_html != "") { ?>
 			<table width="100%" id="lead_log_list" class="log-container"> 
 				<thead> 
@@ -832,7 +856,7 @@ $(function(){
 				</select> 
 			</div>
 			<?php } else { echo "No Comments Found."; } ?>
-			<!--Code Changes for Pagination in Comments Section -- Ends here -->
+			<!--Code Changes for Pagination in Comments Section- Ends here -->
 		</div>
 
 		<div class="side1">
@@ -921,16 +945,16 @@ $(function(){
 			</div>
 			
 			<p id="temp">&nbsp;</p>
-			<div id="lead_tab">
-				<ul id="job-view-tabs">
-					<li><a href="#jv-tab-1">Lead History</a></li>
-					<li><a href="#jv-tab-2">Estimate</a></li>
-					<li><a href="#jv-tab-3">Files</a></li>
-					<li><a href="#jv-tab-4">Tasks</a></li>
-					<li><a href="#jv-tab-5">Milestones</a></li>
-					<li><a href="#jv-tab-6">Customer</a></li>
-					<li><a href="#jv-tab-7">Query</a></li>
-				</ul>
+		<div id="lead_tab">
+			<ul id="job-view-tabs">
+				<li><a href="<?php echo current_url() ?>#jv-tab-1">Lead History</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-2">Estimate</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-5">Milestones</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-6">Customer</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-7">Query</a></li>
+			</ul>
 			<div id="jv-tab-1">
 					<table class="data-table">
 						<tr ><th>Stage Name</th><th>Modified By</th><th>Modified On</th></tr>
@@ -1327,9 +1351,7 @@ $(function(){
 
 			<div id="jv-tab-6">
 				<form id="customer-detail-read-only" onsubmit="return false;">
-				
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
 					<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
 						<tr>
 							<td width="120"><label>First name</label></td>
@@ -1423,6 +1445,7 @@ $(function(){
 						</tr>
 					</table>
 				</form>
+				
 			</div><!-- id: jv-tab-6 end -->
 				
 			<div id="jv-tab-7"><!-- id: jv-tab-7 start -->
@@ -1455,11 +1478,14 @@ $(function(){
 							</div>
 						<?php } ?>
 						
-						<table id="lead_query_list" class="existing-query-list">
-							<thead> </thead>
-							<tbody id="query-file-list"><tr id="querylist"></tr><?php echo $query_files1_html; ?></tbody>
+						<table width="100%" id="lead_query_list" class="existing-query-list"> 
+							<thead> <tr> <th></th> </tr> 
+							</thead>
+								<tbody id="query-file-list">
+								<tr id="querylist"></tr>
+								<?php echo $query_files1_html; ?>			
+								</tbody>
 						</table>
-						
 						<?php if (!empty($query_files1_html)) { ?>
 							<div id="pager1">
 								<?php echo '&nbsp;';?>

@@ -84,12 +84,6 @@ $(function(){
 		$(this).__tabs(a, b, c, d, e, f);
 	};
 	$("#quote-tabs").tabs();
-    $(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
-	//.tablesorterPager({container: $("#pager"), positionFixed: false});
-    $('.data-table tr').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
 });
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
