@@ -408,21 +408,16 @@ switch ($userdata['level']) {
 			<tr>	
 				<td>
 					<select style="width:230px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
-					<option value="0">All</option>
-					<?php foreach($lead_stage_pjt as $ls) {?>
-					<option value="<?php echo $ls['lead_stage_id']; ?>">
-					<?php if ($ls['lead_stage_name'] == 'Project Charter Approved. Convert to Projects In Progress') {
-						$ls['lead_stage_name'] = 'Project - In Progress'; }
-					echo $ls['lead_stage_name']; ?>
-					</option>	
-					<?php } ?>					
+						<option value="1">Project In Progress</option>
+						<option value="2">Project Completed</option>
+						<option value="3">Project Onhold</option>
+						<option value="4">Inactive</option>
 					</select> 
 				</td>
 				
 				
 				<td>
 					<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
-						<option value="0">All</option>
 						<?php foreach($pm_accounts as $pm_acc) {?>
 						<option value="<?php echo $pm_acc['userid']; ?>">
 						<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
@@ -432,7 +427,6 @@ switch ($userdata['level']) {
 				
 				<td>
 					<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
-						<option value="0">All</option>
 						<?php foreach($customers as $customer) {?>
 						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
 						<?php } ?>
