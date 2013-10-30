@@ -181,13 +181,7 @@ function getUserForLeadAssign(regId,cntryId,stId,locId) {
 			}
 		}
 	);
-	/*if (existing_lead > 0) {
-		if (existing_lead_service) {
-			$('#job_belong_to').val(existing_lead_service);
-		}
-		$('#job_belong_to').parent().after('<p class="notice width250px">This is an existing lead. Upon starting, the logs belong to this lead will be transferred to this job.</p>');
-		$('#quote-init-form').append('<input type="hidden" name="transfer_lead" value="' + existing_lead + '" />')
-	}*/
+
 }
 
 
@@ -344,33 +338,6 @@ function startQuote() {
 						$('#content').block({
 						message:'<h4>Processing...</h4>'
 						});
-                        
-						/*
-						if (res.job_category == 1) { // web development quote
-                            $('#web-dev-prep').slideDown();
-                        } else if (res.job_category == 16) { // 16 => 'Premium Real Estate Package'
-                            CreateRealestateWebQuote(880);
-						} else if (res.job_category == 17) { // 17 => 'Unlimited Real Estate Package'
-                            CreateRealestateWebQuote(879);
-                        } else if (res.job_category == 18) { // 18 => 'Property Developers Package'
-                            CreateRealestateWebQuote(877);
-						} else if (res.job_category == 19) { // 19 => 'Commercial Real Estate Package'
-                            CreateRealestateWebQuote(878);
-						} else if (res.job_category == 20) { // 20 => 'Premium Business Website'
-                            CreateRealestateWebQuote(984);
-						} else if (res.job_category == 21) { // 21 => 'Unlimited Business Package'
-                            CreateRealestateWebQuote(1060);
-						} else if (res.job_category == 22) { // 22 => 'One Page Websites (Real Tools)'
-                            CreateRealestateWebQuote(1312);
-						} else if (res.job_category == 30) { // 30 => 'V-Series Website Packages | V1 Unlimited'
-                            CreateRealestateWebQuote(1318);
-                        } else if (res.job_category == 5) { // 5 => 'Web Hosting'
-                            CreateRealestateWebQuote(985);
-                        } else { // normal
-                            $('#item-submit, #change-quote-status').slideDown();
-							populateQuote(res.insert_id);
-                        }
-						*/
 						
 						$('#item-submit, #change-quote-status').slideDown();
 						populateQuote(res.insert_id);
@@ -555,15 +522,11 @@ function cancelDelEdit() {
 }
 
 
-
 function editQuoteDetails() {
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
         err.push('Job title is required');
     }
-    /*if ($.trim($('#job_desc_edit').val()) == '') {
-        err.push('Job description is required');
-    }*/
     if ($('#job_category_edit').val() == 'not_select') {
         err.push('Service type must be selected');
     }
@@ -638,13 +601,6 @@ function selectItemSection() {
 
 function ajxSaveCty(){
 	$(document).ready(function() {
-        /*if( $('#newcountry').val().length > 2 )
-            {
-              var newCty = $('#newcountry').val();
-              getCty(newCty);
-            }
-        return false;
-		*/
 		if ($('#newcountry').val() == "") {
 			alert("Country Required.");
 		}
@@ -775,154 +731,6 @@ function ajxSaveLoc() {
  *Functions for adding New Country, New State & New Location in the New Lead Creation page -- Ends Here.
  */
 
-/*
- * Web development quotes
- */
-
-var web_dev_data = {
-                    num_pages : 0,
-                    domain : 0
-                };
-
-
-function startWebDevQuote() {
-    
-    var errors = [];
-    var num_pages = $('#web-dev-prep select[@name="prep_pages"]').val();
-    var page_html = '';
-    /*
-     * set default value
-     */
-    web_dev_data.num_pages = 0;
-    $('#web_number_of_pages').val(0);
-    
-    if (!$('#web-dev-prep input[@name="prep_gui"]').is(':checked')) {
-        errors.push('Does this quote need GUI design?');
-    }
-    if (!$('#web-dev-prep input[@name="prep_np"]').is(':checked')) {
-        errors.push('Does this quote need NewsletterPRO?');
-    }
-    if (!$('#web-dev-prep input[@name="prep_vs"]').is(':checked')) {
-        errors.push('Does this quote need V-Shop?');
-    }
-    if (!$('#web-dev-prep input[@name="prep_domain"]').is(':checked')) {
-        errors.push('Does this quote need domain registration?');
-    }
-    if (!$('#web-dev-prep input[@name="prep_hosting"]').is(':checked')) {
-        errors.push('Does this quote need hosting?');
-    }
-    if (num_pages == 0) {
-        errors.push('How many pages does this quote need?');
-    }
-    
-    if (errors.length > 0) {
-        alert(errors.join('\n'));
-        return false;
-    } else {
-        
-        page_html += '<br /><p>Please enter page details below.</p>';
-        
-        for(var j = 0; j < num_pages; j++){
-            page_html += '<p><input type="text" name="web_pages_'+ j +'" class="dynamic-page-name textfield width180px" /> &nbsp; &nbsp; <input type="checkbox" name="editablepage_'+ j +'" value="1" /> editable &nbsp; <input type="checkbox" name="formpage_'+ j +'" value="1" /> form </p>';
-        }
-        
-        if ($('#web-dev-prep input[@name="prep_domain"]:checked').val() == 1) {
-            page_html += '<br /><p>Domain Name <input type="text" name="prep_domain_name" value="" class="dynamic-domain-name textfield width180px" />';
-            web_dev_data.domain = 1;
-        } else {
-            web_dev_data.domain = 0;
-        }
-        
-        web_dev_data.num_pages = num_pages;
-        $('#web_number_of_pages').val(num_pages);
-        $('#web_hidden_jobid').val(quote_id);
-        
-        $('#web-dev-prep .prep-init').slideUp();
-        $('#web-dev-prep .web-dev-prep-data').html(page_html).slideDown();
-        $('#web-dev-prep .web-dev-prep-submit').slideDown();
-        
-    }
-    
-}
-
-function submitWebDevQuote() {
-    
-    var errors = [];
-    var empty_page_names = true;
-    
-    if (web_dev_data.num_pages > 0) {
-        $('.dynamic-page-name').each(function(){
-            if ($.trim(this.value) != '') {
-                empty_page_names = false;
-            }
-        });
-    }
-    
-    if (empty_page_names) {
-        errors.push('You should not leave all pages empty!');
-    }
-    
-    if (web_dev_data.domain == 1 && $.trim($('.dynamic-domain-name').val()) == '') {
-        errors.push('You should specify the domain name you want!');
-    }
-    
-    if (errors.length > 0) {
-        alert(errors.join('\n'));
-        return false;
-    } else {
-        
-        $.blockUI({
-            message:'<h2>Preparing your quote...</h2>'
-        });
-        
-        var fd = $('#web-dev-prep').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-        $.post(
-            'welcome/ajax_webdev_quote',
-            fd,
-            function(data){
-                if (typeof(data) == 'object') {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        populateQuote(quote_id);
-                        $('#web-dev-prep').slideUp(400);
-                        $('#item-submit, #change-quote-status').slideDown(400);
-                    }
-                } else {
-                    alert('Error creating the records!');
-                }
-                $.unblockUI();
-            },
-            'json'
-        );
-        
-    }
-}
-
-
-function CreateRealestateWebQuote(duplicate_id) {
-    $.blockUI({
-        message:'<h2>Preparing your quote...</h2>'
-    });
-	
-    $.getJSON(
-        'welcome/ajax_duplicate_quote/' + quote_id + '/' + duplicate_id,
-        function(data){
-            if (typeof(data) == 'object'){
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    populateQuote(quote_id);
-                    $('#item-submit, #change-quote-status').slideDown();
-                }
-            } else {
-                alert('Unexpected response from server!')
-            }
-            $.unblockUI();
-        }
-        
-    );
-}
 </script>
 <style type="text/css">
 h3 .small {
@@ -1329,64 +1137,6 @@ h3 .small {
                 </div>
                 
             </form>
-
-            <form id="web-dev-prep" class="display-none">
-                <h3>Web Development Quotation</h3>
-                <table cellpadding="0" cellspacing="0" class="prep-init">
-                    <tr>
-                        <td colspan="2">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>GUI design</td>
-                        <td valign="middle">&nbsp; <input type="radio" name="prep_gui" value="1" /> Yes &nbsp; <input type="radio" name="prep_gui" value="0" />No</td>
-                    </tr>
-                    <tr>
-                        <td>Number of web pages<br />(Including editable pages)</td>
-                        <td><select name="prep_pages" id="web-dev-prep-pages" class="textfield width80px">
-                            <?php
-                            for ($i = 0; $i < 41; $i++)
-                            {
-                                echo "<option value=\"{$i}\">{$i}</option>\n";
-                            }
-                            ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Does this quote require NewsletterPRO?</td>
-                        <td valign="middle">&nbsp; <input type="radio" name="prep_np" value="1" /> Yes &nbsp; <input type="radio" name="prep_np" value="0" />No</td>
-                    </tr>
-                    <tr>
-                        <td>Does this quote require V-Shop (e-commerce) ?</td>
-                        <td valign="middle">&nbsp; <input type="radio" name="prep_vs" value="1" /> Yes &nbsp; <input type="radio" name="prep_vs" value="0" />No</td>
-                    </tr>
-                    <tr>
-                        <td>Does this quote require domain registration?</td>
-                        <td valign="middle">&nbsp; <input type="radio" name="prep_domain" value="1" /> Yes &nbsp; <input type="radio" name="prep_domain" value="0" />No</td>
-                    </tr>
-                    <tr>
-                        <td>Does this quote require web hosting?</td>
-                        <td valign="middle">&nbsp; <input type="radio" name="prep_hosting" value="1" /> Yes &nbsp; <input type="radio" name="prep_hosting" value="0" />No</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div class="buttons">
-                                <button type="submit" class="" onclick="startWebDevQuote(); return false;">Next</button>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <div class="web-dev-prep-data display-none">
-                    
-                </div>
-                <input type="hidden" name="web_number_of_pages" id="web_number_of_pages" />
-                <input type="hidden" name="jobid" id="web_hidden_jobid" />
-                <div class="web-dev-prep-submit display-none">
-                    <div class="buttons clearfix">
-                        <button type="submit" class="positive" onclick="submitWebDevQuote(); return false;">Start</button>
-                    </div>
-                </div>
-            </form>
 			
 			<?php
 			/**
@@ -1666,33 +1416,7 @@ $(function(){
 				.slideUp(400);
 		}
 	});
-	
-	$('#attach_pdf').change(function(){
-		if ($(this).is(':checked'))	{
-			$('.download-invoice-option-log:not(:visible)').slideDown(400);
-		} else {
-			$('.download-invoice-option-log:visible').slideUp(400);
-		}
-	});
-	
-	
-	$("#job-view-tabs").tabs({
-								selected: 1,
-								show: function (event, ui) {
-									if (ui.index == 3)
-									{
-										loadExistingTasks();
-									}
-									else if (ui.index == 4)
-									{
-										populateJobOverview();
-									}
-									else if (ui.index == 9)
-									{
-										populatePackage();
-									}
-								}
-							});
+
 	
 	$('#job-url-list li a:not(.file-delete)').livequery(function(){
 		$(this).click(function(){
@@ -1843,7 +1567,7 @@ function is_project() {
 
 function reloadWithMessagePjt(str, statusid) {
 	$.get('ajax/request/set_flash_data/' + str,{},function(data){
-		document.location.href = 'invoice/view_project/' + curr_job_id;
+		document.location.href = 'project/view_project/' + curr_job_id;
 		$.unblockUI();
 	});
 }
