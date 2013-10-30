@@ -20,7 +20,7 @@
 		<?php
 		echo '<div id="quote-tabs"><ul id="job-view-tabs">';
 		foreach ($categories as $cat) {
-			echo '<li><a href="#cat_'.$cat['cat_id'].'">'.$cat['cat_name'].'</a></li>';
+			echo '<li><a href="'.current_url().'#cat_'.$cat['cat_id'].'">'.$cat['cat_name'].'</a></li>';
 		}
 		echo '</ul>';
 		foreach ($categories as $cat) {
@@ -74,6 +74,16 @@
 </div>
 <script type="text/javascript">
 $(function(){
+	$.fn.__tabs = $.fn.tabs;
+	$.fn.tabs = function (a, b, c, d, e, f) {
+		var base = location.href.replace(/#.*$/, '');
+		$('ul>li>a[href^="#"]', this).each(function () {
+			var href = $(this).attr('href');
+			alert(href);
+			$(this).attr('href', base + href);
+		});
+		$(this).__tabs(a, b, c, d, e, f);
+	};
 	$("#quote-tabs").tabs();
     $(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
 	//.tablesorterPager({container: $("#pager"), positionFixed: false});
