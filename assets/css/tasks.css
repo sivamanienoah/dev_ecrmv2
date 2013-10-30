@@ -29,7 +29,7 @@
 }
 .row-header td.user {
 	font-weight:bold;
-	font-size:18px;
+	/*font-size:18px;*/
 }
 .great-task-table td a {
 	color:inherit;
