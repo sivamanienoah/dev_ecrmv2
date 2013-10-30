@@ -3,7 +3,7 @@
 class Item_mgmt_model extends crm_model {
 	//public $cfg;
 	
-	function Hosting_model() {
+	function Item_mgmt_model() {
         parent::__construct();        
     }
     
