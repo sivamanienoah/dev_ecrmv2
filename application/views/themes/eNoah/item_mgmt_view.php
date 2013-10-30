@@ -1,7 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
-	<?php //include 'tpl/item_mgmt_submenu.php' ?>
 	<div class="inner q-view">
 	<?php if($this->session->userdata('accesspage')==1){?>
 		<table><tr>
