@@ -9,11 +9,12 @@ if(!empty($packageid_fk)){
 $usernme = $this->session->userdata('logged_in_user');
 ?>
 <style type="text/css">
-#domain-expiry-date {
-		display:none;
+#domain-expiry-date 
+{
+	display:none;
 }
 </style>
-<link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" />
+<!--link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" /-->
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
@@ -84,10 +85,7 @@ $(document).ready(function() {
 
 </script>
 <div id="content">
-    <!--<div id="left-menu">
-		<a href="hosting">Back To Hosting</a>
-	</div>-->
-    <div class="inner"> <?php //$usrid = $this->session->userdata('userid'); ?>
+    <div class="inner">
 	<?php if(($this->session->userdata('add')==1 && $this->uri->segment(3)!= 'update') || (($this->session->userdata('edit')==1) && ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))))) { ?>
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
 			
@@ -187,27 +185,21 @@ $(document).ready(function() {
 							</button>
 						</div>
                     </td>
-                   <!--<td>
-                        <?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && $userdata['level'] < 1) { ?>
-                        <div class="buttons">
-                            <button type="submit" name="delete_account" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-                                Delete Account
-                            </button>
-                        </div>
-                        <?php } else { echo "&nbsp;"; } ?>
-                    </td>-->
                     <td>&nbsp;</td>
 				</tr>
             </table>
 		</form>
-		<?php } else{
+		<?php 
+		} else {
 			echo "You have no rights to access this page";
-		}?>
+		}
+		?>
 	</div>
 </div>
 <?php require (theme_url().'/tpl/footer.php'); ?>
 <script type="text/javascript">
-function ndf_cancel() {
+function ndf_cancel() 
+{
     $.unblockUI();
     return false;
 }
@@ -255,19 +247,14 @@ function ndf_add() {
 /*
  *Functions for adding New Country, New State & New Location in the New Lead Creation page -- Starts Here
  */
-function ajxCty(){
+function ajxCty()
+{
 	$("#addcountry").slideToggle("slow");
 }
 
-function ajxSaveCty(){
+function ajxSaveCty()
+{
 	$(document).ready(function() {
-        /*if( $('#newcountry').val().length > 2 )
-            {
-              var newCty = $('#newcountry').val();
-              getCty(newCty);
-            }
-        return false;
-		*/
 		if ($('#newcountry').val() == "") {
 			alert("Country Required.");
 		}
@@ -300,19 +287,14 @@ function ajxSaveCty(){
 	});	
 }
 
-function ajxSt() {
+function ajxSt() 
+{
 	$("#addstate").slideToggle("slow");
 }
 
-function ajxSaveSt() {
+function ajxSaveSt() 
+{
 	$(document).ready(function() {
-        /*if( $('#newstate').val().length > 2 )
-            {
-              var newSte = $('#newstate').val();
-              getSte(newSte);
-            }
-        return false;
-		*/
 		if ($('#newstate').val() == "") {
 			alert("State Required.");
 		}
@@ -347,11 +329,13 @@ function ajxSaveSt() {
 	});	
 }
 
-function ajxLoc() {
+function ajxLoc()
+{
 	$("#addLocation").slideToggle("slow");
 }
 
-function ajxSaveLoc() {
+function ajxSaveLoc() 
+{
 	$(document).ready(function() {
 		if ($('#newlocation').val() == "") {
 			alert("Location Required.");
