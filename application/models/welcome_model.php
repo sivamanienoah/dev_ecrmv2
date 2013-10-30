@@ -227,7 +227,7 @@ class Welcome_model extends crm_model {
 								Query '.$class.'
 							</td>
 							<td colspan="3" class="task">
-								'.$result['query_msg'].'
+								'.urldecode($result['query_msg']).' 
 							</td>
 						</tr>
 						<tr>
