@@ -45,12 +45,9 @@ if(!empty($hosting)){
 
 <div id="task-page">
 	<div class="task-contents">
-
-<h2><?php //echo $page_title ?></h2>
-
 <?php
-//echo $this->session->userdata('deletetask');
-# weekend offset
+
+
 $wend_offset = 0;
 if (date('l', $start_date_stamp) == 'Monday')
 {
@@ -61,7 +58,6 @@ else if (date('l', $start_date_stamp) == 'Tuesday')
 	$wend_offset = 1;
 }
 $user_tasks = $unallocated_tasks = array();
-//print_r($results);exit;
 
 $uio = $userdata['userid'];
 foreach($created_by as $value) {
@@ -287,15 +283,6 @@ EOD;
 			
 			";
 
-			/*
-			<td class=\"status-{$task['status']}\" valign=top align=right>{$task['status']}%</td>
-			<td align=center>$jobid=$task['jobid'];
-			if(!empty($hostingid[$jobid])) {
-				if(array_search(0,$hostingid[$jobid])>0) $color='red';
-				else $color='#00CC00';
-				echo '<a href="dns/jobs/'.$jobid.'" style="color:'.$color.'">View</a><br>'; 
-			}</td>*/
-
 			echo "<td class=start-date valign=top align=center>{$task['start_date']}</td>
 			<td class=end-date valign=top align=center>{$task['end_date']}</td>
 			<td valign=top align=center>{$actualstart_date}</td>
@@ -385,7 +372,6 @@ EOD;
 			else
 			{
 				$company_link = $task['company'];
-				//$random_task_class = ' random-task';
 			}
 			if($userdata['role_id'] == 1 || in_array($userdata['userid'],$b)) {
 				$random_task_class = ' random-task';
@@ -530,7 +516,6 @@ EOD;
 			else
 			{
 				$company_link = $task['company'];
-				//$random_task_class = ' random-task';
 			}
 			
 			if($userdata['role_id'] == 1 || in_array($userdata['userid'],$b)) {
@@ -538,7 +523,6 @@ EOD;
 			} else if($task['userid_fk'] == $userdata['userid']){
 				$random_task_class = ' newrandom-task';
 			}
-			
 			
 			$require_qc = ($task['require_qc'] == '1') ? " require-qc-{$tk}" : '';
 			
@@ -654,7 +638,6 @@ EOD;
 	</div>
 </div>
 <script type="text/javascript">
-//setTimeout(function(){ document.location.href = document.location.href; }, 1000*60*2);
 $(function(){
 	var ts = $('.great-task-table').size();
 	ts = Math.floor(ts / 2);

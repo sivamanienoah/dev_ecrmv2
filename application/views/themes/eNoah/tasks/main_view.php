@@ -2,16 +2,7 @@
 ob_start();
 require (theme_url().'/tpl/header.php'); 
 ?>
-<!--script type="text/javascript" src="assets/js/blockui.v2.js"></script-->
-<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript">var this_is_home = true;</script>
-<script type="text/javascript">var curr_job_id = 0;</script>
-<script type="text/javascript" src="assets/js/tasks.js?q=9"></script>
 
-<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
-<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="assets/js/easypaginate.js"></script>
 <style type="text/css">
 @import url(assets/css/tasks.css?q=1);
 /* over-ride tasks */
@@ -44,15 +35,23 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 		}
 	ol#pagination li.current{color:#f00;font-weight:bold;}
 </style>
+
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript">var this_is_home = true;</script>
+<script type="text/javascript">var curr_job_id = 0;</script>
+<script type="text/javascript" src="assets/js/tasks.js?q=9"></script>
+
+<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
+<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="assets/js/easypaginate.js"></script>
+
 <div id="content">
     <div class="inner" id="jv-tab-4">
 	
-		<?php
-		include theme_url() . '/tpl/user_accounts_options.php';
-		//echo '<pre>'; print_r($project); echo '</pre>';
-		?>
+		<?php include theme_url() . '/tpl/user_accounts_options.php'; ?>
 		<h2>Tasks</h2>
-	<!--	<p><a href="tasks" onclick="window.open(this.href); return false;">View Full Screen Tasks</a> | <a href="tasks/weekly" onclick="window.open(this.href); return false;">View Weekly Tasks</a></p>-->
+
 		<div style="margin-top:20px;" class="tasks-mgmt">
 				<form id="set-job-task" onsubmit="return false;">
 				
@@ -85,19 +84,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 								?>
 								</select>
 							</td>
-							<!--<td>
-								Hours
-							</td>
-							<td>
-								<input name="task_hours" type="text" class="textfield width100px" /> Hours and
-								<select name="task_mins" class="textfield">
-									<option value="0">0</option>
-									<option value="15">15</option>
-									<option value="30">30</option>
-									<option value="45">45</option>
-								</select>
-								Mins
-							</td>-->
 						</tr>
 						
 						<tr>
@@ -112,30 +98,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 							</td>
 							<td>
 								<input type="text" name="task_end_date" class="textfield pick-date width100px" />
-								&nbsp;
-								<!--<select name="task_end_hour" class="textfield">
-								<?php
-								/*$time_range = array(
-												'10:00:00'	=> '10:00AM',
-												'11:00:00'	=> '11:00AM',
-												'12:00:00'	=> '12:00PM',
-												'13:00:00'	=> '1:00PM',
-												'14:00:00'	=> '2:00PM',
-												'15:00:00'	=> '3:00PM',
-												'16:00:00'	=> '4:00PM',
-												'17:00:00'	=> '5:00PM',
-												'18:00:00'	=> '6:00PM',
-												'19:00:00'	=> '7:00PM'
-											 );
-								foreach ($time_range as $k => $v)
-								{
-									$selected = ($k == '17:00:00') ? ' selected="selected"' : '';
-									echo "
-									<option value=\"{$k}\"{$selected}>{$v}</option>";
-								}*/
-								?>
-								</select>
-							</td>-->
 						</tr>
 						<tr>
 							<td>
@@ -147,12 +109,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 							</td>
 							
 						</tr>
-						<!--<tr>
-							<td>&nbsp;</td>
-							<td colspan=3>
-								Priority Support : <input type="checkbox" name="priority" />
-							</td>
-						</tr>-->
 						<tr>
 							<td colspan="4">
 								<div class="buttons">
@@ -223,7 +179,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 								From Date
 							</td>
 							<td>
-								<!--<input type="text" name="task_search_start_date" class="textfield pick-date width100px"/>-->
 								<input type="text" name="task_search_start_date" class="textfield pick-date width100px"/>
 							</td>
 							<td>
@@ -240,16 +195,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 									<button type="submit" class="positive" onclick="searchTasks();">Search</button>
 									<button type="reset" class="negative">Reset</button>
 								</div>
-								<div class = "buttons">
-									<!--<input type="hidden" value="<?php #echo date('d-m-Y'); ?>" id="hided">
-									<input type="hidden" value="<?php #echo date('Y-m-d',(time()+(86400*7))); ?>" id="hided">-->
-									<!--<button type="button" class="positive" onclick="searchtodayTasks();">Search Today</button>-->
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<!--<p> &nbsp; Search tasks ending on this date range.</p>-->
 							</td>
 						</tr>
 					</table>
@@ -263,28 +208,18 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 		<!-- edit task -->
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
 			<?php
-			
 
-
-			 
-							$uio = $userdata['userid'];
-							$taskidd=$_POST['newPassword'];
-							$cid='';
-							$taskid="<div class='edit-job-task-id'></div>";	
-							foreach($created_by as $value) {
-								$b[] = $value[createdby];						
-							}
-							?>
-							
-							
-								
-
+				$uio = $userdata['userid'];
+				$taskidd=$_POST['newPassword'];
+				$cid='';
+				$taskid="<div class='edit-job-task-id'></div>";	
+				foreach($created_by as $value) {
+					$b[] = $value[createdby];						
+				}
+			?>
 				<tr>
 					<td colspan="4">
-						<!--<div class='edit-job-task-id'></div>-->
 						<strong>All fields are required!</strong>						
-						
-						
 					</td>
 				</tr>
 				<tr>
@@ -300,10 +235,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 					<td>Task Owner</td>
 					<td><input type="text" class="edit-task-owner textfield" readonly="readonly"></td>					
 				</tr>
-				<?php
-				 //if(in_array($uio,$b)) {
-				?>
-				
 				<tr>
 					<td>
 						Allocate to
@@ -316,30 +247,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 						</select>
 							
 					</td>
-					<!--<td>
-						Hours
-					</td>
-					<td>
-						<input name="task_hours" type="text" class="edit-task-hours textfield width100px" /> Hours and
-						<select name="task_mins" class="edit-task-mins textfield">
-							<option value="0">0</option>
-							<option value="15">15</option>
-							<option value="30">30</option>
-							<option value="45">45</option>
-						</select>
-						Mins
-					</td>-->
 				</tr>
-				<?php //} else { ?>
-				<!--<tr>
-							<td>
-								Allocate to
-							</td>
-							<td>
-								<input type="text" name="task_user" class="edit-task-allocate1 textfield width100px" readonly />
-							</td>
-						</tr>-->
-						<?php //} ?>
 				<tr>
 					<td>
 						Planned Start Date
@@ -379,7 +287,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 					<?php } ?>
 					</td>
 				</tr>
-				<!--<tr><td colspan=3>Priority Support : <input type="checkbox" name="priority" class="priority"/></td>-->
 				<tr>
 					<td colspan="4">
 						<div class="buttons">
@@ -391,7 +298,6 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 					</td>
 				</tr>
 			</table>
-		<!-- edit task end -->
 		</form>
 		<div style="margin-top:20px;" class="all-tasks">
 		</div>
