@@ -28,41 +28,6 @@ else if (date('l', $start_date_stamp) == 'Tuesday')
 $user_tasks = $unallocated_tasks = array();
 foreach ($results as $result)
 {
-	/*if ($result['approved'] == 0)
-	{
-		$unallocated_tasks[$result['userid_fk']]['user_name'] = $result['user_label'];
-		$unallocated_tasks[$result['userid_fk']]['tasks'][$result['taskid']] = array(
-																			'task' => $result['task'],
-																			'company' => ($result['company'] == NULL) ? 'General Task' : $result['company'],
-																			'hours' => str_pad($result['hours'], 2, '0', STR_PAD_LEFT),
-																			'mins' => str_pad($result['mins'], 2, '0', STR_PAD_RIGHT),
-																			'status' => $result['status'],
-																			'start_date' => $result['start_date'],
-																			'end_date' => $result['end_date'],
-																			'delayed' => (int) $result['delayed'] * -1,
-																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
-																			'lead' => $result['lead']
-																		);
-	}
-	else
-	{
-		$user_tasks[$result['userid_fk']]['user_name'] = $result['user_label'];
-		$user_tasks[$result['userid_fk']]['tasks'][$result['taskid']] = array(
-																			'task' => $result['task'],
-																			'company' => ($result['company'] == NULL) ? 'General Task' : $result['company'],
-																			'hours' => str_pad($result['hours'], 2, '0', STR_PAD_LEFT),
-																			'mins' => str_pad($result['mins'], 2, '0', STR_PAD_RIGHT),
-																			'status' => $result['status'],
-																			'start_date' => $result['start_date'],
-																			'end_date' => $result['end_date'],
-																			'delayed' => (int) $result['delayed'] * -1,
-																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
-																			'lead' => $result['lead']
-																		);
-	}
-	*/
 	
 	if ($result['approved'] == 0)
 	{
