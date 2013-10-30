@@ -549,20 +549,15 @@ $(function(){
 		});
 		$(this).__tabs(a, b, c, d, e, f);
 	};
-	
-	$("#lead_tab").tabs({ 
-						selected: 0,
-						show: function (event, ui) {
-							if (ui.index == 3)
-							{
-								loadExistingTasks();
-							}
-							else if (ui.index == 4)
-							{
-								populateJobOverview();
-							}
-						}
-					});
+	$( "#lead_tab" ).tabs({
+		beforeActivate: function( event, ui ) {
+			if (ui.newPanel[0].id=='jv-tab-4')
+				loadExistingTasks();
+			if (ui.newPanel[0].id=='jv-tab-5')
+				populateJobOverview();
+		}
+	});
+
 	
 	$('#job-url-list li a:not(.file-delete)').livequery(function(){
 		$(this).click(function(){
