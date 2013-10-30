@@ -1665,7 +1665,7 @@ body {
 					}
 					$successful = 'This log has been emailed to:<br />';
 					
-					$log_subject = "eCRM Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					$log_subject = "eSmart Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
 					
 				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
