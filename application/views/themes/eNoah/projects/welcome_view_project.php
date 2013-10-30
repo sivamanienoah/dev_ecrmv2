@@ -14,11 +14,8 @@ $(document).ready(function() {
 	var mySelect = $('#project_lead');
     previousValue = mySelect.val();
 	var lead_assign = previousValue; 
-	$("#previous-project-manager").val(lead_assign);  //alert($("#previous-project-manager").val());
+	$("#previous-project-manager").val(lead_assign); 
 	$('#project_lead').change( function() {
-		//alert( $(this).val() ); // alerts current value
-		//alert( previousValue ); // alerts previous value
-		//previousValue = mySelect.val(); // save so it can be referenced next time
 	});
 
 	$("#lead_log_list")
@@ -96,11 +93,6 @@ $().ready(function() {
 
 var job_categories = [];
 job_categories['not_select'] = '';
-/*
-<?php foreach ($cfg['job_categories'] as $jck => $jcv) { ?>
-	job_categories[<?php echo  $jck ?>] = '<?php echo  $jcv ?>';
-<?php } ?> 
-*/
 
 var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
 var ex_cust_id = 0;

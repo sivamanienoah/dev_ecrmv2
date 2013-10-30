@@ -48,7 +48,7 @@ $(document).ready(function() {
 		//$("#cust_name").autocomplete("hosting/ajax_customer_search/", { minChars:2 }).result(function(event, data, formatted) {
 			//$('#cust_id').val(data[1]);
 		//});
-		$('input.pick-date').datepicker({dateFormat: 'dd-mm-yy'});
+		$('input.pick-date').datepicker({dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true});
 		
 		$('input[name="domain_mgmt"]').change(function(){
 				if ($('input[name="domain_mgmt"]:checked').val() == 'ENOAH') {
