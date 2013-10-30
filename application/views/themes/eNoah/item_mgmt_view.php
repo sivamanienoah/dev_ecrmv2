@@ -63,7 +63,6 @@
 		}
 		echo '</div>';
 		
-		//echo $menu;
 		?>
 		
 		<?php } else{
