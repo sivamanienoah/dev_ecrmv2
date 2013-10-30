@@ -42,7 +42,7 @@ class Customers extends crm_controller {
     function add_customer($update = false, $id = false, $ajax = false) {
 		
 		$data['regions'] = $this->regionsettings_model->region_list($limit=false, $search=false);
-        
+
         $rules['first_name'] = "trim|required";
 		$rules['last_name'] = "trim|required";
 		$rules['company'] = "trim|required";
@@ -91,17 +91,12 @@ class Customers extends crm_controller {
 		$this->validation->set_fields($fields);
         
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-        
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($this->input->post('update_customer'))) 
+
+		$pst_data = real_escape_array($this->input->post());
+		
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($pst_data['update_customer']))
 		{
             $customer = $this->customer_model->get_customer($id);
-			
-			if ($this->userdata['level'] == 4 && !in_array($this->userdata['userid'], $data['sales_agent_data'])) 
-			{
-				$this->session->set_flashdata('access_error', 'You are not listed with this particular customer!');
-				redirect('notallowed');
-				exit;
-			}
 			
 			//echo '<!--' . print_r($customer, true) . '-->';
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) 
@@ -125,9 +120,9 @@ class Customers extends crm_controller {
 			// all good
             foreach($fields as $key => $val) 
 			{
-				if (isset($this->input->post($key)))
+				if (isset($pst_data[$key]))
 				{
-					$update_data[$key] = $this->input->post($key);
+					$update_data[$key] = $pst_data[$key];
 				}
             }
 
@@ -294,14 +289,14 @@ class Customers extends crm_controller {
 				} else {
 					$json['error'] = false;
 					$json['custid'] = $newid;
-					$json['cust_name1'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name') . ' - ' . $this->input->post('company');
-					$json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
-					$json['cust_email'] = $this->input->post('email_1');
-					$json['cust_company'] = $this->input->post('company');
-					$json['cust_reg'] = $this->input->post('add1_region');
-					$json['cust_cntry'] = $this->input->post('add1_country');
-					$json['cust_ste'] = $this->input->post('add1_state');
-					$json['cust_locn'] = $this->input->post('add1_location');
+					$json['cust_name1'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'] . ' - ' . $pst_data['company'];
+					$json['cust_name'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'];
+					$json['cust_email'] = $pst_data['email_1'];
+					$json['cust_company'] = $pst_data['company'];
+					$json['cust_reg'] = $pst_data['add1_region'];
+					$json['cust_cntry'] = $pst_data['add1_country'];
+					$json['cust_ste'] = $pst_data['add1_state'];
+					$json['cust_locn'] = $pst_data['add1_location'];
 					echo json_encode($json);
 				}
 
