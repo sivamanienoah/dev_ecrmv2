@@ -21,20 +21,6 @@ $(document).ready(function() {
 	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
 	
-	/*
-	$('.table_grid').dataTable({
-		"iDisplayLength": 5,
-		"sPaginationType": "full_numbers",
-		"aaSorting": [],
-		"bPaginate": true,
-		"bInfo": false,
-		"bFilter": false,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": false,
-		"bAutoWidth": false,
-	});
-	*/
 });
 </script>
 <div class="comments-log-container" style= "display:none;">
@@ -199,7 +185,7 @@ if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) 
 		'welcome/add_log',
 		form_data,
 		function(_data){
-
+		alert(_data); return false;
 		try {
 				var data;
 				eval('data = ' + _data);

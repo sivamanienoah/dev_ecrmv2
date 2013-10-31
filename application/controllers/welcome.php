@@ -222,13 +222,12 @@ HDOC;
 				} else {
                     $row['hours'] = '';
                 }
-				
+				$content_item = nl2br(cleanup_chars(ascii_to_entities($row['item_desc'])));
 				if(!empty($row['item_price'])) {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . stripslashes($content_item) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
 				} else {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . stripslashes($content_item) . '</td></tr></table></li>';
 				}
-                
             }
             
             $json['sale_amount'] = '$' . number_format($sale_amount, 2, '.', ',');
@@ -1131,15 +1130,17 @@ body {
 		$ins['item_price'] = $data['item_price'];
 		
 		$updt_item = $this->welcome_model->update_row_item('items', $ins, $data['itemid']);
-
+		$res = array();
 		if ($updt_item)
 		{
-			echo "{error:false}";
+			$res['error'] = false;
 		}
 		else
 		{
-			echo "{error:true, errormsg:'Update failed!'}";
+			$res['error'] = true;
 		}
+		echo json_encode($res); 
+		exit;
         }
     }
 	
@@ -1194,8 +1195,11 @@ body {
      * saves the new positions items
      * for a given lead
      */
-    function ajax_save_item_order() {
-		$data = real_escape_array($this->input->post());
+    function ajax_save_item_order() 
+	{
+		// $data = real_escape_array($this->input->post());
+		$data = $_POST;
+		
         $errors = '';
         if (!isset($data['qi']) || !is_array($data['qi']))
         {
@@ -1220,7 +1224,7 @@ body {
                     ELSE `item_position` END";
             
             if ($this->db->query($sql))
-            {
+            {	
                 $json['error'] = false;
                 echo json_encode($json);
             }

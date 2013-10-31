@@ -1,8 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<link rel="stylesheet" href="assets/css/jquery.autocomplete.css" type="text/css" />
-<script type="text/javascript" src="assets/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <input type="hidden" class="hiddenUrl"/>
@@ -40,16 +38,32 @@ var existing_lead_service;
 var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
 nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
 
-$(document).ready(
-	function(){
-		$("#ex-cust-name").autocomplete("hosting/ajax_customer_search/", { minChars:2, width:'308px' }).result(function(event, data, formatted) {
-			ex_cust_id = data[1];
-			regId = data[2];
-			cntryId = data[3];
-			stId = data[4];
-			locId = data[5];
-            prepareQuoteForClient(ex_cust_id);
-			getUserForLeadAssign(regId,cntryId,stId,locId);
+$(document).ready(function(){
+	
+		$( "#ex-cust-name" ).autocomplete({
+			minLength: 2,
+			source: function(request, response) {
+				$.ajax({ 
+					url: "hosting/ajax_customer_search",
+					data: { 'cust_name': $("#ex-cust-name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+					type: "POST",
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						response( data );
+					}
+				});
+			},
+			select: function(event, ui) {
+				// $('#cust_id').val(ui.item.id);
+				var ex_cust_id = ui.item.id;
+				var  regId = ui.item.regId;
+				var cntryId = ui.item.cntryId;
+				var stId = ui.item.stId;
+				var locId = ui.item.locId;
+				prepareQuoteForClient(ex_cust_id);
+				getUserForLeadAssign(regId,cntryId,stId,locId);
+			} 
 		});
 		
 		<?php
@@ -62,8 +76,8 @@ $(document).ready(
 		}
 		?>
         
-        $('.modal-new-cust').click(function(){
-            $.blockUI({
+      $('.modal-new-cust').click(function(){
+           $.blockUI({
                         message:nc_form_msg,
                         css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default'},
                         overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
@@ -82,7 +96,7 @@ $(document).ready(
             );
             return false;
         });
-        
+	        
         $('.q-item-details div').css('display', 'none')
                                 .siblings('a:first').next().show().end()
                                 .parent().children('a').click(function() {
@@ -101,7 +115,7 @@ $(document).ready(
         
         $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
         
-        $('#q-sort-items li').livequery(function(){ 
+		$('#q-sort-items li').livequery(function(){ 
                                 // use the helper function hover to bind a mouseover and mouseout event 
                                     $(this) 
                                         .hover(function() { 
@@ -115,6 +129,7 @@ $(document).ready(
                                         .unbind('mouseover') 
                                         .unbind('mouseout'); 
                                 });
+							
         
         $('#q-sort-items li .ip-delete').livequery(function(){
             $(this).click(function(){
@@ -165,35 +180,29 @@ function prepareQuoteForClient(custID) {
 	}
 }
 
-function getUserForLeadAssign(regId,cntryId,stId,locId) {
+function getUserForLeadAssign(regId,cntryId,stId,locId) 
+{
 
 	$('.notice').slideUp(400);
 	$.getJSON(
 		'welcome/user_level_details/' + regId + '/' + cntryId + '/' + stId + '/' + locId,
 		{},
-		function (userdetails) {
-			//$('.q-cust-company span').html(userdetails.company);
-			//alert(userdetails);
+		function (userdetails) 
+		{
 			get_user_infm(userdetails);
-						
-			if (existing_lead > 0) {
-				//$('#ex-cust-name').val(userdetails.first_name + ' ' + userdetails.last_name);
-			}
 		}
 	);
-
 }
 
-
-function get_user_infm(users){
-	// alert(users); return false;
+function get_user_infm(users)
+{
 	var baseurl = $('.hiddenUrl').val();
-	var data = users
+	var user = users.toString();
 	$.ajax({
 		type: "POST",
 		url : baseurl + 'user/getUserDetFromDb/',
 		cache : false,
-		data: { user: users },
+		data: { user: user,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' },
 		success : function(response){
 		//alert(response);
 			if(response != '') {
@@ -405,8 +414,11 @@ function addItem() {
 
 
 function prepareSortedItems() {
-    item_sort_order = $('#q-sort-items').sortable('serialize')+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+    
+	var item_sort_order = $('#q-sort-items').sortable('serialize')+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+	
 	$('.q-main-right').block({message:'<h5>Processing</h5>'});
+
     $.post(
         'welcome/ajax_save_item_order',
         item_sort_order,
@@ -1163,20 +1175,9 @@ h3 .small {
             <div class="q-container">
                 <div class="q-details">
 					<div class="q-top-head">
-						<div class="q-cust<?php if(isset($quote_data) && $quote_data['belong_to'] == 'SYNG') echo ' syng-gray' ?>">
-							<h3 class="q-id"><em><?php //echo (isset($quote_data)) ? $cfg['job_status_label'][$quote_data['job_status']] : 'Draft' ?>Lead</em> &nbsp; <span>#<?php echo (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
-							<?php
-							$date_used = '';
-							if (isset($quote_data))
-							{
-								$date_used = $quote_data['date_created'];
-								if (in_array($quote_data['job_status'], array(4, 5, 6, 7, 8)) && $quote_data['date_invoiced'] != '')
-								{
-									$date_used = $quote_data['date_invoiced'];
-								}
-							}
-								
-							?>
+						<div class="q-cust">
+							<h3 class="q-id"><em>Lead</em> &nbsp; <span>#<?php echo (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
+
 							<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
 							<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
 							<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
@@ -1247,7 +1248,7 @@ h3 .small {
 		
 		foreach ($categories as $cat)
 		{
-			$menu .= "<li><a href=\"#cat_{$cat['cat_id']}\">{$cat['cat_name']}</a></li>";
+			$menu .= '<li><a href="'.current_url().'#cat_'.$cat["cat_id"].'">'.$cat["cat_name"].'</a></li>';
 			$records = $cat['records'];
 			ob_start();
 			?>
@@ -1281,9 +1282,20 @@ $(function(){
         $(this).parent().hide(400);
         $('#drag-item-list-opener').show();
     });
+
+	
+	$.fn.__tabs = $.fn.tabs;
+	$.fn.tabs = function (a, b, c, d, e, f) {
+		var base = location.href.replace(/#.*$/, '');
+		$('ul>li>a[href^="#"]', this).each(function () {
+			var href = $(this).attr('href');
+			$(this).attr('href', base + href);
+		});
+		$(this).__tabs(a, b, c, d, e, f);
+	};
 	
 	$('#drag-item-list .item-inventory').tabs();
-    
+
 	$('#drag-item-list .item-inventory div ul li').hover(
         function(){
             $(this).addClass('over');
@@ -1429,8 +1441,10 @@ $(function(){
 	<?php
 	if (is_numeric($quote_data['complete_status']))
 	{
-		echo "updateVisualStatus('" . (int) $quote_data['complete_status'] . "');\n";
-	}
+	?>
+		updateVisualStatus("<?php echo (int)$quote_data['complete_status']; ?>");
+	<?php 
+		}
 	?>
 	
 	$('#enable_post_profile').click(function(){

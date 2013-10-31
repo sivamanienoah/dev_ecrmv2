@@ -8,6 +8,7 @@ function showMSGS(str, ci_csrf_token, csrf_hash) {
     });
 }
 function populateQuote(jobid, nosort) {
+
     if (typeof(jobid) == 'undefined') {
         return;
     } else {
