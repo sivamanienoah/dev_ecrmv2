@@ -512,14 +512,11 @@ class User_model extends crm_model {
 	*/
 
    public function getUserLeadAssigned($users)
-   {
-   
-   		//$query = $this->db->query("select userid, first_name, last_name from ".$this->cfg['dbpref']."users where userid in ($users) ORDER BY first_name");
-		
+   {	
 		$this->db->select("userid, first_name, last_name");
 		$this->db->from($this->cfg['dbpref']."users");
-		//$this->db->where('userid in ('.$users.')'); 
-		$this->db->where_in("userid", $users); 
+		// $this->db->where_in("userid", $users); 
+		$this->db->where("userid in (".$users.")"); 
 		$this->db->order_by("first_name"); 		
 		$query = $this->db->get();
 		$user_res = $query->result_array();
