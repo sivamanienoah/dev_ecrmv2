@@ -1,10 +1,13 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<!--script type="text/javascript" src="assets/js/blockui.v2.js"></script-->
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
+<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
+<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 
 
@@ -1116,21 +1119,22 @@ $(function() {
 		}
 	});
 	
-	$("#job-view-tabs").tabs({
-		selected: 1,
-		show: function (event, ui) {
-			if (ui.index == 3)
-			{
+	$.fn.__tabs = $.fn.tabs;
+	$.fn.tabs = function (a, b, c, d, e, f) {
+		var base = location.href.replace(/#.*$/, '');
+		$('ul>li>a[href^="#"]', this).each(function () {
+			var href = $(this).attr('href');
+			$(this).attr('href', base + href);
+		});
+		$(this).__tabs(a, b, c, d, e, f);
+	};
+	
+	$( "#project-tabs" ).tabs({
+		beforeActivate: function( event, ui ) {
+			if (ui.newPanel[0].id=='jv-tab-4')
 				loadExistingTasks();
-			}
-			else if (ui.index == 4)
-			{
+			if (ui.newPanel[0].id=='jv-tab-4-5')
 				populateJobOverview();
-			}
-			else if (ui.index == 9)
-			{
-				populatePackage();
-			}
 		}
 	});
 	
@@ -1863,19 +1867,20 @@ function setContractorJob()
 
 			</div>
 
-			<div>
-				<p id="temp">&nbsp;</p>
-				<ul id="job-view-tabs">
-					<li><a href="#jv-tab-1">Payment Milestones</a></li>
-					<li><a href="#jv-tab-2">Document</a></li>
-					<li><a href="#jv-tab-3" >Files</a></li>
-					<li><a href="#jv-tab-4" >Tasks</a></li>
-					<li><a href="#jv-tab-4-5">Milestones</a></li>
-					<li><a href="#jv-tab-5">Customer</a></li>
-					<li><a href="#jv-tab-7">URLs</a></li>
-				</ul>
-			</div>
-			<div id="jv-tab-1">
+  <div id="project-tabs">
+	<div>
+		<p id="temp">&nbsp;</p>
+		<ul id="job-view-tabs">
+			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
+		</ul>
+	</div>
+	<div id="jv-tab-1">
 				<div class="q-view-main-top">
 					
 					<div class="payment-buttons clearfix">
@@ -2592,8 +2597,9 @@ function setContractorJob()
 			<?php echo $job_urls_html ?>
 		</ul>
 	</div><!-- id: jv-tab-7 end -->
+  </div>
 </div>
-</div>
+</div><!--end of project-tabs-->
 </div>
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
