@@ -417,8 +417,9 @@ class User extends crm_controller {
 	*
 	*/
 	
-	function getUserDetFromDb($users) {
-		$this->user_model->getUserLeadAssigned($users);
+	function getUserDetFromDb() {
+		$data = real_escape_array($this->input->post());
+		$this->user_model->getUserLeadAssigned($data['user']);
 	}
 	
 	
