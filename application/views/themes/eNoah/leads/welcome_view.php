@@ -56,11 +56,11 @@ $(document).ready(function(){
 			},
 			select: function(event, ui) {
 				// $('#cust_id').val(ui.item.id);
-				var ex_cust_id = ui.item.id;
-				var  regId = ui.item.regId;
-				var cntryId = ui.item.cntryId;
-				var stId = ui.item.stId;
-				var locId = ui.item.locId;
+				ex_cust_id = ui.item.id;
+				regId = ui.item.regId;
+				cntryId = ui.item.cntryId;
+				stId = ui.item.stId;
+				locId = ui.item.locId;
 				prepareQuoteForClient(ex_cust_id);
 				getUserForLeadAssign(regId,cntryId,stId,locId);
 			} 

@@ -175,7 +175,7 @@ function addLog() {
 		}
 	}
 	
-if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
+	if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
 		if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
 			$.unblockUI();
 			return false;
@@ -184,42 +184,33 @@ if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) 
 	$.post(
 		'welcome/add_log',
 		form_data,
-		function(_data){
-		alert(_data); return false;
-		try {
-				var data;
-				eval('data = ' + _data);
-				if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						
-						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
-						$('#job_log').val('');
-						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
-							$(this).attr('checked', false);
-						});
-						$('#log_minutes').val('');
-						$('#additional_client_emails').val('');
-						$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
-							.slideUp(400);
-						
-						if (data.status_updated) {
-							document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-						}
-						if (typeof(this_is_home) != 'undefined')
-						{
-						   window.location.href = window.location.href;
-						}
+		function(data){
+			if (data.error == false)
+			{
+				$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
+					$('#job_log').val('');
+					/*$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
+						$(this).attr('checked', false);
+					});*/
+					$('#log_minutes').val('');
+					$('#additional_client_emails').val('');
+					/*$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
+						.slideUp(400);
+					*/
+					if (data.status_updated) {
+						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 					}
-				} else {
-					alert('Unexpected response from server!');
-				}
-			} catch (e) {
-				alert('Unexpected response from server!\nIt is possible that your session timed out!');
+					if (typeof(this_is_home) != 'undefined')
+					{
+					   window.location.href = window.location.href;
+					}
+				$.unblockUI();
 			}
-			$.unblockUI();
-		}
+			else
+			{
+				alert(data.errormsg);
+			}
+		},"json"
 	)
 }
 

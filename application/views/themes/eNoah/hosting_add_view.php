@@ -15,7 +15,7 @@ $usernme = $this->session->userdata('logged_in_user');
 }
 </style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
+<!--<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>-->
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">

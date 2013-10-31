@@ -63,13 +63,13 @@ function convertQuoteStatus(csrf_token,csrf_hash) {
 		message:'<h2>Processing your request...</h2>'
 	});
 	
-	$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus + '/' + csrf_token, + '/' + csrf_hash,
+	$.getJSON('welcome/ajax_update_quote/' + quote_id + '/' + qstatus,
 	function(data) {
 		if (typeof(data) == 'object') {
 			if (data.error) {
 				alert(data.errormsg);
 				$.unblockUI();
-				window.location.href = "welcome/edit_quote" + "/" + quote_id +"/"+ csrf_token +"/"+ csrf_hash+"/";
+				window.location.href = "welcome/edit_quote" + "/" + quote_id;
 				//alert('status Changed');
 			} else {
 				reloadWithMessage('Status Changed Successfully', csrf_token, csrf_hash);

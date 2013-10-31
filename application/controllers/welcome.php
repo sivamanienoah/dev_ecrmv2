@@ -974,7 +974,7 @@ body {
     public function ajax_update_quote($jobid = 0, $status, $log_status = '')
     {
 		$this->load->model('user_model');	
-		
+		$res = array();
         if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->welcome_model->get_lead_all_detail($jobid))
         {
 			if($status>0) {
@@ -1086,16 +1086,21 @@ body {
 				$this->email->subject($subject);
 				$this->email->message($log_email_content);
 				$this->email->send(); 
-				echo "{error:false}";
+				
+				$res['error'] = false;
 				} else {
-					echo "{error:true, errormsg:'Database update failed!'}";
+					$res['error'] = true;
+					$res['errormsg'] = 'Database update failed!';
 				}	
 			} else  {
-				echo "{error:false}";
+				$res['error'] = false;
 			}
         } else {
-            echo "{error:true, errormsg:'Invalid Lead ID or Stage!'}";
+			$res['error'] = true;
+			$res['errormsg'] = 'Invalid Lead ID or Stage!';
         }
+		echo json_encode($res);
+		exit;
     }
 	
 	/**
@@ -1609,7 +1614,8 @@ body {
 	function add_log()
 	{
 		$data_log = real_escape_array($this->input->post());
-		
+		$res = array();
+		$json = array();
         if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
@@ -1728,7 +1734,7 @@ body {
 </body>
 </html>';												
 
-					$json['debug_info'] = '';
+					$json['debug_info'] = '0';
 					
 					if (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name']))
 					{
@@ -1906,17 +1912,24 @@ HDOC;
                 $json['html'] = $table;
 				
                 echo json_encode($json);
-				
+				exit;
             }
             else
             {
-                echo "{error:true, errormsg:'Post insert failed'}";
+                // echo "{error:true, errormsg:'Post insert failed'}";
+				$res['error'] = true;
+				$res['errormsg'] = 'Post insert failed';
+				
             }
         }
         else
         {
-            echo "{error:true, errormsg:'Invalid data supplied'}";
+            // echo "{error:true, errormsg:'Invalid data supplied'}";
+			$res['error'] = true;
+			$res['errormsg'] = 'Invalid data supplied';
+			
         }
+		exit;
     }
 	
 	
