@@ -35,17 +35,7 @@
 							</button>
 						</div>
                     </td>
-                    <!--<td colspan="2">
-                        <?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && $userdata['level'] < 2) { ?>
-						<?php if($this->session->userdata('delete')==1) { ?>
-                        <div class="buttons">
-                            <button type="submit" name="delete_category" class="negative" onclick="if (!confirm('Are you sure you want to delete this category?\n\nCustomers associated with this category are not affected,\nthey will be removed from this category.\n\nThis action cannot be undone!')) { this.blur(); return false; }">
-                                Delete Category
-                            </button>
-                        </div>
-						<?php } ?>
-                        <?php } else { echo "&nbsp;"; } ?>
-                    </td>-->
+                   
 				</tr>
             </table>
 		</form>
