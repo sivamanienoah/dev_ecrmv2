@@ -208,9 +208,12 @@ class Hosting extends crm_controller {
                 //$company = (trim($cust['company']) == '') ? '' : " - " . $cust['company'];
                 //echo "{$cust['first_name']} {$cust['last_name']}{$company}|{$cust['custid']}|{$cust['add1_region']}|{$cust['add1_country']}|{$cust['add1_state']}|{$cust['add1_location']}\n";
 				if(!empty($cust)) {
-                $res[$i]['id'] = $cust['custid'];
-		 		$res[$i]['label'] = $cust['first_name'].' '.$cust['last_name'].' - '. $cust['company'];
-		 		//$res[$i]['value'] = $cust['custid'];
+					$res[$i]['id'] = $cust['custid'];
+					$res[$i]['label'] = $cust['first_name'].' '.$cust['last_name'].' - '. $cust['company'];
+					$res[$i]['regId'] = $cust['add1_region'];
+					$res[$i]['cntryId'] = $cust['add1_country'];
+					$res[$i]['stId'] = $cust['add1_state'];
+					$res[$i]['locId'] = $cust['add1_location'];
 				}
 		 		$i++;
             }
