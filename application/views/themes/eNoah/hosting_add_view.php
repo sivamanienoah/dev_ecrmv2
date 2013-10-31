@@ -14,7 +14,6 @@ $usernme = $this->session->userdata('logged_in_user');
 	display:none;
 }
 </style>
-<!--link rel="stylesheet" href="assets/css/jquery-ui.css" type="text/css" /-->
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
