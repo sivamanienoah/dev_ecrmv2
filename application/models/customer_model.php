@@ -84,13 +84,9 @@ class Customer_model extends crm_model {
 		if($search != false) {
 			$search = mysql_real_escape_string(urldecode($search));
 			$this->db->where("(first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR company LIKE '%$search%' OR email_1 LIKE '%$search%')");
-			/*$this->db->like('first_name', $search, 'both');
-			$this->db->or_like('last_name', $search, 'both');
-			$this->db->or_like('company', $search, 'both');
-			$this->db->or_like('email_1', $search, 'both');*/
 		}
 		$customers = $this->db->get();        
-        //echo $this->db->last_query();
+        // echo $this->db->last_query();
         return $customers->result_array(); 
     }
     
