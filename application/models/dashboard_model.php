@@ -534,7 +534,6 @@ class Dashboard_model extends crm_model {
 	
 	//for closed opportunities getClosedJobids
 	public function getClosedJobids($cusId = FALSE) {
-		// $jb_stat = array('13','14','16');
 		$pjt_stat = array(0,1,2,3);
 		$curYear = date("Y");
 		$frm_dt = $curYear."-04-01";
@@ -549,14 +548,12 @@ class Dashboard_model extends crm_model {
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('jobid', 'desc');
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
 		$cls_query =  $query->result_array();
 		return $cls_query;
 	}
 	
 	//For Closed Opportunities Leads only - actual_worth_amount
 	public function closedLeadDet($jbid) {
-		//echo "<pre>"; print_r($jbid); exit;
 		if (!empty($jbid)) {
 			$this->db->select('jb.jobid, jb.invoice_no, jb.job_title, jb.pjt_status, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'leads jb');
@@ -570,7 +567,6 @@ class Dashboard_model extends crm_model {
 			$this->db->order_by('jb.jobid', 'desc');
 			$query = $this->db->get();
 			$rest_query =  $query->result_array();
-			echo $this->db->last_query(); exit;
 			return $rest_query;
 		} else {
 			return "no records";
