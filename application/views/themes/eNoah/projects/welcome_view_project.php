@@ -219,40 +219,40 @@ function addLog() {
 	$.post(
 		'project/pjt_add_log',
 		form_data,
-		function(_data){
-		//alert(_data);
-		try {
-				var data;
-				eval('data = ' + _data);
-				if (typeof(data) == 'object'){
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
-						$('#job_log').val('');
-						$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
-							$(this).attr('checked', false);
-						});
-						$('#log_minutes').val('');
-						$('#additional_client_emails').val('');
-						$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
-							.slideUp(400);
-						if (data.status_updated) {
-							document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
-						}
-						if (typeof(this_is_home) != 'undefined')
-						{
-						   window.location.href = window.location.href;
-						}
+		function(data)
+		{
+			if (typeof(data) == 'object')
+			{
+				if (data.error) 
+				{
+					alert(data.errormsg);
+				} 
+				else 
+				{
+					$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
+					$('#job_log').val('');
+					/* $('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
+						$(this).attr('checked', false);
+					}); */
+					$('#log_minutes').val('');
+					$('#additional_client_emails').val('');
+					/* $('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
+						.slideUp(400); */
+					if (data.status_updated) {
+						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 					}
-				} else {
-					alert('Unexpected response from server!');
+					if (typeof(this_is_home) != 'undefined')
+					{
+					   window.location.href = window.location.href;
+					}
 				}
-			} catch (e) {
-				alert('Unexpected response from server!\nIt is possible that your session timed out!');
+			} 
+			else 
+			{
+				alert('Unexpected response from server!');
 			}
 			$.unblockUI();
-		}
+		},"json"
 	)
 }
 
@@ -801,33 +801,26 @@ function setProjectId() {
 			data: { pjt_id: pjtId, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
             success : function(response){
                 $('.checkUser').hide();
-                if(response == 'Ok') {	
+                if(response == 'Ok') {					
 					$('.checkUser').show(); 
 					$('.checkUser1').hide();
 					setTimeout('timerfadeout()', 2000);
 					$.post(
 						'project/set_project_id/',
 						{pjt_id: pjtId, job_id: curr_job_id, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-						function(_data) {
-							try {
-							eval ('var data = ' + _data);
-							if (typeof(data) == 'object') {
-								if (data.error == false) {
-									$('h5.project-id-label span').text(pjtId);
-									$().unblock();
-								} else {
-									alert(data.error);
-								}
+						function(data) 
+						{
+							if (data.error == false) {
+								$('h5.project-id-label span').text(pjtId);
+								$.unblockUI();
 							} else {
-								alert('Updating faild, please try again.');
-								}
-							} catch (e) {
-								alert('Invalid response, your session may have timed out.');
+								alert(data.error);
 							}
-						}
+
+						},"json"
 					);
 				} else {
-					$().unblock();
+					$.unblockUI();
 					$('.checkUser').hide(); 
 					$('.checkUser1').show();
 					setTimeout('timerfadeout()', 2000);
@@ -874,7 +867,7 @@ function setProjectVal()
 							if (typeof(data) == 'object') {
 								if (data.error == false) {
 									$('h5.project-val-label span').text(pjt_value);
-									$().unblock();
+									$.unblockUI();
 								} else {
 									alert(data.error);
 								}
@@ -887,7 +880,7 @@ function setProjectVal()
 						}
 					);
 				} else {
-					$().unblock();
+					$.unblockUI();
 					$('#checkVal').hide(); 
 					$('#checkVal1').show();
 					setTimeout('timerfadeout()', 3000);
@@ -914,11 +907,11 @@ function setProjectStatus() {
 			if (data.error == false) {
 				$('#resmsg').show();
 				$('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
-				$().unblock();
+				$.unblockUI();
 			} else {
 				$('#resmsg').show();
 				$('#resmsg').html("<span class='ajx_failure_msg'>Error in Updation</span>.");
-				$().unblock();
+				$.unblockUI();
 			}
 		}
 	});
@@ -1084,7 +1077,7 @@ if (isset($userdata))
 ?>
 /* function to add the auto log */
 function qcOKlog() {
-	var msg = "VCS QC Officer Log Check - All Appears OK";
+	var msg = "eSmart QC Officer Log Check - All Appears OK";
 	
 	if (!window.confirm('Are you sure you want to stamp the OK log?\n"' + msg + '"')) return false;
 	
@@ -1342,23 +1335,26 @@ function setContractorJob()
 	
 	// alert(p); return false;
 	
-	var data = {'contractors': contractors.join(','), 'jobid': curr_job_id, 'project-mem': p,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
-	$.post(
-		'project/ajax_set_contractor_for_job',
-		data,
-		function(xd)
-		{
-			if (xd.error)
+	var param = {'contractors': contractors.join(','), 'jobid': curr_job_id, 'project-mem': p,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'};
+		var baseurl = $('.hiddenUrl').val();
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+            url : baseurl + 'project/ajax_set_contractor_for_job/',
+            cache : false,
+			data: param,
+            success : function(response)
 			{
-				alert(xd.error);
-			}
-			else if (xd.status == 'OK')
-			{
-				document.location.reload();
-			}
-		},
-		'json'
-	);
+                if(response.status == 'OK')
+				{					
+					document.location.reload();
+				} 
+				else 
+				{
+					alert(response.error);
+				}
+            }
+        });
 }
 </script>
 

@@ -374,7 +374,9 @@ class Project extends crm_controller {
 				$wh_condn = array('jobid_fk'=>$data['jobid']);
 				$del_contract_jobs = $this->project_model->delete_contract_job('contract_jobs', $wh_condn, $new_project_member_delete);
 			}
-			echo '{status: "OK"}';
+			$data['status'] = 'OK';
+			echo json_encode($data); 
+			exit;
 		}
 		else if(empty($data['contractors']))
 		{
@@ -392,7 +394,9 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			echo '{error: "Invalid job or userid supplied!"}';
+			$data['error'] = 'Invalid job or userid supplied!';
+			echo json_encode($data); 
+			exit;
 		}
 	}
 	
@@ -1839,16 +1843,23 @@ HDOC;
                 $json['html'] = $table;
 				
                 echo json_encode($json);
-				
+				exit;
             }
             else
             {
-                echo "{error:true, errormsg:'Post insert failed'}";
+
+				$json['error'] = true;
+				$json['errormsg'] = 'Post insert failed';
+				echo json_encode($json);
+				exit;
             }
         }
         else
         {
-            echo "{error:true, errormsg:'Invalid data supplied'}";
+			$json['error'] = true;
+			$json['errormsg'] = 'Invalid data supplied';
+			echo json_encode($json);
+			exit;
         }
     }
 	
