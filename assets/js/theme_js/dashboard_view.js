@@ -5,15 +5,9 @@
  if(viewlead==1) { 
 
  $(document).ready(function(){
- alert(dashboard_s1); 
+
 	 if (dashboard_s1!='') { 
-	 
-			alert(dashboard_s1);
-	 
-			var testtest = ['Initial(6)',6],['Prospect(1)',1],['Demo Scheduled(1)',1],['Proposal Sent to client(3)',3],['Proposal Accepted(2)',2],['SOW under Review(1)',1],['SOW Sent to Client(1)',1],['SOW Approved(1)',1],['Project Charter Approved(1)',1];
-	 
-			 plot1 = $.jqplot('funnel1', [[dashboard_s1]], {
-			//plot1 = $.jqplot('funnel1', [[testtest]], {
+			plot1 = $.jqplot('funnel1', [dashboard_s1], {
 			//title: 'Leads - Current Pipeline',
 			legend: {
 			   show: true,
@@ -111,6 +105,590 @@
 			$('#funnel1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
 	    } 
 	});
+
+
+$(document).ready(function(){
+   if (dashboard_s2!='') { 
+		$.jqplot.config.enablePlugins = true;
+		var plot2 = $.jqplot('pie1', [dashboard_s2], {
+		gridPadding: {top:25, bottom:24, left:0, right:0},
+		animate: !$.jqplot.use_excanvas,
+		animateReplot: true,
+		seriesDefaults:{
+			shadow: false,
+			renderer:$.jqplot.PieRenderer, 
+			trendline:{ show:false }, 
+			rendererOptions: { 
+				padding: 8,
+				sliceMargin: 2,
+				showDataLabels: true
+			},
+			highlighter: {
+				show: true,
+				formatString:'%s',
+				tooltipLocation:'sw', 
+				useAxesFormatters:false
+			}				 
+		},
+		grid: {
+				drawGridLines: true,        // wether to draw lines across the grid or not.
+				gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+				background: '#ffffff',      // CSS color spec for background color of grid.
+				borderColor: '#ffffff',     // CSS color spec for border around grid.
+				//borderWidth: 2.0,           // pixel width of border around grid.
+				//backgroundColor: 'transparent', 
+				drawBorder: false,
+				shadow: false
+		},
+		legend:{
+			show:true, 
+			fontSize: '9pt',
+			location: 'e',
+			border: false
+		},
+		seriesColors: ["#422460", "#da7b00", "#9c1a4b", "#48596a", "#0d233a", "#2f7ed8", "#492970", "#1aadce", "#8bbc21", "#bfdde5", "#910000", "#027997"]
+		});
+
+		$('#pie1').bind('jqplotDataClick',
+			function (ev, seriesIndex, pointIndex, data) {
+				var formdata = { 'data':data, 'type':'pie1'}
+				formdata[csrf_token_name]      = csrf_hash_token; 
+				$.ajax({
+					type: "POST",
+					url: site_base_url+'dashboard/showLeadsDetails/',
+					dataType:"json",                                                                
+					data: formdata,
+					cache: false,
+					beforeSend:function(){
+						$('#charts_info').empty();
+						$('#charts_info').show();
+						$('#charts_info').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+					},
+					success: function(html){
+						//alert(html.html);
+						$('#charts_info').empty();
+						$("#charts_info").show();
+						if (html.html == 'NULL') {
+							$('#charts_info').html('');
+						} else {
+							$('#charts_info').show();
+							$('#charts_info').html(html.html);
+							
+							$('#example_pie1').dataTable( {
+								"aaSorting": [[ 0, "desc" ]],
+								"iDisplayLength": 5,
+								"sPaginationType": "full_numbers",
+								"bInfo": true,
+								"bPaginate": true,
+								"bProcessing": true,
+								"bServerSide": false,
+								"bLengthChange": false,
+								"bSort": true,
+								"bAutoWidth": false,
+								"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+									//alert(nRow);
+									var cost = 0
+									for ( var i=0 ; i<aaData.length ; i++ )
+									{
+										var TotalMarks = aaData[i][6];
+										cost += parseFloat(TotalMarks);
+										
+									}
+									var nCells = nRow.getElementsByTagName('td');
+									nCells[1].innerHTML = cost.toFixed(2);
+								}
+							});
+							$('html, body').animate({ scrollTop: $("#charts_info").offset().top }, 1000);
+						}
+					}                                                                                       
+				});
+				return false;
+			}
+		);
+
+		$( "#pieimg" ).click(function() {
+			var imgelem = $('#pie1').jqplotToImageElem();
+			var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
+			var imgdata = imageSrc;
+			var base_url = site_base_url;		
+
+			var url = base_url+"dashboard/savePdf/";
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
+			  '</form>');
+			$('body').append(form);
+			$(form).submit();
+			
+		});
+	} else { 
+		$('#pie1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+	} 
+});
+
+
+	$(document).ready(function(){
+        $.jqplot.config.enablePlugins = true;
+		var ticks = dashboard_s3_name;
+		 if (dashboard_s3!='') { 
+				var plot3 = $.jqplot('bar1', [dashboard_s3,[],[]], {
+				title: {
+					//text: 'Lead Indicator',   // title for the plot,
+					//show: true,
+				},
+				// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+				animate: !$.jqplot.use_excanvas,
+				seriesDefaults:{
+					renderer:$.jqplot.BarRenderer,
+					shadow: false,
+					//pointLabels: { show: true, ypadding:3 },
+					pointLabels: { show: true },
+					rendererOptions: {
+						barWidth: 34,
+						varyBarColor: true,
+						animation: {
+							speed: 4000
+						}
+					}
+				},
+				legend: {
+					show: true,
+					placement: 'insideGrid',
+					labels: ticks
+				},
+				//seriesColors: [<?php echo $resColors; ?>],
+				seriesColors: ["#910000", "#f47123", "#2c84c5"],
+				axesDefaults: {
+					tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+					tickOptions: {
+					  //fontFamily:"Arial",
+					  //textColor:'black',
+					}
+				},
+				axesDefaults: {
+					tickRenderer: $.jqplot.CanvasAxisTickRenderer ,         
+					tickOptions: {
+					  //angle: 10,
+					  fontSize: '10pt'            
+					},
+					rendererOptions: {
+						baselineWidth: 0.5,
+						baselineColor: '#444444',
+						drawBaseline: true
+					}
+				},
+				axes: {
+					xaxis: {
+						label:'Lead Indicator--->',
+						renderer: $.jqplot.CategoryAxisRenderer,
+						tickOptions:{
+							
+							show: false
+						}
+					},
+					yaxis: {
+						label:'No. of Leads--->',
+						labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+					}
+				},
+				series: [{
+					markerOptions: {
+						show: true
+					},
+					rendererOptions: {
+						smooth: false
+					}
+				}],
+				grid: {
+					drawGridLines: true,        // wether to draw lines across the grid or not.
+					gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+					background: '#ffffff',      // CSS color spec for background color of grid.
+					borderColor: '#ffffff',     // CSS color spec for border around grid.
+					//borderWidth: 2.0,           // pixel width of border around grid.
+					//backgroundColor: 'transparent', 
+					drawBorder: false,
+					shadow: false
+				},
+				highlighter: {
+					show: false
+				}
+				});
+
+				$('#bar1').bind('jqplotDataClick',
+				function (ev, seriesIndex, pointIndex, data) {
+					var formdata = { 'gid':pointIndex, 'type':'bar1'};
+					formdata[csrf_token_name] = csrf_hash_token;
+					
+					$.ajax({
+						type: "POST",
+						url: site_base_url+'dashboard/showLeadDetails/',
+						dataType:"json",                                                                
+						data: formdata,
+						cache: false,
+						beforeSend:function(){
+							$('#leads-current-activity-list').empty();
+							$('#leads-current-activity-list').show();
+							$('#leads-current-activity-list').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+						},
+						success: function(html){
+							//alert(html.html);
+							$('#leads-current-activity-list').empty();
+							$("#leads-current-activity-list").show();
+							if (html.html == 'NULL') {
+								$('#leads-current-activity-list').html('');
+							} else {
+								$('#leads-current-activity-list').show();
+								$('#leads-current-activity-list').html(html.html);
+								
+								$('#example_bar1').dataTable( {
+									"aaSorting": [[ 0, "desc" ]],
+									"iDisplayLength": 5,
+									"sPaginationType": "full_numbers",
+									"bInfo": true,
+									"bPaginate": true,
+									"bProcessing": true,
+									"bServerSide": false,
+									"bLengthChange": false,
+									"bSort": true,
+									"bAutoWidth": false,
+									"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+										//var TotalMarks = 0;
+										var cost = 0
+										for ( var i=0 ; i<aaData.length ; i++ )
+										{
+											var TotalMarks = aaData[i][6]; 
+											cost += parseFloat(TotalMarks);
+											
+										}
+										var nCells = nRow.getElementsByTagName('td');
+										nCells[1].innerHTML = cost.toFixed(2);
+									}
+								});
+								$('html, body').animate({ scrollTop: $("#leads-current-activity-list").offset().top }, 1000);
+							}
+						}                                                                                       
+					});
+					return false;
+				});
+				
+				$( "#barimg" ).click(function() {
+				//var imgelem = evt.data.chart.jqplotToImageElem();
+				var imgelem = $('#bar1').jqplotToImageElem();
+				var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
+				//alert(imageSrc);// return false;
+				//open(imageSrc); // this will open the image in another tab
+				var imgdata = imageSrc;
+				var base_url = site_base_url;		
+
+				var url = base_url+"dashboard/savePdf/";
+				var form = $('<form action="' + url + '" method="post">' +
+				  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
+				  '</form>');
+				$('body').append(form);
+				$(form).submit();
+
+				});
+			} else { 
+				$('#bar1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+			} 
+    });
+
+ $(document).ready(function(){
+	// For horizontal bar charts, x and y values must will be "flipped"
+    // from their vertical bar counterpart.
+	$.jqplot.config.enablePlugins = true;
+   if (dashboard_s4!='') { 
+		var plot5 = $.jqplot('line1', [dashboard_s4], {
+		//title:'Lead Aging',
+		animate: !$.jqplot.use_excanvas,
+		seriesDefaults: {
+			shadow: false,
+			renderer:$.jqplot.BarRenderer,
+			// Show point labels to the right ('e'ast) of each bar.
+			// edgeTolerance of -15 allows labels flow outside the grid
+			// up to 15 pixels.  If they flow out more than that, they
+			// will be hidden.
+			pointLabels: { show: true, location: 'e', edgeTolerance: -15 },
+			// Rotate the bar shadow as if bar is lit from top right.
+			shadowAngle: 135,
+			// Here's where we tell the chart it is oriented horizontally.
+			rendererOptions: {
+				barDirection: 'horizontal',
+				barWidth: 25,
+				varyBarColor: true,
+				animation: {
+					speed: 4000
+				}
+			}
+		},
+		grid: {
+				drawGridLines: true,        // wether to draw lines across the grid or not.
+				gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+				background: '#ffffff',      // CSS color spec for background color of grid.
+				borderColor: '#ffffff',     // CSS color spec for border around grid.
+				borderWidth: 2.0,           // pixel width of border around grid.
+				//backgroundColor: 'transparent', 
+				drawBorder: false,
+				shadow: false
+		},
+		highlighter: { 
+				show: false
+		},
+		axesDefaults: {
+			tickRenderer: $.jqplot.CanvasAxisTickRenderer ,         
+			tickOptions: {
+			  //angle: 10,
+			  fontSize: '10pt'            
+			},
+			rendererOptions: {
+				baselineWidth: 0.5,
+				baselineColor: '#444444',
+				drawBaseline: true
+			}
+		},
+		axes: {
+			xaxis: {
+				label:'No. of Leads--->',
+				tickOptions:{
+					//fontFamily:'Arial',
+					//fontSize: '10pt',
+					//fontWeight:"bold",
+					//angle: -30,
+					show: false
+				}
+			},
+			yaxis: {
+				label:'No. of Days(from lead creation)--->',
+				tickOptions:{
+					fontFamily:'Arial',
+					fontSize: '8pt',
+					fontWeight:"bold"
+					//angle: -30
+					//show: false
+				},
+				renderer: $.jqplot.CategoryAxisRenderer,
+				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+			}
+		}
+		});
+
+		$('#line1').bind('jqplotDataClick',
+		function (ev, seriesIndex, pointIndex, data) {
+			//alert(pointIndex);
+			var formdata = { 'gid':pointIndex, 'type':'line1'}
+			formdata[csrf_token_name]      = csrf_hash_token; 
+
+			$.ajax({
+				type: "POST",
+				url: site_base_url+'dashboard/showLeadDetails/',
+				dataType:"json",                                                                
+				data: formdata,
+				cache: false,
+				beforeSend:function(){
+					$('#charts_info2').empty();
+					$('#charts_info2').show();
+					$('#charts_info2').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+				},
+				success: function(html){
+					//alert(html.html);
+					$('#charts_info2').empty();
+					$("#charts_info2").show();
+					if (html.html == 'NULL') {
+						$('#charts_info2').html('');
+					} else {
+						$('#charts_info2').show();
+						$('#charts_info2').html(html.html);
+						
+						$('#example_line1').dataTable( {
+							"aaSorting": [[ 0, "desc" ]],
+							"iDisplayLength": 5,
+							"sPaginationType": "full_numbers",
+							"bInfo": true,
+							"bPaginate": true,
+							"bProcessing": true,
+							"bServerSide": false,
+							"bLengthChange": false,
+							"bSort": true,
+							"bAutoWidth": false,
+							"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+								//var TotalMarks = 0;
+								var cost = 0
+								for ( var i=0 ; i<aaData.length ; i++ )
+								{
+									var TotalMarks = aaData[i][6]; 
+									cost += parseFloat(TotalMarks);
+									
+								}
+								var nCells = nRow.getElementsByTagName('td');
+								nCells[1].innerHTML = cost.toFixed(2);
+							}
+						});
+						$('html, body').animate({ scrollTop: $("#charts_info2").offset().top }, 1000);
+					}
+				}                                                                                       
+			});
+			return false;
+		}
+		);
+		$( "#lineimg" ).click(function() {
+			//var imgelem = evt.data.chart.jqplotToImageElem();
+			var imgelem = $('#line1').jqplotToImageElem();
+			var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
+			//alert(imageSrc);// return false;
+			//open(imageSrc); // this will open the image in another tab
+			var imgdata = imageSrc;
+			var base_url = site_base_url;		
+			var url = base_url+"dashboard/savePdf/";
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
+			  '</form>');
+			$('body').append(form);
+			$(form).submit();
+		});
+	 } else { 
+			$('#line1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+	 } 
+});
+
+$(document).ready(function(){
+	//var inpu = [['Cup', 5000], ['Gen', 98876], ['HDTV', 15000], ['dul', 12545], ['Mod', 3987], ['Tck', 66545], ['Hai', 1809]];
+	if (dashboard_cls_oppr!='') { 
+		var plot6 = $.jqplot('line2', [dashboard_cls_oppr], {
+		seriesDefaults: {
+			rendererOptions: {
+			smooth: true
+			}
+		},
+
+		grid: {
+			drawGridLines: false,        // wether to draw lines across the grid or not.
+			gridLineColor: '#C7C7C7',   // CSS color spec of the grid lines.
+			background: '#ffffff',      // CSS color spec for background color of grid.
+			//borderColor: '#999999',     // CSS color spec for border around grid.
+			borderWidth: 1.0,		// pixel width of border around grid.
+			//backgroundColor: 'transparent', 
+			drawBorder: true,
+			shadow: false
+		},
+
+		axesDefaults: {
+			labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+			rendererOptions: {
+				baselineWidth: 0.6,
+				baselineColor: '#444444',
+				drawBaseline: true
+			},
+			tickOptions:{
+				fontWeight:"bold"
+			}
+		},
+		axes: {
+			xaxis: {
+			  renderer: $.jqplot.CategoryAxisRenderer,
+			  label: 'Current Financial Year-->',
+			  labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+			  tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+			  tickOptions: {
+				  //angle: -10,
+				  fontFamily: 'Courier New',
+				  fontSize: '10pt',
+				  showGridline: true
+			  }
+			},
+			yaxis: {
+				label: 'Values(USD)-->',
+				labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+				tickOptions: {
+				  //angle: -10,
+				  fontFamily: 'Courier New',
+				  fontSize: '10pt',
+				  showGridline: true
+			  }
+			}
+		},
+
+		highlighter: { 
+			show: false,
+			//tooltipAxes: 'y',
+			//tooltipLocation: 'nw',
+			useAxesFormatters:false
+		}
+		});
+
+		$('#line2').bind('jqplotDataClick',
+		function (ev, seriesIndex, pointIndex, data) {
+			//alert(data); return false;
+			var formdata = { 'gid':pointIndex, 'type':'line2'};
+			formdata[csrf_token_name]      = csrf_hash_token; 
+
+			$.ajax({
+				type: "POST",
+				url: site_base_url+'dashboard/showLeadDetails_cls/',
+				dataType:"json",                                                                
+				data: formdata,
+				cache: false,
+				beforeSend:function(){
+					$('#charts_info2').empty();
+					$('#charts_info2').show();
+					$('#charts_info2').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+				},
+				success: function(html){
+					//alert(html.html);
+					$('#charts_info2').empty();
+					$("#charts_info2").show();
+					if (html.html == 'NULL') {
+						$('#charts_info2').html('');
+					} else {
+						$('#charts_info2').show();
+						$('#charts_info2').html(html.html);
+						
+						$('#example_line2').dataTable( {
+							"aaSorting": [[ 0, "desc" ]],
+							"iDisplayLength": 5,
+							"sPaginationType": "full_numbers",
+							"bInfo": true,
+							"bPaginate": true,
+							"bProcessing": true,
+							"bServerSide": false,
+							"bLengthChange": false,
+							"bSort": true,
+							"bAutoWidth": false,
+							"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+								//var TotalMarks = 0;
+								var cost = 0
+								for ( var i=0 ; i<aaData.length ; i++ )
+								{
+									var TotalMarks = aaData[i][6]; 
+									cost += parseFloat(TotalMarks);
+									
+								}
+								var nCells = nRow.getElementsByTagName('td');
+								nCells[1].innerHTML = cost.toFixed(2);
+							}
+						});
+						$('html, body').animate({ scrollTop: $("#charts_info2").offset().top }, 1000);
+					}
+				}                                                                                       
+			});
+			return false;
+		}
+		);
+		
+		$( "#line2img" ).click(function() {
+		var imgelem = $('#line2').jqplotToImageElem();
+		var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
+		var imgdata = imageSrc;
+		var base_url = site_base_url;		
+		var url = base_url+"dashboard/savePdf/";
+		var form = $('<form action="' + url + '" method="post">' +
+		  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
+		  '</form>');
+		$('body').append(form);
+		$(form).submit();
+		});
+	 } else { 
+			$('#line2').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+	 } 
+});
 
 
 
@@ -387,6 +965,218 @@ $('#charts_info3').delegate('#leads-by-service-req-export','click',function(){
 });
 /* dashboard excel report ends here */
 
+$(document).ready(function(){
+
+  if (dashboard_s7!='') { 
+		
+		$.jqplot.config.enablePlugins = true;
+		var plot7 = $.jqplot('pie2', [dashboard_s7], {
+			gridPadding: {top:25, bottom:24, left:0, right:0},
+			//title:'<?php echo $chart_title; ?>',
+			animate: !$.jqplot.use_excanvas,
+			animateReplot: true,
+			seriesDefaults:{
+				shadow: false,
+				renderer:$.jqplot.PieRenderer, 
+				trendline:{ show:false }, 
+				rendererOptions: { 
+					padding: 8,
+					sliceMargin: 2,
+					showDataLabels: true
+				},
+				highlighter: {
+					show: true,
+					formatString:'%s',
+					tooltipLocation:'ne', 
+					useAxesFormatters:false
+				}				 
+			},
+			grid: {
+					drawGridLines: true,        // wether to draw lines across the grid or not.
+					gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+					background: '#ffffff',      // CSS color spec for background color of grid.
+					borderColor: '#ffffff',     // CSS color spec for border around grid.
+					//borderWidth: 2.0,           // pixel width of border around grid.
+					//backgroundColor: 'transparent', 
+					drawBorder: false,
+					shadow: false
+			},
+			legend:{
+				show:true, 
+				fontSize: '9pt',
+				location: 'e',
+				border: false
+			},
+			seriesColors: ["#eaa228", "#ff5800", "#c5b47f", "#8bbc21", "#579575", "#1aadce", "#839557", "#910000", "#027997", "#953579", "#422460", "#4b5de4", "#48596a", "#4bb2c5", "#0d233a", "#f0eded", "#492970", "#cc99cc", "#bfdde5", "#66ffcc", "#c747a3", "#ff99ff", "#ffff00", "#cc0000", "#a35b2e"]
+		});
+		$('#pie2').bind('jqplotDataClick',
+				function (ev, seriesIndex, pointIndex, data) {
+					var formdata = { 'data':data, 'type':'pie2'}
+					formdata[csrf_token_name]      = csrf_hash_token; 
+					$.ajax({
+						type: "POST",
+						url: site_base_url+'dashboard/showLeadsDetails/',
+						dataType:"json",                                                                
+						data: formdata,
+						cache: false,
+						beforeSend:function(){
+							$('#charts_info3').empty();
+							$('#charts_info3').show();
+							$('#charts_info3').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+							//$('#res').hide();
+						},
+						success: function(html){
+							//alert(html.html);
+							//$("#loadingImage").hide();
+							$('#charts_info3').empty();
+							$("#charts_info3").show();
+							if (html.html == 'NULL') {
+								$('#charts_info3').html('');
+							} else {
+								$('#charts_info3').show();
+								$('#charts_info3').html(html.html);
+								
+								$('#example_pie2').dataTable( {
+									"aaSorting": [[ 0, "desc" ]],
+									"iDisplayLength": 5,
+									"sPaginationType": "full_numbers",
+									"bInfo": true,
+									"bPaginate": true,
+									"bProcessing": true,
+									"bServerSide": false,
+									"bLengthChange": false,
+									"bSort": true,
+									"bAutoWidth": false,
+									"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+										//alert(nRow);
+										var cost = 0
+										for ( var i=0 ; i<aaData.length ; i++ )
+										{
+											var TotalMarks = aaData[i][6];
+											cost += parseFloat(TotalMarks);
+											
+										}
+										var nCells = nRow.getElementsByTagName('td');
+										nCells[1].innerHTML = cost.toFixed(2);
+									}
+								});
+								$('html, body').animate({ scrollTop: $("#charts_info3").offset().top }, 1000);
+							}
+						}                                                                                       
+					});
+					return false;
+				}
+			);
+		} else { 
+			$('#pie2').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+		} 
+});
+
+
+$(document).ready(function(){
+
+ if (dashboard_s8!='') { 
+	$.jqplot.config.enablePlugins = true;
+	var plot8 = $.jqplot('pie3', [dashboard_s8], {
+		gridPadding: {top:25, bottom:24, left:0, right:0},
+		//title:'<?php echo $chart_title; ?>',
+		animate: !$.jqplot.use_excanvas,
+		animateReplot: true,
+		seriesDefaults:{
+			shadow: false,
+			renderer:$.jqplot.PieRenderer, 
+			trendline:{ show:false }, 
+			rendererOptions: { 
+				padding: 8,
+				sliceMargin: 2,
+				showDataLabels: true
+			},
+			highlighter: {
+				show: true,
+				formatString:'%s',
+				tooltipLocation:'sw', 
+				useAxesFormatters:false
+			}				 
+		},
+		grid: {
+				drawGridLines: true,        // wether to draw lines across the grid or not.
+				gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+				background: '#ffffff',      // CSS color spec for background color of grid.
+				borderColor: '#ffffff',     // CSS color spec for border around grid.
+				//borderWidth: 2.0,           // pixel width of border around grid.
+				//backgroundColor: 'transparent', 
+				drawBorder: false,
+				shadow: false
+		},
+		legend:{
+			show:true, 
+			fontSize: '9pt',
+			location: 'e',
+			border: false
+		},
+		seriesColors: ["#eaa228", "#ff5800", "#c5b47f", "#8bbc21", "#579575", "#1aadce", "#839557", "#910000", "#027997", "#953579", "#422460", "#4b5de4", "#48596a", "#4bb2c5", "#0d233a", "#f0eded", "#492970", "#cc99cc", "#bfdde5", "#66ffcc", "#c747a3", "#ff99ff", "#ffff00", "#cc0000", "#a35b2e"]
+    });
+	$('#pie3').bind('jqplotDataClick',
+			function (ev, seriesIndex, pointIndex, data) {
+				var formdata = { 'data':data, 'type':'pie3' }
+				formdata[csrf_token_name]      = csrf_hash_token; 
+
+				$.ajax({
+					type: "POST",
+					url: site_base_url+'dashboard/showLeadsDetails/',
+					dataType:"json",                                                                
+					data: formdata,
+					cache: false,
+					beforeSend:function(){
+						$('#charts_info3').empty();
+						$('#charts_info3').show();
+						$('#charts_info3').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+					},
+					success: function(html){
+						//alert(html.html);
+						$('#charts_info3').empty();
+						$("#charts_info3").show();
+						if (html.html == 'NULL') {
+							$('#charts_info3').html('');
+						} else {
+							$('#charts_info3').show();
+							$('#charts_info3').html(html.html);
+							
+							$('#example_pie3').dataTable( {
+								"aaSorting": [[ 0, "desc" ]],
+								"iDisplayLength": 5,
+								"sPaginationType": "full_numbers",
+								"bInfo": true,
+								"bPaginate": true,
+								"bProcessing": true,
+								"bServerSide": false,
+								"bLengthChange": false,
+								"bSort": true,
+								"bAutoWidth": false,
+								"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+								    //alert(nRow);
+									var cost = 0
+									for ( var i=0 ; i<aaData.length ; i++ )
+									{
+										var TotalMarks = aaData[i][6];
+										cost += parseFloat(TotalMarks);
+										
+									}
+									var nCells = nRow.getElementsByTagName('td');
+									nCells[1].innerHTML = cost.toFixed(2);
+								}
+							});
+							$('html, body').animate({ scrollTop: $("#charts_info3").offset().top }, 1000);
+						}
+					}                                                                                       
+				});
+				return false;
+			}
+		);
+	 } else { 
+			$('#pie3').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+	 } 
+});
 
 
  } 
