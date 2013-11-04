@@ -233,12 +233,12 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<!-- edit task -->
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
-			<?php
-							$uio = $userdata['userid'];
-							foreach($created_by as $value) {
-								$b[] = $value[created_by];						
-							}
-							?>
+				<?php
+					$uio = $userdata['userid'];
+					foreach($created_by as $value) {
+						$b[] = $value[created_by];						
+					}
+				?>
 				<tr>
 					<td colspan="4">
 						<strong>All fields are required!</strong>
@@ -270,19 +270,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 						?>
 						</select>
 					</td>
-					<!--<td>
-						Hours
-					</td>
-					<td>
-						<input name="task_hours" type="text" class="edit-task-hours textfield width100px" /> Hours and
-						<select name="task_mins" class="edit-task-mins textfield">
-							<option value="0">0</option>
-							<option value="15">15</option>
-							<option value="30">30</option>
-							<option value="45">45</option>
-						</select>
-						Mins
-					</td>-->
+					
 				</tr>
 				<?php } else { ?>
 				<tr>
@@ -373,86 +361,12 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 	
 </div>
 <script type="text/javascript">
-$(function(){
-	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {}, loadEditTables);
-	$('#set-job-task .pick-date, #search-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
-	
-	$('#task_search_user').val('<?php echo $userdata['userid']; ?>');
-	/* job tasks character limit */
-	$('#job-task-desc').keyup(function(){
-		var desc_len = $(this).val();
-		if (desc_len.length > 240) {
-			$(this).focus().val(desc_len.substring(0, 240));
-		}
-		var remain_len = 240 - desc_len.length;
-		if (remain_len < 0) remain_len = 0;
-		$('#task-desc-countdown').text(remain_len);
-	});
-});
-function searchTasks(){
-	$('.tasks-search .search-results').empty().html('Loading...');
-	$.post('tasks/search',$('#search-job-task').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',function(data) {
-		$('.tasks-search').find('.search-results').remove();
-		$('.all-tasks').hide();
-		$('.tasks-search').append(data);
-	});
-	return false;
-}
-function searchtodayTasks(){
-	$('.tasks-search .search-results').empty().html('Loading...');
-	$.post('tasks/search','task_search_user='+$('#task_search_user').val()+'&task_search_start_date='+$('#hided').val()+'&task_search_end_date='+$('#hided').val()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>',function(data) {
-		$('.tasks-search').find('.search-results').remove();
-		$('.all-tasks').hide();
-		$('.tasks-search').append(data);
-	});
-	return false;
-}
-function loadEditTables(){
-	$('#jv-tab-4').block({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
-		
-	var taskids = [];
-	$('td.random-task').each(function(){	
-		taskids.push($(this).attr('rel'));
-		<?php if($this->session->userdata('deletetask') == 1) { ?>
-			$(this).append('<div class="buttons"> \
-								<button type="submit" onclick="openEditTask(\'' + $(this).attr('rel') + '\', \'random\'); return false;\">Edit</button> \
-								<button type="submit" onclick="setTaskStatus(\'' + $(this).attr('rel') + '\', \'complete\'); return false;">Approve</button> \
-								<button type="submit" onclick="setTaskStatus(\'' + $(this).attr('rel') + '\', \'delete\'); return false;">Delete</button> \
-							</div>');	
-		<?php } else if(in_array($uio, $created_by)) { ?>
-			$(this).append('<div class="buttons"> \
-								<button type="submit" onclick="openEditTask(\'' + $(this).attr('rel') + '\', \'random\'); return false;\">Edit</button> \
-								<button type="submit" onclick="setTaskStatus(\'' + $(this).attr('rel') + '\', \'complete\'); return false;">Approve</button> \
-								<button type="submit" onclick="setTaskStatus(\'' + $(this).attr('rel') + '\', \'delete\'); return false;">Delete</button> \
-							</div>');
-		<?php } else { ?>
-			$(this).append('<div class="buttons"> \
-								<button type="submit" onclick="openEditTask(\'' + $(this).attr('rel') + '\', \'random\'); return false;\">Edit</button> \
-								<button type="submit" onclick="setTaskStatus(\'' + $(this).attr('rel') + '\', \'complete\'); return false;">Approve</button> \
-							</div>');
-		<?php } ?>
-	});
-	$('td.newrandom-task').each(function(){
-		taskids.push($(this).attr('rel'));
-			$(this).append('<div class="buttons"> \
-								<button type="submit" onclick="openEditTask(\'' + $(this).attr('rel') + '\', \'random\'); return false;\">Edit</button> \
-							</div>');
-	});
-	if (taskids.length < 1)	{
-		$('#jv-tab-4').unblock();
-		return;
-	}
-	$.post('ajax/request/get_random_tasks',{'id_set': taskids.join(','),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},function(data){
-		if (data != '')	{
-			$('form.random-task-tables').html(data);
-		}
-		$('#jv-tab-4').unblock();
-	});
-}
+	var task_userid = "<?php echo $userdata['userid']; ?>";
+	var deletetask  = "<?php echo $this->session->userdata('deletetask'); ?>";
+	var uio         = "<?php echo $uio; ?>";
+	var created_by  = "<?php echo $created_by; ?>";
 </script>
+<script type="text/javascript" src="assets/js/tasks/main_view.js"></script>
 <?php
 require theme_url() . '/tpl/footer.php';
 ob_end_flush();
