@@ -1865,7 +1865,6 @@ function setContractorJob()
 
   <div id="project-tabs">
 	<div>
-		<p id="temp">&nbsp;</p>
 		<ul id="job-view-tabs">
 			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
 			<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>

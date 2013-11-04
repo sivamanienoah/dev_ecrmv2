@@ -915,8 +915,7 @@ $(function(){
 					}
 				?>
 			</div>
-			
-			<p id="temp">&nbsp;</p>
+
 		<div id="lead_tab">
 			<ul id="job-view-tabs">
 				<li><a href="<?php echo current_url() ?>#jv-tab-1">Lead History</a></li>
@@ -942,20 +941,8 @@ $(function(){
 			
 			<div id="jv-tab-2">
 				<div class="q-container">
-					<div class="q-details">
-						<div class="q-top-head">
-							<div class="q-cust">
-								<h3 class="q-id"><em>Lead</em> &nbsp; <span>#<?php echo  (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
-								<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
-								<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
-								<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['cfn'] . ' ' . $quote_data['cln'] : '' ?></span></p>
-								<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-								<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $quote_data['job_category'] : '' ?></span></p>
-							</div>
-							<p><img src="assets/img/qlogo.jpg?q=1" alt="" /></p>
-						</div>
-						
-						<div class="q-quote-items">
+					<div>
+						<div class="q-quote-items" style="position: relative;">
 							<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
 							<ul id="q-sort-items"></ul>
 						</div>
@@ -1014,7 +1001,7 @@ $(function(){
 								<td colspan="4"><strong>All fields are required!</strong></td>
 							</tr>
 							<tr>
-								<td valign="top"><br /><br />Task Desc</td>
+								<td valign="top"><br /><br />Task Desc a</td>
 								<td colspan="3">
 									<strong><span id="task-desc-countdown">1000</span></strong> characters left.<br />
 									<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>

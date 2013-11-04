@@ -1145,7 +1145,7 @@ EOD;
 		$html = <<< EOD
 					<table border="0" cellpadding="0" cellspacing="0" class="task-list-item{$is_complete}{$marked_100pct}" id="task-table-{$array['taskid']}">						
 						<tr>
-							<td valign="top" width="80">
+							<td valign="top">
 								Task Desc
 							</td>
 							<td colspan="3" class="task"{$isprior}>
@@ -1154,17 +1154,17 @@ EOD;
 						</tr>
 						
 						<tr>
-							<td valign="top" width="80">
+							<td valign="top">
 								Task Owner
 							</td>
-							<td class="item task-owner">
+							<td colspan="3" class="item task-owner">
 								{$res[0]->first_name}
 							</td>	
 													
 						</tr>
 						
 						<tr style="display:none;">
-							<td valign="top" width="80" >
+							<td valign="top" >
 								User ID
 							</td>
 							<td class="task-uid" >
@@ -1173,7 +1173,7 @@ EOD;
 													
 						</tr>
 						<tr style="display:none;">
-							<td valign="top" width="80" >
+							<td valign="top">
 								Assigned ID
 							</td>
 							<td class="task-cid" >
@@ -1185,10 +1185,10 @@ EOD;
 							<td>
 								Allocated to
 							</td>
-							<td class="item user-name" rel="{$array['userid']}" width="100">
+							<td colspan="3" class="item user-name" rel="{$array['userid']}" width="100">
 								{$array['user_label']}
 							</td>
-							<td style="display:none" width="80">
+							<td style="display:none" >
 								Hours
 							</td>
 							
@@ -1199,10 +1199,10 @@ EOD;
 							<td>
 								Planned Start Date
 							</td>
-							<td class="item start-date">
+							<td class="item start-date" width="100">
 								{$start_date}
 							</td>
-							<td>
+							<td class="heading-item">
 								Planned End Date
 							</td>
 							<td class="item end-date">
@@ -1217,7 +1217,7 @@ EOD;
 							<td class="item actualstart-date">
 								{$actualstart_date}
 							</td>
-							<td>
+							<td  class="heading-item">
 								Actual End Date
 							</td>
 							<td class="item actualend-date">
@@ -1226,20 +1226,20 @@ EOD;
 						</tr>					
 						<tr>
 							<td>Status</td>
-							<td class="item status-of-project">{$taskstatus}%</td>
+							<td colspan = 3 class="item status-of-project">{$taskstatus}%</td>
 						</tr>
 						<tr>
 							<td>Remarks</td>
-							<td class="edit-task-remarks"><textarea class="taskremarks" readonly>{$task_remarks}</textarea></td>
+							<td colspan = 3 class="edit-task-remarks"><textarea class="taskremarks" style="width:97%" readonly>{$task_remarks}</textarea></td>
 						</tr>						
 						
 						<tr>
-							<td colspan="2" valign="top">
+							<!--td colspan="2" valign="top">
 								{$own_task}
 								<span class="display-none task-require-qc">{$qc_required}</span>
 								<span class="display-none priority">{$priority}</span>
-							</td>
-							<td colspan="2" valign="top">
+							</td-->
+							<td colspan="4" valign="top">
 								{$is_admin}
 							</td>
 						</tr>

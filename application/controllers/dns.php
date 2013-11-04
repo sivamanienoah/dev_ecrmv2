@@ -9,10 +9,12 @@ class Dns extends crm_controller {
 		$this->load->model('dns_model');
         $this->load->library('validation');
 	}
+	
 	function index($limit = 0, $search = false)
 	{
 		redirect('hosting/');
 	}
+	
 	function go_live($id = false)
 	{
 		if(!$id || $id==0 || $id=='') redirect('hosting/');
@@ -155,6 +157,7 @@ class Dns extends crm_controller {
             }
 		}
 	}
+	
 	function is_valid_date($date)
     {
 		$chkdate=$this->date_convert($date);
@@ -163,11 +166,13 @@ class Dns extends crm_controller {
 		$this->validation->set_message('is_valid_date', 'The date needs to be in a correct format (dd-mm-yyyy) and the date should be a future date.');
 		return FALSE;
     }
+	
 	public function date_convert($str){
 		$mdate = explode('-', $str);
 		$str = $mdate[2].'-'.$mdate[1].'-'.$mdate[0];
 		return $str;
 	}
+	
 	function jobs($jobid=''){
 		if($jobid<=0) redirect('hosting/');
 		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H, `".$this->cfg['dbpref']."leads` as J WHERE J.jobid={$jobid} AND H.custid_fk=J.custid_fk ORDER BY H.domain_name";
@@ -176,6 +181,7 @@ class Dns extends crm_controller {
 		$data['jobs']='JOBS';
 		$this->load->view('dns_view', $data);
 	}
+	
 	function submit(){
 		if($_POST['hostings']=='') redirect('hosting/');
 		if(isset($_POST['update_dns'])) redirect('dns/go_live/'.$_POST['hostings']);

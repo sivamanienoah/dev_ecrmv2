@@ -2,7 +2,7 @@
 
 <div id="content">
 	<div class="inner q-view">
-	<?php if($this->session->userdata('accesspage')==1){?>
+	<?php if($this->session->userdata('accesspage')==1) { ?>
 		<table><tr>
 		<td><h2><?php echo  $page_heading ?></h2></td>
 		<?php if($this->session->userdata('add')==1) { ?>
@@ -24,7 +24,7 @@
 		echo '</ul>';
 		foreach ($categories as $cat) {
 			$records = $cat['records'];
-			?>
+		?>
 		<div id="cat_<?php echo $cat['cat_id'] ?>">
 			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
 				
@@ -59,15 +59,15 @@
 				
 			</table>
 		</div>
-			<?php
+		<?php
 		}
 		echo '</div>';
 		
 		?>
 		
-		<?php } else{
+	<?php } else {
 	echo "You have no rights to access this page";
-}?>
+} ?>
 	</div>
 </div>
 <script type="text/javascript">

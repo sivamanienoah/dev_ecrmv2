@@ -18,7 +18,7 @@
 	            <!-- <p>Configure the task alerts.</p> -->
 	        	<a class="choice-box advanced_filter">
 					Advanced Filters
-					<img class="icon leads" src="assets/img/icon_view_leads.png">
+					<img class="icon leads" src="assets/img/advanced_filter.png">
 				</a>	
 	        	
 	            <div class="clear"><div>    

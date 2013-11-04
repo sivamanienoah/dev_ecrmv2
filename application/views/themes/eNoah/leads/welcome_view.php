@@ -1166,7 +1166,7 @@ h3 .small {
 			if (isset($quote_data))
 			{
 				?>
-			<div class="dev-notice">
+			<div class="leadstg_note_top">
 				Please be careful when editing previous documents, the new textfield only allow 600 characters to be inserted. If you are editing items of a previous document, please note that you will only see 600 characters.
 			</div>
 				<?php
@@ -1174,33 +1174,9 @@ h3 .small {
 			?>
             <div class="q-container">
                 <div class="q-details">
-					<div class="q-top-head">
-						<div class="q-cust">
-							<h3 class="q-id"><em>Lead</em> &nbsp; <span>#<?php echo (isset($quote_data)) ? $quote_data['invoice_no'] : '' ?></span></h3>
-
-							<p class="q-date"><em>Date</em> <span><?php echo  (isset($quote_data)) ? date('d-m-Y', strtotime($date_used)) : date('d-m-Y') ?></span></p>
-							<p class="q-cust-company"><em>Company</em> <span><?php echo  (isset($quote_data)) ? $quote_data['company'] : '' ?></span></p>
-							<p class="q-cust-name"><em>Contact</em> <span><?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?></span></p>
-							<p class="q-cust-email"><em>Email</em> <span><?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?></span></p>
-							<p class="q-service-type"><em>Service</em> <span><?php echo  (isset($quote_data)) ? $quote_data['job_category'] : '' ?></span></p>
-						</div>
-						<!-- end q-self -->
-						<?php 
-							if (getClientLogo()) {
-							$cilentLogo = getClientLogo();
-						?>
-							<p><img src="assets/img/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" width="155" height="50"/></p>
-						<?php 
-							}
-							else {
-						?>
-							<p><img src="" alt="" /></p>
-						<?php
-							}
-						?>
-					</div><!-- q-top-head -->
+					
                     
-                    <div class="q-quote-items">
+                    <div class="q-quote-items" style="position: relative;">
 						<h4 class="quote-title">Project Name : <span><?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></span></h4>
                         <ul id="q-sort-items"></ul>
                     </div>

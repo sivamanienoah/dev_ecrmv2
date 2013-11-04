@@ -30,7 +30,7 @@
 		
 		<a class="choice-box" onclick="advanced_filter_pjt();" >
 			Advanced Filters
-			<img src="assets/img/icon_view_leads.png" class="icon leads" />
+			<img src="assets/img/advanced_filter.png" class="icon leads" />
 		</a>
 		
 		<div id="advance_search_pjt" style="float:left; width:100%;" >
