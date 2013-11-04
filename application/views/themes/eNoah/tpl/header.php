@@ -92,7 +92,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	
 	if (isset($userdata['signature']) && trim($userdata['signature']) == '')
 	{
-		$messages[] = 'Your signature for the eCRM is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
+		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
 	}
 	
 	if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
