@@ -16,16 +16,14 @@ form h3 {
     vertical-align:middle;
 }
 #drag-item-list {
-    position:absolute;
-    top:60px;
-    width:620px;
-	height:500px;
     background:#EAEAEA;
-    margin-left:100px;
-    opacity:0.95;
-    -moz-border-radius:8px;
-    -webkit-border-radius:8px;
-    display:none;
+    display: none;
+    height: 500px;
+    margin-left: 146px;
+    opacity: 0.95;
+    position: absolute;
+    top: 60px;
+    width: 684px;
 }
 #drag-item-list .handle {
     background:#3B5998;
@@ -52,16 +50,16 @@ form h3 {
 }
 #drag-item-list .item-inventory ul li {
 	float:left;
-	margin:3px 0 0;
+	
 }
 #drag-item-list .item-inventory ul li a,
 #drag-item-list .item-inventory ul li a:visited,
 #drag-item-list .item-inventory ul li a:active {
-	display:block;
-	padding:5px;
-	background:#ddd;
-	color:#222;
-	margin-right:2px;
+	background: none repeat scroll 0 0 #CCCCCC;
+    color: #222222;
+    display: block;
+    outline: medium none;
+    padding: 4px 7px;
 }
 #drag-item-list .item-inventory ul li a:hover, #drag-item-list .item-inventory ul li.ui-tabs-selected a {
 	background:#4B6FB9;
@@ -288,6 +286,7 @@ form h3 {
 
 .q-container {
 	height:835px;
+	border-radius: 4px;
 }
 h3 .small {
 	font-weight:normal;
@@ -301,11 +300,11 @@ h3 .small {
 }
 #job-view-tabs li {
 	float:left;
-	margin:2px 2px 0 0;
+	
 }
 #job-view-tabs li a {
 	display:block;
-	padding:4px 8px;
+	padding:4px 7px;
 	background:#CCCCCC;
 	color:#222;
 	outline:none;
@@ -607,6 +606,7 @@ select.width100px {
 #set-job-task .task-list-item td {
 	padding:5px;
 }
+/*
 .task-list-item td.task {
 	background:#FEF08D;
 	color:#333;
@@ -614,6 +614,21 @@ select.width100px {
 .task-list-item td.item {
 	color:#333;
 	background:#FDF7BB;
+}
+*/
+.task-list-item{width:100%;}
+.task-list-item tr td{padding:5px; border:1px solid #ccc; }
+.task-list-item tr td:first-child{
+	 background:#E7EAF1;
+	 font-weight:bold;
+	 width: 102px;
+}
+.task-list-item td.heading-item {
+	background: none repeat scroll 0 0 #E7EAF1;
+	font-weight: bold;
+ }
+.task-list-item tr:last-child td:first-child{
+	background:none;
 }
 .set-task-status {
 	float:left;
@@ -632,7 +647,7 @@ select.width100px {
 	border:1px solid green;
 }
 .delete-task {
-	color:maroon;
+	color:#A51E04 !important;
 	float:right;
 	display:none;
 }

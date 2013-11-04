@@ -669,8 +669,11 @@ color:#595959;
 	width:330px;
 }
 .q-main-right {
-	width:590px;
-	float:right;
+	border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    float: right;
+    padding: 1px;
+    width: 590px;
 }
 .q-container {
 	background:#fff;
@@ -680,7 +683,7 @@ color:#595959;
 	overflow-x:hidden;
 }
 .q-details {
-	padding:15px;
+	padding:4px;
 }
 .q-details h3, .q-details h4, .q-details p {
 	margin:0 0 10px 0;
@@ -833,9 +836,11 @@ color:#595959;
 }
 
 .q-quote-items .quote-title {
-	color:#777;
-	margin:18px 0;
-	font-size:14px;
+    background:#EFEFEF;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 14px;
+    padding: 8px;
 }
 .blockMsg {
     cursor: default !important;
@@ -1167,12 +1172,13 @@ width:100%; background:#fff;}
 	font-weight:bold;
 }
 .choice-box img {
-	position:absolute;
-	right:5px;
-	top:-20px;
+	position: absolute;
+    right: 0;
+    top: -14px !important;
+    width: 75px;
 }
 .choice-box img.quote, .choice-box img.leads {
-	top:-22px;
+	/*top:-22px;*/
 }
 .choice-box:hover {
 	background:#888;
@@ -1267,6 +1273,15 @@ ul.ui-sortable li{
     margin-bottom: 10px;
     padding: 10px 10px 10px 36px;
 }
+.leadstg_note_top {
+    background: url("../../assets/img/Document-Write-icon.png") no-repeat scroll 10px 6px #E7EAF1;
+    border: 1px solid #4B6FB9;
+    color: #800000;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px 10px 10px 40px;
+}
 .negative_disable {
 	color: #6d6d85 !important;
 	cursor:auto !important;
@@ -1346,3 +1361,4 @@ html[xmlns] .clearfix {
 	padding-right:4px;
 	padding-top:2px;
 }
+

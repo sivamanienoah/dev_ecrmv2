@@ -742,7 +742,7 @@ button.ui-button::-moz-focus-inner {
 	float: left;
 	position: relative;
 	top: 0;
-	margin: 1px .2em 0 0;
+	margin: 2px 1px 0;
 	border-bottom-width: 0;
 	padding: 0;
 	white-space: nowrap;
@@ -751,10 +751,11 @@ button.ui-button::-moz-focus-inner {
 	float: left;
 	padding: .5em 1em;
 	text-decoration: none;
+	font-size:12px;
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-active {
 	margin-bottom: -1px;
-	padding-bottom: 1px;
+	
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-active a,
 .ui-tabs .ui-tabs-nav li.ui-state-disabled a,
@@ -768,7 +769,8 @@ button.ui-button::-moz-focus-inner {
 .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
-	padding: 1em 1.4em;
+	/* padding: 1em 1.4em; */
+	padding:5px 2px;
 	background: none;
 }
 .ui-tooltip {
@@ -793,7 +795,7 @@ body .ui-tooltip {
 .ui-widget textarea,
 .ui-widget button, .ui-widget {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 }
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
@@ -804,7 +806,7 @@ body .ui-tooltip {
 	color: #222222;
 }
 .ui-widget-header {
-	border: 1px solid #aaaaaa;
+	border: 1px solid #ccc;
 	background: #cccccc url(../images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 	color: #222222;
 	font-weight: bold;
