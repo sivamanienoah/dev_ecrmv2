@@ -5,17 +5,6 @@
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
         
-        <style type="text/css">
-		.data-table th {
-			padding:0;
-		}
-		.data-table th a {
-			display:block;
-			padding:4px;
-			color:#fff;
-		}
-		</style>
-        
         <h2>Customer Database</h2>
         <form action="customers/search/" method="post" id="cust_search_form">
 			
