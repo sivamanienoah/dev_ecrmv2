@@ -7,11 +7,14 @@
 	});
 
 	function valid() {
-		var catname = $("#cat_name").val();
-		var catupdt = $("#cat_updt").val();
+		var catname 			= $("#cat_name").val();
+		var catupdt 			= $("#cat_updt").val();
+		var params 				= {category: catname, cat_up: catupdt};
+		params[csrf_token_name] = csrf_hash_token;
+		
 		$.ajax({
 			url: "item_mgmt/checkcategoryname",
-			data: {category: catname, cat_up: catupdt,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			data: params,
 			type: "POST",
 			dataType: 'json',
 			success: function(data){
