@@ -103,7 +103,7 @@ $(function(){
                     
 				</tr>
 				<tr>
-					<td>Clienct Email-id:</td>
+					<td>Client Email-id:</td>
 					<td><input type="text" name="client_email" value="<?php echo  (!empty($client_email)?$client_email:$this->validation->client_email); ?>" class="textfield width200px" /></td>
                     
 				</tr>
