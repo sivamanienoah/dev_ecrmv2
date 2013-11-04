@@ -53,34 +53,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script>
 
-<script language="javascript">
-	$(document).ready(function() {
-		$(window).scroll(function () {
-			set = $(document).scrollTop()+"px";
-			$('#floatNotifyDiv').animate({top:set}, {duration:1000,queue:false});
-		});
-		
-		$( ".grid-close" ).bind( "click", function() { 
-			// $('#floatNotifyDiv').slideUp('slow', function () { $lead.css('display','none'); });
-			$('#floatNotifyDiv').hide();
-		});
-	});
-	
-	url_segment      = []; /// URL segments 
-	csrf_token_name  = "<?php echo $this->security->get_csrf_token_name(); ?>";  //Assign Token Name
-	csrf_hash_token  = "<?php echo $this->security->get_csrf_hash(); ?>";   //Assign Hash Token 
-	site_base_url    = "<?php echo base_url(); ?>";   //Site Base URL
-	accesspage       = "<?php echo $this->session->userdata('accesspage'); ?>";   //Site Base URL
-	viewlead         = "<?php echo $this->session->userdata('viewlead'); ?>";   //Site Base URL
-	viewPjt			 = "<?php echo $this->session->userdata('viewPjt'); ?>";
-	
-	/// Site URL segment 
-	<?php foreach($this->uri->segments as $key=>$value){ ?>
-			url_segment['<?php echo $key; ?>'] = '<?php echo $value; ?>';
-	<?php } ?>
-	
-</script>
-
+<?php echo js_global_variable($viewLeads['view']); ?>
 
 </head>
 <body>
