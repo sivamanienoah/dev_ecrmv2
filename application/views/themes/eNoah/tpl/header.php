@@ -71,6 +71,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	csrf_hash_token  = "<?php echo $this->security->get_csrf_hash(); ?>";   //Assign Hash Token 
 	site_base_url    = "<?php echo base_url(); ?>";   //Site Base URL
 	accesspage       = "<?php echo $this->session->userdata('accesspage'); ?>";   //Site Base URL
+	viewlead         = "<?php echo $this->session->userdata('viewlead'); ?>";   //Site Base URL
+	viewPjt			 = "<?php echo $this->session->userdata('viewPjt'); ?>";
+	
 	/// Site URL segment 
 	<?php foreach($this->uri->segments as $key=>$value){ ?>
 			url_segment['<?php echo $key; ?>'] = '<?php echo $value; ?>';
