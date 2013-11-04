@@ -97,7 +97,7 @@ function addLog() {
 	var client_emails = true;
 	if ($('#email_to_customer').is(':checked')) {
 		client_emails = false;
-		$('#multiple-client-emails').children('input[type=checkbox])').each(function(){
+		$('#multiple-client-emails').children('input[type=checkbox]').each(function(){
 			if ($(this).is(':checked')){
 				client_emails = true;
 			}
@@ -189,14 +189,13 @@ function addLog() {
 			{
 				$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
 					$('#job_log').val('');
-					/*$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
+					$('.user-addresses input[type="checkbox"]:checked, #email_to_customer, #log_stickie').each(function(){
 						$(this).attr('checked', false);
-					});*/
+					});
 					$('#log_minutes').val('');
 					$('#additional_client_emails').val('');
-					/*$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
+					$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
 						.slideUp(400);
-					*/
 					if (data.status_updated) {
 						document.location.href = 'http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>';
 					}
@@ -483,7 +482,7 @@ function whatIsSignature()
 
 /* function to add the auto log */
 function qcOKlog() {
-	var msg = "eCRM QC Officer Log Check - All Appears OK";
+	var msg = "eSmart QC Officer Log Check - All Appears OK";
 	
 	if (!window.confirm('Are you sure you want to stamp the OK log?\n"' + msg + '"')) return false;
 	
@@ -511,8 +510,7 @@ $(function(){
 				.children('input[type=checkbox]:first').attr('checked', true);
 		} else {
 			$('#additional_client_emails').val('');
-			$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
-				.slideUp(400);
+			$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end().slideUp(400);
 		}
 	});
 	
