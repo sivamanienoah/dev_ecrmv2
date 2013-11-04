@@ -639,7 +639,6 @@ EOD;
 	</div>
 </div>
 <script type="text/javascript">
-//setTimeout(function(){ document.location.href = document.location.href; }, 1000*60*2);
 $(function(){
 	var ts = $('.great-task-table').size();
 	ts = Math.floor(ts / 2);
