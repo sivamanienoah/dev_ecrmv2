@@ -201,5 +201,5 @@ $usernme = $this->session->userdata('logged_in_user');
 <script>
 	var customer_user_id = "<?php echo $usernme['userid']; ?>";
 </script>
-<script type="text/javascript" src="assets/js/theme_js/customer_add_view.js"></script>
+<script type="text/javascript" src="assets/js/customer/customer_add_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
