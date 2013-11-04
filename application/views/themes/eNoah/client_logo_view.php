@@ -50,7 +50,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--Inner div - close here -->
 </div><!--Content div - close here -->
-<script type="text/javascript" src="assets/js/theme_js/client_logo_view.js"></script>
+<script type="text/javascript" src="assets/js/client_logo/client_logo_view.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
