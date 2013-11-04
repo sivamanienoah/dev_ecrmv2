@@ -539,7 +539,7 @@ $s8 = implode(',', $Ser_Req);
 	 dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
 	 dashboard_userid   = "<?php echo $userdata['userid']; ?>"; 
 </script>
-<script type="text/javascript" src="assets/js/theme_js/dashboard_view.js"></script>
+<script type="text/javascript" src="assets/js/dashboard/dashboard_view.js"></script>
 <?php
  require (theme_url().'/tpl/footer.php');
  ob_end_flush();
