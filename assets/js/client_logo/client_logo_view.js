@@ -6,6 +6,8 @@ function clientLogoAjaxFileUpload() {
 	$('<li>Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#proces_img');
 	var client_url = $('#client_url').val();
 	var client_url=client_url.replace(/\//g, "-");
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
 	$.ajaxFileUpload
 	(
 		{
@@ -13,6 +15,7 @@ function clientLogoAjaxFileUpload() {
 			secureuri:true,
 			fileElementId:'logo_file',
 			dataType: 'json',
+			data:params,
 			success: function (data, status)
 			{
 				if(typeof(data.error) != 'undefined')
@@ -83,7 +86,7 @@ function reset_logo_confirm()
 function del_client_logo()
 {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: site_base_url+'client_logo/del_client_logo/',
 		dataType:"json",                                                                
 		cache: false,
