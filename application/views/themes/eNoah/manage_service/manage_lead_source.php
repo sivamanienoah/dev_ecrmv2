@@ -49,7 +49,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		</table>
 	</form>
 	
-	<table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
+	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
 				<th width="12%">Action</th>

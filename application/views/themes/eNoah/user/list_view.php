@@ -49,7 +49,7 @@
 		</form>
         
 		<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
-        <table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
+        <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             
             <thead>
                 <tr>
@@ -99,5 +99,5 @@
 	</div>
 </div>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
-<script type="text/javascript" src="assets/js/tbl-data.js"></script>
+<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/user/list_view.js"></script>

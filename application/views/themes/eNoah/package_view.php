@@ -43,7 +43,7 @@
             </table>
 		</form>
         
-        <table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
+        <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             
             <thead>
                 <tr>
@@ -76,5 +76,5 @@
 			echo "You have no rights to access this page";
 		}?>
 </div>
-<script type="text/javascript" src="assets/js/tbl-data.js"></script>
+<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
