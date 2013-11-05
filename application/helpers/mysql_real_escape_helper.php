@@ -39,11 +39,13 @@ if ( ! function_exists('real_escape_array'))
 {
 	function real_escape_array($data = array())
 	{
+	
 		$post_data_arr = array();
 		if(sizeof($data)>0){
 			foreach($data as $key=>$value){
+			
 				if(is_array($value) && sizeof($value)>0){
-					$post_data_arr[$key] = $this->multi_dimention_firstlevel($value);
+					$post_data_arr[$key] = multi_dimention_firstlevel($value);
 				}else{
 					$post_data_arr[$key] = mysql_real_escape_string($value);
 				}
@@ -62,7 +64,7 @@ if ( ! function_exists('real_escape_array'))
 		if(sizeof($data)>0){
 			foreach($data as $key=>$value){
 			    if(is_array($value) && sizeof($data)>0){
-					$post_firstlevel_data[$key] = $this->multi_dimention_nextlevel($value);
+					$post_firstlevel_data[$key] = multi_dimention_nextlevel($value);
 				}else{
 					$post_firstlevel_data[$key] = mysql_real_escape_string($value);
 				}
@@ -82,7 +84,7 @@ if ( ! function_exists('real_escape_array'))
 		if(sizeof($data)>0){
 			foreach($data as $key=>$value){
 			    if(is_array($value) && sizeof($data)>0){
-					$post_nextlevel_data[$key] = $this->multi_dimention_firstlevel($value);
+					$post_nextlevel_data[$key] = multi_dimention_firstlevel($value);
 				}else{
 					$post_nextlevel_data[$key] = mysql_real_escape_string($value);
 				}
