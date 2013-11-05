@@ -13,6 +13,7 @@ class Welcome extends crm_controller {
 		$this->load->model('welcome_model');
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
+		$this->load->model('email_template_model');
 		$this->load->helper('text');
 		$this->email->set_newline("\r\n");
 		
@@ -26,6 +27,7 @@ class Welcome extends crm_controller {
 	 * Redirect user to quotation list
 	 */
 	public function index() {
+		
 		redirect('welcome/quotation');
     }
 	
@@ -436,71 +438,10 @@ HDOC;
 			$customer = $this->welcome_model->get_customer_det($get_det['custid_fk']);
 			
 			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($get_det['lead_assign']);
-			
-			$this->load->library('email');
 
 			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 		
-		$email_body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
-
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Lead Notification Message</h3></td>
-  </tr>
-
-  <tr>
-    <td><table style="border:1px #CCC solid; font-family:Arial, Helvetica, sans-serif; font-size:12px;" width="96%" align="center" cellspacing="0" cellpadding="4">
-  <tr>
-	<p>
-    <td style="border-right:1px #CCC solid; color:#FFF"" width="73" bgcolor="#4B6FB9"><b>Title</b> </td>
-    <td  style="border-right:1px #CCC solid; color:#FFF""width="41" bgcolor="#4B6FB9"><b>Description</b> </td>
-	</p>
-  </tr>
-  <tr>
-    <td style="border-right:1px #CCC solid;">Client</td>
-    <td style="border-right:1px #CCC solid;">'.$customer['first_name'].' '.$customer['last_name'].'-'.$customer['company'].'</td>
-  </tr>
-  <tr style="border:1px #CCC solid;">
-    <td style="border-right:1px #CCC solid;">URL</td>
-    <td style="border-right:1px #CCC solid;">
-		<a href="'.$this->config->item('base_url').'welcome/view_quote/'.$insert_id.'">Click here to View Lead</a>
-	</td>
-  </tr>
-</table>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';
-
+			
 			$from=$this->userdata['email'];
 			$arrEmails = $this->config->item('crm');
 			$arrSetEmails=$arrEmails['director_emails'];
@@ -508,15 +449,17 @@ body {
 			$mgmt_mail = implode(',',$mangement_email);
 			$admin_mail=implode(',',$arrSetEmails);
 			
-			$subject='New Lead Creation Notification';
-			$this->email->from($from,$user_name);
+			
+			$param['email_data'] = array('first_name'=>$customer['first_name'],'last_name'=>$customer['last_name'],'company'=>$customer['company'],'base_url'=>$this->config->item('base_url'),'insert_id'=>$insert_id);
 
-			$this->email->to($mgmt_mail.','. $lead_assign_mail[0]['email']);
-			$this->email->bcc($admin_mail);
-			$this->email->subject($subject);
-			$this->email->message($email_body);
-			$this->email->send(); 
-
+			$param['to_mail'] = $mgmt_mail.','. $lead_assign_mail[0]['email'];
+			$param['bcc_mail'] = $admin_mail;
+			$param['from_email'] = $from;
+			$param['from_email_name'] = $user_name;
+			$param['template_name'] = "New Lead Creation Notification";
+			$param['subject'] = 'New Lead Creation Notification';
+			
+			$this->email_template_model->sent_email($param);
 		}
 	}
 	
@@ -616,14 +559,8 @@ body {
         }
         else
         {
-			/*if (!preg_match('/^\n/', $data['item_desc']))
-			{
-				$data['item_desc'] = "\n" . $data['item_desc'];
-			}*/
-				
 			$data['item_desc'] = @str_replace('\r\n','',$data['item_desc']); 
-			$this->quote_add_item($data['jobid'], $data['item_desc'], $data['item_price'], $data['hours']);
-			
+			$this->quote_add_item($data['jobid'], $data['item_desc'], $data['item_price'], $data['hours']);			
 		}
 		
 	}
@@ -706,6 +643,9 @@ body {
 			$ins['expect_worth_id'] = $data['expect_worth_edit'];
 			$ins['expect_worth_amount'] = $data['expect_worth_amount'];
 			$ins['actual_worth_amount'] = $data['actual_worth'];
+			if (empty($data['actual_worth'])) {
+				$ins['actual_worth_amount'] = 0.00;
+			}
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {			
 				$ins['proposal_adjusted_date'] = date('Y-m-d H:i:s');
 			}
@@ -770,7 +710,6 @@ body {
 				
 				if(($data['lead_assign_edit_hidden'] ==  $data['lead_assign_edit'])) 
 				{
-					
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk'] = $jobid;
 					
@@ -790,77 +729,29 @@ body {
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin: 0px;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;">
-							<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-						</td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Re-assignment Notification
-					</h3></td>
-					</tr>
-
-					  <tr>
-						<td>
-						<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-						<p style="background: none repeat scroll 0 0 #4B6FB9;
-						border-bottom: 1px solid #CCCCCC;
-						color: #FFFFFF;
-						margin: 0;
-						padding: 4px;">
-							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-						<p style="padding: 4px;">'.
-							$inserts['log_content'].'<br /><br />
-							'.$this->userdata['signature'].'<br />
-						</p>
-					</div>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';							
-
-					$from=$this->userdata['email'];
 					$arrEmails = $this->config->item('crm');
 					$arrSetEmails=$arrEmails['director_emails'];
 					$mangement_email = $arrEmails['management_emails'];
 					$mgmt_mail = implode(',',$mangement_email);
 					$admin_mail=implode(',',$arrSetEmails);
-					$subject='Lead Re-assigned Notification';
-					$this->email->from($from,$user_name);
-					$this->email->to($mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email']);
-					$this->email->bcc($admin_mail);
-					$this->email->subject($subject);
-					$this->email->message($log_email_content);
-					$this->email->send(); 
+
+					//email sent by email template
+					$param = array();
+					
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'log_content'=>$inserts['log_content'],'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $this->userdata['email'];
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Lead Re-assignment Notification";
+					$param['subject'] = 'Lead Re-assigned Notification';
+
+					$this->email_template_model->sent_email($param);
+
 				} /* lead owner edit mail notifiction starts here */
-				else if(($data['lead_owner_edit_hidden'] ==  $data['lead_owner_edit'])) {
+				else if(($data['lead_owner_edit_hidden'] ==  $data['lead_owner_edit'])) 
+				{
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk'] = $jobid;
 					
@@ -878,62 +769,6 @@ body {
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin: 0px;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;">
-							<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-						</td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Owner Re-assignment Notification
-					</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-						<p style="background: none repeat scroll 0 0 #4B6FB9;
-						border-bottom: 1px solid #CCCCCC;
-						color: #FFFFFF;
-						margin: 0;
-						padding: 4px;">
-							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-						<p style="padding: 4px;">'.
-							$inserts['log_content'].'<br /><br />
-							'.$this->userdata['signature'].'<br />
-						</p>
-					</div>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';							
 
 					$from=$this->userdata['email'];
 					$arrEmails = $this->config->item('crm');
@@ -941,13 +776,20 @@ body {
 					$mangement_email = $arrEmails['management_emails'];
 					$mgmt_mail = implode(',',$mangement_email);
 					$admin_mail=implode(',',$arrSetEmails);
-					$subject='Lead Owner Re-assigned Notification';
-					$this->email->from($from,$user_name);
-					$this->email->to($mgmt_mail.','. $lead_owner[0]['email']);
-					$this->email->bcc($admin_mail);
-					$this->email->subject($subject);
-					$this->email->message($log_email_content);
-					$this->email->send(); 
+					
+					//email sent by email template
+					$param = array();
+					
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'log_content'=>$inserts['log_content'],'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $mgmt_mail.','. $lead_owner[0]['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $this->userdata['email'];
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Lead Owner Re-assignment Notification";
+					$param['subject'] = 'Lead Owner Re-assigned Notification';
+
+					$this->email_template_model->sent_email($param);
 				}
 				/* lead owener eidt mail notification ends here */
 
@@ -961,7 +803,9 @@ body {
 			}
 			else
 			{
-				echo "{error:true, errormsg:'Data update failed!'}";
+				$json['error'] = true;
+				$json['errormsg'] = 'Data update failed!';
+				echo json_encode($json);
 			}            
 		}
 	}
@@ -996,7 +840,8 @@ body {
 				$update['job_status'] = $status;
 					
 				$updt_lead_stg = $this->welcome_model->updt_lead_stg_status($jobid, $update);
-				if ($updt_lead_stg) {
+				if ($updt_lead_stg) 
+				{
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk'] = $jobid;
 					
@@ -1021,83 +866,41 @@ body {
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin: 0px;
-						}
-						</style>
-						</head>
 
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;">
-								<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-							</td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Status Change Notification Message</h3></td>
-						  </tr>
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+					
+					$admin_mail=implode(',',$arrSetEmails);
+					
+					//email sent by email template
+					$param = array();
 
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;">'.
-								$ins_email['log_content_email'].'<br /><br />
-								'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
+					$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content_email'=>$ins_email['log_content_email'], 'signature'=>$this->userdata['signature']);
 
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';
-				$from=$this->userdata['email'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				
-				$admin_mail=implode(',',$arrSetEmails);
-				
-				$subject='Status Change Notification';
-				$this->email->from($from,$user_name);
-				$this->email->to($disarray[0]['email'] .','. $lead_owner[0]['email']);
-				$this->email->bcc($admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($log_email_content);
-				$this->email->send(); 
-				
-				$res['error'] = false;
-				} else {
+					$param['to_mail'] = $disarray[0]['email'] .','. $lead_owner[0]['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $user_data[0]['email'];
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Lead - Status Change Notification";
+					$param['subject'] = "Lead - Status Change Notification";
+
+					$this->email_template_model->sent_email($param);
+
+					$res['error'] = false;
+				}
+				else 
+				{
 					$res['error'] = true;
 					$res['errormsg'] = 'Database update failed!';
 				}	
-			} else  {
+			} 
+			else 
+			{
 				$res['error'] = false;
 			}
-        } else {
+        }
+		else 
+		{
 			$res['error'] = true;
 			$res['errormsg'] = 'Invalid Lead ID or Stage!';
         }
@@ -1276,7 +1079,8 @@ body {
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
 				$delete_job = $this->welcome_model->delete_lead('leads', $id);
-				if ($delete_job) {
+				if ($delete_job) 
+				{
 					$delete_item = $this->welcome_model->delete_row('items', 'jobid_fk', $id);
 					$delete_log = $this->welcome_model->delete_row('logs', 'jobid_fk', $id);
 					$delete_task = $this->welcome_model->delete_row('tasks', 'jobid_fk', $id);
@@ -1290,62 +1094,6 @@ body {
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin: 0px;
-						}
-						</style>
-						</head>
-
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;">
-								<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-							</td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Deleted Notification Message
-						</h3></td>
-						  </tr>
-
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;">'.
-								$ins['log_content'].'<br /><br />
-								'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
-
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';							
-					//$mydata=$q->row();
 					$from=$this->userdata['email'];
 					$arrEmails = $this->config->item('crm');
 					$arrSetEmails=$arrEmails['director_emails'];
@@ -1353,24 +1101,38 @@ body {
 					$mgmt_mail = implode(',',$mangement_email);
 					$admin_mail=implode(',',$arrSetEmails);
 					
-					$subject='Lead Delete Notification';
-					$this->email->from($from,$user_name);
-					$this->email->to($mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email']);
-					$this->email->bcc($admin_mail);
-					$this->email->subject($subject);
-					$this->email->message($log_email_content);
-					$this->email->send(); 
+					//email sent by email template
+					$param = array();
+					
+					$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content'=>$ins['log_content'], 'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $this->userdata['email'];
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Lead - Delete Notification Message";
+					$param['subject'] = "Lead Delete Notification";
+
+					$this->email_template_model->sent_email($param);
+					
 					$this->session->set_flashdata('confirm', array("Item deleted from the system"));
+
 					redirect('welcome/quotation');
-				} else {
+				}
+				else 
+				{
 					$this->session->set_flashdata('login_errors', array("Error in Deletion."));
 					redirect('welcome/quotation');
 				}
-			} else {
+			}
+			else 
+			{
 				$this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
 				redirect('welcome/quotation');
 			}
-		} else {
+		} 
+		else 
+		{
 			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
 			redirect('welcome/quotation');
 		}
@@ -1387,9 +1149,9 @@ body {
 			$update['date_modified'] = date('Y-m-d H:i:s');
 			
 			$updt_job = $this->welcome_model->update_row('leads', $update, $jobid);
-			
-			if ($updt_job) {	
-			
+			$json = array();
+			if ($updt_job) 
+			{
 				$lead_det = $this->welcome_model->get_lead_det($jobid);
 				$ins['userid_fk'] = $this->userdata['userid'];
 				$ins['jobid_fk'] = $jobid;
@@ -1407,84 +1169,42 @@ body {
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 				
-				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin: 0px;
-					}
-					</style>
-					</head>
 
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;">
-							<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-						</td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead To Project Change Notification Message</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-						<p style="background: none repeat scroll 0 0 #4B6FB9;
-						border-bottom: 1px solid #CCCCCC;
-						color: #FFFFFF;
-						margin: 0;
-						padding: 4px;">
-							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-						<p style="padding: 4px;">'.
-							$ins_email['log_content_email'].'<br /><br />
-							'.$this->userdata['signature'].'<br />
-						</p>
-					</div>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';
-			$from=$this->userdata['email'];
-			$arrEmails = $this->config->item('crm');
-			$arrSetEmails=$arrEmails['director_emails'];
+				$arrEmails = $this->config->item('crm');
+				$arrSetEmails=$arrEmails['director_emails'];
+				
+				$admin_mail=implode(',',$arrSetEmails);
 			
-			$admin_mail=implode(',',$arrSetEmails);
-			
-			$subject='Lead to Project Change Notification';
-			$this->email->from($from,$user_name);
-			$this->email->to($lead_assign_mail[0]['email'] .','. $lead_owner[0]['email']);
-			$this->email->bcc($admin_mail);
-			$this->email->subject($subject);
-			$this->email->message($log_email_content);
-			$this->email->send(); 
-			echo "{error:false}";
+				//email sent by email template
+				$param = array();
+				
+				$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content_email'=>$ins_email['log_content_email'], 'signature'=>$this->userdata['signature']);
+
+				$param['to_mail'] = $lead_assign_mail[0]['email'] .','. $lead_owner[0]['email'];
+				$param['bcc_mail'] = $admin_mail;
+				$param['from_email'] = $this->userdata['email'];
+				$param['from_email_name'] = $user_name;
+				$param['template_name'] = "Lead to Project Change Notification";
+				$param['subject'] = "Lead to Project Change Notification";
+
+				$this->email_template_model->sent_email($param);
+				
+				$json['error'] = false;
+				echo json_encode($json);
 			}
 			else
 			{
-				echo "{error:true, errormsg:'Database update failed!'}";
+				$json['error'] = true;
+				$json['errormsg'] = 'Database update failed!';
+				echo json_encode($json);
 			}	
         }
         else
-			{
-				echo "{error:true, errormsg:'Invalid Lead ID or Stage!'}";
-			}
+		{
+			$json['error'] = true;
+			$json['errormsg'] = 'Invalid Lead ID or Stage!';
+			echo json_encode($json);
+		}
     }
 	
 	/*
@@ -1678,63 +1398,8 @@ body {
 					$successful = 'This log has been emailed to:<br />';
 					
 					$log_subject = "eSmart Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
-					
-				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
-
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Lead Notification Message</h3></td>
-  </tr>
-
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
-    <p style="padding: 4px;">'.
-        $data_log['log_content'].'<br /><br />
-		This log has been emailed to:<br />
-		'.$received_by.'<br /><br />
-		'.$this->userdata['signature'].'<br />
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';												
+							
+					$param['email_data'] = array('first_name'=>$client[0]['first_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
 
 					$json['debug_info'] = '0';
 					
@@ -1770,81 +1435,26 @@ body {
 					{
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-						
-						$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
 
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
-  </tr>
+						$param['email_data'] = array('first_name'=>$client[0]['first_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
 
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
-    <p style="padding: 4px;">'.
-        $data_log['log_content'].'<br /><br />
-		This log has been emailed to:<br />
-		'.$received_by.'<br /><br />
-		'.$this->userdata['signature'].'<br />
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';						
-	
 					}
 
-					$this->email->from($user_data[0]['email'], $user_data[0]['first_name']);
-
+					
 					foreach($send_to as $recps) 
 					{
 						$arrRecs[]=$recps[0];
 					}
 					$senders=implode(',',$arrRecs);
-					$this->email->to($senders);
-					$this->email->subject($log_subject);
-					$this->email->message($log_email_content);
-					if(!empty($full_url_path))
-					{
-						$this->email->attach($full_file_path);
-					}
-					if($this->email->send())
+					
+					$param['to_mail'] = $senders;
+					$param['from_email'] = $user_data[0]['email'];
+					$param['from_email_name'] = $user_data[0]['first_name'];
+					$param['template_name'] = "Lead Notificatiion Message";
+					$param['subject'] = $log_subject;
+					
+					
+					if($this->email_template_model->sent_email($param))
 					{
 						$successful .= trim($received_by, ', ');
 					}
@@ -1853,6 +1463,7 @@ body {
 						echo 'failure';
 					}
 					
+
 					if (isset($full_file_path) && is_file($full_file_path)) unlink ($full_file_path);
 					
 					if ($successful == 'This log has been emailed to:<br />')
@@ -1911,17 +1522,15 @@ $table = <<<HDOC
 HDOC;
 				
                 $json['error'] = FALSE;
-                $json['html'] = $table;
+                $json['html'] = $table;			
 				
                 echo json_encode($json);
 				exit;
             }
             else
             {
-                // echo "{error:true, errormsg:'Post insert failed'}";
 				$res['error'] = true;
 				$res['errormsg'] = 'Post insert failed';
-				
             }
         }
         else
