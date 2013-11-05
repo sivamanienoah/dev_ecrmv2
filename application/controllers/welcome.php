@@ -616,10 +616,12 @@ body {
         }
         else
         {
-			if (!preg_match('/^\n/', $data['item_desc']))
+			/*if (!preg_match('/^\n/', $data['item_desc']))
 			{
 				$data['item_desc'] = "\n" . $data['item_desc'];
-			}
+			}*/
+				
+			$data['item_desc'] = @str_replace('\r\n','',$data['item_desc']); 
 			$this->quote_add_item($data['jobid'], $data['item_desc'], $data['item_price'], $data['hours']);
 			
 		}
