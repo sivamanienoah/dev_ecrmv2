@@ -37,6 +37,7 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('VIEWPATH',APPPATH.'/views/');
 define('UPLOAD_PATH',SITE_FILE_PATH.'/crm_data/');
+define('UPLOAD_LOGO',SITE_FILE_PATH.'/assets/img/client_logo');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
