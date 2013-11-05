@@ -2,7 +2,7 @@
 	<div class="inner">
 		<div class="in-content"> 
 		<?php if(($this->session->userdata('accesspage')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
-			<form action="<?php echo  $this->uri->uri_string() ?>" id="country_form" method="post" onsubmit="return checkForm();">
+			<form action="<?php echo  $this->uri->uri_string() ?>" id="country_form" method="post">
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			

@@ -9,7 +9,7 @@
 				</div>
 			<?php } ?>
 			<p>All mandatory fields marked * must be filled in correctly.</p>
-			<form name="region_form" id="region_form" action="<?php echo  $this->uri->uri_string() ?>" method="post" onsubmit="return checkForm();">
+			<form name="region_form" id="region_form" action="<?php echo  $this->uri->uri_string() ?>" method="post">
 			
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			

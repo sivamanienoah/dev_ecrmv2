@@ -10,7 +10,7 @@ $days = ($this->input->post('days')!='')?$this->input->post('days'):$days;
     <div class="inner">
 	<?php if($this->session->userdata('edittask')==1){?>
 		
-    	<form action="<?php echo  $this->uri->uri_string() ?>" method="post" onsubmit="return checkForm();">
+    	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
