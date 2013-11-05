@@ -1362,3 +1362,9 @@ html[xmlns] .clearfix {
 	padding-top:2px;
 }
 
+.data-table th { padding:0; }
+.data-table th a { 
+	display:block;
+	padding:4px;
+	color:#fff;
+}

@@ -298,10 +298,6 @@ h3 .small {
 	overflow:hidden;
 	zoom:1;
 }
-#job-view-tabs li {
-	float:left;
-	
-}
 #job-view-tabs li a {
 	display:block;
 	padding:4px 7px;

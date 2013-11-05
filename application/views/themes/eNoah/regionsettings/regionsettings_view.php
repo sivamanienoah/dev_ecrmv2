@@ -10,39 +10,27 @@
 }
 </style>
 <?php
-if($tabselected == 'region') {
-$selected = 0;
-}elseif($tabselected == 'country') {
-$selected = 1;
-}elseif($tabselected == 'state') {
-$selected = 2;
-}elseif($tabselected == 'location') {
-$selected = 3;
-} 
+switch ($tabselected)
+{
+	case 'region':
+		$selected = 0;
+	break;
+	case 'country':
+		$selected = 1;
+	break;
+	case 'state':
+		$selected = 2;
+	break;
+	case 'location':
+		$selected = 3;
+	break;
 
+}
 ?>
 <script>
-/* $(function() {
-	$("#job-view-tabs").tabs({
-	selected: <?php echo $selected;?>,
-	show: function (event, ui) {
-	    }
+	$(function() {
+		$( "#regset-tabs" ).tabs({ active: <?php echo $selected;?> });
 	});
-});
-*/
-$(function() {
-$.fn.__tabs = $.fn.tabs;
-	$.fn.tabs = function (a, b, c, d, e, f) {
-		var base = location.href.replace(/#.*$/, '');
-		$('ul>li>a[href^="#"]', this).each(function () {
-			var href = $(this).attr('href');
-			$(this).attr('href', base + href);
-		});
-		$(this).__tabs(a, b, c, d, e, f);
-	};
-
-	$( "#regset-tabs" ).tabs(('select', 2),{});
-});
 </script>							
 <div id="content">
     <div class="inner">
