@@ -42,11 +42,59 @@ if ( ! function_exists('real_escape_array'))
 		$post_data_arr = array();
 		if(sizeof($data)>0){
 			foreach($data as $key=>$value){
-				$post_data_arr[$key] = 	mysql_real_escape_string($value);
+				if(is_array($value) && sizeof($value)>0){
+					$post_data_arr[$key] = $this->multi_dimention_firstlevel($value);
+				}else{
+					$post_data_arr[$key] = mysql_real_escape_string($value);
+				}
 			}
 		}
 		return $post_data_arr;
 	}
+	
+	/*
+	*@Multi Dimention Array First Level 
+	*/
+	function multi_dimention_firstlevel($data=array()){
+	
+		$post_firstlevel_data = array();
+	
+		if(sizeof($data)>0){
+			foreach($data as $key=>$value){
+			    if(is_array($value) && sizeof($data)>0){
+					$post_firstlevel_data[$key] = $this->multi_dimention_nextlevel($value);
+				}else{
+					$post_firstlevel_data[$key] = mysql_real_escape_string($value);
+				}
+			}
+	    }
+		
+		return $post_firstlevel_data;
+	
+	}
+
+
+	/*
+	*@Multi Dimention Array Next Level 
+	*/
+	function multi_dimention_nextlevel($data=array()){
+	
+		$post_nextlevel_data = array();
+	
+		if(sizeof($data)>0){
+			foreach($data as $key=>$value){
+			    if(is_array($value) && sizeof($data)>0){
+					$post_nextlevel_data[$key] = $this->multi_dimention_firstlevel($value);
+				}else{
+					$post_nextlevel_data[$key] = mysql_real_escape_string($value);
+				}
+			}
+	    }
+		
+		return $post_nextlevel_data;
+		
+	}
+	
 }
 
 
