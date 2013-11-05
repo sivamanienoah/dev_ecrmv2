@@ -1,29 +1,6 @@
 <?php $cfg = $this->config->item('crm'); ?>
 <?php $userdata = $this->session->userdata('logged_in_user'); 
-//echo $this->session->userdata('viewlead');
 ?>
-<script>
-$('#excel').click(function() {
-	//mychanges
-	/*
-	var stage = "<?php echo $stage; ?>";
-	var customer = "<?php echo $customer; ?>";
-	var leadassignee = "<?php echo $leadassignee; ?>";
-	var regionname = "<?php echo $regionname; ?>";
-	var countryname = "<?php echo $countryname; ?>";
-	var statename = "<?php echo $statename; ?>";
-	var locname = "<?php echo $locname; ?>";
-	var worth = "<?php echo $worth; ?>";
-	var owner = "<?php echo $owner; ?>";
-	var keyword = "<?php echo $keyword; ?>";
-	*/	
-	var sturl = "welcome/excelExport/";
-	document.location.href = sturl;
-	//$('#advance_search_results').load(sturl);	
-	return false;
-});
-
-</script>
 <div style="text-align:right; padding-bottom:5px; padding-right:0px;" >
 	<a id="excel" class="export-btn">Export to Excel</a>
 </div>
@@ -110,12 +87,4 @@ $('#excel').click(function() {
 </table>
 </div>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript">
-$(function(){
-    $(".lead-table").tablesorter({widthFixed: false, widgets: ['zebra']});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-</script>
+<script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>
