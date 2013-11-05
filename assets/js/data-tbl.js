@@ -4,7 +4,7 @@
 */
 
 $(function() {
-	$('.tbl-data').dataTable({
+	$('.data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
 		"sPaginationType": "full_numbers",
