@@ -32,9 +32,7 @@ class Client_logo extends crm_controller
 		$json['error'] = '';
 		$json['msg'] = '';
 		
-		$dir_type = '/assets/img/client_logo/';
-		
-		$f_dir = dirname(FCPATH) . $dir_type;
+		$f_dir = UPLOAD_LOGO;
 		
 		if (!is_dir($f_dir))
 		{

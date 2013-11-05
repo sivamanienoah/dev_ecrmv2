@@ -2,9 +2,8 @@
 ob_start();
 require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
-//echo baseurl();
 ?>
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <div id="content">
@@ -15,6 +14,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<div id="querylead_form" style="border:0px solid;" >
 		<div class="leadstg_note">Logo Dimensions should be Maximum 300px x 50px (width x height).</div>
 			<form id="client_logo_upload" name="client_logo_upload" method="post" onsubmit="return clientLogoAjaxFileUpload();">
+			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<table class="layout add_query" >
 					<tr>
 						<td width="120">Logo Url :</td>
