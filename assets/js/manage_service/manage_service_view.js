@@ -5,7 +5,7 @@
 
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable 
 
-if(accesspage==1) { 
+if(accesspage==1) {
 	$(function() {
 		$('.data-tbl').dataTable({
 			"aaSorting": [[ 0, "asc" ]],
