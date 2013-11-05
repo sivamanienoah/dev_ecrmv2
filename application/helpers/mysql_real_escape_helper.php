@@ -68,9 +68,7 @@ if ( ! function_exists('real_escape_array'))
 				}
 			}
 	    }
-		
 		return $post_firstlevel_data;
-	
 	}
 
 
@@ -90,13 +88,10 @@ if ( ! function_exists('real_escape_array'))
 				}
 			}
 	    }
-		
 		return $post_nextlevel_data;
-		
 	}
 	
 }
 
 
-/* End of file url_helper.php */
-/* Location: ./system/helpers/url_helper.php */
+/* End of file mysql_real_escape_helper.php */
