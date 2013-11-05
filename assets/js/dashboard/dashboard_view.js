@@ -6,105 +6,108 @@
 
  $(document).ready(function(){
 
-	 if (dashboard_s1!='') { 
-			plot1 = $.jqplot('funnel1', [dashboard_s1], {
-			//title: 'Leads - Current Pipeline',
-			legend: {
-			   show: true,
-			   rendererOptions: {
-				   border: false,
-				   fontSize: '10pt',
-				   location: 'e'
-			   }
-			},
-			seriesDefaults: {
-				shadow: false,
-				renderer: $.jqplot.FunnelRenderer
-			},
-			grid: {
-					drawGridLines: true,        // wether to draw lines across the grid or not.
-					gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
-					background: '#ffffff',      // CSS color spec for background color of grid.
-					drawBorder: false,
-					shadow: false
-			},
-			seriesColors: ["#027997", "#910000", "#bfdde5", "#8bbc21", "#1aadce", "#492970", "#2f7ed8", "#0d233a", "#48596a", "#640cb1", "#eaa228", "#422460"]
-			});
-			$('#funnel1').bind('jqplotDataClick',function (ev, seriesIndex, pointIndex, data) {
-				var formdata              = { 'data':data, 'type':'funnel'}
-				formdata[csrf_token_name] = csrf_hash_token; 
-				$.ajax({
-					type: "POST",
-					url: site_base_url+'dashboard/showLeadsDetails/',
-					dataType:"json",                                                                
-					data: formdata,
-					cache: false,
-					beforeSend:function(){
-						$('#charts_info').empty();
+	if (dashboard_s1!='') 
+	{ 
+		plot1 = $.jqplot('funnel1', [dashboard_s1], {
+		//title: 'Leads - Current Pipeline',
+		legend: {
+		   show: true,
+		   rendererOptions: {
+			   border: false,
+			   fontSize: '10pt',
+			   location: 'e'
+		   }
+		},
+		seriesDefaults: {
+			shadow: false,
+			renderer: $.jqplot.FunnelRenderer
+		},
+		grid: {
+				drawGridLines: true,        // wether to draw lines across the grid or not.
+				gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+				background: '#ffffff',      // CSS color spec for background color of grid.
+				drawBorder: false,
+				shadow: false
+		},
+		seriesColors: ["#027997", "#910000", "#bfdde5", "#8bbc21", "#1aadce", "#492970", "#2f7ed8", "#0d233a", "#48596a", "#640cb1", "#eaa228", "#422460"]
+		});
+		$('#funnel1').bind('jqplotDataClick',function (ev, seriesIndex, pointIndex, data) {
+			var formdata              = { 'data':data, 'type':'funnel'}
+			formdata[csrf_token_name] = csrf_hash_token; 
+			$.ajax({
+				type: "POST",
+				url: site_base_url+'dashboard/showLeadsDetails/',
+				dataType:"json",                                                                
+				data: formdata,
+				cache: false,
+				beforeSend:function(){
+					$('#charts_info').empty();
+					$('#charts_info').show();
+					$('#charts_info').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+				},
+				success: function(html){
+					//alert(html.html);
+					$('#charts_info').empty();
+					$("#charts_info").show();
+					if (html.html == 'NULL') {
+						$('#charts_info').html('');
+					} else {
 						$('#charts_info').show();
-						$('#charts_info').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
-					},
-					success: function(html){
-						//alert(html.html);
-						$('#charts_info').empty();
-						$("#charts_info").show();
-						if (html.html == 'NULL') {
-							$('#charts_info').html('');
-						} else {
-							$('#charts_info').show();
-							$('#charts_info').html(html.html);
-							
-							$('#example_funnel').dataTable( {
-								"aaSorting": [[ 0, "desc" ]],
-								"iDisplayLength": 5,
-								"sPaginationType": "full_numbers",
-								"bInfo": true,
-								"bPaginate": true,
-								"bProcessing": true,
-								"bServerSide": false,
-								"bLengthChange": false,
-								"bSort": true,
-								"bAutoWidth": false,
-								"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
-									var cost = 0
-									for ( var i=0 ; i<aaData.length ; i++ )
-									{
-										var TotalMarks = aaData[i][6]; 
-										//var str = TotalMarks.split(" "); //for USD 1200.00
-										//cost += parseFloat(str[1]);//for USD 1200.00
-										cost += parseFloat(TotalMarks);
-										
-									}
-									var nCells = nRow.getElementsByTagName('td');
-									//nCells[1].innerHTML = "USD " + cost.toFixed(2); //for USD 1200.00
-									nCells[1].innerHTML = cost.toFixed(2);
+						$('#charts_info').html(html.html);
+						
+						$('#example_funnel').dataTable( {
+							"aaSorting": [[ 0, "desc" ]],
+							"iDisplayLength": 5,
+							"sPaginationType": "full_numbers",
+							"bInfo": true,
+							"bPaginate": true,
+							"bProcessing": true,
+							"bServerSide": false,
+							"bLengthChange": false,
+							"bSort": true,
+							"bAutoWidth": false,
+							"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+								var cost = 0
+								for ( var i=0 ; i<aaData.length ; i++ )
+								{
+									var TotalMarks = aaData[i][6]; 
+									//var str = TotalMarks.split(" "); //for USD 1200.00
+									//cost += parseFloat(str[1]);//for USD 1200.00
+									cost += parseFloat(TotalMarks);
+									
 								}
-							});
-							$('html, body').animate({ scrollTop: $("#charts_info").offset().top }, 1000);
-						}
-					}                                                                                       
-				});
-				return false;
+								var nCells = nRow.getElementsByTagName('td');
+								//nCells[1].innerHTML = "USD " + cost.toFixed(2); //for USD 1200.00
+								nCells[1].innerHTML = cost.toFixed(2);
+							}
+						});
+						$('html, body').animate({ scrollTop: $("#charts_info").offset().top }, 1000);
+					}
+				}                                                                                       
 			});
-			
-			$( "#funnelimg" ).click(function() {
-				var imgelem = $('#funnel1').jqplotToImageElem();
-				var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
-				var imgdata = imageSrc;
-				var base_url = site_base_url;		
-			
-				var url = base_url+"dashboard/savePdf/";
-				var form = $('<form action="' + url + '" method="post">' +
-				  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
-				  '</form>');
-				$('body').append(form);
-				$(form).submit();
-			});
+			return false;
+		});
 		
-		} else { 
-			$('#funnel1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
-	    } 
-	});
+		$( "#funnelimg" ).click(function() {
+			var imgelem = $('#funnel1').jqplotToImageElem();
+			var imageSrc = imgelem.src; // this stores the base64 image url in imagesrc
+			var imgdata = imageSrc;
+			var base_url = site_base_url;		
+		
+			var url = base_url+"dashboard/savePdf/";
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input type="hidden" name="img_data" value="' +imgdata+ '" />' +
+			  '</form>');
+			$('body').append(form);
+			$(form).submit();
+		});
+	
+	} 
+	else 
+	{
+		$('#funnel1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+	} 
+});
 
 
 $(document).ready(function(){
