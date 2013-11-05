@@ -30,7 +30,8 @@ require (theme_url().'/tpl/header.php');
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <?php 
 // For Chart Title
-switch ($userdata['level']) {
+switch ($userdata['level']) 
+{
     case 1:
         $chart_title = "Leads By Region Wise";
 	break;
@@ -64,12 +65,12 @@ switch ($userdata['level']) {
 			<div class="pull-left">
 				<h5 class="dash-tlt">Leads - Current Pipeline</h5>
 				<div id="funnel1" class="plot" style="width:450px"></div>
-				<!--<div id="funnelimg"><button type="button">PDF</button></div>-->
+				<!--div id="funnelimg"><button type="button">PDF</button></div-->
 			</div>
 			<div class="pull-right">
 				<h5 class="dash-tlt"><?php echo $chart_title; ?></h5>
 				<div id="pie1" class="plot" style="width:450px"></div>
-				<!--<div id="pieimg"><button type="button">PDF</button></div>-->
+				<!--div id="pieimg"><button type="button">PDF</button></div-->
 			</div>
 			</div>
 			<div id="charts_info" class="charts-info-block" style="display:none;"></div> <!--For funnel and pie charts information-->
@@ -78,7 +79,7 @@ switch ($userdata['level']) {
 				<div class="pull-left dash-section lead_ind_title">
 					<h5>Lead Indicator</h5>
 					<div id="bar1" class="plot" ></div>
-					<!--<div id="barimg"><button type="button">PDF</button></div>-->
+					<!--div id="barimg"><button type="button">PDF</button></div-->
 				</div>
 
 				<div class="pull-right dash-section">
@@ -125,12 +126,12 @@ switch ($userdata['level']) {
 			<div class="pull-left dash-section">
 				<h5>Lead Aging</h5>
 				<div id="line1" class="plot"></div>
-				<!--<div id="lineimg"><button type="button">PDF</button></div>-->
+				<!--div id="lineimg"><button type="button">PDF</button></div-->
 			</div>
 			<div class="pull-right dash-section">
 				<h5>Closed Opportunities - Cumulative Sales: <?php echo $totClosedOppor ." ".$default_cur_name; ?></h5>
 				<div id="line2" class="plot"></div>
-				<!--<div id="line2img"><button type="button">PDF</button></div>-->
+				<!--div id="line2img"><button type="button">PDF</button></div-->
 			</div>
 			</div>
 			<div id="charts_info2" class="charts-info-block"></div>
@@ -462,7 +463,7 @@ $s1 = implode(',', $lead_stage);
 
 //For Leads By RegionWise
 $s2 = "";
-foreach($LeadsRegionwise as $key => $value){
+foreach($LeadsRegionwise as $key => $value) {
 	$s2 .= "['".$key."(".$value." ".$default_cur_name.".)',".$value."],";
 }
 
