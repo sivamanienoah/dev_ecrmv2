@@ -66,9 +66,6 @@
 				});
 				return false;
 			});
-
-			$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-			$(".data-table").tablesorterPager({container: $("#pager4"),positionFixed: false});  
 	});
 	
 	var id='';
@@ -85,4 +82,19 @@
 		return false;	
 	}
 
+$(function() {
+	$('#loc-data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 15,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": false,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,	
+	});
+});
 /////////////////

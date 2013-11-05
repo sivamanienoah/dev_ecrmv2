@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
+
 <div id="content">
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
@@ -55,17 +54,16 @@
             </table>
 		</form>
         
-        <table border="0" cellpadding="0" cellspacing="0" class="data-table">
-            
-            <thead>
+        <table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
+			<thead>
                 <tr>
-                    <th<?php if ($current_sort[0] == 'last_name') echo ' class="selected"' ?>><a href="customers/set_search_order/last_name/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Full Name</a></th>
-                    <th<?php if ($current_sort[0] == 'company') echo ' class="selected"' ?>><a href="customers/set_search_order/company/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Company</a></th>
-                    <th<?php if ($current_sort[0] == 'phone_1') echo ' class="selected"' ?>><a href="customers/set_search_order/phone_1/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Phone</a></th>
-                    <th<?php if ($current_sort[0] == 'email_1') echo ' class="selected"' ?>><a href="customers/set_search_order/email_1/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Email</a></th>
-					<th<?php if ($current_sort[0] == 'region_name') echo ' class="selected"' ?>><a href="customers/set_search_order/region_name/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Region</a></th>
-					<th<?php if ($current_sort[0] == 'country_name') echo ' class="selected"' ?>><a href="customers/set_search_order/country_name/<?php echo  base64_encode(trim($this->uri->uri_string(), '/')) ?>">Country</a></th>
-                    <th> Actions </th>
+                    <th>Full Name</th>
+                    <th>Company</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+					<th>Region</th>
+					<th>Country</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             
@@ -86,43 +84,13 @@
 						</td>
                     </tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="7" align="center">No records available to be displayed!</td>
-                    </tr>
                 <?php } ?>
             </tbody>
-            
         </table>
-		<p><?php echo '&nbsp;'; ?></p>
-		<div id="pager">
-		<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-		<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-		<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-		<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-		<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-		<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-		<select class="pagesize"> 
-			<option selected="selected" value="10">10</option> 
-			<option value="20">20</option> 
-			<option value="30">30</option> 
-			<option value="40">40</option> 
-		</select> 
-		</div>
-        <?php } else{
-	echo "You have no rights to access this page";
-}?>
+        <?php } else {
+			echo "You have no rights to access this page";
+		} ?>
 	</div>
 </div>
-<script>
-$(function() {
-
-	$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
-</script>
+<script type="text/javascript" src="assets/js/tbl-data.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

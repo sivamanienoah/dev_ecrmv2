@@ -3,18 +3,25 @@
  *@Manage Service Controller
 */
 
-// csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
+// csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable 
 
- if(accesspage==1) { 
-		$(function() {
-			$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-			.tablesorterPager({container: $("#pager"),positionFixed: false});
-			$('.data-table tr, .data-table th').hover(
-				function() { $(this).addClass('over'); },
-				function() { $(this).removeClass('over'); }
-			);
+if(accesspage==1) { 
+	$(function() {
+		$('.tbl-data').dataTable({
+			"aaSorting": [[ 0, "asc" ]],
+			"iDisplayLength": 15,
+			"sPaginationType": "full_numbers",
+			"bInfo": true,
+			"bPaginate": true,
+			"bProcessing": true,
+			"bServerSide": false,
+			"bLengthChange": false,
+			"bSort": true,
+			"bFilter": false,
+			"bAutoWidth": false,	
 		});
- } 
+	});
+} 
 
 function checkStatus(id) {
 	var formdata = { 'data':id }

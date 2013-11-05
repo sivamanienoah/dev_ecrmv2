@@ -1030,7 +1030,7 @@ width:100%; background:#fff;}
 
 #querylist li { list-style:none !important; }
 #advanceFilters_pjt table colgroup, #advance_search_results_pjts table colgroup, #ad_filter table colgroup{display:none;}
-#regData-table colgroup, #cntryData-table colgroup, #steData-table colgroup, #locnData-table colgroup{display:none;}
+/*#regData-table colgroup, #cntryData-table colgroup, #steData-table colgroup, #locnData-table colgroup{display:none;}*/
 #paymentfadeout, .dialog-err{color: #FF4400;}
 
 .dashboard-heads th {

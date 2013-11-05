@@ -52,17 +52,23 @@ $(document).ready(function() {
 });
 		return false;
 	});
-	
-$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager2"),positionFixed: false});
+    
 });
 
 $(function() {
-
- 
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
+	$('#cntry-data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 15,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": false,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,	
+	});
 });
+
 /////////////////

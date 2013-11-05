@@ -120,7 +120,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 			</tr>
 		</table>
 	</form>        
-        <table id="steData-table" class="data-table" border="0" cellpadding="0" cellspacing="0" >            
+        <table id="ste-data-tbl" class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
             <thead>
                 <tr>
 					<th>State Name</th>
@@ -128,8 +128,6 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 					<th>Region Name</th>
 					<th>Created Date</th>
 					<th>Created By</th>
-					<!--th>Modified By</th-->
-					<!--th>Modified</th-->
 					<th>Status</th>
 					<th>Action</th>
 					
@@ -157,27 +155,9 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 					</td>
 				</tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="7" align="center">No records available to be displayed!</td>
-                    </tr>
                 <?php } ?>
             </tbody>            
         </table>
-		<p><?php echo '&nbsp;'; ?></p>
-		<div id="pager3">
-	<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-    <a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <span>No. of Records per page:<?php echo '&nbsp;'; ?> </span><select class="pagesize"> 
-        <option selected="selected" value="10">10</option> 
-        <option value="20">20</option> 
-        <option value="30">30</option> 
-        <option value="40">40</option> 
-    </select> 
-		</div>
 	<?php } else {
 				echo "You have no rights to access this page";
 			} 

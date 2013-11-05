@@ -43,7 +43,7 @@
             </table>
 		</form>
         
-        <table border="0" cellpadding="0" cellspacing="0" class="data-table">
+        <table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
             
             <thead>
                 <tr>
@@ -67,10 +67,6 @@
 						</td>
                     </tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="5" align="center">No records available to be displayed!</td>
-                    </tr>
                 <?php } ?>
             </tbody>
             
@@ -80,4 +76,5 @@
 			echo "You have no rights to access this page";
 		}?>
 </div>
+<script type="text/javascript" src="assets/js/tbl-data.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

@@ -45,16 +45,9 @@ $(document).ready(function() {
 				return false;
 				}			
     });
-	$(".data-table").tablesorter({widthFixed: false, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager3"),positionFixed: false});  
 });
 
-$(function() {
-    $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
+
 
 var id='';
 function getCountryst(val,id) {
@@ -62,5 +55,20 @@ function getCountryst(val,id) {
     $('#country_row').load(sturl);	
     return false;	
 }
-	
+
+$(function() {
+	$('#ste-data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 15,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": false,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,	
+	});
+});
 /////////////////

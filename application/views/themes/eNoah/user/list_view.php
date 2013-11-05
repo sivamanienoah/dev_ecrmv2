@@ -49,7 +49,7 @@
 		</form>
         
 		<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
-        <table border="0" cellpadding="0" cellspacing="0" class="data-table">
+        <table border="0" cellpadding="0" cellspacing="0" class="tbl-data dashboard-heads dataTable" style="width:100%">
             
             <thead>
                 <tr>
@@ -89,32 +89,15 @@
 						</td>
                     </tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="6" align="center">No records available to be displayed!</td>
-                    </tr>
                 <?php } ?>
             </tbody>
             
         </table>
-		<p><?php echo '&nbsp;'; ?></p>
-		<div id="pager">
-	<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-    <a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <span>No. of Records per page:<?php echo '&nbsp;'; ?> </span><select class="pagesize"> 
-        <option selected="selected" value="10">10</option> 
-        <option value="20">20</option> 
-        <option value="30">30</option> 
-        <option value="40">40</option> 
-    </select> 
-		</div>
-        <?php } else{
+        <?php } else {
 	echo "You have no rights to access this page";
-}?>
+	}?>
 	</div>
 </div>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
+<script type="text/javascript" src="assets/js/tbl-data.js"></script>
 <script type="text/javascript" src="assets/js/user/list_view.js"></script>

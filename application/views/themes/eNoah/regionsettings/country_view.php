@@ -52,15 +52,6 @@
 							</div>
 						</td>
 						<?php } ?>
-						<td colspan="2">
-						<?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && 1 == 1) { # 1 == 2 do not delete users ?>
-						<!--div class="buttons">
-						    <button type="submit" name="delete_country" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-							Delete country
-						    </button>
-						</div-->
-						<?php } else { echo "&nbsp;"; } ?>
-						</td>
 						<?php } ?>
 					</tr>
 				</table>
@@ -94,15 +85,13 @@
                 </tr>
             </table>
 	</form>        
-        <table id="cntryData-table" class="data-table" border="0" cellpadding="0" cellspacing="0" >            
+        <table id="cntry-data-tbl" class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
 		<thead>
 			<tr>
 			    <th>Country Name</th>
 				<th>Region Name</th>
 				<th>Created Date</th>
 			    <th>Created By</th>
-			    <!--<th>Modified By</th>			    
-			    <th>Modified</th>-->
 			    <th>Status</th>
 			    <th>Actions</th>
 			</tr>
@@ -128,32 +117,15 @@
 			</td>                      
                 </tr>																									
                 <?php } ?>
-                <?php } else { ?>
-                <tr>
-			<td colspan="7" align="center">No records available to be displayed!</td>
-		</tr>
                 <?php } ?>
 		</tbody>            
         </table>
-		<p><?php echo '&nbsp;'; ?></p>
-		<div id="pager2">
-	<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-    <a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-    <span> No. of Records per page: <?php echo '&nbsp;'; ?> </span><select class="pagesize"> 
-        <option selected="selected" value="10">10</option> 
-        <option value="20">20</option> 
-        <option value="30">30</option> 
-        <option value="40">40</option> 
-    </select> 
-		</div>
+
 	<?php } else {
 				echo "You have no rights to access this page";
 			} 
 	?>
 	</div>
 </div>
-</div>    
+</div>
 <script type="text/javascript" src="assets/js/regionsettings/country_view.js"></script>
