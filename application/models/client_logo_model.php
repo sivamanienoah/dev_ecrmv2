@@ -21,7 +21,7 @@ class client_logo_model extends crm_model {
 		}
 		else 
 		{
-			@unlink('assets/img/client_logo/'.$logo_res['filename']);
+			@unlink('crm_data/client_logo/'.$logo_res['filename']);
 			$this->db->where('id', 1);
 			$this->db->update("{$this->cfg['dbpref']}" . 'client_logo', $data);		
 		}
@@ -47,7 +47,7 @@ class client_logo_model extends crm_model {
 		} 
 		else 
 		{
-			@unlink('assets/img/client_logo/'.$logo_res['filename']);
+			@unlink('crm_data/client_logo/'.$logo_res['filename']);
 			return $this->db->truncate("{$this->cfg['dbpref']}" . 'client_logo');
 		}
 	}

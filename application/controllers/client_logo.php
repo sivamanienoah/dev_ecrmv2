@@ -32,14 +32,19 @@ class Client_logo extends crm_controller
 		$json['error'] = '';
 		$json['msg'] = '';
 		
-		$f_dir = UPLOAD_LOGO;
-		
+		$f_dir = UPLOAD_PATH;
 		if (!is_dir($f_dir))
 		{
 			mkdir($f_dir);
 			chmod($f_dir, 0777);
 		}
 		
+		$f_dir = $f_dir .'client_logo/';
+		if (!is_dir($f_dir))
+		{
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
 		$logo_name = time().'_'.$_FILES['logo_file']['name'];
 		
 		if (isset($_FILES['logo_file']) && is_uploaded_file($_FILES['logo_file']['tmp_name']))

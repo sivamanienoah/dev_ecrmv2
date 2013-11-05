@@ -68,7 +68,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			if (getClientLogo()) {
 				$cilentLogo = getClientLogo();
 			?>
-			<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="assets/img/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
+			<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="crm_data/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
 			<?php	
 			} else {
 			?>

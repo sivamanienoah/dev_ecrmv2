@@ -43,7 +43,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<div id="files">
 			<?php 
 				if (!empty($get_client_logo['filename'])) 
-				echo "<img src='assets/img/client_logo/".$get_client_logo['filename']."' />";
+				echo "<img src='crm_data/client_logo/".$get_client_logo['filename']."' />";
 			?>
 		</div>
 
