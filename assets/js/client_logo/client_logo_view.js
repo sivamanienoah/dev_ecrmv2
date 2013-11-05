@@ -43,7 +43,7 @@ function clientLogoAjaxFileUpload() {
 						if(typeof(data.file_name) != 'undefined')
 						{
 							if(data.file_name != 'undefined') {
-								fname = '<img src=assets/img/client_logo/'+data.file_name+' alt="Smiley face" >';
+								fname = '<img src=crm_data/client_logo/'+data.file_name+' alt="Smiley face" >';
 							}
 						} else {
 							fname = 'File Not Attached';
