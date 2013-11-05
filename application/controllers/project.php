@@ -277,7 +277,7 @@ class Project extends crm_controller {
 			else 
 			{
 				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $_POST['job_id'];
+				$ins['jobid_fk'] = $this->input->post('job_id');
 				$ins['date_created'] = date('Y-m-d H:i:s');
 				$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
