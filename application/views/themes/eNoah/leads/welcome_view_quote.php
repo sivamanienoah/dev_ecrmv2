@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
-<!--script type="text/javascript" src="assets/js/blockui.v2.js"></script-->
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
@@ -10,7 +9,7 @@
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
-<!--Code Added for the Pagination in Comments Section- Starts Here-->
+<!--Code Added for the Pagination in Comments Section-Starts Here-->
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#lead_log_list")
