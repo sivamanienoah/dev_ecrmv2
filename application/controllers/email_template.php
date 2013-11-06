@@ -85,7 +85,7 @@ class Email_template extends CRM_Controller {
             } else {
 				$ins_item = $update_data;
 				
-				$ins_item['email_templatesubject'] = '<tr><td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">'.$ins_item['email_templatesubject'].'</h3></td></tr>';
+				$ins_item['email_templatesubject'] = '<tr><td style="padding:13px 1px 1px 1px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">'.$ins_item['email_templatesubject'].'</h3></td></tr>';
 
                 $this->email_template_model->insert_row('email_template', $ins_item);
                 $this->session->set_flashdata('confirm', array('Email Template Added!'));
