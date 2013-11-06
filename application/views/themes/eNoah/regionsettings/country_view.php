@@ -85,7 +85,7 @@
                 </tr>
             </table>
 	</form>        
-        <table id="cntry-data-tbl" class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
+        <table class="cntry-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
 		<thead>
 			<tr>
 			    <th>Country Name</th>

@@ -134,7 +134,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
                 </tr>
             </table>
 	</form>        
-        <table id="loc-data-tbl" class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
+        <table class="loc-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
             <thead>
                 <tr>
                     <th>Location Name</th>
