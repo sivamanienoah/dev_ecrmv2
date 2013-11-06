@@ -10,9 +10,6 @@ class Request extends crm_controller {
 		parent::__construct();
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('email_template_model');
-		$this->load->library('email');
-		$this->email->initialize($config);
-		$this->email->set_newline("\r\n");
 	}
     
     function index()
@@ -375,7 +372,6 @@ function add_job_task($update = 'NO', $random = 'NO')
 	{	
 		$this->load->model('user_model');
 		$this->load->library('email');
-		$this->email->initialize($config);
 		$errors = array();
 		
 		if ($random != 'NO')
@@ -529,7 +525,6 @@ function add_job_task($update = 'NO', $random = 'NO')
 				$record['date'] = date('Y-m-d H:i:s');
 				$record['event_data'] = json_encode($old_task);
 				$this->db->insert($this->cfg['dbpref'].'tasks_track', $record);
-				$this->email->initialize($config);
 				$from_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				$arrEmails = $this->config->item('crm');
 				$arrSetEmails=$arrEmails['director_emails'];
@@ -595,9 +590,6 @@ function add_job_task($update = 'NO', $random = 'NO')
 		
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					
-				
-					$this->email->initialize($config);
 
 					$subject = 'New Task Notification';
 					$from = $this->userdata['email'];;
