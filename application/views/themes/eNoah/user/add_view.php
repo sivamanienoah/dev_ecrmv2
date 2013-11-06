@@ -168,11 +168,6 @@
 				<tr><td><td>&nbsp;</td></td></tr>				
                 <tr>
 					<td>&nbsp;</td>
-					<?php //if (isset($this_user) && $userdata['userid'] == $this_user) { ?>
-					<!--<td colspan="3">
-						Active User cannot be modified! Please use my account to update your details.
-					</td>-->
-					<?php //} else { ?>
 					<td>
                         <div class="buttons">
 							<button type="submit" onclick="return last();" name="update_user" class="positive" id="checkemail">				
