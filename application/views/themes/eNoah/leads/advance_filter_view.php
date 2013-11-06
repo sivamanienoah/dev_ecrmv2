@@ -19,7 +19,7 @@
 	<th>Expected Worth</th>
 	<th>Lead Stage</th>
 	<th>Lead Indicator</th>
-	<th>Status</th>
+	<th width="50">Status</th>
 	
 	</tr>
 	</thead>
@@ -58,16 +58,16 @@
 						switch ($filter_result['lead_status'])
 						{
 							case 1:
-								echo $status = 'Active';
+								echo $status = '<span class=label-wip>Active</span>';
 							break;
 							case 2:
-								echo $status = 'On Hold';
+								echo $status = '<span class=label-warning>On Hold</span>';
 							break;
 							case 3:
-								echo $status = 'Dropped';
+								echo $status = '<span class=label-inactive>Dropped</span>';
 							break;
 							case 4:
-								echo $status = 'Closed';
+								echo $status = '<span class=label-success>Closed</span>';
 							break;
 						}
 					?>
