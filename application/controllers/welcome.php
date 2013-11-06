@@ -720,7 +720,7 @@ HDOC;
 					$inserts['userid_fk'] = $this->userdata['userid'];
 					$inserts['jobid_fk'] = $jobid;
 					$inserts['date_created'] = date('Y-m-d H:i:s');
-					$inserts['log_content'] = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead No.' .$lead_det['invoice_no']. ' ';
+					$inserts['log_content'] = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead .' .word_limiter($lead_det['job_title'], 4). ' ';
 					
 					// inset the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $inserts);
@@ -762,7 +762,7 @@ HDOC;
 					$inserts['userid_fk'] = $this->userdata['userid'];
 					$inserts['jobid_fk'] = $jobid;
 					$inserts['date_created'] = date('Y-m-d H:i:s');
-					$inserts['log_content'] = "Lead Owner has been Re-assigned to: " . $lead_owner[0]['first_name'] .' '.$lead_owner[0]['last_name'] .'<br />'. 'For Lead No.' .$lead_det['invoice_no']. ' ';
+					$inserts['log_content'] = "Lead Owner has been Re-assigned to: " . $lead_owner[0]['first_name'] .' '.$lead_owner[0]['last_name'] .'<br />'. 'For Lead ' .word_limiter($lead_det['job_title'], 4). ' ';
 					// insert the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $inserts);
 					
@@ -853,9 +853,9 @@ HDOC;
 					$ins['date_created'] = date('Y-m-d H:i:s');
 					
 					$status_res = $this->welcome_model->get_lead_stg_name($status);
-					$ins['log_content'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - ' .$lead_det['job_title']. ' ';
+					$ins['log_content'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - ' .word_limiter($lead_det['job_title'], 4). ' ';
 					
-					$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$jobid.'>' .$lead_det['job_title']. ' </a>';
+					$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$jobid.'>' .word_limiter($lead_det['job_title'], 4). ' </a>';
 					
 					// insert the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $ins);
@@ -1088,7 +1088,7 @@ HDOC;
 					$delete_query = $this->welcome_model->delete_row('lead_query', 'job_id', $id);
 					
 					# Lead Delete Mail Notification
-					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead No.' .$lead_det['invoice_no']. ' ';
+					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead ' .word_limiter($lead_det['job_title'], 4). ' ';
 
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -1156,8 +1156,8 @@ HDOC;
 				$ins['userid_fk'] = $this->userdata['userid'];
 				$ins['jobid_fk'] = $jobid;
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = 'The Lead "'.$lead_det['job_title'].'" is Successfully Moved to Project.';
-				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'> ' .$lead_det['job_title'].' </a> is Successfully Moved to Project.';
+				$ins['log_content'] = 'The Lead "'.word_limiter($lead_det['job_title'], 4).'" is Successfully Moved to Project.';
+				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'> ' .word_limiter($lead_det['job_title'], 4).' </a> is Successfully Moved to Project.';
 
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
@@ -1440,7 +1440,6 @@ HDOC;
 
 					}
 
-					
 					foreach($send_to as $recps) 
 					{
 						$arrRecs[]=$recps[0];
