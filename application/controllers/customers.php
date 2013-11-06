@@ -10,6 +10,7 @@ class Customers extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('customer_model');
         $this->load->model('regionsettings_model');
+		$this->load->model('email_template_model');
         $this->load->library('validation');
     }
     
@@ -39,8 +40,8 @@ class Customers extends crm_controller {
 		redirect(base64_decode($uri));
 	}
     
-    function add_customer($update = false, $id = false, $ajax = false) {
-		
+    function add_customer($update = false, $id = false, $ajax = false) 
+	{
 		$data['regions'] = $this->regionsettings_model->region_list($limit=false, $search=false);
 
         $rules['first_name'] = "trim|required";
@@ -105,7 +106,8 @@ class Customers extends crm_controller {
             }
         }
 		
-		if ($this->validation->run() == false) {
+		if ($this->validation->run() == false) 
+		{
 			
             if ($ajax == false) {
                 $this->load->view('customer_add_view', $data);
@@ -115,7 +117,9 @@ class Customers extends crm_controller {
                 echo json_encode($json);
             }
 			
-		} else {
+		} 
+		else 
+		{
 			
 			// all good
             foreach($fields as $key => $val) 
@@ -126,191 +130,109 @@ class Customers extends crm_controller {
 				}
             }
 
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-                
-			// set exported back to NULL so it will be exported to addressbook
-			$update_data['exported'] = NULL;
-			
-			//update
-			if ($this->customer_model->update_customer($id, $update_data)) {
-			
-				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-				$dis['date_created'] = date('Y-m-d H:i:s');
-				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) 
+			{
+				// set exported back to NULL so it will be exported to addressbook
+				$update_data['exported'] = NULL;
 				
-				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body { margin: 0px; }
-					</style>
-					</head>
+				//update
+				if ($this->customer_model->update_customer($id, $update_data)) 
+				{
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$dis['date_created'] = date('Y-m-d H:i:s');
+					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Customer Details Modification Notification</h3></td>
-					  </tr>
-					  <tr>
-						<td>
-						<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-						<p style="background: none repeat scroll 0 0 #4B6FB9;
-						border-bottom: 1px solid #CCCCCC;
-						color: #FFFFFF;
-						margin: 0;
-						padding: 4px;">
-							<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-						<p style="padding: 4px;">Customer Details Modified -> '.$update_data['first_name']. '  '.$update_data['last_name']. ' - '.$update_data['company']. '<br /><br />
-							'.$this->userdata['signature'].'<br />
-						</p>
-					</div>
-					</td>
-					  </tr>
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+					$mangement_email = $arrEmails['management_emails'];
+					$mgmt_mail = implode(',',$mangement_email);		
+					$admin_mail=implode(',',$arrSetEmails);
+					$subject='Customer Details Modification Notification';
 
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';	
+					//email sent by email template
+					$param = array();
 					
-				$from=$this->userdata['email'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				$mangement_email = $arrEmails['management_emails'];
-				$mgmt_mail = implode(',',$mangement_email);		
-				$admin_mail=implode(',',$arrSetEmails);
-				$subject='Customer Details Modification Notification';
-				$this->load->library('email');
-				$this->email->set_newline("\r\n");
-				$this->email->from($from,$user_name);
-				$this->email->to($admin_mail.','.$mgmt_mail);
-				$this->email->subject($subject);
-				$this->email->message($log_email_content);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
 
-				$this->email->send(); 
-			
-				$this->session->set_flashdata('confirm', array('Customer Details Updated!'));
-				redirect('customers/add_customer/update/' . $id);
-			}
-                
-		} else {
-                //insert
-			if ($newid = $this->customer_model->insert_customer($update_data)) 
-			{	
-			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-			$dis['date_created'] = date('Y-m-d H:i:s');
-			$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-			
-			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-				<html xmlns="http://www.w3.org/1999/xhtml">
-				<head>
-				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-				<title>Email Template</title>
-				<style type="text/css">
-				body { margin: 0px; }
-				</style>
-				</head>
+					$param['to_mail'] = $admin_mail.','.$mgmt_mail;
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $from;
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Customer Details Modification Notification";
+					$param['subject'] = $subject;
 
-				<body>
-				<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-				<tr><td bgcolor="#FFFFFF">
-				<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-				  <tr>
-					<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-				  </tr>
-				  <tr>
-					<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Customer Creation Notification</h3></td>
-				  </tr>
-
-				  <tr>
-					<td>
-					<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-					<p style="background: none repeat scroll 0 0 #4B6FB9;
-					border-bottom: 1px solid #CCCCCC;
-					color: #FFFFFF;
-					margin: 0;
-					padding: 4px;">
-						<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-					<p style="padding: 4px;">New Customer Created -'.$update_data['first_name']. '  '.$update_data['last_name']. ' - '.$update_data['company']. '<br /><br />
-						'.$this->userdata['signature'].'<br />
-					</p>
-				</div>
-				</td>
-				  </tr>
-
-				   <tr>
-					<td>&nbsp;</td>
-				  </tr>
-				  <tr>
-					<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-				  </tr>
-				</table>
-				</td>
-				</tr>
-				</table>
-				</body>
-				</html>';	
-							
-				$from=$this->userdata['email'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				$mangement_email = $arrEmails['management_emails'];
-				$mgmt_mail = implode(',',$mangement_email);
-				$admin_mail=implode(',',$arrSetEmails);		
-				$varEmailRecipients=implode(',',$arrSetEmails);
-				$subject='New Customer Creation Notification';
-				$this->load->library('email');
-				$this->email->set_newline("\r\n");
-				$this->email->from($from,$user_name);
-				$this->email->to($mgmt_mail);
-				$this->email->bcc($admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($log_email_content);
-
-				$this->email->send(); 
-	  
-				if ($ajax == false) {
-					$this->session->set_flashdata('confirm', array('New Customer Added!'));
-					redirect('customers/add_customer/update/' . $newid);
-				} else {
-					$json['error'] = false;
-					$json['custid'] = $newid;
-					$json['cust_name1'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'] . ' - ' . $pst_data['company'];
-					$json['cust_name'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'];
-					$json['cust_email'] = $pst_data['email_1'];
-					$json['cust_company'] = $pst_data['company'];
-					$json['cust_reg'] = $pst_data['add1_region'];
-					$json['cust_cntry'] = $pst_data['add1_country'];
-					$json['cust_ste'] = $pst_data['add1_state'];
-					$json['cust_locn'] = $pst_data['add1_location'];
-					echo json_encode($json);
+					$this->email_template_model->sent_email($param);
+				
+					$this->session->set_flashdata('confirm', array('Customer Details Updated!'));
+					redirect('customers');
 				}
+					
+			} 
+			else 
+			{
+				//insert
+				if ($newid = $this->customer_model->insert_customer($update_data)) 
+				{	
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$dis['date_created'] = date('Y-m-d H:i:s');
+					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));	
 
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+					$mangement_email = $arrEmails['management_emails'];
+					$mgmt_mail = implode(',',$mangement_email);
+					$admin_mail=implode(',',$arrSetEmails);		
+					$varEmailRecipients=implode(',',$arrSetEmails);
+					$subject='New Customer Creation Notification';
+
+					//email sent by email template
+					$param = array();
+					
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $mgmt_mail;
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $from;
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "New Customer Creation";
+					$param['subject'] = $subject;
+
+					$this->email_template_model->sent_email($param);
+
+					if ($ajax == false) 
+					{
+						$this->session->set_flashdata('confirm', array('New Customer Added!'));
+						redirect('customers');
+					} 
+					else 
+					{
+						$json['error'] = false;
+						$json['custid'] = $newid;
+						$json['cust_name1'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'] . ' - ' . $pst_data['company'];
+						$json['cust_name'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'];
+						$json['cust_email'] = $pst_data['email_1'];
+						$json['cust_company'] = $pst_data['company'];
+						$json['cust_reg'] = $pst_data['add1_region'];
+						$json['cust_cntry'] = $pst_data['add1_country'];
+						$json['cust_ste'] = $pst_data['add1_state'];
+						$json['cust_locn'] = $pst_data['add1_location'];
+						echo json_encode($json);
+					}
+				}
 			}
-
-		}
-
 		}
     }
 	
-	function email_1_check($email) {
-		if ($this->customer_model->primary_mail_check($email) == 0) {
+	function email_1_check($email) 
+	{
+		if ($this->customer_model->primary_mail_check($email) == 0) 
+		{
 			return true;			
-		} else {
+		} 
+		else 
+		{
 			$this->validation->set_message('email_1_check', 'The %s is already exist.');
 			return false;
 		}
@@ -547,8 +469,8 @@ class Customers extends crm_controller {
 	}
 	
 	//checking primary_mail in customer table
-	function Check_email($mail){
-		$res = $this->customer_model->primary_mail_check($mail);
+	function Check_email() {
+		$res = $this->customer_model->primary_mail_check($this->input->post('email'));
 		if($res == 0)
 		echo 'userOk';
 		else
