@@ -496,8 +496,8 @@ class User extends crm_controller {
 	 */
 	public function loadCountrys()
 	{
-		$data = real_escape_array($this->input->post()); 
-		$this->user_model->get_loadCountrysByRegionid($data['region_id']);
+		$data = real_escape_array($this->input->post());
+		$this->user_model->get_loadCountrysByRegionid($data['region_id'][0]);
 	}
 	
 	/*
