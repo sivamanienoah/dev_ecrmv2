@@ -24,7 +24,7 @@ class User_model extends crm_model {
 	*@Method  user_list
 	*/
 	
-    public function user_list($offset, $search, $order_field = 'last_name', $order_type = 'asc') 
+    public function user_list($offset, $search) 
 	{
         if ($search != false) 
 		{	
