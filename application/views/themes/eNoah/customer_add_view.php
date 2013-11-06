@@ -15,12 +15,6 @@ echo '<input type="hidden" name="varEdit" id="varEdit" value="update" />';
 $usernme = $this->session->userdata('logged_in_user');
 ?>
 <div id="content">
-    <!--<div id="left-menu">
-		<a href="customers/">Back To Customer List</a>
-		<?php #if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-		<a href="customers/view_subscriptions/<?php #echo $this->uri->segment(4); ?>">Subscriptions</a>
-		<?php #} ?>
-	</div>--> <?php //echo '<pre>'; print_r($_POST); echo '<?pre>'; ?>
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
     	<form id="formone" action="<?php echo  $this->uri->uri_string() ?>" method="post">
@@ -179,17 +173,6 @@ $usernme = $this->session->userdata('logged_in_user');
 						</div>
                     </td>
 					<td>&nbsp;</td>
-                    <!--<td>
-                        <?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && $userdata['level'] < 2) { ?>
-						<?php if ($this->session->userdata('delete')==1) { ?>
-                        <div class="buttons">
-                            <button type="submit" name="delete_customer" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-                                Delete Customer
-                            </button>
-                        </div>
-						<?php } ?>
-                        <?php } else { echo "&nbsp;"; } ?>
-                    </td>-->
 				</tr>
             </table>
 		</form>
