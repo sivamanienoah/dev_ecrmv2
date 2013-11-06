@@ -91,7 +91,7 @@ class email_template_model extends crm_model {
 		if(count($data['email_data'])>0) {
 			foreach($data['email_data'] as $key=>$value) {
 				$key = "{{".$key."}}";
-				$email_content = str_replace($key,$value,$email_content);
+				$email_content = str_replace($key, $value, $email_content);
 			}
 		}
 		
