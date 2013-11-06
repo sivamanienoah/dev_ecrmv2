@@ -13,8 +13,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						Add New Template
 					</button>
 				</div>
-				
-				<div class="buttons pull-right" style="padding-bottom:10px;">
+				<div class="buttons pull-right" style="padding:0 10px;">
 					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>email_template/add_template_header'">
 						Template Header & Footer
 					</button>
@@ -25,7 +24,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		if($this->session->userdata('accesspage')==1) 
 		{ 
 		?>
-		<table border="0" cellpadding="0" cellspacing="0" class="dashboard-heads dataTable" style="width:100%">
+		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 			<thead>
 				<tr>
 					<th>S.No</th>
@@ -41,7 +40,11 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php foreach($email_template as $emailtemp) { ?>
 				<tr>
 					<td><?php echo $sno; ?></td>
-					<td><?php echo $emailtemp['email_templatename']; ?></td>
+					<td>
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/"><?php echo $emailtemp['email_templatename']; ?> </a> 
+						<?php } else { echo $emailtemp['email_templatename']; } ?> 		
+					</td>
 					<td><?php echo strip_tags($emailtemp['email_templatesubject']); ?></td>
 					<td><?php echo $emailtemp['email_templatefrom']; ?></td>
 					<td><?php echo $emailtemp['modified_on']; ?></td>
@@ -68,6 +71,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		?>
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
+<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
