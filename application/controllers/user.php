@@ -10,6 +10,7 @@ class User extends crm_controller {
 		$this->login_model->check_login();
         $this->load->model('user_model');
         $this->load->model('role_model');
+		$this->load->model('email_template_model');
         $this->load->library('validation');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
@@ -21,16 +22,8 @@ class User extends crm_controller {
     
     public function index($limit = 0, $search = false)
 	{
-        $default = array('last_name', 'asc');
-		if (!$this->session->userdata('user_sort'))
-		{
-			$this->session->set_userdata('user_sort', $default);
-		}
-		$current = $this->session->userdata('user_sort');
-		$data['user_sort'] = $current;
-		
 		$this->login_model->check_login();
-        $data['customers'] = $this->user_model->user_list($limit, $search, $current[0], $current[1]);
+        $data['customers'] = $this->user_model->user_list($limit, $search);
         
         if ($search == false) {
             $config['base_url'] = $this->config->item('base_url') . 'user/index/';
@@ -44,14 +37,14 @@ class User extends crm_controller {
 	*@Add User
 	*
 	*/
-
     public function add_user($update = false, $id = false, $ajax = false)
 	{
 		$post_data =	real_escape_array($this->input->post());
 	
         $rules['first_name']   = "trim|required";
 		$rules['last_name']    = "trim|required";
-        if ($this->input->post('new_user') || $this->input->post('update_password')) {
+        if ($this->input->post('new_user') || $this->input->post('update_password')) 
+		{
             $rules['password'] = "trim|required|min_length[6]";
         }
         $rules['level']   = "required|callback_level_check";
