@@ -76,7 +76,7 @@ class Email_template extends CRM_Controller {
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 				$updt_item = $update_data;
 				
-				$updt_item['email_templatesubject'] = '<tr><td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">'.$updt_item['email_templatesubject'].'</h3></td></tr>';
+				$updt_item['email_templatesubject'] = '<tr><td style="padding:13px 1px 1px 1px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">'.$updt_item['email_templatesubject'].'</h3></td></tr>';
 				
                 if ($this->email_template_model->update_row('email_template', array('email_tempid' => $id), $updt_item)) {
                     $this->session->set_flashdata('confirm', array('Email Template Updated!'));
