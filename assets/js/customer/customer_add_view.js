@@ -66,9 +66,15 @@ $(document).ready(function() {
     });
     function getResult(username){
         var baseurl = $('.hiddenUrl').val();
+		var email = username
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		params['email'] = username;
 		$.ajax({
-	    url : baseurl + 'customers/Check_email/'+username,
+			type: "POST",
+			url : baseurl + 'customers/Check_email/',
             cache : false,
+			data : params,
             success : function(response){
                 $('.checkUser').hide();
                 if(response == 'userOk') {
