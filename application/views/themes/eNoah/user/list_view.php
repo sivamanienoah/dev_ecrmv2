@@ -7,7 +7,6 @@
         <h2>User Database</h2>
 
         <form action="user/search/" method="post" id="cust_search_form">
-			
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
             <table border="0" cellpadding="0" cellspacing="0" class="search-table">
@@ -95,7 +94,7 @@
         </table>
         <?php } else {
 	echo "You have no rights to access this page";
-	}?>
+	} ?>
 	</div>
 </div>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
