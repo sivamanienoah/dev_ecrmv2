@@ -1,4 +1,5 @@
 <?php
+$this->load->helper('text');
 $cfg = $this->config->item('crm');
 
 $vid=$this->session->userdata['logged_in_user']['role_id'];

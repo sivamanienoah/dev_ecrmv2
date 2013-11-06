@@ -1400,7 +1400,7 @@ $(function(){
 				.children('input[type=checkbox]:first').attr('checked', true);
 		} else {
 			$('#additional_client_emails').val('');
-			$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
+			$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
 				.slideUp(400);
 		}
 	});

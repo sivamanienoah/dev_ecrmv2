@@ -13,6 +13,7 @@ class Project extends crm_controller {
 		$this->load->model('project_model');
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
+		$this->load->model('email_template_model');
 		$this->load->helper('text');
 		$this->load->library('email');
 		$this->email->set_newline("\r\n");
@@ -405,90 +406,38 @@ class Project extends crm_controller {
 		$project_name = $this->project_model->get_lead_det($jobid);
 		$project_name['job_title'] = word_limiter($project_name['job_title'], 4);
 		
-		$log_email_content = '';
-		$log_email_content .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
-
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
-  </tr>
-
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>Hi </span>&nbsp;'.$first_name.',</p>
-    <p style="padding: 4px;"><br /><br />';
-	if($mail_type == "insert")
-	{
-		$log_email_content .= 'You are included as one of the project team members in the project - '.$project_name['job_title'].'<br />';
-	}
-	else 
-	{
-		$log_email_content .= 'You are moved from this project - '.$project_name['job_title'].'<br />';
-	}
-	$log_email_content .='<br /><br />
-		Regards<br />
-		<br />
-		Webmaster
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';			
-		$successful = '';
-		if($mail_type == "insert")
-		{
+		if($mail_type == "insert") {
 			$log_subject = 'New Project Assignment Notification';
-		}
-		else
-		{
+		} else {
 			$log_subject = 'Project Removal Notification';
 		}
 		
+		if($mail_type == "insert") {
+			$log_email_content = 'You are included as one of the project team members in the project - '.$project_name['job_title'].'<br />';
+		} else {
+			$log_email_content = 'You are moved from this project - '.$project_name['job_title'].'<br />';
+		}
+		
+		$successful = '';
+		
 		$send_to = $mail;
-		$this->email->from('webmaster@enoahisolution.com','Webmaster');
-		$this->email->to($send_to);
-		$this->email->subject($log_subject);
-		$this->email->message($log_email_content);
-		if($this->email->send()){
+		
+		$print_fancydate = date('l, jS F y h:iA', strtotime(date('Y-m-d H:i:s')));
+		
+		//email sent by email template
+		$param = array();
+
+		$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$first_name, 'log_email_content'=>$log_email_content);
+
+		$param['to_mail'] = $send_to;
+		$param['from_email'] = 'webmaster@enoahisolution.com';
+		$param['from_email_name'] = 'Webmaster';
+		$param['template_name'] = "Assign / Remove Project Members";
+		$param['subject'] = $log_subject;
+		
+		if($this->email_template_model->sent_email($param)){
 			$successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
-
 	}
 
 	/*
@@ -555,69 +504,15 @@ body {
 	}
 	
 	public function sent_to_manager($email, $first_name, $project_name, $mail_type) 
-	{	  
-		$log_email_content = '';
-		$log_email_content .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body { margin: 0px; }
-</style>
-</head>
-
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
-  </tr>
-
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>Hi </span>&nbsp;'.$first_name.',</p>
-    <p style="padding: 4px;">';
-	if($mail_type == "new_manager")
-	{
-		$log_email_content .= '<p style="font-family:Arial, Helvetica, sans-serif; margin-left:18px;">You have been assigned as the Project Manager for the project - '.$project_name.'</p><br />';
-	}
-	else 
-	{
-		$log_email_content .= '<p style="font-family:Arial, Helvetica, sans-serif; margin-left:18px;">You are moved from this project - '.$project_name.'</p><br />';
-	}
-	$log_email_content .='
-		&nbsp;&nbsp;&nbsp;Regards<br />
-		&nbsp;&nbsp;&nbsp;Webmaster
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';
+	{	
+		if($mail_type == "new_manager")
+		{
+			$email_content = "You have been assigned as the Project Manager for the project - '".$project_name."' ";
+		}
+		else 
+		{
+			$email_content = "You are moved from this project - '".$project_name."' ";
+		}
 		
 		if($mail_type == "new_manager")
 		{
@@ -628,14 +523,24 @@ body { margin: 0px; }
 			$log_subject = 'Project Removal Notification';
 		}
 		
-		//$set = $this->get_user_mail(); 
+		$print_fancydate = date('l, jS F y h:iA', strtotime(date('Y-m-d H:i:s')));
+		
 		$send_to = $email;
-		$this->email->from('webmaster@enoahisolution.com','Webmaster');
-		$this->email->to($send_to);
-		$this->email->subject($log_subject);
-		$this->email->message($log_email_content);
-		if($this->email->send()){
-			 echo $successful .= 'This log has been emailed to:<br />'.$send_to;
+		
+		//email sent by email template
+		$param = array();
+
+		$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$first_name, 'email_content'=>$email_content);
+
+		$param['to_mail'] = $send_to;
+		$param['from_email'] = 'webmaster@enoahisolution.com';
+		$param['from_email_name'] = 'Webmaster';
+		$param['template_name'] = "Project Assignment / Removal Notification";
+		$param['subject'] = $log_subject;
+		
+		if($this->email_template_model->sent_email($param))
+		{
+			echo $successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
 	}
 	
@@ -1608,63 +1513,18 @@ body { margin: 0px; }
 					
 					$log_subject = "eSmart Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
 					
-				$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
+					//email sent by email template
+					$param = array();
 
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
-  </tr>
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
 
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
-    <p style="padding: 4px;">'.
-        $data_log['log_content'].'<br /><br />
-		This log has been emailed to:<br />
-		'.$received_by.'<br /><br />
-		'.$this->userdata['signature'].'<br />
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';												
-
+					$param['to_mail'] = $senders;
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $user_data[0]['email'];
+					$param['from_email_name'] = $user_data[0]['first_name'];
+					$param['template_name'] = "Project Notification Message";
+					$param['subject'] = $log_subject;
+					
 					$json['debug_info'] = '';
 					
 					if (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name']))
@@ -1699,81 +1559,26 @@ body {
 					{
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-						
-						$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Email Template</title>
-<style type="text/css">
-body {
-	margin: 0px;
-}
-</style>
-</head>
-
-<body>
-<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-<tr><td bgcolor="#FFFFFF">
-<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-  <tr>
-    <td style="padding:15px; border-bottom:2px #5a595e solid;">
-		<img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" />
-	</td>
-  </tr>
-  <tr>
-    <td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Project Notification Message</h3></td>
-  </tr>
-
-  <tr>
-    <td>
-	<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-    <p style="background: none repeat scroll 0 0 #4B6FB9;
-    border-bottom: 1px solid #CCCCCC;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 4px;">
-        <span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$client[0]['first_name'].'&nbsp;'.$client[0]['last_name'].'</p>
-    <p style="padding: 4px;">'.
-        $data_log['log_content'].'<br /><br />
-		This log has been emailed to:<br />
-		'.$received_by.'<br /><br />
-		'.$this->userdata['signature'].'<br />
-    </p>
-</div>
-</td>
-  </tr>
-
-   <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-  </tr>
-</table>
-</td>
-</tr>
-</table>
-</body>
-</html>';						
-	
 					}
-
-					$this->email->from($user_data[0]['email'], $user_data[0]['first_name']);
-
 					foreach($send_to as $recps) 
 					{
 						$arrRecs[]=$recps[0];
 					}
 					$senders=implode(',',$arrRecs);
-					$this->email->to($senders);
-					$this->email->subject($log_subject);
-					$this->email->message($log_email_content);
-					if(!empty($full_url_path))
-					{
-						$this->email->attach($full_file_path);
-					}
-					if($this->email->send())
+
+					//email sent by email template
+					$param = array();
+
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $senders;
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $user_data[0]['email'];
+					$param['from_email_name'] = $user_data[0]['first_name'];
+					$param['template_name'] = "Project Notification Message";
+					$param['subject'] = $log_subject;
+
+					if($this->email_template_model->sent_email($param))
 					{
 						$successful .= trim($received_by, ', ');
 					}

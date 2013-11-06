@@ -109,7 +109,7 @@
 	var client_emails = true;
 	if ($('#email_to_customer').is(':checked')) {
 		client_emails = false;
-		$('#multiple-client-emails').children('input[type=checkbox])').each(function(){
+		$('#multiple-client-emails').children('input[type=checkbox]').each(function(){
 			if ($(this).is(':checked')){
 				client_emails = true;
 			}
@@ -1105,7 +1105,7 @@
 				.children('input[type=checkbox]:first').attr('checked', true);
 		} else {
 			$('#additional_client_emails').val('');
-			$('#multiple-client-emails').children('input[type=checkbox])').attr('checked', false).end()
+			$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
 				.slideUp(400);
 		}
 	});

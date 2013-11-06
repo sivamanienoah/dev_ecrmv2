@@ -9,6 +9,7 @@ class Request extends crm_controller {
 	{
 		parent::__construct();
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->load->model('email_template_model');
 		$this->load->library('email');
 		$this->email->initialize($config);
 		$this->email->set_newline("\r\n");
@@ -547,142 +548,20 @@ function add_job_task($update = 'NO', $random = 'NO')
 
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-				$email_body_task_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin-left: 0px;
-						margin-top: 0px;
-						margin-right: 0px;
-						margin-bottom: 0px;
-					}
-					.task-list-item, .task-list-item td {
-					border: 1px solid #666666;
-					border-collapse: collapse;
-					}
-					.task-list-item {
-						margin-bottom: 10px;
-						width: 500px;
-					}
-					#set-job-task .task-list-item td {
-						padding: 5px;
-					}
-					#set-job-task td {
-						padding: 0 5px 0 0;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Task Update Notification</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<table cellspacing="0" align="center" cellpadding="0" border="0" id="task-table-28" style="border:1px solid #666666;
-					border-collapse: collapse;">
-						<tbody><tr>
-						<td width="80" valign="top" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Task
-						</td>
-						<td class="task" colspan="3" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FEF08D;
-    color: #333333; padding: 5px;"><a href='.$this->config->item('base_url').'/tasks/all>'.$_POST['job_task'].'</a>
-						</td>
-						</tr>
-						<tr>
-						<td  style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated to
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$taskAssignedTo.'</td>
-						<td width="80" style="border: 1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;" >
-						Remarks
-						</td>
-						<td rel="2:0" class="item hours-mins " style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$task_owners[0]['remarks'].'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Planned Start Date
-						</td>
-						<td class="item start-date" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$dtask_start_date.'
-						</td>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Planned End Date
-						</td>
-						<td class="item end-date" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$dtask_end_date.'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated&nbsp;by:
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'].'</td>
-						<td width="80" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5;">
-						Status
-						</td>
-						<td rel="2:0"  style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px; padding: 5px;">
-						'.$ins['status'].'%'.'
-						</td>
-						</tr>
-						</tbody></table>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';
 				
-				
-				
-				$this->email->from($from,$from_name);
-				$this->email->to($taskAssignedToEmail.','.$admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($email_body_task_content);
-				$this->email->send();
+				//email sent by email template
+				$param = array();
 
+				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>$dtask_start_date,'end_date'=>$dtask_end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
+
+				$param['to_mail'] = $taskAssignedToEmail . ',' .$admin_mail;
+				$param['bcc_mail'] = $admin_mail;
+				$param['from_email'] = $from;
+				$param['from_email_name'] = $from_name;
+				$param['template_name'] = "Task Update Notification";
+				$param['subject'] = $subject;
+
+				$this->email_template_model->sent_email($param);
 			}
 			else if ($update == 'NO')
 			{
@@ -716,133 +595,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					$email_body_task_content ='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin-left: 0px;
-						margin-top: 0px;
-						margin-right: 0px;
-						margin-bottom: 0px;
-					}
-					.task-list-item, .task-list-item td {
-					border: 1px solid #666666;
-					border-collapse: collapse;
-					}
-					.task-list-item {
-						margin-bottom: 10px;
-						width: 500px;
-					}
-					#set-job-task .task-list-item td {
-						padding: 5px;
-					}
-					#set-job-task td {
-						padding: 0 5px 0 0;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Task Notification</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<table cellspacing="0" cellpadding="0" border="0" id="task-table-28" style="border:1px solid #666666;
-					border-collapse: collapse;">
-						<tbody><tr>
-						<td width="80" valign="top" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Task Desc
-						</td>
-						<td class="task" colspan="3" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FEF08D;
-    color: #333333; padding: 5px;"><a href='.$this->config->item('base_url').'tasks/all>'.$_POST['job_task'].'</a>
-						</td>
-						</tr>
-						<tr>
-						<td  style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated to
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$taskSetTo.'</td>
-						<td width="80" style="border: 1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;" >
-						Remarks
-						</td>
-						<td rel="2:0" class="item hours-mins " style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$task_owners[0]['remarks'].'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Planned Start Date
-						</td>
-						<td class="item start-date" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$dtask_start_date.'
-						</td>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Planned End Date
-						</td>
-						<td class="item end-date" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$dtask_end_date.'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated&nbsp;by:
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$task_owners[0]['first_name'].''.$task_owners[0]['last_name'].'</td>
-						<td width="80" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5;">
-						Status
-						</td>
-						<td rel="2:0"  style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px; padding: 5px;">
-						'.$ins['status'].'%'.'
-						</td>
-						</tr>
-						</tbody></table>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';
+					
 				
 					$this->email->initialize($config);
 
@@ -853,12 +606,20 @@ function add_job_task($update = 'NO', $random = 'NO')
 					$arrEmails = $this->config->item('crm');
 					$arrSetEmails=$arrEmails['director_emails'];
 					$admin_mail=implode(',',$arrSetEmails);
-					$this->email->from($from,$user_name);
-					$this->email->to($taskSetToEmail.','.$admin_mail );
-					$this->email->subject($subject);
-					$this->email->message($email_body_task_content);
-					$this->email->send();	
+					
+					//email sent by using email template
+					$param = array();
 
+					$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskSetTo'=>$taskSetTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>$dtask_start_date,'end_date'=>$dtask_end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
+
+					$param['to_mail'] 			= $taskSetToEmail.','.$admin_mail;
+					$param['bcc_mail'] 			= $admin_mail;
+					$param['from_email'] 		= $from;
+					$param['from_email_name'] 	= $user_name;
+					$param['template_name'] 	= "New Task Notification";
+					$param['subject'] 			= $subject;
+
+					$this->email_template_model->sent_email($param);
 				}
 			}
 			else
@@ -1291,153 +1052,26 @@ EOD;
 				if($upd['is_complete']==1){
 						$task_status="Completed";
 				}					
-								$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 
-				$task_owner = $this->user_model->get_user($uid);
-				$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
-				$taskStatusToEmail=$task_owner[0]['email'];
-				$start_date=$data->start_date;
-				$end_date=$data->end_date;
-				$hours=$data->hours;
-				$mins=$data->mins;
-				$hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
-				$start_date=date('d-m-Y', strtotime($start_date));
-				$end_date=date('d-m-Y', strtotime($end_date));
-				$completed_date=date('l, jS F y h:iA', strtotime($upd['marked_complete']));
-				$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
-													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
-													WHERE u.userid = t.created_by
-													AND t.taskid ={$taskid}");
-				$task_owners = $task_owner_name->result_array();
-				$dis['date_created'] = date('Y-m-d H:i:s');
-				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-				$task_email_content='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin-left: 0px;
-						margin-top: 0px;
-						margin-right: 0px;
-						margin-bottom: 0px;
-					}
-					.task-list-item, .task-list-item td {
-					border: 1px solid #666666;
-					border-collapse: collapse;
-					}
-					.task-list-item {
-						margin-bottom: 10px;
-						width: 500px;
-					}
-					#set-job-task .task-list-item td {
-						padding: 5px;
-					}
-					#set-job-task td {
-						padding: 0 5px 0 0;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Task Completed Notification</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<table cellspacing="0" cellpadding="0" border="0" id="task-table-28" style="border:1px solid #666666;
-					border-collapse: collapse;">
-						<tbody><tr>
-						<td width="80" valign="top" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Task
-						</td>
-						<td class="task" colspan="3" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FEF08D;
-    color: #333333; padding: 5px;">'.$task_name.'
-						</td>
-						</tr>
-						<tr>
-						<td  style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated to
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$taskSetTo.'</td>
-						<td width="80" style="border: 1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;" >
-						Remarks
-						</td>
-						<td rel="2:0" class="item hours-mins " style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$task_owners[0]['remarks'].'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Planned Start Date
-						</td>
-						<td class="item start-date" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$start_date.'
-						</td>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Planned End Date
-						</td>
-						<td class="item end-date" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$end_date.'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated&nbsp;by:
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'].'</td>
-						<td width="80" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5;">
-						Status
-						</td>
-						<td rel="2:0"  style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px; padding: 5px;">
-						'.$task_status.'
-						</td>
-						</tr>
-						</tbody></table>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';
+					$task_owner = $this->user_model->get_user($uid);
+					$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
+					$taskStatusToEmail=$task_owner[0]['email'];
+					$start_date=$data->start_date;
+					$end_date=$data->end_date;
+					$hours=$data->hours;
+					$mins=$data->mins;
+					$hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
+					$start_date=date('d-m-Y', strtotime($start_date));
+					$end_date=date('d-m-Y', strtotime($end_date));
+					$completed_date=date('l, jS F y h:iA', strtotime($upd['marked_complete']));
+					$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
+														FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
+														WHERE u.userid = t.created_by
+														AND t.taskid ={$taskid}");
+					$task_owners = $task_owner_name->result_array();
+					$dis['date_created'] = date('Y-m-d H:i:s');
+					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 				
 					$subject='Task Completion Notification';
 					$from = $this->userdata['email'];
@@ -1446,108 +1080,65 @@ EOD;
 					$arrEmails = $this->config->item('crm');
 					$arrSetEmails=$arrEmails['director_emails'];
 					$admin_mail=implode(',',$arrSetEmails);
-					$this->email->from($from,$user_name);
-					$this->email->to($taskStatusToEmail);
-					$this->email->bcc($admin_mail);
-					$this->email->subject($subject);
-					$this->email->message($task_email_content);
-					$this->email->send();	
 					
-					
-					
+					//email sent by email template
+					$param = array();
+
+					$param['email_data'] = array('task_name'=>$task_name, 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'],'start_date'=>$start_date, 'end_date'=>$end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'task_status'=>$task_status);
+
+					$param['to_mail'] = $taskStatusToEmail;
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $from;
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Task Completion Notification";
+					$param['subject'] = $subject;
+
+					$this->email_template_model->sent_email($param);
 					
 					$json['set_complete'] = TRUE;
 					$json['error'] = FALSE;
-					
 				}
 			}
 			else if (isset($_POST['delete_task']))
 			{
 				$data = $q->row();
-				
-			
-					//print_r($data);exit;			
-					$this->db->where('taskid', $taskid);
-					$this->db->delete($task_table);
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-					$task_name=$data->task;
-					$task_createdby=$data->created_by;
-					$uid=$data->userid_fk;
-					$task_owner = $this->user_model->get_user($task_createdby);
-					$taskCreatedBy=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
-					$taskCreatedByEmail=$task_owner[0]['email'];
-					$task_allocated = $this->user_model->get_user($uid);
-					$taskSetTo=$task_allocated[0]['first_name'].'&nbsp;'.$task_allocated[0]['last_name'];
-					$taskSetEmail=$task_allocated[0]['email'];
-					$dis['date_created'] = date('Y-m-d H:i:s');
-					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					$taskdelete_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
-						}
-						</style>
-						</head>
-
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">Task Delete Notification Message
-</h3></td>
-						  </tr>
-
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;</p>
-							<p style="padding: 4px;">'.
-								$task_name.'&nbsp; has&nbsp;been&nbsp;declined&nbsp;by&nbsp;'.$user_name.'<br /><br />'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
-
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';							
+		
+				$this->db->where('taskid', $taskid);
+				$this->db->delete($task_table);
+				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$task_name=$data->task;
+				$task_createdby=$data->created_by;
+				$uid=$data->userid_fk;
+				$task_owner = $this->user_model->get_user($task_createdby);
+				$taskCreatedBy=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
+				$taskCreatedByEmail=$task_owner[0]['email'];
+				$task_allocated = $this->user_model->get_user($uid);
+				$taskSetTo=$task_allocated[0]['first_name'].'&nbsp;'.$task_allocated[0]['last_name'];
+				$taskSetEmail=$task_allocated[0]['email'];
+				$dis['date_created'] = date('Y-m-d H:i:s');
+				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 				
 				$from=$this->userdata['email'];
 				$arrEmails = $this->config->item('crm');
 				$arrSetEmails=$arrEmails['director_emails'];
 				$admin_mail=implode(',',$arrSetEmails);
 				$subject='Task Delete Notification';
-				$this->email->from($from,$user_name);
-				$this->email->to($taskSetEmail);
-				$this->email->bcc($admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($taskdelete_email_content);
-				$this->email->send();	
+				
+				//email sent by email template
+				$param = array();
+
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'task_name'=>$task_name, 'user_name'=>$user_name, 'signature'=>$this->userdata['signature']);
+
+				$param['to_mail'] 	 		= $taskSetEmail;
+				$param['bcc_mail'] 	 		= $admin_mail;
+				$param['from_email'] 		= $from;
+				$param['from_email_name'] 	= $user_name;
+				$param['template_name'] 	= "Task Delete Notification Message";
+				$param['subject'] 			= $subject;
+				
+				$this->email_template_model->sent_email($param);
+				
+				
 				$json['error'] = FALSE;	
 				$json['task_delete'] = TRUE;
 	
@@ -1585,7 +1176,7 @@ EOD;
 				$start_date=date('d-m-Y', strtotime($start_date));
 				$end_date=date('d-m-Y', strtotime($end_date));
 				$task_name=$data->task;
-				//$task_status=$data->status;
+
 				$task_status=$_POST['task_status'];
 				$task_owner = $this->user_model->get_user($uid);
 				$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
@@ -1596,151 +1187,30 @@ EOD;
 													AND t.created_by ={$task_createdby}
 													AND t.taskid ={$taskid}");
 				$task_owners = $task_owner_mail->result_array();
-				//echo $this->db->last_query(); exit;
-				 //echo '********' . print_r($taskStatusToEmail); exit;
+
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-				$task_email_content='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-					<html xmlns="http://www.w3.org/1999/xhtml">
-					<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<title>Email Template</title>
-					<style type="text/css">
-					body {
-						margin-left: 0px;
-						margin-top: 0px;
-						margin-right: 0px;
-						margin-bottom: 0px;
-					}
-					.task-list-item, .task-list-item td {
-					border: 1px solid #666666;
-					border-collapse: collapse;
-					}
-					.task-list-item {
-						margin-bottom: 10px;
-						width: 500px;
-					}
-					#set-job-task .task-list-item td {
-						padding: 5px;
-					}
-					#set-job-task td {
-						padding: 0 5px 0 0;
-					}
-					</style>
-					</head>
-
-					<body>
-					<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-					<tr><td bgcolor="#FFFFFF">
-					<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-					  <tr>
-						<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-					  </tr>
-					  <tr>
-						<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New Status Notification</h3></td>
-					  </tr>
-
-					  <tr>
-						<td>
-						<table cellspacing="0" align="center" cellpadding="0" border="0" id="task-table-28" style="border:1px solid #666666; border-collapse: collapse;">
-						<tbody><tr>
-						<td width="80" valign="top" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Task Desc
-						</td>
-						<td class="task" colspan="3" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FEF08D;
-    color: #333333; padding: 5px;"><a href='.$this->config->item('base_url').'tasks/all>'.$task_name.'</a>
-						</td>
-						</tr>
-						<tr>
-						<td  style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated to
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$taskSetTo.'</td>
-						<td width="80" style="border: 1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;" >
-						Remarks
-						</td>
-						<td rel="2:0" class="item hours-mins " style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$task_owners[0]['remarks'].'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px; ">
-						Planned Start Date
-						</td>
-						<td class="item start-date" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$start_date.'
-						</td>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Planned End Date
-						</td>
-						<td class="item end-date" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$end_date.'
-						</td>
-						</tr>
-
-						<tr>
-						<td style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Allocated by:
-						</td>
-						<td width="100" rel="107" class="item user-name" style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">'.$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'].'</td>
-						<td width="80" style="border:1px solid #666666;
-					border-collapse: collapse; background: none repeat scroll 0 0 #5F5F5; padding: 5px;">
-						Status
-						</td>
-						<td rel="2:0"  style="border:1px solid #666666;
-					border-collapse: collapse;background: none repeat scroll 0 0 #FDF7BB;
-    color: #333333; padding: 5px;">
-						'.$task_status.'%'.'
-						</td>
-						</tr>
-						</tbody></table>
-					</td>
-					  </tr>
-
-					   <tr>
-						<td>&nbsp;</td>
-					  </tr>
-					  <tr>
-						<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-					  </tr>
-					</table>
-					</td>
-					</tr>
-					</table>
-					</body>
-					</html>';
-							
-				
-				
 				
 				$from=$this->userdata['email'];
 				$arrEmails = $this->config->item('crm');
 				$arrSetEmails=$arrEmails['director_emails'];
 				$admin_mail=implode(',',$arrSetEmails);
 				$subject='Task Status Notification';
-				$this->email->from($from,$user_name);
-				$this->email->to($taskStatusToEmail.','.$task_owners[0]['email']);
-				$this->email->bcc($admin_mail);
-				$this->email->subject($subject);
-				$this->email->message($task_email_content);
-				$this->email->send();	
+
+				//email sent by email template
+				$param = array();
+
+				$param['email_data'] = array('task_name'=>$task_name, 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>$start_date, 'end_date'=>$end_date, 'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'], 'task_status'=>$task_status);
+
+				$param['to_mail'] = $taskStatusToEmail.','.$task_owners[0]['email'];
+				$param['bcc_mail'] = $admin_mail;
+				$param['from_email'] = $from;
+				$param['from_email_name'] = $user_name;
+				$param['template_name'] = "Task Notification";
+				$param['subject'] = $subject;
+				
+				$this->email_template_model->sent_email($param);
+
 				$json['error'] = FALSE;
 			}
 		}

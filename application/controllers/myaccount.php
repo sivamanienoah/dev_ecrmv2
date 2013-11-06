@@ -17,12 +17,12 @@ class Myaccount extends crm_controller {
 	*@Constructor
 	*@My Account
 	*/
-	
     public function Myaccount() {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('user_model');
+		$this->load->model('email_template_model');
         $this->load->library('validation');
     }
     
@@ -31,8 +31,7 @@ class Myaccount extends crm_controller {
 	*@Login user Details
 	*@Method   index
 	*/
-	
-   public function index() {
+	public function index() {
 	
         $rules['first_name'] = "trim|required";
 		$rules['last_name']  = "trim|required";
@@ -111,102 +110,45 @@ class Myaccount extends crm_controller {
 				}
 				
 			}
-			else {
-				 unset($update_data['password'], $update_data['pass_conf'], $update_data['oldpassword']);
-             //update query
-			
-            if ($this->user_model->update_user($customer['userid'], $update_data))
+			else 
 			{
-                $new = $this->user_model->get_user($customer['userid']);
-                $this->session->set_userdata('logged_in_user', $new[0]);
-				
-				   $user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				 unset($update_data['password'], $update_data['pass_conf'], $update_data['oldpassword']);
+				//update query
+			
+				if ($this->user_model->update_user($customer['userid'], $update_data))
+				{
+					$new = $this->user_model->get_user($customer['userid']);
+					$this->session->set_userdata('logged_in_user', $new[0]);
+					
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+							
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+							
+					$admin_mail=implode(',',$arrSetEmails);
+					$subject='User Profile Changes Notification';
 					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
-						}
-						</style>
-						</head>
+					//email sent by email template
+					$param = array();
 
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">User Profile Changes Notification 
-</h3></td>
-						  </tr>
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'user_name'=>$user_name,'signature'=>$this->userdata['signature']);
 
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;"> User Profile Modified - '.$update_data['first_name']. '  '.$update_data['last_name']. '<br /><br />
-								'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
+					$param['to_mail'] = $admin_mail;
+					$param['from_email'] = $from;
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "User Profile Changes Notification";
+					$param['subject'] = $subject;
 
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';	
-						
-		$from=$this->userdata['email'];
-		$arrEmails = $this->config->item('crm');
-		$arrSetEmails=$arrEmails['director_emails'];
-				
-		$admin_mail=implode(',',$arrSetEmails);
-		$subject='User Profile Changes Notification';
-		$this->load->library('email');
-		$this->email->set_newline("\r\n");
-		$this->email->from($from,$user_name);
-		$this->email->to($admin_mail);
-		$this->email->subject($subject);
-		$this->email->message($log_email_content);
+					$this->email_template_model->sent_email($param);
 
-		$this->email->send();				
-				
-                
-                $this->session->set_flashdata('confirm', array('User details updated!'));
-                /*if ($this->input->post('update_password'))
-				{
-                    $this->session->set_flashdata('confirm', array('Your password updated!'));
-                }*/
-            }
-            redirect('myaccount/');
+					$this->session->set_flashdata('confirm', array('User details updated!'));
+				}
+				redirect('myaccount');
 			}
-            
-        }
-        
+		}
     }
 	
 	/*

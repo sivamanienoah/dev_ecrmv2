@@ -8,7 +8,6 @@ class Role extends crm_controller {
 	*@construct
 	*@Role Controller
 	*/
-	
     public function __construct()
 	{
         parent::__construct();
@@ -24,7 +23,6 @@ class Role extends crm_controller {
 	*@Get all Role list
 	*@Role Controller
 	*/
-	
     public function index($limit = 0, $search = false)
 	{
 		$this->login_model->check_login();
@@ -46,10 +44,8 @@ class Role extends crm_controller {
 	*@Add Role Record 
 	*@Role Controller
 	*/
-    
     public function add_role($update = false, $id = false, $ajax = false)
 	{
-		
 		$post_data = real_escape_array($this->input->post());
 	
         $this->login_model->check_login();		
@@ -160,7 +156,6 @@ class Role extends crm_controller {
 	*@Delete Role Record
 	*@Role Controller
 	*/
-	
 	public function delete_role($id = false) {
 		if ($this->session->userdata('delete')==1) {	
 			$this->login_model->check_login();
@@ -180,7 +175,6 @@ class Role extends crm_controller {
 	*@Search Role Record
 	*@Role Controller
 	*/
-	
     public function search()
 	{
 		$post_data = real_escape_array($this->input->post());
@@ -198,7 +192,6 @@ class Role extends crm_controller {
 	*@Check Level
 	*@Role Controller
 	*/
-    
     public function level_check($str)
 	{
         if (!preg_match('/^[0-9]+$/', $str)) {
@@ -213,7 +206,6 @@ class Role extends crm_controller {
 	*@Role Log History
 	*@Role Controller
 	*/
-	
 	public function log_history($role = 0)
 	{
 		#$this->output->enable_profiler(TRUE);
@@ -315,8 +307,6 @@ class Role extends crm_controller {
 	*@Check Date & Change Date Format
 	*@Role Controller
 	*/
-
-	
 	public function check_date($date)
 	{
 		if (isset($date))
@@ -338,7 +328,6 @@ class Role extends crm_controller {
 	*@Display Region Settings Page
 	*@Role Controller
 	*/
-	
 	public function region_settings()
 	{
 		$this->load->view('role/regionsettings_view');
@@ -348,7 +337,6 @@ class Role extends crm_controller {
 	*@Insert Region Record
 	*@Role Controller
 	*/
-	
 	public function region()
 	{
 		$this->login_model->check_login();
@@ -378,7 +366,6 @@ class Role extends crm_controller {
 	*@Call Country View page 
 	*@Role Controller
 	*/
-	
 	public function country()
 	{
 		$this->load->view('role/country_view');
@@ -388,7 +375,6 @@ class Role extends crm_controller {
 	*@Call State View page 
 	*@Role Controller
 	*/
-	
 	public function state()
 	{
 		$this->load->view('role/state_view');
@@ -398,7 +384,6 @@ class Role extends crm_controller {
 	*@Call Location View page 
 	*@Role Controller
 	*/
-	
 	public function location()
 	{
 		$this->load->view('role/location_view');
@@ -408,7 +393,6 @@ class Role extends crm_controller {
 	*@Insert masters Record
 	*@Role Controller
 	*/
-
 	public function masters()
 	{	
 		$this->login_model->check_login();
@@ -444,7 +428,6 @@ class Role extends crm_controller {
 	*@Call Role view Templeate 
 	*@Role Controller
 	*/
-	
 	public function roles()
 	{
 		$this->load->view('role/roles_view');

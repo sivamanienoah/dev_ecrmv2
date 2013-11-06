@@ -671,7 +671,7 @@ class User_model extends crm_model {
 	*@table    levels_country,country
     */
 	
-	public function edit_loadCountrys($regionid,$uid){
+	public function edit_loadCountrys($regionid, $uid){
 		
 		$output = '';
 		$this->db->select('country_id');

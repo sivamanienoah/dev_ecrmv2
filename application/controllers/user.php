@@ -39,7 +39,7 @@ class User extends crm_controller {
 	*/
     public function add_user($update = false, $id = false, $ajax = false)
 	{
-		$post_data =	real_escape_array($this->input->post());
+		$post_data = real_escape_array($this->input->post());
 	
         $rules['first_name']   = "trim|required";
 		$rules['last_name']    = "trim|required";
@@ -88,18 +88,25 @@ class User extends crm_controller {
 			
         }
 		
-		if ($this->validation->run() == false) {
-            if ($ajax == false) {
+		if ($this->validation->run() == false) 
+		{
+            if ($ajax == false) 
+			{
                 $this->load->view('user/add_view', $data);
-            } else {
+            } 
+			else 
+			{
                 $json['error'] = true;
                 $json['ajax_error_str'] = $this->validation->error_string;
                 echo json_encode($json);
             }
 			
-		} else {
+		} 
+		else 
+		{
 			// all good
-            foreach($fields as $key => $val) {
+            foreach($fields as $key => $val) 
+			{
                 $update_data[$key] = $this->input->post($key);
             }
 			//for new level settings concepts
@@ -107,292 +114,143 @@ class User extends crm_controller {
                 $update_data1[$key] = $this->input->post($key);
             }
 			
-            if ($this->input->post('new_user') || $this->input->post('update_password')) {
+            if ($this->input->post('new_user') || $this->input->post('update_password')) 
+			{
                 $update_data['password'] = sha1($update_data['password']);
                 if (isset($update_data['update_password'])) unset($update_data['update_password']);
                 if (isset($update_data['new_user'])) unset($update_data['new_user']);
-            } else {
+            } 
+			else 
+			{
                 unset($update_data['password']);
             }
             
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) 
+			{
 				$user_ids = $this->uri->segment(4);
 				$level_id = $update_data['level'];
 				
 				$this->user_model->update_level($update_data1,$user_ids,$level_id);
-                //update
-                if ($this->user_model->update_user($id, $update_data)) {
-				
-				
-		 if($post_data['role_id'] == $post_data['role_change_mail']) 
-		{
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-					$dis['date_created'] = date('Y-m-d H:i:s');
-					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
-						}
-						</style>
-						</head>
-
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">User Role Change Notification
-</h3></td>
-						  </tr>
-
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;"> User Role has been Changed for &nbsp;'.$update_data['first_name']. '  '.$update_data['last_name']. '<br /><br />
-							'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
-
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';	
-						
+				//update
+				if ($this->user_model->update_user($id, $update_data)) 
+				{
+					if($post_data['role_id'] == $post_data['role_change_mail']) 
+					{
+						$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+						$dis['date_created'] = date('Y-m-d H:i:s');
+						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+							
 						$from=$this->userdata['email'];
 						$arrEmails = $this->config->item('crm');
 						$arrSetEmails=$arrEmails['director_emails'];
 								
 						$admin_mail=implode(',',$arrSetEmails);
 						$subject='User Role Change Notification';
-						$this->load->library('email');
-						$this->email->set_newline("\r\n");
-						$this->email->from($from,$user_name);
-						$this->email->to($update_data['email']);
-						$this->email->bcc($admin_mail);
-						$this->email->subject($subject);
-						$this->email->message($log_email_content);
-						$this->email->send(); 
-		}   
-		
-		if($post_data['level'] == $post_data['level_change_mail']) 
-		{
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-					$dis['date_created'] = date('Y-m-d H:i:s');
-					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
-						}
-						</style>
-						</head>
-
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;"> User Level Change Notification 
-</h3></td>
-						  </tr>
-
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;"> User Level has been Changed for &nbsp;'.$update_data['first_name']. '  '.$update_data['last_name']. '<br /><br />
-							'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
-
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';	
 						
+						//email sent by email template
+						$param = array();
+
+						$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'], 'signature'=>$this->userdata['signature']);
+
+						$param['to_mail'] = $update_data['email'];
+						$param['bcc_mail'] = $admin_mail;
+						$param['from_email'] = $from;
+						$param['from_email_name'] = $user_name;
+						$param['template_name'] = "User Role Change Notification";
+						$param['subject'] = $subject;
+
+						$this->email_template_model->sent_email($param);
+					}   
+					
+					if($post_data['level'] == $post_data['level_change_mail']) 
+					{
+						$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+						$dis['date_created'] = date('Y-m-d H:i:s');
+						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+							
 						$from=$this->userdata['email'];
 						$arrEmails = $this->config->item('crm');
 						$arrSetEmails=$arrEmails['director_emails'];
 								
 						$admin_mail=implode(',',$arrSetEmails);
 						$subject='User Level Change Notification';
-						$this->load->library('email');
-						$this->email->set_newline("\r\n");
-						$this->email->from($from,$user_name);
-						$this->email->to($update_data['email']);
-						$this->email->bcc($admin_mail);
-						$this->email->subject($subject);
-						$this->email->message($log_email_content);
 
-						$this->email->send(); 
-		           }
-                    $this->session->set_flashdata('confirm', array('User Details Updated!'));
-                    redirect('user/add_user/update/' . $id);
-                    
-                }
-                
-                
-            } else {
-                //insert
+						//email sent by email template
+						$param = array();
+
+						$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'], 'signature'=>$this->userdata['signature']);
+
+						$param['to_mail'] = $update_data['email'];
+						$param['bcc_mail'] = $admin_mail;
+						$param['from_email'] = $from;
+						$param['from_email_name'] = $user_name;
+						$param['template_name'] = "User Level Change Notification";
+						$param['subject'] = $subject;
+
+						$this->email_template_model->sent_email($param);
+					}
+					$this->session->set_flashdata('confirm', array('User Details Updated!'));
+					redirect('user/add_user/update/' . $id);
+				}
+			} 
+			else 
+			{
+				//insert
 				$newid = $this->user_model->insert_user($update_data);
-                if ($newid != 'max_users') {
-                   // echo "<pre>"; print_r($update_data); exit;
-				    $user_ids = $this->db->insert_id();
+				if ($newid != 'max_users') 
+				{
+				   // echo "<pre>"; print_r($update_data); exit;
+					$user_ids = $this->db->insert_id();
 					$level_id = $update_data['level'];
 					$this->user_model->insert_level_settings($update_data1, $user_ids, $level_id);
 					
-				    $user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-					
-					$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-						<html xmlns="http://www.w3.org/1999/xhtml">
-						<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						<title>Email Template</title>
-						<style type="text/css">
-						body {
-							margin-left: 0px;
-							margin-top: 0px;
-							margin-right: 0px;
-							margin-bottom: 0px;
-						}
-						</style>
-						</head>
-
-						<body>
-						<table width="630" align="center" border="0" cellspacing="15" cellpadding="10" bgcolor="#f5f5f5">
-						<tr><td bgcolor="#FFFFFF">
-						<table width="600" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-						  <tr>
-							<td style="padding:15px; border-bottom:2px #5a595e solid;"><img src="'.$this->config->item('base_url').'assets/img/esmart_logo.jpg" /></td>
-						  </tr>
-						  <tr>
-							<td style="padding:15px 5px 0px 15px;"><h3 style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:15px;">New User Creation Notification 
-</h3></td>
-						  </tr>
-
-						  <tr>
-							<td>
-							<div  style="border: 1px solid #CCCCCC;margin: 0 0 10px;">
-							<p style="background: none repeat scroll 0 0 #4B6FB9;
-							border-bottom: 1px solid #CCCCCC;
-							color: #FFFFFF;
-							margin: 0;
-							padding: 4px;">
-								<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;'.$user_name.'</p>
-							<p style="padding: 4px;">New user Created -'.$update_data['first_name']. '  '.$update_data['last_name']. '<br /> User Login Details<br /><br />
-							Login URL : '.$this->config->item('base_url').' <br />User Login email id : '.$update_data['email'].'<br />
-							Password : '.$post_data['password'].' <br />
-							'.$this->userdata['signature'].'<br />
-							</p>
-						</div>
-						</td>
-						  </tr>
-
-						   <tr>
-							<td>&nbsp;</td>
-						  </tr>
-						  <tr>
-							<td style="font-family:Arial, Helvetica, sans-serif; color:#F60; font-size:12px; text-align:center; padding-top:8px; border-top:1px #CCC solid;"><b>Note : Please do not reply to this mail.  This is an automated system generated email.</b></td>
-						  </tr>
-						</table>
-						</td>
-						</tr>
-						</table>
-						</body>
-						</html>';	
 						
-		$from=$this->userdata['email'];
-		$arrEmails = $this->config->item('crm');
-		$arrSetEmails=$arrEmails['director_emails'];
-				
-		$admin_mail=implode(',',$arrSetEmails);
-		$subject='New User Creation Notification';
-		$this->load->library('email');
-		$this->email->set_newline("\r\n");
-		$this->email->from($from,$user_name);
-		$this->email->to($update_data['email']);
-		$this->email->bcc($admin_mail);
-		$this->email->subject($subject);
-		$this->email->message($log_email_content);
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+							
+					$admin_mail=implode(',',$arrSetEmails);
+					$subject='New User Creation Notification';
+					
+					//email sent by email template
+					$param = array();
 
-		$this->email->send(); 
-				  
-                    if ($ajax == false) {
-                        $this->session->set_flashdata('confirm', array('New User Added!'));
-                        redirect('user/');
-                    } else {
-                        $json['error'] = false;
-                        $json['custid'] = $newid;
-                        $json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
-                        $json['cust_email'] = $this->input->post('email');
-                        echo json_encode($json);
-                    }
-                    
-                } else if ($newid == 'max_users') {
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'], 'base_url'=>$this->config->item('base_url'), 'email'=>$update_data['email'], 'password'=>$post_data['password'], 'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $update_data['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $from;
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "New User Creation Notification";
+					$param['subject'] = $subject;
+
+					$this->email_template_model->sent_email($param);
+		
+					if ($ajax == false) 
+					{
+						$this->session->set_flashdata('confirm', array('New User Added!'));
+						redirect('user/');
+					} 
+					else 
+					{
+						$json['error'] = false;
+						$json['custid'] = $newid;
+						$json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
+						$json['cust_email'] = $this->input->post('email');
+						echo json_encode($json);
+					}
+					
+				}
+				else if ($newid == 'max_users') 
+				{
 					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
 					redirect('user/');
 				}
-                
-            }
-			
+			}
 		}
-        
     }
 	
 	/*
@@ -649,8 +507,8 @@ class User extends crm_controller {
 	
 	public function editloadCountrys()
 	{
-		  $data = real_escape_array($this->input->post()); 
-	      $this->user_model->edit_loadCountrys($data['regionid'],$data['uid']);
+		$data = real_escape_array($this->input->post());
+		$this->user_model->edit_loadCountrys($data['regionid'][0],$data['uid']);
 	}
 	/* 
 	 * Adding User Page 
@@ -778,7 +636,8 @@ class User extends crm_controller {
 			}
 		}
 		
-		for($j=0;$j<count($explode_country);$j++) {
+		for($j=0;$j<count($explode_country);$j++) 
+		{
 			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$data['state_load']);
 			if($check_state_query == 0) {
 				$json['statemsg'] = 'nostate'; 
@@ -788,7 +647,8 @@ class User extends crm_controller {
 			}
 		}
 		
-		for($k=0;$k<count($explode_state);$k++) {
+		for($k=0;$k<count($explode_state);$k++) 
+		{
 			$check_location_query = $this->user_model->checklocationlevel5($explode_state[$k],$data['location_load']);
 			if($check_location_query == 0) {
 				$json['locationmsg'] = 'noloc'; 
