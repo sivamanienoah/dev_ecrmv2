@@ -918,16 +918,16 @@ HDOC;
         $errors = '';
         if (trim($data['item_desc']) == '')
         {
-		$errors[] = 'You must provide a description!';
+			$errors[] = 'You must provide a description!';
         }
         if (trim($data['item_price']) != '' && !is_numeric($data['item_price']))
         {
-		$errors[] = 'Price can only be numeric values!';
-	}
+			$errors[] = 'Price can only be numeric values!';
+		}
         if (!preg_match('/^[0-9]+$/', $data['itemid']))
         {
-		$errors[] = 'item ID must be numeric!';
-	}
+			$errors[] = 'item ID must be numeric!';
+		}
         if (is_array($errors))
         {
             $json['error'] = true;
@@ -936,21 +936,21 @@ HDOC;
         }
         else
         {
-		$ins['item_desc'] = $data['item_desc'];
-		$ins['item_price'] = $data['item_price'];
-		
-		$updt_item = $this->welcome_model->update_row_item('items', $ins, $data['itemid']);
-		$res = array();
-		if ($updt_item)
-		{
-			$res['error'] = false;
-		}
-		else
-		{
-			$res['error'] = true;
-		}
-		echo json_encode($res); 
-		exit;
+			$ins['item_desc'] = $data['item_desc'];
+			$ins['item_price'] = $data['item_price'];
+			
+			$updt_item = $this->welcome_model->update_row_item('items', $ins, $data['itemid']);
+			$res = array();
+			if ($updt_item)
+			{
+				$res['error'] = false;
+			}
+			else
+			{
+				$res['error'] = true;
+			}
+			echo json_encode($res);
+			exit;
         }
     }
 	

@@ -481,7 +481,11 @@ function processItemEdit() {
                     $('.q-modal-item-edit').unblock();
                     populateQuote(quote_id);
                     cancelDelEdit();
-                } else {
+                } else if(data.error='undefined'){
+					$('.q-modal-item-edit').unblock();
+                    populateQuote(quote_id);
+                    cancelDelEdit();
+				} else {
                     $('.q-modal-item-edit').unblock();
                     alert(data.errormsg);
                     $('.q-modal-item-edit').parent().unblock();
