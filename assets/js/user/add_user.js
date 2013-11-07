@@ -179,8 +179,7 @@ if(url_segment[3]!='update'){
 	
  } /// segment 3 is update end
 
-
-	
+	if(url_segment[3] != 'update') {
 	//adduser
        var addlevelid = $('#level_id').val();
 		if($("#level_id").val() == 1) {
@@ -258,7 +257,7 @@ if(url_segment[3]!='update'){
 			$('.select-location').show();
 			loadRegion();
 		}	
-	
+	}
 	//end of adduser
 	
 	
