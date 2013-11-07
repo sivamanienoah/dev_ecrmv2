@@ -58,24 +58,26 @@ $userdata = $this->session->userdata('logged_in_user');
 			</tr>
 		</thead>
 		<tbody>
-		<?php foreach($sales_divisions as $sales) { ?>
-			<tr>
-				<td class="actions">
-					<?php if($this->session->userdata('edit')==1) { ?>
-						<a href="manage_service/division_add/update/<?php echo $sales['div_id']; ?>/">Edit &raquo;</a> 
-					<?php } else { echo "Edit"; } ?> 
-					<?php if($this->session->userdata('delete')==1) { ?>
-						&nbsp;|&nbsp;
-						<!--<a class="delete" href="manage_service/division_delete/update/<?php echo $sales['div_id']; ?>" onclick="return confirm('Are you sure you want to delete?')"> Delete &raquo; </a>-->
-						<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $sales['div_id']; ?>);"> Delete &raquo; </a> 
-					<?php } ?>
-				</td>
-				<td><?php echo $sales['division_name']; ?></td>
-				<td>
-					<?php if ($sales['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
-					<div class="dialog-err pull-right" id="dialog-message-<?php echo $sales['div_id'] ?>" style="display:none"></div>
-				</td>
-			</tr>
+		<?php if (is_array($sales_divisions) && count($sales_divisions) > 0) { ?>
+			<?php foreach($sales_divisions as $sales) { ?>
+				<tr>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_service/division_add/update/<?php echo $sales['div_id']; ?>/">Edit &raquo;</a> 
+						<?php } else { echo "Edit"; } ?> 
+						<?php if($this->session->userdata('delete')==1) { ?>
+							&nbsp;|&nbsp;
+							<!--<a class="delete" href="manage_service/division_delete/update/<?php echo $sales['div_id']; ?>" onclick="return confirm('Are you sure you want to delete?')"> Delete &raquo; </a>-->
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $sales['div_id']; ?>);"> Delete &raquo; </a> 
+						<?php } ?>
+					</td>
+					<td><?php echo $sales['division_name']; ?></td>
+					<td>
+						<?php if ($sales['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+						<div class="dialog-err pull-right" id="dialog-message-<?php echo $sales['div_id'] ?>" style="display:none"></div>
+					</td>
+				</tr>
+			<?php } ?>
 		<?php } ?>
 		</tbody>
 	</table>

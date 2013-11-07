@@ -180,9 +180,9 @@
 				</tr>
             </table>
 		</form>
-		<?php } else{
+		<?php } else {
 			echo "You have no rights to access this page";
-		}?>
+		} ?>
 	</div>
 </div>
 <?php require (theme_url(). '/tpl/footer.php'); ?>

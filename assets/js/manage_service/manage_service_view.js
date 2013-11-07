@@ -5,23 +5,21 @@
 
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable 
 
-if(accesspage==1) {
-	$(function() {
-		$('.data-tbl').dataTable({
-			"aaSorting": [[ 0, "asc" ]],
-			"iDisplayLength": 15,
-			"sPaginationType": "full_numbers",
-			"bInfo": true,
-			"bPaginate": true,
-			"bProcessing": true,
-			"bServerSide": false,
-			"bLengthChange": false,
-			"bSort": true,
-			"bFilter": false,
-			"bAutoWidth": false,	
-		});
+$(function() {
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 15,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": false,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,	
 	});
-} 
+});
 
 function checkStatus(id) {
 	var formdata = { 'data':id }

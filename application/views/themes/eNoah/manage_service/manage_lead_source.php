@@ -58,23 +58,25 @@ $userdata = $this->session->userdata('logged_in_user');
 			</tr>
 		</thead>
 		<tbody>
-		<?php foreach($get_lead_source as $source) { ?>
-			<tr>
-				<td class="actions">
-					<?php if($this->session->userdata('edit')==1) { ?>
-						<a href="manage_service/ls_add/update/<?php echo $source['lead_source_id'] ?>/">Edit &raquo; </a> 
-					<?php } else { echo "Edit"; } ?> 
-					<?php if($this->session->userdata('delete')==1) { ?>
-						&nbsp;|&nbsp;
-						<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['lead_source_id'] ?>);"> Delete &raquo; </a> 
-					<?php } ?>
-				</td>
-				<td><?php echo $source['lead_source_name']; ?></td>
-				<td>
-					<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
-					<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['lead_source_id'] ?>" style="display:none"></div>
-				</td>
-			</tr>
+		<?php if (is_array($get_lead_source) && count($get_lead_source) > 0) { ?>
+			<?php foreach($get_lead_source as $source) { ?>
+				<tr>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_service/ls_add/update/<?php echo $source['lead_source_id'] ?>/">Edit &raquo; </a> 
+						<?php } else { echo "Edit"; } ?> 
+						<?php if($this->session->userdata('delete')==1) { ?>
+							&nbsp;|&nbsp;
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['lead_source_id'] ?>);"> Delete &raquo; </a> 
+						<?php } ?>
+					</td>
+					<td><?php echo $source['lead_source_name']; ?></td>
+					<td>
+						<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+						<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['lead_source_id'] ?>" style="display:none"></div>
+					</td>
+				</tr>
+			<?php } ?>
 		<?php } ?>
 		</tbody>
 	</table>

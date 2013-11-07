@@ -57,27 +57,29 @@ $userdata = $this->session->userdata('logged_in_user');
 			</tr>
 		</thead>
 		<tbody>
-		<?php foreach($getExptWorthCur as $source) { ?>
-			<tr>
-				<td class="actions">
-					<?php if($this->session->userdata('edit')==1) { ?>
-						<a href="manage_service/expect_worth_cur_edit/update/<?php echo $source['expect_worth_id'] ?>/">Edit &raquo; </a> 
-					<?php } else { echo "Edit &raquo;"; } ?> 
-					<?php if(($this->session->userdata('delete')==1) && ($source['expect_worth_id'] != 1)) { ?>
-						&nbsp;|&nbsp;
-						<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['expect_worth_id'] ?>);"> Delete &raquo; </a> 
-					<?php } else { echo "&nbsp;|&nbsp; Delete &raquo;"; } ?>
-				</td>
-				<td><?php echo $source['expect_worth_name']; ?></td>
-				<td><?php echo $source['cur_name']; ?></td>
-				<td>
-					<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>					
-				</td>
-				<td>
-					<?php if ($source['is_default']==1) { ?><img src="assets/img/tick.png" alt="Default Currency" style="width:14px; height:14px" /> <?php } ?>
-					<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['expect_worth_id'] ?>" style="display:none"></div>
-				</td>
-			</tr>
+		<?php if (is_array($getExptWorthCur) && count($getExptWorthCur) > 0) { ?>
+			<?php foreach($getExptWorthCur as $source) { ?>
+				<tr>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_service/expect_worth_cur_edit/update/<?php echo $source['expect_worth_id'] ?>/">Edit &raquo; </a> 
+						<?php } else { echo "Edit &raquo;"; } ?> 
+						<?php if(($this->session->userdata('delete')==1) && ($source['expect_worth_id'] != 1)) { ?>
+							&nbsp;|&nbsp;
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['expect_worth_id'] ?>);"> Delete &raquo; </a> 
+						<?php } else { echo "&nbsp;|&nbsp; Delete &raquo;"; } ?>
+					</td>
+					<td><?php echo $source['expect_worth_name']; ?></td>
+					<td><?php echo $source['cur_name']; ?></td>
+					<td>
+						<?php if ($source['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>					
+					</td>
+					<td>
+						<?php if ($source['is_default']==1) { ?><img src="assets/img/tick.png" alt="Default Currency" style="width:14px; height:14px" /> <?php } ?>
+						<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['expect_worth_id'] ?>" style="display:none"></div>
+					</td>
+				</tr>
+			<?php } ?>
 		<?php } ?>
 		</tbody>
 	</table>

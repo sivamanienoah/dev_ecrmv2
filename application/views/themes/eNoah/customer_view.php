@@ -75,7 +75,6 @@
                         <td><?php echo  $customer['company'] ?></td>
                         <td><?php echo  $customer['phone_1'] ?></td>
                         <td><?php echo  $customer['email_1'] ?></td>
-                        <!--<td><?php #echo  auto_link($customer['www_1'], 'both', TRUE) ?></td>-->
                         <td><?php echo $customer['region_name'] ?></td>
                         <td><?php echo $customer['country_name'] ?></td>
                         <td>

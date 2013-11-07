@@ -37,28 +37,30 @@ $userdata = $this->session->userdata('logged_in_user');
 			</thead>
 			<tbody>
 			<?php $sno = 1; ?>
-			<?php foreach($email_template as $emailtemp) { ?>
-				<tr>
-					<td><?php echo $sno; ?></td>
-					<td>
-						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/"><?php echo $emailtemp['email_templatename']; ?> </a> 
-						<?php } else { echo $emailtemp['email_templatename']; } ?> 		
-					</td>
-					<td><?php echo strip_tags($emailtemp['email_templatesubject']); ?></td>
-					<td><?php echo $emailtemp['email_templatefrom']; ?></td>
-					<td><?php echo $emailtemp['modified_on']; ?></td>
-					<td class="actions">
-						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/">Edit &raquo; </a> 
-						<?php } else { echo "Edit"; } ?> 
-						<?php if($this->session->userdata('delete')==1) { ?>
-							&nbsp;|&nbsp;
-							<a class="delete" href="email_template/delete_email_template/update/<?php echo $emailtemp['email_tempid'] ?>"> Delete &raquo; </a> 
-						<?php } ?>
-					</td>
-				</tr>
-				<?php $sno++; ?>
+			<?php if (is_array($email_template) && count($email_template) > 0) { ?>
+				<?php foreach($email_template as $emailtemp) { ?>
+					<tr>
+						<td><?php echo $sno; ?></td>
+						<td>
+							<?php if($this->session->userdata('edit')==1) { ?>
+								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/"><?php echo $emailtemp['email_templatename']; ?> </a> 
+							<?php } else { echo $emailtemp['email_templatename']; } ?> 		
+						</td>
+						<td><?php echo strip_tags($emailtemp['email_templatesubject']); ?></td>
+						<td><?php echo $emailtemp['email_templatefrom']; ?></td>
+						<td><?php echo $emailtemp['modified_on']; ?></td>
+						<td class="actions">
+							<?php if($this->session->userdata('edit')==1) { ?>
+								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/">Edit &raquo; </a> 
+							<?php } else { echo "Edit"; } ?> 
+							<?php if($this->session->userdata('delete')==1) { ?>
+								&nbsp;|&nbsp;
+								<a class="delete" href="email_template/delete_email_template/update/<?php echo $emailtemp['email_tempid'] ?>"> Delete &raquo; </a> 
+							<?php } ?>
+						</td>
+					</tr>
+					<?php $sno++; ?>
+				<?php } ?>
 			<?php } ?>
 			</tbody>
 		</table>

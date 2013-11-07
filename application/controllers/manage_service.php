@@ -134,7 +134,7 @@ class Manage_service extends crm_controller {
 	*@Method   manage_expt_worth_cur
 	*/
 	
-	public function manage_expt_worth_cur($limit, $search = FALSE) {
+	public function manage_expt_worth_cur($search = FALSE) {
 		$data['page_heading'] = 'Manage Currency';		
 		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);		
 		$this->load->view('manage_service/manage_expect_worth_cur', $data);
