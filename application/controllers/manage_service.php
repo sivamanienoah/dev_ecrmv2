@@ -148,15 +148,19 @@ class Manage_service extends crm_controller {
 	public function ls_add($update = false, $id = false) {		
 		$this->load->library('validation');
         $data = array();        
+		
 		$rules['lead_source_name'] = "trim|required";		
+		
 		$this->validation->set_rules($rules);
 		$fields['lead_source_name'] = 'Lead Source';
 		$fields['status'] = 'Status';		
+		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-        $data['cb_status'] = $this->manage_service_model->get_num_row('lead_source', array('lead_source_id' => $id));
+       
+	   $data['cb_status'] = $this->manage_service_model->get_num_row('leads', array('lead_source' => $id));
+
         $update_item = $this->input->post('update_item');
-		//if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($update_item)) {	
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {	
             $src = $this->manage_service_model->get_row('lead_source', array('lead_source_id' => $id));
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v) {
