@@ -222,11 +222,18 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		{ 
 		   $addImpCus = $menu_items[9];
 		}
+		if($menu_items['0'] == 92) //Administration
+		{ 
+		   $viewAdmin = $menu_items[8];
+		   $addAdmin = $menu_items[9];
+		   $editAdmin = $menu_items[10];
+		   $deleteAdmin = $menu_items[11];
+		}
 	}  	 
-	//echo $this->uri->segment(1);
-	if(!isset($master_id)) 
+	// echo $this->uri->segment(1);
+	if(empty($master_id)) 
 	{
-		$masters=formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
+		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
 		$master_id= $masters[0]['master_parent_id'];
 		$access_limit['view'] =$masters[0]['view'];
 		$access_limit['add'] =$masters[0]['add'];
@@ -253,6 +260,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['addPjt'] = $addPjt;
 	$array['editPjt'] = $editPjt;
 	$array['deletePjt'] = $deletePjt;
+	$array['viewAdmin'] = $viewAdmin;
+	$array['addAdmin'] = $addAdmin;
+	$array['editAdmin'] = $editAdmin;
+	$array['deleteAdmin'] = $deleteAdmin;
 	$array['addImpCus'] = $addImpCus;
 	$this->session->set_userdata($array);
 		
