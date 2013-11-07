@@ -1599,5 +1599,44 @@ HDOC;
 		echo 1;
 		exit;
 	}
+	
+	//For Countries
+	public function loadCountrys($region_id)
+	{
+	    $output = '';
+		$data = $this->welcome_model->getcountry_list($region_id);
+		if(!empty($data)) {
+		foreach($data as $country) {
+		    $output .= '<option value="'.$country['countryid'].'">'.$country['country_name'].'</option>';
+		}
+		} else {
+			$output = '';
+		}
+		echo $output;exit;
+	}
+	
+	//For States
+	public function loadStates($cnt_id)
+	{
+	    $output = '';
+		$data = $this->welcome_model->getstate_list($cnt_id);
+		foreach($data as $st) {
+		    $output .= '<option value="'.$st['stateid'].'">'.$st['state_name'].'</option>';
+		}
+		echo $output;
+	}
+	
+	//For Locations
+	public function loadLocns($loc_id)
+	{
+	    $output = '';
+		$data = $this->welcome_model->getlocation_list($loc_id);
+		//print_r($data);
+		foreach($data as $st) {
+		    $output .= '<option value="'.$st['locationid'].'">'.$st['location_name'].'</option>';
+		}
+		echo $output;
+	}
+	
 }
 ?>
