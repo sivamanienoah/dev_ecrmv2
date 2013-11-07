@@ -83,7 +83,7 @@
 	}
 
 $(function() {
-	$('#loc-data-tbl').dataTable({
+	$('.loc-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
 		"sPaginationType": "full_numbers",

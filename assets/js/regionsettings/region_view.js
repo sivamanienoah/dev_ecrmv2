@@ -72,7 +72,7 @@ $('.checkUser').hide();
 	}
 
 $(function() {
-	$('#reg-data-tbl').dataTable({
+	$('.reg-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
 		"sPaginationType": "full_numbers",

@@ -57,7 +57,7 @@ function getCountryst(val,id) {
 }
 
 $(function() {
-	$('#ste-data-tbl').dataTable({
+	$('.ste-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
 		"sPaginationType": "full_numbers",

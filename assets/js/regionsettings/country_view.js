@@ -56,7 +56,7 @@ $(document).ready(function() {
 });
 
 $(function() {
-	$('#cntry-data-tbl').dataTable({
+	$('.cntry-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
 		"sPaginationType": "full_numbers",
