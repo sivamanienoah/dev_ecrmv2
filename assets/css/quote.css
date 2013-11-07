@@ -599,6 +599,9 @@ select.width100px {
 	border-collapse:collapse;
 	border:1px solid #666;
 }
+.task-list-item tr td.task { 
+	background:#fff
+}
 #set-job-task .task-list-item td {
 	padding:5px;
 }

@@ -339,7 +339,8 @@ function QueryAjaxFileUpload() {
 		reply = "Replied";
 		}
 	 
-	$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#querylist');
+	// $('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#querylist');
+	$('<div id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></div>').appendTo('#querylist');
 	$.ajaxFileUpload
 	(
 		{
@@ -381,10 +382,10 @@ function QueryAjaxFileUpload() {
 						
 			
 var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15"><tbody><tr><td valign="top" width="80">Query '+reply+'</td><td colspan="3" class="task">'+decodeURIComponent(data.lead_query)+'</td></tr>';	
-	_file_link += '<tr><td>Date</td><td class="item user-name" rel="59" width="100">'+data.up_date+'</td>';
-	_file_link += '<td width="80">'+reply+' By</td><td class="item hours-mins" rel="4:0">'+data.firstname+' '+data.lastname+'</td></tr>';
+	_file_link += '<tr><td>Date</td><td class="item user-name task" rel="59" width="100">'+data.up_date+'</td>';
+	_file_link += '<td width="80">'+reply+' By</td><td class="item hours-mins task" rel="4:0">'+data.firstname+' '+data.lastname+'</td></tr>';
 	_file_link += '<tr><td colspan="1" valign="top">File Name</td><td colspan="3">'+fname+'</td></tr>';
-	_file_link += '<tr><td	colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('+data.replay_id+')">Reply</button></td></tr></table></td>';
+	_file_link += '<tr><td class="task" colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('+data.replay_id+')">Reply</button></td></tr></table></td>';
 
 						<?php
 						if ($userdata['level'] > 1) echo '_del_link = "";';
