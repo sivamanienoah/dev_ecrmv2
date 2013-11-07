@@ -111,30 +111,28 @@
 				</tr>
 			</thead>            
 		<tbody>
-		<?php
-		if (is_array($customers) && count($customers) > 0) { 
-		?>
-		<?php foreach ($customers as $customer) {  ?>
-			<tr>
-                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
-                        <td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
-						<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
-						<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
-                        <td><?php echo  $customer['modified'] ;?></td>-->
-                        <td>
-				<?php 
-				if($customer['inactive']==0){
-					echo "<span class=label-success>Active</span>";
-				} else { echo "<span class=label-warning>Inactive</span>"; }				
-				?>
-			</td> 
-			<td class="actions">
-				<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
-				<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
-			</td>                         
-            </tr>
+		<?php if (is_array($customers) && count($customers) > 0) { ?>
+			<?php foreach ($customers as $customer) {  ?>
+				<tr>
+					<td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
+					<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
+					<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
+					<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
+					<td><?php echo  $customer['modified'] ;?></td>-->
+					<td>
+					<?php 
+					if($customer['inactive']==0){
+						echo "<span class=label-success>Active</span>";
+					} else { echo "<span class=label-warning>Inactive</span>"; }				
+					?>
+					</td> 
+					<td class="actions">
+						<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
+						<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+					</td>                         
+				</tr>
 				<?php } ?>
-                <?php } ?>
+			<?php } ?>
             </tbody>            
         </table>
 	<?php } else {

@@ -137,7 +137,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
+                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
 						<td><?php echo $customer['country_name']; ?></td>
 						<td><?php echo $customer['region_name']; ?></td>
 						<td><?php echo date('d-m-Y', strtotime($customer['created'])); ?></td>
@@ -150,8 +150,8 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 				?>
 			</td>                         
 					<td class="actions">
-						<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
-						<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
+						<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
+						<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
 					</td>
 				</tr>
                     <?php } ?>

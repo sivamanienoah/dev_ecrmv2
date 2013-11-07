@@ -150,7 +150,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                 <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/location/update/<?php echo  $customer['locationid'] ?>"><?php echo  $customer['location_name'] ; ?></a><?php } else { echo $customer['location_name']; } ?></td>
+                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/location/update/<?php echo  $customer['locationid'] ?>"><?php echo  $customer['location_name'] ; ?></a><?php } else { echo $customer['location_name']; } ?></td>
 						<td><?php echo $customer['state_name']; ?></td>
 						<td><?php echo $customer['country_name']; ?></td>
 						<!--td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td-->
@@ -163,8 +163,8 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 							?>
 						</td>      
 						<td class="actions">
-							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>"><?php echo  "Edit"; ?><?php } else echo "Edit"; ?></a>
-							<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete" href="regionsettings/location_delete/delete/<?php echo $customer['locationid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
+							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>"><?php echo  "Edit"; ?><?php } else echo "Edit"; ?></a>
+							<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/location_delete/delete/<?php echo $customer['locationid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
 						</td>
                     </tr>
                     <?php } ?>

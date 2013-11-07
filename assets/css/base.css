@@ -1361,7 +1361,7 @@ html[xmlns] .clearfix {
 	padding-right:4px;
 	padding-top:2px;
 }
-
+.clrmarron { color: #A51E04 !important; }
 .data-table th { padding:0; }
 .data-table th a { 
 	display:block;
