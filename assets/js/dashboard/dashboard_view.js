@@ -1329,7 +1329,8 @@ function loadEditTables(){
 							</div>');
 	});
 	if (taskids.length < 1)	{
-		$('#jv-tab-4').unblock();
+		// $('#jv-tab-4').unblock();
+		$.unblockUI();
 		return;
 	}
 	
@@ -1341,7 +1342,6 @@ function loadEditTables(){
 		if (data != '')	{
 			$('form.random-task-tables').html(data);
 		} 
-
 		// $('#jv-tab-4').unblock();
 		$.unblockUI();
 	});

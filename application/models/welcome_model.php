@@ -510,10 +510,10 @@ class Welcome_model extends crm_model {
 			$this->db->order_by("j.jobid", "desc");
 			
 		}
-		else { 
+		else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+			$this->db->select('j.pjt_status, j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
@@ -526,9 +526,10 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = c.add1_region');
 			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
-			
+			$this->db->where('j.pjt_status', 0); 
 			// $this->db->where('j.jobid != "null" AND j.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12)');
-			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'") AND j.pjt_status = "0" ');
+			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'")');
+			
 			
 			if($stage[0] != 'null' && $stage[0] != 'all') {
 				$this->db->where_in('j.job_status',$stage); 
@@ -582,7 +583,7 @@ class Welcome_model extends crm_model {
 				
 				//or_where condition is used for to bring the lead owner leads when he creating the leads for different region.
 				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12))');
-				$this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN ("'.$this->stages.'"))');
+				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN ("'.$this->stages.'"))');
 			}
 			
 			//Advanced filter
@@ -612,7 +613,7 @@ class Welcome_model extends crm_model {
 			
 		}
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		// echo $this->db->last_query();
 		
 		$res =  $query->result_array();       
 		return $res;

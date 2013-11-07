@@ -76,7 +76,8 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				
 				$('#set-job-task')[0].reset();
 			}
-			$('#jv-tab-4').unblock();
+			// $('#jv-tab-4').unblock();
+			$.unblockUI();
 		},
 		'json'
 	);
@@ -267,6 +268,7 @@ function loadExistingTasks()
 		{
 			$('.existing-task-list').append(data);
 			$('#jv-tab-4').unblock();
+			$.unblockUI();
 		}
 	);
 	
@@ -301,6 +303,7 @@ function setTaskStatus(taskid, el)
 		if ( ! window.confirm('Are you sure you want to delete this task?'))
 		{
 			$('#jv-tab-4').unblock();
+			$.unblockUI();
 			return false;
 		}
 		else
@@ -317,6 +320,7 @@ function setTaskStatus(taskid, el)
 		{
 			alert('To mark this task as 100%,\nplease click through to the job\nas it requires quality verification!');
 			$('#jv-tab-4').unblock();
+			$.unblockUI();
 			return false;
 		}
 		else if (task_status_val == 100 && ! _task_require_qc && $.trim($('.task-require-qc', $('#task-table-' + taskid)).text()) == '1')
@@ -401,6 +405,7 @@ function setTaskStatus(taskid, el)
 				_task_require_qc = false;				
 				
 				$('#jv-tab-4').unblock();
+				$.unblockUI();
 			},
 			'json'
 		);

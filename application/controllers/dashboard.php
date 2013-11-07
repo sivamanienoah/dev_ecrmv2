@@ -232,8 +232,8 @@ class Dashboard extends crm_controller {
 			foreach($data['getLeadDetail'] as $leadDet) {
 			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .= '<tr>
-								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>
+								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
+								 <td><a href="'.base_url().'welcome/view_quote/'.$leadDet['jobid'].'" target="_blank">'.$leadDet['job_title'].'</a></td>
 								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
@@ -274,8 +274,8 @@ class Dashboard extends crm_controller {
 			$lead_det['expect_worth_amount'] = $lead_info->expect_worth_name." ".$lead_info->expect_worth_amount;	
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
-			$lead_table_output .=  "<tr><td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."/welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']."</a></td>
+			$lead_table_output .=  "<tr><td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
+			<td><a href='".base_url()."/welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['job_title']."</a></td>
 			<td>".$lead_det['cflname']."</td><td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td><td>". $lead_det['lead_indicator'] ."</td><td text align=right>".number_format($amt_converted, 2, '.', '') ."</td>
 			</tr>";
@@ -310,8 +310,8 @@ class Dashboard extends crm_controller {
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$lead_table_output .=  "<tr>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']. "</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['job_title']. "</a></td>
 			<td>".$lead_det['cflname']."</td>
 			<td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td>
@@ -349,8 +349,8 @@ class Dashboard extends crm_controller {
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$assignee_table_output .=  "<tr>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."/' target='_blank'>".$lead_det['job_title']."</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['jobid']."' target='_blank'>".$lead_det['job_title']."</a></td>
 			<td>".$lead_det['cflname']."</td>
 			<td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td>
@@ -762,8 +762,8 @@ class Dashboard extends crm_controller {
 					break;
 				}
 				$res['html'] .= '<tr>
-								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'/" target="_blank">'.$leadDet['job_title'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'" target="_blank">'.$leadDet['job_title'].'</a></td>
 								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
