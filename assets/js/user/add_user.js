@@ -454,7 +454,7 @@ $('.checkUser').hide();
         });
 	}
 	/*
-	 Levels and regino setting functions starts
+	 Levels and region setting functions starts
 	*/
 	function loadRegion() {
 		$(".region-box").css('display', 'block');
