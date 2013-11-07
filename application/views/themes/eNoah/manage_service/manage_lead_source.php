@@ -18,7 +18,7 @@ $userdata = $this->session->userdata('logged_in_user');
 					Search by Lead Source
 				</td>
 				<td>
-					<input type="text" name="cust_search" value="<?php echo $this->uri->segment(4) ?>" class="textfield width200px" />
+					<input type="text" name="cust_search" value="<?php echo urldecode($this->uri->segment(4)); ?>" class="textfield width200px" />
 				</td>
 				<td>
 					<div class="buttons">

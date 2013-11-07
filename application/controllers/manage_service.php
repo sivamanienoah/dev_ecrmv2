@@ -45,10 +45,8 @@ class Manage_service extends crm_controller {
 	*@Search manage service
 	*@Method index
 	*/
-	
 	public function search(){
-		$cancel = $this->input->post('cancel_submit');
-        if (!empty($cancel)) {
+        if (isset($_POST['cancel_submit'])) {
             redirect('manage_service/');
         } else if ($name = $this->input->post('cust_search')) {
             redirect('manage_service/index/0/' . rawurlencode($name));
@@ -57,17 +55,15 @@ class Manage_service extends crm_controller {
         }
     }
 
+	
 	/*
 	*@Search Lead Sources 
 	*@Method  search_lead
 	*/
-	
 	public function search_lead() {
-	
-		$cancel = $this->input->post('cancel_submit');
-        if (!empty($cancel)) {
+		if (isset($_POST['cancel_submit'])) {
             redirect('manage_service/manage_leadSource');
-        } else if ($name = $this->input->post('cust_search')) {	
+        } else if ($name = $this->input->post('cust_search')) {
             redirect('manage_service/manage_leadSource/0/' . rawurlencode($name));
         } else {
             redirect('manage_service/manage_leadSource');
@@ -78,10 +74,9 @@ class Manage_service extends crm_controller {
 	*@Search Seles divisions
 	*@Method  search_sales
 	*/
-	
 	public function search_sales() {
 		$cancel = $this->input->post('cancel_submit');
-        if (!empty($cancel)) {
+        if (isset($_POST['cancel_submit'])) {
             redirect('manage_service/manage_sales');
         } else if ($name = $this->input->post('cust_search')) {	
             redirect('manage_service/manage_sales/0/' . rawurlencode($name));
@@ -94,7 +89,6 @@ class Manage_service extends crm_controller {
 	*@For search currency
 	*@Method  search_sales
 	*/
-	
 	public function search_currency() {
 		
 	   $cancel = $this->input->post('cancel_submit'); 
@@ -111,7 +105,6 @@ class Manage_service extends crm_controller {
 	*@For sales divisions listing page
 	*@Method  manage_sales
 	*/
-	
 	public function manage_sales($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Sales Divisions';
 		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
@@ -122,7 +115,6 @@ class Manage_service extends crm_controller {
 	*@For lead source listing page
 	*@Method   manage_leadSource
 	*/
-
 	public function manage_leadSource($limit, $search = FALSE) {
 		$data['page_heading'] = 'Manage Lead Source';
 		$data['get_lead_source'] = $this->manage_service_model->get_lead_source($search);		
@@ -133,7 +125,6 @@ class Manage_service extends crm_controller {
 	*@For Expected Worth - Currency Listing Page
 	*@Method   manage_expt_worth_cur
 	*/
-	
 	public function manage_expt_worth_cur($search = FALSE) {
 		$data['page_heading'] = 'Manage Currency';		
 		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);		
@@ -144,7 +135,6 @@ class Manage_service extends crm_controller {
 	*@For Add Lead Source
 	*@Method   ls_add
 	*/
-	
 	public function ls_add($update = false, $id = false) {		
 		$this->load->library('validation');
         $data = array();        
@@ -312,7 +302,6 @@ class Manage_service extends crm_controller {
 	*@For Delete service requirement
 	*@Method   ser_delete
 	*/
-	
 	public function ser_delete($update, $id) 
 	{	
 		if ($this->session->userdata('delete')==1)
@@ -355,7 +344,6 @@ class Manage_service extends crm_controller {
 	*@For add sales divisions
 	*@Method   division_add
 	*/
-	
 	public function division_add($update = false, $id = false) 
 	{
 		
@@ -446,7 +434,6 @@ class Manage_service extends crm_controller {
 	*@For delete sales divisions
 	*@Method   division_add
 	*/
-
 	public function division_delete($update, $id) 
 	{
 		if ($this->session->userdata('delete')==1)
@@ -493,7 +480,6 @@ class Manage_service extends crm_controller {
 	*@For ajax check status
 	*@Method   ajax_check_status
 	*/
-	
 	public function ajax_check_status() 
 	{
 		$post_data  = real_escape_array($this->input->post());
@@ -514,7 +500,6 @@ class Manage_service extends crm_controller {
 	*@For ajax check status (sales divisions)
 	*@Method   ajax_check_status_division
 	*/
-	
 	public function ajax_check_status_division() 
 	{
 		$post_data  = real_escape_array($this->input->post());
@@ -535,7 +520,6 @@ class Manage_service extends crm_controller {
 	*@For ajax check status (job category)
 	*@Method   ajax_check_status_job_category
 	*/
-	
 	public function ajax_check_status_job_category() 
 	{
 		$post_data  = real_escape_array($this->input->post());
@@ -556,7 +540,6 @@ class Manage_service extends crm_controller {
 	*@For ajax check status (currency)
 	*@Method   ajax_check_status_currency
 	*/
-	
 	public function ajax_check_status_currency() 
 	{
 		$post_data  = real_escape_array($this->input->post());
@@ -577,7 +560,6 @@ class Manage_service extends crm_controller {
 	*@For currency adding
 	*@Method   expect_worth_cur_add
 	*/
-	
 	public function expect_worth_cur_add($update = false, $id = false) 
 	{
 		$this->load->library('validation');
@@ -632,10 +614,8 @@ class Manage_service extends crm_controller {
 	*@For currency type edit
 	*@Method   expect_worth_cur_edit
 	*/
-	
 	public function expect_worth_cur_edit($update = false, $id = false) 
 	{
-				
 		$this->load->library('validation');
         $data = array();
         
@@ -702,7 +682,6 @@ class Manage_service extends crm_controller {
 	*@For currency type - delete
 	*@Method   cur_type_delete
 	*/
-	
 	public function cur_type_delete($update, $id)
 	{
 		if ($this->session->userdata('delete')==1)
@@ -729,7 +708,6 @@ class Manage_service extends crm_controller {
 	*@Get Currenecy Name
 	*@Method   get_cur_name
 	*/
-	
 	public function get_cur_name() 
 	{
 		$post_data              = real_escape_array($this->input->post());
