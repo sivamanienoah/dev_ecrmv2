@@ -207,6 +207,7 @@ class Dashboard_model extends crm_model {
 	public function getLeadsAging($cusId = FALSE) {
 		
 		$todayDate = date('Y-m-d h:m:s');
+		// $todayDate = date('Y-m-d');
 		$thirtyDays = date('Y-m-d h:m:s', strtotime("now -30 days"));
 		$sixtyDays = date('Y-m-d h:m:s', strtotime("now -60 days"));
 		$ninetyDays = date('Y-m-d h:m:s', strtotime("now -90 days"));

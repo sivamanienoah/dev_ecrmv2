@@ -171,7 +171,7 @@
 					<td>
                         <div class="buttons">
 							<button type="submit" onclick="return last();" name="update_user" class="positive" id="checkemail">				
-								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> User
+								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> User
 							</button>
 						</div>
                     </td>

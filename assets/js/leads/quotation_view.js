@@ -115,7 +115,7 @@ function loadCountry() {
 	var params 				= {};
 	params[csrf_token_name] = csrf_hash_token;
 	$.post( 
-		'choice/loadCountrys/'+ region_id,
+		'welcome/loadCountrys/'+ region_id,
 		params,
 		function(data) {										
 			if (data.error) {
@@ -139,7 +139,7 @@ function loadState() {
 	params[csrf_token_name] = csrf_hash_token;
 	if(coun_id != '') {
 		$.post( 
-			'choice/loadStates/'+ coun_id,
+			'welcome/loadStates/'+ coun_id,
 			params,
 			function(data) {										
 				if (data.error) {
@@ -163,7 +163,7 @@ function loadLocations() {
 	params[csrf_token_name] = csrf_hash_token;
 	if(st_id != '') {
 		$.post( 
-			'choice/loadLocns/'+ st_id,
+			'welcome/loadLocns/'+ st_id,
 			params,
 			function(data) {										
 				if (data.error) {

@@ -6,7 +6,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 <div id="content">	
     <div class="inner">
 	<div class="in-content">
-	<?php if(($this->session->userdata('accesspage')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
+	<?php if(($this->session->userdata('viewAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('addAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('editAdmin')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
 		<form action="<?php echo  $this->uri->uri_string() ?>" id="state_form" method="post">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -137,7 +137,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if ($this->session->userdata('edit')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
+                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
 						<td><?php echo $customer['country_name']; ?></td>
 						<td><?php echo $customer['region_name']; ?></td>
 						<td><?php echo date('d-m-Y', strtotime($customer['created'])); ?></td>
@@ -150,8 +150,8 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 				?>
 			</td>                         
 					<td class="actions">
-						<?php if ($this->session->userdata('edit')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
-						<?php if ($this->session->userdata('delete')==1) {?> | <a class="delete" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo  "Delete"; ?></a><?php } ?>
+						<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
+						<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
 					</td>
 				</tr>
                     <?php } ?>

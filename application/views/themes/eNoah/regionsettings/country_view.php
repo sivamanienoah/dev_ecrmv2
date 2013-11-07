@@ -1,7 +1,7 @@
-<div id="content">    
+<div id="content">
 	<div class="inner">
 		<div class="in-content"> 
-		<?php if(($this->session->userdata('accesspage')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
+		<?php if(($this->session->userdata('viewAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('addAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('editAdmin')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
 			<form action="<?php echo  $this->uri->uri_string() ?>" id="country_form" method="post">
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -97,33 +97,32 @@
 			</tr>
 		</thead>            
 		<tbody>
-                <?php if (is_array($customers) && count($customers) > 0) { ?>
-                <?php foreach ($customers as $customer) { ?>
-                <tr>
-                        <td><?php if ($this->session->userdata('edit')==1) {?><a class="edit" href="regionsettings/country/update/<?php echo  $customer['countryid'] ?>"><?php echo  $customer['country_name'] ; ?></a><?php } else { echo $customer['country_name']; } ?></td>
-                        <td><?php echo $customer['region_name']; ?></td>
+			<?php if (is_array($customers) && count($customers) > 0) { ?>
+				<?php foreach ($customers as $customer) { ?>
+				<tr>
+						<td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/country/update/<?php echo  $customer['countryid'] ?>"><?php echo  $customer['country_name'] ; ?></a><?php } else { echo $customer['country_name']; } ?></td>
+						<td><?php echo $customer['region_name']; ?></td>
 						<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
 						<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
 						<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
-                        <td><?php echo  $customer['modified'];?></td>-->
-                        <td>
-				<?php 
-				if($customer['inactive']==0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; 		
-				?>
-			</td>  
-			<td class="actions">
-				<?php if ($this->session->userdata('edit')==1) { ?><a class="edit" href="regionsettings/country/update/<?php echo $customer['countryid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>
-				<?php if ($this->session->userdata('delete')==1) { ?> | <a class="delete" href="regionsettings/country_delete/delete/<?php echo $customer['countryid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
-			</td>                      
-                </tr>																									
-                <?php } ?>
-                <?php } ?>
+						<td><?php echo  $customer['modified'];?></td>-->
+						<td>
+						<?php 
+						if($customer['inactive']==0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>";
+						?>
+						</td>  
+						<td class="actions">
+							<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit" href="regionsettings/country/update/<?php echo $customer['countryid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>
+							<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete" href="regionsettings/country_delete/delete/<?php echo $customer['countryid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+						</td>                      
+				</tr>																									
+				<?php } ?>
+			<?php } ?>
 		</tbody>            
         </table>
-
 	<?php } else {
-				echo "You have no rights to access this page";
-			} 
+			echo "You have no rights to access this page";
+		} 
 	?>
 	</div>
 </div>

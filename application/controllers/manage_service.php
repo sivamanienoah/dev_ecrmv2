@@ -166,7 +166,8 @@ class Manage_service extends crm_controller {
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v) {
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
-        }		
+        }
+		
 		if ($this->validation->run() != false) {
             foreach($fields as $key => $val) {
                 $update_data[$key] = $this->input->post($key);
@@ -192,11 +193,11 @@ class Manage_service extends crm_controller {
 		$this->load->view('manage_service/manage_lead_source_add', $data);
 	}
 
+	
 	/*
 	*@For Delete Lead Source
 	*@Method   ls_delete
 	*/
-	
 	public function ls_delete($update, $id) {
 		if ($this->session->userdata('delete')==1) {
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
@@ -213,11 +214,11 @@ class Manage_service extends crm_controller {
 		}
 	}
 
+	
 	/*
 	*@For Add service requirement
 	*@Method   ser_add
 	*/
-	
 	public function ser_add($update = false, $id = false) {
 	
 		$this->load->library('validation');

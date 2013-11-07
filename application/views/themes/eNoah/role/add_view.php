@@ -55,6 +55,5 @@
 }?>
 </div>
  
-
 <?php require (theme_url(). '/tpl/footer.php'); ?>
 

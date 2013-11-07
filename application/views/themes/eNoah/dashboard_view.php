@@ -17,6 +17,7 @@ require (theme_url().'/tpl/header.php');
 ?>
 <?php if($this->session->userdata('viewlead')==1) { ?>
 <script type="text/javascript">var this_is_home = true;</script>
+<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.logAxisRenderer.min.js"></script>
@@ -51,7 +52,7 @@ switch ($userdata['level'])
 <?php if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript">var curr_job_id = 0;</script>
-<script type="text/javascript" src="assets/js/blockui.v2.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <style type="text/css">
 @import url(assets/css/tasks.css?q=1);

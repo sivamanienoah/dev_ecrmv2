@@ -15,7 +15,7 @@
 			<table class="layout">
 				<tr>
                     <td>Lead Source: * </td>
-					<td><input type="text" name="lead_source_name" value="<?php echo $this->validation->lead_source_name ?>" class="textfield width200px" /></td>
+					<td><input type="text" name="lead_source_name" value="<?php echo $this->validation->lead_source_name; ?>" class="textfield width200px" /></td>
 				</tr>
 				<tr>
 					<td>Status</td>

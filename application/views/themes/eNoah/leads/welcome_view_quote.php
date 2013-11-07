@@ -123,9 +123,9 @@ function addLog() {
 	
 	
 	$.blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
+		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+	});
 	
 	
 	var form_data = {'userid':userid, 'jobid':quote_id, 'log_content':the_log, 'emailto':email_set,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
@@ -998,7 +998,7 @@ $(function(){
 								<td colspan="4"><strong>All fields are required!</strong></td>
 							</tr>
 							<tr>
-								<td valign="top"><br /><br />Task Desc a</td>
+								<td valign="top"><br /><br />Task Desc</td>
 								<td colspan="3">
 									<strong><span id="task-desc-countdown">1000</span></strong> characters left.<br />
 									<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>

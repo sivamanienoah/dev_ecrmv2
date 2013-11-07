@@ -1,7 +1,7 @@
 <div id="content">
     <div class="inner">
 		<div class="in-content"> 
-		<?php if(($this->session->userdata('accesspage')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
+		<?php if(($this->session->userdata('viewAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('addAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('editAdmin')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
 			<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Region Details</h2>
 			<?php if ($this->validation->error_string != '') { ?>
 				<div class="form_error">
@@ -116,7 +116,7 @@
 		?>
 		<?php foreach ($customers as $customer) {  ?>
 			<tr>
-                        <td><?php if ($this->session->userdata('edit')==1) {?><a class="edit" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
+                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
                         <td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
 						<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
 						<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
@@ -129,8 +129,8 @@
 				?>
 			</td> 
 			<td class="actions">
-				<?php if ($this->session->userdata('edit')==1) { ?><a class="edit" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>
-				<?php if ($this->session->userdata('delete')==1) { ?> | <a class="delete" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+				<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
+				<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
 			</td>                         
             </tr>
 				<?php } ?>
