@@ -278,7 +278,6 @@ class User extends crm_controller {
 	*@Check User Status
 	*
 	*/
-	
 	function ajax_check_status_user() 
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
@@ -289,7 +288,6 @@ class User extends crm_controller {
 	*@Delete User
 	*
 	*/
-	
 	function delete_user($id = false)
 	{
 		if ($this->session->userdata('delete')==1) {
