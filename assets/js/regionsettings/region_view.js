@@ -4,23 +4,20 @@
 */
 
 // "site_base_url" is global javascript variable 
- 
- $('.first').addClass('1');
-$('.prev').addClass('1');
-$('.pagedisplay').addClass('1');
-$('.next').addClass('1');
-$('.last').addClass('1');
-$('.pagesize').addClass('1');
 $(document).ready(function() {
 	$('#error1').hide();
-	$('a.edit').click(function() {
-	// $('a.edit').delegate('click', function() {
+	//$('a.edit').click(function() {
+	$(document).delegate('a.editReg','click',function() {
 		$('#error1').hide();
-		var url = $(this).attr('href');
-		$('.in-content').load(url);
+		var url = $(this).attr('href');		
+		$('.in-content').load(url +" .in-content",function(){
+			datTable();
+		});
 		return false;
 	});
-	$('button.positive').click(function() { 
+	
+	// $('button.positive').click(function() {
+	$(document).delegate('button.positive','click',function() {
 		$('#error1').hide();
 		var region  = $("#region_name").val() ;
 		if(region == ""){			
@@ -29,22 +26,9 @@ $(document).ready(function() {
 		}
 	});
 	
-	$('button.negative').click(function() {
+	// $('button.negative').click(function() {
+	$(document).delegate('button.negative','click',function() {
 		window.location.href= site_base_url+"regionsettings/region_settings/region";
-		return false;
-	});
-
-	$('button.search').click(function() {
-		var search = $('#search-val').val();
-		$('#error1').hide();
-		var stencode=encodeURIComponent(search);
-		var linkUrl = "regionsettings/region_search/0/"+stencode;
-		//alert(linkUrl);
-		//$('.in-content').load(linkUrl);
-		// $('#ui-tabs-3').load(linkUrl,function() {
-		$('.in-content').load(linkUrl,function() {
-			$('#region_form').attr("action","./regionsettings/region");
-		});
 		return false;
 	});
 });
@@ -74,6 +58,10 @@ $('.checkUser').hide();
 	}
 
 $(function() {
+	datTable();
+});	
+	
+function datTable(){
 	$('.reg-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
@@ -88,6 +76,5 @@ $(function() {
 		"bAutoWidth": false,
 		"bDestroy": true
 	});
-});	
-	
+}
 /////////////////

@@ -5,49 +5,44 @@
 
 // "site_base_url" is global javascript variable 
  
-$('.first').addClass('3');
-$('.prev').addClass('3');
-$('.pagedisplay').addClass('3');
-$('.next').addClass('3');
-$('.last').addClass('3');
-$('.pagesize').addClass('3');
 $(document).ready(function() {
- $('button.stsearch').click(function() {    
-    var st = $('#statesearch').val();
-	var stencode=encodeURIComponent(st);
-    var sturl = "regionsettings/state_search/0/"+ stencode;	
-    //$('.in-content').load(sturl);
-	$('#ui-tabs-7').load(sturl,function() {
-     $('#state_form').attr("action","./regionsettings/state");
-});
-    return false;
-  });
- $('.error').hide();
-   $('a.edit').click(function() {
-    var url = $(this).attr('href');
-    $('.in-content').load(url);
-    return false;
-  });
-  $('button.negative').click(function() {
-	window.location.href= site_base_url+"regionsettings/region_settings/state"
-	return false;
+	$('.error').hide();
+	// $('a.edit').click(function() {
+	$(document).delegate('a.editSte','click',function() {
+		var url = $(this).attr('href');
+		$('.in-content').load(url +" .in-content", function(){
+			datStTable();
+		});
+		return false;
 	});
-  $('.positive').click(function() {
-    $('.error').hide();
-	var region  = $('#country_id').val() ;
-			if(region == ""){
-				$('.error').show();
-				return false;
-				}
-	var country  = $('#state_id').val() ;
-			if(country == ""){
-				$('td#error2.error').show();
-				return false;
-				}			
+	
+	// $('button.negative').click(function() {
+	$(document).delegate('button.negative','click',function() {
+		window.location.href= site_base_url+"regionsettings/region_settings/state"
+		return false;
+	});
+	
+	// $('.positive').click(function() {
+	$(document).delegate('.positive','click',function() {
+		$('.error').hide();
+		var region  = $('#st_regionid').val() ;
+		if(region == 0){
+			$('#errorreg').show();
+			return false;
+		}
+		var country  = $('#country_id').val() ;
+		if(country == 0){
+			$('.error').show();
+			return false;
+		}
+		var state  = $('#state_name').val() ;
+		if(state == 0){
+			$('td#error2.error').show();
+			return false;
+		}
+		$('#state_form').submit();
     });
 });
-
-
 
 var id='';
 function getCountryst(val,id) {
@@ -57,6 +52,10 @@ function getCountryst(val,id) {
 }
 
 $(function() {
+	datStTable();
+});
+
+function datStTable() {
 	$('.ste-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 15,
@@ -68,7 +67,8 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"bDestroy": true
 	});
-});
+}
 /////////////////
