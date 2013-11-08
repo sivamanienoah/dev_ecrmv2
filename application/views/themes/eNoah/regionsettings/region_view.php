@@ -38,30 +38,21 @@
 					</td>
 					<?php } else { ?>
 					<td style="float:left;">
-					<div class="buttons">
-						<button type="submit" name="update_region" class="positive">								
-						<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Region
-						</button>
-					</div>
+						<div class="buttons">
+							<button type="submit" name="update_region" class="positive">								
+							<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Region
+							</button>
+						</div>
 					</td>
 					<?php if ($this->uri->segment(4)) { ?>
-                    <td style="float:left;">
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
+						<td style="float:left;">
+							<div class="buttons">
+								<button type="submit" name="cancel_submit" class="negative">
+									Cancel
+								</button>
+							</div>
+						</td>
                     <?php } ?>
-					<td colspan="2">
-						<?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && 1 == 1) { # 1 == 2 do not delete users ?>
-						<!--div class="buttons">
-						    <button type="submit" name="delete_region" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-							Delete Region
-						    </button>
-						</div-->
-						<?php } else { echo "&nbsp;"; } ?>
-					</td>
 					<?php } ?>
 				</tr>
 			</table>
