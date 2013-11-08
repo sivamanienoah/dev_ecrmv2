@@ -156,20 +156,6 @@ class Regionsettings extends crm_controller {
 		}		
 	}
 	
-	/*
-	*@Search Region Record
-	*@User Controller
-	*/
-	public function region_search($limit = 0, $search = false)
-	{
-		$this->login_model->check_login();
-		$data['customers']  = $this->regionsettings_model->region_list($limit, $search);
-		// echo "<pre>"; print_r($data['customers']); exit;
-		if ($search == false) {
-			$config['base_url'] = $this->config->item('base_url') . 'region/index/';
-		}
-		$this->load->view('regionsettings/region_view', $data);
-    }
 	
 	/*
 	*@Get State 
@@ -789,81 +775,11 @@ class Regionsettings extends crm_controller {
 		}			
 	}
 	
-	//Search functionality
-	
-	
-
-	/*
-	*@Search Country Record
-	*@User Controller
-	*/
-	public function country_search($limit = 0, $search = false)
-	{
-		$this->login_model->check_login();
-        $data['customers'] = $this->regionsettings_model->country_list($limit, $search);
-        $data['regions'] = $this->regionsettings_model->region_list($limit);
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url'] = $this->config->item('base_url') . 'country/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->country_count();
-            $config['per_page'] = '35';
-            $this->pagination->initialize($config);
-            $data['pagination'] = $this->pagination->create_links();
-        }
-        $this->load->view('regionsettings/country_view', $data);
-    }
-
-	/*
-	*@Search State Record
-	*@User Controller
-	*/
-	
-	public function state_search($limit = 0, $search = false)
-	{
-		$this->login_model->check_login();
-		$data['regions']    = $this->regionsettings_model->region_list($limit);
-        $data['customers']  = $this->regionsettings_model->state_list($limit, $search);
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'state/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->state_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
-        $this->load->view('regionsettings/state_view', $data);
-    }
-
-	/*
-	*@Search Location Record
-	*@User Controller
-	*/
-
-	public function location_search($limit = 0, $search = false)
-	{
-		$this->login_model->check_login();
-		$data['regions']    = $this->regionsettings_model->region_list($limit);
-        $data['customers']  = $this->regionsettings_model->location_list($limit, $search);
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'location/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->state_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
-        $this->load->view('regionsettings/location_view', $data);
-    }
 
 	/*
 	*@Level
 	*@User Controller
 	*/
-
-	//Search functionality ends here
 	public function level($update = false, $id = false, $ajax = false)
 	{
 		$post_data = real_escape_array($this->input->post());
