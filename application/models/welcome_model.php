@@ -583,7 +583,7 @@ class Welcome_model extends crm_model {
 				
 				//or_where condition is used for to bring the lead owner leads when he creating the leads for different region.
 				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12))');
-				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN ("'.$this->stages.'"))');
+				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN ("'.$this->stages.'") AND j.pjt_status = 0)');
 			}
 			
 			//Advanced filter
@@ -759,8 +759,7 @@ class Welcome_model extends crm_model {
     	$q = $this->db->get($this->cfg['dbpref'] . 'users');
     	return $q->result_array();
     }
-    
-
+	
 }
 
 ?>
