@@ -40,7 +40,7 @@ $("#advanceFilters").submit(function() {
 	   url: site_base_url+"welcome/advance_filter_search",
 	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 	   success: function(data){
-		   $('#advance_search_results').html(data);
+			$('#advance_search_results').html(data);
 	   }
 	 });
 	return false;  //stop the actual form post !important!
