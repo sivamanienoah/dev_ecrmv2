@@ -5,22 +5,6 @@
 
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
 
-$(function() {
-	$('.data-tbl').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
-		"iDisplayLength": 15,
-		"sPaginationType": "full_numbers",
-		"bInfo": true,
-		"bPaginate": true,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": false,
-		"bSort": true,
-		"bFilter": false,
-		"bAutoWidth": false,	
-	});
-});
-
 function checkStatus(leadSrc_id) {
 	var formdata = { 'data':leadSrc_id }
 	formdata[csrf_token_name] = csrf_hash_token	

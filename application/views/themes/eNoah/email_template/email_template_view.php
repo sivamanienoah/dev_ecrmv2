@@ -5,19 +5,21 @@ $userdata = $this->session->userdata('logged_in_user');
 ?>
 <div id="content">
 	<div class="inner">	
-		<h2><?php echo $page_heading; ?></h2>
-		
 		<?php if($this->session->userdata('add')==1) { ?>
-				<div class="buttons pull-right" style="padding-bottom:10px;">
-					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>email_template/add_email_template'">
-						Add New Template
-					</button>
+			<div>
+				<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+					<div class="buttons pull-right">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>email_template/add_email_template'">
+							Add New Template
+						</button>
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>email_template/add_template_header'">
+							Template Header & Footer
+						</button>
+					</div>
+				<div class="clearfix"></div>
 				</div>
-				<div class="buttons pull-right" style="padding:0 10px;">
-					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>email_template/add_template_header'">
-						Template Header & Footer
-					</button>
-				</div>
+			</div>
+
 		<?php } ?>
 		
 		<?php 

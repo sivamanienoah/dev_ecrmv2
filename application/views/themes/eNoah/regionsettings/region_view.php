@@ -16,7 +16,7 @@
 			<table class="layout">
 				<tr>
 					<td width="100">Region:</td>
-					<td width="240"><input type="text" id="region_name" name="region_name" value="<?php echo  $this->validation->region_name ?>" class="textfield width200px required" /> *</td>
+					<td width="240"><input type="text" id="region_name" name="region_name" value="<?php echo  $this->validation->region_name; ?>" class="textfield width200px required" /> *</td>
 					<td class="error" style="color:red;" id="error1">Region Field required.</td>
 					<td class="checkUser" style="color:green" >Region Name Available.</td>
 					<td class="checkUser1" style="color:red" >Region Name Already Exists.</td>
@@ -66,40 +66,9 @@
 				</tr>
 			</table>
 		</form>	
-	        <h2>Region List</h2>
-        
-        <form action="regionsettings/region_settings/" method="post" id="cust_search_form">
 		
-			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		<h2>Region List</h2>
 		
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td>
-                        Search by Region
-                    </td>
-                    <td>
-                        <input type="text" id="search-val" name="cust_search" class="textfield width200px" />
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" class="search">
-                                
-                                Search
-                            </button>
-                        </div>
-                    </td>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-	</form>        
 		<table class="reg-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>

@@ -88,16 +88,8 @@ class Regionsettings extends crm_controller {
             }
         }
 		
-		$data['customers']  = $this->regionsettings_model->region_list($limit, $search);
-		$data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'region/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->region_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
+		$data['customers']  = $this->regionsettings_model->region_list($limit=false, $search=false);
+
 		$this->login_model->check_login();
 		
 		//adding region
@@ -165,10 +157,24 @@ class Regionsettings extends crm_controller {
 	}
 	
 	/*
+	*@Search Region Record
+	*@User Controller
+	*/
+	public function region_search($limit = 0, $search = false)
+	{
+		$this->login_model->check_login();
+		$data['customers']  = $this->regionsettings_model->region_list($limit, $search);
+		// echo "<pre>"; print_r($data['customers']); exit;
+		if ($search == false) {
+			$config['base_url'] = $this->config->item('base_url') . 'region/index/';
+		}
+		$this->load->view('regionsettings/region_view', $data);
+    }
+	
+	/*
 	*@Get State 
 	*@User Controller
 	*/
-	
 	public function state($update = false, $id = false, $ajax = false)
 	{	
 		$data               = array();
@@ -785,32 +791,12 @@ class Regionsettings extends crm_controller {
 	
 	//Search functionality
 	
-	/*
-	*@Search Region Record
-	*@User Controller
-	*/
-
-	public function region_search($limit = 0, $search = false)
-	{
-		$this->login_model->check_login();
-		$data['customers']  = $this->regionsettings_model->region_list($limit, $search);
-		$data['pagination'] = '';
-		if ($search == false) {
-			$this->load->library('pagination');
-			$config['base_url'] = $this->config->item('base_url') . 'region/index/';
-			$config['total_rows'] = (string) $this->regionsettings_model->region_count();
-			$config['per_page'] = '35';
-			$this->pagination->initialize($config);
-			$data['pagination'] = $this->pagination->create_links();
-		}
-		$this->load->view('regionsettings/region_view', $data);
-    }
+	
 
 	/*
 	*@Search Country Record
 	*@User Controller
 	*/
-	
 	public function country_search($limit = 0, $search = false)
 	{
 		$this->login_model->check_login();

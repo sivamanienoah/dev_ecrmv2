@@ -67,7 +67,7 @@ $(function() {
 		"bServerSide": false,
 		"bLengthChange": false,
 		"bSort": true,
-		"bFilter": false,
+		"bFilter": true,
 		"bAutoWidth": false,	
 	});
 });

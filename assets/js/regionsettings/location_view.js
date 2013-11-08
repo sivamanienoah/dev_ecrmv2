@@ -56,13 +56,9 @@
 
 			$('button.locsearch').click(function() {    
 				var loc = $('#locationsearch').val();
-				//alert(loc);
 				var locurl = "regionsettings/location_search/0/"+ loc;
-				//alert(locurl);
-				//  $('.in-content').load(locurl);
-
-				 $('#ui-tabs-9').load(locurl,function() {
-				 $('#location_form').attr("action","./regionsettings/location");
+				$('#ui-tabs-9').load(locurl,function() {
+					$('#location_form').attr("action","./regionsettings/location");
 				});
 				return false;
 			});
@@ -93,7 +89,7 @@ $(function() {
 		"bServerSide": false,
 		"bLengthChange": false,
 		"bSort": true,
-		"bFilter": false,
+		"bFilter": true,
 		"bAutoWidth": false,	
 	});
 });

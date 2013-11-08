@@ -24,47 +24,18 @@
 	}
 	else {	
 	?>
-	    <h2>Hosting Accounts</h2>
-        <p class="pagination"><?php //echo $pagination ?></p>
-        <form action="hosting/search/" method="post" id="cust_search_form">
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td valign="middle">
-                        Search by Domain Name
-                    </td>
-                    <td valign="middle">
-                        <input type="text" name="account_search" value="<?php echo  $this->uri->segment(4) ?>" class="textfield width200px" />
-                    </td>
-                    <td valign="middle">
-                        <div class="buttons">
-                            <button type="submit" class="positive">
-                                Search
-                            </button>
-                        </div>
-                    </td>
-					<?php if($this->session->userdata('add')==1) { ?>
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='hosting/add_account'">
-								Add New Hosting Account
-							</button>
-						</div>
-					</td>
-					<?php } ?>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td valign="middle">
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-		</form>
+	    
+		<div>
+			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Hosting Accounts</h2>
+				<div class="buttons pull-right">
+					<button type="button" class="positive" onclick="location.href='hosting/add_account'">
+						Add New Hosting Account
+					</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		
         
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             

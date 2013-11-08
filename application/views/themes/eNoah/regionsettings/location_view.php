@@ -105,35 +105,9 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 				</tr>
 			</table>
 		</form>	
-	<h2>Location List</h2>
-        
-        <form action="regionsettings/region_settings/" method="post" id="cust_search_form">
 		
-			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td>
-                        Search by Location
-                    </td>
-                    <td>
-                        <input type="text" id = "locationsearch" name="cust_search" class="textfield width200px" />
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" class="locsearch">Search</button>
-                        </div>
-                    </td>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">Cancel</button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-	</form>        
+		<h2>Location List</h2>
+          
         <table class="loc-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
             <thead>
                 <tr>

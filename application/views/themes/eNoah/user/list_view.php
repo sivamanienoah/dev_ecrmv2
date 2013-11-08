@@ -4,52 +4,20 @@
 <div id="content">
     <div class="inner">
     <?php if($this->session->userdata('accesspage')==1) { ?>       
-        <h2>User Database</h2>
-
-        <form action="user/search/" method="post" id="cust_search_form">
-			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+        <div>
+			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">User Database</h2>
+			<div class="buttons pull-right">
+				<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='user/add_user'" <?php } ?> >
+					Add New User
+				</button>
+			</div>
+			<div class="clearfix"></div>
+			</div>
+		</div>
 		
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td>
-                        Search by Name
-                    </td>
-                    <td>
-                        <input type="text" name="cust_search" value="<?php echo  $this->uri->segment(4) ?>" class="textfield width200px" />
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" class="positive">
-                                
-                                Search
-                            </button>
-                        </div>
-                    </td>
-					<?php if($this->session->userdata('add')==1) { ?>
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='user/add_user'" <?php } ?> >
-								Add New User
-							</button>
-						</div>
-					</td>
-					<?php } ?>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-		</form>
-        
 		<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
+		
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
-            
             <thead>
                 <tr>
                     <th>Full Name</th>
@@ -97,6 +65,6 @@
 	} ?>
 	</div>
 </div>
-<?php require (theme_url(). '/tpl/footer.php'); ?>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/user/list_view.js"></script>
+<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<?php require (theme_url(). '/tpl/footer.php'); ?>

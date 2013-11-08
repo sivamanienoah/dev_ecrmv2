@@ -10,7 +10,6 @@ class Regionsettings_model extends crm_model {
 	*@Get region List
 	*@Region Settings Model
 	*/
-	
     public function region_list($offset, $search) { 
         $userdata = $this->session->userdata('logged_in_user');
 		if ($search != false) {

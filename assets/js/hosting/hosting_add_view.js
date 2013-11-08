@@ -5,13 +5,13 @@
 	var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
 	nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
 	$(function() {
-	
-		var params = {'cust_name': $("#cust_name").val()};
-		params[csrf_token_name] = csrf_hash_token;
-		
 		$( "#cust_name" ).autocomplete({
 			minLength: 2, 
 			source: function(request, response) {
+			
+				var params = {'cust_name': $("#cust_name").val()};
+				params[csrf_token_name] = csrf_hash_token;
+				
 				$.ajax({ 
 					url: "hosting/ajax_customer_search",
 					data: params,
@@ -96,10 +96,6 @@
 						$.unblockUI();	
 						$('.notice').slideUp(400);
 						showMSG('<div id=confirm>New Customer Added!</div>');
-						// $('.q-cust-name span').html(res.cust_name);
-						// $('.q-cust-email span').html(res.cust_email);
-						// $('.q-cust-company span').html(res.cust_company);
-						// getUserForLeadAssign(res.cust_reg,res.cust_cntry,res.cust_ste,res.cust_locn);
 					} else {
 						$('.blockUI .layout').unblock();
 						$('.error-cont').html(res.ajax_error_str).slideDown(400);

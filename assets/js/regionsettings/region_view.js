@@ -14,6 +14,7 @@ $('.pagesize').addClass('1');
 $(document).ready(function() {
 	$('#error1').hide();
 	$('a.edit').click(function() {
+	// $('a.edit').delegate('click', function() {
 		$('#error1').hide();
 		var url = $(this).attr('href');
 		$('.in-content').load(url);
@@ -40,7 +41,8 @@ $(document).ready(function() {
 		var linkUrl = "regionsettings/region_search/0/"+stencode;
 		//alert(linkUrl);
 		//$('.in-content').load(linkUrl);
-		$('#ui-tabs-3').load(linkUrl,function() {
+		// $('#ui-tabs-3').load(linkUrl,function() {
+		$('.in-content').load(linkUrl,function() {
 			$('#region_form').attr("action","./regionsettings/region");
 		});
 		return false;
@@ -82,8 +84,9 @@ $(function() {
 		"bServerSide": false,
 		"bLengthChange": false,
 		"bSort": true,
-		"bFilter": false,
-		"bAutoWidth": false,	
+		"bFilter": true,
+		"bAutoWidth": false,
+		"bDestroy": true
 	});
 });	
 	
