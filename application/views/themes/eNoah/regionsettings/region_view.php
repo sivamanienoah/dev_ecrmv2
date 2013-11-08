@@ -116,15 +116,15 @@
 				<tr>
 					<td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
 					<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
-					<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>   
-					<!--<td><?php echo  $customer['mfnam']. $customer['mlnam']; ?></td>                        
-					<td><?php echo  $customer['modified'] ;?></td>-->
+					<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>
 					<td>
-					<?php 
-					if($customer['inactive']==0){
-						echo "<span class=label-success>Active</span>";
-					} else { echo "<span class=label-warning>Inactive</span>"; }				
-					?>
+						<?php 
+						if($customer['inactive']==0){
+							echo "<span class=label-success>Active</span>";
+						} else { 
+							echo "<span class=label-warning>Inactive</span>"; 
+						}				
+						?>
 					</td> 
 					<td class="actions">
 						<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
