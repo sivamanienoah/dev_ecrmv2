@@ -48,10 +48,9 @@
 		var  keyword = $("#keywordpjt").val(); 
 		if(keyword == "Project No, Project Title, Name or Company")
 		keyword = 'null';
-		document.getElementById('ad_filter').style.display = 'block';	
+		document.getElementById('ad_filter').style.display = 'block';
 		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-		//alert(sturl);
-		$('#ad_filter').load(sturl);	
+		$('#ad_filter').load(sturl);
 		return false;
 	});
 
