@@ -34,7 +34,7 @@ class Manage_service extends crm_controller {
 	*@Method index
 	*/
 	
-    public function index($limit, $search = FALSE) 
+    public function index($search = FALSE) 
 	{
         $data['page_heading'] = 'Manage Service / Product';
 		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);		
@@ -105,7 +105,7 @@ class Manage_service extends crm_controller {
 	*@For sales divisions listing page
 	*@Method  manage_sales
 	*/
-	public function manage_sales($limit, $search = FALSE) {
+	public function manage_sales($search = FALSE) {
 		$data['page_heading'] = 'Manage Sales Divisions';
 		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
 		$this->load->view('manage_service/manage_sales_divisions', $data);
@@ -115,7 +115,7 @@ class Manage_service extends crm_controller {
 	*@For lead source listing page
 	*@Method   manage_leadSource
 	*/
-	public function manage_leadSource($limit, $search = FALSE) {
+	public function manage_leadSource($search = FALSE) {
 		$data['page_heading'] = 'Manage Lead Source';
 		$data['get_lead_source'] = $this->manage_service_model->get_lead_source($search);		
 		$this->load->view('manage_service/manage_lead_source', $data);

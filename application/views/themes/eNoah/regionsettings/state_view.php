@@ -1,4 +1,3 @@
-<script type="text/javascript" src="assets/js/regionsettings/state_view.js"></script>
 <?php
 if($this->validation->regionid != 0) 
 echo '<input type="hidden" name="region_update" id="region_update" value="'.$this->validation->regionid.'" />';
@@ -6,6 +5,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 <div id="content">	
     <div class="inner">
 	<div class="in-content">
+	<script type="text/javascript" src="assets/js/regionsettings/state_view.js"></script>
 	<?php if(($this->session->userdata('viewAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('addAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('editAdmin')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
 		<form action="<?php echo  $this->uri->uri_string() ?>" id="state_form" method="post">
 		
@@ -22,7 +22,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 				<tr>
 					<td width="100">Region:</td>
 					<td width="240">
-					<select name="regionid" class="textfield width200px" onchange="getCountryst(this.value)" class="textfield width200px required">
+					<select name="regionid" id="st_regionid" class="textfield width200px" onchange="getCountryst(this.value)" class="textfield width200px required">
 						<option value="0">Select Region</option>
                             <?php 
 							foreach ($regions as $region) { ?>
@@ -30,7 +30,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 							<?php } ?>
 					</select> *
 					</td>
-					<td class="error" id="error1" style="color:red;">Select Region</td>
+					<td class="error" id="errorreg" style="color:red; display:none;">Select Region</td>
 				</tr>
 				<div id="test"></div>
 				<tr>
@@ -38,19 +38,19 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 					<?php $cid = $this->validation->countryid ?>
 					<td id='country_row' width="240">
 						<select id="country_id" name="countryid" style="width:210px;">
-							<option value="">Select Country</option>
+							<option value="0">Select Country</option>
 							<?php if (is_array($countrys) && count($countrys) > 0) { ?>
 							<?php foreach ($countrys as $country) { ?>
 							<option value="<?php echo $country['countryid'];?>" <?php if($cid==$country['countryid']) { echo "selected"; } ?>><?php echo $country['country_name']; ?> </option>
 							<?php } } ?>
 						</select> *
 					</td>
-					<td class="error" id="error1" style="color:red;">Select Country</td>
+					<td class="error" id="error1" style="color:red; display:none;">Select Country</td>
 				</tr>
 				<tr>
 					<td width="100">State:</td>
-					<td width="240"><input id="state_id" type="text" name="state_name" value="<?php echo $this->validation->state_name ?>" class="textfield width200px required" /> *</td>
-					<td class="error" id="error2" style="color:red;">State Field Required.</td>
+					<td width="240"><input id="state_name" type="text" name="state_name" value="<?php echo $this->validation->state_name ?>" class="textfield width200px required" /> *</td>
+					<td class="error" id="error2" style="color:red; display:none;">State Field Required.</td>
 				</tr>
 				<tr>
 					<td>Status:</td>
@@ -105,7 +105,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
+                        <td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="editSte clrmarron" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo  $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?></td>
 						<td><?php echo $customer['country_name']; ?></td>
 						<td><?php echo $customer['region_name']; ?></td>
 						<td><?php echo date('d-m-Y', strtotime($customer['created'])); ?></td>
@@ -117,7 +117,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 							if($customer['inactive']==0)echo "<span class=label-success>Active</span>"; else echo "<span class = label-warning>Inactive</span>"; ?>
 						</td>                         
 						<td class="actions">
-							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
+							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="editSte clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
 							<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
 						</td>
 					</tr>

@@ -75,9 +75,8 @@ class Regionsettings extends crm_controller {
 	*@Region 
 	*@User Controller
 	*/
-	
 	public function region($update = false, $id = false, $ajax = false)
-	{	
+	{
 		$data=array();
 		$post_data = real_escape_array($this->input->post());
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_region'])) {
@@ -129,12 +128,6 @@ class Regionsettings extends crm_controller {
                     $this->session->set_flashdata('confirm', array('Region Details Updated!'));
                     redirect('regionsettings/region_settings/region');                  
                 }                
-            }else if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['delete_region'])) {
-                //delete
-                if ($this->regionsettings_model->delete_region($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Region Deleted!'));
-                    redirect('regionsettings/region_settings/region');                  
-                }                
             }
 			$user_Detail                = $this->session->userdata('logged_in_user');
 			$update_data['created_by']  = $user_Detail['userid'];			
@@ -145,15 +138,19 @@ class Regionsettings extends crm_controller {
 			$this->db->where('region_name',$update_data['region_name']);
             $query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
             if($query == 0 ) {
-		    if ($this->regionsettings_model->insert_region($update_data)) {                    
-                    $this->session->set_flashdata('confirm', array('Region Details Updated!'));
-                    redirect('regionsettings/region_settings/region');                    
-                }
+				if ($this->regionsettings_model->insert_region($update_data)) {                    
+					$this->session->set_flashdata('confirm', array('Region Details Updated!'));
+					redirect('regionsettings/region_settings/region');                    
+				}
 			} else {
-					$this->session->set_flashdata('login_errors', array('Region Name Already Exists!'));
-                    redirect('regionsettings/region_settings/region');
+				$this->session->set_flashdata('login_errors', array('Region Name Already Exists!'));
+				redirect('regionsettings/region_settings/region');
 			}
 		}		
+	}
+	
+	public function region_redirect() {
+		redirect('regionsettings/region_settings/region');
 	}
 	
 	
@@ -168,15 +165,6 @@ class Regionsettings extends crm_controller {
 		$data['customers']  = $this->regionsettings_model->state_list($limit, $search);
 		$data['countrys']   = $this->regionsettings_model->country_list($limit, $search);
 		$data['regions']    = $this->regionsettings_model->region_list($limit, $search);
-		$data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'region/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->region_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
 		$this->login_model->check_login();
 
 		//adding State
@@ -331,7 +319,7 @@ class Regionsettings extends crm_controller {
 		$data=array();
 		$data = $this->regionsettings_model->getcountry_list($value);
 		$opt = '';
-		$opt .= '<select name="countryid" class="textfield width200px">';
+		$opt .= '<select name="countryid" id="country_id" class="textfield width200px">';
 		$opt .= '<option value="0">Select Country</option>';
 		foreach($data as $country){
 			if($id == $country['countryid']) 
@@ -442,18 +430,10 @@ class Regionsettings extends crm_controller {
 	{
 		$data               = array();
 		$post_data          = real_escape_array($this->input->post());
-		$data['customers']  = $this->regionsettings_model->country_list($limit, $search);
-		$data['regions']    = $this->regionsettings_model->region_list($limit, $search);
-		$data['pagination'] = '';
+		// echo "<pre>"; print_r($post_data); exit;
+		$data['customers']  = $this->regionsettings_model->country_list($limit=false, $search=false);
+		$data['regions']    = $this->regionsettings_model->region_list($limit=false, $search=false);
         
-		if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'country/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->country_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
 		$this->login_model->check_login();
 		
 		//adding State
@@ -466,7 +446,6 @@ class Regionsettings extends crm_controller {
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_country'])) {
             $customer = $this->regionsettings_model->get_country($id);
-			//print_r($customer);
             $data['this_country'] = $customer[0]['country_name'];
             $data['this_country'] = $customer[0]['regionid'];
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {

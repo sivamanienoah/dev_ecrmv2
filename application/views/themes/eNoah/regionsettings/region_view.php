@@ -1,6 +1,8 @@
+
 <div id="content">
     <div class="inner">
 		<div class="in-content"> 
+		<script type="text/javascript" src="assets/js/regionsettings/region_view.js"></script>
 		<?php if(($this->session->userdata('viewAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('addAdmin')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('editAdmin')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
 			<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Region Details</h2>
 			<?php if ($this->validation->error_string != '') { ?>
@@ -17,9 +19,9 @@
 				<tr>
 					<td width="100">Region:</td>
 					<td width="240"><input type="text" id="region_name" name="region_name" value="<?php echo  $this->validation->region_name; ?>" class="textfield width200px required" /> *</td>
-					<td class="error" style="color:red;" id="error1">Region Field required.</td>
-					<td class="checkUser" style="color:green" >Region Name Available.</td>
-					<td class="checkUser1" style="color:red" >Region Name Already Exists.</td>
+					<td class="error" style="color:red; display:none;" id="error1">Region Field required.</td>
+					<td class="checkUser" style="color:green; display:none;">Region Name Available.</td>
+					<td class="checkUser1" style="color:red; display:none;">Region Name Already Exists.</td>
 					<input type="hidden" class="hiddenUrl"/>
 				</tr>	
 				<tr>
@@ -74,7 +76,7 @@
 		<?php if (is_array($customers) && count($customers) > 0) { ?>
 			<?php foreach ($customers as $customer) {  ?>
 				<tr>
-					<td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
+					<td><?php if ($this->session->userdata('editAdmin')==1) {?><a class="editReg clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo  $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?></td>
 					<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
 					<td><?php echo  $customer['cfnam'].$customer['clnam']; ?></td>
 					<td>
@@ -87,7 +89,7 @@
 						?>
 					</td> 
 					<td class="actions">
-						<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="edit clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
+						<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="editReg clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"><?php echo "Edit"; ?></a> <?php } else echo "Edit"; ?>
 						<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="regionsettings/region_delete/delete/<?php echo $customer['regionid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
 					</td>                         
 				</tr>
@@ -102,4 +104,3 @@
     </div>
 	</div>
 	</div>
-	<script type="text/javascript" src="assets/js/regionsettings/region_view.js"></script>
