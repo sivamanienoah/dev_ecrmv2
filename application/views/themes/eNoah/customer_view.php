@@ -3,56 +3,22 @@
 <div id="content">
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
-        
-        <h2>Customer Database</h2>
-        <form action="customers/search/" method="post" id="cust_search_form">
-			
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td>
-                        Search by Name or Company Name
-                    </td>
-                    <td>
-                        <input type="text" name="cust_search" value="<?php echo $this->uri->segment(4) ?>" class="textfield width200px" />
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" class="positive">
-                                Search
-                            </button>
-                        </div>
-                    </td>
-					<?php if($this->session->userdata('add')==1) { ?>
-					
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='customers/add_customer'">
-								Add New Customer
-							</button>
-						</div>
-					</td>
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='importcustomers'">
-								Import Customer List
-							</button>
-						</div>
-					</td>
-					<?php } ?>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-		</form>
+		
+		<div>
+			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Customer Database</h2>
+			<div class="buttons pull-right">
+				<button type="button" class="positive" onclick="location.href='customers/add_customer'">
+					Add New Customer
+				</button>
+				
+				<button type="button" class="positive" onclick="location.href='importcustomers'">
+					Import Customer List
+				</button>
+			</div>
+			<div class="clearfix"></div>
+			</div>
+		</div>
+		
         
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 			<thead>
