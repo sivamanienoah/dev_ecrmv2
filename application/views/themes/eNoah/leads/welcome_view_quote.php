@@ -19,8 +19,18 @@ $(document).ready(function() {
 	$("#lead_query_list")
 	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
     .tablesorterPager({container: $("#pager1"),positionFixed: false});
-	
 });
+/*
+function validateRequestForm()
+{
+	var x=document.forms["search_req"]["keyword"].value;
+	//alert(x); return false;
+	if (x=='Lead No, Job Title, Name or Company') {
+		alert("Please provide any values");
+		return false;
+	}
+}
+*/
 </script>
 <div class="comments-log-container" style= "display:none;">
 	<?php 
@@ -636,6 +646,28 @@ $(function(){
 	
     <div class="inner q-view">
 		<div class="right-communication">
+		
+		<!--form action="welcome/request" name="search_req" method="post" onsubmit="return validateRequestForm()"  style="margin-bottom:2px;">
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			<table border="0" cellpadding="0" cellspacing="0" class="search-table">
+				<tr>
+					<td>
+						Lead Search
+					</td>
+					<td>
+						<input type="text" name="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
+						<input type="hidden" name="quoteid" value="<?php echo $quote_data['jobid']; ?>" />
+					</td>
+					<td>
+						<div class="buttons">
+							<button type="submit" class="positive">
+								Search
+							</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form-->
 		
 		<?php 
 		if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
