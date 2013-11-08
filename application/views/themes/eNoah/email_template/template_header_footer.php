@@ -1,4 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
+<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce_script.js"></script>
 <div id="content">
     <div class="inner">
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
