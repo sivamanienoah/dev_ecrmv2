@@ -5,6 +5,7 @@ $cfg = $this->config->item('crm');
 $vid=$this->session->userdata['logged_in_user']['role_id'];
 $viewLeads = getAccess(51, $vid);
 $viewTasks = getAccess(108, $vid);
+$viewPjts = getAccess(110, $vid);
 
 // for floating div
 $proposal_notify_status = get_notify_status(1);
@@ -53,7 +54,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script>
 
-<?php echo js_global_variable($viewLeads['view']); ?>
+<?php echo js_global_variable($viewLeads['view'], $viewPjts['view']); ?>
 
 </head>
 <body>
