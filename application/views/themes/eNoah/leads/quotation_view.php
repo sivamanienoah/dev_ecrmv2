@@ -129,7 +129,7 @@ require (theme_url().'/tpl/header.php');
 							</tr>
 							<tr align="right" >
 								<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
-								<input type="submit" class="positive" name="advance" value="Search" />
+								<input type="submit" class="positive" name="advance" id="advance" value="Search" />
 							</tr>
 							</tbody>
 							</table>
