@@ -452,6 +452,7 @@ class Welcome_model extends crm_model {
 		$countryname = explode(',',$countryname);
 		$statename = explode(',',$statename);
 		$locname = explode(',',$locname);
+
 		
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
@@ -513,7 +514,7 @@ class Welcome_model extends crm_model {
 		else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.pjt_status, j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
