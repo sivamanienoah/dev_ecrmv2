@@ -5,8 +5,7 @@ class Dashboard extends crm_controller {
 
 	
 	function __construct()
-	{ 
-	
+	{
 		parent::__construct();
 		//$this->load->library('excel');
 		$this->login_model->check_login();
