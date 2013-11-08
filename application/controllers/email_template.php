@@ -47,6 +47,7 @@ class Email_template extends CRM_Controller {
 	*@Method add_email_template
 	*/
 	public function add_email_template($update = false, $id = false) {
+
 		$this->load->library('validation');
         $data = array();        
 		$rules['email_templatename'] = "trim|required";
@@ -121,6 +122,7 @@ class Email_template extends CRM_Controller {
 	*@Method add_template_header
 	*/
 	public function add_template_header() { 		
+	
 		$this->load->library('validation');
         $data = array();        
 		$rules['email_template_header'] = "trim|required";
