@@ -391,7 +391,6 @@ HDOC;
 			if ($this->db->insert($this->cfg['dbpref'] . 'leads', $ins))
             {
 				$insert_id = $this->db->insert_id();
-				
 				$invoice_no = (int) $insert_id;
 				$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 				
@@ -441,14 +440,12 @@ HDOC;
 
 			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 		
-			
 			$from=$this->userdata['email'];
 			$arrEmails = $this->config->item('crm');
 			$arrSetEmails=$arrEmails['director_emails'];
 			$mangement_email = $arrEmails['management_emails'];
 			$mgmt_mail = implode(',',$mangement_email);
 			$admin_mail=implode(',',$arrSetEmails);
-			
 			
 			$param['email_data'] = array('first_name'=>$customer['first_name'],'last_name'=>$customer['last_name'],'company'=>$customer['company'],'base_url'=>$this->config->item('base_url'),'insert_id'=>$insert_id);
 
