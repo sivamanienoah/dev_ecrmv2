@@ -38,7 +38,7 @@
  */
 if ( ! function_exists('js_global_variable'))
 {
-	function js_global_variable($view='')
+	function js_global_variable($view='', $viewPjts='')
 	{
 			$CI = get_instance();
 		?>
@@ -61,8 +61,8 @@ if ( ! function_exists('js_global_variable'))
 				csrf_hash_token  = "<?php echo $CI->security->get_csrf_hash(); ?>";   //Assign Hash Token 
 				site_base_url    = "<?php echo base_url(); ?>";   //Site Base URL
 				accesspage       = "<?php echo $CI->session->userdata('accesspage'); ?>";   //Site Base URL
-				viewlead         = "<?php echo $view; ?>";   //Site Base URL
-				viewPjt			 = "<?php echo $CI->session->userdata('viewPjt'); ?>";
+				viewlead         = "<?php echo $view; ?>";   //lead access
+				viewPjt			 = "<?php echo $viewPjts; ?>"; //project access
 				
 				/// Site URL segment 
 				<?php 
