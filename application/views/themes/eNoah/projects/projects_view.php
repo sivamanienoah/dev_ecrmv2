@@ -77,8 +77,8 @@
 			</tr>
 			<tr align="right" >
 				<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
-				<input type="submit" class="positive" name="advance_pjt" value="Search" /></td>
-			
+				<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
+				</td>
 			</tr>
 			</tbody>
 			</table>
