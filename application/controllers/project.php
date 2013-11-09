@@ -1708,6 +1708,8 @@ HDOC;
 					$delete_item = $this->project_model->delete_row('items', $del_condn);
 					$delete_log = $this->project_model->delete_row('logs', $del_condn); 
 					$delete_task = $this->project_model->delete_row('tasks', $del_condn);
+					$delete_deposits = $this->project_model->delete_row('deposits', $del_condn);
+					$delete_exp_pay = $this->project_model->delete_row('expected_payments', $del_condn);
 					
 					$del_condn1 = array('jobid'=>$id);					
 					$delete_file = $this->project_model->delete_row('lead_files', $del_condn1);
