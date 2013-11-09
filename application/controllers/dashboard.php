@@ -110,7 +110,7 @@ class Dashboard extends crm_controller {
 			$res_query = $rows->row_array();
 			if(!empty($res_query)) {
 				$mon = date("M" ,strtotime($res_query['dateofchange']));
-				//echo $mon."=>".$value['expect_worth_amount'];
+				// echo $mon."=>".$value['expect_worth_amount'];
 				$totalSum = $totalSum + $value['expect_worth_amount'];
 				if (in_array($mon, $monthArr)) {
 					$expect_worth_amount = $closedMonthArr[$mon] + $value['expect_worth_amount'];
@@ -119,12 +119,11 @@ class Dashboard extends crm_controller {
 				}
 				$closedMonthArr[$mon] = $expect_worth_amount;
 				$monthArr[] = $mon;
-			}
-		}
-		//echo "<pre>"; print_r($closedMonthArr); exit;
+			}  
+		} 
+		// echo "<pre>"; print_r($closedMonthArr);
 		$data['totClosedOppor'] = $totalSum;
 		$data['getClosedOppor'] = $closedMonthArr;
-		
 		//for lead source & service requirement.
 		$data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId);
 		$data['get_Service_Req'] = $this->dashboard_model->getServiceReq($cusId);
