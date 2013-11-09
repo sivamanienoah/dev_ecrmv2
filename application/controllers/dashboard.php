@@ -757,7 +757,7 @@ class Dashboard extends crm_controller {
 						$linkurl = "welcome/view_quote/";
 					break;
 					case 1:
-						$linkurl = "invoice/view_project/";
+						$linkurl = "project/view_project/";
 					break;
 				}
 				$res['html'] .= '<tr>

@@ -1154,7 +1154,7 @@ HDOC;
 				$ins['jobid_fk'] = $jobid;
 				$ins['date_created'] = date('Y-m-d H:i:s');
 				$ins['log_content'] = 'The Lead "'.word_limiter($lead_det['job_title'], 4).'" is Successfully Moved to Project.';
-				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'invoice/view_project/'.$jobid.'> ' .word_limiter($lead_det['job_title'], 4).' </a> is Successfully Moved to Project.';
+				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$jobid.'> ' .word_limiter($lead_det['job_title'], 4).' </a> is Successfully Moved to Project.';
 
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);

@@ -122,7 +122,7 @@ function convertProjectStatus(job_stat) {
 
 function reloadWithMessagePjt(str) {
     $.get('ajax/request/set_flash_data/' + str,{},function(data){
-		document.location = 'invoice/view_project/' + quote_id;
+		document.location = 'project/view_project/' + quote_id;
 		$.unblockUI();
     });
 }
