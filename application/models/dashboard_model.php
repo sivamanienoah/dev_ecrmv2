@@ -242,7 +242,7 @@ class Dashboard_model extends crm_model {
 				$where_level = " AND custid_fk IN ('".$cusId."')";
 			}
 		}
-		$stg = '"'.$this->stages.'"';
+		$stg = $this->stages;
 		$age_query = $this->db->query("SELECT 
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$thirtyDays."' AND '".$todayDate."' THEN DATE(date_created) END) as '0-30 Days',
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$sixtyDays."' AND '".$thirtyOneDays."' THEN DATE(date_created) END) as '31-60 Days',
@@ -252,8 +252,8 @@ class Dashboard_model extends crm_model {
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$oneEightyDays."' AND '".$oneFiftyOneDays."' THEN DATE(date_created) END) as '151-180 Days',
 		COUNT(CASE WHEN DATE(date_created) < '".$oneEightyOneDays."' THEN DATE(date_created) END) as 'Above181 Days'
 		FROM ".$this->cfg['dbpref']."leads
-		WHERE job_status IN (".$stg.")
-		AND lead_status=1".$where_level);
+		WHERE job_status IN ('".$stg."')
+		AND lead_status = 1".$where_level);
 		return $age_query->row_array();
 	}
 	
