@@ -10,7 +10,8 @@
 	var locname = $("#locname").val();
 	var stage = $("#stage").val(); 
 	var customer = $("#customer").val(); 
-	var worth = $("#worth").val();	
+	var worth = $("#worth").val();
+	var lead_status = $("#lead_status").val();
 	var keyword = $("#keyword").val(); 
 	//alert(keyword);
 	if(keyword == "Lead No, Job Title, Name or Company")
@@ -35,12 +36,13 @@ $("#advanceFilters").submit(function() {
 	var stage        = $("#stage").val(); 
 	var customer     = $("#customer").val(); 
 	var worth        = $("#worth").val();	
-	var  keyword     = $("#keyword").val();
+	var lead_status  = $("#lead_status").val();
+	var keyword      = $("#keyword").val();
 		
 	 $.ajax({
 	   type: "POST",
 	   url: site_base_url+"welcome/advance_filter_search",
-	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 	   success: function(data){
 			$('#advance_search_results').html(data);
 			$('#advance').show();

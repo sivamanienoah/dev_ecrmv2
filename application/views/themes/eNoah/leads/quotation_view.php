@@ -101,6 +101,7 @@ require (theme_url().'/tpl/header.php');
 								<th>By Country Wise</th>
 								<th>By State Wise</th>
 								<th>By Location Wise</th>
+								<th>By Status</th>
 							</tr>
 							<tr>
 								<td>
@@ -124,6 +125,14 @@ require (theme_url().'/tpl/header.php');
 								<td>
 									<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
 										
+									</select> 
+								</td>
+								<td>
+									<select  style="width:120px;" multiple="multiple" id="lead_status" name="lead_status[]">
+										<option value="1">Active</option>
+										<option value="2">OnHold</option>
+										<option value="3">Dropped</option>
+										<option value="4">Closed</option>
 									</select> 
 								</td>
 							</tr>

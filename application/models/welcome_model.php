@@ -440,7 +440,7 @@ class Welcome_model extends crm_model {
 		return $customers;
 	}
 	
-	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $keyword)
+	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $keyword)
 	{
 		$userdata = $this->session->userdata('logged_in_user');
 		$stage = explode(',',$stage);
@@ -452,8 +452,8 @@ class Welcome_model extends crm_model {
 		$countryname = explode(',',$countryname);
 		$statename = explode(',',$statename);
 		$locname = explode(',',$locname);
+		$lead_status = explode(',',$lead_status);
 
-		
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
@@ -502,6 +502,9 @@ class Welcome_model extends crm_model {
 			}
 			if($locname[0] != 'null' && $locname[0] != 'all'){	
 				$this->db->where_in('c.add1_location', $locname);
+			}
+			if($lead_status[0] != 'null' && $lead_status[0] != 'all'){	
+				$this->db->where_in('j.lead_status', $lead_status);
 			}
 			
 			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
@@ -614,7 +617,7 @@ class Welcome_model extends crm_model {
 			
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
 		
 		$res =  $query->result_array();       
 		return $res;

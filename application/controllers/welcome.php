@@ -50,7 +50,7 @@ class Welcome extends crm_controller {
 	/*
 	 * List all the Leads based on levels with advanced search filter.
 	 */
-	public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $keyword='null') 
+	public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $keyword='null') 
 	{
 		if (count($_POST)>0) {
 			$stage = $_POST['stage'];
@@ -62,33 +62,35 @@ class Welcome extends crm_controller {
 			$countryname = $_POST['countryname'];
 			$statename = $_POST['statename'];
 			$locname = $_POST['locname'];
+			$lead_status = $_POST['lead_status'];
 			$keyword = $_POST['keyword'];
 			$excel_arr = array();
 			foreach ($_POST as $key => $val) {
 				$excel_arr[$key] = $val;
 			}
-			//print_r($excel_arr); 
+			// print_r($excel_arr); exit;
 			$this->session->set_userdata(array("excel_download"=>$excel_arr));
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 		
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $keyword);	
+		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $keyword);	
 
 		$data['filter_results'] = $filter_results;
 
-		$data['stage'] = $stage;
-		$data['customer'] = $customer;
-		$data['worth'] = $worth;
-		$data['owner'] = $owner;
+		$data['stage'] 		  = $stage;
+		$data['customer']	  = $customer;
+		$data['worth'] 		  = $worth;
+		$data['owner'] 		  = $owner;
 		$data['leadassignee'] = $leadassignee;
-		$data['regionname'] = $regionname;
-		$data['countryname'] = $countryname;
-		$data['statename'] = $statename;
-		$data['locname'] = $locname;
-		$data['keyword'] = $keyword;
+		$data['regionname']   = $regionname;
+		$data['countryname']  = $countryname;
+		$data['statename'] 	  = $statename;
+		$data['locname'] 	  = $locname;
+		$data['lead_status']  = $lead_status;
+		$data['keyword'] 	  = $keyword;
 
-		$this->load->view('leads/advance_filter_view', $data);	
+		$this->load->view('leads/advance_filter_view', $data);
 	}
 	
 	/*
@@ -1218,8 +1220,9 @@ HDOC;
 		$countryname='null';
 		$statename='null';
 		$locname='null';
+		$lead_status='null';
 		$keyword='null';
-		
+
 		$exporttoexcel = $this->session->userdata['excel_download'];
 
 		if (count($exporttoexcel)>0) {
@@ -1233,11 +1236,12 @@ HDOC;
 			$countryname=$exporttoexcel['countryname'];
 			$statename=$exporttoexcel['statename'];
 			$locname=$exporttoexcel['locname'];
+			$lead_status=$exporttoexcel['lead_status'];
 			$keyword=$exporttoexcel['keyword'];
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $keyword);
-		
+		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $keyword);
+
 		//load our new PHPExcel library
 		$this->load->library('excel');
 		//activate worksheet number 1
