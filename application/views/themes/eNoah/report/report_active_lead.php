@@ -150,7 +150,7 @@
 							<input type="submit" class="positive" name="advance" id = 'advance' value="Search" />
 							<div id = 'load' style = 'float:right;display:none;height:1px;'>
 								<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-							</div> 
+							</div>
 						</td>
 					</tr>
 				</table></div>
