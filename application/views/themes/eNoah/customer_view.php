@@ -3,18 +3,19 @@
 <div id="content">
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
-		
-		<div>
+		<div style="padding-bottom: 10px;">
 			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Customer Database</h2>
-			<div class="buttons pull-right">
-				<button type="button" class="positive" onclick="location.href='customers/add_customer'">
-					Add New Customer
-				</button>
-				
-				<button type="button" class="positive" onclick="location.href='importcustomers'">
-					Import Customer List
-				</button>
-			</div>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons pull-right">
+						<button type="button" class="positive" onclick="location.href='customers/add_customer'">
+							Add New Customer
+						</button>
+						
+						<button type="button" class="positive" onclick="location.href='importcustomers'">
+							Import Customer List
+						</button>
+					</div>
+				<?php } ?>
 			<div class="clearfix"></div>
 			</div>
 		</div>

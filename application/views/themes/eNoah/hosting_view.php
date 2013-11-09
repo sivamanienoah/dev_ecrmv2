@@ -24,14 +24,15 @@
 	}
 	else {	
 	?>
-	    
-		<div>
+		<div style="padding-bottom: 10px;">
 			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Hosting Accounts</h2>
-				<div class="buttons pull-right">
-					<button type="button" class="positive" onclick="location.href='hosting/add_account'">
-						Add New Hosting Account
-					</button>
-				</div>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons pull-right">
+						<button type="button" class="positive" onclick="location.href='hosting/add_account'">
+							Add New Hosting Account
+						</button>
+					</div>
+				<?php } ?>
 				<div class="clearfix"></div>
 			</div>
 		</div>

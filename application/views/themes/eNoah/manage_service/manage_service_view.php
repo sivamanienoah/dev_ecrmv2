@@ -7,13 +7,15 @@ $userdata = $this->session->userdata('logged_in_user');
 	<div class="inner">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
 	
-	<div>
+	<div style="padding-bottom: 10px;">
 		<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
-		<div class="buttons pull-right">
-			<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ser_add'">
-				Add New Product
-			</button>
-		</div>
+			<?php if($this->session->userdata('add')==1) { ?>
+				<div class="buttons pull-right">
+					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ser_add'">
+						Add New Product
+					</button>
+				</div>
+			<?php } ?>
 		<div class="clearfix"></div>
 		</div>
 	</div>
