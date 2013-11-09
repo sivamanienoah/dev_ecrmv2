@@ -395,6 +395,13 @@ class Project_model extends crm_model
 		$query = $this->db->get($this->cfg['dbpref'].'deposits');
 		return $query->row_array();
 	}
+	
+	function delete_project($tbl, $lead_id) 
+	{
+		$this->db->where('jobid', $lead_id);
+		$this->db->delete($this->cfg['dbpref'] . $tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
 
 }
 

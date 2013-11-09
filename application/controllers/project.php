@@ -1687,5 +1687,85 @@ HDOC;
 		$insert_logs = $this->project_model->insert_row('logs', $logs);
 	}
 	
+	/**
+	 * Deletes Project from the list
+	 */
+	function delete_quote($id) 
+	{
+		if ($this->session->userdata('delete')==1) {
+			if ($id > 0) {
+				$pjt_det = $this->project_model->get_lead_det($id);
+				$wh_condn = array('userid'=>$pjt_det['lead_assign']);
+				$lead_assign_mail = $this->project_model->get_user_data_by_id('users', $wh_condn);
+
+				$condn = array('userid'=>$pjt_det['belong_to']);
+				$lead_owner = $this->project_model->get_user_data_by_id('users', $condn);
+
+				$delete_job = $this->project_model->delete_project('leads', $id);
+				if ($delete_job) 
+				{
+					$del_condn = array('jobid_fk'=>$id);
+					$delete_item = $this->project_model->delete_row('items', $del_condn);
+					$delete_log = $this->project_model->delete_row('logs', $del_condn); 
+					$delete_task = $this->project_model->delete_row('tasks', $del_condn);
+					
+					$del_condn1 = array('jobid'=>$id);					
+					$delete_file = $this->project_model->delete_row('lead_files', $del_condn1);
+					
+					$del_condn2 = array('job_id'=>$id);
+					$delete_query = $this->project_model->delete_row('lead_query', $del_condn2);
+					
+					# Project Delete Mail Notification
+					$ins['log_content'] = 'Project Deleted Sucessfully - Project ' .word_limiter($pjt_det['job_title'], 4). ' ';
+
+					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$dis['date_created'] = date('Y-m-d H:i:s');
+					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+					
+					$from=$this->userdata['email'];
+					$arrEmails = $this->config->item('crm');
+					$arrSetEmails=$arrEmails['director_emails'];
+					$mangement_email = $arrEmails['management_emails'];
+					$mgmt_mail = implode(',',$mangement_email);
+					$admin_mail=implode(',',$arrSetEmails);
+					
+					//email sent by email template
+					$param = array();
+					
+					$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content'=>$ins['log_content'], 'signature'=>$this->userdata['signature']);
+
+					$param['to_mail'] = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
+					$param['bcc_mail'] = $admin_mail;
+					$param['from_email'] = $this->userdata['email'];
+					$param['from_email_name'] = $user_name;
+					$param['template_name'] = "Lead - Delete Notification Message";
+					$param['subject'] = "Project Delete Notification";
+
+					$this->email_template_model->sent_email($param);
+					
+					$this->session->set_flashdata('confirm', array("Item deleted from the system"));
+
+					redirect('project');
+				}
+				else 
+				{
+					$this->session->set_flashdata('login_errors', array("Error in Deletion."));
+					redirect('project');
+				}
+			}
+			else 
+			{
+				$this->session->set_flashdata('login_errors', array("Project does not exist or you may not be authorised to delete Project."));
+				redirect('project');
+			}
+		} 
+		else 
+		{
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('project');
+		}
+		
+	}
+	
 }
 ?>
