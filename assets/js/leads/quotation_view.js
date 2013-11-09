@@ -24,6 +24,8 @@
 
 //For Advance Filters functionality.
 $("#advanceFilters").submit(function() {
+	$('#advance').hide();
+	$('#load').show();
 	var owner        = $("#owner").val();
 	var leadassignee = $("#leadassignee").val();
 	var regionname   = $("#regionname").val();
@@ -41,6 +43,8 @@ $("#advanceFilters").submit(function() {
 	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 	   success: function(data){
 			$('#advance_search_results').html(data);
+			$('#advance').show();
+			$('#load').hide();	
 	   }
 	 });
 	return false;  //stop the actual form post !important!

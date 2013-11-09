@@ -1220,7 +1220,9 @@ if(viewPjt==1) {
 			}
 		}
 
-		$('#advanceFilters_pjt').submit(function() {	
+		$('#advanceFilters_pjt').submit(function() {
+			$('#advance').hide();
+			$('#load').show();
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 
 			var cust = $("#customer1").val(); 
@@ -1230,7 +1232,11 @@ if(viewPjt==1) {
 			document.getElementById('advance_search_results_pjts').style.display = 'block';	
 			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 			//alert(sturl);
-			$('#advance_search_results_pjts').load(sturl);	
+			// $('#advance_search_results_pjts').load(sturl);	
+			$('#advance_search_results_pjts').load(sturl,function(){
+				$('#advance').show();
+				$('#load').hide();
+			});
 			return false;
 		});
 

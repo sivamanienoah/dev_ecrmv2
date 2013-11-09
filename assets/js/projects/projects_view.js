@@ -42,16 +42,32 @@
 
 	$('#advanceFilters_pjt').submit(function() 
 	{	
+		$('#advance').hide();
+		$('#load').show();
 		var pjtstage = $("#pjt_stage").val(); 
 		var pm_acc = $("#pm_acc").val(); 
 		var cust = $("#customer1").val(); 
-		var  keyword = $("#keywordpjt").val(); 
+		var keyword = $("#keywordpjt").val(); 
 		if(keyword == "Project No, Project Title, Name or Company")
 		keyword = 'null';
 		document.getElementById('ad_filter').style.display = 'block';
 		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-		$('#ad_filter').load(sturl);
+		$('#ad_filter').load(sturl,function(){
+			$('#advance').show();
+			$('#load').hide();
+		});
 		return false;
+	
+		
+		var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'keyword':encodeURIComponent(keyword)};
+		params[csrf_token_name] = csrf_hash_token; 
+		
+		/* $('#ad_filter').load('project/advance_filter_search_pjt',params,function(){
+			$('#advance').show();
+			$('#load').hide();
+		}); */
+
+		
 	});
 
 	$('#pjt_search_form').submit(function() {	

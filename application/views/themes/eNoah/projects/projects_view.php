@@ -78,6 +78,9 @@
 			<tr align="right" >
 				<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
 				<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
+				<div id = 'load' style = 'float:right;display:none;height:1px;'>
+					<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+				</div>
 				</td>
 			</tr>
 			</tbody>
