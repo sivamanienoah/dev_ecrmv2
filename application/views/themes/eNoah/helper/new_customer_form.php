@@ -1,8 +1,6 @@
 <p>All mandatory fields marked * must be filled in correctly.</p><p class="error-cont" style="display:none;">&nbsp;</p>
 		<form name="customer_detail_form" id="customer_detail_form" method="post" onsubmit="return false;">
-		
 		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
 			<table class="layout">
 				<tr>
 					<td width="100">First name:*</td>
