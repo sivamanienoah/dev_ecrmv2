@@ -21,6 +21,7 @@ function checkStatus(id) {
 				//alert("You can't Delete the Lead source!. \n This Source is used in Leads.");
 				$('#dialog-err-msg').show();
 				$('#dialog-err-msg').append('One or more Leads currently mapped to this user. This cannot be deleted.');
+				$('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				var r=confirm("Are You Sure Want to Delete?")

@@ -1450,7 +1450,7 @@ class Project extends crm_controller {
 	function pjt_add_log()
 	{
 		$data_log = real_escape_array($this->input->post());
-		
+		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
         if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');

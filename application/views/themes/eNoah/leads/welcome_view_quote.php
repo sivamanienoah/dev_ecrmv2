@@ -82,6 +82,7 @@ var current_job_status = <?php echo (isset($quote_data['job_status'])) ? $quote_
 
 function addLog() {
 	var the_log = $('#job_log').val();
+	
 	if ($.trim(the_log) == '') {
 		alert('Please enter your post!');
 		return false;

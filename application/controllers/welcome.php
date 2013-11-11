@@ -1337,6 +1337,7 @@ HDOC;
 	function add_log()
 	{
 		$data_log = real_escape_array($this->input->post());
+		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
 		$res = array();
 		$json = array();
         if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
