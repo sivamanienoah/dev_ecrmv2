@@ -71,6 +71,24 @@ class email_template_model extends crm_model {
         $this->db->where($cond);
         return $this->db->delete($this->cfg['dbpref'].$table);
     }
+	
+	public function email_outer_content(){
+		return $email_outer_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml">
+			<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<title>eSmart</title>
+			</head>
+
+			<body>
+				<div style="min-width:70%; margin: 0 auto; padding:5px; background:#f5f5f5">
+					<div style="font-family:Arial, Helvetica, sans-serif; font-size:12px;background:#fff; padding:5px;">
+						{{main_body_content}}
+					</div>
+				</div>
+			</body>
+		</html>';
+	}
     
 	/*
 	*@Send the email by using email template
@@ -95,7 +113,10 @@ class email_template_model extends crm_model {
 			}
 		}
 		
-		$email_template = $email_header . $email_title . $email_content . $email_footer;
+		$email_template = $email_header . $email_title .'<div style="padding:10px;" id="body">'.$email_content.'</div>'. $email_footer;
+		
+		$email_outer_content = $this->email_outer_content();
+		$email_template = str_replace('{{main_body_content}}', $email_template, $email_outer_content);
 
 		$this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->to($data['to_mail']);
