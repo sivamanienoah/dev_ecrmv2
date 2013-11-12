@@ -329,9 +329,9 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('custid_fk', $cusId);
 		}
 		if ($dt == 6) {
-			$this->db->where('jb.date_created < "'.$todt.'" ');
+			$this->db->where('date_format( jb.date_created, "%Y-%m-%d" ) < "'.$todt.'" ');
 		} else {
-			$this->db->where('jb.date_created BETWEEN "'.$todt.'" AND "'.$frmdt.'" ');
+			$this->db->where('date_format( jb.date_created, "%Y-%m-%d" ) BETWEEN "'.$todt.'" AND "'.$frmdt.'" ');
 		}
 		$this->db->order_by('jb.jobid', 'desc');
 		$query = $this->db->get();
