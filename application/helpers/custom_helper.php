@@ -66,29 +66,38 @@ function currency_convert()
 			$get = explode("<span class=bld>",$get);
 			$get = explode("</span>",$get[1]);  
 			$converted_amount = preg_replace("/[^0-9\.]/", null, $get[0]);
-
+			
 			$conversion_value = round($converted_amount, 3);
+			updt_currency($cur->expect_worth_id, $to_Currency_id, $conversion_value);
 			
-			$CI->db->where('from', $cur->expect_worth_id);
+		}
+		updt_currency($to_Currency_id, $to_Currency_id, 1);
+	}
+}
+
+function updt_currency($frm, $to_Currency_id, $conversion_value)
+{
+	$CI  = get_instance();
+	$cfg = $CI->config->item('crm'); /// load config
+
+	$CI->db->where('from', $frm);
+	$CI->db->where('to', $to_Currency_id);
+	$query1 = $CI->db->get($cfg['dbpref'].'currency_rate');
+	$res_num = $query1->num_rows();
+			
+	if($res_num>0) {
+		if(!empty($conversion_value)){
+			$CI->db->where('from', $frm);
 			$CI->db->where('to', $to_Currency_id);
-			$query1 = $CI->db->get($cfg['dbpref'].'currency_rate');
-			$res_num = $query1->num_rows();
-			
-			if($res_num>0) {
-				if(!empty($conversion_value)){
-					$CI->db->where('from', $cur->expect_worth_id);
-					$CI->db->where('to', $to_Currency_id);
-					$CI->db->set('value', $conversion_value);
-					$CI->db->update($cfg['dbpref'].'currency_rate');
-				}
-			} else {
-				if(!empty($conversion_value)){
-					$CI->db->set('from', $cur->expect_worth_id);
-					$CI->db->set('to', $to_Currency_id);
-					$CI->db->set('value', $conversion_value);
-					$CI->db->insert($cfg['dbpref'].'currency_rate');
-				}				
-			}
-		}	
+			$CI->db->set('value', $conversion_value);
+			$CI->db->update($cfg['dbpref'].'currency_rate');
+		}
+	} else {
+		if(!empty($conversion_value)){
+			$CI->db->set('from', $frm);
+			$CI->db->set('to', $to_Currency_id);
+			$CI->db->set('value', $conversion_value);
+			$CI->db->insert($cfg['dbpref'].'currency_rate');
+		}				
 	}
 }
