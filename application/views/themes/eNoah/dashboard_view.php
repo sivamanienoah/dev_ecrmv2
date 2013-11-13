@@ -107,8 +107,8 @@ switch ($userdata['level'])
 								<?php foreach ($getCurrentActivityLead as $currentActLead) { ?>
 								<tr>
 									<td><a onclick="getCurrentLeadActivity(<?php echo $currentActLead['jobid'];?>,<?php echo "'".$currentActLead['job_title']."'"; ?>)"><?php echo $currentActLead['job_title']; ?></a></td>
-									<!--<td><?php //echo $currentActLead['expect_worth_name']." ".$currentActLead['expect_worth_amount']; ?></td>-->
-									<td align="right"><?php echo number_format(round($rates[$currentActLead['expect_worth_id']][1] * $currentActLead['expect_worth_amount']), 2, '.', ''); ?></td>
+									<!--td><?php //echo $currentActLead['expect_worth_name']." ".$currentActLead['expect_worth_amount']; ?></td-->
+									<td align="right"><?php echo number_format(round($rates[$currentActLead['expect_worth_id']][$default_cur_id] * $currentActLead['expect_worth_amount']), 2, '.', ''); ?></td>
 									<td><?php echo $currentActLead['ownrfname'] . " " .$currentActLead['ownrlname']; ?></td>
 									<td><?php echo $currentActLead['usrfname'] . " " .$currentActLead['usrlname']; ?></td>
 								</tr>
