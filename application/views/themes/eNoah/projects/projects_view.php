@@ -6,7 +6,7 @@
 		if($this->session->userdata('accesspage')==1) 
 		{
 		?>
-		<form action="" method="post" style="float:right;">
+		<form action="" id="pjt_search_form" name="pjt_search_form" method="post" style="float:right;">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
 			<table border="0" cellpadding="0" cellspacing="0" class="search-table">
@@ -15,7 +15,7 @@
                         Project Search
                     </td>
 					<td>
-                        <input type="text" name="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
+                        <input type="text" name="keyword" id="keywordpjt" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
                     </td>
                     <td rowspan=2>
                         <div class="buttons">
