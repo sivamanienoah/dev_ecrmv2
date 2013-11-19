@@ -18,19 +18,29 @@
 				<p>All mandatory fields marked * must be filled in correctly.</p>
 				<table class="layout">
 					<tr>
-						<td width="100">Region:</td><?php $regid = $this->validation->regionid ?>
-						<td width="240"><select id="country_region_id" name="regionid" class="textfield width200px" ><option value="">Select Region</option><?php if (is_array($regions) && count($regions) > 0) { ?>
-							<?php foreach ($regions as $region) { ?><option value="<?php echo $region['regionid']; ?>"<?php if($regid==$region['regionid']) { echo "selected"; } ?>><?php echo  $region['region_name'] ; ?></option><?php } } ?></select> *</td>
+						<td width="100">Region: *</td><?php $regid = $this->validation->regionid ?>
+						<td width="240">
+							<select id="country_region_id" name="regionid" class="textfield width200px" ><option value="">Select Region</option><?php if (is_array($regions) && count($regions) > 0) { ?>
+							<?php foreach ($regions as $region) { ?><option value="<?php echo $region['regionid']; ?>"<?php if($regid==$region['regionid']) { echo "selected"; } ?>><?php echo  $region['region_name'] ; ?></option><?php } } ?></select>
+						</td>
 						<td class="error" style="color:red; display:none;" id="error1">Select Region</td>
 					</tr>				
 					<tr>	
-						<td width="100">Country:</td>
-						<td width="240"><input id="country_country_name" type="text" name="country_name" value="<?php echo  $this->validation->country_name ?>" class="textfield width200px required" /> *</td>
+						<td width="100">Country: *</td>
+						<td width="240">
+							<input id="country_country_name" type="text" name="country_name" value="<?php echo  $this->validation->country_name ?>" class="textfield width200px required" />
+						</td>
 						<td class="error" style="color:red; display:none;" id="error2">Country Field required.</td>
 					</tr>
 					<tr>
 						<td>Status:</td>
-						<td colspan="3"><input type="checkbox" name="inactive" value="1"<?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the country is inactive .</td>
+						<td colspan="3">
+							<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
+							<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+							<?php if ($cb_status != 0) echo "One or more User / Customer currently assigned for this Country. This cannot be made Inactive."; ?>
+							<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the User need to be Inactive."; ?>
+							<?php if ($this->validation->inactive != 0) echo "Uncheck if the User need to be Active."; ?>
+						</td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -60,7 +70,9 @@
 				</table>
 			</form>
 		<h2>Country List</h2>
-            
+		
+		<div class="dialog-err" id="dialog-err-cntry" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
+		
         <table class="cntry-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
 		<thead>
 			<tr>
@@ -89,7 +101,8 @@
 					</td>  
 					<td class="actions">
 						<?php if ($this->session->userdata('editAdmin')==1) { ?><a class="editConty clrmarron" href="regionsettings/country/update/<?php echo $customer['countryid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>
-						<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="regionsettings/country_delete/delete/<?php echo $customer['countryid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+						<!--<?php if ($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="regionsettings/country_delete/delete/<?php echo $customer['countryid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>-->
+						<?php if($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Cntry(<?php echo $customer['countryid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
 					</td>                      
 				</tr>																								
 				<?php } ?>

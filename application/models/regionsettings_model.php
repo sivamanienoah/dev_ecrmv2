@@ -42,7 +42,7 @@ class Regionsettings_model extends crm_model {
 		if ($userdata['level'] != 1) {
 			$this->db->where_in('reg.regionid',$regions_ids);
 		}
-		$this->db->order_by('reg.inactive', 'asc');
+		$this->db->where('reg.inactive', 0);
 		$customers = $this->db->get();
 		$samle=  $customers->result_array();
 		return $samle;
@@ -53,7 +53,6 @@ class Regionsettings_model extends crm_model {
 	*@List out Country Record
 	*@Region Settings Model
 	*/
-	
 	public function country_list($offset, $search) {
         
         if ($search != false) {
@@ -78,32 +77,22 @@ class Regionsettings_model extends crm_model {
 	*@List Out State Record
 	*@Region Settings Model
 	*/
-
 	public function state_list($offset, $search) {
-       
-        if ($search != false) {
-            $search = urldecode($search);			
-            $this->db->like('state_name', $search);
-			
-        }
-	
 		$this->db->select('re.region_name,cn.country_name,cn.regionid,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,stat.*');
 		$this->db->from($this->cfg['dbpref'].'state as stat');
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'stat.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'stat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'stat.countryid ');
 		$this->db->join($this->cfg['dbpref'].'region as re','re.regionid='. 'cn.regionid');
-		$this->db->order_by('stat.inactive', 'asc');
 		$customers = $this->db->get();   
 		$samle=  $customers->result_array();
-        return $samle;        
+        return $samle;
     }
 
  	/*
 	*@List Out Location Record
 	*@Region Settings Model
 	*/
-	
 	public function location_list($offset, $search) {
        
         if ($search != false) {
@@ -127,7 +116,6 @@ class Regionsettings_model extends crm_model {
 	*@List Out Level Record
 	*@Region Settings Model
 	*/
-	
 	public function level_list($offset, $search) {
        
         if ($search != false) {
@@ -149,7 +137,6 @@ class Regionsettings_model extends crm_model {
 	*@Level Map
 	*@Region Settings Model
 	*/
-	
 	public function level_map($id,$usid) {
 
 		if ($search != false) {
@@ -252,17 +239,41 @@ class Regionsettings_model extends crm_model {
 	*@Region Update Record
 	*@Region Settings Model
 	*/
-	
     public function update_region($id, $data) {
         $this->db->where('regionid', $id);
-        return $this->db->update($this->cfg['dbpref'] . 'region', $data);
+        $res = $this->db->update($this->cfg['dbpref'] . 'region', $data);
+		if ($data['inactive'] == 1) {
+			$updt_data = array('inactive'=>1);
+			$this->db->where('regionid', $id);
+			$ctry = $this->db->update($this->cfg['dbpref'] . 'country', $updt_data);
+			
+			$this->db->select('countryid');
+			$ctry_id = $this->db->get_where($this->cfg['dbpref'] . 'country', array('regionid'=>$id));
+			$countries = $ctry_id->result_array();
+			if(count($countries>0)) {
+				foreach ($countries as $cnt) {
+					$this->db->where('countryid', $cnt['countryid']);
+					$this->db->update($this->cfg['dbpref'] . 'state', $updt_data);
+					
+					$this->db->select('stateid');
+					$ste_id = $this->db->get_where($this->cfg['dbpref'] . 'state', array('countryid'=>$cnt['countryid']));
+					$states = $ste_id->result_array();
+					if(count($states>0)) {
+						foreach ($states as $st) {
+							$this->db->where('stateid', $st['stateid']);
+							$this->db->update($this->cfg['dbpref'] . 'location', $updt_data);
+						}
+					}
+				}
+			}
+		}
+		return $res;
     }
 
 	/*
 	*@Insert Region Record
 	*@Region Settings Model
 	*/
-    
     public function insert_region($data) {
         
         if ( $this->db->insert($this->cfg['dbpref'] . 'region', $data) ) {
@@ -277,32 +288,64 @@ class Regionsettings_model extends crm_model {
 	*@Update Country Record
 	*@Region Settings Model
 	*/
-	
 	public function update_country($id, $data) {
-        
-        $this->db->where('countryid', $id);
-        return $this->db->update($this->cfg['dbpref'] . 'country', $data);
-
+		if($data['inactive'] == 0) {
+			$rg_det = $this->db->get_where($this->cfg['dbpref'] . 'region', array('regionid'=>$data['regionid']));
+			$reg_det = $rg_det->row_array();
+			if ($reg_det['inactive']==1) {
+				return false;
+			} else {
+				$this->db->where('countryid', $id);
+				$res = $this->db->update($this->cfg['dbpref'] . 'country', $data);
+				if ($data['inactive'] == 1) {
+					$updt_data = array('inactive'=>1);
+					$this->db->where('countryid', $id);
+					$ctry = $this->db->update($this->cfg['dbpref'] . 'state', $updt_data);
+					
+					$this->db->select('stateid');
+					$ste_id = $this->db->get_where($this->cfg['dbpref'] . 'state', array('countryid'=>$id));
+					$states = $ste_id->result_array();
+					if(count($states>0)) {
+						foreach ($states as $stes) {
+							$this->db->where('stateid', $stes['stateid']);
+							$this->db->update($this->cfg['dbpref'] . 'location', $updt_data);
+						}
+					}
+				}
+				return $res;
+			}
+		} else {
+			$this->db->where('countryid', $id);
+			$res = $this->db->update($this->cfg['dbpref'] . 'country', $data);
+			if ($data['inactive'] == 1) {
+				$updt_data = array('inactive'=>1);
+				$this->db->where('countryid', $id);
+				$ctry = $this->db->update($this->cfg['dbpref'] . 'state', $updt_data);
+				
+				$this->db->select('stateid');
+				$ste_id = $this->db->get_where($this->cfg['dbpref'] . 'state', array('countryid'=>$id));
+				$states = $ste_id->result_array();
+				if(count($states>0)) {
+					foreach ($states as $stes) {
+						$this->db->where('stateid', $stes['stateid']);
+						$this->db->update($this->cfg['dbpref'] . 'location', $updt_data);
+					}
+				}
+			}
+			return $res;
+		}
     }
 
 	/*
 	*@Insert Country Record
 	*@Region Settings Model
 	*/
-    
     public function insert_country($data) {
-        
         if ( $this->db->insert($this->cfg['dbpref'] . 'country', $data) ) {
             return $this->db->insert_id();
         } else {
             return false;
         }
-		if ( $this->db->insert($this->cfg['dbpref'] . 'region', $data) ) {
-            return $this->db->insert_id();
-        } else {
-            return false;
-        }
-        
     }
 		
 
@@ -310,17 +353,38 @@ class Regionsettings_model extends crm_model {
 	*@Update State Record
 	*@Region Settings Model
 	*/
-		
 	public function update_state($id, $data) {
-        $this->db->where('stateid', $id);
-        return $this->db->update($this->cfg['dbpref'] . 'state', $data);
+		if($data['inactive'] == 0) {
+			$cnt_det = $this->db->get_where($this->cfg['dbpref'] . 'country', array('countryid'=>$data['countryid']));
+			$country_det = $cnt_det->row_array();
+			if ($country_det['inactive']==1) {
+				return false;
+			} else {
+				$this->db->where('stateid', $id);
+				$res = $this->db->update($this->cfg['dbpref'] . 'state', $data);
+				if ($data['inactive'] == 1) {
+					$updt_data = array('inactive'=>1);
+					$this->db->where('stateid', $id);
+					$ctry = $this->db->update($this->cfg['dbpref'] . 'location', $updt_data);
+				}
+				return $res;
+			}
+		} else {
+			$this->db->where('stateid', $id);
+			$res = $this->db->update($this->cfg['dbpref'] . 'state', $data);
+			if ($data['inactive'] == 1) {
+				$updt_data = array('inactive'=>1);
+				$this->db->where('stateid', $id);
+				$ctry = $this->db->update($this->cfg['dbpref'] . 'location', $updt_data);
+			}
+			return $res;
+		}
     }
 
 	/*
 	*@Insert State Record
 	*@Region Settings Model
 	*/
-	
 	public function insert_state($data) {
         if ( $this->db->insert($this->cfg['dbpref'] . 'state', $data) ) {
             return $this->db->insert_id();
@@ -333,19 +397,26 @@ class Regionsettings_model extends crm_model {
 	*@Update Location Record
 	*@Region Settings Model
 	*/
-	
 	public function update_location($id, $data) {
-        
-        $this->db->where('locationid', $id);
-        return $this->db->update($this->cfg['dbpref'] . 'location', $data);
-        
+		if($data['inactive'] == 0) {
+			$st_det = $this->db->get_where($this->cfg['dbpref'] . 'state', array('stateid'=>$data['stateid']));
+			$state_det = $st_det->row_array();
+			if ($state_det['inactive']==1) {
+				return false;
+			} else {
+				$this->db->where('locationid', $id);
+				return $this->db->update($this->cfg['dbpref'] . 'location', $data);
+			}
+		} else {
+			$this->db->where('locationid', $id);
+			return $this->db->update($this->cfg['dbpref'] . 'location', $data);
+		}
     }
 
 	/*
 	*@Insert Location Record
 	*@Region Settings Model
 	*/
-    
     public function insert_location($data) {
         if ( $this->db->insert($this->cfg['dbpref'] . 'location', $data) ) {
             return $this->db->insert_id();
@@ -358,37 +429,127 @@ class Regionsettings_model extends crm_model {
 	*@Delete Region Record
 	*@Region Settings Model
 	*/
-    
     public function delete_region($id) {
         $this->db->where('regionid', $id);
-        return $this->db->delete($this->cfg['dbpref'] . 'region');
+        $del_res = $this->db->delete($this->cfg['dbpref'] . 'region');
+
+		//deleting all the depending countries, states & locations for the region
+		$ctid = array();
+		$stid = array();
+		$locnid = array();
+		if ($del_res == 1) {
+			$this->db->select('countryid');
+			$cnt_id = $this->db->get_where($this->cfg['dbpref'] . 'country', array('regionid' => $id));
+			$countries = $cnt_id->result_array();
+			if(count($countries>0)) {
+				foreach ($countries as $cid) {
+					$ctid[] = $cid['countryid'];
+					$this->db->select('stateid');
+					$ste_id = $this->db->get_where($this->cfg['dbpref'] . 'state', array('countryid' => $cid['countryid']));
+					$states = $ste_id->result_array();
+					if(count($states>0)) {
+						foreach($states as $sid) {
+							$stid[] = $sid['stateid'];
+							$this->db->select('locationid');
+							$loc_id = $this->db->get_where($this->cfg['dbpref'] . 'location', array('stateid' => $sid['stateid']));
+							$locations = $loc_id->result_array();
+							if (count($locations>0)) {
+								foreach($locations as $locid) {
+									$locnid[] = $locid['locationid'];
+								}
+							}
+						}
+					}
+				}
+			}
+			if (count($ctid)>0) {
+				$this->db->where_in('countryid', $ctid);
+				$del_countries = $this->db->delete($this->cfg['dbpref'] . 'country');
+			}
+			if (count($stid)>0) {
+				$this->db->where_in('stateid', $stid);
+				$del_states = $this->db->delete($this->cfg['dbpref'] . 'state');
+			}
+			if (count($locnid)>0) {
+				$this->db->where_in('locationid', $locnid);
+				$del_locations = $this->db->delete($this->cfg['dbpref'] . 'location');
+			}
+		}
+		return $del_res;
     }
 
 	/*
 	*@Delete Country Record
 	*@Region Settings Model
 	*/
-	
 	public function delete_country($id) {
         $this->db->where('countryid', $id);
-        return $this->db->delete($this->cfg['dbpref'] . 'country');
+        $del_res = $this->db->delete($this->cfg['dbpref'] . 'country');
+
+		//deleting all the depending states & locations for the country
+		$stid = array();
+		$locnid = array();
+		if ($del_res == 1) {
+			$this->db->select('stateid');
+			$ste_id = $this->db->get_where($this->cfg['dbpref'] . 'state', array('countryid' => $id));
+			$states = $ste_id->result_array();
+			if(count($states>0)) {
+				foreach($states as $sid) {
+					$stid[] = $sid['stateid'];
+					$this->db->select('locationid');
+					$loc_id = $this->db->get_where($this->cfg['dbpref'] . 'location', array('stateid' => $sid['stateid']));
+					$locations = $loc_id->result_array();
+					if (count($locations>0)) {
+						foreach($locations as $locid) {
+							$locnid[] = $locid['locationid'];
+						}
+					}
+				}
+			}
+			if (count($stid)>0) {
+				$this->db->where_in('stateid', $stid);
+				$del_states = $this->db->delete($this->cfg['dbpref'] . 'state');
+			}
+			if (count($locnid)>0) {
+				$this->db->where_in('locationid', $locnid);
+				$del_locations = $this->db->delete($this->cfg['dbpref'] . 'location');
+			}
+		}
+		return $del_res;
     }
 
 	/*
 	*@Delete State Record
 	*@Region Settings Model
 	*/
-	
 	public function delete_state($id) {
         $this->db->where('stateid', $id);
-        return $this->db->delete($this->cfg['dbpref'] . 'state');
+        $del_res = $this->db->delete($this->cfg['dbpref'] . 'state');
+		
+		//deleting all the depending locations for the state
+		$locnid = array();
+		if ($del_res == 1) {
+			$stid[] = $sid['stateid'];
+			$this->db->select('locationid');
+			$loc_id = $this->db->get_where($this->cfg['dbpref'] . 'location', array('stateid' => $id));
+			$locations = $loc_id->result_array();
+			if (count($locations>0)) {
+				foreach($locations as $locid) {
+					$locnid[] = $locid['locationid'];
+				}
+			}
+			if (count($locnid)>0) {
+				$this->db->where_in('locationid', $locnid);
+				$del_locations = $this->db->delete($this->cfg['dbpref'] . 'location');
+			}
+		}
+		return $del_res;
     }
 
 	/*
 	*@Delete Location Record
 	*@Region Settings Model
 	*/
-	
 	public function delete_location($id) {
         $this->db->where('locationid', $id);
         return $this->db->delete($this->cfg['dbpref']. 'location');
@@ -398,7 +559,6 @@ class Regionsettings_model extends crm_model {
 	*@Count of region Record
 	*@Region Settings Model
 	*/
-	
 	public function region_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'region');
     }
@@ -407,7 +567,6 @@ class Regionsettings_model extends crm_model {
 	*@Count of Country Record
 	*@Region Settings Model
 	*/
-	
 	public function country_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'country');
     }
@@ -416,7 +575,6 @@ class Regionsettings_model extends crm_model {
 	*@Count of State Record
 	*@Region Settings Model
 	*/
-
 	public function state_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'state');
     }
@@ -425,7 +583,6 @@ class Regionsettings_model extends crm_model {
 	*@Count of Location Record
 	*@Region Settings Model
 	*/
-	
 	public function location_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'location');
     }
@@ -434,12 +591,10 @@ class Regionsettings_model extends crm_model {
 	*@Get Region Record
 	*@Region Settings Model
 	*/
-	
 	public function get_region($id) {
-		if( ! $id )
-		{
+		if( ! $id ) {
 			return false;
-		}else{
+		} else {
 			$customer = $this->db->get_where($this->cfg['dbpref'] . 'region', array('regionid' => $id), 1);
 			return $customer->result_array();
 		}
@@ -449,12 +604,10 @@ class Regionsettings_model extends crm_model {
 	*@Get Country Record
 	*@Region Settings Model
 	*/
-
 	public function get_country($id) {
-		if( ! $id )
-		{
+		if( ! $id ) {
 			return false;
-		}else{
+		} else {
 			$customer = $this->db->get_where($this->cfg['dbpref'] . 'country', array('countryid' => $id), 1);
 			return $customer->result_array();
 		}
@@ -464,19 +617,17 @@ class Regionsettings_model extends crm_model {
 	*@Get State Record
 	*@Region Settings Model
 	*/
-	
 	public function get_state($id) {
-		if( ! $id )
-		{
+		if( ! $id ) {
 			return false;
-		}else{		
-			$sql = "SELECT * FROM ".$this->cfg['dbpref']."state
-					LEFT JOIN (".$this->cfg['dbpref']."country, ".$this->cfg['dbpref']."region) ON ( ".$this->cfg['dbpref']."country.countryid = ".$this->cfg['dbpref']."state.countryid
-					AND ".$this->cfg['dbpref']."country.regionid = ".$this->cfg['dbpref']."region.regionid )
-					WHERE ".$this->cfg['dbpref']."state.stateid = $id
-					LIMIT 0 , 1";
-					
-			$customer = $this->db->query($sql);
+		} else {
+			$this->db->select('ste.stateid, ste.state_name, ste.countryid, ste.inactive, reg.regionid');
+			$this->db->from($this->cfg['dbpref'].'state as ste');
+			$this->db->join($this->cfg['dbpref'] . 'country AS cnt','cnt.countryid = ste.countryid','left');
+			$this->db->join($this->cfg['dbpref'] . 'region AS reg','reg.regionid = cnt.regionid','left');
+			$this->db->where('ste.stateid', $id);
+			$this->db->limit(1);
+			$customer = $this->db->get();
 			return $customer->result_array();
 		}
 	}
@@ -485,7 +636,6 @@ class Regionsettings_model extends crm_model {
 	*@Get Country Record List
 	*@Region Settings Model
 	*/
-	
 	public function getcountry_list($val) {  
 		$userdata = $this->session->userdata('logged_in_user');	
 		
@@ -505,7 +655,7 @@ class Regionsettings_model extends crm_model {
 		$countries_ids = array_unique($countries);
 		$countries_ids = (array_values($countries)); //reset the keys in the array
 		
-        $this->db->order_by('inactive', 'asc');
+        $this->db->where('inactive', 0);
         $this->db->order_by('country_name', 'asc');
 		
 		$this->db->where('regionid', $val);
@@ -520,7 +670,6 @@ class Regionsettings_model extends crm_model {
 	*@Get State Record List
 	*@Region Settings Model
 	*/
-	
 	public function getstate_list($val) {       
 
 		$userdata = $this->session->userdata('logged_in_user');		
@@ -542,7 +691,7 @@ class Regionsettings_model extends crm_model {
 		$states_ids = array_unique($states);
 		$states_ids = (array_values($states)); //reset the keys in the array
 		
-        $this->db->order_by('inactive', 'asc');
+        $this->db->where('inactive', 0);
         $this->db->order_by('state_name', 'asc');
 		
 		$this->db->where('countryid', $val);
@@ -558,7 +707,6 @@ class Regionsettings_model extends crm_model {
 	*@Get Location List
 	*@Region Settings Model
 	*/
-
 	public function getlocation_list($val) {
 		$userdata = $this->session->userdata('logged_in_user');
 		
@@ -578,7 +726,7 @@ class Regionsettings_model extends crm_model {
 		$locations_ids = array_unique($locations);
 		$locations_ids = (array_values($locations)); //reset the keys in the array
 		
-        $this->db->order_by('inactive', 'asc');
+        $this->db->where('inactive', 0);
         $this->db->order_by('location_name', 'asc');
 		
 		$this->db->where('stateid', $val);
@@ -594,21 +742,19 @@ class Regionsettings_model extends crm_model {
 	*@Get Location By ID
 	*@Region Settings Model
 	*/
-	
 	public function get_location($id) {
-		if( ! $id )
-		{
+		if( ! $id ) {
 			return false;
-		}else{
-			$sql = "SELECT * FROM ".$this->cfg['dbpref']."location
-					LEFT JOIN (".$this->cfg['dbpref']."state, ".$this->cfg['dbpref']."country, ".$this->cfg['dbpref']."region) ON 
-					( ".$this->cfg['dbpref']."state.stateid = ".$this->cfg['dbpref']."location.stateid AND 
-					  ".$this->cfg['dbpref']."country.countryid = ".$this->cfg['dbpref']."state.countryid AND
-					  ".$this->cfg['dbpref']."country.regionid = ".$this->cfg['dbpref']."region.regionid)
-					  WHERE ".$this->cfg['dbpref']."location.locationid = $id
-					  LIMIT 0 , 1";
-			$customer = $this->db->query($sql);
-			return $customer->result_array();		  
+		} else {
+			$this->db->select('loc.locationid, loc.location_name, loc.stateid, loc.inactive, cnt.countryid, reg.regionid');
+			$this->db->from($this->cfg['dbpref'].'location as loc');
+			$this->db->join($this->cfg['dbpref'] . 'state AS ste','ste.stateid = loc.stateid','left');
+			$this->db->join($this->cfg['dbpref'] . 'country AS cnt','cnt.countryid = ste.countryid','left');
+			$this->db->join($this->cfg['dbpref'] . 'region AS reg','reg.regionid = cnt.regionid','left');
+			$this->db->where('loc.locationid', $id);
+			$this->db->limit(1);
+			$customer = $this->db->get();
+			return $customer->result_array();
 		}
 	}
 	
@@ -616,7 +762,6 @@ class Regionsettings_model extends crm_model {
 	*@Get Location By ID
 	*@Region Settings Model
 	*/
-	
 	public function get_level($id) {
 		if( ! $id )
 		{
@@ -631,7 +776,6 @@ class Regionsettings_model extends crm_model {
 	*@Get Country By Regionid
 	*@Region Settings Model
 	*/
-	
 	public function getcountry_multiplelist($val) { 
 	    if(!empty($val))
 		$str1     =  explode(',',$val);
@@ -648,7 +792,6 @@ class Regionsettings_model extends crm_model {
 	*@Get State By countryid
 	*@Region Settings Model
 	*/
-
 	public function getstate_multiplelist($val) { 
 	    if(!empty($val))
 		$str2       = explode(',',$val);
@@ -665,7 +808,6 @@ class Regionsettings_model extends crm_model {
 	*@Get Location List By Stateid
 	*@Region Settings Model
 	*/
-
 	public function getlocation_multiplelist($val) { 
 		if(!empty($val))
 		$str3 = explode(',',$val);
@@ -683,7 +825,6 @@ class Regionsettings_model extends crm_model {
 	*@Insert Record for Level
 	*@Region Settings Model
 	*/
-
     public function insert_level($data) {
 
 		$dataLevel = array();
@@ -706,7 +847,6 @@ class Regionsettings_model extends crm_model {
 	*@Insert Record (Level Region ,Levels Country, Levels State ,Levels location)
 	*@Region Settings Model
 	*/
-	
 	public function level_dependant_insert($levelId =null,$data){
 	    
 		if(!empty($data['region'])) {
@@ -748,20 +888,16 @@ class Regionsettings_model extends crm_model {
 	*@Delete Record for Level
 	*@Region Settings Model
 	*/
-
-   public function delete_level($id) {
+	public function delete_level($id) {
 		$this->db->where('level_id', $id);
 		$this->db->delete($this->cfg['dbpref'] . 'levels') ;
 		return $this->delete_level_dependant($id);
-	
-              
 	}
 
 	/*
 	*@Delete Level (levels region ,levels country , Levels state, Levels location)
 	*@Region Settings Model
 	*/
-	
     public function delete_level_dependant($id = null){
 
 	    $this->db->where('level_id', $id);
@@ -782,7 +918,6 @@ class Regionsettings_model extends crm_model {
 	*@Update Record for Level
 	*@Region Settings Model
 	*/
-	
 	public function update_level($data,$id) {
 	
 		$dataLevel = array();
@@ -797,7 +932,59 @@ class Regionsettings_model extends crm_model {
 		$this->level_dependant_insert($id,$data);		
 		return $id;
   	
-	}	
+	}
+	
+	/*
+	*@Check Region Status
+	*@Method   check_status_reg
+	*@table    user, customer
+	*@return as Json response
+	*/
+	public function check_status_rcsl($data=array()) {
+		$id = $data['data'];
+		$type = $data['type'];
+		
+		switch ($type)
+		{
+			case "reg":
+				$this->db->where('add1_region', $id);
+				$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+				
+				$this->db->where('region_id', $id);
+				$usrquery = $this->db->get($this->cfg['dbpref'].'levels_region')->num_rows();
+			break;
+			case "cntry":
+				$this->db->where('add1_country', $id);
+				$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+				
+				$this->db->where('country_id', $id);
+				$usrquery = $this->db->get($this->cfg['dbpref'].'levels_country')->num_rows();
+			break;
+			case "ste":
+				$this->db->where('add1_state', $id);
+				$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+				
+				$this->db->where('state_id', $id);
+				$usrquery = $this->db->get($this->cfg['dbpref'].'levels_state')->num_rows();
+			break;
+			case "loc":
+				$this->db->where('add1_location', $id);
+				$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+
+				$this->db->where('location_id', $id);
+				$usrquery = $this->db->get($this->cfg['dbpref'].'levels_location')->num_rows();
+			break;
+		}
+
+		$res = array();
+		if($query == 0 && $usrquery == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+    }
 
 }
 ?>

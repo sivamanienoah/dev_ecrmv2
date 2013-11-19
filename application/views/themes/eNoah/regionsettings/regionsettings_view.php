@@ -38,7 +38,7 @@ switch ($tabselected)
 			<p id="temp">&nbsp;</p>
 			<div id="regset-tabs">
 				<ul id="job-view-tabs">
-					<li><a href="regionsettings/region/">Region</a></li>
+					<li><a href="regionsettings/region">Region</a></li>
 					<li><a href="regionsettings/country">Country</a></li>
 					<li><a href="regionsettings/state">State</a></li>
 					<li><a href="regionsettings/location">Location</a></li>

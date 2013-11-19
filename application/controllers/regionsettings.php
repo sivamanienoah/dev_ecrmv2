@@ -23,18 +23,16 @@ class Regionsettings extends crm_controller {
 	*@Region Settings
 	*@User Controller
 	*/
-	
 	public function region_settings($limit = 0, $search = false)
 	{
 		$data['tabselected'] = $limit; 
-		$this->load->view('regionsettings/regionsettings_view',$data);
+		$this->load->view('regionsettings/regionsettings_view', $data);
 	}
 	
 	/*
 	*@Region Settings
 	*@User Controller
 	*/
-	
     public function levels_view($id=null)
 	{
 			$data['customers'] = $this->regionsettings_model->level_map($id);
@@ -59,7 +57,6 @@ class Regionsettings extends crm_controller {
 	*@Region Settings
 	*@User Controller
 	*/
-    
     public function level_check($str)
 	{
 			if (!preg_match('/^[0-9]+$/', $str)) {
@@ -97,6 +94,22 @@ class Regionsettings extends crm_controller {
 		$fields['region_name'] = "Region Name";		 
 		$fields['inactive']    = 'Inactive';
 		$this->validation->set_fields($fields);
+		
+		//for Inactive Role
+		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			$this->db->where('add1_region', $id);
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+			
+			$this->db->where('region_id', $id);
+			$usrquery = $this->db->get($this->cfg['dbpref'].'levels_region')->num_rows();
+
+			if($query == 0 && $usrquery == 0) {
+				$data['cb_status'] = 0;
+			} else {
+				$data['cb_status'] = 1;
+			}
+		}
+		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_region'])) {
             $customer            = $this->regionsettings_model->get_region($id);
             $data['this_region'] = $customer[0]['region_name'];
@@ -106,7 +119,7 @@ class Regionsettings extends crm_controller {
         }
 		
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-			if ($this->validation->run() == false) {
+		if ($this->validation->run() == false) {
             if ($ajax == false) {
                 $this->load->view('regionsettings/region_view', $data);
             } else {
@@ -119,15 +132,37 @@ class Regionsettings extends crm_controller {
 		    foreach($fields as $key => $val) {
                 $update_data[$key] = $this->input->post($key);
             }
+			//for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
+				}
+			}
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_region'])) {
                 //update
 				$user_Detail                = $this->session->userdata('logged_in_user');
 				$update_data['modified_by'] = $user_Detail['userid'];			
 				$update_data['modified']    = date('Y-m-d H:i:s');
-                if ($this->regionsettings_model->update_region($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Region Details Updated!'));
-                    redirect('regionsettings/region_settings/region');                  
-                }                
+				
+				$this->db->where('region_name', $update_data['region_name']);
+				$this->db->where('regionid !=', $id);
+				$dup_reg = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
+				
+				if ($dup_reg == 0) {
+					if ($this->regionsettings_model->update_region($id, $update_data)) {
+						$this->session->set_flashdata('confirm', array('Region Details Updated!'));
+						redirect('regionsettings/region_settings/region');                  
+					}
+				} else {
+					$this->session->set_flashdata('login_errors', array('Region Name Already Exists!'));
+					redirect('regionsettings/region_settings/region');
+				}
             }
 			$user_Detail                = $this->session->userdata('logged_in_user');
 			$update_data['created_by']  = $user_Detail['userid'];			
@@ -149,10 +184,123 @@ class Regionsettings extends crm_controller {
 		}		
 	}
 	
-	public function region_redirect() {
-		redirect('regionsettings/region_settings/region');
-	}
 	
+	/*
+	*@Get Country
+	*@User Controller
+	*/
+	public function country($update = false, $id = false, $ajax = false)
+	{
+		$data               = array();
+		$post_data          = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($post_data); exit;
+		$data['customers']  = $this->regionsettings_model->country_list($limit=false, $search=false);
+		$data['regions']    = $this->regionsettings_model->region_list($limit=false, $search=false);
+        
+		$this->login_model->check_login();
+		
+		//adding State
+		$rules['country_name']  = "trim|required";         
+		$this->validation->set_rules($rules);
+		$fields['country_name'] = "Country Name";		 
+		$fields['inactive']     = 'Inactive';
+		$fields['regionid']     = 'regionid';
+		$this->validation->set_fields($fields);
+		
+		//for Inactive Role
+		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			$this->db->where('add1_country', $id);
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+				
+			$this->db->where('country_id', $id);
+			$usrquery = $this->db->get($this->cfg['dbpref'].'levels_country')->num_rows();
+
+			if($query == 0 && $usrquery == 0) {
+				$data['cb_status'] = 0;
+			} else {
+				$data['cb_status'] = 1;
+			}
+		}
+		
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_country'])) {
+            $customer = $this->regionsettings_model->get_country($id);
+            $data['this_country'] = $customer[0]['country_name'];
+            $data['this_country'] = $customer[0]['regionid'];
+            if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
+                if (isset($this->validation->$k)) $this->validation->$k = $v;
+            }
+        }
+    
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+			if ($this->validation->run() == false) {
+            if ($ajax == false) {
+                $this->load->view('regionsettings/country_view', $data);
+            } else {
+                $json['error'] = true;
+                $json['ajax_error_str'] = $this->validation->error_string;
+                echo json_encode($json);
+            }
+		} else {
+		    foreach($fields as $key => $val) {
+                $update_data[$key] = $this->input->post($key);
+			}
+			//for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
+				}
+			}
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_country'])) {
+                //update
+				$user_Detail = $this->session->userdata('logged_in_user');
+				$update_data['modified_by']=$user_Detail['userid'];			
+				$update_data['modified']=date('Y-m-d H:i:s');
+				
+				$this->db->where('country_name',$update_data['country_name']);
+				$this->db->where('countryid != ', $id);
+				$dup_cntry = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
+				
+				if($dup_cntry == 0 ) {
+					$updt_res = $this->regionsettings_model->update_country($id, $update_data);
+					if ($updt_res == 1) {
+						$this->session->set_flashdata('confirm', array('Country Details Updated!'));
+						redirect('regionsettings/region_settings/country');                  
+					} else {
+						$this->session->set_flashdata('login_errors', array("Region Should Not Be Inactive!"));
+						redirect('regionsettings/region_settings/country'); 
+					}
+				} else {
+					$this->session->set_flashdata('login_errors', array('Country Name Already Exists!'));
+					redirect('regionsettings/region_settings/country');  
+				}
+            }
+
+			$user_Detail                = $this->session->userdata('logged_in_user');
+			$update_data['created_by']  = $user_Detail['userid'];			
+			$update_data['created']     = date('Y-m-d H:i:s');
+			$update_data['modified_by'] = $user_Detail['userid'];			
+			$update_data['modified']    = date('Y-m-d H:i:s');
+				
+			$this->db->where('country_name',$update_data['country_name']);
+            $query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
+            if($query == 0 ){	
+				if ($this->regionsettings_model->insert_country($update_data)) {                    
+                    $this->session->set_flashdata('confirm', array('Country Details Updated!'));
+                    redirect('regionsettings/region_settings/country');          
+                }
+			}
+			else{
+					$this->session->set_flashdata('login_errors', array('Country Name Already Exists!'));
+                    redirect('regionsettings/region_settings/country');  
+			}
+		}
+	}
 	
 	/*
 	*@Get State 
@@ -163,7 +311,6 @@ class Regionsettings extends crm_controller {
 		$data               = array();
 		$post_data          = real_escape_array($this->input->post());
 		$data['customers']  = $this->regionsettings_model->state_list($limit, $search);
-		$data['countrys']   = $this->regionsettings_model->country_list($limit, $search);
 		$data['regions']    = $this->regionsettings_model->region_list($limit, $search);
 		$this->login_model->check_login();
 
@@ -176,8 +323,24 @@ class Regionsettings extends crm_controller {
 		$fields['regionid']   = 'regionid';
 		$this->validation->set_fields($fields);
 		
+		//for Inactive Role
+		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			$this->db->where('add1_state', $id);
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+
+			$this->db->where('state_id', $id);
+			$usrquery = $this->db->get($this->cfg['dbpref'].'levels_state')->num_rows();
+
+			if($query == 0 && $usrquery == 0) {
+				$data['cb_status'] = 0;
+			} else {
+				$data['cb_status'] = 1;
+			}
+		}
+		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_state'])) {
             $customer           = $this->regionsettings_model->get_state($id);
+			$data['countrys']   = $this->regionsettings_model->country_list($limit, $search);
             $data['this_state'] = $customer[0]['state_name']; 
             $data['this_cname'] = $customer[0]['countryid']; 
             $data['this_rname'] = $customer[0]['regionid']; 
@@ -185,6 +348,7 @@ class Regionsettings extends crm_controller {
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
         }
+		
 		$this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		if ($this->validation->run() == false) {
 				if ($ajax == false) {
@@ -194,47 +358,241 @@ class Regionsettings extends crm_controller {
 					$json['ajax_error_str'] = $this->validation->error_string;
 					echo json_encode($json);
 				}
-			} else {
-				foreach($fields as $key => $val) {
+		} else {
+			foreach($fields as $key => $val) {
 				$update_data[$key] = $this->input->post($key);
-				}			 
-				if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_state'])) {
-					$user_Detail = $this->session->userdata('logged_in_user');
-					$update_data['modified_by']=$user_Detail['userid'];			
-					$update_data['modified']=date('Y-m-d H:i:s');
-					unset($update_data['regionid']);
-				if ($this->regionsettings_model->update_state($id, $update_data)) {
-					$this->session->set_flashdata('confirm', array('State Details Updated!'));
-					redirect('regionsettings/region_settings/state');              
-				}                
+			}
+			//for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
 				}
+			}
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_state'])) {
 				$user_Detail = $this->session->userdata('logged_in_user');
-				$update_data['created_by']=$user_Detail['userid'];			
-				$update_data['created']=date('Y-m-d H:i:s');
 				$update_data['modified_by']=$user_Detail['userid'];			
 				$update_data['modified']=date('Y-m-d H:i:s');
 				unset($update_data['regionid']);
 				
 				$this->db->where('state_name',$update_data['state_name']);
-				$query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
-				if($query == 0 ) {	
-					if ($this->regionsettings_model->insert_state($update_data)) {  
+				$this->db->where('stateid != ', $id);
+				$dup_ste = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
+				
+				if($dup_ste == 0 ) {
+					$updt_res = $this->regionsettings_model->update_state($id, $update_data);
+					if ($updt_res == 1) {
 						$this->session->set_flashdata('confirm', array('State Details Updated!'));
-						redirect('regionsettings/region_settings/state');                    
+						redirect('regionsettings/region_settings/state');              
+					} else {
+						$this->session->set_flashdata('login_errors', array("Country Should Not Be Inactive!"));
+						redirect('regionsettings/region_settings/state'); 
 					}
 				} else {
-						$this->session->set_flashdata('login_errors', array('State Name Already Exists!'));
-						redirect('regionsettings/region_settings/state');
+					$this->session->set_flashdata('login_errors', array('State Name Already Exists!'));
+					redirect('regionsettings/region_settings/state');
 				}
+			}
+			$user_Detail = $this->session->userdata('logged_in_user');
+			$update_data['created_by']=$user_Detail['userid'];			
+			$update_data['created']=date('Y-m-d H:i:s');
+			$update_data['modified_by']=$user_Detail['userid'];			
+			$update_data['modified']=date('Y-m-d H:i:s');
+			unset($update_data['regionid']);
+			
+			$this->db->where('state_name', $update_data['state_name']);
+			$query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
+			if($query == 0 ) {	
+				if ($this->regionsettings_model->insert_state($update_data)) {  
+					$this->session->set_flashdata('confirm', array('State Details Updated!'));
+					redirect('regionsettings/region_settings/state');                    
+				}
+			} else {
+					$this->session->set_flashdata('login_errors', array('State Name Already Exists!'));
+					redirect('regionsettings/region_settings/state');
+			}
 		}
 	}
 	
+	/*
+	*@Get Location List
+	*@User Controller
+	*/
+	public function location($update = false, $id = false, $ajax = false)
+	{ 
+		$post_data          = real_escape_array($this->input->post());
+		$data               = array();
+		$data['customers']  = $this->regionsettings_model->location_list($limit, $search);
+		$data['regions']    = $this->regionsettings_model->region_list($limit, $search);
+
+		$this->login_model->check_login();
+		
+		//Adding State
+		$rules['location_name']  = "trim|required";         
+		$this->validation->set_rules($rules);
+		$fields['location_name'] = "Location Name";		 
+		$fields['inactive']      = 'Inactive';
+		$fields['stateid']       = 'stateid';
+		$fields['regionid']      = 'regionid';
+		$fields['countryid']     = 'countryid';
+		
+		$this->validation->set_fields($fields);
+		
+		//for Inactive Role
+		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			$this->db->where('add1_location', $id);
+			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
+
+			$this->db->where('location_id', $id);
+			$usrquery = $this->db->get($this->cfg['dbpref'].'levels_location')->num_rows();
+
+			if($query == 0 && $usrquery == 0) {
+				$data['cb_status'] = 0;
+			} else {
+				$data['cb_status'] = 1;
+			}
+		}
+		
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_location'])) {
+			$customer = $this->regionsettings_model->get_location($id);
+			$data['states']     = $this->regionsettings_model->state_list($limit, $search);
+			$data['countrys']   = $this->regionsettings_model->country_list($limit, $search);
+            $data['this_location'] = $customer[0]['location_name'];
+            $data['this_sid']      = $customer[0]['stateid'];
+			if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
+                if (isset($this->validation->$k)) $this->validation->$k = $v;
+            }
+        }
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+		if ($this->validation->run() == false) {
+            if ($ajax == false) {
+                $this->load->view('regionsettings/location_view', $data);
+            } else {
+                $json['error'] = true;
+                $json['ajax_error_str'] = $this->validation->error_string;
+                echo json_encode($json);
+            }			
+		} else {
+		     foreach($fields as $key => $val) {
+                $update_data[$key] = $this->input->post($key);
+             }
+			 //for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
+				}
+			}
+			 
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_location'])) {
+                //update
+				$user_Detail                = $this->session->userdata('logged_in_user');
+				$update_data['modified_by'] = $user_Detail['userid'];			
+				$update_data['modified']    = date('Y-m-d H:i:s');
+				unset($update_data['regionid']);				
+				unset($update_data['countryid']);
+				
+				$this->db->where('location_name',$update_data['location_name']);
+				$this->db->where('locationid !=', $id);
+				$dup_loc = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
+				
+				if($dup_loc == 0) {
+					$updt = $this->regionsettings_model->update_location($id, $update_data);
+					if ($updt == 1) {
+						$this->session->set_flashdata('confirm', array('Location Details Updated!'));
+						redirect('regionsettings/region_settings/location');
+					} else {
+						$this->session->set_flashdata('login_errors', array("State Should Not Be Inactive!"));
+						redirect('regionsettings/region_settings/location'); 					
+					}
+				} else {
+					$this->session->set_flashdata('login_errors', array('Location Name Already Exists!'));
+					redirect('regionsettings/region_settings/location');
+				}
+            }
+			$user_Detail = $this->session->userdata('logged_in_user');
+			$update_data['created_by']=$user_Detail['userid'];			
+			$update_data['created']=date('Y-m-d H:i:s');	
+			$update_data['modified_by']=$user_Detail['userid'];			
+			$update_data['modified']=date('Y-m-d H:i:s');
+			unset($update_data['regionid']);				
+			unset($update_data['countryid']);	
+				
+			$this->db->where('location_name',$update_data['location_name']);
+            $query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
+            if($query == 0 ) {	
+				if ($this->regionsettings_model->insert_location($update_data)) {		
+                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
+                    redirect('regionsettings/region_settings/location');                    
+                }	
+			} else {
+				$this->session->set_flashdata('login_errors', array('Location Name Already Exists!'));
+				redirect('regionsettings/region_settings/location');
+			}
+		}
+	}
+	
+	public function region_redirect() {
+		redirect('regionsettings/region_settings/region');
+	}
+
+
+	/*
+	*@Delete region Record
+	*@User Controller
+	*/
+	public function region_delete($delete = false, $id = false, $ajax = false)
+	{ 
+		if ($this->session->userdata('deleteAdmin')==1){	
+				$this->login_model->check_login();
+				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
+					//delete
+					if ($this->regionsettings_model->delete_region($id, $update_data)) {
+						$this->session->set_flashdata('confirm', array('Region Deleted!'));
+						redirect('regionsettings/region_settings/region');                  
+					}                
+				}
+		} else {
+				$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+				redirect('regionsettings/region_settings/region'); 
+		}		
+	}
+
+	/*
+	*@Delete Country Record
+	*@User Controller
+	*/
+	public function country_delete($delete = false, $id = false, $ajax = false)
+	{ 
+		if ($this->session->userdata('deleteAdmin')==1) {	
+			$this->login_model->check_login();
+			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
+				//delete
+				if ($this->regionsettings_model->delete_country($id, $update_data)) {
+					$this->session->set_flashdata('confirm', array('Country Deleted!'));
+					redirect('regionsettings/region_settings/country');                  
+				}                
+			}
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('regionsettings/region_settings/country');
+		}		
+	}
 	
 	/*
 	*@Delete State Record
 	*@User Controller
 	*/
-	
 	public function state_delete($delete = false, $id = false, $ajax = false)
 	{ 
 		if ($this->session->userdata('deleteAdmin')==1) {
@@ -251,12 +609,33 @@ class Regionsettings extends crm_controller {
 				redirect('regionsettings/region_settings/state'); 
 		}	
 	}
+	
+	/*
+	*@Delete Location Record
+	*@User Controller
+	*/
+	public function location_delete($delete = false, $id = false, $ajax = false)
+	{
+		if ($this->session->userdata('deleteAdmin')==1){
+			$this->login_model->check_login();
+							 
+				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
+					//delete
+					if ($this->regionsettings_model->delete_location($id, $update_data)) {
+						$this->session->set_flashdata('confirm', array('Location Deleted!'));
+						redirect('regionsettings/region_settings/location');                  
+					}                
+				}
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('regionsettings/region_settings/location'); 
+		}			
+	}
 
 	/*
 	*@Get Country Record for adding Customer Page
 	*@User Controller
 	*/
-	
 	public function getCountry($value,$id,$updt) {
 		$data = array();
 		$data = $this->regionsettings_model->getcountry_list($value);
@@ -289,7 +668,6 @@ class Regionsettings extends crm_controller {
 	*@Get Country Record for adding location
 	*@User Controller
 	*/
-	
 	public function getCountrylo($value,$id) {
 
 		$data = array();
@@ -313,7 +691,6 @@ class Regionsettings extends crm_controller {
 	*@Get Country Record List 
 	*@User Controller
 	*/
-	
 	public function getCountryst($value,$id) {
 
 		$data=array();
@@ -335,7 +712,6 @@ class Regionsettings extends crm_controller {
 	*@Get State List for adding customer page
 	*@User Controller
 	*/
-	
 	public function getState($value,$id,$updt) {
 	
 		$data=array();
@@ -368,7 +744,6 @@ class Regionsettings extends crm_controller {
 	*@Get State List for adding location page
 	*@User Controller
 	*/
-	
 	public function getStateloc($value,$id) {
 		$data = array();
 		$data = $this->regionsettings_model->getstate_list($value);
@@ -391,7 +766,6 @@ class Regionsettings extends crm_controller {
 	*@Get Location List
 	*@User Controller
 	*/
-	
 	public function getLocation($value,$id,$updt) {
 		$data = array();
 		$data = $this->regionsettings_model->getlocation_list($value);
@@ -422,94 +796,9 @@ class Regionsettings extends crm_controller {
 	}
 
 	/*
-	*@Get Country
-	*@User Controller
-	*/
-
-	public function country($update = false, $id = false, $ajax = false)
-	{
-		$data               = array();
-		$post_data          = real_escape_array($this->input->post());
-		// echo "<pre>"; print_r($post_data); exit;
-		$data['customers']  = $this->regionsettings_model->country_list($limit=false, $search=false);
-		$data['regions']    = $this->regionsettings_model->region_list($limit=false, $search=false);
-        
-		$this->login_model->check_login();
-		
-		//adding State
-		$rules['country_name']  = "trim|required";         
-		$this->validation->set_rules($rules);
-		$fields['country_name'] = "Country Name";		 
-		$fields['inactive']     = 'Inactive';
-		$fields['regionid']     = 'regionid';
-		$this->validation->set_fields($fields);
-		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_country'])) {
-            $customer = $this->regionsettings_model->get_country($id);
-            $data['this_country'] = $customer[0]['country_name'];
-            $data['this_country'] = $customer[0]['regionid'];
-            if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
-        }
-    
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-			if ($this->validation->run() == false) {
-            if ($ajax == false) {
-                $this->load->view('regionsettings/country_view', $data);
-            } else {
-                $json['error'] = true;
-                $json['ajax_error_str'] = $this->validation->error_string;
-                echo json_encode($json);
-            }
-		} else {
-		    foreach($fields as $key => $val) {
-                $update_data[$key] = $this->input->post($key);
-             }	
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_country'])) {
-                //update
-					$user_Detail = $this->session->userdata('logged_in_user');
-					$update_data['modified_by']=$user_Detail['userid'];			
-					$update_data['modified']=date('Y-m-d H:i:s');
-                if ($this->regionsettings_model->update_country($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Country Details Updated!'));
-                    redirect('regionsettings/region_settings/country');                  
-                }                
-            }
-			else if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['delete_country'])) {
-                //delete
-                if ($this->regionsettings_model->delete_country($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Country Deleted!'));
-                    redirect('regionsettings/region_settings/country');                  
-                }                
-            }
-
-			$user_Detail                = $this->session->userdata('logged_in_user');
-			$update_data['created_by']  = $user_Detail['userid'];			
-			$update_data['created']     = date('Y-m-d H:i:s');
-			$update_data['modified_by'] = $user_Detail['userid'];			
-			$update_data['modified']    = date('Y-m-d H:i:s');
-				
-			$this->db->where('country_name',$update_data['country_name']);
-            $query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
-            if($query == 0 ){	
-				if ($this->regionsettings_model->insert_country($update_data)) {                    
-                    $this->session->set_flashdata('confirm', array('Country Details Updated!'));
-                    redirect('regionsettings/region_settings/country');          
-                }
-			}
-			else{
-					$this->session->set_flashdata('login_errors', array('Country Name Already Exists!'));
-                    redirect('regionsettings/region_settings/country');  
-			}
-		}
-	}
-
-	/*
 	*@Country Add Ajax for Region Settings
 	*@User Controller
 	*/
-	
 	//Function for adding New Country, New State & New Location in the Customer Details page. -- Starts here.
 	public function country_add_ajax($ajax_update) {
 		$post_data                   = real_escape_array($this->input->post());
@@ -530,7 +819,6 @@ class Regionsettings extends crm_controller {
 	*@Satate Add Ajax for Region Settings
 	*@User Controller
 	*/
-	
 	public function state_add_ajax($ajax_update) {
 		
 		$post_data                  = real_escape_array($this->input->post());
@@ -550,7 +838,6 @@ class Regionsettings extends crm_controller {
 	*@Location Add Ajax for Region Settings
 	*@User Controller
 	*/
-	
 	public function location_add_ajax($ajax_update) {
 
 		$post_data = real_escape_array($this->input->post());
@@ -569,174 +856,9 @@ class Regionsettings extends crm_controller {
 	//Function for adding New Country, New State & New Location in the Customer Details page. -- Ends here.
 
 	/*
-	*@Get Location List
-	*@User Controller
-	*/
-	
-	public function location($update = false, $id = false, $ajax = false)
-	{ 
-		$post_data          = real_escape_array($this->input->post());
-		$data               = array();
-		$data['customers']  = $this->regionsettings_model->location_list($limit, $search);
-		$data['states']     = $this->regionsettings_model->state_list($limit, $search);
-		$data['regions']    = $this->regionsettings_model->region_list($limit, $search);
-		$data['countrys']   = $this->regionsettings_model->country_list($limit, $search);
-		
-		$data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'country/index/';
-            $config['total_rows'] = (string) $this->regionsettings_model->location_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
-		$this->login_model->check_login();
-		
-		//Adding State
-		$rules['location_name']  = "trim|required";         
-		$this->validation->set_rules($rules);
-		$fields['location_name'] = "Location Name";		 
-		$fields['inactive']      = 'Inactive';
-		$fields['stateid']       = 'stateid';
-		$fields['regionid']      = 'regionid';
-		$fields['countryid']     = 'countryid';
-		
-		$this->validation->set_fields($fields);
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_location'])) {
-			$customer = $this->regionsettings_model->get_location($id);
-            $data['this_location'] = $customer[0]['location_name'];
-            $data['this_sid']      = $customer[0]['stateid'];
-			if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
-        }
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-			if ($this->validation->run() == false) {
-            if ($ajax == false) {
-                $this->load->view('regionsettings/location_view', $data);
-            } else {
-                $json['error'] = true;
-                $json['ajax_error_str'] = $this->validation->error_string;
-                echo json_encode($json);
-            }			
-		} else {
-		     foreach($fields as $key => $val) {
-                $update_data[$key] = $this->input->post($key);
-             }
-			 if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_location'])) {
-                //update
-				$user_Detail                = $this->session->userdata('logged_in_user');
-				$update_data['modified_by'] = $user_Detail['userid'];			
-				$update_data['modified']    = date('Y-m-d H:i:s');
-				unset($update_data['regionid']);				
-				unset($update_data['countryid']);				
-                if ($this->regionsettings_model->update_location($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
-                    redirect('regionsettings/region_settings/location');                  
-                }                
-            }
-			else if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['delete_location'])) {
-                //delete
-                if ($this->regionsettings_model->delete_location($id, $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Location Deleted!'));
-                    redirect('regionsettings/region_settings/location');                  
-                }                
-            }
-			$user_Detail = $this->session->userdata('logged_in_user');
-			$update_data['created_by']=$user_Detail['userid'];			
-			$update_data['created']=date('Y-m-d H:i:s');	
-			$update_data['modified_by']=$user_Detail['userid'];			
-			$update_data['modified']=date('Y-m-d H:i:s');
-			unset($update_data['regionid']);				
-			unset($update_data['countryid']);	
-				
-			$this->db->where('location_name',$update_data['location_name']);
-            $query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
-            if($query == 0 ) {	
-				if ($this->regionsettings_model->insert_location($update_data)) {		
-                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
-                    redirect('regionsettings/region_settings/location');                    
-                }	
-			} else {
-					$this->session->set_flashdata('login_errors', array('Location Name Already Exists!'));
-                    redirect('regionsettings/region_settings/location');
-			  }
-		}
-	}
-
-	/*
-	*@Delete Location Record
-	*@User Controller
-	*/
-	
-	public function location_delete($delete = false, $id = false, $ajax = false)
-	{
-		if ($this->session->userdata('deleteAdmin')==1){
-			$this->login_model->check_login();
-							 
-				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
-					//delete
-					if ($this->regionsettings_model->delete_location($id, $update_data)) {
-						$this->session->set_flashdata('confirm', array('Location Deleted!'));
-						redirect('regionsettings/region_settings/location');                  
-					}                
-				}
-		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-			redirect('regionsettings/region_settings/location'); 
-		}			
-	}
-
-	/*
-	*@Delete region Record
-	*@User Controller
-	*/
-	
-	public function region_delete($delete = false, $id = false, $ajax = false)
-	{ 
-		if ($this->session->userdata('deleteAdmin')==1){	
-				$this->login_model->check_login();
-				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
-					//delete
-					if ($this->regionsettings_model->delete_region($id, $update_data)) {
-						$this->session->set_flashdata('confirm', array('Region Deleted!'));
-						redirect('regionsettings/region_settings/region');                  
-					}                
-				}
-		} else {
-				$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-				redirect('regionsettings/region_settings/region'); 
-		}		
-	}
-
-	/*
-	*@Delete Country Record
-	*@User Controller
-	*/
-	
-	public function country_delete($delete = false, $id = false, $ajax = false)
-	{ 
-		if ($this->session->userdata('deleteAdmin')==1) {	
-			$this->login_model->check_login();
-			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
-				//delete
-				if ($this->regionsettings_model->delete_country($id, $update_data)) {
-					$this->session->set_flashdata('confirm', array('Country Deleted!'));
-					redirect('regionsettings/region_settings/country');                  
-				}                
-			}
-		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-			redirect('regionsettings/region_settings/country');
-		}		
-	}
-
-	/*
 	*@Delete Level Record
 	*@User Controller
 	*/
-	
 	public function level_delete($delete = false, $id = false, $ajax = false)
 	{ 
 		if ($this->session->userdata('deleteAdmin')==1) {	
@@ -852,8 +974,7 @@ class Regionsettings extends crm_controller {
 	/*
 	*@Search Level Record
 	*@User Controller
-	*/
-	
+	*/	
 	public function level_search()
 	{
 		$post_data = real_escape_array($this->input->post());
@@ -871,7 +992,6 @@ class Regionsettings extends crm_controller {
 	*@Search Level View
 	*@User Controller
 	*/
-	
 	public function level_search_view($limit = 0, $search = false)
 	{
 		$data['regions']   = $this->regionsettings_model->region_list();
@@ -893,7 +1013,6 @@ class Regionsettings extends crm_controller {
 	*@Get Country List
 	*@User Controller
 	*/
-  
 	public function getCountryList($value) {
 		$data  	   = array();
 		if(!empty($value))
@@ -921,7 +1040,6 @@ class Regionsettings extends crm_controller {
 	*@Get State List
 	*@User Controller
 	*/
-	
 	public function getStateList($value) {
 		$data          = array();
 		if(!empty($value)){
@@ -951,7 +1069,6 @@ class Regionsettings extends crm_controller {
 	*@Get Location List
 	*@User Controller
 	*/
-	
 	public function getLocationList($value) {
 		$data=array();
 		if(!empty($value))
@@ -979,7 +1096,6 @@ class Regionsettings extends crm_controller {
 	*@Check Exist User Record
 	*@User Controller
 	*/
-	
 	function getResultfromdb($username){
 		$this->db->where('level_name',$username);
 		$query = $this->db->get($this->cfg['dbpref'].'levels')->num_rows();
@@ -991,13 +1107,22 @@ class Regionsettings extends crm_controller {
 	*@Get User Result From Region
 	*@User Controller
 	*/
-	
 	function getResultfromRegion($username){            
 		$this->db->where('region_name',$username);
 		$query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
 		if($query == 0 ) echo 'userOk';
 		else echo 'userNo';
     }
+	
+	/*
+	*@Check Region,Country,State,Location Status
+	*
+	*/
+	function ajax_check_status_rcsl()
+	{
+		$data =	real_escape_array($this->input->post()); // escape special characters
+		$this->regionsettings_model->check_status_rcsl($data);
+	}
 }
 
 ?>

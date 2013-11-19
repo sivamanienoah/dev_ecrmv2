@@ -19,12 +19,23 @@
 			<table class="layout">
 				<tr>
 					<td width="100">Role name:</td>
-					<td width="240"><input type="text" name="name" value="<?php echo  $this->validation->name ?>" class="textfield width200px required" /> *</td>					 
+					<td width="240">
+						<input type="text" name="name" value="<?php echo  $this->validation->name ?>" class="textfield width200px required" /> *
+					</td>					 
 				</tr>			 
-					<tr> <td>Modules:</td><td><?php	echo $pageTree;	?></td></tr>			 			   
+				<tr> 
+					<td>Modules:</td>
+					<td><?php echo $pageTree; ?></td>
+				</tr>			 			   
 				<tr>
 					<td>Inactive Role:</td>
-					<td colspan="3"><input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the role is inactive .</td>
+					<td colspan="3">
+						<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
+						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+						<?php if ($cb_status != 0) echo "One or more User currently assigned for this Role. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the Role need to be Inactive."; ?>
+						<?php if ($this->validation->inactive != 0) echo "Uncheck if the Role need to be Active."; ?>
+					</td>
 				</tr>
                 <tr>
 					<td>&nbsp;</td>

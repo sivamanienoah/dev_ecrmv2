@@ -27,15 +27,6 @@ class Role extends crm_controller {
 	{
 		$this->login_model->check_login();
         $data['customers']  = $this->role_model->role_list($limit, $search);
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'role/index/';
-            $config['total_rows'] = (string) $this->role_model->role_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
         $this->load->view('role/list_view', $data);
     }
 
@@ -47,16 +38,9 @@ class Role extends crm_controller {
     public function add_role($update = false, $id = false, $ajax = false)
 	{
 		$post_data = real_escape_array($this->input->post());
-	
+		
         $this->login_model->check_login();		
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['delete_role'])) {
-            
-            // check to see if this customer has a job on the system before deleting
-            // to do            
-            $this->role_model->delete_role($id);
-            $this->session->set_flashdata('confirm', array('Role Account Deleted!'));
-            redirect('role/roles_list/');            
-        }        
+      
         $rules['name']         = "trim|required";
 		$this->validation->set_rules($rules);
 		$fields['name']        = "Role Name"; 
@@ -70,8 +54,14 @@ class Role extends crm_controller {
 		$fields['roleid']      = array();
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		$data = '';						
-        $data['masterview'] = $this->master_model->master_list($limit, $search);	
+		
+		$data = '';
+		
+		//for Inactive Role
+		$this->db->where('role_id', $id);
+		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+
+        $data['masterview'] = $this->master_model->master_list($limit, $search);
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_role'])) {
             $roles = $this->role_model->get_role($id);		 
 		
@@ -95,7 +85,6 @@ class Role extends crm_controller {
 		
 		$data['pageTree'] = $this->role_model->pageTree($id);	
 		
-	 
 		if ($this->validation->run() == false) {
 			
             if ($ajax == false) {			
@@ -109,18 +98,31 @@ class Role extends crm_controller {
 		} else {			
 			// all good
             foreach($fields as $key => $val) {
-                $update_data[$key] = $this->input->post($key);
-            }			
+				$update_data[$key] = $this->input->post($key);
+            }
+			
+			//for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
+				}
+			}
+
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			 
-            	 $update_data['modified_by']=$user_Detail['userid'];			
-				 $update_data['modified']=date('Y-m-d H:i:s');	 
+            	$update_data['modified_by']=$user_Detail['userid'];			
+				$update_data['modified']=date('Y-m-d H:i:s');	 
 				 
-				   
                 if ($this->role_model->update_role($id, $update_data)) {
-                    
                     $this->session->set_flashdata('confirm', array('Role Details Updated!'));
-                    redirect('role/add_role/update/' . $id);
+                    // redirect('role/add_role/update/' . $id);
+                    redirect('role');
                     
                 }
                 

@@ -20,7 +20,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 			<p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="100">Region:</td>
+					<td width="100">Region: *</td>
 					<td width="240">
 					<select name="regionid" id="st_regionid" class="textfield width200px" onchange="getCountryst(this.value)" class="textfield width200px required">
 						<option value="0">Select Region</option>
@@ -28,13 +28,13 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 							foreach ($regions as $region) { ?>
 								<option value="<?php echo  $region['regionid'] ?>"<?php echo  ($this->validation->regionid == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo  $region['region_name']; ?></option>
 							<?php } ?>
-					</select> *
+					</select>
 					</td>
 					<td class="error" id="errorreg" style="color:red; display:none;">Select Region</td>
 				</tr>
 				<div id="test"></div>
 				<tr>
-					<td width="100">Country:</td>
+					<td width="100">Country: *</td>
 					<?php $cid = $this->validation->countryid ?>
 					<td id='country_row' width="240">
 						<select id="country_id" name="countryid" style="width:210px;">
@@ -43,18 +43,26 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 							<?php foreach ($countrys as $country) { ?>
 							<option value="<?php echo $country['countryid'];?>" <?php if($cid==$country['countryid']) { echo "selected"; } ?>><?php echo $country['country_name']; ?> </option>
 							<?php } } ?>
-						</select> *
+						</select>
 					</td>
 					<td class="error" id="error1" style="color:red; display:none;">Select Country</td>
 				</tr>
 				<tr>
-					<td width="100">State:</td>
-					<td width="240"><input id="state_name" type="text" name="state_name" value="<?php echo $this->validation->state_name ?>" class="textfield width200px required" /> *</td>
+					<td width="100">State: *</td>
+					<td width="240">
+						<input id="state_name" type="text" name="state_name" value="<?php echo $this->validation->state_name ?>" class="textfield width200px required" />
+					</td>
 					<td class="error" id="error2" style="color:red; display:none;">State Field Required.</td>
 				</tr>
 				<tr>
 					<td>Status:</td>
-					<td colspan="3"><input type="checkbox" name="inactive" value="1"<?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the state is inactive .</td>
+					<td colspan="3">
+						<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
+						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+						<?php if ($cb_status != 0) echo "One or more User / Customer currently assigned for this State. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the User need to be Inactive."; ?>
+						<?php if ($this->validation->inactive != 0) echo "Uncheck if the User need to be Active."; ?>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -87,8 +95,10 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 				</tr>
 			</table>
 		</form>
-    <h2>State List</h2>
+		<h2>State List</h2>
         
+		<div class="dialog-err" id="dialog-err-ste" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
+		
         <table class="ste-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
             <thead>
                 <tr>
@@ -118,7 +128,8 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 						</td>                         
 						<td class="actions">
 							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="editSte clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
-							<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
+							<!--<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/state_delete/delete/<?php echo $customer['stateid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>-->
+							<?php if($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
 						</td>
 					</tr>
                     <?php } ?>

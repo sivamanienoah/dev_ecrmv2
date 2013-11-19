@@ -121,7 +121,13 @@
 				<!-- Levels and region settings ends here -->	
 					<?php if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { ?>
 					<td>Inactive User:</td>
-					<td colspan="3"><input type="checkbox" name="inactive" value="1"<?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the user is inactive (ie. no longer working with us).</td>
+					<td colspan="3">
+						<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
+						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+						<?php if ($cb_status != 0) echo "One or more Leads currently assigned for this User. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the User need to be Inactive."; ?>
+						<?php if ($this->validation->inactive != 0) echo "Uncheck if the User need to be Active."; ?>						
+					</td>
 					<?php } ?>
 				</tr>
 				<tr>

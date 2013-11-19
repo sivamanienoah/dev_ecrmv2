@@ -74,8 +74,16 @@ class User extends crm_controller {
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
         
-        $data = '';
-        $data['roles']=$this->role_model->role_list();
+        $data = '';	
+		
+		//for Inactive Role
+		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+			$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0";
+			$this->db->where($where);
+			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		}
+		
+        $data['roles']=$this->role_model->active_role_list();
 		$data['levels'] = $this->user_model->get_levels();
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_user'])) {
             $customer = $this->user_model->get_user($id);
@@ -109,6 +117,19 @@ class User extends crm_controller {
 			{
                 $update_data[$key] = $this->input->post($key);
             }
+			//for inactive role
+			if ($update_data['inactive'] == "") {
+				$update_data['inactive'] = 0;
+			} else if ($update_data['inactive'] == 1) {
+				$update_data['inactive'] = 1;
+			} else {
+				if ($data['cb_status']==0) {
+					$update_data['inactive'] = 0;
+				} else {
+					$update_data['inactive'] = 1;
+				}
+			}
+			
 			//for new level settings concepts
 			foreach($fields1 as $key => $val) {
                 $update_data1[$key] = $this->input->post($key);
@@ -142,9 +163,9 @@ class User extends crm_controller {
 							
 						$from=$this->userdata['email'];
 						$arrEmails = $this->config->item('crm');
-						$arrSetEmails=$arrEmails['director_emails'];
+						$arrSetEmails = $arrEmails['director_emails'];
 								
-						$admin_mail=implode(',',$arrSetEmails);
+						$admin_mail = implode(',',$arrSetEmails);
 						$subject='User Role Change Notification';
 						
 						//email sent by email template
@@ -257,7 +278,6 @@ class User extends crm_controller {
 	*@ Find exist email address by ajax
 	*
 	*/
-	
 	function getUserResult() {	
 		$data =	real_escape_array($this->input->post());
 		$this->user_model->find_exist_email($data);
@@ -267,7 +287,6 @@ class User extends crm_controller {
 	*@Get User for Lead Assigned To
 	*
 	*/
-	
 	function getUserDetFromDb() {
 		$data = real_escape_array($this->input->post());
 		$this->user_model->getUserLeadAssigned($data['user']);

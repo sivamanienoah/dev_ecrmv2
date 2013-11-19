@@ -480,21 +480,20 @@ class User_model extends crm_model {
 	*@Method   find_exist_email
 	*@table    users
 	*/
-	
 	public function find_exist_email($data){	
 
 		$email  =  $data['email'];
 		$update =  $data['email1'];
-	
 		if ($update != 'undefined') {
-			
-			$emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
-			if ($emailid == 1){ 
+			// $emailid = $this->db->query("select email from ".$this->cfg['dbpref']."users where email = '".$email."' and userid != '".$update."' ");
+			$this->db->where('email', $email);
+			$this->db->where('userid !=', $update);
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+			if ($query == 0) {
 				echo 'userOk';
-			}else{ 
+			} else {
 				echo 'userNo';
 			}
-
 		} else {
 			$this->db->where('email',$email);
 			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
@@ -510,13 +509,12 @@ class User_model extends crm_model {
 	*@Method   getUserLeadAssigned
 	*@table    users
 	*/
-
-   public function getUserLeadAssigned($users)
-   {	
+	public function getUserLeadAssigned($users)
+	{	
 		$this->db->select("userid, first_name, last_name");
 		$this->db->from($this->cfg['dbpref']."users");
-		// $this->db->where_in("userid", $users); 
-		$this->db->where("userid in (".$users.")"); 
+		$this->db->where("userid in (".$users.")");
+		$this->db->where("inactive", 0);
 		$this->db->order_by("first_name"); 		
 		$query = $this->db->get();
 		$user_res = $query->result_array();
@@ -526,15 +524,15 @@ class User_model extends crm_model {
 			$res .= "<option value=".$user['userid'].">".$user['first_name']." ".$user['last_name']."</option>";
 		}
 		echo $res;
-   }
+	}
   
     /*
 	*@Check User Status
 	*@Method   check_user_status
 	*@table    leads
+	*@return as Json response
 	*/
-  
-	public function check_user_status($data=array()){
+	public function check_user_status($data=array()) {
 		$id = $data['data'];
 		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0"; 
 		$this->db->where($where);
@@ -548,14 +546,13 @@ class User_model extends crm_model {
 		echo json_encode($res);
 		exit;
     }
-	
+
 
 	/*
 	*@Select Log History 
 	*@Method   log_history
 	*@table    logs,leads,
 	*/
-	
 	public function log_history($log_date,$log_user){
 	
 		# now get the logs for the user on that day
@@ -582,7 +579,8 @@ class User_model extends crm_model {
 	public function get_regions(){
 	
 	    $output       	= '';
-		$this->db->select('regionid,region_name');
+		$this->db->select('regionid, region_name');
+		$this->db->where('inactive', 0);
 		$this->db->from($this->cfg['dbpref']."region");
 		$query = $this->db->get();
 		$region_results = $query->result();
@@ -622,6 +620,7 @@ class User_model extends crm_model {
 
 		$this->db->select('regionid,region_name');
 		$this->db->from($this->cfg['dbpref']."region");
+		$this->db->where("inactive", 0);
 		$query         = $this->db->get();		
 		$region_query  = $query->result();
 		
@@ -642,7 +641,6 @@ class User_model extends crm_model {
 	*@Method    get_loadCountrysByRegionid
 	*@tables    region,country
    */
-  
    public function get_loadCountrysByRegionid($region_id){
 		
 		$output = '';
@@ -650,6 +648,7 @@ class User_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'].'region r');
 		$this->db->join($this->cfg['dbpref'].'country c', 'r.regionid = c.regionid');
 		$this->db->where('c.regionid IN('.$region_id.')'); 
+		$this->db->where('c.inactive', 0); 
 		$query          = $this->db->get();
 		$country_result = $query->result();
 		foreach ($country_result as $countrys)
@@ -716,7 +715,8 @@ class User_model extends crm_model {
 		$this->db->select('stateid,state_name');
 		$this->db->from($this->cfg['dbpref'].'state r');
 		$this->db->join($this->cfg['dbpref'].'country c', 'r.countryid = c.countryid');
-		$this->db->where_in("c.countryid", $country_id);		
+		$this->db->where_in("c.countryid", $country_id);
+		$this->db->where("r.inactive", 0);
 		$country_query    = $this->db->get();
 		$country_result   = $country_query->result();
 		foreach ($country_result as $states)
@@ -779,7 +779,8 @@ class User_model extends crm_model {
 		$this->db->select('locationid,location_name');
 		$this->db->from($this->cfg['dbpref']."location r");
 		$this->db->join($this->cfg['dbpref'].'state c', 'r.stateid = c.stateid');
-		$this->db->where_in("c.stateid", $state_id);				
+		$this->db->where_in("c.stateid", $state_id);			
+		$this->db->where("r.inactive", 0);	
 		$query     			= $this->db->get();		
 		$location_result    = $query->result();
 		foreach ($location_result as $location)

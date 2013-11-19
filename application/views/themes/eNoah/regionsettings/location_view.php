@@ -24,7 +24,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 			<p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">				
 				<tr>
-					<td width="100">Region:</td>
+					<td width="100">Region: *</td>
 					<td width="240">
 					<select name="regionid" id="loc_regionid" class="textfield width200px" onchange="getCountrylo(this.value)" class="textfield width200px required">
 						<option value="0">Select Region</option>
@@ -32,12 +32,12 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 							foreach ($regions as $region) { ?>
 								<option value="<?php echo $region['regionid'] ?>"<?php echo  ($this->validation->regionid == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo  $region['region_name']; ?></option>
 							<?php } ?>
-					</select> *
+					</select>
 					</td>
 					<td class="error" id="Varerr1" style="color:red; display:none;">Region is Mandatory.</td>
 				</tr>
 				<tr>
-					<td width="100">Country:</td>
+					<td width="100">Country: *</td>
 					<td id='country_row1'>
                         <select name="add1_country" id="add1_country" class="textfield width200px required" >
 							<option value="0">Select Country</option>
@@ -45,12 +45,12 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 							foreach ($countrys as $country) { ?>
 								<option value="<?php echo $country['countryid'] ?>"<?php echo ($this->validation->countryid == $country['countryid']) ? ' selected="selected"' : '' ?>><?php echo  $country['country_name']; ?></option>
 							<?php } ?>	
-                        </select>*
+                        </select>
 					</td>
 					<td class="error" id="err2" style="color:red; display:none;">Country is Mandatory.</td>
 				</tr>
 				<tr>
-					<td width="100">State:</td>
+					<td width="100">State: *</td>
 					<?php $stid=$this->validation->stateid ?>
 					<td id='state_row'>
                         <select id="stateid" name="stateid" class="textfield width200px required">
@@ -59,21 +59,25 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 							foreach ($states as $state) { ?>
 								<option value="<?php echo $state['stateid'] ?>"<?php echo ($this->validation->stateid == $state['stateid']) ? ' selected="selected"' : '' ?>><?php echo  $state['state_name']; ?></option>
 							<?php } ?>
-                        </select>*
-						
+                        </select>
 					</td>
-					<!--<td width="240"><select id="state_name" name="stateid"><option value="">Select</option><?php if (is_array($states) && count($states) > 0) { ?>
-					<?php foreach ($states as $state) { ?><option value="<?php echo $state['stateid']; ?>" <?php if($stid==$state['stateid']) { echo "selected"; } ?>><?php echo $state['state_name']; ?> </option><?php } } ?></select> *</td>-->
 					<td class="error" id="erro3" style="color:red; display:none;">State is Mandatory.</td>
 				</tr>				
 				<tr>
-					<td width="100">Location:</td>
-					<td width="240"><input id="loc_location_name" type="text" name="location_name" value="<?php echo  $this->validation->location_name; ?>" class="textfield width200px required" /> *</td>
+					<td width="100">Location: *</td>
+					<td width="240">
+						<input id="loc_location_name" type="text" name="location_name" value="<?php echo  $this->validation->location_name; ?>" class="textfield width200px required" />
+					</td>
 					<td class="error" id="err4" style="color:red; display:none;">Location Field is Required.</td>
 				</tr>
 				<tr>
 					<td>Status:</td>
-					<td colspan="3"><input type="checkbox" name="inactive" value="1"<?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> /> Check if the location is inactive .</td>
+					<td colspan="3">
+						<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> <?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+						<?php if ($cb_status != 0) echo "One or more User / Customer currently assigned for this Location. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the Location need to be Inactive."; ?>
+						<?php if ($this->validation->inactive != 0) echo "Uncheck if the Location need to be Active."; ?>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -106,7 +110,9 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 		</form>	
 		
 		<h2>Location List</h2>
-          
+		
+		<div class="dialog-err" id="dialog-err-loc" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
+		
         <table class="loc-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
             <thead>
                 <tr>
@@ -137,7 +143,8 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 						</td>      
 						<td class="actions">
 							<?php if ($this->session->userdata('editAdmin')==1) {?><a class="editLoc clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>"><?php echo  "Edit"; ?><?php } else echo "Edit"; ?></a>
-							<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/location_delete/delete/<?php echo $customer['locationid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>
+							<!--<?php if ($this->session->userdata('deleteAdmin')==1) {?> | <a class="delete clrmarron" href="regionsettings/location_delete/delete/<?php echo $customer['locationid']; ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a><?php } ?>-->
+							<?php if($this->session->userdata('deleteAdmin')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>						
 						</td>
                     </tr>
                     <?php } ?>

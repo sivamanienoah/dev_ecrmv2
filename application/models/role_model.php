@@ -27,7 +27,6 @@ class Role_model extends crm_model {
 	*@Get Role List
 	*@Role Model
 	*/
-    
     public function role_list($offset, $search) {
         
         $this->db->order_by('inactive', 'asc');
@@ -42,12 +41,22 @@ class Role_model extends crm_model {
         return $customers->result_array();
         
     }
+	
+	/*
+	*@Get Active Role List
+	*@Role Model
+	*/
+	public function active_role_list() {
+		$this->db->order_by('name', 'asc');
+		$this->db->where('inactive', 0);
+        $customers = $this->db->get($this->cfg['dbpref'].'roles');
+        return $customers->result_array();
+    }
 
 	/*
 	*@Count of Role Record
 	*@Role Model
 	*/
-    
     public function role_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'].'roles');
     }
