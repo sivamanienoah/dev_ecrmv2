@@ -34,7 +34,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<tr>
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_service/ser_add/update/<?php echo $jobs['cid']; ?>/">Edit &raquo; </a> 
+							<a href="manage_service/ser_add/update/<?php echo $jobs['cid']; ?>/">Edit &raquo; </a>
 						<?php } else { echo "Edit"; } ?> 
 						<?php if($this->session->userdata('delete')==1) { ?>
 							&nbsp;|&nbsp;

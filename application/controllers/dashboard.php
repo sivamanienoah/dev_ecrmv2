@@ -97,6 +97,7 @@ class Dashboard extends crm_controller {
 		$data['getLeadIndicator'] = $this->dashboard_model->getLeadsIndicator($cusId);
 		$data['getLeastLeadCount'] = $this->dashboard_model->getLeastLeadsCount($cusId);
 		$data['getCurrentActivityLead'] = $this->dashboard_model->getCurrentActivityLeads($isSelect = 7, $cusId);
+		// echo $this->db->last_query(); exit;
 		$data['getLeadAging'] = $this->dashboard_model->getLeadsAging($cusId);
 		//for Closed Opportunities
 		$data['getClosedJobid'] = $this->dashboard_model->getClosedJobids($cusId);

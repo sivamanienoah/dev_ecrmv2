@@ -21,11 +21,11 @@
 				<tr>
 					<td>Status</td>
 					<td>
-					<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo ' checked="checked"' ?>
-					<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
-					<?php if ($cb_status != 0) echo "One or more leads currently assigned for this Service. This cannot be made Inactive."; ?>
-					<?php if (($this->validation->status == 1) && ($cb_status == 0)) echo "Uncheck if the Source need to be Inactive."; ?>
-					<?php if ($this->validation->status != 1) echo "Check if the Source need to be Active."; ?>
+						<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo ' checked="checked"' ?>
+						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+						<?php if ($cb_status != 0) echo "One or more leads currently assigned for this Service. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->status == 1) && ($cb_status == 0)) echo "Uncheck if the Source need to be Inactive."; ?>
+						<?php if ($this->validation->status != 1) echo "Check if the Source need to be Active."; ?>
 					</td>
 				</tr>
 				<tr>

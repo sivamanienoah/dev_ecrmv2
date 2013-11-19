@@ -20,7 +20,6 @@ class Manage_service extends crm_controller {
 	*@Constructor
 	*@Manage Service
 	*/
-	
 	public function __construct() 
 	{
         parent::__construct();
@@ -33,7 +32,6 @@ class Manage_service extends crm_controller {
 	*@Get Service categories List
 	*@Method index
 	*/
-	
     public function index($search = FALSE) 
 	{
         $data['page_heading'] = 'Manage Service / Product';
