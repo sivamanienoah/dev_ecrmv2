@@ -503,7 +503,7 @@ class Welcome_model extends crm_model {
 			if($locname[0] != 'null' && $locname[0] != 'all'){	
 				$this->db->where_in('c.add1_location', $locname);
 			}
-			if($lead_status[0] != 'null' && $lead_status[0] != 'all'){	
+			if($lead_status[0] != 'null' && $lead_status[0] !='') {	
 				$this->db->where_in('j.lead_status', $lead_status);
 			}
 			
@@ -611,7 +611,7 @@ class Welcome_model extends crm_model {
 				} else if (($this->userdata['level'])==5) {
 					$this->db->where_in('c.add1_location',$locationid);
 				}
-				if($lead_status[0] != 'null' && $lead_status[0] != 'all'){	
+				if($lead_status[0] != 'null' && $lead_status[0] != ''){	
 					$this->db->where_in('j.lead_status', $lead_status);
 				}
 			//Advanced filter
