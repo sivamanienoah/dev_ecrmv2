@@ -87,4 +87,41 @@ function datTable() {
 		"bDestroy": true
 	});
 }
+
+//Check status
+function checkStatus_Loc(id) {
+	var formdata = { 'data':id, 'type':'loc' }
+	formdata[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'regionsettings/ajax_check_status_rcsl/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			$('#dialog-err-loc').empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				$('#dialog-err-loc').show();
+				$('#dialog-err-loc').append('One or more User / Customer currently mapped to this Location. This cannot be deleted.');
+				$('html, body').animate({ scrollTop: $('#dialog-err-loc').offset().top }, 500);
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				var r=confirm("Are You Sure Want to Delete this Location?")
+				if (r==true) {
+					window.location.href = 'regionsettings/location_delete/delete/'+id;
+				} else {
+					return false;
+				}
+			}
+		}          
+	});
+return false;
+}
+
+function timerfadeout() {
+	$('.dialog-err').fadeOut();
+}
+
 /////////////////

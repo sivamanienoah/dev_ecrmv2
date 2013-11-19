@@ -393,7 +393,7 @@ class Customers extends crm_controller {
 					$data['last_name'] = $name[1];
 					$data['company'] = $row[0];
 					$data['phone_1'] = $row[7];
-					$data['phone_3'] = $row[9]; 
+					$data['phone_3'] = $row[9];
 					$data['phone_4'] = $row[8]; 
 					$data['email_1'] = $row[10];
 					$data['add1_line1'] = $row[3];
@@ -508,7 +508,6 @@ class Customers extends crm_controller {
 	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
 	 *	Starts here Dated on 29-01-2013
 	 */
-			
 	function importload(){
 		$count = 0;
 		$this->load->library('excel_read');
@@ -567,6 +566,18 @@ class Customers extends crm_controller {
 			$this->load->view('customer_import_view', $page);
 		}
 	/*Ends here*/ 
-	}   
+	}
+
+	
+	/*
+	*@Check User Status
+	*
+	*/
+	function ajax_chk_status_customer()
+	{
+		$data =	real_escape_array($this->input->post()); // escape special characters
+		$this->customer_model->check_customer_status($data);
+	}
+	
 }
 ?>

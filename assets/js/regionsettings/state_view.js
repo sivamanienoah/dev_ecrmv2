@@ -71,4 +71,41 @@ function datStTable() {
 		"bDestroy": true
 	});
 }
+
+
+//Check status
+function checkStatus_Ste(id) {
+	var formdata = { 'data':id, 'type':'ste' }
+	formdata[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'regionsettings/ajax_check_status_rcsl/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			$('#dialog-err-ste').empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				$('#dialog-err-ste').show();
+				$('#dialog-err-ste').append('One or more User / Customer currently mapped to this State. This cannot be deleted.');
+				$('html, body').animate({ scrollTop: $('#dialog-err-ste').offset().top }, 500);
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				var r=confirm("Are You Sure Want to Delete this State?\n(It will delete all the Locations)")
+				if (r==true) {
+					window.location.href = 'regionsettings/state_delete/delete/'+id;
+				} else {
+					return false;
+				}
+			}
+		}          
+	});
+return false;
+}
+
+function timerfadeout() {
+	$('.dialog-err').fadeOut();
+}
 /////////////////

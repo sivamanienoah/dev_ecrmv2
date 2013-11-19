@@ -231,6 +231,26 @@ class Customer_model extends crm_model {
 		$this->db->update($this->cfg['dbpref'].'customers', $data);	
 	}
 	
+	/*
+	*@Check Customer Status
+	*@Method   check_customer_status
+	*@table    leads
+	*@return as Json response
+	*/
+	public function check_customer_status($data=array()) { 
+		$id = $data['data'];
+		$this->db->where('custid_fk', $id);
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+    }
+	
     
 }
 

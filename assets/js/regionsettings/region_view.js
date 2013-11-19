@@ -77,4 +77,41 @@ function datTable(){
 		"bDestroy": true
 	});
 }
+
+//Check status
+function checkStatus(id) {
+	var formdata = { 'data':id, 'type':'reg' }
+	formdata[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'regionsettings/ajax_check_status_rcsl/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			$('#dialog-err-msg').empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				$('#dialog-err-msg').show();
+				$('#dialog-err-msg').append('One or more User / Customer currently mapped to this Region. This cannot be deleted.');
+				$('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				var r=confirm("Are You Sure Want to Delete this Region?\n(It will Delete all the Countries, States & Locations)")
+				if (r==true) {
+					window.location.href = 'regionsettings/region_delete/delete/'+id;
+				} else {
+					return false;
+				}
+			}
+		}          
+	});
+return false;
+}
+
+function timerfadeout() {
+	$('.dialog-err').fadeOut();
+}
+
 /////////////////

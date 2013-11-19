@@ -20,7 +20,8 @@
 			</div>
 		</div>
 		
-        
+        <div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
+		
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 			<thead>
                 <tr>
@@ -46,7 +47,7 @@
                         <td><?php echo $customer['country_name'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>"><?php echo "Edit"; ?></a> <?php } else { echo "Edit"; } ?>
-							<?php if($this->session->userdata('delete')==1){ ?> | <a href="customers/delete_customer/<?php echo  $customer['custid'] ?>" onclick="return confirm('Are you sure you want to delete?')"><?php echo "Delete"; ?></a> <?php } ?>
+							<?php if($this->session->userdata('delete')==1) { ?> | <a href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
 						</td>
                     </tr>
                     <?php } ?>
@@ -58,5 +59,6 @@
 		} ?>
 	</div>
 </div>
+<script type="text/javascript" src="assets/js/customer/customer_view.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
