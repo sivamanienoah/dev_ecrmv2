@@ -62,7 +62,7 @@ function getCountrylo(val,id) {
 	return false;	
 }
 function getStateloc(val,id) {
-	var sturl = "regionsettings/getStateloc/"+ val+"/"+id;		
+	var sturl = "regionsettings/getStateloc_all/"+ val+"/"+id;		
 	$('#state_row').load(sturl);	
 	return false;	
 }

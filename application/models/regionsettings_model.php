@@ -46,7 +46,44 @@ class Regionsettings_model extends crm_model {
 		$customers = $this->db->get();
 		$samle=  $customers->result_array();
 		return $samle;
-    
+	}
+	
+	/*
+	*@Get All Region List (Active & Inactive)
+	*@Region Settings Model
+	*/
+    public function region_list_all() {
+        $userdata = $this->session->userdata('logged_in_user');
+	
+		if ($userdata['level'] == 2 || $userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
+			
+			$this->db->select('region_id');
+			$this->db->from($this->cfg['dbpref'].'levels_region');
+			$this->db->where('level_id',$userdata['level']);
+			$this->db->where('user_id',$userdata['userid']);
+			$query = $this->db->get();
+			$reg_details = $query->result_array();
+			if(sizeof($reg_details)>0){
+				foreach($reg_details as $reg)
+				{
+					$regions[] = $reg['region_id'];
+				}
+			}
+			$regions_ids = array_unique($regions);
+			$regions_ids = (array_values($regions)); //reset the keys in the array
+		}
+	
+		$this->db->select('creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,reg.*');
+		$this->db->from($this->cfg['dbpref'].'region as reg');
+		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'reg.created_by ','left');
+		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'reg.modified_by ','left');
+		if ($userdata['level'] != 1) {
+			$this->db->where_in('reg.regionid',$regions_ids);
+		}
+		// $this->db->where('reg.inactive', 0);
+		$customers = $this->db->get();
+		$samle=  $customers->result_array();
+		return $samle;
 	}
 
 	/*
@@ -55,20 +92,30 @@ class Regionsettings_model extends crm_model {
 	*/
 	public function country_list($offset, $search) {
         
-        if ($search != false) {
-            $search = urldecode($search);
-            $this->db->like('country_name', $search);
-        }
-	
 		$this->db->select('regg.region_name,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,coun.*');
 		$this->db->from($this->cfg['dbpref'].'country as coun');
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'coun.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'coun.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'region as regg','regg.regionid='. 'coun.regionid ');
-		$this->db->order_by('coun.inactive', 'asc');
 
 		$customers = $this->db->get();
-		$samle=  $customers->result_array();
+		$samle =  $customers->result_array();
+		return $samle;
+    }
+	
+	/*
+	*@List out Country Record (Active & Inactive)
+	*@Region Settings Model
+	*/
+	public function country_list_all() {
+		$this->db->select('regg.region_name,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,coun.*');
+		$this->db->from($this->cfg['dbpref'].'country as coun');
+		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'coun.created_by ','left');
+		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'coun.modified_by ','left');
+		$this->db->join($this->cfg['dbpref'].'region as regg','regg.regionid='. 'coun.regionid ');
+
+		$customers = $this->db->get();
+		$samle =  $customers->result_array();
 		return $samle;
     }
  
@@ -88,25 +135,52 @@ class Regionsettings_model extends crm_model {
 		$samle=  $customers->result_array();
         return $samle;
     }
+	
+	/*
+	*@List Out State Record (Active & Inactive)
+	*@Region Settings Model
+	*/
+	public function state_list_all() {
+		$this->db->select('re.region_name,cn.country_name,cn.regionid,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,stat.*');
+		$this->db->from($this->cfg['dbpref'].'state as stat');
+		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'stat.created_by ','left');
+		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'stat.modified_by ','left');
+		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'stat.countryid ');
+		$this->db->join($this->cfg['dbpref'].'region as re','re.regionid='. 'cn.regionid');
+		$customers = $this->db->get();   
+		$samle=  $customers->result_array();
+        return $samle;
+    }
 
  	/*
 	*@List Out Location Record
 	*@Region Settings Model
 	*/
 	public function location_list($offset, $search) {
-       
-        if ($search != false) {
-            $search = urldecode($search);
-            $this->db->like('location_name', $search);
-        }
-
 		$this->db->select('st.countryid,cn.country_name,st.state_name,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,locat.*');
 		$this->db->from($this->cfg['dbpref'].'location as locat');
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'locat.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'locat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'state as st','st.stateid='. 'locat.stateid');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'st.countryid ');
-		$this->db->order_by('locat.inactive', 'asc');
+
+		$customers = $this->db->get();   
+	    $samle=  $customers->result_array();
+        return $samle;
+    }
+	
+	/*
+	*@List Out Location Record (Active & Inactive)
+	*@Region Settings Model
+	*/
+	public function location_list_all() {
+		$this->db->select('st.countryid,cn.country_name,st.state_name,creuser.first_name as cfnam,creuser.last_name as clnam,moduser.first_name as mfnam,moduser.last_name as mlnam,locat.*');
+		$this->db->from($this->cfg['dbpref'].'location as locat');
+		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'locat.created_by ','left');
+		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'locat.modified_by ','left');
+		$this->db->join($this->cfg['dbpref'].'state as st','st.stateid='. 'locat.stateid');
+		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'st.countryid ');
+
 		$customers = $this->db->get();   
 	    $samle=  $customers->result_array();
         return $samle;
@@ -126,7 +200,6 @@ class Regionsettings_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'].'levels as lev');
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'lev.created_by ');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'lev.modified_by ');
-		$this->db->order_by('lev.inactive', 'asc');
 		$customers = $this->db->get();
         $samle=  $customers->result_array();
         return $samle;
@@ -631,6 +704,37 @@ class Regionsettings_model extends crm_model {
 			return $customer->result_array();
 		}
 	}
+	
+	/*
+	*@Get All Countries Record List(Active & Inactive)
+	*@Region Settings Model
+	*/
+	public function getcountry_list_all($val) {
+		$userdata = $this->session->userdata('logged_in_user');	
+		
+		//restriction for country
+		$this->db->select('country_id');
+		$this->db->from($this->cfg['dbpref'].'levels_country');
+		$this->db->where('level_id',$userdata['level']);
+		$this->db->where('user_id',$userdata['userid']);
+		$coun_query   = $this->db->get();
+		$coun_details = $coun_query->result_array();
+		if(sizeof($coun_details)>0){
+			foreach($coun_details as $coun)
+			{
+				$countries[] = $coun['country_id'];
+			}
+		}
+		$countries_ids = array_unique($countries);
+		$countries_ids = (array_values($countries)); //reset the keys in the array
+		
+		$this->db->where('regionid', $val);
+		if ($userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
+			$this->db->where_in('countryid', $countries_ids);
+		}
+		$customers = $this->db->get($this->cfg['dbpref'] . 'country');
+		return $customers->result_array();	
+    }
 
 	/*
 	*@Get Country Record List
@@ -656,13 +760,46 @@ class Regionsettings_model extends crm_model {
 		$countries_ids = (array_values($countries)); //reset the keys in the array
 		
         $this->db->where('inactive', 0);
-        $this->db->order_by('country_name', 'asc');
 		
 		$this->db->where('regionid', $val);
 		if ($userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
 			$this->db->where_in('countryid', $countries_ids);
 		}
 		$customers = $this->db->get($this->cfg['dbpref'] . 'country');
+		return $customers->result_array();	
+    }
+	
+	/*
+	*@Get State Record List
+	*@Region Settings Model
+	*/
+	public function getstate_list_all($val) {       
+
+		$userdata = $this->session->userdata('logged_in_user');		
+	
+		//restriction for state
+		$this->db->select('state_id');
+		$this->db->from($this->cfg['dbpref'].'levels_state');
+		$this->db->where('level_id',$userdata['level']);
+		$this->db->where('user_id',$userdata['userid']);
+		$ste_query   = $this->db->get();
+		$ste_details = $ste_query->result_array();
+		
+		if(sizeof($ste_details)>0){
+			foreach($ste_details as $ste)
+			{
+				$states[] = $ste['state_id'];
+			}
+		}
+		$states_ids = array_unique($states);
+		$states_ids = (array_values($states)); //reset the keys in the array
+		
+		$this->db->where('countryid', $val);
+		if ($userdata['level'] == 4 || $userdata['level'] == 5) {
+			$this->db->where_in('stateid', $states_ids);
+		}
+		$customers = $this->db->get($this->cfg['dbpref'] . 'state');
+
 		return $customers->result_array();	
     }
 
@@ -692,7 +829,6 @@ class Regionsettings_model extends crm_model {
 		$states_ids = (array_values($states)); //reset the keys in the array
 		
         $this->db->where('inactive', 0);
-        $this->db->order_by('state_name', 'asc');
 		
 		$this->db->where('countryid', $val);
 		if ($userdata['level'] == 4 || $userdata['level'] == 5) {
@@ -727,7 +863,6 @@ class Regionsettings_model extends crm_model {
 		$locations_ids = (array_values($locations)); //reset the keys in the array
 		
         $this->db->where('inactive', 0);
-        $this->db->order_by('location_name', 'asc');
 		
 		$this->db->where('stateid', $val);
 		if ($userdata['level'] == 5) {
