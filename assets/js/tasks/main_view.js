@@ -7,7 +7,7 @@
 
 $(function(){
 	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {}, loadEditTables);
-	$('#set-job-task .pick-date, #search-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
+	$('#set-job-task .pick-date, #search-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
 	
 	$('#task_search_user').val(task_userid);
 	/* job tasks character limit */

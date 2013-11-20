@@ -1089,8 +1089,8 @@
 	$(function() {
 	$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
-	$('.pick-date, .pick-date, .pick-date, .milestone_date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
-	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
+	$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
+	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0'});
 
 	$('.task-list-item').livequery(function(){
 		$(this).hover(
