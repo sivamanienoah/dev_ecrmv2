@@ -309,7 +309,7 @@ ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
 <script type="text/javascript">
 $(function(){
 	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', {'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}, loadEditTables);
-	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
+	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
 	$('#task_search_user').val('<?php echo $userdata['userid']; ?>');
