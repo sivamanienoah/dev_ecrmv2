@@ -226,7 +226,8 @@ HDOC;
 				} else {
                     $row['hours'] = '';
                 }
-				$content_item = nl2br(cleanup_chars(ascii_to_entities($row['item_desc'])));
+				// $content_item = nl2br(cleanup_chars(ascii_to_entities($row['item_desc'])));
+				$content_item = nl2br($row['item_desc']);
 				if(!empty($row['item_price'])) {
 					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . stripslashes($content_item) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
 				} else {
@@ -531,7 +532,8 @@ HDOC;
      */
 	function ajax_add_item()
 	{
-		$data = real_escape_array($this->input->post());
+		// $data = real_escape_array($this->input->post());
+		$data = $this->input->post();
         $errors = '';
         if (trim($data['hours']) != '' && !is_numeric($data['hours']))
         {
@@ -558,7 +560,8 @@ HDOC;
         }
         else
         {
-			$data['item_desc'] = @str_replace('\r\n','',$data['item_desc']); 
+			// $data['item_desc'] = @str_replace('\r\n', '', $data['item_desc']);
+			// $data['item_desc'] = stripslashes($data['item_desc']);
 			$this->quote_add_item($data['jobid'], $data['item_desc'], $data['item_price'], $data['hours']);			
 		}
 		
@@ -570,8 +573,7 @@ HDOC;
 	 * Accepts direct ajax call as well as calls from other methods
 	 */
 	function quote_add_item($jobid, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE) {
-	
-        $ins['item_desc'] = $item_desc;
+        $ins['item_desc'] = nl2br($item_desc);
         $ins['jobid_fk'] = $jobid;
 		if(empty($hours)) {
 			$ins['hours'] = '0.00';
@@ -593,7 +595,10 @@ HDOC;
 		$posn = $this->welcome_model->get_item_position($jobid);
         
         $ins['item_position'] = $posn[0]['item_position']+1;
-        
+
+		$ins = real_escape_array($ins);
+		$ins['item_desc'] = @str_replace('\r\n', '', $ins['item_desc']);
+
 		$insert_item = $this->welcome_model->insert_row_return_id('items', $ins);
 
         if ($insert_item>0)
