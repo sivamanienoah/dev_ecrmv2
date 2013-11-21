@@ -14,16 +14,6 @@ class Hosting extends crm_controller {
 	
 	function index($limit = 0, $search = false) {
 		$data['accounts'] = $this->hosting_model->account_list($limit, $search);
-        //$data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');            
-            $config['base_url'] = $this->config->item('base_url') . 'hosting/index/';
-            $config['total_rows'] = (string) $this->hosting_model->account_count();
-            //$config['per_page'] = 20;
-			$config['uri_segment'] = 3;            
-			//$this->pagination->initialize($config);            
-            //$data['pagination'] = $this->pagination->create_links();
-        }
 		$this->load->view('hosting_view', $data);
 	}
 	

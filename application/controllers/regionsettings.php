@@ -1019,15 +1019,6 @@ class Regionsettings extends crm_controller {
 		$data['regions']   = $this->regionsettings_model->region_list();
         $data['customers'] = $this->regionsettings_model->level_list($limit, $search);
 
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            $config['base_url']   = $this->config->item('base_url') . 'regionsettings/level_search_view/';
-            $config['total_rows'] = (string) $this->regionsettings_model->level_count();
-            $config['per_page']   = '35';
-            $this->pagination->initialize($config);
-            $data['pagination']   = $this->pagination->create_links();
-        }
         $this->load->view('regionsettings/level_view', $data);
     }
 

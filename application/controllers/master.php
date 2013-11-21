@@ -21,19 +21,6 @@ class Master extends crm_controller {
 		
         $data['customers'] = $this->master_model->master_list($limit, $search);
         
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            
-            $config['base_url'] = $this->config->item('base_url') . 'master/index/';
-            $config['total_rows'] = (string) $this->master_model->master_count();
-            $config['per_page'] = '35';
-            
-            $this->pagination->initialize($config);
-            
-            $data['pagination'] = $this->pagination->create_links();
-        }
-        
         $this->load->view('master/master_lists', $data);
         
     }

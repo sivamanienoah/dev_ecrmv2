@@ -10,20 +10,7 @@ class Package extends crm_controller {
 	}
 	function index($limit = 0, $search = false){
 		$data['accounts'] = $this->package_model->result_list($limit, $search);
-        $data['pagination'] = '';
-        if ($search == false) {
-            $this->load->library('pagination');
-            
-            $config['base_url'] = $this->config->item('base_url') . 'package/index/';
-            $config['total_rows'] = (string) $this->package_model->acc_count();
-            $config['per_page'] = 20;
-			$config['uri_segment'] = 3;
-            
-            $this->pagination->initialize($config);
-            
-            $data['pagination'] = $this->pagination->create_links();
-        }
-		$this->load->view('package', $data);
+        $this->load->view('package', $data);
 	}
 	function add($id = false){
 		$r=$this->package_model->active();

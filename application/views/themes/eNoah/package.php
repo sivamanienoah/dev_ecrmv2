@@ -4,7 +4,6 @@
 	<div class="inner hosting-section">
 	<?php if($this->session->userdata('accesspage')==1){ ?>
 	    <h2>Package Accounts</h2>
-        <p class="pagination"><?php echo  $pagination ?></p>
         <form action="package/search/" method="post" id="cust_search_form">
 			
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
