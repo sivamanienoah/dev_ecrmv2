@@ -1436,8 +1436,8 @@ function setLeadCreationDate() {
 
 $(function(){
 	
+	$('#lead_creation_date').datepicker({dateFormat: 'dd-mm-yy', maxDate: 0});
 	$('#project-date-assign, #proposal_expected_date, .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -7, maxDate: '+12M'});
-	
 	
 	$('.task-list-item').livequery(function(){
 		$(this).hover(

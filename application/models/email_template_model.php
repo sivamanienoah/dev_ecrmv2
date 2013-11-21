@@ -78,10 +78,67 @@ class email_template_model extends crm_model {
 			<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<title>eSmart</title>
+			<style type="text/css">
+				<!----body {
+					margin-left: 0px;
+					margin-top: 0px;
+					margin-right: 0px;
+					margin-bottom: 0px;
+				}
+				@media only screen and (max-width: 480px) {
+					/* Force table to not be like tables anymore */
+					#no-more-tables table, 
+					#no-more-tables thead, 
+					#no-more-tables tbody, 
+					#no-more-tables th, 
+					#no-more-tables td, 
+					#no-more-tables tr { 
+						display: block; 
+					}
+					/* Hide table headers (but not display: none;, for accessibility) */
+					#no-more-tables thead tr { 
+						position: absolute;
+						top: -9999px;
+						left: -9999px;
+					}
+					#no-more-tables tr { border: 1px solid #ccc; }
+					#no-more-tables td { 
+						/* Behave like a "row" */
+						border: none;
+						border-bottom: 1px solid #eee; 
+						position: relative;
+						padding-left: 50%; 
+						white-space: normal;
+						text-align:left;
+					}
+					#no-more-tables td:before { 
+						/* Now like a table header */
+						position: absolute;
+						/* Top/left values mimic padding */
+						top: 6px;
+						left: 6px;
+						width: 45%; 
+						padding-right: 10px; 
+						white-space: nowrap;
+						text-align:left;
+						font-weight: bold;
+					}
+					/*
+					Label the data
+					*/
+					#no-more-tables td:before { content: attr(data-title); }
+					/*td[data-title]{ color:red;}
+					td{color:green;}*/
+				}
+				#no-more-tables tr:nth-of-type(even) {
+					background: #eee;
+				}----->
+
+				</style>
 			</head>
 
 			<body>
-				<div style="min-width:70%; margin: 0 auto; padding:5px; background:#f5f5f5">
+				<div style="width:70%; margin: 0 auto; padding:5px; background:#f5f5f5">
 					<div style="font-family:Arial, Helvetica, sans-serif; font-size:12px;background:#fff; padding:5px;">
 						{{main_body_content}}
 					</div>

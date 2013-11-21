@@ -19,11 +19,11 @@
             <!--<p>All mandatory fields marked * must be filled in correctly.</p>-->
 			<table class="layout">
 				<tr>
-					<td width="100">First Name:</td>
+					<td width="100">First Name: *</td>
 					<td width="240"><input type="text" id="first_name" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" />
 						<div class="error" style="color:red;" id="error12">required</div>					
 					</td>					
-					<td width="100">Last Name:</td>
+					<td width="100">Last Name: *</td>
 					<td width="240"><input type="text" id="last_name" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> 
 						<div class="error" style="color:red;" id="error2">required</div>
 					</td>
@@ -35,7 +35,7 @@
 					<td><input type="text" name="mobile" value="<?php echo $this->validation->mobile ?>" class="textfield width200px required" /></td>
 				</tr>
 				<tr>
-					<td>Email:</td>
+					<td>Email: *</td>
 					<td><input type="text" id="email" name="email" value="<?php echo $this->validation->email ?>" class="textfield width200px" /><br/> 
 					<span class="error" style="color:red;" id="error4">required</span>
 					<span class="error" style="color:red;" id="notvalid">Not a valid e-mail address</span>
@@ -47,7 +47,7 @@
 					<?php } ?>	
 					</td>
                     
-					<td>Role:</td>
+					<td>Role: *</td>
 					<td>
                         <select id="role_id" name="role_id" class="textfield width200px">
                             <option value="">Please Select</option>
@@ -68,7 +68,7 @@
 				</tr>
 				
 				<tr>
-					<td>Password:</td>
+					<td>Password: *</td>
 					<td><input type="password" id="password" name="password" value="" class="textfield width200px" />
 						<?php if ($this->uri->segment(3) != 'update') { ?>
 							<div class="error" style="color:red;" id="error5">required</div>
@@ -87,7 +87,7 @@
 				</tr>
 				<tr>
 				<!-- Levels and region settings starts here -->
-				<td>Level:</td>
+				<td>Level: *</td>
 					<td>
 					<?php if($this->uri->segment(3) != 'update') { ?>
                         <select id="level_id" name="level" class="textfield width200px">
