@@ -416,6 +416,7 @@ h3 .small {
 }
 .project-lead-change,
 .project-deadline-change,
+.lead-created-change,
 .project-startdate-change {
 	display:none;
 }

@@ -870,10 +870,28 @@ h3 .small {
             </form>
             
             <?php if (isset($edit_quotation) && isset($quote_data)) { ?>
-			<h2> Edit Lead </h2>	
+				<h2> Edit Lead </h2>
+				
+				<form name="lead_dates" id="lead-change-date" style="padding:0 5px 0 0; margin:0 !important;">
+					<table>
+						<tr>
+							<td valign="top" width="300">
+								<h6 class="lead-created-label">Lead Creation Date &raquo;<span><?php if ($quote_data['date_created'] != '') echo date('d-m-Y', strtotime($quote_data['date_created'])); else echo 'Not Set'; ?></span></h6>
+								<p><a href="#" onclick="$('.lead-created-change:hidden').show(200); return false;">Change?</a></p>
+								
+								<div class="lead-created-change">
+									<input type="text" value="" class="textfield pick-date" name="lead_creation_date" id="lead_creation_date" />
+									<div class="buttons clearfix">
+										<button type="submit" class="positive" onclick="setLeadCreationDate(); return false;">Set</button>
+										<button type="submit" onclick="$('.lead-created-change:visible').hide(200); return false;">Cancel</button>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
 			
-				<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
-					
+				<form name="project_dates" id="project-date-assign" style="padding:5px 0 5px 0;">
 					<table>
 						<tr>
 							<td valign="top" width="300">
@@ -892,231 +910,231 @@ h3 .small {
 					</table>
 				</form>
 
-            <form action="" method="post" id="quote-edit-form" onsubmit="return false;">
-                <div>
-                    <p><label>Lead Title</label></p>
-                    <p><input type="text" name="job_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?>" /></p>
-					<p><label>Lead Source</label></p>
-                    <p><select name="lead_source_edit" id="lead_source_edit" class="textfield width300px">
-                            <option value="not_select">Please Select</option>
-                        <?php 
-						foreach ($lead_source_edit as $leadedit) 
-						{
-						?>
-                            <option value="<?php echo  $leadedit['lead_source_id'] ?>"<?php echo  ($quote_data['lead_source'] == $leadedit['lead_source_id']) ? ' selected="selected"' : '' ?>><?php echo  $leadedit['lead_source_name'] ?></option>
-                        <?php
-						}
-						?>
-                        </select>
-                    </p>
-                    <p><label>Service Requirement</label></p>
-                    <p><select name="job_category" id="job_category_edit" class="textfield width300px">
-                            <option value="not_select">Please Select</option>
-						<?php 
-							foreach ($job_cate as $job) 
-							{ 
-						?>
-							<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['job_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
-						<?php
-							}
-						?>
-                        </select>
-                    </p>
-					<p><label>Expected worth of Deal</label></p>
-					<p><select name="expect_worth_edit" id="expect_worth_edit" class="textfield" style="width:100px">
-                            <option value="not_select">Please Select</option>
-                        <?php foreach ($expect_worth as $worth) {							
+				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">
+					<div>
+						<p><label>Lead Title</label></p>
+						<p><input type="text" name="job_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?>" /></p>
+						<p><label>Lead Source</label></p>
+						<p><select name="lead_source_edit" id="lead_source_edit" class="textfield width300px">
+								<option value="not_select">Please Select</option>
+							<?php 
+							foreach ($lead_source_edit as $leadedit) 
+							{
 							?>
-                            <option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo  ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo  $worth['expect_worth_name'] ?></option>
-                        <?php
-							
-						}
-						?>
-                        </select><?php echo'&nbsp;&nbsp;&nbsp;' ?>
-						<label> Amount</label> <?php echo'&nbsp;&nbsp;&nbsp;' ?><input type="text" name="expect_worth_amount" value="<?php echo $quote_data['expect_worth_amount'];?>" id="expect_worth_amount" class="textfield" style=" width:132px" />
-                    </p>
-					
-					<p><label>Actual worth of Project</label><?php echo'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' ?><input type="text" name="actual_worth" value="<?php
-							if($quote_data['actual_worth_amount'] != '0.00') 
-							$amount = $quote_data['actual_worth_amount'];
-							else 
-							$amount = $actual_worth[0]['project_cost']; 
-							echo $amount; ?>" id="actual_worth" class="textfield" style=" width:155px" /></p>
-					<input type="hidden" name="expect_worth_amount_dup" value="<?php echo $quote_data['actual_worth_amount'];?>" id="expect_worth_amount_dup" class="textfield" style=" width:85px" />
-					<!--<p><label>Lead Owner</label></p>
-					<p>
-						<input name="job_belong_to" id="job_belong_to_edit"  class="textfield width300px">
-							
-                    </p> -->
-					<p><label>Division</label></p>
-					<p>
-						<select name="job_division" id="job_division_edit" class="textfield width300px">
-							<option value="not_select">Please Select</option>
-                            <?php
-							
-							foreach ($sales_divisions as $sa_div)
-							{								
-							?>
-								<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
-							<?php								
+								<option value="<?php echo  $leadedit['lead_source_id'] ?>"<?php echo  ($quote_data['lead_source'] == $leadedit['lead_source_id']) ? ' selected="selected"' : '' ?>><?php echo  $leadedit['lead_source_name'] ?></option>
+							<?php
 							}
 							?>
-                        </select>
-						
-                    </p>
-					<!-- lead owner edit owner starts -->
-					<p><label>Lead Owner </label></p>
-					<p>
-					<?php if(($quote_data['belong_to'] ==  $userdata['userid']) || ($userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>
-					    
-						
-						<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px">
-						
-						<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
-							
-                            <option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
-							
-                        <?php
-							
-						}
-						?>
-                        </select>
-						<script>
-						$('#lead_owner_edit').change(function() {
-							var assign_mail = $('#lead_owner_edit').val();
-							//alert(assign_mail);
-							$('#lead_owner_edit_hidden').val(assign_mail);
-						});
-						</script>
-					<?php } else { ?>
-									<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px" disabled=true>
-						<?php foreach ($lead_assign_edit as $leadassignedit) {
-							
+							</select>
+						</p>
+						<p><label>Service Requirement</label></p>
+						<p><select name="job_category" id="job_category_edit" class="textfield width300px">
+								<option value="not_select">Please Select</option>
+							<?php 
+								foreach ($job_cate as $job) 
+								{ 
 							?>
-                            <option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
+								<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['job_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
+							<?php
+								}
+							?>
+							</select>
+						</p>
+						<p><label>Expected worth of Deal</label></p>
+						<p><select name="expect_worth_edit" id="expect_worth_edit" class="textfield" style="width:100px">
+								<option value="not_select">Please Select</option>
+							<?php foreach ($expect_worth as $worth) {							
+								?>
+								<option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo  ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo  $worth['expect_worth_name'] ?></option>
+							<?php
+								
+							}
+							?>
+							</select><?php echo'&nbsp;&nbsp;&nbsp;' ?>
+							<label> Amount</label> <?php echo'&nbsp;&nbsp;&nbsp;' ?><input type="text" name="expect_worth_amount" value="<?php echo $quote_data['expect_worth_amount'];?>" id="expect_worth_amount" class="textfield" style=" width:132px" />
+						</p>
+						
+						<p><label>Actual worth of Project</label><?php echo'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' ?><input type="text" name="actual_worth" value="<?php
+								if($quote_data['actual_worth_amount'] != '0.00') 
+								$amount = $quote_data['actual_worth_amount'];
+								else 
+								$amount = $actual_worth[0]['project_cost']; 
+								echo $amount; ?>" id="actual_worth" class="textfield" style=" width:155px" /></p>
+						<input type="hidden" name="expect_worth_amount_dup" value="<?php echo $quote_data['actual_worth_amount'];?>" id="expect_worth_amount_dup" class="textfield" style=" width:85px" />
+						<!--<p><label>Lead Owner</label></p>
+						<p>
+							<input name="job_belong_to" id="job_belong_to_edit"  class="textfield width300px">
+								
+						</p> -->
+						<p><label>Division</label></p>
+						<p>
+							<select name="job_division" id="job_division_edit" class="textfield width300px">
+								<option value="not_select">Please Select</option>
+								<?php
+								
+								foreach ($sales_divisions as $sa_div)
+								{								
+								?>
+									<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
+								<?php								
+								}
+								?>
+							</select>
 							
-                        <?
+						</p>
+						<!-- lead owner edit owner starts -->
+						<p><label>Lead Owner </label></p>
+						<p>
+						<?php if(($quote_data['belong_to'] ==  $userdata['userid']) || ($userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>
 							
-						}
-						?>
-                        </select>
-						<script>
-							$(document).ready(function() {
-							var assign_hidden = $('#lead_owner_edit').val();
-							//alert(assign_hidden);
-							$('#lead_owner_edit_hidden').val(assign_hidden);
+							
+							<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px">
+							
+							<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+								
+								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
+								
+							<?php
+								
+							}
+							?>
+							</select>
+							<script>
+							$('#lead_owner_edit').change(function() {
+								var assign_mail = $('#lead_owner_edit').val();
+								//alert(assign_mail);
+								$('#lead_owner_edit_hidden').val(assign_mail);
 							});
-						</script>
-					<?php } ?>
-					<input type="hidden" value="0" id="lead_owner_edit_hidden" name="lead_owner_edit_hidden"/>
-					
-                    </p>
-					<!-- lead edit owner ends here -->
-					<p><label>Lead Assigned To</label></p>
-					<p>
-					<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) { ?>
-					
-						<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px">
-						<?php foreach ($lead_assign_edit as $leadassignedit) {
-							
+							</script>
+						<?php } else { ?>
+										<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px" disabled=true>
+							<?php foreach ($lead_assign_edit as $leadassignedit) {
+								
+								?>
+								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
+								
+							<?
+								
+							}
 							?>
-                            <option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
-                        <?php
-							
-						}
-						?>
-                        </select>
-						<script>
-						$('#lead_assign_edit').change(function() {
-							var assign_mail = $('#lead_assign_edit').val();
-							//alert(assign_mail);
-							$('#lead_assign_edit_hidden').val(assign_mail);
-						});
-						</script>
-					<?php } else {	?>
-									<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px" disabled=true>
-						<?php foreach ($lead_assign_edit as $leadassignedit) {
-							
+							</select>
+							<script>
+								$(document).ready(function() {
+								var assign_hidden = $('#lead_owner_edit').val();
+								//alert(assign_hidden);
+								$('#lead_owner_edit_hidden').val(assign_hidden);
+								});
+							</script>
+						<?php } ?>
+						<input type="hidden" value="0" id="lead_owner_edit_hidden" name="lead_owner_edit_hidden"/>
+						
+						</p>
+						<!-- lead edit owner ends here -->
+						<p><label>Lead Assigned To</label></p>
+						<p>
+						<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) { ?>
+						
+							<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px">
+							<?php foreach ($lead_assign_edit as $leadassignedit) {
+								
+								?>
+								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
+							<?php
+								
+							}
 							?>
-                            <option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
-							
-                        <?
-							
-						}
-						?>
-                        </select>
-						<script>
-							$(document).ready(function() {
-							var assign_hidden = $('#lead_assign_edit').val();
-							//alert(assign_hidden);
-							$('#lead_assign_edit_hidden').val(assign_hidden);
+							</select>
+							<script>
+							$('#lead_assign_edit').change(function() {
+								var assign_mail = $('#lead_assign_edit').val();
+								//alert(assign_mail);
+								$('#lead_assign_edit_hidden').val(assign_mail);
 							});
+							</script>
+						<?php } else {	?>
+										<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px" disabled=true>
+							<?php foreach ($lead_assign_edit as $leadassignedit) {
+								
+								?>
+								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
+								
+							<?
+								
+							}
+							?>
+							</select>
+							<script>
+								$(document).ready(function() {
+								var assign_hidden = $('#lead_assign_edit').val();
+								//alert(assign_hidden);
+								$('#lead_assign_edit_hidden').val(assign_hidden);
+								});
+							</script>
+						<?php } ?>
+						<input type="hidden" value="0" id="lead_assign_edit_hidden" name="lead_assign_edit_hidden"/>
+						
+						</p>
+						<p><label>Lead Indicator</label></p>
+						<p>
+							<select name="lead_indicator" id="lead_indicator" class="textfield width300px">
+							<!--<option value="<?php #echo $quote_data['lead_indicator'] ?>"><?php #echo $quote_data['lead_indicator'] ?></option>-->
+							<option value="HOT" <?php if($quote_data['lead_indicator'] == "HOT") echo "selected"; ?>>HOT</option>
+							<option value="WARM" <?php if($quote_data['lead_indicator'] == "WARM") echo "selected"; ?>>WARM</option>
+							<option value="COLD" <?php if($quote_data['lead_indicator'] == "COLD") echo "selected"; ?>>COLD</option>
+							</select>
+						</p>
+						<p><label>Lead Status</label></p>
+						
+						<p>
+							<select name="lead_status" id="lead_status" class="textfield width300px" onchange="getReason(this.value);">
+							<option value="1"  <?php if($quote_data['lead_status'] == 1) echo 'selected="selected"'; ?>>Active</option>
+							<option value="2"  <?php if($quote_data['lead_status'] == 2) echo 'selected="selected"'; ?>>OnHold</option>
+							<option value="3"  <?php if($quote_data['lead_status'] == 3) echo 'selected="selected"'; ?>>Dropped</option>
+							<option value="4"  <?php if($quote_data['lead_status'] == 4) echo 'selected="selected"'; ?>>Closed</option>
+							</select>
+							<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
+						</p>
+						<script>
+						//if(document.getElementById('lead_status').value == 2)
+						//document.getElementById('lead-reason').style.display = "block";
+						function getReason(val){
+							if(val == 2) {							
+								document.getElementById('lead-reason').style.display = "block";
+							} else {
+								document.getElementById('lead-reason').style.display = "none";
+							}					
+						}
 						</script>
-					<?php } ?>
-					<input type="hidden" value="0" id="lead_assign_edit_hidden" name="lead_assign_edit_hidden"/>
-					
-                    </p>
-					<p><label>Lead Indicator</label></p>
-					<p>
-						<select name="lead_indicator" id="lead_indicator" class="textfield width300px">
-						<!--<option value="<?php #echo $quote_data['lead_indicator'] ?>"><?php #echo $quote_data['lead_indicator'] ?></option>-->
-						<option value="HOT" <?php if($quote_data['lead_indicator'] == "HOT") echo "selected"; ?>>HOT</option>
-						<option value="WARM" <?php if($quote_data['lead_indicator'] == "WARM") echo "selected"; ?>>WARM</option>
-						<option value="COLD" <?php if($quote_data['lead_indicator'] == "COLD") echo "selected"; ?>>COLD</option>
-                        </select>
-                    </p>
-					<p><label>Lead Status</label></p>
-					
-					<p>
-						<select name="lead_status" id="lead_status" class="textfield width300px" onchange="getReason(this.value);">
-						<option value="1"  <?php if($quote_data['lead_status'] == 1) echo 'selected="selected"'; ?>>Active</option>
-						<option value="2"  <?php if($quote_data['lead_status'] == 2) echo 'selected="selected"'; ?>>OnHold</option>
-						<option value="3"  <?php if($quote_data['lead_status'] == 3) echo 'selected="selected"'; ?>>Dropped</option>
-						<option value="4"  <?php if($quote_data['lead_status'] == 4) echo 'selected="selected"'; ?>>Closed</option>
-                        </select>
-						<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
-                    </p>
-					<script>
-					//if(document.getElementById('lead_status').value == 2)
-					//document.getElementById('lead-reason').style.display = "block";
-					function getReason(val){
-						if(val == 2) {							
-							document.getElementById('lead-reason').style.display = "block";
-						} else {
-							document.getElementById('lead-reason').style.display = "none";
-						}					
-					}
-					</script>
-					<?php if(($quote_data['lead_status'] == 2) && isset($quote_data['lead_hold_reason'])) { ?>
-							<div id="lead-reason" class="lead-reason" style="display:block;">
-							<p><label>Reasons:</label></p>
-							<textarea class="textfield" style="width:300px; height:80px;" id="reason" name="reason"><?php echo $quote_data['lead_hold_reason']?></textarea>
-							</div>
-						<?php }
-						else { ?>
-							<div id="lead-reason" class="lead-reason" style="display:none;">
-							<p><label>Reasons:</label></p>
-							<textarea class="textfield" style="width:300px; height:80px;" id="reason" name="reason"></textarea>
+						<?php if(($quote_data['lead_status'] == 2) && isset($quote_data['lead_hold_reason'])) { ?>
+								<div id="lead-reason" class="lead-reason" style="display:block;">
+								<p><label>Reasons:</label></p>
+								<textarea class="textfield" style="width:300px; height:80px;" id="reason" name="reason"><?php echo $quote_data['lead_hold_reason']?></textarea>
+								</div>
+							<?php }
+							else { ?>
+								<div id="lead-reason" class="lead-reason" style="display:none;">
+								<p><label>Reasons:</label></p>
+								<textarea class="textfield" style="width:300px; height:80px;" id="reason" name="reason"></textarea>
+								</div>
+							<?php } ?>
+						
+						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
+						<div style="width:170px;">
+						<div class="buttons clearfix pull-left">
+							<button type="submit" class="positive" onclick="editQuoteDetails(); return false;">Save</button>
+						</div>
+						<?php if($quote_data['lead_status'] == 4) { ?>
+							<div class="buttons clearfix pull-right">
+								<button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button>
 							</div>
 						<?php } ?>
-					
-                    <input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
-                    <div style="width:170px;">
-                    <div class="buttons clearfix pull-left">
-                        <button type="submit" class="positive" onclick="editQuoteDetails(); return false;">Save</button>
-                    </div>
-					<?php if($quote_data['lead_status'] == 4) { ?>
-						<div class="buttons clearfix pull-right">
-							<button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button>
 						</div>
-					<?php } ?>
+						<!--div class="buttons">
+							<button type="submit" onclick="$('#quote-edit-form').slideUp(400); return false;">Done</button>
+						</div-->
+						<p style="clear:left;">&nbsp;</p>
 					</div>
-                    <!--div class="buttons">
-                        <button type="submit" onclick="$('#quote-edit-form').slideUp(400); return false;">Done</button>
-                    </div-->
-                    <p style="clear:left;">&nbsp;</p>
-                </div>
-            </form>
+				</form>
             <?php } ?>
             
             <form id="item-submit">
@@ -1347,8 +1365,7 @@ function openDragItems() {
     
 }
 
-function setProjectStatusDate(date_type) {	
-	
+function setProjectStatusDate(date_type) {
 	var set_date_type, date_val, d_class;
 	
 	if (date_type == 'start')
@@ -1372,6 +1389,37 @@ function setProjectStatusDate(date_type) {
 						if (data.error == false) {
 							$('h6.project-' + d_class + '-label span').text(date_val);
 							$('.project-' + d_class + '-change:visible').hide(200);
+						} else {
+							alert(data.error);
+						}
+					} else {
+						alert('Updating faild, please try again.');
+					}
+				} catch (e) {
+					alert('Invalid response, your session may have timed out.');
+				}
+			}
+		);
+	}
+}
+
+function setLeadCreationDate() {
+	var	date_val = $('#lead_creation_date').val();
+	
+	if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
+		alert('Please insert a valid date!');
+		return false;
+	} else {
+		$.post(
+			'welcome/set_lead_creation_date/',
+			{'jobid':curr_job_id, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			function(_data) {
+				try {
+					eval ('var data = ' + _data);
+					if (typeof(data) == 'object') {
+						if (data.error == false) {
+							$('h6.lead-created-label span').text(date_val);
+							$('.lead-created-change:visible').hide(200);
 						} else {
 							alert(data.error);
 						}

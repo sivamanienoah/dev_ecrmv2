@@ -528,6 +528,29 @@ HDOC;
 	}
 	
 	/*
+	 *Change the Lead Creation for the lead.
+	 *@jobid
+	 */
+	public function set_lead_creation_date()
+	{
+		$updt_data = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+		
+		$timestamp = strtotime($updt_data['date']);
+		
+		if ( ! $timestamp)
+		{
+			$data['error'] = 'Invalid date supplied!';
+		}
+		else
+		{
+			$updt['date_created'] = date('Y-m-d H:i:s', $timestamp);
+			$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['jobid']);
+		}
+		echo json_encode($data);
+	}
+	/*
      * adds an item to the lead based on the ajax request
      */
 	function ajax_add_item()
