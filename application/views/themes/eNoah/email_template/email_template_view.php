@@ -44,7 +44,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						<td><?php echo $sno; ?></td>
 						<td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/"><?php echo $emailtemp['email_templatename']; ?> </a> 
+								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>"><?php echo $emailtemp['email_templatename']; ?> </a> 
 							<?php } else { echo $emailtemp['email_templatename']; } ?> 		
 						</td>
 						<td><?php echo strip_tags($emailtemp['email_templatesubject']); ?></td>
@@ -52,7 +52,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						<td><?php echo $emailtemp['modified_on']; ?></td>
 						<td class="actions">
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>/">Edit &raquo; </a> 
+								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>">Edit &raquo; </a> 
 							<?php } else { echo "Edit"; } ?> 
 							<?php if($this->session->userdata('delete')==1) { ?>
 								&nbsp;|&nbsp;
