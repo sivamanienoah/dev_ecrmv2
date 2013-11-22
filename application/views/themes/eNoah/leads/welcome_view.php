@@ -79,7 +79,7 @@ $(document).ready(function(){
       $('.modal-new-cust').click(function(){
            $.blockUI({
                         message:nc_form_msg,
-                        css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default'},
+                        css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
                         overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
                     });
             $.get(
