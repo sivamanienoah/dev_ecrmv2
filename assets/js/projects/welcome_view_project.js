@@ -883,106 +883,105 @@
 
 	//update the project status.
 	function setProjectStatus() {
-	var pjt_stat = $('#pjt_status').val()
-	$.blockUI({
-		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-	});
-	var baseurl = $('.hiddenUrl').val();
-	$.ajax({
-		type: 'POST',
-		url: 'project/set_project_status/',
-		dataType: 'json',
-		data: 'pjt_stat='+pjt_stat+'&job_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
-		success: function(data) {
-			if (data.error == false) {
-				$('#resmsg').show();
-				$('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
-				$.unblockUI();
-			} else {
-				$('#resmsg').show();
-				$('#resmsg').html("<span class='ajx_failure_msg'>Error in Updation</span>.");
-				$.unblockUI();
+		var pjt_stat = $('#pjt_status').val()
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		var baseurl = $('.hiddenUrl').val();
+		$.ajax({
+			type: 'POST',
+			url: 'project/set_project_status/',
+			dataType: 'json',
+			data: 'pjt_stat='+pjt_stat+'&job_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg').show();
+					$('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
+					$.unblockUI();
+				} else {
+					$('#resmsg').show();
+					$('#resmsg').html("<span class='ajx_failure_msg'>Status Already Exists.</span>.");
+					$.unblockUI();
+				}
 			}
-		}
-	});
-	
-	setTimeout('timerfadeout()', 3000);
+		});
+		setTimeout('timerfadeout()', 3000);
 	}
 
 	function setProjectStatusDate(date_type) {
-	$("#errmsg, #errmsg_start_dt").hide();
+		$("#errmsg, #errmsg_start_dt").hide();
 
-	var set_date_type, date_val, d_class;
+		var set_date_type, date_val, d_class;
 
-	if (date_type == 'start') {
-		set_date_type = 'start';
-		date_val = $('#project-start-date').val();
-		d_class = 'startdate';
-	} else {
-		set_date_type = 'end';
-		date_val = $('#project-due-date').val();
-		d_class = 'deadline';
-	}
-
-	var pr_date = $('#project_lead').val()
-	if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
-		//alert('Please enter planned ' + set_date_type + ' date');
-		if (set_date_type == 'start') {
-			//showing error message As DOM type - Start Date
-			$("#errmsg_start_dt").text('Please enter planned ' + set_date_type + ' date');
-			$("#errmsg_start_dt").show();
+		if (date_type == 'start') {
+			set_date_type = 'start';
+			date_val = $('#project-start-date').val();
+			d_class = 'startdate';
 		} else {
-			//showing error message As DOM type - End Date
-			$("#errmsg").text('Please enter planned ' + set_date_type + ' date');
-			$("#errmsg").show();
+			set_date_type = 'end';
+			date_val = $('#project-due-date').val();
+			d_class = 'deadline';
 		}
-		return false;
-	} else {
-	    
-		var params 				= {'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val};
-		params[csrf_token_name] = csrf_hash_token;
-	
-		$.post(
-			'project/set_project_status_date/',
-			params,
-			function(_data) {
-				try {
-					eval ('var data = ' + _data);
-					if (typeof(data) == 'object') {
-						if (data.error == false) {
-							$('h6.project-' + d_class + '-label span').text(date_val);
-							$('.project-' + d_class + '-change:visible').hide(200);
+
+		var pr_date = $('#project_lead').val()
+		if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
+			//alert('Please enter planned ' + set_date_type + ' date');
+			if (set_date_type == 'start') {
+				//showing error message As DOM type - Start Date
+				$("#errmsg_start_dt").text('Please enter planned ' + set_date_type + ' date');
+				$("#errmsg_start_dt").show();
+			} else {
+				//showing error message As DOM type - End Date
+				$("#errmsg").text('Please enter planned ' + set_date_type + ' date');
+				$("#errmsg").show();
+			}
+			return false;
+		} else {
+			
+			var params 				= {'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val};
+			params[csrf_token_name] = csrf_hash_token;
+		
+			$.post(
+				'project/set_project_status_date/',
+				params,
+				function(_data) {
+					try {
+						eval ('var data = ' + _data);
+						if (typeof(data) == 'object') {
+							if (data.error == false) {
+								$('h6.project-' + d_class + '-label span').text(date_val);
+								$('.project-' + d_class + '-change:visible').hide(200);
+							} else {
+								if (set_date_type == 'start') {
+									$("#errmsg_start_dt").text(data.error);
+									$("#errmsg_start_dt").show();
+								} else {
+									$("#errmsg").text(data.error);
+									$("#errmsg").show();
+								}
+							}
 						} else {
 							if (set_date_type == 'start') {
-								$("#errmsg_start_dt").text(data.error);
+								$("#errmsg_start_dt").text('Updating faild, please try again.');
 								$("#errmsg_start_dt").show();
 							} else {
-								$("#errmsg").text(data.error);
+								$("#errmsg").text('Updating faild, please try again.');
 								$("#errmsg").show();
 							}
 						}
-					} else {
+					} catch (e) {
 						if (set_date_type == 'start') {
-							$("#errmsg_start_dt").text('Updating faild, please try again.');
+							$("#errmsg_start_dt").text('Invalid response, your session may have timed out.');
 							$("#errmsg_start_dt").show();
 						} else {
-							$("#errmsg").text('Updating faild, please try again.');
+							$("#errmsg").text('Invalid response, your session may have timed out.');
 							$("#errmsg").show();
 						}
 					}
-				} catch (e) {
-					if (set_date_type == 'start') {
-						$("#errmsg_start_dt").text('Invalid response, your session may have timed out.');
-						$("#errmsg_start_dt").show();
-					} else {
-						$("#errmsg").text('Invalid response, your session may have timed out.');
-						$("#errmsg").show();
-					}
 				}
-			}
-		);
-	}
+			);
+		}
 	}
 
 
