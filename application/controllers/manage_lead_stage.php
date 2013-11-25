@@ -249,5 +249,28 @@ class Manage_lead_stage extends crm_controller {
 		echo json_encode($res);
 		exit;
 	}
+	
+
+	/**
+	 * Check Lead stage is already exits or not.
+	 */
+	function chk_duplicate() {
+		$name = $this->input->post('name');
+		$id = $this->input->post('id');
+		
+		if(empty($id)) {
+			$condn = array('name'=>$name);
+			$res = $this->manage_lead_stage_model->check_lead_stg_duplicate($condn);
+		} else {
+			$condn = array('name'=>$name, 'id'=>$id);
+			$res = $this->manage_lead_stage_model->check_lead_stg_duplicate($condn);
+		}
+		
+		if($res == 0)
+			echo json_encode('success');
+		else
+			echo json_encode('fail');
+		exit;
+	}
 
 }
