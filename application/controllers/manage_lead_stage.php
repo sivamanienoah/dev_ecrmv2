@@ -72,7 +72,7 @@ class Manage_lead_stage extends crm_controller {
 				//Get the sequence no.
 				$results = $this->manage_lead_stage_model->get_last_row('lead_stage', 1, 'sequence', 'sequence desc');
 				if(!empty($results)) {
-					$update_data['sequence'] = $results['sequence'] + 1;
+					$update_data['sequence'] = $results[0]['sequence'] + 1;
 				}
 				$this->manage_lead_stage_model->insert_row('lead_stage', $update_data);
                 $this->session->set_flashdata('confirm', array('New Lead Stage Added!'));
