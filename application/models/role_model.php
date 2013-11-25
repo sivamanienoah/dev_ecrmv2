@@ -65,7 +65,6 @@ class Role_model extends crm_model {
 	*@Get role record by role id
 	*@Role Model
 	*/
-    
     public function get_role($id) {
          if(!$id){
             return false;
@@ -80,13 +79,11 @@ class Role_model extends crm_model {
 			return array_merge($customers,$role);
 		}        
     }
-	 
 
 	/*
 	*@Update Role Record By Role Id
 	*@Role Model
 	*/
-	 
     public function update_role($id, $data) {
         
 		$dataRole = array();
@@ -141,7 +138,6 @@ class Role_model extends crm_model {
 	*@Insert Role Record
 	*@Role Model
 	*/
-    
     public function insert_role($data) {
 	 
 		$dataRole = array();
@@ -189,7 +185,6 @@ class Role_model extends crm_model {
 	*@Delete Role Record
 	*@Role Model
 	*/
-    
     public function delete_role($id) {
         
         $this->db->where('id', $id);
@@ -201,7 +196,6 @@ class Role_model extends crm_model {
 	*@Get Role Name & Role Id 
 	*@Role Model
 	*/
-	
     public function has_role( $role, $role )
     {
         $this->db->join( $this->cfg['dbpref'].'role_roles ur', 'roles.id = ur.roles_id' );
@@ -213,7 +207,6 @@ class Role_model extends crm_model {
 	*@Find out Exist Fields 
 	*@Role Model
 	*/
-	
     public function field_exists( $field )
     {
         return $this->db->field_exists( $field, $this->config->item('role_table', 'acl_auth') );
@@ -224,7 +217,6 @@ class Role_model extends crm_model {
 	*@Check security token
 	*@Role Model
 	*/
-	
     public function check_token( $token )
     {
         return ( $token === $this->reset_code );
@@ -234,7 +226,6 @@ class Role_model extends crm_model {
 	*@Get Module List
 	*@Role Model
 	*/
-	
 	public function UserModuleList($userId) {
 	
 	$this->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to,mrl.role_id,vm.order_id,mrl.id as masreroleid,mrl.view,mrl.add,mrl.edit,mrl.delete');
@@ -253,7 +244,6 @@ class Role_model extends crm_model {
 	*@Page Tree for Update User role Details 
 	*@Role Model
 	*/
-	
 	public function pageTree($id = false) {
  
 		if(!empty($id)){
@@ -352,12 +342,11 @@ class Role_model extends crm_model {
 	*@Update Role Details 
 	*@Role Model
 	*/
-	
 	public function getSubtreeUL(array $subtreeRoot, $level = 0)
 	{	
 	    $html ='';
 	    $all= $add=$edit=$delete=$view='';
-		$html = '<div style="width:1000px; padding:5px;">
+		$html = '<div style="width:500px; padding:5px;">
 		<div style="width:500px;">
 		<div style="background:url(\'assets/img/folder.png\') no-repeat 3px;  padding-left:25px; height:24px; line-height:24px; ">
 		 '.$subtreeRoot['name'].'<input type="hidden" name ="masterid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['id'].'">';
@@ -396,20 +385,30 @@ class Role_model extends crm_model {
 	*@Role Log History 
 	*@Role Model
 	*/
-	
 	public function log_history($log_date,$log_role){
+		# now get the logs for the role on that day
+		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
+				FROM ".$this->cfg['dbpref']."logs
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
+				AND `roleid_fk` = ?
+				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
+			
+		$q = $this->db->query($sql, array($log_date, $log_role['roleid']));
+		$rs = $q->result_array();
+	}
 	
-			# now get the logs for the role on that day
-			$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
-					FROM ".$this->cfg['dbpref']."logs
-					LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
-					WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
-					AND `roleid_fk` = ?
-					ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
-				
-			$q = $this->db->query($sql, array($log_date, $log_role['roleid']));
-			$rs = $q->result_array();
-	
+	/*
+	*Checking duplicates
+	*/
+	function check_role_duplicate($tbl_cont, $condn, $tbl_name) {
+		$this->db->select($tbl_cont['name']);
+		$this->db->where($tbl_cont['name'], $condn['name']);
+		if(!empty($condn['id'])) {
+			$this->db->where($tbl_cont['id'].' !=', $condn['id']);
+		}
+		$res = $this->db->get($this->cfg['dbpref'].$tbl_name);
+        return $res->num_rows();
 	}
 }
 
