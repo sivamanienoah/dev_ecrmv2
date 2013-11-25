@@ -63,7 +63,7 @@ class Manage_lead_stage_model extends crm_model {
 	
 	function check_lead_stg_duplicate($condn) {
 		$this->db->select('lead_stage_name');
-		$this->db->like('lead_stage_name', $condn['name'], 'both');
+		$this->db->where('lead_stage_name', $condn['name']);
 		if(!empty($condn['id'])) {
 			$this->db->where('lead_stage_id !=', $condn['id']);
 		}
