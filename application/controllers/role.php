@@ -462,6 +462,26 @@ class Role extends crm_controller {
 			echo json_encode('fail');
 		exit;
 	}
+	
+	/*
+	*@For ajax check status (roles)
+	*@Method   ajax_check_status_roles
+	*/
+	public function ajax_check_status_roles() 
+	{
+		$post_data  = real_escape_array($this->input->post());
+		$id         = $post_data['data'];
+		$this->db->where('role_id', $id);
+		$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
  
 
 }
