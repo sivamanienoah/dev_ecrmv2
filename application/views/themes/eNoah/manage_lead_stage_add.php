@@ -16,7 +16,9 @@
 			<table class="layout">
 				<tr>
                     <td>Lead Stage: * </td>
-					<td><input type="text" name="lead_stage_name" id="lead_stage_name" autocomplete="off" value="<?php echo $this->validation->lead_stage_name; ?>" class="textfield width200px" /></td>
+					<td>
+						<input type="text" name="lead_stage_name" id="lead_stage_name" autocomplete="off" value="<?php echo $this->validation->lead_stage_name; ?>" class="textfield width200px" />
+					</td>
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 						<input type="hidden" id="lead_stg_hidden" name="lead_stg_hidden" value="<?php echo $this->uri->segment(4); ?>" />
 					<?php } ?>

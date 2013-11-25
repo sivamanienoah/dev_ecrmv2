@@ -714,4 +714,59 @@ class Manage_service extends crm_controller {
 		exit;
 	}
 	
+	
+	/**
+	 * Check Duplicates for Lead source is already exits or not.
+	 */
+	function chk_duplicate() {
+		$chk_data = real_escape_array($this->input->post());
+
+		$name = $chk_data['name'];
+		$id   = $chk_data['id'];
+		$type = $chk_data['type'];
+		
+		$tbl_cont = array();
+		
+		switch ($type) {
+			case 'lead_source':
+				$tbl_cont['name'] = 'lead_source_name';
+				$tbl_cont['id'] = 'lead_source_id';
+				if(empty($id)) {
+					$condn = array('name'=>$name);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				} else {
+					$condn = array('name'=>$name, 'id'=>$id);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				}
+			break;
+			case 'sales_divisions':
+				$tbl_cont['name'] = 'division_name';
+				$tbl_cont['id'] = 'div_id';
+				if(empty($id)) {
+					$condn = array('name'=>$name);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				} else {
+					$condn = array('name'=>$name, 'id'=>$id);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				}
+			break;
+			case 'job_categories':
+				$tbl_cont['name'] = 'category';
+				$tbl_cont['id'] = 'cid';
+				if(empty($id)) {
+					$condn = array('name'=>$name);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				} else {
+					$condn = array('name'=>$name, 'id'=>$id);
+					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
+				}
+			break;
+		}
+
+		if($res == 0)
+			echo json_encode('success');
+		else
+			echo json_encode('fail');
+		exit;
+	}
 }

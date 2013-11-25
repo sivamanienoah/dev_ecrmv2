@@ -15,7 +15,6 @@ class manage_service_model extends crm_model {
 	*@construct
 	*@Manage Service Model
 	*/
-	
     function Manage_service_model() {
        parent::__construct();
     }
@@ -24,7 +23,6 @@ class manage_service_model extends crm_model {
 	*@Get Job Category for Search
 	*@Manage Service Model
 	*/
-	
 	public function get_jobscategory($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'job_categories');
@@ -42,7 +40,6 @@ class manage_service_model extends crm_model {
 	*@Method  get_salesDivisions
 	*@table   sales_divisions
 	*/
-	
 	public function get_salesDivisions($search = FALSE) {
 	
 		$this->db->select('*');
@@ -60,7 +57,6 @@ class manage_service_model extends crm_model {
 	*@Check Active Status
 	*@Method  get_list_active
 	*/
-	
 	public function get_list_active($tbl_name) {
 		$query = $this->db->get_where($tbl_name, array('status' => 1));
 		$activeLists = $query->result_array();
@@ -72,8 +68,6 @@ class manage_service_model extends crm_model {
 	*@Method  get_list_active
 	*@table   lead_source
 	*/
-
-	
 	public function get_lead_source($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'lead_source');
@@ -92,7 +86,6 @@ class manage_service_model extends crm_model {
 	*@Method  get_expect_worth_cur
 	*@table   expect_worth
 	*/
-
 	public function get_expect_worth_cur($search = FALSE) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'expect_worth');
@@ -111,8 +104,6 @@ class manage_service_model extends crm_model {
 	*@Method  get_all_currency
 	*@table   currency_all
 	*/
-
-	
 	public function get_all_currency() {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'currency_all');
@@ -126,7 +117,6 @@ class manage_service_model extends crm_model {
 	*@Method  insert_new_currency
 	*@table   expect_worth
 	*/
-	
 	public function insert_new_currency($ins) {
 		$this->db->insert("{$this->cfg['dbpref']}" . 'expect_worth', $ins);
 		$last_ins_id = $this->db->insert_id();
@@ -143,7 +133,6 @@ class manage_service_model extends crm_model {
 	*@Method  insert_new_currency
 	*@table   expect_worth
 	*/
-	
 	public function updt_exist_currency($updt, $id) {
 		$res = $this->db->update($this->cfg['dbpref'].'expect_worth', $updt, "expect_worth_id = ".$id." ");
 		if (array_key_exists('is_default', $updt)) {
@@ -160,7 +149,6 @@ class manage_service_model extends crm_model {
 	*@Method  getCurName
 	*@table   currency_all
 	*/
-	
 	public function getCurName($id) {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'currency_all');
@@ -174,7 +162,6 @@ class manage_service_model extends crm_model {
 	*@Get row record for dynamic table
 	*@Method  get_row
 	*/
-	
 	public function get_row($table, $cond) {
     	$res = $this->db->get_where($this->cfg['dbpref'].$table, $cond);
         return $res->result_array();
@@ -184,7 +171,6 @@ class manage_service_model extends crm_model {
 	*@Get row count for dynamic table
 	*@Method  get_num_row
 	*/
-	
     public function get_num_row($table, $cond) {
     	$res = $this->db->get_where($this->cfg['dbpref'].$table, $cond);
         return $res->num_rows();
@@ -194,7 +180,6 @@ class manage_service_model extends crm_model {
 	*@Update Row for dynamic table
 	*@Method  update_row
 	*/
-    
     public function update_row($table, $cond, $data) {
     	$this->db->where($cond);
 		return $this->db->update($this->cfg['dbpref'].$table, $data);
@@ -204,7 +189,6 @@ class manage_service_model extends crm_model {
 	*@Insert Row for dynamic table
 	*@Method  insert_row
 	*/
-    
 	public function insert_row($table, $param) {
     	$this->db->insert($this->cfg['dbpref'].$table, $param);
     }
@@ -213,11 +197,23 @@ class manage_service_model extends crm_model {
 	*@Delete Row for dynamic table
 	*@Method  insert_row
 	*/
-    
 	public function delete_row($table, $cond) {
         $this->db->where($cond);
         return $this->db->delete($this->cfg['dbpref'].$table);
     }
+	
+	/*
+	*Checking duplicates
+	*/
+	function check_duplicate($tbl_cont, $condn, $tbl_name) {
+		$this->db->select($tbl_cont['name']);
+		$this->db->where($tbl_cont['name'], $condn['name']);
+		if(!empty($condn['id'])) {
+			$this->db->where($tbl_cont['id'].' !=', $condn['id']);
+		}
+		$res = $this->db->get($this->cfg['dbpref'].$tbl_name);
+        return $res->num_rows();
+	}
     
 }
 

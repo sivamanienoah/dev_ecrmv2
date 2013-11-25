@@ -1,8 +1,9 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
+<script type="text/javascript" src="assets/js/manage_service/manage_service_req_add.js"></script>
 <div id="content">
     <div class="inner">
 
-    	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
+    	<form action="<?php echo  $this->uri->uri_string() ?>" method="post" name="cat_name" onsubmit="return chk_cat_name();">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
@@ -16,11 +17,19 @@
 			<table class="layout">
 				<tr>
                     <td>Product: * </td>
-					<td><input type="text" name="category" value="<?php echo $this->validation->category; ?>" class="textfield width200px" /></td>
+					<td>
+						<input type="text" name="category" id="category_name" value="<?php echo $this->validation->category; ?>" class="textfield width200px" />
+						<?php if ($this->uri->segment(3) == 'update') { ?>
+							<input type="hidden" id="category_hidden" name="category_hidden" value="<?php echo $this->uri->segment(4); ?>" />
+						<?php } ?>
+					</td>
+					<td>
+						<div id="cat_name_msg"> </div>
+					</td>
 				</tr>
 				<tr>
 					<td>Status</td>
-					<td>
+					<td colspan="2">
 						<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo ' checked="checked"' ?>
 						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
 						<?php if ($cb_status != 0) echo "One or more leads currently assigned for this Service. This cannot be made Inactive."; ?>
@@ -30,7 +39,7 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td class="action-buttons">
+					<td class="action-buttons" colspan="2">
                         <div class="buttons">
 							<button type="submit" name="update_pdt" class="positive">
 								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Product
