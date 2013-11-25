@@ -119,7 +119,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				</tr>
                 <tr>
 					<td>Email:*</td>
-					<td><input type="text" name="email_1" id="emailval"  autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
+					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
 					
 					<div><span class="checkUser" style="color:green">Email Available.</span></div>
 					<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
