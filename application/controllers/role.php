@@ -434,6 +434,34 @@ class Role extends crm_controller {
 	{
 		$this->load->view('role/roles_view');
 	}
+	
+	/**
+	 * Check Duplicates for Lead source is already exits or not.
+	 */
+	function chk_role_duplicate() {
+		$chk_data = real_escape_array($this->input->post());
+
+		$name = $chk_data['name'];
+		$id   = $chk_data['id'];
+		$type = $chk_data['type'];
+		$tbl_cont = array();
+		
+		$tbl_cont['name'] = 'name';
+		$tbl_cont['id'] = 'id';
+		if(empty($id)) {
+			$condn = array('name'=>$name);
+			$res = $this->role_model->check_role_duplicate($tbl_cont, $condn, $type);
+		} else {
+			$condn = array('name'=>$name, 'id'=>$id);
+			$res = $this->role_model->check_role_duplicate($tbl_cont, $condn, $type);
+		}
+		
+		if($res == 0)
+			echo json_encode('success');
+		else
+			echo json_encode('fail');
+		exit;
+	}
  
 
 }
