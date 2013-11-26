@@ -30,10 +30,11 @@ class Hosting extends crm_controller {
 		}
 	}
 	
-	function add_account($update = false, $id = false) { 
+	function add_account($update = false, $id = false) {
+
 		$data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
 		$data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
-		//$rules['expiry_date'] = "trim|required";
+
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
 		$rules['domain_name'] = "trim|required|callback_domain_check";
 		if (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'ENOAH' && $_POST['domain_mgmt'] != 'CM') {	
