@@ -31,26 +31,20 @@ class Hosting extends crm_controller {
 	}
 	
 	function add_account($update = false, $id = false) { 
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($_POST['delete_account'])) {
-            $this->hosting_model->delete_row('hosting', 'hostingid', $id);
-            $this->session->set_flashdata('confirm', array('Hosting Account Deleted!'));
-            redirect('hosting/');
-        }
-
 		$data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
 		$data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
-        $rules['domain_name'] = "trim|required|callback_domain_check";
 		//$rules['expiry_date'] = "trim|required";
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
+		$rules['domain_name'] = "trim|required|callback_domain_check";
 		if (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'ENOAH' && $_POST['domain_mgmt'] != 'CM') {	
 			//$rules['domain_expiry'] = "trim|required|callback_is_valid_domain_date";
 			$rules['domain_expiry'] = "trim|required";
 		}
 		$this->validation->set_rules($rules);
+		$fields['customer_id'] = "Customer Name";
 		$fields['domain_name'] = "Domain Name";
 		$fields['domain_expiry'] = "Domain Name Expiry";
 		$fields['expiry_date'] = "Expiry Date";
-        $fields['customer_id'] = "Customer/Business Name";
         $fields['domain_status'] = 'Domain Status';
 		$fields['ssl'] = 'SSL';
 		$fields['other_info'] = 'Other information';
