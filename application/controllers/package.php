@@ -29,8 +29,8 @@ class Package extends crm_controller {
 		$rules['type_months'] = "trim|numeric";
 		$rules['package_price'] = "trim|required|numeric";
 		$rules['typeid_fk'] = "trim|required";
-		$rules['status'] = "trim|required";
 		$rules['duration'] = "trim|required";
+		$rules['status'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
 		
@@ -61,6 +61,7 @@ class Package extends crm_controller {
             }
 		}
 	}
+	
 	function is_available($package_name){
 		$query = $this->db->query("SELECT * FROM ".$this->cfg['dbpref']."package WHERE package_name='{$package_name}'");
 		if($query->num_rows()>0) {$this->validation->set_message('is_available', 'Package name already available in database'); return false;}
