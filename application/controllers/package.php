@@ -105,7 +105,7 @@ class Package extends crm_controller {
 			$rules['package_name'] = "trim|required|callback_isavailable"; 
 			$account['toDB']='';$account['package_name']='';$account['type_months']='';$account['package_flag']='';
 		}
-		$rules['type_months'] = "trim|numeric";
+		$rules['type_months'] = "trim|required|numeric";
 		$rules['package_flag'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
