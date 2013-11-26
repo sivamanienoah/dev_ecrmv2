@@ -176,8 +176,12 @@ class Dashboard extends crm_controller {
 	}
 	
 	public function showLeadsDetails() {
-		$type = $_POST['type']; 
-		$data = $_POST['data'];
+		
+		$res = real_escape_array($this->input->post());
+		
+		$type = $res['type']; 
+		$data = $res['data'];
+
 		$cusId = $this->level_restriction();
 		$res = array();
 		$rates = $this->get_currency_rates();
@@ -361,8 +365,8 @@ class Dashboard extends crm_controller {
 		$assignee_table_output .=  "</table><div class='clear'></div></div>";
 		echo $assignee_table_output;	
 	}
-	public function get_leads_current_weekly_monthly_report() {
 	
+	public function get_leads_current_weekly_monthly_report() {
 		$weekly_monthly_repo = '';
 		$lead_det = array();
 		$isSelect = $this->input->get('statusVar');
@@ -660,13 +664,16 @@ class Dashboard extends crm_controller {
 	}
 
 	public function showLeadDetails() {
-		$gid = $_POST['gid'];
-	    $type = $_POST['type'];
+		$resu = real_escape_array($this->input->post());
+
+		$gid  = $resu['gid'];
+	    $type = $resu['type'];
+
 		$cusId = $this->level_restriction();
 		$rates = $this->get_currency_rates();
 		$res = array();
 		
-		switch($_POST['type']){
+		switch($resu['type']){
 			case "bar1":
 				if ($gid == 0) {
 					$ind = 'HOT';
@@ -728,8 +735,11 @@ class Dashboard extends crm_controller {
 	
 	//for closed opportunities
 	public function showLeadDetails_cls() {
-		$gid = $_POST['gid'];
-	    $type = $_POST['type'];
+		$resu = real_escape_array($this->input->post());
+		
+		$gid = $resu['gid'];
+	    $type = $resu['type'];
+		
 		$cusId = $this->level_restriction();
 		$rates = $this->get_currency_rates();
 		$res = array();
