@@ -71,28 +71,12 @@
 				<tr>
 					<td>Additional Email:</td>
 					<td><input type="text" name="add_email" value="<?php echo  $this->validation->add_email ?>" class="textfield width200px required" /></td>
-                    <td>VCS Logs:</td>
-					<td>
-                        <select name="use_both_emails" class="textfield width200px">
-							<?php
-							$both_emails = array(
-												0 => 'Just email to my main email account',
-												1 => 'Only email to this additional address',
-												2 => 'Email both addresses'
-											);
-							foreach ($both_emails as $key => $val) {
-								?>
-								<option value="<?php echo  $key ?>"<?php echo  ($this->validation->use_both_emails == $key) ? ' selected="selected"' : '' ?>><?php echo  $val ?></option>
-								<?php
-							}
-							?>
-                        </select>
-					</td>
+					
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td colspan="3">
-						<p><strong>Important:</strong> This VCS log setting is only applied when the client emails are not selected when logging<br /> and when you have a valid additional email set-up in your 'My Account' area.</p>
+						<p><strong>Important:</strong> This log setting is only applied when the client emails are not selected when logging<br /> and when you have a valid additional email set-up in your 'My Account' area.</p>
 					</td>
 				</tr>
 				<tr>

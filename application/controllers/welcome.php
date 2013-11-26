@@ -1407,19 +1407,6 @@ HDOC;
 					{
 						# default email
 						$to_user_email = $ua['email'];
-						
-						if (strstr($ua['add_email'], '@') && ! (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name'])))
-						{
-							
-							if ($ua['use_both_emails'] == 1)
-							{
-								$to_user_email = $ua['add_email'];
-							}
-							else if ($ua['use_both_emails'] == 2)
-							{
-								$send_to[]= array($ua['add_email'], $ua['first_name'] . ' ' . $ua['last_name'],'');
-							}
-						}
 
 						$send_to[] = array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'],'');
 						

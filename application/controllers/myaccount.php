@@ -44,7 +44,6 @@ class Myaccount extends crm_controller {
 		$fields['last_name']       = "Last Name";
 		$fields['email']           = "Email Address";
 		$fields['add_email']       = "Additional Email Address";
-		$fields['use_both_emails'] = "Using Both Emails";
         $fields['phone']           = "Telephone";
         $fields['mobile']          = "Mobile";
 		$fields['oldpassword']     = "oldPassword";
