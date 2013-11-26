@@ -42,19 +42,10 @@
 $route['default_controller'] = "dashboard";
 $route['scaffolding_trigger'] = "";
 
-$route['invoice/preview/([0-9]+)'] = "welcome/preview/$1";
 $route['invoice'] = "welcome/quotation/approved";
 $route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
 $route['invoice/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
-$route['invoice/package'] = "welcome/package/invoice";
-$route['invoice/billing'] = "welcome/billing";
 
-$route['subscription'] = "welcome/quotation/s_pending";
-$route['subscription/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
-$route['subscription/([a-z_]+)(/.+)?'] = "welcome/quotation/$1$2";
-$route['subscription/package'] = "welcome/package/subscription";
-
-$route['production/?'] = "production/welcome";
 $route['production/package'] = "welcome/package/production";
 $route['404_override'] = '';
 
