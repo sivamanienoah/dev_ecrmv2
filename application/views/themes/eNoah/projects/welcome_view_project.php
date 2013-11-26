@@ -155,7 +155,7 @@
 
 								if($usid == $final_restrict_user[$j]) {
 									echo '<span class="user">' .
-									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" class="' . $is_pm . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label>' .
+									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label>' .
 									'<select name="post_profile_' . $user_accounts[$i]['userid'] . '" class="post-profile-select">' . $post_profile_options . '</select></span>'; 
 								}	
 							}
