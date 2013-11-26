@@ -126,7 +126,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 			}
 		}
 	$class = '';
-	echo "as dfa sdf"; echo $class;
+
 		$ul='<div style="clear:both;"></div>';
 		if($searchSubMenu==NULL){
 			$ul .='<ul class="menuStyle"><li style="list-style:none"><a href="dashboard" '.$class.' >Home</a></li>';
@@ -157,26 +157,33 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 
 if ( ! function_exists('getSubtreeULMenu'))
 {	
-	function getSubtreeULMenu(array $subtreeRoot, $level = 0,$searchSubMenu=NULL)
+	function getSubtreeULMenu(array $subtreeRoot, $level = 0, $searchSubMenu=NULL)
 	{	
 		$html ='';		 
 			if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
-			$qurystring =explode('/',$_SERVER['REQUEST_URI']);
-			$class='';
-			if($qurystring[2]==$subtreeRoot['links_to']){
-				$class='class="selected"';
-			}
-			$html = '<a href="'.$subtreeRoot['links_to'].'" '.$class.' >'.$subtreeRoot['name'].'</a>';
-		 	 if(!empty($subtreeRoot['children'])){
-			$html .= '<ul class="left-menu">';
-			
-				foreach ($subtreeRoot['children'] as $child) {
-				
-					$html .= '<li style="list-style:none">'.getSubtreeULMenu($child, $level + 1,$searchSubMenu).'</li>';
+				$qurystring = explode('/',$_SERVER['REQUEST_URI']);
+				$class='';
+				$lk = explode('/', $subtreeRoot['links_to']);
+				/* echo "uri sti " . $qurystring[3];
+				echo "<br />";
+				$lk = explode('/', $subtreeRoot['links_to']);
+				echo "Links to " .  $lk[0];
+				echo "<br />"; */
+				// if($qurystring[2]==$subtreeRoot['links_to']){
+				if($qurystring[3] == $lk[0]) {
+					$class='class="selected"';
+				}
+				$html = '<a href="'.$subtreeRoot['links_to'].'" '.$class.' >'.$subtreeRoot['name'].'</a>';
+				if(!empty($subtreeRoot['children'])){
+					$html .= '<ul class="left-menu">';
 					
-				} 
-			$html .= '</ul>';
-			}
+						foreach ($subtreeRoot['children'] as $child) {
+						
+							$html .= '<li style="list-style:none">'.getSubtreeULMenu($child, $level + 1,$searchSubMenu).'</li>';
+							
+						} 
+					$html .= '</ul>';
+				}
 			}
 			return $html; 
 	}
@@ -186,36 +193,35 @@ if ( ! function_exists('getSubtreeSubULMenu'))
 {	
 	function getSubtreeSubULMenu(array $subtreeRoot, $level = 0,$searchSubMenu=NULL)
 	{	
- 
-			$html ='';		 
-			if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
+		$html ='';		 
+		if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
+		
+			 if(empty($subtreeRoot['children']) && $subtreeRoot['master_parent_id']!=0){
+			 $str='';
+			 if($subtreeRoot['name']=='Create New Lead'){
+				$str =  'onclick="$(\'#lead-init-form:not(:visible)\').slideDown(300); return false;" href="#"';
+			 }
+				$html = '<a '.$str.' href="'.$subtreeRoot['links_to'].'">'.$subtreeRoot['name'].'</a>';
+				}
+		 if(!empty($subtreeRoot['children'])){
+				$html .= '<ul class="topstrip">';
+			 }
+			foreach ($subtreeRoot['children'] as $child) {
 			
-			 	 if(empty($subtreeRoot['children']) && $subtreeRoot['master_parent_id']!=0){
-				 $str='';
-				 if($subtreeRoot['name']=='Create New Lead'){
-					$str =  'onclick="$(\'#lead-init-form:not(:visible)\').slideDown(300); return false;" href="#"';
-				 }
-					$html = '<a '.$str.' href="'.$subtreeRoot['links_to'].'">'.$subtreeRoot['name'].'</a>';
-					}
 			 if(!empty($subtreeRoot['children'])){
-					$html .= '<ul class="topstrip">';
-				 }
-				foreach ($subtreeRoot['children'] as $child) {
+				$html .= '<li style="list-style:none">';
+				}
+				$html .= getSubtreeSubULMenu($child, $level + 1,$searchSubMenu);
+				 if(!empty($subtreeRoot['children'])){
+					$html .='</li>';
+				}
 				
-				 if(!empty($subtreeRoot['children'])){
-					$html .= '<li style="list-style:none">';
-					}
-					$html .= getSubtreeSubULMenu($child, $level + 1,$searchSubMenu);
-					 if(!empty($subtreeRoot['children'])){
-						$html .='</li>';
-					}
-					
-				} 
-				 if(!empty($subtreeRoot['children'])){
-					$html .= '</ul>';
+			} 
+			 if(!empty($subtreeRoot['children'])){
+				$html .= '</ul>';
 			}
-			}
-			return $html; 
+		}
+		return $html; 
 	}
 }
 
