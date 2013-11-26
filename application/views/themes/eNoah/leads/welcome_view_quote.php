@@ -1447,9 +1447,9 @@ $(function(){
 						<h3>Query</h3>
 						<table id="querylead_table" class="layout add_query" style="display: none">								
 							<tr>
-								<td width="120">Query:</td>
+								<td>Query:</td>
 								<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
-								<td width="300"><textarea name="query" id="query" cols="20" rows="3" ></textarea></td>
+								<td><textarea name="query" id="query" cols="20" rows="3" style="width: 270px; height: 70px;"></textarea></td>
 							</tr>
 							<tr>
 								<td width="120">Attachment File:</td>
