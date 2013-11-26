@@ -170,7 +170,7 @@ if ( ! function_exists('getSubtreeULMenu'))
 				echo "Links to " .  $lk[0];
 				echo "<br />"; */
 				// if($qurystring[2]==$subtreeRoot['links_to']){
-				if($qurystring[3] == $lk[0]) {
+				if($qurystring[2] == $lk[0]) {
 					$class='class="selected"';
 				}
 				$html = '<a href="'.$subtreeRoot['links_to'].'" '.$class.' >'.$subtreeRoot['name'].'</a>';
