@@ -44,7 +44,7 @@ class Dashboard extends crm_controller {
 		$leads = $data['getLeadByReg']['res'];
     	$total_leads = $data['getLeadByReg']['num'];
 		$lead_reg = array();
-		currency_convert();
+		// currency_convert();
 		$rates = $this->get_currency_rates();
 		$data['rates'] = $this->get_currency_rates();
 		if($total_leads>0)
@@ -751,15 +751,18 @@ class Dashboard extends crm_controller {
 		
 		if (isset($data['leadDeta']) && count($data['leadDeta'])) :
 			foreach($data['leadDeta'] as $leadDet) {
+				// echo $leadDet['pjt_status'];
 				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				switch($leadDet['pjt_status']) {
 					case 0:
 						$linkurl = "welcome/view_quote/";
 					break;
 					case 1:
+					case 2:
+					case 3:
 						$linkurl = "project/view_project/";
 					break;
-				}
+				} 
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								 <td><a href="'.base_url().$linkurl.$leadDet['jobid'].'" target="_blank">'.$leadDet['job_title'].'</a></td>
