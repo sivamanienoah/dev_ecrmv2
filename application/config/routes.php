@@ -46,7 +46,6 @@ $route['invoice'] = "welcome/quotation/approved";
 $route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
 $route['invoice/view_quote/([0-9]+)(/.+)?'] = "welcome/view_quote/$1$2";
 
-$route['production/package'] = "welcome/package/production";
 $route['404_override'] = '';
 
 
