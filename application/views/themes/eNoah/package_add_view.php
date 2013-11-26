@@ -17,27 +17,30 @@
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="120">Package Type Name:</td>
+					<td width="120">Package Type Name: *</td>
 					<td width="300">
-                        <input type="text" name="package_name" value="<?php echo  (!empty($package_name)) ? $package_name : $this->validation->package_name; ?>" class="textfield width200px" /> *
+                        <input type="text" name="package_name" value="<?php echo  (!empty($package_name)) ? $package_name : $this->validation->package_name; ?>" class="textfield width200px" />
                         <input type="hidden" name="customer_id" id="cust_id" value="<?php echo  (isset($customer_id)) ? $customer_id : '' ?>" />
                     </td>
 				</tr>
 				<tr>
-					<td>Months:</td>
-					<td><input type="text" name="type_months" value="<?php echo  (!empty($type_months)) ? $type_months : $this->validation->type_months; ?>" class="textfield width200px required" /> *</td>
+					<td>Months: *</td>
+					<td>
+						<input type="text" name="type_months" value="<?php echo  (!empty($type_months)) ? $type_months : $this->validation->type_months; ?>" class="textfield width200px required" />
+					</td>
 				</tr>
 				<?php
 				(!empty($package_flag)) ? $p=$package_flag : $p=$this->validation->package_flag;
 				?>
 				<tr>
-					<td>Flag:</td>
-					<td><select name="package_flag" class="textfield width200px required">
-					<option value="">Select Flag</option>
-					<option value="active" <?php if($p=='active') echo 'selected="selected"'; ?>>Active</option>
-					<option value="inactive"<?php if($p=='inactive') echo 'selected="selected"'; ?>>Inactive</option>
-					</select> *</td>
-                    
+					<td>Flag: *</td>
+					<td>
+						<select name="package_flag" class="textfield width200px required">
+						<option value="">Select Flag</option>
+						<option value="active" <?php if($p=='active') echo 'selected="selected"'; ?>>Active</option>
+						<option value="inactive"<?php if($p=='inactive') echo 'selected="selected"'; ?>>Inactive</option>
+						</select>
+					</td>
 				</tr>
                 <tr>
 					<td>&nbsp;</td>
@@ -64,7 +67,7 @@
 		</form>
 		<?php } else{
 			echo "You have no rights to access this page";
-		}?>
+		} ?>
 	</div>
 </div>
 <?php require (theme_url().'/tpl/footer.php'); ?>

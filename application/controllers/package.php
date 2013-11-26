@@ -174,6 +174,7 @@ class Package extends crm_controller {
 		if($query->num_rows()>0) {$this->validation->set_message('isavailable', 'Package name already available in database'); return false;}
 		else return true;
 	}
+	
 	function search()
     {
         if (isset($_POST['cancel_submit'])) {
@@ -184,6 +185,28 @@ class Package extends crm_controller {
             redirect('package/');
         }
     }
+	
+	/*
+	*@For ajax check status (package name)
+	*@Method   ajax_check_status_job_category
+	*/
+	public function ajax_check_status_package_name() 
+	{
+		$post_data  = real_escape_array($this->input->post());
+		$id         = $post_data['data'];
+		$tbl        = $post_data['tbl'];
+		$wh_condn   = $post_data['wh_condn'];
+		$this->db->where($wh_condn, $id);
+		$query = $this->db->get($this->cfg['dbpref'].$tbl)->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
 	
 }
 ?>

@@ -36,14 +36,14 @@ $usernme = $this->session->userdata('logged_in_user');
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="120">Customer Name:*</td>
+					<td width="120">Customer Name: *</td>
 					<td width="300">
                         <input type="text" name="customer_name" id="cust_name" value="<?php echo  (isset($customer_name)) ? $customer_name : '' ?>" class="textfield width200px" /> 
                         <input type="hidden" name="customer_id" id="cust_id" value="<?php echo  (isset($customer_id)) ? $customer_id : '' ?>" />
                     </td>
 				</tr>
 				<tr>
-					<td>Domain Name:*</td>
+					<td>Domain Name: *</td>
 					<td><input type="text" name="domain_name" value="<?php echo  $this->validation->domain_name ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
@@ -54,12 +54,12 @@ $usernme = $this->session->userdata('logged_in_user');
 					</td>
 				</tr>
 				<tr id="domain-expiry-date">
-					<td>Domain Expiry Date:*</td>
+					<td>Domain Expiry Date: *</td>
 					<td><input type="text" name="domain_expiry" value="<?php echo  $this->validation->domain_expiry ?>" class="textfield width200px pick-date" /> </td>
                     
 				</tr>
 				<tr>
-					<td>Domain Status:*</td>
+					<td>Domain Status: *</td>
 					<td>
 						<select name="domain_status" class="textfield width200px">
 						<?php
@@ -71,7 +71,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					</td>
                 </tr>
 				<tr>
-					<td>Package Name:*</td>
+					<td>Package Name: </td>
 					<td>
 						<select name="packageid_fk[]" class="textfield" size=6 multiple=multiple style="width:300px;">
 						<option value="">Select Package</option>

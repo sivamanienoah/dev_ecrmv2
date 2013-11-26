@@ -16,24 +16,24 @@
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="120">Package Name:</td>
+					<td width="120">Package Name: *</td>
 					<td width="300">
-                        <input type="text" name="package_name" value="<?php echo  (!empty($package_name)) ? $package_name : $this->validation->package_name; ?>" class="textfield width200px"/> *
+                        <input type="text" name="package_name" value="<?php echo  (!empty($package_name)) ? $package_name : $this->validation->package_name; ?>" class="textfield width200px"/>
                         <input type="hidden" name="customer_id" id="cust_id" value="<?php echo  (isset($customer_id)) ? $customer_id : '' ?>" />
                     </td>
 				</tr>
 				<tr>
-					<td>Package Price:</td>
-					<td><input type="text" name="package_price" value="<?php echo  (!empty($package_price)) ? $package_price : $this->validation->package_price; ?>" class="textfield width200px required" /> *</td>
+					<td>Package Price: *</td>
+					<td><input type="text" name="package_price" value="<?php echo  (!empty($package_price)) ? $package_price : $this->validation->package_price; ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<?php
 				unset($p);
 				(!empty($typeid_fk)) ? $p=$typeid_fk : $p=$this->validation->typeid_fk;
 				?>
 				<tr>
-					<td>Package Type:</td>
+					<td>Package Type: *</td>
 					<td><select name="typeid_fk" class="textfield width200px required">
-					<option value="">Package Type</option>
+					<option value="">Select Package Type</option>
 					<?php
 					foreach($type as $val){
 						?>
@@ -41,7 +41,7 @@
 						<?php
 					}
 					?>
-					</select> *</td>
+					</select></td>
 				</tr>
 				<?php
 				unset($p);
@@ -50,7 +50,7 @@
 				
 				?>
 				<tr>
-					<td>Duration:</td>
+					<td>Duration: *</td>
 					<td><select name="duration" class="textfield width200px required">
 					<option value="">Select Duration</option>
 					<?php
@@ -60,7 +60,7 @@
 						<?php
 					}
 					?>
-					</select> *</td>
+					</select></td>
                     
 				</tr>
 				
@@ -69,16 +69,16 @@
 				(!empty($status)) ? $p=$status : $p=$this->validation->status;
 				?>
 				<tr>
-					<td>Status:</td>
+					<td>Status: *</td>
 					<td><select name="status" class="textfield width200px required">
 					<option value="">Select Status</option>
 					<option value="active" <?php if($p=='active') echo 'selected="selected"'; ?>>Active</option>
 					<option value="inactive"<?php if($p=='inactive') echo 'selected="selected"'; ?>>Inactive</option>
-					</select> *</td>
+					</select></td>
                     
 				</tr>
 				<tr>
-					<td>Quotation details : </td>
+					<td>Quotation details: </td>
 					<td><textarea name="details" rows="20" cols="80"><?php echo  (!empty($details)) ? $details : $this->validation->details; ?></textarea></td>
                     
 				</tr>
