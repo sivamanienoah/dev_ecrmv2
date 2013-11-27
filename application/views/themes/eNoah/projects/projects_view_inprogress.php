@@ -5,7 +5,7 @@
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-table">
+		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
                 <tr>
 					<th width="60">Action</th>
@@ -88,12 +88,25 @@
 </div>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
- $('.data-table tr, .data-table th').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
-    );
-});
+$(function() {
+	dtPjtTable();
+});	
+	
+function dtPjtTable() {
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,
+		"bDestroy": true
+	});
+}
 </script>
 

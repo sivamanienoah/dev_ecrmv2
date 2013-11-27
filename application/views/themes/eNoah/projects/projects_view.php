@@ -91,8 +91,8 @@
 		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		<div id="ad_filter" style="overflow:scroll; height:400px;" >
-		<table border="0" cellpadding="0" cellspacing="0" class="data-table" style="width:1200px !important;">
+		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll;" >
+		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
             
             <thead>
 				<th width="60">Action</th>
