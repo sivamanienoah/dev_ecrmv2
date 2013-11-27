@@ -119,8 +119,6 @@ function addLog() {
 		return false;
 	}
 	
-
-	
 	if ($('#log_stickie').is(':checked')) {
 		if (!window.confirm('Are you sure you want to highlight this log as a Stickie?')) {
 			return false;
@@ -131,7 +129,6 @@ function addLog() {
 	$('.user-addresses input[type="checkbox"]:checked').each(function(){
 		email_set += $(this).attr('id') + ':';
 	});
-	
 	
 	$.blockUI({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
