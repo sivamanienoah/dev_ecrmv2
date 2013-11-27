@@ -220,7 +220,17 @@ class User extends crm_controller {
 				// unset($update_data['email']);
 				// $update_data['email'] = 'ranburaj@enoahisolution.com';
 				$newid = $this->user_model->insert_user($update_data);
-				if ($newid != 'maxusers')
+				if ($newid == 'maxusers')
+				{
+					// echo $newid . "maxusers"; exit;
+					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
+					redirect('user/');
+				}
+				else if ($newid == 'emailexist')
+				{
+					redirect('user');
+				}
+				else
 				{
 					// echo "<pre>"; print_r($update_data); exit;
 					// echo $newid . "new user"; exit;
@@ -266,16 +276,6 @@ class User extends crm_controller {
 						$json['cust_email'] = $this->input->post('email');
 						echo json_encode($json);
 					}
-				}
-				else if ($newid == 'maxusers') 
-				{
-					// echo $newid . "maxusers"; exit;
-					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
-					redirect('user/');
-				}
-				else if ($newid == 'emailexist')
-				{
-					redirect('user');
 				}
 			}
 		}
