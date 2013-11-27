@@ -1372,3 +1372,7 @@ html[xmlns] .clearfix {
 	padding:4px;
 	color:#fff;
 }
+
+.custom_dashboardfilter .dataTables_length {
+	float: none !important;
+}

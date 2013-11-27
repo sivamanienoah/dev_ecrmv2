@@ -5,8 +5,8 @@
 	<a id="excel" class="export-btn">Export to Excel</a>
 </div>
 
-<div id="ad_filter" style="overflow:scroll; height:400px; width:960px;" >
-<table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-table lead-table">
+<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; width:960px;" >
+<table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
 	<tr>
 	<th width="90">Action</th>
@@ -86,5 +86,4 @@
 </tbody>
 </table>
 </div>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>
