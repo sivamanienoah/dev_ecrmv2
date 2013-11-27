@@ -539,6 +539,7 @@ function cancelDelEdit() {
 
 
 function editQuoteDetails() {
+
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
         err.push('Job title is required');
@@ -560,8 +561,16 @@ function editQuoteDetails() {
         err.push('Expected worth amount Currency type must be selected');
     }
 
-	
-	
+	var act_worth = $.trim($('#actual_worth').val());
+
+	if ((act_worth == 0.00) || (act_worth == '') || (act_worth == 0.0)) {
+		act_worth = 0;
+	}
+
+	if ( ($.trim($('#lead_status').val()) == 4) && (act_worth <= 0) ) {
+		err.push('Actual worth amount must not be empty or greater than zero');
+    }
+
     if (err.length > 0) {
         alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
         return false;
@@ -955,11 +964,12 @@ h3 .small {
 						</p>
 						
 						<p><label>Actual worth of Project</label><?php echo'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' ?><input type="text" name="actual_worth" value="<?php
-								if($quote_data['actual_worth_amount'] != '0.00') 
-								$amount = $quote_data['actual_worth_amount'];
-								else 
-								$amount = $actual_worth[0]['project_cost']; 
-								echo $amount; ?>" id="actual_worth" class="textfield" style=" width:155px" /></p>
+							if($quote_data['actual_worth_amount'] != '0.00') 
+							$amount = $quote_data['actual_worth_amount'];
+							else 
+							$amount = $quote_data['actual_worth_amount'];
+							echo $amount;
+						?>" id="actual_worth" class="textfield" style=" width:155px" /></p>
 						<input type="hidden" name="expect_worth_amount_dup" value="<?php echo $quote_data['actual_worth_amount'];?>" id="expect_worth_amount_dup" class="textfield" style=" width:85px" />
 						<!--<p><label>Lead Owner</label></p>
 						<p>
