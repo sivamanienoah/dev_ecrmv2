@@ -89,7 +89,7 @@ var random_task_edit;
 
 function openEditTask(taskid, random)
 {
-	//alert(taskid);
+	// alert(taskid);
 
 	task_being_edited = taskid;
 	
@@ -105,7 +105,7 @@ function openEditTask(taskid, random)
 	
 	$.blockUI({
             message:$('#edit-job-task table'),			
-			css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%'}
+			css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
         });
 	
 	var the_task_el = $('#task-table-' + taskid);
