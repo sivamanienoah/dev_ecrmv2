@@ -302,8 +302,8 @@ EOD;
 
 			echo "<td class=start-date valign=top align=right>{$task['start_date']}</td>
 			<td class=end-date valign=top align=right>{$task['end_date']}</td>
-			<td valign=top align=center>{$actualstart_date}</td>
-			<td valign=top align=center>{$actualend_date}</td>
+			<td class=actualstart-date valign=top align=center>{$actualstart_date}</td>
+			<td class=actualend-date valign=top align=center>{$actualend_date}</td>
 			<td class=\"task{$random_task_class}\" rel='{$tk}'></td>
 		</tr>";
 		}

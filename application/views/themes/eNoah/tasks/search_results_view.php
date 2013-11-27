@@ -256,7 +256,7 @@ EOD;
 			$own_task_form = '<td class=\"status-'.$stat.'\" valign=top align=right>'.$stat.'%</td>';
 			}
 			
-			if($userdata['userid'] == $uk && $userdata['userid'] != $task['created_byid'] && $this->session->userdata('edittask') == 1) {
+			if($userdata['userid'] == $uk && $userdata['userid'] != $task['created_byid'] && $this->session->userdata('edittask') == 1 && $task['is_complete'] != 1) {
 			$action = <<< EOD
 			<button type="submit" onclick="openEditTask('{$tk}','random'); return false;">Edit</button> 
 EOD;

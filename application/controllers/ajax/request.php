@@ -547,7 +547,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 				//email sent by email template
 				$param = array();
 
-				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>$dtask_start_date,'end_date'=>$dtask_end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
+				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>date('d-m-Y', strtotime($dtask_start_date)),'end_date'=>date('d-m-Y', strtotime($dtask_end_date)),'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
 
 				$param['to_mail'] = $taskAssignedToEmail . ',' .$admin_mail;
 				$param['bcc_mail'] = $admin_mail;
@@ -851,41 +851,31 @@ EOD;
 			}
 		}
 		
-		if($uid==$taskcid) {
-			$actualend_date=$array['actualend_date'];
-			if($actualend_date == '0000-00-00 00:00:00') {
+		$actualend_date = $array['actualend_date'];
+		if($uid == $taskcid) {
+			if (($actualend_date == "") || ($actualend_date == "0000-00-00 00:00:00")) {
 				$actualend_date = '0000-00-00';
-				$actualend_dateread="";
+				$actualend_dateread = "";
 			} else {
-				if($actualend_date == '') {
-				$actualend_date='0000-00-00';
+				$actualend_date=date('d-m-Y', strtotime($actualend_date));
 				$actualend_dateread="";
-				} else {
-					$actualend_date=date('d-m-Y', strtotime($array['actualend_date']));
-					$actualend_dateread="";
-				}
 			}
 		} else {
-			if($actualend_date == '0000-00-00 00:00:00') {
+			if (($actualend_date == "") || ($actualend_date == "0000-00-00 00:00:00")) {
 				$actualend_date = '0000-00-00';
-				$actualend_dateread ="read";
+				$actualend_dateread = "read";
 			} else {
-				if($actualend_date == '') {
-					$actualend_date='0000-00-00';
-					$actualend_dateread="read";
-				} else {
-					$actualend_date=date('d-m-Y', strtotime($array['actualend_date']));
-					$actualend_dateread ="read";
-					}
-				}
+				$actualend_date=date('d-m-Y', strtotime($actualend_date));
+				$actualend_dateread="read";
+			} 
 		}
 		
 		if($uid==$taskcid) {			
-			$taskuserid=$array['user_label'];
+			$taskuserid = $array['user_label'];
 			$taskuserid_read="";
 		} else {
 			$taskuserid=$array['user_label'];
-			$taskuserid_read ="read";
+			$taskuserid_read = "read";
 		}
 
 		
@@ -962,7 +952,6 @@ EOD;
 								<span class="date_part">{$end_date}</span> 
 							</td>
 						</tr>
-						
 						<tr>
 							<td>
 								Actual Start Date
@@ -976,7 +965,7 @@ EOD;
 							<td class="item actualend-date">
 								{$actualend_date}
 							</td>
-						</tr>					
+						</tr>
 						<tr>
 							<td>Status</td>
 							<td colspan = 3 class="item status-of-project">{$taskstatus}%</td>
