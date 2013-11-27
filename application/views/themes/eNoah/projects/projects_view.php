@@ -102,7 +102,7 @@
 				<th width="120" class="cust-data">Customer</th>
 				<th width="120">Project Manager</th>
 				<th width="60">Planned Start Date</th>
-				<th width="60">Planned End Date</th>	
+				<th width="60">Planned End Date</th>
 				<th width="40">Project Completion</th>
 				<th width="90">Project Status</th>
             </thead>
