@@ -97,32 +97,52 @@ class User_model extends crm_model {
 	*@Insert User Details
 	*@Method  insert_user
 	*/
-    
     public function insert_user($data)
 	{
 		$availed_users = check_max_users();
 		if ( $this->cfg['max_allowed_users'][0] > $availed_users['avail_users'] )
 		{
+			/* 
+			$sql = "INSERT INTO ".$this->cfg['dbpref']."users (role_id,first_name,last_name,password,email,add_email,use_both_emails,phone,mobile, 	level,is_pm,signature,inactive)	VALUES ('".$data['role_id']."','".$data['first_name']."','".$data['last_name']."','".$data['password']."','".$data['email']."','".$data['add_email']."','".$data['use_both_emails']."','".$data['phone']."','".$data['mobile']."','".$data['level']."','".$data['is_pm']."','".$data['signature']."','".$data['inactive']."') ON DUPLICATE KEY UPDATE email='".$data['email']."' ";	
+			$query = $this->db->query($sql);  
+			if ( $query == 1 )
+			{	
+				echo "asddf asdf"; exit;
+				return $this->db->insert_id();
+			}
+			*/
+		
+			$res = $this->chk_unique_emails($data['email']);
+			
+			if ($res == 1)
+			{
+				$res_user = "emailexist";
+				return $res_user;
+			}
 			if ( $this->db->insert($this->cfg['dbpref']. 'users', $data) ) {
 				return $this->db->insert_id();
-			} 
-			else 
-			{
-				return false;
 			}
 		}
 		else 
 		{
-			$max_user = "max_users";
+			$max_user = "maxusers";
 			return $max_user;
 		}
     }
+	
+		/*
+	*check unique emails
+	*/
+	function chk_unique_emails($email)
+	{
+        $chk = $this->db->get_where($this->cfg['dbpref'] . 'users', array('email'=>$email));
+		return $chk->num_rows();
+	}
 
 	/*
 	*@For new level settings concepts
 	*@Method  insert_level_settings
 	*/
-	
 	public function insert_level_settings($level_data, $user_id, $levelId)
 	{
 		$data['region'] = $level_data['region'];		
@@ -866,7 +886,6 @@ class User_model extends crm_model {
 	*@Method    add_log
 	*@tables    logs
     */
-	
 	public function add_log($data){
 	   if ($this->db->insert($this->cfg['dbpref'].'logs', $data))
 		{

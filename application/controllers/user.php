@@ -59,7 +59,6 @@ class User extends crm_controller {
         $fields['mobile']      = "Mobile";
 		$fields['email']       = "Email Address";
 		$fields['role_id']     = "Role";
-		$fields['sales_code']  = 'Sales Code';
 		$fields['password']    = "Password";
 		$fields['level']       = "User Level";
 		$fields['inactive']    = 'Inactive';
@@ -217,10 +216,14 @@ class User extends crm_controller {
 			else 
 			{
 				//insert
+				// echo "<pre>"; print_r($update_data); exit;
+				// unset($update_data['email']);
+				// $update_data['email'] = 'ranburaj@enoahisolution.com';
 				$newid = $this->user_model->insert_user($update_data);
-				if ($newid != 'max_users') 
+				if ($newid != 'maxusers')
 				{
-				   // echo "<pre>"; print_r($update_data); exit;
+					// echo "<pre>"; print_r($update_data); exit;
+					// echo $newid . "new user"; exit;
 					$user_ids = $this->db->insert_id();
 					$level_id = $update_data['level'];
 					$this->user_model->insert_level_settings($update_data1, $user_ids, $level_id);
@@ -263,12 +266,16 @@ class User extends crm_controller {
 						$json['cust_email'] = $this->input->post('email');
 						echo json_encode($json);
 					}
-					
 				}
-				else if ($newid == 'max_users') 
+				else if ($newid == 'maxusers') 
 				{
+					// echo $newid . "maxusers"; exit;
 					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
 					redirect('user/');
+				}
+				else if ($newid == 'emailexist')
+				{
+					redirect('user');
 				}
 			}
 		}
@@ -514,8 +521,7 @@ class User extends crm_controller {
 	public function loadCountrys()
 	{
 		$data = real_escape_array($this->input->post());
-		$region_id = join(",",$data['region_id']); 
-		$this->user_model->get_loadCountrysByRegionid($region_id);
+		$this->user_model->get_loadCountrysByRegionid($data['region_id'][0]);
 	}
 	
 	/*
