@@ -541,8 +541,9 @@ class User extends crm_controller {
 	 */
 	public function loadStates()
 	{
-		$data = real_escape_array($this->input->post()); 
-		$this->user_model->get_load_state($data['country_id']);
+		$data = real_escape_array($this->input->post());
+		$country_id = join(",", $data['country_id']);
+		$this->user_model->get_load_state($country_id);
 	}
 
 	/* 
@@ -561,14 +562,14 @@ class User extends crm_controller {
 	public function loadLocations()
 	{
 		 $data = real_escape_array($this->input->post());
-		 $this->user_model->get_loadLocations($data['state_id']);
+		 $state_id = join(",", $data['state_id']);
+		 $this->user_model->get_loadLocations($state_id);
 	}
 
 	/*
 	*@Method : load Locations
 	*@User Controller 
 	*/
-	
 	public function editloadLocations()
 	{
 		$data      = real_escape_array($this->input->post()); // escape special characters
@@ -581,7 +582,6 @@ class User extends crm_controller {
 	*@Method : Check Country
 	*@User Controller 
 	*/
-	
 	public function checkcountry() 
 	{
 		$data             =	real_escape_array($this->input->post()); // escape special characters
@@ -604,7 +604,6 @@ class User extends crm_controller {
 	*@Method : Check State
 	*@User Controller 
 	*/
-	
 	public function checkstate() 
 	{
 	
@@ -642,7 +641,6 @@ class User extends crm_controller {
 	*@Method : Check Location
 	*@User Controller 
 	*/
-	
 	public function checklocation() 
 	{
 		$data             =	real_escape_array($this->input->post()); // escape special characters

@@ -463,9 +463,10 @@ class User_model extends crm_model {
 			$this->db->select("*");
 			$this->db->from($this->cfg['dbpref']."state");
 			$this->db->where("countryid", $countryid); 
-			$this->db->where_in("stateid", $state_load);
+			// $this->db->where_in("stateid", $state_load);
+			$this->db->where('stateid IN('.$state_load.')'); 
 			$query = $this->db->get();	
-			
+
 			if($query->num_rows() > 0) {
 				$flag = 1;
 			} 	
@@ -486,7 +487,8 @@ class User_model extends crm_model {
 			$this->db->select("*");
 			$this->db->from($this->cfg['dbpref']."location");
 			$this->db->where("stateid", $stateid); 
-			$this->db->where_in("locationid", $location_load);
+			// $this->db->where_in("locationid", $location_load);
+			$this->db->where('locationid IN('.$location_load.')');
 			$query = $this->db->get();	
 			
 			if($query->num_rows() > 0) {
@@ -727,15 +729,14 @@ class User_model extends crm_model {
 	*@Method   get_load_state
 	*@table    state,country
     */
-	
 	public function get_load_state($country_id){
-	
 		$output = '';
 		
 		$this->db->select('stateid,state_name');
 		$this->db->from($this->cfg['dbpref'].'state r');
 		$this->db->join($this->cfg['dbpref'].'country c', 'r.countryid = c.countryid');
-		$this->db->where_in("c.countryid", $country_id);
+		// $this->db->where_in("c.countryid", $country_id);
+		$this->db->where('c.countryid IN('.$country_id.')'); 
 		$this->db->where("r.inactive", 0);
 		$country_query    = $this->db->get();
 		$country_result   = $country_query->result();
@@ -799,7 +800,8 @@ class User_model extends crm_model {
 		$this->db->select('locationid,location_name');
 		$this->db->from($this->cfg['dbpref']."location r");
 		$this->db->join($this->cfg['dbpref'].'state c', 'r.stateid = c.stateid');
-		$this->db->where_in("c.stateid", $state_id);			
+		// $this->db->where_in("c.stateid", $state_id);
+		$this->db->where('c.stateid IN('.$state_id.')'); 
 		$this->db->where("r.inactive", 0);	
 		$query     			= $this->db->get();		
 		$location_result    = $query->result();
