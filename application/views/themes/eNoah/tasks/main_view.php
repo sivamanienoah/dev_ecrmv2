@@ -388,6 +388,12 @@ function loadEditTables(){
 		$('#jv-tab-4').unblock();
 	});
 }
+
+<?php if(isset($_GET['type'])&&$_GET['type']=='random'){ ?>
+	openEditTask('68','random');  
+<?php } ?>
+
+
 </script>
 <?php
 require theme_url() . '/tpl/footer.php';

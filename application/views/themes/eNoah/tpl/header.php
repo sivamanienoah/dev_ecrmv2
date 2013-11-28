@@ -100,7 +100,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			foreach ($proposal_notify_msg as $arr){
-				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['jobid'].'/">'.$arr['job_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
+				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['jobid'].'">'.$arr['job_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
 			}
 		}
 	}
@@ -111,7 +111,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$notify[] = "<span class=notify_high>Tasks</span>";
 			foreach ($task_notify_msg as $arr){
 				$task_desc = word_limiter($arr['task'], 4);
-				$notify[] = 'The task "<a href="'.base_url().'tasks/all/">'.$task_desc.'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['end_date'])).'</span>.';
+				$notify[] = 'The task "<a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['end_date'])).'</span>.';
 			}
 		}
 	}
