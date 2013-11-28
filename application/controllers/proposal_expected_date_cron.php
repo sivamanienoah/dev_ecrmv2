@@ -6,7 +6,7 @@ class proposal_expected_date_cron extends crm_controller
 	
     public function __construct()
 	{
-        parent::Controller();
+         parent::__construct();
 		//$this->login_model->check_login();
 		//$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('customer_model');
@@ -20,7 +20,8 @@ class proposal_expected_date_cron extends crm_controller
 		$today = date('Y-m-d'); 
 		// $tomorrow = date('Y-m-d', strtotime("+1 day"));
 		
-		$usrs = $this->db->query("SELECT `userid`,`cron_id`,`email_notify_status`,`no_of_days` FROM `vps3_crons_notificatons` WHERE `email_notify_status` =  1 AND `cron_id`=1");
+		$usrs = $this->db->query("SELECT `userid`,`cron_id`,`email_notify_status`,`no_of_days` FROM `".$this->cfg['dbpref']."crons_notificatons` WHERE `email_notify_status` =  1 AND `cron_id`=1");
+
 		$result = $usrs->num_rows();
 		if ($result>0)
 		{
@@ -29,12 +30,12 @@ class proposal_expected_date_cron extends crm_controller
 			
 			foreach ($result as $res) {
 				$expe = $this->db->query(" SELECT jb.jobid, jb.job_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners, CONCAT(ass.first_name, ' ', ass.last_name) as assign, ass.email
-				FROM '".$this->cfg['dbpref']."'leads as jb 
-				LEFT JOIN `vps3_users` as own ON `own`.`userid` = `jb`.`belong_to`
-				LEFT JOIN `vps3_users` as ass ON `ass`.`userid` = `jb`.`lead_assign`
+				FROM `".$this->cfg['dbpref']."leads` as jb 
+				LEFT JOIN `".$this->cfg['dbpref']."users` as own ON `own`.`userid` = `jb`.`belong_to`
+				LEFT JOIN `".$this->cfg['dbpref']."users` as ass ON `ass`.`userid` = `jb`.`lead_assign`
 				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND jb.lead_assign='".$res['userid']."' order by jb.jobid ");
 				
-				// echo $this->db->last_query(); exit;
+				
 				$data['members'] = $expe->result_array();
 				// echo "<pre>"; print_r($data['members']); exit;
 				$user_name = "Webmaster";
@@ -113,7 +114,7 @@ class proposal_expected_date_cron extends crm_controller
 		$today = date('Y-m-d'); 
 		// $tomorrow = date('Y-m-d', strtotime("+1 day"));
 		
-		$usrs = $this->db->query("SELECT `userid`,`cron_id`,`email_notify_status`,`no_of_days` FROM `vps3_crons_notificatons` WHERE `email_notify_status` =  1 AND `cron_id` = 2");
+		$usrs = $this->db->query("SELECT `userid`,`cron_id`,`email_notify_status`,`no_of_days` FROM `".$this->cfg['dbpref']."crons_notificatons` WHERE `email_notify_status` =  1 AND `cron_id` = 2");
 		$result = $usrs->num_rows();
 		if ($result>0)
 		{
@@ -123,9 +124,9 @@ class proposal_expected_date_cron extends crm_controller
 			foreach ($result as $res) {
 							
 				$task_due = $this->db->query(" SELECT t.taskid, t.end_date, t.task, DATEDIFF(t.end_date, '".$today."') as date_diff, CONCAT(u.first_name, ' ', u.last_name) as task_owner, `u`.`email` as owner_mail, CONCAT(au.first_name, ' ', au.last_name) as task_assignee, `au`.`email` as assigned_mail 
-				FROM (`vps3_tasks` t)
-				INNER JOIN `vps3_users` u ON `u`.`userid` = `t`.`created_by`
-				INNER JOIN `vps3_users` au ON `au`.`userid` = `t`.`userid_fk`
+				FROM (`".$this->cfg['dbpref']."tasks` t)
+				INNER JOIN `".$this->cfg['dbpref']."users` u ON `u`.`userid` = `t`.`created_by`
+				INNER JOIN `".$this->cfg['dbpref']."users` au ON `au`.`userid` = `t`.`userid_fk`
 				WHERE `t`.`actualend_date` = 0 AND `t`.`end_date` BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND t.userid_fk = '".$res['userid']."' ");
 				// echo $this->db->last_query(); exit;
 				$data['members'] = $task_due->result_array();
