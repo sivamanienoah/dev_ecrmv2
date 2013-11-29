@@ -44,10 +44,10 @@
 							<?php if($this->session->userdata('edit')==1){ ?>
 								<a href="item_mgmt/add/update/<?php echo  $record['itemid'] ?>/<?php echo  $table_in_use ?>">Edit &raquo; </a><?php } else { ?> Edit &raquo; <?php } ?> 
 							<?php if($this->session->userdata('delete')==1){ ?>	
-							  | <a class="delete" href="item_mgmt/item_delete/update/<?php echo $record['itemid'] ?>/<?php echo  $table_in_use ?>" onclick="return confirm('Are you sure you want to delete?')">Delete &raquo;</a> <?php } else { ?> Delete &raquo; <?php } ?> 
+							  | <a class="delete" href="item_mgmt/item_delete/update/<?php echo $record['itemid'] ?>/<?php echo $table_in_use ?>" onclick="return confirm('Are you sure you want to delete?')"> Delete &raquo; </a> <?php } ?> 
 							</td>
-							<td><?php echo  nl2br($record['item_desc']) ?></td>
-							<td>$<?php echo  $record['item_price'] ?></td>
+							<td><?php echo nl2br($record['item_desc']) ?></td>
+							<td>$<?php echo $record['item_price'] ?></td>
 						</tr>
 						<?php } ?>
 					<?php } else { ?>
