@@ -117,11 +117,11 @@ $('#regionname').change(function() {
 });
 
 function loadCountry() {
-	var region_id = $("#regionname").val();
-	var params 				= {};
+	var region_id 			= $("#regionname").val();
+	var params 				= {'region_id':region_id};
 	params[csrf_token_name] = csrf_hash_token;
 	$.post( 
-		'welcome/loadCountrys/'+ region_id,
+		'welcome/loadCountrys/',
 		params,
 		function(data) {										
 			if (data.error) {
@@ -140,12 +140,12 @@ $('#countryname').change(function() {
 });
 
 function loadState() {
-	var coun_id = $("#countryname").val();
-	var params  			= {};
+	var coun_id 			= $("#countryname").val();
+	var params 				= {'coun_id':coun_id};
 	params[csrf_token_name] = csrf_hash_token;
 	if(coun_id != '') {
 		$.post( 
-			'welcome/loadStates/'+ coun_id,
+			'welcome/loadStates/',
 			params,
 			function(data) {										
 				if (data.error) {
@@ -164,12 +164,12 @@ $('#statename').change(function() {
 });
 
 function loadLocations() {
-	var st_id  = $("#statename").val();
-	var params = {};
+	var st_id  				= $("#statename").val();
+	var params 				= {'st_id':st_id};
 	params[csrf_token_name] = csrf_hash_token;
 	if(st_id != '') {
 		$.post( 
-			'welcome/loadLocns/'+ st_id,
+			'welcome/loadLocns/',
 			params,
 			function(data) {										
 				if (data.error) {
