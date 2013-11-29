@@ -95,7 +95,7 @@ $(function(){
 		var params 				= {'coun_id':coun_id};
 		params[csrf_token_name] = csrf_hash_token; 
 		$.post( 
-			'welcome/loadStates/'+ coun_id,
+			'welcome/loadStates/',
 			params,
 			function(data) {										
 				if (data.error) 
