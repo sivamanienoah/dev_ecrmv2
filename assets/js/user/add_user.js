@@ -495,8 +495,8 @@ $('.checkUser').hide();
 		);
 	}
 	function loadState() {
-		var country_id = $("#country_load").val();
-		var param =	{'country_id':country_id};
+		var country_id 		   = $("#country_load").val();
+		var param 			   = {'country_id':country_id};
 		param[csrf_token_name] = csrf_hash_token;
 		$.post( 
 			'user/loadStates/',
