@@ -5,7 +5,7 @@ public $userdata;
 	
     function __construct()
 	{
-       parent::__construct();
+		parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('report/report_lead_owner_model');
@@ -37,8 +37,7 @@ public $userdata;
     	$data['report'] = $this->get_lead_report();
     	$data['user'] = $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
     	$this->load->vars($data);    	 	
-    	$this->load->view('report/report_lead_owner');
-    	    	   	
+    	$this->load->view('report/report_lead_owner');	
     }
 
     
