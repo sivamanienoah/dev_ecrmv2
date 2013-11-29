@@ -158,7 +158,7 @@ public $userdata;
     		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
     		
     		/*Gross total starts*/
-    		$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Total (USD)');
+    		$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Total ('.$this->default_cur_name.')');
     		$this->excel->getActiveSheet()->setCellValue('J'.$i, $amt);
     				
     		$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);

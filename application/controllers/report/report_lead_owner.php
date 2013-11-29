@@ -167,7 +167,7 @@ public $userdata;
     				$this->excel->getActiveSheet()->getStyle('A'.$st.':A'.$end)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
     				$this->excel->getActiveSheet()->getStyle('A'.$st.':A'.$end)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 					
-    				$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Total (USD)');
+    				$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Total ('.$this->default_cur_name.')');
     				$this->excel->getActiveSheet()->setCellValue('J'.$i, $amt);
     				
     				$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -184,7 +184,7 @@ public $userdata;
     		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
     		
     		/*Gross total starts*/
-    		$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Gross (USD)');
+    		$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Gross ('.$this->default_cur_name.')');
     		$this->excel->getActiveSheet()->setCellValue('J'.$i, $gross);
     				
     		$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
