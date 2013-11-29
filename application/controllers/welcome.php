@@ -1670,8 +1670,11 @@ HDOC;
 	}
 	
 	//For Countries
-	public function loadCountrys($region_id)
+	public function loadCountrys()
 	{
+		$data = real_escape_array($this->input->post());
+		$region_id = join(",", $data['region_id']);
+
 	    $output = '';
 		$data = $this->welcome_model->getcountry_list($region_id);
 		if(!empty($data)) {
@@ -1685,8 +1688,11 @@ HDOC;
 	}
 	
 	//For States
-	public function loadStates($cnt_id)
+	public function loadStates()
 	{
+		$data = real_escape_array($this->input->post());
+		$cnt_id = join(",", $data['coun_id']);
+		
 	    $output = '';
 		$data = $this->welcome_model->getstate_list($cnt_id);
 		foreach($data as $st) {
@@ -1696,8 +1702,11 @@ HDOC;
 	}
 	
 	//For Locations
-	public function loadLocns($loc_id)
+	public function loadLocns()
 	{
+		$data = real_escape_array($this->input->post());
+		$loc_id = join(",", $data['st_id']);
+		
 	    $output = '';
 		$data = $this->welcome_model->getlocation_list($loc_id);
 		//print_r($data);
