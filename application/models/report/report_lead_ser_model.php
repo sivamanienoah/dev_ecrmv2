@@ -71,6 +71,11 @@ class Report_lead_ser_model extends crm_model {
 			$this->db->where_in('cust.add1_location', $locname);
 		}
 		
+		if(!empty($options['ser_requ']) && $options['ser_requ'] != 'null'){
+			$ser_requ = explode(',',$options['ser_requ']);
+			$this->db->where_in('jb.job_category', $ser_requ);
+		}
+		
     	if(!empty($options['worth']) && $options['worth'] != 'null')
 		{
 			$worth = explode(',', $options['worth']);
@@ -115,6 +120,12 @@ class Report_lead_ser_model extends crm_model {
 	{		
 		$query = $this->db->get($this->cfg['dbpref'].'currency_rate');
 		return $query->result();
+	}
+	
+	public function get_serv_req()
+	{		
+		$query = $this->db->get_where($this->cfg['dbpref'].'job_categories', array('status'=>1));
+		return $query->result_array();
 	}
 }
 

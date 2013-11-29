@@ -40,7 +40,7 @@
 						</td>				
 					</tr>
 	            </table>
-	                
+
 	            <div style="border: 1px solid #DCDCDC;">    
 				<table cellpadding="0" cellspacing="0" class="data-table" >
 					<thead>
@@ -103,9 +103,10 @@
 						<th>By Region Wise</th>
 						<th>By Country Wise</th>
 						<th>By State Wise</th>
-						<th>By Location Wise</th>						
+						<th>By Location Wise</th>					
+						<th>By Services</th>					
 					</tr> 
-					 <tr>
+					<tr>
 						<td>
 							<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
 								<?php foreach ($regions as $reg) { ?>
@@ -128,8 +129,15 @@
 							
 							</select> 
 						</td>
-						
-						
+						<td>
+							<select  style="width:120px;" multiple="multiple" id="ser_requ" name="ser_requ[]">
+								<?php if (count($serv_requ)>0) { ?>
+									<?php foreach ($serv_requ as $serv) { ?>
+										<option value="<?php echo $serv['cid'] ?>"><?php echo $serv['category'] ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select> 
+						</td>
 					</tr> 
 					
 					<tr align="right" >

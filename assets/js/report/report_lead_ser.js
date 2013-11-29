@@ -48,8 +48,10 @@ $(function(){
 		statename = statename+"";
 		var locname = $('#locname').val();
 		locname = locname+"";
+		var ser_requ = $('#ser_requ').val();
+		ser_requ = ser_requ+"";
 		
-		var params = {start_date:start_date,end_date:end_date,stage:stage,customer:customer,worth:worth,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
+		var params = {start_date:start_date,end_date:end_date,stage:stage,customer:customer,worth:worth,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname,ser_requ:ser_requ};
 		params[csrf_token_name]   = csrf_hash_token;
 		$('#report_grid').load(base_url+'report/report_lead_ser/get_lead_report',params,function(){
 			$('#advance').show();

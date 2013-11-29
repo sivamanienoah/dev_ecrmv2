@@ -18,6 +18,7 @@ $(function(){
 		var countryname  = $('#countryname').val();		
 		var statename    = $('#statename').val();		
 		var locname      = $('#locname').val();
+		var ser_requ      = $('#ser_requ').val();
 		
 		var base_url = site_base_url;		
 		
@@ -36,6 +37,7 @@ $(function(){
 		  '<input type="hidden" name="countryname" value="' +countryname+ '" />' +
 		  '<input type="hidden" name="statename" value="' +statename+ '" />' +
 		  '<input type="hidden" name="locname" value="' +locname+ '" />' +
+		  '<input type="hidden" name="ser_requ" value="' +ser_requ+ '" />' +
 		  '</form>');
 		$('body').append(form);
 		$(form).submit();

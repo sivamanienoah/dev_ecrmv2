@@ -18,7 +18,7 @@ public $userdata;
 		$this->load->helper('custom_helper');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
-			$this->default_cur_id = $this->default_currency['expect_worth_id'];
+			$this->default_cur_id 	= $this->default_currency['expect_worth_id'];
 			$this->default_cur_name = $this->default_currency['expect_worth_name'];
 		} else {
 			$this->default_cur_id = '1';
@@ -31,10 +31,12 @@ public $userdata;
     	$data = array(); 	
     	
     	$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-    	$data['customers'] = $this->welcome_model->get_customers();	
-		$data['regions'] = $this->regionsettings_model->region_list();		
-    	$data['report'] = $this->get_lead_report();
-    	$data['user'] = $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
+    	$data['customers'] 	= $this->welcome_model->get_customers();	
+		$data['regions'] 	= $this->regionsettings_model->region_list();
+    	$data['user'] 		= $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
+    	$data['serv_requ'] 	= $this->report_lead_ser_model->get_serv_req();
+		$data['report'] 	= $this->get_lead_report();
+
     	$this->load->vars($data);    	 	
     	$this->load->view('report/report_lead_ser');	
     }
@@ -54,6 +56,7 @@ public $userdata;
 		$options['countryname'] = $this->input->post('countryname');		
 		$options['statename'] = $this->input->post('statename');		
 		$options['locname'] = $this->input->post('locname');
+		$options['ser_requ'] = $this->input->post('ser_requ');
 		
     	if($this->userdata['level'] >1){
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						
@@ -88,6 +91,7 @@ public $userdata;
 		$options['countryname'] = $this->input->post('countryname');
 		$options['statename'] = $this->input->post('statename');
 		$options['locname'] = $this->input->post('locname');
+		$options['ser_requ'] = $this->input->post('ser_requ');
 
     	if($this->userdata['level'] >1){
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						
