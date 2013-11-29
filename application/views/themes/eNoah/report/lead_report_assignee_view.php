@@ -95,7 +95,7 @@ if($num>0)
 				{
 					$content .= "<tfoot>";
 					$content .= "<tr>";
-						$content .= "<td colspan = '8' align = 'right'><strong>Gross (USD)</strong></td>";
+						$content .= "<td colspan = '8' align = 'right'><strong>Gross (".$GLOBALS['default_cur_names'].")</strong></td>";
 						$content .= "<td align = 'right'><strong>".$gross."</strong></td>";
 					$content .= "</tr>";
 					$content .= "</tfoot>";	
@@ -103,7 +103,7 @@ if($num>0)
 				
 				$content .= "<tfoot>";
 					$content .= "<tr>";
-						$content .= "<td colspan = '8' align = 'right'><strong>Total (USD)</strong></td>";
+						$content .= "<td colspan = '8' align = 'right'><strong>Total (".$GLOBALS['default_cur_names'].")</strong></td>";
 						$content .= "<td align = 'right'><strong>".$amount."</strong></td>";
 					$content .= "</tr>";
 				$content .= "</tfoot>";

@@ -72,7 +72,7 @@ if (get_default_currency()) {
 							?>
 							<tfoot>
 								<tr>
-									<td colspan="9" align="right"><strong>Total (USD)</strong></td>
+									<td colspan="9" align="right"><strong>Total (<?php echo $default_cur_name; ?>)</strong></td>
 									<td align = 'right'><strong><?php echo $total; ?></strong></td>
 								</tr>
 							</tfoot>
