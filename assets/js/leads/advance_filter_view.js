@@ -16,7 +16,6 @@ $('#excel').click(function() {
         function() { $(this).removeClass('over'); }
     );
 }); */
-
 $(function() {
 	dtTable();
 });	
