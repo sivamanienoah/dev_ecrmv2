@@ -1165,6 +1165,7 @@ width:100%; background:#fff;}
 	background:#4B6FB9 !important;
 	width:260px;
     padding:15px;
+	border-radius:8px;
     -moz-border-radius:8px;
     -webkit-border-radius:8px;
     background:#a8cb17;
