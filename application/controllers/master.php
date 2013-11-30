@@ -202,7 +202,7 @@ class Master extends crm_controller {
 		# now get the logs for the master on that day
 		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
 				FROM ".$this->cfg['dbpref']."logs
-				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`lead_id` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
 				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `masterid_fk` = ?
 				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";
@@ -224,9 +224,9 @@ class Master extends crm_controller {
 			
 			$time_total += $numerc_time;
 			
-			if ( ! isset($row['job_title']))
+			if ( ! isset($row['lead_title']))
 			{
-				$row['job_title'] = 'General Task';
+				$row['lead_title'] = 'General Task';
 			}
 			
 			$row_time_spent = '';
@@ -249,7 +249,7 @@ class Master extends crm_controller {
 	<div class="log">
 		<p class="data">
 		    <span>{$row['fancy_date']}</span>
-		{$data['log_master_name']} - {$row['job_title']}
+		{$data['log_master_name']} - {$row['lead_title']}
 		</p>
 		<p class="desc">
 		{$log_content}

@@ -197,16 +197,16 @@ HDOC;
 	 /*
      * provides the list of items
      * that belong to a given job
-     * @param jobid
+     * @param lead_id
      * @param itemid (latest intsert)
      * @return echo json string
      */
-    function ajax_quote_items($jobid = 0, $itemid = 0, $return = false) 
+    function ajax_quote_items($lead_id = 0, $itemid = 0, $return = false) 
 	{
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
-		$quote = $this->welcome_model->get_quote_items($jobid);
+		$quote = $this->welcome_model->get_quote_items($lead_id);
 
         if (!empty($quote)) {
             $html = '';
@@ -353,7 +353,7 @@ HDOC;
 	 */
 	function ajax_create_quote() {
 	
-		if (trim($this->input->post('job_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('job_category'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_assign'))))
+		if (trim($this->input->post('lead_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_category'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_assign'))))
         {
 			echo "{error:true, errormsg:'Title and job category are required fields!'}";
 		}
@@ -367,9 +367,9 @@ HDOC;
 			
 			$proposal_expected_date = strtotime($data['proposal_expected_date']);
 		    $ewa = '';
-			$ins['job_title'] = $data['job_title'];
+			$ins['lead_title'] = $data['lead_title'];
 			$ins['custid_fk'] = $data['custid_fk'];
-			$ins['job_category'] = $data['job_category'];
+			$ins['lead_category'] = $data['lead_category'];
 			$ins['lead_source'] = $data['lead_source'];
 			$ins['lead_assign'] = $data['lead_assign'];
 			$ins['expect_worth_id'] = $data['expect_worth'];
@@ -384,7 +384,7 @@ HDOC;
 			$ins['division'] = $data['job_division'];
 			$ins['date_created'] = date('Y-m-d H:i:s');
 			$ins['date_modified'] = date('Y-m-d H:i:s');
-			$ins['job_status'] = 1;
+			$ins['lead_stage'] = 1;
 			$ins['lead_indicator'] = $data['lead_indicator'];
 			$ins['proposal_expected_date'] = date('Y-m-d H:i:s', $proposal_expected_date);
 			$ins['created_by'] = $this->userdata['userid'];
@@ -398,7 +398,7 @@ HDOC;
 				$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 				
 				//history - lead_stage_history
-				$lead_hist['jobid'] = $insert_id;
+				$lead_hist['lead_id'] = $insert_id;
 				$lead_hist['dateofchange'] = date('Y-m-d H:i:s');
 				$lead_hist['previous_status'] = 1;
 				$lead_hist['changed_status'] = 1;
@@ -407,7 +407,7 @@ HDOC;
 				$insert_lead_stg_his = $this->welcome_model->insert_row('lead_stage_history', $lead_hist);
 				
 				//history - lead_status_history
-				$lead_stat_hist['jobid'] = $insert_id;
+				$lead_stat_hist['lead_id'] = $insert_id;
 				$lead_stat_hist['dateofchange'] = date('Y-m-d H:i:s');
 				$lead_stat_hist['changed_status'] = 1;
 				$lead_stat_hist['modified_by'] = $this->userdata['userid'];
@@ -422,8 +422,8 @@ HDOC;
 				$json['error'] = false;
                 $json['fancy_insert_id'] = $invoice_no;
                 $json['insert_id'] = $insert_id;
-                $json['job_title'] = htmlentities($data['job_title'], ENT_QUOTES);
-                $json['job_category'] = $data['job_category'];
+                $json['lead_title'] = htmlentities($data['lead_title'], ENT_QUOTES);
+                $json['lead_category'] = $data['lead_category'];
                 $json['lead_source'] = $data['lead_source'];
                 $json['lead_assign'] = $data['lead_assign'];
 				
@@ -498,7 +498,7 @@ HDOC;
 	
 	/*
 	 *Set the Expected proposal date for the lead.
-	 *@jobid
+	 *@lead_id
 	 */
 	public function set_proposal_date()
 	{
@@ -521,7 +521,7 @@ HDOC;
 			if ($updt_data['date_type'] == 'start')
 			{
 				$updt['proposal_expected_date'] = date('Y-m-d H:i:s', $timestamp);
-				$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['jobid']);
+				$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['lead_id']);
 			}		
 		}
 		echo json_encode($data);
@@ -529,7 +529,7 @@ HDOC;
 	
 	/*
 	 *Change the Lead Creation for the lead.
-	 *@jobid
+	 *@lead_id
 	 */
 	public function set_lead_creation_date()
 	{
@@ -546,7 +546,7 @@ HDOC;
 		else
 		{
 			$updt['date_created'] = date('Y-m-d H:i:s', $timestamp);
-			$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['jobid']);
+			$updt_date = $this->welcome_model->update_row('leads', $updt, $updt_data['lead_id']);
 		}
 		echo json_encode($data);
 	}
@@ -570,7 +570,7 @@ HDOC;
         {
 			$errors[] = 'Price can only be numeric values!';
 		}
-        if (!preg_match('/^[0-9]+$/', $data['jobid']))
+        if (!preg_match('/^[0-9]+$/', $data['lead_id']))
         {
 			$errors[] = 'Lead ID must be numeric!';
 		}
@@ -585,7 +585,7 @@ HDOC;
         {
 			// $data['item_desc'] = @str_replace('\r\n', '', $data['item_desc']);
 			// $data['item_desc'] = stripslashes($data['item_desc']);
-			$this->quote_add_item($data['jobid'], $data['item_desc'], $data['item_price'], $data['hours']);			
+			$this->quote_add_item($data['lead_id'], $data['item_desc'], $data['item_price'], $data['hours']);			
 		}
 		
 	}
@@ -595,9 +595,9 @@ HDOC;
 	 * on the system
 	 * Accepts direct ajax call as well as calls from other methods
 	 */
-	function quote_add_item($jobid, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE) {
+	function quote_add_item($lead_id, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE) {
         $ins['item_desc'] = nl2br($item_desc);
-        $ins['jobid_fk'] = $jobid;
+        $ins['jobid_fk'] = $lead_id;
 		if(empty($hours)) {
 			$ins['hours'] = '0.00';
 		} else {
@@ -615,7 +615,7 @@ HDOC;
             $ins['item_price'] = $_POST['item_price'] * $hours;
         }
         
-		$posn = $this->welcome_model->get_item_position($jobid);
+		$posn = $this->welcome_model->get_item_position($lead_id);
         
         $ins['item_position'] = $posn[0]['item_position']+1;
 
@@ -658,14 +658,14 @@ HDOC;
 
 		$data = real_escape_array($this->input->post());
 		
-        if (trim($data['job_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['job_category']))) {
+        if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_category']))) {
 			echo "{error:true, errormsg:'Title and job category are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
 			echo "{error:true, errormsg:'quote ID must be numeric!'}";
 		} else {
-            $ins['job_title'] = $data['job_title'];
+            $ins['lead_title'] = $data['lead_title'];
 			$ins['division'] = $data['job_division'];
-			$ins['job_category'] = $data['job_category'];
+			$ins['lead_category'] = $data['lead_category'];
 			$ins['lead_source'] = $data['lead_source_edit'];
 			$ins['expect_worth_id'] = $data['expect_worth_edit'];
 			$ins['expect_worth_amount'] = $data['expect_worth_amount'];
@@ -685,7 +685,7 @@ HDOC;
 			
 			// for lead status history - starts here
 			if($_POST['lead_status'] != $_POST['lead_status_hidden']) {
-				$lead_stat_hist['jobid'] = $_POST['jobid_edit'];
+				$lead_stat_hist['lead_id'] = $_POST['jobid_edit'];
 				$lead_stat_hist['dateofchange'] = date('Y-m-d H:i:s');
 				$lead_stat_hist['changed_status'] = $_POST['lead_status'];
 				$lead_stat_hist['modified_by'] = $this->userdata['userid'];
@@ -702,8 +702,8 @@ HDOC;
 			/*lead owner ends  here*/
 			$ins['lead_indicator'] = $data['lead_indicator'];
 			$ins['lead_status'] = $data['lead_status'];
-			if($data['job_status'] != '' && $data['job_status'] != 'null')
-			$ins['job_status']  = $data['job_status'];			
+			if($data['lead_stage'] != '' && $data['lead_stage'] != 'null')
+			$ins['lead_stage']  = $data['lead_stage'];			
 			$ins['lead_hold_reason'] = $data['reason'];
 			$ins['date_modified'] = date('Y-m-d H:i:s');
 			$ins['modified_by'] = $this->userdata['userid'];
@@ -726,28 +726,28 @@ HDOC;
 				$insert_log = $this->welcome_model->insert_row('logs', $ins_ad);
 			}
 			/* end proposal adjust date insert */
-			$jobid = $data['jobid_edit'];
+			$lead_id = $data['jobid_edit'];
 			
 			$updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
 			if ($updt_job)
 			{				
 				$his['lead_status'] = $data['lead_status']; //lead_stage_history - lead_status update
 				
-				$updt_lead_stage_his = $this->welcome_model->update_row('lead_stage_history', $his, $jobid);
+				$updt_lead_stage_his = $this->welcome_model->update_row('lead_stage_history', $his, $lead_id);
 				
 				if(($data['lead_assign_edit_hidden'] ==  $data['lead_assign_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
-					$ins['jobid_fk'] = $jobid;
+					$ins['jobid_fk'] = $lead_id;
 					
-					$lead_det = $this->welcome_model->get_lead_det($jobid); //after update.
+					$lead_det = $this->welcome_model->get_lead_det($lead_id); //after update.
 					$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 					$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 					
 					$inserts['userid_fk'] = $this->userdata['userid'];
-					$inserts['jobid_fk'] = $jobid;
+					$inserts['jobid_fk'] = $lead_id;
 					$inserts['date_created'] = date('Y-m-d H:i:s');
-					$inserts['log_content'] = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead .' .word_limiter($lead_det['job_title'], 4). ' ';
+					$inserts['log_content'] = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead .' .word_limiter($lead_det['lead_title'], 4). ' ';
 					
 					// inset the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $inserts);
@@ -780,16 +780,16 @@ HDOC;
 				else if(($data['lead_owner_edit_hidden'] ==  $data['lead_owner_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
-					$ins['jobid_fk'] = $jobid;
+					$ins['jobid_fk'] = $lead_id;
 					
-					$lead_det = $this->welcome_model->get_lead_det($jobid); //after update.
+					$lead_det = $this->welcome_model->get_lead_det($lead_id); //after update.
 					$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 					$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 					
 					$inserts['userid_fk'] = $this->userdata['userid'];
-					$inserts['jobid_fk'] = $jobid;
+					$inserts['jobid_fk'] = $lead_id;
 					$inserts['date_created'] = date('Y-m-d H:i:s');
-					$inserts['log_content'] = "Lead Owner has been Re-assigned to: " . $lead_owner[0]['first_name'] .' '.$lead_owner[0]['last_name'] .'<br />'. 'For Lead ' .word_limiter($lead_det['job_title'], 4). ' ';
+					$inserts['log_content'] = "Lead Owner has been Re-assigned to: " . $lead_owner[0]['first_name'] .' '.$lead_owner[0]['last_name'] .'<br />'. 'For Lead ' .word_limiter($lead_det['lead_title'], 4). ' ';
 					// insert the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $inserts);
 					
@@ -821,8 +821,8 @@ HDOC;
 				/* lead owener eidt mail notification ends here */
 
                 $json['error'] = false;
-                $json['job_title'] = htmlentities($data['job_title'], ENT_QUOTES);
-                $json['job_category'] = $data['job_category'];
+                $json['lead_title'] = htmlentities($data['lead_title'], ENT_QUOTES);
+                $json['lead_category'] = $data['lead_category'];
 				
 				$this->session->set_flashdata('header_messages', array("Details Updated Successfully."));
 				
@@ -840,22 +840,22 @@ HDOC;
 	/*
      * Update the quote to a given status
      * @access public
-     * @param jobid
+     * @param lead_id
      * @param status => desired status
      * @return echo json string
      */
-    public function ajax_update_quote($jobid = 0, $status, $log_status = '')
+    public function ajax_update_quote($lead_id = 0, $status, $log_status = '')
     {
 		$this->load->model('user_model');	
 		$res = array();
-        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->welcome_model->get_lead_all_detail($jobid))
+        if ($lead_id != 0 && preg_match('/^[0-9]+$/', $lead_id) && preg_match('/^[0-9]+$/', $status) && $the_job = $this->welcome_model->get_lead_all_detail($lead_id))
         {
 			if($status>0) {
 				//Lead Status History - Start here
-				$lead_det = $this->welcome_model->get_lead_det($jobid);
-				$lead_his['jobid'] = $jobid;
+				$lead_det = $this->welcome_model->get_lead_det($lead_id);
+				$lead_his['lead_id'] = $lead_id;
 				$lead_his['dateofchange'] = date('Y-m-d H:i:s');
-				$lead_his['previous_status'] = $lead_det['job_status'];
+				$lead_his['previous_status'] = $lead_det['lead_stage'];
 				$lead_his['changed_status'] = $status;
 				$lead_his['lead_status'] = $lead_det['lead_status'];
 				$lead_his['modified_by'] = $this->userdata['userid'];
@@ -864,13 +864,13 @@ HDOC;
 				//get the actual worth amt for the lead
 				$actWorthAmt = $lead_det['actual_worth_amount']; 
 							
-				$update['job_status'] = $status;
+				$update['lead_stage'] = $status;
 					
-				$updt_lead_stg = $this->welcome_model->updt_lead_stg_status($jobid, $update);
+				$updt_lead_stg = $this->welcome_model->updt_lead_stg_status($lead_id, $update);
 				if ($updt_lead_stg) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
-					$ins['jobid_fk'] = $jobid;
+					$ins['jobid_fk'] = $lead_id;
 					
 					$disarray = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 					
@@ -880,9 +880,9 @@ HDOC;
 					$ins['date_created'] = date('Y-m-d H:i:s');
 					
 					$status_res = $this->welcome_model->get_lead_stg_name($status);
-					$ins['log_content'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - ' .word_limiter($lead_det['job_title'], 4). ' ';
+					$ins['log_content'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - ' .word_limiter($lead_det['lead_title'], 4). ' ';
 					
-					$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$jobid.'>' .word_limiter($lead_det['job_title'], 4). ' </a>';
+					$ins_email['log_content_email'] = "Status Changed to:" .' '. urldecode($status_res['lead_stage_name']) .' ' . 'Sucessfully for the Lead - <a href='.$this->config->item('base_url').'welcome/view_quote/'.$lead_id.'>' .word_limiter($lead_det['lead_title'], 4). ' </a>';
 					
 					// insert the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $ins);
@@ -1006,11 +1006,11 @@ HDOC;
             $q = $this->db->get($this->cfg['dbpref'] . 'items');
             if ($q->num_rows() > 0)
             {
-                $jobid = $q->result_array();
+                $lead_id = $q->result_array();
                 $this->db->where('itemid', $data['itemid']);
                 if ( $this->db->delete($this->cfg['dbpref'] . 'items') )
                 {
-                    $this->ajax_quote_items($jobid[0]['jobid_fk']);
+                    $this->ajax_quote_items($lead_id[0]['jobid_fk']);
                 }
                 else
                 {
@@ -1077,15 +1077,15 @@ HDOC;
 	/**
 	 *uploading files - creating log
 	 */
-	public function lead_fileupload_details($jobid, $filename, $userid) {
+	public function lead_fileupload_details($lead_id, $filename, $userid) {
 	   
 		$lead_files['lead_files_name'] = $filename;
 		$lead_files['lead_files_created_by'] = $userid;
 		$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
-		$lead_files['jobid'] = $jobid;
+		$lead_files['lead_id'] = $lead_id;
 		$insert_logs = $this->welcome_model->insert_row('lead_files', $lead_files);
 		
-		$logs['jobid_fk'] = $jobid;
+		$logs['jobid_fk'] = $lead_id;
 		$logs['userid_fk'] = $this->userdata['userid'];
 		$logs['date_created'] = date('Y-m-d H:i:s');
 		$logs['log_content'] = $filename.' is added.';
@@ -1111,11 +1111,11 @@ HDOC;
 					$delete_item = $this->welcome_model->delete_row('items', 'jobid_fk', $id);
 					$delete_log = $this->welcome_model->delete_row('logs', 'jobid_fk', $id);
 					$delete_task = $this->welcome_model->delete_row('tasks', 'jobid_fk', $id);
-					$delete_file = $this->welcome_model->delete_row('lead_files', 'jobid', $id);
+					$delete_file = $this->welcome_model->delete_row('lead_files', 'lead_id', $id);
 					$delete_query = $this->welcome_model->delete_row('lead_query', 'job_id', $id);
 					
 					# Lead Delete Mail Notification
-					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead ' .word_limiter($lead_det['job_title'], 4). ' ';
+					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead ' .word_limiter($lead_det['lead_title'], 4). ' ';
 
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
@@ -1167,24 +1167,24 @@ HDOC;
 	}
 	
 	//Closed lead - move to project
-	public function ajax_update_lead_status($jobid) 
+	public function ajax_update_lead_status($lead_id) 
 	{
-        if ($jobid != 0 && preg_match('/^[0-9]+$/', $jobid))
+        if ($lead_id != 0 && preg_match('/^[0-9]+$/', $lead_id))
         {
 			$update['pjt_status'] = 1;
 			$update['modified_by'] = $this->userdata['userid'];
 			$update['date_modified'] = date('Y-m-d H:i:s');
 			
-			$updt_job = $this->welcome_model->update_row('leads', $update, $jobid);
+			$updt_job = $this->welcome_model->update_row('leads', $update, $lead_id);
 			$json = array();
 			if ($updt_job) 
 			{
-				$lead_det = $this->welcome_model->get_lead_det($jobid);
+				$lead_det = $this->welcome_model->get_lead_det($lead_id);
 				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $jobid;
+				$ins['jobid_fk'] = $lead_id;
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = 'The Lead "'.word_limiter($lead_det['job_title'], 4).'" is Successfully Moved to Project.';
-				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$jobid.'> ' .word_limiter($lead_det['job_title'], 4).' </a> is Successfully Moved to Project.';
+				$ins['log_content'] = 'The Lead "'.word_limiter($lead_det['lead_title'], 4).'" is Successfully Moved to Project.';
+				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$lead_id.'> ' .word_limiter($lead_det['lead_title'], 4).' </a> is Successfully Moved to Project.';
 
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
 				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
@@ -1300,7 +1300,7 @@ HDOC;
 		$i=2;
 		foreach($filter_res as $excelarr) {
 			$this->excel->getActiveSheet()->setCellValue('A'.$i, $excelarr['invoice_no']);
-			$this->excel->getActiveSheet()->setCellValue('B'.$i, $excelarr['job_title']);
+			$this->excel->getActiveSheet()->setCellValue('B'.$i, $excelarr['lead_title']);
 			$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['first_name'].' '.$excelarr['last_name'].' - '.$excelarr['company']);
 			$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['region_name']);
 			$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['ubfn'].' '.$excelarr['ubln']);
@@ -1368,11 +1368,11 @@ HDOC;
 		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
 		$res = array();
 		$json = array();
-        if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
+        if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
 			
-			$job_details = $this->welcome_model->get_lead_det($data_log['jobid']);
+			$job_details = $this->welcome_model->get_lead_det($data_log['lead_id']);
             
             if (count($job_details) > 0) 
             {
@@ -1414,7 +1414,7 @@ HDOC;
 					}
 					$successful = 'This log has been emailed to:<br />';
 					
-					$log_subject = "eSmart Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					$log_subject = "eSmart Notification - {$job_details['lead_title']} [ref#{$job_details['lead_id']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
 							
 					$param['email_data'] = array('first_name'=>$client[0]['first_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
 
@@ -1492,7 +1492,7 @@ HDOC;
 					}
 				}
 			
-				$ins['jobid_fk'] = $data_log['jobid'];
+				$ins['jobid_fk'] = $data_log['lead_id'];
 				
 				// use this to update the view status
 				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
@@ -1516,7 +1516,7 @@ HDOC;
 				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
 				
 				// update the leads table
-				$this->db->where('jobid', $ins['jobid_fk']);
+				$this->db->where('lead_id', $ins['jobid_fk']);
 				$this->db->update($this->cfg['dbpref'] . 'leads', $upd);
                 
                 $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
@@ -1569,7 +1569,7 @@ HDOC;
 			$keyword = mysql_real_escape_string($_POST['keyword']);
 			
 					
-			$sql = "SELECT * FROM `crms_customers`, `crms_leads` a WHERE `custid_fk` = `custid` AND job_status IN (1,4,2,5,3,7,6,9,10,11,12,13) AND ( `job_title` LIKE '%{$keyword}%' OR `invoice_no` LIKE '%{$keyword}%' OR `custid_fk` IN ( SELECT `custid` FROM `crms_customers` WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%' OR `first_name` LIKE '%{$keyword}%' OR `last_name` LIKE '%{$keyword}%' OR `company` LIKE '%{$keyword}%' ) ) ORDER BY `job_status`, `job_title`";
+			$sql = "SELECT * FROM `crms_customers`, `crms_leads` a WHERE `custid_fk` = `custid` AND lead_stage IN (1,4,2,5,3,7,6,9,10,11,12,13) AND ( `lead_title` LIKE '%{$keyword}%' OR `invoice_no` LIKE '%{$keyword}%' OR `custid_fk` IN ( SELECT `custid` FROM `crms_customers` WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%' OR `first_name` LIKE '%{$keyword}%' OR `last_name` LIKE '%{$keyword}%' OR `company` LIKE '%{$keyword}%' ) ) ORDER BY `lead_stage`, `lead_title`";
 			
 			$resul = $this->welcome_model->search_res($keyword);
 					
@@ -1579,9 +1579,9 @@ HDOC;
 			{				
 				$result = $q->result_array();
 				$i = 0;
-				foreach ($this->cfg['job_status'] as $k => $v)
+				foreach ($this->cfg['lead_stage'] as $k => $v)
 				{
-					while (isset($result[$i]) && $k == $result[$i]['job_status'])
+					while (isset($result[$i]) && $k == $result[$i]['lead_stage'])
 					{
 						$data['results'][$k][] = $result[$i];
 						$i++;
@@ -1592,16 +1592,16 @@ HDOC;
 				{
 					$this->session->set_flashdata('header_messages', array('Only one result found! You have been redirect to the job.'));
 					
-					//$status_type = (in_array($result[0]['job_status'], array(4,5,6,7,8,25))) ? 'invoice' : 'welcome';
-					//$status_type = (in_array($result[0]['job_status'])) ? 'invoice' : 'welcome';
+					//$status_type = (in_array($result[0]['lead_stage'], array(4,5,6,7,8,25))) ? 'invoice' : 'welcome';
+					//$status_type = (in_array($result[0]['lead_stage'])) ? 'invoice' : 'welcome';
 					
-					//redirect($status_type . '/view_quote/' . $result[0]['jobid']);
-					redirect('welcome/view_quote/' . $result[0]['jobid'] . '/draft');
+					//redirect($status_type . '/view_quote/' . $result[0]['lead_id']);
+					redirect('welcome/view_quote/' . $result[0]['lead_id'] . '/draft');
 				}
 				else 
 				{	//echo "tljlj";
 					$this->session->set_flashdata('header_messages', array('Results found! You have been redirect to the job.'));
-					redirect('welcome/view_quote/' . $result[0]['jobid'] . '/draft');
+					redirect('welcome/view_quote/' . $result[0]['lead_id'] . '/draft');
 				}
 			  
 		    }
@@ -1641,9 +1641,9 @@ HDOC;
 		//insert customer and retrive last insert id
 		$insert_id = $this->customer_model->get_customer_insert_id($ins_cus);
 		//Create Jobs
-		$ins['job_title']           = 'Ask the Expert';
+		$ins['lead_title']           = 'Ask the Expert';
 		$ins['custid_fk']           = $insert_id;
-		$ins['job_category']        = $_POST['job_category'];
+		$ins['lead_category']        = $_POST['lead_category'];
 		//$ins['lead_source']       = '';
 		$ins['lead_assign']         = 59;
 		$ins['expect_worth_id']     = 5;
@@ -1652,7 +1652,7 @@ HDOC;
 		// $ins['division']         = $_POST['job_division'];
 		$ins['date_created']        = date('Y-m-d H:i:s');
 		$ins['date_modified']       = date('Y-m-d H:i:s');
-		$ins['job_status']          = 1;
+		$ins['lead_stage']          = 1;
 		// $ins['lead_indicator']   = $_POST['lead_indicator'];
 		$ins['created_by']          = 59;
 		$ins['modified_by']         = 59;

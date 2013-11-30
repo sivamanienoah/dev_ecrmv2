@@ -173,9 +173,9 @@ class Dns extends crm_controller {
 		return $str;
 	}
 	
-	function jobs($jobid=''){
-		if($jobid<=0) redirect('hosting/');
-		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H, `".$this->cfg['dbpref']."leads` as J WHERE J.jobid={$jobid} AND H.custid_fk=J.custid_fk ORDER BY H.domain_name";
+	function jobs($lead_id=''){
+		if($lead_id<=0) redirect('hosting/');
+		$sql="SELECT * FROM `".$this->cfg['dbpref']."hosting` as H, `".$this->cfg['dbpref']."leads` as J WHERE J.lead_id={$lead_id} AND H.custid_fk=J.custid_fk ORDER BY H.domain_name";
 		$rows = $this->db->query($sql);
 		$data['hosting']=$rows->result_array();
 		$data['jobs']='JOBS';

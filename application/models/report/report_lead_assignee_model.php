@@ -10,7 +10,7 @@ class Report_lead_assignee_model extends crm_model {
     
     public function getLeadReportByAssignee($options = array())
     {
-    	// $job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
+    	// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
     	
     	if(!empty($options['cust_id'])){    		
     		$this->db->where_in('cust.custid',$options['cust_id']);
@@ -47,7 +47,7 @@ class Report_lead_assignee_model extends crm_model {
    		if(!empty($options['stage']) && $options['stage'] != 'null')
 		{
 			$stage = @explode(',', $options['stage']);
-			$this->db->where_in('jb.job_status',$stage);
+			$this->db->where_in('jb.lead_stage',$stage);
 		}   	
 		
 		
@@ -96,10 +96,10 @@ class Report_lead_assignee_model extends crm_model {
     	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid','INNER');
     	$this->db->join($this->cfg['dbpref'].'users u','u.userid = jb.created_by','INNER');
     	$this->db->join($this->cfg['dbpref'].'users au','au.userid = jb.lead_assign','INNER');    	
-    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status','INNER');    	
+    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage','INNER');    	
     	$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = jb.expect_worth_id','INNER');
     	$this->db->join($this->cfg['dbpref'].'users mu','mu.userid = jb.modified_by','LEFT');
-    	$this->db->where_in('jb.job_status', $this->stg);
+    	$this->db->where_in('jb.lead_stage', $this->stg);
     	$this->db->order_by('au.userid','ASC');
     	$this->db->where('lead_status',1);
 		

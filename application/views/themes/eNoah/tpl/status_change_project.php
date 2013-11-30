@@ -14,9 +14,9 @@ if ( isset($quote_data) )
 
 	<h3>Adjust Project Stage <span class="small">[ current stage - <em><?php echo $quote_data['lead_stage_name']; ?></em> ]</span></h3>
 	
-	<select class="textfield width300px" name="job_status" id="general_convert_quote_status" style="width:298px;">
+	<select class="textfield width300px" name="lead_stage" id="general_convert_quote_status" style="width:298px;">
 		<?php foreach ($get_lead_stage_projects as $stage) { ?>
-               <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['job_status'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> >
+               <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['lead_stage'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> >
 					<?php echo  $stage['lead_stage_name'] ?>
 			   </option>
          <?	} ?>

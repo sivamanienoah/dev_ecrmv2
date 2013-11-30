@@ -23,7 +23,7 @@ if(!empty($hosting)){
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 	<?php
-	if (isset($quote_data['job_title']) && is_string($quote_data['job_title'])) echo htmlentities($quote_data['job_title'], ENT_QUOTES), ' - ';
+	if (isset($quote_data['lead_title']) && is_string($quote_data['lead_title'])) echo htmlentities($quote_data['lead_title'], ENT_QUOTES), ' - ';
 	if (isset($page_heading) && is_string($page_heading)) echo $page_heading, ' - ';
 	echo $cfg['app_full_name'];
 	?>
@@ -79,7 +79,7 @@ foreach ($results as $result)
 																			'end_date' => date('d-m-Y', strtotime($result['end_date'])),
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
+																			'lead_id' => $result['lead_id'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -104,7 +104,7 @@ foreach ($results as $result)
 																			'end_date' => date('d-m-Y', strtotime($result['end_date'])),
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
+																			'lead_id' => $result['lead_id'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -208,11 +208,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				
 				$random_task_class = '';
@@ -361,11 +361,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				$random_task_class = ' random-task';
 			}
@@ -504,11 +504,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				
 				$random_task_class = '';

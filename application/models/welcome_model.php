@@ -15,12 +15,12 @@ class Welcome_model extends crm_model {
 	*/
 	public function get_lead_detail($leadid) {
 	
-		$this->db->select('j.jobid, j.invoice_no, j.job_title, j.job_category, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_category, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
 		j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, 
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
-		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.category as job_category, sadiv.division_name');
+		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.category as lead_category, sadiv.division_name');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
@@ -30,12 +30,12 @@ class Welcome_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'] . 'country as coun', 'coun.countryid = c.add1_country');
 		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = c.add1_state');
 		$this->db->join($this->cfg['dbpref'] . 'location as loc', 'loc.locationid = c.add1_location');
-		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'] . 'lead_source as lsrc', 'lsrc.lead_source_id = j.lead_source');
-		$this->db->join($this->cfg['dbpref'] . 'job_categories as jbcat', 'jbcat.cid = j.job_category');
+		$this->db->join($this->cfg['dbpref'] . 'job_categories as jbcat', 'jbcat.cid = j.lead_category');
 		$this->db->join($this->cfg['dbpref'] . 'sales_divisions as sadiv', 'sadiv.div_id = j.division');
-		$this->db->where('j.jobid = "'.$leadid.'" AND j.job_status IN ("'.$this->stages.'")');
+		$this->db->where('j.lead_id = "'.$leadid.'" AND j.lead_stage IN ("'.$this->stages.'")');
 		$this->db->where('j.pjt_status', 0);
 		
 		$sql = $this->db->get();
@@ -49,8 +49,8 @@ class Welcome_model extends crm_model {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
-		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
-		$this->db->where('jobid', $id);
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
+		$this->db->where('lead_id', $id);
 		$this->db->limit(1);
 		$query = $this->db->get();
 		if ($query->num_rows() > 0)
@@ -136,7 +136,7 @@ class Welcome_model extends crm_model {
 	}
 	
 	function updt_log_view_status($id, $log) {
-		$this->db->where('jobid', $id);
+		$this->db->where('lead_id', $id);
 		return $this->db->update($this->cfg['dbpref'] . 'leads', $log);
 	}
 	
@@ -146,8 +146,8 @@ class Welcome_model extends crm_model {
 		return $query->result_array();
 	}
     
-	function get_quote_items($jobid) {
-		$this->db->where('jobid_fk', $jobid);
+	function get_quote_items($lead_id) {
+		$this->db->where('jobid_fk', $lead_id);
         $this->db->order_by('item_position', 'asc');
         $sql = $this->db->get($this->cfg['dbpref'] . 'items');
 		return $sql->result_array();
@@ -195,17 +195,17 @@ class Welcome_model extends crm_model {
         return $data['job_files_html'];
     }
 	
-    public function get_query_files_list($jobid)
+    public function get_query_files_list($lead_id)
     {
 		
         $data['query_files1_html'] = '';       
 		$query_tab = "SELECT lq.job_id, us.first_name,us.last_name, lq.query_msg, lq.query_id, lq.query_file_name, lq.query_sent_date, lq.replay_query 
 		FROM ".$this->cfg['dbpref']."lead_query as lq
-		LEFT JOIN ".$this->cfg['dbpref']."users as us ON us.userid= lq.user_id WHERE lq.job_id=".$jobid." ORDER BY lq.query_sent_date DESC";
+		LEFT JOIN ".$this->cfg['dbpref']."users as us ON us.userid= lq.user_id WHERE lq.job_id=".$lead_id." ORDER BY lq.query_sent_date DESC";
 		
 		$results = $this->db->query($query_tab);
 		$results = $results->result_array();
-		$path = 'crm_data/query/' . $jobid. '/';
+		$path = 'crm_data/query/' . $lead_id. '/';
 		
 		foreach($results as $result) {	
 			if($result['replay_query'] == 0) {
@@ -265,13 +265,13 @@ class Welcome_model extends crm_model {
         return $data['query_files1_html'];
     }
 	
-    public function get_job_urls($jobid)
+    public function get_job_urls($lead_id)
     {
         $sql = "SELECT *
                 FROM `".$this->cfg['dbpref']."job_urls`
                 WHERE `jobid_fk` = ?
                 ORDER BY `urlid`";
-        $rs = $this->db->query($sql, array($jobid));
+        $rs = $this->db->query($sql, array($lead_id));
         
         $html = '';
         
@@ -296,14 +296,14 @@ class Welcome_model extends crm_model {
 	{
 	    $this->db->select('*');
 	    $this->db->from($this->cfg['dbpref'] . 'leads');
-	    $this->db->where('jobid', $jid);
+	    $this->db->where('lead_id', $jid);
 	    $lead_history = $this->db->get();
 	    return $leads =  $lead_history->row_array();
 	}
 	
 	function updt_lead_stg_status($id, $updt) 
 	{
-		$this->db->where('jobid', $id);
+		$this->db->where('lead_id', $id);
 		return $this->db->update($this->cfg['dbpref'] . 'leads', $updt);
 	}
 	
@@ -323,7 +323,7 @@ class Welcome_model extends crm_model {
     }
 	
 	function update_row($tbl, $updt, $jid) {
-		$this->db->where('jobid', $jid);
+		$this->db->where('lead_id', $jid);
 		$this->db->update($this->cfg['dbpref'] . $tbl, $updt);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
@@ -382,7 +382,7 @@ class Welcome_model extends crm_model {
 	
 	function delete_lead($tbl, $lead_id) 
 	{
-		$this->db->where('jobid', $lead_id);
+		$this->db->where('lead_id', $lead_id);
 		$this->db->delete($this->cfg['dbpref'] . $tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
@@ -422,7 +422,7 @@ class Welcome_model extends crm_model {
 	    $this->db->from($this->cfg['dbpref'].'lead_stage_history lsh');
 	    $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = lsh.changed_status', 'LEFT');
 	    $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = lsh.modified_by', 'LEFT');
-		$this->db->where("jobid", $id);
+		$this->db->where("lead_id", $id);
 		$this->db->order_by('dateofchange', 'desc');
 	    $lead_stg_his = $this->db->get();
 	    $lead_sh=  $lead_stg_his->result_array();
@@ -455,12 +455,12 @@ class Welcome_model extends crm_model {
 		$lead_status = explode(',',$lead_status);
 
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
-			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'")');
+			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			$this->db->where('j.pjt_status', 0);
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 			
@@ -468,12 +468,12 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
 			$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
-			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status', 'LEFT');
+			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
 			
 			if($stage[0] != 'null' && $stage[0] != 'all') {		
-				$this->db->where_in('j.job_status',$stage); 
+				$this->db->where_in('j.lead_stage',$stage); 
 			}
 			
 			if($customer[0] != 'null' && $customer[0] != 'all'){		
@@ -508,16 +508,16 @@ class Welcome_model extends crm_model {
 			}
 			
 			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.job_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
-			$this->db->order_by("j.jobid", "desc");
+			$this->db->order_by("j.lead_id", "desc");
 			
 		}
 		else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
 			c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
@@ -528,15 +528,15 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
 			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = c.add1_region');
-			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
+			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->where('j.pjt_status', 0); 
-			// $this->db->where('j.jobid != "null" AND j.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12)');
-			$this->db->where('j.jobid != "null" AND j.job_status IN ("'.$this->stages.'")');
+			// $this->db->where('j.lead_id != "null" AND j.lead_stage IN (1,2,3,4,5,6,7,8,9,10,11,12)');
+			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			
 			
 			if($stage[0] != 'null' && $stage[0] != 'all') {
-				$this->db->where_in('j.job_status',$stage); 
+				$this->db->where_in('j.lead_stage',$stage); 
 				$this->db->where('j.belong_to', $curusid);
 			}
 			
@@ -558,7 +558,7 @@ class Welcome_model extends crm_model {
 				$this->db->where_in('j.lead_assign', $leadassignee);
 			}
 			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.job_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
 			$region = explode(',',$this->session->userdata['region_id']);
@@ -586,8 +586,8 @@ class Welcome_model extends crm_model {
 				}
 				
 				//or_where condition is used for to bring the lead owner leads when he creating the leads for different region.
-				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN (1,2,3,4,5,6,7,8,9,10,11,12))');
-				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.job_status IN ("'.$this->stages.'") AND j.pjt_status = 0)');
+				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.lead_stage IN (1,2,3,4,5,6,7,8,9,10,11,12))');
+				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.lead_stage IN ("'.$this->stages.'") AND j.pjt_status = 0)');
 			}
 			
 			//Advanced filter
@@ -616,7 +616,7 @@ class Welcome_model extends crm_model {
 				}
 			//Advanced filter
 
-			$this->db->order_by("j.jobid", "desc");
+			$this->db->order_by("j.lead_id", "desc");
 			
 		}
 		$query = $this->db->get();
@@ -632,16 +632,16 @@ class Welcome_model extends crm_model {
 	{
 		$userdata = $this->session->userdata('logged_in_user');
 		 //print_r($userdata['userid']);
-		 $this->db->select('j.jobid, j.invoice_no, j.job_title, j.lead_source, j.job_status, j.date_created, j.date_modified, j.belong_to,
+		 $this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.proposal_expected_date, 
 		c.first_name, c.last_name, c.company, rg.region_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 		us.last_name as usslname, ls.lead_stage_name,ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'] . 'customers as c');		
-		$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.jobid != "null"');		
+		$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');		
 		$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
 		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
-		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.job_status');
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id ');
 		
 		$this->db->where('j.lead_assign', $userdata['userid']);
@@ -755,7 +755,7 @@ class Welcome_model extends crm_model {
     }
 	
     function update_job($insert_id, $up_args) {
-    	$this->db->where('jobid', $insert_id);
+    	$this->db->where('lead_id', $insert_id);
 		$this->db->update($this->cfg['dbpref'] . 'leads', $up_args);
     }
     

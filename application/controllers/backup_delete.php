@@ -379,7 +379,7 @@ VCS";
 			{
 				# matched job
 				
-				$this->db->where('jobid', $matches[1]);
+				$this->db->where('lead_id', $matches[1]);
 				$job_details = $this->db->get($this->cfg['dbpref'] . 'jobs');
 				
 				if ($job_details->num_rows() > 0) 
@@ -535,7 +535,7 @@ VCS";
 		
 		$sql = "SELECT CONCAT_WS(' ', first_name, last_name) AS name, 
 email_1, email_2, email_3, email_4 FROM ".$this->cfg['dbpref']."customers c
-JOIN ".$this->cfg['dbpref']."jobs j ON custid = custid_fk AND job_status IN (2, 3, 4, 5, 6, 15, 30, 31, 32)";
+JOIN ".$this->cfg['dbpref']."jobs j ON custid = custid_fk AND lead_stage IN (2, 3, 4, 5, 6, 15, 30, 31, 32)";
 		$q = $this->db->query($sql);
 		$data = $q->result();
 		foreach ($data as $row)

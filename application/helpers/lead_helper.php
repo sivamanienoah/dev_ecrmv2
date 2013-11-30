@@ -68,7 +68,7 @@ if ( ! function_exists('proposal_expect_end_msg') )
 		$userdata = $CI->session->userdata('logged_in_user');
 		$cfg = $CI->config->item('crm'); // load config
 
-		$CI->db->select('jb.jobid, jb.job_title, jb.proposal_expected_date as dt, DATEDIFF(jb.proposal_expected_date, CURDATE()) as datediff');
+		$CI->db->select('jb.lead_id, jb.lead_title, jb.proposal_expected_date as dt, DATEDIFF(jb.proposal_expected_date, CURDATE()) as datediff');
 		$CI->db->where('jb.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$day.' DAY)) ');
 		$CI->db->where('jb.lead_status', 1);
 		$CI->db->where('jb.lead_assign', $userdata['userid']);

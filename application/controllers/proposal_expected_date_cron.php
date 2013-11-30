@@ -29,11 +29,11 @@ class proposal_expected_date_cron extends crm_controller
 			// echo "<pre>"; print_r($result); exit;
 			
 			foreach ($result as $res) {
-				$expe = $this->db->query(" SELECT jb.jobid, jb.job_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners, CONCAT(ass.first_name, ' ', ass.last_name) as assign, ass.email
+				$expe = $this->db->query(" SELECT jb.lead_id, jb.lead_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners, CONCAT(ass.first_name, ' ', ass.last_name) as assign, ass.email
 				FROM `".$this->cfg['dbpref']."leads` as jb 
 				LEFT JOIN `".$this->cfg['dbpref']."users` as own ON `own`.`userid` = `jb`.`belong_to`
 				LEFT JOIN `".$this->cfg['dbpref']."users` as ass ON `ass`.`userid` = `jb`.`lead_assign`
-				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND jb.lead_assign='".$res['userid']."' order by jb.jobid ");
+				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND jb.lead_assign='".$res['userid']."' order by jb.lead_id ");
 				
 				
 				$data['members'] = $expe->result_array();
@@ -79,7 +79,7 @@ class proposal_expected_date_cron extends crm_controller
 										</p>
 										<p style="padding: 4px;">';
 										$log_email_content .= 'Dear '.$member['assign'].', <br /><br />';
-										$log_email_content .= 'The proposal expected date for the lead "<a href='.$this->config->item('base_url').'welcome/view_quote/'.$member['jobid'].'>'.$member['job_title'].'</a>" is going to end on '.date('d-m-Y', strtotime($member['proposal_expected_date'])).'';
+										$log_email_content .= 'The proposal expected date for the lead "<a href='.$this->config->item('base_url').'welcome/view_quote/'.$member['lead_id'].'>'.$member['lead_title'].'</a>" is going to end on '.date('d-m-Y', strtotime($member['proposal_expected_date'])).'';
 									  $log_email_content .= '<br /><br />
 									  Thanks & Regards,<br />Webmaster.
 									  </p>

@@ -116,17 +116,17 @@
 					?>
                     <tr>
 						<td class="actions" align="center">
-							<a href="project/view_project/<?php echo  $record['jobid'] ?>">
+							<a href="project/view_project/<?php echo  $record['lead_id'] ?>">
 								View
 							</a>
 							<?php
-								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['jobid'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
+								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
 							?>
 						</td>
 						
                         <td class="actions">
 							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['jobid'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
 							</div>
 						</td>
 						
@@ -135,7 +135,7 @@
 						</td>
 						
                         <td class="actions">
-							<?php echo character_limiter($record['job_title'], 35) ?>
+							<?php echo character_limiter($record['lead_title'], 35) ?>
 						</td>
 						
                         <td class="cust-data">

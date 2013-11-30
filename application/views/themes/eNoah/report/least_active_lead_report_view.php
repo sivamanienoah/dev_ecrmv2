@@ -39,7 +39,7 @@ if (get_default_currency()) {
 						?>
 								<tr>
 									<td><?php echo empty($leads->invoice_no)?'':$leads->invoice_no; ?></td>
-									<td><?php echo empty($leads->job_title)?'':$leads->job_title; ?></td>
+									<td><?php echo empty($leads->lead_title)?'':$leads->lead_title; ?></td>
 									<td><?php echo $leads->cust_first_name.''.$leads->cust_last_name; ?></td>
 									<td><?php echo empty($leads->region_name)?'':$leads->region_name; ?></td>
 									<td><?php echo $leads->ownrfname.' '.$leads->ownrlname; ?></td>

@@ -58,8 +58,8 @@ class Tasks extends crm_controller {
 		{
 			$data['assigned_contractors'][] = $tc['userid_fk'];
 		}
-		$this->db->select(array('job_title','jobid'));
-		$this->db->where_not_in('job_title','');
+		$this->db->select(array('lead_title','lead_id'));
+		$this->db->where_not_in('lead_title','');
 		$project = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		$data['project'] = $project->result_array();

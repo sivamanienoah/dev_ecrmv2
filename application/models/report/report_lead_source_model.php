@@ -47,7 +47,7 @@ class Report_lead_source_model extends crm_model {
    		if(!empty($options['stage']) && $options['stage'] != 'null')
 		{
 			$stage = explode(',', $options['stage']);
-			$this->db->where_in('jb.job_status',$stage);
+			$this->db->where_in('jb.lead_stage',$stage);
 		}   	
 		
 		
@@ -95,16 +95,16 @@ class Report_lead_source_model extends crm_model {
 			$this->db->where($where);
 		}   	
     	
-    	$this->db->select('jb.jobid, jb.invoice_no, jb.job_title, jb.expect_worth_amount, jb.expect_worth_id, jb.actual_worth_amount, jb.lead_indicator, jb.lead_status, jb.lead_source, src.lead_source_name, cust.first_name as cust_first_name, cust.last_name as cust_last_name, cust.company, cust.add1_region, reg.region_name, u.userid as owner_id, u.first_name as owner_first_name, u.last_name as owner_last_name, u.email as owner_mail, au.first_name as assigned_first_name, au.last_name as assigned_last_name, au.email as assigned_mail, mu.first_name as modified_first_name, mu.last_name as modified_last_name, ls.lead_stage_name, ew.expect_worth_name');
+    	$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.expect_worth_amount, jb.expect_worth_id, jb.actual_worth_amount, jb.lead_indicator, jb.lead_status, jb.lead_source, src.lead_source_name, cust.first_name as cust_first_name, cust.last_name as cust_last_name, cust.company, cust.add1_region, reg.region_name, u.userid as owner_id, u.first_name as owner_first_name, u.last_name as owner_last_name, u.email as owner_mail, au.first_name as assigned_first_name, au.last_name as assigned_last_name, au.email as assigned_mail, mu.first_name as modified_first_name, mu.last_name as modified_last_name, ls.lead_stage_name, ew.expect_worth_name');
     	$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid', 'INNER');
     	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid', 'INNER');
     	$this->db->join($this->cfg['dbpref'].'users u','u.userid = jb.created_by', 'INNER');
     	$this->db->join($this->cfg['dbpref'].'users au','au.userid = jb.lead_assign', 'INNER');    	
-    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status', 'INNER');    	
+    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage', 'INNER');    	
     	$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = jb.expect_worth_id', 'INNER');
     	$this->db->join($this->cfg['dbpref'].'lead_source src','src.lead_source_id = jb.lead_source', 'INNER');
     	$this->db->join($this->cfg['dbpref'].'users mu','mu.userid = jb.modified_by', 'LEFT');
-    	$this->db->where_in('jb.job_status', $this->stg);
+    	$this->db->where_in('jb.lead_stage', $this->stg);
     	$this->db->order_by('jb.lead_source', 'ASC');
     	$this->db->where('lead_status', 1);
 		

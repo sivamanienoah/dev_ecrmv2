@@ -46,7 +46,7 @@ class Project extends crm_controller {
 	public function advance_filter_search_pjt($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false')
 	{
 	    /*
-		 *$pjtstage - job_status. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
+		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
 		 */
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
@@ -80,7 +80,7 @@ class Project extends crm_controller {
 		if(!empty($result)) {
 			$data['quote_data'] = $result[0];
 			$data['view_quotation'] = true;
-			$temp_cont = $this->project_model->get_contract_jobs($result[0]['jobid']);
+			$temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 			
 			$data['assigned_contractors'] = array();
 			foreach ($temp_cont as $tc) {
@@ -133,11 +133,11 @@ class Project extends crm_controller {
 			
 			if ($data['quote_data']['payment_terms'] == 1)
 			{
-				// $data['payment_data'] = $this->project_model->get_payment_terms($data['quote_data']['jobid']);
-				$data['payment_data'] = $this->project_model->get_expect_payment_terms($data['quote_data']['jobid']);
+				// $data['payment_data'] = $this->project_model->get_payment_terms($data['quote_data']['lead_id']);
+				$data['payment_data'] = $this->project_model->get_expect_payment_terms($data['quote_data']['lead_id']);
 			}
 			
-			$deposits = $this->project_model->get_deposits_data($data['quote_data']['jobid']);
+			$deposits = $this->project_model->get_deposits_data($data['quote_data']['lead_id']);
 			if (!empty($deposits))
 			{
 				$data['deposits_data'] = $deposits;
@@ -194,7 +194,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$wh_condn = array('jobid' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['job_id']);
 			$updt = array('pjt_id' => $updt['pjt_id']);
 			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
@@ -227,7 +227,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$wh_condn = array('jobid' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['job_id']);
 			$updt = array('actual_worth_amount' => $updt['pjt_val']);
 			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
@@ -267,7 +267,7 @@ class Project extends crm_controller {
 				break;
 			}
 
-			$wh_condn = array('jobid' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['job_id']);
 			$updt = array('pjt_status' => $updt['pjt_stat']);
 			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
 			
@@ -295,17 +295,17 @@ class Project extends crm_controller {
 		$updt = real_escape_array($this->input->post());
 		
 		$json['error'] = FALSE;
-		$jobid = $updt['jobid'];
-		$job_status = $updt['job_status'] * 10;
+		$lead_id = $updt['lead_id'];
+		$lead_stage = $updt['lead_stage'] * 10;
 		
-		if (!is_numeric($jobid) || $job_status % 10 != 0 || $job_status > 100)
+		if (!is_numeric($lead_id) || $lead_stage % 10 != 0 || $lead_stage > 100)
 		{
 			$json['error'] = 'Invalid details supplied!';
 		}
 		else
 		{
-			$wh_condn = array('jobid' => $jobid);
-			$updt = array('complete_status' => $job_status);
+			$wh_condn = array('lead_id' => $lead_id);
+			$updt = array('complete_status' => $lead_stage);
 			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_stat==0)
 			{
@@ -316,18 +316,18 @@ class Project extends crm_controller {
 	}
 	
 	/**
-	 * Set the Project team members for the project based on jobid
+	 * Set the Project team members for the project based on lead_id
 	 */
 	public function ajax_set_contractor_for_job()
 	{
 		$data = real_escape_array($this->input->post());
 		
-		if (isset($data['jobid']) && !empty($data['contractors']))
+		if (isset($data['lead_id']) && !empty($data['contractors']))
 		{	
 			$contractors = explode(',', $data['contractors']);	
 			$result = array();
 			
-			$wh_condn = array('jobid_fk'=>$data['jobid']);
+			$wh_condn = array('jobid_fk'=>$data['lead_id']);
 			$project_member = $this->project_model->get_user_data_by_id('contract_jobs', $wh_condn);
 			foreach ($project_member as $project_mem)
 			{
@@ -345,7 +345,7 @@ class Project extends crm_controller {
 				{
 					if (preg_match('/^[0-9]+$/', $con))
 					{
-						$ins['jobid_fk'] =  $data['jobid'];
+						$ins['jobid_fk'] =  $data['lead_id'];
 						$ins['userid_fk'] =  $con;
 						$insert_contract_job = $this->project_model->insert_row('contract_jobs', $ins);
 					}
@@ -356,7 +356,7 @@ class Project extends crm_controller {
 				{			
 					$mail = $mail_id['email'];
 					$first_name = $mail_id['first_name'] .' '.$mail_id['last_name'];
-					$log_email = $this->get_user_mail($mail , $first_name, $type = "insert", $data['jobid']);
+					$log_email = $this->get_user_mail($mail , $first_name, $type = "insert", $data['lead_id']);
 					
 				}
 			}
@@ -369,10 +369,10 @@ class Project extends crm_controller {
 				{
 					$mail = $mail_id['email'];
 					$first_name = $mail_id['first_name'] .' '.$mail_id['last_name'];
-					$log_email = $this->get_user_mail($mail , $first_name, $type = "remove", $data['jobid']);
+					$log_email = $this->get_user_mail($mail , $first_name, $type = "remove", $data['lead_id']);
 				}
 				
-				$wh_condn = array('jobid_fk'=>$data['jobid']);
+				$wh_condn = array('jobid_fk'=>$data['lead_id']);
 				$del_contract_jobs = $this->project_model->delete_contract_job('contract_jobs', $wh_condn, $new_project_member_delete);
 			}
 			$data['status'] = 'OK';
@@ -387,10 +387,10 @@ class Project extends crm_controller {
 			{
 				$mail = $mail_id['email'];
 				$first_name = $mail_id['first_name'] .' '.$mail_id['last_name'];
-				$log_email = $this->get_user_mail($mail , $first_name, $type = "remove", $data['jobid']);
+				$log_email = $this->get_user_mail($mail , $first_name, $type = "remove", $data['lead_id']);
 			}
 			
-			$wh_condn = array('jobid_fk'=>$data['jobid']);
+			$wh_condn = array('jobid_fk'=>$data['lead_id']);
 			$del_contract_jobs = $this->project_model->delete_row('contract_jobs', $wh_condn);
 		}
 		else
@@ -401,10 +401,10 @@ class Project extends crm_controller {
 		}
 	}
 	
-	public function get_user_mail($mail, $first_name, $mail_type, $jobid)
+	public function get_user_mail($mail, $first_name, $mail_type, $lead_id)
 	{	
-		$project_name = $this->project_model->get_lead_det($jobid);
-		$project_name['job_title'] = word_limiter($project_name['job_title'], 4);
+		$project_name = $this->project_model->get_lead_det($lead_id);
+		$project_name['lead_title'] = word_limiter($project_name['lead_title'], 4);
 		
 		if($mail_type == "insert") {
 			$log_subject = 'New Project Assignment Notification';
@@ -413,9 +413,9 @@ class Project extends crm_controller {
 		}
 		
 		if($mail_type == "insert") {
-			$log_email_content = 'You are included as one of the project team members in the project - '.$project_name['job_title'].'<br />';
+			$log_email_content = 'You are included as one of the project team members in the project - '.$project_name['lead_title'].'<br />';
 		} else {
-			$log_email_content = 'You are moved from this project - '.$project_name['job_title'].'<br />';
+			$log_email_content = 'You are moved from this project - '.$project_name['lead_title'].'<br />';
 		}
 		
 		$successful = '';
@@ -449,8 +449,8 @@ class Project extends crm_controller {
 
 		$data['error'] = FALSE;
 		
-		$project_name = $this->project_model->get_lead_det($data_pm['jobid']);
-		$project_name = word_limiter($project_name['job_title'], 4);
+		$project_name = $this->project_model->get_lead_det($data_pm['lead_id']);
+		$project_name = word_limiter($project_name['lead_title'], 4);
 		
 		$user_det = array();
 		$pm_det = array();
@@ -496,7 +496,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$wh_condn = array('jobid' => $data_pm['jobid']);
+			$wh_condn = array('lead_id' => $data_pm['lead_id']);
 			$updt = array('assigned_to' => $data_pm['new_pm']);
 			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
@@ -567,7 +567,7 @@ class Project extends crm_controller {
 		{
 			if ($updt_data['date_type'] == 'start')
 			{	 
-				$wh_condn = array('jobid'=>$updt_data['jobid'], 'date_due <'=>date('Y-m-d H:i:s', $timestamp));
+				$wh_condn = array('lead_id'=>$updt_data['lead_id'], 'date_due <'=>date('Y-m-d H:i:s', $timestamp));
 				$chk_stat = $this->project_model->chk_status('leads', $wh_condn);
 				if($chk_stat)
 				{ 
@@ -575,7 +575,7 @@ class Project extends crm_controller {
 				}
 				else 
 				{ 
-					$wh_condn = array('jobid'=>$updt_data['jobid']);
+					$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 					$updt = array('date_start'=>date('Y-m-d H:i:s', $timestamp));
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 				}
@@ -584,7 +584,7 @@ class Project extends crm_controller {
 			{	
 				if ($updt_data['date_type'] == 'end') 
 				{
-					$chk_stat_start = $this->project_model->get_lead_det($updt_data['jobid']);
+					$chk_stat_start = $this->project_model->get_lead_det($updt_data['lead_id']);
 					
 					if (!empty($chk_stat_start['date_start']))
 					{
@@ -594,7 +594,7 @@ class Project extends crm_controller {
 						} 
 						else 
 						{
-							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
@@ -631,7 +631,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$chk_status = $this->project_model->get_lead_det($updt_data['jobid']);
+			$chk_status = $this->project_model->get_lead_det($updt_data['lead_id']);
 			
 			if ($updt_data['date_type'] == 'start')
 			{
@@ -652,7 +652,7 @@ class Project extends crm_controller {
 						} 
 						else 
 						{
-							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
@@ -675,7 +675,7 @@ class Project extends crm_controller {
 						} 
 						else 
 						{
-							$wh_condn = array('jobid'=>$updt_data['jobid']);
+							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 						}
@@ -872,7 +872,7 @@ class Project extends crm_controller {
 			{
 
 				$up = array('payment_terms'=>1);
-				$wh_condn = array('jobid' => $data['sp_form_jobid']);
+				$wh_condn = array('lead_id' => $data['sp_form_jobid']);
 				$this->project_model->update_row('leads', $up, $wh_condn);
 				
 				$payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
@@ -1019,11 +1019,11 @@ class Project extends crm_controller {
 	
 	/*
 	 *retrieve the payment terms in payment received form(Map to a payment term - Dropdown)
-	 *@params - jobid
+	 *@params - lead_id
 	 */
-	function retrieve_record($jobid)
+	function retrieve_record($lead_id)
 	{
-		$retrieve_rec = $this->project_model->get_expect_payment_terms($jobid);
+		$retrieve_rec = $this->project_model->get_expect_payment_terms($lead_id);
 		$pt_select_box = '';
 		$pt_select_box .= '<option value="0"> &nbsp; </option>';
 		echo sizeof($retrieve_rec); 
@@ -1275,9 +1275,9 @@ class Project extends crm_controller {
 	}
 	
 	//For Edit Functionality - Edit Received Payments.
-	function retrieveRecordEdit($jobid, $eid) 
+	function retrieveRecordEdit($lead_id, $eid) 
 	{		
-		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jobid);
+		$expect_payment_terms = $this->project_model->get_expect_payment_terms($lead_id);
 		
 		$pt_select_box = '';
 		$pt_select_box .= '<option value="0"> &nbsp; </option>';
@@ -1382,7 +1382,7 @@ class Project extends crm_controller {
 	function received_payment_terms_delete($jid)
 	{
 		//mychanges
-			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."leads where jobid='$jid'");
+			$jsql = $this->db->query("select expect_worth_id from ".$this->cfg['dbpref']."leads where lead_id='$jid'");
 			$jres = $jsql->result();
 			$worthid = $jres[0]->expect_worth_id;
 			$expect_worth = $this->db->query("select expect_worth_name from ".$this->cfg['dbpref']."expect_worth where expect_worth_id='$worthid'");
@@ -1451,11 +1451,11 @@ class Project extends crm_controller {
 	{
 		$data_log = real_escape_array($this->input->post());
 		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
-        if (isset($data_log['jobid']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
+        if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
 			
-			$job_details = $this->project_model->get_lead_det($data_log['jobid']);
+			$job_details = $this->project_model->get_lead_det($data_log['lead_id']);
             
             if (count($job_details) > 0) 
             {
@@ -1498,7 +1498,7 @@ class Project extends crm_controller {
 					}
 					$successful = 'This log has been emailed to:<br />';
 					
-					$log_subject = "eSmart Notification - {$job_details['job_title']} [ref#{$job_details['jobid']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					$log_subject = "eSmart Notification - {$job_details['lead_title']} [ref#{$job_details['lead_id']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
 					
 					//email sent by email template
 					$param = array();
@@ -1586,7 +1586,7 @@ class Project extends crm_controller {
 					}
 				}
 			
-				$ins['jobid_fk'] = $data_log['jobid'];
+				$ins['jobid_fk'] = $data_log['lead_id'];
 				
 				// use this to update the view status
 				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
@@ -1610,7 +1610,7 @@ class Project extends crm_controller {
 				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
 				
 				// update the leads table
-				$this->db->where('jobid', $ins['jobid_fk']);
+				$this->db->where('lead_id', $ins['jobid_fk']);
 				$this->db->update($this->cfg['dbpref'] . 'leads', $upd);
                 
                 $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
@@ -1658,15 +1658,15 @@ HDOC;
 	/**
 	 *uploading files - creating log
 	 */
-	public function lead_fileupload_details($jobid, $filename, $userid) {
+	public function lead_fileupload_details($lead_id, $filename, $userid) {
 	   
 		$lead_files['lead_files_name'] = $filename;
 		$lead_files['lead_files_created_by'] = $userid;
 		$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
-		$lead_files['jobid'] = $jobid;
+		$lead_files['lead_id'] = $lead_id;
 		$insert_logs = $this->project_model->insert_row('lead_files', $lead_files);
 		
-		$logs['jobid_fk'] = $jobid;
+		$logs['jobid_fk'] = $lead_id;
 		$logs['userid_fk'] = $this->userdata['userid'];
 		$logs['date_created'] = date('Y-m-d H:i:s');
 		$logs['log_content'] = $filename.' is added.';
@@ -1698,14 +1698,14 @@ HDOC;
 					$delete_deposits = $this->project_model->delete_row('deposits', $del_condn);
 					$delete_exp_pay = $this->project_model->delete_row('expected_payments', $del_condn);
 					
-					$del_condn1 = array('jobid'=>$id);					
+					$del_condn1 = array('lead_id'=>$id);					
 					$delete_file = $this->project_model->delete_row('lead_files', $del_condn1);
 					
 					$del_condn2 = array('job_id'=>$id);
 					$delete_query = $this->project_model->delete_row('lead_query', $del_condn2);
 					
 					# Project Delete Mail Notification
-					$ins['log_content'] = 'Project Deleted Sucessfully - Project ' .word_limiter($pjt_det['job_title'], 4). ' ';
+					$ins['log_content'] = 'Project Deleted Sucessfully - Project ' .word_limiter($pjt_det['lead_title'], 4). ' ';
 
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');

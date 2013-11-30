@@ -47,7 +47,7 @@
 						  		?>
 							  		<tr>
 										<td style="border-right:1px #CCC solid;"><?php echo empty($lead->invoice_no)?'':$lead->invoice_no; ?></td>
-										<td style="border-right:1px #CCC solid;"><?php echo empty($lead->job_title)?'':$lead->job_title; ?></td>
+										<td style="border-right:1px #CCC solid;"><?php echo empty($lead->lead_title)?'':$lead->lead_title; ?></td>
 										<td style="border-right:1px #CCC solid;"><?php echo $lead->cust_first_name.' '.$lead->cust_last_name; ?></td>
 										<td style="border-right:1px #CCC solid;"><?php echo empty($lead->region_name)?'':$lead->region_name; ?></td>
 										<td style="border-right:1px #CCC solid;"><?php echo $lead->owner_first_name.' '.$lead->owner_last_name; ?></td>

@@ -34,7 +34,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->job_title;
+				$content .= $lead->lead_title;
 				$content .= "</td>";
 				
 				$content .= "<td>";
@@ -77,7 +77,7 @@ if($num>0)
 				
 			$content .= "</tr>";
 			
-			if(empty($res[$res_cnt]->job_category) || $res[$res_cnt]->job_category != $lead->job_category)
+			if(empty($res[$res_cnt]->lead_category) || $res[$res_cnt]->lead_category != $lead->lead_category)
 			{
 				$gross+=$amount;
 				if($total_cnt == $res_cnt)

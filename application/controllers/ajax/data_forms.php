@@ -74,7 +74,7 @@ class Data_forms extends crm_controller {
 		}
 		
 		//status
-		$this->db->where('job_status', $id);
+		$this->db->where('lead_stage', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		$this->load->view('helper/lead_stage_edit', $data);

@@ -46,7 +46,7 @@ class Report_lead_region_model extends crm_model {
    		if(!empty($options['stage']) && $options['stage'] != 'null')
 		{
 			$stage = explode(',', $options['stage']);
-			$this->db->where_in('jb.job_status',$stage);
+			$this->db->where_in('jb.lead_stage',$stage);
 		}   	
 		
     	if(!empty($options['regionname']) && $options['regionname'] != 'null'){
@@ -104,10 +104,10 @@ class Report_lead_region_model extends crm_model {
     	
     	$this->db->join($this->cfg['dbpref'].'users u','u.userid = jb.created_by','INNER');
     	$this->db->join($this->cfg['dbpref'].'users au','au.userid = jb.lead_assign','INNER');    	
-    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status','INNER');    	
+    	$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage','INNER');    	
     	$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = jb.expect_worth_id','INNER');
     	$this->db->join($this->cfg['dbpref'].'users mu','mu.userid = jb.modified_by','LEFT');
-    	$this->db->where_in('jb.job_status', $this->stg);
+    	$this->db->where_in('jb.lead_stage', $this->stg);
     	$this->db->order_by($order_by,'ASC');
     	$this->db->where('lead_status',1);
 

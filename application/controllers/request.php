@@ -34,9 +34,9 @@ class Request extends crm_controller {
 					FROM ".$this->cfg['dbpref']."customers, ".$this->cfg['dbpref']."leads a
 					{$contract_join}
 					WHERE `custid_fk` = `custid`
-					AND job_status IN ('".$this->stages."')
+					AND lead_stage IN ('".$this->stages."')
 					AND (
-						`job_title` LIKE '%{$keyword}%'
+						`lead_title` LIKE '%{$keyword}%'
 						OR `invoice_no` LIKE '%{$keyword}%'
 						OR `custid_fk`
 						IN (
@@ -49,7 +49,7 @@ class Request extends crm_controller {
 						)
 					)
 					{$restrict}
-					ORDER BY `job_status`, `job_title`";
+					ORDER BY `lead_stage`, `lead_title`";
 					
 			$q = $this->db->query($sql);
 			// echo $this->db->last_query();
@@ -57,9 +57,9 @@ class Request extends crm_controller {
 			{				
 				$result = $q->result_array();
 				$i = 0;
-				foreach ($this->cfg['job_status'] as $k => $v)
+				foreach ($this->cfg['lead_stage'] as $k => $v)
 				{
-					while (isset($result[$i]) && $k == $result[$i]['job_status'])
+					while (isset($result[$i]) && $k == $result[$i]['lead_stage'])
 					{
 						$data['results'][$k][] = $result[$i];
 						$i++;
@@ -70,12 +70,12 @@ class Request extends crm_controller {
 				{
 					$this->session->set_flashdata('header_messages', array('Only one result found! You have been redirect to the job.'));
 					
-					redirect('welcome/view_quote/' . $result[0]['jobid'] . '/draft');
+					redirect('welcome/view_quote/' . $result[0]['lead_id'] . '/draft');
 				}
 				else 
 				{	//echo "tljlj";
 					$this->session->set_flashdata('header_messages', array('Results found! You have been redirect to the job.'));
-					redirect('welcome/view_quote/' . $result[0]['jobid'] . '/draft');
+					redirect('welcome/view_quote/' . $result[0]['lead_id'] . '/draft');
 				}
 			  
 		    }

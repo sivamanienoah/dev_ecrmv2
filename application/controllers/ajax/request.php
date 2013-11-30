@@ -63,11 +63,11 @@ class Request extends crm_controller {
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
-	public function file_upload($jobid, $date, $upby, $type = 'job')
+	public function file_upload($lead_id, $date, $upby, $type = 'job')
 	{	
-		//echo UPLOAD_PATH .'application/'. $jobid; exit;
+		//echo UPLOAD_PATH .'application/'. $lead_id; exit;
 		/**
-		$jobid = $this->input->post('jobid');
+		$lead_id = $this->input->post('lead_id');
 		$date = $this->input->post('date');
 		$upby = $this->input->post('userid');
 		 * we need to know errors
@@ -86,7 +86,7 @@ class Request extends crm_controller {
 			chmod($f_dir, 0777);
 		}
 		
-		$f_dir = $f_dir.$jobid;
+		$f_dir = $f_dir.$lead_id;
 		
 		if (!is_dir($f_dir))
 		{
@@ -160,7 +160,7 @@ class Request extends crm_controller {
 	$userid = $userdata['userid']; 
 	$ex = explode('/',urldecode($_POST['file_path'])); 
 	
-	$jobid = $ex[2]; 
+	$lead_id = $ex[2]; 
 	$filename = $ex[3]; //filename
 		if (isset($_POST['file_path']))
 		{
@@ -172,7 +172,7 @@ class Request extends crm_controller {
 				    
 					$json['error'] = FALSE;
 					$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs) 
-					VALUES('".$jobid."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is deleted.' ,'".$filename."')"; 		
+					VALUES('".$lead_id."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is deleted.' ,'".$filename."')"; 		
 					$qlogs = $this->db->query($logs);
 				}
 				else
@@ -195,9 +195,9 @@ class Request extends crm_controller {
 	/**
 	 * Get all logs for a particular job;
 	 */
-    public function logs($jobid)
+    public function logs($lead_id)
 	{
-		$this->db->where('jobid_fk', $jobid);
+		$this->db->where('jobid_fk', $lead_id);
 		$this->db->order_by('date_created', 'desc');
 		$logs = $this->db->get($this->cfg['dbpref'] . 'logs');
 		
@@ -244,9 +244,9 @@ HDOC;
 		}
 	}
 	
-	public function get_new_logs($jobid, $datetime)
+	public function get_new_logs($lead_id, $datetime)
 	{
-		$this->db->where('jobid_fk', $jobid);
+		$this->db->where('jobid_fk', $lead_id);
 		$this->db->order_by('date_created', 'desc');
 		$this->db->limit(1);
 		$logs = $this->db->get($this->cfg['dbpref'] . 'logs');
@@ -293,9 +293,9 @@ HDOC;
 	
 	public function add_url_tojob()
 	{
-		if (isset($_POST['jobid']) && isset($_POST['url']))
+		if (isset($_POST['lead_id']) && isset($_POST['url']))
 		{
-			$jobid = $_POST['jobid'];
+			$lead_id = $_POST['lead_id'];
 			$url = $_POST['url'];
 			
 			$ins['content'] = (isset($_POST['content'])) ? $_POST['content'] : '';
@@ -315,7 +315,7 @@ HDOC;
 				{
 					$this->load->helper('url');
 					
-					$ins['jobid_fk'] = $jobid;
+					$ins['jobid_fk'] = $lead_id;
 					$ins['userid_fk'] = $userdata['userid'];
 					$ins['date'] = date('Y-m-d H:i:s');
 					$this->db->insert($this->cfg['dbpref'].'job_urls', $ins);
@@ -376,12 +376,12 @@ function add_job_task($update = 'NO', $random = 'NO')
 		
 		if ($random != 'NO')
 		{
-			//$_POST['jobid'] = 0;
+			//$_POST['lead_id'] = 0;
 		}
 		
 		$json['error'] = FALSE;
 		if($update == 'NO') {
-		$ins['jobid_fk'] = (int) $_POST['jobid'];
+		$ins['jobid_fk'] = (int) $_POST['lead_id'];
 		}
 		$ins['task'] = $_POST['job_task'];
 		$ins['userid_fk'] = $_POST['task_user'];
@@ -451,7 +451,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		/*if ($ins['jobid_fk'] == 0 && $random == 'NO')
 		{
 			$errors[] = $ins['jobid_fk'];
-			$errors[] = 'Valid jobid is required!';
+			$errors[] = 'Valid lead_id is required!';
 		}*/
 		
 		/*if ($update != 'NO')
@@ -692,7 +692,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 	 * Get tasks for a given job
 	 */
 
-	 function get_job_tasks($jobid)
+	 function get_job_tasks($lead_id)
 	{	
 		$uidd = $this->session->userdata['logged_in_user'];
 		$uid = $uidd['userid'];
@@ -701,7 +701,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 				WHERE `".$this->cfg['dbpref']."tasks`.`jobid_fk` = ?
 				AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";				
-		$q = $this->db->query($sql, array('jobid_fk' => $jobid));
+		$q = $this->db->query($sql, array('jobid_fk' => $lead_id));
 		$data = $q->result_array();	
 
 		$html = '';
@@ -1309,7 +1309,7 @@ EOD;
 	/**
 	 * Get tasks for a given lead
 	 */
-	function get_lead_tasks($jobid)
+	function get_lead_tasks($lead_id)
 	{
 		$sql = "SELECT *, `".$this->cfg['dbpref']."lead_tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`
 				FROM `".$this->cfg['dbpref']."lead_tasks`, `".$this->cfg['dbpref']."users`
@@ -1317,7 +1317,7 @@ EOD;
 				AND `".$this->cfg['dbpref']."lead_tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
 				ORDER BY `".$this->cfg['dbpref']."lead_tasks`.`is_complete`, `".$this->cfg['dbpref']."lead_tasks`.`status`, `".$this->cfg['dbpref']."lead_tasks`.`start_date`";
 				
-		$q = $this->db->query($sql, array('jobid_fk' => $jobid));
+		$q = $this->db->query($sql, array('jobid_fk' => $lead_id));
 		$data = $q->result_array();
 		$html = '';
 		foreach ($data as $row)
@@ -1333,11 +1333,11 @@ EOD;
 		echo $html;
 	}
 	
-	function get_job_overview($jobid, $return = FALSE)
+	function get_job_overview($lead_id, $return = FALSE)
 	{
 		$this->db->order_by('due_date', 'asc');
 		$this->db->order_by('position', 'asc');
-		$q = $this->db->get_where($this->cfg['dbpref'].'milestones', array('jobid_fk' => $jobid));
+		$q = $this->db->get_where($this->cfg['dbpref'].'milestones', array('jobid_fk' => $lead_id));
 		
 		$rows = $q->result();
 		
@@ -1351,9 +1351,9 @@ EOD;
 		echo $data;
 	}
 	
-	function save_job_overview($jobid)
+	function save_job_overview($lead_id)
 	{	
-		$this->db->where('jobid_fk', $jobid);
+		$this->db->where('jobid_fk', $lead_id);
 		$this->db->delete($this->cfg['dbpref'].'milestones');
 		
 		$mc = count($_POST['milestone']);
@@ -1365,7 +1365,7 @@ EOD;
 				continue;
 			}
 			
-			$ins['jobid_fk'] = $jobid;
+			$ins['jobid_fk'] = $lead_id;
 			$ins['milestone'] = $_POST['milestone'][$i];
 			$ins['due_date'] = date('Y-m-d', $date);
 			$ins['status'] = $_POST['milestone_status'][$i];
@@ -1373,7 +1373,7 @@ EOD;
 			
 			$this->db->insert($this->cfg['dbpref'].'milestones', $ins);
 		}
-		echo $this->get_job_overview($jobid, TRUE);
+		echo $this->get_job_overview($lead_id, TRUE);
 	}
 	
 	function job_overview_html($object)
@@ -1383,7 +1383,7 @@ EOD;
 		{
 			$status_select_1 = ($row->status == 1) ? ' selected="selected"' : '';
 			$status_select_2 = ($row->status == 2) ? ' selected="selected"' : '';
-			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."leads where jobid = '".$row->jobid_fk."' ");
+			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."leads where lead_id = '".$row->jobid_fk."' ");
 			$lead_details = $qa->row_array();
 			//echo "<pre>"; print_r($lead_details);
 			if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || $lead_details['lead_assign'] == $this->userdata['userid']) {
@@ -1444,7 +1444,7 @@ EOD;
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
-	public function query_file_upload($jobid, $lead_query, $status, $type = 'job')
+	public function query_file_upload($lead_id, $lead_query, $status, $type = 'job')
 	{	
 	
 		/**
@@ -1464,7 +1464,7 @@ EOD;
 			chmod($f_dir, 0777);
 		}
 		
-		$f_dir = $f_dir.$jobid; 
+		$f_dir = $f_dir.$lead_id; 
 		
 		if (!is_dir($f_dir))
 		{
@@ -1497,7 +1497,7 @@ EOD;
 					$users = $this->db->query($qry);
 					$user = $users->result_array();
 
-					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE jobid=".$jobid.")";
+					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE lead_id=".$lead_id.")";
 					$customers = $this->db->query($qry1);
 					$customer = $customers->result_array();
 					if($status == 'query') {
@@ -1514,7 +1514,7 @@ EOD;
 					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
 					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
-					VALUES(".$jobid.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
+					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);
 					
 					$insert_id = $this->db->insert_id();
@@ -1556,7 +1556,7 @@ EOD;
 					$users = $this->db->query($qry);
 					$user = $users->result_array();
 
-					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE jobid=".$jobid.")";
+					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE lead_id=".$lead_id.")";
 					$customers = $this->db->query($qry1);
 					$customer = $customers->result_array();
 					if($status == 'query') {
@@ -1571,7 +1571,7 @@ EOD;
 					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
 					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
-					VALUES(".$jobid.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
+					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);	
 					
 					$insert_id = $this->db->insert_id();

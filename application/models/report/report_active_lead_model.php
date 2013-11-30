@@ -43,7 +43,7 @@ class Report_active_lead_model extends crm_model {
 		
    		if(!empty($options['stage']) && $options['stage'] != 'null') {
 			$stage = explode(',', $options['stage']);
-			$this->db->where_in('jb.job_status',$stage);
+			$this->db->where_in('jb.lead_stage',$stage);
 		}   	
 		
     	if(!empty($options['regionname']) && $options['regionname'] != 'null') {
@@ -87,9 +87,9 @@ class Report_active_lead_model extends crm_model {
     	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid','INNER');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.job_status','INNER');
+		$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage','INNER');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');   		
-   		$this->db->where_in('jb.job_status', $this->stg);
+   		$this->db->where_in('jb.lead_stage', $this->stg);
 		//$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
 		$this->db->where('jb.lead_status',1);   	
 		$query = $this->db->get();

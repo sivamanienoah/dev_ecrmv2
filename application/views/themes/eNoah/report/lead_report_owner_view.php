@@ -37,7 +37,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->job_title;
+				$content .= $lead->lead_title;
 				$content .= "</td>";
 				
 				$content .= "<td>";

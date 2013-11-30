@@ -33,7 +33,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 	<?php
-	if (isset($quote_data['job_title']) && is_string($quote_data['job_title'])) echo htmlentities($quote_data['job_title'], ENT_QUOTES), ' - ';
+	if (isset($quote_data['lead_title']) && is_string($quote_data['lead_title'])) echo htmlentities($quote_data['lead_title'], ENT_QUOTES), ' - ';
 	if (isset($page_heading) && is_string($page_heading)) echo $page_heading, ' - ';
 	echo $cfg['app_full_name'];
 	?>
@@ -100,7 +100,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			foreach ($proposal_notify_msg as $arr){
-				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['jobid'].'">'.$arr['job_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
+				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.$arr['lead_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
 			}
 		}
 	}

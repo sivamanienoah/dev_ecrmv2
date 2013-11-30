@@ -580,7 +580,7 @@ class User_model extends crm_model {
 		# now get the logs for the user on that day
 		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
 				FROM ".$this->cfg['dbpref']."logs
-				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`jobid` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
+				LEFT JOIN `".$this->cfg['dbpref']."leads` ON `".$this->cfg['dbpref']."leads`.`lead_id` = `".$this->cfg['dbpref']."logs`.`jobid_fk`
 				WHERE DATE(`".$this->cfg['dbpref']."logs`.`date_created`) = ?
 				AND `userid_fk` = ?
 				ORDER BY `".$this->cfg['dbpref']."logs`.`date_created`";

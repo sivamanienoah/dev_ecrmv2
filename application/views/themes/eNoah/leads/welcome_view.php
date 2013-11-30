@@ -9,7 +9,7 @@
 $userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
 ?>
-var curr_job_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
+var curr_job_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
 var job_categories = [];
 job_categories['not_select'] = '';
 
@@ -23,7 +23,7 @@ item_inventory[<?php echo  $iv_key ?>] = ['<?php echo  str_replace("'", "\'", $i
 <?php } ?>
 
 var hourly_rate = '';
-var quote_id = <?php echo isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
+var quote_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
 var regId = '';
@@ -147,7 +147,7 @@ $(document).ready(function(){
 		?>
         <?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
         
-        populateQuote(<?php echo $quote_data['jobid'] ?>);
+        populateQuote(<?php echo $quote_data['lead_id'] ?>);
         
         <?php } ?>
         <?php if (isset($edit_quotation)) { ?>
@@ -290,10 +290,10 @@ function startQuote() {
     if (ex_cust_id == 0) {
         err.push('A valid customer needs to be selected');
     }
-    if ($.trim($('#job_title').val()) == '') {
+    if ($.trim($('#lead_title').val()) == '') {
         err.push('Job title is required');
     }
-    if ($('#job_category').val() == 'not_select') {
+    if ($('#lead_category').val() == 'not_select') {
         err.push('Service type must be selected');
     }
 	 if ($('#lead_source').val() == 'not_select') {
@@ -381,7 +381,7 @@ function addItem() {
         $('#content').block({
             message:'<h4>Processing</h4>'
         });
-        // add jobid to form
+        // add lead_id to form
         $('#hidden_jobid').val(quote_id);
         // get form data
         var form_data = $('#item-submit').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
@@ -592,8 +592,8 @@ function editQuoteDetails() {
                     if (res.error == false) {
 						showMSGS('Details Successfully Updated!', csrf_token, csrf_hasf);
                         // good to go
-                        $('.q-title').html(res.job_title);
-                        $('.q-service-type span').html(job_categories[res.job_category]);
+                        $('.q-title').html(res.lead_title);
+                        $('.q-service-type span').html(job_categories[res.lead_category]);
                         
                     } else {
                         alert(res.errormsg);
@@ -780,9 +780,7 @@ h3 .small {
                     <p class="notice width250px">If this is a new customer you need to add the<br /> customer
                     by <a href="#" class="modal-new-cust">completing their details</a>.</p>
                     <p><label>Lead Title</label></p>
-                    <p><input type="text" name="job_title" id="job_title" class="textfield width300px" onkeyup="$('.q-quote-items .quote-title span').html(this.value);" /></p>
-                    <!--p><label>Description</label></p>
-                    <p><textarea name="job_desc" id="job_desc" class="textfield width300px height100px"></textarea></p-->
+                    <p><input type="text" name="lead_title" id="lead_title" class="textfield width300px" onkeyup="$('.q-quote-items .quote-title span').html(this.value);" /></p>
 					<p><label>Lead Source</label></p>
                     
 					<p><select name="lead_source" id="lead_source" class="textfield width300px">
@@ -798,7 +796,7 @@ h3 .small {
                         </select>
                     </p>
                     <p><label>Service Requirement</label></p>
-					<p><select name="job_category" id="job_category" class="textfield width300px" onchange="$('.q-service-type span').html(job_categories[$(this).val()]);">
+					<p><select name="lead_category" id="lead_category" class="textfield width300px" onchange="$('.q-service-type span').html(job_categories[$(this).val()]);">
                             <option value="not_select">Please Select</option>
                         <?php 
 						foreach ($job_cate as $job) { 
@@ -922,7 +920,7 @@ h3 .small {
 				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">
 					<div>
 						<p><label>Lead Title</label></p>
-						<p><input type="text" name="job_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?>" /></p>
+						<p><input type="text" name="lead_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?>" /></p>
 						<p><label>Lead Source</label></p>
 						<p><select name="lead_source_edit" id="lead_source_edit" class="textfield width300px">
 								<option value="not_select">Please Select</option>
@@ -937,13 +935,13 @@ h3 .small {
 							</select>
 						</p>
 						<p><label>Service Requirement</label></p>
-						<p><select name="job_category" id="job_category_edit" class="textfield width300px">
+						<p><select name="lead_category" id="job_category_edit" class="textfield width300px">
 								<option value="not_select">Please Select</option>
 							<?php 
 								foreach ($job_cate as $job) 
 								{ 
 							?>
-								<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['job_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
+								<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['lead_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
 							<?php
 								}
 							?>
@@ -1128,7 +1126,7 @@ h3 .small {
 								</div>
 							<?php } ?>
 						
-						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
+						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
 						<div style="width:170px;">
 						<div class="buttons clearfix pull-left">
 							<button type="submit" class="positive" onclick="editQuoteDetails(); return false;">Save</button>
@@ -1148,7 +1146,7 @@ h3 .small {
             <?php } ?>
             
             <form id="item-submit">
-                <input type="hidden" name="jobid" id="hidden_jobid" />
+                <input type="hidden" name="lead_id" id="hidden_jobid" />
                 <h3>Add items to Lead</h3>
                 <div class="item-container">
                     <table cellpadding="0" cellspacing="0">
@@ -1209,7 +1207,7 @@ h3 .small {
 					
                     
                     <div class="q-quote-items" style="position: relative;">
-						<h4 class="quote-title">Project Name : <span><?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></span></h4>
+						<h4 class="quote-title">Project Name : <span><?php echo (isset($quote_data)) ? $quote_data['lead_title'] : '' ?></span></h4>
                         <ul id="q-sort-items"></ul>
                     </div>
                 </div>
@@ -1391,7 +1389,7 @@ function setProjectStatusDate(date_type) {
 	} else {
 		$.post(
 			'welcome/set_proposal_date/',
-			{'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			{'lead_id':curr_job_id, 'date_type':set_date_type, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(_data) {
 				try {
 					eval ('var data = ' + _data);
@@ -1422,7 +1420,7 @@ function setLeadCreationDate() {
 	} else {
 		$.post(
 			'welcome/set_lead_creation_date/',
-			{'jobid':curr_job_id, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			{'lead_id':curr_job_id, 'date':date_val, '<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 			function(_data) {
 				try {
 					eval ('var data = ' + _data);
@@ -1497,8 +1495,8 @@ $(function(){
 	});
 	
 	$('.jump-to-job select').change(function(){
-		var _new_location = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{jobid}}', $_SERVER['REQUEST_URI']) ?>';
-		document.location = _new_location.replace('{{jobid}}', $(this).val());
+		var _new_location = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
+		document.location = _new_location.replace('{{lead_id}}', $(this).val());
 	});
 	
 	

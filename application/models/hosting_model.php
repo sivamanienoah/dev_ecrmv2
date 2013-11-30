@@ -117,7 +117,7 @@ class Hosting_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'].'hosting_package as HP');
 		$this->db->join($this->cfg['dbpref'].'package as P', 'HP.packageid_fk=P.package_id');
 		$cond = array('HP.hostingid_fk' => $hostingid, 'H.hostingid' => $hostingid);
-		$this->db->where('jb.jobid', $cond);
+		$this->db->where('jb.lead_id', $cond);
     	return $this->db->get()->result_array();
     }
 }

@@ -60,7 +60,7 @@
 			foreach ($results as $s_k => $s_v)
 			{
 				?>
-			<h4><?php echo  $cfg['job_status'][$s_k] ?></h4>
+			<h4><?php echo  $cfg['lead_stage'][$s_k] ?></h4>
 			
 			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
 				
@@ -79,8 +79,8 @@
 						<?php foreach ($s_v as $record) { ?>
 						<tr>
 							<td class="actions">
-								<a href="<?php echo  $controller_uri ?>/view_quote/<?php echo  $record['jobid'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
-								<a class="jTip" id="jt-link-<?php echo  $record['jobid'] ?>" href="ajax/request/logs/<?php echo  $record['jobid'] ?>" title="Available Logs"><img src="assets/img/logs.gif" alt="Logs" /></a>
+								<a href="<?php echo  $controller_uri ?>/view_quote/<?php echo  $record['lead_id'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
+								<a class="jTip" id="jt-link-<?php echo  $record['lead_id'] ?>" href="ajax/request/logs/<?php echo  $record['lead_id'] ?>" title="Available Logs"><img src="assets/img/logs.gif" alt="Logs" /></a>
 							</td>
 							<td>
 							<?php
@@ -91,7 +91,7 @@
 							<?php
 							}
 							?>
-							<?php echo $record['job_title'] ?><img src="assets/img/cab.gif" alt="Invoice Downloaded" /></td>
+							<?php echo $record['lead_title'] ?><img src="assets/img/cab.gif" alt="Invoice Downloaded" /></td>
 							<td>
 								<?php echo  $record['first_name'] . ' ' . $record['last_name'] . ' - ' . $record['company'] ?> <span style="color:#f70;">( <?php if($this->session->userdata('edit')==1) { ?><a href="customers/add_customer/update/<?php echo  $record['custid'] ?>" style="text-decoration:underline;">client info</a><?php } else echo "client info"; ?> )</span>
 							</td>
@@ -99,11 +99,11 @@
 								<?php echo  date('d-m-Y H:i', strtotime($record['date_created'])) ?>
 							</td>
 							<td class="actions" align="center">
-								<a href="<?php echo  $controller_uri ?>/view_quote/<?php echo  $record['jobid'] ?>">View</a>
-								<?php echo (in_array($userdata['level'], array(0,1)) && $record['invoice_downloaded'] != 1) ? ' | <a href="welcome/edit_quote/' . $record['jobid'] . '">Edit</a>' : '' ?>
+								<a href="<?php echo  $controller_uri ?>/view_quote/<?php echo  $record['lead_id'] ?>">View</a>
+								<?php echo (in_array($userdata['level'], array(0,1)) && $record['invoice_downloaded'] != 1) ? ' | <a href="welcome/edit_quote/' . $record['lead_id'] . '">Edit</a>' : '' ?>
 								<?php
 								$list_location = ($this->uri->segment(3)) ? '/' . $this->uri->segment(3) : '';
-								echo (($this->session->userdata('delete')==1)) ? ' | <a href="welcome/delete_quote/' . $record['jobid'] . $list_location . '" onclick="return window.confirm(\'Are you sure?\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; ?>
+								echo (($this->session->userdata('delete')==1)) ? ' | <a href="welcome/delete_quote/' . $record['lead_id'] . $list_location . '" onclick="return window.confirm(\'Are you sure?\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; ?>
 							</td>
 						</tr>
 						<?php } ?>

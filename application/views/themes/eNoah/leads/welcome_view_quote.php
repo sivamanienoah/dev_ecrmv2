@@ -65,20 +65,20 @@ job_categories['not_select'] = '';
 job_categories[<?php echo $job["cid"] ?>] = '<?php echo $job["category"] ?>';
 <?php } ?>
 
-var quote_id = <?php echo  isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>;
+var quote_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
-var curr_job_id = <?php echo  $quote_data['jobid'] ?>;
+var curr_job_id = <?php echo  $quote_data['lead_id'] ?>;
 
 $(function(){
 	<?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
-	populateQuote(<?php echo  $quote_data['jobid'] ?>, true);
+	populateQuote(<?php echo  $quote_data['lead_id'] ?>, true);
 	<?php } ?>
 });
 
 var userid = <?php echo  isset($userdata['userid']) ? $userdata['userid'] : 0 ?>;
 
-var current_job_status = <?php echo (isset($quote_data['job_status'])) ? $quote_data['job_status'] : 0 ?>;
+var current_job_status = <?php echo (isset($quote_data['lead_stage'])) ? $quote_data['lead_stage'] : 0 ?>;
 
 function addLog() {
 	var the_log = $('#job_log').val();
@@ -136,7 +136,7 @@ function addLog() {
 	});
 	
 	
-	var form_data = {'userid':userid, 'jobid':quote_id, 'log_content':the_log, 'emailto':email_set,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
+	var form_data = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'}
 
 
 	if ($('#log_stickie').is(':checked')) {
@@ -240,7 +240,7 @@ function runAjaxFileUpload() {
 	$.ajaxFileUpload
 	(
 		{
-			url:'ajax/request/file_upload/<?php echo $quote_data['jobid'] ?>/'+ date +'/'+ userid + '/',
+			url:'ajax/request/file_upload/<?php echo $quote_data['lead_id'] ?>/'+ date +'/'+ userid + '/',
 			secureuri:false,
 			fileElementId:'ajax_file_uploader',
 			dataType: 'json',
@@ -269,13 +269,13 @@ function runAjaxFileUpload() {
 					else
 					{
 						if(data.msg == 'File successfully uploaded!') {
-							var lead_details = "welcome/lead_fileupload_details/<?php echo $quote_data['jobid'] ?>/"+data.file_name+ "/" +userid;														
+							var lead_details = "welcome/lead_fileupload_details/<?php echo $quote_data['lead_id'] ?>/"+data.file_name+ "/" +userid;														
 							$('#lead_result').load(lead_details);
 						}
-						var _file_link = '<a href="/files/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
-						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
+						var _file_link = '<a href="/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
+						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
 						if(role_id == 1 || lead_assign == unid || belong_to == unid ) {
-						 var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
+						 var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
 						}
 						$('#'+_uid).html(_del_link + _file_link);
 					}
@@ -352,7 +352,7 @@ function QueryAjaxFileUpload() {
 	$.ajaxFileUpload
 	(
 		{
-			url:'ajax/request/query_file_upload/<?php echo $quote_data['jobid'] ?>/'+encodeURIComponent(query)+'/'+replay,
+			url:'ajax/request/query_file_upload/<?php echo $quote_data['lead_id'] ?>/'+encodeURIComponent(query)+'/'+replay,
 			secureuri:false,
 			fileElementId:'query_file',
 			dataType: 'json',
@@ -382,7 +382,7 @@ function QueryAjaxFileUpload() {
 						if(typeof(data.file_name) != 'undefined')
 						{
 						if(data.file_name != 'undefined') {
-							fname = '<a href="crm_data/query/<?php echo $quote_data['jobid'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a>';
+							fname = '<a href="crm_data/query/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a>';
 							
 						} } else {
 							fname = 'File Not Attached';
@@ -433,7 +433,7 @@ function addURLtoJob() {
 	url = js_urlencode(url);
 	$.post(
 		'ajax/request/add_url_tojob/',
-		{'jobid':curr_job_id, 'url':url, 'content':cont,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		{'lead_id':curr_job_id, 'url':url, 'content':cont,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 		function(_data) {
 			try {
 				eval ('var data = ' + _data);
@@ -654,7 +654,7 @@ $(function(){
 					</td>
 					<td>
 						<input type="text" name="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-						<input type="hidden" name="quoteid" value="<?php echo $quote_data['jobid']; ?>" />
+						<input type="hidden" name="quoteid" value="<?php echo $quote_data['lead_id']; ?>" />
 					</td>
 					<td>
 						<div class="buttons">
@@ -862,7 +862,7 @@ $(function(){
 		<div class="side1">
 			<h2 class="job-title">
 				<?php
-					echo htmlentities($quote_data['job_title'], ENT_QUOTES);
+					echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 				?>
 			</h2>
 			
@@ -882,9 +882,9 @@ $(function(){
 					<?php //} ?>	
 					
 					<div class="q-init-details">
-						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['job_title'], ENT_QUOTES) ?></span></p>
+						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
-						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['job_category'] ?></span></p>
+						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_category'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 								<?php
@@ -925,7 +925,7 @@ $(function(){
 						<?php if($quote_data['lead_status'] == 2) { ?>
 							<p class="clearfix"><label>Reason for OnHold </label><span><?php echo $quote_data['lead_hold_reason'] ?></span></p>
 						<?php } ?>
-						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['jobid'] ?>" />
+						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
 					</div>
 				</form>
 				<?php } ?>
@@ -937,7 +937,7 @@ $(function(){
 					{
 				?>
 					<div class="buttons" style="overflow:hidden; padding-bottom:10px; margin:10px 0 0;">
-						<button type="submit" class="positive" onclick="document.location.href = '<?php echo $this->config->item('base_url') ?>welcome/edit_quote/<?php echo $quote_data['jobid'] ?>'">Edit this Lead</button>
+						<button type="submit" class="positive" onclick="document.location.href = '<?php echo $this->config->item('base_url') ?>welcome/edit_quote/<?php echo $quote_data['lead_id'] ?>'">Edit this Lead</button>
 					</div>
 				<?php
 					}
@@ -971,7 +971,7 @@ $(function(){
 				<div class="q-container">
 					<div>
 						<div class="q-quote-items" style="position: relative;">
-							<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
+							<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['lead_title'] : '' ?></h4>
 							<ul id="q-sort-items"></ul>
 						</div>
 					</div>
@@ -1203,7 +1203,7 @@ $(function(){
 				</form>
 				
 				<script type="text/javascript">
-					var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>';
+					var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>';
 					var milestones_cached_row = false;
 					function addMilestoneField()
 					{

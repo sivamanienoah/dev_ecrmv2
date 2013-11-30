@@ -23,7 +23,7 @@ if(!empty($hosting)){
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 	<?php
-	if (isset($quote_data['job_title']) && is_string($quote_data['job_title'])) echo htmlentities($quote_data['job_title'], ENT_QUOTES), ' - ';
+	if (isset($quote_data['lead_title']) && is_string($quote_data['lead_title'])) echo htmlentities($quote_data['lead_title'], ENT_QUOTES), ' - ';
 	if (isset($page_heading) && is_string($page_heading)) echo $page_heading, ' - ';
 	echo $cfg['app_full_name'];
 	?>
@@ -83,7 +83,7 @@ foreach ($results as $result)
 																			'end_date' => $result['end_date'],
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
+																			'lead_id' => $result['lead_id'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -108,7 +108,7 @@ foreach ($results as $result)
 																			'end_date' => $result['end_date'],
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
-																			'jobid' => $result['jobid'],
+																			'lead_id' => $result['lead_id'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -217,11 +217,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				
 				$random_task_class = '';
@@ -293,11 +293,11 @@ EOD;
 
 			/*
 			<td class=\"status-{$task['status']}\" valign=top align=right>{$task['status']}%</td>
-			<td align=center>$jobid=$task['jobid'];
-			if(!empty($hostingid[$jobid])) {
-				if(array_search(0,$hostingid[$jobid])>0) $color='red';
+			<td align=center>$lead_id=$task['lead_id'];
+			if(!empty($hostingid[$lead_id])) {
+				if(array_search(0,$hostingid[$lead_id])>0) $color='red';
 				else $color='#00CC00';
-				echo '<a href="dns/jobs/'.$jobid.'" style="color:'.$color.'">View</a><br>'; 
+				echo '<a href="dns/jobs/'.$lead_id.'" style="color:'.$color.'">View</a><br>'; 
 			}</td>*/
 
 			echo "<td class=start-date valign=top align=right>{$task['start_date']}</td>
@@ -378,11 +378,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				$random_task_class = ' random-task';
 			}
@@ -527,11 +527,11 @@ EOD;
 			{
 				if ($task['leadid'] == 'YES')
 				{
-					$company_link = "<a href=\"leads/index/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"leads/index/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				else
 				{
-					$company_link = "<a href=\"welcome/view_quote/{$task['jobid']}\">{$task['company']}</a>";
+					$company_link = "<a href=\"welcome/view_quote/{$task['lead_id']}\">{$task['company']}</a>";
 				}
 				
 				$random_task_class = '';
@@ -608,11 +608,11 @@ EOD;
 
 			/*
 			<td class=\"status-{$task['status']}\" valign=top align=right>{$task['status']}%</td>
-			<td align=center>$jobid=$task['jobid'];
-			if(!empty($hostingid[$jobid])) {
-				if(array_search(0,$hostingid[$jobid])>0) $color='red';
+			<td align=center>$lead_id=$task['lead_id'];
+			if(!empty($hostingid[$lead_id])) {
+				if(array_search(0,$hostingid[$lead_id])>0) $color='red';
 				else $color='#00CC00';
-				echo '<a href="dns/jobs/'.$jobid.'" style="color:'.$color.'">View</a><br>'; 
+				echo '<a href="dns/jobs/'.$lead_id.'" style="color:'.$color.'">View</a><br>'; 
 			}</td>*/
 
 			echo "<td class=start-date valign=top align=right>{$task['start_date']}</td>

@@ -31,21 +31,21 @@
 			{
 	?>
 			<tr>
-				<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'] ?>">View</a><?php } else echo "View"; ?>
+				<td class="actions" align="center"><?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'] ?>">View</a><?php } else echo "View"; ?>
 				<?php 
 				if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) {
-				echo ' | <a href="welcome/edit_quote/' . $filter_result['jobid'] . '">Edit</a>'; ?>
+				echo ' | <a href="welcome/edit_quote/' . $filter_result['lead_id'] . '">Edit</a>'; ?>
 				<?php } ?> 
 				<?php
 				if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
-				echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['jobid'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['job_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
+				echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
 				} ?>
 				</td>
 				<td>		
-				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', 'draft' ?>">		
+				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>">		
 				<?php echo $filter_result['invoice_no']; ?></a> 
 				</td>
-				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['jobid'], '/', 'draft' ?>"><?php echo $filter_result['job_title']; ?></a> </td>
+				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>"><?php echo $filter_result['lead_title']; ?></a> </td>
 					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
 				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>

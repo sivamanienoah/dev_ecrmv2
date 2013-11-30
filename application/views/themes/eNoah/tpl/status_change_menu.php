@@ -6,11 +6,11 @@
 
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-	<!--<h3>Adjust Lead Stage <span class="small">[ current stage - <em><?php #echo $cfg['job_status'][$quote_data['job_status']] ?></em> ]</span></h3>-->
+	<!--<h3>Adjust Lead Stage <span class="small">[ current stage - <em><?php #echo $cfg['lead_stage'][$quote_data['lead_stage']] ?></em> ]</span></h3>-->
 	<h3>Adjust Lead Stage <span class="small">[ current stage - <em><?php echo $quote_data['lead_stage_name']; ?></em> ]</span></h3>
-	<select class="textfield width300px" name="job_status" id="general_convert_quote_status" style="width:298px;">
+	<select class="textfield width300px" name="lead_stage" id="general_convert_quote_status" style="width:298px;">
 		<?php foreach ($lead_stage as $stage) { ?>
-               <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['job_status'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> ><?php echo  $stage['lead_stage_name'] ?></option>
+               <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['lead_stage'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> ><?php echo  $stage['lead_stage_name'] ?></option>
          <?	} ?>
 	</select>					
 

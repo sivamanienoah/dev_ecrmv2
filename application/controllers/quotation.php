@@ -16,9 +16,9 @@ class Quotation extends crm_controller {
 	{
 	}
 	
-	function invoice_data_zip($jobid)
+	function invoice_data_zip($lead_id)
 	{
-		$this->db->where('jobid', $jobid);
+		$this->db->where('lead_id', $lead_id);
 		$job_details = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		if ($job_details->num_rows() > 0)
@@ -26,13 +26,13 @@ class Quotation extends crm_controller {
 			$job_details = $job_details->result_array();
 			$this->load->library('zip');
 			
-			$inv_data = $this->invoice_to_csv($jobid);
+			$inv_data = $this->invoice_to_csv($lead_id);
 			$cust_data = $this->customer_to_csv($job_details[0]['custid_fk']);
 			
 			$this->zip->add_data($job_details[0]['invoice_no'] . '_INVOICE_DATA.csv', $inv_data);
 			$this->zip->add_data($job_details[0]['custid_fk'] . '_CUSTOMER_DATA.csv', $cust_data);
 			
-			$this->db->where('jobid', $jobid);
+			$this->db->where('lead_id', $lead_id);
 			$this->db->update($this->cfg['dbpref'] . 'leads', array('invoice_downloaded' => '1'));
 			
 			$this->zip->download($job_details[0]['invoice_no'] . '_myob_data.zip'); 
@@ -43,7 +43,7 @@ class Quotation extends crm_controller {
 		}
 	}
 	
-	function invoice_to_csv($jobid)
+	function invoice_to_csv($lead_id)
 	{
 		$csv_titles[0] = "Co./Last Name";
 		$csv_titles[1] = "First Name";
@@ -88,7 +88,7 @@ class Quotation extends crm_controller {
 		$csv_titles[40] = "Category";
 		$csv_titles[41] = "Card ID";
 		
-		$this->db->where('jobid', $jobid);
+		$this->db->where('lead_id', $lead_id);
 		$job_details = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		if ($job_details->num_rows() > 0)
@@ -107,7 +107,7 @@ class Quotation extends crm_controller {
 			$client = $client_details->result_array();
 			
 			$this->db->order_by('item_position', 'asc');
-			$this->db->where('jobid_fk', $jobid);
+			$this->db->where('jobid_fk', $lead_id);
 			$user = $this->db->get($this->cfg['dbpref'] . 'items');
 			$item_data = $user->result_array();
 			
@@ -146,7 +146,7 @@ class Quotation extends crm_controller {
 					$cdata[$j][10] = "$0.00"; // [Amount] => $310.00
 					$cdata[$j][11] = "$0.00"; //[Inc-Tax Amount] => $341.00
 					$cdata[$j][12] = $job[0]['belong_to']; //[Job] => 
-					$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['job_category']]; //[Comment] => Graphic Design
+					$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['lead_category']]; //[Comment] => Graphic Design
 					$cdata[$j][14] = 'Sale;' . $client[0]['company']; //[Journal Memo] => Sale; Ben Ramsay Real Estate
 					$cdata[$j][15] = ''; //[Promised Date] =>
 					$cdata[$j][16] = ""; // Referral Source =>
@@ -193,7 +193,7 @@ class Quotation extends crm_controller {
 				$cdata[$j][10] = $output_item_price; // [Amount] => $310.00
 				$cdata[$j][11] = $output_gst_inc_price; //[Inc-Tax Amount] => $341.00
 				$cdata[$j][12] = $job[0]['belong_to']; //[Job] => 
-				$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['job_category']]; //[Comment] => Graphic Design
+				$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['lead_category']]; //[Comment] => Graphic Design
 				$cdata[$j][14] = 'Sale;' . $client[0]['company']; //[Journal Memo] => Sale; Ben Ramsay Real Estate
 				$cdata[$j][15] = ''; //[Promised Date] =>
 				$cdata[$j][16] = ""; // Referral Source =>
@@ -238,7 +238,7 @@ class Quotation extends crm_controller {
 				$cdata[$j][10] = "$0.00"; // [Amount] => $310.00
 				$cdata[$j][11] = "$0.00"; //[Inc-Tax Amount] => $341.00
 				$cdata[$j][12] = $job[0]['belong_to']; //[Job] => 
-				$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['job_category']]; //[Comment] => Graphic Design
+				$cdata[$j][13] = $this->cfg['job_categories'][$job[0]['lead_category']]; //[Comment] => Graphic Design
 				$cdata[$j][14] = 'Sale;' . $client[0]['company']; //[Journal Memo] => Sale; Ben Ramsay Real Estate
 				$cdata[$j][15] = ''; //[Promised Date] =>
 				$cdata[$j][16] = ""; // Referral Source =>

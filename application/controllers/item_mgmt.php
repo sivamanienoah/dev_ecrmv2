@@ -164,7 +164,7 @@ class Item_mgmt extends crm_controller {
 				redirect('item_mgmt');
 			}
 		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			$this->session->set_flashdata('login_errors', array("You have no rights to delete this item"));
 			redirect('item_mgmt');
 		}
 	}
@@ -174,13 +174,12 @@ class Item_mgmt extends crm_controller {
 	 * @param $id
 	 */
 	function delete_category($id = false) {
-		if ($this->session->userdata('delete')==1){
+		if ($this->session->userdata('delete')==1) {
 			$this->item_mgmt_model->delete_row('additional_cats', array('cat_id' => $id));
 			$this->session->set_flashdata('confirm', array('Category Record Deleted!'));
 			redirect('item_mgmt/category_list');
-		}
-		else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to delete this record"));
 			redirect('item_mgmt/category_list');
 		}	
 	}

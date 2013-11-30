@@ -48,7 +48,7 @@ class web_to_lead extends crm_controller {
 			$ins_cus['add1_state']		= '24'; //Tamil nadu
 			$ins_cus['add1_location']	= '3'; //Chennai
 			
-			$ins['job_title']           = 'Lead From Website - Contact us';
+			$ins['lead_title']           = 'Lead From Website - Contact us';
 		}else{
 		
 			$ins_cus['first_name']    = $_POST['name']; 
@@ -61,7 +61,7 @@ class web_to_lead extends crm_controller {
 			$ins_cus['add1_state']		= '24'; //Tamil nadu
 			$ins_cus['add1_location']	= '3';//Chennai
 			
-			$ins['job_title']           = 'Lead From Website - QAD Services';			
+			$ins['lead_title']           = 'Lead From Website - QAD Services';			
 					
 	    }
 	 
@@ -69,9 +69,9 @@ class web_to_lead extends crm_controller {
 		$insert_id = $this->db->insert_id();
 
 	    //
-		//$ins['job_title']           = 'Ask the Expert';		
+		//$ins['lead_title']           = 'Ask the Expert';		
 		$ins['custid_fk']           = $insert_id;
-		$ins['job_category']        = empty($_POST['job_category'])?39:$_POST['job_category'];
+		$ins['lead_category']        = empty($_POST['lead_category'])?39:$_POST['lead_category'];
 		$ins['lead_source']       = '9';
 		$ins['lead_assign']         = 118;
 		$ins['expect_worth_id']     = 1;
@@ -81,7 +81,7 @@ class web_to_lead extends crm_controller {
 		$ins['division']         = 1;
 		$ins['date_created']        = date('Y-m-d H:i:s');
 		$ins['date_modified']       = date('Y-m-d H:i:s');
-		$ins['job_status']          = 1;
+		$ins['lead_stage']          = 1;
 		$ins['lead_indicator']   = 'HOT';
 		$ins['created_by']          = 59;
 		$ins['modified_by']         = 59;
@@ -93,7 +93,7 @@ class web_to_lead extends crm_controller {
 			$invoice_no = (int) $insert_id;
 			$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 
-			$this->db->where('jobid', $insert_id);
+			$this->db->where('lead_id', $insert_id);
 			$this->db->update($this->cfg['dbpref'] . 'leads', array('invoice_no' => $invoice_no));
 
 			$this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
@@ -104,10 +104,10 @@ class web_to_lead extends crm_controller {
 		exit;
 	}	
 	
-	function quote_add_item($jobid, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE)
+	function quote_add_item($lead_id, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE)
     {
         $ins['item_desc'] = $item_desc;
-        $ins['jobid_fk'] = $jobid;
+        $ins['jobid_fk'] = $lead_id;
 		if(empty($hours)) {
 			$ins['hours'] = '0.00';
 		} else {
@@ -168,12 +168,12 @@ class web_to_lead extends crm_controller {
         }
     }
     
-	function ajax_quote_items($jobid = 0, $itemid = 0, $return = false)
+	function ajax_quote_items($lead_id = 0, $itemid = 0, $return = false)
     {
 	$this->load->helper('text');
 	$this->load->helper('fix_text');
         
-        $this->db->where('jobid_fk', $jobid);
+        $this->db->where('jobid_fk', $lead_id);
         $this->db->order_by('item_position', 'asc');
         $q = $this->db->get($this->cfg['dbpref'] . 'items');
 
@@ -231,7 +231,7 @@ class web_to_lead extends crm_controller {
 			$json['deposits'] = $json['deposit_balance'] = '$0.00';
 			$deposit_total = 0;
 			
-			$this->db->where('jobid_fk', $jobid);
+			$this->db->where('jobid_fk', $lead_id);
 			$deposits = $this->db->get($this->cfg['dbpref'] . 'deposits');
 			//if ($deposits->num_rows() > 0 && $price_allowed)
 			if ($deposits->num_rows() > 0)

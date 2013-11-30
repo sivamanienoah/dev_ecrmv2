@@ -244,9 +244,9 @@ class Role extends crm_controller {
 					$log_content = nl2br($row['log_content']);
 					$numerc_time = (int) $row['time_spent'];
 					$time_total += $numerc_time;
-					if ( ! isset($row['job_title']))
+					if ( ! isset($row['lead_title']))
 					{
-						$row['job_title'] = 'General Task';
+						$row['lead_title'] = 'General Task';
 					}
 					
 					$row_time_spent = '';
@@ -269,7 +269,7 @@ class Role extends crm_controller {
 					'<div class="log">
 						<p class="data">
 							<span>'.$row["fancy_date"].'</span>
-						'.$data["log_role_name"].' - '.$row["job_title"].'
+						'.$data["log_role_name"].' - '.$row["lead_title"].'
 						</p>
 						<p class="desc">
 						'.$log_content.'

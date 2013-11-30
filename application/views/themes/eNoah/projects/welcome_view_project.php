@@ -12,17 +12,17 @@
 <!--Code Added for the Pagination in Comments Section -- Starts Here-->
 <script type="text/javascript">
 
-  var project_jobid           = "<?php echo isset($quote_data['jobid']) ? $quote_data['jobid'] : 0 ?>";
+  var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
   var project_edit_quotation  = "<?php echo $edit_quotation; ?>";
   var project_view_quotation  = "<?php echo $view_quotation; ?>";
   var project_user_id         = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : 0 ?>";
-  var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['job_title']) ?>";
-  var project_job_status      = "<?php echo (isset($quote_data['job_status'])) ? $quote_data['job_status'] : 0 ?>";
+  var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>";
+  var project_job_status      = "<?php echo (isset($quote_data['lead_stage'])) ? $quote_data['lead_stage'] : 0 ?>";
   var project_request_url     = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
   var project_assigned_to     = "<?php echo $quote_data['assigned_to']; ?>";
   var project_userdata    	  = "<?php echo $userdata; ?>";
   var project_complete_status = "<?php echo $quote_data['complete_status']; ?>";
-  var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{jobid}}', $_SERVER['REQUEST_URI']) ?>';			
+  var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';			
   
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
@@ -223,7 +223,7 @@
         <div class="pull-left side1"> 
 			<h2 class="job-title">
 				<?php
-					echo htmlentities($quote_data['job_title'], ENT_QUOTES);
+					echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 				?>
 			</h2>
 			<?php
@@ -684,7 +684,7 @@
 		<div class="q-container">
 			<div class="q-details">
 				<div class="q-quote-items">
-					<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['job_title'] : '' ?></h4>
+					<h4 class="quote-title">Project Name : <?php echo (isset($quote_data)) ? $quote_data['lead_title'] : '' ?></h4>
 					<ul id="q-sort-items"></ul>
 				</div>
 			</div>

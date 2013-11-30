@@ -40,7 +40,7 @@ class Manage_lead_stage extends crm_controller {
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		$data['lead_stage'] = $this->manage_lead_stage_model->get_leadStage($search = false);
-		$data['cb_status'] = $this->manage_lead_stage_model->get_num_row('leads', array('job_status' => $id));
+		$data['cb_status'] = $this->manage_lead_stage_model->get_num_row('leads', array('lead_stage' => $id));
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_item'])) {
 			$src = $this->manage_lead_stage_model->get_row('lead_stage', array('lead_stage_id' => $id));
@@ -180,7 +180,7 @@ class Manage_lead_stage extends crm_controller {
             $json['errormsg'] = implode("\n", $errors);
             echo json_encode($json);
         } else {
-			$data['cb_status'] = $this->manage_lead_stage_model->get_num_row('leads', array('job_status' => $this->input->post('lead_stage_id')));
+			$data['cb_status'] = $this->manage_lead_stage_model->get_num_row('leads', array('lead_stage' => $this->input->post('lead_stage_id')));
 			if ($this->input->post('status') == "") {
 				if ($data['cb_status']==0) {
 					$ins['status'] = 0;
@@ -216,7 +216,7 @@ class Manage_lead_stage extends crm_controller {
 				$json['errormsg'] = implode("\n", $errors);
 				echo json_encode($json);
 			} else {
-				$stat = $this->manage_lead_stage_model->get_num_row('leads', array('job_status' => $stage_id));
+				$stat = $this->manage_lead_stage_model->get_num_row('leads', array('lead_stage' => $stage_id));
 				if ($stat==0) {		
 					if ($this->manage_lead_stage_model->delete_row('lead_stage', array('lead_stage_id' => $stage_id))) {
 						echo "{error:false}";
@@ -239,7 +239,7 @@ class Manage_lead_stage extends crm_controller {
     }
 	
 	function ajax_check_status_lead_stage() {
-		$rows = $this->manage_lead_stage_model->get_num_row('leads', array('job_status' => $this->input->post('data')));
+		$rows = $this->manage_lead_stage_model->get_num_row('leads', array('lead_stage' => $this->input->post('data')));
 		$res = array();
 		if($rows == 0) {
 			$res['html'] .= "YES";

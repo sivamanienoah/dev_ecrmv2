@@ -222,7 +222,7 @@ class Manage_service extends crm_controller {
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
 		//for status
-		$this->db->where('job_category', $id);
+		$this->db->where('lead_category', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
@@ -522,7 +522,7 @@ class Manage_service extends crm_controller {
 	{
 		$post_data  = real_escape_array($this->input->post());
 		$id         = $post_data['data'];
-		$this->db->where('job_category', $id);
+		$this->db->where('lead_category', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {

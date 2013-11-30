@@ -15,14 +15,14 @@ class Dashboard_model extends crm_model {
 	public function getTotLeads($cusId = FALSE) {
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.job_status');
-   		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
+   		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
-		$this->db->group_by('jb.job_status');
-		$this->db->order_by('jb.job_status', 'asc');
+		$this->db->group_by('jb.lead_stage');
+		$this->db->order_by('jb.lead_stage', 'asc');
 		$query = $this->db->get();
 		$tot_query =  $query->result_array();
 		// echo $this->db->last_query(); exit;
@@ -31,7 +31,7 @@ class Dashboard_model extends crm_model {
 	
 	public function getLeadsByReg($cusId = FALSE) {
 		//print_r($custId); exit;
-		// $job_status = array(1,2,3,4,5,6,7,8,9,10,11,12);
+		// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
 		
 		$this->db->select('rg.region_name, coun.country_name, ste.state_name, loc.location_name, j.expect_worth_amount, ew.expect_worth_name, ew.expect_worth_id');	
 		$this->db->join($this->cfg['dbpref'].'customers c','custid = j.custid_fk','inner');
@@ -41,8 +41,8 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'location loc','loc.locationid=c.add1_location','inner');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = j.expect_worth_id','inner');
 		$this->db->where('j.lead_status',1);
-		// $this->db->where_in('j.job_status', $job_status);
-		$this->db->where_in('j.job_status', $this->stg);
+		// $this->db->where_in('j.lead_stage', $lead_stage);
+		$this->db->where_in('j.lead_stage', $this->stg);
 		
 		if ($this->userdata['level']==1) {
 			//$this->db->where_in('j.custid_fk', $cusId);
@@ -72,7 +72,7 @@ class Dashboard_model extends crm_model {
 		$this->db->select('us.userid, COUNT( * ), SUM(jb.expect_worth_amount) as amt, CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.belong_to');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
@@ -88,7 +88,7 @@ class Dashboard_model extends crm_model {
 		$this->db->select('us.userid, COUNT( * ), CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.lead_assign');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
@@ -104,7 +104,7 @@ class Dashboard_model extends crm_model {
 		/*
 		$this->db->select('COUNT(lead_indicator), jb.lead_indicator');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->where('jb.job_status BETWEEN 1 AND 12');
+		$this->db->where('jb.lead_stage BETWEEN 1 AND 12');
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk', $cusId);
@@ -139,7 +139,7 @@ class Dashboard_model extends crm_model {
 			THEN lead_indicator
 			END ) AS 'COLD'
 			FROM ".$this->cfg['dbpref']."leads
-			WHERE job_status IN ('".$this->stages."')
+			WHERE lead_stage IN ('".$this->stages."')
 			AND lead_status =1".$where_level);
 		
 			return $indicator_query->row_array();
@@ -147,19 +147,19 @@ class Dashboard_model extends crm_model {
 	
 	public function getIndiLeads($cusId = FALSE, $indi) {
 	
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
 		$this->db->where('jb.lead_indicator', $indi);
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$ind_query = $query->result_array();
@@ -169,11 +169,11 @@ class Dashboard_model extends crm_model {
 	
 	public function getLeastLeadsCount($cusId = FALSE) {
 		/*
-		$cnt_query = $this->db->query("SELECT `lead_indicator`,count(`lead_indicator`) FROM `".$this->cfg['dbpref']."leads` WHERE `job_status` between 1 and 12 and `lead_status` = 1 and `lead_indicator` !='HOT' GROUP BY `lead_indicator` ORDER BY `lead_indicator`");
+		$cnt_query = $this->db->query("SELECT `lead_indicator`,count(`lead_indicator`) FROM `".$this->cfg['dbpref']."leads` WHERE `lead_stage` between 1 and 12 and `lead_status` = 1 and `lead_indicator` !='HOT' GROUP BY `lead_indicator` ORDER BY `lead_indicator`");
 		*/
 		$this->db->select('lead_indicator, count(`lead_indicator`)');
 		$this->db->from($this->cfg['dbpref'].'leads');
-		$this->db->where_in('job_status', $this->stg);
+		$this->db->where_in('lead_stage', $this->stg);
 		$this->db->where('lead_status',1);
 		$this->db->where('lead_indicator != ', 'HOT');
 		if ($this->userdata['level']!=1) {
@@ -181,19 +181,19 @@ class Dashboard_model extends crm_model {
 		}
 		$this->db->GROUP_BY('lead_indicator');
 		$this->db->order_by('lead_indicator', 'asc');
-		$this->db->order_by('jobid', 'asc');
+		$this->db->order_by('lead_id', 'asc');
 		$query = $this->db->get();
 		$cnt_query =  $query->result_array();
 		return $cnt_query;
 	}
 	
 	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE) {
-		$this->db->select('jb.job_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.jobid, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
+		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk', $cusId);
@@ -252,7 +252,7 @@ class Dashboard_model extends crm_model {
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$oneEightyDays."' AND '".$oneFiftyOneDays."' THEN DATE(date_created) END) as '151-180 Days',
 		COUNT(CASE WHEN DATE(date_created) < '".$oneEightyOneDays."' THEN DATE(date_created) END) as 'Above181 Days'
 		FROM ".$this->cfg['dbpref']."leads
-		WHERE job_status IN ('".$stg."')
+		WHERE lead_stage IN ('".$stg."')
 		AND lead_status = 1".$where_level);
 		return $age_query->row_array();
 	}
@@ -317,13 +317,13 @@ class Dashboard_model extends crm_model {
 			break;	
 		}
 		
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', 'LEFT');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk', $cusId);
@@ -333,27 +333,27 @@ class Dashboard_model extends crm_model {
 		} else {
 			$this->db->where('date_format( jb.date_created, "%Y-%m-%d" ) BETWEEN "'.$todt.'" AND "'.$frmdt.'" ');
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ag_query = $query->result_array();
 		return $ag_query;
 	}
 	
-	/* Get jobid, lead title, region, lead owner, lead assigned to, customer, */
+	/* Get lead_id, lead title, region, lead owner, lead assigned to, customer, */
 	public function getLeadOwnerDependencies($userid, $cusId = FALSE) {
-	    $lead_dependencies = $this->db->select('jb.jobid,jb.job_title,ew.expect_worth_id,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id,jb.lead_title,ew.expect_worth_id,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('ownr.userid', $userid);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		//echo $this->db->last_query(); exit;
 		return $depend_query;
@@ -361,39 +361,39 @@ class Dashboard_model extends crm_model {
 	}
 
 	public function getLeadAssigneeDependencies($userid, $cusId = FALSE) {
-	    $lead_dependencies = $this->db->select('jb.jobid, jb.invoice_no, ew.expect_worth_id, jb.job_title,cs.first_name as cfname ,cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title,cs.first_name as cfname ,cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('usr.userid', $userid);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		return $depend_query;
 		
 	}
 
 	public function getLeadsDetails($leadStage, $cusId = FALSE) {
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.job_status');
+		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ls.lead_stage_name', $leadStage, 'after');
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;
 		$ld_query =  $query->result_array();
@@ -402,7 +402,7 @@ class Dashboard_model extends crm_model {
 	
 	public function getRegionLeadsDetails($leadsRegion, $cusId = FALSE) {
 		//echo $leadsRegion; exit;
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'region reg', 'reg.regionid = cs.add1_region');
@@ -425,42 +425,42 @@ class Dashboard_model extends crm_model {
 		if (($this->userdata['level']==4) || ($this->userdata['level']==5)) {
 			$this->db->where('loc.location_name', $leadsRegion);
 		}
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ld_query =  $query->result_array();
 		return $ld_query;
 	}
 	
-	public function getCurrentLeadActivity($jobid) {
-	    $lead_dependencies = $this->db->select('jb.jobid, ew.expect_worth_id, jb.job_title,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	public function getCurrentLeadActivity($lead_id) {
+	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 							 $this->db->from($this->cfg['dbpref'].'leads jb');
 							 $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 							 $this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 							 $this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 							 $this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-							 $this->db->where_in('jb.job_status', $this->stg);
+							 $this->db->where_in('jb.lead_stage', $this->stg);
 							 $this->db->where('jb.lead_status',1);
-							 $this->db->where('jb.jobid', $jobid);
-							 $this->db->order_by('jb.jobid', 'desc');
+							 $this->db->where('jb.lead_id', $lead_id);
+							 $this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		return $depend_query;
 	}
 	
 	public function LeadDetails($jid) {
-		$this->db->select('jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+		$this->db->select('jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.job_status');
+		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
-   		$this->db->where('jb.jobid', $jid);
+		$this->db->where_in('jb.lead_stage', $this->stg);
+   		$this->db->where('jb.lead_id', $jid);
 		$this->db->where('jb.lead_status', 1);
 		$query = $this->db->get();
 		$lst_query =  $query->row_array();
@@ -539,7 +539,7 @@ class Dashboard_model extends crm_model {
 		$curYear = date("Y");
 		$frm_dt = $curYear."-04-01";
 		$to_dt = ($curYear+1)."-03-31";
-		$this->db->select('jobid , expect_worth_id, actual_worth_amount as expect_worth_amount');
+		$this->db->select('lead_id , expect_worth_id, actual_worth_amount as expect_worth_amount');
 		$this->db->from($this->cfg['dbpref'].'leads');
 		$this->db->where('lead_status', 4);
 		if ($this->userdata['level']!= 1) {
@@ -547,7 +547,7 @@ class Dashboard_model extends crm_model {
 		}
    		$this->db->where_in('pjt_status', $pjt_stat);
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
-		$this->db->order_by('jobid', 'desc');
+		$this->db->order_by('lead_id', 'desc');
 		$query = $this->db->get();
 		$cls_query =  $query->result_array();
 		return $cls_query;
@@ -556,16 +556,16 @@ class Dashboard_model extends crm_model {
 	//For Closed Opportunities Leads only - actual_worth_amount
 	public function closedLeadDet($jbid) {
 		if (!empty($jbid)) {
-			$this->db->select('jb.jobid, jb.invoice_no, jb.job_title, jb.pjt_status, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'leads jb');
-			$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.job_status', "LEFT");
+			$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', "LEFT");
-			$this->db->where_in('jb.jobid', $jbid);
+			$this->db->where_in('jb.lead_id', $jbid);
 			$this->db->where('jb.lead_status', 4);
-			$this->db->order_by('jb.jobid', 'desc');
+			$this->db->order_by('jb.lead_id', 'desc');
 			$query = $this->db->get();
 			$rest_query =  $query->result_array();
 			return $rest_query;
@@ -578,7 +578,7 @@ class Dashboard_model extends crm_model {
 		$this->db->select('ldsrc.lead_source_name, count(`lead_source`) as src');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
@@ -591,15 +591,15 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getServiceReq($cusId = FALSE) {
-		$this->db->select('jc.category, count(`job_category`) as job_cat');
+		$this->db->select('jc.category, count(`lead_category`) as job_cat');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'job_categories jc', 'jc.cid = jb.job_category');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->join($this->cfg['dbpref'].'job_categories jc', 'jc.cid = jb.lead_category');
+		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
-		$this->db->GROUP_BY('jb.job_category');
+		$this->db->GROUP_BY('jb.lead_category');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;
 		$sq_query =  $query->result_array();
@@ -607,40 +607,40 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE) {
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ldsrc.lead_source_name', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ldsr_query =  $query->result_array();
 		return $ldsr_query;
 	}
 	
 	public function getLeadsDetails_pie3($leadStage, $cusId = FALSE) {
-		$this->db->select('jb.jobid, jb.invoice_no, jb.job_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.category, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.category, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'job_categories jbc', 'jbc.cid = jb.job_category');
+		$this->db->join($this->cfg['dbpref'].'job_categories jbc', 'jbc.cid = jb.lead_category');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-		$this->db->where_in('jb.job_status', $this->stg);
+		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('jbc.category', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
-		$this->db->order_by('jb.jobid', 'desc');
+		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		$serreq_query =  $query->result_array();
