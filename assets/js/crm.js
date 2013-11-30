@@ -7,16 +7,16 @@ function showMSGS(str, ci_csrf_token, csrf_hash) {
 		$.unblockUI();
     });
 }
-function populateQuote(jobid, nosort) {
+function populateQuote(lead_id, nosort) {
 
-    if (typeof(jobid) == 'undefined') {
+    if (typeof(lead_id) == 'undefined') {
         return;
     } else {
 		$('.q-container').block({
             message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
         });
-        $.get('welcome/ajax_quote_items/'+jobid,{},function(res) {
+        $.get('welcome/ajax_quote_items/'+lead_id,{},function(res) {
                 if (typeof (res) == 'object') {
                     if (res.error == false) {
                         $('#q-sort-items').empty().append(res.html);

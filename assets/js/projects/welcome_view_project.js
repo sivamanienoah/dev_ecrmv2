@@ -139,7 +139,7 @@
 		});
 
 
-	var form_data 			   = {'userid':userid, 'jobid':quote_id, 'log_content':the_log, 'emailto':email_set}
+	var form_data 			   = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set}
 	form_data[csrf_token_name] = csrf_hash_token;
 	
 	if ($('#log_stickie').is(':checked')) {
@@ -651,7 +651,7 @@
 			return false;
 		}
 		url 					  = js_urlencode(url);
-		var params 				  = {'jobid':curr_job_id, 'url':url, 'content':cont};
+		var params 				  = {'lead_id':curr_job_id, 'url':url, 'content':cont};
 		params[csrf_token_name]   = csrf_hash_token;
 		
 		$.post(
@@ -713,7 +713,7 @@
 				return false;
 			} else {
 			
-				var params 				 = {'jobid':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
+				var params 				 = {'lead_id':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
 				params[csrf_token_name]  = csrf_hash_token;
 
 				$.post(
@@ -939,7 +939,7 @@
 			return false;
 		} else {
 			
-			var params 				= {'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val};
+			var params 				= {'lead_id':curr_job_id, 'date_type':set_date_type, 'date':date_val};
 			params[csrf_token_name] = csrf_hash_token;
 		
 			$.post(
@@ -1014,7 +1014,7 @@
 			return false; 
 		} else {
 		
-			var params 					 = {'jobid':curr_job_id, 'date_type':set_date_type, 'date':date_val};
+			var params 					 = {'lead_id':curr_job_id, 'date_type':set_date_type, 'date':date_val};
 			params[csrf_token_name]      = csrf_hash_token;
 			
 			$.post(
@@ -1177,7 +1177,7 @@
 
 	$('.jump-to-job select').change(function(){
 		var _new_location = proj_location;
-		document.location = _new_location.replace('{{jobid}}', $(this).val());
+		document.location = _new_location.replace('{{lead_id}}', $(this).val());
 	});
 
 
@@ -1277,7 +1277,7 @@
 				css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
 		});
 		
-		var params 				= {jobid: curr_job_id, job_status: status};
+		var params 				= {lead_id: curr_job_id, lead_stage: status};
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.post(
@@ -1333,7 +1333,7 @@
 				contractors.push($(this).val());
 			});
 
-			var params = {'contractors': contractors.join(','), 'jobid': curr_job_id, 'project-mem': p};
+			var params = {'contractors': contractors.join(','), 'lead_id': curr_job_id, 'project-mem': p};
 			params[csrf_token_name] = csrf_hash_token;
 		
 			var baseurl = $('.hiddenUrl').val();

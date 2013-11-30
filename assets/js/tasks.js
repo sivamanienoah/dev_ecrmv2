@@ -58,7 +58,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	
 	$.post(
 		'ajax/request/add_job_task' + random_task_url,
-		{'jobid': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks,'ci_csrf_token': csrf_hasf},
+		{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks,'ci_csrf_token': csrf_hasf},
 		function (data)
 		{
 			if (data.error)
@@ -89,7 +89,7 @@ var random_task_edit;
 
 function openEditTask(taskid, random)
 {
-	// alert(taskid);
+	alert(taskid);
 
 	task_being_edited = taskid;
 	
@@ -109,18 +109,20 @@ function openEditTask(taskid, random)
         });
 	
 	var the_task_el = $('#task-table-' + taskid);
+	alert(the_task_el);
 	var the_task_el1 = taskid;	
 	var edit_table_el = $('.blockUI .task-edit');
-	var createdbyid = $.trim($('.task-cid', the_task_el).text());	
+	var createdbyid = $.trim($('.task-cid', the_task_el).text());
+	
 	var uid=$.trim($('.task-uid', the_task_el).text());	
 	// workout the existing values and replace them
-	
+
 	$('.edit-task-remarks', edit_table_el).val($.trim($('.taskremarks', the_task_el).text()));
 	
 	//$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
 	if (createdbyid == uid)
 	{
-		//alert(createdbyid + "==" + uid);
+		// alert(createdbyid + "==" + uid);
 		$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
 		$('.edit-task-allocate', edit_table_el).removeAttr('disabled', ($.trim($('.user-name', the_task_el).attr('rel'))) );
 		$('.edit-job-task-desc', edit_table_el).val($.trim($('.task', the_task_el).text()));	
@@ -220,7 +222,7 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
-	var param =	{'jobid': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner };
+	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner };
 	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,

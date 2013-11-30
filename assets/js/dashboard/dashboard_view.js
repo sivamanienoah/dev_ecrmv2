@@ -779,10 +779,10 @@ function getLeadAssigneeTable(userid,user_name) {
 		}
 	});
 }
-function getCurrentLeadActivity(jobid,lead_name)  {
+function getCurrentLeadActivity(lead_id,lead_name)  {
 	var baseurl = site_base_url;
 	$.ajax({
-	url : baseurl + 'dashboard/getLeadsCurrentActivity/'+ jobid+'/'+lead_name,
+	url : baseurl + 'dashboard/getLeadsCurrentActivity/'+ lead_id+'/'+lead_name,
 		success : function(response){
 			if(response != '') {
 				$("#leads-current-activity-list").show();
