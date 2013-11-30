@@ -45,7 +45,7 @@
 				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>">		
 				<?php echo $filter_result['invoice_no']; ?></a> 
 				</td>
-				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>"><?php echo $filter_result['lead_title']; ?></a> </td>
+				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
 					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
 				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
