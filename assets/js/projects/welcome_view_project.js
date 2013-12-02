@@ -1458,19 +1458,17 @@
 					var mstat = $('.milestone-status select option:selected', $(this)).val();
 					
 					email_data += ddate + ' : ' + mstone;
-					if (mstat == 2)
-					{
-						email_data += ' [completed]';
-					}
-
 					if (mstat == 0)
 					{
 						email_data += ' [Scheduled]';
 					}
-
 					if (mstat == 1)
 					{
 						email_data += ' [In Progress]';
+					}
+					if (mstat == 2)
+					{
+						email_data += ' [completed]';
 					}
 					email_data += '\n';
 				});
