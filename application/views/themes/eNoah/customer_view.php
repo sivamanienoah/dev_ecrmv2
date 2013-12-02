@@ -39,7 +39,9 @@
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a> <?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?></td>
+                        <td>
+							<?php if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a> <?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?>
+						</td>
                         <td><?php echo $customer['company'] ?></td>
                         <td><?php echo $customer['phone_1'] ?></td>
                         <td><?php echo $customer['email_1'] ?></td>
