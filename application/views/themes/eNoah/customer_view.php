@@ -46,8 +46,18 @@
                         <td><?php echo $customer['region_name'] ?></td>
                         <td><?php echo $customer['country_name'] ?></td>
                         <td>
-							<?php if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>"><?php echo "Edit"; ?></a> <?php } else { echo "Edit"; } ?>
-							<?php if($this->session->userdata('delete')==1) { ?> | <a href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
+							<?php if($this->session->userdata('edit')==1) { ?>
+								<a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>">
+									<?php echo "Edit"; ?>
+								</a> 
+							<?php } else { 
+								echo "Edit";
+							} ?>
+							<?php if($this->session->userdata('delete')==1) { ?>
+								<a href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid'] ?>);" >
+									<?php echo "Delete"; ?>
+								</a>
+							<?php } ?>
 						</td>
                     </tr>
                     <?php } ?>
