@@ -30,15 +30,15 @@ $usernme = $this->session->userdata('logged_in_user');
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="100">First name:*</td>
+					<td width="100">First name: *</td>
 					<td width="240"><input type="text" name="first_name" value="<?php echo  $this->validation->first_name ?>" class="textfield width200px required" /> </td>
-					<td width="100">Last Name:*</td>
+					<td width="100">Last Name: *</td>
 					<td width="240"><input type="text" name="last_name" value="<?php echo  $this->validation->last_name ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
 					<td>Position:</td>
 					<td><input type="text" name="position_title" value="<?php echo  $this->validation->position_title ?>" class="textfield width200px required" /></td>
-                    <td>Company:*</td>
+                    <td>Company: *</td>
 					<td><input type="text" name="company" value="<?php echo  $this->validation->company ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
@@ -57,7 +57,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				</tr>
 				
 				<tr>
-				<td width="100">Region:*</td>
+				<td width="100">Region: *</td>
 					<td width="240">
                         <select id="add1_region" name="add1_region" class="textfield width200px" onchange="getCountry(this.value)" class="textfield width200px required">
 						<option value="0">Select Region</option>
@@ -67,7 +67,7 @@ $usernme = $this->session->userdata('logged_in_user');
 							<?php } ?>
                         </select>
 					</td>
-				<td width="100">Country:*</td>
+				<td width="100">Country: *</td>
                     <td width="240" id='country_row'>
 						<select id="add1_country" class="textfield width200px required" >
 						<option value="0">Select Country</option>                           
@@ -80,7 +80,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				</tr>
 				
 				<tr>
-				<td width="100">State:*</td>
+				<td width="100">State: *</td>
 					<td width="240" id='state_row'>
                         <select id="add1_state" name="add1_state" class="textfield width200px required">
 						<option value="0">Select State</option>                           
@@ -89,7 +89,7 @@ $usernme = $this->session->userdata('logged_in_user');
 							<a id="addStButton" class="addNew"></a> <!--Display the Add button-->
 						<?php } ?>
 					</td>
-				<td width="100">Location:*</td>
+				<td width="100">Location: *</td>
                     <td width="240" id='location_row'>
                         <select id="add1_location" name="add1_location" class="textfield width200px required">
 						<option value="0">Select Location</option>                           
@@ -118,7 +118,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td><input type="text" name="phone_4" value="<?php echo  $this->validation->phone_4 ?>" class="textfield width200px" /></td>
 				</tr>
                 <tr>
-					<td>Email:*</td>
+					<td>Email: *</td>
 					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
 					
 					<div><span class="checkUser" style="color:green">Email Available.</span></div>
@@ -176,9 +176,9 @@ $usernme = $this->session->userdata('logged_in_user');
 				</tr>
             </table>
 		</form>
-		<?php } else{
+		<?php } else {
 			echo "You have no rights to access this page";
-		}?>
+		} ?>
 	</div>
 </div>
 <script>
