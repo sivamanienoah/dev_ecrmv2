@@ -39,8 +39,8 @@ class Regionsettings_model extends crm_model {
 			$this->db->where_in('reg.regionid',$regions_ids);
 		}
 		$this->db->where('reg.inactive', 0);
-		$customers = $this->db->get();
-		$samle=  $customers->result_array();
+		$customers  = $this->db->get();
+		$samle 		= $customers->result_array();
 		return $samle;
 	}
 	
