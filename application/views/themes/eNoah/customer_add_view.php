@@ -63,7 +63,7 @@ $usernme = $this->session->userdata('logged_in_user');
 						<option value="0">Select Region</option>
                             <?php 
 							foreach ($regions as $region) { ?>
-								<option value="<?php echo  $region['regionid'] ?>"<?php echo  ($this->validation->add1_region == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo  $region['region_name']; ?></option>
+								<option value="<?php echo  $region['regionid'] ?>"<?php echo ($this->validation->add1_region == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo  $region['region_name']; ?></option>
 							<?php } ?>
                         </select>
 					</td>
