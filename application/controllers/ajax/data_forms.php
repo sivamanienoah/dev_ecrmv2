@@ -15,8 +15,8 @@ class Data_forms extends crm_controller {
 	 */
 	function new_customer_form()
 	{
-		$data['regions'] = $this->regionsettings_model->region_list($limit, $search);		
-		$this->load->view('helper/new_customer_form',$data);
+		$data['regions'] = $this->regionsettings_model->region_list();		
+		$this->load->view('helper/new_customer_form', $data);
 	}
 	
 	/*

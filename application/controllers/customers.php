@@ -42,7 +42,7 @@ class Customers extends crm_controller {
     
     function add_customer($update = false, $id = false, $ajax = false) 
 	{
-		$data['regions'] = $this->regionsettings_model->region_list($limit=false, $search=false);
+		$data['regions'] = $this->regionsettings_model->region_list();
 
         $rules['first_name'] = "trim|required";
 		$rules['last_name'] = "trim|required";

@@ -923,7 +923,7 @@ class Regionsettings extends crm_controller {
 		$data['state_id']                = array_unique($data['state_id']);
 		$data['location_id']             = array_unique($data['location_id']);
 		$data['customers']               = $this->regionsettings_model->level_list($limit, $search);
-		$data['regions']                 = $this->regionsettings_model->region_list($limit, $search);
+		$data['regions']                 = $this->regionsettings_model->region_list();
 		$this->login_model->check_login();
 		
 		//adding region

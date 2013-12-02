@@ -10,13 +10,9 @@ class Regionsettings_model extends crm_model {
 	*@Get region List
 	*@Region Settings Model
 	*/
-    public function region_list($offset, $search) { 
+    public function region_list() { 
         $userdata = $this->session->userdata('logged_in_user');
-		if ($search != false) {
-			$search = urldecode($search);
-			$this->db->like('region_name', $search);
-	    }
-	
+		
 		if ($userdata['level'] == 2 || $userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
 			
 			$this->db->select('region_id');
