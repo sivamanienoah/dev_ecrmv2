@@ -95,16 +95,16 @@
 		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
             
             <thead>
-				<th width="60">Action</th>
-				<th width="50">Project No.</th>
-				<th width="70">Project ID</th>
-				<th width="120">Project Title</th>
-				<th width="120" class="cust-data">Customer</th>
-				<th width="120">Project Manager</th>
-				<th width="60">Planned Start Date</th>
-				<th width="60">Planned End Date</th>
-				<th width="40">Project Completion</th>
-				<th width="90">Project Status</th>
+				<th>Action</th>
+				<th>Project No.</th>
+				<th>Project ID</th>
+				<th>Project Title</th>
+				<th>Customer</th>
+				<th>Project Manager</th>
+				<th>Planned Start Date</th>
+				<th>Planned End Date</th>
+				<th>Project Completion</th>
+				<th>Project Status</th>
             </thead>
             
             <tbody>

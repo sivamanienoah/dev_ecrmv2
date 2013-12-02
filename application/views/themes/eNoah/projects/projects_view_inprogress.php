@@ -8,22 +8,22 @@
 		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
                 <tr>
-					<th width="60">Action</th>
-					<th width="50">Project No.</th>
-					<th width="70">Project ID</th>
-					<th width="120">Project Title</th>
-					<th width="120" class="cust-data">Customer</th>
-					<th width="120">Project Manager</th>
-					<th width="60">Planned Start Date</th>
-					<th width="60">Planned End Date</th>					
-					<th width="40">Project Completion</th>
-					<th width="90">Project Status</th>
+					<th>Action</th>
+					<th>Project No.</th>
+					<th>Project ID</th>
+					<th>Project Title</th>
+					<th>Customer</th>
+					<th>Project Manager</th>
+					<th>Planned Start Date</th>
+					<th>Planned End Date</th>					
+					<th>Project Completion</th>
+					<th>Project Status</th>
                 </tr>
             </thead>
             
             <tbody>
 				<?php
-					if (is_array($pjts_data) && count($pjts_data) > 0) { 
+					if (is_array($pjts_data) && count($pjts_data) > 0) {
 				?>
                     <?php
 						foreach ($pjts_data as $record) {
@@ -74,13 +74,9 @@
 								</td>
 							</tr>
 					<?php
-						} 
-					} else { 
+						}
+					}
 					?>
-							<tr><td colspan="10" align="center">No records available to be displayed!</td></tr>
-				<?php 
-					} 
-				?>
             </tbody>
         </table>
 	</form>
