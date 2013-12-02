@@ -19,7 +19,7 @@
 	<th>Expected Worth</th>
 	<th>Lead Stage</th>
 	<th>Lead Indicator</th>
-	<th width="50">Status</th>
+	<th>Status</th>
 	
 	</tr>
 	</thead>
@@ -75,13 +75,7 @@
 			</tr> 
 	<?php 
 			} 
-		} 
-		else 
-		{
-	?>
-		<tr align="center" ><td colspan="17"> No Results Found.</td></tr>
-	<?php 
-	}
+		}
 	?>
 </tbody>
 </table>
