@@ -10,7 +10,7 @@ $(document).ready(function() {
 });
 
 function chk_src_dup() {
-	$('#lead_stg_msg').empty();
+	$('#lead_src_msg').empty();
 	
 	var lead_source_name 	= $("#lead_source_name").val();
 	var lead_src_hidden     = $("#lead_src_hidden").val();
