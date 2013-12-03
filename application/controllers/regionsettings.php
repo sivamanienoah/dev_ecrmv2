@@ -788,7 +788,7 @@ class Regionsettings extends crm_controller {
 	*@Get Location List
 	*@User Controller
 	*/
-	public function getLocation($value,$id,$updt) {
+	public function getLocation($value, $id, $updt) {
 		$data = array();
 		$data = $this->regionsettings_model->getlocation_list($value);
 		$opt  = '';
@@ -1135,6 +1135,163 @@ class Regionsettings extends crm_controller {
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
 		$this->regionsettings_model->check_status_rcsl($data);
+	}
+	
+	/*
+	*@Load Default Region Record for adding Customer Page
+	*@User Controller
+	*/
+	function getRegDefault($lvl, $upd) {
+		$data = array();
+		$data = $this->regionsettings_model->region_list();
+		$opt  = '';
+		$opt .= '<select id="add1_region" name="add1_region" onchange="getCountry(this.value)" class="textfield width200px required">';
+		$opt .= '<option value="0">Select Region</option>';
+		if(sizeof($data)>0) {
+		$i = 1;
+			foreach($data as $reg){
+				if($i == 1) {
+					$rid = $reg['regionid'];
+					$opt .= '<option value="'.$reg['regionid'].'" selected = "selected" >'.$reg['region_name'].'</option>';			
+				} else {
+					$opt .= '<option value="'.$reg['regionid'].'">'.$reg['region_name'].'</option>';
+				}
+				$i++;
+			}
+		}
+		$opt .= '</select>';	
+		$opt .= "<script>";
+		if (($lvl>2) && ($upd!='update')) {
+			$opt .= "getDefaultCountry($rid, '$upd')";
+		} else {
+			$opt .= "getCountry($rid)";
+		}
+		$opt .= "</script>";
+		echo $opt;
+		exit;
+	}
+	
+	/*
+	*@Load Default Country Record for adding Customer Page
+	*@User Controller
+	*/
+	function getCntryDefault($id, $upd) {
+		$data = $this->regionsettings_model->getcountry_list($id);
+		$opt  = '';
+		$opt .= '<select name="add1_country" id="add1_country" class="textfield width200px" onchange="getState(this.value)">';
+		$opt .= '<option value="0">Select Country</option>';
+		$i = 1;
+		if(sizeof($data)>0){
+			foreach($data as $country) {
+				if($i == 1) {
+					$cid = $country['countryid'];
+					$opt .= '<option value="'.$country['countryid'].'" selected = "selected" >'.$country['country_name'].'</option>';
+				} else {
+					$opt .= '<option value="'.$country['countryid'].'">'.$country['country_name'].'</option>';
+				}
+				$i++;
+			}
+		}
+		$opt .= '</select>';
+		//Code for Adding New Country in Customer Page.
+		if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2) {
+			if ($updt != "update") {
+				$opt .= "<a class='addNew' id='addButton' onclick='ajxCty()'></a>";
+			}
+		}	
+		$opt .= "<div id='addcountry' class='addCus'>";
+		$opt .= "Add Country: <input type='text' class='textfield width200px required' name='addcountry' id='newcountry'>";
+		$opt .= "<a class='addSave' id='savecountry' onclick='ajxSaveCty()'></a>";
+		$opt .= "</div>";
+		
+		$opt .= "<script>";
+		
+		if (($this->userdata['level']>=4) && $upd!='update') {
+			$opt .= "getDefaultState($cid, '$upd')";
+		} else {
+			$opt .= "getState($cid)";
+		}
+		$opt .= "</script>";
+		echo $opt;
+	}
+	
+	/*
+	*@Load Default State Record for adding Customer Page
+	*@User Controller
+	*/
+	function getSteDefault($id, $upd) {
+		$data = $this->regionsettings_model->getstate_list($id);
+		$opt  = '';
+		$opt .= '<select name="add1_state" id="add1_state" onchange="getLocation(this.value)" class="textfield width200px">';
+		$opt .= '<option value="0">Select State</option>';
+		$i = 1;
+		if(sizeof($data)>0) {
+			foreach($data as $state) {
+				if($i == 1) {
+					$sid = $state['stateid'];
+					$opt .= '<option value="'.$state['stateid'].'" selected = "selected" >'.$state['state_name'].'</option>';
+				} else {
+					$opt .= '<option value="'.$state['stateid'].'">'.$state['state_name'].'</option>';
+				}
+				$i++;
+			}
+		}
+		$opt .= '</select>';
+		//Code for Adding New Country in Customer Page.
+		if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3) {
+			if ($upd != "update") {
+				$opt .= "<a class='addNew' id='addStButton' onclick='ajxSt()'></a>";
+			}
+		}	
+		$opt .= "<div id='addstate' class='addCus'>";
+		$opt .= "Add State : <input type='text' class='textfield width200px required' name='addstate' id='newstate' />";
+		$opt .= "<a class='addSave' id='savestate' onclick='ajxSaveSt()'></a>";
+		$opt .= "</div>";
+		
+		$opt .= "<script>";
+		if (($this->userdata['level']>=5) && ($upd!='update')) {
+			$opt .= "getDefaultLocation($sid, '$upd')";
+		} else {
+			$opt .= "getLocation($sid)";
+		}
+		$opt .= "</script>";
+		echo $opt;
+	}
+	
+	/*
+	*@Load Default State Record for adding Customer Page
+	*@User Controller
+	*/
+	function getLocDefault($id, $upd) {
+		$data = array();
+		$data = $this->regionsettings_model->getlocation_list($id);
+		$opt  = '';
+		$opt .= '<select name="add1_location" id="add1_location" class="textfield width200px">';
+		$opt .= '<option value="0">Select Location</option>';
+		if(sizeof($data)>0){
+			$i=1;
+			foreach($data as $location){
+				if($i == 1) {
+					$opt .= '<option value="'.$location['locationid'].'" selected = "selected" >'.$location['location_name'].'</option>';			
+				} else {
+					$opt .= '<option value="'.$location['locationid'].'">'.$location['location_name'].'</option>';
+				}
+				$i++;
+			}
+		}
+		$opt .= '</select>';
+		
+		//Code for Adding New Location in Customer Page.
+		if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4) {
+			if ($upd != "update") {
+				$opt .= "<a class='addNew' id='addLocButton' onclick='ajxLoc()'></a>";
+			}
+		}	
+		$opt .= "<div id='addLocation' class='addCus'>";
+		$opt .= "Add Location: <input type='text' class='textfield width200px required' name='addlocation' id='newlocation' />";
+		$opt .= "<a class='addSave' id='savelocation' onclick='ajxSaveLoc()'></a>";
+		$opt .= "</div>";
+		echo $opt;
 	}
 }
 

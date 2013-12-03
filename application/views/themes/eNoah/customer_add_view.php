@@ -31,76 +31,90 @@ $usernme = $this->session->userdata('logged_in_user');
 			<table class="layout">
 				<tr>
 					<td width="100">First name: *</td>
-					<td width="240"><input type="text" name="first_name" value="<?php echo  $this->validation->first_name ?>" class="textfield width200px required" /> </td>
+					<td width="240"><input type="text" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
 					<td width="100">Last Name: *</td>
-					<td width="240"><input type="text" name="last_name" value="<?php echo  $this->validation->last_name ?>" class="textfield width200px required" /> </td>
+					<td width="240"><input type="text" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
 					<td>Position:</td>
-					<td><input type="text" name="position_title" value="<?php echo  $this->validation->position_title ?>" class="textfield width200px required" /></td>
+					<td><input type="text" name="position_title" value="<?php echo $this->validation->position_title ?>" class="textfield width200px required" /></td>
                     <td>Company: *</td>
-					<td><input type="text" name="company" value="<?php echo  $this->validation->company ?>" class="textfield width200px required" /> </td>
+					<td><input type="text" name="company" value="<?php echo $this->validation->company ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
 					<td>Address Line 1:</td>
-					<td><input type="text" name="add1_line1" value="<?php echo  $this->validation->add1_line1 ?>" class="textfield width200px" /></td>
+					<td><input type="text" name="add1_line1" value="<?php echo $this->validation->add1_line1 ?>" class="textfield width200px" /></td>
                     <td>Address Line 2:</td>
-					<td><input type="text" name="add1_line2" value="<?php echo  $this->validation->add1_line2 ?>" class="textfield width200px" /></td>
+					<td><input type="text" name="add1_line2" value="<?php echo $this->validation->add1_line2 ?>" class="textfield width200px" /></td>
 				</tr>
 				<?php //print_r($regions); ?>
 				<tr>
 					<td>Suburb:</td>
-					<td><input type="text" name="add1_suburb" value="<?php echo  $this->validation->add1_suburb ?>" class="textfield width200px" /></td>
+					<td><input type="text" name="add1_suburb" value="<?php echo $this->validation->add1_suburb ?>" class="textfield width200px" /></td>
                     <td>Post code:</td>
-					<td><input type="text" name="add1_postcode" value="<?php echo  $this->validation->add1_postcode ?>" class="textfield width200px" /></td>
-					
+					<td><input type="text" name="add1_postcode" value="<?php echo $this->validation->add1_postcode ?>" class="textfield width200px" /></td>
 				</tr>
 				
 				<tr>
 				<td width="100">Region: *</td>
+				<?php if (($usernme['level']>=2) && ($this->uri->segment(3)!='update')) { ?>
+					<td width="240" id="def_reg"></td>
+				<?php } else { ?>
 					<td width="240">
-                        <select id="add1_region" name="add1_region" class="textfield width200px" onchange="getCountry(this.value)" class="textfield width200px required">
+						<select id="add1_region" name="add1_region" onchange="getCountry(this.value)" class="textfield width200px required">
 						<option value="0">Select Region</option>
-                            <?php 
-							foreach ($regions as $region) { ?>
-								<option value="<?php echo  $region['regionid'] ?>"<?php echo ($this->validation->add1_region == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo $region['region_name']; ?></option>
+							<?php
+							if(count($regions>0)) {
+								foreach ($regions as $region) { ?>
+									<option value="<?php echo $region['regionid'] ?>"<?php echo ($this->validation->add1_region == $region['regionid']) ? ' selected="selected"' : '' ?>><?php echo $region['region_name']; ?></option>
+								<?php } ?>
 							<?php } ?>
-                        </select>
+						</select>
 					</td>
+				<?php } ?>
 				<td width="100">Country: *</td>
-                    <td width="240" id='country_row'>
+				<?php if (($usernme['level']>=3) && ($this->uri->segment(3)!='update')) { ?>
+					<td width="240" id="def_cntry"></td>
+				<?php } else { ?>
+					<td width="240" id='country_row'>
 						<select id="add1_country" class="textfield width200px required" >
-						<option value="0">Select Country</option>                           
-                        </select>
+							<option value="0">Select Country</option>                           
+						</select>
 						<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2) { ?>
 							<a class="addNew" id="addButton"></a> <!--Display the Add button-->
 						<?php } ?>	
 					</td>
-					
+				<?php } ?>
 				</tr>
 				
 				<tr>
-				<td width="100">State: *</td>
-					<td width="240" id='state_row'>
-                        <select id="add1_state" name="add1_state" class="textfield width200px required">
-						<option value="0">Select State</option>                           
-                        </select>
-						<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3) { ?>
-							<a id="addStButton" class="addNew"></a> <!--Display the Add button-->
-						<?php } ?>
-					</td>
-				<td width="100">Location: *</td>
-                    <td width="240" id='location_row'>
-                        <select id="add1_location" name="add1_location" class="textfield width200px required">
-						<option value="0">Select Location</option>                           
-                        </select>
-						<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4) { ?>
-							<a id="addLocButton" class="addNew"></a> <!--Display the Add button-->
-						<?php } ?>	
-					</td>
-					
-                   
-				</tr>
+					<td width="100">State: *</td>
+					<?php if (($usernme['level']>=4) && ($this->uri->segment(3)!='update')) { ?>
+						<td width="240" id="def_ste"></td>
+					<?php } else { ?>
+						<td width="240" id='state_row'>
+							<select id="add1_state" name="add1_state" class="textfield width200px required">
+							<option value="0">Select State</option>                           
+							</select>
+							<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3) { ?>
+								<a id="addStButton" class="addNew"></a> <!--Display the Add button-->
+							<?php } ?>
+						</td>
+					<?php } ?>
+					<td width="100">Location: *</td>
+					<?php if (($usernme['level']>=5) && ($this->uri->segment(3)!='update')) { ?>
+						<td width="240" id="def_loc"></td>
+					<?php } else { ?>
+						<td width="240" id='location_row'>
+							<select id="add1_location" name="add1_location" class="textfield width200px required">
+							<option value="0">Select Location</option>                           
+							</select>
+							<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4) { ?>
+								<a id="addLocButton" class="addNew"></a> <!--Display the Add button-->
+							<?php } ?>	
+						</td>
+					<?php } ?>
+					</tr>
 				<tr>
 					<td>Direct Phone:</td>
 					<td><input type="text" name="phone_1" value="<?php echo  $this->validation->phone_1 ?>" class="textfield width200px" />
@@ -161,18 +175,19 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td valign="top">Comments:</td>
 					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo  $this->validation->comments ?></textarea></td>
 				</tr>
-				
-				
                 <tr>
-					<td>&nbsp;</td>
-					<td>
+					<td colspan="4">
                         <div class="buttons">
 							<button type="submit" name="update_customer" id="positiveBtn" class="positive">
-								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
+								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
 							</button>
 						</div>
+						<div class="buttons">
+                            <button type="button" class="negative" onclick="location.href='customers'">
+                                Cancel
+                            </button>
+                        </div>
                     </td>
-					<td>&nbsp;</td>
 				</tr>
             </table>
 		</form>
@@ -183,6 +198,8 @@ $usernme = $this->session->userdata('logged_in_user');
 </div>
 <script>
 	var customer_user_id = "<?php echo $usernme['userid']; ?>";
+	var usr_level 		 = "<?php echo $usernme['level']; ?>";
+	var cus_updt		 = "<?php echo ($this->uri->segment(3) == 'update') ? 'update' : 'no_update' ?>";
 </script>
 <script type="text/javascript" src="assets/js/customer/customer_add_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

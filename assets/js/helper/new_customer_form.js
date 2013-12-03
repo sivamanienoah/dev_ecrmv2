@@ -70,4 +70,28 @@
 		}
 	});
 	
+	//pre-populate the default region, country, state & location
+	if(usr_level >= 2 && cus_updt != 'update' ) {
+		getDefaultRegion(usr_level, cus_updt);
+	}
+	function getDefaultRegion(lvl, upd) {
+		var sturl = "regionsettings/getRegDefault/"+lvl+"/"+upd;
+		$('#def_reg').load(sturl);
+		return false;
+	}
+	function getDefaultCountry(id, upd) {
+		var sturl = "regionsettings/getCntryDefault/"+id+"/"+upd;
+		$('#def_cntry').load(sturl);
+		return false;	
+	}
+	function getDefaultState(id, upd) {
+		var sturl = "regionsettings/getSteDefault/"+id+"/"+upd;
+		$('#def_ste').load(sturl);
+		return false;	
+	}
+	function getDefaultLocation(id, upd) {
+		var sturl = "regionsettings/getLocDefault/"+id+"/"+upd;
+		$('#def_loc').load(sturl);
+		return false;	
+	}
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
