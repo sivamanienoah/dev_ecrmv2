@@ -567,11 +567,10 @@ class Welcome_model extends crm_model {
 			$locationid = explode(',',$this->session->userdata['locationid']);
 
 			if ( ($stage[0] == 'null' || $stage[0] == 'all') && ($customer[0] == 'null' || $customer[0] == 'all') && ($worth[0] == 'null' || $worth[0] == 'all') && ($owner[0] == 'null' || $owner[0] == 'all') && ($leadassignee[0] == 'null' || $leadassignee[0] == 'all') && ($regionname[0] == 'null' || $regionname[0] == 'all') && ($countryname[0] == 'null' || $countryname[0] == 'all') && ($statename[0] == 'null' || $statename[0] == 'all') && ($locname[0] == 'null' || $locname[0] == 'all') && $keyword == 'null' ) {
-				
-			$region = explode(',',$this->session->userdata['region_id']);
-			$countryid = explode(',',$this->session->userdata['countryid']);
-			$stateid = explode(',',$this->session->userdata['stateid']);
-			$locationid = explode(',',$this->session->userdata['locationid']);
+				$region = explode(',',$this->session->userdata['region_id']);
+				$countryid = explode(',',$this->session->userdata['countryid']);
+				$stateid = explode(',',$this->session->userdata['stateid']);
+				$locationid = explode(',',$this->session->userdata['locationid']);
 
 				$this->db->where_in('c.add1_region',$region);
 				
