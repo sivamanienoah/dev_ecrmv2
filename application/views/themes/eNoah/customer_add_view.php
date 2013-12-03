@@ -176,7 +176,10 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo  $this->validation->comments ?></textarea></td>
 				</tr>
                 <tr>
-					<td colspan="4">
+					<td>
+						&nbsp;
+					</td>
+					<td colspan="3">
                         <div class="buttons">
 							<button type="submit" name="update_customer" id="positiveBtn" class="positive">
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
