@@ -17,6 +17,7 @@ class manage_service_model extends crm_model {
 	*/
     function Manage_service_model() {
        parent::__construct();
+	   $this->load->helper('custom_helper');
     }
 
 	/*
@@ -125,6 +126,7 @@ class manage_service_model extends crm_model {
 			$cur_conver['to'] = $last_ins_id;
 			$this->db->update($this->cfg['dbpref'].'expect_worth', $data, "expect_worth_id != ".$last_ins_id." ");
 			$this->db->truncate($this->cfg['dbpref'].'currency_rate');
+			currency_convert();
 		}
     }
 
@@ -141,6 +143,7 @@ class manage_service_model extends crm_model {
 			$this->db->update($this->cfg['dbpref'].'expect_worth', $data, "expect_worth_id != ".$id." ");
 			$this->db->truncate($this->cfg['dbpref'].'currency_rate');
 		}
+		currency_convert();
 		return $res;
     }
 

@@ -44,7 +44,7 @@ class Dashboard extends crm_controller {
 		$leads = $data['getLeadByReg']['res'];
     	$total_leads = $data['getLeadByReg']['num'];
 		$lead_reg = array();
-		currency_convert();
+		// currency_convert();
 		$rates = $this->get_currency_rates();
 		$data['rates'] = $this->get_currency_rates();
 		if($total_leads>0)

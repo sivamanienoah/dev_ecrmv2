@@ -65,7 +65,7 @@ class report_lead_region extends crm_controller {
     	$data['res'] = $res['res'];
     	$data['num'] = $res['num'];
     	if($data['num']>0){
-	    	currency_convert();
+	    	// currency_convert();
 	    	$data['rates'] = $this->get_currency_rates();
     	}
     	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {    		
