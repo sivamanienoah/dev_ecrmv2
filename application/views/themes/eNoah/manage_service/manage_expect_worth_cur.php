@@ -16,6 +16,11 @@ $userdata = $this->session->userdata('logged_in_user');
 						Add New Currency
 					</button>
 				</div>
+				<div class="buttons pull-right" style="padding:0 4px;">
+					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/updt_cur_from_live'">
+						Update Currency From Live
+					</button>
+				</div>
 			<?php } ?>
 			<div class="clearfix"></div>
 		</div>

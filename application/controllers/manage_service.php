@@ -128,6 +128,16 @@ class Manage_service extends crm_controller {
 		$data['getExptWorthCur'] = $this->manage_service_model->get_expect_worth_cur($search);		
 		$this->load->view('manage_service/manage_expect_worth_cur', $data);
 	}
+	
+	/*
+	*@For updating currencies from live - using API
+	*@Method   updt_cur_from_live
+	*/
+	public function updt_cur_from_live($search = FALSE) {
+		$this->load->helper('custom_helper');
+		currency_convert();
+		redirect('manage_service/manage_expt_worth_cur');
+	}
 
 	/*
 	*@For Add Lead Source
