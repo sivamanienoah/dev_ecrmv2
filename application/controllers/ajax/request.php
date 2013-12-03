@@ -602,7 +602,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 					//email sent by using email template
 					$param = array();
 
-					$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskSetTo'=>$taskSetTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>$dtask_start_date,'end_date'=>$dtask_end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
+					$param['email_data'] = array('job_task'=>$_POST['job_task'], 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>date('d-m-Y', strtotime($dtask_start_date)), 'end_date'=>date('d-m-Y', strtotime($dtask_end_date)), 'first_name'=>$task_owners[0]['first_name'], 'last_name'=>$task_owners[0]['last_name'], 'status'=>$ins['status']);
 
 					$param['to_mail'] 			= $taskSetToEmail.','.$admin_mail;
 					$param['bcc_mail'] 			= $admin_mail;
