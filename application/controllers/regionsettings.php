@@ -174,7 +174,7 @@ class Regionsettings extends crm_controller {
             $query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
             if($query == 0 ) {
 				if ($this->regionsettings_model->insert_region($update_data)) {                    
-					$this->session->set_flashdata('confirm', array('Region Details Updated!'));
+					$this->session->set_flashdata('confirm', array('Region Added!'));
 					redirect('regionsettings/region_settings/region');                    
 				}
 			} else {
@@ -291,7 +291,7 @@ class Regionsettings extends crm_controller {
             $query = $this->db->get($this->cfg['dbpref'].'country')->num_rows();
             if($query == 0 ){	
 				if ($this->regionsettings_model->insert_country($update_data)) {                    
-                    $this->session->set_flashdata('confirm', array('Country Details Updated!'));
+                    $this->session->set_flashdata('confirm', array('Country Added!'));
                     redirect('regionsettings/region_settings/country');          
                 }
 			}
@@ -409,7 +409,7 @@ class Regionsettings extends crm_controller {
 			$query = $this->db->get($this->cfg['dbpref'].'state')->num_rows();
 			if($query == 0 ) {	
 				if ($this->regionsettings_model->insert_state($update_data)) {  
-					$this->session->set_flashdata('confirm', array('State Details Updated!'));
+					$this->session->set_flashdata('confirm', array('State Added!'));
 					redirect('regionsettings/region_settings/state');                    
 				}
 			} else {
@@ -532,7 +532,7 @@ class Regionsettings extends crm_controller {
             $query = $this->db->get($this->cfg['dbpref'].'location')->num_rows();
             if($query == 0 ) {	
 				if ($this->regionsettings_model->insert_location($update_data)) {		
-                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
+                    $this->session->set_flashdata('confirm', array('Location Added!'));
                     redirect('regionsettings/region_settings/location');                    
                 }	
 			} else {
