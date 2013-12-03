@@ -9,8 +9,8 @@
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
 	<tr>
-	<th width="90">Action</th>
-	<th width="50">Lead No.</th>
+	<th>Action</th>
+	<th>Lead No.</th>
 	<th>Lead Title</th>
 	<th>Customer</th>
 	<th>Region</th>
@@ -24,7 +24,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php 
+	<?php
 		if(!empty($filter_results)) 
 		{
 			foreach($filter_results as $filter_result) 
