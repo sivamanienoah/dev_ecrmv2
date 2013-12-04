@@ -5,7 +5,7 @@ $cfg = $this->config->item('crm');
 $vid=$this->session->userdata['logged_in_user']['role_id'];
 $viewLeads = getAccess(51, $vid);
 $viewTasks = getAccess(108, $vid);
-$viewPjts = getAccess(110, $vid);
+$viewPjts  = getAccess(110, $vid);
 
 // for floating div
 $proposal_notify_status = get_notify_status(1);
@@ -19,9 +19,9 @@ if($task_notify_status) {
 // for floating div
 
 if ($this->session->userdata('logged_in') == TRUE) {
- 	$userdata = $this->session->userdata('logged_in_user');
-	$menu_itemsmod = $this->session->userdata('menu_item_list');
-	$menulist =  formMenuList($menu_itemsmod,true,NULL);
+ 	$userdata 		= $this->session->userdata('logged_in_user');
+	$menu_itemsmod 	= $this->session->userdata('menu_item_list');
+	$menulist 		=  formMenuList($menu_itemsmod,true,NULL);
 	$sensitive_information_allowed = TRUE;
 }
 
@@ -73,7 +73,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			<?php	
 			} else {
 			?>
-			<a href="dashboard"><img src="" /></a>
+			<a href="dashboard"></a>
 			<?php } ?>
 		</div>
 		<div id="user-status">
@@ -90,7 +90,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	<?php
 	$notify = $this->session->flashdata('notify_msg');
 	$messages = $this->session->flashdata('header_messages');
-	
 	if (isset($userdata['signature']) && trim($userdata['signature']) == '')
 	{
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
@@ -115,21 +114,21 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			}
 		}
 	}
-	
-	if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
+
+	if (!isset($_COOKIE['floatStat'])) {
+		if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
 			<div id="floatNotifyDiv">
-				<div class="grid-close"></div>
+				<div class="grid-close" id="grid-close"></div>
 				<p><?php for ($i = 0; $i < count ($notify);  $i ++) { echo $notify[$i]; if (isset($notify[$i + 1])) echo '<br />'; } ?></p>
 			</div>
-	<?php } ?>
-	
-	
-	<?php if (is_array($messages) && count($messages) > 0 ) { ?>
-		<div id="messages">
-			<p><?php for ($i = 0; $i < count ($messages);  $i ++) { echo $messages[$i]; if (isset($messages[$i + 1])) echo '<br />'; } ?></p>
-		</div>
-	<?php }
-    
+		<?php } ?>
+		
+		<?php if (is_array($messages) && count($messages) > 0 ) { ?>
+			<div id="messages">
+				<p><?php for ($i = 0; $i < count ($messages);  $i ++) { echo $messages[$i]; if (isset($messages[$i + 1])) echo '<br />'; } ?></p>
+			</div>
+		<?php }
+    }
     $confirm = $this->session->flashdata('confirm');
 	if (is_array($confirm) && count($confirm) > 0 ) { ?>
 		<div id="confirm">
@@ -190,32 +189,32 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$i+=1;
 			$parent_id = $menu_items['1'];
 			$master_id = $menu_items['0'];
-			$access_limit['view'] =$menu_items[8];
-			$access_limit['add'] =$menu_items[9];
-			$access_limit['edit'] =$menu_items[10];
-			$access_limit['delete'] =$menu_items[11];
-			$access_limit['links'] =$menu_items[4];
-			$access_limit['name'] =$menu_items[2];
+			$access_limit['view'] 	= $menu_items[8];
+			$access_limit['add'] 	= $menu_items[9];
+			$access_limit['edit'] 	= $menu_items[10];
+			$access_limit['delete'] = $menu_items[11];
+			$access_limit['links'] 	= $menu_items[4];
+			$access_limit['name'] 	= $menu_items[2];
 		}
 		if($menu_items['0'] == 51)  //leads
 		{ 
-		   $viewLead = $menu_items[8];
-		   $addLead = $menu_items[9];
-		   $editLead = $menu_items[10];
+		   $viewLead   = $menu_items[8];
+		   $addLead    = $menu_items[9];
+		   $editLead   = $menu_items[10];
 		   $deleteLead = $menu_items[11];
 		}
 		if($menu_items['0'] == 108) //Tasks
 		{ 
-		   $viewTask = $menu_items[8];
-		   $addTask = $menu_items[9];
-		   $editTask = $menu_items[10];
+		   $viewTask   = $menu_items[8];
+		   $addTask    = $menu_items[9];
+		   $editTask   = $menu_items[10];
 		   $deleteTask = $menu_items[11];
 		}
 		if($menu_items['0'] == 110) //Projects
 		{ 
-		   $viewPjt = $menu_items[8];
-		   $addPjt = $menu_items[9];
-		   $editPjt = $menu_items[10];
+		   $viewPjt   = $menu_items[8];
+		   $addPjt    = $menu_items[9];
+		   $editPjt   = $menu_items[10];
 		   $deletePjt = $menu_items[11];
 		}
 		if($menu_items['0'] == 84) //customer
@@ -224,9 +223,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		}
 		if($menu_items['0'] == 92) //Administration
 		{ 
-		   $viewAdmin = $menu_items[8];
-		   $addAdmin = $menu_items[9];
-		   $editAdmin = $menu_items[10];
+		   $viewAdmin 	= $menu_items[8];
+		   $addAdmin 	= $menu_items[9];
+		   $editAdmin 	= $menu_items[10];
 		   $deleteAdmin = $menu_items[11];
 		}
 	}  	 
@@ -235,36 +234,51 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	{
 		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
 		$master_id= $masters[0]['master_parent_id'];
-		$access_limit['view'] =$masters[0]['view'];
-		$access_limit['add'] =$masters[0]['add'];
-		$access_limit['edit'] =$masters[0]['edit'];
-		$access_limit['delete'] =$masters[0]['delete'];
+		$access_limit['view'] 	= $masters[0]['view'];
+		$access_limit['add'] 	= $masters[0]['add'];
+		$access_limit['edit'] 	= $masters[0]['edit'];
+		$access_limit['delete'] = $masters[0]['delete'];
 	}
-		
-	echo $menulistss =  formSubMenuList($master_id);
-		 
+
+	echo $menulistss 		= formSubMenuList($master_id);
+
 	$array= array();
-	$array['accesspage']= $access_limit['view'];
-	$array['add']= $access_limit['add']; 
-	$array['edit']= $access_limit['edit']; 
-	$array['delete']= $access_limit['delete']; 
-	$array['viewlead'] = $viewLead;
-	$array['addlead'] = $addLead;
-	$array['editlead'] = $editLead;
-	$array['deletelead'] = $deleteLead;
-	$array['viewtask'] = $viewTask;
-	$array['addtask'] = $addTask;
-	$array['edittask'] = $editTask;
-	$array['deletetask'] = $deleteTask;
-	$array['viewPjt'] = $viewPjt;
-	$array['addPjt'] = $addPjt;
-	$array['editPjt'] = $editPjt;
-	$array['deletePjt'] = $deletePjt;
-	$array['viewAdmin'] = $viewAdmin;
-	$array['addAdmin'] = $addAdmin;
-	$array['editAdmin'] = $editAdmin;
-	$array['deleteAdmin'] = $deleteAdmin;
-	$array['addImpCus'] = $addImpCus;
+	$array['accesspage']	= $access_limit['view'];
+	$array['add']			= $access_limit['add']; 
+	$array['edit']			= $access_limit['edit']; 
+	$array['delete']		= $access_limit['delete']; 
+	$array['viewlead'] 		= $viewLead;
+	$array['addlead'] 		= $addLead;
+	$array['editlead'] 		= $editLead;
+	$array['deletelead'] 	= $deleteLead;
+	$array['viewtask'] 		= $viewTask;
+	$array['addtask'] 		= $addTask;
+	$array['edittask'] 		= $editTask;
+	$array['deletetask'] 	= $deleteTask;
+	$array['viewPjt'] 		= $viewPjt;
+	$array['addPjt'] 		= $addPjt;
+	$array['editPjt'] 		= $editPjt;
+	$array['deletePjt'] 	= $deletePjt;
+	$array['viewAdmin'] 	= $viewAdmin;
+	$array['addAdmin'] 		= $addAdmin;
+	$array['editAdmin'] 	= $editAdmin;
+	$array['deleteAdmin'] 	= $deleteAdmin;
+	$array['addImpCus'] 	= $addImpCus;
 	$this->session->set_userdata($array);
-		
 	?>
+
+<script>
+var fid = "<?php echo $userdata['userid'] ?>";
+$(function() {
+	$('#grid-close').click(function() {
+		setCookie("floatStat", fid, 1);
+	});
+});
+function setCookie(c_name,value,exdays)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()+";path=/");
+	document.cookie=c_name + "=" + c_value;
+}
+</script>

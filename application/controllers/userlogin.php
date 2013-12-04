@@ -22,7 +22,11 @@ class Userlogin extends crm_controller {
         */
         $sessionId = $this->session->userdata('session_id');
 		$sql = "DELETE FROM `".$this->cfg['dbpref']."sessions` WHERE `session_id` = ?";
-        $this->db->query($sql, array($sessionId));		
+        $this->db->query($sql, array($sessionId));
+		if (isset($_COOKIE['floatStat']))
+		{
+			setcookie('floatStat', '', 1, '/');
+		}		
         $this->session->set_userdata('logged_in', FALSE);
         $this->session->set_userdata('logged_in_user', FALSE);
         $this->session->set_userdata('menu_item_list', '');
