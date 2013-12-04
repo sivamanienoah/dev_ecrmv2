@@ -1010,14 +1010,15 @@ box-shadow: 0 1px 3px #C2C2C2;
 -o-box-shadow: 0 1px 3px #C2C2C2;
 -webkit-box-shadow: 0 1px 3px #C2C2C2; }
 #charts_info {position: relative;}
-.grid-close{    
+.grid-close {    
 	background: url("../img/close.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
     height: 8px;
     position: absolute;
     right: 8px;
     top: 10px;
-    width: 9px;} 
+    width: 9px;
+	} 
 /*Add Button in the Customers page -- Ends here*/
 
 .table_style{border:1px solid #dbdbdb; border-collapse:collapse;
