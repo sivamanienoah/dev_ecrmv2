@@ -448,9 +448,10 @@ class Manage_service extends crm_controller {
 		{
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 			{
-				$this->db->delete("sales_divisions", array('div_id' => $id));
-				$this->session->set_flashdata('confirm', array('Division Deleted.!'));
-				$get_salesDiv = $this->manage_service_model->get_list_active(sales_divisions);
+				// $this->db->delete("sales_divisions", array('div_id' => $id));
+				$this->manage_service_model->delete_row("sales_divisions", array('div_id' => $id));
+				$this->session->set_flashdata('confirm', array('Division Deleted!'));
+				$get_salesDiv = $this->manage_service_model->get_list_active($this->cfg['dbpref']."sales_divisions");
 				/* $filename = APPPATH."config/sales_divisions.ini";
 					$file = fopen($filename, "w");
 					fwrite($file, '<?php');
