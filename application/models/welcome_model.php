@@ -537,7 +537,7 @@ class Welcome_model extends crm_model {
 			
 			if($stage[0] != 'null' && $stage[0] != 'all') {
 				$this->db->where_in('j.lead_stage',$stage); 
-				$this->db->where('j.belong_to', $curusid);
+				// $this->db->where('j.belong_to', $curusid);
 			}
 			
 			if($customer[0] != 'null' && $customer[0] != 'all') {		
