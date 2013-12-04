@@ -1259,7 +1259,7 @@ if(viewPjt==1) {
 $(function(){
 	
 	var params    		     = {};	
-	params[csrf_token_name]      = csrf_hash_token; 
+	params[csrf_token_name]  = csrf_hash_token; 
 
 	$('.all-tasks').load('tasks/index/extend #task-page .task-contents',params, loadEditTables);
 	$('#set-job-task .pick-date, #search-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -1, maxDate: '+6M'});
