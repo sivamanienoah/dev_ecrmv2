@@ -89,7 +89,7 @@ var random_task_edit;
 
 function openEditTask(taskid, random)
 {
-	alert(taskid);
+	// alert(taskid);
 
 	task_being_edited = taskid;
 	
@@ -107,9 +107,9 @@ function openEditTask(taskid, random)
             message:$('#edit-job-task table'),			
 			css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
         });
-	
+	// alert($('#task-table-' + taskid).length);
 	var the_task_el = $('#task-table-' + taskid);
-	alert(the_task_el);
+	//alert(the_task_el);
 	var the_task_el1 = taskid;	
 	var edit_table_el = $('.blockUI .task-edit');
 	var createdbyid = $.trim($('.task-cid', the_task_el).text());
@@ -238,7 +238,8 @@ function editTask()
 				$('#task-table-' + task_being_edited).replaceWith(data.html);
 				if (random_task_url != '')
 				{
-					window.location.href = window.location.href;
+					// window.location.href = window.location.href;
+					window.location.href = site_base_url+'tasks/all/';
 				}
 			}
 			$('.blockUI .task-add.task-edit').unblock();
@@ -382,7 +383,8 @@ function setTaskStatus(taskid, el)
 					else if (data.task_delete)
 					{
 						//if (window.location.href == 'http://localhost/ecrmv2/tasks/all/')
-						if (window.location.href == 'http://' + hstname + '/' + pth[1] + '/tasks/all/')
+						// if (window.location.href == 'http://' + hstname + '/' + pth[1] + '/tasks/all/')
+						if (window.location.href == site_base_url+'tasks/all/')
 						{
 							window.location.href = window.location.href;
 						}
