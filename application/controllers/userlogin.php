@@ -26,7 +26,12 @@ class Userlogin extends crm_controller {
 		if (isset($_COOKIE['floatStat']))
 		{
 			setcookie('floatStat', '', 1, '/');
-		}		
+		}
+		//unset the session regionid, countryid, stateid & locationid
+		$this->session->unset_userdata('region_id');
+		$this->session->unset_userdata('countryid');
+		$this->session->unset_userdata('stateid');
+		$this->session->unset_userdata('locationid');	
         $this->session->set_userdata('logged_in', FALSE);
         $this->session->set_userdata('logged_in_user', FALSE);
         $this->session->set_userdata('menu_item_list', '');
