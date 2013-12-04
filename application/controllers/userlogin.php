@@ -16,26 +16,21 @@ class Userlogin extends crm_controller {
     }
     
     function index() {
-        
         /*
         * destroy session
         * show login details
         */
-	
         $sessionId = $this->session->userdata('session_id');
 		$sql = "DELETE FROM `".$this->cfg['dbpref']."sessions` WHERE `session_id` = ?";
-        $this->db->query($sql, array($sessionId));
+        $this->db->query($sql, array($sessionId));		
         $this->session->set_userdata('logged_in', FALSE);
         $this->session->set_userdata('logged_in_user', FALSE);
         $this->session->set_userdata('menu_item_list', '');
         $this->load->view('login_view');
-        
     }
     
     function process_login() {
-	
 		if ( $userdata = $this->login_model->process_login($this->input->post('email'),  sha1($this->input->post('password'))) ) {
-	 
 			$menu_items=$this->role_model->UserModuleList($userdata[0]['userid']);
 			//echo $this->db->last_query();exit;
 			$whole='';
@@ -84,24 +79,16 @@ class Userlogin extends crm_controller {
             $this->session->set_userdata($array);
 			
             if ($this->input->post('last_url')) {
-                
                 redirect($this->input->post('last_url'));
-                
             } else {
-			
                 redirect('dashboard/');
-                
             }
-            
             exit();
-            
         } else {
-            
             $this->session->set_flashdata('login_errors', array('Invalid Username, Password or your account is inactive. Access Denied!'));
             redirect('userlogin/');
             exit();
         }
-        
     }
 	
 	function process_remote_login($user = '', $pass = '')
