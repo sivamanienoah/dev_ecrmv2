@@ -414,7 +414,6 @@ function addItem() {
 
 
 function prepareSortedItems() {
-    
 	var item_sort_order = $('#q-sort-items').sortable('serialize')+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 	
 	$('.q-main-right').block({message:'<h5>Processing</h5>'});
@@ -537,9 +536,7 @@ function cancelDelEdit() {
     $.unblockUI();
 }
 
-
 function editQuoteDetails() {
-
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
         err.push('Job title is required');
@@ -607,7 +604,6 @@ function editQuoteDetails() {
         );
 		
     }
-	
 }
 
 function selectItemSection() {
