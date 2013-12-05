@@ -34,7 +34,6 @@ require (theme_url().'/tpl/header.php');
 					<img src="assets/img/advanced_filter.png" class="icon leads" />
 				</a>
 				
-				
 				<div id="advance_search" style="float:left;">
 					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:280px; width:940px;">
 						
