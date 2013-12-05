@@ -152,7 +152,7 @@ require (theme_url().'/tpl/header.php');
 			</div>
 	<?php 
 		} else {
-				echo "You have no rights to access this page";
+			echo "You have no rights to access this page";
 		}
 	?>
 	</div>
