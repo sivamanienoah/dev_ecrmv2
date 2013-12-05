@@ -1180,7 +1180,7 @@ width:100%; background:#fff;}
 .choice-box img {
 	position: absolute;
     right: 0;
-    top: -14px !important;
+    top: -17px;
     width: 75px;
 }
 .choice-box img.quote, .choice-box img.leads {
