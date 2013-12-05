@@ -28,70 +28,70 @@
 		
 	    <h2><?php echo $page_heading ?></h2>
 		
-		<a class="choice-box" onclick="advanced_filter_pjt();" >
+		<a class="choice-box" onclick="advanced_filter_pjt();" style="top:10px;">
 			Advanced Filters
 			<img src="assets/img/advanced_filter.png" class="icon leads" />
 		</a>
 		
 		<div id="advance_search_pjt" style="float:left; width:100%;" >
 		
-		<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
-		
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
-			<thead>
-				<tr>
-					<th>By Project Status Wise</th>
-					<th>By Project Manager Wise</th>
-					<th>By Customer Wise</th>
-				</tr>	
-			</thead>
-			<tbody>
-			<tr>	
-				<td>
-					<select style="width:230px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
-						<option value="1">Project In Progress</option>
-						<option value="2">Project Completed</option>
-						<option value="3">Project Onhold</option>
-						<option value="4">Inactive</option>
-					</select> 
-				</td>
-				
-				<td>
-					<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
-						<?php foreach($pm_accounts as $pm_acc) {?>
-						<option value="<?php echo $pm_acc['userid']; ?>">
-						<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
-						<?php } ?>
-					</select> 
-				</td>
-				
-				<td>
-					<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
-						<?php foreach($customers as $customer) {?>
-						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-						<?php } ?>
-					</select>
-				</td>
-			</tr>
-			<tr align="right" >
-				<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
-				<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
-				<div id = 'load' style = 'float:right;display:none;height:1px;'>
-					<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-				</div>
-				</td>
-			</tr>
-			</tbody>
-			</table>
-		</form>
+			<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
+			
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			
+				<table border="0" cellpadding="0" cellspacing="0" class="data-table">
+				<thead>
+					<tr>
+						<th>By Project Status Wise</th>
+						<th>By Project Manager Wise</th>
+						<th>By Customer Wise</th>
+					</tr>	
+				</thead>
+				<tbody>
+				<tr>	
+					<td>
+						<select style="width:230px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
+							<option value="1">Project In Progress</option>
+							<option value="2">Project Completed</option>
+							<option value="3">Project Onhold</option>
+							<option value="4">Inactive</option>
+						</select> 
+					</td>
+					
+					<td>
+						<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
+							<?php foreach($pm_accounts as $pm_acc) {?>
+							<option value="<?php echo $pm_acc['userid']; ?>">
+							<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
+							<?php } ?>
+						</select> 
+					</td>
+					
+					<td>
+						<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
+							<?php foreach($customers as $customer) {?>
+							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr align="right" >
+					<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
+					<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
+					<div id = 'load' style = 'float:right;display:none;height:1px;'>
+						<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+					</div>
+					</td>
+				</tr>
+				</tbody>
+				</table>
+			</form>
 		</div>
 		<div class="clearfix"></div>
 		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll;" >
+		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;" >
 		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
             
             <thead>
