@@ -55,9 +55,7 @@ require (theme_url().'/tpl/header.php');
 									<td>
 										<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
-											
 													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-													
 											<?php } ?>					
 										</select> 
 									</td>
@@ -69,7 +67,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>  
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
+										<select style="width:120px;" multiple="multiple" id="worth" name="worth[]">
 											<option value="0-10000"> < 10000 </option>
 											<option value="10000-20000"> > 10000 < 20000 </option>
 											<option value="20000-50000"> > 20000 < 50000 </option>
@@ -77,7 +75,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
+										<select style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 										<?php foreach ($lead_owner as $owner){ 
 											if(!empty($owner['first_name'])) { ?>
 											<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
@@ -86,12 +84,12 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
+										<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
 											<?php 	} 
-												  } 
+												} 
 											?>
 										</select> 
 									</td>
