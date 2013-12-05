@@ -42,13 +42,13 @@ require (theme_url().'/tpl/header.php');
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table" >
 							<thead>
-							<tr>
-								<th>By Lead Stage</th>
-								<th>By Customer</th>
-								<th>Expected Worth</th>
-								<th>By lead Owner</th>
-								<th>Lead Assignee</th>
-							</tr>	
+								<tr>
+									<th>By Lead Stage</th>
+									<th>By Customer</th>
+									<th>Expected Worth</th>
+									<th>By lead Owner</th>
+									<th>Lead Assignee</th>
+								</tr>	
 							</thead>
 							<tbody>
 								<tr>	
