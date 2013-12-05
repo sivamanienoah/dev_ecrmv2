@@ -42,107 +42,108 @@ require (theme_url().'/tpl/header.php');
 						
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table" >
-							<thead><tr>
+							<thead>
+							<tr>
 								<th>By Lead Stage</th>
 								<th>By Customer</th>
 								<th>Expected Worth</th>
 								<th>By lead Owner</th>
 								<th>Lead Assignee</th>
 							</tr>	
-								</thead>
-								<tbody>
-							<tr>	
-								<td>
-									<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
-										<?php foreach($lead_stage as $ls) { ?>
-										
-												<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-												
-										<?php } ?>					
-									</select> 
-								</td>
-								<td>
-									<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
-									<?php foreach($customers as $customer) { ?>
-										<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-									<?php } ?>
-									</select> 
-								</td>  
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
-										<option value="0-10000"> < 10000 </option>
-										<option value="10000-20000"> > 10000 < 20000 </option>
-										<option value="20000-50000"> > 20000 < 50000 </option>
-										<option value="50000-above"> > 50000 </option>
-									</select> 
-								</td>
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-									<?php foreach ($lead_owner as $owner){ 
-										if(!empty($owner['first_name'])) { ?>
-										<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-									<?php } 
-									} ?>
-									</select> 
-								</td>
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
-										<?php foreach ($lead_owner as $owner) { 
-												if(!empty($owner['first_name'])) { ?>		
-													<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-										<?php 	} 
-											  } 
-										?>
-									</select> 
-								</td>
-							</tr>
-							<tr>
-								<th>By Region Wise</th>
-								<th>By Country Wise</th>
-								<th>By State Wise</th>
-								<th>By Location Wise</th>
-								<th>By Status</th>
-							</tr>
-							<tr>
-								<td>
-									<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
-										<?php foreach ($regions as $reg) { 
-											if(!empty($reg['region_name'])) {?>
-											<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
-										<?php } } ?>
-									</select> 
-								</td>
-								<td id="country_row">
-									<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]">
-										
-									</select> 
-								</td>
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="statename" name="statename[]">
-										
-									</select> 
-								</td>
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
-										
-									</select> 
-								</td>
-								<td>
-									<select  style="width:120px;" multiple="multiple" id="lead_status" name="lead_status[]">
-										<option value="1">Active</option>
-										<option value="2">OnHold</option>
-										<option value="3">Dropped</option>
-										<option value="4">Closed</option>
-									</select> 
-								</td>
-							</tr>
-							<tr align="right" >
-								<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
-								<input type="submit" class="positive" name="advance" id="advance" value="Search" />
-								<div id = 'load' style = 'float:right;display:none;height:1px;'>
-									<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-								</div>
-							</tr>
+							</thead>
+							<tbody>
+								<tr>	
+									<td>
+										<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
+											<?php foreach($lead_stage as $ls) { ?>
+											
+													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+													
+											<?php } ?>					
+										</select> 
+									</td>
+									<td>
+										<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
+										<?php foreach($customers as $customer) { ?>
+											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+										<?php } ?>
+										</select> 
+									</td>  
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
+											<option value="0-10000"> < 10000 </option>
+											<option value="10000-20000"> > 10000 < 20000 </option>
+											<option value="20000-50000"> > 20000 < 50000 </option>
+											<option value="50000-above"> > 50000 </option>
+										</select> 
+									</td>
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
+										<?php foreach ($lead_owner as $owner){ 
+											if(!empty($owner['first_name'])) { ?>
+											<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+										<?php } 
+										} ?>
+										</select> 
+									</td>
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
+											<?php foreach ($lead_owner as $owner) { 
+													if(!empty($owner['first_name'])) { ?>		
+														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+											<?php 	} 
+												  } 
+											?>
+										</select> 
+									</td>
+								</tr>
+								<tr>
+									<th>By Region Wise</th>
+									<th>By Country Wise</th>
+									<th>By State Wise</th>
+									<th>By Location Wise</th>
+									<th>By Status</th>
+								</tr>
+								<tr>
+									<td>
+										<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
+											<?php foreach ($regions as $reg) { 
+												if(!empty($reg['region_name'])) {?>
+												<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+											<?php } } ?>
+										</select> 
+									</td>
+									<td id="country_row">
+										<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]">
+											
+										</select> 
+									</td>
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="statename" name="statename[]">
+											
+										</select> 
+									</td>
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
+											
+										</select> 
+									</td>
+									<td>
+										<select  style="width:120px;" multiple="multiple" id="lead_status" name="lead_status[]">
+											<option value="1">Active</option>
+											<option value="2">OnHold</option>
+											<option value="3">Dropped</option>
+											<option value="4">Closed</option>
+										</select> 
+									</td>
+								</tr>
+								<tr align="right" >
+									<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
+									<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+									<div id = 'load' style = 'float:right;display:none;height:1px;'>
+										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+									</div>
+								</tr>
 							</tbody>
 							</table>
 						</div>
