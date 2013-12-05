@@ -76,16 +76,17 @@ require (theme_url().'/tpl/header.php');
 									</td>
 									<td>
 										<select style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-										<?php foreach ($lead_owner as $owner){ 
-											if(!empty($owner['first_name'])) { ?>
-											<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-										<?php } 
-										} ?>
+											<?php foreach ($lead_owner as $owner) { 
+													if(!empty($owner['first_name'])) { ?>
+														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+											<?php 	} 
+												} 
+											?>
 										</select> 
 									</td>
 									<td>
 										<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
-											<?php foreach ($lead_owner as $owner) { 
+											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
 											<?php 	} 
