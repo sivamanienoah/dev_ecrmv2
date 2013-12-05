@@ -89,7 +89,7 @@ require (theme_url().'/tpl/header.php');
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
 											<?php 	} 
-												} 
+												}
 											?>
 										</select> 
 									</td>
