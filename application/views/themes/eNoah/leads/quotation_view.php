@@ -105,10 +105,12 @@ require (theme_url().'/tpl/header.php');
 								<tr>
 									<td>
 										<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
-											<?php foreach ($regions as $reg) { 
-												if(!empty($reg['region_name'])) {?>
-												<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
-											<?php } } ?>
+											<?php foreach ($regions as $reg) {
+													if(!empty($reg['region_name'])) { ?>
+														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+											<?php 	}
+												}
+											?>
 										</select> 
 									</td>
 									<td id="country_row">
