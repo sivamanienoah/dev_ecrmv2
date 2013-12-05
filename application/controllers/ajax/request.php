@@ -1513,7 +1513,7 @@ EOD;
 					
 					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
-					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
+					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (lead_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
 					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);
 					
@@ -1570,7 +1570,7 @@ EOD;
 										
 					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
-					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (job_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
+					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (lead_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
 					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
 					$q = $this->db->query($query);	
 					

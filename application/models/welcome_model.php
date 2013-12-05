@@ -199,9 +199,9 @@ class Welcome_model extends crm_model {
     {
 		
         $data['query_files1_html'] = '';       
-		$query_tab = "SELECT lq.job_id, us.first_name,us.last_name, lq.query_msg, lq.query_id, lq.query_file_name, lq.query_sent_date, lq.replay_query 
+		$query_tab = "SELECT lq.lead_id, us.first_name,us.last_name, lq.query_msg, lq.query_id, lq.query_file_name, lq.query_sent_date, lq.replay_query 
 		FROM ".$this->cfg['dbpref']."lead_query as lq
-		LEFT JOIN ".$this->cfg['dbpref']."users as us ON us.userid= lq.user_id WHERE lq.job_id=".$lead_id." ORDER BY lq.query_sent_date DESC";
+		LEFT JOIN ".$this->cfg['dbpref']."users as us ON us.userid= lq.user_id WHERE lq.lead_id=".$lead_id." ORDER BY lq.query_sent_date DESC";
 		
 		$results = $this->db->query($query_tab);
 		$results = $results->result_array();

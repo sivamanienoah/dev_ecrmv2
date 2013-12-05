@@ -194,7 +194,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$wh_condn = array('lead_id' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('pjt_id' => $updt['pjt_id']);
 			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
@@ -227,7 +227,7 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$wh_condn = array('lead_id' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('actual_worth_amount' => $updt['pjt_val']);
 			$updt_id = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_id==0)
@@ -267,7 +267,7 @@ class Project extends crm_controller {
 				break;
 			}
 
-			$wh_condn = array('lead_id' => $updt['job_id']);
+			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('pjt_status' => $updt['pjt_stat']);
 			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
 			
@@ -278,7 +278,7 @@ class Project extends crm_controller {
 			else 
 			{
 				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $this->input->post('job_id');
+				$ins['jobid_fk'] = $this->input->post('lead_id');
 				$ins['date_created'] = date('Y-m-d H:i:s');
 				$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
@@ -947,7 +947,7 @@ class Project extends crm_controller {
 	
 	/*
 	 *Delete the expected payment
-	 *@params expect_id, job_id
+	 *@params expect_id, lead_id
 	 */
 	function agreedPaymentDelete($eid, $jid)
 	{
@@ -1701,7 +1701,7 @@ HDOC;
 					$del_condn1 = array('lead_id'=>$id);					
 					$delete_file = $this->project_model->delete_row('lead_files', $del_condn1);
 					
-					$del_condn2 = array('job_id'=>$id);
+					$del_condn2 = array('lead_id'=>$id);
 					$delete_query = $this->project_model->delete_row('lead_query', $del_condn2);
 					
 					# Project Delete Mail Notification

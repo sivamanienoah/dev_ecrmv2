@@ -784,7 +784,7 @@
 				success : function(response){
 					$('.checkUser').hide();
 					
-					var set_params 				= {pjt_id: pjtId, job_id: curr_job_id};
+					var set_params 				= {pjt_id: pjtId, lead_id: curr_job_id};
 					set_params[csrf_token_name] = csrf_hash_token;
 					
 					if(response == 'Ok') {					
@@ -842,7 +842,7 @@
 			data: params,
 			success : function(response) {
 				$('#checkVal').hide();
-				var params 				= { pjt_val: pjtValue, job_id: curr_job_id};
+				var params 				= { pjt_val: pjtValue, lead_id: curr_job_id};
 				params[csrf_token_name] = csrf_hash_token;
 				
 				if(response == 'Ok') {	
@@ -893,7 +893,7 @@
 			type: 'POST',
 			url: 'project/set_project_status/',
 			dataType: 'json',
-			data: 'pjt_stat='+pjt_stat+'&job_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			data: 'pjt_stat='+pjt_stat+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
 			success: function(data) {
 				if (data.error == false) {
 					$('#resmsg').show();

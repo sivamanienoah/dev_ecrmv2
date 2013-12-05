@@ -1112,7 +1112,7 @@ HDOC;
 					$delete_log = $this->welcome_model->delete_row('logs', 'jobid_fk', $id);
 					$delete_task = $this->welcome_model->delete_row('tasks', 'jobid_fk', $id);
 					$delete_file = $this->welcome_model->delete_row('lead_files', 'lead_id', $id);
-					$delete_query = $this->welcome_model->delete_row('lead_query', 'job_id', $id);
+					$delete_query = $this->welcome_model->delete_row('lead_query', 'lead_id', $id);
 					
 					# Lead Delete Mail Notification
 					$ins['log_content'] = 'Lead Deleted Sucessfully - Lead ' .word_limiter($lead_det['lead_title'], 4). ' ';
