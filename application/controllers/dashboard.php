@@ -29,16 +29,25 @@ class Dashboard extends crm_controller {
 	}
 	
 	function index()
-	{	
+	{
+		
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
 		$userdata = $this->session->userdata('logged_in_user');
 		#$this->output->enable_profiler(TRUE);
 		$data = array();
+		$filter = real_escape_array($this->input->post());
+		if (isset($filter['advance'])) {
+			$data['toggle_stat'] = 1;
+			$filter = $filter;
+		} 
 		$cusId = $this->level_restriction();
-		$data['getLeads'] = $this->dashboard_model->getTotLeads($cusId);
-		//Leads  by RegionWise - Start here
+		
+		//Current Pipeline leads
+		$data['getLeads'] = $this->dashboard_model->getTotLeads($cusId, $filter);
+		
+		//Leads by RegionWise - Start here
 		$data['getLeadByReg'] = $this->dashboard_model->getLeadsByReg($cusId);
 		//echo "<pre>"; print_r($data['getLeadByReg']);
 		$leads = $data['getLeadByReg']['res'];
@@ -48,8 +57,7 @@ class Dashboard extends crm_controller {
 		$rates = $this->get_currency_rates();
 		$data['rates'] = $this->get_currency_rates();
 		if($total_leads>0)
-    	{
-    		//if (($userdata['level'] == 1) || ($userdata['level'] == 2)) {		
+    	{	
     		if ($userdata['level'] == 1) {	
 				foreach ($leads as $lead)
 				{
@@ -121,7 +129,7 @@ class Dashboard extends crm_controller {
 				$closedMonthArr[$mon] = $expect_worth_amount;
 				$monthArr[] = $mon;
 			}  
-		} 
+		}
 		// echo "<pre>"; print_r($closedMonthArr);
 		$data['totClosedOppor'] = $totalSum;
 		$data['getClosedOppor'] = $closedMonthArr;
@@ -156,6 +164,28 @@ class Dashboard extends crm_controller {
 		//For Tasks access - End here
 		$this->load->view('dashboard_view', $data);
     }
+	
+	function getCurrentPipelineLeads()
+	{		
+		$res = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($res); exit;
+		$userdata = $this->session->userdata('logged_in_user');
+		$data = array();
+		$cusId = $this->level_restriction();
+		
+		//Current Pipeline leads
+		$getLeads = $this->dashboard_model->getTotLead($cusId, $res);
+		
+		$lead_stage = array();
+		foreach($getLeads as $getLead){
+			$stage_name = explode('.',$getLead['lead_stage_name']);
+			// $lead_stage[] = $stage_name[0].'('.$getLead["COUNT( * )"].')'."".','.$getLead["COUNT( * )"];
+			$lead_stage[] = $stage_name[0].'('.$getLead["COUNT( * )"].')'."".','.$getLead["COUNT( * )"];
+		}
+		$json['s1'] = implode(',', $lead_stage);
+		echo json_encode($json);
+		exit;
+	}
 	
 	public function get_currency_rates()
 	{
@@ -658,7 +688,8 @@ class Dashboard extends crm_controller {
 		foreach($data['getLeastLead'] as $getLeast){
 			$least_leads[] = $getLeast['lead_title'];
 		}
-		$res['html'] = $least_leads[$_POST['id']];
+		$result = real_escape_array($this->input->post());
+		$res['html'] = $least_leads[$result['id']];
 		echo json_encode($res);
 		exit;
 		//return $amount*$val;
@@ -817,7 +848,6 @@ class Dashboard extends crm_controller {
 					$cusId = $cusIds;
 				break;
 				case 3:
-
 					$countries = $this->dashboard_model->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
 						$cou = array();
 						foreach ($countries as $couid) {
@@ -830,7 +860,6 @@ class Dashboard extends crm_controller {
 					$cusId = $cusIds;
 				break;
 				case 4:
-
 					$states = $this->dashboard_model->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
 						$ste = array();
 						foreach ($states as $steid) {
@@ -843,7 +872,6 @@ class Dashboard extends crm_controller {
 					$cusId = $cusIds;
 				break;
 				case 5:
-
 					$locations = $this->dashboard_model->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
 						$loc = array();
 						foreach ($locations as $locid) {

@@ -9,6 +9,7 @@ if (get_default_currency()) {
 	$default_cur_name = 'USD';
 }
 ?>
+
 <?php
 ob_start();
 $userdata = $this->session->userdata('logged_in_user');
@@ -28,7 +29,7 @@ require (theme_url().'/tpl/header.php');
 <script type="text/javascript" src="assets/js/plugins/jqplot.funnelRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
+<!--<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>-->
 <?php 
 // For Chart Title
 switch ($userdata['level']) 
@@ -62,6 +63,112 @@ switch ($userdata['level'])
 	<div class="inner">
 	<?php if($this->session->userdata('viewlead')==1) { ?>
 		<div>
+		<!--Advance filters-->
+		<div>
+			<a class="choice-box" onclick="advanced_filter();" >
+				Advanced Filters
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
+				
+			<div id="advance_search" style="float:left;">
+				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
+				<form action="<?php echo $this->uri->uri_string() ?>" method="post" style="width:940px;">
+					
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					
+					<div style="border: 1px solid #DCDCDC;">
+						<table cellpadding="0" cellspacing="0" class="data-table" >
+							<thead>
+							<tr>
+								<th>By Lead Stage</th>
+								<th>By Customer</th>
+								<th>By lead Owner</th>
+								<th>Lead Assignee</th>
+							</tr>	
+							</thead>
+							<tbody>
+							<tr>	
+								<td>
+									<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
+										<?php foreach($lead_stage as $ls) { ?>
+											<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+										<?php } ?>					
+									</select> 
+								</td>
+								<td>
+									<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
+										<?php foreach($customers as $customer) { ?>
+											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+										<?php } ?>
+									</select> 
+								</td> 
+								<td>
+									<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
+										<?php foreach ($lead_owner as $owner) { 
+												if(!empty($owner['first_name'])) { ?>
+													<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+										<?php	} 
+											} 
+										?>
+									</select> 
+								</td>
+								<td>
+									<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
+										<?php foreach ($lead_owner as $owner) {
+												if(!empty($owner['first_name'])) { ?>		
+													<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+										<?php 	} 
+											} 
+										?>
+									</select> 
+								</td>
+							</tr>
+							<tr>
+								<th>By Region Wise</th>
+								<th>By Country Wise</th>
+								<th>By State Wise</th>
+								<th>By Location Wise</th>
+							</tr>
+							<tr>
+								<td>
+									<select style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
+										<?php foreach ($regions as $reg) { 
+												if(!empty($reg['region_name'])) { ?>
+													<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+										<?php 	} 
+											}
+										?>
+									</select> 
+								</td>
+								<td id="country_row">
+									<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]">
+									</select> 
+								</td>
+								<td>
+									<select  style="width:120px;" multiple="multiple" id="statename" name="statename[]">
+									</select> 
+								</td>
+								<td>
+									<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
+									</select> 
+								</td>
+							</tr>
+							<tr align="right" >
+								<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
+								<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+								<div id = 'load' style = 'float:right;display:none;height:1px;'>
+									<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+								</div>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+			<div id="advance_search_dash_res" style="clear:both" ></div>
+		</div>
+		
+		<!--Advance filters-->
 		   <div class="clearfix">
 			<div class="pull-left">
 				<h5 class="dash-tlt">Leads - Current Pipeline</h5>
@@ -230,7 +337,6 @@ switch ($userdata['level'])
 		?>
 
 		<form id="edit-job-task" onsubmit="return false;">
-		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
 			<!-- edit task -->
@@ -262,24 +368,11 @@ switch ($userdata['level'])
 					</td>
 					<td>
 						<select name="task_user" class="edit-task-allocate textfield width100px">
-						<?php
-						echo $remind_options, $remind_options_all, $contractor_options;
-						?>
+							<?php 
+								echo $remind_options, $remind_options_all, $contractor_options; 
+							?>
 						</select>
 					</td>
-					<!--<td>
-						Hours
-					</td>
-					<td>
-						<input name="task_hours" type="text" class="edit-task-hours textfield width100px" /> Hours and
-						<select name="task_mins" class="edit-task-mins textfield">
-							<option value="0">0</option>
-							<option value="15">15</option>
-							<option value="30">30</option>
-							<option value="45">45</option>
-						</select>
-						Mins
-					</td>-->
 				</tr>
 				<?php 
 				} else { 
@@ -290,9 +383,9 @@ switch ($userdata['level'])
 					</td>
 					<td>
 						<select name="task_user" class="edit-task-allocate textfield width100px" disabled >
-						<?php
-						echo $remind_options, $remind_options_all, $contractor_options;
-						?>
+							<?php
+								echo $remind_options, $remind_options_all, $contractor_options;
+							?>
 						</select>
 					</td>
 				</tr>
@@ -303,15 +396,15 @@ switch ($userdata['level'])
 					<td>
 						Planned Start Date
 					</td>
-					<?php if(in_array($uio,$b) || $userdata['role_id'] == 1) {?>
+					<?php if(in_array($uio,$b) || $userdata['role_id'] == 1) { ?>
 					<td>
 						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
 					</td>
 					<?php } else { ?>
 					<td>
-								<input type="text" name="task_start_date" class="edit-start-date textfield width100px" readonly />
-							</td>
-							<?php } ?>
+						<input type="text" name="task_start_date" class="edit-start-date textfield width100px" readonly />
+					</td>
+					<?php } ?>
 					<td>
 						Planned End Date
 					</td>
@@ -321,17 +414,6 @@ switch ($userdata['level'])
 						<?php } else { ?>
 							<input type="text" name="task_end_date" class="edit-end-date textfield width100px" readonly />
 						<?php } ?>
-						&nbsp;
-						<!--<select name="task_end_hour" class="textfield edit-end-hour">
-						<?php
-						/*foreach ($time_range as $k => $v)
-						{
-							$selected = '';
-							echo "
-							<option value=\"{$k}\"{$selected}>{$v}</option>";
-						}*/
-						?>
-						</select>-->
 					</td>
 				</tr>
 				<tr>
@@ -344,7 +426,6 @@ switch ($userdata['level'])
 					<td>Remarks</td>
 					<td colspan="3"><textarea name="remarks" class="edit-task-remarks" width="420px"></textarea></td>
 				</tr>
-				<!--<tr><td colspan=3>Priority Support : <input type="checkbox" name="priority" class="priority"/></td>-->
 				<tr>
 					<td colspan="4">
 						<div class="buttons">
@@ -360,7 +441,6 @@ switch ($userdata['level'])
 		</form>
 		<form style="display:none;" class="random-task-tables" onsubmit="return false;">
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
 		</form>
 	<?php } ?>
 	<!--Task Module for Non Lead Acces users only- End here-->
@@ -462,7 +542,7 @@ foreach($getLeads as $getLead){
 }
 $s1 = implode(',', $lead_stage);
 
-//print $s1; exit;
+// print $s1; exit;
 
 
 //For Leads By RegionWise
@@ -532,17 +612,20 @@ foreach($get_Service_Req as $getSerReq) {
 }
 $s8 = implode(',', $Ser_Req);
 ?>
-
+<?php 
+	$toggle_stat =  isset($toggle_stat) ? "toggle" : "no_toggle";
+?>
 <script class="code" type="text/javascript">
-	 dashboard_s1       = [<?php echo $s1; ?>];
-	 dashboard_s2       = [<?php echo @rtrim($s2, ','); ?>];
-	 dashboard_s3       = [<?php echo $s3; ?>];
-	 dashboard_s4       = [<?php echo @rtrim($s4, ','); ?>];
-	 dashboard_s7       = [<?php echo @rtrim($s7, ','); ?>];
-	 dashboard_s8       = [<?php echo @rtrim($s8, ','); ?>];
-	 dashboard_s3_name  = [<?php echo $s3_name; ?>];
-	 dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
-	 dashboard_userid   = "<?php echo $userdata['userid']; ?>"; 
+	dashboard_s1       = [<?php echo $s1; ?>];
+	dashboard_s2       = [<?php echo @rtrim($s2, ','); ?>];
+	dashboard_s3       = [<?php echo $s3; ?>];
+	dashboard_s4       = [<?php echo @rtrim($s4, ','); ?>];
+	dashboard_s7       = [<?php echo @rtrim($s7, ','); ?>];
+	dashboard_s8       = [<?php echo @rtrim($s8, ','); ?>];
+	dashboard_s3_name  = [<?php echo $s3_name; ?>];
+	dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
+	dashboard_userid   = "<?php echo $userdata['userid']; ?>";
+	filter_toggle_stat = "<?php echo $toggle_stat ?>";
 </script>
 <script type="text/javascript" src="assets/js/dashboard/dashboard_view.js"></script>
 <?php

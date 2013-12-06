@@ -12,14 +12,39 @@ class Dashboard_model extends crm_model {
     }
 	
 	//Dashboard functionality
-	public function getTotLeads($cusId = FALSE) {
+	public function getTotLeads($cusId = FALSE, $filter = FALSE) {
+		// echo "<pre>"; print_r($filter); exit;
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
    		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('jb.custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		$this->db->group_by('jb.lead_stage');
+		$this->db->order_by('jb.lead_stage', 'asc');
+		$query = $this->db->get();
+		$tot_query =  $query->result_array();
+		// echo $this->db->last_query(); exit;
+		return $tot_query;
+	}
+	
+	//Dashboard functionality
+	function getTotLead($cusId = FALSE, $filter) {
+		$this->db->select('lstg.lead_stage_name, COUNT( * )');
+		$this->db->from($this->cfg['dbpref'].'leads jb');
+		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
+   		$this->db->where_in('jb.lead_stage', $this->stg);
+		$this->db->where('jb.lead_status',1);
+		if ($this->userdata['level']!=1) {
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if ($filter['customer'] !='null') {
+			$this->db->where('jb.custid_fk in ('.$filter['customer'].')');
 		}
 		$this->db->group_by('jb.lead_stage');
 		$this->db->order_by('jb.lead_stage', 'asc');
@@ -30,7 +55,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getLeadsByReg($cusId = FALSE) {
-		//print_r($custId); exit;
+		// print_r($custId); exit;
 		// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
 		
 		$this->db->select('rg.region_name, coun.country_name, ste.state_name, loc.location_name, j.expect_worth_amount, ew.expect_worth_name, ew.expect_worth_id');	

@@ -4,10 +4,14 @@
 
  if(viewlead==1) { 
 
- $(document).ready(function(){
+$(document).ready(function(){
+	funnel_gh(dashboard_s1);
+});
 
+function funnel_gh(dashboard_s1)
+{
 	if (dashboard_s1!='') 
-	{ 
+	{
 		plot1 = $.jqplot('funnel1', [dashboard_s1], {
 		//title: 'Leads - Current Pipeline',
 		legend: {
@@ -106,8 +110,8 @@
 	else 
 	{
 		$('#funnel1').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
-	} 
-});
+	}
+}
 
 
 $(document).ready(function(){
@@ -1340,8 +1344,8 @@ function loadEditTables(){
 		return;
 	}
 	
-	var params = {'id_set': taskids.join(',')};
-	params[csrf_token_name]      = csrf_hash_token; 
+	var params 				= {'id_set': taskids.join(',')};
+	params[csrf_token_name] = csrf_hash_token; 
 	
 	$.post('ajax/request/get_random_tasks',params,function(data){
 
@@ -1352,5 +1356,164 @@ function loadEditTables(){
 		$.unblockUI();
 	});
 }
+if(viewlead==1 && filter_toggle_stat!='toggle')
+	document.getElementById('advance_search').style.display = 'none';
 
+if(viewlead==1 && filter_toggle_stat=='toggle')
+	document.getElementById('advance_search').style.display;
+	
+function advanced_filter() {
+	$('#advance_search').slideToggle('slow');
+	var status = document.getElementById('advance_search').style.display;
+	
+	if(status == 'none') {
+		var owner = $("#owner").val();
+		var leadassignee = $("#leadassignee").val();
+		var regionname = $("#regionname").val();
+		var countryname = $("#countryname").val();
+		var statename = $("#statename").val();
+		var locname = $("#locname").val();
+		var stage = $("#stage").val(); 
+		var customer = $("#customer").val(); 
+	} else {
+		$("#owner").val("");
+		$("#leadassignee").val("");
+		$("#regionname").val("");
+		$("#countryname").val("");
+		$("#statename").val("");
+		$("#locname").val("");
+		$("#stage").val("");
+		$("#customer").val("");
+	}
+}
+//For Countries
+$('#regionname').change(function() {
+	$('#statename').html('');
+	$('#locname').html('');
+	loadCountry();
+});
+
+function loadCountry() {
+	var region_id 			= $("#regionname").val();
+	var params 				= {'region_id':region_id};
+	params[csrf_token_name] = csrf_hash_token;
+	$.post( 
+		'welcome/loadCountrys/',
+		params,
+		function(data) {										
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$("select#countryname").html(data);
+			}
+		}
+	);
+}
+
+//For States
+$('#countryname').change(function() {
+	$('#locname').html('');
+	loadState();
+});
+
+function loadState() {
+	var coun_id 			= $("#countryname").val();
+	var params 				= {'coun_id':coun_id};
+	params[csrf_token_name] = csrf_hash_token;
+	if(coun_id != '') {
+		$.post( 
+			'welcome/loadStates/',
+			params,
+			function(data) {										
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$("select#statename").html(data);
+				}
+			}
+		);
+	}
+}
+
+//For Locations
+$('#statename').change(function() {
+		loadLocations();
+});
+
+function loadLocations() {
+	var st_id  				= $("#statename").val();
+	var params 				= {'st_id':st_id};
+	params[csrf_token_name] = csrf_hash_token;
+	if(st_id != '') {
+		$.post( 
+			'welcome/loadLocns/',
+			params,
+			function(data) {										
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$("select#locname").html(data);
+				}
+			}
+		);
+	}
+}
+
+//For Advance Filters functionality.
+$("#advanceFiltersDash").submit(function() {
+	$('#advance').hide();
+	$('#load').show();
+	var owner        = $("#owner").val();
+	var leadassignee = $("#leadassignee").val();
+	var regionname   = $("#regionname").val();
+	var countryname  = $("#countryname").val();
+	var statename    = $("#statename").val();
+	var locname      = $("#locname").val();
+	var stage        = $("#stage").val();
+	var customer     = $("#customer").val();
+
+	$.ajax({
+		type: "POST",		
+		url: site_base_url+"dashboard/getCurrentPipelineLeads",
+		dataType: "json",
+		// data: "stage="+stage+"&customer="+customer+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "stage="+stage+"&customer="+customer+'&'+csrf_token_name+'='+csrf_hash_token,
+		success: function(res) {
+			// var dashboard_s1 = [['Prospect(2)',2],['Initial(2)',2]];
+			dashboard_s1 = res['s1'];
+			var res = dashboard_s1.split(",");
+			
+			var len = res.length;
+			var dash = [];
+			/* for (var i=0; i<len; i++) {
+				odd = isOdd(i);
+				if (odd!=1) {
+					dash.push('['+res[i]);
+				}
+				if (odd==1) {
+					dash.push(res[i]+']');
+				}
+			} */
+			var dash1= [];
+			var i = 0;
+			while(res[0]) {			
+				
+				dash1[i] = res.splice(0,2);
+				i++;
+			}
+			dash = dash1;
+			alert(dash[1]);
+			dashboard_s1 = dash;
+			
+			funnel_gh(dashboard_s1);
+			$('#advance').show();
+			$('#load').hide();
+		}
+	});
+	return false;  //stop the actual form post !important!
+});
+
+function isOdd(num) { 
+	return num % 2;
+}
 /////////////////
