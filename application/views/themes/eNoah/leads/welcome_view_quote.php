@@ -536,8 +536,8 @@ $(function(){
 		beforeActivate: function( event, ui ) {
 			if (ui.newPanel[0].id=='jv-tab-4')
 				loadExistingTasks();
-			if (ui.newPanel[0].id=='jv-tab-5')
-				populateJobOverview();
+			// if (ui.newPanel[0].id=='jv-tab-5')
+				// populateJobOverview();
 		}
 	});
 
@@ -950,7 +950,7 @@ $(function(){
 				<li><a href="<?php echo current_url() ?>#jv-tab-2">Estimate</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-5">Milestones</a></li>
+				<!--li><a href="<?php echo current_url() ?>#jv-tab-5">Milestones</a></li-->
 				<li><a href="<?php echo current_url() ?>#jv-tab-6">Customer</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-7">Query</a></li>
 			</ul>
@@ -1153,7 +1153,7 @@ $(function(){
 				</form>
 			</div><!-- id: jv-tab-4 end -->
 			
-			<div id="jv-tab-5">
+			<!--div id="jv-tab-5">
 				<form id="milestone-management" onsubmit="return false;">
 				
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1346,7 +1346,7 @@ $(function(){
 						);
 					}
 				</script>
-			</div><!-- id: jv-tab-5 end -->
+			</div--><!-- id: jv-tab-5 end -->
 
 			<div id="jv-tab-6">
 				<form id="customer-detail-read-only" onsubmit="return false;">
