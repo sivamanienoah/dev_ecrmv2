@@ -745,7 +745,7 @@ $('.checkUser').hide();
 				data: 'region_load='+region_load+'&country_load='+country_load+'&'+csrf_token_name+'='+csrf_hash_token,
 				success:function(data){		
 					if(data.msg == 'noans'){
-						alert('Please select valuable country');
+						alert('Please select corresponding country');
 						return false;
 					} else if(data.msg == 'success'){
 						document.getElementById("frm").submit();
