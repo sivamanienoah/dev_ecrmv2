@@ -325,71 +325,6 @@ class Role extends crm_controller {
 		}
 		return FALSE;
 	}
-	
-	/*
-	*@Display Region Settings Page
-	*@Role Controller
-	*/
-	public function region_settings()
-	{
-		$this->load->view('role/regionsettings_view');
-	}
-	
-	/*
-	*@Insert Region Record
-	*@Role Controller
-	*/
-	public function region()
-	{
-		$this->login_model->check_login();
-		
-		//adding region
-		$rules['region']   = "trim|required";         
-		$this->validation->set_rules($rules);
-		$fields['region']   = "Region Name";		 
-		$fields['inactive'] = 'Inactive';
-		$this->validation->set_fields($fields);
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		if ($this->validation->run() == false) {
-                $this->load->view('role/region_view', $data);
-		} else {
-		    foreach($fields as $key => $val) {
-                $update_data[$key] = $this->input->post($key);
-             }			
-		    if ($this->region_model->insert_region($update_data)) {                    
-                    $this->session->set_flashdata('confirm', array('Region Details Updated!'));
-                    redirect('role/region_settings');                    
-            }		
-		}	
-		
-	}
-
-	/*
-	*@Call Country View page 
-	*@Role Controller
-	*/
-	public function country()
-	{
-		$this->load->view('role/country_view');
-	}
-	
-	/*
-	*@Call State View page 
-	*@Role Controller
-	*/
-	public function state()
-	{
-		$this->load->view('role/state_view');
-	}
-	
-	/*
-	*@Call Location View page 
-	*@Role Controller
-	*/
-	public function location()
-	{
-		$this->load->view('role/location_view');
-	}
 
 	/*
 	*@Insert masters Record
@@ -423,16 +358,6 @@ class Role extends crm_controller {
                     redirect('role/master_list');                    
             }		
 		}		
-	}
-	
-	
-	/*
-	*@Call Role view Templeate 
-	*@Role Controller
-	*/
-	public function roles()
-	{
-		$this->load->view('role/roles_view');
 	}
 	
 	/**
