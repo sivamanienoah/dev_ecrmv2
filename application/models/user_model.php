@@ -130,7 +130,7 @@ class User_model extends crm_model {
 		}
     }
 	
-		/*
+	/*
 	*check unique emails
 	*/
 	function chk_unique_emails($email)
