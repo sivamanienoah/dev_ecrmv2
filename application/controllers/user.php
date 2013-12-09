@@ -507,7 +507,6 @@ class User extends crm_controller {
 	*@Method : Edit Load Regions
 	*@User Controller 
 	*/
-	
 	public function editloadRegions($uid)
 	{
 	   $this->user_model->get_loadregionsByuserId($uid);
@@ -520,8 +519,8 @@ class User extends crm_controller {
 	 */
 	public function loadCountrys()
 	{
-		$data = real_escape_array($this->input->post());
-		$region_id = join(",",$data['region_id']); 
+		$data 	   = real_escape_array($this->input->post());
+		$region_id = join(",", $data['region_id']); 
 		$this->user_model->get_loadCountrysByRegionid($region_id);
 	}
 	
@@ -529,11 +528,11 @@ class User extends crm_controller {
 	*@Method : Edit Load Regions
 	*@User Controller 
 	*/
-	
 	public function editloadCountrys()
 	{
-		$data = real_escape_array($this->input->post());
-		$this->user_model->edit_loadCountrys($data['regionid'][0],$data['uid']);
+		$data 	   = real_escape_array($this->input->post());
+		$region_id = join(",", $data['regionid']);
+		$this->user_model->edit_loadCountrys($region_id, $data['uid']);
 	}
 	/* 
 	 * Adding User Page 
@@ -587,9 +586,9 @@ class User extends crm_controller {
 		$data             =	real_escape_array($this->input->post()); // escape special characters
 		$explode_region   = @explode(',',$data['region_load']);
 		$explode_country  = @explode(',',$data['country_load']);
-		
+
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i], $explode_country);
 			if($check_country_query == 0) {
 				$json['msg'] = 'noans'; 
 				break;
@@ -613,7 +612,7 @@ class User extends crm_controller {
 		$explode_state    = @explode(',',$data['state_load']);
 		
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i], $explode_country);
 			if($check_country_query == 0) {
 				$json['countrymsg'] = 'noans'; 
 				break;
@@ -623,7 +622,7 @@ class User extends crm_controller {
 		}
 		
 		for($j=0;$j<count($explode_country);$j++) {
-			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$data['state_load']);
+			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j], $explode_state);
 			if($check_state_query == 0) {
 				$json['statemsg'] = 'nostate'; 
 				break;
@@ -650,7 +649,7 @@ class User extends crm_controller {
 		$explode_location = @explode(',',$data['location_load']);
 		
 		for($i=0;$i<count($explode_region);$i++) {
-			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$data['country_load']);
+			$check_country_query = $this->user_model->checkcountrylevel3($explode_region[$i],$explode_country);
 			if($check_country_query == 0) {
 				$json['countrymsg'] = 'noans'; 
 				break;
@@ -661,7 +660,7 @@ class User extends crm_controller {
 		
 		for($j=0;$j<count($explode_country);$j++) 
 		{
-			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$data['state_load']);
+			$check_state_query = $this->user_model->checkstatelevel4($explode_country[$j],$explode_state);
 			if($check_state_query == 0) {
 				$json['statemsg'] = 'nostate'; 
 				break;
@@ -672,7 +671,7 @@ class User extends crm_controller {
 		
 		for($k=0;$k<count($explode_state);$k++) 
 		{
-			$check_location_query = $this->user_model->checklocationlevel5($explode_state[$k],$data['location_load']);
+			$check_location_query = $this->user_model->checklocationlevel5($explode_state[$k],$explode_location);
 			if($check_location_query == 0) {
 				$json['locationmsg'] = 'noloc'; 
 				break;

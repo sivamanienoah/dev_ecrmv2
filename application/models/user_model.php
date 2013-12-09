@@ -433,16 +433,17 @@ class User_model extends crm_model {
 	*@table    Country
 	*/
 	
-	public function checkcountrylevel3($regionid,$explode_country) 
+	public function checkcountrylevel3($regionid, $explode_country) 
 	{
 		$flag = 0;		
 		//$query = $this->db->query("select * from ".$this->cfg['dbpref']."country where regionid='".$regionid."' AND countryid IN ($explode_country)");
-		
+
 		$this->db->select("*");
 		$this->db->from($this->cfg['dbpref']."country");
 		$this->db->where("regionid", $regionid); 
 		$this->db->where_in("countryid", $explode_country); 
-		$query = $this->db->get();		
+		$query = $this->db->get();
+	
 		if($query->num_rows() > 0) {
 			$flag = 1;
 		} 	
@@ -463,8 +464,8 @@ class User_model extends crm_model {
 			$this->db->select("*");
 			$this->db->from($this->cfg['dbpref']."state");
 			$this->db->where("countryid", $countryid); 
-			// $this->db->where_in("stateid", $state_load);
-			$this->db->where('stateid IN('.$state_load.')'); 
+			$this->db->where_in("stateid", $state_load);
+			// $this->db->where('stateid IN('.$state_load.')'); 
 			$query = $this->db->get();	
 
 			if($query->num_rows() > 0) {
@@ -487,8 +488,8 @@ class User_model extends crm_model {
 			$this->db->select("*");
 			$this->db->from($this->cfg['dbpref']."location");
 			$this->db->where("stateid", $stateid); 
-			// $this->db->where_in("locationid", $location_load);
-			$this->db->where('locationid IN('.$location_load.')');
+			$this->db->where_in("locationid", $location_load);
+			// $this->db->where('locationid IN('.$location_load.')');
 			$query = $this->db->get();	
 			
 			if($query->num_rows() > 0) {
