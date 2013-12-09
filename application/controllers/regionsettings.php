@@ -193,7 +193,6 @@ class Regionsettings extends crm_controller {
 	{
 		$data               = array();
 		$post_data          = real_escape_array($this->input->post());
-		// echo "<pre>"; print_r($post_data); exit;
 		$data['customers']  = $this->regionsettings_model->country_list_all();
 		$data['regions']    = $this->regionsettings_model->region_list_all();
         
