@@ -22,7 +22,7 @@ $(function() {
 	
 function dtTable() {
 	$('.data-tbl').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
+		"aaSorting": [[ 1, "desc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
