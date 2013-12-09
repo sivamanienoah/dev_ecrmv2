@@ -1,7 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 
 <style>
 .ui-tabs-panel {
@@ -46,7 +44,7 @@ switch ($tabselected)
 			</div>
 			
 	<?php } else {
-	 echo "You have no rights to access this page";
+		echo "You have no rights to access this page";
 	}
 	?>
 	</div>
