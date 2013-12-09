@@ -2,7 +2,7 @@
 
 class Report_lead_source_model extends crm_model {
     
-    function Country_model() {
+    function Report_lead_source_model() {
         parent::__construct();
 		$this->load->helper('lead_stage_helper');
 		$this->stg = getLeadStage();

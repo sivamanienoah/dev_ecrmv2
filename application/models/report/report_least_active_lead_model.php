@@ -2,7 +2,7 @@
 
 class Report_least_active_lead_model extends crm_model {
     
-    function Country_model() {
+    function Report_least_active_lead_model() {
         parent::__construct();
 		$this->load->helper('lead_stage_helper');
 		$this->stg = getLeadStage();
