@@ -98,7 +98,7 @@ class Welcome extends crm_controller {
 	 * @access public
 	 * @param int $id - Job Id
 	 */
-	public function view_quote($id = 0, $quote_section = '') 
+	public function view_quote($id = 0, $quote_section = '')
 	{
         $this->load->helper('text');
 		$this->load->helper('fix_text');
@@ -190,7 +190,9 @@ HDOC;
         }
 		else 
 		{
-            echo "Quote does not exist or if you are an account manager you may not be authorised to view this";
+            // echo "Lead does not exist or you may not be authorised to view this";
+			$this->session->set_flashdata('login_errors', array("Lead does not exist or you may not be authorised to view this."));
+			redirect('welcome/quotation');
         }
     }
 	
