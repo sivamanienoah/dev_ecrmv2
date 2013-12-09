@@ -1467,7 +1467,7 @@ $(function(){
 							<tr>
 								<td>
 									<input type="submit" name="query_sub" value="Submit" class="positive submitpositive" />
-									<input type="button" name="query_sub" value="Cancel" class="cancel" />
+									<input type="button" name="query_sub" value="Cancel" class="cancel" style="padding:2px 7px;" />
 								</td>
 							</tr>
 						</table>
