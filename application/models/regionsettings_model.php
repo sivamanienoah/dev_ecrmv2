@@ -344,13 +344,17 @@ class Regionsettings_model extends crm_model {
 	*@Region Settings Model
 	*/
     public function insert_region($data) {
-        
+		$res = $this->chk_unique_data('region', 'region_name', $data['region_name']);
+		if ($res == 1)
+		{
+			return false;
+		}
+		
         if ( $this->db->insert($this->cfg['dbpref'] . 'region', $data) ) {
             return $this->db->insert_id();
         } else {
             return false;
         }
-        
     }
 
 	/*
@@ -410,6 +414,11 @@ class Regionsettings_model extends crm_model {
 	*@Region Settings Model
 	*/
     public function insert_country($data) {
+		$res = $this->chk_unique_data('country', 'country_name', $data['country_name']);
+		if ($res == 1)
+		{
+			return false;
+		}
         if ( $this->db->insert($this->cfg['dbpref'] . 'country', $data) ) {
             return $this->db->insert_id();
         } else {
@@ -455,6 +464,11 @@ class Regionsettings_model extends crm_model {
 	*@Region Settings Model
 	*/
 	public function insert_state($data) {
+		$res = $this->chk_unique_data('state', 'state_name', $data['state_name']);
+		if ($res == 1)
+		{
+			return false;
+		}
         if ( $this->db->insert($this->cfg['dbpref'] . 'state', $data) ) {
             return $this->db->insert_id();
         } else {
@@ -487,6 +501,11 @@ class Regionsettings_model extends crm_model {
 	*@Region Settings Model
 	*/
     public function insert_location($data) {
+		$res = $this->chk_unique_data('location', 'location_name', $data['location_name']);
+		if ($res == 1)
+		{
+			return false;
+		}
         if ( $this->db->insert($this->cfg['dbpref'] . 'location', $data) ) {
             return $this->db->insert_id();
         } else {
@@ -1116,6 +1135,15 @@ class Regionsettings_model extends crm_model {
 		echo json_encode($res);
 		exit;
     }
+	
+	/*
+	*check unique data(region, country, state & location)
+	*/
+	function chk_unique_data($tbl, $wh_condn, $ins_data)
+	{
+        $chk = $this->db->get_where($this->cfg['dbpref'] . $tbl, array($wh_condn=>$ins_data));
+		return $chk->num_rows();
+	}
 
 }
 ?>
