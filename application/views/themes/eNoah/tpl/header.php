@@ -95,17 +95,17 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
 	}
 	
-	if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
+	// if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			foreach ($proposal_notify_msg as $arr){
 				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.$arr['lead_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
 			}
 		}
-	}
+	// }
 	// echo "<pre>"; print_r($task_notify_msg); exit;
 	
-	if ($this->uri->segment(1) == 'tasks' || $this->uri->segment(1) == 'dashboard') {
+	// if ($this->uri->segment(1) == 'tasks' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($task_notify_msg)) {
 			$notify[] = "<span class=notify_high>Tasks</span>";
 			foreach ($task_notify_msg as $arr){
@@ -113,7 +113,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 				$notify[] = 'The task "<a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['end_date'])).'</span>.';
 			}
 		}
-	}
+	// }
 
 	if (!isset($_COOKIE['floatStat'])) {
 		if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
