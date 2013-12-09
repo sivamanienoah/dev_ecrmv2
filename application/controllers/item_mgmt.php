@@ -157,7 +157,7 @@ class Item_mgmt extends crm_controller {
      * @param $type
      */
 	function item_delete($update = false, $id = false, $type = 'additional') {
-		if ($this->session->userdata('delete')==1){
+		if ($this->session->userdata('delete')==1) {
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 				$this->item_mgmt_model->delete_row('additional_items', array('itemid' => $id));
 				$this->session->set_flashdata('confirm', array('Item Record Deleted!'));
@@ -179,7 +179,7 @@ class Item_mgmt extends crm_controller {
 			$this->session->set_flashdata('confirm', array('Category Record Deleted!'));
 			redirect('item_mgmt/category_list');
 		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to delete this record"));
+			$this->session->set_flashdata('login_errors', array("You have no rights to delete this Category"));
 			redirect('item_mgmt/category_list');
 		}	
 	}
