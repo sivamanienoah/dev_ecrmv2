@@ -99,7 +99,7 @@ require (theme_url().'/tpl/header.php');
 									<td class="tblheadbg">By State Wise</td>
 									<td class="tblheadbg">By Location Wise</td>
 									<td class="tblheadbg">By Status</td>
-									<td class="tblheadbg">By Status</td>
+									<td class="tblheadbg">By Lead Indicator</td>
 								</tr>
 								<tr>
 									<td>
@@ -136,7 +136,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select style="width:60px" multiple="multiple" id="lead_indi" name="lead_indi[]">
+										<select style="width:85px" multiple="multiple" id="lead_indi" name="lead_indi[]">
 											<option value="HOT">Hot</option>
 											<option value="WARM">Warm</option>
 											<option value="COLD">Cold</option>
