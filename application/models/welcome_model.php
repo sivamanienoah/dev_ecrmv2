@@ -64,7 +64,7 @@ class Welcome_model extends crm_model {
 		}
 	}
 	
-	function get_users() 
+	function get_users()
 	{
     	$this->db->select('userid, first_name, last_name, level, role_id, inactive');
 		$this->db->where('inactive', 0);
@@ -113,8 +113,15 @@ class Welcome_model extends crm_model {
     }
 	
 	function get_customers() {
+		$cusId = $this->level_restriction();
+		
+		$userdata = $this->session->userdata('logged_in_user');
+		
 	    $this->db->select('custid, first_name, last_name, company');
 	    $this->db->from($this->cfg['dbpref'] . 'customers');
+		if ($this->userdata['level']!=1) {
+			$this->db->where_in('custid', $cusId);
+		}
 		$this->db->order_by("first_name", "asc");
 	    $customers = $this->db->get();
 	    $customers=  $customers->result_array();
@@ -197,6 +204,12 @@ class Welcome_model extends crm_model {
 	
     public function get_query_files_list($lead_id)
     {
+		$userdata = $this->session->userdata('logged_in_user');
+		
+		$this->db->select('lead_assign,belong_to');
+		$this->db->where('lead_id', $lead_id);
+        $sql = $this->db->get($this->cfg['dbpref'] . 'leads');
+		$lead_det = $sql->row_array();
 		
         $data['query_files1_html'] = '';       
 		$query_tab = "SELECT lq.lead_id, us.first_name,us.last_name, lq.query_msg, lq.query_id, lq.query_file_name, lq.query_sent_date, lq.replay_query 
@@ -222,46 +235,44 @@ class Welcome_model extends crm_model {
 			
 			$data['query_files1_html'] .='<tr><td>
 			<table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15">
-						<tbody><tr>
-							<td valign="top" width="80">
-								Query '.$class.'
-							</td>
-							<td colspan="3" class="task">
-								'.urldecode($result['query_msg']).' 
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Date & Time
-							</td>
-							<td class="item user-name" rel="59" width="100">
-								'.$result['query_sent_date'].'
-							</td>
-							<td width="80">
-								'.$class.' By 
-							</td>
-							<td class="item hours-mins" rel="4:0">
-								'.$result['first_name'].' '.$result['last_name'].'
-							</td>
-						</tr>	
-						<tr>
-							<td colspan="1" valign="top">
-									File Name		
-							</td>
-							<td colspan="3">
-							'.$fname.'
-							</td>
-						</tr>
-						<tr>
-						<td	colspan="4" valign="top">
-							<input type="button" class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('.$result['query_id'].')" value="Reply" />
-						</td>	
-						</tr>
-					</tbody></table>
-			</td></tr>
-			';
+				<tbody><tr>
+					<td valign="top" width="80">
+						Query '.$class.'
+					</td>
+					<td colspan="3" class="task">
+						'.urldecode($result['query_msg']).' 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Date & Time
+					</td>
+					<td class="item user-name" rel="59" width="100">
+						'.$result['query_sent_date'].'
+					</td>
+					<td width="80">
+						'.$class.' By 
+					</td>
+					<td class="item hours-mins" rel="4:0">
+						'.$result['first_name'].' '.$result['last_name'].'
+					</td>
+				</tr>	
+				<tr>
+					<td colspan="1" valign="top">
+							File Name		
+					</td>
+					<td colspan="3">
+					'.$fname.'
+					</td>
+				</tr>';
+				if ($lead_det['belong_to'] == $userdata['userid'] || $lead_det['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) {
+					$data['query_files1_html'] .='<tr><td colspan="4" valign="top">
+						<input type="button" class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('.$result['query_id'].')" value="Reply" />
+					</td></tr>';
+				}
+				$data['query_files1_html'] .='</tbody></table>
+			</td></tr>';
 	   }
-
         return $data['query_files1_html'];
     }
 	
@@ -440,19 +451,20 @@ class Welcome_model extends crm_model {
 		return $customers;
 	}
 	
-	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $keyword)
+	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
 	{
-		$userdata = $this->session->userdata('logged_in_user');
-		$stage = explode(',',$stage);
-		$customer = explode(',',$customer);
-		$worth = explode('-',$worth);		
-		$owner = explode(',',$owner);
-		$leadassignee = explode(',',$leadassignee);
-		$regionname = explode(',',$regionname);
-		$countryname = explode(',',$countryname);
-		$statename = explode(',',$statename);
-		$locname = explode(',',$locname);
-		$lead_status = explode(',',$lead_status);
+		$userdata 		= $this->session->userdata('logged_in_user');
+		$stage 			= explode(',',$stage);
+		$customer 		= explode(',',$customer);
+		$worth 			= explode('-',$worth);		
+		$owner 			= explode(',',$owner);
+		$leadassignee 	= explode(',',$leadassignee);
+		$regionname 	= explode(',',$regionname);
+		$countryname 	= explode(',',$countryname);
+		$statename 		= explode(',',$statename);
+		$locname 		= explode(',',$locname);
+		$lead_status 	= explode(',',$lead_status);
+		$lead_indi 		= explode(',',$lead_indi);
 
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
@@ -506,7 +518,9 @@ class Welcome_model extends crm_model {
 			if($lead_status[0] != 'null' && $lead_status[0] !='') {	
 				$this->db->where_in('j.lead_status', $lead_status);
 			}
-			
+			if($lead_indi[0] != 'null' && $lead_indi[0] !='') {	
+				$this->db->where_in('j.lead_indicator', $lead_indi);
+			}
 			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
@@ -612,6 +626,9 @@ class Welcome_model extends crm_model {
 				}
 				if($lead_status[0] != 'null' && $lead_status[0] != ''){	
 					$this->db->where_in('j.lead_status', $lead_status);
+				}
+				if($lead_indi[0] != 'null' && $lead_indi[0] !='') {	
+					$this->db->where_in('j.lead_indicator', $lead_indi);
 				}
 			//Advanced filter
 
@@ -766,6 +783,137 @@ class Welcome_model extends crm_model {
     	return $q->result_array();
     }
 	
+	//level restriction
+	public function level_restriction() {
+		$userdata = $this->session->userdata('logged_in_user');
+		if (($userdata['role_id'] == 1 && $userdata['level'] == 1) || ($userdata['role_id'] == 2 && $userdata['level'] == 1)) 
+		{
+			$cusId = '';
+		}
+		else
+		{
+			$cusIds = array();
+			$cusIds[] = 0;
+			switch($userdata['level']){
+				case 2:
+					$regions = $this->getRegions($userdata['userid'], $userdata['level']); //Get the Regions based on Level
+						$reg = array();
+						foreach ($regions as $rgid) {
+							$reg[] = $rgid['region_id'];
+						}
+					$CustomersId = $this->getCustomersIds($reg); //Get the Customer id based on Regions
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['custid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 3:
+					$countries = $this->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
+						$cou = array();
+						foreach ($countries as $couid) {
+							$cou[] = $couid['country_id'];
+						}
+					$CustomersId = $this->getCustomersIds($reg,$cou); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['custid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 4:
+					$states = $this->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
+						$ste = array();
+						foreach ($states as $steid) {
+							$ste[] = $steid['state_id'];
+						}
+					$CustomersId = $this->getCustomersIds($reg,$cou,$ste); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['custid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 5:
+					$locations = $this->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
+						$loc = array();
+						foreach ($locations as $locid) {
+							$loc[] = $locid['location_id'];
+						}	
+					$CustomersId = $this->getCustomersIds($reg,$cou,$ste,$loc); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['custid'];
+						}
+					$cusId = $cusIds;
+				break;
+			}
+		}
+		return $cusId;
+	}
+	
+	/*Level Restrictions*/
+	//For Regions
+	public function getRegions($uid, $lvlid) {
+		$this->db->select('region_id');
+		$this->db->from($this->cfg['dbpref'].'levels_region');
+		$this->db->where('user_id', $uid);
+   		$this->db->where('level_id', $lvlid);
+		$query = $this->db->get();
+		$rg_query = $query->result_array();
+		return $rg_query;
+	}
+	
+	//For Countries
+	public function getCountries($uid, $lvlid) {
+		$this->db->select('country_id');
+		$this->db->from($this->cfg['dbpref'].'levels_country');
+		$this->db->where('user_id', $uid);
+   		$this->db->where('level_id', $lvlid);
+		$query = $this->db->get();
+		$cs_query = $query->result_array();
+		return $cs_query;
+	}
+	
+	//For States
+	public function getStates($uid, $lvlid) {
+		$this->db->select('state_id');
+		$this->db->from($this->cfg['dbpref'].'levels_state');
+		$this->db->where('user_id', $uid);
+   		$this->db->where('level_id', $lvlid);
+		$query = $this->db->get();
+		$ste_query = $query->result_array();
+		return $ste_query;
+	}
+	
+	//For Locations
+	public function getLocations($uid, $lvlid) {
+		$this->db->select('location_id');
+		$this->db->from($this->cfg['dbpref'].'levels_location');
+		$this->db->where('user_id', $uid);
+   		$this->db->where('level_id', $lvlid);
+		$query = $this->db->get();
+		$loc_query = $query->result_array();
+		return $loc_query;
+	}
+	
+	//For Customers
+	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) {
+		$this->db->select('custid');
+		$this->db->from($this->cfg['dbpref'].'customers');
+		if (!empty($regId)) {
+			$this->db->where_in('add1_region', $regId);
+		}
+		if (!empty($couId)) {
+			$this->db->where_in('add1_country', $couId);
+		}
+		if (!empty($steId)) {
+			$this->db->where_in('add1_state', $steId);
+		}
+		if (!empty($locId)) {
+			$this->db->where_in('add1_location', $locId);
+		}
+		$query = $this->db->get();
+		$res_query =  $query->result_array();
+		return $res_query;
+	}
+	/*Level Restrictions*/
 }
 
 ?>
