@@ -20,8 +20,6 @@
 					<td width="100">Region: *</td>
 					<td width="240"><input type="text" id="region_name" name="region_name" value="<?php echo  $this->validation->region_name; ?>" class="textfield width200px required" /></td>
 					<td class="error" style="color:red; display:none;" id="error1">Region Field required.</td>
-					<td class="checkUser" style="color:green; display:none;">Region Name Available.</td>
-					<td class="checkUser1" style="color:red; display:none;">Region Name Already Exists.</td>
 					<input type="hidden" class="hiddenUrl"/>
 				</tr>	
 				<tr>

@@ -193,8 +193,8 @@ class Regionsettings extends crm_controller {
 	{
 		$data               = array();
 		$post_data          = real_escape_array($this->input->post());
+		$data['regions']    = $this->regionsettings_model->region_list();
 		$data['customers']  = $this->regionsettings_model->country_list_all();
-		$data['regions']    = $this->regionsettings_model->region_list_all();
         
 		$this->login_model->check_login();
 		
@@ -309,8 +309,8 @@ class Regionsettings extends crm_controller {
 	{	
 		$data               = array();
 		$post_data          = real_escape_array($this->input->post());
+		$data['regions']    = $this->regionsettings_model->region_list();
 		$data['customers']  = $this->regionsettings_model->state_list_all();
-		$data['regions']    = $this->regionsettings_model->region_list_all();
 		$this->login_model->check_login();
 
 		//adding State
@@ -426,8 +426,8 @@ class Regionsettings extends crm_controller {
 	{ 
 		$post_data          = real_escape_array($this->input->post());
 		$data               = array();
+		$data['regions']    = $this->regionsettings_model->region_list();
 		$data['customers']  = $this->regionsettings_model->location_list_all();
-		$data['regions']    = $this->regionsettings_model->region_list_all();
 
 		$this->login_model->check_login();
 		
@@ -670,7 +670,7 @@ class Regionsettings extends crm_controller {
 	public function getCountryst($value,$id) {
 
 		$data=array();
-		$data = $this->regionsettings_model->getcountry_list_all($value);
+		$data = $this->regionsettings_model->getcountry_list($value);
 		$opt = '';
 		$opt .= '<select name="countryid" id="country_id" class="textfield width200px">';
 		$opt .= '<option value="0">Select Country</option>';
@@ -691,7 +691,7 @@ class Regionsettings extends crm_controller {
 	public function getCountrylo($value,$id) {
 
 		$data = array();
-		$data = $this->regionsettings_model->getcountry_list_all($value);
+		$data = $this->regionsettings_model->getcountry_list($value);
 		$opt  = '';
 		$opt .= '<select name="add1_country" id="add1_country" class="textfield width200px" onchange="getStateloc(this.value)">';
 		$opt .= '<option value="0">Select Country</option>';
@@ -767,7 +767,7 @@ class Regionsettings extends crm_controller {
 	*/
 	public function getStateloc_all($value, $id) {
 		$data = array();
-		$data = $this->regionsettings_model->getstate_list_all($value);
+		$data = $this->regionsettings_model->getstate_list($value);
 		$opt  = '';
 		$opt .= '<select name="stateid" id="stateid" class="textfield width200px">';
 		$opt .= '<option value="0">Select State</option>';
@@ -1111,17 +1111,6 @@ class Regionsettings extends crm_controller {
 	function getResultfromdb($username){
 		$this->db->where('level_name',$username);
 		$query = $this->db->get($this->cfg['dbpref'].'levels')->num_rows();
-		if($query == 0 ) echo 'userOk';
-		else echo 'userNo';
-    }
-	
-	/*
-	*@Get User Result From Region
-	*@User Controller
-	*/
-	function getResultfromRegion($username){            
-		$this->db->where('region_name',$username);
-		$query = $this->db->get($this->cfg['dbpref'].'region')->num_rows();
 		if($query == 0 ) echo 'userOk';
 		else echo 'userNo';
     }

@@ -7,7 +7,7 @@ class Regionsettings_model extends crm_model {
     }
     
 	/*
-	*@Get region List
+	*@Get region List (Active records only)
 	*@Region Settings Model
 	*/
     public function region_list() { 
@@ -93,14 +93,14 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'coun.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'coun.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'region as regg','regg.regionid='. 'coun.regionid ');
-
+		$this->db->where('coun.inactive', 0);
 		$customers = $this->db->get();
 		$samle =  $customers->result_array();
 		return $samle;
     }
 	
 	/*
-	*@List out Country Record (Active & Inactive)
+	*@List out Country Record (Active Only)
 	*@Region Settings Model
 	*/
 	public function country_list_all() {
@@ -109,7 +109,7 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'coun.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'coun.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'region as regg','regg.regionid='. 'coun.regionid ');
-
+		// $this->db->where('coun.inactive', 0);
 		$customers = $this->db->get();
 		$samle =  $customers->result_array();
 		return $samle;
@@ -133,7 +133,7 @@ class Regionsettings_model extends crm_model {
     }
 	
 	/*
-	*@List Out State Record (Active & Inactive)
+	*@List Out State Record (Active Only)
 	*@Region Settings Model
 	*/
 	public function state_list_all() {
@@ -143,6 +143,7 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'stat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'stat.countryid ');
 		$this->db->join($this->cfg['dbpref'].'region as re','re.regionid='. 'cn.regionid');
+		$this->db->where('stat.inactive', 0);
 		$customers = $this->db->get();   
 		$samle=  $customers->result_array();
         return $samle;
@@ -166,7 +167,7 @@ class Regionsettings_model extends crm_model {
     }
 	
 	/*
-	*@List Out Location Record (Active & Inactive)
+	*@List Out Location Record (Active Only)
 	*@Region Settings Model
 	*/
 	public function location_list_all() {
@@ -176,7 +177,6 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'locat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'state as st','st.stateid='. 'locat.stateid');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'st.countryid ');
-
 		$customers = $this->db->get();   
 	    $samle=  $customers->result_array();
         return $samle;
