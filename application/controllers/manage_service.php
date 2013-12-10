@@ -133,7 +133,7 @@ class Manage_service extends crm_controller {
 	*@For updating currencies from live - using API
 	*@Method   updt_cur_from_live
 	*/
-	public function updt_cur_from_live($search = FALSE) {
+	public function updt_cur_from_live() {
 		$this->load->helper('custom_helper');
 		currency_convert();
 		redirect('manage_service/manage_expt_worth_cur');
