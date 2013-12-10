@@ -40,34 +40,32 @@ require (theme_url().'/tpl/header.php');
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
 						<div style="border: 1px solid #DCDCDC;">
-							<table cellpadding="0" cellspacing="0" class="data-table" >
-							<thead>
+							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+								<tbody>
 								<tr>
-									<th>By Lead Stage</th>
-									<th>By Customer</th>
-									<th>Expected Worth</th>
-									<th>By lead Owner</th>
-									<th>Lead Assignee</th>
-								</tr>	
-							</thead>
-							<tbody>
+									<td class="tblheadbg">By Lead Stage</td>
+									<td class="tblheadbg">By Customer</td>
+									<td class="tblheadbg">Expected Worth</td>
+									<td class="tblheadbg">By lead Owner</td>
+									<td class="tblheadbg" colspan=2>Lead Assignee</td>
+								</tr>
 								<tr>	
 									<td>
-										<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
+										<select style="width:210px" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
 													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 											<?php } ?>					
 										</select> 
 									</td>
 									<td>
-										<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
+										<select style="width:210px" multiple="multiple" id="customer" name="customer[]">
 										<?php foreach($customers as $customer) { ?>
 											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>  
 									<td>
-										<select style="width:120px;" multiple="multiple" id="worth" name="worth[]">
+										<select style="width:120px" multiple="multiple" id="worth" name="worth[]">
 											<option value="0-10000"> < 10000 </option>
 											<option value="10000-20000"> > 10000 < 20000 </option>
 											<option value="20000-50000"> > 20000 < 50000 </option>
@@ -75,7 +73,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select style="width:120px;" multiple="multiple" id="owner" name="owner[]">
+										<select style="width:110px" multiple="multiple" id="owner" name="owner[]">
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
@@ -84,8 +82,8 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select> 
 									</td>
-									<td>
-										<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
+									<td colspan=2>
+										<select style="width:130px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
@@ -96,15 +94,16 @@ require (theme_url().'/tpl/header.php');
 									</td>
 								</tr>
 								<tr>
-									<th>By Region Wise</th>
-									<th>By Country Wise</th>
-									<th>By State Wise</th>
-									<th>By Location Wise</th>
-									<th>By Status</th>
+									<td class="tblheadbg">By Region Wise</td>
+									<td class="tblheadbg">By Country Wise</td>
+									<td class="tblheadbg">By State Wise</td>
+									<td class="tblheadbg">By Location Wise</td>
+									<td class="tblheadbg">By Status</td>
+									<td class="tblheadbg">By Status</td>
 								</tr>
 								<tr>
 									<td>
-										<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
+										<select style="width:210px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
 													if(!empty($reg['region_name'])) { ?>
 														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
@@ -114,26 +113,33 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td id="country_row">
-										<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]">
+										<select style="width:210px" multiple="multiple" id="countryname" name="countryname[]">
 											
 										</select> 
 									</td>
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="statename" name="statename[]">
+										<select style="width:120px" multiple="multiple" id="statename" name="statename[]">
 											
 										</select> 
 									</td>
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
+										<select style="width:120px" multiple="multiple" id="locname" name="locname[]">
 											
 										</select> 
 									</td>
 									<td>
-										<select  style="width:120px;" multiple="multiple" id="lead_status" name="lead_status[]">
+										<select style="width:70px" multiple="multiple" id="lead_status" name="lead_status[]">
 											<option value="1">Active</option>
 											<option value="2">OnHold</option>
 											<option value="3">Dropped</option>
 											<option value="4">Closed</option>
+										</select> 
+									</td>
+									<td>
+										<select style="width:60px" multiple="multiple" id="lead_indi" name="lead_indi[]">
+											<option value="HOT">Hot</option>
+											<option value="WARM">Warm</option>
+											<option value="COLD">Cold</option>
 										</select> 
 									</td>
 								</tr>
@@ -144,7 +150,7 @@ require (theme_url().'/tpl/header.php');
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
 								</tr>
-							</tbody>
+								</tbody>
 							</table>
 						</div>
 					</form>

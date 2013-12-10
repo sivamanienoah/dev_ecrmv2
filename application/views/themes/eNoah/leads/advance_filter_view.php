@@ -52,7 +52,22 @@
 				<td><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
 				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['lead_stage_name']; ?></td>
-				<td><?php echo $filter_result['lead_indicator']; ?></td>
+				<td>
+					<?php 
+						switch ($filter_result['lead_indicator'])
+						{
+							case 'HOT':
+								echo $status = '<span class=label-hot>Hot</span>';
+							break;
+							case 'WARM':
+								echo $status = '<span class=label-warm>Warm</span>';
+							break;
+							case 'COLD':
+								echo $status = '<span class=label-cold>Cold</span>';
+							break;
+						}
+					?>
+				</td>
 				<td>		
 					<?php 
 						switch ($filter_result['lead_status'])
