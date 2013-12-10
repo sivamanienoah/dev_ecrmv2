@@ -123,5 +123,6 @@ return false;
 function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
+
 $('#errors, #confirm').fadeOut(4000);
 /////////////////
