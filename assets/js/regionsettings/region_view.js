@@ -33,29 +33,6 @@ $(document).ready(function() {
 	});
 });
 
-$('.checkUser').hide();
-    $('.checkUser1').hide();
-    $('#region_name').blur(function(){
-        
-        if( $('#region_name').val().length >= 3 )
-            {
-              var username = $('#region_name').val();
-              getResult(username); 
-            }
-        return false;
-    });
-    function getResult(name){
-        var baseurl = $('.hiddenUrl').val();
-            $.ajax({
-            url : baseurl + 'regionsettings/getResultfromRegion/' + name,
-            cache : false,
-            success : function(response){
-                $('.checkUser').hide();
-                if(response == 'userOk') {$('.checkUser').show(); $('.checkUser1').hide();}
-                else { $('.checkUser').hide(); $('.checkUser1').show();}
-            }
-        });
-	}
 
 $(function() {
 	datTable();
@@ -113,5 +90,7 @@ return false;
 function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
+
+$('#errors, #confirm').fadeOut(4000);
 
 /////////////////
