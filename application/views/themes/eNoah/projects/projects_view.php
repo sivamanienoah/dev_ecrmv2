@@ -178,13 +178,6 @@
 					?>
                 <?php 
 				} 
-				else 
-				{ ?>
-                <tr>
-                    <td align="center" colspan="9">No records available to be displayed!</td>
-                </tr>
-                <?php 
-				} 
 				?>
             </tbody>
         </table>
