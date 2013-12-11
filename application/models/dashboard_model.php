@@ -5,36 +5,60 @@ class Dashboard_model extends crm_model {
     public function __construct()
     {
         parent::__construct();
-		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->helper('lead_stage_helper');
-		$this->stg = getLeadStage();
-		$this->stages = @implode("','", $this->stg);
+		$this->stg 		= getLeadStage();
+		$this->stages 	= @implode("','", $this->stg);
+		$this->userdata = $this->session->userdata('logged_in_user');
     }
 	
 	//Dashboard functionality
-	public function getTotLeads($cusId = FALSE, $filter = FALSE) {
+	public function getTotLeads($cusId = FALSE, $filter = FALSE) 
+	{
 		// echo "<pre>"; print_r($filter); exit;
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
+		$this->db->join($this->cfg['dbpref']. 'customers as c', 'c.custid = jb.custid_fk');
    		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk', $cusId);
 		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
 		if (!empty($filter['customer'])) {
 			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('c.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('c.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('c.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
 		$this->db->group_by('jb.lead_stage');
 		$this->db->order_by('jb.lead_stage', 'asc');
 		$query = $this->db->get();
 		$tot_query =  $query->result_array();
-		// echo $this->db->last_query(); exit;
+		// echo $this->db->last_query();
 		return $tot_query;
 	}
 	
 	//Dashboard functionality
-	function getTotLead($cusId = FALSE, $filter) {
+	function getTotLead($cusId = FALSE, $filter) 
+	{
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
@@ -54,12 +78,11 @@ class Dashboard_model extends crm_model {
 		return $tot_query;
 	}
 	
-	public function getLeadsByReg($cusId = FALSE) {
-		// print_r($custId); exit;
+	public function getLeadsByReg($cusId = FALSE, $filter = FALSE) 
+	{
 		// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
-		
 		$this->db->select('rg.region_name, coun.country_name, ste.state_name, loc.location_name, j.expect_worth_amount, ew.expect_worth_name, ew.expect_worth_id');	
-		$this->db->join($this->cfg['dbpref'].'customers c','custid = j.custid_fk','inner');
+		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = j.custid_fk','inner');
 		$this->db->join($this->cfg['dbpref'].'region rg','rg.regionid=c.add1_region','inner');
 		$this->db->join($this->cfg['dbpref'].'country coun','coun.countryid=c.add1_country','inner');
 		$this->db->join($this->cfg['dbpref'].'state ste','ste.stateid=c.add1_state','inner');
@@ -85,22 +108,72 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('j.custid_fk', $cusId);
 			$this->db->order_by('loc.location_name', 'ASC');
 		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('j.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('j.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('j.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('j.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('c.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('c.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('c.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('c.add1_location', $filter['locname']);
+		}
 		$query = $this->db->get($this->cfg['dbpref'].'leads j');
-		//echo $this->db->last_query();
+		// echo $this->db->last_query();
 		$result['res'] = $query->result();
 		$result['num'] = $query->num_rows();
 		
 		return $result;
 	}
 	
-	public function getLeadsByOwner($cusId = FALSE) {
+	public function getLeadsByOwner($cusId = FALSE, $filter = FALSE) 
+	{
 		$this->db->select('us.userid, COUNT( * ), SUM(jb.expect_worth_amount) as amt, CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.belong_to');
+		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('c.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('c.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('c.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
 		$this->db->group_by('jb.belong_to');
 		$this->db->order_by('us.first_name', 'asc');
@@ -109,14 +182,40 @@ class Dashboard_model extends crm_model {
 		return $own_query;
 	}
 	
-	public function getLeadsByAssignee($cusId = FALSE) {
+	public function getLeadsByAssignee($cusId = FALSE, $filter = FALSE) 
+	{
 		$this->db->select('us.userid, COUNT( * ), CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('c.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('c.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('c.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
 		$this->db->group_by('jb.lead_assign');
 		$this->db->order_by('us.first_name', 'asc');
@@ -125,7 +224,8 @@ class Dashboard_model extends crm_model {
 		return $assg_query;
 	}
 	
-	public function getLeadsIndicator($cusId = FALSE) {
+	public function getLeadsIndicator($cusId = FALSE, $filter = FALSE) 
+	{
 		/*
 		$this->db->select('COUNT(lead_indicator), jb.lead_indicator');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
@@ -153,6 +253,39 @@ class Dashboard_model extends crm_model {
 				$where_level = " AND custid_fk IN ('".$cusId."')";
 			}
 		}
+		$condn = "";
+		if (!empty($filter['customer'])) {
+			$custom = implode("','", $filter['customer']);
+			$condn  = " AND custid_fk IN ('".$custom."')";
+		}
+		if (!empty($filter['stage'])) {
+			$stg    = implode("','", $filter['stage']);
+			$condn .= " AND lead_stage IN ('".$stg."')";
+		}
+		if (!empty($filter['owner'])) {
+			$ownr   = implode("','", $filter['owner']);
+			$condn .= " AND belong_to IN ('".$ownr."')";
+		}
+		if (!empty($filter['leadassignee'])) {
+			$assinee = implode("','", $filter['leadassignee']);
+			$condn  .= " AND lead_assign IN ('".$assinee."')";
+		}
+		if (!empty($filter['regionname'])) {
+			$reg	 = implode("','", $filter['regionname']);
+			$condn  .= " AND add1_region IN ('".$reg."')";
+		}
+		if (!empty($filter['countryname'])) {
+			$county	 = implode("','", $filter['countryname']);
+			$condn  .= " AND add1_country IN ('".$county."')";
+		}
+		if (!empty($filter['statename'])) {
+			$ste	 = implode("','", $filter['statename']);
+			$condn  .= " AND add1_state IN ('".$ste."')";
+		}
+		if (!empty($filter['locname'])) {
+			$locname = implode("','", $filter['locname']);
+			$condn  .= " AND add1_location IN ('".$locname."')";
+		}
 		$indicator_query = $this->db->query("SELECT COUNT(
 			CASE WHEN lead_indicator = 'HOT'
 			THEN lead_indicator
@@ -164,14 +297,18 @@ class Dashboard_model extends crm_model {
 			THEN lead_indicator
 			END ) AS 'COLD'
 			FROM ".$this->cfg['dbpref']."leads
+			JOIN ".$this->cfg['dbpref']."customers ON custid = custid_fk
 			WHERE lead_stage IN ('".$this->stages."')
-			AND lead_status =1".$where_level);
-		
+			AND lead_status =1".$where_level." ".$condn);
+			// echo $this->db->last_query();
 			return $indicator_query->row_array();
 	}
 	
-	public function getIndiLeads($cusId = FALSE, $indi) {
-	
+	public function getIndiLeads($cusId = FALSE, $indi, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
@@ -183,54 +320,130 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid_fk',$cusId);
 		}
+		//for advance filters
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
 		$this->db->where('jb.lead_indicator', $indi);
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$ind_query = $query->result_array();
 		return $ind_query;
-		
 	}
 	
-	public function getLeastLeadsCount($cusId = FALSE) {
+	public function getLeastLeadsCount($cusId = FALSE, $filter = FALSE) 
+	{
 		/*
 		$cnt_query = $this->db->query("SELECT `lead_indicator`,count(`lead_indicator`) FROM `".$this->cfg['dbpref']."leads` WHERE `lead_stage` between 1 and 12 and `lead_status` = 1 and `lead_indicator` !='HOT' GROUP BY `lead_indicator` ORDER BY `lead_indicator`");
 		*/
 		$this->db->select('lead_indicator, count(`lead_indicator`)');
 		$this->db->from($this->cfg['dbpref'].'leads');
+		$this->db->join($this->cfg['dbpref'].'customers','custid = custid_fk','inner');
 		$this->db->where_in('lead_stage', $this->stg);
 		$this->db->where('lead_status',1);
 		$this->db->where('lead_indicator != ', 'HOT');
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('custid_fk',$cusId);
+			$this->db->where_in('custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('add1_location', $filter['locname']);
 		}
 		$this->db->GROUP_BY('lead_indicator');
 		$this->db->order_by('lead_indicator', 'asc');
 		$this->db->order_by('lead_id', 'asc');
-		$query = $this->db->get();
+		$query	   = $this->db->get();
 		$cnt_query =  $query->result_array();
 		return $cnt_query;
 	}
 	
-	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE) {
+	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE, $filter = FALSE) 
+	{
 		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('custid_fk', $cusId);
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('c.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('c.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('c.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
 		$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
-		$query = $this->db->get();
-		$act_query =  $query->result_array();       
+		$query 		= $this->db->get();
+		$act_query  =  $query->result_array();       
 		return $act_query;
 	}
 	
-	public function getLeadsAging($cusId = FALSE) {
-		
+	public function getLeadsAging($cusId = FALSE, $filter = FALSE) 
+	{
 		$todayDate = date('Y-m-d h:m:s');
 		// $todayDate = date('Y-m-d');
 		$thirtyDays = date('Y-m-d h:m:s', strtotime("now -30 days"));
@@ -267,6 +480,40 @@ class Dashboard_model extends crm_model {
 				$where_level = " AND custid_fk IN ('".$cusId."')";
 			}
 		}
+		
+		$condn = "";
+		if (!empty($filter['customer'])) {
+			$custom = implode("','", $filter['customer']);
+			$condn  = " AND custid_fk IN ('".$custom."')";
+		}
+		if (!empty($filter['stage'])) {
+			$stag   = implode("','", $filter['stage']);
+			$condn .= " AND lead_stage IN ('".$stag."')";
+		}
+		if (!empty($filter['owner'])) {
+			$ownr   = implode("','", $filter['owner']);
+			$condn .= " AND belong_to IN ('".$ownr."')";
+		}
+		if (!empty($filter['leadassignee'])) {
+			$assinee = implode("','", $filter['leadassignee']);
+			$condn  .= " AND lead_assign IN ('".$assinee."')";
+		}
+		if (!empty($filter['regionname'])) {
+			$reg	 = implode("','", $filter['regionname']);
+			$condn  .= " AND add1_region IN ('".$reg."')";
+		}
+		if (!empty($filter['countryname'])) {
+			$county	 = implode("','", $filter['countryname']);
+			$condn  .= " AND add1_country IN ('".$county."')";
+		}
+		if (!empty($filter['statename'])) {
+			$ste	 = implode("','", $filter['statename']);
+			$condn  .= " AND add1_state IN ('".$ste."')";
+		}
+		if (!empty($filter['locname'])) {
+			$locname = implode("','", $filter['locname']);
+			$condn  .= " AND add1_location IN ('".$locname."')";
+		}
 		$stg = $this->stages;
 		$age_query = $this->db->query("SELECT 
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$thirtyDays."' AND '".$todayDate."' THEN DATE(date_created) END) as '0-30 Days',
@@ -277,13 +524,19 @@ class Dashboard_model extends crm_model {
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$oneEightyDays."' AND '".$oneFiftyOneDays."' THEN DATE(date_created) END) as '151-180 Days',
 		COUNT(CASE WHEN DATE(date_created) < '".$oneEightyOneDays."' THEN DATE(date_created) END) as 'Above181 Days'
 		FROM ".$this->cfg['dbpref']."leads
+		JOIN ".$this->cfg['dbpref']."customers ON custid = custid_fk
 		WHERE lead_stage IN ('".$stg."')
-		AND lead_status = 1".$where_level);
+		AND lead_status = 1".$where_level." ".$condn);
+		// echo $this->db->last_query();
 		return $age_query->row_array();
 	}
 	
-	public function leadAgingLeads($cusId = FALSE, $dt)
+	public function leadAgingLeads($cusId = FALSE, $dt, $filters)
 	{	
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
+		
 		$todayDate = date('Y-m-d h:m:s');
 		$thirtyDays = date('Y-m-d h:m:s', strtotime("now -30 days"));
 		$sixtyDays = date('Y-m-d h:m:s', strtotime("now -60 days"));
@@ -312,7 +565,8 @@ class Dashboard_model extends crm_model {
 		$oneEightyOneDays = date ( 'Y-m-d h:m:s' , $oneEightyOneDaysTemp);
 
 
-		switch($dt) {
+		switch($dt) 
+		{
 			case 0:
 				$todt = $thirtyDays;
 				$frmdt = $todayDate;
@@ -358,6 +612,32 @@ class Dashboard_model extends crm_model {
 		} else {
 			$this->db->where('date_format( jb.date_created, "%Y-%m-%d" ) BETWEEN "'.$todt.'" AND "'.$frmdt.'" ');
 		}
+		//for advanced filters
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
+		
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ag_query = $query->result_array();
@@ -365,7 +645,11 @@ class Dashboard_model extends crm_model {
 	}
 	
 	/* Get lead_id, lead title, region, lead owner, lead assigned to, customer, */
-	public function getLeadOwnerDependencies($userid, $cusId = FALSE) {
+	public function getLeadOwnerDependencies($userid, $cusId = FALSE, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 	    $lead_dependencies = $this->db->select('jb.lead_id,jb.lead_title,ew.expect_worth_id,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
@@ -378,14 +662,41 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		//echo $this->db->last_query(); exit;
 		return $depend_query;
-		
 	}
 
-	public function getLeadAssigneeDependencies($userid, $cusId = FALSE) {
+	public function getLeadAssigneeDependencies($userid, $cusId = FALSE, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title,cs.first_name as cfname ,cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
@@ -398,13 +709,40 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		return $depend_query;
-		
 	}
 
-	public function getLeadsDetails($leadStage, $cusId = FALSE) {
+	public function getLeadsDetails($leadStage, $cusId = FALSE, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
@@ -416,17 +754,45 @@ class Dashboard_model extends crm_model {
    		$this->db->like('ls.lead_stage_name', $leadStage, 'after');
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
-		//echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$ld_query =  $query->result_array();
 		return $ld_query;
 	}
 	
-	public function getRegionLeadsDetails($leadsRegion, $cusId = FALSE) {
+	public function getRegionLeadsDetails($leadsRegion, $cusId = FALSE, $filters = FALSE) 
+	{
 		//echo $leadsRegion; exit;
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
@@ -455,13 +821,39 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
 		}
+		//for advanced filter
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ld_query =  $query->result_array();
 		return $ld_query;
 	}
 	
-	public function getCurrentLeadActivity($lead_id) {
+	public function getCurrentLeadActivity($lead_id) 
+	{
 	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 							 $this->db->from($this->cfg['dbpref'].'leads jb');
 							 $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
@@ -476,7 +868,8 @@ class Dashboard_model extends crm_model {
 		return $depend_query;
 	}
 	
-	public function LeadDetails($jid) {
+	public function LeadDetails($jid) 
+	{
 		$this->db->select('jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
@@ -494,51 +887,56 @@ class Dashboard_model extends crm_model {
 	
 	/*Level Restrictions*/
 	//For Regions
-	public function getRegions($uid, $lvlid) {
+	public function getRegions($uid, $lvlid) 
+	{
 		$this->db->select('region_id');
 		$this->db->from($this->cfg['dbpref'].'levels_region');
 		$this->db->where('user_id', $uid);
    		$this->db->where('level_id', $lvlid);
 		$query = $this->db->get();
-		$rg_query =  $query->result_array();
+		$rg_query = $query->result_array();
 		return $rg_query;
 	}
 	
 	//For Countries
-	public function getCountries($uid, $lvlid) {
+	public function getCountries($uid, $lvlid) 
+	{
 		$this->db->select('country_id');
 		$this->db->from($this->cfg['dbpref'].'levels_country');
 		$this->db->where('user_id', $uid);
    		$this->db->where('level_id', $lvlid);
 		$query = $this->db->get();
-		$cs_query =  $query->result_array();
+		$cs_query = $query->result_array();
 		return $cs_query;
 	}
 	
 	//For States
-	public function getStates($uid, $lvlid) {
+	public function getStates($uid, $lvlid) 
+	{
 		$this->db->select('state_id');
 		$this->db->from($this->cfg['dbpref'].'levels_state');
 		$this->db->where('user_id', $uid);
    		$this->db->where('level_id', $lvlid);
 		$query = $this->db->get();
-		$ste_query =  $query->result_array();
+		$ste_query = $query->result_array();
 		return $ste_query;
 	}
 	
 	//For Locations
-	public function getLocations($uid, $lvlid) {
+	public function getLocations($uid, $lvlid) 
+	{
 		$this->db->select('location_id');
 		$this->db->from($this->cfg['dbpref'].'levels_location');
 		$this->db->where('user_id', $uid);
    		$this->db->where('level_id', $lvlid);
 		$query = $this->db->get();
-		$loc_query =  $query->result_array();
+		$loc_query = $query->result_array();
 		return $loc_query;
 	}
 	
 	//For Customers
-	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) {
+	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) 
+	{
 		$this->db->select('custid');
 		$this->db->from($this->cfg['dbpref'].'customers');
 		if (!empty($regId)) {
@@ -559,27 +957,58 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//for closed opportunities getClosedJobids
-	public function getClosedJobids($cusId = FALSE) {
+	public function getClosedJobids($cusId = FALSE, $filter = FALSE) 
+	{
 		$pjt_stat = array(0,1,2,3);
 		$curYear = date("Y");
 		$frm_dt = $curYear."-04-01";
 		$to_dt = ($curYear+1)."-03-31";
 		$this->db->select('lead_id , expect_worth_id, actual_worth_amount as expect_worth_amount');
 		$this->db->from($this->cfg['dbpref'].'leads');
+		$this->db->join($this->cfg['dbpref'].'customers', 'custid = custid_fk');
 		$this->db->where('lead_status', 4);
 		if ($this->userdata['level']!= 1) {
 			$this->db->where_in('custid_fk',$cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('add1_location', $filter['locname']);
 		}
    		$this->db->where_in('pjt_status', $pjt_stat);
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('lead_id', 'desc');
 		$query = $this->db->get();
+		// echo $this->db->last_query();
 		$cls_query =  $query->result_array();
 		return $cls_query;
 	}
 	
 	//For Closed Opportunities Leads only - actual_worth_amount
-	public function closedLeadDet($jbid) {
+	public function closedLeadDet($jbid, $filters=false) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		if (!empty($jbid)) {
 			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'leads jb');
@@ -590,6 +1019,30 @@ class Dashboard_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', "LEFT");
 			$this->db->where_in('jb.lead_id', $jbid);
 			$this->db->where('jb.lead_status', 4);
+			if (!empty($fresult['fstge'])) {
+				$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+			}
+			if (!empty($fresult['fcust_id'])) {
+				$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+			}
+			if (!empty($fresult['fownr_id'])) {
+				$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+			}
+			if (!empty($fresult['fassg_id'])) {
+				$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			}
+			if (!empty($fresult['freg_id'])) {
+				$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+			}
+			if (!empty($fresult['fcntry_id'])) {
+				$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+			}
+			if (!empty($fresult['fstet_id'])) {
+				$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+			}
+			if (!empty($fresult['flocn_id'])) {
+				$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+			}
 			$this->db->order_by('jb.lead_id', 'desc');
 			$query = $this->db->get();
 			$rest_query =  $query->result_array();
@@ -599,14 +1052,40 @@ class Dashboard_model extends crm_model {
 		}
 	}
 	
-	public function getLeadSource($cusId = FALSE) {
+	public function getLeadSource($cusId = FALSE, $filter = FALSE) 
+	{
 		$this->db->select('ldsrc.lead_source_name, count(`lead_source`) as src');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('jb.custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('cs.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('cs.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('cs.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('cs.add1_location', $filter['locname']);
 		}
 		$this->db->GROUP_BY('jb.lead_source');
 		$query = $this->db->get();
@@ -615,14 +1094,40 @@ class Dashboard_model extends crm_model {
 		return $ls_query;
 	}
 	
-	public function getServiceReq($cusId = FALSE) {
+	public function getServiceReq($cusId = FALSE, $filter = FALSE) 
+	{
 		$this->db->select('jc.category, count(`lead_category`) as job_cat');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'job_categories jc', 'jc.cid = jb.lead_category');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('jb.custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('cs.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('cs.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('cs.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('cs.add1_location', $filter['locname']);
 		}
 		$this->db->GROUP_BY('jb.lead_category');
 		$query = $this->db->get();
@@ -631,7 +1136,11 @@ class Dashboard_model extends crm_model {
 		return $sq_query;
 	}
 	
-	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE) {
+	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
@@ -643,7 +1152,31 @@ class Dashboard_model extends crm_model {
    		$this->db->like('ldsrc.lead_source_name', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk',$cusId);
+		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
@@ -651,7 +1184,11 @@ class Dashboard_model extends crm_model {
 		return $ldsr_query;
 	}
 	
-	public function getLeadsDetails_pie3($leadStage, $cusId = FALSE) {
+	public function getLeadsDetails_pie3($leadStage, $cusId = FALSE, $filters = FALSE) 
+	{
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.category, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'job_categories jbc', 'jbc.cid = jb.lead_category');
@@ -663,13 +1200,61 @@ class Dashboard_model extends crm_model {
    		$this->db->like('jbc.category', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('custid_fk',$cusId);
+			$this->db->where_in('jb.custid_fk',$cusId);
+		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		$serreq_query =  $query->result_array();
 		return $serreq_query;
+	}
+	
+	function explod_arr($filters)
+	{
+		$fres = array();
+		
+		if ($filters['stge'] !='')
+			$fres['fstge'] 		= explode(',',$filters['stge']);
+		if ($filters['cust_id'] !='')
+			$fres['fcust_id'] 	= explode(',',$filters['cust_id']);
+		if ($filters['ownr_id'] !='')
+			$fres['fownr_id'] 	= explode(',',$filters['ownr_id']);
+		if ($filters['assg_id'] !='')
+			$fres['fassg_id'] 	= explode(',',$filters['assg_id']);
+		if ($filters['reg_id'] !='')
+			$fres['freg_id']	= explode(',',$filters['reg_id']);
+		if ($filters['cntry_id'] !='')
+			$fres['fcntry_id']	= explode(',',$filters['cntry_id']);
+		if ($filters['stet_id'] !='')
+			$fres['fstet_id'] 	= explode(',',$filters['stet_id']);
+		if ($filters['locn_id'] !='') {
+			$fres['flocn_id'] 	= explode(',',$filters['locn_id']);
+		}
+		return $fres;
 	}
 
 }

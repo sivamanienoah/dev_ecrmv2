@@ -1317,6 +1317,24 @@ ul.ui-sortable li{
     background-color: #006fc0;
 	color: #fff;
 }
+.label-hot {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #910000;
+	color: #fff;
+}
+.label-warm {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #F47123;
+	color: #fff;
+}
+.label-cold {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #2C84C5;
+	color: #fff;
+}
 .label-complete {
 	border-radius: 3px 3px 3px 3px;
 	padding: 1px 4px 2px;
@@ -1376,4 +1394,13 @@ html[xmlns] .clearfix {
 }
 .custom_dashboardfilter .dataTables_length {
 	float: none !important;
+}
+.tblheadbg {
+	background: url("../img/toolbar_hover.png") repeat-x scroll 0 bottom #5174BE;
+	border: 1px solid #2F497E !important;
+	color: #fff;
+	font-weight: bold;
+}
+.leadAdvancedfiltertbl tr{
+	background: none repeat scroll 0 0 #fff !important;
 }

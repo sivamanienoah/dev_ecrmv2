@@ -29,7 +29,7 @@ require (theme_url().'/tpl/header.php');
 <script type="text/javascript" src="assets/js/plugins/jqplot.funnelRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-<!--<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>-->
+<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <?php 
 // For Chart Title
 switch ($userdata['level']) 
@@ -52,7 +52,7 @@ switch ($userdata['level'])
 <?php } ?>
 <?php if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
 <script type="text/javascript">var this_is_home = true;</script>
-<script type="text/javascript">var curr_job_id = 0;</script>
+<script type="text/javascript">var curr_job_id  = 0;</script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <style type="text/css">
@@ -72,7 +72,7 @@ switch ($userdata['level'])
 				
 			<div id="advance_search" style="float:left;">
 				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
-				<form action="<?php echo $this->uri->uri_string() ?>" method="post" style="width:940px;">
+				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:940px;">
 					
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
@@ -89,35 +89,35 @@ switch ($userdata['level'])
 							<tbody>
 							<tr>	
 								<td>
-									<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
+									<select style="width:230px;" multiple="multiple" id="stage" name="stage[]" class="advfilter">
 										<?php foreach($lead_stage as $ls) { ?>
-											<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+											<option value="<?php echo $ls['lead_stage_id']; ?>"<?php echo in_array($ls['lead_stage_id'], $filter['stage']) ? 'selected="selected"' : '' ?>><?php echo $ls['lead_stage_name']; ?></option>
 										<?php } ?>					
 									</select> 
 								</td>
 								<td>
-									<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
+									<select style="width:230px;" multiple="multiple" id="customer" name="customer[]" class="advfilter">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+											<option value="<?php echo $customer['custid']; ?>"<?php echo in_array($customer['custid'], $filter['customer']) ? 'selected="selected"' : '' ?>><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
 								<td>
-									<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
+									<select style="width:120px;" multiple="multiple" id="owner" name="owner[]" class="advfilter">
 										<?php foreach ($lead_owner as $owner) { 
 												if(!empty($owner['first_name'])) { ?>
-													<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+													<option value="<?php echo $owner['userid'] ?>"<?php echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : '' ?>><?php echo $owner['first_name']; ?></option>
 										<?php	} 
 											} 
 										?>
 									</select> 
 								</td>
 								<td>
-									<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
-										<?php foreach ($lead_owner as $owner) {
-												if(!empty($owner['first_name'])) { ?>		
-													<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-										<?php 	} 
+									<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]" class="advfilter">
+										<?php foreach ($lead_owner as $ownr) {
+												if(!empty($ownr['first_name'])) { ?>
+													<option value="<?php echo $ownr['userid'] ?>"<?php echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : '' ?>><?php echo $ownr['first_name']; ?></option>
+										<?php 	}
 											} 
 										?>
 									</select> 
@@ -131,30 +131,30 @@ switch ($userdata['level'])
 							</tr>
 							<tr>
 								<td>
-									<select style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
+									<select style="width:230px;" multiple="multiple" id="regionname" name="regionname[]" class="advfilter">
 										<?php foreach ($regions as $reg) { 
 												if(!empty($reg['region_name'])) { ?>
-													<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+													<option value="<?php echo $reg['regionid'] ?>"<?php echo in_array($reg['regionid'], $filter['regionname']) ? 'selected="selected"' : '' ?>><?php echo $reg['region_name'] ?></option>
 										<?php 	} 
 											}
 										?>
 									</select> 
 								</td>
 								<td id="country_row">
-									<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]">
+									<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]" class="advfilter">
 									</select> 
 								</td>
 								<td>
-									<select  style="width:120px;" multiple="multiple" id="statename" name="statename[]">
+									<select style="width:120px;" multiple="multiple" id="statename" name="statename[]" class="advfilter">
 									</select> 
 								</td>
 								<td>
-									<select  style="width:120px;" multiple="multiple" id="locname" name="locname[]">
+									<select style="width:120px;" multiple="multiple" id="locname" name="locname[]" class="advfilter">
 									</select> 
 								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
+								<td colspan="6"><input type="reset" class="positive" name="advance" id="filter_reset" value="Reset" />
 								<input type="submit" class="positive" name="advance" id="advance" value="Search" />
 								<div id = 'load' style = 'float:right;display:none;height:1px;'>
 									<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
@@ -612,9 +612,28 @@ foreach($get_Service_Req as $getSerReq) {
 }
 $s8 = implode(',', $Ser_Req);
 ?>
-<?php 
+<?php
 	$toggle_stat =  isset($toggle_stat) ? "toggle" : "no_toggle";
+	if (!empty($filter['stage']))
+	$stgs = implode(",",$filter['stage']);
+	if (!empty($filter['customer']))
+	$custs_id = implode(",",$filter['customer']);
+	if (!empty($filter['owner']))
+	$owr_id = implode(",",$filter['owner']);
+	if (!empty($filter['leadassignee']))
+	$assg_id = implode(",",$filter['leadassignee']);
+	if (!empty($filter['regionname']))
+	$reg_nme = implode(",",$filter['regionname']);
+	if (!empty($filter['stage']))
+	$stg = implode(",",$filter['stage']);	
+	if (!empty($filter['countryname']))
+	$county_name = implode(",",$filter['countryname']);
+	if (!empty($filter['statename']))
+	$ste_name = implode(",",$filter['statename']);
+	if (!empty($filter['locname']))
+	$loc_name = implode(",",$filter['locname']);
 ?>
+
 <script class="code" type="text/javascript">
 	dashboard_s1       = [<?php echo $s1; ?>];
 	dashboard_s2       = [<?php echo @rtrim($s2, ','); ?>];
@@ -626,6 +645,14 @@ $s8 = implode(',', $Ser_Req);
 	dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
 	dashboard_userid   = "<?php echo $userdata['userid']; ?>";
 	filter_toggle_stat = "<?php echo $toggle_stat ?>";
+	filter_stgs 	   = "<?php echo $stgs ?>";
+	filter_custs_id	   = "<?php echo $custs_id ?>";
+	filter_owr_id 	   = "<?php echo $owr_id ?>";
+	filter_assg_id     = "<?php echo $assg_id ?>";
+	filter_reg_nme     = "<?php echo $reg_nme ?>";
+	filter_country	   = "<?php echo $county_name ?>";
+	filter_state	   = "<?php echo $ste_name ?>";
+	filter_location	   = "<?php echo $loc_name ?>";
 </script>
 <script type="text/javascript" src="assets/js/dashboard/dashboard_view.js"></script>
 <?php
