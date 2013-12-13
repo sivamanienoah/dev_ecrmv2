@@ -77,33 +77,31 @@ switch ($userdata['level'])
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
 					<div style="border: 1px solid #DCDCDC;">
-						<table cellpadding="0" cellspacing="0" class="data-table" >
-							<thead>
+						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
-								<th>By Lead Stage</th>
-								<th>By Customer</th>
-								<th>By lead Owner</th>
-								<th>Lead Assignee</th>
-							</tr>	
-							</thead>
-							<tbody>
+								<td class="tblheadbg" style="width:228px">By Lead Stage</td>
+								<td class="tblheadbg" style="width:210px;">By Customer</td>
+								<td class="tblheadbg">By Lead Owner</td>
+								<td class="tblheadbg">By Lead Assignee</td>
+								<td class="tblheadbg" colspan=2>By Service Requirement</td>
+							</tr>
 							<tr>	
 								<td>
-									<select style="width:230px;" multiple="multiple" id="stage" name="stage[]" class="advfilter">
+									<select style="width:228px" multiple="multiple" id="stage" name="stage[]" class="advfilter">
 										<?php foreach($lead_stage as $ls) { ?>
 											<option value="<?php echo $ls['lead_stage_id']; ?>"<?php echo in_array($ls['lead_stage_id'], $filter['stage']) ? 'selected="selected"' : '' ?>><?php echo $ls['lead_stage_name']; ?></option>
 										<?php } ?>					
 									</select> 
 								</td>
 								<td>
-									<select style="width:230px;" multiple="multiple" id="customer" name="customer[]" class="advfilter">
+									<select style="width:210px;" multiple="multiple" id="customer" name="customer[]" class="advfilter">
 										<?php foreach($customers as $customer) { ?>
 											<option value="<?php echo $customer['custid']; ?>"<?php echo in_array($customer['custid'], $filter['customer']) ? 'selected="selected"' : '' ?>><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
 								<td>
-									<select style="width:120px;" multiple="multiple" id="owner" name="owner[]" class="advfilter">
+									<select style="width:110px;" multiple="multiple" id="owner" name="owner[]" class="advfilter">
 										<?php foreach ($lead_owner as $owner) { 
 												if(!empty($owner['first_name'])) { ?>
 													<option value="<?php echo $owner['userid'] ?>"<?php echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : '' ?>><?php echo $owner['first_name']; ?></option>
@@ -113,7 +111,7 @@ switch ($userdata['level'])
 									</select> 
 								</td>
 								<td>
-									<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]" class="advfilter">
+									<select style="width:110px;" multiple="multiple" id="leadassignee" name="leadassignee[]" class="advfilter">
 										<?php foreach ($lead_owner as $ownr) {
 												if(!empty($ownr['first_name'])) { ?>
 													<option value="<?php echo $ownr['userid'] ?>"<?php echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : '' ?>><?php echo $ownr['first_name']; ?></option>
@@ -122,16 +120,36 @@ switch ($userdata['level'])
 										?>
 									</select> 
 								</td>
+								<td colspan=2>
+									<select  style="width:150px;" multiple="multiple" id="ser_requ" name="ser_requ[]">
+										<?php if (count($serv_requ)>0) { ?>
+											<?php foreach ($serv_requ as $serv) { ?>
+												<option value="<?php echo $serv['sid'] ?>"<?php echo in_array($serv['sid'], $filter['ser_requ']) ? 'selected="selected"' : '' ?>><?php echo $serv['services'] ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select> 
+								</td>
 							</tr>
 							<tr>
-								<th>By Region Wise</th>
-								<th>By Country Wise</th>
-								<th>By State Wise</th>
-								<th>By Location Wise</th>
+								<td class="tblheadbg">By Lead Source</td>
+								<td class="tblheadbg">By Region Wise</td>
+								<td class="tblheadbg">By Country Wise</td>
+								<td class="tblheadbg">By State Wise</td>
+								<td class="tblheadbg">By Location Wise</td>
+								<td class="tblheadbg">By Lead Indicator</td>
 							</tr>
 							<tr>
 								<td>
-									<select style="width:230px;" multiple="multiple" id="regionname" name="regionname[]" class="advfilter">
+									<select  style="width:228px;" multiple="multiple" id="lead_src" name="lead_src[]">
+										<?php if (count($lead_sourc)>0) { ?>
+											<?php foreach ($lead_sourc as $srcs) { ?>
+												<option value="<?php echo $srcs['lead_source_id'] ?>"<?php echo in_array($srcs['lead_source_id'], $filter['lead_src']) ? 'selected="selected"' : '' ?>><?php echo $srcs['lead_source_name'] ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select> 
+								</td>
+								<td>
+									<select style="width:210px;" multiple="multiple" id="regionname" name="regionname[]" class="advfilter">
 										<?php foreach ($regions as $reg) { 
 												if(!empty($reg['region_name'])) { ?>
 													<option value="<?php echo $reg['regionid'] ?>"<?php echo in_array($reg['regionid'], $filter['regionname']) ? 'selected="selected"' : '' ?>><?php echo $reg['region_name'] ?></option>
@@ -141,26 +159,34 @@ switch ($userdata['level'])
 									</select> 
 								</td>
 								<td id="country_row">
-									<select style="width:230px;" multiple="multiple" id="countryname" name="countryname[]" class="advfilter">
+									<select style="width:110px;" multiple="multiple" id="countryname" name="countryname[]" class="advfilter">
 									</select> 
 								</td>
 								<td>
-									<select style="width:120px;" multiple="multiple" id="statename" name="statename[]" class="advfilter">
+									<select style="width:110px;" multiple="multiple" id="statename" name="statename[]" class="advfilter">
 									</select> 
 								</td>
 								<td>
-									<select style="width:120px;" multiple="multiple" id="locname" name="locname[]" class="advfilter">
+									<select style="width:110px;" multiple="multiple" id="locname" name="locname[]" class="advfilter">
+									</select> 
+								</td>
+								<td>
+									<select style="width:75px;" multiple ="multiple" id="lead_indi" name="lead_indi[]">
+										<option value="HOT"<?php echo in_array('HOT', $filter['lead_indi']) ? 'selected' : '' ?>>Hot</option>
+										<option value="WARM"<?php echo in_array('WARM', $filter['lead_indi']) ? 'selected' : '' ?>>Warm</option>
+										<option value="COLD"<?php echo in_array('COLD', $filter['lead_indi']) ? 'selected' : '' ?>>Cold</option>
 									</select> 
 								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="6"><input type="reset" class="positive" name="advance" id="filter_reset" value="Reset" />
-								<input type="submit" class="positive" name="advance" id="advance" value="Search" />
-								<div id = 'load' style = 'float:right;display:none;height:1px;'>
-									<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-								</div>
+								<td colspan="6">
+									<input type="reset" class="positive" name="advance" id="filter_reset" value="Reset" />
+									<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+									<div id = 'load' style = 'float:right;display:none;height:1px;'>
+										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+									</div>
+								</td>
 							</tr>
-							</tbody>
 						</table>
 					</div>
 				</form>
@@ -608,7 +634,7 @@ $s7 = implode(',', $Ld_Src);
 //For Leads - Service Requirement. 
 $Ser_Req = array();
 foreach($get_Service_Req as $getSerReq) {
-	$Ser_Req[] = "['".$getSerReq['category'].'('.$getSerReq["job_cat"].')'."'".','.$getSerReq["job_cat"]."]";
+	$Ser_Req[] = "['".$getSerReq['services'].'('.$getSerReq["job_cat"].')'."'".','.$getSerReq["job_cat"]."]";
 }
 $s8 = implode(',', $Ser_Req);
 ?>

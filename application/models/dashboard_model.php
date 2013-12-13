@@ -48,6 +48,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
+		}
 		$this->db->group_by('jb.lead_stage');
 		$this->db->order_by('jb.lead_stage', 'asc');
 		$query = $this->db->get();
@@ -132,6 +141,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('j.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('j.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('j.lead_indicator', $filter['lead_indi']);
+		}
 		$query = $this->db->get($this->cfg['dbpref'].'leads j');
 		// echo $this->db->last_query();
 		$result['res'] = $query->result();
@@ -175,6 +193,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('c.add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
+		}
 		$this->db->group_by('jb.belong_to');
 		$this->db->order_by('us.first_name', 'asc');
 		$query = $this->db->get();
@@ -216,6 +243,15 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('c.add1_location', $filter['locname']);
+		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
 		$this->db->group_by('jb.lead_assign');
 		$this->db->order_by('us.first_name', 'asc');
@@ -391,6 +427,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('lead_indicator', $filter['lead_indi']);
+		}
 		$this->db->GROUP_BY('lead_indicator');
 		$this->db->order_by('lead_indicator', 'asc');
 		$this->db->order_by('lead_id', 'asc');
@@ -435,6 +480,15 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('c.add1_location', $filter['locname']);
+		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
 		$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
 		$query 		= $this->db->get();
@@ -994,6 +1048,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('lead_indicator', $filter['lead_indi']);
+		}
    		$this->db->where_in('pjt_status', $pjt_stat);
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('lead_id', 'desc');
@@ -1087,6 +1150,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('cs.add1_location', $filter['locname']);
 		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
+		}
 		$this->db->GROUP_BY('jb.lead_source');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;
@@ -1096,9 +1168,9 @@ class Dashboard_model extends crm_model {
 	
 	public function getServiceReq($cusId = FALSE, $filter = FALSE) 
 	{
-		$this->db->select('jc.category, count(`lead_category`) as job_cat');
+		$this->db->select('jc.services, count(`lead_service`) as job_cat');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'job_categories jc', 'jc.cid = jb.lead_category');
+		$this->db->join($this->cfg['dbpref'].'lead_services jc', 'jc.sid = jb.lead_service');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
@@ -1129,7 +1201,16 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['locname'])) {
 			$this->db->where_in('cs.add1_location', $filter['locname']);
 		}
-		$this->db->GROUP_BY('jb.lead_category');
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
+		}
+		$this->db->GROUP_BY('jb.lead_service');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;
 		$sq_query =  $query->result_array();
@@ -1189,15 +1270,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.category, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.services, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'job_categories jbc', 'jbc.cid = jb.lead_category');
+		$this->db->join($this->cfg['dbpref'].'lead_services jbc', 'jbc.sid = jb.lead_service');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
-   		$this->db->like('jbc.category', $leadStage);
+   		$this->db->like('jbc.services', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk',$cusId);
@@ -1255,6 +1336,24 @@ class Dashboard_model extends crm_model {
 			$fres['flocn_id'] 	= explode(',',$filters['locn_id']);
 		}
 		return $fres;
+	}
+	
+	/*
+	*Get the Lead Service
+	*/
+	function get_serv_req()
+	{		
+		$query = $this->db->get_where($this->cfg['dbpref'].'lead_services', array('status'=>1));
+		return $query->result_array();
+	}
+	
+	/*
+	*Get the Lead Sources
+	*/
+	function get_lead_sources()
+	{		
+		$query = $this->db->get_where($this->cfg['dbpref'].'lead_source', array('status'=>1));
+		return $query->result_array();
 	}
 
 }

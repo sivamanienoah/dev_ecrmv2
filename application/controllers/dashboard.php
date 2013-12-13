@@ -133,16 +133,17 @@ class Dashboard extends crm_controller {
 		$data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId, $filter);
 		$data['get_Service_Req'] = $this->dashboard_model->getServiceReq($cusId, $filter);
 		
-		//For Tasks & Projects access - Start here
-		$data['lead_stage']  	 = $this->welcome_model->get_lead_stage();
-		$data['customers']   	 = $this->welcome_model->get_customers();
-		$leadowner 				 = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
-		$data['lead_owner'] 	 = $leadowner->result_array(); 
-
-		$data['regions'] 	 	 = $this->regionsettings_model->region_list();
-		$data['pm_accounts'] 	 = array();
+		//For Tasks & Projects access - Start here (for filter also)
+		$data['lead_stage']  = $this->welcome_model->get_lead_stage();
+		$data['customers']   = $this->welcome_model->get_customers();
+		$leadowner 			 = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
+		$data['lead_owner']  = $leadowner->result_array(); 
+		$data['regions'] 	 = $this->regionsettings_model->region_list();
+		$data['serv_requ'] 	 = $this->dashboard_model->get_serv_req();
+		$data['lead_sourc']  = $this->dashboard_model->get_lead_sources();
+		$data['pm_accounts'] = array();
 		//Here "WHERE" condition used for Fetching the Project Managers.
-		$users 					 = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>3));
+		$users 				 = $this->db->get_where($this->cfg['dbpref'] . 'users',array('role_id'=>3));
 		if ($users->num_rows() > 0)
 		{
 			$data['pm_accounts'] = $users->result_array();
@@ -794,8 +795,8 @@ class Dashboard extends crm_controller {
 			foreach($data['leadDeta'] as $leadDet) {
 				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .= '<tr>
-								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'/" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'/" target="_blank">'.$leadDet['lead_title'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['lead_title'].'</a></td>
 								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
