@@ -15,12 +15,12 @@ class Welcome_model extends crm_model {
 	*/
 	public function get_lead_detail($leadid) {
 	
-		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_category, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
 		j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, 
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
-		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.category as lead_category, sadiv.division_name');
+		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
@@ -33,7 +33,7 @@ class Welcome_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'] . 'lead_source as lsrc', 'lsrc.lead_source_id = j.lead_source');
-		$this->db->join($this->cfg['dbpref'] . 'job_categories as jbcat', 'jbcat.cid = j.lead_category');
+		$this->db->join($this->cfg['dbpref'] . 'lead_services as jbcat', 'jbcat.sid = j.lead_service');
 		$this->db->join($this->cfg['dbpref'] . 'sales_divisions as sadiv', 'sadiv.div_id = j.division');
 		$this->db->where('j.lead_id = "'.$leadid.'" AND j.lead_stage IN ("'.$this->stages.'")');
 		$this->db->where('j.pjt_status', 0);
@@ -73,12 +73,12 @@ class Welcome_model extends crm_model {
 		return $q->result_array();
     }	
 	
-	function get_job_categories() 
+	function get_lead_services() 
 	{
-    	$this->db->select('cid, category');
+    	$this->db->select('sid, services');
 		$this->db->where('status', 1);
-    	$this->db->order_by('cid');
-		$q = $this->db->get($this->cfg['dbpref'] . 'job_categories');
+    	$this->db->order_by('sid');
+		$q = $this->db->get($this->cfg['dbpref'] . 'lead_services');
 		return $q->result_array();
     }
 	

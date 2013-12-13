@@ -18,7 +18,7 @@
 				<tr>
                     <td>Product: * </td>
 					<td>
-						<input type="text" name="category" id="category_name" value="<?php echo $this->validation->category; ?>" class="textfield width200px" />
+						<input type="text" name="services" id="category_name" value="<?php echo $this->validation->services; ?>" class="textfield width200px" />
 						<?php if ($this->uri->segment(3) == 'update') { ?>
 							<input type="hidden" id="category_hidden" name="category_hidden" value="<?php echo $this->uri->segment(4); ?>" />
 						<?php } ?>

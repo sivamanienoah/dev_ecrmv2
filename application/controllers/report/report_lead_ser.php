@@ -157,10 +157,10 @@ public $userdata;
     			$i++;
     			
     			$cnt++;
-    			if(empty($leads[$cnt]->lead_category) || $leads[$cnt]->lead_category != $lead->lead_category)
+    			if(empty($leads[$cnt]->lead_service) || $leads[$cnt]->lead_service != $lead->lead_service)
     			{
     				$end = $i;
-    				$this->excel->getActiveSheet()->setCellValue('A'.$st, $lead->category);
+    				$this->excel->getActiveSheet()->setCellValue('A'.$st, $lead->services);
     				
     				$this->excel->setActiveSheetIndex(0)->mergeCells('A'.$st.':A'.$end);    				
     				$this->excel->getActiveSheet()->getStyle('A'.$st.':A'.$end)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);

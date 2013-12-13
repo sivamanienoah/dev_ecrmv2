@@ -123,7 +123,7 @@ class Report_lead_source_model extends crm_model {
 	
 	public function get_lead_sources()
 	{		
-		$query = $this->db->get($this->cfg['dbpref'].'lead_source');
+		$query = $this->db->get_where($this->cfg['dbpref'].'lead_source', array('status'=>1));
 		return $query->result_array();
 	}
 }

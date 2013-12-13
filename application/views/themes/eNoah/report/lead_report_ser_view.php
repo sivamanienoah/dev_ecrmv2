@@ -77,7 +77,7 @@ if($num>0)
 				
 			$content .= "</tr>";
 			
-			if(empty($res[$res_cnt]->lead_category) || $res[$res_cnt]->lead_category != $lead->lead_category)
+			if(empty($res[$res_cnt]->lead_service) || $res[$res_cnt]->lead_service != $lead->lead_service)
 			{
 				$gross+=$amount;
 				if($total_cnt == $res_cnt)
@@ -100,7 +100,7 @@ if($num>0)
 				//$res_cnt = 0;
 				$amount=0;
 				$region[] = $lead->region_name;
-				createTable($content, $lead->category);
+				createTable($content, $lead->services);
 				$content='';
 			}
 	}	

@@ -58,11 +58,11 @@ var belong_to = <?php echo $quote_data['belong_to'] ; ?>;
 var lead_assign = <?php echo $quote_data['lead_assign'] ; ?>;
 var role_id = <?php echo $userdata['role_id'] ; ?>;
 	
-var job_categories = [];
-job_categories['not_select'] = '';
+var lead_services = [];
+lead_services['not_select'] = '';
 
 <?php foreach ($job_cate as $job) { ?>
-job_categories[<?php echo $job["cid"] ?>] = '<?php echo $job["category"] ?>';
+lead_services[<?php echo $job["sid"] ?>] = '<?php echo $job["services"] ?>';
 <?php } ?>
 
 var quote_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
@@ -884,7 +884,7 @@ $(function(){
 					<div class="q-init-details">
 						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
-						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_category'] ?></span></p>
+						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 								<?php

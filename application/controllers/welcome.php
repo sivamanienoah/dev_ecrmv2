@@ -187,7 +187,7 @@ HDOC;
 
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			
-			$data['job_cate'] = $this->welcome_model->get_job_categories();
+			$data['job_cate'] = $this->welcome_model->get_lead_services();
 			
 			$this->load->view('leads/welcome_view_quote', $data);
         }
@@ -281,7 +281,7 @@ HDOC;
 		}
 		$data['lead_source'] = $this->welcome_model->get_lead_sources();
 		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
-		$data['job_cate'] = $this->welcome_model->get_job_categories();
+		$data['job_cate'] = $this->welcome_model->get_lead_services();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		
 		$this->load->view('leads/welcome_view', $data);
@@ -339,7 +339,7 @@ HDOC;
 			
 			$data['expect_worth'] = $this->welcome_model->get_expect_worths();
 			$data['lead_stage'] = $this->welcome_model->get_lead_stage();
-			$data['job_cate'] = $this->welcome_model->get_job_categories();
+			$data['job_cate'] = $this->welcome_model->get_lead_services();
 			$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 			
             $this->load->view('leads/welcome_view', $data);
@@ -358,9 +358,9 @@ HDOC;
 	 */
 	function ajax_create_quote() {
 	
-		if (trim($this->input->post('lead_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_category'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_assign'))))
+		if (trim($this->input->post('lead_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_service'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_assign'))))
         {
-			echo "{error:true, errormsg:'Title and job category are required fields!'}";
+			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		}
         else if ( !preg_match('/^[0-9]+$/', trim($this->input->post('custid_fk'))) )
         {
@@ -374,7 +374,7 @@ HDOC;
 		    $ewa = '';
 			$ins['lead_title'] = $data['lead_title'];
 			$ins['custid_fk'] = $data['custid_fk'];
-			$ins['lead_category'] = $data['lead_category'];
+			$ins['lead_service'] = $data['lead_service'];
 			$ins['lead_source'] = $data['lead_source'];
 			$ins['lead_assign'] = $data['lead_assign'];
 			$ins['expect_worth_id'] = $data['expect_worth'];
@@ -428,7 +428,7 @@ HDOC;
                 $json['fancy_insert_id'] = $invoice_no;
                 $json['insert_id'] = $insert_id;
                 $json['lead_title'] = htmlentities($data['lead_title'], ENT_QUOTES);
-                $json['lead_category'] = $data['lead_category'];
+                $json['lead_service'] = $data['lead_service'];
                 $json['lead_source'] = $data['lead_source'];
                 $json['lead_assign'] = $data['lead_assign'];
 				
@@ -656,21 +656,21 @@ HDOC;
     }
 	
 	/**
-	 * Edits the basic quotation details (title, category etc)
+	 * Edits the basic quotation details (title, services etc)
 	 * via an ajax request
 	 */
 	function ajax_edit_quote() {
 
 		$data = real_escape_array($this->input->post());
 		
-        if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_category']))) {
-			echo "{error:true, errormsg:'Title and job category are required fields!'}";
+        if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
+			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
 			echo "{error:true, errormsg:'quote ID must be numeric!'}";
 		} else {
             $ins['lead_title'] = $data['lead_title'];
 			$ins['division'] = $data['job_division'];
-			$ins['lead_category'] = $data['lead_category'];
+			$ins['lead_service'] = $data['lead_service'];
 			$ins['lead_source'] = $data['lead_source_edit'];
 			$ins['expect_worth_id'] = $data['expect_worth_edit'];
 			$ins['expect_worth_amount'] = $data['expect_worth_amount'];
@@ -827,7 +827,7 @@ HDOC;
 
                 $json['error'] = false;
                 $json['lead_title'] = htmlentities($data['lead_title'], ENT_QUOTES);
-                $json['lead_category'] = $data['lead_category'];
+                $json['lead_service'] = $data['lead_service'];
 				
 				$this->session->set_flashdata('header_messages', array("Details Updated Successfully."));
 				
@@ -1650,7 +1650,7 @@ HDOC;
 		//Create Jobs
 		$ins['lead_title']           = 'Ask the Expert';
 		$ins['custid_fk']           = $insert_id;
-		$ins['lead_category']        = $_POST['lead_category'];
+		$ins['lead_service']        = $_POST['lead_service'];
 		//$ins['lead_source']       = '';
 		$ins['lead_assign']         = 59;
 		$ins['expect_worth_id']     = 5;

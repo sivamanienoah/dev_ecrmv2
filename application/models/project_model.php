@@ -146,7 +146,7 @@ class Project_model extends crm_model
 	//get overall details for lead or project 
 	function get_quote_data($id) 
 	{
-    	$this->db->select('*,jbcat.category as lead_category');
+    	$this->db->select('*,jbcat.services as lead_service');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
 		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.custid_fk = cus.custid', 'left');
     	$this->db->join($this->cfg['dbpref'].'region as reg', 'reg.regionid = cus.add1_region', 'left');
@@ -155,7 +155,7 @@ class Project_model extends crm_model
     	$this->db->join($this->cfg['dbpref'].'location as locn ', 'locn.locationid = cus.add1_location', 'left');
     	$this->db->join($this->cfg['dbpref'].'expect_worth as exw', 'exw.expect_worth_id = jb.expect_worth_id', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = jb.lead_stage', 'left');
-    	$this->db->join($this->cfg['dbpref'].'job_categories as jbcat', 'jbcat.cid = jb.lead_category', 'left');
+    	$this->db->join($this->cfg['dbpref'].'lead_services as jbcat', 'jbcat.sid = jb.lead_service', 'left');
     	$this->db->where('jb.lead_id', $id);
 		$this->db->limit(1);
 		$results = $this->db->get();

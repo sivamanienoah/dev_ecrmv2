@@ -71,7 +71,7 @@ class web_to_lead extends crm_controller {
 	    //
 		//$ins['lead_title']           = 'Ask the Expert';		
 		$ins['custid_fk']           = $insert_id;
-		$ins['lead_category']        = empty($_POST['lead_category'])?39:$_POST['lead_category'];
+		$ins['lead_service']        = empty($_POST['lead_service'])?39:$_POST['lead_service'];
 		$ins['lead_source']       = '9';
 		$ins['lead_assign']         = 118;
 		$ins['expect_worth_id']     = 1;

@@ -21,15 +21,15 @@ class manage_service_model extends crm_model {
     }
 
 	/*
-	*@Get Job Category for Search
+	*@Get Lead_service for Search
 	*@Manage Service Model
 	*/
 	public function get_jobscategory($search = FALSE) {
 		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].'job_categories');
+		$this->db->from($this->cfg['dbpref'].'lead_services');
 		if ($search != false) {
 			$search = urldecode($search);
-			$this->db->like('category', $search); 
+			$this->db->like('services', $search); 
 		}
 		$query = $this->db->get();
 		$cate =  $query->result_array();
@@ -37,7 +37,7 @@ class manage_service_model extends crm_model {
     }
 
 	/*
-	*@Get Job Category for Search
+	*@Get Sale Divisions for Search
 	*@Method  get_salesDivisions
 	*@table   sales_divisions
 	*/

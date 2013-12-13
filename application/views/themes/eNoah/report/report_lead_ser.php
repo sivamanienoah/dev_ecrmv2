@@ -125,7 +125,7 @@
 							<select  style="width:120px;" multiple="multiple" id="ser_requ" name="ser_requ[]">
 								<?php if (count($serv_requ)>0) { ?>
 									<?php foreach ($serv_requ as $serv) { ?>
-										<option value="<?php echo $serv['cid'] ?>"><?php echo $serv['category'] ?></option>
+										<option value="<?php echo $serv['sid'] ?>"><?php echo $serv['services'] ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select> 

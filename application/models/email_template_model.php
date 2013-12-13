@@ -13,18 +13,16 @@ class email_template_model extends crm_model {
     
 	/*
 	*@construct
-	*@Manage Service Model
+	*@Email_template_model
 	*/
-	
     function Email_template_model() {
        parent::__construct();
     }
 
 	/*
-	*@Get Job Category for Search
-	*@Manage Service Model
+	*@Get email template
+	*@Email_template_model
 	*/
-	
 	public function get_email_templates() {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'email_template');

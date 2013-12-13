@@ -35,7 +35,7 @@ class Manage_service extends crm_controller {
     public function index($search = FALSE) 
 	{
         $data['page_heading'] = 'Manage Service / Product';
-		$data['job_categories'] = $this->manage_service_model->get_jobscategory($search);		
+		$data['lead_services'] = $this->manage_service_model->get_jobscategory($search);		
         $this->load->view('manage_service/manage_service_view', $data); 
     }
 	
@@ -222,22 +222,22 @@ class Manage_service extends crm_controller {
 		$this->load->library('validation');
         $data              = array();
         $post_data         = real_escape_array($this->input->post());
-		$rules['category'] = "trim|required";
+		$rules['services'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
-		$fields['category'] = 'Product';
+		$fields['services'] = 'Product';
 		$fields['status']   = 'Status';
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
 		
 		//for status
-		$this->db->where('lead_category', $id);
+		$this->db->where('lead_service', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
         {
-            $item_data = $this->db->get_where($this->cfg['dbpref']."job_categories", array('cid' => $id));
+            $item_data = $this->db->get_where($this->cfg['dbpref']."lead_services", array('sid' => $id));
             if ($item_data->num_rows() > 0) $src = $item_data->result_array();
             if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
             {
@@ -262,9 +262,9 @@ class Manage_service extends crm_controller {
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
             {
                 //update
-                $this->db->where('cid', $id);
+                $this->db->where('sid', $id);
                 
-                if ($this->db->update($this->cfg['dbpref']."job_categories", $update_data))
+                if ($this->db->update($this->cfg['dbpref']."lead_services", $update_data))
                 {	
                     $this->session->set_flashdata('confirm', array('Product Details Updated!'));
                 }
@@ -272,26 +272,26 @@ class Manage_service extends crm_controller {
             else
             {
                 //insert
-                $this->db->insert($this->cfg['dbpref']."job_categories", $update_data);
+                $this->db->insert($this->cfg['dbpref']."lead_services", $update_data);
                 $this->session->set_flashdata('confirm', array('New Product Added!'));
                 
             }
 			
 
 			/* //write the array
-			$table_name = $this->cfg['dbpref'].'job_categories'; // table Name 
+			$table_name = $this->cfg['dbpref'].'lead_services'; // table Name 
 			$get_jobscat = $this->manage_service_model->get_list_active($table_name);
 			//echo "<pre>"; print_r($data['get_jobscat']);
-			$filename = APPPATH."config/job_categories.ini";
+			$filename = APPPATH."config/lead_services.ini";
 			$file = fopen($filename, "w");
 			fwrite($file, '<?php');
 			fwrite($file, "\n");
-			fwrite($file, '$config["crm"]["job_categories"] = array(');
+			fwrite($file, '$config["crm"]["lead_services"] = array(');
 			fwrite($file, "\n");
 			for($k=0;$k<count($get_jobscat);$k++) {
-				fwrite($file, $get_jobscat[$k]['cid']);
+				fwrite($file, $get_jobscat[$k]['sid']);
 				fwrite($file, ' => "');
-				fwrite($file, $get_jobscat[$k]['category']);
+				fwrite($file, $get_jobscat[$k]['services']);
 				fwrite($file, '",');
 				fwrite($file, "\n");
 			}
@@ -316,19 +316,19 @@ class Manage_service extends crm_controller {
 		{
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 			{
-				$this->db->delete($this->cfg['dbpref']."job_categories", array('cid' => $id));
+				$this->db->delete($this->cfg['dbpref']."lead_services", array('sid' => $id));
 				$this->session->set_flashdata('confirm', array('Product Deleted.!'));
-				$get_jobscat = $this->manage_service_model->get_list_active($this->cfg['dbpref']."job_categories");
-				/* $filename = APPPATH."config/job_categories.ini";
+				$get_jobscat = $this->manage_service_model->get_list_active($this->cfg['dbpref']."lead_services");
+				/* $filename = APPPATH."config/lead_services.ini";
 				$file = fopen($filename, "w");
 				fwrite($file, '<?php');
 				fwrite($file, "\n");
-				fwrite($file, '$config["crm"]["job_categories"] = array(');
+				fwrite($file, '$config["crm"]["lead_services"] = array(');
 				fwrite($file, "\n");
 				for($k=0;$k<count($get_jobscat);$k++) {
-					fwrite($file, $get_jobscat[$k]['cid']);
+					fwrite($file, $get_jobscat[$k]['sid']);
 					fwrite($file, ' => "');
-					fwrite($file, $get_jobscat[$k]['category']);
+					fwrite($file, $get_jobscat[$k]['services']);
 					fwrite($file, '",');
 					fwrite($file, "\n");
 				}
@@ -526,14 +526,14 @@ class Manage_service extends crm_controller {
 	}
 
 	/*
-	*@For ajax check status (job category)
+	*@For ajax check status (lead_service)
 	*@Method   ajax_check_status_job_category
 	*/
 	public function ajax_check_status_job_category() 
 	{
 		$post_data  = real_escape_array($this->input->post());
 		$id         = $post_data['data'];
-		$this->db->where('lead_category', $id);
+		$this->db->where('lead_service', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
@@ -761,9 +761,9 @@ class Manage_service extends crm_controller {
 					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);
 				}
 			break;
-			case 'job_categories':
-				$tbl_cont['name'] = 'category';
-				$tbl_cont['id'] = 'cid';
+			case 'lead_services':
+				$tbl_cont['name'] = 'services';
+				$tbl_cont['id']   = 'sid';
 				if(empty($id)) {
 					$condn = array('name'=>$name);
 					$res = $this->manage_service_model->check_duplicate($tbl_cont, $condn, $type);

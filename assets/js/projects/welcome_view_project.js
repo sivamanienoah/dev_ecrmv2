@@ -67,8 +67,8 @@
 
  ////////////////////////----------------------------X---------------------////////////////////////////
  
-	var job_categories = [];
-	job_categories['not_select'] = '';
+	var lead_services = [];
+	lead_services['not_select'] = '';
 
 	var quote_id        = project_jobid;
 	var ex_cust_id      = 0;

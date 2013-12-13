@@ -10,11 +10,11 @@ $userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
 ?>
 var curr_job_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
-var job_categories = [];
-job_categories['not_select'] = '';
+var lead_services = [];
+lead_services['not_select'] = '';
 
 <?php foreach ($job_cate as $job) { ?>
-job_categories[<?php echo $job["cid"] ?>] = '<?php echo $job["category"] ?>';
+lead_services[<?php echo $job["sid"] ?>] = '<?php echo $job["services"] ?>';
 <?php } ?>
 
 var item_inventory = [];
@@ -293,7 +293,7 @@ function startQuote() {
     if ($.trim($('#lead_title').val()) == '') {
         err.push('Job title is required');
     }
-    if ($('#lead_category').val() == 'not_select') {
+    if ($('#lead_service').val() == 'not_select') {
         err.push('Service type must be selected');
     }
 	 if ($('#lead_source').val() == 'not_select') {
@@ -590,7 +590,7 @@ function editQuoteDetails() {
 						showMSGS('Details Successfully Updated!', csrf_token, csrf_hasf);
                         // good to go
                         $('.q-title').html(res.lead_title);
-                        $('.q-service-type span').html(job_categories[res.lead_category]);
+                        $('.q-service-type span').html(lead_services[res.lead_service]);
                         
                     } else {
                         alert(res.errormsg);
@@ -792,12 +792,12 @@ h3 .small {
                         </select>
                     </p>
                     <p><label>Service Requirement</label></p>
-					<p><select name="lead_category" id="lead_category" class="textfield width300px" onchange="$('.q-service-type span').html(job_categories[$(this).val()]);">
+					<p><select name="lead_service" id="lead_service" class="textfield width300px" onchange="$('.q-service-type span').html(lead_services[$(this).val()]);">
                             <option value="not_select">Please Select</option>
                         <?php 
 						foreach ($job_cate as $job) { 
 						?>
-                            <option value="<?php echo $job['cid'] ?>"><?php echo $job['category'] ?></option>
+                            <option value="<?php echo $job['sid'] ?>"><?php echo $job['services'] ?></option>
                         <?php
 						}
 						?>
@@ -931,13 +931,13 @@ h3 .small {
 							</select>
 						</p>
 						<p><label>Service Requirement</label></p>
-						<p><select name="lead_category" id="job_category_edit" class="textfield width300px">
+						<p><select name="lead_service" id="job_category_edit" class="textfield width300px">
 								<option value="not_select">Please Select</option>
 							<?php 
 								foreach ($job_cate as $job) 
 								{ 
 							?>
-								<option value="<?php echo $job['cid'] ?>"<?php echo ($quote_data['lead_category'] == $job['cid']) ? ' selected="selected"' : '' ?>><?php echo $job['category'] ?></option>
+								<option value="<?php echo $job['sid'] ?>"<?php echo ($quote_data['lead_service'] == $job['sid']) ? ' selected="selected"' : '' ?>><?php echo $job['services'] ?></option>
 							<?php
 								}
 							?>
