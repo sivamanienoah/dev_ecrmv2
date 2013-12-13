@@ -3,7 +3,7 @@
 <div id="content">
 	 
     <div class="inner">
-		<?php if($this->session->userdata('accesspage')==1){?>
+		<?php if($this->session->userdata('accesspage')==1) { ?>
 			
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 			
@@ -11,11 +11,10 @@
 			
 	            <h2>Least Active Leads</h2>
 	            <?php if ($this->validation->error_string != '') { ?>
-	            <div class="form_error">
-	                <?php echo  $this->validation->error_string ?>
-	            </div>
+					<div class="form_error">
+						<?php echo  $this->validation->error_string ?>
+					</div>
 	            <?php } ?>
-	            <!-- <p>Configure the task alerts.</p> -->
 	        	
 				<a class="choice-box advanced_filter">
 					Advanced Filters
@@ -23,7 +22,7 @@
 				</a>	
 	        	
 	            <div class="clear"><div>    
-	            <div id="advance_search" style="display:none;">
+			<div id="advance_search" style="display:none;">
 				<table class="layout">
 					<tr>
 						<!-- <td>
@@ -69,14 +68,13 @@
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
-							<?php foreach($lead_stage as $ls) { ?>
-								<?php if($ls['lead_stage_id'] <= 12) { ?>
-									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-								<?php } //if condition- end here. ?>
-							<?php } ?>					
+								<?php foreach($lead_stage as $ls) { ?>
+									<?php if($ls['lead_stage_id'] <= 12) { ?>
+										<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+									<?php } //if condition- end here. ?>
+								<?php } ?>				
 							</select> 
 						</td>
-	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
 							<?php foreach($customers as $customer) {?>
@@ -84,7 +82,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-					       
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
 							<option value="0-10000"> <10000 </option>
@@ -93,7 +90,6 @@
 							<option value="50000-above"> >50000 </option>
 							</select> 
 						</td>
-					
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 							<?php foreach ($user as $owner){ ?>
@@ -101,7 +97,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-						
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
@@ -109,15 +104,14 @@
 								<?php } ?>
 							</select> 
 						</td>
-						
 					</tr>
-					 <tr>
+					<tr>
 						<th>By Region Wise</th>
 						<th>By Country Wise</th>
 						<th>By State Wise</th>
 						<th>By Location Wise</th>						
 					</tr> 
-					 <tr>
+					<tr>
 						<td>
 							<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
 								<?php foreach ($regions as $reg) { ?>
@@ -140,19 +134,17 @@
 							
 							</select> 
 						</td>
-						
-						
-					</tr> 
-					
+					</tr>
 					<tr align="right" >
 						<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
 							<input type="submit" class="positive" name="advance" id = 'advance' value="Search" />
 							<div id = 'load' style = 'float:right;display:none;height:1px;'>
-							<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+								<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 							</div> 
 						</td>
 					</tr>
-				</table></div>
+				</table>
+				</div>
 			</div>
 				
 			<div id = 'report_grid'>
@@ -160,9 +152,9 @@
 			</div>
 		</form>
 			
-		<?php } else{
+		<?php } else {
 			echo "You have no rights to access this page";
-		}?>
+		} ?>
 	</div>
 </div>
 <script type="text/javascript" src="assets/js/report/report_least_active_lead.js"></script>

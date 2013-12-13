@@ -44,14 +44,14 @@
 	            <div style="border: 1px solid #DCDCDC;">    
 				<table cellpadding="0" cellspacing="0" class="data-table" >
 					<thead>
-						<tr>
-							<th>By Lead Stage</th>
-							<th>By Customer</th>
-							<th>Expected Worth</th>
-							<th>By lead Owner</th>
-							<th>Lead Assignee</th>
-						</tr>	
-					</thead>				
+					<tr>
+						<th>By Lead Stage</th>
+						<th>By Customer</th>
+						<th>Expected Worth</th>
+						<th>By lead Owner</th>
+						<th>Lead Assignee</th>
+					</tr>			
+					</thead>
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
@@ -62,7 +62,6 @@
 							<?php } ?>					
 							</select> 
 						</td>
-	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
 							<?php foreach($customers as $customer) {?>
@@ -70,7 +69,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-					       
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
 							<option value="0-10000"> <10000 </option>
@@ -78,8 +76,7 @@
 							<option value="20000-50000"> >20000 < 50000 </option>
 							<option value="50000-above"> >50000 </option>
 							</select> 
-						</td>			
-						
+						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 							<?php foreach ($user as $owner){ ?>
@@ -87,7 +84,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-						
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
@@ -95,7 +91,6 @@
 								<?php } ?>
 							</select> 
 						</td>
-						
 					</tr>
 					<tr>
 						<th>By Region Wise</th>
@@ -137,7 +132,6 @@
 							</select> 
 						</td>
 					</tr> 
-					
 					<tr align="right" >
 						<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
 							<input type="submit" class="positive" name="advance" id="advance" value="Search" />
