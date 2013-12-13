@@ -66,7 +66,7 @@ class notifications_model extends crm_model {
 		} else {
 			$this->db->select('c.cron_id, c.cron_name');
 			$this->db->from("{$this->cfg['dbpref']}" . 'crons c');
-			$this->db->where('c.cron_id',$cid);
+			$this->db->where('c.cron_id', $cid);
 			$this->db->order_by('c.cron_id', 'asc');
 			$sql = $this->db->get();
 
