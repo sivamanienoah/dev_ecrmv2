@@ -31,7 +31,7 @@
                     <th>Email</th>
 					<th>Region</th>
 					<th>Country</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             
@@ -49,16 +49,11 @@
                         <td><?php echo $customer['country_name'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>">
-									<?php echo "Edit"; ?>
-								</a> 
-							<?php } else { 
-								echo "Edit";
-							} ?>
+								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>/">Edit &raquo;</a>
+							<?php } else { echo "Edit &raquo;"; } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
-								<a href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid'] ?>);" >
-									<?php echo "Delete"; ?>
-								</a>
+								&nbsp;|&nbsp;
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid']; ?>);"> Delete &raquo; </a> 
 							<?php } ?>
 						</td>
                     </tr>
