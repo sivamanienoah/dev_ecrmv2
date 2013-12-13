@@ -50,7 +50,6 @@
 							<th>Expected Worth</th>
 							<th>By lead Owner</th>
 							<th>Lead Assignee</th>
-							
 						</tr>	
 					</thead>				
 					<tr>	
@@ -130,8 +129,10 @@
 						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="lead_src" name="lead_src[]">
-								<?php foreach ($lead_sourc as $src) { ?>
-									<option value="<?php echo $src['lead_source_id'] ?>"><?php echo $src['lead_source_name'] ?></option>
+								<?php if (count($lead_sourc)>0) { ?>
+									<?php foreach ($lead_sourc as $src) { ?>
+										<option value="<?php echo $src['lead_source_id'] ?>"><?php echo $src['lead_source_name'] ?></option>
+									<?php } ?>
 								<?php } ?>
 							</select> 
 						</td>
