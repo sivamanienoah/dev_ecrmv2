@@ -48,10 +48,8 @@
 							<th>By Lead Stage</th>
 							<th>By Customer</th>
 							<th>Expected Worth</th>
-							
 							<th>By lead Owner</th>
 							<th>Lead Assignee</th>
-							
 						</tr>	
 					</thead>				
 					<tr>	
