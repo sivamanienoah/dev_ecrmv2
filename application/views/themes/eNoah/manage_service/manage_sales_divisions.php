@@ -37,10 +37,9 @@ $userdata = $this->session->userdata('logged_in_user');
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
 							<a href="manage_service/division_add/update/<?php echo $sales['div_id']; ?>/">Edit &raquo;</a> 
-						<?php } else { echo "Edit"; } ?> 
+						<?php } else { echo "Edit &raquo;"; } ?> 
 						<?php if($this->session->userdata('delete')==1) { ?>
 							&nbsp;|&nbsp;
-							<!--<a class="delete" href="manage_service/division_delete/update/<?php echo $sales['div_id']; ?>" onclick="return confirm('Are you sure you want to delete?')"> Delete &raquo; </a>-->
 							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $sales['div_id']; ?>);"> Delete &raquo; </a> 
 						<?php } ?>
 					</td>
