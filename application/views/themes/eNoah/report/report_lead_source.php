@@ -3,7 +3,7 @@
 <div id="content">
 	 
     <div class="inner">
-		<?php if($this->session->userdata('accesspage')==1) {?>
+		<?php if($this->session->userdata('accesspage')==1) { ?>
 			
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 			
@@ -40,7 +40,7 @@
 						</td>				
 					</tr>
 	            </table>
-	                
+				
 	            <div style="border: 1px solid #DCDCDC;">    
 				<table cellpadding="0" cellspacing="0" class="data-table" >
 					<thead>
@@ -55,37 +55,35 @@
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
-							<?php foreach($lead_stage as $ls) { ?>
-								<?php if($ls['lead_stage_id'] <= 12) { ?>
+								<?php foreach($lead_stage as $ls) { ?>
 									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-								<?php } //if condition- end here. ?>
-							<?php } ?>					
+								<?php } ?>					
 							</select> 
 						</td>
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
-							<?php foreach($customers as $customer) {?>
-							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-							<?php } ?>
+								<?php foreach($customers as $customer) { ?>
+									<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+								<?php } ?>
 							</select> 
 						</td>
 						<td>
-							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
-							<option value="0-10000"> <10000 </option>
-							<option value="10000-20000"> > 10000 < 20000 </option>
-							<option value="20000-50000"> >20000 < 50000 </option>
-							<option value="50000-above"> >50000 </option>
+							<select style="width:120px;" multiple="multiple" id="worth" name="worth[]">
+								<option value="0-10000"> <10000 </option>
+								<option value="10000-20000"> > 10000 < 20000 </option>
+								<option value="20000-50000"> >20000 < 50000 </option>
+								<option value="50000-above"> >50000 </option>
 							</select> 
 						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-							<?php foreach ($user as $owner){ ?>
-							<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-							<?php } ?>
+								<?php foreach ($user as $owner) { ?>
+									<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+								<?php } ?>
 							</select> 
 						</td>
 						<td>
-							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
+							<select style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
 									<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
 								<?php } ?>
@@ -141,15 +139,14 @@
 							</div>
 						</td>
 					</tr>
-				</table></div>
+				</table>
+				</div>
 			</div>
 			
-				
 			<div id = 'report_grid'>
 	        	<?php echo $report; ?>
 			</div>
 		</form>
-			
 		<?php } else {
 			echo "You have no rights to access this page";
 		} ?>

@@ -3,7 +3,7 @@
 <div id="content">
 	 
     <div class="inner">
-		<?php if($this->session->userdata('accesspage')==1){?>
+		<?php if($this->session->userdata('accesspage')==1) { ?>
 			
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 				
@@ -15,15 +15,12 @@
 	                <?php echo  $this->validation->error_string ?>
 	            </div>
 	            <?php } ?>
-	            <!-- <p>Configure the task alerts.</p> -->
-	        	
 	        	
 				<a class="choice-box advanced_filter">
 					Advanced Filters
 					<img class="icon leads" src="assets/img/advanced_filter.png">
 				</a>
-				
-	        	
+
 	            <div class="clear"><div>    
 	            <div id="advance_search" style="display:none;">
 				
@@ -61,48 +58,40 @@
 							<th>By Lead Stage</th>
 							<th>By Customer</th>
 							<th>Expected Worth</th>
-							
 							<th>By lead Owner</th>
 							<th>Lead Assignee</th>
-							
 						</tr>	
 					</thead>				
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
 							<?php foreach($lead_stage as $ls) { ?>
-								<?php if($ls['lead_stage_id'] <= 12) { ?>
-									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-								<?php } //if condition- end here. ?>
+								<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 							<?php } ?>					
 							</select> 
 						</td>
-	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
-							<?php foreach($customers as $customer) {?>
-							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-							<?php } ?>
+								<?php foreach($customers as $customer) {?>
+									<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
+								<?php } ?>
 							</select> 
 						</td>
-					       
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
-							<option value="0-10000"> <10000 </option>
-							<option value="10000-20000"> > 10000 < 20000 </option>
-							<option value="20000-50000"> >20000 < 50000 </option>
-							<option value="50000-above"> >50000 </option>
+								<option value="0-10000"> <10000 </option>
+								<option value="10000-20000"> > 10000 < 20000 </option>
+								<option value="20000-50000"> >20000 < 50000 </option>
+								<option value="50000-above"> >50000 </option>
 							</select> 
 						</td>
-					
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-							<?php foreach ($user as $owner){ ?>
-							<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-							<?php } ?>
+								<?php foreach ($user as $owner){ ?>
+									<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+								<?php } ?>
 							</select> 
 						</td>
-						
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
@@ -110,7 +99,6 @@
 								<?php } ?>
 							</select> 
 						</td>
-						
 					</tr>
 					 <tr>
 						<th>By Region Wise</th>
@@ -141,10 +129,7 @@
 							
 							</select> 
 						</td>
-						
-						
-					</tr> 
-					
+					</tr>
 					<tr align="right" >
 						<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
 							<input type="submit" class="positive" name="advance" id = 'advance' value="Search" />
@@ -153,7 +138,8 @@
 							</div>
 						</td>
 					</tr>
-				</table></div>
+				</table>
+				</div>
 			</div>
 				
 			<div id = 'report_grid'>
@@ -161,9 +147,9 @@
 			</div>
 		</form>
 			
-		<?php } else{
+		<?php } else {
 			echo "You have no rights to access this page";
-		}?>
+		} ?>
 	</div>
 </div>
 <script type="text/javascript" src="assets/js/report/report_active_lead.js"></script>

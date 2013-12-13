@@ -3,7 +3,7 @@
 <div id="content">
 	 
     <div class="inner">
-		<?php if($this->session->userdata('accesspage')==1){?>
+		<?php if($this->session->userdata('accesspage')==1) { ?>
 			
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 
@@ -46,31 +46,25 @@
 							<th>By Lead Stage</th>
 							<th>By Customer</th>
 							<th>Expected Worth</th>
-							
 							<th>By lead Owner</th>
 							<th>Lead Assignee</th>
-							
 						</tr>	
 					</thead>				
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
 							<?php foreach($lead_stage as $ls) { ?>
-								<?php if($ls['lead_stage_id'] <= 12) { ?>
 									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-								<?php } //if condition- end here. ?>
 							<?php } ?>					
 							</select> 
 						</td>
-	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
-							<?php foreach($customers as $customer) {?>
-							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-							<?php } ?>
+								<?php foreach($customers as $customer) { ?>
+									<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+								<?php } ?>
 							</select> 
 						</td>
-					       
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
 							<option value="0-10000"> <10000 </option>

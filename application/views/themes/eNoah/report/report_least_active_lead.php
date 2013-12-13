@@ -25,18 +25,6 @@
 			<div id="advance_search" style="display:none;">
 				<table class="layout">
 					<tr>
-						<!-- <td>
-							Weekly/Monthly
-						</td>
-						<td>
-							<select name = 'range' id = 'range' >
-								<option value = '7'>Weekly</option>
-								<option value = '30'>Monthly</option>
-							</select>
-							
-						</td>
-						 -->
-						 
 						<td>
 							From Date
 						</td>
@@ -48,8 +36,7 @@
 						</td>	
 						<td>
 							<input type="text" name="task_search_end_date" id ="task_search_end_date"class="textfield pick-date width100px" autocomplete = 'off' />
-						</td>				
-								
+						</td>
 					</tr>
 	            </table>
 				<div style="border: 1px solid #DCDCDC;">
@@ -59,42 +46,38 @@
 							<th>By Lead Stage</th>
 							<th>By Customer</th>
 							<th>Expected Worth</th>
-							
 							<th>By lead Owner</th>
 							<th>Lead Assignee</th>
-							
 						</tr>	
 					</thead>				
 					<tr>	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
 								<?php foreach($lead_stage as $ls) { ?>
-									<?php if($ls['lead_stage_id'] <= 12) { ?>
-										<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-									<?php } //if condition- end here. ?>
+									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 								<?php } ?>				
 							</select> 
 						</td>
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
-							<?php foreach($customers as $customer) {?>
-							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-							<?php } ?>
+								<?php foreach($customers as $customer) { ?>
+									<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+								<?php } ?>
 							</select> 
 						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
-							<option value="0-10000"> <10000 </option>
-							<option value="10000-20000"> > 10000 < 20000 </option>
-							<option value="20000-50000"> >20000 < 50000 </option>
-							<option value="50000-above"> >50000 </option>
+								<option value="0-10000"> <10000 </option>
+								<option value="10000-20000"> > 10000 < 20000 </option>
+								<option value="20000-50000"> >20000 < 50000 </option>
+								<option value="50000-above"> >50000 </option>
 							</select> 
 						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
-							<?php foreach ($user as $owner){ ?>
-							<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
-							<?php } ?>
+								<?php foreach ($user as $owner) { ?>
+									<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+								<?php } ?>
 							</select> 
 						</td>
 						<td>

@@ -15,8 +15,7 @@
 	                <?php echo  $this->validation->error_string ?>
 	            </div>
 	            <?php } ?>
-	            <!-- <p>Configure the task alerts.</p> -->
-	        		
+	 	        		
 				<a class="choice-box advanced_filter">
 					Advanced Filters
 					<img class="icon leads" src="assets/img/advanced_filter.png">
@@ -56,13 +55,10 @@
 						<td>
 							<select style="width:230px;" multiple="multiple" id="stage" name="stage[]">
 							<?php foreach($lead_stage as $ls) { ?>
-								<?php if($ls['lead_stage_id'] <= 12) { ?>
-									<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-								<?php } //if condition- end here. ?>
+								<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 							<?php } ?>					
 							</select> 
 						</td>
-	
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
 							<?php foreach($customers as $customer) {?>
@@ -70,7 +66,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-					       
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="worth" name="worth[]">
 							<option value="0-10000"> <10000 </option>
@@ -78,8 +73,7 @@
 							<option value="20000-50000"> >20000 < 50000 </option>
 							<option value="50000-above"> >50000 </option>
 							</select> 
-						</td>			
-						
+						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 							<?php foreach ($user as $owner){ ?>
@@ -87,7 +81,6 @@
 							<?php } ?>
 							</select> 
 						</td>
-						
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
@@ -95,7 +88,6 @@
 								<?php } ?>
 							</select> 
 						</td>
-						
 					</tr>
 					 <tr>
 						<th>By Region Wise</th>
@@ -103,7 +95,7 @@
 						<th>By State Wise</th>
 						<th>By Location Wise</th>						
 					</tr> 
-					 <tr>
+					<tr>
 						<td>
 							<select  style="width:230px;" multiple="multiple" id="regionname" name="regionname[]">
 								<?php foreach ($regions as $reg) { ?>
@@ -126,10 +118,7 @@
 							
 							</select> 
 						</td>
-						
-						
-					</tr> 
-					
+					</tr>
 					<tr align="right" >
 						<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
 							<input type="submit" class="positive" name="advance" id="advance" value="Search" />
@@ -138,7 +127,8 @@
 							</div>
 						</td>
 					</tr>
-				</table></div>
+				</table>
+				</div>
 			</div>
 				
 			<div id = 'report_grid'>
