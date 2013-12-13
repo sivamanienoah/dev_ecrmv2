@@ -41,13 +41,12 @@ require (theme_url().'/tpl/header.php');
 						
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
-								<tbody>
 								<tr>
 									<td class="tblheadbg">By Lead Stage</td>
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
-									<td class="tblheadbg" colspan=2>Lead Assignee</td>
+									<td class="tblheadbg" colspan=2>By Lead Assignee</td>
 								</tr>
 								<tr>	
 									<td>
@@ -150,7 +149,6 @@ require (theme_url().'/tpl/header.php');
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
 								</tr>
-								</tbody>
 							</table>
 						</div>
 					</form>
