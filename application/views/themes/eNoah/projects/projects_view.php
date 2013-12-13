@@ -28,7 +28,7 @@
 		
 	    <h2><?php echo $page_heading ?></h2>
 		
-		<a class="choice-box" onclick="advanced_filter_pjt();" style="top:10px;">
+		<a class="choice-box" onclick="advanced_filter_pjt();">
 			Advanced Filters
 			<img src="assets/img/advanced_filter.png" class="icon leads" />
 		</a>

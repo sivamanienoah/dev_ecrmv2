@@ -28,7 +28,7 @@ require (theme_url().'/tpl/header.php');
 
 			<h2>Lead Dashboard</h2>
 		
-			<div style="margin-top:20px;">
+			<div>
 				<a class="choice-box" onclick="advanced_filter();" >
 					Advanced Filters
 					<img src="assets/img/advanced_filter.png" class="icon leads" />
