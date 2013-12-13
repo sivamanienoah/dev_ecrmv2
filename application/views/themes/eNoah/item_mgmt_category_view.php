@@ -2,7 +2,6 @@
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <!--script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
 <div id="content">
-	<?php //include 'tpl/item_mgmt_submenu.php' ?>
 	<div class="inner">
 		<table>
 		<tr>

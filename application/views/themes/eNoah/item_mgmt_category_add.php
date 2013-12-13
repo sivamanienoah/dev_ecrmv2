@@ -1,7 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
 <div id="content">
-    <?php //include 'tpl/item_mgmt_submenu.php' ?>
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || (($this->session->userdata('edit')==1) && ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))))) { ?>
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post" name="formone" onsubmit="return valid();">
