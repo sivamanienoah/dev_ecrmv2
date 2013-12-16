@@ -6,7 +6,6 @@
 
 $(function(){
 	$('#excel').click(function() {
-		//mychanges		
 		var start_date = $('#task_search_start_date').val();
 		var end_date = $('#task_search_end_date').val();
 		var stage = $('#stage').val();
