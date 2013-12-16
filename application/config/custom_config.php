@@ -13,7 +13,7 @@ $config['crm']['app_date']      = '27-11-2013';
 
 $config['crm']['dbpref']        = 'crms_';
 $config['crm']['theme']         = 'eNoah';
-$config['crm']['data']          = 'vps3_data';
+$config['crm']['data']          = '';
 
 $config['crm']['domain_status'] = array(
                                     0 => 'Not Delegated',
