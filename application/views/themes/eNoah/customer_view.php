@@ -66,6 +66,7 @@
 		} ?>
 	</div>
 </div>
-<script type="text/javascript" src="assets/js/customer/customer_view.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/customer/customer_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

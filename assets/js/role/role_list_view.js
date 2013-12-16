@@ -23,16 +23,22 @@ function role_checkStatus(id) {
 				$('#dialog-message-'+id).append("One or more users currently assigned for this role. This cannot be deleted.");
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'role/delete_role/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}                                                                                       
 	});
 return false;
+}
+
+function processDelete(id) {
+	window.location.href = 'role/delete_role/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function timerfadeout() {

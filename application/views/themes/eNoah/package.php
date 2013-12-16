@@ -2,7 +2,7 @@
 <div id="content">
 	<?php //include 'tpl/hosting_submenu.php'; ?>
 	<div class="inner hosting-section">
-	<?php if($this->session->userdata('accesspage')==1){ ?>
+	<?php if($this->session->userdata('accesspage')==1) { ?>
 	    <h2>Package Accounts</h2>
         <form action="package/search/" method="post" id="cust_search_form">
 			
@@ -46,7 +46,6 @@
 		</form>
         <div id="dialog-msg" class="dialog-err" style="font-size: 13px; font-weight: bold; padding: 0px 0px 10px; text-align: center;"> </div>
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
-            
             <thead>
                 <tr>
                     <th>Package Name</th>
@@ -84,5 +83,6 @@
 	</div>
 </div>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/package/package.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

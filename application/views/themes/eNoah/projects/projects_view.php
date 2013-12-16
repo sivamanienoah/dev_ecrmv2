@@ -95,7 +95,7 @@
 		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
             
             <thead>
-				<th>Action</th>
+				<th width="90px;">Action</th>
 				<th>Project No.</th>
 				<th>Project ID</th>
 				<th>Project Title</th>
@@ -104,7 +104,7 @@
 				<th>Planned Start Date</th>
 				<th>Planned End Date</th>
 				<th>Project Completion</th>
-				<th>Project Status</th>
+				<th width="110px;">Project Status</th>
             </thead>
             
             <tbody>
@@ -117,11 +117,14 @@
                     <tr>
 						<td class="actions" align="center">
 							<a href="project/view_project/<?php echo $record['lead_id'] ?>">
-								View
+								View &raquo;
 							</a>
 							<?php
-								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
+								if($this->session->userdata('delete')==1) { 
+								$tle = str_replace("'", "\'", $record['lead_title']);
 							?>
+								| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
+							<?php } ?>
 						</td>
                         <td class="actions">
 							<div>
@@ -189,6 +192,6 @@
 		?>
 	</div>
 </div>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/projects/projects_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

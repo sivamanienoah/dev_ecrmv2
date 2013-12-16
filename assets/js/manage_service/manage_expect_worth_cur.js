@@ -25,12 +25,10 @@ function checkStatus(id) {
 				$('#dialog-message-'+id).append('One of more leads currently mapped to this currency. This cannot be deleted.');
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'manage_service/cur_type_delete/update/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}                                                                                       
 	});
@@ -40,5 +38,13 @@ function checkStatus(id) {
 function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
-	
+
+function processDelete(id) {
+	window.location.href = 'manage_service/cur_type_delete/update/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
+}
+
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

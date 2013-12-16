@@ -83,16 +83,22 @@ function checkStatus_Cntry(id) {
 				$('html, body').animate({ scrollTop: $('#dialog-err-cntry').offset().top }, 500);
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete this Country?\n(It will delete all the States & Locations)")
-				if (r==true) {
-					window.location.href = 'regionsettings/country_delete/delete/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete this Country?<br />(It will delete all the States & Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}          
 	});
 return false;
+}
+
+function processDelete(id) {
+	window.location.href = 'regionsettings/country_delete/delete/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function timerfadeout() {

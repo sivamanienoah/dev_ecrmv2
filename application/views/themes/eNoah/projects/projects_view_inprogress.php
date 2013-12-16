@@ -8,7 +8,7 @@
 		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
                 <tr>
-					<th>Action</th>
+					<th width="90px;">Action</th>
 					<th>Project No.</th>
 					<th>Project ID</th>
 					<th>Project Title</th>
@@ -17,7 +17,7 @@
 					<th>Planned Start Date</th>
 					<th>Planned End Date</th>					
 					<th>Project Completion</th>
-					<th>Project Status</th>
+					<th width="110px;">Project Status</th>
                 </tr>
             </thead>
             
@@ -30,10 +30,13 @@
 					?>
 							<tr>
 								<td class="actions" align="center">
-									<a href="project/view_project/<?php echo $record['lead_id'] ?>">View</a>
+									<a href="project/view_project/<?php echo $record['lead_id'] ?>">View &raquo;</a>
 									<?php
-									echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['lead_id'] . $list_location . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : ''; 
+										if($this->session->userdata('delete')==1) { 
+										$tle = str_replace("'", "\'", $record['lead_title']);
 									?>
+										| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
+									<?php } ?>
 								</td>
 								<td class="actions">
 									<div>

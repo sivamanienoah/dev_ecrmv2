@@ -108,16 +108,22 @@ function checkStatus_Loc(id) {
 				$('html, body').animate({ scrollTop: $('#dialog-err-loc').offset().top }, 500);
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete this Location?")
-				if (r==true) {
-					window.location.href = 'regionsettings/location_delete/delete/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete this Location?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}          
 	});
 return false;
+}
+
+function processDelete(id) {
+	window.location.href = 'regionsettings/location_delete/delete/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function timerfadeout() {

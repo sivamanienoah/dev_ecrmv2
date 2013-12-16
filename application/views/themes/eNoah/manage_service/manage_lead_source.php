@@ -56,6 +56,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_service/manage_lead_source.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');

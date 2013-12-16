@@ -75,16 +75,23 @@ function checkStatus(id) {
 				$('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete this Region?\n(It will Delete all the Countries, States & Locations)")
-				if (r==true) {
-					window.location.href = 'regionsettings/region_delete/delete/'+id;
-				} else {
-					return false;
-				}
+				// var r=confirm("Are You Sure Want to Delete this Region?\n(It will Delete all the Countries, States & Locations)");
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete this Region?<br />(It will Delete all the Countries, States & Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}          
 	});
 return false;
+}
+
+function processDelete(id) {
+	window.location.href = 'regionsettings/region_delete/delete/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function timerfadeout() {

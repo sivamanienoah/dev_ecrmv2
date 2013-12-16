@@ -1,21 +1,20 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
 <div id="content">
 	<div class="inner q-view">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-		<table><tr>
-		<td><h2><?php echo  $page_heading ?></h2></td>
-		<?php if($this->session->userdata('add')==1) { ?>
-		<td valign="middle";>
-			<div class="buttons">
-				<button type="button" class="positive" style="margin:0px 0px 10px 10px;" onclick="location.href='<?php echo base_url(); ?>item_mgmt/add'">
-					Add New Item
-				</button>
+		<div style="padding-bottom: 10px;">
+			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons pull-right">
+						<button type="button" class="positive" style="margin:0px 0px 10px 10px;" onclick="location.href='<?php echo base_url(); ?>item_mgmt/add'">
+							Add New Item
+						</button>
+					</div>
+				<?php } ?>
+			<div class="clearfix"></div>
 			</div>
-		</td>
-		<?php } ?>
-		</tr>
-		</table>
+		</div>
+		
 		<?php
 		echo '<div id="quote-tabs"><ul id="job-view-tabs">';
 		foreach ($categories as $cat) {
@@ -27,10 +26,9 @@
 		?>
 		<div id="cat_<?php echo $cat['cat_id'] ?>">
 			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
-				
 				<thead>
 					<tr>
-						<?php if($this->session->userdata('edit')==1){ ?><th>Action</th><?php } ?>
+						<th>Action</th>
 						<th width="80%">Item Description</th>
 						<th width="10%">Item Price</th>
 					</tr>
@@ -41,10 +39,11 @@
 						<?php foreach ($records as $record) { ?>
 						<tr>
 							<td class="actions">
-							<?php if($this->session->userdata('edit')==1){ ?>
-								<a href="item_mgmt/add/update/<?php echo  $record['itemid'] ?>/<?php echo  $table_in_use ?>">Edit &raquo; </a><?php } else { ?> Edit &raquo; <?php } ?> 
-							<?php if($this->session->userdata('delete')==1){ ?>	
-							  | <a class="delete" href="item_mgmt/item_delete/update/<?php echo $record['itemid'] ?>/<?php echo $table_in_use ?>" onclick="return confirm('Are you sure you want to delete?')"> Delete &raquo; </a> <?php } ?> 
+							<?php if($this->session->userdata('edit')==1) { ?>
+								<a href="item_mgmt/add/update/<?php echo  $record['itemid'] ?>/<?php echo $table_in_use ?>">Edit &raquo; </a><?php } else { ?> Edit &raquo; <?php } ?> 
+							<?php if($this->session->userdata('delete')==1) { ?>	
+							  | <a class="delete" href="javascript:void(0)" onclick="return deleteItemMgmt(<?php echo $record['itemid']; ?>); return false; "> Delete &raquo; </a> 
+							 <?php } ?> 
 							</td>
 							<td><?php echo nl2br($record['item_desc']) ?></td>
 							<td>$<?php echo $record['item_price'] ?></td>
@@ -56,18 +55,15 @@
 						</tr>
 					<?php } ?>
 				</tbody>
-				
 			</table>
 		</div>
 		<?php
 		}
 		echo '</div>';
-		
 		?>
-		
 	<?php } else {
-	echo "You have no rights to access this page";
-} ?>
+		echo "You have no rights to access this page";
+	} ?>
 	</div>
 </div>
 <script type="text/javascript">
@@ -84,5 +80,8 @@ $(function(){
 	};
 	$("#quote-tabs").tabs();
 });
+var tbl_in_use = '<?php echo $table_in_use ?>';
 </script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/item_mgmt/item_mgmt_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

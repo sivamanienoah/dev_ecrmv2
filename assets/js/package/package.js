@@ -24,12 +24,10 @@ function checkStatusPack(id) {
 				$('html, body').animate({ scrollTop: $("#dialog-msg").offset().top }, 1000);
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete?")
-				if (r==true) {
-				  window.location.href = 'package/delete_packagename/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}                                                                                       
 	});
@@ -39,5 +37,12 @@ return false;
 function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
-	
+
+function processDelete(id) {
+	window.location.href = 'package/delete_packagename/'+id;
+}
+
+function cancelDel() {
+	$.unblockUI();
+}
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

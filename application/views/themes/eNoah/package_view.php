@@ -36,8 +36,8 @@
 					<td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo  $account['type_id'] ?>"><?php echo $account['package_name'] ?></a><?php } else echo $account['package_name'] ?></td>
 					<td><?php echo  $account['type_months'] ?></td>
 					<td><?php if ($account['package_flag'] == 'active') echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
-					<td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo  $account['type_id'] ?>">Edit &raquo;</a> <?php } else { echo "Edit &raquo;"; } ?>
-					<?php if($this->session->userdata('delete')==1){ ?> | <!--<a href="package/delete/<?php echo $account['type_id'] ?>" onclick="return confirm('Are you sure you want to delete?')" >Delete</a>-->
+					<td><?php if($this->session->userdata('edit')==1) { ?><a href="package/update/<?php echo  $account['type_id'] ?>">Edit &raquo;</a> <?php } else { echo "Edit &raquo;"; } ?>
+					<?php if($this->session->userdata('delete')==1) { ?> |
 					<a class="delete" href="javascript:void(0)" onclick="return checkStatuspk(<?php echo $account['type_id']; ?>);"> Delete &raquo; </a>
 					<?php } ?>
 					</td>
@@ -52,5 +52,6 @@
 		}?>
 </div>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/package/package_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

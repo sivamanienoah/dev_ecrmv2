@@ -93,16 +93,22 @@ function checkStatus_Ste(id) {
 				$('html, body').animate({ scrollTop: $('#dialog-err-ste').offset().top }, 500);
 				setTimeout('timerfadeout()', 4000);
 			} else {
-				var r=confirm("Are You Sure Want to Delete this State?\n(It will delete all the Locations)")
-				if (r==true) {
-					window.location.href = 'regionsettings/state_delete/delete/'+id;
-				} else {
-					return false;
-				}
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete this State?<br />(It will delete all the Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
 			}
 		}          
 	});
 return false;
+}
+
+function processDelete(id) {
+	window.location.href = 'regionsettings/state_delete/delete/'+id;
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function timerfadeout() {

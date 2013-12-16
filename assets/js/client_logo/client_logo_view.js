@@ -73,18 +73,18 @@ function clientLogoAjaxFileUpload() {
 	return false;
 }
 
-function reset_logo_confirm()
-{
-	var r=confirm("Are You Sure Want to Reset the Logo?")
-	if (r==true) {
-		del_client_logo();
-	} else {
-		return false;
-	}
+function reset_logo_confirm() {
+	$.blockUI({
+		message:'<br /><h5>Are You Sure Want to Reset the Logo?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="del_client_logo(); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		css:{width:'440px'}
+	});
 }
 
-function del_client_logo()
-{
+function cancelDel() {
+    $.unblockUI();
+}
+
+function del_client_logo() {
 	$.ajax({
 		type: "GET",
 		url: site_base_url+'client_logo/del_client_logo/',
@@ -98,10 +98,11 @@ function del_client_logo()
 				$('#files').empty();
 				$('#files').html('<span class="ajx_failure_msg">Logo Deleted.</span>');
 			}
+			$.unblockUI();
 		}                                                                                       
 	});
+	
 	return false;
 }
-
 
 /////////////////

@@ -38,8 +38,13 @@
 				<?php } ?> 
 				<?php
 				if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
-				echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
-				} ?>
+				// echo (($this->session->userdata('deletelead')==1)) ? ' | <a href="welcome/delete_quote/' . $filter_result['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $filter_result['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this lead.\');">Delete</a>' : ' | Delete';
+					$lead_tle = str_replace("'", "\'", $filter_result['lead_title']);
+				?>
+					| <a class="delete" href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>, '<?php echo $lead_tle; ?>'); return false; "> Delete </a> 
+				<?php 				
+				} 
+				?>
 				</td>
 				<td>		
 				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>">		
@@ -95,4 +100,5 @@
 </tbody>
 </table>
 </div>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>

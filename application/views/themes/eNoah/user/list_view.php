@@ -60,13 +60,13 @@
                     <?php } ?>
                 <?php } ?>
             </tbody>
-            
         </table>
         <?php } else {
-	echo "You have no rights to access this page";
-	} ?>
+			echo "You have no rights to access this page";
+		} ?>
 	</div>
 </div>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/user/list_view.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>

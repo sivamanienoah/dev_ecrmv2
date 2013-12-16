@@ -51,10 +51,15 @@ $userdata = $this->session->userdata('logged_in_user');
 		<?php } ?>
 		</tbody>
 	</table>
-	<?php } else { echo "You have no rights to access this page"; } ?>
+	<?php 
+	} else { 
+		echo "You have no rights to access this page"; 
+	} 
+	?>
 	</div><!--Inner div-close here -->
 </div><!--Content div-close here -->
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_service/manage_service_view.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
