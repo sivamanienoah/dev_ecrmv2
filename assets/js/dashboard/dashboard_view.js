@@ -37,16 +37,19 @@ function funnel_gh(dashboard_s1)
 		});
 		$('#funnel1').bind('jqplotDataClick',function (ev, seriesIndex, pointIndex, data) {
 			if (filter_toggle_stat=='toggle') {
-				var stge 	 = filter_stgs;
-				var cust_id  = filter_custs_id;
-				var ownr_id  = filter_owr_id;
-				var assg_id  = filter_assg_id;
-				var reg_id	 = filter_reg_nme;
-				var cntry_id = filter_country;
-				var stet_id	 = filter_state;
-				var locn_id	 = filter_location;
+				var stge	 	 = filter_stgs;
+				var cust_id	 	 = filter_custs_id;
+				var ownr_id		 = filter_owr_id;
+				var assg_id	 	 = filter_assg_id;
+				var reg_id		 = filter_reg_nme;
+				var cntry_id 	 = filter_country;
+				var stet_id		 = filter_state;
+				var locn_id		 = filter_location;
+				var servic_req	 = filter_servic_req;
+				var lead_sour	 = filter_lead_sour;
+				var lead_indic	 = filter_lead_indic;
 			}
-			var formdata              = { 'data':data, 'type':'funnel', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+			var formdata              = { 'data':data, 'type':'funnel', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 			formdata[csrf_token_name] = csrf_hash_token;
 			$.ajax({
 				type: "POST",
@@ -167,16 +170,19 @@ $(document).ready(function(){
 
 		$('#pie1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 			if (filter_toggle_stat=='toggle') {
-				var stge 	 = filter_stgs;
-				var cust_id  = filter_custs_id;
-				var ownr_id  = filter_owr_id;
-				var assg_id  = filter_assg_id;
-				var reg_id	 = filter_reg_nme;
-				var cntry_id = filter_country;
-				var stet_id	 = filter_state;
-				var locn_id	 = filter_location;
+				var stge 	     = filter_stgs;
+				var cust_id      = filter_custs_id;
+				var ownr_id      = filter_owr_id;
+				var assg_id      = filter_assg_id;
+				var reg_id	     = filter_reg_nme;
+				var cntry_id     = filter_country;
+				var stet_id	     = filter_state;
+				var locn_id	 	 = filter_location;
+				var servic_req	 = filter_servic_req;
+				var lead_sour	 = filter_lead_sour;
+				var lead_indic	 = filter_lead_indic;
 			}
-			var formdata              = { 'data':data, 'type':'pie1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+			var formdata              = { 'data':data, 'type':'pie1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 			formdata[csrf_token_name]      = csrf_hash_token; 
 			$.ajax({
 				type: "POST",
@@ -339,16 +345,19 @@ $(document).ready(function(){
 
 				$('#bar1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 					if (filter_toggle_stat=='toggle') {
-						var stge 	 = filter_stgs;
-						var cust_id  = filter_custs_id;
-						var ownr_id  = filter_owr_id;
-						var assg_id  = filter_assg_id;
-						var reg_id	 = filter_reg_nme;
-						var cntry_id = filter_country;
-						var stet_id	 = filter_state;
-						var locn_id	 = filter_location;
+						var stge 	     = filter_stgs;
+						var cust_id      = filter_custs_id;
+						var ownr_id      = filter_owr_id;
+						var assg_id      = filter_assg_id;
+						var reg_id	     = filter_reg_nme;
+						var cntry_id     = filter_country;
+						var stet_id	     = filter_state;
+						var locn_id	 	 = filter_location;
+						var servic_req	 = filter_servic_req;
+						var lead_sour	 = filter_lead_sour;
+						var lead_indic	 = filter_lead_indic;
 					}
-					var formdata              = { 'gid':pointIndex, 'type':'bar1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+					var formdata              = { 'gid':pointIndex, 'type':'bar1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 					formdata[csrf_token_name] = csrf_hash_token;
 					
 					$.ajax({
@@ -507,17 +516,20 @@ $(document).ready(function(){
 		$('#line1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 			//alert(pointIndex);
 			if (filter_toggle_stat=='toggle') {
-				var stge 	 = filter_stgs;
-				var cust_id  = filter_custs_id;
-				var ownr_id  = filter_owr_id;
-				var assg_id  = filter_assg_id;
-				var reg_id	 = filter_reg_nme;
-				var cntry_id = filter_country;
-				var stet_id	 = filter_state;
-				var locn_id	 = filter_location;
+				var stge 	     = filter_stgs;
+				var cust_id      = filter_custs_id;
+				var ownr_id      = filter_owr_id;
+				var assg_id      = filter_assg_id;
+				var reg_id	     = filter_reg_nme;
+				var cntry_id     = filter_country;
+				var stet_id	     = filter_state;
+				var locn_id	 	 = filter_location;
+				var servic_req	 = filter_servic_req;
+				var lead_sour	 = filter_lead_sour;
+				var lead_indic	 = filter_lead_indic;
 			}
-			var formdata              = { 'gid':pointIndex, 'type':'line1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
-			formdata[csrf_token_name]      = csrf_hash_token; 
+			var formdata              = { 'gid':pointIndex, 'type':'line1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+			formdata[csrf_token_name] = csrf_hash_token; 
 
 			$.ajax({
 				type: "POST",
@@ -659,16 +671,19 @@ $(document).ready(function(){
 		$('#line2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 			
 			if (filter_toggle_stat=='toggle') {
-				var stge 	 = filter_stgs;
-				var cust_id  = filter_custs_id;
-				var ownr_id  = filter_owr_id;
-				var assg_id  = filter_assg_id;
-				var reg_id	 = filter_reg_nme;
-				var cntry_id = filter_country;
-				var stet_id	 = filter_state;
-				var locn_id	 = filter_location;
+				var stge 	     = filter_stgs;
+				var cust_id      = filter_custs_id;
+				var ownr_id      = filter_owr_id;
+				var assg_id      = filter_assg_id;
+				var reg_id	     = filter_reg_nme;
+				var cntry_id     = filter_country;
+				var stet_id	     = filter_state;
+				var locn_id	 	 = filter_location;
+				var servic_req	 = filter_servic_req;
+				var lead_sour	 = filter_lead_sour;
+				var lead_indic	 = filter_lead_indic;
 			}
-			var formdata              = { 'gid':pointIndex, 'type':'line2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+			var formdata              = { 'gid':pointIndex, 'type':'line2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 			formdata[csrf_token_name]      = csrf_hash_token; 
 
 			$.ajax({
@@ -745,16 +760,19 @@ $(document).ready(function(){
 
 function getLeadDashboardTable(userid, user_name) {
 	if (filter_toggle_stat=='toggle') {
-		var stge 	 = filter_stgs;
-		var cust_id  = filter_custs_id;
-		var ownr_id  = filter_owr_id;
-		var assg_id  = filter_assg_id;
-		var reg_id	 = filter_reg_nme;
-		var cntry_id = filter_country;
-		var stet_id	 = filter_state;
-		var locn_id	 = filter_location;
+		var stge 	     = filter_stgs;
+		var cust_id      = filter_custs_id;
+		var ownr_id      = filter_owr_id;
+		var assg_id      = filter_assg_id;
+		var reg_id	     = filter_reg_nme;
+		var cntry_id     = filter_country;
+		var stet_id	     = filter_state;
+		var locn_id	 	 = filter_location;
+		var servic_req	 = filter_servic_req;
+		var lead_sour	 = filter_lead_sour;
+		var lead_indic	 = filter_lead_indic;
 	}
-	var formdata              = { 'userid':userid, 'user_name':'user_name', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+	var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 	formdata[csrf_token_name]      = csrf_hash_token; 
 	$.ajax({
 		type: "POST",
@@ -798,16 +816,19 @@ function getLeadDashboardTable(userid, user_name) {
 
 function getLeadAssigneeTable(userid,user_name) {
 	if (filter_toggle_stat=='toggle') {
-		var stge 	 = filter_stgs;
-		var cust_id  = filter_custs_id;
-		var ownr_id  = filter_owr_id;
-		var assg_id  = filter_assg_id;
-		var reg_id	 = filter_reg_nme;
-		var cntry_id = filter_country;
-		var stet_id	 = filter_state;
-		var locn_id	 = filter_location;
+		var stge 	     = filter_stgs;
+		var cust_id      = filter_custs_id;
+		var ownr_id      = filter_owr_id;
+		var assg_id      = filter_assg_id;
+		var reg_id	     = filter_reg_nme;
+		var cntry_id     = filter_country;
+		var stet_id	     = filter_state;
+		var locn_id	 	 = filter_location;
+		var servic_req	 = filter_servic_req;
+		var lead_sour	 = filter_lead_sour;
+		var lead_indic	 = filter_lead_indic;
 	}
-	var formdata              = { 'userid':userid, 'user_name':'user_name', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+	var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 	formdata[csrf_token_name] = csrf_hash_token; 
 	$.ajax({
 		type: "POST",
@@ -1087,17 +1108,20 @@ $(document).ready(function(){
 			seriesColors: ["#eaa228", "#ff5800", "#c5b47f", "#8bbc21", "#579575", "#1aadce", "#839557", "#910000", "#027997", "#953579", "#422460", "#4b5de4", "#48596a", "#4bb2c5", "#0d233a", "#f0eded", "#492970", "#cc99cc", "#bfdde5", "#66ffcc", "#c747a3", "#ff99ff", "#ffff00", "#cc0000", "#a35b2e"]
 		});
 		$('#pie2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-			if (filter_toggle_stat=='toggle') {
-				var stge 	 = filter_stgs;
-				var cust_id  = filter_custs_id;
-				var ownr_id  = filter_owr_id;
-				var assg_id  = filter_assg_id;
-				var reg_id	 = filter_reg_nme;
-				var cntry_id = filter_country;
-				var stet_id	 = filter_state;
-				var locn_id	 = filter_location;
+			if (filter_toggle_stat=='toggle') {			
+				var stge 	     = filter_stgs;
+				var cust_id      = filter_custs_id;
+				var ownr_id      = filter_owr_id;
+				var assg_id      = filter_assg_id;
+				var reg_id	     = filter_reg_nme;
+				var cntry_id     = filter_country;
+				var stet_id	     = filter_state;
+				var locn_id	 	 = filter_location;
+				var servic_req	 = filter_servic_req;
+				var lead_sour	 = filter_lead_sour;
+				var lead_indic	 = filter_lead_indic;
 			}
-			var formdata              = { 'data':data, 'type':'pie2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+			var formdata              = { 'data':data, 'type':'pie2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 			formdata[csrf_token_name]      = csrf_hash_token; 
 			$.ajax({
 				type: "POST",
@@ -1203,16 +1227,19 @@ $(document).ready(function(){
     });
 	$('#pie3').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 		if (filter_toggle_stat=='toggle') {
-			var stge 	 = filter_stgs;
-			var cust_id  = filter_custs_id;
-			var ownr_id  = filter_owr_id;
-			var assg_id  = filter_assg_id;
-			var reg_id	 = filter_reg_nme;
-			var cntry_id = filter_country;
-			var stet_id	 = filter_state;
-			var locn_id	 = filter_location;
+			var stge 	     = filter_stgs;
+			var cust_id      = filter_custs_id;
+			var ownr_id      = filter_owr_id;
+			var assg_id      = filter_assg_id;
+			var reg_id	     = filter_reg_nme;
+			var cntry_id     = filter_country;
+			var stet_id	     = filter_state;
+			var locn_id	 	 = filter_location;
+			var servic_req	 = filter_servic_req;
+			var lead_sour	 = filter_lead_sour;
+			var lead_indic	 = filter_lead_indic;
 		}
-		var formdata              = { 'data':data, 'type':'pie3', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id }
+		var formdata              = { 'data':data, 'type':'pie3', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 		formdata[csrf_token_name] = csrf_hash_token; 
 
 		$.ajax({

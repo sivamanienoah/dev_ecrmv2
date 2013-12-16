@@ -121,7 +121,7 @@ switch ($userdata['level'])
 									</select> 
 								</td>
 								<td colspan=2>
-									<select  style="width:150px;" multiple="multiple" id="ser_requ" name="ser_requ[]">
+									<select  style="width:150px;" multiple="multiple" id="ser_requ" name="ser_requ[]" class="advfilter">
 										<?php if (count($serv_requ)>0) { ?>
 											<?php foreach ($serv_requ as $serv) { ?>
 												<option value="<?php echo $serv['sid'] ?>"<?php echo in_array($serv['sid'], $filter['ser_requ']) ? 'selected="selected"' : '' ?>><?php echo $serv['services'] ?></option>
@@ -140,7 +140,7 @@ switch ($userdata['level'])
 							</tr>
 							<tr>
 								<td>
-									<select  style="width:228px;" multiple="multiple" id="lead_src" name="lead_src[]">
+									<select  style="width:228px;" multiple="multiple" id="lead_src" name="lead_src[]" class="advfilter">
 										<?php if (count($lead_sourc)>0) { ?>
 											<?php foreach ($lead_sourc as $srcs) { ?>
 												<option value="<?php echo $srcs['lead_source_id'] ?>"<?php echo in_array($srcs['lead_source_id'], $filter['lead_src']) ? 'selected="selected"' : '' ?>><?php echo $srcs['lead_source_name'] ?></option>
@@ -171,7 +171,7 @@ switch ($userdata['level'])
 									</select> 
 								</td>
 								<td>
-									<select style="width:75px;" multiple ="multiple" id="lead_indi" name="lead_indi[]">
+									<select style="width:75px;" multiple ="multiple" id="lead_indi" name="lead_indi[]" class="advfilter">
 										<option value="HOT"<?php echo in_array('HOT', $filter['lead_indi']) ? 'selected' : '' ?>>Hot</option>
 										<option value="WARM"<?php echo in_array('WARM', $filter['lead_indi']) ? 'selected' : '' ?>>Warm</option>
 										<option value="COLD"<?php echo in_array('COLD', $filter['lead_indi']) ? 'selected' : '' ?>>Cold</option>
@@ -658,27 +658,36 @@ $s8 = implode(',', $Ser_Req);
 	$ste_name = implode(",",$filter['statename']);
 	if (!empty($filter['locname']))
 	$loc_name = implode(",",$filter['locname']);
+	if (!empty($filter['ser_requ']))
+	$servic_req = implode(",",$filter['ser_requ']);
+	if (!empty($filter['lead_src']))
+	$lead_sour = implode(",",$filter['lead_src']);
+	if (!empty($filter['lead_indi']))
+	$lead_indic = implode(",",$filter['lead_indi']);
 ?>
 
 <script class="code" type="text/javascript">
-	dashboard_s1       = [<?php echo $s1; ?>];
-	dashboard_s2       = [<?php echo @rtrim($s2, ','); ?>];
-	dashboard_s3       = [<?php echo $s3; ?>];
-	dashboard_s4       = [<?php echo @rtrim($s4, ','); ?>];
-	dashboard_s7       = [<?php echo @rtrim($s7, ','); ?>];
-	dashboard_s8       = [<?php echo @rtrim($s8, ','); ?>];
+	dashboard_s1	   = [<?php echo $s1; ?>];
+	dashboard_s2	   = [<?php echo @rtrim($s2, ','); ?>];
+	dashboard_s3	   = [<?php echo $s3; ?>];
+	dashboard_s4	   = [<?php echo @rtrim($s4, ','); ?>];
+	dashboard_s7 	   = [<?php echo @rtrim($s7, ','); ?>];
+	dashboard_s8 	   = [<?php echo @rtrim($s8, ','); ?>];
 	dashboard_s3_name  = [<?php echo $s3_name; ?>];
 	dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
 	dashboard_userid   = "<?php echo $userdata['userid']; ?>";
 	filter_toggle_stat = "<?php echo $toggle_stat ?>";
-	filter_stgs 	   = "<?php echo $stgs ?>";
+	filter_stgs		   = "<?php echo $stgs ?>";
 	filter_custs_id	   = "<?php echo $custs_id ?>";
-	filter_owr_id 	   = "<?php echo $owr_id ?>";
+	filter_owr_id	   = "<?php echo $owr_id ?>";
 	filter_assg_id     = "<?php echo $assg_id ?>";
 	filter_reg_nme     = "<?php echo $reg_nme ?>";
-	filter_country	   = "<?php echo $county_name ?>";
-	filter_state	   = "<?php echo $ste_name ?>";
-	filter_location	   = "<?php echo $loc_name ?>";
+	filter_country 	   = "<?php echo $county_name ?>";
+	filter_state       = "<?php echo $ste_name ?>";
+	filter_location    = "<?php echo $loc_name ?>";
+	filter_servic_req  = "<?php echo $servic_req ?>";
+	filter_lead_sour   = "<?php echo $lead_sour ?>";
+	filter_lead_indic  = "<?php echo $lead_indic ?>";
 </script>
 <script type="text/javascript" src="assets/js/dashboard/dashboard_view.js"></script>
 <?php

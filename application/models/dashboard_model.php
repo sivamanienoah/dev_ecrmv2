@@ -322,6 +322,18 @@ class Dashboard_model extends crm_model {
 			$locname = implode("','", $filter['locname']);
 			$condn  .= " AND add1_location IN ('".$locname."')";
 		}
+		if (!empty($filter['ser_requ'])) {
+			$ser = implode("','", $filter['ser_requ']);
+			$condn  .= " AND lead_service IN ('".$ser."')";
+		}
+		if (!empty($filter['lead_src'])) {
+			$sorc = implode("','", $filter['lead_src']);
+			$condn  .= " AND lead_source IN ('".$sorc."')";
+		}
+		if (!empty($filter['lead_indi'])) {
+			$indic = implode("','", $filter['lead_indi']);
+			$condn  .= " AND lead_indicator IN ('".$indic."')";
+		}
 		$indicator_query = $this->db->query("SELECT COUNT(
 			CASE WHEN lead_indicator = 'HOT'
 			THEN lead_indicator
@@ -380,6 +392,15 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
 		$this->db->where('jb.lead_indicator', $indi);
 		$this->db->order_by('jb.lead_id', 'desc');
@@ -568,6 +589,18 @@ class Dashboard_model extends crm_model {
 			$locname = implode("','", $filter['locname']);
 			$condn  .= " AND add1_location IN ('".$locname."')";
 		}
+		if (!empty($filter['ser_requ'])) {
+			$ser = implode("','", $filter['ser_requ']);
+			$condn  .= " AND lead_service IN ('".$ser."')";
+		}
+		if (!empty($filter['lead_src'])) {
+			$sorc = implode("','", $filter['lead_src']);
+			$condn  .= " AND lead_source IN ('".$sorc."')";
+		}
+		if (!empty($filter['lead_indi'])) {
+			$indic = implode("','", $filter['lead_indi']);
+			$condn  .= " AND lead_indicator IN ('".$indic."')";
+		}
 		$stg = $this->stages;
 		$age_query = $this->db->query("SELECT 
 		COUNT(CASE WHEN DATE(date_created) BETWEEN '".$thirtyDays."' AND '".$todayDate."' THEN DATE(date_created) END) as '0-30 Days',
@@ -691,6 +724,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
 		
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
@@ -740,6 +782,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		//echo $this->db->last_query(); exit;
@@ -786,6 +837,15 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
@@ -834,9 +894,18 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		// echo $this->db->last_query();
 		$ld_query =  $query->result_array();
 		return $ld_query;
 	}
@@ -899,6 +968,15 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
@@ -1061,7 +1139,6 @@ class Dashboard_model extends crm_model {
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('lead_id', 'desc');
 		$query = $this->db->get();
-		// echo $this->db->last_query();
 		$cls_query =  $query->result_array();
 		return $cls_query;
 	}
@@ -1105,6 +1182,15 @@ class Dashboard_model extends crm_model {
 			}
 			if (!empty($fresult['flocn_id'])) {
 				$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+			}
+			if (!empty($fresult['fser_req_id'])) {
+				$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+			}
+			if (!empty($fresult['flead_src_id'])) {
+				$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+			}
+			if (!empty($fresult['flead_indic_id'])) {
+				$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 			}
 			$this->db->order_by('jb.lead_id', 'desc');
 			$query = $this->db->get();
@@ -1259,6 +1345,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		$ldsr_query =  $query->result_array();
@@ -1307,6 +1402,15 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
 		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
@@ -1332,8 +1436,14 @@ class Dashboard_model extends crm_model {
 			$fres['fcntry_id']	= explode(',',$filters['cntry_id']);
 		if ($filters['stet_id'] !='')
 			$fres['fstet_id'] 	= explode(',',$filters['stet_id']);
-		if ($filters['locn_id'] !='') {
+		if ($filters['locn_id'] !='')
 			$fres['flocn_id'] 	= explode(',',$filters['locn_id']);
+		if ($filters['servic_req'] !='')
+			$fres['fser_req_id'] 	= explode(',',$filters['servic_req']);
+		if ($filters['lead_sour'] !='')
+			$fres['flead_src_id'] 	= explode(',',$filters['lead_sour']);
+		if ($filters['lead_indic'] !='') {
+			$fres['flead_indic_id'] 	= explode(',',$filters['lead_indic']);
 		}
 		return $fres;
 	}

@@ -201,25 +201,28 @@ class Dashboard extends crm_controller {
 	
 	public function showLeadsDetails() 
 	{
-		$res  				 = real_escape_array($this->input->post());
-		$filters			 = array();
-		$filters['stge'] 	 = $res['stge'];
-		$filters['cust_id']  = $res['cust_id'];
-		$filters['ownr_id']  = $res['ownr_id'];
-		$filters['assg_id']  = $res['assg_id'];
-		$filters['reg_id'] 	 = $res['reg_id'];
-		$filters['cntry_id'] = $res['cntry_id'];
-		$filters['stet_id']  = $res['stet_id'];
-		$filters['locn_id']  = $res['locn_id'];
+		$res  				   = real_escape_array($this->input->post());
+		$filters			   = array();
+		$filters['stge'] 	   = $res['stge'];
+		$filters['cust_id']    = $res['cust_id'];
+		$filters['ownr_id']    = $res['ownr_id'];
+		$filters['assg_id']    = $res['assg_id'];
+		$filters['reg_id']     = $res['reg_id'];
+		$filters['cntry_id']   = $res['cntry_id'];
+		$filters['stet_id']	   = $res['stet_id'];
+		$filters['locn_id']    = $res['locn_id'];
+		$filters['servic_req'] = $res['servic_req'];
+		$filters['lead_sour']  = $res['lead_sour'];
+		$filters['lead_indic'] = $res['lead_indic'];
 		
-		$type 		= $res['type']; 
-		$data 		= $res['data'];
+		$type 				   = $res['type']; 
+		$data 				   = $res['data'];
 
 		$cusId 		= $this->level_restriction();
 		$res 		= array();
 		$rates 		= $this->get_currency_rates();
 		$lead_stage = explode("(",$data[0]); 
-		// echo $type . " " . $lead_stage[0];exit;
+		// echo $type . " " . $lead_stage[0]; exit;
 		switch($type) 
 		{
 			case "funnel":
@@ -292,18 +295,23 @@ class Dashboard extends crm_controller {
 	/* Get lead_id, lead title, region, lead owner, lead assigned to, customer, */
 	public function getLeadDependency()
 	{
-		$res  				 = real_escape_array($this->input->post());
-		$filters			 = array();
-		$filters['stge'] 	 = $res['stge'];
-		$filters['cust_id']  = $res['cust_id'];
-		$filters['ownr_id']  = $res['ownr_id'];
-		$filters['assg_id']  = $res['assg_id'];
-		$filters['reg_id'] 	 = $res['reg_id'];
-		$filters['cntry_id'] = $res['cntry_id'];
-		$filters['stet_id']  = $res['stet_id'];
-		$filters['locn_id']  = $res['locn_id'];
-		$userid 			 = $res['userid']; 
-		$username 			 = $res['username'];
+		
+		$res  				   = real_escape_array($this->input->post());
+		$filters			   = array();
+		$filters['stge'] 	   = $res['stge'];
+		$filters['cust_id']    = $res['cust_id'];
+		$filters['ownr_id']    = $res['ownr_id'];
+		$filters['assg_id']    = $res['assg_id'];
+		$filters['reg_id']     = $res['reg_id'];
+		$filters['cntry_id']   = $res['cntry_id'];
+		$filters['stet_id']	   = $res['stet_id'];
+		$filters['locn_id']    = $res['locn_id'];
+		$filters['servic_req'] = $res['servic_req'];
+		$filters['lead_sour']  = $res['lead_sour'];
+		$filters['lead_indic'] = $res['lead_indic'];
+
+		$userid 			   = $res['userid']; 
+		$username 			   = $res['user_name'];
 		
 		$cusId 							= $this->level_restriction();
 		$data['getLeadOwnerDependence'] = $this->dashboard_model->getLeadOwnerDependencies($userid, $cusId, $filters);
@@ -380,20 +388,24 @@ class Dashboard extends crm_controller {
 		echo $lead_table_output;	
 	}
 	
-	public function getLeadAssigneeDependency($userid,$username) 
+	public function getLeadAssigneeDependency()
 	{
-		$res  				 = real_escape_array($this->input->post());
-		$filters			 = array();
-		$filters['stge'] 	 = $res['stge'];
-		$filters['cust_id']  = $res['cust_id'];
-		$filters['ownr_id']  = $res['ownr_id'];
-		$filters['assg_id']  = $res['assg_id'];
-		$filters['reg_id'] 	 = $res['reg_id'];
-		$filters['cntry_id'] = $res['cntry_id'];
-		$filters['stet_id']  = $res['stet_id'];
-		$filters['locn_id']  = $res['locn_id'];
-		$userid 			 = $res['userid']; 
-		$username 			 = $res['username'];
+		$res  				   = real_escape_array($this->input->post());
+		$filters			   = array();
+		$filters['stge'] 	   = $res['stge'];
+		$filters['cust_id']    = $res['cust_id'];
+		$filters['ownr_id']    = $res['ownr_id'];
+		$filters['assg_id']    = $res['assg_id'];
+		$filters['reg_id']     = $res['reg_id'];
+		$filters['cntry_id']   = $res['cntry_id'];
+		$filters['stet_id']	   = $res['stet_id'];
+		$filters['locn_id']    = $res['locn_id'];
+		$filters['servic_req'] = $res['servic_req'];
+		$filters['lead_sour']  = $res['lead_sour'];
+		$filters['lead_indic'] = $res['lead_indic'];
+		
+		$userid 			   = $res['userid']; 
+		$username 			   = $res['user_name'];
 	
 		$cusId = $this->level_restriction();
 		$data['getLeadOwnerDependence'] = $this->dashboard_model->getLeadAssigneeDependencies($userid, $cusId, $filters);
@@ -735,15 +747,18 @@ class Dashboard extends crm_controller {
 	{
 		$resu = real_escape_array($this->input->post());
 		
-		$filters			 = array();
-		$filters['stge'] 	 = $resu['stge'];
-		$filters['cust_id']  = $resu['cust_id'];
-		$filters['ownr_id']  = $resu['ownr_id'];
-		$filters['assg_id']  = $resu['assg_id'];
-		$filters['reg_id'] 	 = $resu['reg_id'];
-		$filters['cntry_id'] = $resu['cntry_id'];
-		$filters['stet_id']  = $resu['stet_id'];
-		$filters['locn_id']  = $resu['locn_id'];
+		$filters			   = array();	
+		$filters['stge'] 	   = $resu['stge'];
+		$filters['cust_id']    = $resu['cust_id'];
+		$filters['ownr_id']    = $resu['ownr_id'];
+		$filters['assg_id']    = $resu['assg_id'];
+		$filters['reg_id']     = $resu['reg_id'];
+		$filters['cntry_id']   = $resu['cntry_id'];
+		$filters['stet_id']	   = $resu['stet_id'];
+		$filters['locn_id']    = $resu['locn_id'];
+		$filters['servic_req'] = $resu['servic_req'];
+		$filters['lead_sour']  = $resu['lead_sour'];
+		$filters['lead_indic'] = $resu['lead_indic'];
 
 		$gid  = $resu['gid'];
 	    $type = $resu['type'];
@@ -817,15 +832,18 @@ class Dashboard extends crm_controller {
 	{
 		$resu = real_escape_array($this->input->post());
 		
-		$filters			 = array();
-		$filters['stge'] 	 = $resu['stge'];
-		$filters['cust_id']  = $resu['cust_id'];
-		$filters['ownr_id']  = $resu['ownr_id'];
-		$filters['assg_id']  = $resu['assg_id'];
-		$filters['reg_id'] 	 = $resu['reg_id'];
-		$filters['cntry_id'] = $resu['cntry_id'];
-		$filters['stet_id']  = $resu['stet_id'];
-		$filters['locn_id']  = $resu['locn_id'];
+		$filters			   = array();
+		$filters['stge'] 	   = $resu['stge'];
+		$filters['cust_id']    = $resu['cust_id'];
+		$filters['ownr_id']    = $resu['ownr_id'];
+		$filters['assg_id']    = $resu['assg_id'];
+		$filters['reg_id']     = $resu['reg_id'];
+		$filters['cntry_id']   = $resu['cntry_id'];
+		$filters['stet_id']	   = $resu['stet_id'];
+		$filters['locn_id']    = $resu['locn_id'];
+		$filters['servic_req'] = $resu['servic_req'];
+		$filters['lead_sour']  = $resu['lead_sour'];
+		$filters['lead_indic'] = $resu['lead_indic'];
 		
 		$gid   = $resu['gid'];
 	    $type  = $resu['type'];
@@ -990,7 +1008,7 @@ class Dashboard extends crm_controller {
 	}
 	
 	//for getClosedJobLeadDetail
-	public function getClosedJobLeadDetail($mid, $filters=false) 
+	public function getClosedJobLeadDetail($mid, $filters=false)
 	{
 		$cusId 	= $this->level_restriction();
 		$months = array('04','05','06','07','08','09','10','11','12','01','02','03');
