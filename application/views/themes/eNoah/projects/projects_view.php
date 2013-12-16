@@ -116,42 +116,39 @@
 					?>
                     <tr>
 						<td class="actions" align="center">
-							<a href="project/view_project/<?php echo  $record['lead_id'] ?>">
+							<a href="project/view_project/<?php echo $record['lead_id'] ?>">
 								View
 							</a>
 							<?php
 								echo ($this->session->userdata('deletePjt') == 1) ? ' | <a href="project/delete_quote/' . $record['lead_id'] . '" onclick="return window.confirm(\'Are you sure you want to delete\n' . str_replace("'", "\'", $record['lead_title']) . '?\n\nThis will delete all the items\nand logs attached to this job.\');">Delete</a>' : '';
 							?>
 						</td>
-						
                         <td class="actions">
 							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo  $record['invoice_no'] ?></a> &nbsp;
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo  $record['invoice_no'] ?></a>
 							</div>
 						</td>
-						
 						<td class="actions">
 							<?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?>
 						</td>
-						
                         <td class="actions">
-							<?php echo character_limiter($record['lead_title'], 35) ?>
+							<?php echo character_limiter($record['lead_title'], 35); ?>
 						</td>
-						
                         <td class="cust-data">
 							<span style="color:none"><?php echo $record['cfname'] . ' ' . $record['clname'] ?></span> - <?php echo $record['company'] ?>
 						</td>
-						
 						<td class="cust-data">
 							<?php echo $record['fnm'] . ' ' . $record['lnm']; ?>
 						</td>
-			
-						<td><?php if ($record['date_start'] == "") { echo "-"; } else { echo  date('d-m-Y', strtotime($record['date_start'])); } ?></td>
-						
-						<td><?php if ($record['date_due'] == "") echo "-"; else echo  date('d-m-Y', strtotime($record['date_due'])) ?></td>
-						
-						<td class="actions" align="center"><?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?></td>
-						
+						<td>
+							<?php if ($record['date_start'] == "") { echo "-"; } else { echo  date('d-m-Y', strtotime($record['date_start'])); } ?>
+						</td>
+						<td>
+							<?php if ($record['date_due'] == "") echo "-"; else echo  date('d-m-Y', strtotime($record['date_due'])) ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
+						</td>
 						<td class="actions" align="center">
 							<?php
 							switch ($record['pjt_status'])
