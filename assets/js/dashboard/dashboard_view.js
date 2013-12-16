@@ -974,93 +974,93 @@ $('#current-lead-report').change(function() {
 /* dashboard excel report starts here */
 /* Lead Owner report */
 $('#lead-dependency-list').delegate('#lead-ownner-export','click',function(){
-        var user_id = $('#lead-dependency-table').attr('name'); 
-		var user_name = $('#lead-owner-username').val(); 
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+user_id+'/'+user_name+'/leadowner';
-		document.location.href = sturl;
-		return false;
+	var user_id = $('#lead-dependency-table').attr('name'); 
+	var user_name = $('#lead-owner-username').val(); 
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+user_id+'/'+user_name+'/leadowner';
+	document.location.href = sturl;
+	return false;
 });
 /*lead assignee report */
 $('#lead-dependency-list').delegate('#lead-assignee-export','click',function(){
-        var user_id = $('#lead-assignee-table').attr('name'); 
-		var user_name = $('#lead-assignee-username').val();  
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+user_id+'/'+user_name+'/assignee';
-		document.location.href = sturl;
-		return false;
+	var user_id = $('#lead-assignee-table').attr('name');
+	var user_name = $('#lead-assignee-username').val();  
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+user_id+'/'+user_name+'/assignee';
+	document.location.href = sturl;
+	return false;
 });
 
 /*current pipeline report */
 $('#charts_info').delegate('#current-pipeline-export','click',function(){
-	    var lead_stage_name = $("#current-pipeline-export").attr('name'); //alert(lead_stage_name);
-		var type = $("#lead-type-name").val();  
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+lead_stage_name+"/"+type;
-		document.location.href = sturl;
-		return false;
+	var lead_stage_name = $("#current-pipeline-export").attr('name'); //alert(lead_stage_name);
+	var type = $("#lead-type-name").val();  
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+lead_stage_name+"/"+type;
+	document.location.href = sturl;
+	return false;
 });
 /*lead by region report*/
 $('#charts_info').delegate('#leads-by-region-export','click',function(){
-	    var lead_region_name = $("#leads-by-region-export").attr('name'); 
-		var type = $("#lead-by-region").val(); // alert(lead_stage_name + " " + type);
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"leadsregion/"+lead_region_name+"/"+type;
-		document.location.href = sturl;
-		return false;
+	var lead_region_name = $("#leads-by-region-export").attr('name'); 
+	var type = $("#lead-by-region").val(); // alert(lead_stage_name + " " + type);
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"leadsregion/"+lead_region_name+"/"+type;
+	document.location.href = sturl;
+	return false;
 });
 /*lead current activity report */
 $('#leads-current-activity-list').delegate('#lead-current-activity-export','click',function(){
-		var lead_no = $("#lead-no").val(); 
-		var lead_name = $("#lead-no").attr('name');
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_name+"/"+lead_no+"/currentactivity";
-		document.location.href = sturl;
-		return false;
+	var lead_no = $("#lead-no").val(); 
+	var lead_name = $("#lead-no").attr('name');
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_name+"/"+lead_no+"/currentactivity";
+	document.location.href = sturl;
+	return false;
 });
 
 /*lead aging report */
 $('#charts_info2').delegate('#lead-aging-report','click',function(){
-	    var lead_aging = $("#lead-aging-report").attr('name');
-		var type = $("#lead-aging-type").val();   
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_aging+"/"+type+"/leadsaging";
-		document.location.href = sturl;
-		return false;
+	var lead_aging = $("#lead-aging-report").attr('name');
+	var type = $("#lead-aging-type").val();   
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_aging+"/"+type+"/leadsaging";
+	document.location.href = sturl;
+	return false;
 });
 $('#charts_info2').delegate('#closed-oppor-report','click',function(){
-	    var gra_id = $("#closed-oppor-report").attr('name');
-		var type = $("#cls-oppr-type").val();   
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+gra_id+"/"+type+"/closedopp";
-		document.location.href = sturl;
-		return false;
+	var gra_id = $("#closed-oppor-report").attr('name');
+	var type = $("#cls-oppr-type").val();   
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+gra_id+"/"+type+"/closedopp";
+	document.location.href = sturl;
+	return false;
 });
 $('#leads-current-activity-list').delegate('#least-active-report','click',function() {
-	    var lead_indi = $("#least-active-report").attr('name');
-		var type = $("#least-active-type").val(); 
-		//alert(type); return false;
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_indi+"/"+type+"/leastactive";
-		document.location.href = sturl;
-		return false;
+	var lead_indi = $("#least-active-report").attr('name');
+	var type = $("#least-active-type").val(); 
+	//alert(type); return false;
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+lead_indi+"/"+type+"/leastactive";
+	document.location.href = sturl;
+	return false;
 });
 //for pie2 & pie3 charts export
 $('#charts_info3').delegate('#leads-by-leadsource-export','click',function(){
-	    var arg1 = $("#leads-by-leadsource-export").attr('name'); 
-		var arg2 = $("#lead-by-leadsource").val();   
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+arg1+"/"+arg2;
-		document.location.href = sturl;
-		return false;
+	var arg1 = $("#leads-by-leadsource-export").attr('name'); 
+	var arg2 = $("#lead-by-leadsource").val();   
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+arg1+"/"+arg2;
+	document.location.href = sturl;
+	return false;
 });
 $('#charts_info3').delegate('#leads-by-service-req-export','click',function(){
-	    var arg1 = $("#leads-by-service-req-export").attr('name');
-		var arg2 = $("#lead-by-service-req").val();   
-		var baseurl = site_base_url;
-		var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+arg1+"/"+arg2;
-		document.location.href = sturl;
-		return false;
+	var arg1 = $("#leads-by-service-req-export").attr('name');
+	var arg2 = $("#lead-by-service-req").val();   
+	var baseurl = site_base_url;
+	var sturl = baseurl+"dashboard/excel_export_lead_owner/"+"pipeline/"+arg1+"/"+arg2;
+	document.location.href = sturl;
+	return false;
 });
 /* dashboard excel report ends here */
 
