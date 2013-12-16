@@ -4,8 +4,7 @@
 */
 
 $(function(){
-	$('#excel').click(function() {
-		//mychanges		
+	$('#excel').click(function() {		
 		var range = $('#range').val();
 		var stage = $('#stage').val();
 		var customer = $('#customer').val();
