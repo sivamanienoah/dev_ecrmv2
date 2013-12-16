@@ -239,7 +239,7 @@ switch ($userdata['level'])
 							<?php if (count($getCurrentActivityLead)>0) { ?>
 								<?php foreach ($getCurrentActivityLead as $currentActLead) { ?>
 								<tr>
-									<td><a onclick="getCurrentLeadActivity(<?php echo $currentActLead['lead_id'];?>,<?php echo "'".$currentActLead['lead_title']."'"; ?>)"><?php echo $currentActLead['lead_title']; ?></a></td>
+									<td><a onclick="getCurrentLeadActivity(<?php echo $currentActLead['lead_id'];?>,<?php echo "'".$currentActLead['lead_title']."'"; ?>)"><?php echo character_limiter($currentActLead['lead_title'], 35); ?></a></td>
 									<!--td><?php //echo $currentActLead['expect_worth_name']." ".$currentActLead['expect_worth_amount']; ?></td-->
 									<td align="right"><?php echo number_format(round($rates[$currentActLead['expect_worth_id']][$default_cur_id] * $currentActLead['expect_worth_amount']), 2, '.', ''); ?></td>
 									<td><?php echo $currentActLead['ownrfname'] . " " .$currentActLead['ownrlname']; ?></td>

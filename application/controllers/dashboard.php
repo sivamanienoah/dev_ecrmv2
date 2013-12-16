@@ -13,6 +13,7 @@ class Dashboard extends crm_controller {
 		$this->load->model('regionsettings_model');
 		$this->load->model('welcome_model');
 		$this->load->helper('custom_helper');
+		$this->load->helper('text_helper');
 		$this->load->helper('lead_stage_helper');
 		$this->userdata   = $this->session->userdata('logged_in_user');
 		$this->pjt_stg 	  = array(0,1,2,3);
@@ -275,7 +276,7 @@ class Dashboard extends crm_controller {
 			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .='<tr>
 								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.$leadDet['lead_title'].'</a></td>
+								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.character_limiter($leadDet['lead_title'], 35).'</a></td>
 								<td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								<td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								<td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
@@ -335,7 +336,7 @@ class Dashboard extends crm_controller {
 			$lead_det['lead_indicator'] 	 = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$lead_table_output .=  "<tr><td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."/welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['lead_title']."</a></td>
+			<td><a href='".base_url()."/welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".character_limiter($lead_det['lead_title'], 35)."</a></td>
 			<td>".$lead_det['cflname']."</td><td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td><td>". $lead_det['lead_indicator'] ."</td><td text align=right>".number_format($amt_converted, 2, '.', '') ."</td>
 			</tr>";
@@ -372,7 +373,7 @@ class Dashboard extends crm_controller {
 			$amt_converted 	= $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$lead_table_output .=  "<tr>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['lead_title']. "</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".character_limiter($lead_det['lead_title'], 35). "</a></td>
 			<td>".$lead_det['cflname']."</td>
 			<td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td>
@@ -429,7 +430,7 @@ class Dashboard extends crm_controller {
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
 			$assignee_table_output .=  "<tr>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
-			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['lead_title']."</a></td>
+			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".character_limiter($lead_det['lead_title'], 35)."</a></td>
 			<td>".$lead_det['cflname']."</td>
 			<td>".$lead_det['owrfirst_name']."</td>
 			<td>".$lead_det['usrfname']."</td>
@@ -455,7 +456,7 @@ class Dashboard extends crm_controller {
 		$weekly_monthly_repo .= '<thead><tr><th>Lead Title</th><th>Estimated Worth ('.$this->default_cur_name.')</th><th>Lead Owner</th><th>Lead Assignee</th></tr></thead><tbody>';
 		foreach($data['getCurrentActivityTable'] as $lead_info)
 		{
-			$lead_det['lead_title'] 	     = '<a onclick="getCurrentLeadActivity('. $lead_info['lead_id'].','."'".$lead_info['lead_title']."'".')" >'. $lead_info['lead_title'].'</a>';
+			$lead_det['lead_title'] 	     = '<a onclick="getCurrentLeadActivity('. $lead_info['lead_id'].','."'".$lead_info['lead_title']."'".')" >'. character_limiter($lead_info['lead_title'], 35).'</a>';
 			$lead_det['owrfirst_name'] 		 = $lead_info['ownrfname']." ".$lead_info['ownrlname'];	
 			$lead_det['usrfname'] 			 = $lead_info['usrfname']." ".$lead_info['usrlname'];
 			$lead_det['expect_worth_amount'] = number_format(round($rates[$lead_info['expect_worth_id']][$this->default_cur_id]*$lead_info['expect_worth_amount']), 2, '.', '');	
@@ -811,7 +812,7 @@ class Dashboard extends crm_controller {
 				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['lead_title'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.character_limiter($leadDet['lead_title'], 35).'</a></td>
 								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
@@ -882,7 +883,7 @@ class Dashboard extends crm_controller {
 				} 
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
-								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['lead_title'].'</a></td>
+								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.character_limiter($leadDet['lead_title'], 35).'</a></td>
 								 <td>'.$leadDet['first_name'].' '.$leadDet['last_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
 								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
