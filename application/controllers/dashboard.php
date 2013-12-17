@@ -355,7 +355,7 @@ class Dashboard extends crm_controller {
 		$lead_det = array(); 
 		$rates = $this->get_currency_rates();
 		$lead_table_output  = '';
-        $lead_table_output .= '<div class="dash-section dash-section1"><h5 id="lead-owner-scroll">Currently Activities Leads - '.$leadname.'</h5><div class="grid-close"></div></div>';
+        $lead_table_output .= '<div class="dash-section dash-section1"><h5 id="lead-owner-scroll">Currently Activities Leads - '.character_limiter(urldecode($leadname), 35).'</h5><div class="grid-close"></div></div>';
 		$lead_table_output .= "<div class='dashbrd charts-info-block'>";	
 		$lead_table_output .= '<a id="lead-current-activity-export" class="export-btn export-btn1" >Export to Excel</a>';
 		$lead_table_output .= "<input id='lead-no' type='hidden' name='".$leadname."' value='".$lead_id."'/>";
@@ -469,49 +469,57 @@ class Dashboard extends crm_controller {
 	}
 
 	public function excel_export_lead_owner($userid)
-    {	
-		$cusId 			 = $this->level_restriction();
-    	$lead_username	 = $this->uri->segment(4);  
-		$lead_stage_name = $this->uri->segment(4);
-		$lead_arg 		 = $this->uri->segment(5); 
-		$lead_id		 = $this->uri->segment(4); 
-		$lead_aging		 = $this->uri->segment(3);
-		$lead_indi		 = $this->uri->segment(3);
+    {
+    	// $lead_username	 = $this->uri->segment(4);  
+		// $lead_stage_name = $this->uri->segment(4);
+		// $lead_id		 = $this->uri->segment(4); 
+		// $lead_aging		 = $this->uri->segment(3);
+		// $lead_indi		 = $this->uri->segment(3);
+		
+		$result     = real_escape_array($this->input->post());
+
+		$graph_type = $result['type'];
+		$cusId      = $this->level_restriction();
+		$expFilter  = real_escape_array($this->input->post());
 		$lead_owner_opp  = array();
-		switch ($lead_arg) 
+
+		switch ($graph_type) 
 		{
+			case 'funnel':
+				$res			= $this->dashboard_model->getLeadsDetails($result['lead_stage_name'], $cusId, $expFilter);
+			break;
+			case 'pie1':
+				$res			= $this->dashboard_model->getRegionLeadsDetails($result['lead_region_name'], $cusId, $expFilter);
+			break;
+			case 'bar1':
+				$res 			= $this->dashboard_model->getIndiLeads($cusId, $result['lead_indi'], $expFilter);
+			break;
+			case 'leastactive':
+				$res 			= $this->dashboard_model->getIndiLeads($cusId, $lead_indi);
+			break;
+			case 'currentactivity':
+				$res 			= $this->dashboard_model->getCurrentLeadActivity($result['lead_no']);	
+				$lead_owner_opp = $res->result_array();
+			break;
+			case 'line1':
+				$res 			= $this->dashboard_model->leadAgingLeads($cusId, $result['lead_aging'], $expFilter);
+			break;
+			case 'line2':
+				$res 			= $this->getClosedJobLeadDetail($result['month_id'], $expFilter);
+			break;
+			case 'pie2':
+				$res 			= $this->dashboard_model->getLeadsDetails_pie2($result['lead_source'], $cusId, $expFilter);
+			break;
+			case 'pie3':
+				$res 			= $this->dashboard_model->getLeadsDetails_pie3($result['servic_require'], $cusId, $expFilter);
+			break;
 			case 'leadowner':
-				$res 			= $this->dashboard_model->getLeadOwnerDependencies($userid, $cusId);
+				$res 			= $this->dashboard_model->getLeadOwnerDependencies($result['user_id'], $cusId, $expFilter);
 				$lead_owner_opp = $res->result_array();
 			break;
 			case 'assignee':
-				$res 			= $this->dashboard_model->getLeadAssigneeDependencies($userid, $cusId);
+				$res 			= $this->dashboard_model->getLeadAssigneeDependencies($result['user_id'], $cusId, $expFilter);
 				$lead_owner_opp = $res->result_array();
-			break;
-			case 'funnel':
-				$res			= $this->dashboard_model->getLeadsDetails($lead_stage_name, $cusId);
-			break;
-			case 'pie1':
-				$res			= $this->dashboard_model->getRegionLeadsDetails($lead_stage_name, $cusId);
-			break;
-			case 'currentactivity':
-				$res 			= $this->dashboard_model->getCurrentLeadActivity($lead_id);	
-				$lead_owner_opp = $res->result_array();
-			break;
-			case 'leastactive':
-				$res = $this->dashboard_model->getIndiLeads($cusId, $lead_indi);
-			break;
-			case 'leadsaging':
-				$res = $this->dashboard_model->leadAgingLeads($cusId, $lead_aging);
-			break;
-			case 'closedopp':
-				$res = $this->getClosedJobLeadDetail($lead_aging);
-			break;
-			case 'pie2':
-				$res = $this->dashboard_model->getLeadsDetails_pie2($lead_stage_name, $cusId);
-			break;
-			case 'pie3':
-				$res = $this->dashboard_model->getLeadsDetails_pie3($lead_stage_name, $cusId);
 			break;
 		}
 			
@@ -524,13 +532,7 @@ class Dashboard extends crm_controller {
 			//name the worksheet
 			
 			
-			switch ($lead_arg) {
-				case 'leadowner':
-					$this->excel->getActiveSheet()->setTitle('Lead Owner Opportunities');
-				break;
-				case 'assignee':
-					$this->excel->getActiveSheet()->setTitle('Lead Assignee Opportunities');
-				break;
+			switch ($graph_type) {
 				case 'funnel':
 					$this->excel->getActiveSheet()->setTitle('Current Pipeline Leads');
 				break;
@@ -540,13 +542,16 @@ class Dashboard extends crm_controller {
 				case 'currentactivity':
 					$this->excel->getActiveSheet()->setTitle('Currently Active Leads');
 				break;
+				case 'bar1':
+					$this->excel->getActiveSheet()->setTitle('Leads Indicator');
+				break;
 				case 'leastactive':
 					$this->excel->getActiveSheet()->setTitle('Least Active Leads');
 				break;
-				case 'leadsaging':
+				case 'line1':
 					$this->excel->getActiveSheet()->setTitle('Leads Aging');
 				break;
-				case 'closedopp':
+				case 'line2':
 					$this->excel->getActiveSheet()->setTitle('Closed Opportunities');
 				break;
 				case 'pie2':
@@ -554,6 +559,12 @@ class Dashboard extends crm_controller {
 				break;
 				case 'pie3':
 					$this->excel->getActiveSheet()->setTitle('Service Requirement');
+				break;
+				case 'leadowner':
+					$this->excel->getActiveSheet()->setTitle('Lead Owner Opportunities');
+				break;
+				case 'assignee':
+					$this->excel->getActiveSheet()->setTitle('Lead Assignee Opportunities');
 				break;
 			}
 			
@@ -583,30 +594,7 @@ class Dashboard extends crm_controller {
 			$total_amt_converted = 0;
 		    $rates = $this->get_currency_rates();
 			
-			switch ($lead_arg) {
-				case 'leadowner':
-				case 'assignee':
-					foreach ($lead_owner_opp as $lead)
-					{			
-						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
-						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
-						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['cfname'].' '.$lead['clname']);
-						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
-						/* converting to USD */
-						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
-						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
-						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
-						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
-						
-						$i++;
-					}
-					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
-					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
-					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
-					$this->excel->getActiveSheet()->getStyle('G'.$i)->getFont()->setBold(true);
-				break;
-				
+			switch ($graph_type) {
 				case 'funnel':
 				case 'pie1':
 				case 'pie2':
@@ -650,9 +638,10 @@ class Dashboard extends crm_controller {
 					$this->excel->getActiveSheet()->getStyle('G'.$i)->getFont()->setBold(true);
 				break;
 				
-				case 'leadsaging':
+				case 'bar1':
+				case 'line1':
 				case 'leastactive':
-				case 'closedopp':
+				case 'line2':
 					foreach ($res as $lead)
 					{			//LeadDetails
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
@@ -671,6 +660,29 @@ class Dashboard extends crm_controller {
 					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
 					$this->excel->getActiveSheet()->getStyle('G'.$i)->getFont()->setBold(true);
 				break;
+				
+				case 'leadowner':
+				case 'assignee':
+					foreach ($lead_owner_opp as $lead)
+					{			
+						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
+						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
+						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['cfname'].' '.$lead['clname']);
+						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
+						/* converting to USD */
+						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
+						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
+						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
+						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
+						
+						$i++;
+					}
+					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
+					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
+					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
+					$this->excel->getActiveSheet()->getStyle('G'.$i)->getFont()->setBold(true);
+				break;
 			}
 			
     		/*To build columns ends*/
@@ -682,30 +694,27 @@ class Dashboard extends crm_controller {
 			//set aligment to center for that merged cell (A1 to D1)
 			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
-			switch ($lead_arg) 
+			switch ($graph_type) 
 			{
-				case 'leadowner':
-					$filename = 'Lead_owner_report_'.$lead_username.'.xls';
-				break;
-				case 'assignee':
-					$filename = 'Lead_assignee_report_'.$lead_username.'.xls';
-				break;
 				case 'funnel':
 					$filename = 'Current_pipeline_leads.xls';
 				break;
 				case 'pie1':
 					$filename = 'Leads_By_Region.xls';
 				break;
-				case 'currentactivity':
-					$filename = 'currently_active_leads.xls';
-				break;
-				case 'leadsaging':
-					$filename = 'leads_aging.xls';
+				case 'bar1':
+					$filename = 'lead_indicator.xls';
 				break;
 				case 'leastactive':
 					$filename = 'least_active_leads.xls';
+				break;				
+				case 'currentactivity':
+					$filename = 'currently_active_leads.xls';
 				break;
-				case 'closedopp':
+				case 'line1':
+					$filename = 'leads_aging.xls';
+				break;
+				case 'line2':
 					$filename = 'closed_oppor.xls';
 				break;
 				case 'pie2':
@@ -713,6 +722,12 @@ class Dashboard extends crm_controller {
 				break;
 				case 'pie3':
 					$filename = 'Leads_By_SerReq.xls';
+				break;
+				case 'leadowner':
+					$filename = 'Lead_owner_report_'.$result['user_name'].'.xls';
+				break;
+				case 'assignee':
+					$filename = 'Lead_assignee_report_'.$result['user_name'].'.xls';
 				break;
 			}	
 
@@ -802,7 +817,7 @@ class Dashboard extends crm_controller {
 		}
 		if($type == 'line1') {
 			$res['html'] .= '<a id="lead-aging-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
-			$res['html'] .= "<input id='least-active-type' type='hidden' value='".$type."'/>";
+			$res['html'] .= "<input id='lead-aging-type' type='hidden' value='".$type."'/>";
 		}
 		
 		$res['html'] .= '<table cellspacing="0" id='.$tid.' class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
