@@ -8,15 +8,15 @@ $(function(){
 	});
 	
 	$('#task_search_start_date').datepicker({dateFormat: 'dd-mm-yy',  onSelect: function(selected) {
-		 		var date2 = $('#task_search_start_date').datepicker('getDate');
-        		$("#task_search_end_date").datepicker("option","minDate", date2);
-     		 }
+			var date2 = $('#task_search_start_date').datepicker('getDate');
+			$("#task_search_end_date").datepicker("option","minDate", date2);
+		}
 	});
 
 	$('#task_search_end_date').datepicker({dateFormat: 'dd-mm-yy',  onSelect: function(selected) {
 			var date1 = $('#task_search_end_date').datepicker('getDate');							
 			$("#task_search_start_date").datepicker("option","maxDate", date1);
-		 }
+		}
 	});
 	 
 	
