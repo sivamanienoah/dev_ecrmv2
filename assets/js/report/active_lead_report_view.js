@@ -28,7 +28,6 @@ $(function(){
 		  '<input type="hidden" name="worth" value="' +worth+ '" />' +
 		  '<input type="hidden" name="owner" value="' +owner+ '" />' +
 		  '<input type="hidden" name="leadassignee" value="' +leadassignee+ '" />' +
-
 		  '<input type="hidden" name="regionname" value="' +regionname+ '" />' +
 		  '<input type="hidden" name="countryname" value="' +countryname+ '" />' +
 		  '<input type="hidden" name="statename" value="' +statename+ '" />' +
