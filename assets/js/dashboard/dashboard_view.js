@@ -28,22 +28,17 @@ if(viewlead==1) {
 			},
 			seriesColors: ["#027997", "#910000", "#bfdde5", "#8bbc21", "#1aadce", "#492970", "#2f7ed8", "#0d233a", "#48596a", "#640cb1", "#eaa228", "#422460"]
 			});
+			
 			$('#funnel1').bind('jqplotDataClick',function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat=='toggle') {
-					var stge	 	 = filter_stgs;
-					var cust_id	 	 = filter_custs_id;
-					var ownr_id		 = filter_owr_id;
-					var assg_id	 	 = filter_assg_id;
-					var reg_id		 = filter_reg_nme;
-					var cntry_id 	 = filter_country;
-					var stet_id		 = filter_state;
-					var locn_id		 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'data':data, 'type':'funnel', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+				formdata['data'] 	  = data;
+				formdata['type'] 	  = 'funnel';
 				formdata[csrf_token_name] = csrf_hash_token;
+
 				$.ajax({
 					type: "POST",
 					url: site_base_url+'dashboard/showLeadsDetails/',
@@ -159,21 +154,15 @@ if(viewlead==1) {
 			});
 
 			$('#pie1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat=='toggle') {
-					var stge 	     = filter_stgs;
-					var cust_id      = filter_custs_id;
-					var ownr_id      = filter_owr_id;
-					var assg_id      = filter_assg_id;
-					var reg_id	     = filter_reg_nme;
-					var cntry_id     = filter_country;
-					var stet_id	     = filter_state;
-					var locn_id	 	 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'data':data, 'type':'pie1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-				formdata[csrf_token_name]      = csrf_hash_token; 
+				formdata['data'] 		  = data;
+				formdata['type'] 		  = 'pie1';
+				formdata[csrf_token_name] = csrf_hash_token;
+				
 				$.ajax({
 					type: "POST",
 					url: site_base_url+'dashboard/showLeadsDetails/',
@@ -334,20 +323,13 @@ if(viewlead==1) {
 			});
 
 			$('#bar1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat=='toggle') {
-					var stge 	     = filter_stgs;
-					var cust_id      = filter_custs_id;
-					var ownr_id      = filter_owr_id;
-					var assg_id      = filter_assg_id;
-					var reg_id	     = filter_reg_nme;
-					var cntry_id     = filter_country;
-					var stet_id	     = filter_state;
-					var locn_id	 	 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'gid':pointIndex, 'type':'bar1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+				formdata['gid'] 	  = pointIndex;
+				formdata['type'] 	  = 'bar1';
 				formdata[csrf_token_name] = csrf_hash_token;
 				
 				$.ajax({
@@ -504,21 +486,14 @@ if(viewlead==1) {
 
 			$('#line1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 				//alert(pointIndex);
-				if (filter_toggle_stat=='toggle') {
-					var stge 	     = filter_stgs;
-					var cust_id      = filter_custs_id;
-					var ownr_id      = filter_owr_id;
-					var assg_id      = filter_assg_id;
-					var reg_id	     = filter_reg_nme;
-					var cntry_id     = filter_country;
-					var stet_id	     = filter_state;
-					var locn_id	 	 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'gid':pointIndex, 'type':'line1', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-				formdata[csrf_token_name] = csrf_hash_token; 
+				formdata['gid'] 	  = pointIndex;
+				formdata['type'] 	  = 'line1';
+				formdata[csrf_token_name] = csrf_hash_token;
 
 				$.ajax({
 					type: "POST",
@@ -658,22 +633,14 @@ if(viewlead==1) {
 			});
 
 			$('#line2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				
-				if (filter_toggle_stat=='toggle') {
-					var stge 	     = filter_stgs;
-					var cust_id      = filter_custs_id;
-					var ownr_id      = filter_owr_id;
-					var assg_id      = filter_assg_id;
-					var reg_id	     = filter_reg_nme;
-					var cntry_id     = filter_country;
-					var stet_id	     = filter_state;
-					var locn_id	 	 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'gid':pointIndex, 'type':'line2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-				formdata[csrf_token_name]      = csrf_hash_token; 
+				formdata['gid'] 		  = pointIndex;
+				formdata['type'] 	 	  = 'line2';
+				formdata[csrf_token_name] = csrf_hash_token;
 
 				$.ajax({
 					type: "POST",
@@ -789,21 +756,15 @@ if(viewlead==1) {
 			});
 			
 			$('#pie2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat=='toggle') {			
-					var stge 	     = filter_stgs;
-					var cust_id      = filter_custs_id;
-					var ownr_id      = filter_owr_id;
-					var assg_id      = filter_assg_id;
-					var reg_id	     = filter_reg_nme;
-					var cntry_id     = filter_country;
-					var stet_id	     = filter_state;
-					var locn_id	 	 = filter_location;
-					var servic_req	 = filter_servic_req;
-					var lead_sour	 = filter_lead_sour;
-					var lead_indic	 = filter_lead_indic;
+				if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
 				}
-				var formdata              = { 'data':data, 'type':'pie2', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-				formdata[csrf_token_name]      = csrf_hash_token; 
+				formdata['data'] 	      = data;
+				formdata['type'] 	      = 'pie2';
+				formdata[csrf_token_name] = csrf_hash_token;
+
 				$.ajax({
 					type: "POST",
 					url: site_base_url+'dashboard/showLeadsDetails/',
@@ -907,21 +868,14 @@ if(viewlead==1) {
 		});
 		
 		$('#pie3').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-			if (filter_toggle_stat=='toggle') {
-				var stge 	     = filter_stgs;
-				var cust_id      = filter_custs_id;
-				var ownr_id      = filter_owr_id;
-				var assg_id      = filter_assg_id;
-				var reg_id	     = filter_reg_nme;
-				var cntry_id     = filter_country;
-				var stet_id	     = filter_state;
-				var locn_id	 	 = filter_location;
-				var servic_req	 = filter_servic_req;
-				var lead_sour	 = filter_lead_sour;
-				var lead_indic	 = filter_lead_indic;
+			if (filter_toggle_stat == 'toggle') {
+				var formdata = advanceFilterParameterForDataClick();
+			} else {
+				var formdata = {};
 			}
-			var formdata              = { 'data':data, 'type':'pie3', 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-			formdata[csrf_token_name] = csrf_hash_token; 
+			formdata['data'] 	      = data;
+			formdata['type'] 	      = 'pie3';
+			formdata[csrf_token_name] = csrf_hash_token;
 
 			$.ajax({
 				type: "POST",
@@ -979,22 +933,17 @@ if(viewlead==1) {
 		} 
 	});
 
+	
 	function getLeadDashboardTable(userid, user_name) {
-		if (filter_toggle_stat=='toggle') {
-			var stge 	     = filter_stgs;
-			var cust_id      = filter_custs_id;
-			var ownr_id      = filter_owr_id;
-			var assg_id      = filter_assg_id;
-			var reg_id	     = filter_reg_nme;
-			var cntry_id     = filter_country;
-			var stet_id	     = filter_state;
-			var locn_id	 	 = filter_location;
-			var servic_req	 = filter_servic_req;
-			var lead_sour	 = filter_lead_sour;
-			var lead_indic	 = filter_lead_indic;
+		if (filter_toggle_stat == 'toggle') {
+			var formdata = advanceFilterParameterForDataClick();
+		} else {
+			var formdata = {};
 		}
-		var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-		formdata[csrf_token_name]      = csrf_hash_token; 
+		formdata['userid']   	  = userid;
+		formdata['user_name']     = user_name;
+		formdata[csrf_token_name] = csrf_hash_token;
+		
 		$.ajax({
 			type: "POST",
 			url : site_base_url + 'dashboard/getLeadDependency/',
@@ -1036,21 +985,15 @@ if(viewlead==1) {
 
 
 	function getLeadAssigneeTable(userid,user_name) {
-		if (filter_toggle_stat=='toggle') {
-			var stge 	     = filter_stgs;
-			var cust_id      = filter_custs_id;
-			var ownr_id      = filter_owr_id;
-			var assg_id      = filter_assg_id;
-			var reg_id	     = filter_reg_nme;
-			var cntry_id     = filter_country;
-			var stet_id	     = filter_state;
-			var locn_id	 	 = filter_location;
-			var servic_req	 = filter_servic_req;
-			var lead_sour	 = filter_lead_sour;
-			var lead_indic	 = filter_lead_indic;
+		if (filter_toggle_stat == 'toggle') {
+			var formdata = advanceFilterParameterForDataClick();
+		} else {
+			var formdata = {};
 		}
-		var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
-		formdata[csrf_token_name] = csrf_hash_token; 
+		formdata['userid'] 	  	  = userid;
+		formdata['user_name'] 	  = user_name;
+		formdata[csrf_token_name] = csrf_hash_token;
+
 		$.ajax({
 			type: "POST",
 			url : site_base_url + 'dashboard/getLeadAssigneeDependency/',
@@ -1168,29 +1111,17 @@ if(viewlead==1) {
 
 	//currently active leads
 	$('#current-lead-report').change(function() {
-		
-		if (filter_toggle_stat=='toggle') {
-			var stge 	   = filter_stgs;
-			var cust_id    = filter_custs_id;
-			var ownr_id    = filter_owr_id;
-			var assg_id    = filter_assg_id;
-			var reg_id	   = filter_reg_nme;
-			var cntry_id   = filter_country;
-			var stet_id	   = filter_state;
-			var locn_id	   = filter_location;
-			var servic_req = filter_servic_req;
-			var lead_sour  = filter_lead_sour;
-			var lead_indic = filter_lead_indic;
+		if (filter_toggle_stat == 'toggle') {
+			var formdata = advanceFilterParameterForDataClick();
+		} else {
+			var formdata = {};
 		}
-		
-		var formdata              = { 'statusVar':$(this).val(), 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+		formdata['statusVar'] 	  = $(this).val();
 		formdata[csrf_token_name] = csrf_hash_token;
-		
-		var baseurl = site_base_url;
+		var baseurl				  = site_base_url;
 		$.ajax({
 			type: 'POST',
 			url : baseurl + 'dashboard/get_leads_current_weekly_monthly_report/',
-			// data: statusVar,
 			data: formdata,
 			beforeSend:function(){
 				$('#weekly-monthly').empty();
@@ -1429,8 +1360,26 @@ if(viewlead==1) {
 		return false;
 	});
 
+	//global function for graph click parameters
+	function advanceFilterParameterForDataClick() {
+		var stge 	   = filter_stgs;
+		var cust_id    = filter_custs_id;
+		var ownr_id    = filter_owr_id;
+		var assg_id    = filter_assg_id;
+		var reg_id	   = filter_reg_nme;
+		var cntry_id   = filter_country;
+		var stet_id    = filter_state;
+		var locn_id    = filter_location;
+		var servic_req = filter_servic_req;
+		var lead_sour  = filter_lead_sour;
+		var lead_indic = filter_lead_indic;
+	
+		var filterParameterDataClick = {'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic};
+		
+		return filterParameterDataClick;
+	}
 
-	//global function for excel parameters
+	//global function for export to excel parameters
 	function advanceFilterParameterForExcel() {
 		var stge 	   = filter_stgs;
 		var cust_id    = filter_custs_id;
@@ -1460,77 +1409,76 @@ if(viewlead==1) {
 	}
 
 	/* dashboard excel report ends here */
-
-} 
+}
 
 if(viewPjt==1) { 
-		//For Projects
-		var pjtstage = $("#pjt_stage").val(); 
-		var pm_acc = $("#pm_acc").val(); 
-		var cust = $("#customer1").val(); 
-		var keyword = $("#keywordpjt").val(); 
-		//alert(keyword);
-		if(keyword == "Project No, Project Title, Name or Company")
-			keyword = 'null';
+	//For Projects
+	var pjtstage = $("#pjt_stage").val(); 
+	var pm_acc = $("#pm_acc").val(); 
+	var cust = $("#customer1").val(); 
+	var keyword = $("#keywordpjt").val(); 
+	//alert(keyword);
+	if(keyword == "Project No, Project Title, Name or Company")
+		keyword = 'null';
 
-		if (document.getElementById('advance_search_pjt'))
-			document.getElementById('advance_search_pjt').style.display = 'none';	
+	if (document.getElementById('advance_search_pjt'))
+		document.getElementById('advance_search_pjt').style.display = 'none';	
 
-		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-		//alert(sturl);	
-		$('#advance_search_results_pjts').load(sturl);
-			
-		function advanced_filter_pjt() {
-			$('#advance_search_pjt').slideToggle('slow');
-			var  keyword = $("#keywordpjt").val();
-			var status = document.getElementById('advance_search_pjt').style.display;
-			
-			if(status == 'none') {
-				var pjtstage = $("#pjt_stage").val(); 
-				var pm_acc = $("#pm_acc").val(); 
-				var cust = $("#customer1").val(); 
-			}
-			else   {
-					
-				$("#pjt_stage").val("");
-				$("#pm_acc").val("");
-				$("#customer1").val("");
-
-			}
-		}
-
-		$('#advanceFilters_pjt').submit(function() {
-			$('#advance').hide();
-			$('#load').show();
+	var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	//alert(sturl);	
+	$('#advance_search_results_pjts').load(sturl);
+		
+	function advanced_filter_pjt() {
+		$('#advance_search_pjt').slideToggle('slow');
+		var  keyword = $("#keywordpjt").val();
+		var status = document.getElementById('advance_search_pjt').style.display;
+		
+		if(status == 'none') {
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 
 			var cust = $("#customer1").val(); 
+		}
+		else   {
+				
+			$("#pjt_stage").val("");
+			$("#pm_acc").val("");
+			$("#customer1").val("");
+
+		}
+	}
+
+	$('#advanceFilters_pjt').submit(function() {
+		$('#advance').hide();
+		$('#load').show();
+		var pjtstage = $("#pjt_stage").val(); 
+		var pm_acc = $("#pm_acc").val(); 
+		var cust = $("#customer1").val(); 
+		var  keyword = $("#keywordpjt").val(); 
+		if(keyword == "Project No, Project Title, Name or Company")
+		keyword = 'null';
+		document.getElementById('advance_search_results_pjts').style.display = 'block';	
+		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+		//alert(sturl);
+		// $('#advance_search_results_pjts').load(sturl);	
+		$('#advance_search_results_pjts').load(sturl,function(){
+			$('#advance').show();
+			$('#load').hide();
+		});
+		return false;
+	});
+
+	$('#pjt_search_form').submit(function() {	
 			var  keyword = $("#keywordpjt").val(); 
 			if(keyword == "Project No, Project Title, Name or Company")
 			keyword = 'null';
-			document.getElementById('advance_search_results_pjts').style.display = 'block';	
+			var pjtstage = $("#pjt_stage").val(); 
+			var pm_acc = $("#pm_acc").val(); 
+			var cust = $("#customer1").val();  
 			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-			//alert(sturl);
-			// $('#advance_search_results_pjts').load(sturl);	
-			$('#advance_search_results_pjts').load(sturl,function(){
-				$('#advance').show();
-				$('#load').hide();
-			});
+			$('#advance_search_results_pjts').load(sturl);
 			return false;
-		});
-
-		$('#pjt_search_form').submit(function() {	
-				var  keyword = $("#keywordpjt").val(); 
-				if(keyword == "Project No, Project Title, Name or Company")
-				keyword = 'null';
-				var pjtstage = $("#pjt_stage").val(); 
-				var pm_acc = $("#pm_acc").val(); 
-				var cust = $("#customer1").val();  
-				var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-				$('#advance_search_results_pjts').load(sturl);
-				return false;
-		});
- } 
+	});
+}
 
 
 //For Tasks
