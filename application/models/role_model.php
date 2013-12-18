@@ -245,7 +245,6 @@ class Role_model extends crm_model {
 	*@Role Model
 	*/
 	public function pageTree($id = false) {
- 
 		if(!empty($id)){
 			$idcondition = "rl.id=mrl.role_id and rl.id=".$id;
 			$this->db->select('vm.*,mrl.id as masreroleid,mrl.add,mrl.edit,mrl.view,mrl.delete,rl.name ,rl.id as roleid');
@@ -271,20 +270,19 @@ class Role_model extends crm_model {
 		$i=0;
 	 
 		foreach($vertices as $vertice) {
-		
-		$sample = array();
-			if($vertice['master_parent_id']==0) {	 
-				$vertice['master_parent_id'] = NULL;
+			$sample = array();
+				if($vertice['master_parent_id']==0) {	 
+					$vertice['master_parent_id'] = NULL;
+				}
+			if(!isset($vertice['roleid']) or empty($vertice['roleid'])) { 
+				$sample['add'] = 0;
+				$sample['edit'] = 0;
+				$sample['delete'] = 0;
+				$sample['view'] = 0;
+				$sample['roleid'] = 0;
+				$sample['masreroleid'] = 0;
 			}
-		if(!isset($vertice['roleid']) or empty($vertice['roleid'])) { 
-			$sample['add'] = 0;
-			$sample['edit'] = 0;
-			$sample['delete'] = 0;
-			$sample['view'] = 0;
-			$sample['roleid'] = 0;
-			$sample['masreroleid'] = 0;
-		}
-			$vertices[$i] =array_merge($vertices[$i],$sample);
+			$vertices[$i] = array_merge($vertices[$i],$sample);
 			$i++;
 		}
 	
@@ -327,13 +325,13 @@ class Role_model extends crm_model {
 		}
 	  
 		unset($subtrees);
-		 
+
 		$ul='<ul>';
 		foreach ($trees as $root) {
 			$ul.= '<li style="list-style:none">'.$this->getSubtreeUL($root).'</li>';
 		}
 		$ul.= '</ul>';
-			 
+
 		return $ul;
 	}
 
@@ -343,39 +341,50 @@ class Role_model extends crm_model {
 	*@Role Model
 	*/
 	public function getSubtreeUL(array $subtreeRoot, $level = 0)
-	{	
-	    $html ='';
-	    $all= $add=$edit=$delete=$view='';
+	{
+		// echo "<pre>"; print_r($subtreeRoot);
+	    $html = '';
+	    $all = $add = $edit = $delete = $view = '';
+	    $disableStatusProfile = $disableStatusReport = '';
 		$html = '<div style="width:500px; padding:5px;">
 		<div style="width:500px;">
 		<div style="background:url(\'assets/img/folder.png\') no-repeat 3px;  padding-left:25px; height:24px; line-height:24px; ">
 		 '.$subtreeRoot['name'].'<input type="hidden" name ="masterid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['id'].'">';
 		$html .= '<input type="hidden"  name ="masreroleid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['masreroleid'].'">';
 		$html .= '<input type="hidden" name ="roleid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['roleid'].'"> ';
-		if ($subtreeRoot['add'] == 1 && $subtreeRoot['view'] == 1 && $subtreeRoot['edit'] == 1 && $subtreeRoot['delete'] == 1){
+		if ($subtreeRoot['add'] == 1 && $subtreeRoot['view'] == 1 && $subtreeRoot['edit'] == 1 && $subtreeRoot['delete'] == 1) {
 			$all= ' checked="checked"';
 		} 
-		if ($subtreeRoot['add'] == 1){
+		if ($subtreeRoot['add'] == 1) {
 			$add= ' checked="checked"';
 		} 
-		if ($subtreeRoot['edit'] == 1){
+		if ($subtreeRoot['edit'] == 1) {
 			$edit= ' checked="checked"';
 		} 
-		if ($subtreeRoot['delete'] == 1){
+		if ($subtreeRoot['delete'] == 1) {
 			$delete= ' checked="checked"';
 		} 
-		if ($subtreeRoot['view'] == 1){
+		if ($subtreeRoot['view'] == 1) {
 			$view= ' checked="checked"';
-		} 
-		$html .='<span style="width:400px;"> <input  type="checkbox" id="checkp" class="check" '.$all.' name ="full"> &nbsp;All &nbsp;
-			<input type="checkbox"   name ="add['.$subtreeRoot['id'].']"'.$add.'  value="1"> &nbsp;Add &nbsp; 
-			<input type="checkbox"    name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View  &nbsp;
-			<input type="checkbox"   name ="edit['.$subtreeRoot['id'].']" '.$edit.' value="1" > &nbsp;Edit  &nbsp;
-			<input type="checkbox"   name ="delete['.$subtreeRoot['id'].']" '.$delete.'  value="1"> &nbsp;Delete &nbsp;</span></div></div> </div>';
-		if(sizeof($subtreeRoot['children'])>0){
+		}
+		if ($subtreeRoot['id'] == 89) {
+			$disableStatusProfile = ' disabled';
+		}
+		if ($subtreeRoot['id'] == 113) {
+			$disableStatusReport = ' disabled';
+		}
+		$html .='<span style="width:400px;"> 
+				<input type="checkbox" id="checkp" class="check" '.$all.' '.$disableStatusProfile.' '.$disableStatusReport.' name ="full"> &nbsp;All&nbsp;
+				<input type="checkbox" name ="add['.$subtreeRoot['id'].']"'.$add.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1"> &nbsp;Add&nbsp; 
+				<input type="checkbox" name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View&nbsp;
+				<input type="checkbox" name ="edit['.$subtreeRoot['id'].']" '.$edit.' '.$disableStatusReport.' value="1" > &nbsp;Edit&nbsp;
+				<input type="checkbox" name ="delete['.$subtreeRoot['id'].']" '.$delete.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1"> &nbsp;Delete&nbsp;
+				</span></div></div> </div>';
+		
+		if(sizeof($subtreeRoot['children'])>0) {
 			foreach ($subtreeRoot['children'] as $child) {
 				$html .= '<ul style="padding-left:30px;list-style:none"><li>'.$this->getSubtreeUL($child, $level + 1);
-					$html .='</li></ul>';
+				$html .='</li></ul>';
 			}
 		}
 		return $html;
