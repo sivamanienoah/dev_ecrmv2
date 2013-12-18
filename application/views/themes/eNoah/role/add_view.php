@@ -42,16 +42,18 @@
 						<?php if ($this->validation->inactive != 0) echo "Uncheck if the Role need to be Active."; ?>
 					</td>
 				</tr>
+				<tr></tr>
+				<tr></tr>
                 <tr>
 					<td>&nbsp;</td>
 					<td>
                         <div class="buttons">
 							<button type="submit" name="update_user" class="positive">
-								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Role
+								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Role
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='role'">
+							<button type="button" class="negative" onclick="location.href='role'">
 								Cancel
 							</button>
                         </div>
