@@ -931,10 +931,10 @@ CREATE TABLE IF NOT EXISTS `crms_items` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `crms_job_categories`
+-- Table structure for table `crms_lead_services`
 --
 
-CREATE TABLE IF NOT EXISTS `crms_job_categories` (
+CREATE TABLE IF NOT EXISTS `crms_lead_services` (
   `cid` int(10) NOT NULL AUTO_INCREMENT,
   `category` varchar(150) NOT NULL,
   `status` int(1) NOT NULL,
@@ -942,10 +942,10 @@ CREATE TABLE IF NOT EXISTS `crms_job_categories` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 
 --
--- Dumping data for table `crms_job_categories`
+-- Dumping data for table `crms_lead_services`
 --
 
-INSERT INTO `crms_job_categories` (`cid`, `category`, `status`) VALUES
+INSERT INTO `crms_lead_services` (`cid`, `category`, `status`) VALUES
 (1, 'eConnect', 1),
 (10, 'e-Stone', 1),
 (2, 'e-CRM', 1),
@@ -993,10 +993,10 @@ CREATE TABLE IF NOT EXISTS `crms_job_urls` (
 --
 
 CREATE TABLE IF NOT EXISTS `crms_leads` (
-  `jobid` int(11) NOT NULL AUTO_INCREMENT,
-  `job_title` varchar(200) NOT NULL,
+  `lead_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lead_title` varchar(200) NOT NULL,
   `job_desc` text,
-  `job_category` tinyint(4) DEFAULT NULL,
+  `lead_service` tinyint(4) DEFAULT NULL,
   `lead_source` int(5) DEFAULT NULL,
   `lead_assign` int(5) DEFAULT NULL,
   `expect_worth_id` int(4) NOT NULL,
@@ -1006,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `crms_leads` (
   `custid_fk` int(11) NOT NULL,
   `date_quoted` datetime DEFAULT NULL,
   `date_invoiced` datetime DEFAULT NULL,
-  `job_status` tinyint(4) DEFAULT '1',
+  `lead_stage` tinyint(4) DEFAULT '1',
   `complete_status` tinyint(4) DEFAULT NULL,
   `assigned_to` int(4) DEFAULT NULL,
   `pjt_id` varchar(20) DEFAULT NULL,
@@ -1029,7 +1029,7 @@ CREATE TABLE IF NOT EXISTS `crms_leads` (
   `pjt_status` int(1) NOT NULL DEFAULT '0',
   `lead_indicator` varchar(32) DEFAULT NULL,
   `lead_hold_reason` text,
-  PRIMARY KEY (`jobid`),
+  PRIMARY KEY (`lead_id`),
   KEY `custid_fk` (`custid_fk`),
   KEY `assigned_to` (`assigned_to`),
   KEY `belong_to` (`belong_to`)
@@ -1050,7 +1050,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_files` (
   `lead_files_name` text NOT NULL,
   `lead_files_created_by` int(4) NOT NULL,
   `lead_files_created_on` datetime NOT NULL,
-  `jobid` int(4) NOT NULL
+  `lead_id` int(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1066,7 +1066,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_files` (
 
 CREATE TABLE IF NOT EXISTS `crms_lead_query` (
   `query_id` int(5) NOT NULL AUTO_INCREMENT,
-  `job_id` int(16) NOT NULL,
+  `lead_id` int(16) NOT NULL,
   `user_id` int(5) NOT NULL,
   `query_msg` varchar(1024) NOT NULL,
   `query_file_name` varchar(255) NOT NULL,
@@ -1153,7 +1153,7 @@ INSERT INTO `crms_lead_stage` (`lead_stage_id`, `lead_stage_name`, `sequence`, `
 --
 
 CREATE TABLE IF NOT EXISTS `crms_lead_stage_history` (
-  `jobid` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
   `dateofchange` datetime NOT NULL,
   `previous_status` int(11) NOT NULL,
   `changed_status` int(11) NOT NULL,
@@ -1173,7 +1173,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_stage_history` (
 --
 
 CREATE TABLE IF NOT EXISTS `crms_lead_status_history` (
-  `jobid` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
   `dateofchange` datetime NOT NULL,
   `changed_status` int(11) NOT NULL,
   `modified_by` int(11) NOT NULL

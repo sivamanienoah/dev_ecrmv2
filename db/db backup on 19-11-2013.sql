@@ -1338,10 +1338,10 @@ INSERT INTO `crms_items` (`itemid`, `jobid_fk`, `item_position`, `item_desc`, `i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `crms_job_categories`
+-- Table structure for table `crms_lead_services`
 --
 
-CREATE TABLE IF NOT EXISTS `crms_job_categories` (
+CREATE TABLE IF NOT EXISTS `crms_lead_services` (
   `cid` int(10) NOT NULL AUTO_INCREMENT,
   `category` varchar(150) NOT NULL,
   `status` int(1) NOT NULL,
@@ -1349,10 +1349,10 @@ CREATE TABLE IF NOT EXISTS `crms_job_categories` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
--- Dumping data for table `crms_job_categories`
+-- Dumping data for table `crms_lead_services`
 --
 
-INSERT INTO `crms_job_categories` (`cid`, `category`, `status`) VALUES
+INSERT INTO `crms_lead_services` (`cid`, `category`, `status`) VALUES
 (1, 'eConnect', 1),
 (10, 'e-Stone', 1),
 (2, 'e-CRM', 1),
@@ -1404,10 +1404,10 @@ INSERT INTO `crms_job_urls` (`urlid`, `jobid_fk`, `userid_fk`, `url`, `content`,
 --
 
 CREATE TABLE IF NOT EXISTS `crms_leads` (
-  `jobid` int(11) NOT NULL AUTO_INCREMENT,
-  `job_title` varchar(200) NOT NULL,
+  `lead_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lead_title` varchar(200) NOT NULL,
   `job_desc` text,
-  `job_category` tinyint(4) DEFAULT NULL,
+  `lead_service` tinyint(4) DEFAULT NULL,
   `lead_source` int(5) DEFAULT NULL,
   `lead_assign` int(5) DEFAULT NULL,
   `expect_worth_id` int(4) NOT NULL,
@@ -1417,7 +1417,7 @@ CREATE TABLE IF NOT EXISTS `crms_leads` (
   `custid_fk` int(11) NOT NULL,
   `date_quoted` datetime DEFAULT NULL,
   `date_invoiced` datetime DEFAULT NULL,
-  `job_status` tinyint(4) DEFAULT '1',
+  `lead_stage` tinyint(4) DEFAULT '1',
   `complete_status` tinyint(4) DEFAULT NULL,
   `assigned_to` int(4) DEFAULT NULL,
   `pjt_id` varchar(20) DEFAULT NULL,
@@ -1440,7 +1440,7 @@ CREATE TABLE IF NOT EXISTS `crms_leads` (
   `pjt_status` int(1) NOT NULL DEFAULT '0',
   `lead_indicator` varchar(32) DEFAULT NULL,
   `lead_hold_reason` text,
-  PRIMARY KEY (`jobid`),
+  PRIMARY KEY (`lead_id`),
   KEY `custid_fk` (`custid_fk`),
   KEY `assigned_to` (`assigned_to`),
   KEY `belong_to` (`belong_to`)
@@ -1450,7 +1450,7 @@ CREATE TABLE IF NOT EXISTS `crms_leads` (
 -- Dumping data for table `crms_leads`
 --
 
-INSERT INTO `crms_leads` (`jobid`, `job_title`, `job_desc`, `job_category`, `lead_source`, `lead_assign`, `expect_worth_id`, `expect_worth_amount`, `actual_worth_amount`, `invoice_no`, `custid_fk`, `date_quoted`, `date_invoiced`, `job_status`, `complete_status`, `assigned_to`, `pjt_id`, `date_start`, `date_due`, `actual_date_start`, `actual_date_due`, `date_created`, `date_modified`, `proposal_expected_date`, `proposal_adjusted_date`, `created_by`, `modified_by`, `account_manager`, `belong_to`, `division`, `payment_terms`, `log_view_status`, `lead_status`, `pjt_status`, `lead_indicator`, `lead_hold_reason`) VALUES
+INSERT INTO `crms_leads` (`lead_id`, `lead_title`, `job_desc`, `lead_service`, `lead_source`, `lead_assign`, `expect_worth_id`, `expect_worth_amount`, `actual_worth_amount`, `invoice_no`, `custid_fk`, `date_quoted`, `date_invoiced`, `lead_stage`, `complete_status`, `assigned_to`, `pjt_id`, `date_start`, `date_due`, `actual_date_start`, `actual_date_due`, `date_created`, `date_modified`, `proposal_expected_date`, `proposal_adjusted_date`, `created_by`, `modified_by`, `account_manager`, `belong_to`, `division`, `payment_terms`, `log_view_status`, `lead_status`, `pjt_status`, `lead_indicator`, `lead_hold_reason`) VALUES
 (52, 'HH', NULL, 7, 3, 149, 1, 3000.00, 0.00, '00052', 52, NULL, '2013-09-04 19:13:23', 14, 90, 150, NULL, '2013-05-07 00:00:00', '2013-05-08 00:00:00', '2013-05-07 00:00:00', '2013-05-08 00:00:00', '2013-04-01 15:48:53', '2013-09-12 14:05:28', '2013-04-25 00:00:00', NULL, 161, 59, NULL, '161', '1', 0, ':161:59:139:158', 4, 4, 'HOT', ''),
 (60, 'asdf asdf asdf asdf asdf', NULL, 1, 1, 163, 1, 10000.00, 1381.65, '00060', 84, NULL, NULL, 5, NULL, NULL, NULL, '2013-10-16 00:00:00', NULL, NULL, NULL, '2013-04-24 14:44:33', '2013-10-25 13:55:40', NULL, '2013-04-24 19:35:42', 139, 59, NULL, '139', '2', 0, '59:158:139:167', 3, 0, 'HOT', 'Other reasons'),
 (53, 'HooperHolmes', NULL, 12, 3, 163, 1, 10000.00, 135.00, '00053', 67, NULL, NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2013-04-02 12:03:36', '2013-11-04 16:47:08', '2013-04-17 00:00:00', '2013-09-11 17:35:40', 161, 59, NULL, '155', '1', 0, '59:161:158:165:159:135:139', 3, 0, 'HOT', ''),
@@ -1514,14 +1514,14 @@ CREATE TABLE IF NOT EXISTS `crms_lead_files` (
   `lead_files_name` text NOT NULL,
   `lead_files_created_by` int(4) NOT NULL,
   `lead_files_created_on` datetime NOT NULL,
-  `jobid` int(4) NOT NULL
+  `lead_id` int(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `crms_lead_files`
 --
 
-INSERT INTO `crms_lead_files` (`lead_files_name`, `lead_files_created_by`, `lead_files_created_on`, `jobid`) VALUES
+INSERT INTO `crms_lead_files` (`lead_files_name`, `lead_files_created_by`, `lead_files_created_on`, `lead_id`) VALUES
 ('colors.txt', 170, '2013-07-19 19:10:56', 70),
 ('file-array.txt', 59, '2013-08-21 10:44:30', 78),
 ('junior-resources.xlsx', 59, '2013-08-21 10:49:25', 78),
@@ -1562,7 +1562,7 @@ INSERT INTO `crms_lead_files` (`lead_files_name`, `lead_files_created_by`, `lead
 
 CREATE TABLE IF NOT EXISTS `crms_lead_query` (
   `query_id` int(5) NOT NULL AUTO_INCREMENT,
-  `job_id` int(16) NOT NULL,
+  `lead_id` int(16) NOT NULL,
   `user_id` int(5) NOT NULL,
   `query_msg` varchar(1024) NOT NULL,
   `query_file_name` varchar(255) NOT NULL,
@@ -1578,7 +1578,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_query` (
 -- Dumping data for table `crms_lead_query`
 --
 
-INSERT INTO `crms_lead_query` (`query_id`, `job_id`, `user_id`, `query_msg`, `query_file_name`, `query_sent_date`, `query_sent_to`, `query_from`, `status`, `replay_query`) VALUES
+INSERT INTO `crms_lead_query` (`query_id`, `lead_id`, `user_id`, `query_msg`, `query_file_name`, `query_sent_date`, `query_sent_to`, `query_from`, `status`, `replay_query`) VALUES
 (1, 88, 59, 'dsfasdf', 'colors.txt', '2013-09-04 14:56:32', 'giri@gr.com', 'admin@enoahisolution.com', 'query', 0),
 (2, 88, 59, 'saddf asdf', 'phpchart.txt', '2013-09-04 14:57:35', 'giri@gr.com', 'admin@enoahisolution.com', 'replay', 1),
 (3, 93, 59, 'sdfdf', 'books.jpg', '2013-09-17 17:57:47', 'sswami@enoahisolution.com', 'admin@enoahisolution.com', 'query', 0),
@@ -1679,7 +1679,7 @@ INSERT INTO `crms_lead_stage` (`lead_stage_id`, `lead_stage_name`, `sequence`, `
 --
 
 CREATE TABLE IF NOT EXISTS `crms_lead_stage_history` (
-  `jobid` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
   `dateofchange` datetime NOT NULL,
   `previous_status` int(11) NOT NULL,
   `changed_status` int(11) NOT NULL,
@@ -1691,7 +1691,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_stage_history` (
 -- Dumping data for table `crms_lead_stage_history`
 --
 
-INSERT INTO `crms_lead_stage_history` (`jobid`, `dateofchange`, `previous_status`, `changed_status`, `lead_status`, `modified_by`) VALUES
+INSERT INTO `crms_lead_stage_history` (`lead_id`, `dateofchange`, `previous_status`, `changed_status`, `lead_status`, `modified_by`) VALUES
 (76, '2013-08-06 15:54:44', 6, 7, 1, 59),
 (76, '2013-08-07 19:15:55', 7, 8, 1, 59),
 (76, '2013-07-07 19:16:15', 8, 9, 1, 59),
@@ -1825,7 +1825,7 @@ INSERT INTO `crms_lead_stage_history` (`jobid`, `dateofchange`, `previous_status
 --
 
 CREATE TABLE IF NOT EXISTS `crms_lead_status_history` (
-  `jobid` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
   `dateofchange` datetime NOT NULL,
   `changed_status` int(11) NOT NULL,
   `modified_by` int(11) NOT NULL
@@ -1835,7 +1835,7 @@ CREATE TABLE IF NOT EXISTS `crms_lead_status_history` (
 -- Dumping data for table `crms_lead_status_history`
 --
 
-INSERT INTO `crms_lead_status_history` (`jobid`, `dateofchange`, `changed_status`, `modified_by`) VALUES
+INSERT INTO `crms_lead_status_history` (`lead_id`, `dateofchange`, `changed_status`, `modified_by`) VALUES
 (91, '2013-09-12 14:57:37', 1, 59),
 (91, '2013-09-12 15:19:48', 3, 59),
 (91, '2013-09-12 15:18:27', 2, 59),
