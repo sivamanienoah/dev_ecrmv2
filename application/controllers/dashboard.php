@@ -652,6 +652,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;					  
 					}
+					//Column Alignment
+					$this->excel->getActiveSheet()->getStyle('A1:A'.$i)->getNumberFormat()->setFormatCode('00000');
 					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
 					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
 					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
@@ -672,6 +674,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;
 					}
+					//Column Alignment
+					$this->excel->getActiveSheet()->getStyle('A1:A'.$i)->getNumberFormat()->setFormatCode('00000');
 					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
 					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
 					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
@@ -695,6 +699,8 @@ class Dashboard extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($amt_converted, 2, '.', ''));
 						$i++;
 					}
+					//Column Alignment
+					$this->excel->getActiveSheet()->getStyle('A1:A'.$i)->getNumberFormat()->setFormatCode('00000');
 					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
 					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
 					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
@@ -718,6 +724,8 @@ class Dashboard extends crm_controller {
 						
 						$i++;
 					}
+					//Column Alignment
+					$this->excel->getActiveSheet()->getStyle('A1:A'.$i)->getNumberFormat()->setFormatCode('00000');
 					$this->excel->getActiveSheet()->setCellValue('F'.$i, 'TOTAL');
 					$this->excel->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
 					$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($total_amt_converted, 2, '.', ''));
