@@ -34,6 +34,7 @@ class Role extends crm_controller {
 	/*
 	*@Add Role Record 
 	*@Role Controller
+	*@Parameter $update - update, $id - role_id
 	*/
     public function add_role($update = false, $id = false, $ajax = false)
 	{
@@ -83,7 +84,8 @@ class Role extends crm_controller {
             }
         }
 		
-		$data['pageTree'] = $this->role_model->pageTree($id);	
+		$data['pageTree'] = $this->role_model->pageTree($id);
+		// echo "<pre>"; print_r($data['pageTree']); exit;
 		
 		if ($this->validation->run() == false) {
 			
