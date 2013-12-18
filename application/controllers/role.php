@@ -123,27 +123,25 @@ class Role extends crm_controller {
                     $this->session->set_flashdata('confirm', array('Role Details Updated!'));
                     // redirect('role/add_role/update/' . $id);
                     redirect('role');
-                    
                 }
                 
             } else {
                $user_Detail = $this->session->userdata('logged_in_user');
                 //insert
-				 $update_data['userid']=$user_Detail['userid'];			
-				 $update_data['modified_by']=$user_Detail['userid'];			
-				 $update_data['created']=date('Y-m-d H:i:s');	 
-				 $update_data['created_by']=$user_Detail['userid'];			
-				 $update_data['modified']=date('Y-m-d H:i:s');						
+				 $update_data['userid']		 = $user_Detail['userid'];			
+				 $update_data['modified_by'] = $user_Detail['userid'];			
+				 $update_data['created']	 = date('Y-m-d H:i:s');	 
+				 $update_data['created_by']	 = $user_Detail['userid'];			
+				 $update_data['modified']	 = date('Y-m-d H:i:s');						
 				 
                 if ($newid = $this->role_model->insert_role($update_data)) {
-                    
                     if ($ajax == false) {
                         $this->session->set_flashdata('confirm', array('New Role Added!'));
                         redirect('role/add_role/update/' . $newid);
                     } else {
                         $json['error'] = false;
-                        $json['id'] = $newid;
-                        $json['name'] = $this->input->post('name') ; 
+                        $json['id']    = $newid;
+                        $json['name']  = $this->input->post('name') ; 
                         echo json_encode($json);
                     }
                 }                
