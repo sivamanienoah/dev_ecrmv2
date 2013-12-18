@@ -993,7 +993,7 @@ if(viewlead==1) {
 			var lead_sour	 = filter_lead_sour;
 			var lead_indic	 = filter_lead_indic;
 		}
-		var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id ,'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+		var formdata              = { 'userid':userid, 'user_name':user_name, 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
 		formdata[csrf_token_name]      = csrf_hash_token; 
 		$.ajax({
 			type: "POST",
@@ -1166,15 +1166,41 @@ if(viewlead==1) {
 		$lead.slideUp('fast', function () { $lead.css('display','none'); });
 	});
 
+	//currently active leads
 	$('#current-lead-report').change(function() {
-		var statusVar = 'statusVar='+$(this).val()+'&'+csrf_token_name+'='+csrf_hash_token;
+		
+		if (filter_toggle_stat=='toggle') {
+			var stge 	   = filter_stgs;
+			var cust_id    = filter_custs_id;
+			var ownr_id    = filter_owr_id;
+			var assg_id    = filter_assg_id;
+			var reg_id	   = filter_reg_nme;
+			var cntry_id   = filter_country;
+			var stet_id	   = filter_state;
+			var locn_id	   = filter_location;
+			var servic_req = filter_servic_req;
+			var lead_sour  = filter_lead_sour;
+			var lead_indic = filter_lead_indic;
+		}
+		
+		var formdata              = { 'statusVar':$(this).val(), 'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic }
+		formdata[csrf_token_name] = csrf_hash_token;
+		
 		var baseurl = site_base_url;
 		$.ajax({
-		type: 'GET',
-		url : baseurl + 'dashboard/get_leads_current_weekly_monthly_report/',
-		data: statusVar,
+			type: 'POST',
+			url : baseurl + 'dashboard/get_leads_current_weekly_monthly_report/',
+			// data: statusVar,
+			data: formdata,
+			beforeSend:function(){
+				$('#weekly-monthly').empty();
+				$("#weekly-monthly").show();
+				$('#weekly-monthly').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+			},
 			success : function(response){
 				if(response != '') {
+					$('#weekly-monthly').empty();
+					$("#weekly-monthly").show();
 					$("#weekly-monthly").html(response);
 					$('#weekly-monthly-table').dataTable({
 						"iDisplayLength": 5,
@@ -1190,8 +1216,8 @@ if(viewlead==1) {
 				} 			
 			}
 		});
-		
 	});
+	
 	
 	/* dashboard excel report starts here */
 	

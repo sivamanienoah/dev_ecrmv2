@@ -464,8 +464,7 @@ class Dashboard_model extends crm_model {
 		return $cnt_query;
 	}
 	
-	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE, $filter = FALSE) 
-	{
+	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE, $filter = FALSE) {
 		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
@@ -477,11 +476,12 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('jb.custid_fk', $cusId);
 		}
-		if (!empty($filter['customer'])) {
-			$this->db->where_in('jb.custid_fk', $filter['customer']);
-		}
+		//advanced filter
 		if (!empty($filter['stage'])) {
 			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
 		}
 		if (!empty($filter['owner'])) {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
@@ -516,8 +516,52 @@ class Dashboard_model extends crm_model {
 		return $act_query;
 	}
 	
-	public function getLeadsAging($cusId = FALSE, $filter = FALSE) 
-	{
+	function getCurrentActivityLeadsAjax($isSelect = 7, $cusId = FALSE, $filters = FALSE) {
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
+		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
+		$this->db->from($this->cfg['dbpref'].'leads jb');
+		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
+		$this->db->where_in('jb.lead_stage', $this->stg);
+		$this->db->where('jb.lead_status', 1);
+		if ($this->userdata['level']!=1) {
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		//for advanced filters
+		if (!empty($fresult['fstge']))
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		if (!empty($fresult['fcust_id']))
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		if (!empty($fresult['fownr_id']))
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		if (!empty($fresult['fassg_id']))
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		if (!empty($fresult['freg_id']))
+			$this->db->where_in('c.add1_region', $fresult['freg_id']);
+		if (!empty($fresult['fcntry_id']))
+			$this->db->where_in('c.add1_country', $fresult['fcntry_id']);
+		if (!empty($fresult['fstet_id']))
+			$this->db->where_in('c.add1_state', $fresult['fstet_id']);
+		if (!empty($fresult['flocn_id']))
+			$this->db->where_in('c.add1_location', $fresult['flocn_id']);
+		if (!empty($fresult['fser_req_id']))
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		if (!empty($fresult['flead_src_id']))
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
+		$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
+		$query 		= $this->db->get();
+		$act_query  =  $query->result_array();       
+		return $act_query;
+	}
+	
+	public function getLeadsAging($cusId = FALSE, $filter = FALSE) {
 		$todayDate = date('Y-m-d h:m:s');
 		// $todayDate = date('Y-m-d');
 		$thirtyDays = date('Y-m-d h:m:s', strtotime("now -30 days"));
@@ -617,8 +661,7 @@ class Dashboard_model extends crm_model {
 		return $age_query->row_array();
 	}
 	
-	public function leadAgingLeads($cusId = FALSE, $dt, $filters)
-	{	
+	public function leadAgingLeads($cusId = FALSE, $dt, $filters) {	
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -740,8 +783,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	/* Get lead_id, lead title, region, lead owner, lead assigned to, customer, */
-	public function getLeadOwnerDependencies($userid, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getLeadOwnerDependencies($userid, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -796,8 +838,7 @@ class Dashboard_model extends crm_model {
 		return $depend_query;
 	}
 
-	public function getLeadAssigneeDependencies($userid, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getLeadAssigneeDependencies($userid, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -851,8 +892,7 @@ class Dashboard_model extends crm_model {
 		return $depend_query;
 	}
 
-	public function getLeadsDetails($leadStage, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getLeadsDetails($leadStage, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -909,8 +949,7 @@ class Dashboard_model extends crm_model {
 		return $ld_query;
 	}
 	
-	public function getRegionLeadsDetails($leadsRegion, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getRegionLeadsDetails($leadsRegion, $cusId = FALSE, $filters = FALSE) {
 		//echo $leadsRegion; exit;
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
@@ -1000,8 +1039,7 @@ class Dashboard_model extends crm_model {
 		return $ld_query;
 	}
 	
-	public function getCurrentLeadActivity($lead_id) 
-	{
+	public function getCurrentLeadActivity($lead_id) {
 	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title,cs.first_name as cfname, jb.invoice_no, cs.last_name as clname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 							 $this->db->from($this->cfg['dbpref'].'leads jb');
 							 $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
@@ -1016,8 +1054,7 @@ class Dashboard_model extends crm_model {
 		return $depend_query;
 	}
 	
-	public function LeadDetails($jid) 
-	{
+	public function LeadDetails($jid) {
 		$this->db->select('jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
@@ -1035,8 +1072,7 @@ class Dashboard_model extends crm_model {
 	
 	/*Level Restrictions*/
 	//For Regions
-	public function getRegions($uid, $lvlid) 
-	{
+	public function getRegions($uid, $lvlid) {
 		$this->db->select('region_id');
 		$this->db->from($this->cfg['dbpref'].'levels_region');
 		$this->db->where('user_id', $uid);
@@ -1047,8 +1083,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For Countries
-	public function getCountries($uid, $lvlid) 
-	{
+	public function getCountries($uid, $lvlid) {
 		$this->db->select('country_id');
 		$this->db->from($this->cfg['dbpref'].'levels_country');
 		$this->db->where('user_id', $uid);
@@ -1059,8 +1094,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For States
-	public function getStates($uid, $lvlid) 
-	{
+	public function getStates($uid, $lvlid) {
 		$this->db->select('state_id');
 		$this->db->from($this->cfg['dbpref'].'levels_state');
 		$this->db->where('user_id', $uid);
@@ -1071,8 +1105,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For Locations
-	public function getLocations($uid, $lvlid) 
-	{
+	public function getLocations($uid, $lvlid) {
 		$this->db->select('location_id');
 		$this->db->from($this->cfg['dbpref'].'levels_location');
 		$this->db->where('user_id', $uid);
@@ -1083,8 +1116,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For Customers
-	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) 
-	{
+	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) {
 		$this->db->select('custid');
 		$this->db->from($this->cfg['dbpref'].'customers');
 		if (!empty($regId)) {
@@ -1105,8 +1137,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//for closed opportunities getClosedJobids
-	public function getClosedJobids($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getClosedJobids($cusId = FALSE, $filter = FALSE) {
 		$pjt_stat = array(0,1,2,3);
 		$curYear = date("Y");
 		$frm_dt = $curYear."-04-01";
@@ -1160,8 +1191,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For Closed Opportunities Leads only - actual_worth_amount
-	public function closedLeadDet($jbid, $filters=false) 
-	{
+	public function closedLeadDet($jbid, $filters=false) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -1217,8 +1247,7 @@ class Dashboard_model extends crm_model {
 		}
 	}
 	
-	public function getLeadSource($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeadSource($cusId = FALSE, $filter = FALSE) {
 		$this->db->select('ldsrc.lead_source_name, count(`lead_source`) as src');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
@@ -1268,8 +1297,7 @@ class Dashboard_model extends crm_model {
 		return $ls_query;
 	}
 	
-	public function getServiceReq($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getServiceReq($cusId = FALSE, $filter = FALSE) {
 		$this->db->select('jc.services, count(`lead_service`) as job_cat');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_services jc', 'jc.sid = jb.lead_service');
@@ -1319,8 +1347,7 @@ class Dashboard_model extends crm_model {
 		return $sq_query;
 	}
 	
-	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -1376,8 +1403,7 @@ class Dashboard_model extends crm_model {
 		return $ldsr_query;
 	}
 	
-	public function getLeadsDetails_pie3($leadStage, $cusId = FALSE, $filters = FALSE) 
-	{
+	public function getLeadsDetails_pie3($leadStage, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -1434,8 +1460,7 @@ class Dashboard_model extends crm_model {
 		return $serreq_query;
 	}
 	
-	function explod_arr($filters)
-	{
+	function explod_arr($filters) {
 		$fres = array();
 		
 		if ($filters['stge'] !='')
@@ -1467,8 +1492,7 @@ class Dashboard_model extends crm_model {
 	/*
 	*Get the Lead Service
 	*/
-	function get_serv_req()
-	{		
+	function get_serv_req() {		
 		$query = $this->db->get_where($this->cfg['dbpref'].'lead_services', array('status'=>1));
 		return $query->result_array();
 	}
@@ -1476,8 +1500,7 @@ class Dashboard_model extends crm_model {
 	/*
 	*Get the Lead Sources
 	*/
-	function get_lead_sources()
-	{		
+	function get_lead_sources() {		
 		$query = $this->db->get_where($this->cfg['dbpref'].'lead_source', array('status'=>1));
 		return $query->result_array();
 	}

@@ -483,11 +483,13 @@ class Dashboard extends crm_controller {
 	
 	public function get_leads_current_weekly_monthly_report() 
 	{
+		$res = real_escape_array($this->input->post());
 		$weekly_monthly_repo = '';
 		$lead_det 	= array();
-		$isSelect 	= $this->input->get('statusVar');
+		$isSelect 	= $res['statusVar'];
+		$filter		= $res;
 		$cusId 		= $this->level_restriction();
-		$data['getCurrentActivityTable'] = $this->dashboard_model->getCurrentActivityLeads($isSelect, $cusId);
+		$data['getCurrentActivityTable'] = $this->dashboard_model->getCurrentActivityLeadsAjax($isSelect, $cusId, $filter);
 		// echo "<pre>"; print_r($data['getCurrentActivityTable']); exit;
 		$weekly_monthly_repo .= '<table class="dashboard-heads" id="weekly-monthly-table" cellspacing="0" cellpadding="10px;" border="0" width="100%">';
 		$rates = $this->get_currency_rates();
