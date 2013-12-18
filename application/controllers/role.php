@@ -146,7 +146,6 @@ class Role extends crm_controller {
                         $json['name'] = $this->input->post('name') ; 
                         echo json_encode($json);
                     }
-                    
                 }                
             }
 			
