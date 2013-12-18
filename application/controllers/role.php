@@ -158,14 +158,13 @@ class Role extends crm_controller {
 	public function delete_role($id = false) {
 		if ($this->session->userdata('delete')==1) {	
 			$this->login_model->check_login();
-					
 			if ($this->role_model->delete_role($id)) {
 				$this->session->set_flashdata('confirm', array('Role Account Deleted!'));
 				redirect('role/');
 			}
 		} else {
-				$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-				redirect('role/');
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('role/');
 		}
 	}
     
