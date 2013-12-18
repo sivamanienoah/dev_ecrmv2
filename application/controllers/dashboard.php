@@ -57,36 +57,74 @@ class Dashboard extends crm_controller {
 		$data['rates'] = $this->get_currency_rates();
 		if($total_leads>0)
     	{	
-    		if ($userdata['level'] == 1) {	
-				foreach ($leads as $lead)
-				{
-					$region_name			 = trim($lead->region_name);
-					$lead_reg[$region_name]  = empty($lead_reg[$region_name])?0:$lead_reg[$region_name];
-					//$lead_reg[$region_name] += $lead->expect_worth_amount;
-					$lead_reg[$region_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+    		if ($userdata['level'] == 1) {
+				if ((!empty($filter['regionname'])) && (empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+					foreach ($leads as $lead) {
+						$country_name			  = trim($lead->country_name);
+						$lead_reg[$country_name]  = empty($lead_reg[$country_name])?0:$lead_reg[$country_name];
+						$lead_reg[$country_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+					}
+				} else if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+					foreach ($leads as $lead) {
+						$state_name 		    = trim($lead->state_name);
+						$lead_reg[$state_name]  = empty($lead_reg[$state_name])?0:$lead_reg[$state_name];
+						$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+					}
+				} else if (!empty($filter['statename'])) {
+					foreach ($leads as $lead) {
+						$location_name 			   = trim($lead->location_name);
+						$lead_reg[$location_name]  = empty($lead_reg[$location_name])?0:$lead_reg[$location_name];
+						$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+					}
+				} else {
+					foreach ($leads as $lead) {
+						$region_name			 = trim($lead->region_name);
+						$lead_reg[$region_name]  = empty($lead_reg[$region_name])?0:$lead_reg[$region_name];
+						//$lead_reg[$region_name] += $lead->expect_worth_amount;
+						$lead_reg[$region_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+					}
 				}
 			} else {
 				switch($userdata['level']) {
 					case 2:
-						foreach ($leads as $lead)
-						{
-							$country_name			  = trim($lead->country_name);
-							$lead_reg[$country_name]  = empty($lead_reg[$country_name])?0:$lead_reg[$country_name];
-							$lead_reg[$country_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+						if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+							foreach ($leads as $lead) {
+								$state_name 		    = trim($lead->state_name);
+								$lead_reg[$state_name]  = empty($lead_reg[$state_name])?0:$lead_reg[$state_name];
+								$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+							}
+						} else if ((!empty($filter['statename']))) {
+							foreach ($leads as $lead) {
+								$location_name 			   = trim($lead->location_name);
+								$lead_reg[$location_name]  = empty($lead_reg[$location_name])?0:$lead_reg[$location_name];
+								$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+							}
+						} else {
+							foreach ($leads as $lead) {
+								$country_name			  = trim($lead->country_name);
+								$lead_reg[$country_name]  = empty($lead_reg[$country_name])?0:$lead_reg[$country_name];
+								$lead_reg[$country_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+							}
 						}
 					break;
 					case 3:
-						foreach ($leads as $lead)
-						{
-							$state_name 		    = trim($lead->state_name);
-							$lead_reg[$state_name]  = empty($lead_reg[$state_name])?0:$lead_reg[$state_name];
-							$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
-						}
+						if ((!empty($filter['statename']))) {
+							foreach ($leads as $lead) {
+								$location_name 			   = trim($lead->location_name);
+								$lead_reg[$location_name]  = empty($lead_reg[$location_name])?0:$lead_reg[$location_name];
+								$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+							}
+						} else {
+							foreach ($leads as $lead) {
+								$state_name 		    = trim($lead->state_name);
+								$lead_reg[$state_name]  = empty($lead_reg[$state_name])?0:$lead_reg[$state_name];
+								$lead_reg[$state_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
+							}
+						}			
 					break;
 					case 4:
 					case 5:
-						foreach ($leads as $lead)
-						{
+						foreach ($leads as $lead) {
 							$location_name 			   = trim($lead->location_name);
 							$lead_reg[$location_name]  = empty($lead_reg[$location_name])?0:$lead_reg[$location_name];
 							$lead_reg[$location_name] += $this->conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$this->default_cur_id]);
@@ -218,11 +256,11 @@ class Dashboard extends crm_controller {
 		
 		$type 				   = $res['type']; 
 		$data 				   = $res['data'];
-
+		
 		$cusId 		= $this->level_restriction();
 		$res 		= array();
 		$rates 		= $this->get_currency_rates();
-		$lead_stage = explode("(",$data[0]); 
+		$lead_stage = explode("(",$data[0]);
 		// echo $type . " " . $lead_stage[0]; exit;
 		switch($type) 
 		{

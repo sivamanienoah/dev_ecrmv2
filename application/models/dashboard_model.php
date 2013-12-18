@@ -102,7 +102,6 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('j.lead_stage', $this->stg);
 		
 		if ($this->userdata['level']==1) {
-			//$this->db->where_in('j.custid_fk', $cusId);
 			$this->db->order_by('rg.region_name', 'ASC');
 		}
 		if ($this->userdata['level']==2) {
@@ -916,6 +915,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
+		
 		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
@@ -928,13 +928,28 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 
 		if ($this->userdata['level']==1) {
-			$this->db->where('reg.region_name', $leadsRegion);
+			if ((!empty($fresult['freg_id'])) && (empty($fresult['fcntry_id'])) && (empty($fresult['fstet_id'])) && (empty($fresult['flocn_id'])))
+				$this->db->where('cou.country_name', $leadsRegion);
+			else if ((!empty($fresult['fcntry_id'])) && (empty($fresult['fstet_id'])) && (empty($fresult['flocn_id'])))
+				$this->db->where('ste.state_name', $leadsRegion);
+			else if (!empty($fresult['fstet_id']))
+				$this->db->where('loc.location_name', $leadsRegion);
+			else 
+				$this->db->where('reg.region_name', $leadsRegion);
 		}
-		if (($this->userdata['level'])==2){
-			$this->db->where('cou.country_name', $leadsRegion);
+		if (($this->userdata['level'])==2) {
+			if ((!empty($fresult['fcntry_id'])) && (empty($fresult['fstet_id'])) && (empty($fresult['flocn_id'])))
+				$this->db->where('ste.state_name', $leadsRegion);
+			else if (!empty($fresult['fstet_id']))
+				$this->db->where('loc.location_name', $leadsRegion);
+			else 
+				$this->db->where('cou.country_name', $leadsRegion);
 		}
-		if (($this->userdata['level'])==3){
-			$this->db->where('ste.state_name', $leadsRegion);
+		if (($this->userdata['level'])==3) {
+			if (!empty($fresult['fstet_id']))
+				$this->db->where('loc.location_name', $leadsRegion);
+			else
+				$this->db->where('ste.state_name', $leadsRegion);
 		}
 		if (($this->userdata['level']==4) || ($this->userdata['level']==5)) {
 			$this->db->where('loc.location_name', $leadsRegion);
@@ -980,6 +995,7 @@ class Dashboard_model extends crm_model {
 		}
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$ld_query =  $query->result_array();
 		return $ld_query;
 	}

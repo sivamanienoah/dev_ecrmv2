@@ -17,7 +17,6 @@ require (theme_url().'/tpl/header.php');
 //echo baseurl();
 ?>
 <?php if($this->session->userdata('viewlead')==1) { ?>
-<script type="text/javascript">var this_is_home = true;</script>
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -35,13 +34,29 @@ require (theme_url().'/tpl/header.php');
 switch ($userdata['level']) 
 {
     case 1:
-        $chart_title = "Leads By Region Wise";
+		if ((!empty($filter['regionname'])) && (empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+			$chart_title = "Leads By Country Wise";
+		} else if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+			$chart_title = "Leads By State Wise";
+		} else if (!empty($filter['statename'])) {
+			$chart_title = "Leads By Location Wise";
+		} else {
+			$chart_title = "Leads By Region Wise";
+		}
 	break;
     case 2:
-        $chart_title = "Leads By Country Wise";
+		if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname'])))
+			$chart_title = "Leads By State Wise";
+		else if (!empty($filter['statename']))
+			$chart_title = "Leads By Location Wise";
+		else 
+			$chart_title = "Leads By Country Wise";
 	break;
     case 3:
-        $chart_title = "Leads By State Wise";
+		if (!empty($filter['statename']))
+			$chart_title = "Leads By Location Wise";
+		else
+			$chart_title = "Leads By State Wise";
 	break;
 	case 4:
 	case 5:
