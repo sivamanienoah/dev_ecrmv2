@@ -12,8 +12,7 @@ class Dashboard_model extends crm_model {
     }
 	
 	//Dashboard functionality
-	public function getTotLeads($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getTotLeads($cusId = FALSE, $filter = FALSE) {
 		// echo "<pre>"; print_r($filter); exit;
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
@@ -66,8 +65,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//Dashboard functionality
-	function getTotLead($cusId = FALSE, $filter) 
-	{
+	function getTotLead($cusId = FALSE, $filter) {
 		$this->db->select('lstg.lead_stage_name, COUNT( * )');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage lstg', 'lstg.lead_stage_id = jb.lead_stage');
@@ -87,8 +85,7 @@ class Dashboard_model extends crm_model {
 		return $tot_query;
 	}
 	
-	public function getLeadsByReg($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeadsByReg($cusId = FALSE, $filter = FALSE) {
 		// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
 		$this->db->select('rg.region_name, coun.country_name, ste.state_name, loc.location_name, j.expect_worth_amount, ew.expect_worth_name, ew.expect_worth_id');	
 		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = j.custid_fk','inner');
@@ -157,8 +154,7 @@ class Dashboard_model extends crm_model {
 		return $result;
 	}
 	
-	public function getLeadsByOwner($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeadsByOwner($cusId = FALSE, $filter = FALSE) {
 		$this->db->select('us.userid, COUNT( * ), SUM(jb.expect_worth_amount) as amt, CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.belong_to');
@@ -208,8 +204,7 @@ class Dashboard_model extends crm_model {
 		return $own_query;
 	}
 	
-	public function getLeadsByAssignee($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeadsByAssignee($cusId = FALSE, $filter = FALSE) {
 		$this->db->select('us.userid, COUNT( * ), CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.lead_assign');
@@ -259,8 +254,7 @@ class Dashboard_model extends crm_model {
 		return $assg_query;
 	}
 	
-	public function getLeadsIndicator($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeadsIndicator($cusId = FALSE, $filter = FALSE) {
 		/*
 		$this->db->select('COUNT(lead_indicator), jb.lead_indicator');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
@@ -351,8 +345,7 @@ class Dashboard_model extends crm_model {
 			return $indicator_query->row_array();
 	}
 	
-	public function getIndiLeads($cusId = FALSE, $indi, $filters = FALSE) 
-	{
+	public function getIndiLeads($cusId = FALSE, $indi, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -409,8 +402,7 @@ class Dashboard_model extends crm_model {
 		return $ind_query;
 	}
 	
-	public function getLeastLeadsCount($cusId = FALSE, $filter = FALSE) 
-	{
+	public function getLeastLeadsCount($cusId = FALSE, $filter = FALSE) {
 		/*
 		$cnt_query = $this->db->query("SELECT `lead_indicator`,count(`lead_indicator`) FROM `".$this->cfg['dbpref']."leads` WHERE `lead_stage` between 1 and 12 and `lead_status` = 1 and `lead_indicator` !='HOT' GROUP BY `lead_indicator` ORDER BY `lead_indicator`");
 		*/
