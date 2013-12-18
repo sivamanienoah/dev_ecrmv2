@@ -1644,6 +1644,7 @@ if(viewlead==1 && filter_toggle_stat=='toggle') {
 
 	function set_state(filter_state) {
 		var stat = new Array();
+		if (filter_state)
 		stat = filter_state.split(",");
 		for (var i=0;i<stat.length;i++)
 		{
@@ -1654,6 +1655,7 @@ if(viewlead==1 && filter_toggle_stat=='toggle') {
 	
 	function set_location(filter_location) {
 		var loc = new Array();
+		if (filter_location)
 		loc = filter_location.split(",");
 		for (var i=0;i<loc.length;i++)
 		{
