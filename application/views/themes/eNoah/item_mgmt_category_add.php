@@ -28,23 +28,17 @@
 				<tr> </tr>
                 <tr>
 					<td>&nbsp;</td>
-					<td class="action-buttons">
+					<td colspan=2 class="action-buttons">
                         <div class="buttons">
 							<button type="submit" name="update_item" class="positive">
 								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Item
 							</button>
 						</div>
-                    </td>
-                    <td colspan="2" class="action-buttons">
-						<!--
-                        <?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)) && $userdata['level'] < 2) { ?>
-                        <div class="buttons">
-                            <button type="submit" name="delete_item" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-                                Delete Item
-                            </button>
+						<div class="buttons">
+                           <button type="button" class="negative" onclick="location.href='item_mgmt/category_list'">
+								Cancel
+							</button>
                         </div>
-                        <?php } else { echo "&nbsp;"; } ?>
-						-->
                     </td>
 				</tr>
             </table>

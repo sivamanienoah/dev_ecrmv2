@@ -84,14 +84,18 @@ require (theme_url().'/tpl/header.php'); ?>
                     <td><input type="password" name="pass_conf" value="" class="textfield width200px" /> </td>
 				</tr>
                 <tr>
-					<td>&nbsp;</td>
 					<td>
+						&nbsp;
+					</td>
+					<td colspan="4">
                         <div class="buttons">
 							<button type="submit" name="update_user" class="positive">Update</button>
 						</div>
-                    </td>
-                    <td colspan="2">
-                        &nbsp;
+						<div class="buttons">
+                           <button type="button" class="negative" onclick="location.href='myaccount'">
+								Cancel
+							</button>
+                        </div>
                     </td>
 				</tr>
             </table>

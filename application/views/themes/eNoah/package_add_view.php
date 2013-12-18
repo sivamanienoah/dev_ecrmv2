@@ -47,27 +47,24 @@
 					<td>
                         <div class="buttons">
 							<button type="submit" name="update_customer" class="positive">
-								
 								<?php echo  ($this->uri->segment(2) == 'update' && is_numeric($this->uri->segment(3))) ? 'Update' : 'Add' ?> Package Type
 							</button>
 						</div>
-                    </td>
-                    <td>
-                        <?php if ($this->uri->segment(2) == 'update' && is_numeric($this->uri->segment(3)) && $userdata['level'] < 1) { ?>
-                        <div class="buttons">
-                            <button type="submit" name="delete_account" class="negative" onclick="if (!confirm('Are you sure?\nThis action cannot be undone!')) { this.blur(); return false; }">
-                                Delete Account
-                            </button>
-                        </div>
-                        <?php } else { echo "&nbsp;"; } ?>
+						<div class="buttons">
+							<button type="button" class="negative" onclick="location.href='package/type'">
+								Cancel
+							</button>
+						</div>
                     </td>
                     <td>&nbsp;</td>
 				</tr>
             </table>
 		</form>
-		<?php } else{
+		<?php 
+		} else {
 			echo "You have no rights to access this page";
-		} ?>
+		} 
+		?>
 	</div>
 </div>
 <?php require (theme_url().'/tpl/footer.php'); ?>

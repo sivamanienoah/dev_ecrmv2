@@ -113,8 +113,12 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td>
                         <div class="buttons">
 							<button type="submit" name="update_customer" class="positive">
-								
 								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Account
+							</button>
+						</div>
+						<div class="buttons">
+							<button type="button" class="negative" onclick="location.href='hosting'">
+								Cancel
 							</button>
 						</div>
                     </td>

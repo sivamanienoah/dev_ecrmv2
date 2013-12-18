@@ -87,8 +87,12 @@
 					<td>
                         <div class="buttons">
 							<button type="submit" name="update_customer" class="positive">
-								
 								<?php echo  ($toDB=='update') ? 'Update' : 'Add' ?> Package Type
+							</button>
+						</div>
+						<div class="buttons">
+							<button type="button" class="negative" onclick="location.href='package'">
+								Cancel
 							</button>
 						</div>
                     </td>

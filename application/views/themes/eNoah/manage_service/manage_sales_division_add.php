@@ -44,6 +44,11 @@
 								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Division
 							</button>
 						</div>
+						<div class="buttons">
+                           <button type="button" class="negative" onclick="location.href='manage_service/manage_sales'">
+								Cancel
+							</button>
+                        </div>
                     </td>
 				</tr>
             </table>

@@ -180,6 +180,11 @@
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> User
 							</button>
 						</div>
+						<div class="buttons">
+                           <button type="button" class="negative" onclick="location.href='user'">
+								Cancel
+							</button>
+                        </div>
                     </td>
                     
 					<?php //} ?>
