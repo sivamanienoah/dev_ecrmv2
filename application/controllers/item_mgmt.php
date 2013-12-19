@@ -139,12 +139,14 @@ class Item_mgmt extends crm_controller {
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {        
                 if ($this->item_mgmt_model->update_row('additional_items', array('itemid' => $id), $update_data)) {
                     $this->session->set_flashdata('confirm', array('Item Details Updated!'));
-                    redirect('item_mgmt/add/update/' . $id . '/' . $type);
+                    // redirect('item_mgmt/add/update/' . $id . '/' . $type);
+                    redirect('item_mgmt');
                 }
             } else {
             	$this->item_mgmt_model->insert_row('additional_items', $update_data);
                 $this->session->set_flashdata('confirm', array('New Item Added!'));
-                redirect('item_mgmt/add/update/' . $this->db->insert_id() . '/' . $type);
+                // redirect('item_mgmt/add/update/' . $this->db->insert_id() . '/' . $type);
+                redirect('item_mgmt');
             }
 		}
         $this->load->view('item_mgmt_add', $data);

@@ -139,7 +139,8 @@ class Role extends crm_controller {
                 if ($newid = $this->role_model->insert_role($update_data)) {
                     if ($ajax == false) {
                         $this->session->set_flashdata('confirm', array('New Role Added!'));
-                        redirect('role/add_role/update/' . $newid);
+                        // redirect('role/add_role/update/' . $newid);
+                        redirect('role');
                     } else {
                         $json['error'] = false;
                         $json['id']    = $newid;

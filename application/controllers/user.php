@@ -92,7 +92,6 @@ class User extends crm_controller {
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
-			
         }
 		
 		if ($this->validation->run() == false) 
@@ -107,7 +106,6 @@ class User extends crm_controller {
                 $json['ajax_error_str'] = $this->validation->error_string;
                 echo json_encode($json);
             }
-			
 		} 
 		else 
 		{
@@ -210,21 +208,19 @@ class User extends crm_controller {
 						$this->email_template_model->sent_email($param);
 					}
 					$this->session->set_flashdata('confirm', array('User Details Updated!'));
-					redirect('user/add_user/update/' . $id);
+					// redirect('user/add_user/update/' . $id);
+					redirect('user');
 				}
 			} 
 			else 
 			{
 				//insert
-				// echo "<pre>"; print_r($update_data); exit;
-				// unset($update_data['email']);
-				// $update_data['email'] = 'ranburaj@enoahisolution.com';
 				$newid = $this->user_model->insert_user($update_data);
 				if ($newid == 'maxusers')
 				{
 					// echo $newid . "maxusers"; exit;
 					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
-					redirect('user/');
+					redirect('user');
 				}
 				else if ($newid == 'emailexist')
 				{
@@ -232,8 +228,6 @@ class User extends crm_controller {
 				}
 				else
 				{
-					// echo "<pre>"; print_r($update_data); exit;
-					// echo $newid . "new user"; exit;
 					$user_ids = $this->db->insert_id();
 					$level_id = $update_data['level'];
 					$this->user_model->insert_level_settings($update_data1, $user_ids, $level_id);
@@ -263,10 +257,9 @@ class User extends crm_controller {
 
 					$this->email_template_model->sent_email($param);
 		
-					if ($ajax == false) 
-					{
+					if ($ajax == false) {
 						$this->session->set_flashdata('confirm', array('New User Added!'));
-						redirect('user/');
+						redirect('user');
 					} 
 					else 
 					{
@@ -332,18 +325,16 @@ class User extends crm_controller {
 	*@Search User
 	*
 	*/
-	
-    public function search()
-	{
+    public function search() {
         $this->login_model->check_login();
 		$data =	real_escape_array($this->input->post()); // escape special characters
         if (isset($data['cancel_submit'])) {
-            redirect('user/');
+            redirect('user');
         } else if ($name = $data['cust_search']) {
 
             redirect('user/index/0/' . remove_special_chars($name));
         } else {
-            redirect('user/');
+            redirect('user');
         }
     }
 
@@ -352,9 +343,7 @@ class User extends crm_controller {
 	*@Method : Check Level
 	*@module : User
 	*/
-    
-    public function level_check($str)
-	{
+    public function level_check($str) {
         if (!preg_match('/^[0-9]+$/', $str)) {
 			$this->validation->set_message('level_check', 'Level must be selected.');
 			return false;
@@ -367,28 +356,22 @@ class User extends crm_controller {
 	*@ Method :log History
 	*@ module : User
 	*/
-
-	public function log_history($user = 0)
-	{
+	public function log_history($user = 0) {
 		$log_user = $this->user_model->get_user($user);
-		if (count($log_user) > 0)
-		{
-			if ( ! in_array($this->userdata['level'], array(0, 1)) && $log_user[0]['userid'] != $this->userdata['userid'])
-			{
+		if (count($log_user) > 0) {
+			if ( ! in_array($this->userdata['level'], array(0, 1)) && $log_user[0]['userid'] != $this->userdata['userid']) {
 				$this->session->set_flashdata('login_errors', array('Your access level does not allow access to this area!'));
                 redirect('notallowed/');
                 exit();
 			}
 			$log_user = $log_user[0];
 		}
-		else
-		{
+		else {
 			$log_user = $this->userdata;
 		}
 		
 		$log_date = $this->check_date($this->input->post('log_date'));
-		if ( ! $log_date)
-		{
+		if ( ! $log_date) {
 			$log_date = date('Y-m-d');
 		}
 		
@@ -398,27 +381,22 @@ class User extends crm_controller {
 		$data['log_set']          = '';
 		$time_total               = 0;
 		
-		foreach ($rs as $row)
-		{
+		foreach ($rs as $row) { 
 			$log_content = nl2br($row['log_content']);
 			$numerc_time = (int) $row['time_spent'];
 			$time_total += $numerc_time;
-			if ( ! isset($row['lead_title']))
-			{
+			if ( ! isset($row['lead_title'])) {
 				$row['lead_title'] = 'General Task';
 			}
 			$row_time_spent = '';
-			if ($numerc_time > 0)
-			{
+			if ($numerc_time > 0) {
 				$the_hours = floor($numerc_time / 60);
 				$the_mins = $numerc_time % 60;
-				if ($the_hours > 0)
-				{
+				if ($the_hours > 0) {
 					$row_time_spent = " - Time Spent: {$the_hours} Hours";
 					if ($the_mins > 0) $row_time_spent .= " {$the_mins} Mins";
 				}
-				else
-				{
+				else {
 					$row_time_spent = " - Time Spent: {$the_mins} Mins";
 				}
 			}
@@ -433,27 +411,22 @@ class User extends crm_controller {
 					'.$log_content.'
 				</p>
 			</div>';
-			
 		}
 		
 		$hours_spent    = floor( $time_total / 60);
 		$remainder_mins = $time_total - ($hours_spent * 60);
 		$mins_spent     = '';
-		if ($remainder_mins > 0)
-		{
+		if ($remainder_mins > 0) {
 			$mins_spent  = "{$remainder_mins} Mins";
 		}
 		
-		if ($hours_spent > 0)
-		{
+		if ($hours_spent > 0) {
 			$data['total_time_spent'] = "Total Time: {$hours_spent} Hours {$mins_spent}";
 		}
-		else
-		{
+		else {
 			$data['total_time_spent'] = ($mins_spent != '') ? "Total Time: {$mins_spent}" : '';
 		}
-		if ($data['log_set'] == '')
-		{
+		if ($data['log_set'] == '') {
 			$data['log_set'] = '<h4>No logs available for this date!</h4>';
 		}
 		$this->load->view('user/log_list_view', $data);
