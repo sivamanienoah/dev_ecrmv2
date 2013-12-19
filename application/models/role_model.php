@@ -18,7 +18,6 @@ class Role_model extends crm_model {
 	*@construct
 	*@Role Model
 	*/
-	
     function Role_model() {        
         parent::__construct();     
     }
@@ -66,9 +65,9 @@ class Role_model extends crm_model {
 	*@Role Model
 	*/
     public function get_role($id) {
-         if(!$id){
+		if(!$id) {
             return false;
-        }else{			
+        } else {			
 			$customer = $this->db->get_where($this->cfg['dbpref'].'roles', array('id' => $id), 1);	
 			$role =$this->db->order_by('masterid', 'asc');			
 			$role = $this->db->get_where($this->cfg['dbpref'].'master_roles', array('role_id' => $id));	
@@ -301,8 +300,7 @@ class Role_model extends crm_model {
 				'masreroleid' => array(),
 				'roleid' => array(),
 			);
-		 
-					
+			
 			if (isset($subtrees[$vertex['masterid']])) {
 				$v['children'] = $subtrees[$vertex['masterid']];
 			}
@@ -316,12 +314,11 @@ class Role_model extends crm_model {
 
 			if ($vertex['master_parent_id'] == 0) {		
 				$trees[] = $v;
-			}else if (!isset($subtrees[$vertex['master_parent_id']])) {
+			} else if (!isset($subtrees[$vertex['master_parent_id']])) {
 				$subtrees[$vertex['master_parent_id']] = array($v);
-			}else {
+			} else {
 				$subtrees[$vertex['master_parent_id']][] = $v;
 			}
-			
 		}
 	  
 		unset($subtrees);
@@ -345,13 +342,15 @@ class Role_model extends crm_model {
 		// echo "<pre>"; print_r($subtreeRoot);
 	    $html = '';
 	    $all = $add = $edit = $delete = $view = '';
-	    $disableStatusProfile = $disableStatusReport = '';
+	    $disableStatusProfile = $disableStatusProject = $disableStatusReport = '';
+		
 		$html = '<div style="width:500px; padding:5px;">
 		<div style="width:500px;">
 		<div style="background:url(\'assets/img/folder.png\') no-repeat 3px;  padding-left:25px; height:24px; line-height:24px; ">
 		 '.$subtreeRoot['name'].'<input type="hidden" name ="masterid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['id'].'">';
 		$html .= '<input type="hidden"  name ="masreroleid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['masreroleid'].'">';
 		$html .= '<input type="hidden" name ="roleid['.$subtreeRoot['id'].']" value="'.$subtreeRoot['roleid'].'"> ';
+		
 		if ($subtreeRoot['add'] == 1 && $subtreeRoot['view'] == 1 && $subtreeRoot['edit'] == 1 && $subtreeRoot['delete'] == 1) {
 			$all= ' checked="checked"';
 		} 
@@ -370,12 +369,15 @@ class Role_model extends crm_model {
 		if ($subtreeRoot['id'] == 89) {
 			$disableStatusProfile = ' disabled';
 		}
+		if ($subtreeRoot['id'] == 110) {
+			$disableStatusProject = ' disabled';
+		}
 		if ($subtreeRoot['id'] == 113) {
 			$disableStatusReport = ' disabled';
 		}
 		$html .='<span style="width:400px;"> 
-				<input type="checkbox" id="checkp" class="check" '.$all.' '.$disableStatusProfile.' '.$disableStatusReport.' name ="full"> &nbsp;All&nbsp;
-				<input type="checkbox" name ="add['.$subtreeRoot['id'].']"'.$add.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1"> &nbsp;Add&nbsp; 
+				<input type="checkbox" id="checkp" class="check" '.$all.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' name ="full"> &nbsp;All&nbsp;
+				<input type="checkbox" name ="add['.$subtreeRoot['id'].']"'.$add.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' value="1"> &nbsp;Add&nbsp; 
 				<input type="checkbox" name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View&nbsp;
 				<input type="checkbox" name ="edit['.$subtreeRoot['id'].']" '.$edit.' '.$disableStatusReport.' value="1" > &nbsp;Edit&nbsp;
 				<input type="checkbox" name ="delete['.$subtreeRoot['id'].']" '.$delete.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1"> &nbsp;Delete&nbsp;
