@@ -19,7 +19,6 @@ class User extends crm_controller {
 	*@User List
 	*
 	*/
-    
     public function index($limit = 0, $search = false)
 	{
 		$this->login_model->check_login();
