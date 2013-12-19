@@ -3,7 +3,10 @@ class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
 
-	
+	/*
+	*Method constructor
+	*
+	*/
 	function __construct()
 	{
 		parent::__construct();
@@ -28,8 +31,11 @@ class Dashboard extends crm_controller {
 		}
 	}
 	
-	function index()
-	{
+	/*
+	*Method index
+	*
+	*/
+	function index() {
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
@@ -165,9 +171,10 @@ class Dashboard extends crm_controller {
 				$monthArr[] 			 = $mon;
 			}  
 		}
-		// echo "<pre>"; print_r($closedMonthArr);
+
 		$data['totClosedOppor'] = $totalSum;
 		$data['getClosedOppor'] = $closedMonthArr;
+		
 		//for lead source & service requirement.
 		$data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId, $filter);
 		$data['get_Service_Req'] = $this->dashboard_model->getServiceReq($cusId, $filter);
@@ -199,27 +206,9 @@ class Dashboard extends crm_controller {
 		$this->load->view('dashboard_view', $data);
     }
 	
-	function getCurrentPipelineLeads()
-	{		
-		$res 	  = real_escape_array($this->input->post());
-		$userdata = $this->session->userdata('logged_in_user');
-		$data 	  = array();
-		$cusId 	  = $this->level_restriction();
-		
-		//Current Pipeline leads
-		$getLeads = $this->dashboard_model->getTotLead($cusId, $res);
-		
-		$lead_stage = array();
-		foreach($getLeads as $getLead){
-			$stage_name   = explode('.',$getLead['lead_stage_name']);
-			$lead_stage[] = $stage_name[0].'('.$getLead["COUNT( * )"].')'."".','.$getLead["COUNT( * )"];
-		}
-		$s1 = implode(',', $lead_stage);
-		// echo json_encode($json);
-		echo $s1;
-		exit;
-	}
-	
+	/*
+	*method : get_currency_rates
+	*/
 	public function get_currency_rates()
 	{
 		$currency_rates = $this->report_lead_region_model->get_currency_rate();
