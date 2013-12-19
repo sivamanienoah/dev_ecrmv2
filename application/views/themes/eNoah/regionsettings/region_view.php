@@ -1,4 +1,3 @@
-<? echo "<pre>"; print_r($this->session->userdata); ?>
 <div id="content">
     <div class="inner">
 		<div class="in-content"> 
