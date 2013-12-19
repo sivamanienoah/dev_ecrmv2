@@ -493,28 +493,28 @@ switch ($userdata['level'])
 
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-			<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-					<td>
-                        Project Search
-                    </td>
-					<td>
-                        <input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
-                    </td>
-                    <td rowspan=2>
-                        <div class="buttons">
-                            <button type="submit" class="positive">Search</button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-		</form>
+	<table border="0" cellpadding="0" cellspacing="0" class="search-table">
+		<tr>
+			<td>
+				Project Search
+			</td>
+			<td>
+				<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
+			</td>
+			<td rowspan=2>
+				<div class="buttons">
+					<button type="submit" class="positive">Search</button>
+				</div>
+			</td>
+		</tr>
+	</table>
+</form>
 <a class="choice-box" onclick="advanced_filter_pjt();" >
-		Advanced Filters
-		<img src="assets/img/advanced_filter.png" class="icon leads" style="width:62px; height:62px" />
+	Advanced Filters
+	<img src="assets/img/advanced_filter.png" class="icon leads" style="width:62px; height:62px" />
 </a>
+
 <div id="advance_search_pjt" style="float:left; width:100%;" >
-		
 		<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -537,21 +537,17 @@ switch ($userdata['level'])
 						<option value="4">Inactive</option>
 					</select> 
 				</td>
-				
-				
 				<td>
 					<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
 						<?php foreach($pm_accounts as $pm_acc) {?>
-						<option value="<?php echo $pm_acc['userid']; ?>">
-						<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
+							<option value="<?php echo $pm_acc['userid']; ?>"><?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
 						<?php } ?>
 					</select> 
 				</td>
-				
 				<td>
 					<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
 						<?php foreach($customers as $customer) {?>
-						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
 						<?php } ?>
 					</select>
 				</td>
