@@ -16,64 +16,71 @@ $userdata = $this->session->userdata('logged_in_user');
 require (theme_url().'/tpl/header.php');
 //echo baseurl();
 ?>
-<?php if($this->session->userdata('viewlead')==1) { ?>
-<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.logAxisRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
-<script type="text/javascript" src="assets/js/plugins/jqplot.funnelRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <?php 
-// For Chart Title
-switch ($userdata['level']) 
-{
-    case 1:
-		if ((!empty($filter['regionname'])) && (empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
-			$chart_title = "Leads By Country Wise";
-		} else if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
-			$chart_title = "Leads By State Wise";
-		} else if (!empty($filter['statename'])) {
-			$chart_title = "Leads By Location Wise";
-		} else {
-			$chart_title = "Leads By Region Wise";
-		}
-	break;
-    case 2:
-		if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname'])))
-			$chart_title = "Leads By State Wise";
-		else if (!empty($filter['statename']))
-			$chart_title = "Leads By Location Wise";
-		else 
-			$chart_title = "Leads By Country Wise";
-	break;
-    case 3:
-		if (!empty($filter['statename']))
-			$chart_title = "Leads By Location Wise";
-		else
-			$chart_title = "Leads By State Wise";
-	break;
-	case 4:
-	case 5:
-        $chart_title = "Leads By Location Wise";
-	break;
-}
+if($this->session->userdata('viewlead')==1) { 
 ?>
-<?php } ?>
-<?php if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
-<script type="text/javascript">var this_is_home = true;</script>
-<script type="text/javascript">var curr_job_id  = 0;</script>
-<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<style type="text/css">
-@import url(assets/css/tasks.css?q=1);
-</style>
-<?php } ?>
+	<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.logAxisRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/jqplot.funnelRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
+	<?php 
+	// For Chart Title
+	switch ($userdata['level']) {
+		case 1:
+			if ((!empty($filter['regionname'])) && (empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+				$chart_title = "Leads By Country Wise";
+			} else if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname']))) {
+				$chart_title = "Leads By State Wise";
+			} else if (!empty($filter['statename'])) {
+				$chart_title = "Leads By Location Wise";
+			} else {
+				$chart_title = "Leads By Region Wise";
+			}
+		break;
+		case 2:
+			if ((!empty($filter['countryname'])) && (empty($filter['statename'])) && (empty($filter['locname'])))
+				$chart_title = "Leads By State Wise";
+			else if (!empty($filter['statename']))
+				$chart_title = "Leads By Location Wise";
+			else 
+				$chart_title = "Leads By Country Wise";
+		break;
+		case 3:
+			if (!empty($filter['statename']))
+				$chart_title = "Leads By Location Wise";
+			else
+				$chart_title = "Leads By State Wise";
+		break;
+		case 4:
+		case 5:
+			$chart_title = "Leads By Location Wise";
+		break;
+	}
+	?>
+<?php 
+} 
+?>
+<?php 
+if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewlead') != 1)) { 
+?>
+	<script type="text/javascript">var this_is_home = true;</script>
+	<script type="text/javascript">var curr_job_id  = 0;</script>
+	<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+	<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
+	<style type="text/css">
+	@import url(assets/css/tasks.css?q=1);
+	</style>
+<?php 
+} 
+?>
 <div id="content">
 	<div class="inner">
 	<?php if($this->session->userdata('viewlead')==1) { ?>
