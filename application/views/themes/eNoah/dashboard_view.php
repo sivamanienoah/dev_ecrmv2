@@ -312,7 +312,9 @@ switch ($userdata['level'])
 						<?php if (count($getLeadByOwner)>0) { ?>
 							<?php foreach ($getLeadByOwner as $leadOwners) { ?>
 							<tr>
-								<td><a onclick="getLeadDashboardTable(<?php echo $leadOwners['userid'];?>,<?php echo "'".$leadOwners['user_name']."'"; ?>);return false;"><?php echo $leadOwners['user_name']; ?></a></td>
+								<td>
+									<a onclick="getLeadDashboardTable(<?php echo $leadOwners['userid'];?>,<?php echo "'".$leadOwners['user_name']."'"; ?>);return false;"><?php echo $leadOwners['user_name']; ?></a>
+								</td>
 								<td><?php echo $leadOwners['COUNT( * )']; ?></td>
 							</tr>
 							<?php } ?>
@@ -336,7 +338,9 @@ switch ($userdata['level'])
 						<?php if (count($getLeadByAssignee)>0) { ?>
 							<?php foreach ($getLeadByAssignee as $leadAssign) { ?>
 							<tr>
-								<td><a id="demo-stage" onclick="getLeadAssigneeTable(<?php echo $leadAssign['userid'];?>,<?php echo "'".$leadAssign['user_name']."'"; ?>);"><?php echo $leadAssign['user_name']; ?></a></td>
+								<td>
+									<a id="demo-stage" onclick="getLeadAssigneeTable(<?php echo $leadAssign['userid'];?>,<?php echo "'".$leadAssign['user_name']."'"; ?>);"><?php echo $leadAssign['user_name']; ?></a>
+								</td>
 								<td><?php echo $leadAssign['COUNT( * )']; ?></td>
 							</tr>
 							<?php } ?>
