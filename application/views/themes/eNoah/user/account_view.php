@@ -65,7 +65,7 @@
 								   <button type="button" class="negative" onclick="location.href='myaccount'">Cancel</button>
 								</div>
 							<?php 
-							} 
+							}
 							?>
 						</td>
 					</tr>
