@@ -2,7 +2,7 @@
 require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
     <div class="inner">
-	<?php if($this->session->userdata('accesspage')==1){?>
+	<?php if($this->session->userdata('accesspage')==1) { ?>
 		<form action="myaccount/add_log" method="post" onsubmit="return false;" style="display:none;" class="time-log-form">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -35,7 +35,7 @@ require (theme_url().'/tpl/header.php'); ?>
 				</tr>
 			</table>
 		</form>
-    	<form action="<?php echo  $this->uri->uri_string() ?>" method="post" >
+    	<form action="<?php echo $this->uri->uri_string() ?>" method="post" >
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
@@ -45,7 +45,7 @@ require (theme_url().'/tpl/header.php'); ?>
                 <?php echo  $this->validation->error_string ?>
             </div>
             <?php } ?>
-            <p>If you would like to update your details, please use the form below.</p>
+            <p>***If you would like to update your details, please use the form below.</p>
 			<table class="layout">
 				<tr>
 					<td width="100">First name:</td>
@@ -65,17 +65,15 @@ require (theme_url().'/tpl/header.php'); ?>
 						<input type="text" name="email" value="<?php echo  $this->validation->email ?>" class="textfield width200px" /> &nbsp; (This is your login email)
 					</td>
 				</tr>
-				
 				<tr>
 					<td>Signature:</td>
 					<td colspan="3">
 						<textarea name="signature" class="textfield width300px" rows="6"><?php echo  $this->validation->signature ?></textarea>
 					</td>
 				</tr>
-				
 				<tr>
 					<td>Old Password:</td>
-					<td><input type="password" name="oldpassword" value="" class="textfield width200px" /> </td>
+					<td><input type="password" name="oldpassword" value="" class="textfield width200px" autocomplete="off"/> </td>
 				</tr>
 				<tr>
 					<td>Password:</td>
@@ -92,18 +90,17 @@ require (theme_url().'/tpl/header.php'); ?>
 							<button type="submit" name="update_user" class="positive">Update</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='myaccount'">
-								Cancel
-							</button>
+                           <button type="button" class="negative" onclick="location.href='myaccount'">Cancel</button>
                         </div>
                     </td>
 				</tr>
             </table>
 		</form>
-		
-		<?php } else{
-	echo "You have no rights to access this page";
-}?>
+		<?php
+		} else {
+			echo "You have no rights to access this page";
+		}
+		?>
 	</div>
 </div>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
