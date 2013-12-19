@@ -6,12 +6,19 @@
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
 			<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add New' ?> Lead Stage </h2>
-            <?php if ($this->validation->error_string != '') { ?>
-            <div class="form_error">
-                <?php echo $this->validation->error_string ?>
-            </div>
-            <?php } ?>
-			<?php if($this->session->userdata('add')==1) { ?>
+            <?php 
+			if ($this->validation->error_string != '') { 
+			?>
+				<div class="form_error">
+					<?php echo $this->validation->error_string ?>
+				</div>
+            <?php 
+			} 
+			?>
+			
+			<?php 
+			if(($this->session->userdata('add')==1)  || ($this->session->userdata('edit')==1)) {
+			?>
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
@@ -27,14 +34,13 @@
 				<tr>
 					<td>Status</td>
 					<td colspan="2">
-					<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo 'checked="checked"' ?>
-					<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>>
-					<?php if ($cb_status != 0) echo "One or more leads currently assigned for this Lead Stage. This cannot be made Inactive."; ?>
-					<?php if (($this->validation->status == 1) && ($cb_status == 0)) echo "Uncheck if the Lead Stage need to be Inactive."; ?>
-					<?php if ($this->validation->status != 1) echo "Check if the Lead Stage need to be Active."; ?>
+						<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo 'checked="checked"' ?>
+						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>>
+						<?php if ($cb_status != 0) echo "One or more leads currently assigned for this Lead Stage. This cannot be made Inactive."; ?>
+						<?php if (($this->validation->status == 1) && ($cb_status == 0)) echo "Uncheck if the Lead Stage need to be Inactive."; ?>
+						<?php if ($this->validation->status != 1) echo "Check if the Lead Stage need to be Active."; ?>
 					</td>
 				</tr>
-				
 				<tr>
 					<td>&nbsp;</td>
 					<td class="action-buttons" colspan="2">
@@ -51,8 +57,11 @@
                     </td>
 				</tr>
 				</table>
-				
-			<?php } else { echo "You have no rights to access this page"; } ?>
+			<?php 
+			} else { 
+				echo "You have no rights to access this page"; 
+			} 
+			?>
 		</form>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
