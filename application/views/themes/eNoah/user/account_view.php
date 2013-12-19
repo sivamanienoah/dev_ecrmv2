@@ -73,7 +73,7 @@ require (theme_url().'/tpl/header.php'); ?>
 				</tr>
 				<tr>
 					<td>Old Password:</td>
-					<td><input type="password" name="oldpassword" value="" class="textfield width200px" autocomplete="off"/> </td>
+					<td><input type="password" name="oldpassword" value="" class="textfield width200px" autocomplete="off"/></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
