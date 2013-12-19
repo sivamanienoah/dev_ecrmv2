@@ -30,7 +30,6 @@
 					<td align="right">
 						<div class="buttons">
 							<button type="submit" name="add_log" id="add_log" class="positive" style="float:right; margin:0;">
-								
 								Add Details
 							</button>
 						</div>
