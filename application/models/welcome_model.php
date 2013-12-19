@@ -693,12 +693,13 @@ class Welcome_model extends crm_model {
 		//restriction for country
 		$coun_query = $this->db->query("SELECT country_id FROM ".$this->cfg['dbpref']."levels_country WHERE level_id = '".$userdata['level']."' AND user_id = '".$userdata['userid']."' ");
 		$coun_details = $coun_query->result_array();
-		foreach($coun_details as $coun)
-		{
+		foreach($coun_details as $coun) {
 			$countries[] = $coun['country_id'];
 		}
-		$countries_ids = array_unique($countries);
-		$countries_ids = (array_values($countries)); //reset the keys in the array
+		if (!empty($countries)) {
+			$countries_ids = array_unique($countries);
+			$countries_ids = (array_values($countries)); //reset the keys in the array
+		}
 		
         $this->db->order_by('inactive', 'asc');
         $this->db->order_by('country_name', 'asc');

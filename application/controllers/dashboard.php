@@ -962,11 +962,14 @@ class Dashboard extends crm_controller {
 		else
 		{
 			$cusIds = array();
+			$reg = array();
+			$cou = array();
+			$ste = array();
+			$loc = array();
 			$cusIds[] = 0;
-			switch($userdata['level']){
+			switch($userdata['level']) {
 				case 2:
 					$regions = $this->dashboard_model->getRegions($userdata['userid'], $userdata['level']); //Get the Regions based on Level
-						$reg = array();
 						foreach ($regions as $rgid) {
 							$reg[] = $rgid['region_id'];
 						}
@@ -978,7 +981,6 @@ class Dashboard extends crm_controller {
 				break;
 				case 3:
 					$countries = $this->dashboard_model->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
-						$cou = array();
 						foreach ($countries as $couid) {
 							$cou[] = $couid['country_id'];
 						}
@@ -990,7 +992,6 @@ class Dashboard extends crm_controller {
 				break;
 				case 4:
 					$states = $this->dashboard_model->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
-						$ste = array();
 						foreach ($states as $steid) {
 							$ste[] = $steid['state_id'];
 						}
@@ -1002,7 +1003,6 @@ class Dashboard extends crm_controller {
 				break;
 				case 5:
 					$locations = $this->dashboard_model->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
-						$loc = array();
 						foreach ($locations as $locid) {
 							$loc[] = $locid['location_id'];
 						}	

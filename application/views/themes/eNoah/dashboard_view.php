@@ -104,14 +104,14 @@ switch ($userdata['level'])
 								<td>
 									<select style="width:228px" multiple="multiple" id="stage" name="stage[]" class="advfilter">
 										<?php foreach($lead_stage as $ls) { ?>
-											<option value="<?php echo $ls['lead_stage_id']; ?>"<?php echo in_array($ls['lead_stage_id'], $filter['stage']) ? 'selected="selected"' : '' ?>><?php echo $ls['lead_stage_name']; ?></option>
+											<option value="<?php echo $ls['lead_stage_id']; ?>"<?php if (!empty($filter['stage'])) { echo in_array($ls['lead_stage_id'], $filter['stage']) ? 'selected="selected"' : ''; } ?>><?php echo $ls['lead_stage_name']; ?></option>
 										<?php } ?>					
 									</select> 
 								</td>
 								<td>
 									<select style="width:210px;" multiple="multiple" id="customer" name="customer[]" class="advfilter">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['custid']; ?>"<?php echo in_array($customer['custid'], $filter['customer']) ? 'selected="selected"' : '' ?>><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
+											<option value="<?php echo $customer['custid']; ?>"<?php if (!empty($filter['customer'])) { echo in_array($customer['custid'], $filter['customer']) ? 'selected="selected"' : ''; } ?>><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
@@ -119,7 +119,7 @@ switch ($userdata['level'])
 									<select style="width:110px;" multiple="multiple" id="owner" name="owner[]" class="advfilter">
 										<?php foreach ($lead_owner as $owner) { 
 												if(!empty($owner['first_name'])) { ?>
-													<option value="<?php echo $owner['userid'] ?>"<?php echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : '' ?>><?php echo $owner['first_name']; ?></option>
+													<option value="<?php echo $owner['userid'] ?>"<?php if (!empty($filter['owner'])) { echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : ''; } ?>><?php echo $owner['first_name']; ?></option>
 										<?php	} 
 											} 
 										?>
@@ -129,7 +129,7 @@ switch ($userdata['level'])
 									<select style="width:110px;" multiple="multiple" id="leadassignee" name="leadassignee[]" class="advfilter">
 										<?php foreach ($lead_owner as $ownr) {
 												if(!empty($ownr['first_name'])) { ?>
-													<option value="<?php echo $ownr['userid'] ?>"<?php echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : '' ?>><?php echo $ownr['first_name']; ?></option>
+													<option value="<?php echo $ownr['userid'] ?>"<?php if (!empty($filter['leadassignee'])) { echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : ''; } ?>><?php echo $ownr['first_name']; ?></option>
 										<?php 	}
 											} 
 										?>
@@ -139,7 +139,7 @@ switch ($userdata['level'])
 									<select  style="width:150px;" multiple="multiple" id="ser_requ" name="ser_requ[]" class="advfilter">
 										<?php if (count($serv_requ)>0) { ?>
 											<?php foreach ($serv_requ as $serv) { ?>
-												<option value="<?php echo $serv['sid'] ?>"<?php echo in_array($serv['sid'], $filter['ser_requ']) ? 'selected="selected"' : '' ?>><?php echo $serv['services'] ?></option>
+												<option value="<?php echo $serv['sid'] ?>"<?php if (!empty($filter['ser_requ'])) { echo in_array($serv['sid'], $filter['ser_requ']) ? 'selected="selected"' : ''; } ?>><?php echo $serv['services'] ?></option>
 											<?php } ?>
 										<?php } ?>
 									</select> 
@@ -158,7 +158,7 @@ switch ($userdata['level'])
 									<select  style="width:228px;" multiple="multiple" id="lead_src" name="lead_src[]" class="advfilter">
 										<?php if (count($lead_sourc)>0) { ?>
 											<?php foreach ($lead_sourc as $srcs) { ?>
-												<option value="<?php echo $srcs['lead_source_id'] ?>"<?php echo in_array($srcs['lead_source_id'], $filter['lead_src']) ? 'selected="selected"' : '' ?>><?php echo $srcs['lead_source_name'] ?></option>
+												<option value="<?php echo $srcs['lead_source_id'] ?>"<?php if (!empty($filter['lead_src'])) { echo in_array($srcs['lead_source_id'], $filter['lead_src']) ? 'selected="selected"' : ''; } ?>><?php echo $srcs['lead_source_name'] ?></option>
 											<?php } ?>
 										<?php } ?>
 									</select> 
@@ -167,7 +167,7 @@ switch ($userdata['level'])
 									<select style="width:210px;" multiple="multiple" id="regionname" name="regionname[]" class="advfilter">
 										<?php foreach ($regions as $reg) { 
 												if(!empty($reg['region_name'])) { ?>
-													<option value="<?php echo $reg['regionid'] ?>"<?php echo in_array($reg['regionid'], $filter['regionname']) ? 'selected="selected"' : '' ?>><?php echo $reg['region_name'] ?></option>
+													<option value="<?php echo $reg['regionid'] ?>"<?php if (!empty($filter['regionname'])) { echo in_array($reg['regionid'], $filter['regionname']) ? 'selected="selected"' : ''; } ?>><?php echo $reg['region_name'] ?></option>
 										<?php 	} 
 											}
 										?>
@@ -187,9 +187,9 @@ switch ($userdata['level'])
 								</td>
 								<td>
 									<select style="width:75px;" multiple ="multiple" id="lead_indi" name="lead_indi[]" class="advfilter">
-										<option value="HOT"<?php echo in_array('HOT', $filter['lead_indi']) ? 'selected' : '' ?>>Hot</option>
-										<option value="WARM"<?php echo in_array('WARM', $filter['lead_indi']) ? 'selected' : '' ?>>Warm</option>
-										<option value="COLD"<?php echo in_array('COLD', $filter['lead_indi']) ? 'selected' : '' ?>>Cold</option>
+										<option value="HOT"<?php if (!empty($filter['lead_indi'])) { echo in_array('HOT', $filter['lead_indi']) ? 'selected' : ''; } ?>>Hot</option>
+										<option value="WARM"<?php if (!empty($filter['lead_indi'])) { echo in_array('WARM', $filter['lead_indi']) ? 'selected' : ''; } ?>>Warm</option>
+										<option value="COLD"<?php if (!empty($filter['lead_indi'])) { echo in_array('COLD', $filter['lead_indi']) ? 'selected' : ''; } ?>>Cold</option>
 									</select> 
 								</td>
 							</tr>
@@ -629,6 +629,7 @@ foreach($getLeadAging as $key => $value){
 
 //for closed opportunities graph.
 $cls_oppo_values = array();
+$cls_oppr = '';
 $months = array('Apr'=>0, 'May'=>0, 'Jun'=>0, 'Jul'=>0, 'Aug'=>0, 'Sep'=>0, 'Oct'=>0, 'Nov'=>0, 'Dec'=>0, 'Jan'=>0, 'Feb'=>0, 'Mar'=>0);
 foreach ($months as $key => $val) {
 	$cls_oppo_values[$key] = ($getClosedOppor[$key] == "")?($val):$getClosedOppor[$key];
@@ -654,6 +655,7 @@ foreach($get_Service_Req as $getSerReq) {
 $s8 = implode(',', $Ser_Req);
 ?>
 <?php
+	$stgs = $custs_id = $owr_id = $assg_id = $reg_nme = $county_name = $ste_name = $loc_name = $servic_req = $lead_sour = $lead_indic = '';
 	$toggle_stat =  isset($toggle_stat) ? "toggle" : "no_toggle";
 	if (!empty($filter['stage']))
 	$stgs = implode(",",$filter['stage']);
@@ -665,8 +667,6 @@ $s8 = implode(',', $Ser_Req);
 	$assg_id = implode(",",$filter['leadassignee']);
 	if (!empty($filter['regionname']))
 	$reg_nme = implode(",",$filter['regionname']);
-	if (!empty($filter['stage']))
-	$stg = implode(",",$filter['stage']);	
 	if (!empty($filter['countryname']))
 	$county_name = implode(",",$filter['countryname']);
 	if (!empty($filter['statename']))

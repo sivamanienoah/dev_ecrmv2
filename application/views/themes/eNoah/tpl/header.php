@@ -77,12 +77,21 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			<?php } ?>
 		</div>
 		<div id="user-status">
-			<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
-				<p id="user"><?php echo  ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | <?php echo  $userdata['name'] ?> &nbsp; <a href="userlogin/">Sign out?</a></p>
-			<?php } else { ?>
+			<?php  
+			if ($this->session->userdata('logged_in') == TRUE) {
+			?>
+				<p id="user">
+					<?php echo ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | 
+					<?php echo isset($userdata['name']) ? $userdata['name']: ''; ?> &nbsp; <a href="userlogin/">Sign out?</a>
+				</p>
+			<?php 
+			} else {
+			?>
 				<p id="user"><a href="userlogin/">Login</a></p>
-			<?php } ?>
-			<p class="date-time"><?php echo  date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
+			<?php 
+			}
+			?>
+			<p class="date-time"><?php echo date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
 		</div>
 	</div>
 </div>
@@ -90,8 +99,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	<?php
 	$notify = $this->session->flashdata('notify_msg');
 	$messages = $this->session->flashdata('header_messages');
-	if (isset($userdata['signature']) && trim($userdata['signature']) == '')
-	{
+	if (isset($userdata['signature']) && trim($userdata['signature']) == '') {
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
 	}
 	
@@ -177,7 +185,12 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	//echo $Qstring;
 	$access_limit = array();
 	$parent_id='';
-		
+	
+	$viewAdmin = $addAdmin = $editAdmin = $deleteAdmin = '';
+	$viewLead = $addLead = $editLead = $deleteLead = '';
+	$viewTask = $addTask = $editTask = $deleteTask = '';
+	$viewPjt = $addPjt = $editPjt = $deletePjt = '';
+	$addImpCus = '';
 	$i=0;
 	//$access_limit= array();
 	// echo "<pre>"; print_r($menu_items_vals); 
@@ -230,10 +243,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		}
 	}  	 
 	// echo $this->uri->segment(1);
-	if(empty($master_id)) 
-	{
-		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);		  
-		$master_id= $masters[0]['master_parent_id'];
+	if(empty($master_id)) {
+		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);
+		//check as array
+		$master_id = $masters[0]['master_parent_id'];
 		$access_limit['view'] 	= $masters[0]['view'];
 		$access_limit['add'] 	= $masters[0]['add'];
 		$access_limit['edit'] 	= $masters[0]['edit'];
@@ -269,6 +282,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 
 <script>
 var fid = "<?php echo $userdata['userid'] ?>";
+
 $(function() {
 	$('#grid-close').click(function() {
 		setCookie("floatStat", fid, 1);
