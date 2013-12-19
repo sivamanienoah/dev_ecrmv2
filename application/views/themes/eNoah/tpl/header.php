@@ -186,7 +186,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$access_limit = array();
 	$parent_id='';
 	
-	$viewAdmin = $addAdmin = $editAdmin = $deleteAdmin = '';
+	// $viewAdmin = $addAdmin = $editAdmin = $deleteAdmin = '';
 	$viewLead = $addLead = $editLead = $deleteLead = '';
 	$viewTask = $addTask = $editTask = $deleteTask = '';
 	$viewPjt = $addPjt = $editPjt = $deletePjt = '';
@@ -234,13 +234,13 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		{ 
 		   $addImpCus = $menu_items[9];
 		}
-		if($menu_items['0'] == 92) //Administration
-		{ 
-		   $viewAdmin 	= $menu_items[8];
-		   $addAdmin 	= $menu_items[9];
-		   $editAdmin 	= $menu_items[10];
-		   $deleteAdmin = $menu_items[11];
-		}
+		// if($menu_items['0'] == 92) //Administration
+		// { 
+		   // $viewAdmin 	= $menu_items[8];
+		   // $addAdmin 	= $menu_items[9];
+		   // $editAdmin 	= $menu_items[10];
+		   // $deleteAdmin = $menu_items[11];
+		// }
 	}  	 
 	// echo $this->uri->segment(1);
 	if(empty($master_id)) {
@@ -272,10 +272,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['addPjt'] 		= $addPjt;
 	$array['editPjt'] 		= $editPjt;
 	$array['deletePjt'] 	= $deletePjt;
-	$array['viewAdmin'] 	= $viewAdmin;
-	$array['addAdmin'] 		= $addAdmin;
-	$array['editAdmin'] 	= $editAdmin;
-	$array['deleteAdmin'] 	= $deleteAdmin;
 	$array['addImpCus'] 	= $addImpCus;
 	$this->session->set_userdata($array);
 	?>
