@@ -141,6 +141,7 @@ class Dashboard extends crm_controller {
     	}
 		$data['LeadsRegionwise'] 		= $lead_reg; //Results for leads by regionwise.
    		$data['LeadsRegionwiseTot'] 	= $total_leads; //count of leads
+		
 		//Leads  by RegionWise - End here
 		$data['getLeadByOwner'] 		= $this->dashboard_model->getLeadsByOwner($cusId, $filter);
 		$data['getLeadByAssignee'] 		= $this->dashboard_model->getLeadsByAssignee($cusId, $filter);
@@ -148,18 +149,20 @@ class Dashboard extends crm_controller {
 		$data['getLeastLeadCount'] 		= $this->dashboard_model->getLeastLeadsCount($cusId, $filter);
 		$data['getCurrentActivityLead'] = $this->dashboard_model->getCurrentActivityLeads($isSelect = 7, $cusId, $filter);
 		$data['getLeadAging']   		= $this->dashboard_model->getLeadsAging($cusId, $filter);
+		
 		//for Closed Opportunities
 		$data['getClosedJobid']			= $this->dashboard_model->getClosedJobids($cusId, $filter);
 		$closedMonthArr = array();
 		$monthArr 						= array();
 		$totalSum						= 0;
+		
 		foreach ($data['getClosedJobid'] as $value) {
 			$value['expect_worth_amount'] = $this->conver_currency($value['expect_worth_amount'], $rates[$value['expect_worth_id']][$this->default_cur_id]);
-			$sql = "SELECT lead_id, dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE lead_id = '".$value['lead_id']."' AND changed_status = 4 ORDER BY dateofchange DESC LIMIT 1";
-			$rows = $this->db->query($sql);
-			$res_query = $rows->row_array();
-			if(!empty($res_query)) {
-				$mon = date("M" ,strtotime($res_query['dateofchange']));
+
+			$result = $this->dashboard_model->getLeadClosedDate($value['lead_id']);
+
+			if(!empty($result)) {
+				$mon = date("M" ,strtotime($result['dateofchange']));
 				// echo $mon."=>".$value['expect_worth_amount'];
 				$totalSum = $totalSum + $value['expect_worth_amount'];
 				if (in_array($mon, $monthArr)) {
@@ -209,8 +212,8 @@ class Dashboard extends crm_controller {
 	/*
 	*method : get_currency_rates
 	*/
-	public function get_currency_rates()
-	{
+	public function get_currency_rates() {
+	
 		$currency_rates = $this->report_lead_region_model->get_currency_rate();
     	$rates 			= array();
     	if(!empty($currency_rates)){
@@ -222,13 +225,13 @@ class Dashboard extends crm_controller {
     	return $rates;
 	}
 	
-	public function conver_currency($amount,$val)
-	{
+	public function conver_currency($amount,$val) {
+	
 		return round($amount*$val);
 	}
 	
-	public function showLeadsDetails() 
-	{
+	public function showLeadsDetails() {
+	
 		$res  				   = real_escape_array($this->input->post());
 		$filters			   = array();
 		$filters['stge'] 	   = $res['stge'];
@@ -251,8 +254,8 @@ class Dashboard extends crm_controller {
 		$rates 		= $this->get_currency_rates();
 		$lead_stage = explode("(",$data[0]);
 		// echo $type . " " . $lead_stage[0]; exit;
-		switch($type) 
-		{
+		switch($type) {
+		
 			case "funnel":
 				$heading			   = "Current Pipeline Leads";
 				$data['getLeadDetail'] = $this->dashboard_model->getLeadsDetails(trim($lead_stage[0]), $cusId, $filters);
@@ -273,8 +276,8 @@ class Dashboard extends crm_controller {
 		$res['html'] .= '<div class="dash-section dash-section1"><h5>'.$heading.'</h5><div class="grid-close"></div></div>';
 		$res['html'] .= "<div class='dashbrd'>";
 	
-		switch($type) 
-		{
+		switch($type) {
+		
 			case "funnel":
 				$res['html'] .= '<a id="current-pipeline-export" class="export-btn" name="'.$lead_stage[0].'">Export to Excel</a>';
 				$res['html'] .= "<input id='lead-type-name' type='hidden' value='".$type."'/>";	
@@ -298,8 +301,7 @@ class Dashboard extends crm_controller {
 		}	
 		$res['html'] .= '<table cellspacing="0" id="'.$dt_id.'" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th width=62px;>Lead No.</th><th width=210px;>Lead Title </th><th width=145px;>Customer</th><th width=145px;>Lead Owner</th><th width=145px;>Lead Assignee</th><th width=105px;>Lead Indicator</th><th width=85px;>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		if (isset($data['getLeadDetail']) && count($data['getLeadDetail'])) :
-			foreach($data['getLeadDetail'] as $leadDet) 
-			{
+			foreach($data['getLeadDetail'] as $leadDet) {
 			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .='<tr>
 								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
@@ -321,8 +323,7 @@ class Dashboard extends crm_controller {
 	}
 	
 	/* Get lead_id, lead title, region, lead owner, lead assigned to, customer, */
-	public function getLeadDependency()
-	{
+	public function getLeadDependency() {
 		
 		$res  				   = real_escape_array($this->input->post());
 		$filters			   = array();
@@ -351,8 +352,7 @@ class Dashboard extends crm_controller {
         $lead_table_output .= "<input id='lead-owner-username' type='hidden' value='".$username."'/>";			
 		$lead_table_output .= '<a id="lead-ownner-export" class="export-btn">Export to Excel</a>';
 		$lead_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-dependency-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
-		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
-		{
+		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
 			$lead_det['invoice_no']   		 = $lead_info->invoice_no;
 			$lead_det['lead_id'] 			 = $lead_info->lead_id;
 			$lead_det['lead_title'] 		 = $lead_info->lead_title;
@@ -376,8 +376,7 @@ class Dashboard extends crm_controller {
 		echo json_encode($lead_table_output);		
 	}
 	
-	public function getLeadsCurrentActivity($lead_id, $leadname) 
-	{
+	public function getLeadsCurrentActivity($lead_id, $leadname) {
 		$data['getLeadOwnerDependence'] = $this->dashboard_model->getCurrentLeadActivity($lead_id);
 		$lead_det = array(); 
 		$rates = $this->get_currency_rates();
@@ -387,8 +386,7 @@ class Dashboard extends crm_controller {
 		$lead_table_output .= '<a id="lead-current-activity-export" class="export-btn export-btn1" >Export to Excel</a>';
 		$lead_table_output .= "<input id='lead-no' type='hidden' name='".$leadname."' value='".$lead_id."'/>";
 		$lead_table_output .=  '<table cellspacing="0" id="leads-current-activity-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
-		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
-		{
+		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
 			$lead_det['invoice_no'] 		 = $lead_info->invoice_no;
 			$lead_det['lead_id']			 = $lead_info->lead_id;
 			$lead_det['lead_title'] 		 = $lead_info->lead_title;
@@ -416,8 +414,7 @@ class Dashboard extends crm_controller {
 		echo $lead_table_output;	
 	}
 	
-	public function getLeadAssigneeDependency()
-	{
+	public function getLeadAssigneeDependency() {
 		$res  				   = real_escape_array($this->input->post());
 		$filters			   = array();
 		$filters['stge'] 	   = $res['stge'];
@@ -445,8 +442,8 @@ class Dashboard extends crm_controller {
 		$assignee_table_output .= "<input id='lead-assignee-username' type='hidden' value='".$username."'/>";		
 		$assignee_table_output .= '<a id="lead-assignee-export" class="export-btn">Export to Excel</a>';
 		$assignee_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-assignee-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th></thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
-		foreach($data['getLeadOwnerDependence']->result() as $lead_info)
-		{
+		
+		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
 			$lead_det['lead_id'] 		= $lead_info->lead_id;
 			$lead_det['invoice_no'] 	= $lead_info->invoice_no;
 			$lead_det['lead_title'] 	= $lead_info->lead_title;
@@ -470,8 +467,7 @@ class Dashboard extends crm_controller {
 		echo json_encode($assignee_table_output);	
 	}
 	
-	public function get_leads_current_weekly_monthly_report() 
-	{
+	public function get_leads_current_weekly_monthly_report() {
 		$res = real_escape_array($this->input->post());
 		$weekly_monthly_repo = '';
 		$lead_det 	= array();
@@ -483,8 +479,7 @@ class Dashboard extends crm_controller {
 		$weekly_monthly_repo .= '<table class="dashboard-heads" id="weekly-monthly-table" cellspacing="0" cellpadding="10px;" border="0" width="100%">';
 		$rates = $this->get_currency_rates();
 		$weekly_monthly_repo .= '<thead><tr><th>Lead Title</th><th>Estimated Worth ('.$this->default_cur_name.')</th><th>Lead Owner</th><th>Lead Assignee</th></tr></thead><tbody>';
-		foreach($data['getCurrentActivityTable'] as $lead_info)
-		{
+		foreach($data['getCurrentActivityTable'] as $lead_info) {
 			$lead_det['lead_title'] 	     = '<a onclick="getCurrentLeadActivity('. $lead_info['lead_id'].','."'".$lead_info['lead_title']."'".')" >'. character_limiter($lead_info['lead_title'], 35).'</a>';
 			$lead_det['owrfirst_name'] 		 = $lead_info['ownrfname']." ".$lead_info['ownrlname'];	
 			$lead_det['usrfname'] 			 = $lead_info['usrfname']." ".$lead_info['usrlname'];
@@ -497,13 +492,7 @@ class Dashboard extends crm_controller {
 		echo $weekly_monthly_repo;
 	}
 
-	public function excel_export_lead_owner($userid)
-    {
-    	// $lead_username	 = $this->uri->segment(4);  
-		// $lead_stage_name = $this->uri->segment(4);
-		// $lead_id		 = $this->uri->segment(4); 
-		// $lead_aging		 = $this->uri->segment(3);
-		// $lead_indi		 = $this->uri->segment(3);
+	public function excel_export_lead_owner($userid) {
 		
 		$result     = real_escape_array($this->input->post());
 
@@ -512,8 +501,7 @@ class Dashboard extends crm_controller {
 		$expFilter  = real_escape_array($this->input->post());
 		$lead_owner_opp  = array();
 
-		switch ($graph_type) 
-		{
+		switch ($graph_type) {
 			case 'funnel':
 				$res			= $this->dashboard_model->getLeadsDetails($result['lead_stage_name'], $cusId, $expFilter);
 			break;
@@ -552,8 +540,7 @@ class Dashboard extends crm_controller {
 			break;
 		}
 			
-    	if($res->num_rows > 0 || count($res) > 0)
-    	{
+    	if($res->num_rows > 0 || count($res) > 0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
 			//activate worksheet number 1
@@ -628,8 +615,7 @@ class Dashboard extends crm_controller {
 				case 'pie1':
 				case 'pie2':
 				case 'pie3':
-					for($j = 0; $j < count($res); $j++) 
-					{			
+					for($j = 0; $j < count($res); $j++) {			
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $res[$j]['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $res[$j]['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $res[$j]['first_name'].' '.$res[$j]['last_name']);
@@ -650,8 +636,7 @@ class Dashboard extends crm_controller {
 				break;
 				
 				case 'currentactivity':
-					foreach ($lead_owner_opp as $lead)
-					{			
+					foreach ($lead_owner_opp as $lead) {			
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['cfname'].' '.$lead['clname']);
@@ -675,8 +660,7 @@ class Dashboard extends crm_controller {
 				case 'line1':
 				case 'leastactive':
 				case 'line2':
-					foreach ($res as $lead)
-					{			//LeadDetails
+					foreach ($res as $lead) {			//LeadDetails
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['first_name'].' '.$lead['last_name']);
@@ -698,8 +682,7 @@ class Dashboard extends crm_controller {
 				
 				case 'leadowner':
 				case 'assignee':
-					foreach ($lead_owner_opp as $lead)
-					{			
+					foreach ($lead_owner_opp as $lead) {			
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['cfname'].' '.$lead['clname']);
@@ -731,8 +714,7 @@ class Dashboard extends crm_controller {
 			//set aligment to center for that merged cell (A1 to D1)
 			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
-			switch ($graph_type) 
-			{
+			switch ($graph_type) {
 				case 'funnel':
 					$filename = 'Current_pipeline_leads.xls';
 				break;
@@ -782,8 +764,7 @@ class Dashboard extends crm_controller {
     	redirect('/dashboard/');
     }
 
-	public function getLeadTitle() 
-	{
+	public function getLeadTitle() {
 		$data['getLeastLead'] = $this->dashboard_model->getLeastLeads();
 		$least_leads = array();
 		foreach($data['getLeastLead'] as $getLeast){
@@ -796,8 +777,7 @@ class Dashboard extends crm_controller {
 		//return $amount*$val;
 	}
 
-	public function showLeadDetails() 
-	{
+	public function showLeadDetails() {
 		$resu = real_escape_array($this->input->post());
 		
 		$filters			   = array();	
@@ -881,8 +861,7 @@ class Dashboard extends crm_controller {
 	}
 	
 	//for closed opportunities
-	public function showLeadDetails_cls() 
-	{
+	public function showLeadDetails_cls() {
 		$resu = real_escape_array($this->input->post());
 		
 		$filters			   = array();
@@ -952,15 +931,12 @@ class Dashboard extends crm_controller {
 	}
 	
 	//level restriction
-	public function level_restriction() 
-	{
+	public function level_restriction() {
 		$userdata = $this->session->userdata('logged_in_user');
-		if (($userdata['role_id'] == 1 && $userdata['level'] == 1) || ($userdata['role_id'] == 2 && $userdata['level'] == 1)) 
-		{
+		// if (($userdata['role_id'] == 1 && $userdata['level'] == 1) || ($userdata['role_id'] == 2 && $userdata['level'] == 1)) {
+		if ($userdata['level'] == 1) {
 			$cusId = '';
-		}
-		else
-		{
+		} else {
 			$cusIds = array();
 			$reg = array();
 			$cou = array();
@@ -1018,8 +994,7 @@ class Dashboard extends crm_controller {
 	}
 	
 	//for save pdf
-	public function savePdf() 
-	{
+	public function savePdf() {
 		$data = $_POST['img_data'];
 		list($type, $data) = explode(';', $data);
 		list(, $data)      = explode(',', $data);
@@ -1061,8 +1036,7 @@ class Dashboard extends crm_controller {
 	}
 	
 	//for getClosedJobLeadDetail
-	public function getClosedJobLeadDetail($mid, $filters=false)
-	{
+	public function getClosedJobLeadDetail($mid, $filters=false) {
 		$cusId 	= $this->level_restriction();
 		$months = array('04','05','06','07','08','09','10','11','12','01','02','03');
 		$mont 	= $months[$mid];

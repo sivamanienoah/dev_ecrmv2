@@ -1496,6 +1496,20 @@ class Dashboard_model extends crm_model {
 		$query = $this->db->get_where($this->cfg['dbpref'].'lead_source', array('status'=>1));
 		return $query->result_array();
 	}
+	
+	/*
+	*Get the Lead Status History
+	*/ 
+	function getLeadClosedDate($id) {
+	    $this->db->select('lead_id, dateofchange');
+	    $this->db->from($this->cfg['dbpref'].'lead_status_history');
+		$this->db->where("lead_id", $id);
+		$this->db->where("changed_status", 4);
+		$this->db->order_by('dateofchange', 'desc');
+		$this->db->limit(1);
+	    $sql = $this->db->get();
+	    return $res = $sql->row_array();
+	}
 
 }
 
