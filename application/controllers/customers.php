@@ -4,6 +4,7 @@ class Customers extends crm_controller {
 	public $userdata;
 	private $import_dryrun = FALSE;
 	
+	
     function __construct() {
         parent::__construct();
 		$this->login_model->check_login();
@@ -24,8 +25,7 @@ class Customers extends crm_controller {
 		$data['current_sort'] = $current;
         $data['customers'] = $this->customer_model->customer_list($limit, rawurldecode($search), $current[0], $current[1]);
 
-        if ($search == false) 
-		{           
+        if ($search == false) {           
 			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
 			$config['total_rows'] = (string) $this->customer_model->customer_count();
         }
@@ -508,7 +508,7 @@ class Customers extends crm_controller {
 	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
 	 *	Starts here Dated on 29-01-2013
 	 */
-	function importload(){
+	function importload() {
 		$count = 0;
 		$this->load->library('excel_read');
 		$this->login_model->check_login();		
@@ -516,18 +516,20 @@ class Customers extends crm_controller {
 		$objReader = new Excel_read();
 		if(isset($_FILES['card_file']['tmp_name'])) {
 			$strextension=explode(".",$_FILES['card_file']['name']);			
-		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {	 		
-			$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);	
-			for($i=2; $i<count($impt_data); $i++) {				
+		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {		
+			$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);
+			for($i=2; $i<=count($impt_data); $i++) {
 				if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['I']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['Q'])) {
 					$empty_error[] = $impt_data[$i]['A'];
 				} else {
 					if(!empty($impt_data[$i]['A']) && !empty($impt_data[$i]['B']) && !empty($impt_data[$i]['I']) && !empty($impt_data[$i]['J']) && !empty($impt_data[$i]['K']) && !empty($impt_data[$i]['L']) && !empty($impt_data[$i]['Q'])) {
+								
 						$numrows = $this->customer_model->primary_mail_check($impt_data[$i]['Q']);						
 						if($numrows != 0){
 							$email_exit[] = $impt_data[$i]['Q'];
 						} else {
-							if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $impt_data[$i]['Q'])) {
+							$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+							if(preg_match($regex, $impt_data[$i]['Q'])) {
 								// Region
 								if(!empty($impt_data[$i]['I']))
 								$strreg = $this->customer_model->get_rscl_id('', '', 'region', ucwords(strtolower($impt_data[$i]['I'])));							
