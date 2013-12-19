@@ -14,18 +14,17 @@ class ImportCustomers extends crm_controller {
         $this->load->library('validation');
     }
     
-     function index() {	
-	  $this->load->view('customer_import_view', $page); 
-     }
+	function index() {	
+		$this->load->view('customer_import_view', $page); 
+	}
      
-    function import_success(){
-	$data['msg']="Successfully Imported";
-	$this->load->view('success_import_view',$data);
+    function import_success() {
+		$data['msg']="Successfully Imported";
+		$this->load->view('success_import_view',$data);
     }
 
     
-	function importcust()
-	{
+	function importcust() {
 		$this->login_model->check_login();
 		
         $page['error'] = $page['msg'] = '';
@@ -90,8 +89,7 @@ class ImportCustomers extends crm_controller {
         
     }
 	
-	function import_customers_csv($mode = '', $dryrun = FALSE)
-	{
+	function import_customers_csv($mode = '', $dryrun = FALSE) {
 		if ($dryrun == 'dry')
 		{
 			$this->import_dryrun = TRUE;
