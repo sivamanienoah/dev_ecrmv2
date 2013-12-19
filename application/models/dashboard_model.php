@@ -1508,7 +1508,7 @@ class Dashboard_model extends crm_model {
 		$this->db->order_by('dateofchange', 'desc');
 		$this->db->limit(1);
 	    $sql = $this->db->get();
-	    return $res = $sql->row_array();
+	    return $sql->row_array();
 	}
 
 }
