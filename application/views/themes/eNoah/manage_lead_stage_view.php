@@ -2,6 +2,7 @@
 ob_start();
 require (theme_url(). '/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
+
 ?>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_lead_stage/manage_lead_stage_view.js"></script>
@@ -9,7 +10,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<div class="inner">
 		<h2 class="clearfix"><span class="pull-left"><?php echo $page_heading; ?></span>
 			<?php 
-			if($this->session->userdata('add')==1) { 
+			if($this->session->userdata('add')==1) {
 			?>
 				<div class="pull-right">
 					<button type="button" class="positive btn-leadStgAdd" onclick="location.href='<?php echo base_url(); ?>manage_lead_stage/leadStg_add'">Add New Lead Stage</button>
