@@ -13,7 +13,6 @@ class User_model extends crm_model {
 	*@Constructor
 	*@User Model
 	*/
-	
     public function User_model() {
        parent::__construct();
     }
@@ -23,11 +22,8 @@ class User_model extends crm_model {
 	*@Get User list
 	*@Method  user_list
 	*/
-	
-    public function user_list($offset, $search) 
-	{
-        if ($search != false) 
-		{	
+    public function user_list($offset, $search) {
+        if ($search != false) {
 			$search = urldecode($search);
 			$where = "(CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%$search%' OR `first_name` LIKE '%$search%' OR `last_name` LIKE '%$search%') ORDER BY a.first_name";
 
@@ -36,16 +32,13 @@ class User_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'levels as b', 'b.level_id = a.level', 'left');
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 			$this->db->where($where); 
-        }
-		else
-        {			
+        } else {			
             $offset = mysql_real_escape_string($offset);
 			$this->db->select('a.*,b.level_id,b.level_name,c.id,c.name');
 			$this->db->from($this->cfg['dbpref']."users as a");
 			$this->db->join($this->cfg['dbpref'].'levels as b', 'b.level_id = a.level', 'left');
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 			$this->db->order_by("a.first_name", "asc"); 
-			
 		}	
 
 		$query = $this->db->get();		
@@ -57,9 +50,7 @@ class User_model extends crm_model {
 	*@Get User Count
 	*@Method  user_count
 	*/
-    
-    public function user_count() 
-	{
+    public function user_count() {
         return $count = $this->db->count_all($this->cfg['dbpref'] . 'users');
     }
     
@@ -67,28 +58,20 @@ class User_model extends crm_model {
 	*@Get User By id
 	*@Method  get_user
 	*/
-	
-    public function get_user($id) 
-	{
-        if(!$id)
-        {
+    public function get_user($id) {
+        if(!$id) {
             return false;
-        }
-		else
-		{
+        } else {
 			$customer = $this->db->get_where($this->cfg['dbpref'] . 'users', array('userid' => $id), 1);
 			return $customer->result_array();
 		}
     }
     
-	 
 	/*
 	*@Update User Details By corresponding User ID
 	*@Method  update_user
 	*/
-	
-    public function update_user($id, $data) 
-	{
+    public function update_user($id, $data) {
         $this->db->where('userid', $id);
         return $this->db->update($this->cfg['dbpref'] . 'users', $data);
     }
@@ -97,11 +80,9 @@ class User_model extends crm_model {
 	*@Insert User Details
 	*@Method  insert_user
 	*/
-    public function insert_user($data)
-	{
+    public function insert_user($data) {
 		$availed_users = check_max_users();
-		if ( $this->cfg['max_allowed_users'][0] > $availed_users['avail_users'] )
-		{
+		if ( $this->cfg['max_allowed_users'][0] > $availed_users['avail_users'] ) {
 			/* 
 			$sql = "INSERT INTO ".$this->cfg['dbpref']."users (role_id,first_name,last_name,password,email,add_email,use_both_emails,phone,mobile, 	level,is_pm,signature,inactive)	VALUES ('".$data['role_id']."','".$data['first_name']."','".$data['last_name']."','".$data['password']."','".$data['email']."','".$data['add_email']."','".$data['use_both_emails']."','".$data['phone']."','".$data['mobile']."','".$data['level']."','".$data['is_pm']."','".$data['signature']."','".$data['inactive']."') ON DUPLICATE KEY UPDATE email='".$data['email']."' ";	
 			$query = $this->db->query($sql);  
@@ -122,9 +103,7 @@ class User_model extends crm_model {
 			if ( $this->db->insert($this->cfg['dbpref']. 'users', $data) ) {
 				return $this->db->insert_id();
 			}
-		}
-		else 
-		{
+		} else {
 			$max_user = "maxusers";
 			return $max_user;
 		}
@@ -133,8 +112,7 @@ class User_model extends crm_model {
 	/*
 	*check unique emails
 	*/
-	function chk_unique_emails($email)
-	{
+	function chk_unique_emails($email) {
         $chk = $this->db->get_where($this->cfg['dbpref'] . 'users', array('email'=>$email));
 		return $chk->num_rows();
 	}
@@ -143,8 +121,7 @@ class User_model extends crm_model {
 	*@For new level settings concepts
 	*@Method  insert_level_settings
 	*/
-	public function insert_level_settings($level_data, $user_id, $levelId)
-	{
+	public function insert_level_settings($level_data, $user_id, $levelId) {
 		$data['region'] = $level_data['region'];		
 		if(!empty($data['region'])) {
 			 for($i=0;$i<count($data['region']);$i++){
@@ -192,9 +169,7 @@ class User_model extends crm_model {
 	*@Get UserList By region id,country id & state id
 	*@Method  get_userslist
 	*/
-	
-	public function get_userslist($regid, $cntryid, $steid, $locid)
-    {
+	public function get_userslist($regid, $cntryid, $steid, $locid) {
 		$this->db->select('user_id');
 		$this->db->from($this->cfg['dbpref']."levels_region");
 		$this->db->where('region_id',$regid); 
@@ -246,9 +221,7 @@ class User_model extends crm_model {
 	*@Delete User by corresponding user id
 	*@Method  delete_user
 	*/
-	
-    public function delete_user($id) 
-	{
+    public function delete_user($id) {
         $this->db->where('userid', $id);
         return $this->db->delete($this->cfg['dbpref'] . 'users');
     }
@@ -257,9 +230,7 @@ class User_model extends crm_model {
 	*@For ACL
 	*@Method  has_role
 	*/
-	
-	public function has_role( $user, $role )
-    {
+	public function has_role( $user, $role ) {
         $this->db->join( $this->cfg['dbpref'].'user_roles ur', 'users.id = ur.users_id' );
         $this->db->join( $this->cfg['dbpref'].'roles r', 'r.id = ur.roles_id' );
         return $this->get_by( array( 'r.name' => $role, 'ur.users_id' => $user ) );
@@ -270,8 +241,6 @@ class User_model extends crm_model {
 	*@Method  has_role
 	*@table   user_table
 	*/
-
-	
     public function field_exists( $field )
     {
         return $this->db->field_exists( $field, $this->config->item('user_table', 'acl_auth') );
@@ -282,9 +251,7 @@ class User_model extends crm_model {
 	*@Method  has_role
 	*@table   levels
 	*/
-	
-	public function get_levels()
-    {
+	public function get_levels() {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'] . 'levels');
 		$this->db->limit('5','0');
@@ -292,15 +259,12 @@ class User_model extends crm_model {
         $lists=  $list_levels->result_array();
 		return $lists;
     }
-
 	
 	/*
 	*@Check reset token
 	*@Method  has_role
 	*/
-
-    public function check_token( $token )
-    {
+    public function check_token( $token ) {
         return ( $token === $this->reset_code );
     }
 
@@ -309,9 +273,7 @@ class User_model extends crm_model {
 	*@Method  addremarks
 	*@table   taskremarks
 	*/
-	
-	public function addremarks($remarks,$userid,$taskid)
-	{
+	public function addremarks($remarks,$userid,$taskid) {
 		$this->db->query("INSERT INTO `".$this->cfg['dbpref']."taskremarks`(`remarks`,`taskid`,`userid`,`createdon`) VALUES('".$remarks."','".$taskid."','".$userid."',now())");
 	}
 
@@ -321,10 +283,7 @@ class User_model extends crm_model {
 	*@Method  updatedby
 	*@table   tasks
 	*/
-
-	
-	public function updatedby($taskid) 
-	{
+	public function updatedby($taskid) {
 		$this->db->select('created_by');
 		$this->db->from($this->cfg['dbpref'].'tasks');
 		$this->db->where('taskid',$taskid);
@@ -338,9 +297,7 @@ class User_model extends crm_model {
 	*@Method  update_level
 	*@table   tasks
 	*/
-	
-    public function update_level($data,$id,$levelid) 
-	{		
+    public function update_level($data,$id,$levelid) {		
 		$this->delete_level_dependant($id);
 		$this->level_dependant_insert($id,$data,$levelid);		
 		return $id;
@@ -352,10 +309,7 @@ class User_model extends crm_model {
 	*@Method   delete_level_dependant
 	*@table    levels_region,levels_country,levels_state,levels_location
 	*/
-
-	
-	public function delete_level_dependant($id = null)
-	{
+	public function delete_level_dependant($id = null) {
 		$this->db->where('user_id',$id);
 		$this->db->delete($this->cfg['dbpref'] . 'levels_region') ;
 		$this->db->where('user_id', $id);
@@ -371,9 +325,7 @@ class User_model extends crm_model {
 	*@Method   level_dependant_insert
 	*@table    levels_region,levels_country,levels_state,levels_location
 	*/
-	
-    public function level_dependant_insert($userId = null,$data,$levelid)
-	{		
+    public function level_dependant_insert($userId = null,$data,$levelid) {		
 		if(!empty($data['region'])) {	
 				for($i=0;$i<count($data['region']);$i++){				
 					$dataRegion = array();
@@ -432,9 +384,7 @@ class User_model extends crm_model {
 	*@Method   checkcountrylevel3
 	*@table    Country
 	*/
-	
-	public function checkcountrylevel3($regionid, $explode_country) 
-	{
+	public function checkcountrylevel3($regionid, $explode_country) {
 		$flag = 0;		
 		//$query = $this->db->query("select * from ".$this->cfg['dbpref']."country where regionid='".$regionid."' AND countryid IN ($explode_country)");
 
@@ -455,22 +405,19 @@ class User_model extends crm_model {
 	*@Method   checkstatelevel4
 	*@table    state
 	*/
+	public function checkstatelevel4($countryid,$state_load) {
+		$flag = 0;		
+		
+		$this->db->select("*");
+		$this->db->from($this->cfg['dbpref']."state");
+		$this->db->where("countryid", $countryid); 
+		$this->db->where_in("stateid", $state_load);
+		// $this->db->where('stateid IN('.$state_load.')'); 
+		$query = $this->db->get();	
 
-	
-	public function checkstatelevel4($countryid,$state_load) 
-	{
-			$flag = 0;		
-			
-			$this->db->select("*");
-			$this->db->from($this->cfg['dbpref']."state");
-			$this->db->where("countryid", $countryid); 
-			$this->db->where_in("stateid", $state_load);
-			// $this->db->where('stateid IN('.$state_load.')'); 
-			$query = $this->db->get();	
-
-			if($query->num_rows() > 0) {
-				$flag = 1;
-			} 	
+		if($query->num_rows() > 0) {
+			$flag = 1;
+		} 	
 		return $flag;
 	}
 	
@@ -479,23 +426,20 @@ class User_model extends crm_model {
 	*@Method   checklocationlevel5
 	*@table    location
 	*/
-
-	
-	public function checklocationlevel5($stateid,$location_load) 
-	{	
-			$flag = 0;		
-			
-			$this->db->select("*");
-			$this->db->from($this->cfg['dbpref']."location");
-			$this->db->where("stateid", $stateid); 
-			$this->db->where_in("locationid", $location_load);
-			// $this->db->where('locationid IN('.$location_load.')');
-			$query = $this->db->get();	
-			
-			if($query->num_rows() > 0) {
-				$flag = 1;
-			} 	
-			return $flag;
+	public function checklocationlevel5($stateid,$location_load) {	
+		$flag = 0;		
+		
+		$this->db->select("*");
+		$this->db->from($this->cfg['dbpref']."location");
+		$this->db->where("stateid", $stateid); 
+		$this->db->where_in("locationid", $location_load);
+		// $this->db->where('locationid IN('.$location_load.')');
+		$query = $this->db->get();	
+		
+		if($query->num_rows() > 0) {
+			$flag = 1;
+		} 	
+		return $flag;
 	}
 	
 	/*
@@ -503,7 +447,7 @@ class User_model extends crm_model {
 	*@Method   find_exist_email
 	*@table    users
 	*/
-	public function find_exist_email($data){	
+	public function find_exist_email($data) {
 
 		$email  =  $data['email'];
 		$update =  $data['email1'];
@@ -532,8 +476,7 @@ class User_model extends crm_model {
 	*@Method   getUserLeadAssigned
 	*@table    users
 	*/
-	public function getUserLeadAssigned($users)
-	{	
+	public function getUserLeadAssigned($users) {	
 		$this->db->select("userid, first_name, last_name");
 		$this->db->from($this->cfg['dbpref']."users");
 		$this->db->where("userid in (".$users.")");
@@ -576,7 +519,7 @@ class User_model extends crm_model {
 	*@Method   log_history
 	*@table    logs,leads,
 	*/
-	public function log_history($log_date,$log_user){
+	public function log_history($log_date,$log_user) {
 	
 		# now get the logs for the user on that day
 		$sql = "SELECT *, DATE_FORMAT(`".$this->cfg['dbpref']."logs`.`date_created`, '%W, %D %M %y %h:%i%p') AS `fancy_date`
@@ -598,8 +541,7 @@ class User_model extends crm_model {
 	*@Method   get_regions
 	*@table    region
 	*/
-	
-	public function get_regions(){
+	public function get_regions() {
 	
 	    $output       	= '';
 		$this->db->select('regionid, region_name');
@@ -625,8 +567,7 @@ class User_model extends crm_model {
 	*@Method   get_loadregionsByuserId
 	*@table    levels_region,region
 	*/
-  
-   public function get_loadregionsByuserId($uid){
+	public function get_loadregionsByuserId($uid) {
    
 		$uid = (int)$uid; // User ID
 
@@ -664,7 +605,7 @@ class User_model extends crm_model {
 	*@Method    get_loadCountrysByRegionid
 	*@tables    region,country
    */
-   public function get_loadCountrysByRegionid($region_id){
+   public function get_loadCountrysByRegionid($region_id) {
 		
 		$output = '';
 		$this->db->select('countryid,country_name');
@@ -683,8 +624,7 @@ class User_model extends crm_model {
 			
 		}
 		echo $output;
-   
-   }
+	}
 
 
 	/*
@@ -692,8 +632,7 @@ class User_model extends crm_model {
 	*@Method   edit_loadCountrys
 	*@table    levels_country,country
     */
-	
-	public function edit_loadCountrys($regionid, $uid){
+	public function edit_loadCountrys($regionid, $uid) {
 		
 		$output = '';
 		$this->db->select('country_id');
@@ -730,7 +669,7 @@ class User_model extends crm_model {
 	*@Method   get_load_state
 	*@table    state,country
     */
-	public function get_load_state($country_id){
+	public function get_load_state($country_id) {
 		$output = '';
 		
 		$this->db->select('stateid,state_name');
@@ -749,7 +688,6 @@ class User_model extends crm_model {
 			    $output .= '<option value="'.$states->stateid.'">'.$states->state_name.'</option>';
 		}
 		echo $output;
-	
 	} 
 	
 	/*
@@ -757,9 +695,7 @@ class User_model extends crm_model {
 	*@Method   get_load_state
 	*@table    state,country
     */
-	
-	public function edit_loadstate($countryid,$uid)
-	{    
+	public function edit_loadstate($countryid,$uid) {    
 		$output = '';
 		$this->db->select('state_id');
 		$this->db->from($this->cfg['dbpref']."levels_state");
@@ -786,16 +722,13 @@ class User_model extends crm_model {
 		echo $output;
 	}
 
-
 	
 	/*
 	*@Get Locations By state id
 	*@Method   get_loadLocations
 	*@table    location,state
     */
-
-	
-   public function get_loadLocations($state_id){
+	public function get_loadLocations($state_id) {
 		$output = '';
 
 		$this->db->select('locationid,location_name');
@@ -821,8 +754,7 @@ class User_model extends crm_model {
 	*@Method   editloadLocations
 	*@tables    levels_location,location
     */
-	
-	public function editloadLocations($state_id,$uid){
+	public function editloadLocations($state_id,$uid) {
 	
 		$output = '';
 		
@@ -859,29 +791,26 @@ class User_model extends crm_model {
 	*@Method    getUserfromdb
 	*@tables    users
     */
-	
-	public function getUserfromdb(){
-	
-			if ($update != 'undefined') {
-			
-				$where = "email = '".$username."' AND `userid` != '".$update."' ";
-				$this->db->where($where);
-				$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-				//echo $this->db->last_query();
-				if ($query == 0) {
-					echo 'userOk';
-				}
-				else {
-					echo 'userNo';
-				}
+	public function getUserfromdb() {
+		if ($update != 'undefined') {
+		
+			$where = "email = '".$username."' AND `userid` != '".$update."' ";
+			$this->db->where($where);
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+			//echo $this->db->last_query();
+			if ($query == 0) {
+				echo 'userOk';
 			}
-			else {	
-				$this->db->where('email',$username);
-				$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
-				if( $query == 0 ) echo 'userOk';
-				else echo 'userNo';
-			}	
-	
+			else {
+				echo 'userNo';
+			}
+		}
+		else {	
+			$this->db->where('email',$username);
+			$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+			if( $query == 0 ) echo 'userOk';
+			else echo 'userNo';
+		}	
 	}
 	
 	/*
@@ -889,7 +818,7 @@ class User_model extends crm_model {
 	*@Method    add_log
 	*@tables    logs
     */
-	public function add_log($data){
+	public function add_log($data) {
 	   if ($this->db->insert($this->cfg['dbpref'].'logs', $data))
 		{
 			echo "{error: false}";
