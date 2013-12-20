@@ -5,8 +5,7 @@ class Tasks extends crm_controller {
 	public $userdata;
 	public $cfg;
 	
-    public function __construct()
-	{
+    public function __construct() {
         parent::__construct();
 		$this->load->helper('form');
 		$this->load->model('task_model');
@@ -15,8 +14,7 @@ class Tasks extends crm_controller {
     }
 	
 	
-	public function index($extend = FALSE)
-	{	
+	public function index($extend = FALSE) {	
 		$data['created_by'] = $this->task_model->get_task_created_by();
 
 		$res = $this->get_daily_tasks($extend);
@@ -36,8 +34,7 @@ class Tasks extends crm_controller {
 	/**
 	 * Tasks for the main menu
 	 */
-	public function all()
-	{
+	public function all() {
 		$data = array();
 		
 		$data['user_accounts'] = array();
@@ -65,6 +62,7 @@ class Tasks extends crm_controller {
 		$data['project'] = $project->result_array();
 
 		$data['created_by'] = $this->task_model->get_task_created_by();
+		echo "<pre>"; print_r($data); exit;
 		$this->load->view('tasks/main_view', $data);
 	}
 	
@@ -73,14 +71,12 @@ class Tasks extends crm_controller {
 	 * Get all tasks
 	 * For today
 	 */
-	private function get_daily_tasks($extend = FALSE)
-	{
+	private function get_daily_tasks($extend = FALSE) {
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
 
 		$now = time();
-		if (isset($_GET['day']))
-		{
+		if (isset($_GET['day'])) {
 			$from_date = explode('-', $_GET['day']);
 			if ($from_date_stamp = mktime(0, 0, 0, $from_date[1], $from_date[0], $from_date[2]))
 			{
@@ -96,9 +92,7 @@ class Tasks extends crm_controller {
 	}
 	
 	//Search functionality
-	function search()
-	{
-		
+	function search() {
 		$data['created_by'] = $this->task_model->get_task_created_by();
 		
 		$res = $this->search_user_tasks($_POST['task_search_start_date'], $_POST['task_search_end_date'], $_POST['task_search']);
@@ -116,8 +110,7 @@ class Tasks extends crm_controller {
 	/**
 	 * Search the tasks
 	 */
-	private function search_user_tasks($search_from_date = '', $search_to_date = '', $task_search = '')
-	{		
+	private function search_user_tasks($search_from_date = '', $search_to_date = '', $task_search = '') {		
 		//New Search Functionality - 04/02/2013
 		//echo $search_from_date;
 
@@ -129,7 +122,7 @@ class Tasks extends crm_controller {
 		}
 
 		$uidd = $this->session->userdata['logged_in_user']; 
-		$uid = $uidd['userid'];
+		$uid  = $uidd['userid'];
 
 		$now = time();
 		if (isset($_GET['day']))
