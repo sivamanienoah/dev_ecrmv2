@@ -881,8 +881,9 @@ color:#595959;
  -webkit-border-radius:4px 4px 4px 4px;
 }
 .great-task-table{border:1px solid #2b9edc;}
-.due-today{ background-color:#76b4e2 !important;}
+.due-today{background-color:#76b4e2 !important;}
 .great-task-table, .great-task-table td{border:1px solid #2b9edc;}
+.prior{background:purple}
 .data-table th {
 
  }
