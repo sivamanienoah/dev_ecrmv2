@@ -215,9 +215,9 @@ require (theme_url().'/tpl/header.php');
 					</td>
 					<td>
 						<select name="task_user" class="edit-task-allocate textfield width100px" >
-						<?php						
-						echo $remind_options, $remind_options_all;
-						?>						
+							<?php						
+							echo $remind_options, $remind_options_all;
+							?>						
 						</select>
 							
 					</td>
