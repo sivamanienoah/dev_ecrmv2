@@ -3,20 +3,17 @@
 class Task_model extends crm_model 
 {
     
-    function Task_model() 
-	{
+    function Task_model() {
 		parent::__construct();
     }
 	
-	public function get_task_created_by()
-	{
+	public function get_task_created_by() {
 		$sql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`,`".$this->cfg['dbpref']."tasks`.`userid_fk` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 
 		return $sql->result_array();
 	}
 	
-	public function get_task_daily($uid, $today)
-	{
+	public function get_task_daily($uid, $today) {
 		$sql = "SELECT ".$this->cfg['dbpref']."leads.lead_id as lead_id, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
 		DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
 		DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('".$today."') ) AS `delayed`,
@@ -35,14 +32,12 @@ class Task_model extends crm_model
 		return $query->result_array();
 	}
 	
-	public function get_created_by_for_task($id)
-	{
+	public function get_created_by_for_task($id) {
 		$query = $this->db->query("SELECT `created_by` FROM `".$this->cfg['dbpref']."tasks` WHERE `taskid`=".$id);
 		return $query->result_array();
 	}
 	
-	public function get_task_search_wip($today, $uid, $varStart_date)
-	{
+	public function get_task_search_wip($today, $uid, $varStart_date) {
 		$sql = "SELECT ".$this->cfg['dbpref']."leads.lead_id as lead_id, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
 		DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
 		DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('".$today."') ) AS `delayed`,
@@ -61,8 +56,7 @@ class Task_model extends crm_model
 	
 	}
 	
-	public function get_task_search_comp($today, $uid, $varStart_date)
-	{
+	public function get_task_search_comp($today, $uid, $varStart_date) {
 		$sql = "SELECT ".$this->cfg['dbpref']."leads.lead_id as lead_id, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
 		DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
 		DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('".$today."') ) AS `delayed`,
@@ -81,8 +75,7 @@ class Task_model extends crm_model
 	
 	}
 	
-	public function get_task_search_all($today, $uid, $varStart_date)
-	{
+	public function get_task_search_all($today, $uid, $varStart_date) {
 		 $sql = "SELECT ".$this->cfg['dbpref']."leads.lead_id as lead_id, `".$this->cfg['dbpref']."tasks`.`taskid` AS `taskid`, `".$this->cfg['dbpref']."tasks`.`task` AS `task`, `".$this->cfg['dbpref']."tasks`.`remarks` AS `remark`, us.`first_name` AS `created`, DATE(`".$this->cfg['dbpref']."tasks`.`start_date`) AS `start_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualstart_date`) AS `actualstart_date`, DATE(`".$this->cfg['dbpref']."tasks`.`actualend_date`) AS `actualend_date`, `".$this->cfg['dbpref']."tasks`.`approved` AS `approved`, `".$this->cfg['dbpref']."tasks`.`require_qc` AS `require_qc`,
 		DATE(`".$this->cfg['dbpref']."tasks`.`end_date`) AS `end_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`, `".$this->cfg['dbpref']."tasks`.`created_by` AS `created_byid`,
 		DATEDIFF( DATE(`".$this->cfg['dbpref']."tasks`.`end_date`), DATE('".$today."') ) AS `delayed`,
