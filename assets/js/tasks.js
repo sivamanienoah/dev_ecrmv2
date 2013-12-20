@@ -304,8 +304,8 @@ function setTaskStatus(taskid, el)
 		params[csrf_token_name] = csrf_hash_token;
 	}
 	else if (typeof el == 'string' && el == 'delete') /* delete task */
-	{
-		if ( ! window.confirm('Are you sure you want to delete this task?'))
+	{		
+		/* if ( ! window.confirm('Are you sure you want to delete this task?'))
 		{
 			$('#jv-tab-4').unblock();
 			$.unblockUI();
@@ -315,7 +315,9 @@ function setTaskStatus(taskid, el)
 		{
 			params = {'taskid': taskid, 'delete_task': true};
 			params[csrf_token_name] = csrf_hash_token;
-		}
+		} */
+		params = {'taskid': taskid, 'delete_task': true};
+		params[csrf_token_name] = csrf_hash_token;
 	}
 	else /* set the status */
 	{
@@ -362,24 +364,6 @@ function setTaskStatus(taskid, el)
 					{
 						$('#task-table-' + taskid).addClass('completed');
 					}
-					else if (data.marked_100pct && $('#job_log').size() > 0 && $.trim($('.task-require-qc', $('#task-table-' + taskid)).text()) == '1')
-					{
-						// all good! Place a log
-						var msg = "The following task has been marked 100% and have been verified to comply with the Visiontech standard.\n\n.";
-						
-						msg += $('#task-table-' + taskid).find('tr:first td:eq(1)').text().replace(/^(\s|\t)+/, '') + '\n\n';
-						
-						$('table.the-task-require-qc td:has("span")').each(function(){
-							msg += '** ' + $('span', $(this)).text() + ' - YES\n'
-						});
-						
-						// get adrian@ (6)
-						$('#job_log').val(msg);
-						$('.user .production-manager-user').attr('checked', true);
-						addLog();
-						
-						$('#task-table-' + taskid).addClass('marked_100pct');
-					}
 					else if (data.task_delete)
 					{
 						//if (window.location.href == 'http://localhost/ecrmv2/tasks/all/')
@@ -395,11 +379,9 @@ function setTaskStatus(taskid, el)
 							});
 						}
 					}
-					else {
-					
+					else 
+					{
 						$('#set_task_status_' + taskid).parents('.tasks').removeClass('complete')
-					
-					
 					}
 					if (typeof(this_is_home) != 'undefined')
 					{
@@ -416,6 +398,7 @@ function setTaskStatus(taskid, el)
 			'json'
 		);
 }
+
 function submitFullCompleteStatus()
 {
 	var all_good = true;
@@ -442,5 +425,23 @@ function submitFullCompleteStatus()
 		setTaskStatus(submit_taskid);
 	}
 	
+	return false;
+}
+
+function deleteConfirm(taskid) {
+	$.blockUI({
+		message:'<br /><h5>Are you sure you want to delete this task?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+taskid+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		css:{width:'440px'}
+	});
+}
+
+function processDelete(taskid) {
+	$.unblockUI();
+	setTaskStatus(taskid, 'delete');
+}
+
+function cancelDel() {
+	$('#jv-tab-4').unblock();
+	$.unblockUI();
 	return false;
 }

@@ -7,15 +7,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	#$sensitive_information_allowed = ( in_array($userdata['level'], array(0, 1, 2, 4, 5)) ) ? TRUE : FALSE;
 }
 ?>
-<?php /*
-$hostingid=array();
-if(!empty($hosting)){
-	foreach($hosting as $val){
-		$k=$val['jobid_fk'];$v=$val['hostingid_fk'];$t=$val['hostingid'];
-		$hostingid[$k][$v]=$t;
-	}
-} */
-?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -35,8 +27,8 @@ if(!empty($hosting)){
 <link rel="stylesheet" href="assets/css/smoothness/ui.all.css?q=2" type="text/css" />
 <link rel="stylesheet" href="assets/css/ui-lightness/jquery-ui-1.7.2.custom.css?q=1" type="text/css" />
 <!-- link rel="stylesheet" media="screen" href="assets/css/jquery.timepickr.css" type="text/css" / -->
-<script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script>
-<script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script>
+<!--script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script-->
+<!--script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script-->
 <style>
 .prior{background:purple;color:#CCC;color:#ccc;}
 </style>
@@ -46,7 +38,6 @@ if(!empty($hosting)){
 <div id="task-page">
 	<div class="task-contents">
 <?php
-
 
 $wend_offset = 0;
 if (date('l', $start_date_stamp) == 'Monday')
@@ -160,7 +151,7 @@ foreach ($results as $result)
 EOD;
 		$total_time = $today_total_time = 0;
 		foreach ($user_tasks[$uk]['tasks'] as $tk => $task)
-		{		
+		{
 			$format_task = nl2br($task['task']);
 			$prior='';$complete = '';
 			if ($task['priority'] == '1' && $task['status'] != '100')
@@ -405,31 +396,32 @@ EOD;
 	
 	}
 	$i = 0;
-	//echo '<pre>'; print_r($user_tasks); echo '</pre>';
+	// echo '<pre>'; print_r($user_tasks); echo '</pre>'; exit;
 	foreach ($user_tasks as $uk => $ut)
 	{
-		if($userdata['role_id'] == 1 || $userdata['userid'] != $uk ) {
-			$use = $ut['user_name'].' - ';			
+		// if($userdata['role_id'] == 1 || $userdata['userid'] != $uk ) {
+		if($userdata['userid'] != $uk ) {
+			$use = $ut['user_name'].' - ';
 		}
 		else {
-			$use =  '' ; 
+			$use =  '' ;
 		}
 		
-			$utuser = $ut['user_name'];
-			$td = '<td class="user" align="center" width="200px">Assigned To</td>';
-			$tdcon = '<td valign=top align=center>'.$utuser.'</td>';
+		$utuser = $ut['user_name'];
+		$td 	= '<td class="user" align="center" width="200px">Assigned To</td>';
+		$tdcon  = '<td valign=top align=center>'.$utuser.'</td>';
 		
 		/*mycahanges*/
 			
-			$tdowner = '<td class="user" align="center" width="200px">Assigned By</td>';
+		$tdowner = '<td class="user" align="center" width="200px">Assigned By</td>';
 			
-			/*ends*/
-		
-			if($uk == $userdata['userid']) {
-				$title = "<h3 style='border-bottom:1px solid #ccc;'>Tasks Assigned To Me</h3><br />";
-			} else if($uk == in_array($uio,$b)) {
-				$title = "<h3 style='border-bottom:1px solid #ccc;'>Tasks Assigned To -"." ". $utuser." </h3><br />";
-			}
+		/*ends*/
+
+		if($uk == $userdata['userid']) {
+			$title = "<h3 style='border-bottom:1px solid #ccc;'>Tasks Assigned To Me</h3><br />";
+		} else if($uk == in_array($uio,$b)) {
+			$title = "<h3 style='border-bottom:1px solid #ccc;'>Tasks Assigned To -"." ". $utuser." </h3><br />";
+		}
 		echo <<< EOD
 		{$title}
 	<table class="great-task-table" border="0" cellpadding="0" cellspacing="0" id="user-{$uk}">
@@ -474,7 +466,7 @@ EOD;
 			}
 			/*mycahanges*/
 			
-			 $utowner = $task['taskowner'];
+			$utowner = $task['taskowner'];
 			$tdowner = '<td align="center">Assigned By</td>';
 			$tdownercon = '<td valign=top align=center>'.$utowner.'</td>';			
 			
@@ -554,7 +546,7 @@ EOD;
 			/*ends*/
 			
 			
-			if($userdata['userid'] == $uk) {
+		if($userdata['userid'] == $uk) {
 			//$own_task_form = ($uk != $userdata['userid'] || $task['leadid'] == 'YES') ? '' : <<< EOD
 			$own_task_form =  <<< EOD
 		<td valign="top" align="center"><form onsubmit="return false" style="margin-bottom:0;">
@@ -566,56 +558,54 @@ EOD;
 			</div>
 		</form></td>
 EOD;
-	} else {
+		} else {
 			$stat =$task['status'];
 			$own_task_form = '<td class=\"status-'.$stat.'\" valign=top align=right>'.$stat.'%</td>';
-			}
+		}
 			
-			if($userdata['userid'] == $uk && $userdata['userid'] != $task['created_byid'] && $this->session->userdata('edittask') == 1) {
+		if($userdata['userid'] == $uk && $userdata['userid'] != $task['created_byid'] && $this->session->userdata('edittask') == 1) {
 			$action = <<< EOD
 			<button type="submit" onclick="openEditTask('{$tk}','random'); return false;">Edit</button> 
 EOD;
-	} else if($userdata['userid'] == $task['created_byid'] && $this->session->userdata('deletetask') == 1 && $this->session->userdata('edittask') == 1) {
+		} else if($userdata['userid'] == $task['created_byid'] && $this->session->userdata('deletetask') == 1 && $this->session->userdata('edittask') == 1) {
 			$action = <<< EOD
 			<button type="submit" onclick="openEditTask('{$tk}','random'); return false;">Edit</button> 
 			<button type="submit" onclick="setTaskStatus('{$tk}','complete'); return false;">Approve</button> 
-			<button type="submit" onclick="setTaskStatus('{$tk}', 'delete'); return false;">Delete</button>
+			<button type="submit" onclick="deleteConfirm('{$tk}'); return false;">Delete</button>
 EOD;
-	} else if($userdata['userid'] == $task['created_byid'] && $this->session->userdata('edittask') == 1) {
+		} else if($userdata['userid'] == $task['created_byid'] && $this->session->userdata('edittask') == 1) {
 			$action = <<< EOD
 			<button type="submit" onclick="openEditTask('{$tk}','random'); return false;">Edit</button> 
 			<button type="submit" onclick="setTaskStatus('{$tk}','complete'); return false;">Approve</button> 
 			
 EOD;
-	} else if($userdata['userid'] == $uk && $userdata['userid'] == $task['created_byid'] && $this->session->userdata('deletetask') == 1 && $this->session->userdata('edittask') == 1) {
+		} else if($userdata['userid'] == $uk && $userdata['userid'] == $task['created_byid'] && $this->session->userdata('deletetask') == 1 && $this->session->userdata('edittask') == 1) {
 		$action = <<< EOD
 			<button type="submit" onclick="openEditTask('{$tk}','random'); return false;">Edit</button> 
 			<button type="submit" onclick="setTaskStatus('{$tk}','complete'); return false;">Approve</button> 
-			<button type="submit" onclick="setTaskStatus('{$tk}', 'delete'); return false;">Delete</button>
+			<button type="submit" onclick="deleteConfirm('{$tk}'); return false;">Delete</button>
 EOD;
-    } else {
+		} else if($userdata['userid'] == $uk && $userdata['userid'] == $task['created_byid'] && $this->session->userdata('deletetask') == 1) {
+		$action = <<< EOD
+			<button type="submit" onclick="deleteConfirm('{$tk}'); return false;">Delete</button>
+EOD;
+		} else {
 			$action = 'No Access';
 		}
-				
-			
 			
 		echo "<tr class=\"tasks{$delayed}{$due_today}{$require_qc}{$prior}{$complete}\">
 			<td class=\"first\" rel='{$tk}' valign=top >{$format_task}</td>
 			<td class=\"rema\" valign=top >{$task['remark']}</td>
 			{$tdownercon}
-			{$tdcon}
-					
-			";
+			{$tdcon}";
 
-			echo "<td class=start-date valign=top align=center>{$task['start_date']}</td>
+		echo "<td class=start-date valign=top align=center>{$task['start_date']}</td>
 			<td class=end-date valign=top align=center>{$task['end_date']}</td>
 			<td class=actualstart-date valign=top align=center>{$actualstart_date}</td>
 			<td class=actualend-date valign=top align=center>{$actualend_date}</td>
 			{$own_task_form}
-			<td valign=top class=\"task{$random_task_class}\" rel='{$tk}'> <div class=\"buttons\">{$action} 
-								 
-							</div></td>
-		</tr>";
+			<td valign=top class=\"task{$random_task_class}\" rel='{$tk}'> <div class=\"buttons\">{$action}
+			</div></td></tr>";
 		}
 		$mins = $total_time % 60;
 		$hours = floor($total_time / 60);
@@ -625,11 +615,11 @@ EOD;
 		$today_total_hours = str_pad($hours, 2, '0', STR_PAD_LEFT) . ':' . str_pad($mins, 2, '0', STR_PAD_RIGHT);
 		echo <<< EOD
 		
-	</table>	
+	</table>
 EOD;
 ?>
 <p><?php echo '&nbsp;'; ?></p>	
-<?php
+	<?php
 		$i++;
 		unset($user_tasks[$uk]);
 	}

@@ -9,7 +9,7 @@ class Task_model extends crm_model
 	
 	public function get_task_created_by() {
 		$sql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`,`".$this->cfg['dbpref']."tasks`.`userid_fk` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
-
+		
 		return $sql->result_array();
 	}
 	
@@ -90,6 +90,17 @@ class Task_model extends crm_model
 		WHERE (`".$this->cfg['dbpref']."tasks`.`created_by` = '".$uid."' OR `".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$uid."') ".$varStart_date." ";
 		$query = $this->db->query($sql);
 		return $query->result_array();
+	}
+	
+	function getActiveUsers() {
+		$this->db->select("userid, first_name, last_name, email");
+		$this->db->from($this->cfg['dbpref']."users");
+		$this->db->where("inactive", 0);
+		$this->db->order_by("first_name");	
+		$query = $this->db->get();
+		$res['num']  = $query->num_rows();
+		$res['user'] = $query->result_array();
+		return $res;
 	}
     
 }

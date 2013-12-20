@@ -39,12 +39,14 @@ class Tasks extends crm_controller {
 		
 		$data['user_accounts'] = array();
 
-		$users = $this->db->get($this->cfg['dbpref'] . 'users');
-		if ($users->num_rows() > 0)
+		// $users = $this->db->get($this->cfg['dbpref'] . 'users');
+		$users = $this->task_model->getActiveUsers();
+
+		if ($users['num'] > 0)
 		{
-			$data['user_accounts'] = $users->result_array();
+			$data['user_accounts'] = $users['user'];
 		}
-		
+		/*
 		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 		
 		$temp_cont = $cq->result_array();
@@ -54,15 +56,16 @@ class Tasks extends crm_controller {
 		foreach ($temp_cont as $tc)
 		{
 			$data['assigned_contractors'][] = $tc['userid_fk'];
-		}
+		} 
+		
 		$this->db->select(array('lead_title','lead_id'));
 		$this->db->where_not_in('lead_title','');
 		$project = $this->db->get($this->cfg['dbpref'] . 'leads');
 		
 		$data['project'] = $project->result_array();
-
+		*/
 		$data['created_by'] = $this->task_model->get_task_created_by();
-		echo "<pre>"; print_r($data); exit;
+		
 		$this->load->view('tasks/main_view', $data);
 	}
 	
@@ -135,21 +138,20 @@ class Tasks extends crm_controller {
 		}
 		
 		$today = date('Y-m-d', $now);
-		//echo $task_search;
-		if ($task_search == 0) 
-		{
-			//Work In Progress
-			$data = $this->task_model->get_task_search_wip($today, $uid, $varStart_date);
-		}
-		else if ($task_search == 1) 
-		{
-			//Completed
-			$data = $this->task_model->get_task_search_comp($today, $uid, $varStart_date);
-		}
-		else 
-		{
-			//All
-			$data = $this->task_model->get_task_search_all($today, $uid, $varStart_date);
+		
+		switch($task_search) {
+			case 0:
+				//Work In Progress
+				$data = $this->task_model->get_task_search_wip($today, $uid, $varStart_date);
+			break;
+			case 1:
+				//Completed
+				$data = $this->task_model->get_task_search_comp($today, $uid, $varStart_date);
+			break;
+			case -1:
+				//All
+				$data = $this->task_model->get_task_search_all($today, $uid, $varStart_date);
+			break;
 		}
 		return array($data, $now);
 	}
