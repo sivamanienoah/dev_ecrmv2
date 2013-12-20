@@ -2,7 +2,6 @@
 ob_start();
 require (theme_url(). '/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
-
 ?>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_lead_stage/manage_lead_stage_view.js"></script>
