@@ -50,8 +50,8 @@ require (theme_url().'/tpl/header.php');
 						<td>
 							<select name="task_user" class="textfield width100px">
 							<?php
-							//echo $remind_options, $remind_options_all, $contractor_options;
-							echo $remind_options, $remind_options_all;
+								//echo $remind_options, $remind_options_all, $contractor_options;
+								echo $remind_options, $remind_options_all;
 							?>
 							</select>
 						</td>
@@ -75,7 +75,6 @@ require (theme_url().'/tpl/header.php');
 							Remarks
 						</td>
 						<td>
-							
 							<textarea name="task-remarks" id="task-remarks"></textarea>
 						</td>
 						
