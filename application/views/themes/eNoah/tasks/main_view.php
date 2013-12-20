@@ -5,35 +5,6 @@ require (theme_url().'/tpl/header.php');
 
 <style type="text/css">
 @import url(assets/css/tasks.css?q=1);
-/* over-ride tasks */
-td.task {
-	width:557px;
-}
-.great-task-table, .great-task-table td {
-	border-color:#888;
-}
-.row-header td.user {
-	font-size:12px;
-}
-.prior{background:purple}
-/* end over-ride */
-.existing-query-list {
-    clear: left;
-}
-.cancel {
-    background-color: #D8D8D8;
-    border: 1px solid #CCCCCC;
-    color: #565656;
-    cursor: pointer;
-}
-ol#pagination{overflow:hidden; padding-top:50px; padding-left:15px;}
-	ol#pagination li{
-		float:left;
-		list-style:none;
-		cursor:pointer;
-		margin:0 0 0 .5em;
-		}
-	ol#pagination li.current{color:#f00;font-weight:bold;}
 </style>
 
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
