@@ -18,7 +18,7 @@ $(document).ready(function() {
 	});
 
 	// $('button.negative').click(function() {
-	$(document).delegate('button.negative','click',function() {
+	$(document).delegate('button#location_cancl','click',function() {
 		window.location.href= site_base_url+"regionsettings/region_settings/location"; // site_base_url is base url
 		return false;
 	});

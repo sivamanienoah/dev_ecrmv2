@@ -27,7 +27,7 @@ $(document).ready(function() {
 	});
 	
 	// $('button.negative').click(function() {
-	$(document).delegate('button.negative','click',function() {
+	$(document).delegate('button#reg_cancl','click',function() {
 		window.location.href= site_base_url+"regionsettings/region_settings/region";
 		return false;
 	});
@@ -90,7 +90,7 @@ function processDelete(id) {
 	window.location.href = 'regionsettings/region_delete/delete/'+id;
 }
 
-function cancelDel() {
+function cancelDel() {	
     $.unblockUI();
 }
 

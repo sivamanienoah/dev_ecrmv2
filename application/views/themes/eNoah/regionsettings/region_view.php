@@ -59,7 +59,7 @@
 							<?php if ($this->uri->segment(4)) { ?>
 								<td style="float:left;">
 									<div class="buttons">
-										<button type="submit" name="cancel_submit" class="negative">
+										<button type="submit" name="cancel_submit" id="reg_cancl" class="negative">
 											Cancel
 										</button>
 									</div>

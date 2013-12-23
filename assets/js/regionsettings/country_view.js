@@ -14,7 +14,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('button.negative').click(function() {
+	$('button#country_cancl').click(function() {
 		window.location.href="regionsettings/region_settings/country"
 		return false;
 	});

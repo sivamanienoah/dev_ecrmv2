@@ -105,7 +105,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 							<?php if ($this->uri->segment(4)) { ?>
 						<td style="float:left;">
 							<div class="buttons">
-								<button type="submit" name="cancel_submit" class="negative">Cancel</button>
+								<button type="submit" name="cancel_submit" class="negative" id="location_cancl">Cancel</button>
 							</div>
 						</td>
 						<?php } ?>
