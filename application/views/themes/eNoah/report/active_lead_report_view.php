@@ -15,7 +15,6 @@ if (get_default_currency()) {
 	            <table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table">
 					<thead>
 						<tr>
-							
 							<th>Lead No.</th>
 							<th>Lead Title</th>
 							<th>Customer</th>
