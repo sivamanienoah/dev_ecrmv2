@@ -116,20 +116,19 @@ $(document).ready(function(){
         $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
         
 		$('#q-sort-items li').livequery(function(){ 
-                                // use the helper function hover to bind a mouseover and mouseout event 
-                                    $(this) 
-                                        .hover(function() { 
-                                            quoteItemOver($(this)); 
-                                        }, function() { 
-                                            quoteItemOut($(this)); 
-                                        }); 
-                                }, function() { 
-                                    // unbind the mouseover and mouseout events 
-                                    $(this) 
-                                        .unbind('mouseover') 
-                                        .unbind('mouseout'); 
-                                });
-							
+		// use the helper function hover to bind a mouseover and mouseout event 
+			$(this) 
+				.hover(function() { 
+					quoteItemOver($(this)); 
+				}, function() { 
+					quoteItemOut($(this)); 
+				}); 
+		}, function() { 
+			// unbind the mouseover and mouseout events 
+			$(this) 
+				.unbind('mouseover') 
+				.unbind('mouseout'); 
+		});
         
         $('#q-sort-items li .ip-delete').livequery(function(){
             $(this).click(function(){
@@ -153,7 +152,6 @@ $(document).ready(function(){
         <?php if (isset($edit_quotation)) { ?>
         $('#item-submit').css('display', 'block');
         <?php } ?>
-
 	}
 );
 
@@ -180,8 +178,7 @@ function prepareQuoteForClient(custID) {
 	}
 }
 
-function getUserForLeadAssign(regId,cntryId,stId,locId) 
-{
+function getUserForLeadAssign(regId,cntryId,stId,locId) {
 
 	$('.notice').slideUp(400);
 	$.getJSON(
@@ -194,8 +191,7 @@ function getUserForLeadAssign(regId,cntryId,stId,locId)
 	);
 }
 
-function get_user_infm(users)
-{
+function get_user_infm(users) {
 	var baseurl = $('.hiddenUrl').val();
 	var user = users.toString();
 	$.ajax({
@@ -212,25 +208,11 @@ function get_user_infm(users)
 	});
 }
 
-function cleanupLead() {
-	 $.getJSON(
-		'leads/delete/' + existing_lead + '/TRUE',
-		{},
-		function (data) {
-			
-		}
-	);
-	if (window.console)
-	{
-		console.log('Clean up called');
-	}
-	return false;
-}
-
 function ndf_cancel() {
     $.unblockUI();
     return false;
 }
+
 function ndf_add() {
     $('.new-cust-form-loader .error-handle:visible').slideUp(300);
     var form_data = $('#customer_detail_form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
@@ -318,7 +300,11 @@ function startQuote() {
         err.push('Proposal Expected Date is required');
     }
     if (err.length > 0) {
-        alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+        // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+		$.blockUI({
+			message:'<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">'+err.join('<br />')+'</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
+			css:{width:'440px'}
+		});
         return false;
     } else {
         // block
@@ -331,42 +317,39 @@ function startQuote() {
         var form_data = $('#quote-init-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
         $.post('welcome/ajax_create_quote',form_data,function (res) {
-                if (typeof (res) == 'object') {
-                    if (res.error == false) {
-						
-						// if this was a lead, clear the lead
-						if (res.lead_converted)
-						{
-							cleanupLead();
-						}
-						
-                        // good to go
-                        $('.q-id span').html(res.fancy_insert_id);
-                        quote_id = res.insert_id;
-                        $('#quote-init-form').slideUp();
-						$('#content').block({
+			if (typeof (res) == 'object') {
+				if (res.error == false) {
+					// good to go
+					$('.q-id span').html(res.fancy_insert_id);
+					quote_id = res.insert_id;
+					$('#quote-init-form').slideUp();
+					$('#content').block({
 						message:'<h4>Processing...</h4>'
-						});
-						
-						$('#item-submit, #change-quote-status').slideDown();
-						populateQuote(res.insert_id);
-						
-						$('#item-submit').append('<br /><br /><div class="action-buttons" style="clear:left; overflow:hidden; margin-top:20px;">' +
-													'<div class="buttons clearfix">' +
-													'<button type="button" class="positive" onclick="document.location.href = \'<?php echo $this->config->item('base_url') ?>welcome/view_quote/' + res.insert_id + '\'; return false;">View Lead</button>' +
-													'</div>' +
-												'</div>');
-                    } else {
-                       // alert(res.errormsg);
-                    }
-                } else {
-                    alert('Your session timed out!');
-                }
-                $('#content').unblock();
-            },
-            "json"
+					});
+					
+					$('#item-submit, #change-quote-status').slideDown();
+					populateQuote(res.insert_id);
+					
+					$('#item-submit').append('<br /><br /><div class="action-buttons" style="clear:left; overflow:hidden; margin-top:20px;">' +
+												'<div class="buttons clearfix">' +
+												'<button type="button" class="positive" onclick="document.location.href = \'<?php echo $this->config->item('base_url') ?>welcome/view_quote/' + res.insert_id + '\'; return false;">View Lead</button>' +
+												'</div>' +
+											'</div>');
+				} else {
+				   // alert(res.errormsg);
+				}
+			} else {
+				alert('Your session timed out!');
+			}
+			$('#content').unblock();
+		},
+		"json"
         );
     }
+}
+
+function cancelDel() {
+    $.unblockUI();
 }
 
 function addItem() {
@@ -569,7 +552,13 @@ function editQuoteDetails() {
     }
 
     if (err.length > 0) {
-        alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+        // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+		
+		$.blockUI({
+			message:'<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">'+err.join('<br />')+'</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
+			css:{width:'440px'}
+		});
+
         return false;
     } else {
         // block
