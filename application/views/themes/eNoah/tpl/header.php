@@ -107,13 +107,13 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			$content = '';
-			$content .= '<tr><td class="fontbld" width="40px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
+			$content .= '<tr><td class="fontbld" width="30px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
 			$content .= '<td class="fontbld">Lead Title</td>';
 			$content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
 			foreach ($proposal_notify_msg as $arr) {
 				// $lead_title = word_limiter($arr['lead_title'], 4);
-				$lead_title = character_limiter($arr['lead_title'], 50);
-				$content .= '<tr><td><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.$lead_title.'</a></td><td>'.date('d-m-Y', strtotime($arr['dt'])).'</td></tr>';
+				// $lead_title = character_limiter($arr['lead_title'], 50);
+				$content .= '<tr><td><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.character_limiter($arr['lead_title'], 50).'</a></td><td>'.date('d-m-Y', strtotime($arr['dt'])).'</td></tr>';
 			}
 		}
 	// }
@@ -126,7 +126,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';
 			foreach ($task_notify_msg as $arr) {
 				// $task_desc = word_limiter($arr['task'], 4);
-				$task_desc = character_limiter($arr['task'], 55);
+				$task_desc = character_limiter($arr['task'], 50);
 				$taskcontent .= '<tr><td><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a></td><td>'.date('d-m-Y', strtotime($arr['end_date'])).'</td></tr>';
 			}
 		}
