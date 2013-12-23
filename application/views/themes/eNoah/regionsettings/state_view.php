@@ -133,8 +133,12 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 										echo "<span class = label-warning>Inactive</span>"; ?>
 								</td>                         
 								<td class="actions">
-									<?php if ($this->session->userdata('edit')==1) {?><a class="editSte clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>"><?php echo  "Edit"; ?></a> <?php } else echo "Edit"; ?>                    
-									<?php if($this->session->userdata('delete')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>
+									<?php if ($this->session->userdata('edit')==1) { ?>
+										<a class="editSte clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>">Edit &raquo;</a> 
+									<?php } else echo "Edit &raquo;"; ?>                    
+									<?php if($this->session->userdata('delete')==1) { ?> | 
+										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" >Delete &raquo;</a>
+									<?php } ?>
 								</td>
 							</tr>
 					<?php 

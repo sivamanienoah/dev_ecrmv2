@@ -153,8 +153,12 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 									?>
 								</td>      
 								<td class="actions">
-									<?php if ($this->session->userdata('edit')==1) {?><a class="editLoc clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>"><?php echo  "Edit"; ?><?php } else echo "Edit"; ?></a>
-									<?php if($this->session->userdata('delete')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" ><?php echo "Delete"; ?></a><?php } ?>		
+									<?php if ($this->session->userdata('edit')==1) { ?>
+										<a class="editLoc clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>">Edit &raquo;</a>
+									<?php } else echo "Edit &raquo;"; ?>
+									<?php if($this->session->userdata('delete')==1) { ?> | 
+										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" >Delete &raquo;"</a>
+									<?php } ?>		
 								</td>
 							</tr>
 					<?php 
