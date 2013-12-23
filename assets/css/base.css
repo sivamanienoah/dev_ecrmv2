@@ -277,17 +277,18 @@ button:hover, .buttons a:hover{
  margin-bottom:10px;
 }
 #floatNotifyDiv {
-	background: url("../img/notify.png") no-repeat scroll 8px 9px #B7C6E8;
+	background:#F2F6FF;
     border: 1px solid #8698CE;
     clear: both;
 	min-height: 20px;
     height: auto;
     left: 28%;
     margin-top: 5px;
-    padding: 12px 48px;
+    /*padding: 12px 48px;*/
     position: absolute;
     width: 37%;
     z-index: 10;
+	box-shadow:5px 4px 5px #BABABA;
 }
 .notify_high {
 	color: #a51e04;
@@ -385,6 +386,10 @@ select.width300px {
 }
 .modal-confirmation {
 	padding:10px 0 10px 175px;
+}
+.modal-errmsg {
+	padding:10px 20px;
+	text-align:left;
 }
 #page {
 	background-color: #ffffff;
@@ -1019,6 +1024,15 @@ box-shadow: 0 1px 3px #C2C2C2;
     right: 8px;
     top: 10px;
     width: 9px;
+	}
+.grid-close1 {    
+	background: url("../img/close_black.png") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    height: 8px;
+    position: absolute;
+    right: 8px;
+    top: 10px;
+    width: 9px;
 	} 
 /*Add Button in the Customers page -- Ends here*/
 
@@ -1406,3 +1420,7 @@ html[xmlns] .clearfix {
 .leadAdvancedfiltertbl tr{
 	background: none repeat scroll 0 0 #fff !important;
 }
+.follow-style{border:1px solid #C3CDE2; width:100%;border-collapse: collapse;}
+.follow-style td{border:1px solid #C3CDE2; padding:5px; color:#223966; }
+.follow-title{ font-size:13px; font-weight:bold;}
+.fontbld {font-weight:bold;}

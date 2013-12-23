@@ -106,19 +106,28 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	// if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
-			foreach ($proposal_notify_msg as $arr){
-				$notify[] = 'The proposal expected date for the lead "<a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.$arr['lead_title'].'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['dt'])).'</span>.';
+			$content = '';
+			$content .= '<tr><td class="fontbld" width="40px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
+			$content .= '<td class="fontbld">Lead Title</td>';
+			$content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
+			foreach ($proposal_notify_msg as $arr) {
+				// $lead_title = word_limiter($arr['lead_title'], 4);
+				$lead_title = character_limiter($arr['lead_title'], 50);
+				$content .= '<tr><td><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.$lead_title.'</a></td><td>'.date('d-m-Y', strtotime($arr['dt'])).'</td></tr>';
 			}
 		}
 	// }
-	// echo "<pre>"; print_r($task_notify_msg); exit;
 	
 	// if ($this->uri->segment(1) == 'tasks' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($task_notify_msg)) {
-			$notify[] = "<span class=notify_high>Tasks</span>";
-			foreach ($task_notify_msg as $arr){
-				$task_desc = word_limiter($arr['task'], 4);
-				$notify[] = 'The task "<a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a>" is going to end on <span class=notify_high>'.date('d-m-Y', strtotime($arr['end_date'])).'</span>.';
+			$taskcontent = '';
+			$taskcontent .= '<tr><td class="fontbld" rowspan="'.(count($task_notify_msg)+1).'">Tasks</td>';
+			$taskcontent .= '<td class="fontbld">Task Description</td>';
+			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';
+			foreach ($task_notify_msg as $arr) {
+				// $task_desc = word_limiter($arr['task'], 4);
+				$task_desc = character_limiter($arr['task'], 55);
+				$taskcontent .= '<tr><td><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a></td><td>'.date('d-m-Y', strtotime($arr['end_date'])).'</td></tr>';
 			}
 		}
 	// }
@@ -126,8 +135,13 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	if (!isset($_COOKIE['floatStat'])) {
 		if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
 			<div id="floatNotifyDiv">
-				<div class="grid-close" id="grid-close"></div>
-				<p><?php for ($i = 0; $i < count ($notify);  $i ++) { echo $notify[$i]; if (isset($notify[$i + 1])) echo '<br />'; } ?></p>
+				<div class="grid-close grid-close1" id="grid-close"></div>
+				<table border="0" class="follow-style" cellpadding="5" cellspacing="0">
+					<tr><td colspan='3' class="follow-title">Follow Up Reminder(s)</td></tr>
+						<!--p><?php #for ($i = 0; $i < count ($notify);  $i ++) { echo $notify[$i]; if (isset($notify[$i + 1])) echo '<br />'; } ?></p-->
+						<?php echo $content; ?>
+						<?php echo $taskcontent; ?>
+				</table>
 			</div>
 		<?php } ?>
 		
