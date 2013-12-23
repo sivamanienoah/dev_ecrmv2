@@ -237,6 +237,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	// echo $this->uri->segment(1);
 	if(empty($master_id)) {
 		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);
+		$access_limit 			= array();
 		//check as array
 		$master_id = $masters[0]['master_parent_id'];
 		$access_limit['view'] 	= $masters[0]['view'];
@@ -245,8 +246,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		$access_limit['delete'] = $masters[0]['delete'];
 	}
 
-	echo $menulistss 		= formSubMenuList($master_id);
-
+	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
+	
 	$array= array();
 	$array['accesspage']	= $access_limit['view'];
 	$array['add']			= $access_limit['add']; 

@@ -192,7 +192,7 @@ if ( ! function_exists('getSubtreeULMenu'))
 if ( ! function_exists('getSubtreeSubULMenu'))
 {	
 	function getSubtreeSubULMenu(array $subtreeRoot, $level = 0,$searchSubMenu=NULL)
-	{	
+	{
 		$html ='';		 
 		if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
 		
@@ -227,23 +227,26 @@ if ( ! function_exists('getSubtreeSubULMenu'))
 
 if ( ! function_exists('formSubMenuList'))
 {
-		function formSubMenuList($masterId = NULL) { 
-					if($masterId!=NULL && $masterId !='') {
+		function formSubMenuList($masterId = NULL, $access) {
 
-								$ci  = &get_instance(); 
-								$cfg = $ci->config->item('crm');
-								
-								$ci->load->database(); 
-								$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters  as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.masterid asc');
-									$SubMenuitms = $ci->db->get();
-									$submenus = $SubMenuitms->result_array();
-									$str = "<ul class='topstrip'>";
-									foreach($submenus as $submenu){
-										$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";
-									}
-									$str .="</ul>";
-									 return $str;
+			if($masterId!=NULL && $masterId !='') {
+				$ci  = &get_instance(); 
+				$cfg = $ci->config->item('crm');
+				
+				$ci->load->database(); 
+				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.masterid asc');
+				$SubMenuitms = $ci->db->get();
+				$submenus = $SubMenuitms->result_array();
+				$str = "<ul class='topstrip'>";
+				foreach($submenus as $submenu){
+					if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
+						continue;
 					}
+					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";
+				}
+				$str .="</ul>";
+				return $str;
+			}
 		}
 }
 
