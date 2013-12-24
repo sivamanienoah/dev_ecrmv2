@@ -27,9 +27,9 @@ $userdata = $this->session->userdata('logged_in_user');
 		</div>
 		<table cellpadding="0" cellspacing="0" class="lead-stg-list" width="100%">
 			<tr>
-				<th width="40%">Lead Stage</th>
+				<th width="38%">Lead Stage</th>
 				<th width="60px">Status</th>
-				<th width="55px">Action</th>
+				<th width="75px">Action</th>
 				<th></th>
 			</tr>
 		</table>
