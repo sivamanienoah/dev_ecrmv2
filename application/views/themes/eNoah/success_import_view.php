@@ -17,7 +17,7 @@
     <?php if(!empty($empty_error)){
     $empty_error_str = implode('<br/>', $empty_error); ?>
 	<div><b>The Following Customers Not updated in Customer List, because </b></div>
-	 <?php echo " The Customer First Name or Last Name or Company or Region or Direct Phone or Email is missing <br /> $empty_error_str";  
+	 <?php echo " The Customer First Name or Company or Region or Direct Phone or Email is missing <br /> $empty_error_str";  
 	}
 	?> 
 	<?php if(!empty($invalidemail)){

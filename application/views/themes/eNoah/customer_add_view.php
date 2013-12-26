@@ -32,7 +32,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				<tr>
 					<td width="100">First name: *</td>
 					<td width="240"><input type="text" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
-					<td width="100">Last Name: *</td>
+					<td width="100">Last Name: </td>
 					<td width="240"><input type="text" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
@@ -77,7 +77,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td width="240" id="def_cntry"></td>
 				<?php } else { ?>
 					<td width="240" id='country_row'>
-						<select id="add1_country" class="textfield width200px required" >
+						<select id="add1_country" name="add1_country" class="textfield width200px required" >
 							<option value="0">Select Country</option>                           
 						</select>
 						<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2) { ?>
@@ -132,10 +132,10 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td><input type="text" name="phone_4" value="<?php echo  $this->validation->phone_4 ?>" class="textfield width200px" /></td>
 				</tr>
                 <tr>
-					<td>Email: *</td>
+					<td>Email: </td>
 					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
 					
-					<div><span class="checkUser" style="color:green">Email Available.</span></div>
+					<div><span class="checkUser" style="color:green">Valid Email.</span></div>
 					<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
 					<div><span class="checkUser2" id="email-existsval" style="color:red">Invalid Email.</span></div>
 					

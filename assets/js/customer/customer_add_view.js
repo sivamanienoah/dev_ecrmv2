@@ -55,12 +55,16 @@ $(document).ready(function() {
 			var username = $('#emailval').val();
 			var filter = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 			if(filter.test(username)){
-					getResult(username);
-			} else {
-					$('.checkUser2').show();
-					$('.checkUser').hide();
+					//getResult(username);
+					$('.checkUser').show(); 
 					$('.checkUser1').hide();
-					//$("#positiveBtn").attr("disabled", "disabled");
+					$('.checkUser2').hide();
+					$("#positiveBtn").removeAttr("disabled");
+			} else {
+					$('.checkUser').hide(); 
+					$('.checkUser2').hide(); 
+					$('.checkUser1').show();
+					$("#positiveBtn").attr("disabled", "disabled");
 				}
 		}
 		return false;
