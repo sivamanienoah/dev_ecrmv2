@@ -62,9 +62,11 @@
             </table>
 		</form>
 	</div>
-	<?php } else{
-	echo "You have no rights to access this page";
-}?>
+	<?php 
+	} else {
+		echo "You have no rights to access this page";
+	}
+	?>
 </div>
  
 <?php require (theme_url(). '/tpl/footer.php'); ?>

@@ -376,11 +376,11 @@ class Role_model extends crm_model {
 			$disableStatusReport = ' disabled';
 		}
 		$html .='<span style="width:400px;"> 
-				<input type="checkbox" id="checkp" class="check" '.$all.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' name ="full"> &nbsp;All&nbsp;
-				<input type="checkbox" name ="add['.$subtreeRoot['id'].']"'.$add.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' value="1"> &nbsp;Add&nbsp; 
-				<input type="checkbox" name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" > &nbsp;View&nbsp;
-				<input type="checkbox" name ="edit['.$subtreeRoot['id'].']" '.$edit.' '.$disableStatusReport.' value="1" > &nbsp;Edit&nbsp;
-				<input type="checkbox" name ="delete['.$subtreeRoot['id'].']" '.$delete.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1"> &nbsp;Delete&nbsp;
+				<input type="checkbox" id="tab_chk_all-'.$subtreeRoot['id'].'" class="check" '.$all.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' name ="full"> &nbsp;All&nbsp;
+				<input type="checkbox" id="tab_chk_add-'.$subtreeRoot['id'].'" name ="add['.$subtreeRoot['id'].']"'.$add.' '.$disableStatusProfile.' '.$disableStatusProject.' '.$disableStatusReport.' value="1" onclick="unSelectCreate('.$subtreeRoot['id'].');"> &nbsp;Add&nbsp; 
+				<input type="checkbox" id="tab_chk_view-'.$subtreeRoot['id'].'" name ="view['.$subtreeRoot['id'].']" '.$view.' value="1" onclick="unSelectView('.$subtreeRoot['id'].');"> &nbsp;View&nbsp;
+				<input type="checkbox" id="tab_chk_edit-'.$subtreeRoot['id'].'" name ="edit['.$subtreeRoot['id'].']" '.$edit.' '.$disableStatusReport.' value="1" onclick="unSelectEdit('.$subtreeRoot['id'].');"> &nbsp;Edit&nbsp;
+				<input type="checkbox" id="tab_chk_del-'.$subtreeRoot['id'].'"  name ="delete['.$subtreeRoot['id'].']" '.$delete.' '.$disableStatusProfile.' '.$disableStatusReport.' value="1" onclick="unSelectDelete('.$subtreeRoot['id'].');"> &nbsp;Delete&nbsp;
 				</span></div></div> </div>';
 		
 		if(sizeof($subtreeRoot['children'])>0) {
