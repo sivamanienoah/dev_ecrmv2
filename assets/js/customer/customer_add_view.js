@@ -61,9 +61,9 @@ $(document).ready(function() {
 					$('.checkUser2').hide();
 					$("#positiveBtn").removeAttr("disabled");
 			} else {
-					$('.checkUser').hide(); 
-					$('.checkUser2').hide(); 
-					$('.checkUser1').show();
+					$('.checkUser').hide();
+					$('.checkUser1').hide();
+					$('.checkUser2').show();
 					$("#positiveBtn").attr("disabled", "disabled");
 				}
 		}

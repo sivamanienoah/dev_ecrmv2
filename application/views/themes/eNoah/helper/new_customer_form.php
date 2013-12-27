@@ -6,7 +6,7 @@
 				<tr>
 					<td width="100">First name:*</td>
 					<td width="240"><input type="text" name="first_name" value="" class="textfield width200px required" /> </td>
-					<td width="100">Last Name:*</td>
+					<td width="100">Last Name:</td>
 					<td width="240"><input type="text" name="last_name" value="" class="textfield width200px required" /></td>
 				</tr>
 				<tr>
@@ -95,9 +95,9 @@
 					<td><input type="text" name="phone_4" value="" class="textfield width200px" /></td>
 				</tr>
                 <tr>
-					<td>Email:*</td>
+					<td>Email:</td>
 					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="" class="textfield width200px required" /> 
-					<div><span class="checkUser" style="color:green">Email Available.</span></div>
+					<div><span class="checkUser" style="color:green">Valid Email.</span></div>
 					<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
 					<div><span class="checkUser2" id="email-existsval" style="color:red">Invalid Email.</span></div>
 					<input type="hidden" class="hiddenUrl"/>
