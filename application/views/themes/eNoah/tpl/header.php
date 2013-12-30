@@ -253,7 +253,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);
 		$access_limit 			= array();
 		//check as array
-		$master_id = $masters[0]['master_parent_id'];
+		$master_id			 	= $masters[0]['master_parent_id'];
 		$access_limit['view'] 	= $masters[0]['view'];
 		$access_limit['add'] 	= $masters[0]['add'];
 		$access_limit['edit'] 	= $masters[0]['edit'];
