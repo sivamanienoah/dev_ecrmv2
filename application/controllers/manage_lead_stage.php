@@ -115,7 +115,7 @@ class Manage_lead_stage extends crm_controller {
 						$dele = "<a href='javascript:void(0)' onclick='checkStatus(".$row['lead_stage_id'].");'>Delete &raquo;</a>";
 					else 
 						$dele = "Delete &raquo;";
-					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="data-table btm-none" width="100%"><tr><td class="lead-stage" width="38%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="60px">' . $stat . '</td><td width="75px">'. $edit .' | '. $dele .'</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
+					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="data-table btm-none" width="100%"><tr><td class="lead-stage" width="38%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="54px">' . $stat . '</td><td width="80px">'. $edit .' | '. $dele .'</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
 				} else {
 					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td></tr></table></li>';
 				}

@@ -15,7 +15,7 @@ $userdata = $this->session->userdata('logged_in_user');
 					<button type="button" class="positive btn-leadStgAdd" onclick="location.href='<?php echo base_url(); ?>manage_lead_stage/leadStg_add'">Add New Lead Stage</button>
 				</div>
 			<?php 
-			} 
+			}
 			?>
 	</h2>
 
@@ -28,8 +28,8 @@ $userdata = $this->session->userdata('logged_in_user');
 		<table cellpadding="0" cellspacing="0" class="lead-stg-list" width="100%">
 			<tr>
 				<th width="38%">Lead Stage</th>
-				<th width="60px">Status</th>
-				<th width="75px">Action</th>
+				<th width="54px">Status</th>
+				<th width="80px">Action</th>
 				<th></th>
 			</tr>
 		</table>
@@ -37,7 +37,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<ul id="lead_stg_items"></ul>
 		</div>
 	<?php 
-	} else { 
+	} else {
 		echo "You have no rights to access this page"; 
 	} 
 	?>
