@@ -103,10 +103,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
 	}
 	
+		$content = '';
 	// if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
-			$content = '';
 			$content .= '<tr><td class="fontbld" width="30px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
 			$content .= '<td class="fontbld">Lead Title</td>';
 			$content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
@@ -117,10 +117,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			}
 		}
 	// }
-	
+		$taskcontent = '';
 	// if ($this->uri->segment(1) == 'tasks' || $this->uri->segment(1) == 'dashboard') {
 		if (!empty($task_notify_msg)) {
-			$taskcontent = '';
 			$taskcontent .= '<tr><td class="fontbld" rowspan="'.(count($task_notify_msg)+1).'">Tasks</td>';
 			$taskcontent .= '<td class="fontbld">Task Description</td>';
 			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';

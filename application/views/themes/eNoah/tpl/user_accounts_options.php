@@ -3,7 +3,7 @@ $contractor_list = '';
 $contractor_list_select1 = '';
 $contractor_list_select2 = '';
 $contractor_list_selecttemp2 = '';
-$$assignContractors = '';
+$assignContractors = '';
 $i = 0;
 $ua_options = '';
 $pm_options = '';
@@ -28,7 +28,7 @@ if (count($user_accounts)) foreach ($user_accounts as $ua)
 		$contractor_options .= '<option value="' . $ua['userid'] . '">' . $contractor_name . '</option>';
 		//For listing the assigned contractors in the 2nd Multiple SELECT BOX in project_view_quote.php
 		$contractor_list_selecttemp2 .= '<option value="' . $ua['userid'] . '"' .$cl_checked1.'>' . $ua_id_name[$ua['userid']] . '</option>';
-		$assignContractors = $ua['userid'];	
+		$assignContractors = $ua['userid'];
 	}
 	
 	$contractor_list .= '<label><input type="checkbox" value="' . $ua['userid'] . '" name="contractor_job[]" ' . $cl_checked . ' /> ' . $ua_id_name[$ua['userid']] . '</label>';

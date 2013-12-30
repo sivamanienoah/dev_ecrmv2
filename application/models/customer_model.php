@@ -34,9 +34,11 @@ class Customer_model extends crm_model {
 			foreach($coun_details as $coun) {
 				$countries[] = $coun['country_id'];
 			}
-			$countries_ids = array_unique($countries);
-			$countries_ids = (array_values($countries)); //reset the keys in the array
-			//$countries_ids = @implode(",",$countries_ids);
+			if (!empty($countries)) {
+				$countries_ids = array_unique($countries);
+				$countries_ids = (array_values($countries)); //reset the keys in the array
+				//$countries_ids = @implode(",",$countries_ids);
+			}
 		
 			//restriction for state
 			$this->db->select('state_id');
@@ -45,8 +47,10 @@ class Customer_model extends crm_model {
 			foreach($ste_details as $ste) {
 				$states[] = $ste['state_id'];
 			}
-			$states_ids = array_unique($states);
-			$states_ids = (array_values($states)); //reset the keys in the array
+			if (!empty($states)) {
+				$states_ids = array_unique($states);
+				$states_ids = (array_values($states)); //reset the keys in the array				
+			}
 			//$states_ids = implode(",",$states_ids);
 		
 			//restriction for location
@@ -56,8 +60,10 @@ class Customer_model extends crm_model {
 			foreach($loc_details as $loc) {
 				$locations[] = $loc['location_id'];
 			}
-			$locations_ids = array_unique($locations);
-			$locations_ids = (array_values($locations)); //reset the keys in the array
+			if (!empty($locations)) {
+				$locations_ids = array_unique($locations);
+				$locations_ids = (array_values($locations)); //reset the keys in the array
+			}
 			//$locations_ids = implode(",",$locations_ids);
 		}
        

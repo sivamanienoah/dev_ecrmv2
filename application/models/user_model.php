@@ -124,13 +124,13 @@ class User_model extends crm_model {
 	public function insert_level_settings($level_data, $user_id, $levelId) {
 		$data['region'] = $level_data['region'];		
 		if(!empty($data['region'])) {
-			 for($i=0;$i<count($data['region']);$i++){
+			for($i=0;$i<count($data['region']);$i++){
 				$dataRegion = array();
 				$dataRegion['region_id'] = $data['region'][$i];
 				$dataRegion['level_id'] = $levelId;
 				$dataRegion['user_id'] = $user_id;
 				$this->db->insert($this->cfg['dbpref'] . 'levels_region', $dataRegion) ;
-			 }
+			}
 		 }
 		 $data['country_state'] = $level_data['country'];
 		 if(!empty($data['country_state'])) {		
@@ -154,13 +154,13 @@ class User_model extends crm_model {
 		 }
 		 $data['location'] = $level_data['location'];
 		 if(!empty($data['location'])) {			 
-		 for($i=0;$i<count($data['location']);$i++){
-			$dataRegion = array();
-			$dataRegion['location_id'] =$data['location'][$i];
-			$dataRegion['level_id'] = $levelId;
-			$dataRegion['user_id'] = $user_id;
-			$this->db->insert($this->cfg['dbpref'] . 'levels_location', $dataRegion); 
-		 }
+			for($i=0;$i<count($data['location']);$i++){
+				$dataRegion = array();
+				$dataRegion['location_id'] =$data['location'][$i];
+				$dataRegion['level_id'] = $levelId;
+				$dataRegion['user_id'] = $user_id;
+				$this->db->insert($this->cfg['dbpref'] . 'levels_location', $dataRegion); 
+			}
 		 }
 	}
 

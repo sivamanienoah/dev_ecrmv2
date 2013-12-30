@@ -735,9 +735,10 @@ class Regionsettings_model extends crm_model {
 				$countries[] = $coun['country_id'];
 			}
 		}
-		$countries_ids = array_unique($countries);
-		$countries_ids = (array_values($countries)); //reset the keys in the array
-		
+		if (!empty($countries)) {
+			$countries_ids = array_unique($countries);
+			$countries_ids = (array_values($countries)); //reset the keys in the array
+		}
 		$this->db->where('regionid', $val);
 		if ($userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
 			$this->db->where_in('countryid', $countries_ids);
@@ -766,9 +767,10 @@ class Regionsettings_model extends crm_model {
 				$countries[] = $coun['country_id'];
 			}
 		}
-		$countries_ids = array_unique($countries);
-		$countries_ids = (array_values($countries)); //reset the keys in the array
-		
+		if (!empty($countries)) {
+			$countries_ids = array_unique($countries);
+			$countries_ids = (array_values($countries)); //reset the keys in the array
+		}
         $this->db->where('inactive', 0);
 		
 		$this->db->where('regionid', $val);
@@ -835,9 +837,10 @@ class Regionsettings_model extends crm_model {
 				$states[] = $ste['state_id'];
 			}
 		}
-		$states_ids = array_unique($states);
-		$states_ids = (array_values($states)); //reset the keys in the array
-		
+		if (!empty($states)) {
+			$states_ids = array_unique($states);
+			$states_ids = (array_values($states)); //reset the keys in the array
+		}
         $this->db->where('inactive', 0);
 		
 		$this->db->where('countryid', $val);
@@ -1123,9 +1126,9 @@ class Regionsettings_model extends crm_model {
 
 		$res = array();
 		if($query == 0 && $usrquery == 0) {
-			$res['html'] .= "YES";
+			$res['html'] = "YES";
 		} else {
-			$res['html'] .= "NO";
+			$res['html'] = "NO";
 		}
 		echo json_encode($res);
 		exit;
