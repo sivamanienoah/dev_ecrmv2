@@ -244,26 +244,26 @@ class Role_model extends crm_model {
 	*@Role Model
 	*/
 	public function pageTree($id = false) {
-		if(!empty($id)){
+		if(!empty($id)) {
 			$idcondition = "rl.id=mrl.role_id and rl.id=".$id;
-			$this->db->select('vm.*,mrl.id as masreroleid,mrl.add,mrl.edit,mrl.view,mrl.delete,rl.name ,rl.id as roleid');
+			$this->db->select('vm.*, mrl.id as masreroleid, mrl.add, mrl.edit, mrl.view, mrl.delete, rl.name, rl.id as roleid');
 			$this->db->from($this->cfg['dbpref'].'masters as vm');	
-			$this->db->join($this->cfg['dbpref'].'master_roles as mrl','vm.masterid=mrl.masterid and mrl.role_id='.$id,'left');
-			$this->db->join($this->cfg['dbpref'].'roles as rl',$idcondition,'left');		
-			$this->db->order_by('vm.master_parent_id', 'desc');			
+			$this->db->join($this->cfg['dbpref'].'master_roles as mrl','vm.masterid=mrl.masterid and mrl.role_id='.$id, 'left');
+			$this->db->join($this->cfg['dbpref'].'roles as rl', $idcondition, 'left');		
+			$this->db->order_by('vm.master_parent_id', 'desc');
 			$this->db->order_by('vm.masterid', 'asc');	
 			$this->db->where('vm.master_parent_id', 0);				
 			$this->db->where('vm.inactive', 0);				
-			$customers = $this->db->get();			
-		}else{				 
-		   $this->db->select('*');
+			$customers = $this->db->get();
+		} else {
+			$this->db->select('*');
 			$this->db->from($this->cfg['dbpref'].'masters');
 			$this->db->where('master_parent_id',0);
 			$this->db->order_by('masterid', 'asc');
 			$customers = $this->db->get();
 			//$customers = $this->db->query($sql, array($log_date, $log_user['userid']));		
-		}		
-		 
+		}
+		
 		$vertices= $customers->result_array();
 		
 		$i=0;
