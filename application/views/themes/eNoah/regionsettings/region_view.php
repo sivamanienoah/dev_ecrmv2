@@ -12,7 +12,7 @@
 				if ($this->validation->error_string != '') {
 				?>
 					<div class="form_error">
-						<?php echo  $this->validation->error_string ?>
+						<?php echo $this->validation->error_string ?>
 					</div>
 				<?php 
 				}
