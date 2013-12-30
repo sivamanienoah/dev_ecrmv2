@@ -552,15 +552,15 @@ class Regionsettings extends crm_controller {
 	*/
 	public function region_delete($delete = false, $id = false, $ajax = false)
 	{ 
-		if ($this->session->userdata('deleteAdmin')==1){	
-				$this->login_model->check_login();
-				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
-					//delete
-					if ($this->regionsettings_model->delete_region($id, $update_data)) {
-						$this->session->set_flashdata('confirm', array('Region Deleted!'));
-						redirect('regionsettings/region_settings/region');                  
-					}                
-				}
+		if ($this->session->userdata('delete')==1) {
+			$this->login_model->check_login();
+			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
+				//delete
+				if ($this->regionsettings_model->delete_region($id, $update_data)) {
+					$this->session->set_flashdata('confirm', array('Region Deleted!'));
+					redirect('regionsettings/region_settings/region');                  
+				}                
+			}
 		} else {
 				$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
 				redirect('regionsettings/region_settings/region'); 
@@ -573,7 +573,7 @@ class Regionsettings extends crm_controller {
 	*/
 	public function country_delete($delete = false, $id = false, $ajax = false)
 	{ 
-		if ($this->session->userdata('deleteAdmin')==1) {	
+		if ($this->session->userdata('delete')==1) {	
 			$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
 				//delete
@@ -594,7 +594,7 @@ class Regionsettings extends crm_controller {
 	*/
 	public function state_delete($delete = false, $id = false, $ajax = false)
 	{ 
-		if ($this->session->userdata('deleteAdmin')==1) {
+		if ($this->session->userdata('delete')==1) {
 		$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
                 //delete
@@ -615,7 +615,7 @@ class Regionsettings extends crm_controller {
 	*/
 	public function location_delete($delete = false, $id = false, $ajax = false)
 	{
-		if ($this->session->userdata('deleteAdmin')==1){
+		if ($this->session->userdata('delete')==1){
 			$this->login_model->check_login();
 							 
 				if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
@@ -882,7 +882,7 @@ class Regionsettings extends crm_controller {
 	*/
 	public function level_delete($delete = false, $id = false, $ajax = false)
 	{ 
-		if ($this->session->userdata('deleteAdmin')==1) {	
+		if ($this->session->userdata('delete')==1) {	
 			$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id) ) {
 				//delete
