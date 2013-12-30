@@ -29,7 +29,7 @@
 					<?php if($this->session->userdata('add')==1) { ?>
 					<td valign="middle";>
 						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='master/add_master'">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>master/add_master'">
 								Add New Module
 							</button>
 						</div>

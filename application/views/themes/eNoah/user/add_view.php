@@ -188,7 +188,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='user'">
+                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>user'">
 								Cancel
 							</button>
                         </div>

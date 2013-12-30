@@ -50,7 +50,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='manage_lead_stage'">
+                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>manage_lead_stage'">
 								Cancel
 							</button>
                         </div>

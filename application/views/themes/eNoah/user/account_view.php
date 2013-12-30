@@ -62,7 +62,7 @@
 									<button type="submit" name="update_user" class="positive">Update</button>
 								</div>
 								<div class="buttons">
-								   <button type="button" class="negative" onclick="location.href='myaccount'">Cancel</button>
+								   <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>myaccount'">Cancel</button>
 								</div>
 							<?php 
 							}

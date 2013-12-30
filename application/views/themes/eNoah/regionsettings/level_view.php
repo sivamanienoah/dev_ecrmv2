@@ -72,7 +72,7 @@
 						<button type="submit" name="update_level" class="positive">	
 							<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Level
 						</button>
-						<button type="reset"  name="reset" class="negative" onclick='window.location.href="regionsettings/level"; return false;'>
+						<button type="reset"  name="reset" class="negative" onclick='window.location.href="<?php echo base_url(); ?>regionsettings/level"; return false;'>
                             Reset
                         </button>						
 					</div>

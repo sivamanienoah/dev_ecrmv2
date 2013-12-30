@@ -35,7 +35,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='item_mgmt/category_list'">
+                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>item_mgmt/category_list'">
 								Cancel
 							</button>
                         </div>

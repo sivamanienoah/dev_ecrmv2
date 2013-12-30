@@ -186,7 +186,7 @@ $usernme = $this->session->userdata('logged_in_user');
 							</button>
 						</div>
 						<div class="buttons">
-                            <button type="button" class="negative" onclick="location.href='customers'">
+                            <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>customers'">
                                 Cancel
                             </button>
                         </div>

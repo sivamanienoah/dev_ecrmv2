@@ -53,7 +53,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-							<button type="button" class="negative" onclick="location.href='role'">
+							<button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>role'">
 								Cancel
 							</button>
                         </div>
@@ -70,4 +70,3 @@
 </div>
  
 <?php require (theme_url(). '/tpl/footer.php'); ?>
-

@@ -8,7 +8,7 @@
 			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">User Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
 					<div class="buttons pull-right">
-						<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='user/add_user'" <?php } ?> >
+						<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='<?php echo base_url(); ?>user/add_user'" <?php } ?> >
 							Add New User
 						</button>
 					</div>

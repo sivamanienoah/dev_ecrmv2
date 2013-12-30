@@ -7,11 +7,11 @@
 			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Customer Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
 					<div class="buttons pull-right">
-						<button type="button" class="positive" onclick="location.href='customers/add_customer'">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>customers/add_customer'">
 							Add New Customer
 						</button>
 						
-						<button type="button" class="positive" onclick="location.href='importcustomers'">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>importcustomers'">
 							Import Customer List
 						</button>
 					</div>

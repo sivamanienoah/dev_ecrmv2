@@ -51,7 +51,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-							<button type="button" class="negative" onclick="location.href='package/type'">
+							<button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>package/type'">
 								Cancel
 							</button>
 						</div>

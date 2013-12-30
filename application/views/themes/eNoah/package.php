@@ -26,7 +26,7 @@
 					<?php if($this->session->userdata('add')==1) { ?>
 					<td valign="middle";>
 						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='package/add'">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/add'">
 								Add New Package
 							</button>
 						</div>

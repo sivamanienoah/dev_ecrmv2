@@ -57,7 +57,7 @@ echo $this->validation->item_desc
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='item_mgmt'">
+                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>item_mgmt'">
 								Cancel
 							</button>
                         </div>

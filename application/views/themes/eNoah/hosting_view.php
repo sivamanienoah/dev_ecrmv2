@@ -26,7 +26,7 @@
 			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Hosting Accounts</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
 					<div class="buttons pull-right">
-						<button type="button" class="positive" onclick="location.href='hosting/add_account'">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
 							Add New Hosting Account
 						</button>
 					</div>
