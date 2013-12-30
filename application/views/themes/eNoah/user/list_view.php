@@ -57,7 +57,7 @@
 							<?php } else { echo "Edit &raquo;"; } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
 								&nbsp;|&nbsp;
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid']; ?>);"> Delete &raquo; </a> 
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['userid']; ?>);"> Delete &raquo; </a> 
 							<?php } ?>
 						</td>
                     </tr>
