@@ -83,7 +83,6 @@ class Role extends crm_controller {
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
         }
-		
 		$data['pageTree'] = $this->role_model->pageTree($id);
 		// echo "<pre>"; print_r($data['pageTree']); exit;
 		

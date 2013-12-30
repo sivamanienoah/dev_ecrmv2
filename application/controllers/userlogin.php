@@ -41,7 +41,7 @@ class Userlogin extends crm_controller {
     function process_login() {
 		if ( $userdata = $this->login_model->process_login($this->input->post('email'),  sha1($this->input->post('password'))) ) {
 			$menu_items=$this->role_model->UserModuleList($userdata[0]['userid']);
-			//echo $this->db->last_query();exit;
+			// echo $this->db->last_query();exit;
 			$whole='';
 			$val='';
 			for($i=0;$i<count($menu_items);$i++){				 
