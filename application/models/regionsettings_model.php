@@ -872,8 +872,10 @@ class Regionsettings_model extends crm_model {
 				$locations[] = $loc['location_id'];
 			}
 		}
-		$locations_ids = array_unique($locations);
-		$locations_ids = (array_values($locations)); //reset the keys in the array
+		if (!empty($locations)) {
+			$locations_ids = array_unique($locations);
+			$locations_ids = (array_values($locations)); //reset the keys in the array
+		}
 		
         $this->db->where('inactive', 0);
 		
