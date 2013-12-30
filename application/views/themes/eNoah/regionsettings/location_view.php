@@ -77,7 +77,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 					</tr>
 					<tr>
 						<td>Status:</td>
-						<td colspan="3">
+						<td colspan="2" width="700">
 							<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?> <?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
 							<?php if ($cb_status != 0) echo "One or more User / Customer currently assigned for this Location. This cannot be made Inactive."; ?>
 							<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the Location need to be Inactive."; ?>
@@ -85,16 +85,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 						</td>
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
-						<?php if (isset($this_user) && $userdata['userid'] == $this_user) { ?>
-						<td colspan="3">
-							Active location cannot be modified! Please use my account to update your details.
-						</td>
-						<?php } else if (isset($this_user_level) && $userdata['level'] >= $this_user_level && $userdata['level'] != 0) { ?>
-						<td colspan="3">
-							Your location level cannot updated similar levels or levels above you.
-						</td>
-						<?php } else { ?>
+						<td></td>
 						<td style="float:left;">
 							<div class="buttons">
 								<button type="submit" name="update_location" class="positive" id="btnAddLoc">								
@@ -102,13 +93,12 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 								</button>
 							</div>
 						</td>
-							<?php if ($this->uri->segment(4)) { ?>
+						<?php if ($this->uri->segment(4)) { ?>
 						<td style="float:left;">
 							<div class="buttons">
 								<button type="submit" name="cancel_submit" class="negative" id="location_cancl">Cancel</button>
 							</div>
 						</td>
-						<?php } ?>
 						<?php } ?>
 					</tr>
 				</table>
@@ -157,7 +147,7 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 										<a class="editLoc clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>">Edit &raquo;</a>
 									<?php } else echo "Edit &raquo;"; ?>
 									<?php if($this->session->userdata('delete')==1) { ?> | 
-										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" >Delete &raquo;"</a>
+										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" >Delete &raquo;</a>
 									<?php } ?>		
 								</td>
 							</tr>

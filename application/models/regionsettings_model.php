@@ -208,11 +208,6 @@ class Regionsettings_model extends crm_model {
 	*/
 	public function level_map($id,$usid) {
 
-		if ($search != false) {
-            $search = urldecode($search);
-            $this->db->like('level_name', $search);
-        }
-		
 		switch($id){
 
 		  case 1:

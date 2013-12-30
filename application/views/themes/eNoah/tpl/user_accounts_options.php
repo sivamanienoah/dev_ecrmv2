@@ -2,6 +2,8 @@
 $contractor_list = '';
 $contractor_list_select1 = '';
 $contractor_list_select2 = '';
+$contractor_list_selecttemp2 = '';
+$$assignContractors = '';
 $i = 0;
 $ua_options = '';
 $pm_options = '';

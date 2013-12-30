@@ -78,10 +78,6 @@ class Regionsettings extends crm_controller {
 		$post_data = real_escape_array($this->input->post());
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_region'])) {
 			$region = $this->regionsettings_model->get_region($id);
-			$data['this_user'] = $region[0]['userid'];
-            if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
         }
 		
 		$data['customers']  = $this->regionsettings_model->region_list_all();
@@ -96,6 +92,7 @@ class Regionsettings extends crm_controller {
 		$this->validation->set_fields($fields);
 		
 		//for Inactive Role
+		$data['cb_status'] = '';
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			$this->db->where('add1_region', $id);
 			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
@@ -207,6 +204,7 @@ class Regionsettings extends crm_controller {
 		$this->validation->set_fields($fields);
 		
 		//for Inactive Role
+		$data['cb_status'] = '';
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			$this->db->where('add1_country', $id);
 			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
@@ -323,6 +321,7 @@ class Regionsettings extends crm_controller {
 		$this->validation->set_fields($fields);
 		
 		//for Inactive Role
+		$data['cb_status'] = '';
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			$this->db->where('add1_state', $id);
 			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
@@ -336,7 +335,7 @@ class Regionsettings extends crm_controller {
 				$data['cb_status'] = 1;
 			}
 		}
-		
+		$data['countrys'] = array();
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_state'])) {
             $customer           = $this->regionsettings_model->get_state($id);
 			$data['countrys']   = $this->regionsettings_model->country_list_all();
@@ -443,6 +442,7 @@ class Regionsettings extends crm_controller {
 		$this->validation->set_fields($fields);
 		
 		//for Inactive Role
+		$data['cb_status'] = '';
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			$this->db->where('add1_location', $id);
 			$query = $this->db->get($this->cfg['dbpref'].'customers')->num_rows();
@@ -457,6 +457,8 @@ class Regionsettings extends crm_controller {
 			}
 		}
 		
+		$data['states']     = array();
+		$data['countrys']   = array();
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_location'])) {
 			$customer = $this->regionsettings_model->get_location($id);
 			$data['states']     = $this->regionsettings_model->state_list_all();

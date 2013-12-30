@@ -505,9 +505,9 @@ class User_model extends crm_model {
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
-			$res['html'] .= "YES";
+			$res['html'] = "YES";
 		} else {
-			$res['html'] .= "NO";
+			$res['html'] = "NO";
 		}
 		echo json_encode($res);
 		exit;
@@ -570,7 +570,9 @@ class User_model extends crm_model {
 	public function get_loadregionsByuserId($uid) {
    
 		$uid = (int)$uid; // User ID
-
+		
+		$output       	= '';
+		
 		$this->db->select('region_id');
 		$this->db->from($this->cfg['dbpref']."levels_region");
 		$this->db->where('user_id', $uid); 

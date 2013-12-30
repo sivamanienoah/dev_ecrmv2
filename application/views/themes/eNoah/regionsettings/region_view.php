@@ -32,7 +32,7 @@
 						</tr>	
 						<tr>
 							<td>Status:</td>
-							<td colspan="3">
+							<td colspan="2" width="700">
 								<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
 								<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
 								<?php if ($cb_status != 0) echo "One or more User / Customer currently assigned for this Region. This cannot be made Inactive."; ?>
