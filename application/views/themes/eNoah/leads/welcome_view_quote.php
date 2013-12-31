@@ -1019,8 +1019,10 @@ $(function(){
 						
 						<?php
 							$uio = $userdata['userid'];
-							foreach($created_by as $value) {
-								$b[] = $value[created_by];						
+							if (!empty($created_by)) {
+								foreach($created_by as $value) {
+									$b[] = $value[created_by];						
+								}
 							}
 						?>
 						<h3>Tasks</h3>
@@ -1092,8 +1094,10 @@ $(function(){
 							<td colspan="4">
 								<?php
 								$uio = $userdata['userid'];
-								foreach($created_by as $value) {
-									$b[] = $value[created_by];						
+								if (!empty($created_by)) {
+									foreach($created_by as $value) {
+										$b[] = $value[created_by];						
+									}
 								}
 								?>
 								<strong>All fields are required!</strong>
@@ -1430,7 +1434,7 @@ $(function(){
 						</tr>
 						<tr>
 							<td><label>Email 4</label></td>
-							<td><b><?php echo $customer_tab[0]['email_4'] ?></b></td>
+							<td><b><?php echo $quote_data['email_4'] ?></b></td>
 						</tr>
 							<tr>
 							<td><label>Web</label></td>

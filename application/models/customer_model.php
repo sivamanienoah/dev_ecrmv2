@@ -249,9 +249,9 @@ class Customer_model extends crm_model {
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
 		if($query == 0) {
-			$res['html'] .= "YES";
+			$res['html'] = "YES";
 		} else {
-			$res['html'] .= "NO";
+			$res['html'] = "NO";
 		}
 		echo json_encode($res);
 		exit;

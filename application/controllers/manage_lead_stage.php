@@ -12,7 +12,7 @@ class Manage_lead_stage extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     
-    function index($limit, $search = FALSE) {	
+    function index($search = FALSE) {
         $data['page_heading'] = 'Manage Lead Stage';
 		$data['lead_stage'] = $this->manage_lead_stage_model->get_leadStage($search);
         $this->load->view('manage_lead_stage_view', $data); 
@@ -22,7 +22,7 @@ class Manage_lead_stage extends crm_controller {
         if (isset($_POST['cancel_submit'])) {
             redirect('manage_lead_stage/');
         } else if ($name = $this->input->post('cust_search')) {
-            redirect('manage_lead_stage/index/0/' . rawurlencode($name));
+            redirect('manage_lead_stage/index/' . rawurlencode($name));
         } else {
             redirect('manage_lead_stage/');
         }    

@@ -57,7 +57,7 @@ class Master extends crm_controller {
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
         
         $data = '';
-        $data['masters'] = $this->master_model->master_list();
+        $data['masters'] = $this->master_model->master_list($search = false);
 	
 	
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_master'])) {

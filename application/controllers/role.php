@@ -62,21 +62,26 @@ class Role extends crm_controller {
 		$this->db->where('role_id', $id);
 		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
 
-        $data['masterview'] = $this->master_model->master_list($limit, $search);
+        $data['masterview'] = $this->master_model->master_list($search = false);
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_role'])) {
-            $roles = $this->role_model->get_role($id);		 
-		
-			for($j=0;$j<count($data['masterview']);$j++) {
-				for($i=0;$i<count($roles);$i++){			 	
-					if($roles[$i]['masterid']==$data['masterview'][$j]['masterid']) {				 
-							$data['masterview'][$i]['add']=$roles[$i]['add'];
-							$data['masterview'][$i]['edit']=$roles[$i]['edit'];
-							$data['masterview'][$i]['delete']=$roles[$i]['delete'];
-							$data['masterview'][$i]['view']=$roles[$i]['view'];
-							$data['masterview'][$i]['userroleid']=$roles[$i]['id'];
+            $roles = $this->role_model->get_role($id);
+			if(!empty($data['masterview'])) {
+				for($j=0;$j<count($data['masterview']);$j++) {
+					if (!empty($roles)) {
+						for($i=0;$i<count($roles);$i++) {
+							if ((!empty($roles[$i])) && (!empty($data['masterview'][$j]))) {
+								if($roles[$i]['masterid']==$data['masterview'][$j]['masterid']) {
+									$data['masterview'][$i]['add']=$roles[$i]['add'];
+									$data['masterview'][$i]['edit']=$roles[$i]['edit'];
+									$data['masterview'][$i]['delete']=$roles[$i]['delete'];
+									$data['masterview'][$i]['view']=$roles[$i]['view'];
+									$data['masterview'][$i]['userroleid']=$roles[$i]['id'];
+								}
+							}
+						}
 					}
 				}
-			}	 		 
+			}		
             $data['this_role'] = $roles['role'][0]['id'];
            
             if (is_array($roles) && count($roles) > 0) foreach ($roles['role'][0] as $k => $v) {
@@ -114,7 +119,7 @@ class Role extends crm_controller {
 					$update_data['inactive'] = 1;
 				}
 			}
-
+			$user_Detail = $this->session->userdata('logged_in_user');
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
 			 
             	$update_data['modified_by']=$user_Detail['userid'];			
@@ -127,7 +132,6 @@ class Role extends crm_controller {
                 }
                 
             } else {
-               $user_Detail = $this->session->userdata('logged_in_user');
                 //insert
 				 $update_data['userid']		 = $user_Detail['userid'];			
 				 $update_data['modified_by'] = $user_Detail['userid'];			

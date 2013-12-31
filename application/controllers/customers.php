@@ -65,7 +65,7 @@ class Customers extends crm_controller {
 		$this->validation->set_rules($rules);		
 		
 		$fields['first_name'] = "First Name";
-		// $fields['last_name'] = "Last Name";
+		$fields['last_name'] = "Last Name";
 		$fields['position_title'] = 'Position';
 		$fields['company'] = "Company";
 		$fields['add1_line1'] = "";

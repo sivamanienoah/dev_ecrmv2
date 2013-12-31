@@ -8,12 +8,13 @@ function checkStatus(id) {
 	var formdata = { 'data':id }
 	formdata[csrf_token_name] = csrf_hash_token;
 	$.ajax({
+		async: false,
 		type: "POST",
 		url: site_base_url+'customers/ajax_chk_status_customer/',
 		dataType:"json",                                                                
 		data: formdata,
 		cache: false,
-		beforeSend:function(){
+		beforeSend:function() {
 			$('#dialog-err-msg').empty();
 		},
 		success: function(response) {

@@ -38,13 +38,13 @@
 if ( ! function_exists('real_escape_array'))
 {
 	function real_escape_array($data = array())
-	{	
+	{
 		$post_data_arr = array();
-		if(sizeof($data)>0){
+		if(!empty($data) && count($data)>0) {
 			foreach($data as $key=>$value){
-				if(is_array($value) && sizeof($value)>0){
+				if(is_array($value) && sizeof($value)>0) {
 					$post_data_arr[$key] = real_escape_array($value);
-				}else{
+				} else {
 					$post_data_arr[$key] = mysql_real_escape_string($value);
 				}
 			}

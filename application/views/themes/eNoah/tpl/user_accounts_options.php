@@ -41,6 +41,7 @@ if (count($user_accounts)) foreach ($user_accounts as $ua)
 	$contractor_list_select2 = $contractor_list_selecttemp2;
 
 	$pl_sel = '';
+	// echo "<pre>"; print_r($quote_data); exit;
 	if (isset($quote_data) && $quote_data['assigned_to'] == $ua['userid'])
 	{
 		$pl_sel = ' selected="selected"';
@@ -58,14 +59,16 @@ if (count($user_accounts)) foreach ($user_accounts as $ua)
 	
 }
 
-if (count($pm_accounts)) foreach ($pm_accounts as $pm)
-{
-	$pm_id_name[$pm['userid']] = $pm['first_name'] . ' ' . $pm['last_name'];
-		
-	$pl_sel = '';
-	if (isset($quote_data) && $quote_data['assigned_to'] == $pm['userid'])
+if (isset($pm_accounts) && count($pm_accounts)>0) {
+	foreach ($pm_accounts as $pm)
 	{
-		$pl_sel = ' selected="selected"';
+		$pm_id_name[$pm['userid']] = $pm['first_name'] . ' ' . $pm['last_name'];
+			
+		$pl_sel = '';
+		if (isset($quote_data) && $quote_data['assigned_to'] == $pm['userid'])
+		{
+			$pl_sel = ' selected="selected"';
+		}
+		$pm_options .= '<option value="' . $pm['userid'] . '"' . $pl_sel . '>' . $pm_id_name[$pm['userid']] . '</option>';
 	}
-	$pm_options .= '<option value="' . $pm['userid'] . '"' . $pl_sel . '>' . $pm_id_name[$pm['userid']] . '</option>';
 }

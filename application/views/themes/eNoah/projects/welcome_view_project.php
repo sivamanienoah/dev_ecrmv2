@@ -13,7 +13,6 @@
 <script type="text/javascript">
 
   var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
-  var project_edit_quotation  = "<?php echo $edit_quotation; ?>";
   var project_view_quotation  = "<?php echo $view_quotation; ?>";
   var project_user_id         = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : 0 ?>";
   var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>";
@@ -155,8 +154,7 @@
 
 								if($usid == $final_restrict_user[$j]) {
 									echo '<span class="user">' .
-									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label>' .
-									'<select name="post_profile_' . $user_accounts[$i]['userid'] . '" class="post-profile-select">' . $post_profile_options . '</select></span>'; 
+									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label></span>';
 								}	
 							}
 							
@@ -543,11 +541,12 @@
 					</div>
 					<?php
 						$output = '';
+						$total_amount_recieved = '';
+						$pt_select_box = '';
 						$output .= '<div class="payment-terms-mini-view1" style="display:block; float:left; margin-top:5px;">';
 					    if(!empty($payment_data))
 						{
 							$pdi = 1;
-							$pt_select_box = '';
 							$pt_select_box .= '<option value="0"> &nbsp; </option>';
 							$output .= "<table width='100%' class='payment_tbl'>
 							<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
@@ -616,10 +615,9 @@
 							<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
 							
 							<?php if (isset($pt_select_box)) { ?>
-							<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
-							<?php } 
-							else { ?>
-							  <p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
+								<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
+							<?php } else { ?>
+								<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
 							<?php } ?>
 							
 							<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
@@ -633,6 +631,7 @@
 						<?php 
 		
 						$output = '';
+						$amount_recieved = '';
 						$output .= '<div class="payment-received-mini-view1" style="float:left; display:none; margin-top:5px;">';
 						if(!empty($deposits_data))
 						{

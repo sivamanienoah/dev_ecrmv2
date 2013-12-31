@@ -697,6 +697,7 @@ class Project extends crm_controller {
 	{
 		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jid);
 		$output = '';
+		$total_amount_recieved = '';
 		$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
 		$expi = 1;
 		$pt_select_box = '';
@@ -768,6 +769,8 @@ class Project extends crm_controller {
 		$payment_details = $this->project_model->get_payment_term_det($eid, $jid);
 		
 		$expected_date = date('d-m-Y', strtotime($payment_details['expected_date']));
+		$project_milestone_name = $payment_details['project_milestone_name'];
+		$project_milestone_amt  = $payment_details['amount'];
 		
 		echo '
 		<script>
@@ -789,9 +792,9 @@ class Project extends crm_controller {
 			<tr>
 				<td>
 				<br />
-				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$payment_details[project_milestone_name].'" class="textfield width200px" /> </p>
+				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$project_milestone_name.'" class="textfield width200px" /> </p>
 				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" /> </p>
-				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$payment_details[amount].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$project_milestone_amt.'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
 				<div class="buttons">
 					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
 				</div>
@@ -878,6 +881,7 @@ class Project extends crm_controller {
 				$payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
 
 				$output = '';
+				$total_amount_recieved = '';
 				$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
 				$pdi = 1;
 				$pt_select_box = '';
@@ -1156,6 +1160,7 @@ class Project extends crm_controller {
 			$deposit_data = $this->project_model->get_deposits_data($updt_data['pr_form_jobid']);
 			
 			$output = '';
+			$amount_recieved = '';
 			$output .= '<div class="payment-received-mini-view2" style="margin-top:5px;">';
 			$pdi = 1;
 			$output .= '<option value="0"> &nbsp; </option>';

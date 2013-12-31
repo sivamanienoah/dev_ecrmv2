@@ -9,17 +9,12 @@
 $userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
 ?>
-var curr_job_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
+var curr_job_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
 var lead_services = [];
 lead_services['not_select'] = '';
 
 <?php foreach ($job_cate as $job) { ?>
 lead_services[<?php echo $job["sid"] ?>] = '<?php echo $job["services"] ?>';
-<?php } ?>
-
-var item_inventory = [];
-<?php foreach ($cfg['item_inventory'] as $iv_key => $iv_val) { ?>
-item_inventory[<?php echo  $iv_key ?>] = ['<?php echo  str_replace("'", "\'", $iv_val['desc']) ?>', '<?php echo  str_replace("'", "\'", $iv_val['hours']) ?>'];
 <?php } ?>
 
 var hourly_rate = '';
@@ -265,7 +260,6 @@ function setPrice(num) {
     }   
 }
 
-  
 
 function startQuote() {
     var err = [];
@@ -381,7 +375,7 @@ function addItem() {
                         $('#total_inc_gst').html(res.total_inc_gst);
                         $('#q-sort-items').sortable('refresh');
                         scrollElem('.q-container', '#q-sort-items li#qi-'+res.itemid);
-                        $('#item_title, #item_price, #item_desc, #hours, #item_section').val('');
+                        $('#item_title, #item_price, #item_desc, #hours').val('');
                     } else {
                         alert(res.errormsg);
                     }
@@ -595,12 +589,6 @@ function editQuoteDetails() {
     }
 }
 
-function selectItemSection() {
-    var si = $('#item_section').val();
-    $('#item_desc').val(item_inventory[si][0]);
-    $('#hours').val(item_inventory[si][1]).focus().blur();
-}
-
 
 /*
  *Functions for adding New Country, New State & New Location in the New Lead Creation page -- Starts Here
@@ -770,12 +758,13 @@ h3 .small {
                     
 					<p><select name="lead_source" id="lead_source" class="textfield width300px">
                             <option value="not_select">Please Select</option>
-                        <?php foreach ($lead_source as $leads) {
-							
-							?>
-                            <option value="<?php echo  $leads['lead_source_id'] ?>"><?php echo  $leads['lead_source_name'] ?></option>
                         <?php
-							
+						if (!empty($lead_source)) {
+							foreach ($lead_source as $leads) {
+							?>
+								<option value="<?php echo $leads['lead_source_id'] ?>"><?php echo  $leads['lead_source_name'] ?></option>
+							<?php
+							}
 						}
 						?>
                         </select>
@@ -797,12 +786,11 @@ h3 .small {
                     
 					<p><select name="expect_worth" id="expect_worth" class="textfield width100px">
                             <option value="not_select">Please Select</option>
-                        <?php foreach ($expect_worth as $expect) {
-							
-							?>
+                        <?php 
+						foreach ($expect_worth as $expect) {
+						?>
                             <option value="<?php echo  $expect['expect_worth_id'] ?>"><?php echo  $expect['expect_worth_name'] ?></option>
                         <?php
-							
 						}
 						?>
                         </select> <?php '/t';?><label> Amount</label> <input type="text" name="expect_worth_amount" id="expect_worth_amount" class="textfield" style=" width:140px" />
@@ -831,11 +819,12 @@ h3 .small {
 						<select name="lead_assign" id="lead_assign" class="textfield width300px">
 						<option value="not_select">Please Select</option>
                             <?php
-							foreach ($lead_assign as $leada)
-							{
-								?>
+							if (!empty($lead_assign)) {
+								foreach ($lead_assign as $leada) {
+							?>
 								<option value="<?php echo $leada['userid'] ?>"><?php echo $leada['first_name'] ?></option>
-								<?php
+							<?php
+								}
 							}
 							?>
                         </select>
@@ -1457,34 +1446,11 @@ $(function(){
 			return false;
 		});
 	});
-
-	
-	<?php
-	if (is_numeric($quote_data['complete_status']))
-	{
-	?>
-		updateVisualStatus("<?php echo (int)$quote_data['complete_status']; ?>");
-	<?php 
-		}
-	?>
-	
-	$('#enable_post_profile').click(function(){
-		if ($(this).is(':checked'))
-		{
-			$('.post-profile-select').show();
-		}
-		else
-		{
-			$('.post-profile-select').hide();
-		}
-	});
 	
 	$('.jump-to-job select').change(function(){
 		var _new_location = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
 		document.location = _new_location.replace('{{lead_id}}', $(this).val());
 	});
-	
-	
 	
 	$('#job_log').siblings().hide();
 	

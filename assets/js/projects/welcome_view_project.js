@@ -76,9 +76,9 @@
 	var curr_job_id     = project_jobid;
 
 	$(function(){
-	    if ( ( project_edit_quotation!='' || project_view_quotation!='' ) ) { 
-				populateQuote(project_jobid, true);
-		 } 
+	    if ( ( project_view_quotation!='' ) ) {
+			populateQuote(project_jobid, true);
+		} 
 	});
 
 	var userid 				= project_user_id;
@@ -1162,18 +1162,6 @@
 	{
 		updateVisualStatus(project_complete_status);
 	}
-	
-
-	$('#enable_post_profile').click(function(){
-		if ($(this).is(':checked'))
-		{
-			$('.post-profile-select').show();
-		}
-		else
-		{
-			$('.post-profile-select').hide();
-		}
-	});
 
 	$('.jump-to-job select').change(function(){
 		var _new_location = proj_location;
