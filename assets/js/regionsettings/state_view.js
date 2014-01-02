@@ -94,7 +94,7 @@ function checkStatus_Ste(id) {
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({
-					message:'<br /><h5>Are You Sure Want to Delete this State?<br />(It will delete all the Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					message:'<br /><h5>Are You Sure Want to Delete this State?<br />(It will delete all the Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDeleteState('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 					css:{width:'440px'}
 				});
 			}
@@ -103,8 +103,42 @@ function checkStatus_Ste(id) {
 return false;
 }
 
-function processDelete(id) {
+function processDeleteState(id) {
 	window.location.href = 'regionsettings/state_delete/delete/'+id;
+}
+
+//Check status for Location
+function checkStatus_Loc(id) {
+	var formdata = { 'data':id, 'type':'loc' }
+	formdata[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'regionsettings/ajax_check_status_rcsl/',
+		dataType:"json",                                                                
+		data: formdata,
+		cache: false,
+		beforeSend:function(){
+			$('#dialog-err-loc').empty();
+		},
+		success: function(response) {
+			if (response.html == 'NO') {
+				$('#dialog-err-loc').show();
+				$('#dialog-err-loc').append('One or more User / Customer currently mapped to this Location. This cannot be deleted.');
+				$('html, body').animate({ scrollTop: $('#dialog-err-loc').offset().top }, 500);
+				setTimeout('timerfadeout()', 4000);
+			} else {
+				$.blockUI({
+					message:'<br /><h5>Are You Sure Want to Delete this Location?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDeleteLocation('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					css:{width:'440px'}
+				});
+			}
+		}          
+	});
+return false;
+}
+
+function processDeleteLocation(id) {
+	window.location.href = 'regionsettings/location_delete/delete/'+id;
 }
 
 function cancelDel() {

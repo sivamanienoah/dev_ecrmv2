@@ -7,6 +7,7 @@ $(document).ready(function() {
  $('.error').hide();
 	// $('a.edit').click(function() {
 	$(document).delegate('a.editConty','click',function() {
+		alert('country');
 		var url = $(this).attr('href');
 		$('.in-content').load(url +" .in-content",function(){
 			dtTable();
@@ -84,7 +85,7 @@ function checkStatus_Cntry(id) {
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({
-					message:'<br /><h5>Are You Sure Want to Delete this Country?<br />(It will delete all the States & Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					message:'<br /><h5>Are You Sure Want to Delete this Country?<br />(It will delete all the States & Locations)</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDeleteCountry('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 					css:{width:'440px'}
 				});
 			}
@@ -93,7 +94,7 @@ function checkStatus_Cntry(id) {
 return false;
 }
 
-function processDelete(id) {
+function processDeleteCountry(id) {
 	window.location.href = 'regionsettings/country_delete/delete/'+id;
 }
 

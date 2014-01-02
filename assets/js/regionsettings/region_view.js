@@ -7,7 +7,7 @@
 $(document).ready(function() {
 	$('#error1').hide();
 	//$('a.edit').click(function() {
-	$(document).delegate('a.editReg','click',function() {
+	$(document).delegate('a.editReg','click',function() {;
 		$('#error1').hide();
 		var url = $(this).attr('href');		
 		$('.in-content').load(url +" .in-content",function(){
@@ -33,12 +33,15 @@ $(document).ready(function() {
 	});
 });
 
-
-$(function() {
-	datTable();
+$(function() {	
+	
 });	
+$(window).load(function(){
+	//datTable();
+});
 	
 function datTable(){
+	alert('erer')
 	$('.reg-data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 10,

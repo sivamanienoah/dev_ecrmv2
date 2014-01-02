@@ -109,7 +109,7 @@ function checkStatus_Loc(id) {
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({
-					message:'<br /><h5>Are You Sure Want to Delete this Location?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+					message:'<br /><h5>Are You Sure Want to Delete this Location?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDeleteLocation('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 					css:{width:'440px'}
 				});
 			}
@@ -118,7 +118,7 @@ function checkStatus_Loc(id) {
 return false;
 }
 
-function processDelete(id) {
+function processDeleteLocation(id) {
 	window.location.href = 'regionsettings/location_delete/delete/'+id;
 }
 
