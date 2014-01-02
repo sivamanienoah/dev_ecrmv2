@@ -2,7 +2,7 @@
     <div class="inner">
 		<div class="in-content">
 			<?php $userdata = $this->session->userdata('logged_in_user'); ?>
-			<script type="text/javascript" src="assets/js/regionsettings/region_view.js"></script>
+			<!--script type="text/javascript" src="assets/js/regionsettings/region_view.js"></script-->
 			<?php
 			if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update' && $userdata['level'] == 1) || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) {
 			?>
@@ -48,7 +48,7 @@
 							// if ($this->session->userdata('add')) {
 							?>
 								<div class="buttons">
-									<button type="submit" name="update_region" class="positive">								
+									<button type="submit" name="update_region" id="btnAddRegion" class="positive">								
 										<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Region
 									</button>
 								</div>
@@ -59,7 +59,7 @@
 							<?php if ($this->uri->segment(4)) { ?>
 								<td style="float:left;">
 									<div class="buttons">
-										<button type="submit" name="cancel_submit" id="reg_cancl" class="negative">
+										<button type="submit" name="cancel_submit" id="reg_cancel" class="negative">
 											Cancel
 										</button>
 									</div>
@@ -79,7 +79,7 @@
 					
 				<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
 					
-				<table class="reg-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0">
+				<table class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr>
 							<th>Region Name</th>
@@ -96,7 +96,7 @@
 					?>
 						<tr>
 							<td>
-								<?php if ($this->session->userdata('edit')==1) {?><a class="editReg clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?>
+								<?php if ($this->session->userdata('edit')==1) {?><a class="editRegion clrmarron" href="regionsettings/region/update/<?php echo  $customer['regionid'] ?>"><?php echo $customer['region_name'] ; ?></a><?php } else { echo $customer['region_name']; } ?>
 							</td>
 							<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
 							<td><?php echo  $customer['cfnam']." ".$customer['clnam']; ?></td>
@@ -111,7 +111,7 @@
 							</td> 
 							<td class="actions">
 								<?php if ($this->session->userdata('edit')==1) { ?>
-									<a class="editReg clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>">Edit &raquo;</a> 
+									<a class="editRegion clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>">Edit &raquo;</a> 
 								<?php } else { echo "Edit &raquo;"; } ?>
 									<?php if($this->session->userdata('delete')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['regionid'] ?>);" >Delete &raquo;</a>
 								<?php } ?>

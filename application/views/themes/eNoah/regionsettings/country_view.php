@@ -1,7 +1,6 @@
 <div id="content">
 	<div class="inner">
-		<div class="in-content"> 
-			<script type="text/javascript" src="assets/js/regionsettings/country_view.js"></script>
+		<div class="in-content">
 			<?php $userdata = $this->session->userdata('logged_in_user'); ?>
 			<?php
 			if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update' && $userdata['level'] <= 2) || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) {
@@ -56,7 +55,7 @@
 							<td style="float:left;">
 								<?php if ($this->uri->segment(4)) { ?>
 									<div class="buttons">
-										<button type="submit" name="cancel_submit" id="country_cancl" class="negative">
+										<button type="submit" name="cancel_submit" id="country_cancel" class="negative">
 											Cancel
 										</button>
 									</div>
@@ -76,7 +75,7 @@
 				
 				<div class="dialog-err" id="dialog-err-cntry" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
 				
-				<table class="cntry-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
+				<table class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
 				<thead>
 					<tr>
 						<th>Country Name</th>
@@ -94,7 +93,7 @@
 					?>
 							<tr>
 								<td>
-									<?php if ($this->session->userdata('edit')==1) { ?><a class="editConty clrmarron" href="regionsettings/country/update/<?php echo  $customer['countryid'] ?>"><?php echo $customer['country_name'] ; ?></a><?php } else { echo $customer['country_name']; } ?>
+									<?php if ($this->session->userdata('edit')==1) { ?><a class="editCountry clrmarron" href="regionsettings/country/update/<?php echo  $customer['countryid'] ?>"><?php echo $customer['country_name'] ; ?></a><?php } else { echo $customer['country_name']; } ?>
 								</td>
 								<td><?php echo $customer['region_name']; ?></td>
 								<td><?php echo  date('d-m-Y', strtotime($customer['created'])); ?></td>
@@ -109,7 +108,7 @@
 								</td>  
 								<td class="actions">
 									<?php if ($this->session->userdata('edit')==1) { ?>
-										<a class="editConty clrmarron" href="regionsettings/country/update/<?php echo $customer['countryid']; ?>">Edit &raquo;</a> 
+										<a class="editCountry clrmarron" href="regionsettings/country/update/<?php echo $customer['countryid']; ?>">Edit &raquo;</a> 
 									<?php } else { echo "Edit &raquo;"; } ?>
 									<?php if($this->session->userdata('delete')==1) { ?> | 
 											<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Cntry(<?php echo $customer['countryid'] ?>);" >Delete &raquo;</a>

@@ -5,8 +5,6 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 <div id="content">	
     <div class="inner">
 		<div class="in-content">
-		<script type="text/javascript" src="assets/js/regionsettings/state_view.js"></script>
-
 		<?php $userdata = $this->session->userdata('logged_in_user'); ?>
 		<?php
 		if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update' && $userdata['level'] <= 3) || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) {
@@ -72,7 +70,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 						<td>&nbsp;</td>
 						<td style="float:left;">
 							<div class="buttons">
-								<button type="submit" name="update_state" class="positive">
+								<button type="submit" name="update_state" id="btnAddState" class="positive">
 									<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> state
 								</button>
 							</div>
@@ -80,7 +78,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 						<td style="float:left;">
 							<?php if ($this->uri->segment(4)) { ?>
 								<div class="buttons">
-									<button type="submit" name="cancel_submit" class="negative" id="state_cancl">
+									<button type="submit" name="cancel_submit" class="negative" id="state_cancel">
 									Cancel
 									</button>
 								</div>
@@ -100,7 +98,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 			
 			<div class="dialog-err" id="dialog-err-ste" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
 			
-			<table class="ste-data-tbl dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
+			<table class="dashboard-heads dataTable" style="width:100%" border="0" cellpadding="0" cellspacing="0" >            
 				<thead>
 					<tr>
 						<th>State Name</th>
@@ -119,7 +117,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 					?>
 							<tr>
 								<td>
-									<?php if ($this->session->userdata('edit')==1) {?><a class="editSte clrmarron" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?>
+									<?php if ($this->session->userdata('edit')==1) {?><a class="editState clrmarron" href="regionsettings/state/update/<?php echo  $customer['stateid'] ?>"><?php echo $customer['state_name'] ; ?></a><?php } else { echo $customer['state_name']; } ?>
 								</td>
 								<td><?php echo $customer['country_name']; ?></td>
 								<td><?php echo $customer['region_name']; ?></td>
@@ -134,7 +132,7 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 								</td>                         
 								<td class="actions">
 									<?php if ($this->session->userdata('edit')==1) { ?>
-										<a class="editSte clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>">Edit &raquo;</a> 
+										<a class="editState clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>">Edit &raquo;</a> 
 									<?php } else echo "Edit &raquo;"; ?>                    
 									<?php if($this->session->userdata('delete')==1) { ?> | 
 										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" >Delete &raquo;</a>

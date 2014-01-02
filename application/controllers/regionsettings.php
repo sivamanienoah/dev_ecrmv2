@@ -59,12 +59,12 @@ class Regionsettings extends crm_controller {
 	*/
     public function level_check($str)
 	{
-			if (!preg_match('/^[0-9]+$/', $str)) {
-				$this->validation->set_message('level_check', 'Level must be selected.');
-				return false;
-			} else {
-				return true;
-			}
+		if (!preg_match('/^[0-9]+$/', $str)) {
+			$this->validation->set_message('level_check', 'Level must be selected.');
+			return false;
+		} else {
+			return true;
+		}
     }
 	
 	

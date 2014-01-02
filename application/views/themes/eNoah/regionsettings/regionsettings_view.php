@@ -1,6 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-
+<script type="text/javascript" src="assets/js/regionsettings/rcsl_view.js"></script>
 <style>
 .ui-tabs-panel {
 	border-top:1px solid #999;
@@ -27,7 +27,25 @@ switch ($tabselected)
 ?>
 <script>
 	$(function() {
-		$( "#regset-tabs" ).tabs({ active: <?php echo $selected;?> });
+		$( "#regset-tabs" ).tabs({ 
+		active: <?php echo $selected;?>, 
+		beforeLoad: function( event, ui ) {
+			$.blockUI({ css: { 
+				border: 'none', 
+				padding: '15px', 
+				backgroundColor: '#000',
+				radius:'10px',
+				'-webkit-border-radius': '10px', 
+				'-moz-border-radius': '10px', 
+				opacity: .5, 
+				color: '#fff' 
+			} });
+		},
+		load:function() { 
+				datTable();
+				$.unblockUI();
+			}
+		});
 	});
 </script>							
 <div id="content">
@@ -43,7 +61,8 @@ switch ($tabselected)
 				</ul>
 			</div>
 			
-	<?php } else {
+	<?php 
+	} else {
 		echo "You have no rights to access this page";
 	}
 	?>
