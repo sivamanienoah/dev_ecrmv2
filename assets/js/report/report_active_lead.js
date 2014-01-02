@@ -23,7 +23,7 @@ $(function(){
 	$('#report_lead_frm').submit(function(e){
 		e.preventDefault();		
 		$('#advance').hide();
-		$('#load').show();		
+		$('#load').show();
 		var base_url = site_base_url; //site_base_url is global variable 		
 		var start_date = $('#task_search_start_date').val();
 		var end_date = $('#task_search_end_date').val();
