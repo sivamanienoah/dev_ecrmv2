@@ -1131,9 +1131,13 @@ class Dashboard_model extends crm_model {
 	//for closed opportunities getClosedJobids
 	public function getClosedJobids($cusId = FALSE, $filter = FALSE) {
 		$pjt_stat = array(0,1,2,3);
-		$curYear = date("Y");
-		$frm_dt = $curYear."-04-01";
-		$to_dt = ($curYear+1)."-03-31";
+		
+		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y");
+		//eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("d/m/y"),"4/1","3/31");
+
+		$frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
 		$this->db->select('lead_id , expect_worth_id, actual_worth_amount as expect_worth_amount');
 		$this->db->from($this->cfg['dbpref'].'leads');
 		$this->db->join($this->cfg['dbpref'].'customers', 'custid = custid_fk');
@@ -1509,6 +1513,30 @@ class Dashboard_model extends crm_model {
 		$this->db->limit(1);
 	    $sql = $this->db->get();
 	    return $sql->row_array();
+	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		// $fystartdate = strtotime($fyStart.$inputyear);
+		// $fyenddate = strtotime($fyEnd.$inputyear);
+		
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		// if($date < $fyenddate){
+		if($date <= $fyenddate){
+			$fy = intval($inputyear);
+		}else{
+			$fy = intval(intval($inputyear) + 1);
+		}
+	 
+		return $fy;
 	}
 
 }
