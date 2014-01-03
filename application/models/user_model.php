@@ -84,7 +84,7 @@ class User_model extends crm_model {
 		$availed_users = check_max_users();
 		if ( $this->cfg['max_allowed_users'][0] > $availed_users['avail_users'] ) {
 			/* 
-			$sql = "INSERT INTO ".$this->cfg['dbpref']."users (role_id,first_name,last_name,password,email,add_email,use_both_emails,phone,mobile, 	level,is_pm,signature,inactive)	VALUES ('".$data['role_id']."','".$data['first_name']."','".$data['last_name']."','".$data['password']."','".$data['email']."','".$data['add_email']."','".$data['use_both_emails']."','".$data['phone']."','".$data['mobile']."','".$data['level']."','".$data['is_pm']."','".$data['signature']."','".$data['inactive']."') ON DUPLICATE KEY UPDATE email='".$data['email']."' ";	
+			$sql = "INSERT INTO ".$this->cfg['dbpref']."users (role_id,first_name,last_name,password,email,add_email,use_both_emails,phone,mobile, 	level,signature,inactive)	VALUES ('".$data['role_id']."','".$data['first_name']."','".$data['last_name']."','".$data['password']."','".$data['email']."','".$data['add_email']."','".$data['use_both_emails']."','".$data['phone']."','".$data['mobile']."','".$data['level']."','".$data['signature']."','".$data['inactive']."') ON DUPLICATE KEY UPDATE email='".$data['email']."' ";	
 			$query = $this->db->query($sql);  
 			if ( $query == 1 )
 			{	
