@@ -575,26 +575,35 @@ class Welcome_model extends crm_model {
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
+			if (isset($this->session->userdata['region_id']))
 			$region = explode(',',$this->session->userdata['region_id']);
+			if (isset($this->session->userdata['countryid']))
 			$countryid = explode(',',$this->session->userdata['countryid']);
+			if (isset($this->session->userdata['stateid']))
 			$stateid = explode(',',$this->session->userdata['stateid']);
+			if (isset($this->session->userdata['locationid']))
 			$locationid = explode(',',$this->session->userdata['locationid']);
 
 			if ( ($stage[0] == 'null' || $stage[0] == 'all') && ($customer[0] == 'null' || $customer[0] == 'all') && ($worth[0] == 'null' || $worth[0] == 'all') && ($owner[0] == 'null' || $owner[0] == 'all') && ($leadassignee[0] == 'null' || $leadassignee[0] == 'all') && ($regionname[0] == 'null' || $regionname[0] == 'all') && ($countryname[0] == 'null' || $countryname[0] == 'all') && ($statename[0] == 'null' || $statename[0] == 'all') && ($locname[0] == 'null' || $locname[0] == 'all') && $keyword == 'null' ) {
+				
+				if (isset($this->session->userdata['region_id']))
 				$region = explode(',',$this->session->userdata['region_id']);
+				if (isset($this->session->userdata['countryid']))
 				$countryid = explode(',',$this->session->userdata['countryid']);
+				if (isset($this->session->userdata['stateid']))
 				$stateid = explode(',',$this->session->userdata['stateid']);
+				if (isset($this->session->userdata['locationid']))
 				$locationid = explode(',',$this->session->userdata['locationid']);
 
 				$this->db->where_in('c.add1_region',$region);
 				
-				if($this->session->userdata['countryid'] != '') {
+				if (isset($this->session->userdata['countryid'])) {
 					$this->db->where_in('c.add1_country',$countryid); 
 				}
-				if($this->session->userdata['stateid'] != '') {
-					$this->db->where_in('c.add1_state',$stateid); 
+				if (isset($this->session->userdata['stateid'])) {
+					$this->db->where_in('c.add1_state',$stateid);
 				}
-				if($this->session->userdata['locationid'] != '') {
+				if (isset($this->session->userdata['locationid'])) {
 					$this->db->where_in('c.add1_location',$locationid); 
 				}
 				
@@ -795,10 +804,13 @@ class Welcome_model extends crm_model {
 		{
 			$cusIds = array();
 			$cusIds[] = 0;
+			$reg = array();
+			$cou = array();
+			$ste = array();
+			$loc = array();
 			switch($userdata['level']){
 				case 2:
 					$regions = $this->getRegions($userdata['userid'], $userdata['level']); //Get the Regions based on Level
-						$reg = array();
 						foreach ($regions as $rgid) {
 							$reg[] = $rgid['region_id'];
 						}
@@ -810,7 +822,6 @@ class Welcome_model extends crm_model {
 				break;
 				case 3:
 					$countries = $this->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
-						$cou = array();
 						foreach ($countries as $couid) {
 							$cou[] = $couid['country_id'];
 						}
@@ -822,7 +833,6 @@ class Welcome_model extends crm_model {
 				break;
 				case 4:
 					$states = $this->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
-						$ste = array();
 						foreach ($states as $steid) {
 							$ste[] = $steid['state_id'];
 						}
@@ -834,7 +844,6 @@ class Welcome_model extends crm_model {
 				break;
 				case 5:
 					$locations = $this->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
-						$loc = array();
 						foreach ($locations as $locid) {
 							$loc[] = $locid['location_id'];
 						}	
