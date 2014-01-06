@@ -249,7 +249,7 @@
 					$ci->db->select('vm.master_parent_id ,mrl.view,mrl.add,mrl.edit,mrl.delete from '.$this->cfg['dbpref'].'masters as vm JOIN  master_roles as mrl on mrl.masterid= vm.master_parent_id  where vm.controller_name ="'.$string.'" and mrl.role_id="'.$id.'" ');
 					$ci->db->limit('1','0');
 					$masterId = $ci->db->get();
-					//echo $ci->db->last_query();				 
+					// echo $ci->db->last_query(); exit;
 					$master = $masterId->result_array();
 					return $master;
 				} 
