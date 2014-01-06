@@ -1459,28 +1459,28 @@ class Dashboard_model extends crm_model {
 	
 	function explod_arr($filters) {
 		$fres = array();
-		
-		if ($filters['stge'] !='')
+
+		if (isset($filters['stge']) && $filters['stge']!='')
 			$fres['fstge'] 		= explode(',',$filters['stge']);
-		if ($filters['cust_id'] !='')
+		if (isset($filters['cust_id']) && $filters['cust_id']!='')
 			$fres['fcust_id'] 	= explode(',',$filters['cust_id']);
-		if ($filters['ownr_id'] !='')
+		if (isset($filters['ownr_id']) && $filters['ownr_id']!='')
 			$fres['fownr_id'] 	= explode(',',$filters['ownr_id']);
-		if ($filters['assg_id'] !='')
+		if (isset($filters['assg_id']) && $filters['assg_id']!='')
 			$fres['fassg_id'] 	= explode(',',$filters['assg_id']);
-		if ($filters['reg_id'] !='')
+		if (isset($filters['reg_id']) && $filters['reg_id']!='')
 			$fres['freg_id']	= explode(',',$filters['reg_id']);
-		if ($filters['cntry_id'] !='')
+		if (isset($filters['cntry_id']) && $filters['cntry_id']!='')
 			$fres['fcntry_id']	= explode(',',$filters['cntry_id']);
-		if ($filters['stet_id'] !='')
+		if (isset($filters['stet_id']) && $filters['stet_id']!='')
 			$fres['fstet_id'] 	= explode(',',$filters['stet_id']);
-		if ($filters['locn_id'] !='')
+		if (isset($filters['locn_id']) && $filters['locn_id']!='')
 			$fres['flocn_id'] 	= explode(',',$filters['locn_id']);
-		if ($filters['servic_req'] !='')
+		if (isset($filters['servic_req']) && $filters['servic_req']!='')
 			$fres['fser_req_id'] 	= explode(',',$filters['servic_req']);
-		if ($filters['lead_sour'] !='')
+		if (isset($filters['lead_sour']) && $filters['lead_sour']!='')
 			$fres['flead_src_id'] 	= explode(',',$filters['lead_sour']);
-		if ($filters['lead_indic'] !='') {
+		if (isset($filters['lead_indic']) && $filters['lead_indic']!='') {
 			$fres['flead_indic_id'] 	= explode(',',$filters['lead_indic']);
 		}
 		return $fres;
