@@ -212,9 +212,9 @@ function editTask()
 	}
 	
 	$('.blockUI .task-add.task-edit').block({
-            message:'<h3>Processing</h3>',
-			css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
-        });
+		message:'<h3>Processing</h3>',
+		css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
+	});
 	
 	var random_task_url = '';
 	if (random_task_edit)
