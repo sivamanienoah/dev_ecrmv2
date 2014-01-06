@@ -1048,14 +1048,16 @@ class Dashboard extends crm_controller {
 		foreach ($data['lead_id'] as $value) {
 			$sql = "SELECT lead_id, dateofchange FROM {$this->cfg['dbpref']}lead_status_history WHERE lead_id = '".$value['lead_id']."' AND changed_status = 4 ORDER BY dateofchange DESC LIMIT 1";
 			$rows = $this->db->query($sql);
-			//echo $this->db->last_query(); 
 			$res_query = $rows->row_array();
-			if ($mont<=3) {
-				$Yr = (date("Y")+1);
+			//get the current financial year
+			$curFiscalYear = $this->calculateFiscalYearForDate(date("d/m/y"),"4/1","3/31");
+			if ($mont<=3) {		
+				// $Yr = (date("Y")+1);
+				$Yr = $curFiscalYear;
 			} else {
-				$Yr = date("Y");
+				$Yr = $curFiscalYear-1;
 			}
-			
+			// echo $Yr; exit;
 			$yer = date("Y" , strtotime($res_query['dateofchange']));
 			$mon = date("m" , strtotime($res_query['dateofchange']));
 			
@@ -1068,4 +1070,25 @@ class Dashboard extends crm_controller {
 		$leads_res = $this->dashboard_model->closedLeadDet($jb, $filters);
 		return $leads_res;
 	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate){
+			$fy = intval($inputyear);
+		}else{
+			$fy = intval(intval($inputyear) + 1);
+		}
+	 
+		return $fy;
+	}
+	
 }
