@@ -2,6 +2,7 @@
 ob_start();
 require (theme_url().'/tpl/header.php');
 // echo "<pre>"; print_r($this->session->userdata);
+// echo "<pre>"; print_r($created_by);
 ?>
 
 <style type="text/css">
@@ -182,14 +183,9 @@ require (theme_url().'/tpl/header.php');
 		<!-- edit task -->
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
 			<?php
-
 				$uio = $userdata['userid'];
-				$taskidd=$_POST['newPassword'];
 				$cid='';
-				$taskid="<div class='edit-job-task-id'></div>";	
-				foreach($created_by as $value) {
-					$b[] = $value[createdby];						
-				}
+				$taskid="<div class='edit-job-task-id'></div>";
 			?>
 				<tr>
 					<td colspan="4">
@@ -239,20 +235,20 @@ require (theme_url().'/tpl/header.php');
 				<tr>
 					<td>Actual Start Date</td>
 					<td>
-						<?php 
-						if($created_by['jobid_fk'] == $remind_options) {  
+						<?php
+						if($created_by['jobid_fk'] == $remind_options) {
 						?>
 							<input type="text"  name="task_actualstart_date" class="edit-actualstart textfield pick-date width100px" readonly />
 						<?php 
-						} else { 
+						} else {
 						?>
-							<input type="text" name="task_actualstart_date" class="edit-actualstart-date textfield pick-date width100px"/>
+							<input type="text" name="task_actualstart_date" class="edit-actualstart-date textfield pick-date width100px"  />
 						<?php 
 						} 
 						?>
 					</td>
 					<td>Actual End Date</td>
-					<td class="actualend-date"><input type="text" class="edit-actualend-date pick-date textfield" ></td>
+					<td class="actualend-date"><input type="text" class="edit-actualend-date textfield" readonly></td>
 				</tr>
 				<tr>
 					<td>Remarks</td>
@@ -291,8 +287,8 @@ require (theme_url().'/tpl/header.php');
 </div>
 <script type="text/javascript">
 	var task_userid = '<?php echo $userdata['userid'] ?>';
-	var get_type 	= '<?php echo $_GET['type'] ?>';
-	var get_id      = '<?php echo $_GET['id'] ?>';
+	var get_type 	= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
+	var get_id      = '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
 </script>
 <script type="text/javascript" src="assets/js/tasks/main_view.js"></script>
 <?php
