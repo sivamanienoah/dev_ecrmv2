@@ -166,12 +166,11 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			</p>
 		</div>
 	<?php } ?>
-    
-    
+
 	<?php
 		if ($this->session->userdata('logged_in') == TRUE)
 		{
-			echo $menulist ;      
+			echo $menulist; 
 		} 
 	?>
    
@@ -204,7 +203,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$addImpCus = '';
 	$i=0;
 	//$access_limit= array();
-	// echo "<pre>"; print_r($menu_items_vals); 
+	// echo "<pre>"; print_r($menu_items_vals); exit;
 	foreach($menu_items_vals as $menu_items) {		 
 		$strcmp = strcmp(strtolower($this->uri->segment(1)), strtolower($menu_items[3]));	
 		if(($strcmp==0 && $i==0 )) 
