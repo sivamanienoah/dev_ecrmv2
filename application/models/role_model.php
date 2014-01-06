@@ -71,10 +71,10 @@ class Role_model extends crm_model {
 			$customer = $this->db->get_where($this->cfg['dbpref'].'roles', array('id' => $id), 1);	
 			$role =$this->db->order_by('masterid', 'asc');			
 			$role = $this->db->get_where($this->cfg['dbpref'].'master_roles', array('role_id' => $id));	
-			//echo $this->db->last_query();
+			// echo $this->db->last_query(); exit;
 			$customers['role']= $customer->result_array();
 			$role = $role->result_array();			
-			//print_r($role);
+			// print_r($role);
 			return array_merge($customers,$role);
 		}        
     }
@@ -232,9 +232,11 @@ class Role_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'master_roles as mrl','rl.id=mrl.role_id');
 		$this->db->join($this->cfg['dbpref'].'masters as vm','vm.masterid=mrl.masterid and vm.inactive=0');
 		$this->db->join($this->cfg['dbpref'].'users as vu','vu.role_id=rl.id and  vu.userid='.$userId);		
-		$this->db->order_by('vm.master_parent_id', 'desc');			
-		$this->db->order_by('vm.masterid', 'asc');	
+		// $this->db->order_by('vm.master_parent_id', 'desc');			
+		// $this->db->order_by('vm.masterid', 'asc');
+		$this->db->order_by('vm.order_id', 'asc');
 		$Menuitms = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$menuItems = $Menuitms->result_array();
 		return $menuItems;
 	}
