@@ -18,7 +18,7 @@ $(function(){
 		var statename    = $('#statename').val();		
 		var locname      = $('#locname').val();
 		
-		var base_url = "<?php echo site_url(); ?>";		
+		var base_url = site_base_url;
 		
 		var url = base_url+"report/report_lead_owner/excelExport";
 		var form = $('<form action="' + url + '" method="post">' +
