@@ -1134,7 +1134,7 @@ class Dashboard_model extends crm_model {
 		
 		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y");
 		//eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
-		$curFiscalYear = $this->calculateFiscalYearForDate(date("d/m/y"),"4/1","3/31");
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 
 		$frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
@@ -1182,6 +1182,7 @@ class Dashboard_model extends crm_model {
    		$this->db->where('date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('lead_id', 'desc');
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$cls_query =  $query->result_array();
 		return $cls_query;
 	}

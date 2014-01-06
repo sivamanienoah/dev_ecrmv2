@@ -1050,7 +1050,7 @@ class Dashboard extends crm_controller {
 			$rows = $this->db->query($sql);
 			$res_query = $rows->row_array();
 			//get the current financial year
-			$curFiscalYear = $this->calculateFiscalYearForDate(date("d/m/y"),"4/1","3/31");
+			$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 			if ($mont<=3) {		
 				// $Yr = (date("Y")+1);
 				$Yr = $curFiscalYear;
