@@ -25,7 +25,7 @@
 								Submit
 							</button>
 						</div>
-						<input type="hidden" name="last_url" value="<?php echo  $this->session->flashdata('last_url') ?>" />
+						<input type="hidden" name="last_url" value="<?php echo $this->session->flashdata('last_url') ?>" />
 					</td>
 				</tr>
 			</table>
