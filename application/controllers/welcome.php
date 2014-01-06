@@ -232,11 +232,11 @@ HDOC;
                     $row['hours'] = '';
                 }
 				// $content_item = nl2br(cleanup_chars(ascii_to_entities($row['item_desc'])));
-				$content_item = nl2br($row['item_desc']);
+
 				if(!empty($row['item_price'])) {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . stripslashes($content_item) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" width="85%">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td><td width="14%" class="item-price width100px" align="right" valign="bottom">' . $row['item_price'] . '</td></tr></table></li>';
 				} else {
-					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . stripslashes($content_item) . '</td></tr></table></li>';
+					$html .= '<li id="qi-' . $row['itemid'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['item_desc']))) . '</td></tr></table></li>';
 				}
             }
             
@@ -560,22 +560,20 @@ HDOC;
      */
 	function ajax_add_item()
 	{
-		// $data = real_escape_array($this->input->post());
-		$data = $this->input->post();
         $errors = '';
-        if (trim($data['hours']) != '' && !is_numeric($data['hours']))
+        if (trim($_POST['hours']) != '' && !is_numeric($_POST['hours']))
         {
 			$errors[] = 'Hours can only be numeric values!';
 		}
-        if (trim($data['item_desc']) == '')
+        if (trim($_POST['item_desc']) == '')
         {
             $errors[] = 'You must provide a description!';
         }
-        if (trim($data['item_price']) != '' && !is_numeric($data['item_price']))
+        if (trim($_POST['item_price']) != '' && !is_numeric($_POST['item_price']))
         {
 			$errors[] = 'Price can only be numeric values!';
 		}
-        if (!preg_match('/^[0-9]+$/', $data['lead_id']))
+        if (!preg_match('/^[0-9]+$/', $_POST['lead_id']))
         {
 			$errors[] = 'Lead ID must be numeric!';
 		}
@@ -588,9 +586,12 @@ HDOC;
         }
         else
         {
-			// $data['item_desc'] = @str_replace('\r\n', '', $data['item_desc']);
-			// $data['item_desc'] = stripslashes($data['item_desc']);
-			$this->quote_add_item($data['lead_id'], $data['item_desc'], $data['item_price'], $data['hours']);			
+			if (!preg_match('/^\n/', $_POST['item_desc']))
+			{
+				// $_POST['item_desc'] = "\n" . $_POST['item_desc'];
+			}
+			$this->quote_add_item($_POST['lead_id'], $_POST['item_desc'], $_POST['item_price'], $_POST['hours']);
+			
 		}
 		
 	}
@@ -601,8 +602,10 @@ HDOC;
 	 * Accepts direct ajax call as well as calls from other methods
 	 */
 	function quote_add_item($lead_id, $item_desc = '', $item_price = 0, $hours, $ajax = TRUE) {
-        $ins['item_desc'] = nl2br($item_desc);
+		
+		$ins['item_desc'] = $item_desc;
         $ins['jobid_fk'] = $lead_id;
+		
 		if(empty($hours)) {
 			$ins['hours'] = '0.00';
 		} else {
@@ -624,8 +627,8 @@ HDOC;
         
         $ins['item_position'] = $posn[0]['item_position']+1;
 
-		$ins = real_escape_array($ins);
-		$ins['item_desc'] = @str_replace('\r\n', '', $ins['item_desc']);
+		// $ins = real_escape_array($ins);
+		// $ins['item_desc'] = @str_replace('\r\n', '', $ins['item_desc']);
 
 		$insert_item = $this->welcome_model->insert_row_return_id('items', $ins);
 
@@ -946,9 +949,8 @@ HDOC;
 	function ajax_edit_item() {
 		
 		$data = real_escape_array($this->input->post());
-		
         $errors = '';
-        if (trim($data['item_desc']) == '')
+        if (trim($_POST['item_desc']) == '')
         {
 			$errors[] = 'You must provide a description!';
         }
@@ -968,8 +970,9 @@ HDOC;
         }
         else
         {
-			$ins['item_desc'] = $data['item_desc'];
+			$ins['item_desc'] = $_POST['item_desc'];
 			$ins['item_price'] = $data['item_price'];
+			// echo "<pre>"; print_r($ins); exit;
 			
 			$updt_item = $this->welcome_model->update_row_item('items', $ins, $data['itemid']);
 			$res = array();

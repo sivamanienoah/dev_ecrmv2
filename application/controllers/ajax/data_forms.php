@@ -41,11 +41,12 @@ class Data_forms extends crm_controller {
 			{
 				$desc_content = "\n" . $desc_content;
 			}
-			
-			$data['item_desc'] = stripslashes($desc_content);
+
+			$data['item_desc'] = $desc_content;
 			$data['item_price'] = $row[0]['item_price'];
 			$data['itemid'] = $id;
 		}
+
 		$this->load->view('helper/quote_item_edit', $data);
 	}
 	
