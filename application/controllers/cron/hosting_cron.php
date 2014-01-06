@@ -132,7 +132,7 @@ class hosting_cron extends crm_controller {
     }
     
 	//For Hosting
-    function hosting_remainder()
+    function hosting_reminder()
 	{
 		$today = date('Y-m-d'); 
 		$endDate = date('Y-m-d', strtotime("+30 days"));
