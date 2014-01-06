@@ -128,7 +128,7 @@ class hosting_cron extends crm_controller {
 	else {
 		$data['res'] = "No Domain Expriy Date found";
 	}	
-		$this->load->view('hosting_cron_view', $data);
+		//$this->load->view('hosting_cron_view', $data);
     }
     
 	//For Hosting
@@ -247,7 +247,7 @@ class hosting_cron extends crm_controller {
 	else {
 		$data['res'] = "No Hosting expriy date found";
 	}	
-		$this->load->view('hosting_cron_view', $data);
+		//$this->load->view('hosting_cron_view', $data);
     }
 	
    
