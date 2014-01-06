@@ -54,10 +54,10 @@ $userdata = $this->session->userdata('logged_in_user');
 							<?php if($this->session->userdata('edit')==1) { ?>
 								<a href="email_template/add_email_template/update/<?php echo $emailtemp['email_tempid'] ?>">Edit &raquo; </a> 
 							<?php } else { echo "Edit"; } ?> 
-							<?php if($this->session->userdata('delete')==1) { ?>
-								&nbsp;|&nbsp;
-								<a class="delete" href="email_template/delete_email_template/update/<?php echo $emailtemp['email_tempid'] ?>"> Delete &raquo; </a> 
-							<?php } ?>
+							<?php //if($this->session->userdata('delete')==1) { ?>
+								<!--&nbsp;|&nbsp;
+								<a class="delete" href="email_template/delete_email_template/update/<?php echo $emailtemp['email_tempid'] ?>"> Delete &raquo; </a--> 
+							<?php //} ?>
 						</td>
 					</tr>
 					<?php $sno++; ?>
