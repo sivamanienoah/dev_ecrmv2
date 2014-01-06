@@ -51,8 +51,9 @@ else if (date('l', $start_date_stamp) == 'Tuesday')
 $user_tasks = $unallocated_tasks = array();
 
 $uio = $userdata['userid'];
+$b = array();
 foreach($created_by as $value) {
-	$b[] = $value[created_by];						
+	$b[] = $value['created_by'];					
 }
 
 foreach ($results as $result)
