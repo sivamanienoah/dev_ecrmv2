@@ -124,7 +124,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$taskcontent .= '<td class="fontbld">Task Description</td>';
 			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';
 			foreach ($task_notify_msg as $arr) {
-				// $task_desc = word_limiter($arr['task'], 4);
 				$task_desc = character_limiter($arr['task'], 50);
 				$taskcontent .= '<tr><td><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a></td><td>'.date('d-m-Y', strtotime($arr['end_date'])).'</td></tr>';
 			}
@@ -207,7 +206,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	//$access_limit= array();
 	// echo "<pre>"; print_r($menu_items_vals); 
 	foreach($menu_items_vals as $menu_items) {		 
-		//echo "<pre>";print_r($menu_items);
 		$strcmp = strcmp(strtolower($this->uri->segment(1)), strtolower($menu_items[3]));	
 		if(($strcmp==0 && $i==0 )) 
 		{ 
@@ -248,15 +246,17 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		}
 	}  	 
 	// echo $this->uri->segment(1);
-	if(empty($master_id)) {
+	if(empty($master_id) && isset($userdata['role_id'])) {
 		$masters = formMasterDetail($this->uri->segment(1), $userdata['role_id']);
 		$access_limit 			= array();
 		//check as array
-		$master_id			 	= $masters[0]['master_parent_id'];
-		$access_limit['view'] 	= $masters[0]['view'];
-		$access_limit['add'] 	= $masters[0]['add'];
-		$access_limit['edit'] 	= $masters[0]['edit'];
-		$access_limit['delete'] = $masters[0]['delete'];
+		if (!empty($masters[0])) {
+			$master_id			 	= $masters[0]['master_parent_id'];
+			$access_limit['view'] 	= $masters[0]['view'];
+			$access_limit['add'] 	= $masters[0]['add'];
+			$access_limit['edit'] 	= $masters[0]['edit'];
+			$access_limit['delete'] = $masters[0]['delete'];
+		}
 	}
 
 	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
@@ -265,7 +265,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['accesspage']	= $access_limit['view'];
 	$array['add']			= $access_limit['add']; 
 	$array['edit']			= $access_limit['edit']; 
-	$array['delete']		= $access_limit['delete']; 
+	$array['delete']		= $access_limit['delete'];
 	$array['viewlead'] 		= $viewLead;
 	$array['addlead'] 		= $addLead;
 	$array['editlead'] 		= $editLead;
@@ -283,7 +283,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	?>
 
 <script>
-var fid = "<?php echo $userdata['userid'] ?>";
+var fid = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : '' ?>";
 
 $(function() {
 	$('#grid-close').click(function() {
