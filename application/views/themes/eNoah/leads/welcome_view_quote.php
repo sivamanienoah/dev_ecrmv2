@@ -503,7 +503,7 @@ function qcOKlog() {
 
 $(function(){
 	
-	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -7, maxDate: '+12M'});
+	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: 0, maxDate: '+12M'});
 	
 	$('.task-list-item').livequery(function(){
 		$(this).hover(
@@ -1130,7 +1130,7 @@ $(function(){
 							<td>Planned Start Date</td>
 							<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" /></td>
 							<td>Planned End Date</td>
-							<td><input type="text" name="task_end_date" class="edit-end-date textfield width100px" readonly /></td>
+							<td><input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px"/></td>
 						</tr>
 						<tr>
 							<td>Actual Start Date</td>
@@ -1512,6 +1512,7 @@ $(function(){
 					$(function(){
 						$(".cancel").click(function(){
 							$('#querylead_table').slideToggle();
+							$('#query, #query_file').val('');
 						})
 					})
 				</script>
