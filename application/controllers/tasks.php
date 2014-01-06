@@ -26,7 +26,6 @@ class Tasks extends crm_controller {
 		$data['results'] = $res[0];
 		$data['start_date_stamp'] = $res[1];
 		$data['page_title'] = 'Task List for '. date('l, jS F y', $res[1]);
-		$data['hosting']=$res[2];
 
 		$this->load->view('tasks/full_view', $data);
 	}
@@ -46,26 +45,9 @@ class Tasks extends crm_controller {
 		{
 			$data['user_accounts'] = $users['user'];
 		}
-		/*
-		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 		
-		$temp_cont = $cq->result_array();
-		
-		$data['assigned_contractors'] = array();
-		
-		foreach ($temp_cont as $tc)
-		{
-			$data['assigned_contractors'][] = $tc['userid_fk'];
-		} 
-		
-		$this->db->select(array('lead_title','lead_id'));
-		$this->db->where_not_in('lead_title','');
-		$project = $this->db->get($this->cfg['dbpref'] . 'leads');
-		
-		$data['project'] = $project->result_array();
-		*/
 		$data['created_by'] = $this->task_model->get_task_created_by();
-		
+
 		$this->load->view('tasks/main_view', $data);
 	}
 	
