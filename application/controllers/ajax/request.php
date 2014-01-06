@@ -381,16 +381,16 @@ function add_job_task($update = 'NO', $random = 'NO')
 		
 		$json['error'] = FALSE;
 		if($update == 'NO') {
-		$ins['jobid_fk'] = (int) $_POST['lead_id'];
+			$ins['jobid_fk'] = (int) $_POST['lead_id'];
 		}
 		$ins['task'] = $_POST['job_task'];
 		$ins['userid_fk'] = $_POST['task_user'];
-		$ins['hours'] = (int) $_POST['task_hours'];
-		$ins['mins'] = (int) $_POST['task_mins'];
+		// $ins['hours'] = (int) $_POST['task_hours'];
+		// $ins['mins'] = (int) $_POST['task_mins'];
 		$ins['remarks'] = $_POST['remarks'];
 		if($update == 'NO') {
 		//$ins['approved'] = ($this->userdata['is_pm'] == 1 ) ? 1 : 0;
-		$ins['approved'] = 1;
+			$ins['approved'] = 1;
 		}
 		if($update == 'NO') {
 			$ins['created_by'] = $this->userdata['userid'];
@@ -429,20 +429,10 @@ function add_job_task($update = 'NO', $random = 'NO')
 			$errors[] = 'Invalid task end time!';
 		}*/
 		
-		if ($this->userdata['is_pm'] != 1)
+		if ($start_date < strtotime(date('Y-m-d')) && $update == 'NO')
 		{
-			if ($start_date < strtotime(date('Y-m-d')) && $update == 'NO')
-			{
-				$errors[] = 'Start date cannot be earlier than today!';
-			}
-			
-			/*if ($end_date < strtotime(date('Y-m-d')))
-			{
-				$errors[] = 'End date cannot be earlier than today!';
-			}	*/		
-			
+			$errors[] = 'Start date cannot be earlier than today!';
 		}
-		
 		if ($end_date < $start_date)
 		{
 			$errors[] = 'End date cannot be earlier than start date';
@@ -515,7 +505,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 				$taskowner = $this->user_model->get_user($ins['userid']);
 				$taskAssignedTo=$taskowner[0]['first_name'].'&nbsp;'.$taskowner[0]['last_name'];
 				$taskAssignedToEmail=$taskowner[0]['email'];
-				$hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
+				// $hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
 
 				$json['html'] = $this->format_task($ins);
 				
@@ -580,7 +570,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 					$task_owner = $this->user_model->get_user($ins['userid_fk']);
 					$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
 					$taskSetToEmail=$task_owner[0]['email'];
-					$hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
+					// $hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
 					$job_url = ($ins['jobid_fk'] != 0) ? $this->config->item('base_url')."welcome/view_quote/{$ins['jobid_fk']}" : '';
 					$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
@@ -731,7 +721,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		$uid = $uidd['userid'];
 		$lead_assigns = $this->db->query("SELECT userid,first_name FROM {$this->cfg['dbpref']}users ");
 		$data['lead_assign'] = $lead_assigns->result_array();
-		
+
 		$res = array();
 		
 		$taskid = nl2br($array['taskid']);
@@ -757,7 +747,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 		$select = "SELECT ".$this->cfg['dbpref']."users.first_name,".$this->cfg['dbpref']."users.userid FROM ".$this->cfg['dbpref']."users WHERE ".$this->cfg['dbpref']."users.userid=".$array['created_by'];	
 		$dd = $this->db->query($select);
 		$res = $dd->result();
-		#$$html = $this->session->set_userdata('taskownerid', $res[0]->userid);		
+		#$html = $this->session->set_userdata('taskownerid', $res[0]->userid);		
 		if (!isset($array['user_label']))
 		{
 			$array['user_label'] = '';
@@ -774,34 +764,32 @@ function add_job_task($update = 'NO', $random = 'NO')
 				$opts .= "<option value=\"{$o}\"{$sel}>{$o}%</option>";
 			}
 			
+			$task_edit = "<button type=\"submit\" onclick=\"openEditTask('{$array['taskid']}'); return false;\">Edit Task</button>";
+			$task_approve = ($array['approved'] == 0) ? "<button type=\"submit\" onclick=\"approveTask('{$array['taskid']}'); return false;\">Approve Task</button>" : '';
 			
-				$task_edit = "<button type=\"submit\" onclick=\"openEditTask('{$array['taskid']}'); return false;\">Edit Task</button>";
-				$task_approve = ($array['approved'] == 0) ? "<button type=\"submit\" onclick=\"approveTask('{$array['taskid']}'); return false;\">Approve Task</button>" : '';
-			
-			if($array['userid'] == $this->userdata['userid']) {			
+		if($array['userid'] == $this->userdata['userid']) {		
 			$own_task =  <<< EOD
-			<select name="set_task_status_{$array['taskid']}" id="set_task_status_{$array['taskid']}" class="set-task-status">
+				<select name="set_task_status_{$array['taskid']}" id="set_task_status_{$array['taskid']}" class="set-task-status">
 				{$opts}
-			</select>
-			<div class="buttons">
-				<button type="submit" onclick="setTaskStatus('{$array['taskid']}'); return false;">Set Status</button>
-				{$task_edit}
-			</div>		
+				</select>
+				<div class="buttons">
+					<button type="submit" onclick="setTaskStatus('{$array['taskid']}'); return false;">Set Status</button>
+					{$task_edit}
+				</div>
 EOD;
 }
 
 		if ($array['created_by'] == $array['userid'] &&  $array['userid'] == $this->userdata['userid']) {
-		$own_task =  <<< EOD
-			<select name="set_task_status_{$array['taskid']}" id="set_task_status_{$array['taskid']}" class="set-task-status">
-				{$opts}
-			</select>
-			<div class="buttons">
-				<button type="submit" onclick="setTaskStatus('{$array['taskid']}'); return false;">Set Status</button>
-				
-			</div>		
+			$own_task =  <<< EOD
+				<select name="set_task_status_{$array['taskid']}" id="set_task_status_{$array['taskid']}" class="set-task-status">
+					{$opts}
+				</select>
+				<div class="buttons">
+					<button type="submit" onclick="setTaskStatus('{$array['taskid']}'); return false;">Set Status</button>
+					
+				</div>		
 EOD;
-		
-		}
+		} 
 
 		
 		$is_admin = '';
@@ -902,8 +890,7 @@ EOD;
 							</td>
 							<td colspan="3" class="item task-owner">
 								{$res[0]->first_name}
-							</td>	
-													
+							</td>
 						</tr>
 						
 						<tr style="display:none;">
@@ -913,7 +900,6 @@ EOD;
 							<td class="task-uid" >
 								{$uid}
 							</td>	
-													
 						</tr>
 						<tr style="display:none;">
 							<td valign="top">
@@ -921,8 +907,7 @@ EOD;
 							</td>
 							<td class="task-cid" >
 								{$taskcid}
-							</td>	
-													
+							</td>
 						</tr>
 						<tr>
 							<td>
@@ -934,7 +919,6 @@ EOD;
 							<td style="display:none" >
 								Hours
 							</td>
-							
 						</tr>
 						
 						
@@ -985,7 +969,6 @@ EOD;
 								{$is_admin}
 							</td>
 						</tr>
-							
 					</table>
 EOD;
 		
@@ -1007,8 +990,7 @@ EOD;
 		$json['error'] = TRUE;
 		$taskid = (isset($_POST['taskid'])) ? $_POST['taskid'] : 0;
 		//mychanges
-			$taskstat = $_POST['task_status'];	
-
+		$taskstat = (isset($_POST['task_status'])) ? $_POST['task_status'] : 0;
 		//mychanges ends
 		$q = $this->db->get_where($task_table, array('taskid' => $taskid));
 		
@@ -1042,7 +1024,7 @@ EOD;
 					$end_date=$data->end_date;
 					$hours=$data->hours;
 					$mins=$data->mins;
-					$hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
+					// $hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
 					$start_date=date('d-m-Y', strtotime($start_date));
 					$end_date=date('d-m-Y', strtotime($end_date));
 					$completed_date=date('l, jS F y h:iA', strtotime($upd['marked_complete']));
@@ -1153,7 +1135,7 @@ EOD;
 				$end_date=$data->end_date;
 				$hours=$data->hours;
 				$mins=$data->mins;
-				$hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
+				// $hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
 				$start_date=date('d-m-Y', strtotime($start_date));
 				$end_date=date('d-m-Y', strtotime($end_date));
 				$task_name=$data->task;
