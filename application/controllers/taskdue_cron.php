@@ -53,7 +53,7 @@ class taskdue_cron extends crm_controller {
 	    			
 	    			if(!empty($data['assigned'])){    				
 		    			$content = $this->load->view('cron/taskdue_cron',$data,true);
-		    			//$this->send_mail($content, 'akarthik@enoahisolution.com', 'Pending tasks');
+		    			// $this->send_mail($content, 'ssriram@enoahisolution.com', 'Pending tasks');
 		    			$this->send_mail($content, $user_mail[$user], 'Pending tasks');		    			
 			    		//echo $content;
 		    			
@@ -67,7 +67,7 @@ class taskdue_cron extends crm_controller {
 		    		
 		    		if(!empty($data['created'])){
 			    		$content = $this->load->view('cron/taskdue_cron',$data,true);
-			    		//$this->send_mail($content, 'akarthik@enoahisolution.com', 'Task to be followed up');
+			    		// $this->send_mail($content, 'ssriram@enoahisolution.com', 'Task to be followed up');
 			    		$this->send_mail($content, $user_mail[$user], 'Pending tasks');
 			    		//echo $content;
 		    		}
@@ -82,7 +82,7 @@ class taskdue_cron extends crm_controller {
     {
     	$config['mailtype'] = 'html';
 		$from = 'webmaster@enoahisolution.com';
-		//$to_user = 'akarthik@enoahisolution.com';
+		// $to_user = 'ssriram@enoahisolution.com';
 	
 		$this->email->initialize($config);
 		$this->email->clear();
