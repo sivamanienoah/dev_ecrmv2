@@ -21,6 +21,7 @@ $(function(){
 		var base_url = site_base_url;
 		
 		var url = base_url+"report/report_lead_owner/excelExport";
+		
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 		  '<input type="hidden" name="start_date" value="' +start_date+ '" />' +
