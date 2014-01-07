@@ -220,7 +220,7 @@ return false;
 }
 
 function processDeleteRegion(id) {
-	window.location.href = 'regionsettings/region_delete/delete/'+id;
+	window.location.href = site_base_url+'regionsettings/region_delete/delete/'+id;
 }
 
 //Check status before delete the Country
@@ -254,7 +254,7 @@ return false;
 }
 
 function processDeleteCountry(id) {
-	window.location.href = 'regionsettings/country_delete/delete/'+id;
+	window.location.href = site_base_url+'regionsettings/country_delete/delete/'+id;
 }
 
 //Check status before delete the State
@@ -288,7 +288,7 @@ return false;
 }
 
 function processDeleteState(id) {
-	window.location.href = 'regionsettings/state_delete/delete/'+id;
+	window.location.href = site_base_url+'regionsettings/state_delete/delete/'+id;
 }
 
 //Check status before delete the location
@@ -322,7 +322,7 @@ return false;
 }
 
 function processDeleteLocation(id) {
-	window.location.href = 'regionsettings/location_delete/delete/'+id;
+	window.location.href = site_base_url+'regionsettings/location_delete/delete/'+id;
 }
 
 function cancelDel() {
