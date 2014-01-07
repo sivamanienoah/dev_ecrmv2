@@ -1552,7 +1552,7 @@ function is_project() {
 				if (data.error) {
 					alert(data.errormsg);
 					$.unblockUI();
-					window.location.href = "welcome/edit_quote" + "/" + curr_job_id +"/";
+					window.location.href = site_base_url+"welcome/edit_quote" + "/" + curr_job_id +"/";
 					//alert('status Changed');
 				} else {
 					//alert(qstatus);
@@ -1568,7 +1568,7 @@ function is_project() {
 
 function reloadWithMessagePjt(str, statusid) {
 	$.get('ajax/request/set_flash_data/' + str,{},function(data){
-		document.location.href = 'project/view_project/' + curr_job_id;
+		document.location.href = site_base_url+'project/view_project/' + curr_job_id;
 		$.unblockUI();
 	});
 }

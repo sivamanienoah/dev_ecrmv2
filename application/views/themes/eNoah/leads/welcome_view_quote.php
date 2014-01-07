@@ -53,10 +53,10 @@ function validateRequestForm()
 <!--Code Added for the Pagination in Comments Section-Ends Here-->
 
 <script type="text/javascript">
-var unid = <?php  echo $userdata['userid'] ; ?>;
-var belong_to = <?php echo $quote_data['belong_to'] ; ?>;
-var lead_assign = <?php echo $quote_data['lead_assign'] ; ?>;
-var role_id = <?php echo $userdata['role_id'] ; ?>;
+var unid = <?php  echo $userdata['userid'] ?>;
+var belong_to = <?php echo $quote_data['belong_to'] ?>;
+var lead_assign = <?php echo $quote_data['lead_assign'] ?>;
+var role_id = <?php echo $userdata['role_id'] ?>;
 	
 var lead_services = [];
 lead_services['not_select'] = '';
@@ -536,8 +536,6 @@ $(function(){
 		beforeActivate: function( event, ui ) {
 			if (ui.newPanel[0].id=='jv-tab-4')
 				loadExistingTasks();
-			// if (ui.newPanel[0].id=='jv-tab-5')
-				// populateJobOverview();
 		}
 	});
 
@@ -696,7 +694,9 @@ $(function(){
 					
 					<table border="0" cellpadding="0" cellspacing="0" class="client-comm-options">
 						<tr>
-							<td rowspan="2" class="action-td" valign="top" align="right"><a href="#" onclick="addClientCommOptions(); $(this).blur(); return false;">Communicate<br />to Client via</td>
+							<td rowspan="2" class="action-td" valign="top" align="right">
+								<a href="#" onclick="addClientCommOptions(); $(this).blur(); return false;">Communicate<br />to Client via</a>
+							</td>
 							<td><input type="checkbox" name="client_comm_phone" value="<?php echo (isset($quote_data['phone_1'])) ? $quote_data['phone_1'] : '' ?>"> <span>Phone</span></td>
 							<td><input type="checkbox" name="client_comm_sms" value="<?php echo (isset($quote_data['phone_3'])) ? $quote_data['phone_3'] : '' ?>"> <span>SMS</span></td>
 						</tr>
@@ -927,7 +927,6 @@ $(function(){
 						<?php } ?>
 						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
 					</div>
-				</form>
 				<?php } ?>
 				
 				<?php
@@ -950,7 +949,6 @@ $(function(){
 				<li><a href="<?php echo current_url() ?>#jv-tab-2">Estimate</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-				<!--li><a href="<?php echo current_url() ?>#jv-tab-5">Milestones</a></li-->
 				<li><a href="<?php echo current_url() ?>#jv-tab-6">Customer</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-7">Query</a></li>
 			</ul>
@@ -1157,201 +1155,6 @@ $(function(){
 				</form>
 			</div><!-- id: jv-tab-4 end -->
 			
-			<!--div id="jv-tab-5">
-				<form id="milestone-management" onsubmit="return false;">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-					<h3>Milestones</h3>
-					
-					<table id="milestone-clone" style="display:none;">
-						<tr>
-							<td class="milestone">
-								<input type="text" name="milestone[]" class="textfield width250px" />
-							</td>
-							<td class="milestone-date">
-								<input type="text" name="milestone_date[]" class="textfield width80px pick-date" />
-							</td>
-							<td class="milestone-status">
-								<select name="milestone_status[]" class="textfield width80px">
-									<option value="0">Scheduled</option>
-									<option value="1">In Progress</option>
-									<option value="2">Completed</option>
-								</select>
-							</td>
-							<td class="milestone-action" valign="middle">
-								&nbsp; <a href="#" onclick="removeMilestoneRow(this); return false;">Remove</a>
-							</td>
-						</tr>
-					</table>
-					
-					<table id="milestone-data">
-						<thead>
-							<tr>
-								<th align="left">Item</th>
-								<th>Date</th>
-								<th>Status</th>
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
-					<div class="buttons">
-						<button type="submit" class="positive" onclick="addMilestoneField();">Add New</button>
-						<button type="submit" class="positive" onclick="saveMilestones();">Save List</button>
-						<button type="submit" class="positive" onclick="emailMilestones();">Email Timeline</button>
-					</div>
-					<?php } ?>
-				</form>
-				
-				<script type="text/javascript">
-					var qc_job_title = '<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>';
-					var milestones_cached_row = false;
-					function addMilestoneField()
-					{
-						if ( ! milestones_cached_row)
-						{
-							milestones_cached_row = $('#milestone-clone tr:first');
-						}
-						
-						milestones_cached_row.clone().appendTo('#milestone-data tbody');
-						$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-					}
-					
-					function removeMilestoneRow(el)
-					{
-						var agree=confirm("Are you sure you want to delete this file?");
-							if (agree) {
-								$(el).parent().parent().remove();
-							}
-							var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-						
-						$('#jv-tab-5').block({
-											message:'<img src="assets/img/ajax-loader.gif" />',
-											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-										});
-						
-						$.post(
-							'ajax/request/save_job_overview/' + curr_job_id,
-							data,
-							function(detail)
-							{
-								if ($.trim(detail) != '')
-								{
-									$('#milestone-data tbody').html(detail);
-									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-								}
-								$('#jv-tab-5').unblock();
-							}
-						);
-						return false;
-					}
-					
-					function saveMilestones()
-					{
-						var error = false;
-						
-						$('#milestone-data tbody tr').each(function(){
-							if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
-							{
-								error = 'All milestones and dates are required!';
-							}
-						});
-						
-						if (error)
-						{
-							alert(error);
-							return;
-						}
-						
-						var data = $('#milestone-management').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-						
-						$('#jv-tab-5').block({
-											message:'<img src="assets/img/ajax-loader.gif" />',
-											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-										});
-						
-						$.post(
-							'ajax/request/save_job_overview/' + curr_job_id,
-							data,
-							function(detail)
-							{
-								if ($.trim(detail) != '')
-								{
-									$('#milestone-data tbody').html(detail);
-									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-								}
-								$('#jv-tab-5').unblock();
-							}
-						);
-					}
-					
-					function emailMilestones()
-					{
-						var obj = $('#milestone-data tbody tr');
-						
-						if (obj.length == 0)
-						{
-							alert('No records are there to email!');
-							return false;
-						}
-						var email_data = '';
-						obj.each(function(){
-							var ddate = $('.milestone-date input', $(this)).val();
-							var mstone = $('.milestone input', $(this)).val();
-							var mstat = $('.milestone-status select option:selected', $(this)).val();
-							
-							email_data += ddate + ' : ' + mstone;
-							
-							if (mstat == 2)
-							{
-								email_data += ' [completed]';
-							}
-							
-							if (mstat == 0)
-							{
-								email_data += ' [Scheduled]';
-							}
-							
-							if (mstat == 1)
-							{
-								email_data += ' [In Progress]';
-							}
-							
-							email_data += '\n';
-						});
-						
-						$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
-						$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-						
-						return false;
-					}
-					
-					function populateJobOverview()
-					{
-						$('#jv-tab-5').block({
-											message:'<img src="assets/img/ajax-loader.gif" />',
-											css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-										});
-						$.get(
-							'ajax/request/get_job_overview/' + curr_job_id,
-							{},
-							function(detail)
-							{
-								if ($.trim(detail) != '')
-								{
-									$('#milestone-data tbody').html(detail);
-									$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-								}
-								$('#jv-tab-5').unblock();
-							}
-						);
-					}
-				</script>
-			</div--><!-- id: jv-tab-5 end -->
-
 			<div id="jv-tab-6">
 				<form id="customer-detail-read-only" onsubmit="return false;">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1461,7 +1264,7 @@ $(function(){
 						<table id="querylead_table" class="layout add_query" style="display: none">								
 							<tr>
 								<td>Query:</td>
-								<div id="query_form" style="display:none;" ><input type='text' value='query' name='replay' id='replay' /></div>
+									<div id="query_form" style="display: none"><input type='text' value='query' name='replay' id='replay' /></div>
 								<td><textarea name="query" id="query" cols="20" rows="3" style="width: 270px; height: 70px;"></textarea></td>
 							</tr>
 							<tr>
