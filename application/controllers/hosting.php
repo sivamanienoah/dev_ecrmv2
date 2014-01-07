@@ -37,18 +37,20 @@ class Hosting extends crm_controller {
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
 		$rules['domain_name'] = "trim|required|callback_domain_check";
+
 		if (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'ENOAH' && $_POST['domain_mgmt'] != 'CM') {	
 			//$rules['domain_expiry'] = "trim|required|callback_is_valid_domain_date";
 			$rules['domain_expiry'] = "trim|required";
 		}
 		$this->validation->set_rules($rules);
-		$fields['customer_id'] = "Customer Name";
-		$fields['domain_name'] = "Domain Name";
+		$fields['customer_id']	 = "Customer Name";
+		$fields['domain_name']	 = "Domain Name";
 		$fields['domain_expiry'] = "Domain Name Expiry";
-		$fields['expiry_date'] = "Expiry Date";
+		$fields['expiry_date']	 = "Expiry Date";
         $fields['domain_status'] = 'Domain Status';
-		$fields['ssl'] = 'SSL';
-		$fields['other_info'] = 'Other information';
+		$fields['ssl']			 = 'SSL';
+		$fields['other_info']	 = 'Other information';
+		
 		$this->validation->set_fields($fields);
         if (!$this->input->post('expiry_date') && !$update)
         $this->validation->expiry_date = date('d-m-Y', strtotime('+1 year'));
