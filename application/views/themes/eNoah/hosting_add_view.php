@@ -71,7 +71,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					</td>
                 </tr>
 				<tr>
-					<td>Package Name: </td>
+					<td>Package Name: *</td>
 					<td>
 						<select name="packageid_fk[]" id="pack_name" class="textfield" size=6 multiple=multiple style="width:300px;">
 							<option value="">Select Package</option> 
