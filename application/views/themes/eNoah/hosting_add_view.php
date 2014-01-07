@@ -73,21 +73,25 @@ $usernme = $this->session->userdata('logged_in_user');
 				<tr>
 					<td>Package Name: </td>
 					<td>
-						<select name="packageid_fk[]" class="textfield" size=6 multiple=multiple style="width:300px;">
-						<option value="">Select Package</option>
-						<?php
-						if(!empty($package)){
-						foreach ($package as $val) {
-							if(!empty($p[$val['package_id']])) { 
-								$s= ' selected="selected"'; 
-								if(strtotime($p[$val['package_id']])>0) $k=' - ('.date('d-m-Y',strtotime($p[$val['package_id']])).')';
-								else $k='';
+						<select name="packageid_fk[]" id="pack_name" class="textfield" size=6 multiple=multiple style="width:300px;">
+							<option value="">Select Package</option> 
+							<?php
+							if(!empty($package)) {
+								foreach ($package as $val) {
+									if(!empty($p[$val['package_id']])) { 
+										$s= ' selected="selected"'; 
+										if(strtotime($p[$val['package_id']])>0) $k=' - ('.date('d-m-Y',strtotime($p[$val['package_id']])).')';
+										else $k='';
+									} else {
+										$s=''; $k='';
+									}
+									echo '<option value="'.$val['package_id'].'"'.$s.'>'.$val['package_name'].$k.'</option>';
+								} 
 							}
-							else { $s=''; $k='';}
-							echo '<option value="'.$val['package_id'].'"'.$s.'>'.$val['package_name'].$k.'</option>';
-					 } }?>
+							?>
 						</select> 
 					</td>
+					<td id="showerrmsg" class="dialog-err"></td>
                 </tr>
 				<tr>
 					<td>Hosting Expiry Date:</td>
@@ -112,7 +116,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td>&nbsp;</td>
 					<td>
                         <div class="buttons">
-							<button type="submit" name="update_customer" class="positive">
+							<button type="submit" name="update_customer" class="positive" onclick="return validatePackname()">
 								<?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Account
 							</button>
 						</div>
@@ -138,3 +142,13 @@ $usernme = $this->session->userdata('logged_in_user');
 	hosting_userid = "<?php echo $usernme['userid']; ?>";
 </script>
 <script type="text/javascript" src="assets/js/hosting/hosting_add_view.js"></script>
+<script>
+	function validatePackname() {
+		if(document.getElementById('pack_name').value=='') {
+			$('#showerrmsg').empty();
+			$('#showerrmsg').show();
+			$('#showerrmsg').html('Select any option');
+			return false;
+		}		
+	}
+</script>
