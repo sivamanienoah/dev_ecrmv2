@@ -3,14 +3,6 @@
 *@
 */
 
-	/* $(function(){
-		$(".data-table").tablesorter({widthFixed: true, widgets: ['zebra']});
-		$('.data-table tr, .data-table th').hover(
-			function() { $(this).addClass('over'); },
-			function() { $(this).removeClass('over'); }
-		);
-	}); */
-	
 $(function() {
 	dtPjtTable();
 });	
