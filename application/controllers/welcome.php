@@ -1150,7 +1150,7 @@ HDOC;
 
 					$this->email_template_model->sent_email($param);
 					
-					$this->session->set_flashdata('confirm', array("Item deleted from the system"));
+					$this->session->set_flashdata('confirm', array("Lead deleted from the system"));
 
 					redirect('welcome/quotation');
 				}

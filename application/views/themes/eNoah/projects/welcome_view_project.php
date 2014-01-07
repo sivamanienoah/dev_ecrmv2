@@ -211,9 +211,10 @@
 					<option value="40">40</option> 
 				</select> 
 			</div>
-			<?php }	else {
+			<?php 
+			} else {
 				echo "No Comments Found."; 
-				}
+			}
 			?>
 			<!--Code Changes for Pagination in Comments Section -- Ends here -->
 		</div>

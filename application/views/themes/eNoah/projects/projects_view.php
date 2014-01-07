@@ -186,7 +186,7 @@
 		<?php 
 		} 
 		else 
-		{ 
+		{
 			echo "You have no rights to access this page";
 		}
 		?>
