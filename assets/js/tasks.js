@@ -255,17 +255,15 @@ function editTask()
 var tasks_loaded = false;
 
 function loadExistingTasks()
-{
+{	
 	if (tasks_loaded)
 	{
 		return false;
 	}
-	
 	$('#jv-tab-4').block({
-	// $(this).blockUI({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
+		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+	});
 	$.get(
 		'ajax/request/get_job_tasks/' + curr_job_id,
 		{},
