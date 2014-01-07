@@ -55,8 +55,12 @@ $(document).ready(function(){
 			return false;
 		});
 	});
+	
+	
 });
-
+$.ajaxSetup ({
+    cache: false
+	});
 </script>
 </body>
 </html>

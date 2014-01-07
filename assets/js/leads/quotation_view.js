@@ -19,9 +19,10 @@
 		keyword = 'null';
 	if(viewlead==1) {	
 		document.getElementById('advance_search').style.display = 'none';	
-	} 
-	var sturl = "welcome/advance_filter_search/";
-	
+	}
+
+	//for ie ajax loading issue appending random number
+	var sturl = site_base_url+"welcome/advance_filter_search/?"+Math.random();
 	$('#advance_search_results').load(sturl);
 
 //For Advance Filters functionality.
@@ -44,6 +45,7 @@ $("#advanceFilters").submit(function() {
 	 $.ajax({
 	   type: "POST",
 	   url: site_base_url+"welcome/advance_filter_search",
+	   cache: false,
 	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 	   success: function(data){
 			$('#advance_search_results').html(data);
@@ -163,7 +165,7 @@ function loadState() {
 
 //For Locations
 $('#statename').change(function() {
-		loadLocations();
+	loadLocations();
 });
 
 function loadLocations() {
