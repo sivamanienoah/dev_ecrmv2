@@ -1351,6 +1351,27 @@ class Welcome extends crm_controller {
 			//merge cell A1 until D1
 			//$this->excel->getActiveSheet()->mergeCells('A1:D1');
 			//set aligment to center for that merged cell (A1 to D1)
+			
+			//Set width for cells
+			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);			
+			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+			
+			//cell format
+			$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+			
 			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
 			$filename='Lead Dashboard.xls'   ; //save our workbook as this file name
