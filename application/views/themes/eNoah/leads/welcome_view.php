@@ -893,6 +893,8 @@ h3 .small {
 
 				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">
 					<div>
+						<p><label>Lead No</label></p>
+						<p><input type="text" name="lead_no" id="lead_no" class="textfield width300px" value="<?php echo $quote_data['invoice_no'] ?>" disabled /></p>
 						<p><label>Lead Title</label></p>
 						<p><input type="text" name="lead_title" id="job_title_edit" class="textfield width300px" value="<?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?>" /></p>
 						<p><label>Lead Source</label></p>
@@ -902,7 +904,7 @@ h3 .small {
 							foreach ($lead_source_edit as $leadedit) 
 							{
 							?>
-								<option value="<?php echo  $leadedit['lead_source_id'] ?>"<?php echo  ($quote_data['lead_source'] == $leadedit['lead_source_id']) ? ' selected="selected"' : '' ?>><?php echo  $leadedit['lead_source_name'] ?></option>
+								<option value="<?php echo $leadedit['lead_source_id'] ?>"<?php echo ($quote_data['lead_source'] == $leadedit['lead_source_id']) ? ' selected="selected"' : '' ?>><?php echo  $leadedit['lead_source_name'] ?></option>
 							<?php
 							}
 							?>
