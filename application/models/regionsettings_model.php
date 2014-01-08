@@ -127,6 +127,7 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'stat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'stat.countryid ');
 		$this->db->join($this->cfg['dbpref'].'region as re','re.regionid='. 'cn.regionid');
+		$this->db->where('stat.inactive', 0);
 		$customers = $this->db->get();   
 		$samle=  $customers->result_array();
         return $samle;
@@ -143,7 +144,7 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'stat.modified_by ','left');
 		$this->db->join($this->cfg['dbpref'].'country as cn','cn.countryid='. 'stat.countryid ');
 		$this->db->join($this->cfg['dbpref'].'region as re','re.regionid='. 'cn.regionid');
-		$this->db->where('stat.inactive', 0);
+		// $this->db->where('stat.inactive', 0);
 		$customers = $this->db->get();   
 		$samle=  $customers->result_array();
         return $samle;
