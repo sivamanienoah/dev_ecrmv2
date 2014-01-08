@@ -5,11 +5,7 @@
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<!--script type="text/javascript" src="assets/js/easypaginate.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
 <script type="text/javascript">var this_is_home = true;</script>
-<!--Code Added for the Pagination in Comments Section-Starts Here-->
 <script type="text/javascript">
 
 /*
@@ -41,8 +37,6 @@ function validateRequestForm()
 		}
 	?>
 </div>
-
-<!--Code Added for the Pagination in Comments Section-Ends Here-->
 
 <script type="text/javascript">
 var unid = <?php  echo $userdata['userid'] ?>;
