@@ -66,7 +66,6 @@ $userdata = $this->session->userdata('logged_in_user');
 	<?php } else { echo "You have no rights to access this page"; } ?>
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_service/manage_expect_worth_cur.js"></script>
 <?php

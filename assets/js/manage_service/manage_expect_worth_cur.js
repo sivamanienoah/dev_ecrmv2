@@ -47,4 +47,20 @@ function cancelDel() {
     $.unblockUI();
 }
 
+$(function() {
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 1, "asc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": true,
+		"bAutoWidth": false,	
+	});
+});
+
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
