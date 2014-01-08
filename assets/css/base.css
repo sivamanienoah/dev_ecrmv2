@@ -1441,6 +1441,7 @@ Back to top button
 	text-transform: uppercase;
 	text-decoration: none;
 	color: #a3a3a3;
+	outline: medium none transparent;
 	/* background color transition */
 	-webkit-transition: 1s;
 	-moz-transition: 1s;
