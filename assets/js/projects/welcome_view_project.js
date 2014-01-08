@@ -11,13 +11,6 @@
 		$('#project_lead').change( function() {
 		});
 
-		$("#lead_log_list")
-		.tablesorter({widthFixed: true, widgets: ['zebra']}) 
-		.tablesorterPager({container: $("#pager"),positionFixed: false});
-		
-		$("#lead_query_list")
-		.tablesorter({widthFixed: true, widgets: ['zebra']}) 
-		.tablesorterPager({container: $("#pager1"),positionFixed: false});
 		$("#show-con").hide();
 		$("#show-btn").click(function(){
 			$("#show-con").slideToggle("slow"); 
@@ -63,6 +56,22 @@
 				$('#project-member').val($('#select2').val());
 				return !$('#select2 option:selected').remove().appendTo('#select1');  
 		   });
+		   
+		   $('.logstbl').dataTable( {
+			"iDisplayLength": 10,
+			"sPaginationType": "full_numbers",
+			"bInfo": false,
+			"bPaginate": true,
+			"bProcessing": true,
+			"bServerSide": false,
+			"bLengthChange": false,
+			"bSort": false,
+			"bFilter": false,
+			"bAutoWidth": false,
+			"oLanguage": {
+			  "sEmptyTable": "No Comments Found..."
+			}
+		});
 	});
 
  ////////////////////////----------------------------X---------------------////////////////////////////

@@ -5,21 +5,13 @@
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<script type="text/javascript" src="assets/js/easypaginate.js"></script>
+<!--script type="text/javascript" src="assets/js/easypaginate.js"></script>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
+<script type="text/javascript" src="assets/js/tablesort.pager.js"></script-->
 <script type="text/javascript">var this_is_home = true;</script>
 <!--Code Added for the Pagination in Comments Section-Starts Here-->
 <script type="text/javascript">
-$(document).ready(function() {
-	$("#lead_log_list")
-	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager"),positionFixed: false});
-	
-	$("#lead_query_list")
-	.tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager1"),positionFixed: false});
-});
+
 /*
 function validateRequestForm()
 {
@@ -272,10 +264,10 @@ function runAjaxFileUpload() {
 							var lead_details = "welcome/lead_fileupload_details/<?php echo $quote_data['lead_id'] ?>/"+data.file_name+ "/" +userid;														
 							$('#lead_result').load(lead_details);
 						}
-						var _file_link = '<a href="/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
-						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
+						var _file_link = '<a href="crm_data/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
+						var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'crm_data/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
 						if(role_id == 1 || lead_assign == unid || belong_to == unid ) {
-						 var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
+							var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'crm_data/files/<?php echo $quote_data['lead_id'] ?>/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>'; 
 						}
 						$('#'+_uid).html(_del_link + _file_link);
 					}
@@ -348,6 +340,7 @@ function QueryAjaxFileUpload() {
 		}
 	 
 	// $('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#querylist');
+	$('#querylist').empty();
 	$('<div id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></div>').appendTo('#querylist');
 	$.ajaxFileUpload
 	(
@@ -389,11 +382,11 @@ function QueryAjaxFileUpload() {
 						}
 						
 			
-var _file_link = '<td><table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15"><tbody><tr><td valign="top" width="80">Query '+reply+'</td><td colspan="3" class="task">'+decodeURIComponent(data.lead_query)+'</td></tr>';	
+var _file_link = '<table border="0" cellpadding="5" cellspacing="5" class="task-list-item" id="task-table-15"><tbody><tr><td valign="top" width="80">Query '+reply+'</td><td colspan="3" class="task">'+decodeURIComponent(data.lead_query)+'</td></tr>';	
 	_file_link += '<tr><td>Date</td><td class="item user-name task" rel="59" width="100">'+data.up_date+'</td>';
 	_file_link += '<td width="80">'+reply+' By</td><td class="item hours-mins task" rel="4:0">'+data.firstname+' '+data.lastname+'</td></tr>';
 	_file_link += '<tr><td colspan="1" valign="top">File Name</td><td colspan="3">'+fname+'</td></tr>';
-	_file_link += '<tr><td class="task" colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('+data.replay_id+')">Reply</button></td></tr></table></td>';
+	_file_link += '<tr><td class="task" colspan="4" valign="top"><button class="positive" style="float:right;cursor:pointer;" id="replay" onclick="getReplyForm('+data.replay_id+')">Reply</button></td></tr></table>';
 
 						<?php
 						if ($userdata['level'] > 1) echo '_del_link = "";';
@@ -827,37 +820,19 @@ $(function(){
 			</span>
 			<h4>Comments</h4>
 
-			<!--Code Changes for Pagination in Comments Section- Starts here -->
-			<?php if ($log_html != "") { ?>
-			<table width="100%" id="lead_log_list" class="log-container"> 
-				<thead> 
+			<table width="100%" id="lead_log_list" class="log-container logstbl">
+				<thead>
 					<tr> 
-						<th></th> 
-					</tr> 
+						<th>&nbsp;</th> 
+					</tr>
 				</thead>
 				<tbody>
-				<?php 
-					echo $log_html;
-				?>				
-				</tbody> 
+					<?php 
+						echo $log_html;
+					?>
+				</tbody>
 			</table>
-			<div id="pager">
-				<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-				<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-				<select class="pagesize"> 
-					<option selected="selected" value="10">10</option> 
-					<option value="20">20</option> 
-					<option value="30">30</option> 
-					<option value="40">40</option> 
-				</select> 
-			</div>
-			<?php } else { echo "No Comments Found."; } ?>
-			<!--Code Changes for Pagination in Comments Section- Ends here -->
-		</div>
+	</div>
 
 		<div class="side1">
 			<h2 class="job-title">
@@ -882,7 +857,8 @@ $(function(){
 					<?php //} ?>	
 					
 					<div class="q-init-details">
-						<p class="clearfix"><label>Lead Title</label>  <span><?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
+						<p class="clearfix"><label>Lead No</label>  <span><?php echo $quote_data['invoice_no'] ?></span></p>
+						<p class="clearfix"><label>Lead Title</label>  <span><?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
 						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
@@ -1284,31 +1260,17 @@ $(function(){
 							</div>
 						<?php } ?>
 						
-						<table width="100%" id="lead_query_list" class="existing-query-list"> 
-							<thead> <tr> <th></th> </tr> 
+						<table width="100%" id="lead_query_list" class="existing-query-list queriestbl"> 
+							<thead> 
+								<tr> 
+									<th>&nbsp;</th> 
+								</tr> 
 							</thead>
 								<tbody id="query-file-list">
-								<tr id="querylist"></tr>
-								<?php echo $query_files1_html; ?>			
+									<tr id="querylist"><td>&nbsp;</td></tr>
+									<?php echo $query_files1_html; ?>			
 								</tbody>
 						</table>
-						<?php if (!empty($query_files1_html)) { ?>
-							<div id="pager1">
-								<?php echo '&nbsp;';?>
-								<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-								<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-								<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-								<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-								<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-								<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-								<select class="pagesize"> 
-									<option selected="selected" value="10">10</option> 
-									<option value="20">20</option> 
-									<option value="30">30</option> 
-									<option value="40">40</option> 
-								</select> 
-							</div>
-						<?php } ?>
 					</form>
 				</div>
 				<script>
@@ -1318,6 +1280,39 @@ $(function(){
 							$('#query, #query_file').val('');
 						})
 					})
+					
+					$('.logstbl').dataTable( {
+						"iDisplayLength": 10,
+						"sPaginationType": "full_numbers",
+						"bInfo": false,
+						"bPaginate": true,
+						"bProcessing": true,
+						"bServerSide": false,
+						"bLengthChange": false,
+						"bSort": false,
+						"bFilter": false,
+						"bAutoWidth": false,
+						"oLanguage": {
+						  "sEmptyTable": "No Comments Found..."
+						}
+					});
+					
+					$('.queriestbl').dataTable( {
+						"iDisplayLength": 5,
+						"sPaginationType": "full_numbers",
+						"bInfo": false,
+						"bPaginate": true,
+						"bProcessing": true,
+						"bServerSide": false,
+						"bLengthChange": false,
+						"bSort": false,
+						"bFilter": false,
+						"bAutoWidth": false,
+						"oLanguage": {
+						  "sEmptyTable": "No Queries Found..."
+						}
+					});
+					
 				</script>
 			</div>
 		</div>

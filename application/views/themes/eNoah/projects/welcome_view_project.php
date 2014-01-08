@@ -5,8 +5,6 @@
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/tablesort.pager.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 
 <!--Code Added for the Pagination in Comments Section -- Starts Here-->
@@ -183,12 +181,11 @@
 			</span>
 			<h4>Job History</h4>
 
-			<!--Code Changes for Pagination in Comments Section -- Starts here -->
-			<?php if ($log_html != "") { ?>
-			<table width="100%" id="lead_log_list" class="log-container"> 
+			
+			<table width="100%" id="lead_log_list" class="log-container logstbl"> 
 				<thead> 
 					<tr> 
-						<th></th> 
+						<th>&nbsp;</th> 
 					</tr> 
 				</thead>
 				<tbody>
@@ -197,26 +194,7 @@
 				?>				
 				</tbody> 
 			</table>
-			<div id="pager">
-				<a class="first"> First </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="prev"> &laquo; Prev </a> <?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<input type="text" size="2" class="pagedisplay"/><?php echo '&nbsp;&nbsp;&nbsp;'; ?> <!-- this can be any element, including an input --> 
-				<a class="next"> Next &raquo; </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<a class="last"> Last </a><?php echo '&nbsp;&nbsp;&nbsp;'; ?>
-				<span>No. of Records per page:<?php echo '&nbsp;'; ?> </span>
-				<select class="pagesize"> 
-					<option selected="selected" value="10">10</option> 
-					<option value="20">20</option> 
-					<option value="30">30</option> 
-					<option value="40">40</option> 
-				</select> 
-			</div>
-			<?php 
-			} else {
-				echo "No Comments Found."; 
-			}
-			?>
-			<!--Code Changes for Pagination in Comments Section -- Ends here -->
+
 		</div>
 		
         <div class="pull-left side1"> 
