@@ -40,6 +40,8 @@ class Data_forms extends crm_controller {
 			if (preg_match("/^\n/", $desc_content))
 			{
 				$desc_content = "\n" . $desc_content;
+			} else {
+				$desc_content = "\n" . $desc_content;
 			}
 
 			$data['item_desc'] = $desc_content;

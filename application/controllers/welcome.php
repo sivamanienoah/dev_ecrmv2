@@ -127,7 +127,7 @@ class Welcome extends crm_controller {
             if (!empty($getLogs)) {
                 $log_data = $getLogs;
                 $this->load->helper('url');
-                
+
                 foreach ($log_data as $ld) {
 					$user_data = $this->welcome_model->get_user_data_by_id($ld['userid_fk']);
 					
@@ -143,19 +143,18 @@ class Welcome extends crm_controller {
 					
 					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';					
 
-$table = <<<HDOC
-<tr id="log" class="log{$stick_class}">
-<td id="log" class="log{$stick_class}">
-<p class="data log{$stick_class}">
-        <span class="log{$stick_class}">{$fancy_date}</span>
-    {$user_data[0]['first_name']} {$user_data[0]['last_name']}
-    </p>
-    <p class="desc log{$stick_class}">
-        {$log_content}
-    </p>
-</td>
-</tr>
-HDOC;
+					$table = '
+					<tr class="log'.$stick_class.'">
+						<td class="log'.$stick_class.'">
+							<p class="data log'.$stick_class.'">
+								<span class="log'.$stick_class.'">'.$fancy_date.'</span>
+								'.$user_data[0]['first_name'].' '.$user_data[0]['last_name'].'
+							</p>
+							<p class="desc log'.$stick_class.'">
+								'.$log_content.'
+							</p>
+						</td>
+					</tr>';
 
                     $data['log_html'] .= $table;
 					unset($table, $user_data, $user, $log_content);
@@ -169,18 +168,17 @@ HDOC;
 		    $f_dir = $fcpath . 'files/' . $id . '/'; 
 			$data['job_files_html'] = $this->welcome_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
 			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
-			
+
 			/**
 			 * Get URLs associated with this job
 			 */
 			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
 			
-			/*
 			//this code will be reuse for calculate the actual worth of project
+			/*
 			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
 								FROM `{$this->cfg['dbpref']}items`
 								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
-			// echo $this->db->last_query(); exit;
 			$data['actual_worth'] = $actual_worths->result_array();	
 			echo "<pre>"; print_r($data['actual_worth']);
 			*/
@@ -1320,7 +1318,7 @@ HDOC;
 			//display only date
 			$this->excel->getActiveSheet()->setCellValue('I'.$i, date('d-m-Y', strtotime($excelarr['date_created'])));
 			$this->excel->getActiveSheet()->setCellValue('J'.$i, date('d-m-Y', strtotime($excelarr['date_modified'])));
-			$this->excel->getActiveSheet()->setCellValue('K'.$i, $excelarr['usfname'].' '.$excelarr['uslname']);
+			$this->excel->getActiveSheet()->setCellValue('K'.$i, $excelarr['usfname'].' '.$excelarr['usslname']);
 			$this->excel->getActiveSheet()->setCellValue('L'.$i, $excelarr['lead_stage_name']);
 			if($excelarr['proposal_expected_date'] != null) {
 				$this->excel->getActiveSheet()->setCellValue('M'.$i, date('d-m-Y', strtotime($excelarr['proposal_expected_date'])));

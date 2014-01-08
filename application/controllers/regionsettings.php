@@ -35,22 +35,22 @@ class Regionsettings extends crm_controller {
 	*/
     public function levels_view($id=null)
 	{
-			$data['customers'] = $this->regionsettings_model->level_map($id);
-			if(sizeof($data['customers'])>0){
-				foreach($data['customers'] as $cus){
-					$data['level_name'][]    = $cus['level_name'];
-					$data['region_name'][]   = $cus['region_name'];
-					$data['country_name'][]  = $cus['country_name'];
-					$data['state_name'][]    = $cus['state_name'];
-					$data['location_name'][] = $cus['location_name'];		
-				}
+		$data['customers'] = $this->regionsettings_model->level_map($id);
+		if(sizeof($data['customers'])>0){
+			foreach($data['customers'] as $cus){
+				$data['level_name'][]    = $cus['level_name'];
+				$data['region_name'][]   = $cus['region_name'];
+				$data['country_name'][]  = $cus['country_name'];
+				$data['state_name'][]    = $cus['state_name'];
+				$data['location_name'][] = $cus['location_name'];		
 			}
-			$data['level_name']    = array_unique($data['level_name']);
-			$data['region_name']   = array_unique($data['region_name']);
-			$data['country_name']  = array_unique($data['country_name']);
-			$data['state_name']    = array_unique($data['state_name']);
-			$data['location_name'] = array_unique($data['location_name']);
-			$this->load->view('regionsettings/mapping_view',$data);
+		}
+		$data['level_name']    = array_unique($data['level_name']);
+		$data['region_name']   = array_unique($data['region_name']);
+		$data['country_name']  = array_unique($data['country_name']);
+		$data['state_name']    = array_unique($data['state_name']);
+		$data['location_name'] = array_unique($data['location_name']);
+		$this->load->view('regionsettings/mapping_view',$data);
 	}
 
 	/*
