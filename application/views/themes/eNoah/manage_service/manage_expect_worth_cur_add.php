@@ -47,7 +47,7 @@
 							</button>
 						</div>
 						<div class="buttons">
-                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>manage_service/expect_worth_cur_add'">
+                           <button type="button" class="negative" onclick="location.href='<?php echo base_url(); ?>manage_service/manage_expt_worth_cur'">
 								Cancel
 							</button>
                         </div>
