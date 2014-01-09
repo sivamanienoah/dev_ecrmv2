@@ -9,13 +9,13 @@ class Userlogin extends crm_controller {
         $this->load->model('regionsettings_model'); 
     }
 	
-    function Userlogin() {
-       
+    function Userlogin() 
+	{
         parent::__construct();
-        
     }
     
-    function index() {
+    function index()
+	{
         /*
         * destroy session
         * show login details
@@ -38,7 +38,8 @@ class Userlogin extends crm_controller {
         $this->load->view('login_view');
     }
     
-    function process_login() {
+    function process_login() 
+	{
 		if ( $userdata = $this->login_model->process_login($this->input->post('email'),  sha1($this->input->post('password'))) ) {
 			$menu_items=$this->role_model->UserModuleList($userdata[0]['userid']);
 			// echo $this->db->last_query();exit;
