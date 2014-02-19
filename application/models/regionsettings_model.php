@@ -10,7 +10,7 @@ class Regionsettings_model extends crm_model {
 	*@Get region List (Active records only)
 	*@Region Settings Model
 	*/
-    public function region_list() { 
+    public function region_list() {
         $userdata = $this->session->userdata('logged_in_user');
 		
 		if ($userdata['level'] == 2 || $userdata['level'] == 3 || $userdata['level'] == 4 || $userdata['level'] == 5) {
@@ -36,7 +36,7 @@ class Regionsettings_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users as creuser','creuser.userid='.'reg.created_by ','left');
 		$this->db->join($this->cfg['dbpref'].'users as moduser','moduser.userid='. 'reg.modified_by ','left');
 		if ($userdata['level'] != 1) {
-			$this->db->where_in('reg.regionid',$regions_ids);
+			$this->db->where_in('reg.regionid', $regions_ids);
 		}
 		$this->db->where('reg.inactive', 0);
 		$customers  = $this->db->get();
