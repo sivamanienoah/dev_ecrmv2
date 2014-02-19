@@ -60,7 +60,7 @@ class Dashboard_model extends crm_model {
 		$this->db->order_by('jb.lead_stage', 'asc');
 		$query = $this->db->get();
 		$tot_query =  $query->result_array();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); EXIT;
 		return $tot_query;
 	}
 	
@@ -649,7 +649,7 @@ class Dashboard_model extends crm_model {
 		JOIN ".$this->cfg['dbpref']."customers ON custid = custid_fk
 		WHERE lead_stage IN ('".$stg."')
 		AND lead_status = 1".$where_level." ".$condn);
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
 		return $age_query->row_array();
 	}
 	
