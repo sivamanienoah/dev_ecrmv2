@@ -498,7 +498,7 @@ class Regionsettings extends crm_controller {
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && isset($post_data['update_location'])) {
                 //update
 				$user_Detail                = $this->session->userdata('logged_in_user');
-				$update_data['modified_by'] = $user_Detail['userid'];			
+				$update_data['modified_by'] = $user_Detail['userid'];		
 				$update_data['modified']    = date('Y-m-d H:i:s');
 				unset($update_data['regionid']);				
 				unset($update_data['countryid']);
@@ -558,7 +558,7 @@ class Regionsettings extends crm_controller {
 			$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
 				//delete
-				if ($this->regionsettings_model->delete_region($id, $update_data)) {
+				if ($this->regionsettings_model->delete_region($id)) {
 					$this->session->set_flashdata('confirm', array('Region Deleted!'));
 					redirect('regionsettings/region_settings/region');                  
 				}                
@@ -579,7 +579,7 @@ class Regionsettings extends crm_controller {
 			$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
 				//delete
-				if ($this->regionsettings_model->delete_country($id, $update_data)) {
+				if ($this->regionsettings_model->delete_country($id)) {
 					$this->session->set_flashdata('confirm', array('Country Deleted!'));
 					redirect('regionsettings/region_settings/country');                  
 				}                
@@ -600,7 +600,7 @@ class Regionsettings extends crm_controller {
 		$this->login_model->check_login();
 			if ($delete == 'delete' && preg_match('/^[0-9]+$/', $id)) {
                 //delete
-                if ($this->regionsettings_model->delete_state($id, $update_data)) {
+                if ($this->regionsettings_model->delete_state($id)) {
                     $this->session->set_flashdata('confirm', array('State Deleted!'));
                     redirect('regionsettings/region_settings/state');                  
                 }                
@@ -823,12 +823,13 @@ class Regionsettings extends crm_controller {
 	*@User Controller
 	*/
 	//Function for adding New Country, New State & New Location in the Customer Details page. -- Starts here.
-	public function country_add_ajax($ajax_update) {
+	public function country_add_ajax($ajax_update) 
+	{
 		$post_data                   = real_escape_array($this->input->post());
-		$ajax_update['country_name'] = $post_data['country_name'];
-		$ajax_update['created_by']   = $post_data['created_by'];
-		$ajax_update['modified_by']  = $post_data['created_by'];
 		$ajax_update['regionid']     = $post_data['regionid'];
+		$ajax_update['country_name'] = $post_data['country_name'];
+		$ajax_update['created_by']   = $this->userdata['userid'];
+		$ajax_update['modified_by']  = $this->userdata['userid'];
 		$ajax_update['created']      = date('Y-m-d H:i:s');
 		$ajax_update['modified']     = date('Y-m-d H:i:s');
 		
@@ -842,7 +843,7 @@ class Regionsettings extends crm_controller {
 	*@Satate Add Ajax for Region Settings
 	*@User Controller
 	*/
-	public function state_add_ajax($ajax_update) {
+	function state_add_ajax($ajax_update) {
 		
 		$post_data                  = real_escape_array($this->input->post());
 		$ajax_update['state_name']  = $post_data['state_name'];
@@ -861,14 +862,14 @@ class Regionsettings extends crm_controller {
 	*@Location Add Ajax for Region Settings
 	*@User Controller
 	*/
-	public function location_add_ajax($ajax_update) {
-
+	function location_add_ajax($ajax_update) 
+	{
 		$post_data = real_escape_array($this->input->post());
 	
 		$ajax_update['location_name'] = $post_data['location_name'];
-		$ajax_update['created_by']    = $post_data['created_by'];
-		$ajax_update['modified_by']   = $post_data['created_by'];
 		$ajax_update['stateid']       = $post_data['stateid'];
+		$ajax_update['created_by']    = $post_data['created_by'];
+		$ajax_update['modified_by']   = $post_data['created_by'];		
 		$ajax_update['created']       = date('Y-m-d H:i:s');
 		$ajax_update['modified']      = date('Y-m-d H:i:s');
 		
@@ -876,6 +877,7 @@ class Regionsettings extends crm_controller {
 		$locationId = $this->db->insert_id();
 		$this->getLocation($ajax_update['stateid'],$locationId);
 	}
+	
 	//Function for adding New Country, New State & New Location in the Customer Details page. -- Ends here.
 
 	/*
@@ -1283,6 +1285,8 @@ class Regionsettings extends crm_controller {
 		$opt .= "</div>";
 		echo $opt;
 	}
+	
+	
 }
 
 ?>
