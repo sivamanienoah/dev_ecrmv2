@@ -1598,7 +1598,7 @@ HDOC;
 			$keyword = mysql_real_escape_string($_POST['keyword']);
 			
 					
-			$sql = "SELECT * FROM `crms_customers`, `crms_leads` a WHERE `custid_fk` = `custid` AND lead_stage IN (1,4,2,5,3,7,6,9,10,11,12,13) AND ( `lead_title` LIKE '%{$keyword}%' OR `invoice_no` LIKE '%{$keyword}%' OR `custid_fk` IN ( SELECT `custid` FROM `crms_customers` WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%' OR `first_name` LIKE '%{$keyword}%' OR `last_name` LIKE '%{$keyword}%' OR `company` LIKE '%{$keyword}%' ) ) ORDER BY `lead_stage`, `lead_title`";
+			$sql = "SELECT * FROM '".$this->cfg['dbpref']."'customers,'".$this->cfg['dbpref']."'leads a WHERE `custid_fk` = `custid` AND lead_stage IN (1,4,2,5,3,7,6,9,10,11,12,13) AND ( `lead_title` LIKE '%{$keyword}%' OR `invoice_no` LIKE '%{$keyword}%' OR `custid_fk` IN ( SELECT `custid` FROM '".$this->cfg['dbpref']."'customers WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%' OR `first_name` LIKE '%{$keyword}%' OR `last_name` LIKE '%{$keyword}%' OR `company` LIKE '%{$keyword}%' ) ) ORDER BY `lead_stage`, `lead_title`";
 			
 			$resul = $this->welcome_model->search_res($keyword);
 					
