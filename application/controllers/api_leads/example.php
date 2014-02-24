@@ -45,6 +45,8 @@ class Example extends REST_Controller
     {
 	$this->load->config('custom_config');
 	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm") {
+	 print_r($_SERVER);
+	 exit;
         //$this->some_model->updateUser( $this->get('id') );
         //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),"oppurtunity_email"=>$this->post('email'),"oppurtunity_phone"=>$this->post('phone'),"oppurtunity_name"=>$this->post('name'),"expect_worth_id"=>"","custid_fk"=>0,"expect_worth_id"=>0);
