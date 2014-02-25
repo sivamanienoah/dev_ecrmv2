@@ -6,7 +6,7 @@
   curl_setopt($curl_handle, CURLOPT_POSTFIELDS, "name=enoahcrm&email=sdsdsd@sss.com&phone=111111&enquiry=We have two options here, CURLOPT_POST which turns HTTP POST on, and CURLOPT_POSTFIELDS which contains an array of our post data to submit. This can be used to submit data to ");
   curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
   curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
-  curl_setopt($curl_handle,CURLOPT_HTTPHEADER,array('domainname:10.0.9.367'));
+  curl_setopt($curl_handle,CURLOPT_HTTPHEADER,array('domainname:10.0.9.36'));
   curl_setopt($curl_handle,CURLOPT_AUTOREFERER,1);
   $buffer = curl_exec($curl_handle);
   curl_close($curl_handle);
