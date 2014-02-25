@@ -44,7 +44,8 @@ class Example extends REST_Controller
     function user_post()
     {
 	$this->load->config('custom_config');
-	  
+	  print_r($_SERVER);
+	  exit;
 	  $query  = $this->db->select('*');
 	  $query = $this->db->from("crm_keys");
       $query = $this->db->get();
