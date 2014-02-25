@@ -44,9 +44,6 @@ class Example extends REST_Controller
     function user_post()
     {
 	$this->load->config('custom_config');
-	echo "<pre>";
-	  print_r($_SERVER);
-	  exit;
 	  $query  = $this->db->select('*');
 	  $query = $this->db->from("crm_keys");
       $query = $this->db->get();
@@ -55,7 +52,7 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm" && $_SERVER['SERVER_NAME']==trim($servername)) {
+	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm" && $_SERVER['REMOTE_ADDR']==trim($servername)) {
         $message = array('message' => 'ADDED');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
 						  "oppurtunity_email"=>$this->post('email'),
