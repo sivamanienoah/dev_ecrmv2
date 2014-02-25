@@ -46,7 +46,7 @@ class Example extends REST_Controller
 	$this->load->config('custom_config');
 	  
 	  $query  = $this->db->select('*');
-	  $query = $this->db->from($this->config->config["crm"]["dbpref"]."keys");
+	  $query = $this->db->from("crm_keys");
       $query = $this->db->get();
 	  $servername = "";
 	  $servername_arr  = $query->row_array();
@@ -54,8 +54,6 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	echo $server_name;
-	exit;
 	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm") {
         //$this->some_model->updateUser( $this->get('id') );
         //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
