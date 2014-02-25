@@ -54,7 +54,7 @@ class Example extends REST_Controller
 	          $servername = $servername_arr['server_name'];
 	  }
 
-	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm" && $_SERVER['SERVER_NAME']==trim($servername)) {
+	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm") {
         //$this->some_model->updateUser( $this->get('id') );
         //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
