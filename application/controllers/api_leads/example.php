@@ -44,12 +44,28 @@ class Example extends REST_Controller
     function user_post()
     {
 	$this->load->config('custom_config');
+	  
+	  $query  = $this->db->select('*');
+	  $query = $this->db->from($this->config->config["crm"]["dbpref"]."keys");
+      $query = $this->db->get();
+	  $servername = "";
+	  $servername_arr  = $query->row_array();
+	  
+	  if(!empty($servername_arr)){
+	          $servername = $servername_arr['server_name'];
+	  }
+	echo $server_name;
+	exit;
 	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm") {
-	 print_r($_SERVER);
-	 exit;
         //$this->some_model->updateUser( $this->get('id') );
         //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
-		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),"oppurtunity_email"=>$this->post('email'),"oppurtunity_phone"=>$this->post('phone'),"oppurtunity_name"=>$this->post('name'),"expect_worth_id"=>"","custid_fk"=>0,"expect_worth_id"=>0);
+		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
+						  "oppurtunity_email"=>$this->post('email'),
+						  "oppurtunity_phone"=>$this->post('phone'),
+						  "oppurtunity_name"=>$this->post('name'),
+						  "expect_worth_id"=>"",
+						  "custid_fk"=>0,
+						  "expect_worth_id"=>0);
 		$this->db->insert($this->config->config["crm"]["dbpref"]."oppurtunities",$arrinset);
         $this->response($message, 200); // 200 being the HTTP response code
 		}
