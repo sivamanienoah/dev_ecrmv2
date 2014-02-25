@@ -50,7 +50,7 @@ class Example extends REST_Controller
       $query = $this->db->get();
 	  $servername = "";
 	  $servername_arr  = $query->row_array();
-	  
+	  print_r($servername_arr);
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
