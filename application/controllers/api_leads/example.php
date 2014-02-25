@@ -52,9 +52,6 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	  echo "<pre>";
-	  print_r($_SERVER);
-	  exit;
 	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm" && $_SERVER['REMOTE_ADDR']==trim($servername)) {
         $message = array('message' => 'ADDED');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
