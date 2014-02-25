@@ -4,6 +4,7 @@ $cfg = $this->config->item('crm');
 
 $vid=$this->session->userdata['logged_in_user']['role_id'];
 $viewLeads = getAccess(51, $vid);
+$viewEnquiries = getAccess(130, $vid);
 $viewTasks = getAccess(108, $vid);
 $viewPjts  = getAccess(110, $vid);
 
@@ -198,6 +199,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$parent_id='';
 	
 	$viewLead = $addLead = $editLead = $deleteLead = '';
+	$viewEnquiry = $addEnquiry = $editEnquiry = $deleteEnquiry = '';
 	$viewTask = $addTask = $editTask = $deleteTask = '';
 	$viewPjt = $addPjt = $editPjt = $deletePjt = '';
 	$addImpCus = '';
@@ -224,6 +226,13 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		   $addLead    = $menu_items[9];
 		   $editLead   = $menu_items[10];
 		   $deleteLead = $menu_items[11];
+		}
+		if($menu_items['0'] == 130)  //Enquiries
+		{ 
+		   $viewEnquiry   = $menu_items[8];
+		   $addEnquiry    = $menu_items[9];
+		   $editEnquiry   = $menu_items[10];
+		   $deleteEnquiry = $menu_items[11];
 		}
 		if($menu_items['0'] == 108) //Tasks
 		{ 
@@ -268,6 +277,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['viewlead'] 		= $viewLead;
 	$array['addlead'] 		= $addLead;
 	$array['editlead'] 		= $editLead;
+	$array['viewenquiry'] 		= $viewEnquiry;
+	$array['addenquiry'] 		= $addEnquiry;
+	$array['editenquiry'] 		= $editEnquiry;
+	$array['deleteenquiry'] 	= $deleteEnquiry;
 	$array['deletelead'] 	= $deleteLead;
 	$array['viewtask'] 		= $viewTask;
 	$array['addtask'] 		= $addTask;
