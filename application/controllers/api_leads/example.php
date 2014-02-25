@@ -53,7 +53,8 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	  echo $_SERVER['SERVER_NAME'];
+	  echo $_SERVER['SERVER_NAME']."<br>";
+	   echo $servername."<br>";
 	  exit;
 	 if($_SERVER["HTTP_ENOAHCRM"]=="enoahcrm" && $_SERVER['SERVER_NAME']==$servername) {
         //$this->some_model->updateUser( $this->get('id') );
