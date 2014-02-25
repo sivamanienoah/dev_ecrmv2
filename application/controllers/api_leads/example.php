@@ -44,6 +44,7 @@ class Example extends REST_Controller
     function user_post()
     {
 	$this->load->config('custom_config');
+	echo "<pre>";
 	  print_r($_SERVER);
 	  exit;
 	  $query  = $this->db->select('*');
