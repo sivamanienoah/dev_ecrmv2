@@ -8,6 +8,7 @@
   curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
   curl_setopt($curl_handle,CURLOPT_HTTPHEADER,array('domainname:10.0.9.36'));
   curl_setopt($curl_handle,CURLOPT_AUTOREFERER,1);
+   curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, "http://www.google.com");
   $buffer = curl_exec($curl_handle);
   curl_close($curl_handle);
   if (empty($buffer)){
