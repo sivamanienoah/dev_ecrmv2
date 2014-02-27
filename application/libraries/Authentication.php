@@ -28,9 +28,18 @@ class CI_Authentication {
 
   function validate_api($username, $password)
   {
-     if($username=="admin" && $password=="1234")
+     $CI =& get_instance();
+     $CI->db->select('*');
+	 $query = $CI->db->where('id','1');
+	 $query = $CI->db->from('crm_keys');
+	 $query  = $CI->db->get();
+	 $arrresult = $query->row_array();
+	 if(!empty($arrresult))
 	 {
-	    return true;
+		 if($username==$arrresult['username'] && md5($password)==$arrresult['password'])
+		 {
+			   return true;
+		 }
 	 }
   }
 
