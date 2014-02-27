@@ -68,7 +68,7 @@ $config['rest_auth'] = 'basic';
 | '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
 |
 */
-$config['auth_source'] = 'validate_api';
+$config['auth_source'] = 'library';
 
 /*
 |--------------------------------------------------------------------------
