@@ -52,7 +52,7 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	 if($_SERVER["HTTP_DOMAINNAME"]==trim($servername)) {
+	
         $message = array('message' => 'ADDED');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
 						  "oppurtunity_email"=>$this->post('email'),
@@ -63,7 +63,6 @@ class Example extends REST_Controller
 						  "expect_worth_id"=>0);
 		 $this->db->insert($this->config->config["crm"]["dbpref"]."oppurtunities",$arrinset);
          $this->response($message, 200); // 200 being the HTTP response code
-		}
     }
     
     function user_delete()
