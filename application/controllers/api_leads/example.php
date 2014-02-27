@@ -52,6 +52,7 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
+	  echo   gethostbyaddr($_SERVER['REMOTE_ADDR']);
 	 if($_SERVER["HTTP_DOMAINNAME"]==trim($servername)) {
         $message = array('message' => 'ADDED');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
