@@ -66,11 +66,11 @@ $config['crm']['max_allowed_users'] = array(
 											);
 											
 $config['crm']['director_emails']  = array(
-                                    'Admin' => 'ssriram@enoahisolution.com',
+                                    'Admin' => 'kbalasubramanian@enoahisolution.com',
                                    );		
 
 $config['crm']['management_emails'] = array(
-									'Senior Management' => 'ssriram@enoahisolution.com',
+									'Senior Management' => 'kbalasubramanian@enoahisolution.com',
 								    );
 
 # keep in sync with above
