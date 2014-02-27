@@ -26,6 +26,10 @@ $userdata = $this->session->userdata('logged_in_user');
 					<?php 
 
 					if ($this->session->userdata('viewenquiry')==1) { ?><a href="<?php echo  base_url(); ?>enquiries/view_enquiries/<?php echo  $filter_result->oppurtunity_id ?>">View</a><?php } else echo "View"; ?>
+					<?php 
+					if ($this->session->userdata('editenquiry')==1  || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) {
+					echo ' | <a href="enquiries/edit_enquiry/' . $filter_result->oppurtunity_id . '">Edit</a>'; ?>
+					<?php } ?> 
 					<?php
 					if ($this->session->userdata('deleteenquiry')==1 || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
 						$lead_tle = str_replace("'", "\'", $filter_result->oppurtunity_name);
