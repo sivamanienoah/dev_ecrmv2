@@ -47,46 +47,8 @@ class Enquiries extends crm_controller {
 	
 	public function advance_filter_search() 
 	{
-		$filt = real_escape_array($this->input->post());
-		if (count($filt)>0) {
-			$stage 		  = $filt['stage'];
-			$customer 	  = $filt['customer'];
-			$worth   	  = $filt['worth'];
-			$owner 		  = $filt['owner'];
-			$leadassignee = $filt['leadassignee'];
-			$regionname   = $filt['regionname'];
-			$countryname  = $filt['countryname'];
-			$statename 	  = $filt['statename'];
-			$locname 	  = $filt['locname'];
-			$lead_status  = $filt['lead_status'];
-			$lead_indi 	  = $filt['lead_indi'];
-			$keyword 	  = $filt['keyword'];
-			$excel_arr 	  = array();
-			foreach ($filt as $key => $val) {
-				$excel_arr[$key] = $val;
-			}
-			// print_r($excel_arr); exit;
-			$this->session->set_userdata(array("excel_download"=>$excel_arr));
-		} else {
-			$this->session->unset_userdata(array("excel_download"=>''));
-		}
-		// echo "<pre>"; print_r($this->session->userdata);
 		$filter_results = $this->enquiries_model->get_filter_results();	
-		// echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
-
-		$data['stage'] 		  = $stage;
-		$data['customer']	  = $customer;
-		$data['worth'] 		  = $worth;
-		$data['owner'] 		  = $owner;
-		$data['leadassignee'] = $leadassignee;
-		$data['regionname']   = $regionname;
-		$data['countryname']  = $countryname;
-		$data['statename'] 	  = $statename;
-		$data['locname'] 	  = $locname;
-		$data['lead_status']  = $lead_status;
-		$data['lead_indi']    = $lead_indi;
-		$data['keyword'] 	  = $keyword;
 		$this->load->view('enquiries/enquiries_list_view', $data);
 	}
 	
@@ -97,6 +59,22 @@ class Enquiries extends crm_controller {
 	  $get_enquiry_detail = $this->enquiries_model->get_enquiry_detail($id);
 	  $data['get_enquiry_detail'] = $get_enquiry_detail;
 	  $this->load->view('enquiries/view_enquiry', $data);
+	}
+	
+	function edit_enquiry($id)
+	{
+	    $data['categories'] = $this->welcome_model->get_categories();
+		$c = count($data['categories']);
+		for ($i = 0; $i < $c; $i++) {
+			$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
+		}
+		$data['lead_source'] = $this->welcome_model->get_lead_sources();
+		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
+		$data['job_cate'] = $this->welcome_model->get_lead_services();
+		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+		$get_enquiry_detail = $this->enquiries_model->get_enquiry_detail($id);
+	    $data['get_enquiry_detail'] = $get_enquiry_detail;
+		$this->load->view('enquiries/enquiry_to_lead_view', $data);
 	}
 	
 	function delete_enquiry($id)
