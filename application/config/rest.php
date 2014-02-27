@@ -56,7 +56,7 @@ $config['rest_realm'] = 'REST API';
 |	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
 |
 */
-$config['rest_auth'] = false;
+$config['rest_auth'] = 'basic';
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ $config['rest_auth'] = false;
 | '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
 |
 */
-$config['auth_source'] = 'ldap';
+$config['auth_source'] = 'validate_api';
 
 /*
 |--------------------------------------------------------------------------
@@ -81,8 +81,8 @@ $config['auth_source'] = 'ldap';
 | In other cases override the function _perform_library_auth in your controller
 |
 */
-$config['auth_library_class'] = '';
-$config['auth_library_function'] = '';
+$config['auth_library_class']    = 'authentication';
+$config['auth_library_function'] = 'validate_api';
 
 /*
 |--------------------------------------------------------------------------
