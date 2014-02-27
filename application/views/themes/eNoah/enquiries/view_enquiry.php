@@ -58,6 +58,7 @@ function validateRequestForm()
 										
 								<div class="buttons">
 								   <button onclick="location.href='<?php echo base_url().'enquiries/enquirieslist' ?>'" class="negative" type="button">Back</button>
+								    <button class="negative" type="button">Convert To Leads</button>
 								</div>
 													</td>
 					</tr>
