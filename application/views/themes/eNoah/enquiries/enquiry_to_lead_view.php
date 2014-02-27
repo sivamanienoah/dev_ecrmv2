@@ -318,7 +318,7 @@ function startQuote() {
         // get form data
         var form_data = $('#quote-init-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
-        $.post('welcome/ajax_create_quote',form_data,function (res) {
+        $.post('welcome/ajax_enquiry_to_lead',form_data,function (res) {
 			if (typeof (res) == 'object') {
 				if (res.error == false) {
 					// good to go
@@ -794,7 +794,9 @@ h3 .small {
             <form action="" method="post" id="quote-init-form" class="<?php echo  (isset($view_enquiry) || isset($edit_enquiry)) ? 'display-none' : '' ?>" onsubmit="return false;">
                 <input type="hidden" name="custid_fk" id="hidden_custid_fk" />
 			
-				<input type="hidden" value="35158c371ab75416dab3f33d4eb4b032" name="ci_csrf_token" id="token">
+				<input type="hidden" value="" name="ci_csrf_token" id="token">
+				
+				<input type="hidden" value="<?php echo $get_enquiry_detail['oppurtunity_id'] ?>" name="enquiry_id" id="enquiry_id">
 				<h2>Convert this enquiry to Lead</h2>
 				<table class="layout">
 					<tbody>
