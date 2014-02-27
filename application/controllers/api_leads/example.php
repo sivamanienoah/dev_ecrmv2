@@ -52,8 +52,7 @@ class Example extends REST_Controller
 	  if(!empty($servername_arr)){
 	          $servername = $servername_arr['server_name'];
 	  }
-	  echo "<pre>";
-	 print_r($_SERVER);
+	  echo   gethostbyaddr($_SERVER['REMOTE_ADDR']);
 	  exit;
 	 if($_SERVER["HTTP_DOMAINNAME"]==trim($servername)) {
         $message = array('message' => 'ADDED');
