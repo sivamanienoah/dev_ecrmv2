@@ -318,7 +318,7 @@ function startQuote() {
         // get form data
         var form_data = $('#quote-init-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 		
-        $.post('welcome/ajax_enquiry_to_lead',form_data,function (res) {
+        $.post('enquiries/ajax_enquiry_to_lead',form_data,function (res) {
 			if (typeof (res) == 'object') {
 				if (res.error == false) {
 					// good to go
