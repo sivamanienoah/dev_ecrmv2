@@ -1197,7 +1197,7 @@ width:100%; background:#fff;}
 	position: absolute;
     right: 0;
     top: -17px;
-    width: 75px;
+   /* width: 75px;*/
 }
 .choice-box img.quote, .choice-box img.leads {
 	/*top:-22px;*/
