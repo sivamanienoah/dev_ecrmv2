@@ -45,6 +45,26 @@
 | the active record class
 */
 
+// Second Database
+$active_group = "timesheet";
+$active_record = TRUE;
+$db['timesheet']['hostname'] = 'localhost';
+$db['timesheet']['username'] = 'root';
+$db['timesheet']['password'] = '';
+$db['timesheet']['database'] = 'tes_timesheet';
+$db['timesheet']['dbdriver'] = 'mysql';
+$db['timesheet']['dbprefix'] = 'enoah_';
+$db['timesheet']['pconnect'] = FALSE;
+$db['timesheet']['db_debug'] = TRUE;
+$db['timesheet']['cache_on'] = FALSE;
+$db['timesheet']['cachedir'] = '';
+$db['timesheet']['char_set'] = 'utf8';
+$db['timesheet']['dbcollat'] = 'utf8_general_ci';
+$db['timesheet']['swap_pre'] = '';
+$db['timesheet']['autoinit'] = TRUE;
+$db['timesheet']['stricton'] = FALSE;
+
+
 $active_group = 'default';
 $active_record = TRUE;
 
@@ -63,6 +83,8 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
+
+
 
 
 /* End of file database.php */
