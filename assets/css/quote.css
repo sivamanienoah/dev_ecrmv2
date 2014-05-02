@@ -782,4 +782,11 @@ select.width100px {
 	margin:0 0 0 5px !important;
 }
 
+.project-estimate-hour-change {
+	display:none;
+}
+
+.project-type-change {
+	display:none;
+}
 
