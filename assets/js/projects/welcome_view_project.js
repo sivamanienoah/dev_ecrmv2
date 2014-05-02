@@ -1642,4 +1642,107 @@
 			return true;
 		}
 		
+		function setProjectEstimateHour() {
+			
+			$("#errmsg_start_dt").hide();
+			var hour_val, h_class;
+			hour_val=$('#project-estimate-hour').val();
+			h_class = 'estimate-hour';
+
+			if (hour_val=='') {
+				$("#errmsg_estimate_hour").text('Please enter project estimate hour');
+				$("#errmsg_estimate_hour").show();
+				return false;
+			}else {
+				if(filterFloat(hour_val) == false){
+					$("#errmsg_estimate_hour").text('Please enter valid estimate hour');
+					$("#errmsg_estimate_hour").show();
+					return false;
+				}
+				var params 				= {'lead_id':curr_job_id,'esthr':hour_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					'project/set_project_estimate_hour/',
+					params,
+					function(_data) {
+						try {
+							eval ('var data = ' + _data);
+							if (typeof(data) == 'object') {
+								if (data.error == false) {
+									$('h6.project-' + h_class + '-label span').text(hour_val);
+									$('.project-' + h_class + '-change:visible').hide(200);
+								} else {
+									$("#errmsg_estimate_hour").text(data.error);
+									$("#errmsg_estimate_hour").show();
+								}
+							} else {
+								$("#errmsg_estimate_hour").text('Updating faild, please try again.');
+								$("#errmsg_estimate_hour").show();
+							}
+						} catch (e) {
+							$("#errmsg_estimate_hour").text('Invalid response, your session may have timed out.');
+							$("#errmsg_estimate_hour").show();
+						}
+					}
+				);
+			}
+		}
+		
+		function setProjectType() {
+			
+			$("#errmsg_project_type").hide();
+			var project_type_val, p_class,project_val;
+			project_type_val=$('#project_type').val();
+			p_class = 'type';
+
+			if (project_type_val=='') {
+				$("#errmsg_project_type").text('Please select project type');
+				$("#errmsg_project_type").show();
+				return false;
+			}else {
+				var params 				= {'lead_id':curr_job_id,'project_type':project_type_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					'project/set_project_type/',
+					params,
+					function(_data) {
+						try {
+							eval ('var data = ' + _data);
+							if (typeof(data) == 'object') {
+								if (data.error == false) {
+									if(project_type_val =='1'){
+										project_val='Fixed';
+									}else if(project_type_val =='2'){
+										project_val='Internal';
+									}else if(project_type_val =='3'){
+										project_val='T&M';
+									}
+									$('h6.project-' + p_class + '-label span').text(project_val);
+									$('.project-' + p_class + '-change:visible').hide(200);
+								} else {
+									$("#errmsg_project_type").text(data.error);
+									$("#errmsg_project_type").show();
+								}
+							} else {
+								$("#errmsg_project_type").text('Updating faild, please try again.');
+								$("#errmsg_project_type").show();
+							}
+						} catch (e) {
+							$("#errmsg_project_type").text('Invalid response, your session may have timed out.');
+							$("#errmsg_project_type").show();
+						}
+					}
+				);
+			}
+		}
+		
+		var filterFloat = function (value) {
+		    if(/^\-?([0-9]+(\.[0-9]+)?|Infinity)$/
+		      .test(value))
+		      return Number(value);
+		  return false;
+		}
+		
 		////////////////////------------------------XXXXXXXXXXX--------------------------//////////////////////////
