@@ -160,7 +160,44 @@ class Project extends crm_controller {
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-
+			$timesheet = $this->project_model->get_timesheet_data($id);
+			
+			$data['timesheet_data']=array();
+			$total_billable=0;
+			$total_nonbillable=0;
+			$total_internal=0;
+			$total_cost=0;
+			if(count($timesheet)>0){
+				$i=0;
+				foreach($timesheet as $timesheetData){
+					$total_billable += $timesheetData['Billable'];
+					$total_nonbillable += $timesheetData['Non-Billable'];
+					$total_internal += $timesheetData['Internal'];
+					$total_cost += $timesheetData['cost'];
+					$data['timesheet_data'][]=$timesheetData;
+					$i++;
+				}
+				// To Get total of values
+				$data['timesheet_data'][$i]['Resources']='Total';
+				$data['timesheet_data'][$i]['Billable']=$total_billable;
+				$data['timesheet_data'][$i]['Internal']=$total_internal;
+				$data['timesheet_data'][$i]['Non-Billable']=$total_nonbillable;
+				$data['timesheet_data'][$i]['bill_rate']='';
+				$data['timesheet_data'][$i]['cost']=$total_cost;
+			}
+			$data['actual_hour_data']='NIL';
+			$actual_hour = $this->project_model->get_actual_project_hour($id);
+			if(count($actual_hour)>0){
+				$data['actual_hour_data']=$actual_hour['total_Hour'];
+			}
+			$project_cost=$this->project_model->get_project_cost($id);
+			
+			if(count($project_cost)>0){
+				foreach($project_cost as $project_cost_data){
+					$data['project_total_cost'] +=$project_cost_data['cost'];
+				}
+			}
+			$data['project_costs']=$project_cost;
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -1759,6 +1796,61 @@ HDOC;
 			redirect('project');
 		}
 		
+	}
+	
+	public function set_project_estimate_hour()
+	{	
+		
+		$updt_data = real_escape_array($this->input->post());
+
+		$data['error'] = FALSE;
+
+		$estimateHr = $updt_data['esthr'];
+		
+		if (!is_numeric($updt_data['esthr']))
+		{
+			$data['error'] = 'Invalid estimated hour!';
+		}
+		else
+		{
+				$wh_condn = $updt_data['lead_id'];
+				$chk_stat = $this->project_model->get_actual_project_hour($wh_condn);
+				if(count($chk_stat)>0){
+					$actual_hr=$chk_stat['total_Hour'];
+				}else{
+					$actual_hr='0';
+				}
+				
+				if($estimateHr < $actual_hr)
+				{ 
+					$data['error'] = 'Estimated project hour must be equal or greater than the actual project hour!';
+				}
+				else{
+					$wh_condn = array('lead_id'=>$updt_data['lead_id']);
+					$updt = array('estimate_hour'=>$estimateHr);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				}
+
+		}
+		echo json_encode($data);
+	}
+	
+	public function set_project_type(){
+				
+		$updt_data = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$project_type=$updt_data['project_type'];
+		if ($updt_data['project_type'] == '')
+		{
+			$data['error'] = 'Please select project type';
+		}
+		else
+		{
+			$wh_condn = array('lead_id'=>$updt_data['lead_id']);
+			$updt = array('project_type'=>$project_type);
+			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+		}
+		echo json_encode($data);
 	}
 	
 }
