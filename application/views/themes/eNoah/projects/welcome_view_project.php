@@ -23,6 +23,76 @@
   
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
+<!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+	.wrap_table {
+	    width: 452px;
+	}
+	
+	.wrap_table table {
+	    width: 435px;
+	    table-layout: fixed;
+	}
+	
+	table.wrap_table tr td,table.wrap_table tr td {
+		font-family: verdana,arial,sans-serif;
+		font-size:11px;
+	    padding: 5px;
+	    border: 1px solid #eee;
+	    width: 100px;
+	    word-wrap: break-word;
+	}
+	
+	table.head tr td {
+		font-family: verdana,arial,sans-serif;
+		font-weight: bold;
+		font-size:11px;
+		color:#333333;
+	    background: #eee;
+	    background-color: #dedede;
+	}
+	
+	.inner_table {
+	    height: 100px;
+	    overflow-y: auto;
+	}
+	
+	
+	
+	.wrap_timesheet {
+	    width: 100%;
+	}
+	
+	
+	.wrap_timesheet table {
+	    width: 98%;
+	    table-layout: fixed;
+	}
+	
+	table.wrap_timesheet tr td{
+		font-family: verdana,arial,sans-serif;
+		font-size:11px;
+	    padding: 5px;
+	    border: 1px solid #eee;
+	    width: 100px;
+	    word-wrap: break-word;
+	}
+	
+	table.head_timesheet tr td {
+		font-family: verdana,arial,sans-serif;
+		font-weight: bold;
+		font-size:11px;
+		color:#333333;
+	    background: #eee;
+	    background-color: #dedede;
+	}
+	
+	.inner_timesheet {
+	    height: 100px;
+	    overflow-y: auto;
+	}
+	.job_history a{color:#A51E04;}
+</style>
 <div class="comments-log-container" style= "display:none;">
 	<?php if ($log_html != "") { ?>
 			<table width="100%" class="log-container"> 
@@ -165,35 +235,6 @@
 				</div>
 			</form>
 			<p>&nbsp;</p>
-			<span style="float:right;"> 
-				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
-				|
-				<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
-				<?php 
-				if (isset($userdata) && $userdata['level']==1 && $userdata['role_id']==1)
-				{
-				?>
-				|
-				<a href="#" onclick="qcOKlog(); return false;">All Logs OK?</a>
-				<?php 
-				}
-				?>
-			</span>
-			<h4>Job History</h4>
-
-			
-			<table width="100%" id="lead_log_list" class="log-container logstbl"> 
-				<thead> 
-					<tr> 
-						<th>&nbsp;</th> 
-					</tr> 
-				</thead>
-				<tbody>
-				<?php 
-					echo $log_html;
-				?>				
-				</tbody> 
-			</table>
 
 		</div>
 		
@@ -416,8 +457,91 @@
 								</div>
 								<?php } ?>
 							</td>
+
+						</tr>
+						
+						<tr>
+							<td valign="top" width="175">
+								<h6 class="project-estimate-hour-label">Estimated Project Hour &raquo; <span><?php if ($quote_data['estimate_hour'] != '') echo $quote_data['estimate_hour']; else echo 'Not Set'; ?></span></h6>
+								<?php if ($chge_access == 1){ ?>
+								<p><a href="#" onclick="$('.project-estimate-hour-change:hidden').show(200); return false;">Change?</a></p>
+								<div class="project-estimate-hour-change">
+									<input type="text" value="" class="textfield" id="project-estimate-hour" />
+									<span id="errmsg_estimate_hour" style="color:red"></span>
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="setProjectEstimateHour(); return false;">Set</button>
+									</div>
+									<div class="buttons">
+										<button type="submit" onclick="$('.project-estimate-hour-change:visible, #errmsg_estimate_hour').hide(200); return false;">Cancel</button>
+									</div>
+								</div>
+								<?php } ?>
+							</td>
+							<td valign="top" width="175">
+								<h6 class="actual-project-hour-label">Actual Project Hour &raquo; <span><?php echo $actual_hour_data; ?></span></h6>
+							</td>
+							</tr>
+							
+							<tr>
+							<td valign="top" width="175">
+								<h6 class="project-type-label">Project Type &raquo; <span><?php if ($quote_data['project_type'] == '1') echo 'Fixed'; elseif($quote_data['project_type'] == '2' || $quote_data['project_type']== '') echo 'Internal'; elseif($quote_data['project_type'] == '3') echo 'T&amp;M'; ?></span></h6>
+								<?php if ($chge_access == 1) { ?>
+								<p><a href="#" onclick="$('.project-type-change:hidden').show(200); return false;">Change?</a></p>
+								<div class="project-type-change">
+									<select name="project_type" id="project_type">
+										<option value="">Select</option>
+									   <option value="<?php echo '1'; ?>" <?php if ($quote_data['project_type'] == '1') {echo 'selected';} ?>><?php echo 'Fixed'; ?></option>
+									   <option value="<?php echo '2'; ?>" <?php if ($quote_data['project_type'] == '2' || $quote_data['project_type'] == '0') {echo 'selected';} ?>><?php echo 'Internal'; ?></option>
+									   <option value="<?php echo '3'; ?>" <?php if ($quote_data['project_type'] == '3') {echo 'selected';} ?>><?php echo 'T&amp;M'; ?></option> 
+									</select>
+									<span id="errmsg_project_type" style="color:red"></span>
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="setProjectType(); return false;">Set</button>
+									</div>
+									<div class="buttons">
+										<button type="submit" onclick="$('.project-type-change:visible, #errmsg_project_type').hide(200); return false;">Cancel</button>
+									</div>
+								</div>
+								<?php } ?>
+							</td>
 						</tr>
 					</table>
+					<div id="project_cost">
+						<h5 class="project-cost-label">Project Hours</h5>
+						<div class="wrap_table">
+							<?php if(count($project_costs) >0 ){?>
+						    <table class="head">
+						        <tr>
+						            <td>Resource</td>
+						            <td>Hours</td>
+						            <td>Cost per Hour</td>
+						        </tr>
+						    </table>
+						    <div class="inner_table">
+						        <table>
+						        <?php foreach($project_costs as $project_cost){?>
+								        <tr>
+								            <td><?php echo $project_cost['Resources'];?></td>
+								            <td><?php echo $project_cost['total_hour'];?></td>
+								            <td><?php echo $project_cost['bill_rate'];?></td>
+								        </tr>
+						        <?php } ?>
+						        <tr style="background-color: #dedede;font-weight:bold;">
+						        	<td>Total Project Value</td>
+						        	<td></td>
+						        	<td>
+						        		<?php echo $project_total_cost;?>
+						        	</td>
+						        </tr>
+						    </table>
+						    </div>
+						    <?php 
+								}else{
+							    	echo '<b> Unable to extract project cost from timesheet system </b>';
+								}
+							?>
+						</div>
+					</div>
 					
 				</form>
 				
@@ -469,7 +593,7 @@
 
 			</div>
 
-  <div id="project-tabs">
+  <div id="project-tabs" style="width:930px;">
 	<div>
 		<ul id="job-view-tabs">
 			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
@@ -479,6 +603,8 @@
 			<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>
 			<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
 			<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-8">Metrics</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
 		</ul>
 	</div>
 	<div id="jv-tab-1">
@@ -1056,6 +1182,72 @@
 			<?php echo $job_urls_html ?>
 		</ul>
 	</div><!-- id: jv-tab-7 end -->
+	
+	<div id="jv-tab-8">
+		<div class="wrap_timesheet">
+			<?php if(count($timesheet_data) >0 ){?>
+			    <table class="head_timesheet">
+			        <tr>
+			            <td>Resource</td>
+			            <td>Billable Hours</td>
+			            <td>Internal Hours</td>
+			            <td>Non-Billable Hours</td>
+			            <td>Rate</td>
+			            <td>Cost</td>
+			        </tr>
+			    </table>
+		    <div class="inner_timesheet">
+		        <table>
+		        <?php foreach($timesheet_data as $timesheet){?>
+				        <tr>
+				            <td><?php echo $timesheet['Resources'];?></td>
+							<td><?php echo $timesheet['Billable'];?></td>
+							<td><?php echo $timesheet['Internal'];?></td>
+							<td><?php echo $timesheet['Non-Billable'];?></td>
+							<td><?php echo $timesheet['bill_rate'];?></td>
+							<td><?php echo $timesheet['cost'];?></td>
+				        </tr>
+		        <?php } ?>
+		    </table>
+		    </div>
+		    <?php 
+				}else{
+			    	echo '<b> Unable to extract project hours from timesheet system </b>';
+				}
+			?>
+		</div>
+	</div><!-- id: jv-tab-8 end -->
+	
+	<div id="jv-tab-9">
+		<span style="float:right;" class="job_history"> 
+				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
+				|
+				<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
+				<?php 
+				if (isset($userdata) && $userdata['level']==1 && $userdata['role_id']==1)
+				{
+				?>
+				|
+				<a href="#" onclick="qcOKlog(); return false;">All Logs OK?</a>
+				<?php 
+				}
+				?>
+		</span>
+		<h4>Job History</h4>
+		<table width="100%" id="lead_log_list" class="log-container logstbl"> 
+			<thead> 
+				<tr> 
+					<th>&nbsp;</th> 
+				</tr> 
+			</thead>
+			<tbody>
+			<?php 
+				echo $log_html;
+			?>				
+			</tbody> 
+		</table>
+	</div><!-- id: jv-tab-9 end -->
+	
   </div>
 </div>
 </div><!--end of project-tabs-->
