@@ -1506,10 +1506,18 @@ class Dashboard_model extends crm_model {
 	*Get the Lead Status History
 	*/ 
 	function getLeadClosedDate($id) {
+		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y");
+		//eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+
+		$frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
+		
 	    $this->db->select('lead_id, dateofchange');
 	    $this->db->from($this->cfg['dbpref'].'lead_status_history');
 		$this->db->where("lead_id", $id);
 		$this->db->where("changed_status", 4);
+		$this->db->where('dateofchange BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
 		$this->db->order_by('dateofchange', 'desc');
 		$this->db->limit(1);
 	    $sql = $this->db->get();
