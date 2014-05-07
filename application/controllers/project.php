@@ -76,6 +76,12 @@ class Project extends crm_controller {
 			$data['chge_access'] = $this->project_model->get_access($id, $usernme['userid']);
 		}
 		
+		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
+			$data['ms_chge_access'] = 1;
+		} else {
+			$data['ms_chge_access'] = $this->project_model->get_ms_access($id, $usernme['userid']);
+		}
+		
 		$result = $this->project_model->get_quote_data($id);
 		if(!empty($result)) {
 			$data['quote_data'] = $result[0];
@@ -198,6 +204,10 @@ class Project extends crm_controller {
 				}
 			}
 			$data['project_costs']=$project_cost;
+			
+			//Intially Get all the Milestone data
+			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
+			
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -1851,6 +1861,358 @@ HDOC;
 			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
 		echo json_encode($data);
+	}
+	
+
+	/*
+	*@For Add & Update addMilestones
+	*@Method addMilestones
+	*/
+	function addMilestones($update = false)
+	{
+		$errors = array();
+		$today = time();
+		
+		$milestone_data = real_escape_array($this->input->post());
+		
+		if(!empty($milestone_data['ms_plan_st_date'])) {
+			$milestone_data['ms_plan_st_date'] = date('Y-m-d', strtotime($milestone_data['ms_plan_st_date']));
+		}
+		if(!empty($milestone_data['ms_plan_end_date'])) {
+			$milestone_data['ms_plan_end_date'] = date('Y-m-d', strtotime($milestone_data['ms_plan_end_date']));
+		}
+		if(!empty($milestone_data['ms_act_st_date']) ) {
+			$milestone_data['ms_act_st_date'] = date('Y-m-d', strtotime($milestone_data['ms_act_st_date']));
+		}
+		if(!empty($milestone_data['ms_act_end_date'])) {
+			$milestone_data['ms_act_end_date'] = date('Y-m-d', strtotime($milestone_data['ms_act_end_date']));
+		}
+		
+		if (count($errors)) {
+		
+			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
+			
+		} else {
+		
+			$job_updated = FALSE;
+			
+			if ($update == "") {
+			
+				$ins_milestone = $this->project_model->insert_row('milestones', $milestone_data);
+
+				// $pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
+				
+				$ins['jobid_fk']      = $data['sp_form_jobid'];
+				$ins['userid_fk']     = $this->userdata['userid'];
+				$ins['date_created']  = date('Y-m-d H:i:s');
+				$ins['log_content']   = $pay_det;
+				// $insert_logs = $this->project_model->insert_row('logs', $ins);
+				$job_updated = TRUE;
+			} else {
+			
+				$wh_condn = array('milestoneid'=>$update, 'jobid_fk'=>$milestone_data['jobid_fk']);
+				$updt_row = $this->project_model->update_row("milestones", $milestone_data, $wh_condn);
+				$job_updated = TRUE;
+			}	
+			
+			$this->retrieveMilestoneTerms($milestone_data['jobid_fk']);
+			
+			if ($job_updated==FALSE) {
+				echo "<h3>Add/Update Failed</h3>";
+			}
+		}
+	}
+	
+	/*
+	 *edit the milestone term
+	 */
+	function milestone_edit_term($ms_id, $pjtid)
+	{
+		$milestone_details = $this->project_model->get_milestone_term_det($ms_id, $pjtid);
+		
+		$msPlStDate  = date('d-m-Y', strtotime($milestone_details['ms_plan_st_date']));
+		$msPlEndDate  = date('d-m-Y', strtotime($milestone_details['ms_plan_end_date']));
+		if($milestone_details['ms_act_st_date'] == '0000-00-00 00:00:00') {
+			$msActStDate = '';
+		} else {
+			$msActStDate  = date('d-m-Y', strtotime($milestone_details['ms_act_st_date']));
+		}
+		if($milestone_details['ms_act_end_date'] == '0000-00-00 00:00:00') {
+			$msActEndDate = '';
+		} else {
+			$msActEndDate  = date('d-m-Y', strtotime($milestone_details['ms_act_end_date']));
+		}
+		
+		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width80px'>";
+		foreach($this->cfg['milestones_complete_status'] as $statusKey => $statusValue) {
+			if($milestone_details['ms_percent']==$statusKey){
+				$selectedPercent = 'selected="selected"';
+			} else {
+				$selectedPercent = '';
+			}
+			$percentSelectBox .= "<option value=".$statusKey." ".$selectedPercent.">".$statusValue."</option>";
+		}
+		$percentSelectBox .= "</select>";
+		
+		$statusSelectBox = '<select name="milestone_status" class="textfield width100px">';
+		foreach($this->cfg['milestones_status'] as $msStatusKey => $msStatusValue) {
+			if($milestone_details['milestone_status']==$msStatusKey){
+				$selectedStatus = 'selected="selected"';
+			} else {
+				$selectedStatus = '';
+			}
+			$statusSelectBox .= "<option value=".$msStatusKey." ".$selectedStatus.">".$msStatusValue."</option>";
+		}
+		$statusSelectBox .= '</select>';
+		
+		echo '
+		<script>			
+		function isNumberKey(evt)
+		{
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+		}
+		$(function() {
+			$(".pick-date").datepicker({dateFormat: "dd-mm-yy"});
+		});
+		</script>
+		<form id="milestone-management" onsubmit="return false;">
+		<table class="milestone-table ms-toggler" frame="box">
+			<tr>
+				<td>
+				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" value= "'.$milestone_details['milestone_name'].'" class="textfield width200px" /> </p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" value= "'.$msPlStDate.'" class="textfield width200px pick-date" /> </p>
+				</td>
+				<td>
+				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" value= "'.$msPlEndDate.'" class="textfield width200px pick-date" /> </p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" value= "'.$msActStDate.'" class="textfield width200px pick-date" /> </p>
+				</td>
+				<td>
+				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" value= "'.$msActEndDate.'" class="textfield width200px pick-date" /> </p>
+				</td>
+			</tr>
+			<tr>
+			<td colspan=2><p>
+			Efforts *<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+			</td>
+			</tr>
+			
+			<tr>
+			<td>
+				<p>Percentage of Completion '.$percentSelectBox.'</p>
+					</td>
+					<td>
+						<p>Status '.$statusSelectBox.'</p>
+					</td>
+				</tr>
+			<tr>
+					<td colspan=2>
+						<p>
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="updateMilestoneTerms('.$ms_id.'); return false;">Update</button>
+						</div>
+						</p>
+					</td>
+				</tr>
+			<input type="hidden" name="jobid_fk" id="jobid_fk" value="0" />
+		</table>
+		</form>';
+	}
+	
+	//**Ajax Reload the Milestone Add view**//
+	function addMilestoneFormView()
+	{
+		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width80px'>";
+		foreach($this->cfg['milestones_complete_status'] as $statusKey => $statusValue) {
+			$percentSelectBox .= "<option value=".$statusKey." ".$selectedPercent.">".$statusValue."</option>";
+		}
+		$percentSelectBox .= "</select>";
+		
+		$statusSelectBox = '<select name="milestone_status" class="textfield width100px">';
+		foreach($this->cfg['milestones_status'] as $msStatusKey => $msStatusValue) {
+			$statusSelectBox .= "<option value=".$msStatusKey." ".$selectedStatus.">".$msStatusValue."</option>";
+		}
+		$statusSelectBox .= '</select>';
+		
+		$clk = "onclick=$('.ms-toggler').slideToggle();";
+	
+		echo '<script>			
+		function isNumberKey(evt)
+		{
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+		}
+		$(function() {
+			$(".pick-date").datepicker({dateFormat: "dd-mm-yy"});
+		});
+		</script>
+		<form id="milestone-management" onsubmit="return false;">
+		<table class="milestone-table ms-toggler" frame="box">
+			<tr>
+				<td>
+				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" class="textfield width200px" /> </p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" class="textfield width200px pick-date" /> </p>
+				</td>
+				<td>
+				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" class="textfield width200px pick-date" /> </p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" class="textfield width200px pick-date" /> </p>
+				</td>
+				<td>
+				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" class="textfield width200px pick-date" /> </p>
+				</td>
+			</tr>
+			<tr>
+			<td colspan=2><p>
+			Efforts *<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+			</td>
+			</tr>
+			
+			<tr>
+			<td>
+				<p>Percentage of Completion '.$percentSelectBox.'</p>
+					</td>
+					<td>
+						<p>Status '.$statusSelectBox.'</p>
+					</td>
+				</tr>
+			<tr>
+					<td colspan=2>
+						<p>
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="addMilestoneTerms(); return false;">Add</button>
+						</div>
+						<div class="buttons">
+							<button type="submit" '.$clk.'>Cancel</button>
+						</div>
+						</p>
+					</td>
+				</tr>
+			<input type="hidden" name="jobid_fk" id="jobid_fk" value="0" />
+		</table>
+		</form>';
+	}
+	
+	/*
+	 *Delete the expected payment
+	 *@params expect_id, lead_id
+	 */
+	function deleteMilestoneTerm($msid, $pjtid)
+	{
+		// $stat = $this->project_model->get_payment_term_det($msid, $pjtid);
+		
+		//log details
+		$ins['jobid_fk'] = $jid;
+		$ins['userid_fk'] = $this->userdata['userid'];
+		$ins['date_created'] = date('Y-m-d H:i:s');
+		// $ins['log_content'] = 'Project Milestone Name: '.$stat['project_milestone_name'].'  Amount: '.$stat['expect_worth_name'].' '.$stat['amount'].'  is deleted on '.date('Y-m-d');
+			
+		//delete the record
+		$wh_condn = array('milestoneid' => $msid, 'jobid_fk' => $pjtid);
+		$deleteTerm = $this->project_model->delete_row('milestones', $wh_condn);
+		echo $this->db->last_query();
+		if ($deleteTerm)
+		{
+			//insert the log
+			// $insert_logs = $this->project_model->insert_row('logs', $ins);
+			echo "<span id=paymentfadeout><h6>Milestone Deleted!</h6></span>";
+		}
+		else
+		{
+			echo "<span id=paymentfadeout><h6>Error In Deletion!</h6></span>";
+		}
+		$this->retrieveMilestoneTerms($pjtid);
+	}
+	
+	/*
+	*@method retrieveMilestoneTerms()
+	*@param Jobid
+	*for lists all the milestone terms
+	*/
+	function retrieveMilestoneTerms($pjt_id)
+	{
+		$milestone_det = $this->project_model->get_milestone_terms($pjt_id); //after update
+		$output = '';
+		$output .= "<table width='100%' class='payment_tbl'>
+		<tr><td colspan='3'><h6>Milestone Terms</h6></td></tr>
+		</table>";
+		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+		$output .= "<thead>";
+		$output .= "<tr align='left'>";
+		$output .= "<th class='header'>Milestone Name</th>";
+		$output .= "<th class='header'>Planned Start Date</th>";
+		$output .= "<th class='header'>Planned End Date</th>";
+		$output .= "<th class='header'>Actual Start Date</th>";
+		$output .= "<th class='header'>Actual End Date</th>";
+		$output .= "<th class='header'>Effort</th>";
+		$output .= "<th class='header'>Completion(%)</th>";
+		$output .= "<th class='header'>Status</th>";
+		$output .= "<th class='header'>Action</th>";
+		$output .= "</tr>";
+		$output .= "</thead>";
+		if (count($milestone_det>0))
+		{
+			foreach ($milestone_det as $ms_det)
+			{
+				switch($ms_det['milestone_status']) {
+					case 0:
+					$ms_stat = 'Scheduled';
+					break;
+					case 1:
+					$ms_stat = 'In Progress';
+					break;
+					case 2:
+					$ms_stat = 'Completed';
+					break;
+				}
+				$ms_act_st = ($ms_det['ms_act_st_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_det['ms_act_st_date'])) : '';
+				$ms_act_end = ($ms_det['ms_act_end_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_det['ms_act_end_date'])) : '';
+				$output .= "<tr>";
+				$output .= "<td align='left'>".$ms_det['milestone_name']."</td>";
+				$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_det['ms_plan_st_date']))."</td>";
+				$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_det['ms_plan_end_date']))."</td>";
+				$output .= "<td align='left'>".$ms_act_st."</td>";
+				$output .= "<td align='left'>".$ms_act_end."</td>";
+				$output .= "<td align='left'>".$ms_det['ms_effort']."</td>";
+				$output .= "<td align='left'>".$ms_det['ms_percent']."</td>";
+				$output .= "<td align='left'>".$ms_stat."</td>";
+				$output .= "<td align='left'><a class='edit' onclick='milestoneEditTerm(".$ms_det['milestoneid']."); return false;' >Edit</a> | ";
+				$output .= "<a class='edit' onclick='milestoneDeleteTerm(".$ms_det['milestoneid'].");' >Delete</a></td>";
+				$output .= "</tr>";
+			}
+		}
+		$output .= "</table>";
+		echo $output;
+	}
+	
+	function exportMilestoneTerms($pjtId)
+	{
+		$milestone_det = $this->project_model->get_milestone_terms($pjtId);
+		echo count($milestone_det);
+		exit;
 	}
 	
 }

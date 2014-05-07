@@ -1095,174 +1095,177 @@
 	}
 
 	$(function() {
-	$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
-	$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
-	$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
-	$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0'});
+		$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
+		$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
+		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
+		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0'});
+		$('#milestone-management .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 
-	$('.task-list-item').livequery(function(){
-		$(this).hover(
-			function() { $('.delete-task', $(this)).css('display', 'block'); },
-			function() { $('.delete-task', $(this)).css('display', 'none'); }
-		);
-	});
-
-	$('#email_to_customer').change(function(){
-		if ($(this).is(':checked'))	{
-			$('#multiple-client-emails').slideDown(400)
-				.children('input[type=checkbox]:first').attr('checked', true);
-		} else {
-			$('#additional_client_emails').val('');
-			$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
-				.slideUp(400);
-		}
-	});
-
-	$.fn.__tabs = $.fn.tabs;
-	$.fn.tabs = function (a, b, c, d, e, f) {
-		var base = location.href.replace(/#.*$/, '');
-		$('ul>li>a[href^="#"]', this).each(function () {
-			var href = $(this).attr('href');
-			$(this).attr('href', base + href);
+		$('.task-list-item').livequery(function(){
+			$(this).hover(
+				function() { $('.delete-task', $(this)).css('display', 'block'); },
+				function() { $('.delete-task', $(this)).css('display', 'none'); }
+			);
 		});
-		$(this).__tabs(a, b, c, d, e, f);
-	};
 
-	$( "#project-tabs" ).tabs({
-		beforeActivate: function( event, ui ) {
-			if (ui.newPanel[0].id=='jv-tab-4')
-				loadExistingTasks();
-			if (ui.newPanel[0].id=='jv-tab-4-5')
-				populateJobOverview();
-		}
-	});
-
-	$('#job-url-list li a:not(.file-delete)').livequery(function(){
-		$(this).click(function(){
-			window.open(this.href);
-			return false;
-		});
-	});
-
-	try {
-		var sb_ol = $('.status-bar').offset().left;
-		$('.status-bar').mousemove(function(e){
-			var wd = e.clientX - sb_ol;
-			$('.over', $(this)).css({width: wd + 'px', opacity:0.5});
-		});
-		
-		$('.status-bar').bind('mouseleave', function(e){
-			$('.over', $(this)).stop().animate({opacity:0}, 600);
-		});
-		
-		$('.status-bar a').click(function(){
-			var pos = $(this).attr('rel');
-			if (window.confirm('Are you sure that you want to change\nthe status to ' + pos * 10 +'% completion?'))
-			{
-				updateJobStatus(pos);
+		$('#email_to_customer').change(function(){
+			if ($(this).is(':checked'))	{
+				$('#multiple-client-emails').slideDown(400)
+					.children('input[type=checkbox]:first').attr('checked', true);
+			} else {
+				$('#additional_client_emails').val('');
+				$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
+					.slideUp(400);
 			}
-			$('.status-bar span.over').fadeOut();
-			return false;
 		});
-	} catch (e) { if (window.console) console.log(e); }
 
-	
-	if (project_complete_status!='')
-	{
-		updateVisualStatus(project_complete_status);
-	}
+		$.fn.__tabs = $.fn.tabs;
+		$.fn.tabs = function (a, b, c, d, e, f) {
+			var base = location.href.replace(/#.*$/, '');
+			$('ul>li>a[href^="#"]', this).each(function () {
+				var href = $(this).attr('href');
+				$(this).attr('href', base + href);
+			});
+			$(this).__tabs(a, b, c, d, e, f);
+		};
 
-	$('.jump-to-job select').change(function(){
-		var _new_location = proj_location;
-		document.location = _new_location.replace('{{lead_id}}', $(this).val());
-	});
+		$( "#project-tabs" ).tabs({
+			beforeActivate: function( event, ui ) {
+				if (ui.newPanel[0].id=='jv-tab-4')
+					loadExistingTasks();
+				if (ui.newPanel[0].id=='jv-tab-4-5') {
+					// populateJobOverview();
+					$('.payment-received-mini-view1').hide();
+				}
+			}
+		});
 
+		$('#job-url-list li a:not(.file-delete)').livequery(function(){
+			$(this).click(function(){
+				window.open(this.href);
+				return false;
+			});
+		});
 
-	$('#job_log').siblings().hide();
+		try {
+			var sb_ol = $('.status-bar').offset().left;
+			$('.status-bar').mousemove(function(e){
+				var wd = e.clientX - sb_ol;
+				$('.over', $(this)).css({width: wd + 'px', opacity:0.5});
+			});
+			
+			$('.status-bar').bind('mouseleave', function(e){
+				$('.over', $(this)).stop().animate({opacity:0}, 600);
+			});
+			
+			$('.status-bar a').click(function(){
+				var pos = $(this).attr('rel');
+				if (window.confirm('Are you sure that you want to change\nthe status to ' + pos * 10 +'% completion?'))
+				{
+					updateJobStatus(pos);
+				}
+				$('.status-bar span.over').fadeOut();
+				return false;
+			});
+		} catch (e) { if (window.console) console.log(e); }
 
-	$('#job_log').focus(function(){
-		$(this).siblings(':hidden').not('#multiple-client-emails').slideDown('fast');
-		if ($(this).val() == 'Click to view options') {
-			$(this).val('');
-			$(this).removeClass('gray-text');
-		}
-	});
-
-
-	/* job tasks character limit */
-	$('#job-task-desc').keyup(function(){
-		var desc_len = $(this).val();
 		
-		if (desc_len.length > 240) {
-			$(this).focus().val(desc_len.substring(0, 240));
-		}
-		
-		var remain_len = 240 - desc_len.length;
-		if (remain_len < 0) remain_len = 0;
-		
-		$('#task-desc-countdown').text(remain_len);
-	});
-
-	$('#edit-job-task-desc').keyup(function(){
-		var desc_len = $(this).val();
-		
-		if (desc_len.length > 240) {
-			$(this).focus().val(desc_len.substring(0, 240));
-		}
-		
-		var remain_len = 240 - desc_len.length;
-		if (remain_len < 0) remain_len = 0;
-		
-		$('#edit-task-desc-countdown').text(remain_len);
-	});
-
-	// Sasha's quick keys
-	$('#job_log').keydown(function (e) {
-
-	if (e.ctrlKey && e.keyCode == 13) {
-
-		// Entered values:
-		var minutesInput = $('#log_minutes');
-		var minutes = minutesInput.val();
-
-		// Check the values that are required (time and recipients)
-		//
-		// if either are empty, use prompt() dialog boxes to use them.
-		// EDIT: In fact, a prompt will use enter, so we can jam it down if needed.
-
-		var newMinutes = prompt('Time in minutes', minutes);
-		if(minutes != newMinutes) {
-			minutesInput.val(newMinutes);
+		if (project_complete_status!='')
+		{
+			updateVisualStatus(project_complete_status);
 		}
 
-		var contactsText = prompt('Select contacts (min 3 letters). Seperate with a space.');
-		var contacts = contactsText.split(' ');
-		for(i in contacts) {
-			// Check the ones that match.
-			//
-			// Modifications needed: this needs to be case insensitive.
-			if(contacts[i].length >= 3) {
-				contacts[i].replace(/\w+/g, function(a){
-					contacts[i]  = a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
-				});
+		$('.jump-to-job select').change(function(){
+			var _new_location = proj_location;
+			document.location = _new_location.replace('{{lead_id}}', $(this).val());
+		});
+
+
+		$('#job_log').siblings().hide();
+
+		$('#job_log').focus(function(){
+			$(this).siblings(':hidden').not('#multiple-client-emails').slideDown('fast');
+			if ($(this).val() == 'Click to view options') {
+				$(this).val('');
+				$(this).removeClass('gray-text');
+			}
+		});
+
+
+		/* job tasks character limit */
+		$('#job-task-desc').keyup(function(){
+			var desc_len = $(this).val();
+			
+			if (desc_len.length > 240) {
+				$(this).focus().val(desc_len.substring(0, 240));
+			}
+			
+			var remain_len = 240 - desc_len.length;
+			if (remain_len < 0) remain_len = 0;
+			
+			$('#task-desc-countdown').text(remain_len);
+		});
+
+		$('#edit-job-task-desc').keyup(function(){
+			var desc_len = $(this).val();
+			
+			if (desc_len.length > 240) {
+				$(this).focus().val(desc_len.substring(0, 240));
+			}
+			
+			var remain_len = 240 - desc_len.length;
+			if (remain_len < 0) remain_len = 0;
+			
+			$('#edit-task-desc-countdown').text(remain_len);
+		});
+
+		// Sasha's quick keys
+		$('#job_log').keydown(function (e) {
+
+			if (e.ctrlKey && e.keyCode == 13) {
+
+				// Entered values:
+				var minutesInput = $('#log_minutes');
+				var minutes = minutesInput.val();
+
+				// Check the values that are required (time and recipients)
+				//
+				// if either are empty, use prompt() dialog boxes to use them.
+				// EDIT: In fact, a prompt will use enter, so we can jam it down if needed.
+
+				var newMinutes = prompt('Time in minutes', minutes);
+				if(minutes != newMinutes) {
+					minutesInput.val(newMinutes);
+				}
+
+				var contactsText = prompt('Select contacts (min 3 letters). Seperate with a space.');
+				var contacts = contactsText.split(' ');
+				for(i in contacts) {
+					// Check the ones that match.
+					//
+					// Modifications needed: this needs to be case insensitive.
+					if(contacts[i].length >= 3) {
+						contacts[i].replace(/\w+/g, function(a){
+							contacts[i]  = a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
+						});
+						
+						var scope = $('.user label:contains("' + contacts[i] + '")').parent();
+						$('input[type=checkbox]', scope).attr('checked', true);
+					}
+				}
+				var recipients = 'Send to the following recipients:\n';
+				$('.user input[type=checkbox]:checked').each(
+					function () {
+						recipients += $('label', $(this).parent()).text() + '\n';
+					}
+				);
 				
-				var scope = $('.user label:contains("' + contacts[i] + '")').parent();
-				$('input[type=checkbox]', scope).attr('checked', true);
+				if(confirm(recipients)) {
+					addLog();
+				}
+				return false;
 			}
-		}
-		var recipients = 'Send to the following recipients:\n';
-		$('.user input[type=checkbox]:checked').each(
-			function () {
-				recipients += $('label', $(this).parent()).text() + '\n';
-			}
-		);
-		
-		if(confirm(recipients)) {
-			addLog();
-		}
-		return false;
-	}
-	});
+		});
 
 	});
 
@@ -1355,147 +1358,146 @@
 	}
 	
 	
-	//////////////////////////----------------------X-----------------////////////////////////////
+	//////////////////////////----------------------X-----------------////////////////////////////	
 	
+	var milestones_cached_row = false;
+	function addMilestoneField()
+	{
+		if ( ! milestones_cached_row)
+		{
+			milestones_cached_row = $('#milestone-clone tr:first');
+		}
+		
+		milestones_cached_row.clone().appendTo('#milestone-data tbody');
+		$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+	}
 	
-			var milestones_cached_row = false;
-			function addMilestoneField()
+	function removeMilestoneRow(el)
+	{
+		var agree=confirm("Are you sure you want to delete this milestone?");
+			if (agree) {
+				$(el).parent().parent().remove();
+			}
+			var data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
+		
+		$('#jv-tab-4-5').block({
+							message:'<img src="assets/img/ajax-loader.gif" />',
+							css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+						});
+		
+		$.post(
+			'ajax/request/save_job_overview/' + curr_job_id,
+			data,
+			function(detail)
 			{
-				if ( ! milestones_cached_row)
+				if ($.trim(detail) != '')
 				{
-					milestones_cached_row = $('#milestone-clone tr:first');
+					$('#milestone-data tbody').html(detail);
+					$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 				}
-				
-				milestones_cached_row.clone().appendTo('#milestone-data tbody');
-				$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
+				$('#jv-tab-4-5').unblock();
 			}
-			
-			function removeMilestoneRow(el)
+		);
+		return false;
+	}
+	
+	function saveMilestones()
+	{
+		var error = false;
+		
+		$('#milestone-data tbody tr').each(function(){
+			if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
 			{
-				var agree=confirm("Are you sure you want to delete this milestone?");
-					if (agree) {
-						$(el).parent().parent().remove();
-					}
-					var data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
-				
-				$('#jv-tab-4-5').block({
-									message:'<img src="assets/img/ajax-loader.gif" />',
-									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-								});
-				
-				$.post(
-					'ajax/request/save_job_overview/' + curr_job_id,
-					data,
-					function(detail)
-					{
-						if ($.trim(detail) != '')
-						{
-							$('#milestone-data tbody').html(detail);
-							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-						}
-						$('#jv-tab-4-5').unblock();
-					}
-				);
-				return false;
+				error = 'All milestones and dates are required!';
 			}
-			
-			function saveMilestones()
+		});
+		
+		if (error)
+		{
+			alert(error);
+			return;
+		}
+		
+		var data = $('#milestone-management').serialize()+'&csrf_token_name'+'='+csrf_hash_token;
+		
+		$('#jv-tab-4-5').block({
+							message:'<img src="assets/img/ajax-loader.gif" />',
+							css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+						});
+		
+		$.post(
+			'ajax/request/save_job_overview/' + curr_job_id,
+			data,
+			function(detail)
 			{
-				var error = false;
-				
-				$('#milestone-data tbody tr').each(function(){
-					if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
-					{
-						error = 'All milestones and dates are required!';
-					}
-				});
-				
-				if (error)
+				if ($.trim(detail) != '')
 				{
-					alert(error);
-					return;
+					$('#milestone-data tbody').html(detail);
+					$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 				}
-				
-				var data = $('#milestone-management').serialize()+'&csrf_token_name'+'='+csrf_hash_token;
-				
-				$('#jv-tab-4-5').block({
-									message:'<img src="assets/img/ajax-loader.gif" />',
-									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-								});
-				
-				$.post(
-					'ajax/request/save_job_overview/' + curr_job_id,
-					data,
-					function(detail)
-					{
-						if ($.trim(detail) != '')
-						{
-							$('#milestone-data tbody').html(detail);
-							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-						}
-						$('#jv-tab-4-5').unblock();
-					}
-				);
+				$('#jv-tab-4-5').unblock();
 			}
+		);
+	}
+	
+	function emailMilestones()
+	{
+		var qc_job_title = project_job_title;
+		var obj = $('#milestone-data tbody tr');
+		
+		if (obj.length == 0)
+		{
+			alert('No records are there to email!');
+			return false;
+		}
+		var email_data = '';
+		obj.each(function(){
+			var ddate = $('.milestone-date input', $(this)).val();
+			var mstone = $('.milestone input', $(this)).val();
+			var mstat = $('.milestone-status select option:selected', $(this)).val();
 			
-			function emailMilestones()
+			email_data += ddate + ' : ' + mstone;
+			if (mstat == 0)
 			{
-				var qc_job_title = project_job_title;
-				var obj = $('#milestone-data tbody tr');
-				
-				if (obj.length == 0)
+				email_data += ' [Scheduled]';
+			}
+			if (mstat == 1)
+			{
+				email_data += ' [In Progress]';
+			}
+			if (mstat == 2)
+			{
+				email_data += ' [completed]';
+			}
+			email_data += '\n';
+		});
+		
+		$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
+		$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
+		
+		return false;
+	}
+	
+	function populateJobOverview()
+	{
+		$('#jv-tab-4-5').block({
+							message:'<img src="assets/img/ajax-loader.gif" />',
+							css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
+						});
+		$.get(
+			'ajax/request/get_job_overview/' + curr_job_id,
+			{},
+			function(detail)
+			{
+				if ($.trim(detail) != '')
 				{
-					alert('No records are there to email!');
-					return false;
+					$('#milestone-data tbody').html(detail);
+					$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
 				}
-				var email_data = '';
-				obj.each(function(){
-					var ddate = $('.milestone-date input', $(this)).val();
-					var mstone = $('.milestone input', $(this)).val();
-					var mstat = $('.milestone-status select option:selected', $(this)).val();
-					
-					email_data += ddate + ' : ' + mstone;
-					if (mstat == 0)
-					{
-						email_data += ' [Scheduled]';
-					}
-					if (mstat == 1)
-					{
-						email_data += ' [In Progress]';
-					}
-					if (mstat == 2)
-					{
-						email_data += ' [completed]';
-					}
-					email_data += '\n';
-				});
-				
-				$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
-				$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-				
-				return false;
+				$('#jv-tab-4-5').unblock();
 			}
-			
-			function populateJobOverview()
-			{
-				$('#jv-tab-4-5').block({
-									message:'<img src="assets/img/ajax-loader.gif" />',
-									css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-								});
-				$.get(
-					'ajax/request/get_job_overview/' + curr_job_id,
-					{},
-					function(detail)
-					{
-						if ($.trim(detail) != '')
-						{
-							$('#milestone-data tbody').html(detail);
-							$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-						}
-						$('#jv-tab-4-5').unblock();
-					}
-				);
-			}
+		);
+	}
 			
 			
 		/////////////////////------------------X-------------------//////////////////////////////////////
@@ -1564,7 +1566,7 @@
 			$('#checkVal1').hide();
 		});
 
-		///Add Payment Terms Edit function Starts here 
+		//Add Payment Terms Edit function Starts here 
 		function paymentProfileEdit(eid) 
 		{
 			$(".payment-profile-view").show();
@@ -1602,6 +1604,7 @@
 			$('#rec_paymentfadeout').fadeOut();
 			$('#resmsg, #pjt_val_errormsg, #checkVal1, #checkVal').fadeOut();
 			$('#pjt_id_errormsg, .checkUser, #id-existsval').fadeOut();
+			$('#msErrNotifyFadeout').fadeOut();
 		}
 
 		function paymentReceivedEdit(pdid) 
@@ -1612,7 +1615,7 @@
 			$('.payment-recieved-view').load(pdurl);
 		}
 
-		///<!--Add Received Payment Terms Delete function Starts here.-->
+		//<!--Add Received Payment Terms Delete function Starts here.-->
 		function paymentReceivedDelete(eid,map) {
 			var agree=confirm("Are you sure you want to delete this Payment?");
 			if (agree) {
@@ -1745,4 +1748,158 @@
 		  return false;
 		}
 		
-		////////////////////------------------------XXXXXXXXXXX--------------------------//////////////////////////
+	////////////////////------------------------XXXXXXXXXXX--------------------------//////////////////////////
+	//////Add Milestones////////Start here//////
+	function addMilestoneTerms()
+	{
+		$('#jobid_fk').val(curr_job_id);
+		var errors = [];
+		
+		if ($('#jobid_fk').val() == 0) {
+			errors.push('Milestone not properly loaded!');
+		}
+		if ( ($.trim($('#milestone_name').val()) == '') ) {
+			errors.push('<p>Enter Milestone Name.</p>');
+		}
+		if ( ($.trim($('#ms_plan_st_date').val()) == '') ) {
+			errors.push('<p>Please Select Planned Start Date.</p>');
+		}
+		if ( ($.trim($('#ms_plan_end_date').val())  == '') ) { 
+			errors.push('<p>Please Select Planned End Date.</p>');
+		}
+		if ($.trim($('#ms_effort').val())  == '') {
+			errors.push('<p>Enter Milestone Effort.</p>');
+		}
+		if (errors.length > 0) {
+			//alert(errors.join('\n'));
+			setTimeout('timerfadeout()', 8000);
+			$('#msErrNotifyFadeout').show();
+			$('#msErrNotifyFadeout').html(errors.join(''));
+			return false;
+		} else {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
+			var form_data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
+			$.post( 
+				'project/addMilestones',
+				form_data,
+				function(data) {
+					if (data.error) {
+						alert(data.errormsg);
+					} else {
+						$('.ms-toggler').slideToggle();
+						$('#milestone_view_det').empty();
+						$('#milestone_view_det').html(data);
+					}
+					$.unblockUI();
+					$('#milestone-management')[0].reset();
+				}
+			);
+		}
+	}
+	//////Add Milestones////////End here//////
+
+	//////Updating Milestones////////Start here//////
+	function updateMilestoneTerms(ms_id)
+	{
+		$('#jobid_fk').val(curr_job_id);
+		var errors = [];
+		
+		if ($('#jobid_fk').val() == 0) {
+			errors.push('Milestone not properly loaded!');
+		}
+		if ( ($.trim($('#milestone_name').val()) == '') ) {
+			errors.push('<p>Enter Milestone Name.</p>');
+		}
+		if ( ($.trim($('#ms_plan_st_date').val()) == '') ) {
+			errors.push('<p>Please Select Planned Start Date.</p>');
+		}
+		if ( ($.trim($('#ms_plan_end_date').val())  == '') ) { 
+			errors.push('<p>Please Select Planned End Date.</p>');
+		}
+		if ($.trim($('#ms_effort').val())  == '') {
+			errors.push('<p>Enter Milestone Effort.</p>');
+		}
+		if (errors.length > 0) {
+			//alert(errors.join('\n'));
+			setTimeout('timerfadeout()', 8000);
+			$('#msErrNotifyFadeout').show();
+			$('#msErrNotifyFadeout').html(errors.join(''));
+			return false;
+		} else {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
+			var form_data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
+			$.post( 
+				'project/addMilestones/'+ms_id,
+				form_data,
+				function(data) {
+					if (data.error) {
+						alert(data.errormsg);
+					} else {
+						$('.ms-toggler').slideToggle();
+						$('#milestone_view_det').empty();
+						$('#milestone_view_det').html(data);
+					}
+					$.unblockUI();
+					$('#milestone-add-view').empty();
+					// $('#addNew-ms').hide();
+					addMilestoneForm();
+					
+				}
+			);
+		}
+	}
+	//////Update Milestones////////End here//////
+	
+	function addMilestoneForm() {
+		setTimeout('timerfadeout()', 2000);
+		var url = "project/addMilestoneFormView";
+		$('#milestone-add-view').load(url);
+		$('.ms-toggler').slideToggle();
+	}
+	
+	//Milestone Edit Terms function Starts here
+	function milestoneEditTerm(ms_id)
+	{ 
+		$(".milestone-table").show();
+		var jobid = project_jobid;
+		setTimeout('timerfadeout()', 2000);
+		var url = "project/milestone_edit_term/"+ms_id+"/"+jobid;
+		$('#milestone-add-view').load(url);
+		$('#addNew-ms').hide();
+	}
+	
+	//Milestone Delete Terms function Starts here
+	function milestoneDeleteTerm(ms_id)
+	{
+		var agree=confirm("Are you sure you want to delete this file?");
+		if (agree) 
+		{
+			var pjtid = project_jobid;
+			setTimeout('timerfadeout()', 2000);
+			var url = "project/deleteMilestoneTerm/"+ms_id+"/"+pjtid;
+			$('#milestone_view_det').load(url);
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	//Export milestones
+	function exportMilestone(pjt_id)
+	{
+		var url = "project/exportMilestoneTerms/"+pjt_id;
+	}
+	$('#excel').click(function() {
+		var sturl = site_base_url+"welcome/excelExport/";
+		document.location.href = sturl;
+		return false;
+	});

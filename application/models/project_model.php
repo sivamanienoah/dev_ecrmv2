@@ -143,6 +143,23 @@ class Project_model extends crm_model
 		return $chge_access;
 	}
 	
+	//get the access for add, edit & delete Milestones in Project Module
+	public function get_ms_access($id, $uid)
+	{
+		$this->db->select('assigned_to');
+		$this->db->where('lead_id', $id);
+		$this->db->where('assigned_to', $uid);
+		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
+		$res1 = $sql->result_array();
+		if (empty($res1)) {
+			$ms_chge_access = 0;
+		}
+		else {
+			$ms_chge_access = 1;
+		}
+		return $ms_chge_access;
+	}
+	
 	//get overall details for lead or project 
 	function get_quote_data($id) 
 	{
@@ -444,6 +461,28 @@ class Project_model extends crm_model
 		
 		$query=$timesheet_db->query($sql);
 		return $query->result_array();
+	}
+	
+	//get milestone details for the project.
+	public function get_milestone_terms($id)
+	{
+    	$this->db->select('ms.milestoneid ,ms.milestone_name, ms.ms_plan_st_date, ms.ms_plan_end_date, ms.ms_act_st_date,  ms.ms_act_end_date, ms.ms_effort, ms.ms_percent, ms.milestone_status');
+		$this->db->from($this->cfg['dbpref'].'milestones as ms');
+    	$this->db->where('ms.jobid_fk', $id);
+    	$this->db->order_by('ms.milestoneid');
+		$results = $this->db->get();
+        return $results->result_array();
+    }
+	
+	//get the milestone term details.
+	function get_milestone_term_det($msid, $jobid)
+	{
+		$wh_condn = array('milestoneid' => $msid, 'jobid_fk' => $jobid);
+		$this->db->select('ms.milestone_name, ms.ms_plan_st_date, ms.ms_plan_end_date, ms.ms_act_st_date, ms.ms_act_end_date, ms.ms_effort, ms.ms_percent, ms.milestone_status');
+		$this->db->from($this->cfg['dbpref'].'milestones as ms');
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->row_array();
 	}
 }
 

@@ -994,58 +994,178 @@
 		</form>
 		
 	</div><!-- id: jv-tab-4 end -->
-			
+
 	<div id="jv-tab-4-5">
-		<form id="milestone-management" onsubmit="return false;">
-		
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-			<h3>Milestones</h3>
-			<table id="milestone-clone" style="display:none;">
-				<tr>
-					<td class="milestone">
-						<input type="text" name="milestone[]" class="textfield width250px" />
-					</td>
-					<td class="milestone-date">
-						<input type="text" name="milestone_date[]" class="textfield width80px pick-date" />
-					</td>
-					<td class="milestone-status">
-						<select name="milestone_status[]" class="textfield width80px">
-							<option value="0">Scheduled</option>
-							<option value="1">In Progress</option>
-							<option value="2">Completed</option>
-						</select>
-					</td>
-					<td class="milestone-action" valign="middle">
-						&nbsp; <a href="#" onclick="removeMilestoneRow(this); return false;">Remove</a>
-					</td>
-				</tr>
-			</table>
-			
-			<table id="milestone-data">
-				<thead>
-					<tr>
-						<th align="left">Item</th>
-						<th>Date</th>
-						<th>Status</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			
-			<div class="buttons">
-				<button type="submit" class="positive" onclick="addMilestoneField();">Add New</button>
-				<button type="submit" class="positive" onclick="saveMilestones();">Save List</button>
-				<button type="submit" class="positive" onclick="emailMilestones();">Email Timeline</button>
+		<div id="milestone-top-view">
+		<h3>Milestones</h3>
+			<div style="color:red; margin:7px 0 0;" id="msErrNotifyFadeout"></div>
+			<div id="milestone-add-view">
+				<form id="milestone-management" onsubmit="return false;">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<table class="milestone-table ms-toggler" style="display:none;" frame="box">
+						<tr>
+							<td>
+								<?php $jobid = isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0; ?>
+								<input type="hidden" name="jobid_fk" id="jobid_fk" value=<?php echo $jobid; ?> />
+								<p>
+									Milestone name *
+									<input type="text" name="milestone_name" id="milestone_name" class="textfield width200px" />
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									Planned Start Date * 
+									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" class="textfield width200px pick-date" />
+								</p>
+							</td>
+							<td>
+								<p>
+									Planned End Date *
+									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" class="textfield width200px pick-date" />
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									Actual Start Date
+									<input type="text" name="ms_act_st_date" id="ms_act_st_date" class="textfield width200px pick-date" />
+								</p>
+							</td>
+							<td>
+								<p>
+									Actual End Date
+									<input type="text" name="ms_act_end_date" id="ms_act_end_date" class="textfield width200px pick-date" />
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=2>
+								<p>
+									Efforts *
+									<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							<p>
+								Percentage of Completion
+								<select name="ms_percent" id="ms_percent" class="textfield width80px">
+									<?php
+										foreach($this->cfg['milestones_complete_status'] as $complete_key=>$complete_val) {
+											?>
+												<option value="<?php echo $complete_key; ?>"><?php echo $complete_val; ?></option>
+											<?php
+										}
+									?>
+								</select>
+							</p>
+							</td>
+							<td>
+								<p>
+									Status
+									<select name="milestone_status" class="textfield width100px">
+										<?php
+										foreach($this->cfg['milestones_status'] as $status_key=>$status_val) {
+											?>
+												<option value="<?php echo $status_key; ?>"><?php echo $status_val; ?></option>
+											<?php
+										}
+										?>
+									</select>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=2>
+								<p>
+								<div class="buttons">
+									<button type="submit" class="positive" onclick="addMilestoneTerms(); return false;">Add</button>
+								</div>
+								<div class="buttons">
+									<button type="submit" onclick="$('.ms-toggler').slideToggle();">Cancel</button>
+								</div>
+								</p>
+							</td>
+						</tr>						
+					</table>
+				</form>
 			</div>
-			
-		</form>
-		
-		
-	</div>
-			
+			<?php if ($ms_chge_access == 1) { ?>
+			<div class="buttons task-init ms-toggler" id="addNew-ms">
+				<button type="button" class="positive" onclick="$('.ms-toggler').slideToggle();" style="float:none;">Add New Milestone</button>
+			</div>
+			<?php } ?>
+			<p></p>
+			<div>
+				<a id="milestone-export" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
+				<a id="milestone-export" class="export-btn" name="msExport" style="color:#fff !important;">Export Timeline</a>
+			</div>
+			<?php
+			$output .= '<div class="milestone_view_det" id="milestone_view_det" style="display:block; margin-top:5px;">';
+			if(!empty($milestone_data))
+			{
+				$output .= "<table width='100%' class='payment_tbl'><tr><td colspan='3'><h6>Milestone Terms</h6></td></tr></table>";
+				$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+				$output .= "<thead>";
+				$output .= "<tr align='left'>";
+				$output .= "<th class='header'>Milestone Name</th>";
+				$output .= "<th class='header'>Planned Start Date</th>";
+				$output .= "<th class='header'>Planned End Date</th>";
+				$output .= "<th class='header'>Actual Start Date</th>";
+				$output .= "<th class='header'>Actual End Date</th>";
+				$output .= "<th class='header'>Effort</th>";
+				$output .= "<th class='header'>Completion(%)</th>";
+				$output .= "<th class='header'>Status</th>";
+				$output .= "<th class='header'>Action</th>";
+				$output .= "</tr>";
+				$output .= "</thead>";
+				foreach ($milestone_data as $ms_data)
+				{
+					switch($ms_data['milestone_status']){
+						case 0:
+						$ms_stat = 'Scheduled';
+						break;
+						case 1:
+						$ms_stat = 'In Progress';
+						break;
+						case 2:
+						$ms_stat = 'Completed';
+						break;
+					}
+					$ms_act_st = ($ms_data['ms_act_st_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_st_date'])) : '';
+					$ms_act_end = ($ms_data['ms_act_end_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_end_date'])) : '';
+					$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
+					$output .= "<tr>";
+					$output .= "<td align='left'>".$ms_data['milestone_name']."</td>";
+					$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_st_date']))."</td>";
+					$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_end_date']))."</td>";
+					$output .= "<td align='left'>".$ms_act_st."</td>";
+					$output .= "<td align='left'>".$ms_act_end."</td>";
+					$output .= "<td align='left'>".$ms_data['ms_effort']."</td>";
+					$output .= "<td align='left'>".$ms_data['ms_percent']."</td>";
+					$output .= "<td align='left'>".$ms_stat."</td>";
+					$output .= "<td align='left'>";
+					if ($ms_chge_access == 1) {
+						$output .= "<a class='edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' >Edit</a> | ";
+						$output .= "<a class='edit' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' >Delete</a>";
+					} else {
+						$output .= "Edit | Delete";
+					}
+					$output .= "</td>";
+					$output .= "</tr>";
+				}
+				$output .= "</table>";
+			}
+			$output .= '</div>';
+			echo $output;
+			?>
+		</div> <!--end of milestone-top-view-->
+	</div><!-- id: jv-tab-4-5 end -->
+
 	<div id="jv-tab-5">
 		<form id="customer-detail-read-only" onsubmit="return false;">
 		

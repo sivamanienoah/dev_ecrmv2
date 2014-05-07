@@ -55,6 +55,26 @@ $config['crm']['job_complete_status'] = array(
                                     11 => 'Complete'
                                 );
 								
+$config['crm']['milestones_complete_status'] = array(
+                                    0 => '0%',
+                                    10 => '10%',
+                                    20 => '20%',
+                                    30 => '30%',
+                                    40 => '40%',
+                                    50 => '50%',
+                                    60 => '60%',
+                                    70 => '70%',
+									80 => '80%',
+                                    90 => '90%',
+                                    100 => '100%'
+                                );
+								
+$config['crm']['milestones_status'] = array(
+                                    0 => 'Scheduled',
+                                    1 => 'In Progress',
+                                    2 => 'Completed%'
+                                );
+								
 $config['crm']['tasks_search']  = array(
                                     0 => 'Work In Progress',
                                     1 => 'Completed',
@@ -66,11 +86,11 @@ $config['crm']['max_allowed_users'] = array(
 											);
 											
 $config['crm']['director_emails']  = array(
-                                    'Admin' => 'kbalasubramanian@enoahisolution.com',
+                                    'Admin' => 'ssriram@enoahisolution.com',
                                    );		
 
 $config['crm']['management_emails'] = array(
-									'Senior Management' => 'kbalasubramanian@enoahisolution.com',
+									'Senior Management' => 'ssriram@enoahisolution.com',
 								    );
 
 # keep in sync with above
