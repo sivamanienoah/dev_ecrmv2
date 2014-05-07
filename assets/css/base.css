@@ -1474,3 +1474,9 @@ Back to top button
 	background-color: #777;
 }
 /*Back to top*/
+/* Project - Milestone - Start */
+#milestone_name { margin-left : 15px; }
+#ms_act_st_date { margin-left : 15px; }
+#ms_act_end_date { margin-left : 15px; }
+#ms_effort { margin-left : 56px; }
+/* Project - Milestone - End*/
