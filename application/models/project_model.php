@@ -29,33 +29,40 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage, $pm_acc, $cust, $keyword) {	
+	public function get_projects_results($pjtstage, $pm_acc, $cust, $service,$keyword) {	
+		
 		$userdata = $this->session->userdata('logged_in_user');
-		$stage = explode(',',$pjtstage);
-		$customer = explode(',',$cust);
-		$pm = explode(',',$pm_acc);
-
+		$stage = $pjtstage;
+		$customer = $cust;
+		$pm = $pm_acc;
+		$services = $service;
+	
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title,j.expect_worth_amount, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			
-			if($stage[0] != 'null'){		
-				$this->db->where("j.lead_status", 4);
+			if(!empty($stage)){	
+				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
 			}
 			
-			if($customer[0] != 'null' && $customer[0] != '0'){		
+			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
 			
-			if($pm[0] != 'null' && $pm[0] != '0'){		
+			if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
 			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){	
+			
+			if(!empty($services)){		
+				$this->db->where_in('j.lead_service',$services); 
+			}
+			
+			if($keyword != 'Lead No, Job Title, Name or Company' && !empty($keyword)){	
 				
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
@@ -98,21 +105,26 @@ class Project_model extends crm_model
 			$this->db->where_in('j.lead_id', $result_ids);
 			
 			
-			if($stage[0] != 'null') {
+			if(!empty($stage)) {
 				$this->db->where("j.lead_status", 4);
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
 			}
 			
-			if($customer[0] != 'null' && $customer[0] != '0') {		
+			if(!empty($customer)) {		
 				$this->db->where_in('j.custid_fk',$customer);		
 			}
 			
-			if($pm[0] != 'null' && $pm[0] != '0') {		
+			if(!empty($pm)) {		
 				$this->db->where_in('j.assigned_to',$pm); 
 			}
-			if($keyword != 'Project No, Project Title, Name or Company' && $keyword != 'null'){		
+			
+			if(!empty($services)){		
+				$this->db->where_in('j.lead_service',$services); 
+			}
+			
+			if($keyword != 'Project No, Project Title, Name or Company' && !empty($keyword)){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
@@ -121,7 +133,7 @@ class Project_model extends crm_model
 			
 		}
 		$query = $this->db->get();
-		
+		//echo $this->db->last_query();
 		$pjts =  $query->result_array();		
 		return $pjts;
 	}
@@ -431,6 +443,7 @@ class Project_model extends crm_model
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username";
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id";
 		$sql .= " WHERE (t.proj_id = ".$id." AND a.proj_id = ".$id.") GROUP BY t.uid";
+		//echo $sql;
 		$query=$timesheet_db->query($sql);
 		return $query->result_array();
 	}
@@ -444,7 +457,7 @@ class Project_model extends crm_model
 		$sql .=" LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id ";
 		$sql .=" WHERE (t.proj_id = ".$id." AND a.proj_id = ".$id.") ";
 		$sql .=" AND (t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW()) GROUP BY a.proj_id ";
-		
+		//echo $sql;
 		$query=$timesheet_db->query($sql);
 		return $query->row_array();
 	}
@@ -458,9 +471,35 @@ class Project_model extends crm_model
 		$sql .=" LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id ";
 		$sql .=" WHERE (t.proj_id = ".$id." AND a.proj_id = ".$id.") ";
 		$sql .=" AND (t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW()) GROUP BY t.uid";
-		
+		//echo $sql;
 		$query=$timesheet_db->query($sql);
 		return $query->result_array();
+	}
+	
+	public function get_timesheet_hours($id){
+		$timesheet_db = $this->load->database('timesheet',TRUE); 
+		//$id='315';
+		$sql = "SELECT t.proj_id, sum(t.duration)/8 as total_hour,brt.bill_rate,(sum(t.duration)/8)*brt.bill_rate as cost, ";
+		$sql .= " SUM(CASE WHEN t.resoursetype='Billable' AND ((t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/8 as 'billable',";
+		$sql .= " SUM(CASE WHEN t.resoursetype='Non-Billable' AND ((t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/8 as 'nonbillable',";
+		$sql .= " SUM(CASE WHEN t.resoursetype='Internal' AND ((t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/8 as 'internal'";
+		$sql .= " FROM ".$timesheet_db->dbprefix('times')." AS t";
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username";
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id";
+		$sql .= " WHERE (t.proj_id = ".$id." AND a.proj_id = ".$id.") GROUP BY t.proj_id";
+		//echo $sql;exit;
+		$query=$timesheet_db->query($sql);
+		return $query->row();
+	}
+	
+	public function get_services(){
+		$this->db->select('sid, services');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_services');
+	    $this->db->where("status",'1');
+		$this->db->order_by("sid", "asc");
+	    $services = $this->db->get();
+	    $services =  $services->result_array();
+	    return $services;
 	}
 	
 	//get milestone details for the project.
