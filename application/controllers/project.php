@@ -2239,7 +2239,6 @@ HDOC;
 	{
 		$inputData=$this->input->get();
 		$leadId=$inputData['lead_id'];
-		$leadId='76';
 		
 		$milestone_det = $this->project_model->get_milestone_terms($leadId);
 		if(!empty($milestone_det)){
