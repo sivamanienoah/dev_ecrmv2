@@ -92,6 +92,28 @@
 	    overflow-y: auto;
 	}
 	.job_history a{color:#A51E04;}
+	
+	input[type='radio'] {
+    -webkit-appearance:none;
+    width:20px;
+    height:20px;
+    border:1px solid darkgray;
+    border-radius:50%;
+    outline:none;
+    box-shadow:0 0 5px 0px gray inset;
+}
+input[type='radio']:hover {
+    box-shadow:0 0 5px 0px orange inset;
+}
+input[type='radio']:before {
+    content:'';
+    display:block;
+    width:60%;
+    height:60%;
+    margin: 20% auto;    
+    border-radius:50%;    
+}
+	
 </style>
 <div class="comments-log-container" style= "display:none;">
 	<?php if ($log_html != "") { ?>
@@ -490,9 +512,9 @@
 								<div class="project-type-change">
 									<select name="project_type" id="project_type">
 										<option value="">Select</option>
-									   <option value="<?php echo '1'; ?>" <?php if ($quote_data['project_type'] == '1') {echo 'selected';} ?>><?php echo 'Fixed'; ?></option>
-									   <option value="<?php echo '2'; ?>" <?php if ($quote_data['project_type'] == '2' || $quote_data['project_type'] == '0') {echo 'selected';} ?>><?php echo 'Internal'; ?></option>
-									   <option value="<?php echo '3'; ?>" <?php if ($quote_data['project_type'] == '3') {echo 'selected';} ?>><?php echo 'T&amp;M'; ?></option> 
+									    <option value="<?php echo '1'; ?>" <?php if ($quote_data['project_type'] == '1') {echo 'selected';} ?>><?php echo 'Fixed'; ?></option>
+									    <option value="<?php echo '2'; ?>" <?php if ($quote_data['project_type'] == '2' || $quote_data['project_type'] == '0') {echo 'selected';} ?>><?php echo 'Internal'; ?></option>
+									    <option value="<?php echo '3'; ?>" <?php if ($quote_data['project_type'] == '3') {echo 'selected';} ?>><?php echo 'T&amp;M'; ?></option> 
 									</select>
 									<span id="errmsg_project_type" style="color:red"></span>
 									<div class="buttons">
@@ -504,6 +526,29 @@
 								</div>
 								<?php } ?>
 							</td>
+							
+							
+							<td valign="top" width="175">
+								<h6 class="rag-type-label">RAG Status &raquo; <span><?php if ($quote_data['rag_status'] == '1') echo 'Red'; elseif($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') echo 'Amber'; elseif($quote_data['rag_status'] == '3') echo 'Green'; ?></span></h6>
+								<?php if ($chge_access == 1) { ?>
+								<p><a href="#" onclick="$('.rag-status-change:hidden').show(200); return false;">Change?</a></p>
+								<div class="rag-status-change">
+									<input type="radio" name="rag_status" value="1" <?php if($quote_data['rag_status'] == '1') { echo 'checked="checked"'; } ?> id="red">Red
+									<input type="radio" name="rag_status" value="2" <?php if($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') { echo 'checked="checked"'; } ?> id="amber">Amber
+									<input type="radio" name="rag_status" value="3" <?php if($quote_data['rag_status'] == '3') { echo 'checked="checked"'; } ?> id="green">Green
+									
+									<span id="errmsg_rag_status" style="color:red"></span>
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="setRagStatus(); return false;">Set</button>
+									</div>
+									<div class="buttons">
+										<button type="submit" onclick="$('.rag-status-change:visible, #errmsg_rag_status').hide(200); return false;">Cancel</button>
+									</div>
+								</div>
+								<?php } ?>
+							</td>
+							
+							
 						</tr>
 					</table>
 					<div id="project_cost">
@@ -1101,8 +1146,10 @@
 			<?php } ?>
 			<p></p>
 			<div>
-				<a id="milestone-export" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
+				<a id="milestone-email" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
 				<a id="milestone-export" class="export-btn" name="msExport" style="color:#fff !important;">Export Timeline</a>
+				
+				
 			</div>
 			<?php
 			$output .= '<div class="milestone_view_det" id="milestone_view_det" style="display:block; margin-top:5px;">';

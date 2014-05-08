@@ -19,7 +19,7 @@
                     </td>
                     <td rowspan=2>
                         <div class="buttons">
-                            <button type="submit" class="positive">Search</button>
+                            <button type="submit" class="positive" id="project_search">Search</button>
                         </div>
                     </td>
                 </tr>
@@ -45,12 +45,13 @@
 						<th>By Project Status Wise</th>
 						<th>By Project Manager Wise</th>
 						<th>By Customer Wise</th>
+						<th>By Services Wise</th>
 					</tr>	
 				</thead>
 				<tbody>
 				<tr>	
 					<td>
-						<select style="width:230px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
+						<select style="width:200px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
 							<option value="1">Project In Progress</option>
 							<option value="2">Project Completed</option>
 							<option value="3">Project Onhold</option>
@@ -59,7 +60,7 @@
 					</td>
 					
 					<td>
-						<select style="width:230px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
+						<select style="width:200px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
 							<?php foreach($pm_accounts as $pm_acc) {?>
 							<option value="<?php echo $pm_acc['userid']; ?>">
 							<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
@@ -68,9 +69,16 @@
 					</td>
 					
 					<td>
-						<select style="width:230px;" multiple="multiple" id="customer1" name="customer1[]">
+						<select style="width:200px;" multiple="multiple" id="customer1" name="customer1[]">
 							<?php foreach($customers as $customer) {?>
 							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+							<?php } ?>
+						</select>
+					</td>
+					<td>
+						<select style="width:200px;" multiple="multiple" id="services" name="services[]">
+							<?php foreach($services as $service) {?>
+							<option value="<?php echo $service['sid']; ?>"><?php echo $service['services'];?></option>	
 							<?php } ?>
 						</select>
 					</td>
@@ -99,11 +107,27 @@
 				<th>Project No.</th>
 				<th>Project ID</th>
 				<th>Project Title</th>
+				<th>Project Completion</th>
+				
+				<th>Project Type</th>
+				<th>Planned Hours</th>
+				<th>Billable Hours</th>
+				<th>Internal Hours</th>
+				<th>Non-Billable Hours</th>
+				<th>Total Utilized Hours (Actuals)</th>
+				<th>Effort Variance</th>
+				<th>Project Value</th>
+				<th>Utilization Cost</th>
+				<th>P&L</th>
+				<th>P&L %</th>
+				<th>RAG Status</th>
+				
 				<th>Customer</th>
 				<th>Project Manager</th>
 				<th>Planned Start Date</th>
 				<th>Planned End Date</th>
-				<th>Project Completion</th>
+				
+				
 				<th width="110px;">Project Status</th>
             </thead>
             
@@ -113,6 +137,7 @@
 				?>
                     <?php
 					foreach ($records as $record) {
+						$timsheetData = $this->project_model->get_timesheet_hours($record['lead_id']);
 					?>
                     <tr>
 						<td class="actions" align="center">
@@ -137,6 +162,61 @@
                         <td class="actions">
 							<?php echo character_limiter($record['lead_title'], 35); ?>
 						</td>
+						<td class="actions" align="center">
+							<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php 
+								if($record['project_type'] =='1'){
+									echo 'Fixed';
+								}elseif($record['project_type'] =='2'){
+									 echo 'Internal';
+								}elseif($record['project_type'] =='3'){
+									echo 'T&amp;M';
+								}else{
+									echo '-';
+								}
+							?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']/8); else echo "-"; ?>
+						</td>
+						
+						
+						<td class="actions" align="center">
+							<?php if (isset($timsheetData->billable)) echo $timsheetData->billable; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($timsheetData->internal)) echo $timsheetData->internal; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($timsheetData->nonbillable)) echo $timsheetData->nonbillable; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php echo ($timsheetData->billable+$timsheetData->internal)-$timsheetData->nonbillable; ?>
+						</td>
+						
+						<td class="actions" align="center">
+							<?php echo $timsheetData->total_hour-$record['estimate_hour']; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($record['expect_worth_amount'])) echo $record['expect_worth_amount']; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($timsheetData->cost)) echo $timsheetData->cost; else echo "-"; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php echo ($record['expect_worth_amount']-$timsheetData->cost); ?>
+						</td>
+						<td class="actions" align="center">
+							<?php echo ($record['expect_worth_amount']-$timsheetData->cost)/$record['expect_worth_amount']; ?>
+						</td>
+						<td class="actions" align="center">
+							<?php if (isset($record['rag_status'])){ if($record['rag_status'] =='1') echo 'Red'; elseif($record['rag_status'] =='2') echo 'Amber';elseif($record['rag_status'] =='3') echo 'Green'; else echo '-';}else echo "-"; ?>
+						</td>
+						
+						
+						
                         <td class="cust-data">
 							<span style="color:none"><?php echo $record['cfname'] . ' ' . $record['clname'] ?></span> - <?php echo $record['company'] ?>
 						</td>
@@ -149,9 +229,8 @@
 						<td>
 							<?php if ($record['date_due'] == "") echo "-"; else echo  date('d-m-Y', strtotime($record['date_due'])) ?>
 						</td>
-						<td class="actions" align="center">
-							<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
-						</td>
+						
+						
 						<td class="actions" align="center">
 							<?php
 							switch ($record['pjt_status'])
