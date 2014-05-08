@@ -28,6 +28,7 @@ function dtPjtTable() {
 	var pjtstage = $("#pjt_stage").val(); 
 	var pm_acc = $("#pm_acc").val(); 
 	var cust = $("#customer1").val(); 
+	var service = $("#services").val(); 
 	var keyword = $("#keywordpjt").val(); 
 	//alert(keyword);
 	if(keyword == "Project No, Project Title, Name or Company")
@@ -37,22 +38,58 @@ function dtPjtTable() {
 		document.getElementById('advance_search_pjt').style.display = 'none';
 
 		function advanced_filter_pjt(){
-		$('#advance_search_pjt').slideToggle('slow');
-		var  keyword = $("#keywordpjt").val();
-		var status = document.getElementById('advance_search_pjt').style.display;
+			$('#advance_search_pjt').slideToggle('slow');
+			var  keyword = $("#keywordpjt").val();
+			var status = document.getElementById('advance_search_pjt').style.display;
+			
+			if(status == 'none') {
+				var pjtstage = $("#pjt_stage").val(); 
+				var pm_acc = $("#pm_acc").val(); 
+				var cust = $("#customer1").val(); 
+				var service = $("#services").val(); 
+			}
+			else   {
+				$("#pjt_stage").val("");
+				$("#pm_acc").val("");
+				$("#customer1").val("");
+				$("#services").val("");
+			}
+		}
 		
-		if(status == 'none') {
+		$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 
 			var cust = $("#customer1").val(); 
-		}
-		else   {
-			$("#pjt_stage").val("");
-			$("#pm_acc").val("");
-			$("#customer1").val("");
-		}
-	}
-
+			var service = $("#services").val(); 
+			var keyword = $("#keywordpjt").val(); 
+			if(keyword == "Project No, Project Title, Name or Company")
+			keyword = '';
+			
+			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword)};
+			params[csrf_token_name] = csrf_hash_token; 
+			
+			if($(this).attr("id") == 'advanceFilters_pjt'){
+				$('#advance').hide();
+				$('#load').show();
+			}
+			
+		    $.ajax({
+		        type: 'POST',
+		        url: 'project/advance_filter_search_pjt',
+		        data: params,
+		        success: function(data) {
+		    		$("#ad_filter" ).html(data);
+		    		
+		    		if($(this).attr("id") == 'advanceFilters_pjt'){
+		    			$('#advance').show();
+			    		$('#load').hide();
+					}
+		        }
+		    });
+		    return false;
+		});
+		
+/**
 	$('#advanceFilters_pjt').submit(function() 
 	{	
 		$('#advance').hide();
@@ -60,11 +97,12 @@ function dtPjtTable() {
 		var pjtstage = $("#pjt_stage").val(); 
 		var pm_acc = $("#pm_acc").val(); 
 		var cust = $("#customer1").val(); 
+		var service = $("#services").val(); 
 		var keyword = $("#keywordpjt").val(); 
 		if(keyword == "Project No, Project Title, Name or Company")
 		keyword = 'null';
 		document.getElementById('ad_filter').style.display = 'block';
-		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+service+'/'+encodeURIComponent(keyword);
 		$('#ad_filter').load(sturl,function(){
 			$('#advance').show();
 			$('#load').hide();
@@ -80,7 +118,7 @@ function dtPjtTable() {
 			$('#load').hide();
 		}); */
 
-		
+/**		
 	});
 
 	$('#pjt_search_form').submit(function() {	
@@ -89,12 +127,13 @@ function dtPjtTable() {
 			keyword = 'null';
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 
-			var cust = $("#customer1").val();  
-			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+			var cust = $("#customer1").val(); 
+			var service = $("#services").val(); 
+			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+service+'/'+encodeURIComponent(keyword);
 			$('#ad_filter').load(sturl);
 			return false;
 	});
-	
+**/	
 	
 	function deleteProject(id, title) {
 		$.blockUI({

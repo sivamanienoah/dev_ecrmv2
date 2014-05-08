@@ -4,6 +4,12 @@
 */
 
 	$(document).ready(function() {
+		
+		$('#red,#amber,#green').click(function(e){
+			ragStatus();
+		});
+		ragStatus();
+		
 		var mySelect = $('#project_lead');
 		previousValue = mySelect.val();
 		var lead_assign = previousValue; 
@@ -1741,6 +1747,71 @@
 			}
 		}
 		
+		
+		function setRagStatus() {
+			
+			$("#errmsg_rag_status").hide();
+			var rag_status_val, r_class,rag_val;
+			rag_status_val=$("input[type='radio'][name='rag_status']:checked").val();
+			r_class = 'type';
+
+			if (rag_status_val=='') {
+				$("#errmsg_rag_status").text('Please check RAG status');
+				$("#errmsg_rag_status").show();
+				return false;
+			}else {
+				var params 				= {'lead_id':curr_job_id,'rag_status':rag_status_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					'project/set_rag_status/',
+					params,
+					function(_data) {
+						try {
+							eval ('var data = ' + _data);
+							if (typeof(data) == 'object') {
+								if (data.error == false) {
+									if(rag_status_val =='1'){
+										rag_val='Red';
+									}else if(rag_status_val =='2'){
+										rag_val='Amber';
+									}else if(rag_status_val =='3'){
+										rag_val='Green';
+									}
+									$('h6.rag-' + r_class + '-label span').text(rag_val);
+									$('.rag-' + r_class + '-change:visible').hide(200);
+								} else {
+									$("#errmsg_rag_status").text(data.error);
+									$("#errmsg_rag_status").show();
+								}
+							} else {
+								$("#errmsg_rag_status").text('Updating faild, please try again.');
+								$("#errmsg_rag_status").show();
+							}
+						} catch (e) {
+							$("#errmsg_rag_status").text('Invalid response, your session may have timed out.');
+							$("#errmsg_rag_status").show();
+						}
+					}
+				);
+			}
+		}
+		
+		function ragStatus(){
+			var radioId=$('input[type=radio][name=rag_status]:checked').attr('id');
+			if(radioId == 'red'){
+				$("input[type='radio']:checked").css( {"background":"#CC0000"});
+			}else if(radioId == 'amber'){
+				$("input[type='radio']:checked").css( {"background":"#FFBF00"});
+			}else if(radioId == 'green'){
+				$("input[type='radio']:checked").css( {"background":"#177245"});
+			}
+			
+			if($('input:radio[checked=false]')){
+				$("input[type='radio'][name=rag_status]:not(:checked)").css( {"background":""});
+			}
+		}
+		
 		var filterFloat = function (value) {
 		    if(/^\-?([0-9]+(\.[0-9]+)?|Infinity)$/
 		      .test(value))
@@ -1893,13 +1964,25 @@
 		}
 	}
 	
-	//Export milestones
-	function exportMilestone(pjt_id)
-	{
-		var url = "project/exportMilestoneTerms/"+pjt_id;
-	}
-	$('#excel').click(function() {
-		var sturl = site_base_url+"welcome/excelExport/";
-		document.location.href = sturl;
-		return false;
+	$(document).ready(function() {
+		$("#milestone-export").on('click',function(e){
+	        e.preventDefault();
+	        var params 				= {'lead_id':curr_job_id};
+			params[csrf_token_name] = csrf_hash_token;			
+	        $url = 'project/exportMilestoneTerms';
+	        $.ajax({
+	            type: 'GET',
+	            data: params,
+	            url: $url,
+	            success: function(data){
+	                   if(data == true){
+	                	   alert('This file is not available for download.');
+	                   }else{
+	                	   window.location =""+$url+"";
+	                   }
+	            }
+	         
+	        })
+		});
 	});
+	
