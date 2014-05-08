@@ -36,23 +36,32 @@ class Project extends crm_controller {
 		if(!empty($pjt_managers))
 		$data['pm_accounts'] = $pjt_managers;
 		$data['customers'] = $this->project_model->get_customers();
-		$data['records'] = $this->project_model->get_projects_results($pjtstage = 'null', $pm_acc = 'null', $cust = 'null', $keyword = 'null');
+		$data['services'] = $this->project_model->get_services();
+		$data['records'] = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '');
 		$this->load->view('projects/projects_view', $data);
     }
 	
 	/*
 	 *Advanced Search For Projects
 	 */
-	public function advance_filter_search_pjt($pjtstage='false', $pm_acc='false', $cust='false', $keyword='false')
+	public function advance_filter_search_pjt()
 	{
+ 		$inputData=real_escape_array($this->input->post());
+ 		
+		$pjtstage=$inputData['pjtstage'];
+		$pm_acc=$inputData['pm_acc'];
+		$cust=$inputData['cust'];
+		$service=$inputData['service'];
+		$keyword=$inputData['keyword'];
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
 		 */
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $keyword);	
-
+		
+		$getProjects = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);	
+		
 		$data['pjts_data'] = $getProjects;
 		$data['records'] = $getProjects;
 		
@@ -1863,6 +1872,24 @@ HDOC;
 		echo json_encode($data);
 	}
 	
+	public function set_rag_status(){
+				
+		$updt_data = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$rag_status=$updt_data['rag_status'];
+		if ($updt_data['rag_status'] == '')
+		{
+			$data['error'] = 'Please check RAG status';
+		}
+		else
+		{
+			$wh_condn = array('lead_id'=>$updt_data['lead_id']);
+			$updt = array('rag_status'=>$rag_status);
+			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+		}
+		echo json_encode($data);
+	}
+	
 
 	/*
 	*@For Add & Update addMilestones
@@ -2208,12 +2235,85 @@ HDOC;
 		echo $output;
 	}
 	
-	function exportMilestoneTerms($pjtId)
+	function exportMilestoneTerms()
 	{
-		$milestone_det = $this->project_model->get_milestone_terms($pjtId);
-		echo count($milestone_det);
-		exit;
+		$inputData=$this->input->get();
+		$leadId=$inputData['lead_id'];
+		$leadId='76';
+		
+		$milestone_det = $this->project_model->get_milestone_terms($leadId);
+		if(!empty($milestone_det)){
+			$this->load->library('excel');
+			$this->excel->setActiveSheetIndex(0);
+			$this->excel->getActiveSheet()->setTitle('Milestone');
+			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(10);
+			
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Milestone Name');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Planned Start Date');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Planned End Date');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'Actual Start Date');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'Actual End Date');
+			$this->excel->getActiveSheet()->setCellValue('F1', 'Effort');
+			$this->excel->getActiveSheet()->setCellValue('G1', 'Completion(%)');
+			$this->excel->getActiveSheet()->setCellValue('H1', 'Status');
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
+			
+			$i=2;
+			foreach ($milestone_det as $milestone) {		
+				$this->excel->getActiveSheet()->setCellValue('A'.$i, $milestone['milestone_name']);
+				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('d-m-Y', strtotime($milestone['ms_plan_st_date'])));
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, date('d-m-Y', strtotime($milestone['ms_plan_end_date'])));
+				if($milestone['ms_act_st_date']==0){
+					$actStartDate='NIL';
+				}else{
+					$actStartDate=date('d-m-Y', strtotime($milestone['ms_act_st_date']));
+				}
+				if($milestone['ms_act_end_date']==0){
+					$actEndDate='NIL';
+				}else{
+					$actEndDate=date('d-m-Y', strtotime($milestone['ms_act_end_date']));
+				}
+				
+				$this->excel->getActiveSheet()->setCellValue('D'.$i, $actStartDate);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $actEndDate);
+				$this->excel->getActiveSheet()->setCellValue('F'.$i, $milestone['ms_effort']);
+				$this->excel->getActiveSheet()->setCellValue('G'.$i, $milestone['ms_percent']);
+				if($milestone['milestone_status'] =='0'){
+					$mStatus='Scheduled';
+				}elseif($milestone['milestone_status'] =='1'){
+					$mStatus='In Progress';
+				}if($milestone['milestone_status'] =='2'){
+					$mStatus='Completed%';
+				}
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $mStatus);
+				$i++;
+			}
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$filename='milestone_'.time().'.xls';
+			header('Content-Type: application/vnd.ms-excel'); //mime type
+			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+			header('Cache-Control: max-age=0'); //no cache
+						 
+			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+			//if you want to save it as .XLSX Excel 2007 format
+			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+			//force user to download the Excel file without writing it to server's HD
+			$objWriter->save('php://output');
+			//$error = true;
+			exit();
+		}else{
+			$error = true;
+			exit($error);
+		}
 	}
-	
+
 }
 ?>
