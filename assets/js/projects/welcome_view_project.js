@@ -1779,7 +1779,7 @@
 										rag_val='Green';
 									}
 									$('h6.rag-' + r_class + '-label span').text(rag_val);
-									$('.rag-' + r_class + '-change:visible').hide(200);
+									$('.rag-status-change').hide(200);
 								} else {
 									$("#errmsg_rag_status").text(data.error);
 									$("#errmsg_rag_status").show();
