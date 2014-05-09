@@ -152,7 +152,6 @@ class Dashboard extends crm_controller {
 		
 		//for Closed Opportunities
 		$data['getClosedJobid']			= $this->dashboard_model->getClosedJobids($cusId, $filter);
-		
 		$closedMonthArr = array();
 		$monthArr 						= array();
 		$totalSum						= 0;

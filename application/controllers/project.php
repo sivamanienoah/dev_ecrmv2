@@ -1511,14 +1511,17 @@ class Project extends crm_controller {
 	function pjt_add_log()
 	{
 		$data_log = real_escape_array($this->input->post());
-		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		
+		// echo "<pre>"; print_r($data_log); exit;
+		
+		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
         if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
 			
 			$job_details = $this->project_model->get_lead_det($data_log['lead_id']);
             
-            if (count($job_details) > 0) 
+            if (count($job_details) > 0)
             {
 				$wh_condn = array('userid'=>$data_log['userid']);
 				$user_data = $this->project_model->get_user_data_by_id('users', $wh_condn);
@@ -2004,11 +2007,29 @@ HDOC;
           return true;
 		}
 		$(function() {
-			$(".pick-date").datepicker({dateFormat: "dd-mm-yy"});
+			$("#ms_plan_st_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, onSelect: function(date) {
+				if($("#ms_plan_end_date").val!="") {
+					$("#ms_plan_end_date").val("");
+				}
+			   var return_date=$("#ms_plan_st_date").val();
+			   $("#ms_plan_end_date").datepicker("option", "minDate", return_date);
+			
+			}});
+			$("#ms_plan_end_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true });
+			
+			$("#ms_act_st_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, onSelect: function(date) {
+				if($("#ms_act_end_date").val!="")
+				{
+					$("#ms_act_end_date").val("");
+				}
+				var return_date=$("#ms_act_st_date").val();
+				$("#ms_act_end_date").datepicker("option", "minDate", return_date);
+			}});
+			$("#ms_act_end_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true });
 		});
 		</script>
 		<form id="milestone-management" onsubmit="return false;">
-		<table class="milestone-table ms-toggler" frame="box">
+		<table class="milestone-table ms-toggler">
 			<tr>
 				<td>
 				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" value= "'.$milestone_details['milestone_name'].'" class="textfield width200px" /> </p>
@@ -2086,11 +2107,29 @@ HDOC;
           return true;
 		}
 		$(function() {
-			$(".pick-date").datepicker({dateFormat: "dd-mm-yy"});
+			$("#ms_plan_st_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, onSelect: function(date) {
+				if($("#ms_plan_end_date").val!="") {
+					$("#ms_plan_end_date").val("");
+				}
+			   var return_date=$("#ms_plan_st_date").val();
+			   $("#ms_plan_end_date").datepicker("option", "minDate", return_date);
+			
+			}});
+			$("#ms_plan_end_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true });
+			
+			$("#ms_act_st_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, onSelect: function(date) {
+				if($("#ms_act_end_date").val!="")
+				{
+					$("#ms_act_end_date").val("");
+				}
+				var return_date=$("#ms_act_st_date").val();
+				$("#ms_act_end_date").datepicker("option", "minDate", return_date);
+			}});
+			$("#ms_act_end_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true });
 		});
 		</script>
 		<form id="milestone-management" onsubmit="return false;">
-		<table class="milestone-table ms-toggler" frame="box">
+		<table class="milestone-table ms-toggler">
 			<tr>
 				<td>
 				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" class="textfield width200px" /> </p>
@@ -2160,7 +2199,6 @@ HDOC;
 		//delete the record
 		$wh_condn = array('milestoneid' => $msid, 'jobid_fk' => $pjtid);
 		$deleteTerm = $this->project_model->delete_row('milestones', $wh_condn);
-		echo $this->db->last_query();
 		if ($deleteTerm)
 		{
 			//insert the log
@@ -2181,12 +2219,12 @@ HDOC;
 	*/
 	function retrieveMilestoneTerms($pjt_id)
 	{
-		$milestone_det = $this->project_model->get_milestone_terms($pjt_id); //after update
+		$milestone_det = $this->project_model->get_milestone_terms($pjt_id); //after update		
 		$output = '';
 		$output .= "<table width='100%' class='payment_tbl'>
 		<tr><td colspan='3'><h6>Milestone Terms</h6></td></tr>
 		</table>";
-		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+		$output .= "<table class='data-table' id='milestone-data' cellspacing = '0' cellpadding = '0' border = '0'>";
 		$output .= "<thead>";
 		$output .= "<tr align='left'>";
 		$output .= "<th class='header'>Milestone Name</th>";
@@ -2232,16 +2270,29 @@ HDOC;
 			}
 		}
 		$output .= "</table>";
+		$output .= "#";
+		$output .= $this->calculateProjectMeter($pjt_id);
 		echo $output;
+	}
+	
+	/*
+	*@method calculateProjectMeter()
+	*@param leadid
+	*/
+	function calculateProjectMeter($jobid)
+	{
+		$projectMeterStatus = $this->project_model->get_project_meter_status($jobid);
+		return round(($projectMeterStatus['ms_percent']/10));
 	}
 	
 	function exportMilestoneTerms()
 	{
-		$inputData=$this->input->get();
-		$leadId=$inputData['lead_id'];
+		$inputData = $this->input->post();
+		$leadId	   = $inputData['lead_id'];
 		
 		$milestone_det = $this->project_model->get_milestone_terms($leadId);
-		if(!empty($milestone_det)){
+
+		if(!empty($milestone_det)) {
 			$this->load->library('excel');
 			$this->excel->setActiveSheetIndex(0);
 			$this->excel->getActiveSheet()->setTitle('Milestone');
@@ -2252,7 +2303,7 @@ HDOC;
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
 			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
-			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
 			
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Milestone Name');
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Planned Start Date');
@@ -2262,10 +2313,10 @@ HDOC;
 			$this->excel->getActiveSheet()->setCellValue('F1', 'Effort');
 			$this->excel->getActiveSheet()->setCellValue('G1', 'Completion(%)');
 			$this->excel->getActiveSheet()->setCellValue('H1', 'Status');
-			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
+			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setSize(10);
 			
 			$i=2;
-			foreach ($milestone_det as $milestone) {		
+			foreach ($milestone_det as $milestone) {	
 				$this->excel->getActiveSheet()->setCellValue('A'.$i, $milestone['milestone_name']);
 				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('d-m-Y', strtotime($milestone['ms_plan_st_date'])));
 				$this->excel->getActiveSheet()->setCellValue('C'.$i, date('d-m-Y', strtotime($milestone['ms_plan_end_date'])));
@@ -2294,8 +2345,8 @@ HDOC;
 				$this->excel->getActiveSheet()->setCellValue('H'.$i, $mStatus);
 				$i++;
 			}
-			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
-			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			$filename='milestone_'.time().'.xls';
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
@@ -2308,11 +2359,12 @@ HDOC;
 			$objWriter->save('php://output');
 			//$error = true;
 			exit();
-		}else{
+		} else {
 			$error = true;
 			exit($error);
 		}
 	}
+
 
 }
 ?>

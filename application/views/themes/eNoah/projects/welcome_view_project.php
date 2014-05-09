@@ -392,19 +392,19 @@ input[type='radio']:before {
 
 				<p class="status-bar">
 					<span class="bar"></span>
-					<?php if ($chge_access == 1) { ?>
-					<span class="over"></span>
-					<a href="#" class="p1" rel="1"></a>
-					<a href="#" class="p2" rel="2"></a>
-					<a href="#" class="p3" rel="3"></a>
-					<a href="#" class="p4" rel="4"></a>
-					<a href="#" class="p5" rel="5"></a>
-					<a href="#" class="p6" rel="6"></a>
-					<a href="#" class="p7" rel="7"></a>
-					<a href="#" class="p8" rel="8"></a>
-					<a href="#" class="p9" rel="9"></a>
-					<a href="#" class="p10" rel="10"></a>
-					<?php } ?>
+					<?php //if ($chge_access == 1) { ?>
+						<!--span class="over"></span>
+						<a href="#" class="p1" rel="1"></a>
+						<a href="#" class="p2" rel="2"></a>
+						<a href="#" class="p3" rel="3"></a>
+						<a href="#" class="p4" rel="4"></a>
+						<a href="#" class="p5" rel="5"></a>
+						<a href="#" class="p6" rel="6"></a>
+						<a href="#" class="p7" rel="7"></a>
+						<a href="#" class="p8" rel="8"></a>
+						<a href="#" class="p9" rel="9"></a>
+						<a href="#" class="p10" rel="10"></a-->
+					<?php //} ?>
 				</p>
 
 				<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
@@ -1047,7 +1047,7 @@ input[type='radio']:before {
 			<div id="milestone-add-view">
 				<form id="milestone-management" onsubmit="return false;">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<table class="milestone-table ms-toggler" style="display:none;" frame="box">
+					<table class="milestone-table ms-toggler" style="display:none;">
 						<tr>
 							<td>
 								<?php $jobid = isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0; ?>
@@ -1145,18 +1145,16 @@ input[type='radio']:before {
 			</div>
 			<?php } ?>
 			<p></p>
-			<div>
+			<div style="position: relative; z-index: 0;">
 				<a id="milestone-email" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
 				<a id="milestone-export" class="export-btn" name="msExport" style="color:#fff !important;">Export Timeline</a>
-				
-				
 			</div>
 			<?php
 			$output .= '<div class="milestone_view_det" id="milestone_view_det" style="display:block; margin-top:5px;">';
 			if(!empty($milestone_data))
 			{
 				$output .= "<table width='100%' class='payment_tbl'><tr><td colspan='3'><h6>Milestone Terms</h6></td></tr></table>";
-				$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+				$output .= "<table class='data-table' id='milestone-data' cellspacing = '0' cellpadding = '0' border = '0'>";
 				$output .= "<thead>";
 				$output .= "<tr align='left'>";
 				$output .= "<th class='header'>Milestone Name</th>";

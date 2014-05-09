@@ -101,143 +101,144 @@
 
 	function addLog() {
 
-	var the_log = $('#job_log').val();
-	if ($.trim(the_log) == '') {
-		alert('Please enter your post!');
-		return false;
-	}
+		var the_log = $('#job_log').val();
+		
+		if ($.trim(the_log) == '') {
+			alert('Please enter your post!');
+			return false;
+		}
 
-	var submit_log_minutes = null, log_minutes = $('#log_minutes').val();
-	if ($.trim(log_minutes) != '')
-	{
-		if ( ! /^[0-9]+$/.test(log_minutes))
+		var submit_log_minutes = null, log_minutes = $('#log_minutes').val();
+		if ($.trim(log_minutes) != '')
 		{
-			alert('Invalid minutes supplied');
-			return false;
-		}
-		else
-		{
-			submit_log_minutes = log_minutes;
-		}
-	}
-
-	var client_emails = true;
-	if ($('#email_to_customer').is(':checked')) {
-		client_emails = false;
-		$('#multiple-client-emails').children('input[type=checkbox]').each(function(){
-			if ($(this).is(':checked')){
-				client_emails = true;
-			}
-		});
-	}
-
-	if (!client_emails) {
-		alert('If you want to email the client, you must select at least one email address of the client.');
-		return false;
-	}
-
-	if ($('#log_stickie').is(':checked')) {
-		if (!window.confirm('Are you sure you want to highlight this log as a Stickie?')) {
-			return false;
-		}
-	}
-
-	var email_set = '';
-	$('.user-addresses input[type="checkbox"]:checked').each(function(){
-		email_set += $(this).attr('id') + ':';
-	});
-
-
-	$.blockUI({
-			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-		});
-
-
-	var form_data 			   = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set}
-	form_data[csrf_token_name] = csrf_hash_token;
-	
-	if ($('#log_stickie').is(':checked')) {
-		form_data.log_stickie = true;
-	}
-
-
-	/* add minutes to the log */
-	if (submit_log_minutes)
-	{
-		form_data.time_spent = submit_log_minutes;
-	}
-
-
-	if ($('#email_to_customer').is(':checked')) {
-		form_data.email_to_customer = true;
-		form_data.client_email_address = $('#client_email_address').val();
-		form_data.client_full_name = $('#client_full_name').val();
-		if ($('#client_emails_1').is(':checked')) {
-			form_data.client_emails_1 = $('#client_emails_1').val();
-		}
-		if ($('#client_emails_2').is(':checked')) {
-			form_data.client_emails_2 = $('#client_emails_2').val();
-		}
-		if ($('#client_emails_3').is(':checked')) {
-			form_data.client_emails_3 = $('#client_emails_3').val();
-		}
-		if ($('#client_emails_4').is(':checked')) {
-			form_data.client_emails_4 = $('#client_emails_4').val();
-		}
-		form_data.additional_client_emails = $('#additional_client_emails').val();
-	}
-	if ($('#requesting_client_approval').val() == 1) {
-		form_data.requesting_client_approval = true;
-	}
-
-	// empty list of emails?
-	if (email_set == '' && typeof(form_data.client_emails_1) == 'undefined' && typeof(form_data.client_emails_2) == 'undefined' && typeof(form_data.client_emails_3) == 'undefined' && typeof(form_data.client_emails_4) == 'undefined' && typeof(form_data.additional_client_emails) == 'undefined') {
-		if (!window.confirm('You do not have any user selected for emails!\nDo you want to continue?')) {
-			$.unblockUI();
-			return false;
-		}
-	}
-
-	if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
-		if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
-			$.unblockUI();
-			return false;
-		}
-	}
-	$.post(
-		'project/pjt_add_log',
-		form_data,
-		function(data)
-		{
-			if (typeof(data) == 'object')
+			if ( ! /^[0-9]+$/.test(log_minutes))
 			{
-				if (data.error) 
+				alert('Invalid minutes supplied');
+				return false;
+			}
+			else
+			{
+				submit_log_minutes = log_minutes;
+			}
+		}
+
+		var client_emails = true;
+		if ($('#email_to_customer').is(':checked')) {
+			client_emails = false;
+			$('#multiple-client-emails').children('input[type=checkbox]').each(function(){
+				if ($(this).is(':checked')){
+					client_emails = true;
+				}
+			});
+		}
+
+		if (!client_emails) {
+			alert('If you want to email the client, you must select at least one email address of the client.');
+			return false;
+		}
+
+		if ($('#log_stickie').is(':checked')) {
+			if (!window.confirm('Are you sure you want to highlight this log as a Stickie?')) {
+				return false;
+			}
+		}
+
+		var email_set = '';
+		$('.user-addresses input[type="checkbox"]:checked').each(function(){
+			email_set += $(this).attr('id') + ':';
+		});
+
+
+		$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+
+
+		var form_data 			   = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set}
+		form_data[csrf_token_name] = csrf_hash_token;
+		
+		if ($('#log_stickie').is(':checked')) {
+			form_data.log_stickie = true;
+		}
+
+
+		/* add minutes to the log */
+		if (submit_log_minutes)
+		{
+			form_data.time_spent = submit_log_minutes;
+		}
+
+
+		if ($('#email_to_customer').is(':checked')) {
+			form_data.email_to_customer = true;
+			form_data.client_email_address = $('#client_email_address').val();
+			form_data.client_full_name = $('#client_full_name').val();
+			if ($('#client_emails_1').is(':checked')) {
+				form_data.client_emails_1 = $('#client_emails_1').val();
+			}
+			if ($('#client_emails_2').is(':checked')) {
+				form_data.client_emails_2 = $('#client_emails_2').val();
+			}
+			if ($('#client_emails_3').is(':checked')) {
+				form_data.client_emails_3 = $('#client_emails_3').val();
+			}
+			if ($('#client_emails_4').is(':checked')) {
+				form_data.client_emails_4 = $('#client_emails_4').val();
+			}
+			form_data.additional_client_emails = $('#additional_client_emails').val();
+		}
+		if ($('#requesting_client_approval').val() == 1) {
+			form_data.requesting_client_approval = true;
+		}
+
+		// empty list of emails?
+		if (email_set == '' && typeof(form_data.client_emails_1) == 'undefined' && typeof(form_data.client_emails_2) == 'undefined' && typeof(form_data.client_emails_3) == 'undefined' && typeof(form_data.client_emails_4) == 'undefined' && typeof(form_data.additional_client_emails) == 'undefined') {
+			if (!window.confirm('You do not have any user selected for emails!\nDo you want to continue?')) {
+				$.unblockUI();
+				return false;
+			}
+		}
+
+		if ($('#email_to_customer').is(':checked') && the_log.match(/attach|invoice/gi) != null) {
+			if ( ! window.confirm('You have not attached the invoice to the email.\nDo you want to continue without the invoice?')) {
+				$.unblockUI();
+				return false;
+			}
+		}
+		$.post(
+			'project/pjt_add_log',
+			form_data,
+			function(data)
+			{
+				if (typeof(data) == 'object')
 				{
-					alert(data.errormsg);
+					if (data.error) 
+					{
+						alert(data.errormsg);
+					} 
+					else 
+					{
+						$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
+						$('#job_log').val('');
+						$('#log_minutes').val('');
+						$('#additional_client_emails').val('');
+						if (data.status_updated) {
+							document.location.href = project_request_url;
+						}
+						if (typeof(this_is_home) != 'undefined')
+						{
+						   window.location.href = window.location.href;
+						}
+					}
 				} 
 				else 
 				{
-					$('#lead_log_list').prepend(data.html).children('.log:first').slideDown(400);
-					$('#job_log').val('');
-					$('#log_minutes').val('');
-					$('#additional_client_emails').val('');
-					if (data.status_updated) {
-						document.location.href = project_request_url;
-					}
-					if (typeof(this_is_home) != 'undefined')
-					{
-					   window.location.href = window.location.href;
-					}
+					alert('Unexpected response from server!');
 				}
-			} 
-			else 
-			{
-				alert('Unexpected response from server!');
-			}
-			$.unblockUI();
-		},"json"
-	)
+				$.unblockUI();
+			},"json"
+		)
 	}
 
 	function setPaymentRecievedTerms() 
@@ -560,13 +561,13 @@
 
 	function runAjaxFileUpload() 
 	{
-	var _uid = new Date().getTime();
-	$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
-	var params 				= {};
-	params[csrf_token_name] = csrf_hash_token;
-	
-	$.ajaxFileUpload
-	(
+		var _uid = new Date().getTime();
+		$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
+		var params 				= {};
+		params[csrf_token_name] = csrf_hash_token;
+		
+		$.ajaxFileUpload
+		(
 			{
 				url:'ajax/request/file_upload/'+project_jobid,
 				secureuri:false,
@@ -718,61 +719,61 @@
 	var job_project_manager = project_assigned_to;
 
 	function setProjectLead() {
-			$('#pjt_lead_errormsg').hide();
-			var pl_user = $('#project_lead').val(); 
-			var previous_manager = $("#previous-project-manager").val(); 
+		$('#pjt_lead_errormsg').hide();
+		var pl_user = $('#project_lead').val(); 
+		var previous_manager = $("#previous-project-manager").val(); 
 
-			if (pl_user == 0) {
-				$('#pjt_lead_errormsg').text('Please Select Project Manager!');
-				$('#pjt_lead_errormsg').show();
-				return false;
-			} else {
-			
-				var params 				 = {'lead_id':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
-				params[csrf_token_name]  = csrf_hash_token;
+		if (pl_user == 0) {
+			$('#pjt_lead_errormsg').text('Please Select Project Manager!');
+			$('#pjt_lead_errormsg').show();
+			return false;
+		} else {
+		
+			var params 				 = {'lead_id':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
+			params[csrf_token_name]  = csrf_hash_token;
 
-				$.post(
-					'project/set_project_lead/',
-					params,
-					function(data) {
-						try {
-						  // return false;
-							eval ('var data = ' + data);
-							if (typeof(data) == 'object') {
-								if (data.error == false) { 
-									job_project_manager = pl_user;
-									$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-									$('.project-lead-change:visible').hide(200);
-									if (typeof(this_is_home) != 'undefined')
-									{
-										window.location.href = window.location.href;
-									}
-								} else { 
-									alert(data.error);
+			$.post(
+				'project/set_project_lead/',
+				params,
+				function(data) {
+					try {
+					  // return false;
+						eval ('var data = ' + data);
+						if (typeof(data) == 'object') {
+							if (data.error == false) { 
+								job_project_manager = pl_user;
+								$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
+								$('.project-lead-change:visible').hide(200);
+								if (typeof(this_is_home) != 'undefined')
+								{
+									window.location.href = window.location.href;
 								}
-							} else {
-								alert('Updating faild, please try again.');
+							} else { 
+								alert(data.error);
 							}
-						} catch (e) {
-							//alert('Invalid response, your session may have  timed out.');
-							$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-							$('.project-lead-change:visible').hide(200);
-							$("#previous-project-manager").val(pl_user);
+						} else {
+							alert('Updating faild, please try again.');
 						}
+					} catch (e) {
+						//alert('Invalid response, your session may have  timed out.');
 						$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
 						$('.project-lead-change:visible').hide(200);
-						if (typeof(this_is_home) != 'undefined')
-						{
-							window.location.href = window.location.href;
-						}
+						$("#previous-project-manager").val(pl_user);
 					}
-					//'json'
-				);
-			}
+					$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
+					$('.project-lead-change:visible').hide(200);
+					if (typeof(this_is_home) != 'undefined')
+					{
+						window.location.href = window.location.href;
+					}
+				}
+				//'json'
+			);
+		}
 	}
 
 	//adding the project id.
-	function setProjectId() {	
+	function setProjectId() {
 		$('#pjt_id_errormsg, .checkUser1, .checkUser').hide();
 		var pjtId = $('#pjtId').val()
 		if (pjtId == 0) {
@@ -782,16 +783,16 @@
 			setTimeout('timerfadeout()', 2000);
 			return false;
 		} else {
-				$.blockUI({
-					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-				});
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
 
-				var baseurl 			= $('.hiddenUrl').val();
-				var params  			= { pjt_id: pjtId};
-				params[csrf_token_name] = csrf_hash_token;
+			var baseurl 			= $('.hiddenUrl').val();
+			var params  			= { pjt_id: pjtId};
+			params[csrf_token_name] = csrf_hash_token;
 				
-				$.ajax({ 
+			$.ajax({
 				type: "POST",
 				url : baseurl + 'project/chkPjtIdFromdb/',
 				cache : false,
@@ -834,66 +835,66 @@
 	//updating the project value.
 	function setProjectVal() 
 	{
-	$('#pjt_val_errormsg, .checkVal1, .checkVal').hide();
-	var pjtValue = $('#pjt_value').val()
-	if (pjtValue == 0) {
-		$('#pjt_val_errormsg').text('Please Enter Project Value!');
-		$('#pjt_val_errormsg').show();
-		setTimeout('timerfadeout()', 3000);
-		return false;
-	} else {
-			$.blockUI({
-				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-			});
-			
-			var baseurl = $('.hiddenUrl').val();
-			var params      				 = { pjt_val: pjtValue };
-			params[csrf_token_name]      = csrf_hash_token;
-			$.ajax({
-			type: "POST",
-			url : baseurl + 'project/chkPjtValFromdb/',
-			cache : false,
-			data: params,
-			success : function(response) {
-				$('#checkVal').hide();
-				var params 				= { pjt_val: pjtValue, lead_id: curr_job_id};
-				params[csrf_token_name] = csrf_hash_token;
+		$('#pjt_val_errormsg, .checkVal1, .checkVal').hide();
+		var pjtValue = $('#pjt_value').val()
+		if (pjtValue == 0) {
+			$('#pjt_val_errormsg').text('Please Enter Project Value!');
+			$('#pjt_val_errormsg').show();
+			setTimeout('timerfadeout()', 3000);
+			return false;
+		} else {
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
 				
-				if(response == 'Ok') {	
-					$('#checkVal').show(); 
-					$('#checkVal1').hide();
-					setTimeout('timerfadeout()', 3000);
-					$.post(
-						'project/set_project_value/',
-						params,
-						function(_data) {
-							try {
-							eval ('var data = ' + _data);
-							if (typeof(data) == 'object') {
-								if (data.error == false) {
-									$('h5.project-val-label span').text(pjt_value);
-									$.unblockUI();
+				var baseurl = $('.hiddenUrl').val();
+				var params      				 = { pjt_val: pjtValue };
+				params[csrf_token_name]      = csrf_hash_token;
+				$.ajax({
+				type: "POST",
+				url : baseurl + 'project/chkPjtValFromdb/',
+				cache : false,
+				data: params,
+				success : function(response) {
+					$('#checkVal').hide();
+					var params 				= { pjt_val: pjtValue, lead_id: curr_job_id};
+					params[csrf_token_name] = csrf_hash_token;
+					
+					if(response == 'Ok') {	
+						$('#checkVal').show(); 
+						$('#checkVal1').hide();
+						setTimeout('timerfadeout()', 3000);
+						$.post(
+							'project/set_project_value/',
+							params,
+							function(_data) {
+								try {
+								eval ('var data = ' + _data);
+								if (typeof(data) == 'object') {
+									if (data.error == false) {
+										$('h5.project-val-label span').text(pjt_value);
+										$.unblockUI();
+									} else {
+										alert(data.error);
+									}
 								} else {
-									alert(data.error);
+									alert('Updating faild, please try again.');
+									}
+								} catch (e) {
+									alert('Invalid response, your session may have timed out.');
 								}
-							} else {
-								alert('Updating faild, please try again.');
-								}
-							} catch (e) {
-								alert('Invalid response, your session may have timed out.');
 							}
-						}
-					);
-				} else {
-					$.unblockUI();
-					$('#checkVal').hide(); 
-					$('#checkVal1').show();
-					setTimeout('timerfadeout()', 3000);
+						);
+					} else {
+						$.unblockUI();
+						$('#checkVal').hide(); 
+						$('#checkVal1').show();
+						setTimeout('timerfadeout()', 3000);
+					}
 				}
-			}
-		});
-	}
+			});
+		}
 	}
 
 	//update the project status.
@@ -1105,8 +1106,6 @@
 		$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
 		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
 		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0'});
-		$('#milestone-management .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
-
 		$('.task-list-item').livequery(function(){
 			$(this).hover(
 				function() { $('.delete-task', $(this)).css('display', 'block'); },
@@ -1153,7 +1152,7 @@
 			});
 		});
 
-		try {
+		/* try {
 			var sb_ol = $('.status-bar').offset().left;
 			$('.status-bar').mousemove(function(e){
 				var wd = e.clientX - sb_ol;
@@ -1166,6 +1165,7 @@
 			
 			$('.status-bar a').click(function(){
 				var pos = $(this).attr('rel');
+			
 				if (window.confirm('Are you sure that you want to change\nthe status to ' + pos * 10 +'% completion?'))
 				{
 					updateJobStatus(pos);
@@ -1173,7 +1173,7 @@
 				$('.status-bar span.over').fadeOut();
 				return false;
 			});
-		} catch (e) { if (window.console) console.log(e); }
+		} catch (e) { if (window.console) console.log(e); } */
 
 		
 		if (project_complete_status!='')
@@ -1297,7 +1297,7 @@
 							pos_just_completed = true;
 							status = status * 10;
 							updateVisualStatus(status);
-							location.reload(); 
+							// location.reload();
 						} else {
 							alert(data.error);
 						}
@@ -1321,46 +1321,46 @@
 
 	function setContractorJob()
 	{
-			$("div#errMsgPjtNulMem").hide();
-			var contractors = [];
+		$("div#errMsgPjtNulMem").hide();
+		var contractors = [];
 
-			var p = $('#project-member').val()
+		var p = $('#project-member').val()
 
-			var arr = new Array;
-			$("#select2 option").each ( function() {
-				arr.push ( $(this).val() );
-			});
+		var arr = new Array;
+		$("#select2 option").each ( function() {
+			arr.push ( $(this).val() );
+		});
 
-			if (arr.length === 0) {
-				$("div#errMsgPjtNulMem").show();
-			}
+		if (arr.length === 0) {
+			$("div#errMsgPjtNulMem").show();
+		}
 
-			$('select#select2 option').each(function(){
-				contractors.push($(this).val());
-			});
+		$('select#select2 option').each(function(){
+			contractors.push($(this).val());
+		});
 
-			var params = {'contractors': contractors.join(','), 'lead_id': curr_job_id, 'project-mem': p};
-			params[csrf_token_name] = csrf_hash_token;
-		
-			var baseurl = $('.hiddenUrl').val();
-			$.ajax({
-				type: "POST",
-				dataType: 'json',
-				url : baseurl + 'project/ajax_set_contractor_for_job/',
-				cache : false,
-				data: params,
-				success : function(response)
+		var params = {'contractors': contractors.join(','), 'lead_id': curr_job_id, 'project-mem': p};
+		params[csrf_token_name] = csrf_hash_token;
+	
+		var baseurl = $('.hiddenUrl').val();
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url : baseurl + 'project/ajax_set_contractor_for_job/',
+			cache : false,
+			data: params,
+			success : function(response)
+			{
+				if(response.status == 'OK')
+				{					
+					document.location.reload();
+				} 
+				else 
 				{
-					if(response.status == 'OK')
-					{					
-						document.location.reload();
-					} 
-					else 
-					{
-						alert(response.error);
-					}
+					alert(response.error);
 				}
-			});
+			}
+		});
 	}
 	
 	
@@ -1446,7 +1446,7 @@
 		);
 	}
 	
-	function emailMilestones()
+	/* function emailMilestones()
 	{
 		var qc_job_title = project_job_title;
 		var obj = $('#milestone-data tbody tr');
@@ -1482,7 +1482,7 @@
 		$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
 		
 		return false;
-	}
+	} */
 	
 	function populateJobOverview()
 	{
@@ -1578,14 +1578,14 @@
 			$(".payment-profile-view").show();
 			var jid = project_jobid;
 			setTimeout('timerfadeout()', 2000);
-			var url = "project/payment_term_edit/"+eid+"/"+jid;
+			var url = site_base_url+"project/payment_term_edit/"+eid+"/"+jid;
 			$('#payment-profile-view').load(url);
 		}
 
 		function paymentProfileView() 
 		{
 			setTimeout('timerfadeout()', 2000);
-			var url = "project/agreedPaymentView";
+			var url = site_base_url+"project/agreedPaymentView";
 			$('#payment-profile-view').load(url);
 		}
 		function paymentProfileDelete(eid) 
@@ -1595,7 +1595,7 @@
 			{
 				var jid = project_jobid;
 				setTimeout('timerfadeout()', 2000);
-				var url = "project/agreedPaymentDelete/"+eid+"/"+jid;
+				var url = site_base_url+"project/agreedPaymentDelete/"+eid+"/"+jid;
 				$('.payment-terms-mini-view1').load(url);
 			}
 			else 
@@ -1617,7 +1617,7 @@
 		{
 			$(".payment-recieved-view").show(); 
 			var jid = project_jobid;
-			var pdurl = "project/paymentEdit/"+pdid+"/"+jid;
+			var pdurl = site_base_url+"project/paymentEdit/"+pdid+"/"+jid;
 			$('.payment-recieved-view').load(pdurl);
 		}
 
@@ -1627,7 +1627,7 @@
 			if (agree) {
 				var jid = project_jobid;
 				setTimeout('timerfadeout()', 2000);
-				var url = "project/receivedPaymentDelete/"+eid+"/"+jid+"/"+map;
+				var url = site_base_url+"project/receivedPaymentDelete/"+eid+"/"+jid+"/"+map;
 				$('.payment-received-mini-view1').load(url);
 			}
 			else {
@@ -1638,7 +1638,7 @@
 
 		function paymentReceivedView() 
 		{
-			var url = "project/PaymentView";
+			var url = site_base_url+"project/PaymentView";
 			$('#payment-recieved-view').load(url);
 		}
 
@@ -1672,7 +1672,7 @@
 				params[csrf_token_name] = csrf_hash_token;
 			
 				$.post(
-					'project/set_project_estimate_hour/',
+					site_base_url+'project/set_project_estimate_hour/',
 					params,
 					function(_data) {
 						try {
@@ -1855,15 +1855,19 @@
 			
 			var form_data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
 			$.post( 
-				'project/addMilestones',
+				site_base_url+'project/addMilestones',
 				form_data,
 				function(data) {
+					
 					if (data.error) {
 						alert(data.errormsg);
 					} else {
 						$('.ms-toggler').slideToggle();
 						$('#milestone_view_det').empty();
-						$('#milestone_view_det').html(data);
+						var data = data.split('#');
+						$('#milestone_view_det').html(data[0]);
+						updateJobStatus(data[1]);
+						
 					}
 					$.unblockUI();
 					$('#milestone-management')[0].reset();
@@ -1908,7 +1912,7 @@
 			
 			var form_data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
 			$.post( 
-				'project/addMilestones/'+ms_id,
+				site_base_url+'project/addMilestones/'+ms_id,
 				form_data,
 				function(data) {
 					if (data.error) {
@@ -1916,7 +1920,9 @@
 					} else {
 						$('.ms-toggler').slideToggle();
 						$('#milestone_view_det').empty();
-						$('#milestone_view_det').html(data);
+						var data = data.split('#');
+						$('#milestone_view_det').html(data[0]);
+						updateJobStatus(data[1]);
 					}
 					$.unblockUI();
 					$('#milestone-add-view').empty();
@@ -1931,7 +1937,7 @@
 	
 	function addMilestoneForm() {
 		setTimeout('timerfadeout()', 2000);
-		var url = "project/addMilestoneFormView";
+		var url = site_base_url+"project/addMilestoneFormView";
 		$('#milestone-add-view').load(url);
 		$('.ms-toggler').slideToggle();
 	}
@@ -1942,7 +1948,7 @@
 		$(".milestone-table").show();
 		var jobid = project_jobid;
 		setTimeout('timerfadeout()', 2000);
-		var url = "project/milestone_edit_term/"+ms_id+"/"+jobid;
+		var url = site_base_url+"project/milestone_edit_term/"+ms_id+"/"+jobid;
 		$('#milestone-add-view').load(url);
 		$('#addNew-ms').hide();
 	}
@@ -1951,38 +1957,115 @@
 	function milestoneDeleteTerm(ms_id)
 	{
 		var agree=confirm("Are you sure you want to delete this file?");
-		if (agree) 
-		{
-			var pjtid = project_jobid;
-			setTimeout('timerfadeout()', 2000);
-			var url = "project/deleteMilestoneTerm/"+ms_id+"/"+pjtid;
-			$('#milestone_view_det').load(url);
-		}
-		else 
-		{
+		var pjtid = project_jobid;
+		if (agree) {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
+			var form_data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
+			$.post( 
+				site_base_url+"project/deleteMilestoneTerm/"+ms_id+"/"+pjtid,
+				form_data,
+				function(data) {
+					if (data.error) {
+						alert(data.errormsg);
+					} else {
+						setTimeout('timerfadeout()', 2000);
+						var data = data.split('#');
+						$('#milestone_view_det').html(data[0]);
+						updateJobStatus(data[1]);
+					}
+					$.unblockUI();
+				}
+			);
+		} else {
 			return false;
 		}
 	}
 	
+	
 	$(document).ready(function() {
-		$("#milestone-export").on('click',function(e){
-	        e.preventDefault();
-	        var params 				= {'lead_id':curr_job_id};
-			params[csrf_token_name] = csrf_hash_token;			
-	        $url = 'project/exportMilestoneTerms';
-	        $.ajax({
-	            type: 'GET',
-	            data: params,
-	            url: $url,
-	            success: function(data){
-	                   if(data == true){
-	                	   alert('This file is not available for download.');
-	                   }else{
-	                	   window.location =""+$url+"";
-	                   }
-	            }
-	         
-	        })
+		/*Export Milestones*/
+		$('#milestone-export').on('click',function(e) {
+			e.preventDefault();
+			var baseurl   = site_base_url;
+			var url 	  = baseurl+"project/exportMilestoneTerms";
+			
+			var form = $('<form action="' + url + '" method="post">' +
+			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+			'<input type="hidden" name="lead_id" value="' +curr_job_id+ '" />' +
+			'</form>');
+			$('body').append(form);
+			$(form).submit();
+			return false;
 		});
+		/*Email Milestones*/
+		$('#milestone-email').on('click',function(e) {
+			e.preventDefault();
+			emailMilestones();
+		});
+	});
+	
+	/*Email Milestones*/
+	function emailMilestones()
+	{
+		var qc_job_title = project_job_title;
+		var obj = $('#milestone-data tbody tr');
+		if (obj.length == 0)
+		{
+			alert('No records are there to email!');
+			return false;
+		}
+		var email_data = '';
+		var table = $('#milestone-data tbody');
+		obj.each(function(){
+			var $tds = $(this).find('td'),
+				msname	 = $tds.eq(0).text(),
+				msplst	 = $tds.eq(1).text(),
+				msplend	 = $tds.eq(2).text();
+				msactst	 = $tds.eq(3).text();
+				msactend = $tds.eq(4).text();
+				mseff	 = $tds.eq(5).text();
+				mscomp	 = $tds.eq(6).text();
+				msstaus	 = $tds.eq(7).text();
+			
+			email_data += 'MileStone Name: ' + msname + 
+						'\nPlanned Start Date: ' + msplst + 
+						'\nPlanned End Date: ' + msplend + 
+						'\nActual Start Date: ' + msactst + 
+						'\nActual End Date: ' + msactend +
+						'\nEffort: ' + mseff +
+						'\nCompletion: ' + mscomp + '%' +
+						'\nCompletion: ' + msstaus+'\n\n';
+			
+		});
+		$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
+		$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
+		return false;
+	}
+	
+	//Milestones dateformats conditions
+	$(document).ready(function() {
+		$('#ms_plan_st_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
+			if($('#ms_plan_end_date').val!='')
+			{
+				$('#ms_plan_end_date').val('');
+			}
+			var return_date=$('#ms_plan_st_date').val();
+			$('#ms_plan_end_date').datepicker("option", "minDate", return_date);
+		}});
+		$('#ms_plan_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+		
+		$('#ms_act_st_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
+			if($('#ms_act_end_date').val!='')
+			{
+				$('#ms_act_end_date').val('');
+			}
+			var return_date=$('#ms_act_st_date').val();
+			$('#ms_act_end_date').datepicker("option", "minDate", return_date);
+		}});
+		$('#ms_act_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	});
 	

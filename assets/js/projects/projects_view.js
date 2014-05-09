@@ -26,10 +26,10 @@ function dtPjtTable() {
 
 	//For Projects
 	var pjtstage = $("#pjt_stage").val(); 
-	var pm_acc = $("#pm_acc").val(); 
-	var cust = $("#customer1").val(); 
-	var service = $("#services").val(); 
-	var keyword = $("#keywordpjt").val(); 
+	var pm_acc	 = $("#pm_acc").val(); 
+	var cust	 = $("#customer1").val(); 
+	var service	 = $("#services").val(); 
+	var keyword	 = $("#keywordpjt").val(); 
 	//alert(keyword);
 	if(keyword == "Project No, Project Title, Name or Company")
 		keyword = 'null';
@@ -39,16 +39,15 @@ function dtPjtTable() {
 
 		function advanced_filter_pjt(){
 			$('#advance_search_pjt').slideToggle('slow');
-			var  keyword = $("#keywordpjt").val();
-			var status = document.getElementById('advance_search_pjt').style.display;
+			var keyword = $("#keywordpjt").val();
+			var status  = document.getElementById('advance_search_pjt').style.display;
 			
 			if(status == 'none') {
 				var pjtstage = $("#pjt_stage").val(); 
-				var pm_acc = $("#pm_acc").val(); 
-				var cust = $("#customer1").val(); 
-				var service = $("#services").val(); 
-			}
-			else   {
+				var pm_acc	 = $("#pm_acc").val(); 
+				var cust	 = $("#customer1").val(); 
+				var service	 = $("#services").val(); 
+			} else {
 				$("#pjt_stage").val("");
 				$("#pm_acc").val("");
 				$("#customer1").val("");
@@ -58,16 +57,15 @@ function dtPjtTable() {
 		
 		$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
 			var pjtstage = $("#pjt_stage").val(); 
-			var pm_acc = $("#pm_acc").val(); 
-			var cust = $("#customer1").val(); 
-			var service = $("#services").val(); 
-			var keyword = $("#keywordpjt").val(); 
+			var pm_acc 	 = $("#pm_acc").val(); 
+			var cust 	 = $("#customer1").val(); 
+			var service  = $("#services").val(); 
+			var keyword  = $("#keywordpjt").val(); 
 			if(keyword == "Project No, Project Title, Name or Company")
 			keyword = '';
 			
 			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword)};
 			params[csrf_token_name] = csrf_hash_token; 
-			
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
 				$('#load').show();
@@ -79,11 +77,8 @@ function dtPjtTable() {
 		        data: params,
 		        success: function(data) {
 		    		$("#ad_filter" ).html(data);
-		    		
-		    		if($(this).attr("id") == 'advanceFilters_pjt'){
-		    			$('#advance').show();
-			    		$('#load').hide();
-					}
+					$('#advance').show();
+					$('#load').hide();
 		        }
 		    });
 		    return false;

@@ -523,6 +523,17 @@ class Project_model extends crm_model
 		$query = $this->db->get();
 		return $query->row_array();
 	}
+	
+	//Calculate the project meter status
+	function get_project_meter_status($jobid)
+	{
+		$wh_condn = array('jobid_fk' => $jobid);
+		$this->db->select_avg('ms_percent');
+		$this->db->from($this->cfg['dbpref'].'milestones');
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
 }
 
 ?>

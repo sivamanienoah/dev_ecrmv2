@@ -13,7 +13,6 @@
 					<th>Project ID</th>
 					<th>Project Title</th>
 					<th>Project Completion</th>
-					
 					<th>Project Type</th>
 					<th>Planned Hours</th>
 					<th>Billable Hours</th>
@@ -26,13 +25,10 @@
 					<th>P&L</th>
 					<th>P&L %</th>
 					<th>RAG Status</th>
-					
 					<th>Customer</th>
 					<th>Project Manager</th>
 					<th>Planned Start Date</th>
-					<th>Planned End Date</th>					
-					
-					
+					<th>Planned End Date</th>
 					<th width="110px;">Project Status</th>
                 </tr>
             </thead>
@@ -155,7 +151,7 @@
 	</form>
 
 </div>
-<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
+<!--script type="text/javascript" src="assets/js/tablesort.min.js"></script-->
 <script type="text/javascript">
 $(function() {
 	dtPjtTable();
