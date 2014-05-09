@@ -1364,9 +1364,9 @@
 	}
 	
 	
-	//////////////////////////----------------------X-----------------////////////////////////////	
+	//////////////////////////----------------------X-----------------////////////////////////////
 	
-	var milestones_cached_row = false;
+	/* var milestones_cached_row = false;
 	function addMilestoneField()
 	{
 		if ( ! milestones_cached_row)
@@ -1376,9 +1376,9 @@
 		
 		milestones_cached_row.clone().appendTo('#milestone-data tbody');
 		$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-	}
+	} */
 	
-	function removeMilestoneRow(el)
+	/* function removeMilestoneRow(el)
 	{
 		var agree=confirm("Are you sure you want to delete this milestone?");
 			if (agree) {
@@ -1405,8 +1405,9 @@
 			}
 		);
 		return false;
-	}
+	} */
 	
+	/* 
 	function saveMilestones()
 	{
 		var error = false;
@@ -1444,7 +1445,7 @@
 				$('#jv-tab-4-5').unblock();
 			}
 		);
-	}
+	} */
 	
 	/* function emailMilestones()
 	{
@@ -1483,6 +1484,7 @@
 		
 		return false;
 	} */
+	//////////////////////////----------------------X-----------------////////////////////////////
 	
 	function populateJobOverview()
 	{
@@ -1652,7 +1654,6 @@
 		}
 		
 		function setProjectEstimateHour() {
-			
 			$("#errmsg_start_dt").hide();
 			var hour_val, h_class;
 			hour_val=$('#project-estimate-hour').val();
@@ -1699,7 +1700,6 @@
 		}
 		
 		function setProjectType() {
-			
 			$("#errmsg_project_type").hide();
 			var project_type_val, p_class,project_val;
 			project_type_val=$('#project_type').val();
@@ -1749,9 +1749,8 @@
 		
 		
 		function setRagStatus() {
-			
 			$("#errmsg_rag_status").hide();
-			var rag_status_val, r_class,rag_val;
+			var rag_status_val, r_class, rag_val;
 			rag_status_val=$("input[type='radio'][name='rag_status']:checked").val();
 			r_class = 'type';
 
