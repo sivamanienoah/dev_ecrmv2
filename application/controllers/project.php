@@ -1923,23 +1923,12 @@ HDOC;
 			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
 			
 		} else {
-		
 			$job_updated = FALSE;
 			
 			if ($update == "") {
-			
 				$ins_milestone = $this->project_model->insert_row('milestones', $milestone_data);
-
-				// $pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
-				
-				$ins['jobid_fk']      = $data['sp_form_jobid'];
-				$ins['userid_fk']     = $this->userdata['userid'];
-				$ins['date_created']  = date('Y-m-d H:i:s');
-				$ins['log_content']   = $pay_det;
-				// $insert_logs = $this->project_model->insert_row('logs', $ins);
 				$job_updated = TRUE;
 			} else {
-			
 				$wh_condn = array('milestoneid'=>$update, 'jobid_fk'=>$milestone_data['jobid_fk']);
 				$updt_row = $this->project_model->update_row("milestones", $milestone_data, $wh_condn);
 				$job_updated = TRUE;
@@ -2188,21 +2177,11 @@ HDOC;
 	 */
 	function deleteMilestoneTerm($msid, $pjtid)
 	{
-		// $stat = $this->project_model->get_payment_term_det($msid, $pjtid);
-		
-		//log details
-		$ins['jobid_fk'] = $jid;
-		$ins['userid_fk'] = $this->userdata['userid'];
-		$ins['date_created'] = date('Y-m-d H:i:s');
-		// $ins['log_content'] = 'Project Milestone Name: '.$stat['project_milestone_name'].'  Amount: '.$stat['expect_worth_name'].' '.$stat['amount'].'  is deleted on '.date('Y-m-d');
-			
 		//delete the record
 		$wh_condn = array('milestoneid' => $msid, 'jobid_fk' => $pjtid);
 		$deleteTerm = $this->project_model->delete_row('milestones', $wh_condn);
 		if ($deleteTerm)
 		{
-			//insert the log
-			// $insert_logs = $this->project_model->insert_row('logs', $ins);
 			echo "<span id=paymentfadeout><h6>Milestone Deleted!</h6></span>";
 		}
 		else
