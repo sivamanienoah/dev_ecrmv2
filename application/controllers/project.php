@@ -2026,18 +2026,18 @@ HDOC;
 			</tr>
 			<tr>
 				<td>
-				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" value= "'.$msPlStDate.'" class="textfield width200px pick-date" /> </p>
+				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" value= "'.$msPlStDate.'" class="textfield width200px pick-date" /> </p>
 				</td>
 				<td>
-				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" value= "'.$msPlEndDate.'" class="textfield width200px pick-date" /> </p>
+				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" value= "'.$msPlEndDate.'" class="textfield width200px pick-date" /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" value= "'.$msActStDate.'" class="textfield width200px pick-date" /> </p>
+				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" value= "'.$msActStDate.'" class="textfield width200px pick-date" /> </p>
 				</td>
 				<td>
-				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" value= "'.$msActEndDate.'" class="textfield width200px pick-date" /> </p>
+				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" value= "'.$msActEndDate.'" class="textfield width200px pick-date" /> </p>
 				</td>
 			</tr>
 			<tr>
@@ -2126,18 +2126,18 @@ HDOC;
 			</tr>
 			<tr>
 				<td>
-				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" class="textfield width200px pick-date" /> </p>
+				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
 				</td>
 				<td>
-				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" class="textfield width200px pick-date" /> </p>
+				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" class="textfield width200px pick-date" /> </p>
+				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
 				</td>
 				<td>
-				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" class="textfield width200px pick-date" /> </p>
+				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
 				</td>
 			</tr>
 			<tr>
