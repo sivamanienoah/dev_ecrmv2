@@ -49,9 +49,9 @@
 $active_group = "timesheet";
 $active_record = TRUE;
 $db['timesheet']['hostname'] = 'localhost';
-$db['timesheet']['username'] = 'root';
-$db['timesheet']['password'] = '';
-$db['timesheet']['database'] = 'tes_timesheet';
+$db['timesheet']['username'] = 'dev_timesheet';
+$db['timesheet']['password'] = 'tim@Dev4';
+$db['timesheet']['database'] = 'dev_timesheet';
 $db['timesheet']['dbdriver'] = 'mysql';
 $db['timesheet']['dbprefix'] = 'enoah_';
 $db['timesheet']['pconnect'] = FALSE;
