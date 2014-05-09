@@ -1062,13 +1062,13 @@ input[type='radio']:before {
 							<td>
 								<p>
 									Planned Start Date * 
-									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" class="textfield width200px pick-date" />
+									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width200px pick-date" />
 								</p>
 							</td>
 							<td>
 								<p>
 									Planned End Date *
-									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" class="textfield width200px pick-date" />
+									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width200px pick-date" />
 								</p>
 							</td>
 						</tr>
@@ -1076,13 +1076,13 @@ input[type='radio']:before {
 							<td>
 								<p>
 									Actual Start Date
-									<input type="text" name="ms_act_st_date" id="ms_act_st_date" class="textfield width200px pick-date" />
+									<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width200px pick-date" />
 								</p>
 							</td>
 							<td>
 								<p>
 									Actual End Date
-									<input type="text" name="ms_act_end_date" id="ms_act_end_date" class="textfield width200px pick-date" />
+									<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width200px pick-date" />
 								</p>
 							</td>
 						</tr>
