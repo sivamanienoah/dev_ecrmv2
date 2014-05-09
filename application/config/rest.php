@@ -200,7 +200,7 @@ $config['rest_database_group'] = 'default';
 |	'keys'
 |
 */
-$config['rest_keys_table'] = 'crm_keys';
+$config['rest_keys_table'] = 'crms_keys';
 
 /*
 |--------------------------------------------------------------------------
@@ -272,7 +272,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |	'logs'
 |
 */
-$config['rest_logs_table'] = 'crm_apilogs';
+$config['rest_logs_table'] = 'crms_apilogs';
 
 /*
 |--------------------------------------------------------------------------
@@ -312,7 +312,7 @@ $config['rest_enable_logging'] = TRUE;
 |	'access'
 |
 */
-$config['rest_access_table'] = 'crm_access';
+$config['rest_access_table'] = 'crms_access';
 
 /*
 |--------------------------------------------------------------------------
