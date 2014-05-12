@@ -1,5 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); 
-//print_r($roles);
+// echo "<pre>"; print_r($roles);
 ?>
 
 <div id="content">
@@ -77,7 +77,8 @@
 							<div class="error" style="color:red;" id="error5">required</div>
 						<?php } ?>
 					</td>
-                    <td>&nbsp;</td>
+					<td>Login Authentication:</td>
+					<td><label for="auth-ldap">LDAP&nbsp;&nbsp;&nbsp;</label><input <?php echo ($this->validation->auth == 'ldap') ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth" value="ldap"/>&nbsp;&nbsp;&nbsp;<label for="auth-dp">DB&nbsp;&nbsp;&nbsp;</label><input <?php echo ($this->validation->auth == 'db') ? ' checked="checked"' : '' ?> id="auth-dp" type="radio" name="auth" value="db"/></td>
                     <td>
 						<?php 
 						if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { 
