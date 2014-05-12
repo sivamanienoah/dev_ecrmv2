@@ -22,7 +22,7 @@
 					<th>Effort Variance</th>
 					<th>Project Value</th>
 					<th>Utilization Cost</th>
-					<th>P&L</th>
+					<th>P&L </th>
 					<th>P&L %</th>
 					<th>RAG Status</th>
 					<th>Customer</th>
