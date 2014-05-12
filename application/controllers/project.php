@@ -92,6 +92,7 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
+		
 		if(!empty($result)) {
 			$data['quote_data'] = $result[0];
 			$data['view_quotation'] = true;
@@ -159,14 +160,14 @@ class Project extends crm_controller {
 			}
 			
 			/**
-			 * Get files associated with this job
+			 * Get the files associated with this job
 			 */
 			$fcpath = UPLOAD_PATH; 
 		    $f_dir = $fcpath . 'files/' . $id . '/'; 
 			$data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
 
 			/**
-			 * Get URLs associated with this job
+			 * Get the URLs associated with this job
 			 */
 			$data['job_urls_html'] = $this->project_model->get_job_urls($id);
 			
@@ -175,44 +176,52 @@ class Project extends crm_controller {
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			$timesheet = $this->project_model->get_timesheet_data($id);
+			
+			if(!empty($data['quote_data']['pjt_id']))
+			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id']);
 			
 			$data['timesheet_data']=array();
-			$total_billable=0;
-			$total_nonbillable=0;
-			$total_internal=0;
-			$total_cost=0;
-			if(count($timesheet)>0){
+			$total_billable	   = 0;
+			$total_nonbillable = 0;
+			$total_internal	   = 0;
+			$total_cost        = 0;
+			if(count($timesheet)>0) {
 				$i=0;
-				foreach($timesheet as $timesheetData){
-					$total_billable += $timesheetData['Billable'];
-					$total_nonbillable += $timesheetData['Non-Billable'];
-					$total_internal += $timesheetData['Internal'];
-					$total_cost += $timesheetData['cost'];
-					$data['timesheet_data'][]=$timesheetData;
+				foreach($timesheet as $timesheetData) {
+					$total_billable 	     += $timesheetData['Billable'];
+					$total_nonbillable		 += $timesheetData['Non-Billable'];
+					$total_internal  		 += $timesheetData['Internal'];
+					$total_cost       		 += $timesheetData['cost'];
+					$data['timesheet_data'][] = $timesheetData;
 					$i++;
 				}
 				// To Get total of values
-				$data['timesheet_data'][$i]['Resources']='Total';
-				$data['timesheet_data'][$i]['Billable']=$total_billable;
-				$data['timesheet_data'][$i]['Internal']=$total_internal;
-				$data['timesheet_data'][$i]['Non-Billable']=$total_nonbillable;
-				$data['timesheet_data'][$i]['bill_rate']='';
-				$data['timesheet_data'][$i]['cost']=$total_cost;
+				$data['timesheet_data'][$i]['Resources']	= 'Total';
+				$data['timesheet_data'][$i]['Billable'] 	= $total_billable;
+				$data['timesheet_data'][$i]['Internal']		= $total_internal;
+				$data['timesheet_data'][$i]['Non-Billable'] = $total_nonbillable;
+				$data['timesheet_data'][$i]['bill_rate']	= '';
+				$data['timesheet_data'][$i]['cost']			= $total_cost;
 			}
-			$data['actual_hour_data']='NIL';
-			$actual_hour = $this->project_model->get_actual_project_hour($id);
-			if(count($actual_hour)>0){
-				$data['actual_hour_data']=$actual_hour['total_Hour'];
-			}
-			$project_cost=$this->project_model->get_project_cost($id);
+			$data['actual_hour_data']						= 'NIL';
 			
+			if(!empty($data['quote_data']['pjt_id']))
+			$actual_hour = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id']);
+			
+			if(count($actual_hour)>0){
+				$data['actual_hour_data'] = $actual_hour['total_Hour'];
+			}
+
+			if(!empty($data['quote_data']['pjt_id']))
+			$project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id']);
+
+			$data['project_costs'] = array();
 			if(count($project_cost)>0){
 				foreach($project_cost as $project_cost_data){
-					$data['project_total_cost'] +=$project_cost_data['cost'];
+					$data['project_total_cost'] += $project_cost_data['cost'];
 				}
+				$data['project_costs'] = $project_cost;
 			}
-			$data['project_costs']=$project_cost;
 			
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
@@ -1817,48 +1826,49 @@ HDOC;
 			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
 			redirect('project');
 		}
-		
 	}
 	
 	public function set_project_estimate_hour()
-	{	
-		
+	{
 		$updt_data = real_escape_array($this->input->post());
-
+		
 		$data['error'] = FALSE;
-
+		
 		$estimateHr = $updt_data['esthr'];
 		
-		if (!is_numeric($updt_data['esthr']))
+		if (!is_numeric($updt_data['esthr'])) 
 		{
 			$data['error'] = 'Invalid estimated hour!';
-		}
-		else
+		} 
+		else 
 		{
-				$wh_condn = $updt_data['lead_id'];
-				$chk_stat = $this->project_model->get_actual_project_hour($wh_condn);
-				if(count($chk_stat)>0){
-					$actual_hr=$chk_stat['total_Hour'];
-				}else{
-					$actual_hr='0';
-				}
-				
-				if($estimateHr < $actual_hr)
-				{ 
-					$data['error'] = 'Estimated project hour must be equal or greater than the actual project hour!';
-				}
-				else{
-					$wh_condn = array('lead_id'=>$updt_data['lead_id']);
-					$updt = array('estimate_hour'=>$estimateHr);
-					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-				}
-
+			$wh_condn = $updt_data['lead_id'];
+			$chk_stat = $this->project_model->get_actual_project_hour($wh_condn);
+			if(count($chk_stat)>0) 
+			{
+				$actual_hr=$chk_stat['total_Hour'];
+			} 
+			else 
+			{
+				$actual_hr='0';
+			}
+			
+			if($estimateHr < $actual_hr) 
+			{
+				$data['error'] = 'Estimated project hour must be equal or greater than the actual project hour!';
+			}
+			else 
+			{
+				$wh_condn = array('lead_id'=>$updt_data['lead_id']);
+				$updt = array('estimate_hour'=>$estimateHr);
+				$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+			}
 		}
 		echo json_encode($data);
 	}
 	
-	public function set_project_type(){
-				
+	public function set_project_type()
+	{
 		$updt_data = real_escape_array($this->input->post());
 		$data['error'] = FALSE;
 		$project_type=$updt_data['project_type'];
@@ -1868,15 +1878,15 @@ HDOC;
 		}
 		else
 		{
-			$wh_condn = array('lead_id'=>$updt_data['lead_id']);
-			$updt = array('project_type'=>$project_type);
+			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
+			$updt	   = array('project_type'=>$project_type);
 			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
 		echo json_encode($data);
 	}
 	
-	public function set_rag_status(){
-				
+	public function set_rag_status()
+	{
 		$updt_data = real_escape_array($this->input->post());
 		$data['error'] = FALSE;
 		$rag_status=$updt_data['rag_status'];
@@ -2295,7 +2305,7 @@ HDOC;
 			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setSize(10);
 			
 			$i=2;
-			foreach ($milestone_det as $milestone) {	
+			foreach ($milestone_det as $milestone) {
 				$this->excel->getActiveSheet()->setCellValue('A'.$i, $milestone['milestone_name']);
 				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('d-m-Y', strtotime($milestone['ms_plan_st_date'])));
 				$this->excel->getActiveSheet()->setCellValue('C'.$i, date('d-m-Y', strtotime($milestone['ms_plan_end_date'])));
@@ -2314,12 +2324,12 @@ HDOC;
 				$this->excel->getActiveSheet()->setCellValue('E'.$i, $actEndDate);
 				$this->excel->getActiveSheet()->setCellValue('F'.$i, $milestone['ms_effort']);
 				$this->excel->getActiveSheet()->setCellValue('G'.$i, $milestone['ms_percent']);
-				if($milestone['milestone_status'] =='0'){
+				if($milestone['milestone_status'] == '0'){
 					$mStatus='Scheduled';
-				}elseif($milestone['milestone_status'] =='1'){
+				}elseif($milestone['milestone_status'] == '1'){
 					$mStatus='In Progress';
-				}if($milestone['milestone_status'] =='2'){
-					$mStatus='Completed%';
+				}if($milestone['milestone_status'] == '2'){
+					$mStatus='Completed';
 				}
 				$this->excel->getActiveSheet()->setCellValue('H'.$i, $mStatus);
 				$i++;
@@ -2330,7 +2340,6 @@ HDOC;
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
-						 
 			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
 			//if you want to save it as .XLSX Excel 2007 format
 			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  

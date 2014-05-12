@@ -129,11 +129,13 @@
             
             <tbody>
 				<?php
-				if (is_array($records) && count($records) > 0) { 
+				if (is_array($records) && count($records) > 0) {
 				?>
                     <?php
 					foreach ($records as $record) {
-						$timsheetData = $this->project_model->get_timesheet_hours($record['lead_id']);
+						if(!empty($record['pjt_id'])) {
+							$timsheetData = $this->project_model->get_timesheet_hours($record['pjt_id']);
+						}
 					?>
                     <tr>
 						<td class="actions" align="center">
@@ -163,11 +165,11 @@
 						</td>
 						<td class="actions" align="center">
 							<?php 
-								if($record['project_type'] =='1'){
+								if($record['project_type'] == '1'){
 									echo 'Fixed';
-								}elseif($record['project_type'] =='2'){
-									 echo 'Internal';
-								}elseif($record['project_type'] =='3'){
+								}elseif($record['project_type'] == '2'){
+									echo 'Internal';
+								}elseif($record['project_type'] == '3'){
 									echo 'T&amp;M';
 								}else{
 									echo '-';

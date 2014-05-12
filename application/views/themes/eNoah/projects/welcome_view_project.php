@@ -23,98 +23,6 @@
   
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
-<!-- CSS goes in the document HEAD or added to your external stylesheet -->
-<style type="text/css">
-	.wrap_table {
-	    width: 452px;
-	}
-	
-	.wrap_table table {
-	    width: 435px;
-	    table-layout: fixed;
-	}
-	
-	table.wrap_table tr td,table.wrap_table tr td {
-		font-family: verdana,arial,sans-serif;
-		font-size:11px;
-	    padding: 5px;
-	    border: 1px solid #eee;
-	    width: 100px;
-	    word-wrap: break-word;
-	}
-	
-	table.head tr td {
-		font-family: verdana,arial,sans-serif;
-		font-weight: bold;
-		font-size:11px;
-		color:#333333;
-	    background: #eee;
-	    background-color: #dedede;
-	}
-	
-	.inner_table {
-	    height: 100px;
-	    overflow-y: auto;
-	}
-	
-	
-	
-	.wrap_timesheet {
-	    width: 100%;
-	}
-	
-	
-	.wrap_timesheet table {
-	    width: 98%;
-	    table-layout: fixed;
-	}
-	
-	table.wrap_timesheet tr td{
-		font-family: verdana,arial,sans-serif;
-		font-size:11px;
-	    padding: 5px;
-	    border: 1px solid #eee;
-	    width: 100px;
-	    word-wrap: break-word;
-	}
-	
-	table.head_timesheet tr td {
-		font-family: verdana,arial,sans-serif;
-		font-weight: bold;
-		font-size:11px;
-		color:#333333;
-	    background: #eee;
-	    background-color: #dedede;
-	}
-	
-	.inner_timesheet {
-	    height: 100px;
-	    overflow-y: auto;
-	}
-	.job_history a{color:#A51E04;}
-	
-	input[type='radio'] {
-    -webkit-appearance:none;
-    width:20px;
-    height:20px;
-    border:1px solid darkgray;
-    border-radius:50%;
-    outline:none;
-    box-shadow:0 0 5px 0px gray inset;
-}
-input[type='radio']:hover {
-    box-shadow:0 0 5px 0px orange inset;
-}
-input[type='radio']:before {
-    content:'';
-    display:block;
-    width:60%;
-    height:60%;
-    margin: 20% auto;    
-    border-radius:50%;    
-}
-	
-</style>
 <div class="comments-log-container" style= "display:none;">
 	<?php if ($log_html != "") { ?>
 			<table width="100%" class="log-container"> 
@@ -552,9 +460,9 @@ input[type='radio']:before {
 						</tr>
 					</table>
 					<div id="project_cost">
-						<h5 class="project-cost-label">Project Hours</h5>
+						<h5 class="project-cost-label">Project Cost</h5>
 						<div class="wrap_table">
-							<?php if(count($project_costs) >0 ){?>
+							<?php if(count($project_costs) >0 ) { ?>
 						    <table class="head">
 						        <tr>
 						            <td>Resource</td>
@@ -563,8 +471,8 @@ input[type='radio']:before {
 						        </tr>
 						    </table>
 						    <div class="inner_table">
-						        <table>
-						        <?php foreach($project_costs as $project_cost){?>
+							<table>
+						        <?php foreach($project_costs as $project_cost) { ?>
 								        <tr>
 								            <td><?php echo $project_cost['Resources'];?></td>
 								            <td><?php echo $project_cost['total_hour'];?></td>
@@ -574,14 +482,12 @@ input[type='radio']:before {
 						        <tr style="background-color: #dedede;font-weight:bold;">
 						        	<td>Total Project Value</td>
 						        	<td></td>
-						        	<td>
-						        		<?php echo $project_total_cost;?>
-						        	</td>
+						        	<td><?php echo $project_total_cost;?></td>
 						        </tr>
 						    </table>
 						    </div>
 						    <?php 
-								}else{
+								} else {
 							    	echo '<b> Unable to extract project cost from timesheet system </b>';
 								}
 							?>
@@ -1350,33 +1256,46 @@ input[type='radio']:before {
 	
 	<div id="jv-tab-8">
 		<div class="wrap_timesheet">
-			<?php if(count($timesheet_data) >0 ){?>
-			    <table class="head_timesheet">
+			<?php if(count($timesheet_data) >0 ) { ?>
+			    <table class="head_timesheet data-table">
 			        <tr>
-			            <td>Resource</td>
-			            <td>Billable Hours</td>
-			            <td>Internal Hours</td>
-			            <td>Non-Billable Hours</td>
-			            <td>Rate</td>
-			            <td>Cost</td>
+			            <th>Resource</th>
+			            <th>Billable Hours</th>
+			            <th>Internal Hours</th>
+			            <th>Non-Billable Hours</th>
+			            <th>Rate</th>
+			            <th>Cost</th>
 			        </tr>
 			    </table>
-		    <div class="inner_timesheet">
-		        <table>
-		        <?php foreach($timesheet_data as $timesheet){?>
-				        <tr>
-				            <td><?php echo $timesheet['Resources'];?></td>
-							<td><?php echo $timesheet['Billable'];?></td>
-							<td><?php echo $timesheet['Internal'];?></td>
-							<td><?php echo $timesheet['Non-Billable'];?></td>
-							<td><?php echo $timesheet['bill_rate'];?></td>
-							<td><?php echo $timesheet['cost'];?></td>
-				        </tr>
-		        <?php } ?>
-		    </table>
-		    </div>
+				<div class="inner_timesheet ">
+					<table class="data-table">
+						<?php $m = 1; ?>
+						<?php foreach($timesheet_data as $timesheet) { ?>
+							<?php if( $m != count($timesheet_data) ) { ?>
+									<tr>
+										<td><?php echo $timesheet['Resources'];?></td>
+										<td><?php echo $timesheet['Billable'];?></td>
+										<td><?php echo $timesheet['Internal'];?></td>
+										<td><?php echo $timesheet['Non-Billable'];?></td>
+										<td><?php echo $timesheet['bill_rate'];?></td>
+										<td><?php echo $timesheet['cost'];?></td>
+									</tr>
+							<?php $m++; ?>
+							<?php } else { ?>
+								<tr>
+									<td><b><?php echo $timesheet['Resources'];?></b></td>
+									<td><b><?php echo $timesheet['Billable'];?></b></td>
+									<td><b><?php echo $timesheet['Internal'];?></b></td>
+									<td><b><?php echo $timesheet['Non-Billable'];?></b></td>
+									<td><b><?php echo $timesheet['bill_rate'];?></b></td>
+									<td><b><?php echo $timesheet['cost'];?></b></td>
+								</tr>
+							<?php } /* else condition */?>
+						<?php } /* for loop */ ?>
+					</table>
+				</div>
 		    <?php 
-				}else{
+				} else {
 			    	echo '<b> Unable to extract project hours from timesheet system </b>';
 				}
 			?>
