@@ -61,6 +61,7 @@ class User extends crm_controller {
 		$fields['password']    = "Password";
 		$fields['level']       = "User Level";
 		$fields['inactive']    = 'Inactive';
+		$fields['auth']    	   = 'Login Authentication';
 		
 		// insert new level settings concepts
 		$fields1['region']     = 'region';
