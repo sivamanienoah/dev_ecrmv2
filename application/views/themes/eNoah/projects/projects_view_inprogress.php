@@ -5,10 +5,10 @@
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-tbl dashboard-heads dataTable">
+		<table border="0" cellpadding="0" cellspacing="0" style="width:1600px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
                 <tr>
-					<th width="90px;">Action</th>
+					<th width="82px;">Action</th>
 					<th>Project No.</th>
 					<th>Project ID</th>
 					<th>Project Title</th>

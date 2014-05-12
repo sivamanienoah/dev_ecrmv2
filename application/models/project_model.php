@@ -477,7 +477,7 @@ class Project_model extends crm_model
 	}
 	
 	public function get_timesheet_hours($id){
-		$timesheet_db = $this->load->database('timesheet',TRUE); 
+		$timesheet_db = $this->load->database('timesheet', TRUE); 
 		//$id='315';
 		$sql = "SELECT t.proj_id, sum(t.duration)/8 as total_hour,brt.bill_rate,(sum(t.duration)/8)*brt.bill_rate as cost, ";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Billable' AND ((t.start_time = '0000-00-00' OR t.start_time < NOW()) AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/8 as 'billable',";

@@ -100,15 +100,14 @@
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;" >
-		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
+		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1600px !important;">
             
             <thead>
-				<th width="90px;">Action</th>
+				<th width="82px;">Action</th>
 				<th>Project No.</th>
 				<th>Project ID</th>
 				<th>Project Title</th>
 				<th>Project Completion</th>
-				
 				<th>Project Type</th>
 				<th>Planned Hours</th>
 				<th>Billable Hours</th>
@@ -121,13 +120,10 @@
 				<th>P&L</th>
 				<th>P&L %</th>
 				<th>RAG Status</th>
-				
 				<th>Customer</th>
 				<th>Project Manager</th>
 				<th>Planned Start Date</th>
 				<th>Planned End Date</th>
-				
-				
 				<th width="110px;">Project Status</th>
             </thead>
             
