@@ -72,7 +72,7 @@ $config['crm']['milestones_complete_status'] = array(
 $config['crm']['milestones_status'] = array(
                                     0 => 'Scheduled',
                                     1 => 'In Progress',
-                                    2 => 'Completed%'
+                                    2 => 'Completed'
                                 );
 								
 $config['crm']['tasks_search']  = array(
