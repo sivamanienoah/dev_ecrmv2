@@ -1988,9 +1988,14 @@
 	$(document).ready(function() {
 		/*Export Milestones*/
 		$('#milestone-export').on('click',function(e) {
+			var obj = $('#milestone-data tbody tr');
+			if (obj.length == 0) {
+				alert('No records are there to Export!');
+				return false;
+			}
 			e.preventDefault();
-			var baseurl   = site_base_url;
-			var url 	  = baseurl+"project/exportMilestoneTerms";
+			var baseurl = site_base_url;
+			var url 	= baseurl+"project/exportMilestoneTerms";
 			
 			var form = $('<form action="' + url + '" method="post">' +
 			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
