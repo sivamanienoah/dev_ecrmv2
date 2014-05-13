@@ -18,7 +18,7 @@
 					<?php echo $this->validation->error_string; ?>
 				</div>
             <?php 
-			} 
+			}
 			?>
 
 			<table class="layout">
