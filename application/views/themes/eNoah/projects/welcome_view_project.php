@@ -393,7 +393,7 @@
 						<tr>
 							<td valign="top" width="175">
 								<h6 class="project-estimate-hour-label">Estimated Project Hour &raquo; <span><?php if ($quote_data['estimate_hour'] != '') echo $quote_data['estimate_hour']; else echo 'Not Set'; ?></span></h6>
-								<?php if ($chge_access == 1){ ?>
+								<?php if ($ms_chge_access == 1){ ?>
 								<p><a href="#" onclick="$('.project-estimate-hour-change:hidden').show(200); return false;">Change?</a></p>
 								<div class="project-estimate-hour-change">
 									<input type="text" value="" class="textfield" id="project-estimate-hour" />
@@ -415,7 +415,7 @@
 							<tr>
 							<td valign="top" width="175">
 								<h6 class="project-type-label">Project Type &raquo; <span><?php if ($quote_data['project_type'] == '1') echo 'Fixed'; elseif($quote_data['project_type'] == '2' || $quote_data['project_type']== '') echo 'Internal'; elseif($quote_data['project_type'] == '3') echo 'T&amp;M'; ?></span></h6>
-								<?php if ($chge_access == 1) { ?>
+								<?php if ($ms_chge_access == 1) { ?>
 								<p><a href="#" onclick="$('.project-type-change:hidden').show(200); return false;">Change?</a></p>
 								<div class="project-type-change">
 									<select name="project_type" id="project_type">
@@ -438,7 +438,7 @@
 							
 							<td valign="top" width="175">
 								<h6 class="rag-type-label">RAG Status &raquo; <span><?php if ($quote_data['rag_status'] == '1') echo 'Red'; elseif($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') echo 'Amber'; elseif($quote_data['rag_status'] == '3') echo 'Green'; ?></span></h6>
-								<?php if ($chge_access == 1) { ?>
+								<?php if ($ms_chge_access == 1) { ?>
 								<p><a href="#" onclick="$('.rag-status-change:hidden').show(200); return false;">Change?</a></p>
 								<div class="rag-status-change">
 									<input type="radio" name="rag_status" value="1" <?php if($quote_data['rag_status'] == '1') { echo 'checked="checked"'; } ?> id="red">Red
