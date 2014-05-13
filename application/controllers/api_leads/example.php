@@ -43,15 +43,15 @@ class Example extends REST_Controller
     
     function user_post()
     {
-	$this->load->config('custom_config');
-	  $query  = $this->db->select('*');
-	  $query = $this->db->from("crm_keys");
-      $query = $this->db->get();
-	  $servername = "";
-	  $servername_arr  = $query->row_array();
-	  if(!empty($servername_arr)){
-	          $servername = $servername_arr['server_name'];
-	  }
+		$this->load->config('custom_config');
+		$query = $this->db->select('*');
+		$query = $this->db->from("crms_keys");
+		$query = $this->db->get();
+		$servername = "";
+		$servername_arr  = $query->row_array();
+		if(!empty($servername_arr)){
+			$servername = $servername_arr['server_name'];
+		}
 	
         $message = array('message' => 'ADDED');
 		$arrinset = array("oppurtunity_title"=>$this->post('enquiry'),
