@@ -1927,7 +1927,7 @@ HDOC;
 		if(!empty($milestone_data['ms_act_end_date'])) {
 			$milestone_data['ms_act_end_date'] = date('Y-m-d', strtotime($milestone_data['ms_act_end_date']));
 		}
-		
+		$milestone_data['actual_effort'] = ($milestone_data['ms_effort'] * $milestone_data['ms_percent'])/100;
 		if (count($errors)) {
 		
 			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
@@ -2271,7 +2271,8 @@ HDOC;
 	function calculateProjectMeter($jobid)
 	{
 		$projectMeterStatus = $this->project_model->get_project_meter_status($jobid);
-		return round(($projectMeterStatus['ms_percent']/10));
+		$meterStatus = ($projectMeterStatus['actual_effort']/$projectMeterStatus['ms_percent'])*100;
+		return round(($meterStatus/10));
 	}
 	
 	function exportMilestoneTerms()

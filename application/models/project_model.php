@@ -528,11 +528,15 @@ class Project_model extends crm_model
 		return $query->row_array();
 	}
 	
-	//Calculate the project meter status
+	/*
+	 *@Method get_project_meter_status
+	 *@Param lead id
+	 */
 	function get_project_meter_status($jobid)
 	{
 		$wh_condn = array('jobid_fk' => $jobid);
 		$this->db->select_avg('ms_percent');
+		$this->db->select_avg('actual_effort');
 		$this->db->from($this->cfg['dbpref'].'milestones');
 		$this->db->where($wh_condn);
 		$query = $this->db->get();
