@@ -9,7 +9,6 @@ $(function() {
 	
 function dtPjtTable() {
 	$('.data-tbl').dataTable({
-		"aaSorting": [[ 1, "desc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,

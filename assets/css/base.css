@@ -1367,6 +1367,12 @@ ul.ui-sortable li{
     background-color: #c0504d;
 	color: #fff;
 }
+.label-amber {
+	border-radius: 3px 3px 3px 3px;
+	padding: 1px 4px 2px;
+    background-color: #ff7e00;
+	color: #fff;
+}
 /*Clearfix*/
 .clearfix:after {
 	content: ".";

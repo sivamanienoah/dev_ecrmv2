@@ -100,14 +100,14 @@
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;" >
-		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1600px !important;">
+		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
             
             <thead>
 				<th width="82px;">Action</th>
-				<th>Project No.</th>
-				<th>Project ID</th>
+				<!--th>Project No.</th>
+				<th>Project ID</th-->
 				<th>Project Title</th>
-				<th>Project Completion</th>
+				<th>Project Completion (%)</th>
 				<th>Project Type</th>
 				<th>Planned Hours</th>
 				<th>Billable Hours</th>
@@ -120,11 +120,11 @@
 				<th>P&L </th>
 				<th>P&L %</th>
 				<th>RAG Status</th>
-				<th>Customer</th>
+				<!--th>Customer</th>
 				<th>Project Manager</th>
 				<th>Planned Start Date</th>
 				<th>Planned End Date</th>
-				<th width="110px;">Project Status</th>
+				<th width="110px;">Project Status</th-->
             </thead>
             
             <tbody>
@@ -149,16 +149,18 @@
 								| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
 							<?php } ?>
 						</td>
-                        <td class="actions">
+                        <!--td class="actions">
 							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo  $record['invoice_no'] ?></a>
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo $record['invoice_no'] ?></a>
 							</div>
 						</td>
 						<td class="actions">
 							<?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?>
-						</td>
-                        <td class="actions">
-							<?php echo character_limiter($record['lead_title'], 35); ?>
+						</td-->
+                        <td class="actions">							
+							<div>
+								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo character_limiter($record['lead_title'], 35); ?></a>
+							</div>
 						</td>
 						<td class="actions" align="center">
 							<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
@@ -210,12 +212,30 @@
 							<?php echo ($record['expect_worth_amount']-$timsheetData->cost)/$record['expect_worth_amount']; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($record['rag_status'])){ if($record['rag_status'] =='1') echo 'Red'; elseif($record['rag_status'] =='2') echo 'Amber';elseif($record['rag_status'] =='3') echo 'Green'; else echo '-';}else echo "-"; ?>
+							<?php 
+								if (isset($record['rag_status'])) {
+									switch ($record['rag_status'])
+									{
+										case 1:
+											$ragStatus = '<span class=label-inactive>Red</span>';
+										break;
+										case 2:
+											$ragStatus = '<span class=label-amber>Amber</span>';
+										break;
+										case 3:
+											$ragStatus = '<span class=label-success>Green</span>';
+										break;
+										default:
+											$ragStatus = "-";
+									}
+									echo $ragStatus;
+								} else {
+									echo "-";
+								}
+							?>
 						</td>
-						
-						
-						
-                        <td class="cust-data">
+
+                        <!--td class="cust-data">
 							<span style="color:none"><?php echo $record['cfname'] . ' ' . $record['clname'] ?></span> - <?php echo $record['company'] ?>
 						</td>
 						<td class="cust-data">
@@ -248,7 +268,7 @@
 								}
 							 echo $pjtstat;
 							 ?>
-						</td>
+						</td-->
 					</tr>
 					<?php
 					} 
