@@ -535,7 +535,7 @@ class Project_model extends crm_model
 	function get_project_meter_status($jobid)
 	{
 		$wh_condn = array('jobid_fk' => $jobid);
-		$this->db->select_avg('ms_percent');
+		$this->db->select_avg('ms_effort');
 		$this->db->select_avg('actual_effort');
 		$this->db->from($this->cfg['dbpref'].'milestones');
 		$this->db->where($wh_condn);
