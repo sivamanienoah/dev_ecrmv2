@@ -5,7 +5,7 @@
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-		<table border="0" cellpadding="0" cellspacing="0" style="width:1200px !important;" class="data-tbl dashboard-heads dataTable">
+		<table border="0" cellpadding="0" cellspacing="0" style="width:1250px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
                 <tr>
 					<th width="82px;">Action</th>
@@ -97,7 +97,7 @@
 									<?php echo $timsheetData->total_hour-($record['estimate_hour'])/8; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($record['expect_worth_amount'])) echo $record['expect_worth_amount']; else echo "-"; ?>
+									<?php if (isset($record['actual_worth_amount'])) echo $record['expect_worth_name'] . ' ' . $record['actual_worth_amount']; else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
 									<?php if (isset($timsheetData->cost)) echo $timsheetData->cost; else echo "-"; ?>

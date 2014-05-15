@@ -292,6 +292,7 @@ h3 .small {
 	font-weight:normal;
 	font-size:14px;
 	display:block;
+	padding-left: 16px;
 }
 #job-view-tabs {
 	list-style:none;

@@ -296,9 +296,9 @@
 					</table>
 				</form>
 				
-				<h3 class="status-title">Adjust project status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
+				<h3 class="status-title">Project Completion Status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
 
-				<p class="status-bar">
+				<!--p class="status-bar">
 					<span class="bar"></span>
 					<?php //if ($chge_access == 1) { ?>
 						<!--span class="over"></span>
@@ -313,7 +313,28 @@
 						<a href="#" class="p9" rel="9"></a>
 						<a href="#" class="p10" rel="10"></a-->
 					<?php //} ?>
-				</p>
+				<!--/p-->
+				
+				<div class="holder">
+					<div class="holder-in">  
+						<div class="bg-meter-scale">
+							<div class="track">
+								<div class="meter">&nbsp;</div>
+							</div>
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
+							<tbody>
+								<tr>
+									<td>25</td>
+									<td>50</td>
+									<td>75</td>
+									<td>100</td>
+								</tr>
+							</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="holder-in-rgt">&nbsp;</div>
+				</div>
 
 				<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
 					
@@ -583,11 +604,13 @@
 							<tr>
 								<td>
 									<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
-									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
+									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
 									<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+									<?php if ($chge_access == 1) { ?>
 									<div class="buttons">
 										<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
 									</div>
+									<?php } ?>
 									<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
 									<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
 								</td>
@@ -645,8 +668,13 @@
 								$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
 								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
+								if ($chge_access == 1) {
 								$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
 								$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid'].");' >Delete</a></td>";
+								} else {
+								$output .= "<td align='left'><a class='edit'>Edit</a> | ";
+								$output .= "<a class='edit'>Delete</a></td>";
+								}
 								$output .= "</tr>";
 								$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
 								$pdi ++;
@@ -668,7 +696,7 @@
 						
 							<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
 							<p>Amount Received *<input type="text" name="pr_date_2" onkeypress="return isNumberKey(event)" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span></p>
-							<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
+							<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" readonly /> </p>
 							
 							<?php if (isset($pt_select_box)) { ?>
 								<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
@@ -677,9 +705,11 @@
 							<?php } ?>
 							
 							<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
+							<?php if ($chge_access == 1) { ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="setPaymentRecievedTerms(); return false;">Add Payment</button>
 							</div>
+							<?php } ?>
 							<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
 							<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
 						</form>
@@ -714,8 +744,13 @@
 								$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
 								$output .= "<td> ".$dd['expect_worth_name'].' '.number_format($dd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td>".$dd['payment_term']."</td>";
+								if ($chge_access == 1) {
 								$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
 								$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+								} else {
+								$output .= "<td align='left'><a class='edit'>Edit</a> | ";
+								$output .= "<a class='edit'>Delete</a></td>";
+								}
 								$output .= "</tr>";
 							}
 							$output .= "<tr>";
@@ -960,51 +995,47 @@
 								<input type="hidden" name="jobid_fk" id="jobid_fk" value=<?php echo $jobid; ?> />
 								<p>
 									Milestone name *
-									<input type="text" name="milestone_name" id="milestone_name" class="textfield width200px" />
+									<input type="text" name="milestone_name" id="milestone_name" class="textfield" style="width:235px;" />
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>
+								<p style="float: left;">
 									Planned Start Date * 
-									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width200px pick-date" />
+									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
 								</p>
-							</td>
-							<td>
-								<p>
+								<p style="float: left; margin: 0px 10px;">
 									Planned End Date *
-									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width200px pick-date" />
+									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<p>
+								<p style="float: left;">
 									Actual Start Date
-									<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width200px pick-date" />
+									<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
 								</p>
-							</td>
-							<td>
-								<p>
+								<p style="float: left; margin: 0px 10px;">
 									Actual End Date
-									<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width200px pick-date" />
+									<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td colspan=2>
 								<p>
-									Efforts *
-									<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span>
+									Efforts * (Numbers)
+									<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" id="ms_effort" class="textfield width60px" maxlength="5" />
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-							<p>
+							<p style="float: left;">
 								Percentage of Completion
-								<select name="ms_percent" id="ms_percent" class="textfield width80px">
+								<select name="ms_percent" id="ms_percent" class="textfield width60px">
 									<?php
 										foreach($this->cfg['milestones_complete_status'] as $complete_key=>$complete_val) {
 											?>
@@ -1014,20 +1045,18 @@
 									?>
 								</select>
 							</p>
-							</td>
-							<td>
-								<p>
-									Status
-									<select name="milestone_status" class="textfield width100px">
-										<?php
-										foreach($this->cfg['milestones_status'] as $status_key=>$status_val) {
-											?>
-												<option value="<?php echo $status_key; ?>"><?php echo $status_val; ?></option>
-											<?php
-										}
+							<p style="float: left; margin: 0px 15px;">
+								Status
+								<select name="milestone_status" class="textfield width100px">
+									<?php
+									foreach($this->cfg['milestones_status'] as $status_key=>$status_val) {
 										?>
-									</select>
-								</p>
+											<option value="<?php echo $status_key; ?>"><?php echo $status_val; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</p>
 							</td>
 						</tr>
 						<tr>

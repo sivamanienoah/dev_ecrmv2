@@ -38,9 +38,10 @@ class Project_model extends crm_model
 		$services = $service;
 	
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title,j.expect_worth_amount, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
-			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
+			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			
 			if(!empty($stage)){	
@@ -98,9 +99,10 @@ class Project_model extends crm_model
 			$result_ids = array_unique($res);
 			$curusid= $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_stage, j.pjt_id, j.assigned_to, j.complete_status,j.date_start, j.date_due, j.pjt_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
-			$this->db->from($this->cfg['dbpref'] . 'customers as c');		
-			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');		
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->from($this->cfg['dbpref'] . 'customers as c');
+			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');
+			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->where_in('j.lead_id', $result_ids);
 			

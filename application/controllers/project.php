@@ -361,16 +361,16 @@ class Project extends crm_controller {
 		
 		$json['error'] = FALSE;
 		$lead_id = $updt['lead_id'];
-		$lead_stage = $updt['lead_stage'] * 10;
+		$thermometer_val = $updt['thermometer_val'];
 		
-		if (!is_numeric($lead_id) || $lead_stage % 10 != 0 || $lead_stage > 100)
+		if (!is_numeric($lead_id) || $thermometer_val > 100)
 		{
 			$json['error'] = 'Invalid details supplied!';
 		}
 		else
 		{
 			$wh_condn = array('lead_id' => $lead_id);
-			$updt = array('complete_status' => $lead_stage);
+			$updt = array('complete_status' => $thermometer_val);
 			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 			if($updt_stat==0)
 			{
@@ -761,6 +761,14 @@ class Project extends crm_controller {
 	function retrieve_payment_terms($jid)
 	{
 		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jid);
+		
+		$usernme = $this->session->userdata('logged_in_user');
+		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
+			$chge_access = 1;
+		} else {
+			$chge_access = $this->project_model->get_access($jid, $usernme['userid']);
+		}
+		
 		$output = '';
 		$total_amount_recieved = '';
 		$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
@@ -810,8 +818,13 @@ class Project extends crm_controller {
 				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
 				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
 				$output .= "<td align='center'>".$payment_received."</td>";
+				if( $chge_access == 1 ) {
 				$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' >Edit</a> | ";
 				$output .= "<a class='edit' onclick='paymentProfileDelete(".$exp['expectid']."); return false;' >Delete</a></td>";
+				} else {
+				$output .= "<td align='left'><a class='edit' >Edit</a> | ";
+				$output .= "<a class='edit'>Delete</a></td>";
+				}
 				$output .= "</tr>";
 				$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
 				$expi ++;
@@ -858,7 +871,7 @@ class Project extends crm_controller {
 				<td>
 				<br />
 				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$project_milestone_name.'" class="textfield width200px" /> </p>
-				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" /> </p>
+				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" readonly /> </p>
 				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$project_milestone_amt.'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
 				<div class="buttons">
 					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
@@ -1073,7 +1086,7 @@ class Project extends crm_controller {
 		<tr>
 			<td>
 				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
-				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" /> </p>
+				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
 				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
 				<div class="buttons">
 					<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
@@ -1293,7 +1306,7 @@ class Project extends crm_controller {
 		<form id="payment-recieved-terms">
 			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
 			<p>Amount Received *<input onkeypress="return isNumberKey(event)" type="text" name="pr_date_2" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" /> </p>
+			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" readonly /> </p>
 			
 			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
 
@@ -1331,7 +1344,7 @@ class Project extends crm_controller {
 			<form id="update-payment-recieved-terms">
 			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" value="'.$received_payment_details['invoice_no'].'" class="textfield width200px" /> </p>
 			<p>Amount Received *<input type="text" onkeypress="return isNumberKey(event)" name="pr_date_2" id="pr_date_2" value="'.$received_payment_details['amount'].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px pick-date" /> </p>
+			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px pick-date" readonly /> </p>
 			
 			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
 
@@ -1974,7 +1987,7 @@ HDOC;
 			$msActEndDate  = date('d-m-Y', strtotime($milestone_details['ms_act_end_date']));
 		}
 		
-		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width80px'>";
+		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width60px'>";
 		foreach($this->cfg['milestones_complete_status'] as $statusKey => $statusValue) {
 			if($milestone_details['ms_percent']==$statusKey){
 				$selectedPercent = 'selected="selected"';
@@ -2033,37 +2046,32 @@ HDOC;
 		<table class="milestone-table ms-toggler">
 			<tr>
 				<td>
-				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" value= "'.$milestone_details['milestone_name'].'" class="textfield width200px" /> </p>
+				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" value= "'.$milestone_details['milestone_name'].'" class="textfield" style="width:235px;" /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" value= "'.$msPlStDate.'" class="textfield width200px pick-date" /> </p>
-				</td>
-				<td>
-				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" value= "'.$msPlEndDate.'" class="textfield width200px pick-date" /> </p>
+				<p style="float: left;">Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" value= "'.$msPlStDate.'" class="textfield width60px pick-date" readonly /> </p>
+				<p style="float: left; margin: 0px 15px;">Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" value= "'.$msPlEndDate.'" class="textfield width60px pick-date" readonly /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" value= "'.$msActStDate.'" class="textfield width200px pick-date" /> </p>
-				</td>
-				<td>
-				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" value= "'.$msActEndDate.'" class="textfield width200px pick-date" /> </p>
+				<p style="float: left;">Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" value= "'.$msActStDate.'" class="textfield width60px pick-date" readonly /> </p>
+				<p style="float: left; margin: 0px 15px;">Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" value= "'.$msActEndDate.'" class="textfield width60px pick-date" readonly /> </p>
 				</td>
 			</tr>
 			<tr>
-			<td colspan=2><p>
-			Efforts *<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+			<td colspan=2>
+			<p>
+			Efforts *(Numbers)<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width60px" maxlength="5" /></p>
 			</td>
 			</tr>
 			
 			<tr>
 			<td>
-				<p>Percentage of Completion '.$percentSelectBox.'</p>
-					</td>
-					<td>
-						<p>Status '.$statusSelectBox.'</p>
+				<p style="float: left;">Percentage of Completion '.$percentSelectBox.'</p>
+				<p style="float: left; margin: 0px 15px;">Status '.$statusSelectBox.'</p>
 					</td>
 				</tr>
 			<tr>
@@ -2083,7 +2091,7 @@ HDOC;
 	//**Ajax Reload the Milestone Add view**//
 	function addMilestoneFormView()
 	{
-		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width80px'>";
+		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width60px'>";
 		foreach($this->cfg['milestones_complete_status'] as $statusKey => $statusValue) {
 			$percentSelectBox .= "<option value=".$statusKey." ".$selectedPercent.">".$statusValue."</option>";
 		}
@@ -2133,37 +2141,31 @@ HDOC;
 		<table class="milestone-table ms-toggler">
 			<tr>
 				<td>
-				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" class="textfield width200px" /> </p>
+				<p>Milestone name *<input type="text" name="milestone_name" id="milestone_name" class="textfield" style="width:235px;" /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
-				</td>
-				<td>
-				<p>Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
+				<p style="float: left;">Planned Start Date *<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width60px pick-date" readonly /> </p>
+				<p style="float: left; margin: 0px 10px;">Planned End Date *<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width60px pick-date" readonly /> </p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<p>Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
-				</td>
-				<td>
-				<p>Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width200px pick-date" /> </p>
+				<p style="float: left;">Actual Start Date<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width60px pick-date" readonly /> </p>
+				<p style="float: left; margin: 0px 10px;">Actual End Date<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width60px pick-date" readonly /> </p>
 				</td>
 			</tr>
 			<tr>
 			<td colspan=2><p>
-			Efforts *<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+			Efforts * (Numbers)<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" value= "'.$milestone_details['ms_effort'].'" id="ms_effort" class="textfield width60px" maxlength="5" /></p>
 			</td>
 			</tr>
 			
 			<tr>
 			<td>
-				<p>Percentage of Completion '.$percentSelectBox.'</p>
-					</td>
-					<td>
-						<p>Status '.$statusSelectBox.'</p>
+				<p style="float: left;">Percentage of Completion '.$percentSelectBox.'</p>
+				<p style="float: left; margin: 0px 15px;">Status '.$statusSelectBox.'</p>
 					</td>
 				</tr>
 			<tr>
@@ -2274,7 +2276,7 @@ HDOC;
 	{
 		$projectMeterStatus = $this->project_model->get_project_meter_status($jobid);
 		$meterStatus		= ($projectMeterStatus['actual_effort']/$projectMeterStatus['ms_effort'])*100;
-		return round(($meterStatus/10));
+		return round($meterStatus, 2);
 	}
 	
 	function exportMilestoneTerms()

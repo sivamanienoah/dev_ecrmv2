@@ -1282,8 +1282,7 @@
 				message:'<img src="assets/img/ajax-loader.gif" />',
 				css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
 		});
-		
-		var params 				= {lead_id: curr_job_id, lead_stage: status};
+		var params 				= {lead_id: curr_job_id, thermometer_val: status};
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.post(
@@ -1295,7 +1294,6 @@
 					if (typeof(data) == 'object') {
 						if (data.error == false) {
 							pos_just_completed = true;
-							status = status * 10;
 							updateVisualStatus(status);
 							// location.reload();
 						} else {
@@ -1314,8 +1312,11 @@
 
 	function updateVisualStatus(status) 
 	{
+		// $('h3.status-title .small em strong').html(status);
+		// $('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
+		// job_complete_percentage = status;
 		$('h3.status-title .small em strong').html(status);
-		$('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
+		$('.meter').css({'width':status +'%'});
 		job_complete_percentage = status;
 	}
 
@@ -1922,6 +1923,7 @@
 						var data = data.split('#');
 						$('#milestone_view_det').html(data[0]);
 						updateJobStatus(data[1]);
+						// setThermometerValue(data[1]);
 					}
 					$.unblockUI();
 					$('#milestone-add-view').empty();
@@ -1983,7 +1985,6 @@
 			return false;
 		}
 	}
-	
 	
 	$(document).ready(function() {
 		/*Export Milestones*/
@@ -2073,3 +2074,8 @@
 		$('#ms_act_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	});
 	
+	/*Function for setting the Project Thermometer value*/
+	function setThermometerValue(wdt) {
+		$('.meter').css({'width':wdt +'%'});
+	}
+	/*Project Thermometer*/

@@ -100,7 +100,7 @@
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;" >
-		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1200px !important;">
+		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1250px !important;">
             
             <thead>
 				<th width="82px;">Action</th>
@@ -200,7 +200,7 @@
 							<?php echo $timsheetData->total_hour-$record['estimate_hour']; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($record['expect_worth_amount'])) echo $record['expect_worth_amount']; else echo "-"; ?>
+							<?php if (isset($record['actual_worth_amount'])) echo $record['expect_worth_name'] . ' ' . $record['actual_worth_amount']; else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php if (isset($timsheetData->cost)) echo $timsheetData->cost; else echo "-"; ?>
