@@ -185,8 +185,8 @@
 			
 				<div>
 					<div style="float:left;">
-						<h5><label class="project-id">Project Id</label>&nbsp;&nbsp;
-						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="15" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> />
+						<h5><label class="project-id">Project ID</label>&nbsp;&nbsp;
+						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> />
 						<input type="hidden" class="hiddenUrl"/>
 						</h5>
 					</div>					
@@ -201,29 +201,6 @@
 							<span class="checkUser" style="color:green">Project Id Saved.</span>
 							<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
 						</div>
-					<?php } ?>
-				</div>	
-			</form>
-			<form>
-				<div>
-					<div style="float:left;">
-						<h5><label class="project-val">Project Value</label>&nbsp;&nbsp;
-						<input class="textfield" style="width: 25px; font-weight:bold;" type="text" name="curid" id="curid" value="<?php if (isset($quote_data['expect_worth_name'])) echo $quote_data['expect_worth_name']; ?>" readonly />
-						<input class="textfield" style="width: 95px;" type="text" name="pjt_value" id="pjt_value" value="<?php if (isset($quote_data['actual_worth_amount'])) echo $quote_data['actual_worth_amount']; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> onkeypress="return isNumberKey(event)" />
-						<input type="hidden" class="hiddenUrl"/>
-						</h5>
-					</div>					
-					<?php if ($chge_access == 1) { ?>
-					<div class="buttons">
-						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectVal(); return false;">
-							Set Project Value
-						</button>
-					</div>
-					<div class="error-msg">
-						<span id="pjt_val_errormsg" style="color:red"></span>
-						<span id="checkVal" style="color:green">Project Value Updated.</span>
-						<span id="checkVal1" id="val-existsval" style="color:red">Project Value Already Exists.</span>
-					</div>
 					<?php } ?>
 				</div>	
 			</form>
@@ -250,320 +227,233 @@
 					<?php } ?>
 				</div>	
 			</form>
-			<div class="action-buttons" style="overflow:hidden;">
-				<?php
-				require (theme_url().'/tpl/user_accounts_options.php');
-				?>
+			
+			<div valign="top" width="175">
+				<h6 class="rag-type-label">RAG Status &raquo; <span><?php if ($quote_data['rag_status'] == '1') echo 'Red'; elseif($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') echo 'Amber'; elseif($quote_data['rag_status'] == '3') echo 'Green'; ?></span></h6>
+				<?php if ($chge_access == 1) { ?>
+				<p><a href="#" onclick="$('.rag-status-change:hidden').show(200); return false;">Change?</a></p>
+				<div class="rag-status-change">
+					<input type="radio" name="rag_status" value="1" <?php if($quote_data['rag_status'] == '1') { echo 'checked="checked"'; } ?> id="red">Red
+					<input type="radio" name="rag_status" value="2" <?php if($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') { echo 'checked="checked"'; } ?> id="amber">Amber
+					<input type="radio" name="rag_status" value="3" <?php if($quote_data['rag_status'] == '3') { echo 'checked="checked"'; } ?> id="green">Green
+					
+					<span id="errmsg_rag_status" style="color:red"></span>
+					<div class="buttons">
+						<button type="submit" class="positive" onclick="setRagStatus(); return false;">Set</button>
+					</div>
+					<div class="buttons">
+						<button type="submit" onclick="$('.rag-status-change:visible, #errmsg_rag_status').hide(200); return false;">Cancel</button>
+					</div>
+				</div>
+				<?php } ?>
+			</div>
+			
+			<!-- Project Progress Thermometer - Start -->
+			<h3 class="status-title">Project Completion Status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
+
+			<!--p class="status-bar">
+				<span class="bar"></span>
+				<?php //if ($chge_access == 1) { ?>
+					<!--span class="over"></span>
+					<a href="#" class="p1" rel="1"></a>
+					<a href="#" class="p2" rel="2"></a>
+					<a href="#" class="p3" rel="3"></a>
+					<a href="#" class="p4" rel="4"></a>
+					<a href="#" class="p5" rel="5"></a>
+					<a href="#" class="p6" rel="6"></a>
+					<a href="#" class="p7" rel="7"></a>
+					<a href="#" class="p8" rel="8"></a>
+					<a href="#" class="p9" rel="9"></a>
+					<a href="#" class="p10" rel="10"></a-->
+				<?php //} ?>
+			<!--/p-->
 				
-				<form name="project_assign" id="project-assign">
+			<div class="holder">
+				<div class="holder-in">  
+					<div class="bg-meter-scale">
+						<div class="track">
+							<div class="meter">&nbsp;</div>
+						</div>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
+						<tbody>
+							<tr>
+								<td>25</td>
+								<td>50</td>
+								<td>75</td>
+								<td>100</td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="holder-in-rgt">&nbsp;</div>
+			</div>
+			<!-- Project Progress Thermometer - End -->
+			
+			<div valign="top" width="175">
+				<h6 class="project-type-label">Project Type &raquo; <span><?php if ($quote_data['project_type'] == '1') echo 'Fixed'; elseif($quote_data['project_type'] == '2' || $quote_data['project_type']== '') echo 'Internal'; elseif($quote_data['project_type'] == '3') echo 'T&amp;M'; ?></span></h6>
+				<?php if ($chge_access == 1) { ?>
+				<p><a href="#" onclick="$('.project-type-change:hidden').show(200); return false;">Change?</a></p>
+				<div class="project-type-change">
+					<select name="project_type" id="project_type">
+						<option value="">Select</option>
+						<option value="<?php echo '1'; ?>" <?php if ($quote_data['project_type'] == '1') {echo 'selected';} ?>><?php echo 'Fixed'; ?></option>
+						<option value="<?php echo '2'; ?>" <?php if ($quote_data['project_type'] == '2' || $quote_data['project_type'] == '0') {echo 'selected';} ?>><?php echo 'Internal'; ?></option>
+						<option value="<?php echo '3'; ?>" <?php if ($quote_data['project_type'] == '3') {echo 'selected';} ?>><?php echo 'T&amp;M'; ?></option> 
+					</select>
+					<span id="errmsg_project_type" style="color:red"></span>
+					<div class="buttons">
+						<button type="submit" class="positive" onclick="setProjectType(); return false;">Set</button>
+					</div>
+					<div class="buttons">
+						<button type="submit" onclick="$('.project-type-change:visible, #errmsg_project_type').hide(200); return false;">Cancel</button>
+					</div>
+				</div>
+				<?php } ?>
+			</div>
+			
+			<?php
+			require (theme_url().'/tpl/user_accounts_options.php');
+			?>
+			
+			<form name="project_assign" id="project-assign">
+			
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div valign="top">
+					<h5 class="project-lead-label">Project Manager <br /><span class="small">[ 
+					<?php if (isset($quote_data['assigned_to']) and is_numeric($quote_data['assigned_to'])) {
+									if(isset($ua_id_name[$quote_data['assigned_to']])) echo $ua_id_name[$quote_data['assigned_to']];
+									else echo 'Not Set';
+									}
+							else echo 'Not Set'; ?> 
+					]</span>
+					</h5>
+					<?php
+					if ($chge_access == 1) {
+					?>
+					<p><a href="#" onclick="$('.project-lead-change:hidden').show(200); return false;">Change?</a></p>
+					<div class="project-lead-change">
+						<select name="project_lead" id="project_lead" class="textfield">
+							<option value="0">Please Select</option>
+							<?php echo $pm_options ?>
+						</select>
+						<span id="pjt_lead_errormsg" style="color:red; float:left;"></span>
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="setProjectLead(); return false;">Set</button>
+						</div>
+						<div class="buttons">
+							<button type="submit" onclick="$('.project-lead-change:visible, #pjt_lead_errormsg').hide(200); return false;">Cancel</button>
+						</div>
+						<input type="hidden" value="" id="previous-project-manager"/>
+					</div>
+					<?php
+					}
+					?>
+				</div>
+			</form>
+			
+			<form name="contractor-assign">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
-					<table border="0">
-						<tr>
-							<td valign="top">
-								<h5 class="project-lead-label">Project Manager <br /><span class="small">[ 
-								<?php if (isset($quote_data['assigned_to']) and is_numeric($quote_data['assigned_to'])) { 
-												if(isset($ua_id_name[$quote_data['assigned_to']])) echo $ua_id_name[$quote_data['assigned_to']];
-												else echo 'Not Set';
-												}
-										else echo 'Not Set'; ?> 
-                                ]</span>
-								</h5>
-								<?php
-								if ($chge_access == 1) {
-								?>
-								<p><a href="#" onclick="$('.project-lead-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-lead-change">
-									<select name="project_lead" id="project_lead" class="textfield">
-										<option value="0">Please Select</option>
-										<?php echo $pm_options ?>
-									</select>
-									<span id="pjt_lead_errormsg" style="color:red; float:left;"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectLead(); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-lead-change:visible, #pjt_lead_errormsg').hide(200); return false;">Cancel</button>
-									</div>
-									<input type="hidden" value="" id="previous-project-manager"/>
-								</div>
-								<?php
-								}
-								?>
-							</td>
-						</tr>
-					</table>
-				</form>
-				
-				<h3 class="status-title">Project Completion Status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
-
-				<!--p class="status-bar">
-					<span class="bar"></span>
-					<?php //if ($chge_access == 1) { ?>
-						<!--span class="over"></span>
-						<a href="#" class="p1" rel="1"></a>
-						<a href="#" class="p2" rel="2"></a>
-						<a href="#" class="p3" rel="3"></a>
-						<a href="#" class="p4" rel="4"></a>
-						<a href="#" class="p5" rel="5"></a>
-						<a href="#" class="p6" rel="6"></a>
-						<a href="#" class="p7" rel="7"></a>
-						<a href="#" class="p8" rel="8"></a>
-						<a href="#" class="p9" rel="9"></a>
-						<a href="#" class="p10" rel="10"></a-->
-					<?php //} ?>
-				<!--/p-->
-				
-				<div class="holder">
-					<div class="holder-in">  
-						<div class="bg-meter-scale">
-							<div class="track">
-								<div class="meter">&nbsp;</div>
-							</div>
-							<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
-							<tbody>
-								<tr>
-									<td>25</td>
-									<td>50</td>
-									<td>75</td>
-									<td>100</td>
-								</tr>
-							</tbody>
-							</table>
-						</div>
-					</div>
-					<div class="holder-in-rgt">&nbsp;</div>
-				</div>
-
-				<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
-					
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />				
-				
-					<table>
-						<tr>
-							<td valign="top" width="175">
-								<h6 class="project-startdate-label">Planned Project Start Date &raquo; <span><?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo 'Not Set'; ?></span></h6>
-								<?php if ($chge_access == 1){ ?>
-								<p><a href="#" onclick="$('.project-startdate-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-startdate-change">
-									<input type="text" value="" class="textfield pick-date" id="project-start-date" />
-									<span id="errmsg_start_dt" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-startdate-change:visible, #errmsg_start_dt').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-							<td valign="top" width="175">
-								<h6 class="project-deadline-label">Planned Project End Date &raquo; <span><?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo 'Not Set'; ?></span></h6>
-								<?php if ($chge_access == 1) {?>
-								<p><a href="#" onclick="$('.project-deadline-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-deadline-change">
-									<input type="text" value="" class="textfield pick-date" id="project-due-date" />
-									<span id="errmsg" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectStatusDate('due'); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-deadline-change:visible , #errmsg').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-						</tr>
-						<tr>
-							<td valign="top" width="175">
-								<h6 class="actual-project-startdate-label">Actual Project Start Date &raquo; <span><?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo 'Not Set'; ?></span></h6>
-								<?php if ($chge_access == 1) { ?>
-								<p><a href="#" onclick="$('.actual-project-startdate-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="actual-project-startdate-change">
-									<input type="text" value="" class="textfield pick-date" id="actual-project-start-date" />
-									<span id="errmsg_actual_start_dt" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.actual-project-startdate-change:visible, #errmsg_actual_start_dt').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-							<td valign="top" width="175">
-								<h6 class="actual-project-deadline-label">Actual Project End Date &raquo; <span><?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo 'Not Set'; ?></span></h6>
-								<?php if ($chge_access == 1) { ?>
-								<p><a href="#" onclick="$('.actual-project-deadline-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="actual-project-deadline-change">
-									<input type="text" value="" class="textfield pick-date" id="actual-project-due-date" />
-									<span id="errmsg_actual_end_dt" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.actual-project-deadline-change:visible, #errmsg_actual_end_dt').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-
-						</tr>
-						
-						<tr>
-							<td valign="top" width="175">
-								<h6 class="project-estimate-hour-label">Estimated Project Hour &raquo; <span><?php if ($quote_data['estimate_hour'] != '') echo $quote_data['estimate_hour']; else echo 'Not Set'; ?></span></h6>
-								<?php if ($ms_chge_access == 1){ ?>
-								<p><a href="#" onclick="$('.project-estimate-hour-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-estimate-hour-change">
-									<input type="text" value="" class="textfield" id="project-estimate-hour" />
-									<span id="errmsg_estimate_hour" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectEstimateHour(); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-estimate-hour-change:visible, #errmsg_estimate_hour').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-							<td valign="top" width="175">
-								<h6 class="actual-project-hour-label">Actual Project Hour &raquo; <span><?php echo $actual_hour_data; ?></span></h6>
-							</td>
-							</tr>
-							
-							<tr>
-							<td valign="top" width="175">
-								<h6 class="project-type-label">Project Type &raquo; <span><?php if ($quote_data['project_type'] == '1') echo 'Fixed'; elseif($quote_data['project_type'] == '2' || $quote_data['project_type']== '') echo 'Internal'; elseif($quote_data['project_type'] == '3') echo 'T&amp;M'; ?></span></h6>
-								<?php if ($ms_chge_access == 1) { ?>
-								<p><a href="#" onclick="$('.project-type-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="project-type-change">
-									<select name="project_type" id="project_type">
-										<option value="">Select</option>
-									    <option value="<?php echo '1'; ?>" <?php if ($quote_data['project_type'] == '1') {echo 'selected';} ?>><?php echo 'Fixed'; ?></option>
-									    <option value="<?php echo '2'; ?>" <?php if ($quote_data['project_type'] == '2' || $quote_data['project_type'] == '0') {echo 'selected';} ?>><?php echo 'Internal'; ?></option>
-									    <option value="<?php echo '3'; ?>" <?php if ($quote_data['project_type'] == '3') {echo 'selected';} ?>><?php echo 'T&amp;M'; ?></option> 
-									</select>
-									<span id="errmsg_project_type" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectType(); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.project-type-change:visible, #errmsg_project_type').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-							
-							
-							<td valign="top" width="175">
-								<h6 class="rag-type-label">RAG Status &raquo; <span><?php if ($quote_data['rag_status'] == '1') echo 'Red'; elseif($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') echo 'Amber'; elseif($quote_data['rag_status'] == '3') echo 'Green'; ?></span></h6>
-								<?php if ($ms_chge_access == 1) { ?>
-								<p><a href="#" onclick="$('.rag-status-change:hidden').show(200); return false;">Change?</a></p>
-								<div class="rag-status-change">
-									<input type="radio" name="rag_status" value="1" <?php if($quote_data['rag_status'] == '1') { echo 'checked="checked"'; } ?> id="red">Red
-									<input type="radio" name="rag_status" value="2" <?php if($quote_data['rag_status'] == '2' || $quote_data['rag_status']== '') { echo 'checked="checked"'; } ?> id="amber">Amber
-									<input type="radio" name="rag_status" value="3" <?php if($quote_data['rag_status'] == '3') { echo 'checked="checked"'; } ?> id="green">Green
-									
-									<span id="errmsg_rag_status" style="color:red"></span>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setRagStatus(); return false;">Set</button>
-									</div>
-									<div class="buttons">
-										<button type="submit" onclick="$('.rag-status-change:visible, #errmsg_rag_status').hide(200); return false;">Cancel</button>
-									</div>
-								</div>
-								<?php } ?>
-							</td>
-							
-							
-						</tr>
-					</table>
-					<div id="project_cost">
-						<h5 class="project-cost-label">Project Cost</h5>
-						<div class="wrap_table">
-							<?php if(count($project_costs) >0 ) { ?>
-						    <table class="head">
-						        <tr>
-						            <td>Resource</td>
-						            <td>Hours</td>
-						            <td>Cost per Hour</td>
-						        </tr>
-						    </table>
-						    <div class="inner_table">
-							<table>
-						        <?php foreach($project_costs as $project_cost) { ?>
-								        <tr>
-								            <td><?php echo $project_cost['Resources'];?></td>
-								            <td><?php echo $project_cost['total_hour'];?></td>
-								            <td><?php echo $project_cost['bill_rate'];?></td>
-								        </tr>
-						        <?php } ?>
-						        <tr style="background-color: #dedede;font-weight:bold;">
-						        	<td>Total Project Value</td>
-						        	<td></td>
-						        	<td><?php echo $project_total_cost;?></td>
-						        </tr>
-						    </table>
-						    </div>
-						    <?php 
-								} else {
-							    	echo '<b> Unable to extract project cost from timesheet system </b>';
-								}
-							?>
-						</div>
-					</div>
-					
-				</form>
-				
-				<form name="contractor-assign">
-				
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
-					<h5 class="project-lead-label">Assign Project Team</h5>
-					<p><a href="javascript:void(0);" id="show-btn">Show</a></p>
+				<h5 class="project-lead-label">Assign Project Team</h5>
+				<p><a href="javascript:void(0);" id="show-btn">Show</a></p>
 										
-					<div id="show-con">
-						<?php if ($chge_access == 1) { ?>
-							<div class="list-contractors">
-								<div style="float:left;">
-									<span style="padding-left: 55px;">Members</span><br />
-									<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
-								</div>
-								
-								<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
-									<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
-									<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
-									<input type="hidden" value ="" id="project-member" name="project-member"/>
-								</div>
-								<div style="float:left;">
-									<span style="padding-left: 45px;">Project Team</span><br />
-									<select multiple="multiple" name="select2" id="select2" ><?php echo $contractor_list_select2 ?></select>
-								</div>
+				<div id="show-con">
+					<?php if ($chge_access == 1) { ?>
+						<div class="list-contractors">
+							<div style="float:left;">
+								<span style="padding-left: 55px;">Members</span><br />
+								<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
 							</div>
-						<?php 
-						} else { 
-						?>
+							
+							<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
+								<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
+								<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
+								<input type="hidden" value ="" id="project-member" name="project-member"/>
+							</div>
+							<div style="float:left;">
 								<span style="padding-left: 45px;">Project Team</span><br />
-								<select id="select3" multiple="multiple"><?php echo $contractor_list_select2 ?></select>
-						<?php		
-						}
-						?>
-						<?php 
-							if ($chge_access == 1) { 
-						?>
-							<div class="buttons" style="clear:both;">
-								<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>
-								<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
+								<select multiple="multiple" name="select2" id="select2" ><?php echo $contractor_list_select2 ?></select>
 							</div>
-						<?php 
-						} 
-						?>
+						</div>
+					<?php 
+					} else { 
+					?>
+							<span style="padding-left: 45px;">Project Team</span><br />
+							<select id="select3" multiple="multiple"><?php echo $contractor_list_select2 ?></select>
+					<?php		
+					}
+					?>
+					<?php 
+						if ($chge_access == 1) { 
+					?>
+						<div class="buttons" style="clear:both;">
+							<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>
+							<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
+						</div>
+					<?php 
+					} 
+					?>
+				</div>
+			</form>
+			
+			<table border=0 id="project-date-assign">
+				<tr>
+					<th>Project Dates</th>
+					<th>Planned</th>
+					<th>Actuals</th>
+				</tr>
+				<tr>					
+					<th>Start Date</th>
+					<td>
+						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" class="textfield pick-date" id="project-start-date" /> 
+						<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
+					</td>
+					<td>
+						<input type="text" value="" class="textfield pick-date" id="actual-project-start-date" />
+						<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
+					</td>
+				</tr>
+				<tr>					
+					<th>End Date</th>
+					<td>
+						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" class="textfield pick-date" id="project-due-date" />
+						<button type="submit" class="positive buttons" onclick="setProjectStatusDate('due'); return false;">Set</button>
+					</td>
+					<td>
+						<input type="text" value="" class="textfield pick-date" id="actual-project-due-date" />
+						<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=3><span id="dates_errmsg" style="color:red"></span></td>
+				</tr>
+			</table>
+			
+			<form>
+				<div>
+					<div style="float:left;">
+						<h5><label class="project-val">Project Value</label>&nbsp;&nbsp;
+						<input class="textfield" style="width: 25px; font-weight:bold;" type="text" name="curid" id="curid" value="<?php if (isset($quote_data['expect_worth_name'])) echo $quote_data['expect_worth_name']; ?>" readonly />
+						<input class="textfield" style="width: 95px;" type="text" name="pjt_value" id="pjt_value" value="<?php if (isset($quote_data['actual_worth_amount'])) echo $quote_data['actual_worth_amount']; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> onkeypress="return isNumberKey(event)" />
+						<input type="hidden" class="hiddenUrl"/>
+						</h5>
+					</div>					
+					<?php if ($chge_access == 1) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectVal(); return false;">
+							Set Project Value
+						</button>
 					</div>
-				</form>
-
-			</div>
+					<div class="error-msg">
+						<span id="pjt_val_errormsg" style="color:red"></span>
+						<span id="checkVal" style="color:green">Project Value Updated.</span>
+						<span id="checkVal1" id="val-existsval" style="color:red">Project Value Already Exists.</span>
+					</div>
+					<?php } ?>
+				</div>	
+			</form>
 
   <div id="project-tabs" style="width:930px;">
 	<div>
@@ -1074,7 +964,7 @@
 					</table>
 				</form>
 			</div>
-			<?php if ($ms_chge_access == 1) { ?>
+			<?php if ($chge_access == 1) { ?>
 			<div class="buttons task-init ms-toggler" id="addNew-ms">
 				<button type="button" class="positive" onclick="$('.ms-toggler').slideToggle();" style="float:none;">Add New Milestone</button>
 			</div>
@@ -1097,7 +987,7 @@
 				$output .= "<th class='header'>Planned End Date</th>";
 				$output .= "<th class='header'>Actual Start Date</th>";
 				$output .= "<th class='header'>Actual End Date</th>";
-				$output .= "<th class='header'>Effort</th>";
+				$output .= "<th class='header'>Efforts</th>";
 				$output .= "<th class='header'>Completion(%)</th>";
 				$output .= "<th class='header'>Status</th>";
 				$output .= "<th class='header'>Action</th>";
@@ -1129,7 +1019,7 @@
 					$output .= "<td align='left'>".$ms_data['ms_percent']."</td>";
 					$output .= "<td align='left'>".$ms_stat."</td>";
 					$output .= "<td align='left'>";
-					if ($ms_chge_access == 1) {
+					if ($chge_access == 1) {
 						$output .= "<a class='edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' >Edit</a> | ";
 						$output .= "<a class='edit' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' >Delete</a>";
 					} else {

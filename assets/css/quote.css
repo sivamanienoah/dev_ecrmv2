@@ -505,7 +505,7 @@ h3 .small em strong {
 
 #project-assign {
 	width:185px;
-	float:right;
+	/*float:right;*/
 }
 .project-lead-label span {
 	font-weight:normal;

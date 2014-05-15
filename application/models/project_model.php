@@ -157,23 +157,6 @@ class Project_model extends crm_model
 		return $chge_access;
 	}
 	
-	//get the access for add, edit & delete Milestones in Project Module
-	public function get_ms_access($id, $uid)
-	{
-		$this->db->select('assigned_to');
-		$this->db->where('lead_id', $id);
-		$this->db->where('assigned_to', $uid);
-		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
-		$res1 = $sql->result_array();
-		if (empty($res1)) {
-			$ms_chge_access = 0;
-		}
-		else {
-			$ms_chge_access = 1;
-		}
-		return $ms_chge_access;
-	}
-	
 	//get overall details for lead or project 
 	function get_quote_data($id) 
 	{

@@ -85,12 +85,6 @@ class Project extends crm_controller {
 			$data['chge_access'] = $this->project_model->get_access($id, $usernme['userid']);
 		}
 		
-		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
-			$data['ms_chge_access'] = 1;
-		} else {
-			$data['ms_chge_access'] = $this->project_model->get_ms_access($id, $usernme['userid']);
-		}
-		
 		$result = $this->project_model->get_quote_data($id);
 		
 		if(!empty($result)) {
@@ -2225,7 +2219,7 @@ HDOC;
 		$output .= "<th class='header'>Planned End Date</th>";
 		$output .= "<th class='header'>Actual Start Date</th>";
 		$output .= "<th class='header'>Actual End Date</th>";
-		$output .= "<th class='header'>Effort</th>";
+		$output .= "<th class='header'>Efforts</th>";
 		$output .= "<th class='header'>Completion(%)</th>";
 		$output .= "<th class='header'>Status</th>";
 		$output .= "<th class='header'>Action</th>";
@@ -2304,7 +2298,7 @@ HDOC;
 			$this->excel->getActiveSheet()->setCellValue('C1', 'Planned End Date');
 			$this->excel->getActiveSheet()->setCellValue('D1', 'Actual Start Date');
 			$this->excel->getActiveSheet()->setCellValue('E1', 'Actual End Date');
-			$this->excel->getActiveSheet()->setCellValue('F1', 'Effort');
+			$this->excel->getActiveSheet()->setCellValue('F1', 'Efforts');
 			$this->excel->getActiveSheet()->setCellValue('G1', 'Completion(%)');
 			$this->excel->getActiveSheet()->setCellValue('H1', 'Status');
 			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setSize(10);

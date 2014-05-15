@@ -926,7 +926,7 @@
 	}
 
 	function setProjectStatusDate(date_type) {
-		$("#errmsg, #errmsg_start_dt").hide();
+		$("#dates_errmsg").hide();
 
 		var set_date_type, date_val, d_class;
 
@@ -945,12 +945,12 @@
 			//alert('Please enter planned ' + set_date_type + ' date');
 			if (set_date_type == 'start') {
 				//showing error message As DOM type - Start Date
-				$("#errmsg_start_dt").text('Please enter planned ' + set_date_type + ' date');
-				$("#errmsg_start_dt").show();
+				$("#dates_errmsg").text('Please enter planned ' + set_date_type + ' date');
+				$("#dates_errmsg").show();
 			} else {
 				//showing error message As DOM type - End Date
-				$("#errmsg").text('Please enter planned ' + set_date_type + ' date');
-				$("#errmsg").show();
+				$("#dates_errmsg").text('Please enter planned ' + set_date_type + ' date');
+				$("#dates_errmsg").show();
 			}
 			return false;
 		} else {
@@ -966,33 +966,33 @@
 						eval ('var data = ' + _data);
 						if (typeof(data) == 'object') {
 							if (data.error == false) {
-								$('h6.project-' + d_class + '-label span').text(date_val);
-								$('.project-' + d_class + '-change:visible').hide(200);
+								$("#dates_errmsg").text('Saved Successfully...');
+								$("#dates_errmsg").show();
 							} else {
 								if (set_date_type == 'start') {
-									$("#errmsg_start_dt").text(data.error);
-									$("#errmsg_start_dt").show();
+									$("#dates_errmsg").text(data.error);
+									$("#dates_errmsg").show();
 								} else {
-									$("#errmsg").text(data.error);
-									$("#errmsg").show();
+									$("#dates_errmsg").text(data.error);
+									$("#dates_errmsg").show();
 								}
 							}
 						} else {
 							if (set_date_type == 'start') {
-								$("#errmsg_start_dt").text('Updating faild, please try again.');
-								$("#errmsg_start_dt").show();
+								$("#dates_errmsg").text('Updating faild, please try again.');
+								$("#dates_errmsg").show();
 							} else {
-								$("#errmsg").text('Updating faild, please try again.');
-								$("#errmsg").show();
+								$("#dates_errmsg").text('Updating faild, please try again.');
+								$("#dates_errmsg").show();
 							}
 						}
 					} catch (e) {
 						if (set_date_type == 'start') {
-							$("#errmsg_start_dt").text('Invalid response, your session may have timed out.');
-							$("#errmsg_start_dt").show();
+							$("#dates_errmsg").text('Invalid response, your session may have timed out.');
+							$("#dates_errmsg").show();
 						} else {
-							$("#errmsg").text('Invalid response, your session may have timed out.');
-							$("#errmsg").show();
+							$("#dates_errmsg").text('Invalid response, your session may have timed out.');
+							$("#dates_errmsg").show();
 						}
 					}
 				}
@@ -1655,7 +1655,7 @@
 		}
 		
 		function setProjectEstimateHour() {
-			$("#errmsg_start_dt").hide();
+			$("#dates_errmsg").hide();
 			var hour_val, h_class;
 			hour_val=$('#project-estimate-hour').val();
 			h_class = 'estimate-hour';
