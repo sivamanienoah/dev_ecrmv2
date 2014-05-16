@@ -17,11 +17,11 @@
 		$('#project_lead').change( function() {
 		});
 
-		$("#show-con").hide();
-		$("#show-btn").click(function(){
-			$("#show-con").slideToggle("slow"); 
-			return false;
-		});
+		// $("#show-con").hide();
+		// $("#show-btn").click(function(){
+			// $("#show-con").slideToggle("slow"); 
+			// return false;
+		// });
 		$('.payment-profile-button').click(function() {
 			$('#rec_paymentfadeout').hide();
 			$('.payment-profile-view').slideToggle(); 
@@ -243,69 +243,69 @@
 
 	function setPaymentRecievedTerms() 
 	{
-	$('#pr_form_jobid').val(curr_job_id);
-	var valid_date = true;
-	var date_entered = true;
-	var errors = [];
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-	var yyyy = today.getFullYear();
-	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
-	var pdate2 = $.trim($('#pr_date_3').val());	
+		$('#pr_form_jobid').val(curr_job_id);
+		var valid_date = true;
+		var date_entered = true;
+		var errors = [];
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yyyy = today.getFullYear();
+		if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
+		var pdate2 = $.trim($('#pr_date_3').val());	
 
-	if (($.trim($('#pr_date_1').val()) == '') && ($.trim($('#pr_date_2').val()) == '') && ($.trim($('#pr_date_3').val()) == '')) {
-		date_entered = false;
-	}
-	if (valid_date == false) {
-		errors.push('You have selected an invalid date');
-	}
-	if(($.trim($('#pr_date_1').val()) == '')) {
-		errors.push('<p>Enter Invoice Number.</p>');
-	}
-	if(($.trim($('#pr_date_2').val()) == '')) {
-		errors.push('<p>Enter Amount.</p>');
-	}
-	if(($.trim($('#pr_date_3').val()) == '')) { //|| valid_date == false) {
-		errors.push('<p>Enter valid Date.</p>');
-	}
-	if($('.deposit_map_field').val() == 0) {
-	   errors.push('<p>Map payment term.</p>');
-	}
+		if (($.trim($('#pr_date_1').val()) == '') && ($.trim($('#pr_date_2').val()) == '') && ($.trim($('#pr_date_3').val()) == '')) {
+			date_entered = false;
+		}
+		if (valid_date == false) {
+			errors.push('You have selected an invalid date');
+		}
+		if(($.trim($('#pr_date_1').val()) == '')) {
+			errors.push('<p>Enter Invoice Number.</p>');
+		}
+		if(($.trim($('#pr_date_2').val()) == '')) {
+			errors.push('<p>Enter Amount.</p>');
+		}
+		if(($.trim($('#pr_date_3').val()) == '')) { //|| valid_date == false) {
+			errors.push('<p>Enter valid Date.</p>');
+		}
+		if($('.deposit_map_field').val() == 0) {
+		   errors.push('<p>Map payment term.</p>');
+		}
 
-	if (errors.length > 0) {
-		$('#rec_paymentfadeout').show();
-		$('#rec_paymentfadeout').html(errors.join(''));
-		setTimeout('timerfadeout()', 8000);
-		return false;
-	} else {
-		$.blockUI({
-			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-		});
+		if (errors.length > 0) {
+			$('#rec_paymentfadeout').show();
+			$('#rec_paymentfadeout').html(errors.join(''));
+			setTimeout('timerfadeout()', 8000);
+			return false;
+		} else {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
+			var form_data = $('#payment-recieved-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;		
+			$.post( 
+				site_base_url+'project/add_project_received_payments',
+				form_data,
+				function(data) {
+						if (data.error) {
+							setTimeout('timerfadeout()', 8000);
+							$('#rec_paymentfadeout').show();
+							$('#rec_paymentfadeout').html(data.errormsg);
+						} else {
+							$('.payment-recieved-view:visible').slideUp(400);
+							$('.payment-received-mini-view1').html(data.msg);
+							$('#payment-recieved-terms')[0].reset();
+						}
+					$.unblockUI();
+				}
+				,'json'
+			);
+			
+		}
 		
-		var form_data = $('#payment-recieved-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;		
-		$.post( 
-			'project/add_project_received_payments',
-			form_data,
-			function(data) {
-					if (data.error) {
-						setTimeout('timerfadeout()', 8000);
-						$('#rec_paymentfadeout').show();
-						$('#rec_paymentfadeout').html(data.errormsg);
-					} else {
-						$('.payment-recieved-view:visible').slideUp(400);
-						$('.payment-received-mini-view1').html(data.msg);
-						$('#payment-recieved-terms')[0].reset();
-					}
-				$.unblockUI();
-			}
-			,'json'
-		);
-		
-	}
-	
-	$('.payment-received-mini-view1').css('display', 'block');
+		$('.payment-received-mini-view1').css('display', 'block');
 	
 	}
 
@@ -354,7 +354,7 @@
 			});
 			var form_data = $('#update-payment-recieved-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
 			$.post( 
-				'project/add_project_received_payments/'+pdid+'/'+eid,
+				site_base_url+'project/add_project_received_payments/'+pdid+'/'+eid,
 				form_data,
 				function(data) {
 						if (data.error) {
@@ -380,7 +380,7 @@
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
 		$.post( 
-			'project/retrieve_record/'+curr_job_id,params,
+			site_base_url+'project/retrieve_record/'+curr_job_id,params,
 			function(data) {
 				if (data.error) {
 					alert(data.errormsg);
@@ -397,7 +397,7 @@
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
 		$.post( 
-			'project/retrieve_payment_terms/'+curr_job_id,params,
+			site_base_url+'project/retrieve_payment_terms/'+curr_job_id,params,
 			function(data) {
 				if (data.error) {
 					alert(data.errormsg);
@@ -457,7 +457,7 @@
 			
 			var form_data = $('#set-payment-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
 			$.post( 
-				'project/set_payment_terms',
+				site_base_url+'project/set_payment_terms',
 				form_data,
 				function(data) {
 					if (data.error) {
@@ -528,7 +528,7 @@
 			});
 			var form_data = $('#update-payment-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
 			$.post( 
-				'project/set_payment_terms/'+eid,
+				site_base_url+'project/set_payment_terms/'+eid,
 				form_data,
 				function(data) {
 						if (data.error) {
@@ -636,7 +636,7 @@
 			params[csrf_token_name] = csrf_hash_token;
 			
 			$.post(
-				'ajax/request/file_delete/',
+				site_base_url+'ajax/request/file_delete/',
 				params,
 				function(data) {
 					try {
@@ -671,7 +671,7 @@
 		params[csrf_token_name]   = csrf_hash_token;
 		
 		$.post(
-			'ajax/request/add_url_tojob/',
+			site_base_url+'ajax/request/add_url_tojob/',
 			params,
 			function(_data) {
 				try {
@@ -720,57 +720,43 @@
 
 	function setProjectLead() {
 		$('#pjt_lead_errormsg').hide();
-		var pl_user = $('#project_lead').val(); 
-		var previous_manager = $("#previous-project-manager").val(); 
-
+		var pl_user				= $('#project_lead').val(); 
+		var previous_manager	= $("#previous-project-manager").val();
+		var params 				= {'lead_id':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
+		params[csrf_token_name] = csrf_hash_token;
+		
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
 		if (pl_user == 0) {
-			$('#pjt_lead_errormsg').text('Please Select Project Manager!');
+			$('#pjt_lead_errormsg').html("<span class='ajx_failure_msg'>Please Select Project Manager!</span>");
 			$('#pjt_lead_errormsg').show();
+			$.unblockUI();
+			setTimeout('timerfadeout()', 3000);
 			return false;
 		} else {
-		
-			var params 				 = {'lead_id':curr_job_id, 'new_pm':pl_user, 'previous_pm':previous_manager};
-			params[csrf_token_name]  = csrf_hash_token;
-
 			$.post(
-				'project/set_project_lead/',
+				site_base_url + 'project/set_project_lead',
 				params,
-				function(data) {
-					try {
-					  // return false;
-						eval ('var data = ' + data);
-						if (typeof(data) == 'object') {
-							if (data.error == false) { 
-								job_project_manager = pl_user;
-								$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-								$('.project-lead-change:visible').hide(200);
-								if (typeof(this_is_home) != 'undefined')
-								{
-									window.location.href = window.location.href;
-								}
-							} else { 
-								alert(data.error);
-							}
-						} else {
-							alert('Updating faild, please try again.');
-						}
-					} catch (e) {
-						//alert('Invalid response, your session may have  timed out.');
-						$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-						$('.project-lead-change:visible').hide(200);
+				function(data)
+				{
+					if (data.error == false) {
+						job_project_manager = pl_user;
+						$('#pjt_lead_errormsg').show();
+						$('#pjt_lead_errormsg').html("<span class='ajx_success_msg'>Project Manager Saved.</span>");
 						$("#previous-project-manager").val(pl_user);
+					} else {
+						alert(data.msg);
+						// window.location.href = window.location.href;
 					}
-					$('h5.project-lead-label span').text('[ ' + $('#project_lead option:selected').text() + ' ]');
-					$('.project-lead-change:visible').hide(200);
-					if (typeof(this_is_home) != 'undefined')
-					{
-						window.location.href = window.location.href;
-					}
-				}
-				//'json'
+				},"json"
 			);
+			$.unblockUI();
+			setTimeout('timerfadeout()', 3000);
 		}
-	}
+	}	
 
 	//adding the project id.
 	function setProjectId() {
@@ -808,7 +794,7 @@
 						$('.checkUser1').hide();
 						setTimeout('timerfadeout()', 2000);
 						$.post(
-							'project/set_project_id/',
+							site_base_url+'project/set_project_id/',
 							set_params,
 							function(data) 
 							{
@@ -835,45 +821,43 @@
 	//updating the project value.
 	function setProjectVal() 
 	{
-		$('#pjt_val_errormsg, .checkVal1, .checkVal').hide();
+		$('#msg_project_efforts').empty();
 		var pjtValue = $('#pjt_value').val()
 		if (pjtValue == 0) {
-			$('#pjt_val_errormsg').text('Please Enter Project Value!');
-			$('#pjt_val_errormsg').show();
+			$('#msg_project_efforts').html("<span class='ajx_failure_msg'>Please Enter Project Value!.</span>");
+			$('#msg_project_efforts').show();
 			setTimeout('timerfadeout()', 3000);
 			return false;
 		} else {
-				$.blockUI({
-					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-				});
-				
-				var baseurl = $('.hiddenUrl').val();
-				var params      				 = { pjt_val: pjtValue };
-				params[csrf_token_name]      = csrf_hash_token;
-				$.ajax({
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
+			var baseurl = $('.hiddenUrl').val();
+			var params      			 = { pjt_val: pjtValue, lead_id: curr_job_id };
+			params[csrf_token_name]      = csrf_hash_token;
+			$.ajax({
 				type: "POST",
 				url : baseurl + 'project/chkPjtValFromdb/',
 				cache : false,
 				data: params,
 				success : function(response) {
-					$('#checkVal').hide();
-					var params 				= { pjt_val: pjtValue, lead_id: curr_job_id};
+					var params 				= { pjt_val: pjtValue, lead_id: curr_job_id };
 					params[csrf_token_name] = csrf_hash_token;
 					
-					if(response == 'Ok') {	
-						$('#checkVal').show(); 
-						$('#checkVal1').hide();
+					if(response == 'Ok') {
 						setTimeout('timerfadeout()', 3000);
 						$.post(
-							'project/set_project_value/',
+							site_base_url+'project/set_project_value/',
 							params,
 							function(_data) {
 								try {
 								eval ('var data = ' + _data);
 								if (typeof(data) == 'object') {
 									if (data.error == false) {
-										$('h5.project-val-label span').text(pjt_value);
+										$('#msg_project_efforts').show();
+										$('#msg_project_efforts').html("<span class='ajx_success_msg'>Project Value Updated.</span>");
 										$.unblockUI();
 									} else {
 										alert(data.error);
@@ -888,9 +872,8 @@
 						);
 					} else {
 						$.unblockUI();
-						$('#checkVal').hide(); 
-						$('#checkVal1').show();
-						setTimeout('timerfadeout()', 3000);
+						$('#msg_project_efforts').html("<span class='ajx_failure_msg'>Project Value Already Exists.</span>");
+						setTimeout('timerfadeout()', 2000);
 					}
 				}
 			});
@@ -904,10 +887,9 @@
 			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 		});
-		var baseurl = $('.hiddenUrl').val();
 		$.ajax({
 			type: 'POST',
-			url: 'project/set_project_status/',
+			url: site_base_url+'project/set_project_status/',
 			dataType: 'json',
 			data: 'pjt_stat='+pjt_stat+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
 			success: function(data) {
@@ -926,10 +908,14 @@
 	}
 
 	function setProjectStatusDate(date_type) {
-		$("#dates_errmsg").hide();
-
+		
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
+		$("#dates_errmsg").empty();
 		var set_date_type, date_val, d_class;
-
 		if (date_type == 'start') {
 			set_date_type = 'start';
 			date_val = $('#project-start-date').val();
@@ -946,12 +932,12 @@
 			if (set_date_type == 'start') {
 				//showing error message As DOM type - Start Date
 				$("#dates_errmsg").text('Please enter planned ' + set_date_type + ' date');
-				$("#dates_errmsg").show();
 			} else {
 				//showing error message As DOM type - End Date
 				$("#dates_errmsg").text('Please enter planned ' + set_date_type + ' date');
-				$("#dates_errmsg").show();
 			}
+			$.unblockUI();
+			$("#dates_errmsg").show();
 			return false;
 		} else {
 			
@@ -959,7 +945,7 @@
 			params[csrf_token_name] = csrf_hash_token;
 		
 			$.post(
-				'project/set_project_status_date/',
+				site_base_url+'project/set_project_status_date/',
 				params,
 				function(_data) {
 					try {
@@ -967,45 +953,34 @@
 						if (typeof(data) == 'object') {
 							if (data.error == false) {
 								$("#dates_errmsg").text('Saved Successfully...');
-								$("#dates_errmsg").show();
 							} else {
-								if (set_date_type == 'start') {
-									$("#dates_errmsg").text(data.error);
-									$("#dates_errmsg").show();
-								} else {
-									$("#dates_errmsg").text(data.error);
-									$("#dates_errmsg").show();
-								}
+								$("#dates_errmsg").text(data.error);
 							}
 						} else {
-							if (set_date_type == 'start') {
-								$("#dates_errmsg").text('Updating faild, please try again.');
-								$("#dates_errmsg").show();
-							} else {
-								$("#dates_errmsg").text('Updating faild, please try again.');
-								$("#dates_errmsg").show();
-							}
+							$("#dates_errmsg").text('Updating faild, please try again.');
 						}
 					} catch (e) {
-						if (set_date_type == 'start') {
-							$("#dates_errmsg").text('Invalid response, your session may have timed out.');
-							$("#dates_errmsg").show();
-						} else {
-							$("#dates_errmsg").text('Invalid response, your session may have timed out.');
-							$("#dates_errmsg").show();
-						}
+						$("#dates_errmsg").text('Invalid response, your session may have timed out.');
 					}
+					$.unblockUI();
+					$("#dates_errmsg").show();
+					setTimeout('timerfadeout()', 3000);
 				}
 			);
 		}
 	}
 
 
-	function actualSetProjectStatusDate(date_type) {	
+	function actualSetProjectStatusDate(date_type) {
+		
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
 		
 		var set_date_type, date_val, d_class;
 		
-		$("#errmsg_actual_start_dt, #errmsg_actual_end_dt").hide();
+		$("#dates_errmsg").empty();
 		if (date_type == 'start')
 		{
 			set_date_type = 'start';
@@ -1021,12 +996,12 @@
 		var pr_date = $('#project_lead').val()
 		if (! /^\d{2}-\d{2}-\d{4}$/.test(date_val)) {
 			if (set_date_type == 'start') {
-				$("#errmsg_actual_start_dt").text('Please enter actual ' + set_date_type + ' date');
-				$("#errmsg_actual_start_dt").show();
+				$("#dates_errmsg").text('Please enter actual ' + set_date_type + ' date');
 			} else {
-				$("#errmsg_actual_end_dt").text('Please enter actual ' + set_date_type + ' date');
-				$("#errmsg_actual_end_dt").show();
+				$("#dates_errmsg").text('Please enter actual ' + set_date_type + ' date');
 			}
+			$.unblockUI();
+			$("#dates_errmsg").show();
 			return false; 
 		} else {
 		
@@ -1034,42 +1009,28 @@
 			params[csrf_token_name]      = csrf_hash_token;
 			
 			$.post(
-				'project/actual_set_project_status_date/',
+				site_base_url+'project/actual_set_project_status_date/',
 				params,
 				function(_data) { //alert(_data);
 					try {
 						eval ('var data = ' + _data);
 						if (typeof(data) == 'object') {
 							if (data.error == false) {
-								$('h6.actual-project-' + d_class + '-label span').text(date_val);
-								$('.actual-project-' + d_class + '-change:visible').hide(200);
+								// $('h6.actual-project-' + d_class + '-label span').text(date_val);
+								// $('.actual-project-' + d_class + '-change:visible').hide(200);
+								$("#dates_errmsg").text('Saved Successfully...');
 							} else {
-								if (set_date_type == 'start') {
-									$("#errmsg_actual_start_dt").text(data.error);
-									$("#errmsg_actual_start_dt").show();
-								} else {
-									$("#errmsg_actual_end_dt").text(data.error);
-									$("#errmsg_actual_end_dt").show();
-								}
+								$("#dates_errmsg").text(data.error);
 							}
 						} else {
-							if (set_date_type == 'start') {
-								$("#errmsg_actual_start_dt").text('Updating faild, please try again.');
-								$("#errmsg_actual_start_dt").show();
-							} else {
-								$("#errmsg_actual_end_dt").text('Updating faild, please try again.');
-								$("#errmsg_actual_end_dt").show();
-							}
+							$("#dates_errmsg").text('Updating faild, please try again.');
 						}
 					} catch (e) {
-						if (set_date_type == 'start') {
-							$("#errmsg_actual_start_dt").text('Invalid response, your session may have timed out.');
-							$("#errmsg_actual_start_dt").show();
-						} else {
-							$("#errmsg_actual_end_dt").text('Invalid response, your session may have timed out.');
-							$("#errmsg_actual_end_dt").show();
-						}
+						$("#dates_errmsg").text('Invalid response, your session may have timed out.');
 					}
+					$.unblockUI();
+					$("#dates_errmsg").show();
+					setTimeout('timerfadeout()', 3000);
 				}
 			);
 		}
@@ -1310,7 +1271,7 @@
 		);
 	}
 
-	function updateVisualStatus(status) 
+	function updateVisualStatus(status)
 	{
 		// $('h3.status-title .small em strong').html(status);
 		// $('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
@@ -1571,8 +1532,6 @@
 		{
 			$('.checkUser').hide();
 			$('.checkUser1').hide();
-			$('#checkVal').hide();
-			$('#checkVal1').hide();
 		});
 
 		//Add Payment Terms Edit function Starts here 
@@ -1611,7 +1570,10 @@
 		{
 			$('#paymentfadeout').fadeOut();
 			$('#rec_paymentfadeout').fadeOut();
-			$('#resmsg, #pjt_val_errormsg, #checkVal1, #checkVal').fadeOut();
+			$('#pjt_lead_errormsg').fadeOut();
+			$('#dates_errmsg').fadeOut();
+			$('#msg_project_efforts').fadeOut();
+			$('#errmsg_project_type').fadeOut();
 			$('#pjt_id_errormsg, .checkUser, #id-existsval').fadeOut();
 			$('#msErrNotifyFadeout').fadeOut();
 		}
@@ -1661,17 +1623,22 @@
 			h_class = 'estimate-hour';
 
 			if (hour_val=='') {
-				$("#errmsg_estimate_hour").text('Please enter project estimate hour');
-				$("#errmsg_estimate_hour").show();
+				$("#msg_project_efforts").text('Please enter project estimate hour');
+				$("#msg_project_efforts").show();
 				return false;
 			}else {
 				if(filterFloat(hour_val) == false){
-					$("#errmsg_estimate_hour").text('Please enter valid estimate hour');
-					$("#errmsg_estimate_hour").show();
+					$("#msg_project_efforts").text('Please enter valid estimate hour');
+					$("#msg_project_efforts").show();
 					return false;
 				}
 				var params 				= {'lead_id':curr_job_id,'esthr':hour_val};
 				params[csrf_token_name] = csrf_hash_token;
+				
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
 			
 				$.post(
 					site_base_url+'project/set_project_estimate_hour/',
@@ -1681,20 +1648,19 @@
 							eval ('var data = ' + _data);
 							if (typeof(data) == 'object') {
 								if (data.error == false) {
-									$('h6.project-' + h_class + '-label span').text(hour_val);
-									$('.project-' + h_class + '-change:visible').hide(200);
+									$('#msg_project_efforts').html("<span class='ajx_success_msg'>Saved Successfully...</span>");
 								} else {
-									$("#errmsg_estimate_hour").text(data.error);
-									$("#errmsg_estimate_hour").show();
+									$("#msg_project_efforts").html("<span class='ajx_failure_msg'>"+data.error+"</span>");
 								}
 							} else {
-								$("#errmsg_estimate_hour").text('Updating faild, please try again.');
-								$("#errmsg_estimate_hour").show();
+								$("#msg_project_efforts").html("<span class='ajx_failure_msg'>Updating faild, please try again.</span>");
 							}
 						} catch (e) {
-							$("#errmsg_estimate_hour").text('Invalid response, your session may have timed out.');
-							$("#errmsg_estimate_hour").show();
+							$("#msg_project_efforts").html("<span class='ajx_failure_msg'>Invalid response, your session may have timed out.</span>");
 						}
+						$("#msg_project_efforts").show();
+						$.unblockUI();
+						setTimeout('timerfadeout()', 2000);
 					}
 				);
 			}
@@ -1702,20 +1668,28 @@
 		
 		function setProjectType() {
 			$("#errmsg_project_type").hide();
+			
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			
 			var project_type_val, p_class,project_val;
 			project_type_val=$('#project_type').val();
 			p_class = 'type';
 
 			if (project_type_val=='') {
-				$("#errmsg_project_type").text('Please select project type');
+				$("#errmsg_project_type").html("<span class='ajx_failure_msg'>Please select project type.</span>");
 				$("#errmsg_project_type").show();
+				$.unblockUI();
+				setTimeout('timerfadeout()', 3000);
 				return false;
 			}else {
 				var params 				= {'lead_id':curr_job_id,'project_type':project_type_val};
 				params[csrf_token_name] = csrf_hash_token;
 			
 				$.post(
-					'project/set_project_type/',
+					site_base_url+'project/set_project_type/',
 					params,
 					function(_data) {
 						try {
@@ -1728,23 +1702,27 @@
 										project_val='Internal';
 									}else if(project_type_val =='3'){
 										project_val='T&M';
-									}
-									$('h6.project-' + p_class + '-label span').text(project_val);
-									$('.project-' + p_class + '-change:visible').hide(200);
+									}									
+									$('#errmsg_project_type').show();
+									$('#errmsg_project_type').html("<span class='ajx_success_msg'>Status Updated.</span>");
 								} else {
 									$("#errmsg_project_type").text(data.error);
 									$("#errmsg_project_type").show();
 								}
+								$.unblockUI();
 							} else {
-								$("#errmsg_project_type").text('Updating faild, please try again.');
 								$("#errmsg_project_type").show();
+								$("#errmsg_project_type").html("<span class='ajx_failure_msg'>Updating faild, please try again.</span>.");
+								$.unblockUI();
 							}
 						} catch (e) {
-							$("#errmsg_project_type").text('Invalid response, your session may have timed out.');
+							$("#errmsg_project_type").html("<span class='ajx_failure_msg'>Invalid response, your session may have timed out.</span>");
 							$("#errmsg_project_type").show();
+							$.unblockUI();
 						}
 					}
 				);
+				setTimeout('timerfadeout()', 3000);
 			}
 		}
 		

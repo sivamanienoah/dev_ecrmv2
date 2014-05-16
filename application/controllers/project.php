@@ -235,7 +235,7 @@ class Project extends crm_controller {
 
 		$wh_condn = array('pjt_id'=>$data['pjt_id']);
 		$stat = $this->project_model->chk_status('leads', $wh_condn);
-		if( $stat == 0 ) 
+		if( $stat == 0 )
 		echo 'Ok';
 		else
 		echo 'No';
@@ -266,7 +266,7 @@ class Project extends crm_controller {
 	{
 		$data = real_escape_array($this->input->post());
 
-		$wh_condn = array('actual_worth_amount'=>$data['pjt_val']);
+		$wh_condn = array('lead_id' => $data['lead_id'], 'actual_worth_amount'=>$data['pjt_val']);
 		$stat = $this->project_model->chk_status('leads', $wh_condn);
 		if( $stat == 0 ) 
 		echo 'Ok';
@@ -513,7 +513,7 @@ class Project extends crm_controller {
 		
 		$user_det = array();
 		$pm_det = array();
-				
+
 		$wh_condn = array('userid'=>$data_pm['previous_pm']);
 		$previous_manager = $this->project_model->get_user_data_by_id('users', $wh_condn);
 		
@@ -551,15 +551,17 @@ class Project extends crm_controller {
 		
 		if ($data_pm['new_pm'] == 0)
 		{	
-			$data['error'] = 'User must be selected!';
+			$data['error'] = TRUE;
+			$data['msg'] = 'Session Expired (or) DB Error Occured.';
 		}
 		else
 		{
 			$wh_condn = array('lead_id' => $data_pm['lead_id']);
-			$updt = array('assigned_to' => $data_pm['new_pm']);
+			$updt	  = array('assigned_to' => $data_pm['new_pm']);
 			$updt_stat = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
-		echo json_encode($data);	 
+		echo json_encode($data);
+		exit;
 	}
 	
 	public function sent_to_manager($email, $first_name, $project_name, $mail_type) 
@@ -597,10 +599,7 @@ class Project extends crm_controller {
 		$param['template_name'] = "Project Assignment / Removal Notification";
 		$param['subject'] = $log_subject;
 		
-		if($this->email_template_model->sent_email($param))
-		{
-			echo $successful .= 'This log has been emailed to:<br />'.$send_to;
-		}
+		$this->email_template_model->sent_email($param);
 	}
 	
 	/*
@@ -1872,6 +1871,7 @@ HDOC;
 			}
 		}
 		echo json_encode($data);
+		exit;
 	}
 	
 	public function set_project_type()
