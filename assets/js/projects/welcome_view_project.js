@@ -2,13 +2,7 @@
 *@Welcome View Project
 *@
 */
-
 	$(document).ready(function() {
-		
-		$('#red,#amber,#green').click(function(e){
-			ragStatus();
-		});
-		ragStatus();
 		
 		var mySelect = $('#project_lead');
 		previousValue = mySelect.val();
@@ -207,7 +201,7 @@
 			}
 		}
 		$.post(
-			'project/pjt_add_log',
+			site_base_url+'project/pjt_add_log',
 			form_data,
 			function(data)
 			{
@@ -789,8 +783,8 @@
 					var set_params 				= {pjt_id: pjtId, lead_id: curr_job_id};
 					set_params[csrf_token_name] = csrf_hash_token;
 					
-					if(response == 'Ok') {					
-						$('.checkUser').show(); 
+					if(response == 'Ok') {				
+						$('.checkUser').show();
 						$('.checkUser1').hide();
 						setTimeout('timerfadeout()', 2000);
 						$.post(
@@ -800,7 +794,13 @@
 							{
 								if (data.error == false) {
 									$('h5.project-id-label span').text(pjtId);
-									$.unblockUI();
+									setTimeout(function(){
+										$.blockUI({
+											message:'<h4>Fetching Timesheet Information...</h4><img src="assets/img/ajax-loader.gif" />',
+											css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+										});
+										window.location.reload(true);
+									},2000);
 								} else {
 									alert(data.error);
 								}
@@ -858,6 +858,8 @@
 									if (data.error == false) {
 										$('#msg_project_efforts').show();
 										$('#msg_project_efforts').html("<span class='ajx_success_msg'>Project Value Updated.</span>");
+										variancePjtValue = pjtValue - $("#actualValue").val();
+										$("#varianceValue").val(variancePjtValue);
 										$.unblockUI();
 									} else {
 										alert(data.error);
@@ -1648,7 +1650,9 @@
 							eval ('var data = ' + _data);
 							if (typeof(data) == 'object') {
 								if (data.error == false) {
-									$('#msg_project_efforts').html("<span class='ajx_success_msg'>Saved Successfully...</span>");
+									$('#msg_project_efforts').html("<span class='ajx_success_msg'>Saved Successfully...</span>");		
+									varianceeff = $("#actualEff").val() - hour_val;
+									$("#varianceEff").val(varianceeff);
 								} else {
 									$("#msg_project_efforts").html("<span class='ajx_failure_msg'>"+data.error+"</span>");
 								}
@@ -1726,69 +1730,6 @@
 			}
 		}
 		
-		
-		function setRagStatus() {
-			$("#errmsg_rag_status").hide();
-			var rag_status_val, r_class, rag_val;
-			rag_status_val=$("input[type='radio'][name='rag_status']:checked").val();
-			r_class = 'type';
-
-			if (rag_status_val=='') {
-				$("#errmsg_rag_status").text('Please check RAG status');
-				$("#errmsg_rag_status").show();
-				return false;
-			}else {
-				var params 				= {'lead_id':curr_job_id,'rag_status':rag_status_val};
-				params[csrf_token_name] = csrf_hash_token;
-			
-				$.post(
-					'project/set_rag_status/',
-					params,
-					function(_data) {
-						try {
-							eval ('var data = ' + _data);
-							if (typeof(data) == 'object') {
-								if (data.error == false) {
-									if(rag_status_val =='1'){
-										rag_val='Red';
-									}else if(rag_status_val =='2'){
-										rag_val='Amber';
-									}else if(rag_status_val =='3'){
-										rag_val='Green';
-									}
-									$('h6.rag-' + r_class + '-label span').text(rag_val);
-									$('.rag-status-change').hide(200);
-								} else {
-									$("#errmsg_rag_status").text(data.error);
-									$("#errmsg_rag_status").show();
-								}
-							} else {
-								$("#errmsg_rag_status").text('Updating faild, please try again.');
-								$("#errmsg_rag_status").show();
-							}
-						} catch (e) {
-							$("#errmsg_rag_status").text('Invalid response, your session may have timed out.');
-							$("#errmsg_rag_status").show();
-						}
-					}
-				);
-			}
-		}
-		
-		function ragStatus(){
-			var radioId=$('input[type=radio][name=rag_status]:checked').attr('id');
-			if(radioId == 'red'){
-				$("input[type='radio']:checked").css( {"background":"#CC0000"});
-			}else if(radioId == 'amber'){
-				$("input[type='radio']:checked").css( {"background":"#FFBF00"});
-			}else if(radioId == 'green'){
-				$("input[type='radio']:checked").css( {"background":"#177245"});
-			}
-			
-			if($('input:radio[checked=false]')){
-				$("input[type='radio'][name=rag_status]:not(:checked)").css( {"background":""});
-			}
-		}
 		
 		var filterFloat = function (value) {
 		    if(/^\-?([0-9]+(\.[0-9]+)?|Infinity)$/
@@ -2049,7 +1990,49 @@
 			var return_date=$('#ms_act_st_date').val();
 			$('#ms_act_end_date').datepicker("option", "minDate", return_date);
 		}});
+		
 		$('#ms_act_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+		
+		//Set the RAG Status
+		$( ".rag_stat" ).change(function() {
+			$("#errmsg_rag_status").hide();
+			var rag_status_val = $(this).val();
+			if (rag_status_val=='') {
+				$("#errmsg_rag_status").text('Please check RAG status');
+				$("#errmsg_rag_status").show();
+				return false;
+			} else {
+				var params 				= {'lead_id':curr_job_id, 'rag_status':rag_status_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					site_base_url+'project/set_rag_status/',
+					params,
+					function(_data) {
+						if (typeof(_data) == 'object') {
+							if (_data.error == false) {
+								if(rag_status_val =='1'){
+									rag_val='Red';
+								}else if(rag_status_val =='2'){
+									rag_val='Amber';
+								}else if(rag_status_val =='3'){
+									rag_val='Green';
+								}
+								// $('h6.rag-' + r_class + '-label span').text(rag_val);
+								// $('.rag-status-change').hide(200);
+							} else {
+								$("#errmsg_rag_status").text(data.error);
+								$("#errmsg_rag_status").show();
+							}
+						} else {
+							$("#errmsg_rag_status").text('Updating faild, please try again.');
+							$("#errmsg_rag_status").show();
+						}
+					},"json"
+				);
+			}
+		});
+		
 	});
 	
 	/*Function for setting the Project Thermometer value*/
@@ -2057,3 +2040,28 @@
 		$('.meter').css({'width':wdt +'%'});
 	}
 	/*Project Thermometer*/
+/*RAG Status Script - Start*/
+$(function(){
+
+	$('.rag-status input:radio').screwDefaultButtons({
+		image: '.',
+		width: 25,
+		height: 25
+	});
+	
+	$('input#red').parent().addClass('styleradio-1');
+	$('input#amber').parent().addClass('styleradio-2');
+	$('input#green').parent().addClass('styleradio-3');
+	
+	if(rag_stat_id == 1) {
+		$(".rag-status").children("div").eq(0).attr("id","red-radio");
+	}
+	if(rag_stat_id == 2) {
+		$(".rag-status").children("div").eq(1).attr("id","amber-radio");
+	}
+	if(rag_stat_id == 3) {
+		$(".rag-status").children("div").eq(2).attr("id","green-radio");
+	}
+
+});
+/*RAG Status Script - End*/
