@@ -139,7 +139,6 @@
 								$thisParent.css({
 									backgroundPosition:  '0 ' + checkedPos + "px"
 								});
-								// $thisParent.attr('id', $this.attr('id')+rag_stat_id);
 								$thisParent.attr('id', $this.attr('id')+'-radio');
 								
 							
