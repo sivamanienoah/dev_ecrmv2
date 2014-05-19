@@ -1207,12 +1207,12 @@
 						<?php foreach($timesheet_data as $timesheet) { ?>
 							<?php if( $m != count($timesheet_data) ) { ?>
 									<tr>
-										<td><?php echo rtrim($timesheet['Resources'], "0");?></td>
-										<td><?php echo rtrim($timesheet['Billable'], "0");?></td>
-										<td><?php echo rtrim($timesheet['Internal'], "0");?></td>
-										<td><?php echo rtrim($timesheet['Non-Billable'], "0");?></td>
-										<td><?php echo rtrim($timesheet['bill_rate'], "0");?></td>
-										<td><?php echo rtrim($timesheet['cost'], "0");?></td>
+										<td><?php echo $timesheet['Resources'];?></td>
+										<td><?php echo $timesheet['Billable'];?></td>
+										<td><?php echo $timesheet['Internal'];?></td>
+										<td><?php echo $timesheet['Non-Billable'];?></td>
+										<td><?php echo $timesheet['bill_rate'];?></td>
+										<td><?php echo $timesheet['cost'];?></td>
 									</tr>
 							<?php $m++; ?>
 							<?php } else { ?> <!--for printing bold-->
