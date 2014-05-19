@@ -25,33 +25,7 @@
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
-<script type="text/javascript">
-	$(function(){
 
-		$('.rag-status input:radio').screwDefaultButtons({
-			image: '.',
-			width: 25,
-			height: 25
-		});
-		
-		$('input#red').parent().addClass('styleradio-1');
-		$('input#amber').parent().addClass('styleradio-2');
-		$('input#green').parent().addClass('styleradio-3');
-		
-		if(rag_stat_id == 1) {
-			$(".rag-status").children("div").eq(0).attr("id","red-radio");
-		}
-		if(rag_stat_id == 2) {
-			$(".rag-status").children("div").eq(1).attr("id","amber-radio");
-		}
-		if(rag_stat_id == 3) {
-			$(".rag-status").children("div").eq(2).attr("id","green-radio");
-		}
-
-	});
-	
-	  
-</script>
 <div class="comments-log-container" style= "display:none;">
 	<?php if ($log_html != "") { ?>
 			<table width="100%" class="log-container"> 
@@ -259,15 +233,14 @@
 			
 			<div style="overflow: hidden; clear: both">
 				<h6 style="float: left;margin: 4px 10px 0 0">RAG Status</h6>
-				<?php if ($chge_access == 1) { ?>
+				
 				<div class="rag-status">
-					<input type="radio" name="rag_status" class="rag_stat" value="1"  id="red" >
-					<input type="radio" name="rag_status" class="rag_stat" value="2" <?php if($quote_data['rag_status'] == '2') { echo 'checked="checked"'; } ?> id="amber">
-					<input type="radio" name="rag_status" class="rag_stat" value="3" <?php if($quote_data['rag_status'] == '3' || $quote_data['rag_status']== '') { echo 'checked="checked"'; } ?> id="green">
-					
+					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
 					<span id="errmsg_rag_status" style="color:red"></span>
 				</div>
-				<?php } ?>
+				
 			</div>
 			
 			<!-- Project Progress Thermometer - Start -->
