@@ -193,7 +193,7 @@
 							<?php if (isset($timsheetData->nonbillable)) echo $timsheetData->nonbillable; else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php echo ($timsheetData->billable+$timsheetData->internal)-$timsheetData->nonbillable; ?>
+							<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable); ?>
 						</td>
 						
 						<td class="actions" align="center">
