@@ -77,7 +77,7 @@
 									?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']/8); else echo "-"; ?>
+									<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']/60); else echo "-"; ?>
 								</td>
 								
 								
@@ -94,7 +94,7 @@
 									<?php echo ($timsheetData->billable+$timsheetData->internal)-$timsheetData->nonbillable; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php echo $timsheetData->total_hour-($record['estimate_hour'])/8; ?>
+									<?php echo $timsheetData->total_hour-($record['estimate_hour'])/60; ?>
 								</td>
 								<td class="actions" align="center">
 									<?php if (isset($record['actual_worth_amount'])) echo $record['expect_worth_name'] . ' ' . $record['actual_worth_amount']; else echo "-"; ?>
