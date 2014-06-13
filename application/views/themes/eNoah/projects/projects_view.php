@@ -179,7 +179,7 @@
 							?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']/60); else echo "-"; ?>
+							<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
 						</td>
 						
 						
