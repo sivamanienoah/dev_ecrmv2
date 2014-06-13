@@ -184,13 +184,13 @@
 						
 						
 						<td class="actions" align="center">
-							<?php if (isset($timsheetData->billable)) echo $timsheetData->billable; else echo "-"; ?>
+							<?php if (isset($timsheetData->billable)) echo sprintf('%0.2f',$timsheetData->billable); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($timsheetData->internal)) echo $timsheetData->internal; else echo "-"; ?>
+							<?php if (isset($timsheetData->internal)) echo sprintf('%0.2f',$timsheetData->internal); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($timsheetData->nonbillable)) echo $timsheetData->nonbillable; else echo "-"; ?>
+							<?php if (isset($timsheetData->nonbillable)) echo sprintf('%0.2f',$timsheetData->nonbillable); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable); ?>
@@ -203,7 +203,7 @@
 							<?php if (isset($record['actual_worth_amount'])) echo $record['expect_worth_name'] . ' ' . $record['actual_worth_amount']; else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($timsheetData->cost)) echo $timsheetData->cost; else echo "-"; ?>
+							<?php if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php echo ($record['expect_worth_amount']-$timsheetData->cost); ?>
