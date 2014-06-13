@@ -1208,21 +1208,21 @@
 							<?php if( $m != count($timesheet_data) ) { ?>
 									<tr>
 										<td><?php echo $timesheet['Resources'];?></td>
-										<td><?php echo $timesheet['Billable'];?></td>
-										<td><?php echo $timesheet['Internal'];?></td>
-										<td><?php echo $timesheet['Non-Billable'];?></td>
+										<td><?php echo sprintf('%0.2f', $timesheet['Billable']);;?></td>
+										<td><?php echo sprintf('%0.2f', $timesheet['Internal']);?></td>
+										<td><?php echo sprintf('%0.2f', $timesheet['Non-Billable']);?></td>
 										<td><?php echo $timesheet['bill_rate'];?></td>
-										<td><?php echo $timesheet['cost'];?></td>
+										<td><?php echo sprintf('%0.2f', $timesheet['cost']);?></td>
 									</tr>
 							<?php $m++; ?>
 							<?php } else { ?> <!--for printing bold-->
 								<tr>
 									<td><b><?php echo $timesheet['Resources'];?></b></td>
-									<td><b><?php echo $timesheet['Billable'];?></b></td>
-									<td><b><?php echo $timesheet['Internal'];?></b></td>
-									<td><b><?php echo $timesheet['Non-Billable'];?></b></td>
+									<td><b><?php echo sprintf('%0.2f', $timesheet['Billable']);?></b></td>
+									<td><b><?php echo sprintf('%0.2f', $timesheet['Internal']);?></b></td>
+									<td><b><?php echo sprintf('%0.2f', $timesheet['Non-Billable']);?></b></td>
 									<td><b><?php echo $timesheet['bill_rate'];?></b></td>
-									<td><b><?php echo $timesheet['cost'];?></b></td>
+									<td><b><?php echo sprintf('%0.2f', $timesheet['cost']);?></b></td>
 								</tr>
 							<?php } /* else condition */?>
 						<?php } /* for loop */ ?>
