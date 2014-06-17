@@ -434,7 +434,7 @@
 						<?php } ?>
 					</td>
 					<td> 
-						<input type="text" id="actualEff" value="<?php if ($actual_hour_data != '') echo rtrim($actual_hour_data, "0"); else echo ''; ?>" class="textfield width60px" readonly />
+						<input type="text" id="actualEff" value="<?php if ($actual_hour_data != '') echo sprintf('%0.2f', $actual_hour_data); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
 					<td>
 						<?php 
