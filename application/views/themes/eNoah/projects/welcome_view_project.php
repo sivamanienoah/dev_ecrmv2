@@ -244,7 +244,7 @@
 			</div>
 			
 			<!-- Project Progress Thermometer - Start -->
-			<div style="background: #fff; border:1px solid #ddd; margin:10px 0; padding:10px">
+			<div style="margin:10px 0; padding:10px">
 			<h3 class="status-title">Project Completion Status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
 
 			<!--p class="status-bar">
