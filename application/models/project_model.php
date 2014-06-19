@@ -429,7 +429,7 @@ class Project_model extends crm_model
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username";
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id";
 		$sql .= " WHERE (p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id) GROUP BY t.uid";
-		// echo $sql;
+		// echo $sql; #EXIT;
 		$query=$timesheet_db->query($sql);
 		return $query->result_array();
 	}
