@@ -244,8 +244,8 @@
 			</div>
 			
 			<!-- Project Progress Thermometer - Start -->
-			<div style="margin:10px 0; padding:10px">
-			<h3 class="status-title">Project Completion Status <span class="small">[ current status - <em><strong>0</strong>% Complete</em> ]</span></h3>
+			<div style="margin:10px 0; ">
+			<h6 class="status-title">Project Completion Status &nbsp; <span class="small" style="color:#a51e04" >[ Current Status - <em><strong>0</strong>% Completed </em> ]</span></h6>
 
 			<!--p class="status-bar">
 				<span class="bar"></span>
@@ -263,26 +263,29 @@
 					<a href="#" class="p10" rel="10"></a-->
 				<?php //} ?>
 			<!--/p-->
-				
-			<div class="holder">
-				<div class="holder-in">  
-					<div class="bg-meter-scale">
-						<div class="track">
-							<div class="meter">&nbsp;</div>
-						</div>
-						<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
-						<tbody>
-							<tr>
-								<td>25</td>
-								<td>50</td>
-								<td>75</td>
-								<td>100</td>
-							</tr>
-						</tbody>
-						</table>
-					</div>
+			<div class="meter-container">
+				<div class="track-meter"></div>
+				<div class="track-progress-left"></div>
+				<div class="progress-cont">
+					<div class="track-progress"></div>
 				</div>
-				<div class="holder-in-rgt">&nbsp;</div>
+				<div class="track"></div>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
+					<tbody>
+						<tr>
+							<td>10</td>
+							<td>20</td>
+							<td>30</td>
+							<td>40</td>
+							<td>50</td>
+							<td>60</td>
+							<td>70</td>
+							<td>80</td>
+							<td>90</td>
+							<td>100</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			</div>
 			<!-- Project Progress Thermometer - End -->
