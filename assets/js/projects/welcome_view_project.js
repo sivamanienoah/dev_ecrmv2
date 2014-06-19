@@ -1278,8 +1278,16 @@
 		// $('h3.status-title .small em strong').html(status);
 		// $('.status-bar span.bar').animate({width: (status * 3) + 'px'}, 1000);
 		// job_complete_percentage = status;
-		$('h3.status-title .small em strong').html(status);
-		$('.meter').css({'width':status +'%'});
+		$('h6.status-title .small em strong').html(status);
+		$('.track-progress').css({'width':status +'%'});
+		if(status==100){
+			$(".progress-cont").css("width",100+"%")
+		}else if(status==0){
+			$('.track-progress-left').hide();
+		}else{
+			$(".progress-cont").removeAttr("style");
+			$('.track-progress-left').show();
+		}
 		job_complete_percentage = status;
 	}
 
@@ -1842,7 +1850,6 @@
 						var data = data.split('#');
 						$('#milestone_view_det').html(data[0]);
 						updateJobStatus(data[1]);
-						// setThermometerValue(data[1]);
 					}
 					$.unblockUI();
 					$('#milestone-add-view').empty();
@@ -2034,12 +2041,7 @@
 		});
 		
 	});
-	
-	/*Function for setting the Project Thermometer value*/
-	function setThermometerValue(wdt) {
-		$('.meter').css({'width':wdt +'%'});
-	}
-	/*Project Thermometer*/
+
 /*RAG Status Script - Start*/
 $(function(){
 
