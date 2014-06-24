@@ -1,5 +1,15 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
+<?php
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_name = $default_currency['expect_worth_name'];
+} else {
+	$default_cur_id = '1';
+	$default_cur_name = 'USD';
+}
+?>
 <div id="content">
 	<div class="inner">
 		<?php
@@ -99,13 +109,12 @@
 		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
 		<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;" >
 		<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:1250px !important;">
             
             <thead>
 				<th width="82px;">Action</th>
-				<!--th>Project No.</th>
-				<th>Project ID</th-->
 				<th>Project Title</th>
 				<th>Project Completion (%)</th>
 				<th>Project Type</th>
@@ -115,48 +124,35 @@
 				<th>Non-Billable Hours</th>
 				<th>Total Utilized Hours (Actuals)</th>
 				<th>Effort Variance</th>
-				<th>Project Value</th>
+				<th>Project Value (<?php echo $default_cur_name; ?>)</th>
 				<th>Utilization Cost</th>
 				<th>P&L </th>
 				<th>P&L %</th>
 				<th>RAG Status</th>
-				<!--th>Customer</th>
-				<th>Project Manager</th>
-				<th>Planned Start Date</th>
-				<th>Planned End Date</th>
-				<th width="110px;">Project Status</th-->
             </thead>
             
             <tbody>
 				<?php
-				if (is_array($records) && count($records) > 0) {
-				?>
-                    <?php
-					foreach ($records as $record) {
+				if (is_array($project_record) && count($project_record) > 0) {
+					foreach ($project_record as $record) {
 						if(!empty($record['pjt_id'])) {
-							$timsheetData = $this->project_model->get_timesheet_hours($record['pjt_id']);
+							$timsheetData = $this->project_model->get_timesheet_hours($record['pjt_id'], $record['lead_id']);
+						} else {
+							$timsheetData = '';
 						}
-					?>
+				?>
                     <tr>
 						<td class="actions" align="center">
 							<a href="project/view_project/<?php echo $record['lead_id'] ?>">
 								View &raquo;
 							</a>
 							<?php
-								if($this->session->userdata('delete')==1) { 
+								if($this->session->userdata('delete')==1) {
 								$tle = str_replace("'", "\'", $record['lead_title']);
 							?>
 								| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
 							<?php } ?>
 						</td>
-                        <!--td class="actions">
-							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo $record['invoice_no'] ?></a>
-							</div>
-						</td>
-						<td class="actions">
-							<?php if (isset ($record['pjt_id'])) { echo $record['pjt_id']; } else { echo "-"; } ?>
-						</td-->
                         <td class="actions">							
 							<div>
 								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo character_limiter($record['lead_title'], 35); ?></a>
@@ -181,8 +177,6 @@
 						<td class="actions" align="center">
 							<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
 						</td>
-						
-						
 						<td class="actions" align="center">
 							<?php if (isset($timsheetData->billable)) echo sprintf('%0.2f',$timsheetData->billable); else echo "-"; ?>
 						</td>
@@ -197,25 +191,24 @@
 						</td>
 						
 						<td class="actions" align="center">
-							<?php echo $timsheetData->total_hour-$record['estimate_hour']; ?>
+							<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable)-$record['estimate_hour']; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($record['actual_worth_amount'])) echo $record['expect_worth_name'] . ' ' . $record['actual_worth_amount']; else echo "-"; ?>
+							<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php echo ($record['expect_worth_amount']-$timsheetData->cost); ?>
+							<?php echo ($record['actual_worth_amt']-$timsheetData->cost); ?>
 						</td>
 						<td class="actions" align="center">
-							<?php echo ($record['expect_worth_amount']-$timsheetData->cost)/$record['expect_worth_amount']; ?>
+							<?php echo ($record['actual_worth_amt']-$timsheetData->cost)/$record['actual_worth_amt']; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php 
 								if (isset($record['rag_status'])) {
-									switch ($record['rag_status'])
-									{
+									switch ($record['rag_status']) {
 										case 1:
 											$ragStatus = '<span class=label-inactive>Red</span>';
 										break;
@@ -234,41 +227,6 @@
 								}
 							?>
 						</td>
-
-                        <!--td class="cust-data">
-							<span style="color:none"><?php echo $record['cfname'] . ' ' . $record['clname'] ?></span> - <?php echo $record['company'] ?>
-						</td>
-						<td class="cust-data">
-							<?php echo $record['fnm'] . ' ' . $record['lnm']; ?>
-						</td>
-						<td>
-							<?php if ($record['date_start'] == "") { echo "-"; } else { echo  date('d-m-Y', strtotime($record['date_start'])); } ?>
-						</td>
-						<td>
-							<?php if ($record['date_due'] == "") echo "-"; else echo  date('d-m-Y', strtotime($record['date_due'])) ?>
-						</td>
-						
-						
-						<td class="actions" align="center">
-							<?php
-							switch ($record['pjt_status'])
-								{
-									case 1:
-										$pjtstat = '<span class=label-wip>Project In Progress</span>';
-									break;
-									case 2:
-										$pjtstat = '<span class=label-success>Project Completed</span>';
-									break;
-									case 3:
-										$pjtstat = '<span class=label-warning>Project Onhold</span>';
-									break;
-									case 4:
-										$pjtstat = '<span class=label-inactive>Inactive</span>';
-									break;
-								}
-							 echo $pjtstat;
-							 ?>
-						</td-->
 					</tr>
 					<?php
 					} 

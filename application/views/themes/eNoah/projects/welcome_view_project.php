@@ -18,10 +18,10 @@
   var project_request_url     = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
   var project_assigned_to     = "<?php echo $quote_data['assigned_to']; ?>";
   var project_userdata    	  = "<?php echo $userdata; ?>";
-  var project_complete_status = "<?php echo $quote_data['complete_status']; ?>";
+  var project_complete_status = "<?php echo isset($quote_data['complete_status']) ? $quote_data['complete_status'] : 0 ?>";
   var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
   var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
-  
+
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>

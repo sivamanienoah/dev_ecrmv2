@@ -22,22 +22,37 @@ class Project extends crm_controller {
 		$this->stg = getLeadStage();
 		$this->stg_name = getLeadStageName();
 		$this->stages = @implode('","', $this->stg);
+		
+		$this->load->helper('custom_helper');
+		$this->load->model('report/report_lead_region_model');
+		
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id   = '1';
+			$this->default_cur_name = 'USD';
+		}
+
 	}
 	
 	/*
 	 * List all the Leads based on levels
 	 * @access public
 	 */
-	public function index() 
+	public function index()
 	{
 		$data['page_heading'] = "Projects - Lists";		
 		$data['pm_accounts'] = array();
-		$pjt_managers = $this->project_model->get_user_byrole(3);
+		$pjt_managers		 = $this->project_model->get_user_byrole(3);
 		if(!empty($pjt_managers))
 		$data['pm_accounts'] = $pjt_managers;
-		$data['customers'] = $this->project_model->get_customers();
-		$data['services'] = $this->project_model->get_services();
-		$data['records'] = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '');
+		$data['customers']   = $this->project_model->get_customers();
+		$data['services']    = $this->project_model->get_services();
+		$data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '');
+		$data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
+		unset($data['records']);
 		$this->load->view('projects/projects_view', $data);
     }
 	
@@ -48,11 +63,12 @@ class Project extends crm_controller {
 	{
  		$inputData=real_escape_array($this->input->post());
  		
-		$pjtstage=$inputData['pjtstage'];
-		$pm_acc=$inputData['pm_acc'];
-		$cust=$inputData['cust'];
-		$service=$inputData['service'];
-		$keyword=$inputData['keyword'];
+		$pjtstage = $inputData['pjtstage'];
+		$pm_acc   = $inputData['pm_acc'];
+		$cust     = $inputData['cust'];
+		$service  = $inputData['service'];
+		$keyword  = $inputData['keyword'];
+		
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
 		 */
@@ -60,10 +76,8 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		
-		$getProjects = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);	
-		
-		$data['pjts_data'] = $getProjects;
-		$data['records'] = $getProjects;
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);
+		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
@@ -172,7 +186,7 @@ class Project extends crm_controller {
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			
 			if(!empty($data['quote_data']['pjt_id']))
-			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id']);
+			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
 			
 			$data['timesheet_data']=array();
 			$total_billable	   = 0;
@@ -200,14 +214,14 @@ class Project extends crm_controller {
 			$data['actual_hour_data']						= 'NIL';
 			
 			if(!empty($data['quote_data']['pjt_id']))
-			$actual_hour = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id']);
+			$actual_hour = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id'], $id);
 			
 			if(count($actual_hour)>0){
 				$data['actual_hour_data'] = $actual_hour['total_Hour'];
 			}
 
 			if(!empty($data['quote_data']['pjt_id']))
-			$project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id']);
+			$project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id'], $id);
 
 			$data['project_costs'] = array();
 			if(count($project_cost)>0){
@@ -1838,6 +1852,8 @@ HDOC;
 	{
 		$updt_data = real_escape_array($this->input->post());
 		
+		$result = $this->project_model->get_quote_data($updt_data['lead_id']);
+		
 		$data['error'] = FALSE;
 		
 		$estimateHr = $updt_data['esthr'];
@@ -1848,11 +1864,15 @@ HDOC;
 		} 
 		else 
 		{
-			$wh_condn = $updt_data['lead_id'];
-			$chk_stat = $this->project_model->get_actual_project_hour($wh_condn);
-			if(count($chk_stat)>0) 
+
+			if(!empty($data['quote_data']['pjt_id']))
+			$chk_stat = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id'], $updt_data['lead_id']);
+			else
+			$chk_stat = 0;
+
+			if(count($chk_stat)>0)
 			{
-				$actual_hr=$chk_stat['total_Hour'];
+				$actual_hr = $chk_stat['total_Hour'];
 			} 
 			else 
 			{
@@ -1969,7 +1989,7 @@ HDOC;
 		$milestone_details = $this->project_model->get_milestone_term_det($ms_id, $pjtid);
 		
 		$msPlStDate  = date('d-m-Y', strtotime($milestone_details['ms_plan_st_date']));
-		$msPlEndDate  = date('d-m-Y', strtotime($milestone_details['ms_plan_end_date']));
+		$msPlEndDate = date('d-m-Y', strtotime($milestone_details['ms_plan_end_date']));
 		if($milestone_details['ms_act_st_date'] == '0000-00-00 00:00:00') {
 			$msActStDate = '';
 		} else {
@@ -1978,7 +1998,7 @@ HDOC;
 		if($milestone_details['ms_act_end_date'] == '0000-00-00 00:00:00') {
 			$msActEndDate = '';
 		} else {
-			$msActEndDate  = date('d-m-Y', strtotime($milestone_details['ms_act_end_date']));
+			$msActEndDate = date('d-m-Y', strtotime($milestone_details['ms_act_end_date']));
 		}
 		
 		$percentSelectBox = "<select name='ms_percent' id='ms_percent' class='textfield width60px'>";
@@ -2014,12 +2034,13 @@ HDOC;
 
           return true;
 		}
+		
 		$(function() {
 			$("#ms_plan_st_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, onSelect: function(date) {
 				if($("#ms_plan_end_date").val!="") {
 					$("#ms_plan_end_date").val("");
 				}
-			   var return_date=$("#ms_plan_st_date").val();
+			   var return_date = $("#ms_plan_st_date").val();
 			   $("#ms_plan_end_date").datepicker("option", "minDate", return_date);
 			
 			}});
@@ -2030,12 +2051,14 @@ HDOC;
 				{
 					$("#ms_act_end_date").val("");
 				}
-				var return_date=$("#ms_act_st_date").val();
+				var return_date = $("#ms_act_st_date").val();
 				$("#ms_act_end_date").datepicker("option", "minDate", return_date);
 			}});
 			$("#ms_act_end_date").datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true });
 		});
+		
 		</script>
+		
 		<form id="milestone-management" onsubmit="return false;">
 		<table class="milestone-table ms-toggler">
 			<tr>
@@ -2351,7 +2374,238 @@ HDOC;
 			exit($error);
 		}
 	}
+	
+	/*
+	*method : get_currency_rates
+	*/
+	public function get_currency_rates() {
+		$currency_rates = $this->report_lead_region_model->get_currency_rate();
+    	$rates 			= array();
+    	if(!empty($currency_rates)) {
+    		foreach ($currency_rates as $currency) {
+    			$rates[$currency->from][$currency->to] = $currency->value;
+    		}
+    	}
+    	return $rates;
+	}
+	
+	public function conver_currency($amount, $val) {
+		return round($amount*$val);
+	}
+	
+	/* Change the actual worth amount to Default currency */
+	public function getProjectsDataByDefaultCurrency($records) {
+		$rates 		         = $this->get_currency_rates();
+		if (isset($records) && count($records)) :
+		$data['project_record'] = array();
+		$i = 0;
+		foreach ($records as $rec) {
+			$amt_converted = $this->conver_currency($rec['actual_worth_amount'],$rates[$rec['expect_worth_id']][$this->default_cur_id]);
+			$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
+			$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
+			$data['project_record'][$i]['lead_title']		= $rec['lead_title'];
+			$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
+			$data['project_record'][$i]['lead_stage']		= $rec['lead_stage'];
+			$data['project_record'][$i]['pjt_id']			= $rec['pjt_id'];
+			$data['project_record'][$i]['assigned_to'] 		= $rec['assigned_to'];
+			$data['project_record'][$i]['date_start'] 		= $rec['date_start'];
+			$data['project_record'][$i]['date_due'] 		= $rec['date_due'];
+			$data['project_record'][$i]['complete_status'] 	= $rec['complete_status'];
+			$data['project_record'][$i]['pjt_status'] 		= $rec['pjt_status'];
+			$data['project_record'][$i]['estimate_hour'] 	= $rec['estimate_hour'];
+			$data['project_record'][$i]['project_type']	 	= $rec['project_type'];
+			$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
+			$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
+			$data['project_record'][$i]['clname'] 			= $rec['clname'];
+			$data['project_record'][$i]['company'] 			= $rec['company'];
+			$data['project_record'][$i]['fnm'] 				= $rec['fnm'];
+			$data['project_record'][$i]['lnm'] 				= $rec['lnm'];
+			$i++;
+		}
+		endif;
+		return $data['project_record'];
+	}
+	
+	/* Export to Excel */
+	public function excelExport() {
+		$pjtstage = $this->input->post('stages');
+		$pm_acc = $this->input->post('pm');		
+		$cust = $this->input->post('customers');
+		$service = $this->input->post('services');
+		$keyword = null;
+		
+		if((!empty($pjtstage)) && $pjtstage!='null')
+		$pjtstage = explode(",",$pjtstage);
+		else 
+		$pjtstage = '';
+		if((!empty($pm_acc)) && $pm_acc!='null')
+		$pm_acc = explode(",",$pm_acc);
+		else
+		$pm_acc = '';
+		if((!empty($cust)) && $cust!='null')
+		$cust = explode(",",$cust);
+		else
+		$cust = '';
+		if((!empty($service)) && $service!='null')
+		$service = explode(",",$service);
+		else
+		$service = '';
+		
+    	$getProjectData = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);
+		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData);
 
+    	if(count($pjts_data)>0) {
+    		//load our new PHPExcel library
+			$this->load->library('excel');
+			//activate worksheet number 1
+			$this->excel->setActiveSheetIndex(0);
+			//name the worksheet
+			$this->excel->getActiveSheet()->setTitle('Projects');											
+			//set cell A1 content with some text			
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Project Title');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Project Completion (%)');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Project Type');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'Planned Hours');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'Billable Hours');
+			$this->excel->getActiveSheet()->setCellValue('F1', 'Internal Hours');
+			$this->excel->getActiveSheet()->setCellValue('G1', 'Non-Billable Hours');
+			$this->excel->getActiveSheet()->setCellValue('H1', 'Total Utilized Hours (Actuals)');
+			$this->excel->getActiveSheet()->setCellValue('I1', 'Effort Variance');
+			$this->excel->getActiveSheet()->setCellValue('J1', 'Project Value ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('K1', 'Utilization Cost');
+			$this->excel->getActiveSheet()->setCellValue('L1', 'P&L');
+			$this->excel->getActiveSheet()->setCellValue('M1', 'P&L %');
+			$this->excel->getActiveSheet()->setCellValue('N1', 'RAG Status');
 
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
+			$i=2;		
+			
+    		foreach($pjts_data as $rec) {
+			
+				if(!empty($rec['pjt_id'])) {
+					$timsheetData = $this->project_model->get_timesheet_hours($rec['pjt_id'], $rec['lead_id']);
+				} else {
+					$timsheetData = '';
+				}
+				
+				if (isset($rec['estimate_hour']))
+				$estimate_hr = ($rec['estimate_hour']); 
+				else 
+				$estimate_hr = "-";
+					
+				switch ($rec['project_type']) {
+					case 1:
+						$type = 'Fixed';
+					break;
+					case 2:
+						$type = 'Internal';
+					break;
+					case 3:
+						$type = 'T&M';
+					break;
+					default:
+						$type = '-';
+				}
+				
+				switch ($rec['rag_status']) {
+					case 1:
+						$rag = 'Red';
+					break;
+					case 2:
+						$rag = 'Amber';
+					break;
+					case 3:
+						$rag = 'Green';
+					break;
+					default:
+						$rag = '-';
+				}
+				
+				if (isset($timsheetData->billable)) 
+				$bill_hr = sprintf('%0.2f', $timsheetData->billable); 
+				else 
+				$bill_hr = "-";
+				
+				if (isset($timsheetData->internal)) 
+				$inter_hr = sprintf('%0.2f', $timsheetData->internal); 
+				else 
+				$inter_hr = "-";
+				
+				if (isset($timsheetData->nonbillable)) 
+				$nonbill_hr = sprintf('%0.2f', $timsheetData->nonbillable); 
+				else 
+				$nonbill_hr = "-";
+				
+				$total_hr = $timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable;
+				
+				if (isset($rec['actual_worth_amt'])) 
+				$pjt_val = $rec['actual_worth_amt'];
+				else 
+				$pjt_val = "-";
+				
+				if (isset($timsheetData->cost)) 
+				$util_cost = sprintf('%0.2f',$timsheetData->cost); 
+				else 
+				$util_cost = "-";
+				
+				$plPercent = ($rec['actual_worth_amt']-$timsheetData->cost)/$rec['actual_worth_amt'];
+				$percent = ($plPercent == FALSE)?'-':$plPercent;
+				
+    			$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
+    			$this->excel->getActiveSheet()->setCellValue('B'.$i, $rec['complete_status']);
+    			$this->excel->getActiveSheet()->setCellValue('C'.$i, $type);
+    			$this->excel->getActiveSheet()->setCellValue('D'.$i, $estimate_hr);
+    			$this->excel->getActiveSheet()->setCellValue('E'.$i, $bill_hr);
+    			$this->excel->getActiveSheet()->setCellValue('F'.$i, $inter_hr);
+    			$this->excel->getActiveSheet()->setCellValue('G'.$i, $nonbill_hr);
+    			$this->excel->getActiveSheet()->setCellValue('H'.$i, $total_hr);
+    			$this->excel->getActiveSheet()->setCellValue('I'.$i, $timsheetData->total_hour-$rec['estimate_hour']);
+    			$this->excel->getActiveSheet()->setCellValue('J'.$i, $pjt_val);
+    			$this->excel->getActiveSheet()->setCellValue('K'.$i, $util_cost);
+    			$this->excel->getActiveSheet()->setCellValue('L'.$i, $rec['actual_worth_amt']-$timsheetData->cost);
+    			$this->excel->getActiveSheet()->setCellValue('M'.$i, $percent);
+    			$this->excel->getActiveSheet()->setCellValue('N'.$i, $rag);
+    			$i++;
+    		}
+    		/*To build columns ends*/
+    		// $this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+    		// $this->excel->getActiveSheet()->getStyle('I'.$i.':'.'J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+    		$this->excel->getActiveSheet()->getStyle('I'.$i.':'.'Q'.$i)->getFont()->setBold(true);
+    		/*Gross total ends*/
+    		//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
+			//merge cell A1 until D1			
+			//Set width for cells
+			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(19);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(24);
+			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(14);
+			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
+			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(8);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(7);
+			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(12);
+			//Column Alignment
+			// $this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+			// $filename='Project_report.xls'   ; //save our workbook as this file name
+			$filename='Project_report_'.time().'.xls'   ; //save our workbook as this file name
+			header('Content-Type: application/vnd.ms-excel'); //mime type
+			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+			header('Cache-Control: max-age=0'); //no cache
+			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+			//if you want to save it as .XLSX Excel 2007 format
+			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+			//force user to download the Excel file without writing it to server's HD
+			$objWriter->save('php://output');
+    	}    	
+    	redirect('/project/');
+    }
 }
 ?>
