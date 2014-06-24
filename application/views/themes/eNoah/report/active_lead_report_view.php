@@ -10,7 +10,7 @@ if (get_default_currency()) {
 }
 ?>
 <div id="ad_filter" class="clear">
-<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>	
+<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
 	        	
 	            <table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table">
 					<thead>
