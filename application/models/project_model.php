@@ -12,7 +12,7 @@ class Project_model extends crm_model
     }
     
 	
-	function get_user_byrole($role_id) 
+	function get_user_byrole($role_id)
 	{
     	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
     	return $users;
@@ -420,8 +420,8 @@ class Project_model extends crm_model
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
 		
-		if(!empty($getActDate[0]['date_start'])) {
-			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_start']));
+		if(!empty($getActDate[0]['date_created'])) {
+			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_created']));
 		} else {
 			$start_date = '0000-00-00';
 		}
@@ -448,8 +448,8 @@ class Project_model extends crm_model
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
 		
-		if(!empty($getActDate[0]['date_start'])) {
-			$start_date = date('Y-m-d', strtotime($getActDate[0]['date_start']));
+		if(!empty($getActDate[0]['date_created'])) {
+			$start_date = date('Y-m-d', strtotime($getActDate[0]['date_created']));
 		} else {
 			$start_date = '0000-00-00';
 		}
@@ -474,8 +474,8 @@ class Project_model extends crm_model
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
 		
-		if(!empty($getActDate[0]['date_start'])) {
-			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_start']));
+		if(!empty($getActDate[0]['date_created'])) {
+			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_created']));
 		} else {
 			$start_date = '0000-00-00';
 		}
@@ -485,9 +485,9 @@ class Project_model extends crm_model
 		$sql = "SELECT t.uid AS Resources, sum(t.duration)/60 as total_hour, brt.bill_rate, (sum(t.duration)/60)*brt.bill_rate as cost ";  
 		$sql .= " FROM ".$timesheet_db->dbprefix('times')." AS t ";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('project')." AS p ";
-		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username ";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id ";
+		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk" ;
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username " ;
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id " ;
 		$sql .= " WHERE (p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id) ";
 		$sql .= " AND (t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW()) GROUP BY t.uid";
 		//echo $sql;
@@ -495,20 +495,21 @@ class Project_model extends crm_model
 		return $query->result_array();
 	}
 	
+	//Displaying in Project Dashboard
 	public function get_timesheet_hours($pjt_code, $lead_id)
 	{
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
 		
-		if(!empty($getActDate[0]['date_start'])) {
-			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_start']));
+		if(!empty($getActDate[0]['date_created'])) {
+			$start_date = date('Y-m-d',strtotime($getActDate[0]['date_created']));
 		} else {
 			$start_date = '0000-00-00';
 		}
 	
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		//$id='315';
-		$sql = "SELECT t.proj_id, sum(t.duration)/60 as total_hour,brt.bill_rate,(sum(t.duration)/60)*brt.bill_rate as cost, ";
+		$sql = "SELECT t.proj_id, sum(t.duration)/60 as total_hour, brt.bill_rate, (sum(t.duration)/60)*brt.bill_rate as cost, ";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'billable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Non-Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'nonbillable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Internal' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'internal'";
@@ -523,7 +524,7 @@ class Project_model extends crm_model
 		return $query->row();
 	}
 	
-	public function get_services(){
+	public function get_services() {
 		$this->db->select('sid, services');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_services');
 	    $this->db->where("status",'1');
