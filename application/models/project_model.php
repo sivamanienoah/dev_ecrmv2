@@ -416,7 +416,7 @@ class Project_model extends crm_model
 	}
 
 	public function get_timesheet_data($pjt_code, $lead_id)
-	{
+	{	
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
 		
@@ -428,15 +428,14 @@ class Project_model extends crm_model
 	
 		$timesheet_db = $this->load->database('timesheet',TRUE);
 		//$id='315';
-		$sql = "SELECT t.uid AS Resources, sum(t.duration)/60 as total_cost,brt.bill_rate,(sum(t.duration)/60)*brt.bill_rate as cost, ";
+		$sql = "SELECT t.uid AS Resources, sum(t.duration)/60 as total_hour, ";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'Billable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Non-Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'Non-Billable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Internal' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'Internal'";
 		$sql .= " FROM ".$timesheet_db->dbprefix('times')." AS t";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('project')." AS p";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id";
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid = a.username";
 		$sql .= " WHERE ( p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id ) GROUP BY t.uid";
 		// echo $sql; #EXIT;
 		$query=$timesheet_db->query($sql);
@@ -460,7 +459,7 @@ class Project_model extends crm_model
 		$sql .=" FROM ".$timesheet_db->dbprefix('times')." AS t ";
 		$sql .=" JOIN ".$timesheet_db->dbprefix('project')." AS p";
 		$sql .=" JOIN ".$timesheet_db->dbprefix('task')." AS tsk";
-		$sql .=" LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username ";
+		$sql .=" LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid = a.username ";
 		$sql .=" LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id ";
 		$sql .=" WHERE (p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id) ";
 		$sql .=" AND (t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW()) GROUP BY a.proj_id ";
@@ -482,12 +481,11 @@ class Project_model extends crm_model
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$sql = "SELECT t.uid AS Resources, sum(t.duration)/60 as total_hour, brt.bill_rate, (sum(t.duration)/60)*brt.bill_rate as cost ";  
+		$sql = "SELECT t.uid AS Resources, sum(t.duration)/60 as total_hour ";  
 		$sql .= " FROM ".$timesheet_db->dbprefix('times')." AS t ";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('project')." AS p ";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk" ;
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username " ;
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id " ;
 		$sql .= " WHERE (p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id) ";
 		$sql .= " AND (t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW()) GROUP BY t.uid";
 		//echo $sql;
@@ -509,19 +507,27 @@ class Project_model extends crm_model
 	
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		//$id='315';
-		$sql = "SELECT t.proj_id, sum(t.duration)/60 as total_hour, brt.bill_rate, (sum(t.duration)/60)*brt.bill_rate as cost, ";
+		$sql = "SELECT t.proj_id, sum(t.duration)/60 as total_hour, a.username, ";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'billable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Non-Billable' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'nonbillable',";
 		$sql .= " SUM(CASE WHEN t.resoursetype='Internal' AND ((t.start_time > '".$start_date."') AND (t.end_time = '0000-00-00' OR t.end_time <= NOW())) THEN duration ELSE 0 END)/60 as 'internal'";
 		$sql .= " FROM ".$timesheet_db->dbprefix('times')." AS t";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('project')." AS p";
 		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid=a.username";
-		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('billrate')." as brt ON a.rate_id=brt.rate_id";
+		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid = a.username";
 		$sql .= " WHERE (p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id) GROUP BY t.proj_id";
 		// echo $sql; exit;
 		$query = $timesheet_db->query($sql);
 		return $query->row();
+	}
+	
+	//Get the latest cost from the timesheet db.
+	public function get_latest_cost($username)
+	{
+		$timesheet_db = $this->load->database('timesheet', TRUE);
+		$sql = "SELECT ROUND((uc.direct_cost+uc.overheads_cost), 2) as cost FROM ".$timesheet_db->dbprefix('user_cost')." AS uc WHERE uc.employee_id = (SELECT u.emp_id FROM ".$timesheet_db->dbprefix('user')." AS u WHERE u.username='".$username."') ORDER BY uc.year DESC, uc.month DESC LIMIT 0,1";
+		$query = $timesheet_db->query($sql);
+		return $query->row_array();
 	}
 	
 	public function get_services() {

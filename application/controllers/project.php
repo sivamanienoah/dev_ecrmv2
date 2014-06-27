@@ -87,7 +87,7 @@ class Project extends crm_controller {
 	 * @access public
 	 * @param int $id - Job Id
 	 */
-	public function view_project($id = 0) 
+	public function view_project($id = 0)
 	{
         $this->load->helper('text');
 		$this->load->helper('fix_text');
@@ -192,44 +192,51 @@ class Project extends crm_controller {
 			$total_billable	   = 0;
 			$total_nonbillable = 0;
 			$total_internal	   = 0;
-			$total_cost        = 0;
+			$rate_cost        = 0;
 			if(count($timesheet)>0) {
 				$i=0;
 				foreach($timesheet as $timesheetData) {
-					$total_billable 	     += $timesheetData['Billable'];
-					$total_nonbillable		 += $timesheetData['Non-Billable'];
-					$total_internal  		 += $timesheetData['Internal'];
-					$total_cost       		 += $timesheetData['cost'];
-					$data['timesheet_data'][] = $timesheetData;
+				
+					if(!empty($timesheetData['Resources'])) {
+						$costData = $this->project_model->get_latest_cost($timesheetData['Resources']);
+					} else {
+						$costData['cost'] = 0;
+					}
+				
+					$total_billable 	       += $timesheetData['Billable'];
+					$total_nonbillable		   += $timesheetData['Non-Billable'];
+					$total_internal  		   += $timesheetData['Internal'];
+					$timesheetData['rate_cost'] = $costData['cost'];
+					$data['timesheet_data'][]   = $timesheetData;
 					$i++;
 				}
+				
 				// To Get total of values
 				$data['timesheet_data'][$i]['Resources']	= 'Total';
 				$data['timesheet_data'][$i]['Billable'] 	= $total_billable;
 				$data['timesheet_data'][$i]['Internal']		= $total_internal;
 				$data['timesheet_data'][$i]['Non-Billable'] = $total_nonbillable;
-				$data['timesheet_data'][$i]['bill_rate']	= '';
-				$data['timesheet_data'][$i]['cost']			= $total_cost;
+				// $data['timesheet_data'][$i]['cost']			= $total_cost;
 			}
 			$data['actual_hour_data']						= 'NIL';
 			
 			if(!empty($data['quote_data']['pjt_id']))
 			$actual_hour = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id'], $id);
 			
-			if(count($actual_hour)>0){
+			if(!empty($data['timesheet_data']))
+			
+			if(count($actual_hour)>0) {
 				$data['actual_hour_data'] = $actual_hour['total_Hour'];
 			}
 
-			if(!empty($data['quote_data']['pjt_id']))
-			$project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id'], $id);
-
 			$data['project_costs'] = array();
-			if(count($project_cost)>0){
-				foreach($project_cost as $project_cost_data){
-					$data['project_total_cost'] += $project_cost_data['cost'];
-				}
-				$data['project_costs'] = $project_cost;
+			if(!empty($data['timesheet_data'])) {
+			// $project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id'], $id);
+				$project_cost = $this->calcActualProjectHour($data['timesheet_data']);
 			}
+			
+			if($project_cost>0)
+			$data['project_costs'] = $project_cost;
 			
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
@@ -242,6 +249,22 @@ class Project extends crm_controller {
         }
         
     }
+	
+	function calcActualProjectHour($arrTimesheet) {
+		$overall_tot = 0;
+		foreach($arrTimesheet as $timesheet) {
+			$bill_hr  	 = sprintf('%0.2f', $timesheet['Billable']);
+			$int_hr	  	 = sprintf('%0.2f', $timesheet['Internal']);
+			$nonbil_hr	 = sprintf('%0.2f', $timesheet['Non-Billable']);
+			$rate_hr  	 = sprintf('%0.2f', $timesheet['rate_cost']);
+			$tot_cost 	 = ($bill_hr+$int_hr+$nonbil_hr)*$rate_hr;
+			$overall_tot = $overall_tot + $tot_cost;
+			if(count($arrTimesheet) == 1) {
+				continue;
+			}
+		}
+		return sprintf('%0.2f', $overall_tot);
+	}
 	
 	function chkPjtIdFromdb()
 	{	

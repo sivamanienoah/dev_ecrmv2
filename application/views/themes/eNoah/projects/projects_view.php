@@ -140,6 +140,11 @@ if (get_default_currency()) {
 						} else {
 							$timsheetData = '';
 						}
+						
+						if(!empty($timsheetData->username)) {
+							$costData = $this->project_model->get_latest_cost($timsheetData->username);
+							// echo "<pre>"; print_r($costData['cost']); exit;
+						}
 				?>
                     <tr>
 						<td class="actions" align="center">
@@ -197,7 +202,8 @@ if (get_default_currency()) {
 							<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
-							<?php if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
+						-
+							<?php #if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
 						</td>
 						<td class="actions" align="center">
 							<?php echo ($record['actual_worth_amt']-$timsheetData->cost); ?>

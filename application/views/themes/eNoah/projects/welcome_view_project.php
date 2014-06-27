@@ -458,16 +458,16 @@
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" id="actualValue" value="<?php if(count($project_costs) >0 ) echo $project_total_cost; else echo ''; ?>" class="textfield width60px" readonly />
+						<input type="text" id="actualValue" value="<?php if( $project_costs >0 ) echo $project_costs; else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
 					<td>
 						<?php 
 							if (isset($quote_data['actual_worth_amount']))
-								$varianceProjectVal = $quote_data['actual_worth_amount'] - $project_total_cost;
+								$varianceProjectVal = $quote_data['actual_worth_amount'] - $project_costs;
 							else
 								$varianceProjectVal = '';
 						?>
-						<input type="text" id="varianceValue" value="<?php if (isset($varianceProjectVal)) echo $varianceProjectVal; else echo ''; ?>" class="textfield width60px" readonly />
+						<input type="text" id="varianceValue" value="<?php if (isset($varianceProjectVal)) echo sprintf('%0.2f', $varianceProjectVal); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
 				</tr>
 			</table>
@@ -1206,26 +1206,37 @@
 			    </table>
 				<div class="inner_timesheet ">
 					<table class="data-table">
-						<?php $m = 1; ?>
+						<?php
+						$m = 1;
+						$overall_tot = 0;
+						?>
 						<?php foreach($timesheet_data as $timesheet) { ?>
+							<?php
+								$bill_hr  	 = sprintf('%0.2f', $timesheet['Billable']);
+								$int_hr	  	 = sprintf('%0.2f', $timesheet['Internal']);
+								$nonbil_hr	 = sprintf('%0.2f', $timesheet['Non-Billable']);
+								$rate_hr  	 = sprintf('%0.2f', $timesheet['rate_cost']);
+								$tot_cost 	 = ($bill_hr+$int_hr+$nonbil_hr)*$rate_hr;
+								$overall_tot = $overall_tot + $tot_cost;
+							?>
 							<?php if( $m != count($timesheet_data) ) { ?>
 									<tr>
 										<td><?php echo $timesheet['Resources'];?></td>
-										<td><?php echo sprintf('%0.2f', $timesheet['Billable']);;?></td>
-										<td><?php echo sprintf('%0.2f', $timesheet['Internal']);?></td>
-										<td><?php echo sprintf('%0.2f', $timesheet['Non-Billable']);?></td>
-										<td><?php echo $timesheet['bill_rate'];?></td>
-										<td><?php echo sprintf('%0.2f', $timesheet['cost']);?></td>
+										<td><?php echo $bill_hr; ?></td>
+										<td><?php echo $int_hr; ?></td>
+										<td><?php echo $nonbil_hr; ?></td>
+										<td><?php echo $rate_hr; ?></td>
+										<td><?php echo $tot_cost; ?></td>
 									</tr>
 							<?php $m++; ?>
 							<?php } else { ?> <!--for printing bold-->
 								<tr>
 									<td><b><?php echo $timesheet['Resources'];?></b></td>
-									<td><b><?php echo sprintf('%0.2f', $timesheet['Billable']);?></b></td>
-									<td><b><?php echo sprintf('%0.2f', $timesheet['Internal']);?></b></td>
-									<td><b><?php echo sprintf('%0.2f', $timesheet['Non-Billable']);?></b></td>
-									<td><b><?php echo $timesheet['bill_rate'];?></b></td>
-									<td><b><?php echo sprintf('%0.2f', $timesheet['cost']);?></b></td>
+									<td><b><?php echo $bill_hr; ?></b></td>
+									<td><b><?php echo $int_hr; ?></b></td>
+									<td><b><?php echo $nonbil_hr; ?></b></td>
+									<td></td>
+									<td><b><?php echo sprintf('%0.2f', $overall_tot); ?></b></td>
 								</tr>
 							<?php } /* else condition */?>
 						<?php } /* for loop */ ?>

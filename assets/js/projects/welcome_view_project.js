@@ -1139,11 +1139,12 @@
 		} catch (e) { if (window.console) console.log(e); } */
 
 		
-		if (project_complete_status!='')
-		{
-			updateVisualStatus(project_complete_status);
-		}
-
+		$(document).ready(function() {
+			if (project_complete_status!='') {
+				updateVisualStatus(project_complete_status);
+			}
+		});
+		
 		$('.jump-to-job select').change(function(){
 			var _new_location = proj_location;
 			document.location = _new_location.replace('{{lead_id}}', $(this).val());
@@ -1977,14 +1978,15 @@
 		return false;
 	}
 	
-	//Milestones dateformats conditions
+	//Milestones dateformats conditions -milestone-management
+	
 	$(document).ready(function() {
 		$('#ms_plan_st_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
 			if($('#ms_plan_end_date').val!='')
 			{
 				$('#ms_plan_end_date').val('');
 			}
-			var return_date=$('#ms_plan_st_date').val();
+			var return_date = $('#ms_plan_st_date').val();
 			$('#ms_plan_end_date').datepicker("option", "minDate", return_date);
 		}});
 		$('#ms_plan_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
@@ -1999,8 +2001,11 @@
 		}});
 		
 		$('#ms_act_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+	});
+	
+	//Set the RAG Status
+	$(document).ready(function() {
 		
-		//Set the RAG Status
 		$( ".rag_stat" ).change(function() {
 			$("#errmsg_rag_status").hide();
 			var rag_status_val = $(this).val();

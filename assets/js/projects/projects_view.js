@@ -143,3 +143,26 @@ function dtPjtTable() {
 	function cancelDel() {
 		$.unblockUI();
 	}
+	
+	$(function(){
+		$('#excel').click(function() {
+			var stage = $('#pjt_stage').val();
+			var pm    = $('#pm_acc').val();
+			var customer = $('#customer1').val();
+			var service = $('#services').val();
+
+			var url = site_base_url+"project/excelExport";
+			
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+			  '<input type="hidden" name="stages" value="' +stage+ '" />' +
+			  '<input type="hidden" name="pm" value="' +pm+ '" />' +
+			  '<input type="hidden" name="customers" value="' +customer+ '" />' +
+			  '<input type="hidden" name="services" value="' +service+ '" />' +	  
+			  '</form>');
+			$('body').append(form);
+			$(form).submit();
+			return false;
+		});
+	});
+	
