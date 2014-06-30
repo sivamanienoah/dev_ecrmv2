@@ -231,7 +231,6 @@ class Project extends crm_controller {
 			$data['project_costs'] = array();
 			
 			if(!empty($data['timesheet_data'])) {
-			// $project_cost = $this->project_model->get_project_cost($data['quote_data']['pjt_id'], $id);
 				$project_cost = $this->calcActualProjectCost($data['timesheet_data']);
 			}
 			
