@@ -125,7 +125,7 @@ if (get_default_currency()) {
 				<th>Total Utilized Hours (Actuals)</th>
 				<th>Effort Variance</th>
 				<th>Project Value (<?php echo $default_cur_name; ?>)</th>
-				<th>Utilization Cost</th>
+				<th>Utilization Cost (<?php echo $default_cur_name; ?>)</th>
 				<th>P&L </th>
 				<th>P&L %</th>
 				<th>RAG Status</th>
@@ -135,105 +135,105 @@ if (get_default_currency()) {
 				<?php
 				if (is_array($project_record) && count($project_record) > 0) {
 					foreach ($project_record as $record) {
-						if(!empty($record['pjt_id'])) {
-							$timsheetData = $this->project_model->get_timesheet_hours($record['pjt_id'], $record['lead_id']);
-						} else {
-							$timsheetData = '';
-						}
-						
-						if(!empty($timsheetData->username)) {
-							$costData = $this->project_model->get_latest_cost($timsheetData->username);
-							// echo "<pre>"; print_r($costData['cost']); exit;
-						}
 				?>
-                    <tr>
-						<td class="actions" align="center">
-							<a href="project/view_project/<?php echo $record['lead_id'] ?>">
-								View &raquo;
-							</a>
-							<?php
-								if($this->session->userdata('delete')==1) {
-								$tle = str_replace("'", "\'", $record['lead_title']);
-							?>
-								| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
-							<?php } ?>
-						</td>
-                        <td class="actions">							
-							<div>
-								<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo character_limiter($record['lead_title'], 35); ?></a>
-							</div>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php 
-								if($record['project_type'] == '1'){
-									echo 'Fixed';
-								}elseif($record['project_type'] == '2'){
-									echo 'Internal';
-								}elseif($record['project_type'] == '3'){
-									echo 'T&amp;M';
-								}else{
-									echo '-';
-								}
-							?>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($timsheetData->billable)) echo sprintf('%0.2f',$timsheetData->billable); else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($timsheetData->internal)) echo sprintf('%0.2f',$timsheetData->internal); else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($timsheetData->nonbillable)) echo sprintf('%0.2f',$timsheetData->nonbillable); else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable); ?>
-						</td>
-						
-						<td class="actions" align="center">
-							<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable)-$record['estimate_hour']; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-						-
-							<?php #if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php echo ($record['actual_worth_amt']-$timsheetData->cost); ?>
-						</td>
-						<td class="actions" align="center">
-							<?php echo ($record['actual_worth_amt']-$timsheetData->cost)/$record['actual_worth_amt']; ?>
-						</td>
-						<td class="actions" align="center">
-							<?php 
-								if (isset($record['rag_status'])) {
-									switch ($record['rag_status']) {
-										case 1:
-											$ragStatus = '<span class=label-inactive>Red</span>';
-										break;
-										case 2:
-											$ragStatus = '<span class=label-amber>Amber</span>';
-										break;
-										case 3:
-											$ragStatus = '<span class=label-success>Green</span>';
-										break;
-										default:
-											$ragStatus = "-";
+						<tr>
+							<td class="actions" align="center">
+								<a href="project/view_project/<?php echo $record['lead_id'] ?>">
+									View &raquo;
+								</a>
+								<?php
+									if($this->session->userdata('delete')==1) {
+									$tle = str_replace("'", "\'", $record['lead_title']);
+								?>
+									| <a class="delete" href="javascript:void(0)" onclick="return deleteProject(<?php echo $record['lead_id']; ?>, '<?php echo $tle; ?>'); return false; "> Delete &raquo; </a> 
+								<?php } ?>
+							</td>
+							<td class="actions">							
+								<div>
+									<a style="color:#A51E04; text-decoration:none;" href="project/view_project/<?php echo $record['lead_id'] ?>"><?php echo character_limiter($record['lead_title'], 35); ?></a>
+								</div>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php
+									if(isset($record['project_type'])) {
+										switch ($record['project_type']) {
+											case 1:
+												echo 'Fixed';
+											break;
+											case 2:
+												echo 'Internal';
+											break;
+											case 3:
+												echo 'T&amp;M';
+											break;
+											default:
+												echo "-";
+										}
+									} else {
+										echo "-";
 									}
-									echo $ragStatus;
-								} else {
-									echo "-";
-								}
-							?>
-						</td>
-					</tr>
+								?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['bill_hr'])) echo sprintf('%0.2f',$record['bill_hr']); else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['int_hr'])) echo sprintf('%0.2f',$record['int_hr']); else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['nbil_hr'])) echo sprintf('%0.2f',$record['nbil_hr']); else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr']); ?>
+							</td>
+							
+							<td class="actions" align="center">
+								<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr'])-$record['estimate_hour']; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php if (isset($record['total_cost'])) echo $record['total_cost']; else echo "-"; ?>
+							</td>
+							<td class="actions" align="center">
+								<?php echo ($record['actual_worth_amt']-$record['total_cost']); ?>
+							</td>
+							<td class="actions" align="center">
+								<?php 
+									$perc = ($record['actual_worth_amt']-$record['total_cost'])/$record['actual_worth_amt']; 
+									echo sprintf('%0.2f',$perc);
+								?>
+							</td>
+							<td class="actions" align="center">
+								<?php 
+									if (isset($record['rag_status'])) {
+										switch ($record['rag_status']) {
+											case 1:
+												$ragStatus = '<span class=label-inactive>Red</span>';
+											break;
+											case 2:
+												$ragStatus = '<span class=label-amber>Amber</span>';
+											break;
+											case 3:
+												$ragStatus = '<span class=label-success>Green</span>';
+											break;
+											default:
+												$ragStatus = "-";
+										}
+										echo $ragStatus;
+									} else {
+										echo "-";
+									}
+								?>
+							</td>
+						</tr>
 					<?php
 					} 
 					?>

@@ -1201,7 +1201,7 @@
 			            <th>Internal Hours</th>
 			            <th>Non-Billable Hours</th>
 			            <th>Rate</th>
-			            <th>Cost</th>
+			            <th>Cost (USD)</th>
 			        </tr>
 			    </table>
 				<div class="inner_timesheet ">

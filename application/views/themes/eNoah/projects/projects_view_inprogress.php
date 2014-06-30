@@ -30,9 +30,6 @@
 				<?php
 					if (is_array($pjts_data) && count($pjts_data) > 0) {
 						foreach ($pjts_data as $record) {
-							if(!empty($record['pjt_id'])) {
-								$timsheetData = $this->project_model->get_timesheet_hours($record['pjt_id'], $record['lead_id']);
-							}
 				?>
 							<tr>
 								<td class="actions" align="center">
@@ -51,15 +48,23 @@
 								</td>
 								<td class="actions" align="center"><?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?></td>
 								<td class="actions" align="center">
-									<?php 
-										if($record['project_type'] =='1'){
-											echo 'Fixed';
-										}elseif($record['project_type'] =='2'){
-											 echo 'Internal';
-										}elseif($record['project_type'] =='3'){
-											echo 'T&amp;M';
-										}else{
-											echo '-';
+									<?php
+										if(isset($record['project_type'])) {
+											switch ($record['project_type']) {
+												case 1:
+													echo 'Fixed';
+												break;
+												case 2:
+													echo 'Internal';
+												break;
+												case 3:
+													echo 'T&amp;M';
+												break;
+												default:
+													echo "-";
+											}
+										} else {
+											echo "-";
 										}
 									?>
 								</td>
@@ -67,31 +72,34 @@
 									<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($timsheetData->billable)) echo sprintf('%0.2f',$timsheetData->billable); else echo "-"; ?>
+									<?php if (isset($record['bill_hr'])) echo sprintf('%0.2f',$record['bill_hr']); else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($timsheetData->internal)) echo sprintf('%0.2f',$timsheetData->internal); else echo "-"; ?>
+									<?php if (isset($record['int_hr'])) echo sprintf('%0.2f',$record['int_hr']); else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($timsheetData->nonbillable)) echo sprintf('%0.2f',$timsheetData->nonbillable); else echo "-"; ?>
+									<?php if (isset($record['nbil_hr'])) echo sprintf('%0.2f',$record['nbil_hr']); else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable); ?>
+									<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr']); ?>
 								</td>
 								<td class="actions" align="center">
-									<?php echo ($timsheetData->billable+$timsheetData->internal+$timsheetData->nonbillable)-($record['estimate_hour']); ?>
+									<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr'])-$record['estimate_hour']; ?>
 								</td>
 								<td class="actions" align="center">
 									<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php if (isset($timsheetData->cost)) echo sprintf('%0.2f',$timsheetData->cost); else echo "-"; ?>
+									<?php if (isset($record['total_cost'])) echo $record['total_cost']; else echo "-"; ?>
 								</td>
 								<td class="actions" align="center">
-									<?php echo ($record['actual_worth_amt']-$timsheetData->cost); ?>
+									<?php echo ($record['actual_worth_amt']-$record['total_cost']); ?>
 								</td>
 								<td class="actions" align="center">
-									<?php echo ($record['actual_worth_amt']-$timsheetData->cost)/$record['actual_worth_amt']; ?>
+									<?php 
+										$perc = ($record['actual_worth_amt']-$record['total_cost'])/$record['actual_worth_amt']; 
+										echo sprintf('%0.2f',$perc);
+									?>
 								</td>
 								<td class="actions" align="center">
 									<?php 
@@ -116,7 +124,6 @@
 										}
 									?>
 								</td>
-								<?php $timsheetData = ""; ?>
 							</tr>
 					<?php
 						}
