@@ -44,7 +44,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						<?php if($this->session->userdata('edit')==1) { ?>
 							<a href="manage_service/expect_worth_cur_edit/update/<?php echo $source['expect_worth_id'] ?>/">Edit &raquo; </a> 
 						<?php } else { echo "Edit &raquo;"; } ?> 
-						<?php if(($this->session->userdata('delete')==1) && ($source['is_default'] != 1)) { ?>
+						<?php if(($this->session->userdata('delete')==1) && ($source['is_default'] != 1) && ($source['expect_worth_id']!=1)) { ?>
 							&nbsp;|&nbsp;
 							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['expect_worth_id'] ?>);"> Delete &raquo; </a> 
 						<?php } else { echo "&nbsp;|&nbsp; Delete &raquo;"; } ?>
