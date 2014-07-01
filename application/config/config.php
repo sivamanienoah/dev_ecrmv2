@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= "http://".$_SERVER['HTTP_HOST']."/DEV/dev_ecrmv2/";
+$config['base_url']	= "http://".$_SERVER['HTTP_HOST']."/dev/projects/ecrmv2/";
 
 /*
 |--------------------------------------------------------------------------
@@ -367,4 +367,3 @@ $config['proxy_ips'] = '';
 //require (SITE_FILE_PATH.'/application/core/CRM_controller.php');
 /* End of file config.php */
 /* Location: ./application/config/config.php */
-

@@ -49,9 +49,9 @@
 $active_group = "timesheet";
 $active_record = TRUE;
 $db['timesheet']['hostname'] = 'localhost';
-$db['timesheet']['username'] = 'root';
-$db['timesheet']['password'] = '';
-$db['timesheet']['database'] = 'uat_timesheet';
+$db['timesheet']['username'] = 'dev_timesheet';
+$db['timesheet']['password'] = 'tim@Dev4';
+$db['timesheet']['database'] = 'dev_timesheet';
 $db['timesheet']['dbdriver'] = 'mysql';
 $db['timesheet']['dbprefix'] = 'enoah_';
 $db['timesheet']['pconnect'] = FALSE;
@@ -69,8 +69,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
+$db['default']['username'] = 'dev_ecrmv2';
+$db['default']['password'] = 'Ecr@vm2';
 $db['default']['database'] = 'dev_ecrmv2';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
