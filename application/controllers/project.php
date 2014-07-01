@@ -103,17 +103,15 @@ class Project extends crm_controller {
 		$result = $this->project_model->get_quote_data($id);
 		
 		if(!empty($result)) {
-			$data['quote_data'] = $result[0];
+			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
 			$temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 			
 			$data['assigned_contractors'] = array();
 			foreach ($temp_cont as $tc) {
 				$data['assigned_contractors'][] = $tc['userid_fk'];
-			}            
-			
-			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid']))
-			{
+			}
+			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$logViewStatus = $this->project_model->updt_log_view_status($id, $log_view_status);
 			}
@@ -124,13 +122,11 @@ class Project extends crm_controller {
                 $log_data = $getLogs;
                 $this->load->helper('url');
                 
-                foreach ($log_data as $ld)
-                {
+                foreach ($log_data as $ld) {
 					$wh_condn = array('userid'=>$ld['userid_fk']);
 					$user_data = $this->project_model->get_user_data_by_id('users', $wh_condn);
 					
-					if (count($user_data) < 1)
-					{
+					if (count($user_data) < 1) {
 						echo '<!-- ', print_r($ld, TRUE), ' -->'; 
 						continue;
 					}
@@ -193,31 +189,35 @@ class Project extends crm_controller {
 			$total_billable	   = 0;
 			$total_nonbillable = 0;
 			$total_internal	   = 0;
-			$rate_cost        = 0;
+			$rate_cost         = 0;
 			if(count($timesheet)>0) {
 				$i=0;
 				foreach($timesheet as $timesheetData) {
-				
+					$costData['cost'] = 0;
+					
 					if(!empty($timesheetData['Resources'])) {
 						$costData = $this->project_model->get_latest_cost($timesheetData['Resources']);
-					} else {
-						$costData['cost'] = 0;
+					}
+					
+					/*Actual worth amount in default currency*/
+					if(!empty($costData) && $costData['cost']>0) {
+						$rates = $this->get_currency_rates();
+						$rateCostPerHr = $this->conver_currency($costData['cost'], $rates[1][$result[0]['expect_worth_id']]);
 					}
 				
 					$total_billable 	       += $timesheetData['Billable'];
 					$total_nonbillable		   += $timesheetData['Non-Billable'];
 					$total_internal  		   += $timesheetData['Internal'];
-					$timesheetData['rate_cost'] = $costData['cost'];
+					$timesheetData['rate_cost'] = $rateCostPerHr; // as per lead currency
+					// $timesheetData['rate_cost'] = $costData['cost']; // in us dollar
 					$data['timesheet_data'][]   = $timesheetData;
 					$i++;
 				}
-				
 				// To Get total of values
 				$data['timesheet_data'][$i]['Resources']	= 'Total';
 				$data['timesheet_data'][$i]['Billable'] 	= $total_billable;
 				$data['timesheet_data'][$i]['Internal']		= $total_internal;
 				$data['timesheet_data'][$i]['Non-Billable'] = $total_nonbillable;
-				// $data['timesheet_data'][$i]['cost']		= $total_cost;
 			}
 			$data['actual_hour_data']						= 'NIL';
 			
@@ -2415,7 +2415,7 @@ HDOC;
 	}
 	
 	public function conver_currency($amount, $val) {
-		return round($amount*$val);
+		return round($amount*$val, 2);
 	}
 	
 	/* Change the actual worth amount to Default currency */

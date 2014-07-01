@@ -26,6 +26,18 @@
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
 
+<?php 
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_name = $default_currency['expect_worth_name'];
+} else {
+	$default_cur_id = '1';
+	$default_cur_name = 'USD';
+}
+?>
+
 <div class="comments-log-container" style= "display:none;">
 	<?php if ($log_html != "") { ?>
 			<table width="100%" class="log-container"> 
@@ -42,7 +54,7 @@
 
 <div id="content">
     <?php
-		$date_used = $quote_data['date_created']; 
+		$date_used = $quote_data['date_created'];
 	?>
     <div class="inner q-view">
 		<div class="right-communication">		
@@ -458,12 +470,15 @@
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" id="actualValue" value="<?php if( $project_costs >0 ) echo $project_costs; else echo ''; ?>" class="textfield width60px" readonly />
+					<?php
+						$project_cost = (!empty($project_costs)) ? $project_costs : 0;
+					?>
+						<input type="text" id="actualValue" value="<?php echo $project_cost; ?>" class="textfield width60px" readonly />
 					</td>
 					<td>
 						<?php 
 							if (isset($quote_data['actual_worth_amount']))
-								$varianceProjectVal = $quote_data['actual_worth_amount'] - $project_costs;
+								$varianceProjectVal = $quote_data['actual_worth_amount'] - $project_cost;
 							else
 								$varianceProjectVal = '';
 						?>
@@ -1200,8 +1215,8 @@
 			            <th>Billable Hours</th>
 			            <th>Internal Hours</th>
 			            <th>Non-Billable Hours</th>
-			            <th>Rate</th>
-			            <th>Cost (USD)</th>
+			            <th>Rate (<?php echo $quote_data['expect_worth_name']; ?>)</th>
+			            <th>Cost (<?php echo $quote_data['expect_worth_name']; ?>)</th>
 			        </tr>
 			    </table>
 				<div class="inner_timesheet ">
