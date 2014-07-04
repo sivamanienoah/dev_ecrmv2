@@ -343,14 +343,19 @@ class Project extends crm_controller {
 		
 		$data['error'] = FALSE;
 		
-		if ($updt['pjt_stat'] == "") 
-		{
+		if($updt['pjt_stat'] == 2) {
+			$checkStat = $this->project_model->get_lead_det($updt['lead_id']);
+			if(isset($checkStat['actual_date_due'])) {
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Actual End Date must be filled';
+			}
+		}
+
+		if ($updt['pjt_stat'] == "") {
 			$data['error'] = 'Value must not be Null value!';
-		} 
-		else 
-		{
-			switch ($updt['pjt_stat'])
-			{
+		} else {
+			switch ($updt['pjt_stat']) {
 				case 1:
 					$log_status = 'The Project moved to In Progress';
 				break;
@@ -364,23 +369,20 @@ class Project extends crm_controller {
 					$log_status = 'The Project moved to Inactive';
 				break;
 			}
-
+		}
+		
+		if( $data['error'] == FALSE ) {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('pjt_status' => $updt['pjt_stat']);
 			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
-			
-			if($updt_pjt==0)
-			{
-				$data['error'] = 'Project Status Not Updated.';
-			}
-			else 
-			{
-				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $this->input->post('lead_id');
-				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
-				$insert_logs = $this->project_model->insert_row('logs', $ins);
-			}
+		}
+		
+		if($updt_pjt) {
+			$ins['userid_fk'] = $this->userdata['userid'];
+			$ins['jobid_fk'] = $this->input->post('lead_id');
+			$ins['date_created'] = date('Y-m-d H:i:s');
+			$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
+			$insert_logs = $this->project_model->insert_row('logs', $ins);
 		}
 		echo json_encode($data);
 	}
@@ -707,6 +709,90 @@ class Project extends crm_controller {
 		echo json_encode($data);
 	}
 	
+	
+	/*
+	 *Remove the Planned Project START & END Date.
+	 */
+	public function rm_project_status_date()
+	{
+		$updt_data = real_escape_array($this->input->post());
+
+		$data['error'] = FALSE;
+		
+		$checkStat = $this->project_model->get_lead_det($updt_data['lead_id']);
+		
+		/* switch ($updt_data['date_type']) {
+			case 'start';
+				if(isset($checkStat['date_due'])) {
+					$data['error'] = 'End Date must be delete';
+				} else if(isset($checkStat['actual_date_start'])) {
+					$data['error'] = 'Actual Start Date must be delete';
+				} else {
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('date_start' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				}
+			break;
+			case 'due';
+				if(isset($checkStat['actual_date_due'])) {
+					$data['error'] = 'Actual End Date must be deleted';
+				} else {
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('date_due' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				}
+			break;
+			case 'act-start';
+				if(isset($checkStat['date_start'])) {
+					$data['error'] = 'Planned Start Date must be deleted';
+				} else {
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('actual_date_start' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				}
+			break;
+			case 'act-due';
+				if(isset($checkStat['actual_date_start'])) {
+					$data['error'] = 'Actual Start Date must be deleted';
+				} else if(isset($checkStat['date_due'])) {
+					$data['error'] = 'Planned End Date must be deleted';
+				} else {
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('actual_date_due' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				}
+			break;
+		} */
+		if($checkStat['pjt_status'] != 2) {
+			switch ($updt_data['date_type']) {
+				case 'start';
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('date_start' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				break;
+				case 'due';
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('date_due' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				break;
+				case 'act-start';
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('actual_date_start' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				break;
+				case 'act-due';
+					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
+					$updt	   = array('actual_date_due' => NULL);
+					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+				break;
+			}
+		} else {
+			$data['error'] = 'Completed Projects cannot be altered.';
+		}
+		echo json_encode($data);
+	}
+	
+	
 	/*
 	 *Set the Actual Project START & END Date.
 	 */
@@ -732,22 +818,22 @@ class Project extends crm_controller {
 			
 			if ($updt_data['date_type'] == 'start')
 			{
-				if (!empty($chk_status['date_start'])) 
-				{	
-					if($chk_status['date_start'] > date('Y-m-d H:i:s', $timestamp)) 
-					{ 
+				if (!empty($chk_status['date_start']))
+				{
+					if($chk_status['date_start'] > date('Y-m-d H:i:s', $timestamp))
+					{
 						$data['error'] = 'Actual Project Start Date Must be Equal or Later than the Planned Project Start Date!';
 					}
-					else 
-					{	
-						if (!empty($chk_status['actual_date_due'])) 
+					else
+					{
+						if (!empty($chk_status['actual_date_due']))
 						{
 							if ($chk_status['actual_date_due'] < date('Y-m-d H:i:s', $timestamp))
 							{
 								$data['error'] = 'Actual Project Start Date Must be Equal or Earlier than the Actual Project End Date!';
 							}
-						} 
-						else 
+						}
+						else
 						{
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));

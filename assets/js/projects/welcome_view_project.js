@@ -901,7 +901,7 @@
 					$.unblockUI();
 				} else {
 					$('#resmsg').show();
-					$('#resmsg').html("<span class='ajx_failure_msg'>Status Already Exists.</span>.");
+					$('#resmsg').html("<span class='ajx_failure_msg'>"+data.error+".</span>");
 					$.unblockUI();
 				}
 			}
@@ -970,6 +970,58 @@
 				}
 			);
 		}
+	}
+	
+	//Removing the Project Dates
+	function rmProjectStatusDate(date_type) {
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
+		$("#dates_errmsg").empty();
+		
+		switch(date_type) {
+			case 'start':
+				var txtbx = 'project-start-date';
+			break;
+			case 'due':
+				var txtbx = 'project-due-date';
+			break;
+			case 'act-start':
+				var txtbx = 'actual-project-start-date';
+			break;
+			default:
+				var txtbx = 'actual-project-due-date';
+		} 
+		
+		var params 				= {'lead_id':curr_job_id, 'date_type':date_type};
+		params[csrf_token_name] = csrf_hash_token;
+	
+		$.post(
+			site_base_url+'project/rm_project_status_date/',
+			params,
+			function(_data) {
+				try {
+					eval ('var data = ' + _data);
+					if (typeof(data) == 'object') {
+						if (data.error == false) {
+							$("#dates_errmsg").text('Updated Successfully...');
+							$("#"+txtbx).val("");
+						} else {
+							$("#dates_errmsg").text(data.error);
+						}
+					} else {
+						$("#dates_errmsg").text('Updating faild, please try again.');
+					}
+				} catch (e) {
+					$("#dates_errmsg").text('Invalid response, your session may have timed out.');
+				}
+				$.unblockUI();
+				$("#dates_errmsg").show();
+				setTimeout('timerfadeout()', 3000);
+			}
+		);
 	}
 
 

@@ -352,7 +352,7 @@ class Project_model extends crm_model
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
 	
-	public function chk_status($tbl, $condn) 
+	public function chk_status($tbl, $condn)
 	{		
 		$this->db->where($condn);
 		$sql = $this->db->get($this->cfg['dbpref'] . $tbl);

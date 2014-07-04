@@ -1707,3 +1707,73 @@ div#green-radio{
  font-size:100%;
 }
 /*Back to top*/
+
+/*project*/
+
+.pjt-btn a, .pjt-btn button{
+    display:block;
+    float:left;
+    margin:0 7px 0 0;
+    background-color:#d8d8d8;
+    border:1px solid #ccc;
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size:100%;
+    line-height:130%;
+    text-decoration:none;
+    font-weight:bold;
+    color:#000;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+}
+.pjt-btn button{
+    width:auto;
+    overflow:visible;
+    padding:4px 10px 3px 7px; /* IE6 */
+	margin: 0 0 0 10px;
+}
+.pjt-btn button[type]{
+    padding:2px 6px 2px 6px; /* Firefox */
+    line-height:17px; /* Safari */
+}
+.pjt-btn button img, .pjt-btn a img{
+    margin:0 3px 0px 0 !important;
+    padding:0;
+    border:none;
+    width:13px;
+    height:13px;
+}
+/* STANDARD */
+button:hover, .pjt-btn a:hover{
+    background-color:#dff4ff;
+    border:1px solid #c2e1ef;
+    color:#336699;
+}
+.pjt-btn a:active{
+    background-color:#6299c5;
+    border:1px solid #6299c5;
+    color:#fff;
+}
+/* NEGATIVE */
+.pjt-btn a.negative, button.negative{
+    color:#d12f19;
+	margin: 0 0 0 4px;
+}
+.pjt-btn a.negative:hover, button.negative:hover{
+    background:#fbe3e4;
+    border:1px solid #fbc2c4;
+    color:#d12f19;
+}
+.pjt-btn a.negative:active{
+    background-color:#d12f19;
+    border:1px solid #d12f19;
+    color:#fff;
+}
+button.positive, .pjt-btn a.positive, input.positive{
+    background: url("../img/title-bg.png") repeat-x scroll 0 0 #D4DBE5;
+    border: 1px solid #CCCCCC;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    margin:0;
+    padding: 2px 7px;
+}

@@ -403,30 +403,42 @@ if (get_default_currency()) {
 				<tr>					
 					<td><strong>Start Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width60px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
+						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
 						<?php if($chge_access == 1) { ?>
-						<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
+							<div class="pjt-btn">
+								<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
+								<button type="submit" class="negative" onclick="rmProjectStatusDate('start'); return false;">Remove</button>
+							</div>
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width60px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
+						<input type="text" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
 						<?php if($chge_access == 1) { ?>
-						<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
+							<div class="buttons">
+								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
+								<button type="submit" class="negative" onclick="rmProjectStatusDate('act-start'); return false;">Remove</button>
+							</div>
 						<?php } ?>
 					</td>
 				</tr>
 				<tr>
 					<td><strong>End Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width60px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
+						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
 						<?php if($chge_access == 1) { ?>
-						<button type="submit" class="positive buttons" onclick="setProjectStatusDate('due'); return false;">Set</button>
+						<div class="buttons">
+							<button type="submit" class="positive buttons" onclick="setProjectStatusDate('due'); return false;">Set</button>
+							<button type="submit" class="negative buttons" onclick="rmProjectStatusDate('due'); return false;">Remove</button>
+						</div>
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width60px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
+						<input type="text" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
 						<?php if($chge_access == 1) { ?>
-						<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
+							<div class="buttons">
+								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
+								<button type="submit" class="negative" onclick="rmProjectStatusDate('act-due'); return false;">Remove</button>
+							</div>
 						<?php } ?>
 					</td>
 				</tr>
