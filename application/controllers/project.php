@@ -184,59 +184,37 @@ class Project extends crm_controller {
 			
 			if(!empty($data['quote_data']['pjt_id']))
 			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
-			
-			$data['timesheet_data']=array();
-			$total_billable	   = 0;
-			$total_nonbillable = 0;
-			$total_internal	   = 0;
-			$rate_cost         = 0;
+			$rates = $this->get_currency_rates();
+
+			$data['timesheet_data'] = array();
 			if(count($timesheet)>0) {
-				$i=0;
-				foreach($timesheet as $timesheetData) {
-					$costData['cost'] = 0;
-					
-					if(!empty($timesheetData['Resources'])) {
-						$costData = $this->project_model->get_latest_cost($timesheetData['Resources']);
+				foreach($timesheet as $ts) {
+					$costdata = array();
+					if(isset($ts['cost'])) {
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$result[0]['expect_worth_id']]);
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+					} else {
+						$costdata = $this->project_model->get_latest_cost($ts['username']);
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
+						$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$result[0]['expect_worth_id']]);
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 					}
-					
-					/*Actual worth amount in default currency*/
-					if(!empty($costData) && $costData['cost']>0) {
-						$rates = $this->get_currency_rates();
-						$rateCostPerHr = $this->conver_currency($costData['cost'], $rates[1][$result[0]['expect_worth_id']]);
-					}
-				
-					$total_billable 	       += $timesheetData['Billable'];
-					$total_nonbillable		   += $timesheetData['Non-Billable'];
-					$total_internal  		   += $timesheetData['Internal'];
-					$timesheetData['rate_cost'] = $rateCostPerHr; // as per lead currency
-					// $timesheetData['rate_cost'] = $costData['cost']; // in us dollar
-					$data['timesheet_data'][]   = $timesheetData;
-					$i++;
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 				}
-				// To Get total of values
-				$data['timesheet_data'][$i]['Resources']	= 'Total';
-				$data['timesheet_data'][$i]['Billable'] 	= $total_billable;
-				$data['timesheet_data'][$i]['Internal']		= $total_internal;
-				$data['timesheet_data'][$i]['Non-Billable'] = $total_nonbillable;
-			}
-			$data['actual_hour_data']						= 'NIL';
-			
-			if(!empty($data['quote_data']['pjt_id']))
-			$actual_hour = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id'], $id);
-			
-			if(count($actual_hour)>0) {
-				$data['actual_hour_data'] = $actual_hour['total_Hour'];
 			}
 
 			$data['project_costs'] = array();
-			
 			if(!empty($data['timesheet_data'])) {
-				$project_cost = $this->calcActualProjectCost($data['timesheet_data']);
+				$res = $this->calcActualProjectCost($data['timesheet_data']);
+				if($res['total_cost']>0) {
+					$data['project_costs'] = $res['total_cost'];
+				}
+				if($res['total_hours']>0) {
+					$data['actual_hour_data'] = $res['total_hours'];
+				}
 			}
-			
-			if($project_cost>0)
-			$data['project_costs'] = $project_cost;
-			
+		
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
 			
@@ -252,20 +230,42 @@ class Project extends crm_controller {
 	/*
 	* calculate the project actual value based on actual hour
 	*/
-	function calcActualProjectCost($arrTimesheet) {
-		$overall_tot = 0;
-		foreach($arrTimesheet as $timesheet) {
-			$bill_hr  	 = sprintf('%0.2f', $timesheet['Billable']);
-			$int_hr	  	 = sprintf('%0.2f', $timesheet['Internal']);
-			$nonbil_hr	 = sprintf('%0.2f', $timesheet['Non-Billable']);
-			$rate_hr  	 = sprintf('%0.2f', $timesheet['rate_cost']);
-			$tot_cost 	 = ($bill_hr+$int_hr+$nonbil_hr)*$rate_hr;
-			$overall_tot = $overall_tot + $tot_cost;
-			if(count($arrTimesheet) == 1) {
-				continue;
+	function calcActualProjectCost($timesheet_data) {
+		$total_cost = 0;
+		foreach($timesheet_data as $key1=>$value1) {
+			$resource_name = $key1;
+			foreach($value1 as $key2=>$value2) {
+				$year = $key2;
+				foreach($value2 as $key3=>$value3) {
+					$month		 	  = $key3;
+					$billable_hrs	  = 0;
+					$non_billable_hrs = 0;
+					$internal_hrs	  = 0;
+					foreach($value3 as $key4=>$value4) {
+						switch($key4) {
+							case 'Billable':
+								$rate = $value4['rateperhr'];
+								$billable_hrs = $value4['duration'];
+								$total_billable_hrs += $billable_hrs;
+							break;
+							case 'Non-Billable':
+								$rate = $value4['rateperhr'];
+								$non_billable_hrs = $value4['duration'];
+								$total_non_billable_hrs += $non_billable_hrs;
+							break;
+							case 'Internal':
+								$rate = $value4['rateperhr'];
+								$internal_hrs = $value4['duration'];
+								$total_internal_hrs += $internal_hrs;
+							break;
+						}
+					}
+					$data['total_cost'] += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
+				}
 			}
 		}
-		return sprintf('%0.2f', $overall_tot);
+		$data['total_hours'] = $total_internal_hrs+$total_non_billable_hrs+$total_billable_hrs;
+		return $data;
 	}
 
 	function chkPjtIdFromdb()
@@ -2506,19 +2506,18 @@ HDOC;
 	
 	/* Change the actual worth amount to Default currency */
 	public function getProjectsDataByDefaultCurrency($records) {
-	
+
 		$rates 		         = $this->get_currency_rates();
 		if (isset($records) && count($records)) :
 		$data['project_record'] = array();
 		$i = 0;
 		foreach ($records as $rec) {
-			$amt_converted = $this->conver_currency($rec['actual_worth_amount'],$rates[$rec['expect_worth_id']][$this->default_cur_id]);
-			
+			$amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 			$dataTimesheet = array();
 			if(!empty($rec['pjt_id'])) {
 				$dataTimesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id']);
 			}
-			
+
 			$overall_tot_cost	    = 0;
 			$total_billable			= 0;
 			$total_internal		    = 0;
@@ -2546,7 +2545,8 @@ HDOC;
 			}
 
 			if(!empty($data['data_timesheet'])) {
-				$project_cost = $this->calcActualProjectCost($data['data_timesheet']);
+				$res = $this->calcActualProjectCost($data['data_timesheet']);
+				$project_cost = $res['total_cost'];
 			} else {
 				$project_cost = 0;
 			}

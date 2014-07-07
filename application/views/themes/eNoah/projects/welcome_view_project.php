@@ -1224,6 +1224,7 @@ if (get_default_currency()) {
 			    <table class="head_timesheet data-table">
 			        <tr>
 			            <th>Resource</th>
+			            <th>Month & Year</th>
 			            <th>Billable Hours</th>
 			            <th>Internal Hours</th>
 			            <th>Non-Billable Hours</th>
@@ -1234,39 +1235,62 @@ if (get_default_currency()) {
 				<div class="inner_timesheet ">
 					<table class="data-table">
 						<?php
-						$m = 1;
-						$overall_tot = 0;
+						$total_billable_hrs		= 0;
+						$total_non_billable_hrs = 0;
+						$total_internal_hrs		= 0;
+						$total_cost				= 0;
+						foreach($timesheet_data as $key1=>$value1) {
+							$resource_name = $key1;
+							foreach($value1 as $key2=>$value2) {
+								$year = $key2;
+								foreach($value2 as $key3=>$value3) {
+									$month		 	  = $key3;
+									$billable_hrs	  = 0;
+									$non_billable_hrs = 0;
+									$internal_hrs	  = 0;
+									foreach($value3 as $key4=>$value4) {
+										switch($key4) {
+											case 'Billable':
+												$rate = $value4['rateperhr'];
+												$billable_hrs = $value4['duration'];
+												$total_billable_hrs += $billable_hrs;
+											break;
+											case 'Non-Billable':
+												$rate = $value4['rateperhr'];
+												$non_billable_hrs = $value4['duration'];
+												$total_non_billable_hrs += $non_billable_hrs;
+											break;
+											case 'Internal':
+												$rate = $value4['rateperhr'];
+												$internal_hrs = $value4['duration'];
+												$total_internal_hrs += $internal_hrs;
+											break;
+										}
+									}
+									echo "<tr>
+										<td>".ucwords($resource_name)."</td>
+										<td>".substr($month, 0, 3). " " . $year."</td>
+										<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
+										<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
+										<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
+										<td align=right>".$rate."</td>
+										<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
+									</tr>";
+									
+									$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
+								}
+							}
+						}
+						echo "<tr>
+							<td align=right><b>Total</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
+						</tr>";
 						?>
-						<?php foreach($timesheet_data as $timesheet) { ?>
-							<?php
-								$bill_hr  	 = sprintf('%0.2f', $timesheet['Billable']);
-								$int_hr	  	 = sprintf('%0.2f', $timesheet['Internal']);
-								$nonbil_hr	 = sprintf('%0.2f', $timesheet['Non-Billable']);
-								$rate_hr  	 = sprintf('%0.2f', $timesheet['rate_cost']);
-								$tot_cost 	 = ($bill_hr+$int_hr+$nonbil_hr)*$rate_hr;
-								$overall_tot = $overall_tot + $tot_cost;
-							?>
-							<?php if( $m != count($timesheet_data) ) { ?>
-									<tr>
-										<td><?php echo $timesheet['Resources'];?></td>
-										<td><?php echo $bill_hr; ?></td>
-										<td><?php echo $int_hr; ?></td>
-										<td><?php echo $nonbil_hr; ?></td>
-										<td><?php echo $rate_hr; ?></td>
-										<td><?php echo $tot_cost; ?></td>
-									</tr>
-							<?php $m++; ?>
-							<?php } else { ?> <!--for printing bold-->
-								<tr>
-									<td><b><?php echo $timesheet['Resources'];?></b></td>
-									<td><b><?php echo $bill_hr; ?></b></td>
-									<td><b><?php echo $int_hr; ?></b></td>
-									<td><b><?php echo $nonbil_hr; ?></b></td>
-									<td></td>
-									<td><b><?php echo sprintf('%0.2f', $overall_tot); ?></b></td>
-								</tr>
-							<?php } /* else condition */?>
-						<?php } /* for loop */ ?>
 					</table>
 				</div>
 		    <?php 

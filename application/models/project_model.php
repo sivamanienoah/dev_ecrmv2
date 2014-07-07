@@ -415,7 +415,7 @@ class Project_model extends crm_model
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
 
-	public function get_timesheet_data($pjt_code, $lead_id)
+	/* public function get_timesheet_data($pjt_code, $lead_id)
 	{	
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
@@ -437,6 +437,33 @@ class Project_model extends crm_model
 		$sql .= " JOIN ".$timesheet_db->dbprefix('task')." AS tsk";
 		$sql .= " LEFT JOIN ".$timesheet_db->dbprefix('assignments')." as a ON t.uid = a.username";
 		$sql .= " WHERE ( p.project_code = '".$pjt_code."' AND t.proj_id = p.proj_id AND a.proj_id = p.proj_id AND tsk.task_id = t.task_id ) GROUP BY t.uid";
+		// echo $sql; #EXIT;
+		$query=$timesheet_db->query($sql);
+		return $query->result_array();
+	} */
+	
+	public function get_timesheet_data($pjt_code, $lead_id)
+	{
+		if(!empty($lead_id))
+		$getActDate = $this->get_quote_data($lead_id);
+		
+		if(!empty($getActDate[0]['date_created'])) {
+			$start_date = date('Y-m-d', strtotime($getActDate[0]['date_created']));
+		} else {
+			$start_date = '0000-00-00';
+		}
+		
+		$timesheet_db = $this->load->database('timesheet',TRUE);
+		
+		$sql = "SELECT ROUND((ct.direct_cost + ct.overheads_cost), 2) as cost, Monthname(t.start_time) as month_name, YEAR(t.start_time) as yr, u.emp_id, u.first_name, u.last_name, u.username, t.start_time AS start_time_str, t.end_time AS end_time_str, SUM((t.duration/60)) as Duration, t.resoursetype, WEEK(t.start_time) AS Week
+		FROM ".$timesheet_db->dbprefix('user')." AS u
+		LEFT JOIN ".$timesheet_db->dbprefix('times')." AS t ON t.uid = u.username
+		LEFT JOIN ".$timesheet_db->dbprefix('user_cost')." as ct ON ct.employee_id = u.emp_id AND ct.month=MONTH(t.start_time) AND ct.year=YEAR(t.start_time) 
+		LEFT JOIN ".$timesheet_db->dbprefix('project')." as p ON p.proj_id = t.proj_id
+		WHERE ((t.start_time > '".$start_date."') AND (t.end_time <= NOW())) AND u.status='ACTIVE' AND p.project_code = '".$pjt_code."'
+		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
+		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
+		
 		// echo $sql; #EXIT;
 		$query=$timesheet_db->query($sql);
 		return $query->result_array();
@@ -522,8 +549,7 @@ class Project_model extends crm_model
 	}
 	
 	//Get the latest cost from the timesheet db.
-	public function get_latest_cost($username)
-	{
+	public function get_latest_cost($username) {
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		$sql = "SELECT ROUND((uc.direct_cost+uc.overheads_cost), 2) as cost FROM ".$timesheet_db->dbprefix('user_cost')." AS uc WHERE uc.employee_id = (SELECT u.emp_id FROM ".$timesheet_db->dbprefix('user')." AS u WHERE u.username='".$username."') ORDER BY uc.year DESC, uc.month DESC LIMIT 0,1";
 		$query = $timesheet_db->query($sql);
