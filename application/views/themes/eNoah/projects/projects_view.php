@@ -56,21 +56,22 @@ if (get_default_currency()) {
 						<th>By Project Manager Wise</th>
 						<th>By Customer Wise</th>
 						<th>By Services Wise</th>
+						<th>By Date(Actual)</th>
 					</tr>	
 				</thead>
 				<tbody>
 				<tr>	
 					<td>
-						<select style="width:200px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
+						<select style="width:125px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
 							<option value="1">Project In Progress</option>
 							<option value="2">Project Completed</option>
 							<option value="3">Project Onhold</option>
 							<option value="4">Inactive</option>
-						</select> 
+						</select>
 					</td>
 					
 					<td>
-						<select style="width:200px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
+						<select style="width:150px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
 							<?php foreach($pm_accounts as $pm_acc) {?>
 							<option value="<?php echo $pm_acc['userid']; ?>">
 							<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
@@ -79,18 +80,28 @@ if (get_default_currency()) {
 					</td>
 					
 					<td>
-						<select style="width:200px;" multiple="multiple" id="customer1" name="customer1[]">
+						<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">
 							<?php foreach($customers as $customer) {?>
 							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
 							<?php } ?>
 						</select>
 					</td>
 					<td>
-						<select style="width:200px;" multiple="multiple" id="services" name="services[]">
+						<select style="width:170px;" multiple="multiple" id="services" name="services[]">
 							<?php foreach($services as $service) {?>
 							<option value="<?php echo $service['sid']; ?>"><?php echo $service['services'];?></option>	
 							<?php } ?>
 						</select>
+					</td>
+					<td>
+						<select style="width:178px;" id="datefilter" name="datefilter">
+							<option value="1">All</option>
+							<option value="2">Start Date</option>
+							<option value="3">End Date</option>
+						</select>
+						<br />
+						From <input type="text" name="from_date" id="from_date" class="pick-date textfield" style="width:57px;" />
+						To <input type="text" name="to_date" id="to_date" class="pick-date textfield" style="width:57px;" />
 					</td>
 				</tr>
 				<tr align="right" >

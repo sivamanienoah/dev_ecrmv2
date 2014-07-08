@@ -59,11 +59,14 @@ function dtPjtTable() {
 			var pm_acc 	 = $("#pm_acc").val(); 
 			var cust 	 = $("#customer1").val(); 
 			var service  = $("#services").val(); 
-			var keyword  = $("#keywordpjt").val(); 
+			var keyword  = $("#keywordpjt").val();
+			var datefilter  = $("#datefilter").val();
+			var from_date   = $("#from_date").val();
+			var to_date  	= $("#to_date").val();
 			if(keyword == "Project No, Project Title, Name or Company")
 			keyword = '';
 			
-			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword)};
+			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
@@ -166,3 +169,15 @@ function dtPjtTable() {
 		});
 	});
 	
+	$(function() {
+		// $('#from_date, #to_date').datepicker({dateFormat: 'dd-mm-yy'});
+		$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, maxDate: '0', onSelect: function(date) {
+			if($('#to_date').val!='')
+			{
+				$('#to_date').val('');
+			}
+			var return_date = $('#from_date').val();
+			$('#to_date').datepicker("option", "minDate", return_date);
+		}});
+		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, maxDate: '0', changeYear: true });
+	});

@@ -54,6 +54,7 @@ class Project extends crm_controller {
 		$data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
 		
 		unset($data['records']);
+		$data['records']     = array();
 		$this->load->view('projects/projects_view', $data);
     }
 	
@@ -62,13 +63,16 @@ class Project extends crm_controller {
 	 */
 	public function advance_filter_search_pjt()
 	{
- 		$inputData=real_escape_array($this->input->post());
+ 		$inputData = real_escape_array($this->input->post());
  		
-		$pjtstage = $inputData['pjtstage'];
-		$pm_acc   = $inputData['pm_acc'];
-		$cust     = $inputData['cust'];
-		$service  = $inputData['service'];
-		$keyword  = $inputData['keyword'];
+		$pjtstage 	= $inputData['pjtstage'];
+		$pm_acc   	= $inputData['pm_acc'];
+		$cust     	= $inputData['cust'];
+		$service 	= $inputData['service'];
+		$keyword  	= $inputData['keyword'];
+		$datefilter = $inputData['datefilter'];
+		$from_date	= $inputData['from_date'];
+		$to_date  	= $inputData['to_date'];
 		
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
@@ -76,8 +80,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		
 		$this->load->view('projects/projects_view_inprogress', $data);
@@ -236,7 +239,7 @@ class Project extends crm_controller {
 		$total_billable_hrs		= 0;
 		$total_non_billable_hrs = 0;
 		$total_internal_hrs		= 0;
-		$total_cost				= 0;
+		$data['total_cost']		= 0;
 		foreach($timesheet_data as $key1=>$value1) {
 			$resource_name = $key1;
 			foreach($value1 as $key2=>$value2) {

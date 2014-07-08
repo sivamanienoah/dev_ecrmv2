@@ -29,40 +29,66 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword) {
+	public function get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date) {
 		
-		$userdata = $this->session->userdata('logged_in_user');
-		$stage = $pjtstage;
-		$customer = $cust;
-		$pm = $pm_acc;
-		$services = $service;
+		$userdata   = $this->session->userdata('logged_in_user');
+		$stage 		= $pjtstage;
+		$customer 	= $cust;
+		$pm			= $pm_acc;
+		$services	= $service;
+		$datefilter = $datefilter;
+		$from_date 	= $from_date;
+		$to_date	= $to_date;
 	
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
-			
 			if(!empty($stage)){	
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status =1 ");
 			}
-			
 			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
-			
 			if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
 			}
-			
 			if(!empty($services)){		
-				$this->db->where_in('j.lead_service',$services); 
+				$this->db->where_in('j.lead_service',$services);
 			}
-			
+			if(!empty($from_date)) {
+				switch($datefilter) {
+					case 1:
+						if(!empty($to_date)) {
+							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+							$this->db->where("(j.actual_date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.actual_date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
+						} else {
+							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+						}
+					break;
+					case 2:
+						if(!empty($to_date)) {
+							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.actual_date_start <=', date('Y-m-d', strtotime($to_date)));
+						} else {
+							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
+						}
+					break;
+					case 3:
+						if(!empty($to_date)) {
+							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.actual_date_due <=', date('Y-m-d', strtotime($to_date)));
+						} else {
+							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
+						}
+					break;
+				}
+			}
 			if($keyword != 'Lead No, Job Title, Name or Company' && !empty($keyword)){	
 				
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
@@ -103,37 +129,59 @@ class Project_model extends crm_model
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->where_in('j.lead_id', $result_ids);
-			
-			
+
 			if(!empty($stage)) {
 				$this->db->where("j.lead_status", 4);
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
 			}
-			
 			if(!empty($customer)) {		
 				$this->db->where_in('j.custid_fk',$customer);		
 			}
-			
 			if(!empty($pm)) {		
 				$this->db->where_in('j.assigned_to',$pm); 
 			}
-			
 			if(!empty($services)){		
 				$this->db->where_in('j.lead_service',$services); 
 			}
-			
+			if(!empty($from_date)) {
+				switch($datefilter) {
+					case 1:
+						if(!empty($to_date)) {
+							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+							$this->db->where("(j.actual_date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.actual_date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
+						} else {
+							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+						}
+					break;
+					case 2:
+						if(!empty($to_date)) {
+							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.actual_date_start <=', date('Y-m-d', strtotime($to_date)));
+						} else {
+							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
+						}
+					break;
+					case 3:
+						if(!empty($to_date)) {
+							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.actual_date_due <=', date('Y-m-d', strtotime($to_date)));
+						} else {
+							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
+						}
+					break;
+				}
+			}
 			if($keyword != 'Project No, Project Title, Name or Company' && !empty($keyword)){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
-
 			$this->db->order_by("j.lead_id", "desc");
 			
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();		
 		return $pjts;
 	}
@@ -521,7 +569,7 @@ class Project_model extends crm_model
 	} */
 	
 	//Displaying in Project Dashboard
-	public function get_timesheet_hours($pjt_code, $lead_id)
+	/* public function get_timesheet_hours($pjt_code, $lead_id)
 	{
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
@@ -546,7 +594,7 @@ class Project_model extends crm_model
 		// echo $sql; exit;
 		$query = $timesheet_db->query($sql);
 		return $query->row();
-	}
+	} */
 	
 	//Get the latest cost from the timesheet db.
 	public function get_latest_cost($username) {
