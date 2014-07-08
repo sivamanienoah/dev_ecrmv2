@@ -184,6 +184,7 @@ class Project extends crm_controller {
 			
 			if(!empty($data['quote_data']['pjt_id']))
 			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
+			
 			$rates = $this->get_currency_rates();
 
 			$data['timesheet_data'] = array();
@@ -230,8 +231,12 @@ class Project extends crm_controller {
 	/*
 	* calculate the project actual value based on actual hour
 	*/
-	function calcActualProjectCost($timesheet_data) {
-		$total_cost = 0;
+	function calcActualProjectCost($timesheet_data)
+	{
+		$total_billable_hrs		= 0;
+		$total_non_billable_hrs = 0;
+		$total_internal_hrs		= 0;
+		$total_cost				= 0;
 		foreach($timesheet_data as $key1=>$value1) {
 			$resource_name = $key1;
 			foreach($value1 as $key2=>$value2) {
@@ -264,7 +269,10 @@ class Project extends crm_controller {
 				}
 			}
 		}
-		$data['total_hours'] = $total_internal_hrs+$total_non_billable_hrs+$total_billable_hrs;
+		$data['total_billable_hrs']		= $total_billable_hrs;
+		$data['total_internal_hrs']	    = $total_internal_hrs;
+		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
+		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
 		return $data;
 	}
 
@@ -2505,82 +2513,90 @@ HDOC;
 	}
 	
 	/* Change the actual worth amount to Default currency */
-	public function getProjectsDataByDefaultCurrency($records) {
-
-		$rates 		         = $this->get_currency_rates();
-		if (isset($records) && count($records)) :
+	public function getProjectsDataByDefaultCurrency($records)
+	{
+		$rates = $this->get_currency_rates();
+		
 		$data['project_record'] = array();
 		$i = 0;
-		foreach ($records as $rec) {
-			$amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
-			$dataTimesheet = array();
-			if(!empty($rec['pjt_id'])) {
-				$dataTimesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id']);
-			}
+		if (isset($records) && count($records)) :
+			foreach($records as $rec) {
+				$amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				$data['timesheet_data'] = array();
+				$timesheet				= array();
+				$total_cost				= 0;
+				$total_hours			= 0;
+				$total_billable_hrs		= 0;
+				$total_internal_hrs		= 0;
+				$total_non_billable_hrs = 0;
+				
+				if(!empty($rec['pjt_id']))
+				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id']);
 
-			$overall_tot_cost	    = 0;
-			$total_billable			= 0;
-			$total_internal		    = 0;
-			$total_nonbillable		= 0;
-			$data['data_timesheet'] = array();
-			
-			if(count($dataTimesheet)>0) {
-				$j=0;
-				foreach($dataTimesheet as $tsData) {
-					if(!empty($tsData['Resources'])) {
-						$costData = $this->project_model->get_latest_cost($tsData['Resources']);
-					} else {
-						$costData['cost'] = 0;
+				if(count($timesheet)>0) {
+					foreach($timesheet as $ts) {
+						$costdata = array();
+						if(isset($ts['cost'])) {
+							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+							$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+						} else {
+							$costdata = $this->project_model->get_latest_cost($ts['username']);
+							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
+							$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$this->default_cur_id]);
+							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+						}
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 					}
-					$total_billable 	       += $tsData['Billable'];
-					$total_nonbillable		   += $tsData['Non-Billable'];
-					$total_internal  		   += $tsData['Internal'];
-					$tsData['rate_cost']		= $costData['cost'];
-					$data['data_timesheet'][]   = $tsData;
-					$j++;
 				}
-				$data['data_timesheet'][$j]['Billable'] 	= $total_billable;
-				$data['data_timesheet'][$j]['Internal']		= $total_internal;
-				$data['data_timesheet'][$j]['Non-Billable'] = $total_nonbillable;
-			}
 
-			if(!empty($data['data_timesheet'])) {
-				$res = $this->calcActualProjectCost($data['data_timesheet']);
-				$project_cost = $res['total_cost'];
-			} else {
-				$project_cost = 0;
+				if(!empty($data['timesheet_data'])) {
+					$res = $this->calcActualProjectCost($data['timesheet_data']);
+					if($res['total_cost']>0) {
+						$total_cost = $res['total_cost'];
+					}
+					if($res['total_hours']>0) {
+						$total_hours = $res['total_hours'];
+					}
+					if($res['total_billable_hrs']>0) {
+						$total_billable_hrs = $res['total_billable_hrs'];
+					}
+					if($res['total_internal_hrs']>0) {
+						$total_internal_hrs = $res['total_internal_hrs'];
+					}
+					if($res['total_non_billable_hrs']>0) {
+						$total_non_billable_hrs = $res['total_non_billable_hrs'];
+					}
+				}
+				//Build the Array
+				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
+				$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
+				$data['project_record'][$i]['lead_title']		= $rec['lead_title'];
+				$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
+				$data['project_record'][$i]['lead_stage']		= $rec['lead_stage'];
+				$data['project_record'][$i]['pjt_id']			= $rec['pjt_id'];
+				$data['project_record'][$i]['assigned_to'] 		= $rec['assigned_to'];
+				$data['project_record'][$i]['date_start'] 		= $rec['date_start'];
+				$data['project_record'][$i]['date_due'] 		= $rec['date_due'];
+				$data['project_record'][$i]['complete_status'] 	= $rec['complete_status'];
+				$data['project_record'][$i]['pjt_status'] 		= $rec['pjt_status'];
+				$data['project_record'][$i]['estimate_hour'] 	= $rec['estimate_hour'];
+				$data['project_record'][$i]['project_type']	 	= $rec['project_type'];
+				$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
+				$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
+				$data['project_record'][$i]['clname'] 			= $rec['clname'];
+				$data['project_record'][$i]['company'] 			= $rec['company'];
+				$data['project_record'][$i]['fnm'] 				= $rec['fnm'];
+				$data['project_record'][$i]['lnm'] 				= $rec['lnm'];
+				$data['project_record'][$i]['bill_hr'] 			= $total_billable_hrs;
+				$data['project_record'][$i]['int_hr'] 			= $total_internal_hrs;
+				$data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
+				$data['project_record'][$i]['total_hours'] 		= $total_hours;
+				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
+				$i++;
 			}
-			if($project_cost>0) {
-				$projectVal = $this->conver_currency($project_cost, $rates[1][$this->default_cur_id]);
-				$overall_tot_cost = $projectVal;
-			}
-			$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
-			$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
-			$data['project_record'][$i]['lead_title']		= $rec['lead_title'];
-			$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
-			$data['project_record'][$i]['lead_stage']		= $rec['lead_stage'];
-			$data['project_record'][$i]['pjt_id']			= $rec['pjt_id'];
-			$data['project_record'][$i]['assigned_to'] 		= $rec['assigned_to'];
-			$data['project_record'][$i]['date_start'] 		= $rec['date_start'];
-			$data['project_record'][$i]['date_due'] 		= $rec['date_due'];
-			$data['project_record'][$i]['complete_status'] 	= $rec['complete_status'];
-			$data['project_record'][$i]['pjt_status'] 		= $rec['pjt_status'];
-			$data['project_record'][$i]['estimate_hour'] 	= $rec['estimate_hour'];
-			$data['project_record'][$i]['project_type']	 	= $rec['project_type'];
-			$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
-			$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
-			$data['project_record'][$i]['clname'] 			= $rec['clname'];
-			$data['project_record'][$i]['company'] 			= $rec['company'];
-			$data['project_record'][$i]['fnm'] 				= $rec['fnm'];
-			$data['project_record'][$i]['lnm'] 				= $rec['lnm'];
-			$data['project_record'][$i]['bill_hr'] 			= $total_billable;
-			$data['project_record'][$i]['int_hr'] 			= $total_internal;
-			$data['project_record'][$i]['nbil_hr'] 			= $total_nonbillable;
-			$data['project_record'][$i]['total_cost'] 		= number_format($overall_tot_cost, 2, '.', '');
-			$i++;
-		}
 		endif;
-		// ECHO "<PRE>"; PRINT_R($data['project_record']); EXIT;
 		return $data['project_record'];
 	}
 	
@@ -2611,7 +2627,7 @@ HDOC;
 		
     	$getProjectData = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);
 		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData);
-
+		
     	if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');

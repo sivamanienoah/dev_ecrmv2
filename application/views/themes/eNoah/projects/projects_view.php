@@ -106,7 +106,6 @@ if (get_default_currency()) {
 			</form>
 		</div>
 		<div class="clearfix"></div>
-		
 		<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
@@ -189,26 +188,31 @@ if (get_default_currency()) {
 							<td class="actions" align="center">
 								<?php if (isset($record['nbil_hr'])) echo sprintf('%0.2f',$record['nbil_hr']); else echo "-"; ?>
 							</td>
+							<?php $tot_hr = isset($record['total_hours']) ? $record['total_hours'] : 0; ?>
 							<td class="actions" align="center">
-								<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr']); ?>
+								<?php echo sprintf('%0.2f', $tot_hr); ?>
 							</td>
 							
 							<td class="actions" align="center">
-								<?php echo ($record['bill_hr']+$record['int_hr']+$record['nbil_hr'])-$record['estimate_hour']; ?>
+								<?php echo sprintf('%0.2f', $tot_hr-$record['estimate_hour']); ?>
 							</td>
 							<td class="actions" align="center">
 								<?php if (isset($record['actual_worth_amt'])) echo $record['actual_worth_amt']; else echo "-"; ?>
 							</td>
+							<?php $tot_cost = isset($record['total_cost']) ? $record['total_cost'] : 0; ?>
 							<td class="actions" align="center">
-								<?php if (isset($record['total_cost'])) echo $record['total_cost']; else echo "-"; ?>
-							</td>
-							<td class="actions" align="center">
-								<?php echo ($record['actual_worth_amt']-$record['total_cost']); ?>
+								<?php echo sprintf('%0.2f', $tot_cost); ?>
 							</td>
 							<td class="actions" align="center">
 								<?php 
-									$perc = ($record['actual_worth_amt']-$record['total_cost'])/$record['actual_worth_amt']; 
-									echo sprintf('%0.2f',$perc);
+									$profitloss = $record['actual_worth_amt']-$tot_cost;
+									echo sprintf('%0.2f', $profitloss);
+								?>
+							</td>
+							<td class="actions" align="center">
+								<?php 
+									$perc = ($record['actual_worth_amt']-$tot_cost)/$record['actual_worth_amt']; 
+									echo sprintf('%0.2f', $perc);
 								?>
 							</td>
 							<td class="actions" align="center">
