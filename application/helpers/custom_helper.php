@@ -35,7 +35,7 @@ function currency_convert()
 	
 	$query = $CI->db->get($CI->cfg['dbpref'].'expect_worth');
 	$res = $query->result();
-
+	
 	if(!empty($res)){
 		foreach ($res as $curren)
 		{
@@ -62,7 +62,6 @@ function currency_convert()
 				$data = explode('"', $rawdata);
 				$data = explode(' ', $data['3']); 
 				$var = $data['0']; */
-				
 				if($from_Currency!=$to_Currency) {
 					$url = "https://www.google.com/finance/converter?a=$amount&from=$from_Currency&to=$to_Currency";
 					$amount = urlencode($amount);
@@ -72,7 +71,7 @@ function currency_convert()
 					$get = explode("<span class=bld>",$get);
 					$get = explode("</span>",$get[1]);  
 					$converted_amount = preg_replace("/[^0-9\.]/", null, $get[0]);
-					$conversion_value = round($converted_amount, 3);
+					$conversion_value = round($converted_amount, 2);
 					updt_currency($from_Currency_id, $to_Currency_id, $conversion_value);
 				} else {
 					updt_currency($from_Currency_id, $to_Currency_id, 1);
