@@ -470,7 +470,7 @@ if (get_default_currency()) {
 							else
 								$varianceProjectHour = '';
 						?>
-						<input type="text" id="varianceEff" value="<?php if (isset($varianceProjectHour)) echo $varianceProjectHour; else echo ''; ?>" class="textfield width60px" readonly />
+						<input type="text" id="varianceEff" value="<?php if (isset($varianceProjectHour)) echo sprintf('%0.2f', $varianceProjectHour); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
 				</tr>
 				<tr>					

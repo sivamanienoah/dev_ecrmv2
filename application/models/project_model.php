@@ -517,7 +517,7 @@ class Project_model extends crm_model
 		return $query->result_array();
 	}
 	
-	public function get_actual_project_hour($pjt_code, $lead_id)
+	/* public function get_actual_project_hour($pjt_code, $lead_id)
 	{
 		if(!empty($lead_id))
 		$getActDate = $this->get_quote_data($lead_id);
@@ -541,7 +541,7 @@ class Project_model extends crm_model
 		// echo $sql; #exit;
 		$query=$timesheet_db->query($sql);
 		return $query->row_array();
-	}
+	} */
 	
 	/* public function get_project_cost($pjt_code, $lead_id)
 	{
@@ -652,5 +652,4 @@ class Project_model extends crm_model
 	}
 	
 }
-
 ?>

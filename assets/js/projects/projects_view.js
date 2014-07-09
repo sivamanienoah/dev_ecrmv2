@@ -153,6 +153,9 @@ function dtPjtTable() {
 			var pm    = $('#pm_acc').val();
 			var customer = $('#customer1').val();
 			var service = $('#services').val();
+			var datefilter  = $("#datefilter").val();
+			var from_date   = $("#from_date").val();
+			var to_date  	= $("#to_date").val();
 
 			var url = site_base_url+"project/excelExport";
 			
@@ -161,7 +164,10 @@ function dtPjtTable() {
 			  '<input type="hidden" name="stages" value="' +stage+ '" />' +
 			  '<input type="hidden" name="pm" value="' +pm+ '" />' +
 			  '<input type="hidden" name="customers" value="' +customer+ '" />' +
-			  '<input type="hidden" name="services" value="' +service+ '" />' +	  
+			  '<input type="hidden" name="services" value="' +service+ '" />' +
+			  '<input type="hidden" name="datefilter" value="' +datefilter+ '" />' +
+			  '<input type="hidden" name="from_date" value="' +from_date+ '" />' +
+			  '<input type="hidden" name="to_date" value="' +to_date+ '" />' +
 			  '</form>');
 			$('body').append(form);
 			$(form).submit();

@@ -50,7 +50,7 @@ class Project extends crm_controller {
 		$data['pm_accounts'] = $pjt_managers;
 		$data['customers']   = $this->project_model->get_customers();
 		$data['services']    = $this->project_model->get_services();
-		$data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '');
+		$data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
 		$data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
 		
 		unset($data['records']);
@@ -1986,31 +1986,9 @@ HDOC;
 		} 
 		else 
 		{
-
-			if(!empty($data['quote_data']['pjt_id']))
-			$chk_stat = $this->project_model->get_actual_project_hour($data['quote_data']['pjt_id'], $updt_data['lead_id']);
-			else
-			$chk_stat = 0;
-
-			if(count($chk_stat)>0)
-			{
-				$actual_hr = $chk_stat['total_Hour'];
-			} 
-			else 
-			{
-				$actual_hr='0';
-			}
-			
-			if($estimateHr < $actual_hr) 
-			{
-				$data['error'] = 'Estimated project hour must be equal or greater than the actual project hour!';
-			}
-			else 
-			{
-				$wh_condn = array('lead_id'=>$updt_data['lead_id']);
-				$updt = array('estimate_hour'=>$estimateHr);
-				$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-			}
+			$wh_condn = array('lead_id'=>$updt_data['lead_id']);
+			$updt = array('estimate_hour'=>$estimateHr);
+			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
 		echo json_encode($data);
 		exit;
@@ -2609,6 +2587,9 @@ HDOC;
 		$pm_acc = $this->input->post('pm');		
 		$cust = $this->input->post('customers');
 		$service = $this->input->post('services');
+		$datefilter = $this->input->post('datefilter');
+		$from_date = $this->input->post('from_date');
+		$to_date = $this->input->post('to_date');		
 		$keyword = null;
 		
 		if((!empty($pjtstage)) && $pjtstage!='null')
@@ -2628,7 +2609,7 @@ HDOC;
 		else
 		$service = '';
 		
-    	$getProjectData = $this->project_model->get_projects_results($pjtstage, $pm_acc, $cust, $service, $keyword);
+    	$getProjectData = $this->project_model->get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date);
 		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData);
 		
     	if(count($pjts_data)>0) {
