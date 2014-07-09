@@ -485,7 +485,7 @@ if (get_default_currency()) {
 					<?php
 						$project_cost = (!empty($project_costs)) ? $project_costs : 0;
 					?>
-						<input type="text" id="actualValue" value="<?php echo $project_cost; ?>" class="textfield width60px" readonly />
+						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
 					<td>
 						<?php 
