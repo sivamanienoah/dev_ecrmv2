@@ -312,13 +312,13 @@ class Project extends crm_controller {
 		echo json_encode($data);
 	}
 	
-	function chkPjtValFromdb() 
+	function chkPjtValFromdb()
 	{
 		$data = real_escape_array($this->input->post());
 
 		$wh_condn = array('lead_id' => $data['lead_id'], 'actual_worth_amount'=>$data['pjt_val']);
 		$stat = $this->project_model->chk_status('leads', $wh_condn);
-		if( $stat == 0 ) 
+		if( $stat == 0 )
 		echo 'Ok';
 		else
 		echo 'No';
