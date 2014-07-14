@@ -398,7 +398,7 @@ if (get_default_currency()) {
 				<tr>
 					<th>Project Dates</th>
 					<th>Planned</th>
-					<th>Actuals</th>
+					<th>Actual</th>
 				</tr>
 				<tr>					
 					<td><strong>Start Date</strong></td>
