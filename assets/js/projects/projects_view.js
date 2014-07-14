@@ -177,7 +177,7 @@ function dtPjtTable() {
 	
 	$(function() {
 		// $('#from_date, #to_date').datepicker({dateFormat: 'dd-mm-yy'});
-		$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, maxDate: '0', onSelect: function(date) {
+		$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
 			if($('#to_date').val!='')
 			{
 				$('#to_date').val('');
@@ -185,5 +185,5 @@ function dtPjtTable() {
 			var return_date = $('#from_date').val();
 			$('#to_date').datepicker("option", "minDate", return_date);
 		}});
-		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, maxDate: '0', changeYear: true });
+		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	});
