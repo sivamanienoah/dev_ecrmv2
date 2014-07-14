@@ -1038,12 +1038,14 @@
 		if (date_type == 'start')
 		{
 			set_date_type = 'start';
+			type = 'actual-project-start-date';
 			date_val = $('#actual-project-start-date').val();
 			d_class = 'startdate';
 		}
 		else
 		{
 			set_date_type = 'end';
+			type = 'actual-project-due-date';
 			date_val = $('#actual-project-due-date').val();
 			d_class = 'deadline';
 		}
@@ -1075,6 +1077,7 @@
 								$("#dates_errmsg").text('Saved Successfully...');
 							} else {
 								$("#dates_errmsg").text(data.error);
+								$('#' + type).val("");
 							}
 						} else {
 							$("#dates_errmsg").text('Updating faild, please try again.');
