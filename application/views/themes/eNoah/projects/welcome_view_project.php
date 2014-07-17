@@ -403,8 +403,8 @@ if (get_default_currency()) {
 				<tr>					
 					<td><strong>Start Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
-						<?php if($chge_access == 1) { ?>
+						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
+						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="pjt-btn">
 								<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
 								<button type="submit" class="negative" onclick="rmProjectStatusDate('start'); return false;">Remove</button>
@@ -412,8 +412,8 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
-						<?php if($chge_access == 1) { ?>
+						<input type="text" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
+						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
 								<button type="submit" class="negative" onclick="rmProjectStatusDate('act-start'); return false;">Remove</button>
@@ -424,8 +424,8 @@ if (get_default_currency()) {
 				<tr>
 					<td><strong>End Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
-						<?php if($chge_access == 1) { ?>
+						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
+						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 						<div class="buttons">
 							<button type="submit" class="positive buttons" onclick="setProjectStatusDate('due'); return false;">Set</button>
 							<button type="submit" class="negative buttons" onclick="rmProjectStatusDate('due'); return false;">Remove</button>
@@ -433,8 +433,8 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
-						<?php if($chge_access == 1) { ?>
+						<input type="text" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
+						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
 								<button type="submit" class="negative" onclick="rmProjectStatusDate('act-due'); return false;">Remove</button>
@@ -456,7 +456,7 @@ if (get_default_currency()) {
 					<td><strong>Efforts (Hours)</strong></td>
 					<td>
 						<input type="text" value="<?php if ($quote_data['estimate_hour'] != '') echo $quote_data['estimate_hour']; else echo ''; ?>" class="textfield width60px" id="project-estimate-hour" onkeypress="return isNumberKey(event)" maxlength="10" <?php if($chge_access != 1) { ?> readonly <?php } ?>/>
-						<?php if($chge_access == 1) { ?>
+						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 						<button type="submit" class="positive" onclick="setProjectEstimateHour(); return false;">Set</button>
 						<?php } ?>
 					</td>
@@ -477,7 +477,7 @@ if (get_default_currency()) {
 					<td><strong>Project Value (<?php if (isset($quote_data['expect_worth_name'])) echo $quote_data['expect_worth_name']; ?>) </strong></td>
 					<td>
 						<input class="textfield" style="width: 60px;" type="text" name="pjt_value" id="pjt_value" value="<?php if (isset($quote_data['actual_worth_amount'])) echo $quote_data['actual_worth_amount']; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> onkeypress="return isNumberKey(event)" />
-						<?php if ($chge_access == 1) { ?>
+						<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 						<button type="submit" class="positive" onclick="setProjectVal(); return false;">Set</button>
 						<?php } ?>
 					</td>
@@ -1228,8 +1228,8 @@ if (get_default_currency()) {
 			            <th>Billable Hours</th>
 			            <th>Internal Hours</th>
 			            <th>Non-Billable Hours</th>
-			            <th>Rate (<?php echo $quote_data['expect_worth_name']; ?>)</th>
-			            <th>Cost (<?php echo $quote_data['expect_worth_name']; ?>)</th>
+			            <th>Cost Per Hour(<?php echo $quote_data['expect_worth_name']; ?>)</th>
+			            <th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
 			        </tr>
 			    </table>
 				<div class="inner_timesheet ">

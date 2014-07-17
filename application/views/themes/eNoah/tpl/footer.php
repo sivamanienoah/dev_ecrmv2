@@ -22,12 +22,12 @@ $(function(){
 		}
 	});
   $('.pjt-search').css('color', '#777777').focus(function(){
-		if ($(this).val() == 'Project No, Project Title, Name or Company') {
+		if ($(this).val() == 'Project Title, Name or Company') {
 			$(this).val('').css('color', '#333333');
 		}
 	}).blur(function(){
 		if ($(this).val() == '') {
-			$(this).css('color', '#777777').val('Project No, Project Title, Name or Company');
+			$(this).css('color', '#777777').val('Project Title, Name or Company');
 		}
 	});
 })

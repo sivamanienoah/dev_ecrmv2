@@ -510,7 +510,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 				Project Search
 			</td>
 			<td>
-				<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project No, Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
+				<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
 			</td>
 			<td rowspan=2>
 				<div class="buttons">

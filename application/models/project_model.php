@@ -173,7 +173,7 @@ class Project_model extends crm_model
 					break;
 				}
 			}
-			if($keyword != 'Project No, Project Title, Name or Company' && !empty($keyword)){		
+			if($keyword != 'Project Title, Name or Company' && !empty($keyword)){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
 			}
