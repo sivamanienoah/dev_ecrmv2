@@ -1447,6 +1447,7 @@ if(viewPjt==1) {
 		}
 	}
 
+	/*
 	$('#advanceFilters_pjt').submit(function() {
 		$('#advance').hide();
 		$('#load').show();
@@ -1466,7 +1467,7 @@ if(viewPjt==1) {
 		});
 		return false;
 	});
-
+	
 	$('#pjt_search_form').submit(function() {	
 			var  keyword = $("#keywordpjt").val(); 
 			if(keyword == "Project Title, Name or Company")
@@ -1477,6 +1478,39 @@ if(viewPjt==1) {
 			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 			$('#advance_search_results_pjts').load(sturl);
 			return false;
+	});
+	*/
+	
+	$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
+		var pjtstage = $("#pjt_stage").val(); 
+		var pm_acc 	 = $("#pm_acc").val(); 
+		var cust 	 = $("#customer1").val(); 
+		var service  = $("#services").val(); 
+		var keyword  = $("#keywordpjt").val();
+		var datefilter  = $("#datefilter").val();
+		var from_date   = $("#from_date").val();
+		var to_date  	= $("#to_date").val();
+		if(keyword == "Project Title, Name or Company")
+		keyword = '';
+		
+		var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+		params[csrf_token_name] = csrf_hash_token; 
+		if($(this).attr("id") == 'advanceFilters_pjt'){
+			$('#advance').hide();
+			$('#load').show();
+		}
+		
+		$.ajax({
+			type: 'POST',
+			url: 'project/advance_filter_search_pjt',
+			data: params,
+			success: function(data) {
+				$("#advance_search_results_pjts" ).html(data);
+				$('#advance').show();
+				$('#load').hide();
+			}
+		});
+		return false;
 	});
 }
 
