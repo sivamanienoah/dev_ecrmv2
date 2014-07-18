@@ -1418,7 +1418,7 @@ if(viewPjt==1) {
 	var cust = $("#customer1").val(); 
 	var keyword = $("#keywordpjt").val(); 
 	//alert(keyword);
-	if(keyword == "Project No, Project Title, Name or Company")
+	if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
 
 	if (document.getElementById('advance_search_pjt'))
@@ -1454,7 +1454,7 @@ if(viewPjt==1) {
 		var pm_acc = $("#pm_acc").val(); 
 		var cust = $("#customer1").val(); 
 		var  keyword = $("#keywordpjt").val(); 
-		if(keyword == "Project No, Project Title, Name or Company")
+		if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
 		document.getElementById('advance_search_results_pjts').style.display = 'block';	
 		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
@@ -1469,7 +1469,7 @@ if(viewPjt==1) {
 
 	$('#pjt_search_form').submit(function() {	
 			var  keyword = $("#keywordpjt").val(); 
-			if(keyword == "Project No, Project Title, Name or Company")
+			if(keyword == "Project Title, Name or Company")
 			keyword = 'null';
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 
