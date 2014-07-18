@@ -50,7 +50,7 @@ class Project_model extends crm_model
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
-				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status =1 ");
+				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
 			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
@@ -134,7 +134,7 @@ class Project_model extends crm_model
 				$this->db->where("j.lead_status", 4);
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
-				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status !='0' ");
+				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status != 1 ");
 			}
 			if(!empty($customer)) {		
 				$this->db->where_in('j.custid_fk',$customer);		

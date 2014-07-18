@@ -1424,7 +1424,8 @@ if(viewPjt==1) {
 	if (document.getElementById('advance_search_pjt'))
 		document.getElementById('advance_search_pjt').style.display = 'none';	
 
-	var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	// var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
+	var sturl = "project/advance_filter_search_pjt/";
 	//alert(sturl);	
 	$('#advance_search_results_pjts').load(sturl);
 		
