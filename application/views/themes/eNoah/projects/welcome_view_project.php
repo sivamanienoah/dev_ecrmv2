@@ -526,7 +526,7 @@ if (get_default_currency()) {
 						</div>
 					</div>
 				<div style="color:red; margin:7px 0 0;" id="rec_paymentfadeout"></div>
-				<?php				
+				<?php
 				if ($quote_data['payment_terms'] == 0 || $quote_data['payment_terms'] == 1)
 				{
 				?>
