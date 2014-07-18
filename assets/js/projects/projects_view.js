@@ -30,7 +30,7 @@ function dtPjtTable() {
 	var service	 = $("#services").val(); 
 	var keyword	 = $("#keywordpjt").val(); 
 	//alert(keyword);
-	if(keyword == "Project No, Project Title, Name or Company")
+	if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
 
 	if (document.getElementById('advance_search_pjt'))
@@ -63,7 +63,7 @@ function dtPjtTable() {
 			var datefilter  = $("#datefilter").val();
 			var from_date   = $("#from_date").val();
 			var to_date  	= $("#to_date").val();
-			if(keyword == "Project No, Project Title, Name or Company")
+			if(keyword == "Project Title, Name or Company")
 			keyword = '';
 			
 			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
@@ -96,7 +96,7 @@ function dtPjtTable() {
 		var cust = $("#customer1").val(); 
 		var service = $("#services").val(); 
 		var keyword = $("#keywordpjt").val(); 
-		if(keyword == "Project No, Project Title, Name or Company")
+		if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
 		document.getElementById('ad_filter').style.display = 'block';
 		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+service+'/'+encodeURIComponent(keyword);
@@ -120,7 +120,7 @@ function dtPjtTable() {
 
 	$('#pjt_search_form').submit(function() {	
 			var  keyword = $("#keywordpjt").val(); 
-			if(keyword == "Project No, Project Title, Name or Company")
+			if(keyword == "Project Title, Name or Company")
 			keyword = 'null';
 			var pjtstage = $("#pjt_stage").val(); 
 			var pm_acc = $("#pm_acc").val(); 

@@ -522,7 +522,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 </form>
 <a class="choice-box" onclick="advanced_filter_pjt();" >
 	Advanced Filters
-	<img src="assets/img/advanced_filter.png" class="icon leads" style="width:62px; height:62px" />
+	<img src="assets/img/advanced_filter.png" class="icon leads" />
 </a>
 
 <div id="advance_search_pjt" style="float:left; width:100%;" >

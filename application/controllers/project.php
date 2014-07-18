@@ -64,7 +64,7 @@ class Project extends crm_controller {
 	public function advance_filter_search_pjt()
 	{
  		$inputData = real_escape_array($this->input->post());
- 		
+
 		$pjtstage 	= $inputData['pjtstage'];
 		$pm_acc   	= $inputData['pm_acc'];
 		$cust     	= $inputData['cust'];
@@ -82,7 +82,6 @@ class Project extends crm_controller {
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
