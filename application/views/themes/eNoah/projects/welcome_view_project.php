@@ -205,7 +205,7 @@ if (get_default_currency()) {
 						<input type="hidden" class="hiddenUrl"/>
 						</h5>
 					</div>					
-					<?php if ($chge_access == 1) { ?>
+					<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 						<div class="buttons">
 							<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectId(); return false;">
 								Set Project ID
@@ -314,7 +314,7 @@ if (get_default_currency()) {
                         </select>
 						</h5>
 					</div>					
-					<?php if ($chge_access == 1) { ?>
+					<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
 						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 124px;" onclick="setProjectType(); return false;">
 							Set Project Type
@@ -336,7 +336,7 @@ if (get_default_currency()) {
 						</select>
 						</h5>
 					</div>					
-					<?php if ($chge_access == 1) { ?>
+					<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
 						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 60px;" onclick="setProjectLead(); return false;">
 							Set PM
@@ -382,7 +382,7 @@ if (get_default_currency()) {
 					}
 					?>
 					<?php 
-						if ($chge_access == 1) { 
+						if($chge_access == 1 && $quote_data['pjt_status'] != 2) {
 					?>
 						<div class="buttons" style="clear:both;">
 							<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>

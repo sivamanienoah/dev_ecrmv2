@@ -897,7 +897,14 @@
 			success: function(data) {
 				if (data.error == false) {
 					$('#resmsg').show();
-					$('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
+					// $('#resmsg').html("<span class='ajx_success_msg'>Status Updated.</span>");
+					setTimeout(function(){
+						$.blockUI({
+							message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+							css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+						});
+						window.location.reload(true);
+					},500);
 					$.unblockUI();
 				} else {
 					$('#resmsg').show();
