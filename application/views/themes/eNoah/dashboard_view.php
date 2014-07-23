@@ -499,7 +499,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	
 <?php if(($this->session->userdata('viewPjt')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
 <h2 style="padding-bottom:4px; border-bottom:1px solid #ccc; clear:left; margin-bottom:15px;">PROJECTS - LISTS</h2>
-<h4><div id="project_note">Default Display - Project In Progress Only</div></h4>
+<div id="project_note" class="leadstg_note" style="width: 95%;">By default displays only the project(s) in "In Progress" status</div>
 <form name="pjt_search_form" id="pjt_search_form" action="" method="post" style="float:right;">
 
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />

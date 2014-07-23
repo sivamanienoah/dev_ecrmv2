@@ -37,7 +37,7 @@ if (get_default_currency()) {
 		</form>
 		
 	    <h2><?php echo $page_heading ?></h2>
-	    <h4><div id="project_note">Default Display - Project In Progress Only</div></h4>
+	    <div id="project_note" class="leadstg_note" style="width: 95%;">By default displays only the project(s) in "In Progress" status</div>
 		
 		<a class="choice-box" onclick="advanced_filter_pjt();">
 			Advanced Filters
