@@ -267,31 +267,31 @@ function startQuote() {
         err.push('A valid customer needs to be selected');
     }
     if ($.trim($('#lead_title').val()) == '') {
-        err.push('Job title is required');
+        err.push('Lead title is required');
     }
     if ($('#lead_service').val() == 'not_select') {
-        err.push('Service type must be selected');
+        err.push('Service Requirement must be selected');
     }
 	 if ($('#lead_source').val() == 'not_select') {
-        err.push('Lead Source type must be selected');
+        err.push('Lead Source must be selected');
     }
 	 if ($('#lead_assign').val() == 'not_select') {
-        err.push('Lead Assigned to type must be selected');
+        err.push('Lead Assigned to must be selected');
     }
 	 if ($('#job_division').val() == 'not_select') {
-        err.push('Job Division type must be selected');
-    }
-	 if ($('#lead_indicator').val() == 'not_select') {
-        err.push('Lead Indicator type must be selected');
+        err.push('Division must be selected');
     }
 	if ($('#expect_worth').val() == 'not_select') {
-        err.push('Expected Worth Amount Curreny type must be selected');
+        err.push('Expected Worth Curreny must be selected');
     }
 	if ($.trim($('#expect_worth_amount').val()) == '') {
         err.push('Expected Worth Amount is required');
     }
 	if ($.trim($('#proposal_expected_date').val()) == '') {
         err.push('Proposal Expected Date is required');
+    }
+	if ($('#lead_indicator').val() == 'not_select') {
+        err.push('Lead Indicator must be selected');
     }
     if (err.length > 0) {
         // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
@@ -516,23 +516,22 @@ function cancelDelEdit() {
 function editQuoteDetails() {
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
-        err.push('Job title is required');
+        err.push('Lead title is required');
     }
     if ($('#job_category_edit').val() == 'not_select') {
-        err.push('Service type must be selected');
+        err.push('Service Requirement must be selected');
     }
 	 if ($('#lead_source_edit').val() == 'not_select') {
-        err.push('Lead Source type must be selected');
+        err.push('Lead Source must be selected');
     }
 	 if ($('#lead_assign_edit').val() == 'not_select') {
-        err.push('Lead Assigned to type must be selected');
+        err.push('Lead Assigned to must be selected');
     }
 	if ($('#job_division_edit').val() == 'not_select') {
-        err.push('Division type must be selected');
+        err.push('Division must be selected');
     }
-
 	if ($('#expect_worth_edit').val() == 'not_select') {
-        err.push('Expected worth amount Currency type must be selected');
+        err.push('Expected Worth Currency must be selected');
     }
 
 	var act_worth = $.trim($('#actual_worth').val());
@@ -542,7 +541,7 @@ function editQuoteDetails() {
 	}
 
 	if ( ($.trim($('#lead_status').val()) == 4) && (act_worth <= 0) ) {
-		err.push('Actual worth amount must not be empty or greater than zero');
+		err.push('Actual worth amount must not be empty and greater than zero');
     }
 
     if (err.length > 0) {
