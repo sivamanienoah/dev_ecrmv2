@@ -189,6 +189,7 @@ class Dashboard extends crm_controller {
 		$data['lead_owner']  = $leadowner->result_array(); 
 		$data['regions'] 	 = $this->regionsettings_model->region_list();
 		$data['serv_requ'] 	 = $this->dashboard_model->get_serv_req();
+		$data['services']    = $this->dashboard_model->get_serv_req();
 		$data['lead_sourc']  = $this->dashboard_model->get_lead_sources();
 		$data['pm_accounts'] = array();
 		//Here "WHERE" condition used for Fetching the Project Managers.

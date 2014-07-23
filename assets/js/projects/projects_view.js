@@ -38,6 +38,7 @@ function dtPjtTable() {
 
 		function advanced_filter_pjt(){
 			$('#advance_search_pjt').slideToggle('slow');
+			$('#project_note').slideToggle('slow');
 			var keyword = $("#keywordpjt").val();
 			var status  = document.getElementById('advance_search_pjt').style.display;
 			

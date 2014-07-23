@@ -2,7 +2,7 @@
  *@Dashboard Jquery
 */
 
-if(viewlead==1) { 
+if(viewlead==1) {
 	$(document).ready(function() {
 		if (dashboard_s1!='') {
 			plot1 = $.jqplot('funnel1', [dashboard_s1], {
@@ -1411,7 +1411,7 @@ if(viewlead==1) {
 	/* dashboard excel report ends here */
 }
 
-if(viewPjt==1) { 
+if(viewPjt==1) {
 	//For Projects
 	var pjtstage = $("#pjt_stage").val(); 
 	var pm_acc = $("#pm_acc").val(); 
@@ -1431,6 +1431,7 @@ if(viewPjt==1) {
 		
 	function advanced_filter_pjt() {
 		$('#advance_search_pjt').slideToggle('slow');
+		$('#project_note').slideToggle('slow');
 		var  keyword = $("#keywordpjt").val();
 		var status = document.getElementById('advance_search_pjt').style.display;
 		
@@ -1512,6 +1513,19 @@ if(viewPjt==1) {
 			}
 		});
 		return false;
+	});
+	
+	$(function() {
+		// $('#from_date, #to_date').datepicker({dateFormat: 'dd-mm-yy'});
+		$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
+			if($('#to_date').val!='')
+			{
+				$('#to_date').val('');
+			}
+			var return_date = $('#from_date').val();
+			$('#to_date').datepicker("option", "minDate", return_date);
+		}});
+		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	});
 }
 

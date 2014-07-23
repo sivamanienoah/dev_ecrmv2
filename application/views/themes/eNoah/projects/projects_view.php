@@ -37,6 +37,7 @@ if (get_default_currency()) {
 		</form>
 		
 	    <h2><?php echo $page_heading ?></h2>
+	    <h4><div id="project_note">Default Display - Project In Progress Only</div></h4>
 		
 		<a class="choice-box" onclick="advanced_filter_pjt();">
 			Advanced Filters

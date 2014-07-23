@@ -201,7 +201,17 @@ if (get_default_currency()) {
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-id">Project ID</label>&nbsp;&nbsp;
-						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($chge_access != 1) { ?>readonly<?php } ?> />
+						<?php 
+							$readonly_status = false;
+							
+							if($chge_access != 1)
+							$readonly_status = true;
+							if($quote_data['pjt_status'] == 2)
+							$readonly_status = true;
+						?>
+						
+						
+						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
 						<input type="hidden" class="hiddenUrl"/>
 						</h5>
 					</div>					
@@ -247,9 +257,9 @@ if (get_default_currency()) {
 				<h6 style="float: left;margin: 4px 10px 0 0">RAG Status</h6>
 				
 				<div class="rag-status">
-					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
-					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
-					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
+					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
+					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<span id="errmsg_rag_status" style="color:red"></span>
 				</div>
 				
@@ -306,7 +316,7 @@ if (get_default_currency()) {
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Type</label>&nbsp;&nbsp;
-						<select name="project_type" id="project_type" class="textfield" style="width:138px;" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+						<select name="project_type" id="project_type" class="textfield" style="width:138px;" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 							<option value="">Select</option>
 							<option value="1" <?php if($quote_data['project_type'] == 1) echo 'selected="selected"'; ?>>Fixed</option>
 							<option value="2" <?php if($quote_data['project_type'] == 2) echo 'selected="selected"'; ?>>Internal</option>
@@ -330,7 +340,7 @@ if (get_default_currency()) {
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Manager</label>&nbsp;&nbsp;
-						<select name="project_lead" id="project_lead" class="textfield" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+						<select name="project_lead" id="project_lead" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 							<option value="0">Please Select</option>
 							<?php echo $pm_options ?>
 						</select>
