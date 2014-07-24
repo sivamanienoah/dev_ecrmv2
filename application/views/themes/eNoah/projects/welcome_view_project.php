@@ -459,7 +459,7 @@ if (get_default_currency()) {
 				<tr>
 					<th></th>
 					<th>Budgeted</th>
-					<th>Actuals</th>
+					<th>Actual</th>
 					<th>Variance</th>
 				</tr>
 				<tr>					
