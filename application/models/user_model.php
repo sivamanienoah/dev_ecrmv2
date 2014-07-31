@@ -500,7 +500,8 @@ class User_model extends crm_model {
 	*/
 	public function check_user_status($data=array()) {
 		$id = $data['data'];
-		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0"; 
+		// $where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0"; 
+		$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")"; 
 		$this->db->where($where);
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		$res = array();
