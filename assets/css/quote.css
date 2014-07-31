@@ -164,6 +164,7 @@ form h3 {
 }
 .log-container .log .desc {
 	padding:4px;
+	word-break:break-all;
 }
 .comments-log-container .log .desc {
 	padding:4px;
