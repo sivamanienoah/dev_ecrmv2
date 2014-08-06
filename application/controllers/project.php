@@ -1665,6 +1665,10 @@ class Project extends crm_controller {
 		// echo "<pre>"; print_r($data_log); exit;
 		
 		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
+		$ins['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		
+		$break = 120;
+		$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
         if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
@@ -1730,7 +1734,7 @@ class Project extends crm_controller {
 					
 					if (isset($data_log['email_to_customer']) && isset($data_log['client_email_address']) && isset($data_log['client_full_name']))
 					{
-						// we're emailing the client, so remove the VCS log  prefix
+						// we're emailing the client, so remove the eNoah log prefix
 						$log_subject = preg_replace('/^eNoah Notification \- /', '', $log_subject);
 						
 						for ($cei = 1; $cei < 5; $cei ++)
@@ -1806,7 +1810,7 @@ class Project extends crm_controller {
 				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
 				
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = $data_log['log_content'] . $successful;
+				$ins['log_content'] = $ins['log_content'] . $successful;
 				
 				$stick_class = '';
 				if (isset($data_log['log_stickie']))

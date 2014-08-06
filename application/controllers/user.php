@@ -77,7 +77,8 @@ class User extends crm_controller {
 		
 		//for Inactive Role
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-			$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0";
+			// $where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0";
+			$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")";
 			$this->db->where($where);
 			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		}

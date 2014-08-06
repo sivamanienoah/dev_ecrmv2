@@ -1395,6 +1395,11 @@ class Welcome extends crm_controller {
 	{
 		$data_log = real_escape_array($this->input->post());
 		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		$ins['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		
+		$break = 120;
+		$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+
 		$res = array();
 		$json = array();
         if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
@@ -1498,7 +1503,6 @@ class Welcome extends crm_controller {
 					$param['template_name'] = "Lead Notificatiion Message";
 					$param['subject'] = $log_subject;
 					
-					
 					if($this->email_template_model->sent_email($param))
 					{
 						$successful .= trim($received_by, ', ');
@@ -1527,7 +1531,7 @@ class Welcome extends crm_controller {
 				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['userid'];
 				
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = $data_log['log_content'] . $successful;
+				$ins['log_content'] = $ins['log_content'] . $successful;
 				
 				$stick_class = '';
 				if (isset($data_log['log_stickie']))

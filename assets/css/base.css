@@ -1096,7 +1096,7 @@ width:100%; background:#fff;}
     padding: 3px 10px;
     text-decoration: none;
 	position: relative;
-	z-index: 1000;
+	z-index: 1;
 	margin-top: 5px;
 }
 .export-btn:hover{

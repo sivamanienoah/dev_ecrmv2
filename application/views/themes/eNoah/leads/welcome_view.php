@@ -541,7 +541,7 @@ function editQuoteDetails(arg) {
 	}
 
 	if ( ($.trim($('#lead_status').val()) == 4) && (act_worth <= 0) ) {
-		err.push('Actual worth amount must not be empty and greater than zero');
+		err.push('Actual worth amount must not be empty and it must be greater than zero');
     }
 
     if (err.length > 0) {
@@ -1104,15 +1104,15 @@ h3 .small {
 							<?php } ?>
 						
 						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
-						<div style="width:170px;">
+						<div style="width:300px;">
 						<div class="buttons clearfix pull-left">
 							<button type="submit" class="positive" onclick="editQuoteDetails('save'); return false;">Save</button>
 						</div>
-						<div class="buttons clearfix pull-right">
+						<div class="buttons clearfix pull-left" style="padding: 0px 10px;">
 							<button type="submit" class="positive" onclick="editQuoteDetails('view'); return false;">Save & View</button>
 						</div>
 						<?php if($quote_data['lead_status'] == 4) { ?>
-							<div class="buttons clearfix pull-right">
+							<div class="buttons clearfix pull-left">
 								<button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button>
 							</div>
 						<?php } ?>
