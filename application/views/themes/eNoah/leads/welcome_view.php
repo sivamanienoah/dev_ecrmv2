@@ -513,7 +513,7 @@ function cancelDelEdit() {
     $.unblockUI();
 }
 
-function editQuoteDetails() {
+function editQuoteDetails(arg) {
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
         err.push('Lead title is required');
@@ -573,7 +573,9 @@ function editQuoteDetails() {
                         // good to go
                         $('.q-title').html(res.lead_title);
                         $('.q-service-type span').html(lead_services[res.lead_service]);
-                        
+                        if(arg == 'view') {
+							window.location.href = site_base_url+"welcome/view_quote" + "/" + curr_job_id;
+						}
                     } else {
                         alert(res.errormsg);
                     }
@@ -1104,7 +1106,10 @@ h3 .small {
 						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
 						<div style="width:170px;">
 						<div class="buttons clearfix pull-left">
-							<button type="submit" class="positive" onclick="editQuoteDetails(); return false;">Save</button>
+							<button type="submit" class="positive" onclick="editQuoteDetails('save'); return false;">Save</button>
+						</div>
+						<div class="buttons clearfix pull-right">
+							<button type="submit" class="positive" onclick="editQuoteDetails('view'); return false;">Save & View</button>
 						</div>
 						<?php if($quote_data['lead_status'] == 4) { ?>
 							<div class="buttons clearfix pull-right">
