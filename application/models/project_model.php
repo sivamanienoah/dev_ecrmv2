@@ -508,7 +508,7 @@ class Project_model extends crm_model
 		LEFT JOIN ".$timesheet_db->dbprefix('times')." AS t ON t.uid = u.username
 		LEFT JOIN ".$timesheet_db->dbprefix('user_cost')." as ct ON ct.employee_id = u.emp_id AND ct.month=MONTH(t.start_time) AND ct.year=YEAR(t.start_time) 
 		LEFT JOIN ".$timesheet_db->dbprefix('project')." as p ON p.proj_id = t.proj_id
-		WHERE ((t.start_time > '".$start_date."') AND (t.end_time <= NOW())) AND u.status='ACTIVE' AND p.project_code = '".$pjt_code."'
+		WHERE ((t.start_time >= '".$start_date."') AND (t.end_time <= NOW())) AND u.status='ACTIVE' AND p.project_code = '".$pjt_code."'
 		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
 		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
 		
