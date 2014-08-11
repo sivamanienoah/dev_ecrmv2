@@ -517,6 +517,34 @@ class Project_model extends crm_model
 		return $query->result_array();
 	}
 	
+	/*
+	 *@method get_timesheet_users
+	 *@param project_code
+	 */
+	public function get_timesheet_users($pjt_code)
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);
+		
+		$users = array();
+		
+		$sql = "SELECT assgn.username 
+		FROM ".$timesheet_db->dbprefix('assignments')." as assgn 
+		JOIN ".$timesheet_db->dbprefix('project')." as pj ON pj.proj_id = assgn.proj_id 
+		WHERE pj.project_code = '".$pjt_code."' 
+		ORDER BY assgn.username";
+		
+		// echo $sql; exit;
+		$query = $timesheet_db->query($sql);
+		$res = $query->result_array();
+		
+		if(count($res) > 0) {
+			foreach($res as $row){
+				$users[] = $row['username'];
+			}
+		}
+		return $users;
+	}
+	
 	/* public function get_actual_project_hour($pjt_code, $lead_id)
 	{
 		if(!empty($lead_id))

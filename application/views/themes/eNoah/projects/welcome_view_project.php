@@ -26,7 +26,8 @@
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
 
-<?php 
+<?php
+
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
 	$default_currency = get_default_currency();
@@ -358,13 +359,9 @@ if (get_default_currency()) {
 				</div>	
 			</form>
 			
-			
-			<form name="contractor-assign">
-				
+			<!--form name="contractor-assign">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
 				<h5 class="project-lead-label">Assign Project Team</h5>
-				<!--p><a href="javascript:void(0);" id="show-btn">Show</a></p-->
 				<div id="show-con">
 					<?php if ($chge_access == 1) { ?>
 						<div class="list-contractors">
@@ -402,7 +399,19 @@ if (get_default_currency()) {
 					} 
 					?>
 				</div>
-			</form>
+			</form-->
+			
+			<!--List the project assigned members from the timesheet-->
+			<h6>Project Team Members</h6>
+			<div class="team_list">
+				<?php
+					if(count($timesheetAssignedUsers>0)) {
+						foreach($timesheetAssignedUsers as $project_assignees) {
+							echo ucfirst($project_assignees) . "<br />";
+						}
+					}
+				?>
+			</div>
 			
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">
 				<tr>

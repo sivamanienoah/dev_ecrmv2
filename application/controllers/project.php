@@ -184,8 +184,10 @@ class Project extends crm_controller {
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			
-			if(!empty($data['quote_data']['pjt_id']))
-			$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
+			if(!empty($data['quote_data']['pjt_id'])) {
+				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
+				$data['timesheetAssignedUsers'] = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
+			}
 			
 			$rates = $this->get_currency_rates();
 

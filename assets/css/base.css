@@ -1777,3 +1777,9 @@ button.positive, .pjt-btn a.positive, input.positive{
     margin:0;
     padding: 2px 7px;
 }
+.team_list {
+    margin: 12px 0 0 15px;
+    max-height: 100px;
+    overflow-y: scroll;
+    width: 150px;
+}
