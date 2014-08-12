@@ -981,13 +981,6 @@
 	
 	//Removing the Project Dates
 	function rmProjectStatusDate(date_type) {
-		$.blockUI({
-			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-		});
-		
-		$("#dates_errmsg").empty();
-		
 		switch(date_type) {
 			case 'start':
 				var txtbx = 'project-start-date';
@@ -1000,7 +993,18 @@
 			break;
 			default:
 				var txtbx = 'actual-project-due-date';
-		} 
+		}
+		if($('#'+txtbx).val() == '') {
+			return false;
+		}
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
+		$("#dates_errmsg").empty();
+		
+		
 		
 		var params 				= {'lead_id':curr_job_id, 'date_type':date_type};
 		params[csrf_token_name] = csrf_hash_token;
