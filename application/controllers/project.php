@@ -103,7 +103,7 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
-		
+	
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
@@ -2036,6 +2036,25 @@ HDOC;
 		{
 			$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 			$updt = array('rag_status'=>$rag_status);
+			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+		}
+		echo json_encode($data);
+	}
+	
+	/*
+	 *@method set_bill_type
+	 *@set the bill type for the Project
+	 */
+	public function set_bill_type()
+	{
+		$updt_data = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$billing_type = $updt_data['billing_type'];
+		if ($updt_data['billing_type'] == '') {
+			$data['error'] = 'Please Check Billing Type';
+		} else {
+			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
+			$updt 	   = array('billing_type'=>$billing_type);
 			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
 		}
 		echo json_encode($data);

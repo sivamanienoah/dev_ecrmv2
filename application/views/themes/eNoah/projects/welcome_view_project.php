@@ -256,65 +256,54 @@ if (get_default_currency()) {
 			
 			<div class="clrboth">
 				<h6 class="pjt_data">RAG Status</h6>
-				
 				<div class="rag-status">
 					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<span id="errmsg_rag_status" style="color:red"></span>
 				</div>
-				
 			</div>
 			
 			<!-- Project Progress Thermometer - Start -->
 			<div style="margin:10px 0; ">
-			<h6 class="status-title">Project Completion Status &nbsp; <span class="small" style="color:#a51e04" >[ Current Status - <em><strong>0</strong>% Completed </em> ]</span></h6>
-
-			<!--p class="status-bar">
-				<span class="bar"></span>
-				<?php //if ($chge_access == 1) { ?>
-					<!--span class="over"></span>
-					<a href="#" class="p1" rel="1"></a>
-					<a href="#" class="p2" rel="2"></a>
-					<a href="#" class="p3" rel="3"></a>
-					<a href="#" class="p4" rel="4"></a>
-					<a href="#" class="p5" rel="5"></a>
-					<a href="#" class="p6" rel="6"></a>
-					<a href="#" class="p7" rel="7"></a>
-					<a href="#" class="p8" rel="8"></a>
-					<a href="#" class="p9" rel="9"></a>
-					<a href="#" class="p10" rel="10"></a-->
-				<?php //} ?>
-			<!--/p-->
-			<div class="meter-container">
-				<div class="track-meter"></div>
-				<div class="track-progress-left"></div>
-				<div class="progress-cont">
-					<div class="track-progress"></div>
+				<h6 class="status-title">Project Completion Status &nbsp; <span class="small" style="color:#a51e04" >[ Current Status - <em><strong>0</strong>% Completed </em> ]</span></h6>
+				<div class="meter-container">
+					<div class="track-meter"></div>
+					<div class="track-progress-left"></div>
+					<div class="progress-cont">
+						<div class="track-progress"></div>
+					</div>
+					<div class="track"></div>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
+						<tbody>
+							<tr>
+								<td>10</td>
+								<td>20</td>
+								<td>30</td>
+								<td>40</td>
+								<td>50</td>
+								<td>60</td>
+								<td>70</td>
+								<td>80</td>
+								<td>90</td>
+								<td>100</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-				<div class="track"></div>
-				<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl-scale">
-					<tbody>
-						<tr>
-							<td>10</td>
-							<td>20</td>
-							<td>30</td>
-							<td>40</td>
-							<td>50</td>
-							<td>60</td>
-							<td>70</td>
-							<td>80</td>
-							<td>90</td>
-							<td>100</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 			</div>
 			<!-- Project Progress Thermometer - End -->
 			
-			<!--List the project lead from the timesheet-->
-
+			<div class="clrboth">
+				<h6 class="pjt_data">Billing Type</h6>
+				<div class="pjt-resultclass">
+					<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
+					<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
+					<span id="errmsg_bill_type" style="color:red"></span>
+				</div>
+			</div>
+			
+			<!--List the project Type from the timesheet-->
 			<div class="clrboth">
 				<h6 class="pjt_data">Project Type</h6>
 					<div class="pjt-resultclass">

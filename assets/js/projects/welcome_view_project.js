@@ -1653,6 +1653,7 @@
 			$('#errmsg_project_type').fadeOut();
 			$('#pjt_id_errormsg, .checkUser, #id-existsval').fadeOut();
 			$('#msErrNotifyFadeout').fadeOut();
+			$('#errmsg_bill_type').fadeOut();
 		}
 
 		function paymentReceivedEdit(pdid) 
@@ -2109,6 +2110,39 @@
 					},"json"
 				);
 			}
+		});
+		
+		$( ".bill_type" ).change(function() {
+			$("#errmsg_bill_type").hide();
+			var billing_type_val = $(this).val();
+			if (billing_type_val=='') {
+				$("#errmsg_bill_type").text('Please Check Bill Type');
+				$("#errmsg_bill_type").show();
+				return false;
+			} else {
+				var params 				= {'lead_id':curr_job_id, 'billing_type':billing_type_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					site_base_url+'project/set_bill_type/',
+					params,
+					function(_data) {
+						if (typeof(_data) == 'object') {
+							if (_data.error == false) {
+								$('#errmsg_bill_type').html("<span class='ajx_success_msg'>Status Updated...</span>");
+							} else {
+								$("#errmsg_bill_type").text(data.error);
+								$("#errmsg_bill_type").show();
+							}
+						} else {
+							$("#errmsg_bill_type").text('Updating faild, please try again.');
+							$("#errmsg_bill_type").show();
+						}
+					},"json"
+				);
+			}
+			$("#errmsg_bill_type").show();
+			setTimeout('timerfadeout()', 2000);
 		});
 		
 	});
