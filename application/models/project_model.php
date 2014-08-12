@@ -223,12 +223,12 @@ class Project_model extends crm_model
     }
 	
 	//get the project assigned members
-	function get_contract_jobs($id) 
+	/* function get_contract_jobs($id) 
 	{
     	$this->db->where('jobid_fk', $id);
 		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
 		return $cq->result_array();
-    }
+    } */
 	
 	public function get_job_files($f_dir, $fcpath, $lead_details)
     {
@@ -518,6 +518,42 @@ class Project_model extends crm_model
 	}
 	
 	/*
+	 *@method get_timesheet_project_type
+	 *@param project_code
+	 */
+	public function get_timesheet_project_type($pjt_code)
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);
+	
+		$sql = "SELECT pj.project_type_id, pjtype.project_type_name
+		FROM ".$timesheet_db->dbprefix('project')." as pj 
+		JOIN ".$timesheet_db->dbprefix('project_types')." as pjtype ON pjtype.project_type_id = pj.project_type_id 
+		WHERE pj.project_code = '".$pjt_code."' ";
+		
+		// echo $sql; exit;
+		$query = $timesheet_db->query($sql);
+		return $query->row_array();
+	}
+	
+	/*
+	 *@method get_timesheet_project_lead
+	 *@param project_code
+	 */
+	public function get_timesheet_project_lead($pjt_code)
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);
+	
+		$sql = "SELECT CONCAT(us.first_name,' ',us.last_name) as project_lead, pj.proj_leader 
+		FROM ".$timesheet_db->dbprefix('project')." as pj 
+		JOIN ".$timesheet_db->dbprefix('user')." as us ON us.username = pj.proj_leader 
+		WHERE pj.project_code = '".$pjt_code."' ";
+		
+		// echo $sql; exit;
+		$query = $timesheet_db->query($sql);
+		return $query->row_array();
+	}
+	
+	/*
 	 *@method get_timesheet_users
 	 *@param project_code
 	 */
@@ -527,10 +563,11 @@ class Project_model extends crm_model
 		
 		$users = array();
 		
-		$sql = "SELECT assgn.username 
+		$sql = "SELECT us.first_name, us.last_name, assgn.username 
 		FROM ".$timesheet_db->dbprefix('assignments')." as assgn 
 		JOIN ".$timesheet_db->dbprefix('project')." as pj ON pj.proj_id = assgn.proj_id 
-		WHERE pj.project_code = '".$pjt_code."' 
+		JOIN ".$timesheet_db->dbprefix('user')." as us ON us.username = assgn.username 
+		WHERE pj.project_code = '".$pjt_code."' AND assgn.status = 0
 		ORDER BY assgn.username";
 		
 		// echo $sql; exit;
@@ -539,7 +576,7 @@ class Project_model extends crm_model
 		
 		if(count($res) > 0) {
 			foreach($res as $row){
-				$users[] = $row['username'];
+				$users[] = $row['first_name'] . ' ' .$row['last_name'];
 			}
 		}
 		return $users;

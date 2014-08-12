@@ -1675,9 +1675,9 @@ div#green-radio{
 	width:18px;
 	height:18px;
 }
-.rag-status{
+.rag-status {
 	float: left;
-	padding: 0 50px;
+	padding: 0 15px;
 }
 .test-block label{
 	width: 115px;
@@ -1778,8 +1778,20 @@ button.positive, .pjt-btn a.positive, input.positive{
     padding: 2px 7px;
 }
 .team_list {
-    margin: 12px 0 0 15px;
     max-height: 100px;
     overflow-y: scroll;
     width: 150px;
+}
+.pjt_data {
+    float: left;
+	margin: 2px 10px 0 0;
+	width: 132px;
+}
+.pjt-resultclass{
+	float: left;
+	padding: 2px 15px 16px;
+}
+.clrboth {
+	clear: both;
+    overflow: hidden;
 }

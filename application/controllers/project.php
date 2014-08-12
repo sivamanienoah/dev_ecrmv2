@@ -107,12 +107,16 @@ class Project extends crm_controller {
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
-			$temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
+			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 			
-			$data['assigned_contractors'] = array();
-			foreach ($temp_cont as $tc) {
+			// $data['assigned_contractors']   = array();
+			$data['timesheetProjectType']   = array();
+			$data['timesheetProjectLead']   = array();
+			$data['timesheetAssignedUsers'] = array();
+
+			/* foreach ($temp_cont as $tc) {
 				$data['assigned_contractors'][] = $tc['userid_fk'];
-			}
+			} */
 			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$logViewStatus = $this->project_model->updt_log_view_status($id, $log_view_status);
@@ -186,6 +190,8 @@ class Project extends crm_controller {
 			
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
+				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
+				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$data['timesheetAssignedUsers'] = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
 			}
 			

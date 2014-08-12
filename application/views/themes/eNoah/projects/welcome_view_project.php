@@ -254,8 +254,8 @@ if (get_default_currency()) {
 				</div>	
 			</form>
 			
-			<div style="overflow: hidden; clear: both">
-				<h6 style="float: left;margin: 4px 10px 0 0">RAG Status</h6>
+			<div class="clrboth">
+				<h6 class="pjt_data">RAG Status</h6>
 				
 				<div class="rag-status">
 					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
@@ -313,15 +313,27 @@ if (get_default_currency()) {
 			</div>
 			<!-- Project Progress Thermometer - End -->
 			
-			<form>
+			<!--List the project lead from the timesheet-->
+
+			<div class="clrboth">
+				<h6 class="pjt_data">Project Type</h6>
+					<div class="pjt-resultclass">
+					<?php
+						if(count($timesheetProjectType>0)) {
+							echo $timesheetProjectType['project_type_name'];
+						}
+					?>
+					</div>
+			</div>
+			<!--form>
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Type</label>&nbsp;&nbsp;
 						<select name="project_type" id="project_type" class="textfield" style="width:138px;" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 							<option value="">Select</option>
-							<option value="1" <?php if($quote_data['project_type'] == 1) echo 'selected="selected"'; ?>>Fixed</option>
-							<option value="2" <?php if($quote_data['project_type'] == 2) echo 'selected="selected"'; ?>>Internal</option>
-							<option value="3" <?php if($quote_data['project_type'] == 3) echo 'selected="selected"'; ?>>T&amp;M</option>
+							<option value="1" <?php #if($quote_data['project_type'] == 1) echo 'selected="selected"'; ?>>Fixed</option>
+							<option value="2" <?php #if($quote_data['project_type'] == 2) echo 'selected="selected"'; ?>>Internal</option>
+							<option value="3" <?php #if($quote_data['project_type'] == 3) echo 'selected="selected"'; ?>>T&amp;M</option>
                         </select>
 						</h5>
 					</div>					
@@ -334,16 +346,16 @@ if (get_default_currency()) {
 					</div>
 					<?php } ?>
 				</div>	
-			</form>
+			</form-->
 			
 			<?php require (theme_url().'/tpl/user_accounts_options.php'); ?>
-			<form>
+			<!--form>
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Manager</label>&nbsp;&nbsp;
 						<select name="project_lead" id="project_lead" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 							<option value="0">Please Select</option>
-							<?php echo $pm_options ?>
+							<?php //echo $pm_options ?>
 						</select>
 						</h5>
 					</div>					
@@ -357,7 +369,19 @@ if (get_default_currency()) {
 					</div>
 					<?php } ?>
 				</div>	
-			</form>
+			</form-->
+			
+			<!--List the project lead from the timesheet-->
+			<div class="clrboth">
+				<h6 class="pjt_data">Project Manager</h6>
+					<div class="pjt-resultclass">
+					<?php
+						if(count($timesheetProjectLead>0)) {
+							echo $timesheetProjectLead['project_lead'];
+						}
+					?>
+					</div>
+			</div>
 			
 			<!--form name="contractor-assign">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -396,21 +420,23 @@ if (get_default_currency()) {
 							<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
 						</div>
 					<?php 
-					} 
+					}
 					?>
 				</div>
 			</form-->
 			
 			<!--List the project assigned members from the timesheet-->
-			<h6>Project Team Members</h6>
-			<div class="team_list">
-				<?php
-					if(count($timesheetAssignedUsers>0)) {
-						foreach($timesheetAssignedUsers as $project_assignees) {
-							echo ucfirst($project_assignees) . "<br />";
+			<div class="clrboth">
+				<h6 class="pjt_data">Project Team Members</h6>
+				<div class="team_list pjt-resultclass">
+					<?php
+						if(count($timesheetAssignedUsers>0)) {
+							foreach($timesheetAssignedUsers as $project_assignees) {
+								echo ucfirst($project_assignees) . "<br />";
+							}
 						}
-					}
-				?>
+					?>
+				</div>
 			</div>
 			
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">
