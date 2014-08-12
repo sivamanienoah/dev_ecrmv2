@@ -432,7 +432,7 @@ if (get_default_currency()) {
 					<?php
 						if(count($timesheetAssignedUsers>0)) {
 							foreach($timesheetAssignedUsers as $project_assignees) {
-								echo ucfirst($project_assignees) . "<br />";
+								echo $project_assignees . "<br />";
 							}
 						}
 					?>
