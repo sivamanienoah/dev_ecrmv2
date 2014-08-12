@@ -961,7 +961,7 @@
 						eval ('var data = ' + _data);
 						if (typeof(data) == 'object') {
 							if (data.error == false) {
-								$("#dates_errmsg").text('Saved Successfully...');
+								$('#dates_errmsg').html("<span class='ajx_success_msg'>Saved Successfully...</span>");
 							} else {
 								$("#dates_errmsg").text(data.error);
 							}
@@ -1017,7 +1017,7 @@
 					eval ('var data = ' + _data);
 					if (typeof(data) == 'object') {
 						if (data.error == false) {
-							$("#dates_errmsg").text('Updated Successfully...');
+							$('#dates_errmsg').html("<span class='ajx_success_msg'>Updated Successfully...</span>");
 							$("#"+txtbx).val("");
 						} else {
 							$("#dates_errmsg").text(data.error);
@@ -1085,7 +1085,7 @@
 							if (data.error == false) {
 								// $('h6.actual-project-' + d_class + '-label span').text(date_val);
 								// $('.actual-project-' + d_class + '-change:visible').hide(200);
-								$("#dates_errmsg").text('Saved Successfully...');
+								$('#dates_errmsg').html("<span class='ajx_success_msg'>Saved Successfully...</span>");
 							} else {
 								$("#dates_errmsg").text(data.error);
 								$('#' + type).val("");
