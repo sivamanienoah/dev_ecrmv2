@@ -1769,7 +1769,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 }
 .pjt-resultclass{
 	float: left;
-	padding: 2px 15px 16px;
+	padding: 2px 15px 6px;
 }
 .clrboth {
 	clear: both;
