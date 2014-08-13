@@ -1080,7 +1080,6 @@ h3 .small {
 							</select>
 							<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
 							<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
-							<input type="hidden" name="is_client" id="is_client" value="<?php echo $quote_data['is_client'] ?>" />
 						</p>
 						<script>
 						//if(document.getElementById('lead_status').value == 2)

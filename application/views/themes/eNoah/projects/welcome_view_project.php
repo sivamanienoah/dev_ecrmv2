@@ -238,7 +238,7 @@ if (get_default_currency()) {
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-val">Project Status</label>&nbsp;&nbsp;
-						<select name="pjt_status" id="pjt_status" class="textfield" style="width:138px;" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
+						<select name="pjt_status" id="pjt_status" class="textfield" style="width:161px;" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
 							<option value="1"  <?php if($quote_data['pjt_status'] == 1) echo 'selected="selected"'; ?>>Project In Progress</option>
 							<option value="2"  <?php if($quote_data['pjt_status'] == 2) echo 'selected="selected"'; ?>>Project Completed</option>
 							<option value="3"  <?php if($quote_data['pjt_status'] == 3) echo 'selected="selected"'; ?>>Project Onhold</option>
