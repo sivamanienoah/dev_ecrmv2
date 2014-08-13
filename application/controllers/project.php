@@ -103,7 +103,7 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
-	
+		
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
@@ -189,7 +189,8 @@ class Project extends crm_controller {
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			
 			if(!empty($data['quote_data']['pjt_id'])) {
-				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id);
+				$bill_type = isset($data['quote_data']['billing_type']) ? $data['quote_data']['billing_type'] : 1;
+				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type);
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$data['timesheetAssignedUsers'] = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
@@ -2543,7 +2544,7 @@ HDOC;
 				$total_non_billable_hrs = 0;
 				
 				if(!empty($rec['pjt_id']))
-				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id']);
+				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $rec['billing_type']);
 
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {

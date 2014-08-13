@@ -1520,7 +1520,7 @@ table.head tr td {
 .wrap_timesheet { width: 100%; }
 
 .wrap_timesheet table {
-	width: 80%;
+	width: 100%;
 	table-layout: fixed;
 }
 	

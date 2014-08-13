@@ -41,7 +41,7 @@ class Project_model extends crm_model
 		$to_date	= $to_date;
 	
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status,j.estimate_hour,j.project_type,j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
@@ -490,18 +490,22 @@ class Project_model extends crm_model
 		return $query->result_array();
 	} */
 	
-	public function get_timesheet_data($pjt_code, $lead_id)
+	public function get_timesheet_data($pjt_code, $lead_id, $bill_type)
 	{
-		if(!empty($lead_id))
-		$getActDate = $this->get_quote_data($lead_id);
-		
-		if(!empty($getActDate[0]['date_created'])) {
-			$start_date = date('Y-m-d', strtotime($getActDate[0]['date_created']));
+		if($bill_type == 2) {
+			$start_date = date('Y-m-01');
 		} else {
-			$start_date = '0000-00-00';
+			if(!empty($lead_id)) {
+				$getActDate = $this->get_quote_data($lead_id);
+			}
+			if(!empty($getActDate[0]['date_created'])) {
+				$start_date = date('Y-m-d', strtotime($getActDate[0]['date_created']));
+			} else {
+				$start_date = '0000-00-00';
+			}
 		}
-		
-		$timesheet_db = $this->load->database('timesheet',TRUE);
+
+		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
 		$sql = "SELECT ROUND((ct.direct_cost + ct.overheads_cost), 2) as cost, Monthname(t.start_time) as month_name, YEAR(t.start_time) as yr, u.emp_id, u.first_name, u.last_name, u.username, t.start_time AS start_time_str, t.end_time AS end_time_str, SUM((t.duration/60)) as Duration, t.resoursetype, WEEK(t.start_time) AS Week
 		FROM ".$timesheet_db->dbprefix('user')." AS u

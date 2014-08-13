@@ -1134,7 +1134,13 @@
 		$('#set-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 		$('#payment-recieved-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy', maxDate: '0'});
 		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
-		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0'});
+		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({
+			dateFormat: 'dd-mm-yy', 
+			minDate: '0',
+			beforeShow : function(input, inst) {
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
 		$('.task-list-item').livequery(function(){
 			$(this).hover(
 				function() { $('.delete-task', $(this)).css('display', 'block'); },
@@ -1304,7 +1310,7 @@
 		});
 
 	});
-
+	
 	var job_complete_percentage;
 
 	function updateJobStatus(status) {
@@ -2172,3 +2178,59 @@ $(function(){
 
 });
 /*RAG Status Script - End*/
+
+/*For Timesheet Metrics Data - Start*/
+	$(function() {
+		$( "#from_date, #to_date" ).datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true,
+			dateFormat: 'M-yy',            
+			onClose: function(dateText, inst) { 
+				var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
+				$(this).datepicker('setDate', new Date(year, month, 1));
+			},
+			beforeShow : function(input, inst) {
+				if ((datestr = $(this).val()).length > 0) {
+					year = datestr.substring(datestr.length-4, datestr.length);
+					month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNamesShort'));
+					$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
+					$(this).datepicker('setDate', new Date(year, month, 1));    
+				}
+				var other = this.id == "from_date" ? "#to_date" : "#from_date";
+				var option = this.id == "from_date" ? "maxDate" : "minDate";        
+				if ((selectedDate = $(other).val()).length > 0) {
+					year = selectedDate.substring(selectedDate.length-4, selectedDate.length);
+					month = jQuery.inArray(selectedDate.substring(0, selectedDate.length-5), $(this).datepicker('option', 'monthNamesShort'));
+					$(this).datepicker( "option", option, new Date(year, month, 1));
+				}
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+		
+		$('#filter_metrics').submit(function() {
+			var start_date = $("#from_date").val(); 
+			var end_date   = $("#to_date").val(); 
+			
+			var params = {'start_date':start_date,'end_date':end_date};
+			params[csrf_token_name] = csrf_hash_token; 
+			if($(this).attr("id") == 'filter_metrics'){
+				$('#metrics_data').hide();
+				$('#load').show();
+			}
+			
+			$.ajax({
+				type: 'POST',
+				url: 'project/advance_filter_search_pjt',
+				data: params,
+				success: function(data) {
+					$(".inner_timesheet" ).html(data);
+					$('#metrics_data').show();
+					$('#load').hide();
+				}
+			});
+			return false;
+		});
+	});
+/*For Timesheet Metrics Data - End*/

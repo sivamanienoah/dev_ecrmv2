@@ -432,7 +432,7 @@ if (get_default_currency()) {
 				<tr>					
 					<td><strong>Start Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
+						<input type="text" data-calendar="true" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-start-date" readonly />
 						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="pjt-btn">
 								<button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
@@ -441,7 +441,7 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
+						<input type="text" data-calendar="true" value="<?php if ($quote_data['actual_date_start'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_start'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-start-date" readonly />
 						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('start'); return false;">Set</button>
@@ -453,7 +453,7 @@ if (get_default_currency()) {
 				<tr>
 					<td><strong>End Date</strong></td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
+						<input type="text" data-calendar="true" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="project-due-date" readonly />
 						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 						<div class="buttons">
 							<button type="submit" class="positive buttons" onclick="setProjectStatusDate('due'); return false;">Set</button>
@@ -462,7 +462,7 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td>
-						<input type="text" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
+						<input type="text" data-calendar="true" value="<?php if ($quote_data['actual_date_due'] != '') echo date('d-m-Y', strtotime($quote_data['actual_date_due'])); else echo ''; ?>" <?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?> class="textfield pick-date width100px" <?php } else { ?> class="textfield width60px" <?php } ?> id="actual-project-due-date" readonly />
 						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="actualSetProjectStatusDate('due'); return false;">Set</button>
@@ -1250,6 +1250,16 @@ if (get_default_currency()) {
 	<div id="jv-tab-8">
 		<div class="wrap_timesheet">
 			<?php if(count($timesheet_data) >0 ) { ?>
+				<div id="metrics_date">
+					<form name="filter_metrics" id="filter_metrics"  method="post">
+						Month & Year <input type="text" name="from_date" id="from_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" />
+						<!--To--> <input type="hidden" name="to_date" id="to_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" disabled />
+						<input id="metrics_data" class="positive" type="submit" value="Search" >
+						<div id='load' style='float:left;display:none;height:1px;'>
+							<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+						</div>
+					</form>
+				</div>
 			    <table class="head_timesheet data-table">
 			        <tr>
 			            <th>Resource</th>
@@ -1261,7 +1271,7 @@ if (get_default_currency()) {
 			            <th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
 			        </tr>
 			    </table>
-				<div class="inner_timesheet ">
+				<div class="inner_timesheet">
 					<table class="data-table">
 						<?php
 						$total_billable_hrs		= 0;
@@ -1364,5 +1374,9 @@ if (get_default_currency()) {
 </div>
 </div><!--end of project-tabs-->
 </div>
-
+<style>
+.hide-calendar .ui-datepicker-calendar {
+   display: none;
+}
+</style>
 <?php require (theme_url().'/tpl/footer.php'); ?>
