@@ -664,16 +664,18 @@ class Welcome extends crm_controller {
 
 		$data = real_escape_array($this->input->post());
 		
+		// echo "<pre>"; print_r($data); exit;
+		
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
 			echo "{error:true, errormsg:'quote ID must be numeric!'}";
 		} else {
-            $ins['lead_title'] = $data['lead_title'];
-			$ins['division'] = $data['job_division'];
-			$ins['lead_service'] = $data['lead_service'];
-			$ins['lead_source'] = $data['lead_source_edit'];
-			$ins['expect_worth_id'] = $data['expect_worth_edit'];
+            $ins['lead_title'] 			= $data['lead_title'];
+			$ins['division']			= $data['job_division'];
+			$ins['lead_service']		= $data['lead_service'];
+			$ins['lead_source']			= $data['lead_source_edit'];
+			$ins['expect_worth_id']		= $data['expect_worth_edit'];
 			$ins['expect_worth_amount'] = $data['expect_worth_amount'];
 			$ins['actual_worth_amount'] = $data['actual_worth'];
 			if (empty($data['actual_worth'])) {
@@ -682,7 +684,6 @@ class Welcome extends crm_controller {
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {			
 				$ins['proposal_adjusted_date'] = date('Y-m-d H:i:s');
 			}
-		
 			if($data['lead_assign_edit_hidden'] == null || $data['lead_assign_edit_hidden'] == 0) {
 				$ins['lead_assign'] = $data['lead_assign_edit'];
 			} else {
@@ -690,12 +691,12 @@ class Welcome extends crm_controller {
 			}
 			
 			// for lead status history - starts here
-			if($_POST['lead_status'] != $_POST['lead_status_hidden']) {
-				$lead_stat_hist['lead_id'] = $_POST['jobid_edit'];
-				$lead_stat_hist['dateofchange'] = date('Y-m-d H:i:s');
+			if($_POST['lead_status'] 			 != $_POST['lead_status_hidden']) {
+				$lead_stat_hist['lead_id'] 		  = $_POST['jobid_edit'];
+				$lead_stat_hist['dateofchange']   = date('Y-m-d H:i:s');
 				$lead_stat_hist['changed_status'] = $_POST['lead_status'];
-				$lead_stat_hist['modified_by'] = $this->userdata['userid'];
-				$insert_lead_stat_his = $this->welcome_model->insert_row('lead_status_history', $lead_stat_hist);
+				$lead_stat_hist['modified_by']	  = $this->userdata['userid'];
+				$insert_lead_stat_his 			  = $this->welcome_model->insert_row('lead_status_history', $lead_stat_hist);
 			}
 			// for lead status history - ends here	
 			
@@ -706,28 +707,28 @@ class Welcome extends crm_controller {
 				$ins['belong_to'] = $data['lead_owner_edit_hidden'];
 			}
 			/*lead owner ends  here*/
-			$ins['lead_indicator'] = $data['lead_indicator'];
-			$ins['lead_status'] = $data['lead_status'];
-			if($data['lead_stage'] != '' && $data['lead_stage'] != 'null')
-			$ins['lead_stage']  = $data['lead_stage'];			
+			$ins['lead_indicator']   = $data['lead_indicator'];
+			$ins['lead_status'] 	 = $data['lead_status'];
+			if($data['lead_stage']  != '' && $data['lead_stage'] != 'null')
+			$ins['lead_stage'] 		 = $data['lead_stage'];			
 			$ins['lead_hold_reason'] = $data['reason'];
-			$ins['date_modified'] = date('Y-m-d H:i:s');
-			$ins['modified_by'] = $this->userdata['userid'];
+			$ins['date_modified'] 	 = date('Y-m-d H:i:s');
+			$ins['modified_by']		 = $this->userdata['userid'];
 			/* belong to assigned editing the lead owner */
 
 			/* for onhold reason insert */	
-			$inse['log_content'] = "Lead Onhold Reason: "; 
+			$inse['log_content']  = "Lead Onhold Reason: "; 
 			$inse['log_content'] .= $data['reason'];
-            $inse['jobid_fk'] = $data['jobid_edit'];
-            $inse['userid_fk'] = $this->userdata['userid'];
-			if($data['reason'] != '' && $data['reason'] != 'null')
-			$insert_log = $this->welcome_model->insert_row('logs', $inse);
+            $inse['jobid_fk']     = $data['jobid_edit'];
+            $inse['userid_fk']    = $this->userdata['userid'];
+			if($data['reason']   != '' && $data['reason'] != 'null')
+			$insert_log			  = $this->welcome_model->insert_row('logs', $inse);
 			/* end of onhold reason insert */
 		
 			/* for proposal adjust date insert */
 			$ins_ad['log_content'] = 'Actual Worth Amount Modified On :' . ' ' . date('M j, Y g:i A'); 
-			$ins_ad['jobid_fk'] = $data['jobid_edit'];
-			$ins_ad['userid_fk'] = $this->userdata['userid'];
+			$ins_ad['jobid_fk']    = $data['jobid_edit'];
+			$ins_ad['userid_fk']   = $this->userdata['userid'];
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {
 				$insert_log = $this->welcome_model->insert_row('logs', $ins_ad);
 			}
@@ -735,25 +736,38 @@ class Welcome extends crm_controller {
 			$lead_id = $data['jobid_edit'];
 			
 			$updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
+			
 			if ($updt_job)
 			{				
 				$his['lead_status'] = $data['lead_status']; //lead_stage_history - lead_status update
+				
+				//update customer isclient
+				if($data['lead_status'] == 4) {
+					$update_cus = array('is_client'=>1);
+					$updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
+				} else if($data['lead_status'] != 4 && $data['lead_status_hidden'] == 4) {
+					$chk_isclient = $this->welcome_model->check_isclient_stat($data['customer_id']);
+					if($chk_isclient==0) {
+						$update_cus = array('is_client'=>0);
+						$updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
+					}
+				}
 				
 				$updt_lead_stage_his = $this->welcome_model->update_row('lead_stage_history', $his, $lead_id);
 				
 				if(($data['lead_assign_edit_hidden'] ==  $data['lead_assign_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
-					$ins['jobid_fk'] = $lead_id;
+					$ins['jobid_fk']  = $lead_id;
 					
-					$lead_det = $this->welcome_model->get_lead_det($lead_id); //after update.
+					$lead_det		  = $this->welcome_model->get_lead_det($lead_id); //after update.
 					$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
-					$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
+					$lead_owner       = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 					
 					$inserts['userid_fk'] = $this->userdata['userid'];
-					$inserts['jobid_fk'] = $lead_id;
+					$inserts['jobid_fk']  = $lead_id;
 					$inserts['date_created'] = date('Y-m-d H:i:s');
-					$inserts['log_content'] = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead .' .word_limiter($lead_det['lead_title'], 4). ' ';
+					$inserts['log_content']  = "Lead has been Re-assigned to: " . $lead_assign_mail[0]['first_name'] .' '.$lead_assign_mail[0]['last_name'] .'<br />'. 'For Lead .' .word_limiter($lead_det['lead_title'], 4). ' ';
 					
 					// inset the new log
 					$insert_log = $this->welcome_model->insert_row('logs', $inserts);
@@ -773,12 +787,12 @@ class Welcome extends crm_controller {
 					
 					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'log_content'=>$inserts['log_content'],'signature'=>$this->userdata['signature']);
 
-					$param['to_mail'] = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
-					$param['bcc_mail'] = $admin_mail;
-					$param['from_email'] = $this->userdata['email'];
+					$param['to_mail']		  = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
+					$param['bcc_mail']		  = $admin_mail;
+					$param['from_email']	  = $this->userdata['email'];
 					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "Lead Re-assignment Notification";
-					$param['subject'] = 'Lead Re-assigned Notification';
+					$param['template_name']	  = "Lead Re-assignment Notification";
+					$param['subject']		  = 'Lead Re-assigned Notification';
 
 					$this->email_template_model->sent_email($param);
 

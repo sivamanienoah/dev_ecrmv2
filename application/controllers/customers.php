@@ -62,7 +62,7 @@ class Customers extends crm_controller {
 		else {			
 			// $rules['email_1']	= "required|valid_email|callback_email_1_check";
 		}
-		$this->validation->set_rules($rules);		
+		$this->validation->set_rules($rules);	
 		
 		$fields['first_name'] = "First Name";
 		$fields['last_name'] = "Last Name";
@@ -85,6 +85,7 @@ class Customers extends crm_controller {
 		$fields['email_3'] = "";
 		$fields['email_4'] = "";
 		$fields['skype_name'] = '';
+		$fields['is_client'] = '';
 		$fields['www_1'] = "Primary Web Address";
 		$fields['www_2'] = "";
         $fields['comments'] = '';

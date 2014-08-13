@@ -924,6 +924,32 @@ class Welcome_model extends crm_model {
 		return $res_query;
 	}
 	/*Level Restrictions*/
+	
+	/*
+	*@method check_isclient_stat()
+	*@param customer_id
+	*@return row count
+	*/
+	public function check_isclient_stat($cus_id)
+	{
+		$this->db->select('lead_status');
+		$this->db->from($this->cfg['dbpref'].'leads');
+		$this->db->where('custid_fk', $cus_id);
+		$this->db->where('lead_status', 4);
+		$query = $this->db->get();
+		return $query->num_rows();
+	}	
+	
+	/*
+	*@method updtCustomerIsClient()
+	*@param customer_id
+	*
+	*/
+	public function updtCustomerIsClient($cus_id, $updt)
+	{
+    	$this->db->where('custid', $cus_id);
+		return $this->db->update($this->cfg['dbpref'] . 'customers', $updt);
+	}
 }
 
 ?>

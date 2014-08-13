@@ -31,6 +31,7 @@
                     <th>Email</th>
 					<th>Region</th>
 					<th>Country</th>
+					<th>Is Client</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -47,6 +48,13 @@
                         <td><?php echo $customer['email_1'] ?></td>
                         <td><?php echo $customer['region_name'] ?></td>
                         <td><?php echo $customer['country_name'] ?></td>
+                        <td align="center">
+							<?php if($customer['is_client'] == 1) { ?>
+								<img style="width:14px; height:14px" alt="isClient" src="assets/img/tick.png">
+							<?php } else { ?>
+								<?php echo "-"; ?>
+							<?php } ?>
+						</td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
 								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>/">Edit &raquo;</a>

@@ -143,9 +143,7 @@ $usernme = $this->session->userdata('logged_in_user');
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 						<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="emailupdate" id="emailupdate" />
 					<?php } ?>
-				</td>	
-				
-				
+				</td>
                     <td>Secondary Email:</td>
 					<td><input type="text" name="email_2" value="<?php echo  $this->validation->email_2 ?>" class="textfield width200px required" /> 
 					</td>
@@ -161,7 +159,14 @@ $usernme = $this->session->userdata('logged_in_user');
 				<tr>
 					<td>Skype Name:</td>
 					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
+					<?php if ($this->uri->segment(3) == 'update') { ?>
+					<td>Is a Client:</td>
+					<td>
+						<input type="checkbox" name="is_client" value="1" <?php if ($this->validation->is_client == 1) echo ' checked="checked"' ?> disabled >
+					</td>
+					<?php } else { ?>
                     <td colspan="2">&nbsp;</td>
+					<?php } ?>
 				</tr>
                 <tr>
 					<td>Web:</td>

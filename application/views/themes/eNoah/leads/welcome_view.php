@@ -10,6 +10,7 @@ $userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
 ?>
 var curr_job_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
+var customer_id = <?php echo $quote_data['custid_fk'] ?>;
 var lead_services = [];
 lead_services['not_select'] = '';
 
@@ -1078,6 +1079,8 @@ h3 .small {
 							<option value="4"  <?php if($quote_data['lead_status'] == 4) echo 'selected="selected"'; ?>>Closed</option>
 							</select>
 							<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
+							<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
+							<input type="hidden" name="is_client" id="is_client" value="<?php echo $quote_data['is_client'] ?>" />
 						</p>
 						<script>
 						//if(document.getElementById('lead_status').value == 2)
