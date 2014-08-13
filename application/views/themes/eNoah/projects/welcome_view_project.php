@@ -196,22 +196,26 @@ if (get_default_currency()) {
 					$varPjtId = $quote_data['pjt_id'];
 				}
 			?>
+			<div class="clrboth">
+				<h6 class="pjt_data">Billing Type</h6>
+				<div class="pjt-resultclass">
+					<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
+					<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
+					<span id="errmsg_bill_type" style="color:red"></span>
+				</div>
+			</div>
 			<form>
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-id">Project ID</label>&nbsp;&nbsp;
 						<?php 
 							$readonly_status = false;
-							
 							if($chge_access != 1)
 							$readonly_status = true;
 							if($quote_data['pjt_status'] == 2)
 							$readonly_status = true;
 						?>
-						
-						
 						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
 						<input type="hidden" class="hiddenUrl"/>
 						</h5>
@@ -293,16 +297,7 @@ if (get_default_currency()) {
 				</div>
 			</div>
 			<!-- Project Progress Thermometer - End -->
-			
-			<div class="clrboth">
-				<h6 class="pjt_data">Billing Type</h6>
-				<div class="pjt-resultclass">
-					<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
-					<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
-					<span id="errmsg_bill_type" style="color:red"></span>
-				</div>
-			</div>
-			
+
 			<!--List the project Type from the timesheet-->
 			<div class="clrboth">
 				<h6 class="pjt_data">Project Type</h6>
