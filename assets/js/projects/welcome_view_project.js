@@ -2129,7 +2129,7 @@
 					function(_data) {
 						if (typeof(_data) == 'object') {
 							if (_data.error == false) {
-								$('#errmsg_bill_type').html("<span class='ajx_success_msg'>Status Updated...</span>");
+								$('#errmsg_bill_type').html("<span class='ajx_success_msg'>Status Updated.</span>");
 							} else {
 								$("#errmsg_bill_type").text(data.error);
 								$("#errmsg_bill_type").show();
