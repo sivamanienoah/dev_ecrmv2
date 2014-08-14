@@ -482,7 +482,7 @@ if (get_default_currency()) {
 					<th></th>
 					<th>Budgeted</th>
 					<th>Actual</th>
-					<?php if($quote_data['billing_type'] == 1) { ?>
+					<?php if($quote_data['billing_type'] != 2) { ?>
 					<th>Variance</th>
 					<?php } ?>
 				</tr>
@@ -497,7 +497,7 @@ if (get_default_currency()) {
 					<td> 
 						<input type="text" id="actualEff" value="<?php if ($actual_hour_data != '') echo sprintf('%0.2f', $actual_hour_data); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
-					<?php if($quote_data['billing_type'] == 1) { ?>
+					<?php if($quote_data['billing_type'] != 2) { ?>
 					<td>
 						<?php 
 							if ($actual_hour_data != '')
@@ -523,7 +523,7 @@ if (get_default_currency()) {
 					?>
 						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
-					<?php if($quote_data['billing_type'] == 1) { ?>
+					<?php if($quote_data['billing_type'] != 2) { ?>
 					<td>
 						<?php 
 							if (isset($quote_data['actual_worth_amount']))
