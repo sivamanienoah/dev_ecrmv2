@@ -1659,6 +1659,7 @@
 			$('#errmsg_project_type').fadeOut();
 			$('#pjt_id_errormsg, .checkUser, #id-existsval').fadeOut();
 			$('#msErrNotifyFadeout').fadeOut();
+			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
 		}
 
@@ -2080,6 +2081,7 @@
 	$(document).ready(function() {
 		
 		$( ".rag_stat" ).change(function() {
+			$("#errmsg_rag_status").empty();
 			$("#errmsg_rag_status").hide();
 			var rag_status_val = $(this).val();
 			if (rag_status_val=='') {
@@ -2105,6 +2107,8 @@
 								}
 								// $('h6.rag-' + r_class + '-label span').text(rag_val);
 								// $('.rag-status-change').hide(200);
+								$('#errmsg_rag_status').html("<span class='ajx_success_msg'>Status Updated.</span>");
+								$("#errmsg_rag_status").show();
 							} else {
 								$("#errmsg_rag_status").text(data.error);
 								$("#errmsg_rag_status").show();
@@ -2116,9 +2120,11 @@
 					},"json"
 				);
 			}
+			setTimeout('timerfadeout()', 2000);
 		});
 		
 		$( ".bill_type" ).change(function() {
+			$("#errmsg_bill_type").empty();
 			$("#errmsg_bill_type").hide();
 			var billing_type_val = $(this).val();
 			if (billing_type_val=='') {
@@ -2184,6 +2190,7 @@ $(function(){
 		$( "#from_date, #to_date" ).datepicker({
 			changeMonth: true,
 			changeYear: true,
+			maxDate: 0,
 			showButtonPanel: true,
 			dateFormat: 'M-yy',            
 			onClose: function(dateText, inst) { 
@@ -2210,19 +2217,22 @@ $(function(){
 		});
 		
 		$('#filter_metrics').submit(function() {
-			var start_date = $("#from_date").val(); 
-			var end_date   = $("#to_date").val(); 
+			var start_date = $("#from_date").val();
+			var end_date   = $("#to_date").val();
+			var cur_name   = $("#expect_worth_name").val();
 			
-			var params = {'start_date':start_date,'end_date':end_date};
+			if(start_date == '')
+			return false;
+			
+			var params = {'start_date':start_date, 'end_date':end_date, 'project_id':project_jobid, 'project_code':project_code, 'expect_worth_id':expect_worth_id, 'cur_name':cur_name};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'filter_metrics'){
 				$('#metrics_data').hide();
 				$('#load').show();
 			}
-			
 			$.ajax({
 				type: 'POST',
-				url: 'project/advance_filter_search_pjt',
+				url: site_base_url+'project/filterTimesheetMetricsData',
 				data: params,
 				success: function(data) {
 					$(".inner_timesheet" ).html(data);

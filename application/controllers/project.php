@@ -52,7 +52,7 @@ class Project extends crm_controller {
 		$data['services']    = $this->project_model->get_services();
 		$data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
 		$data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
-		
+		// echo "<pre>"; print_r($data['project_record']); exit;
 		unset($data['records']);
 		$data['records']     = array();
 		$this->load->view('projects/projects_view', $data);
@@ -197,7 +197,7 @@ class Project extends crm_controller {
 			}
 			
 			$rates = $this->get_currency_rates();
-
+			
 			$data['timesheet_data'] = array();
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
@@ -213,6 +213,8 @@ class Project extends crm_controller {
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 					}
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
 				}
 			}
 
@@ -257,22 +259,29 @@ class Project extends crm_controller {
 					$billable_hrs	  = 0;
 					$non_billable_hrs = 0;
 					$internal_hrs	  = 0;
+					$project_type	  = '';
 					foreach($value3 as $key4=>$value4) {
 						switch($key4) {
 							case 'Billable':
-								$rate = $value4['rateperhr'];
-								$billable_hrs = $value4['duration'];
+								$rs_name			 = $value4['rs_name'];
+								$rate				 = $value4['rateperhr'];
+								$billable_hrs		 = $value4['duration'];
 								$total_billable_hrs += $billable_hrs;
+								$project_type		 = $value4['pj_type'];
 							break;
 							case 'Non-Billable':
-								$rate = $value4['rateperhr'];
-								$non_billable_hrs = $value4['duration'];
+								$rs_name				 = $value4['rs_name'];
+								$rate				 	 = $value4['rateperhr'];
+								$non_billable_hrs		 = $value4['duration'];
 								$total_non_billable_hrs += $non_billable_hrs;
+								$project_type		 	 = $value4['pj_type'];
 							break;
 							case 'Internal':
-								$rate = $value4['rateperhr'];
-								$internal_hrs = $value4['duration'];
+								$rs_name			 = $value4['rs_name'];
+								$rate				 = $value4['rateperhr'];
+								$internal_hrs		 = $value4['duration'];
 								$total_internal_hrs += $internal_hrs;
+								$project_type		 = $value4['pj_type'];
 							break;
 						}
 					}
@@ -284,6 +293,7 @@ class Project extends crm_controller {
 		$data['total_internal_hrs']	    = $total_internal_hrs;
 		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
 		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
+		$data['project_type']			= $project_type;
 		return $data;
 	}
 
@@ -2542,9 +2552,12 @@ HDOC;
 				$total_billable_hrs		= 0;
 				$total_internal_hrs		= 0;
 				$total_non_billable_hrs = 0;
+				$project_type			= '';
+				
+				$bill_type = isset($rec['billing_type']) ? $rec['billing_type'] : 1;
 				
 				if(!empty($rec['pjt_id']))
-				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $rec['billing_type']);
+				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type);
 
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
@@ -2560,11 +2573,14 @@ HDOC;
 							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 						}
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
 					}
 				}
 
 				if(!empty($data['timesheet_data'])) {
 					$res = $this->calcActualProjectCost($data['timesheet_data']);
+					// echo "<pre>"; print_r($res); exit;
 					if($res['total_cost']>0) {
 						$total_cost = $res['total_cost'];
 					}
@@ -2580,6 +2596,7 @@ HDOC;
 					if($res['total_non_billable_hrs']>0) {
 						$total_non_billable_hrs = $res['total_non_billable_hrs'];
 					}
+					$project_type = $res['project_type'];
 				}
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
@@ -2594,7 +2611,7 @@ HDOC;
 				$data['project_record'][$i]['complete_status'] 	= $rec['complete_status'];
 				$data['project_record'][$i]['pjt_status'] 		= $rec['pjt_status'];
 				$data['project_record'][$i]['estimate_hour'] 	= $rec['estimate_hour'];
-				$data['project_record'][$i]['project_type']	 	= $rec['project_type'];
+				$data['project_record'][$i]['project_type']	 	= $project_type;
 				$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
 				$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
 				$data['project_record'][$i]['clname'] 			= $rec['clname'];
@@ -2673,20 +2690,7 @@ HDOC;
     		foreach($pjts_data as $rec) {
 			
 				$estimate_hr =  (isset($rec['estimate_hour'])) ? $rec['estimate_hour'] : "-";
-				
-				switch ($rec['project_type']) {
-					case 1:
-						$type = 'Fixed';
-					break;
-					case 2:
-						$type = 'Internal';
-					break;
-					case 3:
-						$type = 'T&M';
-					break;
-					default:
-						$type = '-';
-				}
+				$type = $rec['project_type'];
 				
 				switch ($rec['rag_status']) {
 					case 1:
@@ -2774,5 +2778,130 @@ HDOC;
     	}    	
     	redirect('/project/');
     }
+	
+	public function filterTimesheetMetricsData()
+	{
+		$postdata   = real_escape_array($this->input->post());
+		$start_date = date('Y-m-01', strtotime($postdata['start_date']));
+
+		//for differentiate sending the past date in search.
+		$bill_type  = 3;
+		$timesheet  = $this->project_model->get_timesheet_data($postdata['project_code'], $postdata['project_id'], $bill_type, $start_date);
+		
+		$rates = $this->get_currency_rates();
+		$data['timesheet_data'] = array();
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				$costdata = array();
+				if(isset($ts['cost'])) {
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+					$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$postdata['expect_worth_id']]);
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+				} else {
+					$costdata = $this->project_model->get_latest_cost($ts['username']);
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
+					$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$postdata['expect_worth_id']]);
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+				}
+				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
+				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
+				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
+			}
+		}
+
+		$data['project_costs'] = array();
+		if(!empty($data['timesheet_data'])) {
+			$res = $this->calcActualProjectCost($data['timesheet_data']);
+			if($res['total_cost']>0) {
+				$data['project_costs'] = $res['total_cost'];
+			}
+			if($res['total_hours']>0) {
+				$data['actual_hour_data'] = $res['total_hours'];
+			}
+		}
+		
+		//Display the Date in view
+		$htmldata = '';
+		if(count($data['timesheet_data'])>0){
+			
+			$total_billable_hrs		= 0;
+			$total_non_billable_hrs = 0;
+			$total_internal_hrs		= 0;
+			$total_cost				= 0;
+			
+			$htmldata = '<table class="head_timesheet data-table">
+							<tr>
+								<th>Resource</th>
+								<th>Month & Year</th>
+								<th>Billable Hours</th>
+								<th>Internal Hours</th>
+								<th>Non-Billable Hours</th>
+								<th>Cost Per Hour('.$postdata["cur_name"].')</th>
+								<th>Cost('.$postdata["cur_name"].')</th>
+							</tr>
+						</table>';
+			
+			$htmldata .= '<table class="data-table">';
+			
+			foreach($data['timesheet_data'] as $key1=>$value1) {
+				$resource_name = $key1;
+				foreach($value1 as $key2=>$value2) {
+					$year = $key2;
+					foreach($value2 as $key3=>$value3) {
+						$month		 	  = $key3;
+						$billable_hrs	  = 0;
+						$non_billable_hrs = 0;
+						$internal_hrs	  = 0;
+						foreach($value3 as $key4=>$value4) {
+							switch($key4) {
+								case 'Billable':
+									$rs_name			 = $value4['rs_name'];
+									$rate				 = $value4['rateperhr'];
+									$billable_hrs 		 = $value4['duration'];
+									$total_billable_hrs += $billable_hrs;
+								break;
+								case 'Non-Billable':
+									$rs_name			 	 = $value4['rs_name'];
+									$rate					 = $value4['rateperhr'];
+									$non_billable_hrs		 = $value4['duration'];
+									$total_non_billable_hrs += $non_billable_hrs;
+								break;
+								case 'Internal':
+									$rs_name			 = $value4['rs_name'];
+									$rate				 = $value4['rateperhr'];
+									$internal_hrs		 = $value4['duration'];
+									$total_internal_hrs += $internal_hrs;
+								break;
+							}
+						}
+						$htmldata .= "<tr>
+							<td>".$rs_name."</td>
+							<td>".substr($month, 0, 3). " " . $year."</td>
+							<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
+							<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
+							<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
+							<td align=right>".$rate."</td>
+							<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
+						</tr>";
+						$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
+					}
+				}
+			}
+			$htmldata .= "<tr>
+							<td align=right><b>Total</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
+						</tr>";
+			$htmldata .= '</table>';
+		} else {
+			$htmldata .= '<div align="center" style="margin: 20px 0 0;"><b> No Data Available for "'.$postdata['start_date'].'"</b></div>';
+		}
+		echo $htmldata;
+		exit;
+	}
 }
 ?>

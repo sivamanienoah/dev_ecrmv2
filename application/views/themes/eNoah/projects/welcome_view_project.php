@@ -11,6 +11,8 @@
 <script type="text/javascript">
 
   var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
+  var project_code            = "<?php echo isset($quote_data['pjt_id']) ? $quote_data['pjt_id'] : 0 ?>";
+  var expect_worth_id         = "<?php echo isset($quote_data['expect_worth_id']) ? $quote_data['expect_worth_id'] : 1 ?>";
   var project_view_quotation  = "<?php echo $view_quotation; ?>";
   var project_user_id         = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : 0 ?>";
   var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>";
@@ -39,7 +41,7 @@ if (get_default_currency()) {
 }
 ?>
 
-<div class="comments-log-container" style= "display:none;">
+<div class="comments-log-container" style="display:none;">
 	<?php if ($log_html != "") { ?>
 			<table width="100%" class="log-container"> 
 				<tbody>
@@ -196,6 +198,13 @@ if (get_default_currency()) {
 					$varPjtId = $quote_data['pjt_id'];
 				}
 			?>
+			<?php 
+				$readonly_status = false;
+				if($chge_access != 1)
+				$readonly_status = true;
+				if($quote_data['pjt_status'] == 2)
+				$readonly_status = true;
+			?>
 			<div class="clrboth">
 				<h6 class="pjt_data">Billing Type</h6>
 				<div class="pjt-resultclass">
@@ -209,13 +218,7 @@ if (get_default_currency()) {
 				<div>
 					<div style="float:left;">
 						<h5><label class="project-id">Project ID</label>&nbsp;&nbsp;
-						<?php 
-							$readonly_status = false;
-							if($chge_access != 1)
-							$readonly_status = true;
-							if($quote_data['pjt_status'] == 2)
-							$readonly_status = true;
-						?>
+
 						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
 						<input type="hidden" class="hiddenUrl"/>
 						</h5>
@@ -264,7 +267,7 @@ if (get_default_currency()) {
 					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
 					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-					<span id="errmsg_rag_status" style="color:red"></span>
+					<span id="errmsg_rag_status" style="color:red; float: right; margin: 6px 0px 0px 5px;"></span>
 				</div>
 			</div>
 			
@@ -479,19 +482,22 @@ if (get_default_currency()) {
 					<th></th>
 					<th>Budgeted</th>
 					<th>Actual</th>
+					<?php if($quote_data['billing_type'] == 1) { ?>
 					<th>Variance</th>
+					<?php } ?>
 				</tr>
 				<tr>					
 					<td><strong>Efforts (Hours)</strong></td>
 					<td>
 						<input type="text" value="<?php if ($quote_data['estimate_hour'] != '') echo $quote_data['estimate_hour']; else echo ''; ?>" class="textfield width60px" id="project-estimate-hour" onkeypress="return isNumberKey(event)" maxlength="10" <?php if($chge_access != 1) { ?> readonly <?php } ?>/>
 						<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-						<button type="submit" class="positive" onclick="setProjectEstimateHour(); return false;">Set</button>
+							<button type="submit" class="positive" onclick="setProjectEstimateHour(); return false;">Set</button>
 						<?php } ?>
 					</td>
 					<td> 
 						<input type="text" id="actualEff" value="<?php if ($actual_hour_data != '') echo sprintf('%0.2f', $actual_hour_data); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
+					<?php if($quote_data['billing_type'] == 1) { ?>
 					<td>
 						<?php 
 							if ($actual_hour_data != '')
@@ -501,6 +507,7 @@ if (get_default_currency()) {
 						?>
 						<input type="text" id="varianceEff" value="<?php if (isset($varianceProjectHour)) echo sprintf('%0.2f', $varianceProjectHour); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
+					<?php } ?>
 				</tr>
 				<tr>					
 					<td><strong>Project Value (<?php if (isset($quote_data['expect_worth_name'])) echo $quote_data['expect_worth_name']; ?>) </strong></td>
@@ -516,6 +523,7 @@ if (get_default_currency()) {
 					?>
 						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
+					<?php if($quote_data['billing_type'] == 1) { ?>
 					<td>
 						<?php 
 							if (isset($quote_data['actual_worth_amount']))
@@ -525,6 +533,7 @@ if (get_default_currency()) {
 						?>
 						<input type="text" id="varianceValue" value="<?php if (isset($varianceProjectVal)) echo sprintf('%0.2f', $varianceProjectVal); else echo ''; ?>" class="textfield width60px" readonly />
 					</td>
+					<?php } ?>
 				</tr>
 			</table>
 			<div id="msg_project_efforts"></div>
@@ -1249,17 +1258,22 @@ if (get_default_currency()) {
 	
 	<div id="jv-tab-8">
 		<div class="wrap_timesheet">
-			<?php if(count($timesheet_data) >0 ) { ?>
-				<div id="metrics_date">
-					<form name="filter_metrics" id="filter_metrics"  method="post">
-						Month & Year <input type="text" name="from_date" id="from_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" />
-						<!--To--> <input type="hidden" name="to_date" id="to_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" disabled />
-						<input id="metrics_data" class="positive" type="submit" value="Search" >
-						<div id='load' style='float:left;display:none;height:1px;'>
-							<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-						</div>
-					</form>
-				</div>
+				<?php if($quote_data['billing_type'] == 2) { ?>
+					<div id="filter_metrics_data" align="right" style="margin:0 0 10px">
+						<form name="filter_metrics" id="filter_metrics"  method="post">
+							<label><strong>Month & Year </strong></label>
+							<input type="text" name="from_date" id="from_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;margin-bottom:0;" />
+							<!--To--> <input type="hidden" name="to_date" id="to_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" disabled />
+							<input type="hidden" name="expect_worth_name" id="expect_worth_name" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly="readonly" />
+							<input id="metrics_data" class="positive" type="submit" value="Search"/>
+							<span style="vertical-align: top;">
+								<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' id='load' style='display:none; width: 60px;' />
+							</span>
+						</form>
+					</div>
+				<?php } ?>
+				<div class="inner_timesheet">
+				<?php if(count($timesheet_data) >0 ) { ?>
 			    <table class="head_timesheet data-table">
 			        <tr>
 			            <th>Resource</th>
@@ -1271,72 +1285,78 @@ if (get_default_currency()) {
 			            <th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
 			        </tr>
 			    </table>
-				<div class="inner_timesheet">
-					<table class="data-table">
-						<?php
-						$total_billable_hrs		= 0;
-						$total_non_billable_hrs = 0;
-						$total_internal_hrs		= 0;
-						$total_cost				= 0;
-						foreach($timesheet_data as $key1=>$value1) {
-							$resource_name = $key1;
-							foreach($value1 as $key2=>$value2) {
-								$year = $key2;
-								foreach($value2 as $key3=>$value3) {
-									$month		 	  = $key3;
-									$billable_hrs	  = 0;
-									$non_billable_hrs = 0;
-									$internal_hrs	  = 0;
-									foreach($value3 as $key4=>$value4) {
-										switch($key4) {
-											case 'Billable':
-												$rate = $value4['rateperhr'];
-												$billable_hrs = $value4['duration'];
-												$total_billable_hrs += $billable_hrs;
-											break;
-											case 'Non-Billable':
-												$rate = $value4['rateperhr'];
-												$non_billable_hrs = $value4['duration'];
-												$total_non_billable_hrs += $non_billable_hrs;
-											break;
-											case 'Internal':
-												$rate = $value4['rateperhr'];
-												$internal_hrs = $value4['duration'];
-												$total_internal_hrs += $internal_hrs;
-											break;
-										}
+				<table class="data-table">
+					<?php
+					$total_billable_hrs		= 0;
+					$total_non_billable_hrs = 0;
+					$total_internal_hrs		= 0;
+					$total_cost				= 0;
+					foreach($timesheet_data as $key1=>$value1) {
+						$resource_name = $key1;
+						foreach($value1 as $key2=>$value2) {
+							$year = $key2;
+							foreach($value2 as $key3=>$value3) {
+								$month		 	  = $key3;
+								$billable_hrs	  = 0;
+								$non_billable_hrs = 0;
+								$internal_hrs	  = 0;
+								foreach($value3 as $key4=>$value4) {
+									switch($key4) {
+										case 'Billable':
+											$rs_name			 = $value4['rs_name'];
+											$rate				 = $value4['rateperhr'];
+											$billable_hrs		 = $value4['duration'];
+											$total_billable_hrs += $billable_hrs;
+										break;
+										case 'Non-Billable':
+											$rs_name				 = $value4['rs_name'];
+											$rate					 = $value4['rateperhr'];
+											$non_billable_hrs		 = $value4['duration'];
+											$total_non_billable_hrs += $non_billable_hrs;
+										break;
+										case 'Internal':
+											$rs_name			 = $value4['rs_name'];
+											$rate				 = $value4['rateperhr'];
+											$internal_hrs 		 = $value4['duration'];
+											$total_internal_hrs += $internal_hrs;
+										break;
 									}
-									echo "<tr>
-										<td>".ucwords($resource_name)."</td>
-										<td>".substr($month, 0, 3). " " . $year."</td>
-										<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
-										<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
-										<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
-										<td align=right>".$rate."</td>
-										<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
-									</tr>";
-									
-									$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 								}
+								echo "<tr>
+									<td>".$rs_name."</td>
+									<td>".substr($month, 0, 3). " " . $year."</td>
+									<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
+									<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
+									<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
+									<td align=right>".$rate."</td>
+									<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
+								</tr>";
+								
+								$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 							}
 						}
-						echo "<tr>
-							<td align=right><b>Total</b></td>
-							<td></td>
-							<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
-							<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
-							<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
-							<td></td>
-							<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
-						</tr>";
-						?>
-					</table>
-				</div>
+					}
+					echo "<tr>
+						<td align=right><b>Total</b></td>
+						<td></td>
+						<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
+						<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
+						<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
+						<td></td>
+						<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
+					</tr>";
+					?>
+				</table>
 		    <?php 
 				} else {
-			    	echo '<b> Unable to extract project hours from timesheet system </b>';
+					if($quote_data['billing_type'] == 2) {
+						echo '<div align="center" style="margin: 20px 0 0;"><b> No data available for Current Month</b></div>';
+					} else {
+						echo '<div align="center" style="margin: 20px 0 0;"><b> Unable to extract project hours from timesheet system </b></div>';
+					}
 				}
 			?>
+			</div>
 		</div>
 	</div><!-- id: jv-tab-8 end -->
 	

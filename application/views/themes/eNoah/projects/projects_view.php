@@ -168,25 +168,7 @@ if (get_default_currency()) {
 								<?php if (isset($record['complete_status'])) echo ($record['complete_status']) . " %"; else echo "-"; ?>
 							</td>
 							<td class="actions" align="center">
-								<?php
-									if(isset($record['project_type'])) {
-										switch ($record['project_type']) {
-											case 1:
-												echo 'Fixed';
-											break;
-											case 2:
-												echo 'Internal';
-											break;
-											case 3:
-												echo 'T&amp;M';
-											break;
-											default:
-												echo "-";
-										}
-									} else {
-										echo "-";
-									}
-								?>
+								<?php if (isset($record['project_type'])) echo ($record['project_type']); else echo "-"; ?>
 							</td>
 							<td class="actions" align="center">
 								<?php if (isset($record['estimate_hour'])) echo ($record['estimate_hour']); else echo "-"; ?>
