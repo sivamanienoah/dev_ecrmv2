@@ -1662,6 +1662,12 @@
 			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
 		}
+		
+		function fadeoutpagerefresh() 
+		{
+			$('#errmsg_bill_type').fadeOut();
+			window.location.reload();
+		}
 
 		function paymentReceivedEdit(pdid) 
 		{
@@ -2154,7 +2160,7 @@
 				);
 			}
 			$("#errmsg_bill_type").show();
-			setTimeout('timerfadeout()', 2000);
+			setTimeout('fadeoutpagerefresh()', 1000);
 		});
 		
 	});
