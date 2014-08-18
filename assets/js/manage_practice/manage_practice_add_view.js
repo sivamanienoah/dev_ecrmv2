@@ -23,7 +23,7 @@ function chk_practice_name() {
 		return false;
 	} else {
 		$.ajax({
-			url: "manage_practice/chk_duplicate",
+			url: site_base_url+"manage_practice/chk_duplicate",
 			data: params,
 			type: "POST",
 			dataType: 'json',
