@@ -1424,7 +1424,7 @@ if(viewPjt==1) {
 		document.getElementById('advance_search_pjt').style.display = 'none';	
 
 	// var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
-	var sturl = "project/advance_filter_search_pjt/";
+	var sturl = site_base_url+"project/advance_filter_search_pjt/";
 	//alert(sturl);	
 	$('#advance_search_results_pjts').load(sturl);
 		
@@ -1500,7 +1500,7 @@ if(viewPjt==1) {
 		
 		$.ajax({
 			type: 'POST',
-			url: 'project/advance_filter_search_pjt',
+			url: site_base_url+'project/advance_filter_search_pjt',
 			data: params,
 			success: function(data) {
 				$("#advance_search_results_pjts" ).html(data);
