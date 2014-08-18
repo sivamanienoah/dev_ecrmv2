@@ -29,12 +29,11 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date) {
+	public function get_projects_results($pjtstage,$cust,$service,$keyword,$datefilter,$from_date,$to_date) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		$stage 		= $pjtstage;
 		$customer 	= $cust;
-		$pm			= $pm_acc;
 		$services	= $service;
 		$datefilter = $datefilter;
 		$from_date 	= $from_date;
@@ -55,9 +54,9 @@ class Project_model extends crm_model
 			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
-			if(!empty($pm)){		
+			/* if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
-			}
+			} */
 			if(!empty($services)){		
 				$this->db->where_in('j.lead_service',$services);
 			}
@@ -138,9 +137,6 @@ class Project_model extends crm_model
 			}
 			if(!empty($customer)) {		
 				$this->db->where_in('j.custid_fk',$customer);		
-			}
-			if(!empty($pm)) {		
-				$this->db->where_in('j.assigned_to',$pm); 
 			}
 			if(!empty($services)){		
 				$this->db->where_in('j.lead_service',$services); 
