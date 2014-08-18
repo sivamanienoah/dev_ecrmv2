@@ -20,7 +20,7 @@ function checkStatus(id) {
 		success: function(response) {
 			if (response.html == 'NO') {
 				$('#dialog-message-'+id).show();
-				$('#dialog-message-'+id).append("One or more leads currently assigned for this service. This cannot be deleted.");
+				$('#dialog-message-'+id).append("One or more Projects currently assigned for this service. This cannot be deleted.");
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({
