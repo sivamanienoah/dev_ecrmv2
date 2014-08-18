@@ -1255,15 +1255,27 @@ if (get_default_currency()) {
 			<?php echo $job_urls_html ?>
 		</ul>
 	</div><!-- id: jv-tab-7 end -->
-	
+	<?php 
+		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+		$cur_year = date('Y');
+		$end_year = date('Y', strtotime('-15 year'));
+	?>
 	<div id="jv-tab-8">
 		<div class="wrap_timesheet">
 				<?php if($quote_data['billing_type'] == 2) { ?>
 					<div id="filter_metrics_data" align="right" style="margin:0 0 10px">
 						<form name="filter_metrics" id="filter_metrics"  method="post">
-							<label><strong>Month & Year </strong></label>
-							<input type="text" name="from_date" id="from_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;margin-bottom:0;" />
-							<!--To--> <input type="hidden" name="to_date" id="to_date" class="textfield" data-calendar="false" readonly="readonly" style="width:57px;" disabled />
+							<label><strong>Month & Year</strong></label>
+							<select name="metrics_month" id="metrics_month">
+							<?php foreach ($months as $name) { ?>
+								<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
+							<?php } ?>
+							</select>
+							<select name="metrics_year" id="metrics_year">
+							<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
+								<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
+							<?php } ?>
+							</select>
 							<input type="hidden" name="expect_worth_name" id="expect_worth_name" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly="readonly" />
 							<input id="metrics_data" class="positive" type="submit" value="Search"/>
 							<span style="vertical-align: top;">

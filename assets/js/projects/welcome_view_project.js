@@ -2186,45 +2186,15 @@ $(function(){
 /*RAG Status Script - End*/
 
 /*For Timesheet Metrics Data - Start*/
-	$(function() {
-		$( "#from_date, #to_date" ).datepicker({
-			changeMonth: true,
-			changeYear: true,
-			maxDate: 0,
-			showButtonPanel: true,
-			dateFormat: 'M-yy',            
-			onClose: function(dateText, inst) { 
-				var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-				var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
-				$(this).datepicker('setDate', new Date(year, month, 1));
-			},
-			beforeShow : function(input, inst) {
-				if ((datestr = $(this).val()).length > 0) {
-					year = datestr.substring(datestr.length-4, datestr.length);
-					month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNamesShort'));
-					$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
-					$(this).datepicker('setDate', new Date(year, month, 1));    
-				}
-				var other = this.id == "from_date" ? "#to_date" : "#from_date";
-				var option = this.id == "from_date" ? "maxDate" : "minDate";        
-				if ((selectedDate = $(other).val()).length > 0) {
-					year = selectedDate.substring(selectedDate.length-4, selectedDate.length);
-					month = jQuery.inArray(selectedDate.substring(0, selectedDate.length-5), $(this).datepicker('option', 'monthNamesShort'));
-					$(this).datepicker( "option", option, new Date(year, month, 1));
-				}
-				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
-			}
-		});
-		
+	$(function() {		
 		$('#filter_metrics').submit(function() {
-			var start_date = $("#from_date").val();
-			var end_date   = $("#to_date").val();
+			var start_date = $("#metrics_month").val()+'-'+$("#metrics_year").val();
 			var cur_name   = $("#expect_worth_name").val();
 			
 			if(start_date == '')
 			return false;
 			
-			var params = {'start_date':start_date, 'end_date':end_date, 'project_id':project_jobid, 'project_code':project_code, 'expect_worth_id':expect_worth_id, 'cur_name':cur_name};
+			var params = {'start_date':start_date, 'project_id':project_jobid, 'project_code':project_code, 'expect_worth_id':expect_worth_id, 'cur_name':cur_name};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'filter_metrics'){
 				$('#metrics_data').hide();
