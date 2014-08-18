@@ -1413,10 +1413,9 @@ if(viewlead==1) {
 
 if(viewPjt==1) {
 	//For Projects
-	var pjtstage = $("#pjt_stage").val(); 
-	var pm_acc = $("#pm_acc").val(); 
-	var cust = $("#customer1").val(); 
-	var keyword = $("#keywordpjt").val(); 
+	var pjtstage = $("#pjt_stage").val();
+	var cust = $("#customer1").val();
+	var keyword = $("#keywordpjt").val();
 	//alert(keyword);
 	if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
@@ -1436,14 +1435,12 @@ if(viewPjt==1) {
 		var status = document.getElementById('advance_search_pjt').style.display;
 		
 		if(status == 'none') {
-			var pjtstage = $("#pjt_stage").val(); 
-			var pm_acc = $("#pm_acc").val(); 
-			var cust = $("#customer1").val(); 
+			var pjtstage = $("#pjt_stage").val();
+			var cust = $("#customer1").val();
 		}
 		else   {
 				
 			$("#pjt_stage").val("");
-			$("#pm_acc").val("");
 			$("#customer1").val("");
 
 		}
@@ -1484,8 +1481,7 @@ if(viewPjt==1) {
 	*/
 	
 	$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
-		var pjtstage = $("#pjt_stage").val(); 
-		var pm_acc 	 = $("#pm_acc").val(); 
+		var pjtstage = $("#pjt_stage").val();
 		var cust 	 = $("#customer1").val(); 
 		var service  = $("#services").val(); 
 		var keyword  = $("#keywordpjt").val();
@@ -1495,7 +1491,7 @@ if(viewPjt==1) {
 		if(keyword == "Project Title, Name or Company")
 		keyword = '';
 		
-		var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+		var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 		params[csrf_token_name] = csrf_hash_token; 
 		if($(this).attr("id") == 'advanceFilters_pjt'){
 			$('#advance').hide();
