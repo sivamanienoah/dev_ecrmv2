@@ -76,7 +76,7 @@ function dtPjtTable() {
 			
 		    $.ajax({
 		        type: 'POST',
-		        url: 'project/advance_filter_search_pjt',
+		        url: site_base_url+'project/advance_filter_search_pjt',
 		        data: params,
 		        success: function(data) {
 		    		$("#ad_filter" ).html(data);
@@ -141,7 +141,7 @@ function dtPjtTable() {
 	}
 		
 	function processDelete(id,t) {
-		window.location.href = 'project/delete_quote/'+id;
+		window.location.href = site_base_url+'project/delete_quote/'+id;
 	}
 
 	function cancelDel() {

@@ -1322,7 +1322,7 @@
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.post(
-			'project/update_job_status/',
+			site_base_url+'project/update_job_status/',
 			params,
 			function(_data) {
 				try {
