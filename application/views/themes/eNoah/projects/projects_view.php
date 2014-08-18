@@ -54,7 +54,7 @@ if (get_default_currency()) {
 				<thead>
 					<tr>
 						<th>By Project Status Wise</th>
-						<th>By Project Manager Wise</th>
+						<!--th>By Project Manager Wise</th-->
 						<th>By Customer Wise</th>
 						<th>By Services Wise</th>
 						<th>By Date(Actual)</th>
@@ -71,14 +71,14 @@ if (get_default_currency()) {
 						</select>
 					</td>
 					
-					<td>
+					<!--td>
 						<select style="width:150px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
 							<?php foreach($pm_accounts as $pm_acc) {?>
 							<option value="<?php echo $pm_acc['userid']; ?>">
 							<?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
 							<?php } ?>
 						</select> 
-					</td>
+					</td-->
 					
 					<td>
 						<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">

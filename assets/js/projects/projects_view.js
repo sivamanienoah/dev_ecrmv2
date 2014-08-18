@@ -25,7 +25,7 @@ function dtPjtTable() {
 
 	//For Projects
 	var pjtstage = $("#pjt_stage").val(); 
-	var pm_acc	 = $("#pm_acc").val(); 
+	// var pm_acc	 = $("#pm_acc").val(); 
 	var cust	 = $("#customer1").val(); 
 	var service	 = $("#services").val(); 
 	var keyword	 = $("#keywordpjt").val(); 
@@ -44,12 +44,12 @@ function dtPjtTable() {
 			
 			if(status == 'none') {
 				var pjtstage = $("#pjt_stage").val(); 
-				var pm_acc	 = $("#pm_acc").val(); 
+				// var pm_acc	 = $("#pm_acc").val();
 				var cust	 = $("#customer1").val(); 
 				var service	 = $("#services").val(); 
 			} else {
 				$("#pjt_stage").val("");
-				$("#pm_acc").val("");
+				// $("#pm_acc").val("");
 				$("#customer1").val("");
 				$("#services").val("");
 			}
@@ -57,7 +57,7 @@ function dtPjtTable() {
 		
 		$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
 			var pjtstage = $("#pjt_stage").val(); 
-			var pm_acc 	 = $("#pm_acc").val(); 
+			// var pm_acc 	 = $("#pm_acc").val(); 
 			var cust 	 = $("#customer1").val(); 
 			var service  = $("#services").val(); 
 			var keyword  = $("#keywordpjt").val();
@@ -67,7 +67,7 @@ function dtPjtTable() {
 			if(keyword == "Project Title, Name or Company")
 			keyword = '';
 			
-			var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+			var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
@@ -151,7 +151,7 @@ function dtPjtTable() {
 	$(function(){
 		$('#excel').click(function() {
 			var stage = $('#pjt_stage').val();
-			var pm    = $('#pm_acc').val();
+			// var pm    = $('#pm_acc').val();
 			var customer = $('#customer1').val();
 			var service = $('#services').val();
 			var datefilter  = $("#datefilter").val();
@@ -163,7 +163,6 @@ function dtPjtTable() {
 			var form = $('<form action="' + url + '" method="post">' +
 			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 			  '<input type="hidden" name="stages" value="' +stage+ '" />' +
-			  '<input type="hidden" name="pm" value="' +pm+ '" />' +
 			  '<input type="hidden" name="customers" value="' +customer+ '" />' +
 			  '<input type="hidden" name="services" value="' +service+ '" />' +
 			  '<input type="hidden" name="datefilter" value="' +datefilter+ '" />' +
