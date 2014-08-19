@@ -1,9 +1,16 @@
+<?php
+$this->load->helper('custom_helper');
+if (get_default_currency()) {
+	$default_currency = get_default_currency();
+	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_name = $default_currency['expect_worth_name'];
+} else {
+	$default_cur_id = '1';
+	$default_cur_name = 'USD';
+}
+?>
 <div id="content">
-	<script type="text/javascript" src="assets/js/j-tip.js?q=8"></script>
-	
-	<form name="project-total-form" onsubmit="return false;" style="clear:right; overflow:visible;">
-		
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+	<!--script type="text/javascript" src="assets/js/j-tip.js?q=8"></script-->
 
 		<table border="0" cellpadding="0" cellspacing="0" style="width:1250px !important;" class="data-tbl dashboard-heads dataTable">
             <thead>
@@ -18,8 +25,8 @@
 					<th>Non-Billable Hours</th>
 					<th>Total Utilized Hours (Actuals)</th>
 					<th>Effort Variance</th>
-					<th>Project Value</th>
-					<th>Utilization Cost</th>
+					<th>Project Value (<?php echo $default_cur_name; ?>)</th>
+					<th>Utilization Cost (<?php echo $default_cur_name; ?>)</th>
 					<th>P&L </th>
 					<th>P&L %</th>
 					<th>RAG Status</th>
@@ -31,7 +38,7 @@
 					if (is_array($pjts_data) && count($pjts_data) > 0) {
 						foreach ($pjts_data as $record) {
 				?>
-							<tr>
+						<tr>
 							<td class="actions" align="center">
 								<a href="project/view_project/<?php echo $record['lead_id'] ?>">
 									View &raquo;
@@ -122,10 +129,7 @@
 					?>
             </tbody>
         </table>
-	</form>
-
 </div>
-<!--script type="text/javascript" src="assets/js/tablesort.min.js"></script-->
 <script type="text/javascript">
 $(function() {
 	dtPjtTable();

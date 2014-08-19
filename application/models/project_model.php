@@ -335,6 +335,15 @@ class Project_model extends crm_model
     	$this->db->order_by('first_name', "asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
+    }	
+	
+	public function get_practices()
+	{
+    	$this->db->select('id, practices');
+		$this->db->where('status', 1);
+    	$this->db->order_by('id');
+		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
+		return $query->result_array();
     }
 	
 	function get_payment_terms($id) 
@@ -407,6 +416,11 @@ class Project_model extends crm_model
 	{
 		$this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+    }
+	
+	function update_practice($tbl, $updt, $condn)
+	{
+		return $this->db->update($this->cfg['dbpref'] . $tbl, $updt, $condn);
     }
 	
 	//get expected payment details for the project.

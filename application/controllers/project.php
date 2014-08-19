@@ -50,11 +50,11 @@ class Project extends crm_controller {
 		$data['pm_accounts'] = $pjt_managers;
 		$data['customers']   = $this->project_model->get_customers();
 		$data['services']    = $this->project_model->get_services();
-		$data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
-		$data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
+		// $data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
+		// $data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
 		// echo "<pre>"; print_r($data['project_record']); exit;
-		unset($data['records']);
-		$data['records']     = array();
+		// unset($data['records']);
+		// $data['records']     = array();
 		$this->load->view('projects/projects_view', $data);
     }
 	
@@ -64,15 +64,25 @@ class Project extends crm_controller {
 	public function advance_filter_search_pjt()
 	{
  		$inputData = real_escape_array($this->input->post());
-
-		$pjtstage 	= $inputData['pjtstage'];
-		$pm_acc   	= $inputData['pm_acc'];
-		$cust     	= $inputData['cust'];
-		$service 	= $inputData['service'];
-		$keyword  	= $inputData['keyword'];
-		$datefilter = $inputData['datefilter'];
-		$from_date	= $inputData['from_date'];
-		$to_date  	= $inputData['to_date'];
+		
+		if(!empty($inputData)) {
+			$pjtstage 	= $inputData['pjtstage'];
+			// $pm_acc   	= $inputData['pm_acc'];
+			$cust     	= $inputData['cust'];
+			$service 	= $inputData['service'];
+			$keyword  	= $inputData['keyword'];
+			$datefilter = $inputData['datefilter'];
+			$from_date	= $inputData['from_date'];
+			$to_date  	= $inputData['to_date'];
+		} else {
+			$pjtstage 	= '';
+			$cust     	= '';
+			$service 	= '';
+			$keyword  	= '';
+			$datefilter = '';
+			$from_date	= '';
+			$to_date  	= '';
+		}
 		
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
@@ -80,7 +90,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$pm_acc,$cust,$service,$keyword,$datefilter,$from_date,$to_date);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$keyword,$datefilter,$from_date,$to_date);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
@@ -152,6 +162,7 @@ class Project extends crm_controller {
             }
 			
 			$data['user_accounts'] = $this->project_model->get_users();
+			$data['practices'] 	   = $this->project_model->get_practices();
 			
 			$data['pm_accounts'] = array();
 			$pjt_managers = $this->project_model->get_user_byrole(3);
@@ -295,6 +306,24 @@ class Project extends crm_controller {
 		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
 		$data['project_type']			= $project_type;
 		return $data;
+	}
+	
+	public function set_practices()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['practice'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt = array('practice' => $updt['practice']);
+			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			if($updt_id==0)
+			$data['error'] = 'Error in Updation';
+		}
+		echo json_encode($data);
 	}
 
 	function chkPjtIdFromdb()

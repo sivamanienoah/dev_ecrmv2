@@ -183,94 +183,104 @@ if (get_default_currency()) {
 				</div>
 			</form>
 			<p>&nbsp;</p>
-
 		</div>
 		
         <div class="pull-left side1 test-block"> 
-			<h2 class="job-title">
-				<?php
-					echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
-				?>
-			</h2>
+			<h2 class="job-title"> <?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES); ?> </h2>
 			<?php
-				if (isset($quote_data['pjt_id'])) 
-				{
+				if (isset($quote_data['pjt_id'])) {
 					$varPjtId = $quote_data['pjt_id'];
 				}
-			?>
-			<?php 
+				
 				$readonly_status = false;
 				if($chge_access != 1)
 				$readonly_status = true;
 				if($quote_data['pjt_status'] == 2)
 				$readonly_status = true;
 			?>
-			<div class="clrboth">
-				<h6 class="pjt_data">Billing Type</h6>
-				<div class="pjt-resultclass">
-					<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
-					<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
-					<span id="errmsg_bill_type" style="color:red"></span>
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Practice</label>
+					<select name="practice" id="practice" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="">Select Practice</option>
+						<?php if(!empty($practices)) {
+							foreach($practices as $pract) {
+								$selectedPractice = '';
+								if($pract['id'] == $quote_data['practice']) {
+									$selectedPractice = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $pract['id']; ?>" <?php echo $selectedPractice; ?>><?php echo $pract['practices']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
 				</div>
-			</div>
-			<form>
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
 				<div>
-					<div style="float:left;">
-						<h5><label class="project-id">Project ID</label>&nbsp;&nbsp;
-
-						<input class="textfield" style="width: 156px;" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
-						<input type="hidden" class="hiddenUrl"/>
-						</h5>
-					</div>					
-					<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-						<div class="buttons">
-							<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 118px;" onclick="setProjectId(); return false;">
-								Set Project ID
-							</button>
-						</div>
-						<div class="error-msg">
-							<span id="pjt_id_errormsg" style="color:red"></span>
-							<span class="checkUser" style="color:green">Project Id Saved.</span>
-							<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
-						</div>
-					<?php } ?>
-				</div>	
-			</form>
-			<form>
-				<div>
-					<div style="float:left;">
-						<h5><label class="project-val">Project Status</label>&nbsp;&nbsp;
-						<select name="pjt_status" id="pjt_status" class="textfield" style="width:161px;" <?php if ($chge_access != 1) { ?> disabled <?php } ?> >
-							<option value="1"  <?php if($quote_data['pjt_status'] == 1) echo 'selected="selected"'; ?>>Project In Progress</option>
-							<option value="2"  <?php if($quote_data['pjt_status'] == 2) echo 'selected="selected"'; ?>>Project Completed</option>
-							<option value="3"  <?php if($quote_data['pjt_status'] == 3) echo 'selected="selected"'; ?>>Project Onhold</option>
-							<option value="4"  <?php if($quote_data['pjt_status'] == 4) echo 'selected="selected"'; ?>>Inactive</option>
-                        </select>
-						<input type="hidden" class="hiddenUrl"/>
-						</h5>
-					</div>					
-					<?php if ($chge_access == 1) { ?>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
-						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 124px;" onclick="setProjectStatus(); return false;">
-							Set Project Status
-						</button>
-						<div id="resmsg" class="error-msg"></div>
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setPractices(); return false;">Set</button>
 					</div>
-					<?php } ?>
-				</div>	
+					<div id="resmsg_practice"></div>
+				<?php } ?>
+				</div>
 			</form>
 			
-			<div class="clrboth">
-				<h6 class="pjt_data">RAG Status</h6>
-				<div class="rag-status">
-					<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-					<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-					<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-					<span id="errmsg_rag_status" style="color:red; float: right; margin: 6px 0px 0px 5px;"></span>
-				</div>
+			<label class="pull-left">Billing Type</label>
+			<div style="line-height: 25px;">
+				<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
+				<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
+				<span id="errmsg_bill_type" style="color:red"></span>
 			</div>
-			
+			<div class="clear"></div>
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="project-id">Project ID</label>
+					<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
+					<input type="hidden" class="hiddenUrl"/>
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px;" onclick="setProjectId(); return false;">Set</button>
+					</div>
+					<div class="error-msg">
+						<span id="pjt_id_errormsg" style="color:red"></span>
+						<span class="checkUser" style="color:green">Project Id Saved.</span>
+						<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
+					</div>
+				<?php } ?>
+				</div>
+			</form>
+			<form>
+				<div class="pull-left">
+					<label class="project-status">Project Status</label>
+					<select name="pjt_status" id="pjt_status" class="textfield" <?php if ($chge_access != 1) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="1"  <?php if($quote_data['pjt_status'] == 1) echo 'selected="selected"'; ?>>Project In Progress</option>
+						<option value="2"  <?php if($quote_data['pjt_status'] == 2) echo 'selected="selected"'; ?>>Project Completed</option>
+						<option value="3"  <?php if($quote_data['pjt_status'] == 3) echo 'selected="selected"'; ?>>Project Onhold</option>
+						<option value="4"  <?php if($quote_data['pjt_status'] == 4) echo 'selected="selected"'; ?>>Inactive</option>
+					</select>
+					<input type="hidden" class="hiddenUrl"/>
+				</div>					
+				<?php if ($chge_access == 1) { ?>
+				<div class="buttons">
+					<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px;" onclick="setProjectStatus(); return false;">Set</button>
+					<div id="resmsg" class="error-msg"></div>
+				</div>
+				<?php } ?>
+			</form>
+			<div class="pull-left"><label class="rag">RAG Status</label></div>
+			<div class="rag-status">
+				<input type="radio" name="rag_status" class="rag_stat" value="1" id="red" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
+				<input type="radio" name="rag_status" class="rag_stat" value="2" id="amber" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
+				<input type="radio" name="rag_status" class="rag_stat" value="3" id="green" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
+				<span id="errmsg_rag_status" style="color:red; float: right; margin: 6px 0px 0px 5px;"></span>
+			</div>
+
 			<!-- Project Progress Thermometer - Start -->
 			<div style="margin:10px 0; ">
 				<h6 class="status-title">Project Completion Status &nbsp; <span class="small" style="color:#a51e04" >[ Current Status - <em><strong>0</strong>% Completed </em> ]</span></h6>
@@ -302,128 +312,36 @@ if (get_default_currency()) {
 			<!-- Project Progress Thermometer - End -->
 
 			<!--List the project Type from the timesheet-->
-			<div class="clrboth">
-				<h6 class="pjt_data">Project Type</h6>
-					<div class="pjt-resultclass">
-					<?php
-						if(count($timesheetProjectType>0)) {
-							echo $timesheetProjectType['project_type_name'];
-						}
-					?>
-					</div>
+			<label class="pull-left">Project Type</label>
+			<div class="displaycontent">
+				<?php
+					if(count($timesheetProjectType>0)) {
+						echo $timesheetProjectType['project_type_name'];
+					}
+				?>
 			</div>
-			<!--form>
-				<div>
-					<div style="float:left;">
-						<h5><label class="project-val">Project Type</label>&nbsp;&nbsp;
-						<select name="project_type" id="project_type" class="textfield" style="width:138px;" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-							<option value="">Select</option>
-							<option value="1" <?php #if($quote_data['project_type'] == 1) echo 'selected="selected"'; ?>>Fixed</option>
-							<option value="2" <?php #if($quote_data['project_type'] == 2) echo 'selected="selected"'; ?>>Internal</option>
-							<option value="3" <?php #if($quote_data['project_type'] == 3) echo 'selected="selected"'; ?>>T&amp;M</option>
-                        </select>
-						</h5>
-					</div>					
-					<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-					<div class="buttons">
-						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 124px;" onclick="setProjectType(); return false;">
-							Set Project Type
-						</button>
-						<div id="errmsg_project_type"></div>
-					</div>
-					<?php } ?>
-				</div>	
-			</form-->
-			
 			<?php require (theme_url().'/tpl/user_accounts_options.php'); ?>
-			<!--form>
-				<div>
-					<div style="float:left;">
-						<h5><label class="project-val">Project Manager</label>&nbsp;&nbsp;
-						<select name="project_lead" id="project_lead" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> >
-							<option value="0">Please Select</option>
-							<?php //echo $pm_options ?>
-						</select>
-						</h5>
-					</div>					
-					<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-					<div class="buttons">
-						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px; width: 60px;" onclick="setProjectLead(); return false;">
-							Set PM
-						</button>
-						<input type="hidden" value="" id="previous-project-manager"/>
-						<div id="pjt_lead_errormsg"></div>
-					</div>
-					<?php } ?>
-				</div>	
-			</form-->
 			
 			<!--List the project lead from the timesheet-->
-			<div class="clrboth">
-				<h6 class="pjt_data">Project Manager</h6>
-					<div class="pjt-resultclass">
-					<?php
-						if(count($timesheetProjectLead>0)) {
-							echo $timesheetProjectLead['project_lead'];
-						}
-					?>
-					</div>
+			<label class="pull-left">Project Manager</label>
+			<div class="displaycontent">
+				<?php
+					if(count($timesheetProjectLead>0)) {
+						echo $timesheetProjectLead['project_lead'];
+					}
+				?>
 			</div>
 			
-			<!--form name="contractor-assign">
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				<h5 class="project-lead-label">Assign Project Team</h5>
-				<div id="show-con">
-					<?php if ($chge_access == 1) { ?>
-						<div class="list-contractors">
-							<div style="float:left;">
-								<span style="padding-left: 55px;">Members</span><br />
-								<select multiple="multiple" id="select1"><?php echo $contractor_list_select1 ?></select>
-							</div>
-							
-							<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
-								<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
-								<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
-								<input type="hidden" value ="" id="project-member" name="project-member"/>
-							</div>
-							<div style="float:left;">
-								<span style="padding-left: 45px;">Project Team</span><br />
-								<select multiple="multiple" name="select2" id="select2" ><?php echo $contractor_list_select2 ?></select>
-							</div>
-						</div>
-					<?php 
-					} else { 
-					?>
-						<span style="padding-left: 45px;">Project Team</span><br />
-						<select id="select3" multiple="multiple"><?php echo $contractor_list_select2 ?></select>
-					<?php		
-					}
-					?>
-					<?php 
-						if($chge_access == 1 && $quote_data['pjt_status'] != 2) {
-					?>
-						<div class="buttons" style="clear:both;">
-							<button type="submit" class="positive" id="positiveSelectBox" onclick="setContractorJob(); return false;">Set Project Team</button>
-							<div id="errMsgPjtNulMem" class="error-msg" style="display:none; color:#FF4400;">Please assign any project member.</div>
-						</div>
-					<?php 
-					}
-					?>
-				</div>
-			</form-->
-			
 			<!--List the project assigned members from the timesheet-->
-			<div class="clrboth">
-				<h6 class="pjt_data">Project Team Members</h6>
-				<div class="team_list pjt-resultclass">
-					<?php
-						if(count($timesheetAssignedUsers>0)) {
-							foreach($timesheetAssignedUsers as $project_assignees) {
-								echo $project_assignees . "<br />";
-							}
+			<h6 class="pull-left" style="width: 115px; padding-top:8px;">Project Team Members</h6>
+			<div class="team_list">
+				<?php
+					if(count($timesheetAssignedUsers>0)) {
+						foreach($timesheetAssignedUsers as $project_assignees) {
+							echo $project_assignees . "<br />";
 						}
-					?>
-				</div>
+					}
+				?>
 			</div>
 			
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">

@@ -3,6 +3,16 @@
 *@
 */
 
+$('#ad_filter').hide();
+$('#excel').hide();
+$('#ajax_loader').show();
+var sturl = site_base_url+"project/advance_filter_search_pjt/?"+Math.random();
+$('#ad_filter').load(sturl,function(){
+	$('#ajax_loader').hide();
+	$('#ad_filter').show();
+	$('#excel').show();
+});
+
 $(function() {
 	dtPjtTable();
 });	
@@ -72,6 +82,9 @@ function dtPjtTable() {
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
 				$('#load').show();
+				$("#ad_filter" ).hide();
+				$('#ajax_loader').show();
+				$('#excel').hide();
 			}
 			
 		    $.ajax({
@@ -79,59 +92,16 @@ function dtPjtTable() {
 		        url: site_base_url+'project/advance_filter_search_pjt',
 		        data: params,
 		        success: function(data) {
-		    		$("#ad_filter" ).html(data);
-					$('#advance').show();
+					$("#ad_filter" ).html(data);
 					$('#load').hide();
+					$('#ajax_loader').hide();
+					$("#ad_filter" ).show();
+					$('#advance').show();
+					$('#excel').show();
 		        }
 		    });
 		    return false;
 		});
-		
-/**
-	$('#advanceFilters_pjt').submit(function() 
-	{	
-		$('#advance').hide();
-		$('#load').show();
-		var pjtstage = $("#pjt_stage").val(); 
-		var pm_acc = $("#pm_acc").val(); 
-		var cust = $("#customer1").val(); 
-		var service = $("#services").val(); 
-		var keyword = $("#keywordpjt").val(); 
-		if(keyword == "Project Title, Name or Company")
-		keyword = 'null';
-		document.getElementById('ad_filter').style.display = 'block';
-		var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+service+'/'+encodeURIComponent(keyword);
-		$('#ad_filter').load(sturl,function(){
-			$('#advance').show();
-			$('#load').hide();
-		});
-		return false;
-	
-		
-		var params = {'pjtstage':pjtstage,'pm_acc':pm_acc,'keyword':encodeURIComponent(keyword)};
-		params[csrf_token_name] = csrf_hash_token; 
-		
-		/* $('#ad_filter').load('project/advance_filter_search_pjt',params,function(){
-			$('#advance').show();
-			$('#load').hide();
-		}); */
-
-/**		
-	});
-
-	$('#pjt_search_form').submit(function() {	
-			var  keyword = $("#keywordpjt").val(); 
-			if(keyword == "Project Title, Name or Company")
-			keyword = 'null';
-			var pjtstage = $("#pjt_stage").val(); 
-			var pm_acc = $("#pm_acc").val(); 
-			var cust = $("#customer1").val(); 
-			var service = $("#services").val(); 
-			var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+service+'/'+encodeURIComponent(keyword);
-			$('#ad_filter').load(sturl);
-			return false;
-	});
-**/	
 	
 	function deleteProject(id, title) {
 		$.blockUI({

@@ -881,10 +881,41 @@
 			});
 		}
 	}
+	
+	//Set the Project Practices//
+	function setPractices() {
+		$('#resmsg_practice').empty();
+		var practice = $('#practice').val();
+		
+		if(practice == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_practices/',
+			dataType: 'json',
+			data: 'practice='+practice+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_practice').html("<span class='ajx_success_msg'>Status Updated</span>");
+				} else {
+					$('#resmsg_practice').show();
+					$('#resmsg_practice').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
 
 	//update the project status.
 	function setProjectStatus() {
-		var pjt_stat = $('#pjt_status').val()
+		var pjt_stat = $('#pjt_status').val();
 		$.blockUI({
 			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
@@ -949,7 +980,6 @@
 			$("#dates_errmsg").show();
 			return false;
 		} else {
-			
 			var params 				= {'lead_id':curr_job_id, 'date_type':set_date_type, 'date':date_val};
 			params[csrf_token_name] = csrf_hash_token;
 		
@@ -1003,9 +1033,7 @@
 		});
 		
 		$("#dates_errmsg").empty();
-		
-		
-		
+
 		var params 				= {'lead_id':curr_job_id, 'date_type':date_type};
 		params[csrf_token_name] = csrf_hash_token;
 	
@@ -1661,12 +1689,7 @@
 			$('#msErrNotifyFadeout').fadeOut();
 			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
-		}
-		
-		function fadeoutpagerefresh() 
-		{
-			$('#errmsg_bill_type').fadeOut();
-			window.location.reload();
+			// $('#resmsg_practice').fadeOut();
 		}
 
 		function paymentReceivedEdit(pdid) 
@@ -2138,6 +2161,10 @@
 				$("#errmsg_bill_type").show();
 				return false;
 			} else {
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
 				var params 				= {'lead_id':curr_job_id, 'billing_type':billing_type_val};
 				params[csrf_token_name] = csrf_hash_token;
 			
@@ -2148,21 +2175,24 @@
 						if (typeof(_data) == 'object') {
 							if (_data.error == false) {
 								$('#errmsg_bill_type').html("<span class='ajx_success_msg'>Status Updated.</span>");
+								setTimeout(function(){
+									$.blockUI({
+										message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+										css: {background:'#666', border: '2px solid #999', padding:'2px', height:'35px', color:'#333'}
+									});
+									window.location.reload(true);
+								},500);
 							} else {
 								$("#errmsg_bill_type").text(data.error);
-								$("#errmsg_bill_type").show();
 							}
 						} else {
 							$("#errmsg_bill_type").text('Updating faild, please try again.');
-							$("#errmsg_bill_type").show();
 						}
 					},"json"
 				);
 			}
 			$("#errmsg_bill_type").show();
-			setTimeout('fadeoutpagerefresh()', 1000);
 		});
-		
 	});
 
 /*RAG Status Script - Start*/
