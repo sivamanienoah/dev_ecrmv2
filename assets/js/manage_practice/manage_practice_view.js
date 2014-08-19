@@ -1,6 +1,6 @@
 /*
- *@Manage Service View
- *@Manage Service Controller
+ *@Manage Practice View
+ *@Manage Practice Controller
 */
 
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable 
@@ -20,7 +20,7 @@ function checkStatus(id) {
 		success: function(response) {
 			if (response.html == 'NO') {
 				$('#dialog-message-'+id).show();
-				$('#dialog-message-'+id).append("One or more Projects currently assigned for this service. This cannot be deleted.");
+				$('#dialog-message-'+id).append("One or more Projects currently assigned for this Practice. This cannot be deleted.");
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({

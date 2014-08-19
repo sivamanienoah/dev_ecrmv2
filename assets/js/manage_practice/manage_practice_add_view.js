@@ -1,6 +1,6 @@
 /*
- *@Manage Lead Source
- *@Manage Service Controller
+ *@Manage Practice
+ *@Manage Practice Controller
 */
 
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
