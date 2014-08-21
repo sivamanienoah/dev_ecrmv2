@@ -1,6 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
-	<script type="text/javascript" src="assets/js/j-tip.js?q=1"></script>
+	<!--script type="text/javascript" src="assets/js/j-tip.js?q=1"></script-->
 	<style type="text/css">
 	#JT {
 		position:absolute;
