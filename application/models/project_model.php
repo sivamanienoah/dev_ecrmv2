@@ -29,12 +29,13 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$keyword,$datefilter,$from_date,$to_date) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		$stage 		= $pjtstage;
 		$customer 	= $cust;
 		$services	= $service;
+		$practices	= $practice;
 		$datefilter = $datefilter;
 		$from_date 	= $from_date;
 		$to_date	= $to_date;
@@ -59,6 +60,9 @@ class Project_model extends crm_model
 			} */
 			if(!empty($services)){		
 				$this->db->where_in('j.lead_service',$services);
+			}
+			if(!empty($practices)){		
+				$this->db->where_in('j.practice',$practices);
 			}
 			if(!empty($from_date)) {
 				switch($datefilter) {
@@ -122,7 +126,7 @@ class Project_model extends crm_model
 			$result_ids = array_unique($res);
 			$curusid= $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'customers as c');
 			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
@@ -140,6 +144,9 @@ class Project_model extends crm_model
 			}
 			if(!empty($services)){		
 				$this->db->where_in('j.lead_service',$services); 
+			}
+			if(!empty($practices)){		
+				$this->db->where_in('j.practice',$practices);
 			}
 			if(!empty($from_date)) {
 				switch($datefilter) {
@@ -698,7 +705,7 @@ class Project_model extends crm_model
 	public function get_services() {
 		$this->db->select('sid, services');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_services');
-	    $this->db->where("status",'1');
+	    $this->db->where("status", '1');
 		$this->db->order_by("sid", "asc");
 	    $services = $this->db->get();
 	    $services =  $services->result_array();

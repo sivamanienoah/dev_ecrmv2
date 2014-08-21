@@ -51,6 +51,7 @@ if (get_default_currency()) {
 							<!--th>By Project Manager Wise</th-->
 							<th>By Customer Wise</th>
 							<th>By Services Wise</th>
+							<th>By Practices</th>
 							<th>By Date(Actual)</th>
 						</tr>	
 					</thead>
@@ -89,6 +90,13 @@ if (get_default_currency()) {
 							</select>
 						</td>
 						<td>
+							<select style="width:150px;" multiple="multiple" id="practices" name="practices[]">
+								<?php foreach($practices as $pract) {?>
+								<option value="<?php echo $pract['id']; ?>"><?php echo $pract['practices'];?></option>	
+								<?php } ?>
+							</select>
+						</td>
+						<td>
 							<select style="width:178px;" id="datefilter" name="datefilter">
 								<option value="1">All</option>
 								<option value="2">Start Date</option>
@@ -116,7 +124,7 @@ if (get_default_currency()) {
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
-			<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; margin-top:15px;">
+			<div id="ad_filter" class="custom_dashboardfilter" style="margin-top:15px;">
 				
 			</div>
 		<?php 

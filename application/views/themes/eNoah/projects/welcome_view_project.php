@@ -223,7 +223,7 @@ if (get_default_currency()) {
 					<div class="buttons">
 						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setPractices(); return false;">Set</button>
 					</div>
-					<div id="resmsg_practice"></div>
+					<div id="resmsg_practice" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
 				<?php } ?>
 				</div>
 			</form>

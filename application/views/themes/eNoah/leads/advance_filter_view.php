@@ -10,18 +10,17 @@ $userdata = $this->session->userdata('logged_in_user');
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
 	<tr>
-	<th>Action</th>
-	<th>Lead No.</th>
-	<th>Lead Title</th>
-	<th>Customer</th>
-	<th>Region</th>
-	<th>Lead Owner</th>
-	<th>Lead Assigned To</th>
-	<th>Expected Worth</th>
-	<th>Lead Stage</th>
-	<th>Lead Indicator</th>
-	<th>Status</th>
-	
+		<th>Action</th>
+		<th>Lead No.</th>
+		<th>Lead Title</th>
+		<th>Customer</th>
+		<th>Region</th>
+		<th>Lead Owner</th>
+		<th>Lead Assigned To</th>
+		<th>Expected Worth</th>
+		<th>Lead Stage</th>
+		<th>Lead Indicator</th>
+		<th>Status</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -33,19 +32,21 @@ $userdata = $this->session->userdata('logged_in_user');
 	?>
 			<tr>
 				<td class="actions" align="center">
-					<?php if ($this->session->userdata('viewlead')==1) { ?><a href="<?php echo  base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'] ?>">View</a><?php } else echo "View"; ?>
+					<?php if ($this->session->userdata('viewlead')==1) { ?>
+						<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'] ?>" title='View'>
+							<img src="assets/img/view.png" alt='view' height="16" >
+						</a>
+					<?php } ?>
 					<?php 
-					if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) {
-					echo ' | <a href="welcome/edit_quote/' . $filter_result['lead_id'] . '">Edit</a>'; ?>
+					if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) { ?>					
+						<a href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
+							<img src="assets/img/edit.png" alt='edit' height="15" >
+						</a>
 					<?php } ?> 
 					<?php
-					if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) {
-						$lead_tle = str_replace("'", "\'", $filter_result['lead_title']);
-					?>
-						| <a class="delete" href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>, '<?php echo $lead_tle; ?>'); return false; "> Delete </a> 
-					<?php 				
-					} 
-					?>
+					if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) { ?>
+						<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' height="15" ></a> 
+					<?php } ?>
 				</td>
 				<td>		
 				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>">		

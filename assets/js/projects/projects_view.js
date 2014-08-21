@@ -37,7 +37,8 @@ function dtPjtTable() {
 	var pjtstage = $("#pjt_stage").val(); 
 	// var pm_acc	 = $("#pm_acc").val(); 
 	var cust	 = $("#customer1").val(); 
-	var service	 = $("#services").val(); 
+	var service	 = $("#services").val();
+	var practice = $("#practices").val();
 	var keyword	 = $("#keywordpjt").val(); 
 	//alert(keyword);
 	if(keyword == "Project Title, Name or Company")
@@ -56,12 +57,14 @@ function dtPjtTable() {
 				var pjtstage = $("#pjt_stage").val(); 
 				// var pm_acc	 = $("#pm_acc").val();
 				var cust	 = $("#customer1").val(); 
-				var service	 = $("#services").val(); 
+				var service	 = $("#services").val();
+				var practice = $("#practices").val();				
 			} else {
 				$("#pjt_stage").val("");
 				// $("#pm_acc").val("");
 				$("#customer1").val("");
 				$("#services").val("");
+				$("#practices").val("");
 			}
 		}
 		
@@ -69,7 +72,8 @@ function dtPjtTable() {
 			var pjtstage = $("#pjt_stage").val(); 
 			// var pm_acc 	 = $("#pm_acc").val(); 
 			var cust 	 = $("#customer1").val(); 
-			var service  = $("#services").val(); 
+			var service  = $("#services").val();
+			var practice = $('#practices').val();
 			var keyword  = $("#keywordpjt").val();
 			var datefilter  = $("#datefilter").val();
 			var from_date   = $("#from_date").val();
@@ -77,7 +81,7 @@ function dtPjtTable() {
 			if(keyword == "Project Title, Name or Company")
 			keyword = '';
 			
-			var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+			var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'practice':practice,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
@@ -103,14 +107,14 @@ function dtPjtTable() {
 		    return false;
 		});
 	
-	function deleteProject(id, title) {
+	function deleteProject(id) {
 		$.blockUI({
-			message:'<br /><h5>Are You Sure Want to Delete <br />'+title+'?<br /><br />This will delete all the items<br />and logs attached to this Project.</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+			message:'<br /><h5>Are You Sure Want to Delete <br />this project?<br /><br />This will delete all the items<br />and logs attached to this Project.</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 			css:{width:'440px'}
 		});
 	}
 		
-	function processDelete(id,t) {
+	function processDelete(id) {
 		window.location.href = site_base_url+'project/delete_quote/'+id;
 	}
 
@@ -124,6 +128,7 @@ function dtPjtTable() {
 			// var pm    = $('#pm_acc').val();
 			var customer = $('#customer1').val();
 			var service = $('#services').val();
+			var practice = $('#practices').val();
 			var datefilter  = $("#datefilter").val();
 			var from_date   = $("#from_date").val();
 			var to_date  	= $("#to_date").val();
@@ -135,6 +140,7 @@ function dtPjtTable() {
 			  '<input type="hidden" name="stages" value="' +stage+ '" />' +
 			  '<input type="hidden" name="customers" value="' +customer+ '" />' +
 			  '<input type="hidden" name="services" value="' +service+ '" />' +
+			  '<input type="hidden" name="practices" value="' +practice+ '" />' +
 			  '<input type="hidden" name="datefilter" value="' +datefilter+ '" />' +
 			  '<input type="hidden" name="from_date" value="' +from_date+ '" />' +
 			  '<input type="hidden" name="to_date" value="' +to_date+ '" />' +

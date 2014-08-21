@@ -1689,7 +1689,7 @@
 			$('#msErrNotifyFadeout').fadeOut();
 			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
-			// $('#resmsg_practice').fadeOut();
+			$('#resmsg_practice').fadeOut();
 		}
 
 		function paymentReceivedEdit(pdid) 
