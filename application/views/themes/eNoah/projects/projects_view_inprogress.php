@@ -32,23 +32,27 @@ if (get_default_currency()) {
 			switch ($record['rag_status']) {
 				case 1:
 					$ragStatus = '<span class=label-inactive>Red</span>';
+					$rag_color = '#c0504d';
 				break;
 				case 2:
 					$ragStatus = '<span class=label-amber>Amber</span>';
+					$rag_color = '#ff7e00';
 				break;
 				case 3:
 					$ragStatus = '<span class=label-success>Green</span>';
+					$rag_color = '#468847';
 				break;
 				default:
 					$ragStatus = "-";
+					$rag_color = '';
 			}
 			
 			if($record['billing_type'] == 1) {
-				$milestone_content .= "<tr>";
+				$milestone_content .= '<tr bgcolor='.$rag_color.'>';
 				$milestone_content .= "<td class='actions' align='center'>";
-				$milestone_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src=assets/img/view.png alt='view'></a>";
+				$milestone_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view'></a>";
 				if($this->session->userdata('delete')==1) {
-				$milestone_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src=assets/img/trash.png alt='delete' height=15px;></a>";
+				$milestone_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
 				}
 				$milestone_content .= "</td>";
 				$milestone_content .= "<td>".$title."</td>";
@@ -69,9 +73,9 @@ if (get_default_currency()) {
 			} else {
 				$monthly_content .= "<tr>";
 				$monthly_content .= "<td class='actions' align='center'>";
-				$monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' height='16'></a>";
+				$monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a>";
 				if($this->session->userdata('delete')==1) {
-				$monthly_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' height='15'></a>";
+				$monthly_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
 				}
 				$monthly_content .= "</td>";
 				$monthly_content .= "<td>".$title."</td>";
@@ -94,22 +98,22 @@ if (get_default_currency()) {
 	}
 ?>
 <h2>Milestone Based</h2>
-<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
+<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
 		<tr>
 			<th>Action</th>
-			<th>Project Title</th>
-			<th>Completion %</th>
-			<th>Project Type</th>
-			<th>RAG Status</th>
-			<th>Planned Hours</th>
-			<th>Billable Hours</th>
-			<th>Internal Hours</th>
-			<th>Non-Billable Hours</th>
-			<th>Total Utilized Hours (Actuals)</th>
-			<th>Effort Variance</th>
-			<th>Project Value (<?php echo $default_cur_name; ?>)</th>
-			<th>Utilization Cost (<?php echo $default_cur_name; ?>)</th>
+			<th>Title</th>
+			<th><img src="assets/img/completion.png">%</th>
+			<th><img src="assets/img/type.png"></th>
+			<th>RAG</th>
+			<th><img src="assets/img/planned-hour.png"></th>
+			<th><img src="assets/img/billable-hour.png" ></th>
+			<th><img src="assets/img/internal-hour.png"></th>
+			<th><img src="assets/img/non-billable.png" ></th>
+			<th><img src="assets/img/total-hours.png" ></th>
+			<th><img src="assets/img/variance.png" ></th>
+			<th><img src="assets/img/project_value.png" > (<?php echo $default_cur_name; ?>)</th>
+			<th><img src="assets/img/utilization_project_value.png" > (<?php echo $default_cur_name; ?>)</th>
 			<th>P&L </th>
 			<th>P&L %</th>
 		</tr>
@@ -125,15 +129,15 @@ if (get_default_currency()) {
 	<thead>
 		<tr>
 			<th>Action</th>
-			<th>Project Title</th>
+			<th>Title</th>
 			<th>Completion %</th>
-			<th>Project Type</th>
-			<th>RAG Status</th>
-			<th>Planned Hours</th>
-			<th>Billable Hours</th>
-			<th>Internal Hours</th>
-			<th>Non-Billable Hours</th>
-			<th>Total Utilized Hours (Actuals)</th>
+			<th>Type</th>
+			<th>RAG</th>
+			<th>Planned Hr</th>
+			<th>Billable Hr</th>
+			<th>Internal Hr</th>
+			<th>Non-Billable Hr</th>
+			<th>Total Utilized Hr (Actuals)</th>
 			<th>Project Value (<?php echo $default_cur_name; ?>)</th>
 			<th>Utilization Cost (<?php echo $default_cur_name; ?>)</th>
 			<th>P&L </th>

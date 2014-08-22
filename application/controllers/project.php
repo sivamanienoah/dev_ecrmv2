@@ -93,8 +93,9 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
-		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
+		// $getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
+		// $data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
+		$data = array();
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
@@ -2631,6 +2632,13 @@ HDOC;
 					}
 					$project_type = $res['project_type'];
 				}
+				
+				/*For monthly based projects if there is no records for current month, Project type is also empty. So we get the project type individual for dashboard*/
+				if((empty($project_type)) && !empty($rec['pjt_id']) && ($bill_type==2)) {
+					$timesheet_project_type = $this->project_model->get_timesheet_project_type($rec['pjt_id']);
+					$project_type = $timesheet_project_type['project_type_name']; 
+				}
+				
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
 				$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
@@ -2822,18 +2830,18 @@ HDOC;
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(19);
-			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(13);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(24);
-			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(14);
-			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(17);
+			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(17);
 			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(8);
-			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(7);
-			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(12);
+			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('D2:D'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
@@ -2849,17 +2857,17 @@ HDOC;
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(19);
-			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(13);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(13);
-			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(24);
-			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(14);
-			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(17);
+			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(7);
-			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(7);
-			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(12);
+			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$k)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('F2:F'.$k)->getNumberFormat()->setFormatCode('0.00');

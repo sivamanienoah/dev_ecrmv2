@@ -545,7 +545,7 @@ class Project_model extends crm_model
 		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
 		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
 		
-		// echo $sql; EXIT;
+		// echo $sql; #EXIT;
 		$query = $timesheet_db->query($sql);
 		return $query->result_array();
 	}
@@ -562,7 +562,6 @@ class Project_model extends crm_model
 		FROM ".$timesheet_db->dbprefix('project')." as pj 
 		JOIN ".$timesheet_db->dbprefix('project_types')." as pjtype ON pjtype.project_type_id = pj.project_type_id 
 		WHERE pj.project_code = '".$pjt_code."' ";
-		
 		// echo $sql; exit;
 		$query = $timesheet_db->query($sql);
 		return $query->row_array();

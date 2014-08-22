@@ -34,18 +34,18 @@ $userdata = $this->session->userdata('logged_in_user');
 				<td class="actions" align="center">
 					<?php if ($this->session->userdata('viewlead')==1) { ?>
 						<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'] ?>" title='View'>
-							<img src="assets/img/view.png" alt='view' height="16" >
+							<img src="assets/img/view.png" alt='view' >
 						</a>
 					<?php } ?>
 					<?php 
 					if ($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) { ?>					
 						<a href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
-							<img src="assets/img/edit.png" alt='edit' height="15" >
+							<img src="assets/img/edit.png" alt='edit' >
 						</a>
 					<?php } ?> 
 					<?php
 					if ($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2 ) { ?>
-						<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' height="15" ></a> 
+						<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 					<?php } ?>
 				</td>
 				<td>		

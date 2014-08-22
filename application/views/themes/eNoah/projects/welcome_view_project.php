@@ -315,8 +315,10 @@ if (get_default_currency()) {
 			<label class="pull-left">Project Type</label>
 			<div class="displaycontent">
 				<?php
-					if(count($timesheetProjectType>0)) {
+					if(count($timesheetProjectType)>0) {
 						echo $timesheetProjectType['project_type_name'];
+					} else {
+						echo '-';
 					}
 				?>
 			</div>
@@ -326,8 +328,10 @@ if (get_default_currency()) {
 			<label class="pull-left">Project Manager</label>
 			<div class="displaycontent">
 				<?php
-					if(count($timesheetProjectLead>0)) {
+					if(count($timesheetProjectLead)>0) {
 						echo $timesheetProjectLead['project_lead'];
+					} else {
+						echo '-';
 					}
 				?>
 			</div>
@@ -336,10 +340,12 @@ if (get_default_currency()) {
 			<h6 class="pull-left" style="width: 115px; padding-top:8px;">Project Team Members</h6>
 			<div class="team_list">
 				<?php
-					if(count($timesheetAssignedUsers>0)) {
+					if(count($timesheetAssignedUsers)>0) {
 						foreach($timesheetAssignedUsers as $project_assignees) {
 							echo $project_assignees . "<br />";
 						}
+					} else {
+						echo '-';
 					}
 				?>
 			</div>
