@@ -129,12 +129,12 @@ if (get_default_currency()) {
 					<tr>
 						<td><img src="assets/img/completion.png"> - Completion Percentage </span></td>
 						<td><img src="assets/img/type.png"> - Project Type</td>
-						<td><img src="assets/img/planned-hour.png"> - Planned Hour</td>
-						<td><img src="assets/img/billable-hour.png"> - Billable Hour</td>
-						<td><img src="assets/img/internal-hour.png"> - Internal Hour</td>
+						<td><img src="assets/img/planned-hour.png"> - Planned Hours</td>
+						<td><img src="assets/img/billable-hour.png"> - Billable Hours</td>
+						<td><img src="assets/img/internal-hour.png"> - Internal Hours</td>
 					</tr>
 					<tr>
-						<td><img src="assets/img/non-billable.png"> - Non Billable Hour</td>
+						<td><img src="assets/img/non-billable.png"> - Non Billable Hours</td>
 						<td><img src="assets/img/total-hours.png"> - Total Utilized Hours</td>
 						<td><img src="assets/img/project_value.png"> - Project Value</td>
 						<td><img src="assets/img/utilization_project_value.png"> - Utilization Cost</td>
