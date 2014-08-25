@@ -121,6 +121,28 @@ if (get_default_currency()) {
 			</div>
 			<div class="clearfix"></div>
 			<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
+			
+			<h2>Legends</h2>
+			<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
+				<!--Legends-->
+				<table cellspacing="10" cellpadding="0" style="color:#fff;">
+					<tr>
+						<td><img src="assets/img/completion.png"> - Completion Percentage </span></td>
+						<td><img src="assets/img/type.png"> - Project Type</td>
+						<td><img src="assets/img/planned-hour.png"> - Planned Hour</td>
+						<td><img src="assets/img/billable-hour.png"> - Billable Hour</td>
+						<td><img src="assets/img/internal-hour.png"> - Internal Hour</td>
+						<td><img src="assets/img/non-billable.png"> - Non Billable Hour</td>
+					</tr>
+					<tr>
+						<td><img src="assets/img/total-hours.png"> - Total Utilized Hours</td>
+						<td><img src="assets/img/project_value.png"> - Project Value</td>
+						<td><img src="assets/img/utilization_project_value.png"> - Utilization Cost</td>
+						<td><img src="assets/img/profitloss.png"> - P&L </td>
+						<td><img src="assets/img/profitloss.png"> - P&L % </td>
+					</tr>
+				</table>
+			</div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>

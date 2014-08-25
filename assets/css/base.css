@@ -1373,10 +1373,22 @@ ul.ui-sortable li{
     background-color: #c0504d;
 	color: #fff;
 }
+.label-red {
+    background-color: #c0504d;
+    border-radius: 10px;
+    color: #fff;
+    padding: 0 5px 0 10px;
+}
 .label-amber {
-	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	border-radius: 10px;
+	padding: 0 5px 0 10px;
     background-color: #ff7e00;
+	color: #fff;
+}
+.label-green {
+	border-radius: 10px;;
+	padding: 0 5px 0 10px;
+    background-color: #468847;
 	color: #fff;
 }
 /*Clearfix*/

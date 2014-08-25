@@ -93,9 +93,9 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		// $getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
-		// $data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		$data = array();
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
+		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
+		// $data = array();
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	

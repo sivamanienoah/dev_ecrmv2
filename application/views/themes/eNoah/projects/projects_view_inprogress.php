@@ -31,15 +31,15 @@ if (get_default_currency()) {
 			$profitlossPercent = sprintf('%0.2f', ($profitloss/$record['actual_worth_amt']));
 			switch ($record['rag_status']) {
 				case 1:
-					$ragStatus = '<span class=label-inactive>Red</span>';
+					$ragStatus = '<span class=label-red></span>';
 					$rag_color = '#c0504d';
 				break;
 				case 2:
-					$ragStatus = '<span class=label-amber>Amber</span>';
+					$ragStatus = '<span class=label-amber></span>';
 					$rag_color = '#ff7e00';
 				break;
 				case 3:
-					$ragStatus = '<span class=label-success>Green</span>';
+					$ragStatus = '<span class=label-green></span>';
 					$rag_color = '#468847';
 				break;
 				default:
@@ -103,19 +103,19 @@ if (get_default_currency()) {
 		<tr>
 			<th>Action</th>
 			<th>Title</th>
-			<th><img src="assets/img/completion.png">%</th>
-			<th><img src="assets/img/type.png"></th>
-			<th>RAG</th>
-			<th><img src="assets/img/planned-hour.png"></th>
-			<th><img src="assets/img/billable-hour.png" ></th>
-			<th><img src="assets/img/internal-hour.png"></th>
-			<th><img src="assets/img/non-billable.png" ></th>
-			<th><img src="assets/img/total-hours.png" ></th>
-			<th><img src="assets/img/variance.png" ></th>
-			<th><img src="assets/img/project_value.png" > (<?php echo $default_cur_name; ?>)</th>
-			<th><img src="assets/img/utilization_project_value.png" > (<?php echo $default_cur_name; ?>)</th>
-			<th>P&L </th>
-			<th>P&L %</th>
+			<th title="Completion Percentage"><img src="assets/img/completion.png">%</th>
+			<th title="Project Type"><img src="assets/img/type.png"></th>
+			<th title="RAG Status">RAG</th>
+			<th title="Planned Hour"><img src="assets/img/planned-hour.png"></th>
+			<th title="Billable Hour"><img src="assets/img/billable-hour.png"></th>
+			<th title="Internal Hour"><img src="assets/img/internal-hour.png"></th>
+			<th title="Non-Billable Hour"><img src="assets/img/non-billable.png"></th>
+			<th title="Total Utilized Hours"><img src="assets/img/total-hours.png"></th>
+			<th title="Effort Variance"><img src="assets/img/variance.png"></th>
+			<th title="Project Value"><img src="assets/img/project_value.png" >(<?php echo $default_cur_name; ?>)</th>
+			<th title="Utilization Cost"><img src="assets/img/utilization_project_value.png" >(<?php echo $default_cur_name; ?>)</th>
+			<th title="P&L"><img src="assets/img/profitloss.png"></th>
+			<th title="P&L %"><img src="assets/img/profitloss.png">%</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -130,24 +130,26 @@ if (get_default_currency()) {
 		<tr>
 			<th>Action</th>
 			<th>Title</th>
-			<th>Completion %</th>
-			<th>Type</th>
-			<th>RAG</th>
-			<th>Planned Hr</th>
-			<th>Billable Hr</th>
-			<th>Internal Hr</th>
-			<th>Non-Billable Hr</th>
-			<th>Total Utilized Hr (Actuals)</th>
-			<th>Project Value (<?php echo $default_cur_name; ?>)</th>
-			<th>Utilization Cost (<?php echo $default_cur_name; ?>)</th>
-			<th>P&L </th>
-			<th>P&L %</th>
+			<th title="Completion Percentage"><img src="assets/img/completion.png">%</th>
+			<th title="Project Type"><img src="assets/img/type.png"></th>
+			<th title="RAG Status">RAG</th>
+			<th title="Planned Hour"><img src="assets/img/planned-hour.png"></th>
+			<th title="Billable Hour"><img src="assets/img/billable-hour.png"></th>
+			<th title="Internal Hour"><img src="assets/img/internal-hour.png"></th>
+			<th title="Non-Billable Hour"><img src="assets/img/non-billable.png"></th>
+			<th title="Total Utilized Hours"><img src="assets/img/total-hours.png"></th>
+			<th title="Project Value"><img src="assets/img/project_value.png" >(<?php echo $default_cur_name; ?>)</th>
+			<th title="Utilization Cost"><img src="assets/img/utilization_project_value.png" >(<?php echo $default_cur_name; ?>)</th>
+			<th title="P&L"><img src="assets/img/profitloss.png"></th>
+			<th title="P&L %"><img src="assets/img/profitloss.png">%</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php echo $monthly_content; ?>
 	</tbody>
 </table>
+
+
 <script type="text/javascript">
 $(function() {
 	dtPjtTable();
