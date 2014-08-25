@@ -228,7 +228,6 @@ class Project extends crm_controller {
 					}
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
-					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
 				}
 			}
 
@@ -281,21 +280,18 @@ class Project extends crm_controller {
 								$rate				 = $value4['rateperhr'];
 								$billable_hrs		 = $value4['duration'];
 								$total_billable_hrs += $billable_hrs;
-								$project_type		 = $value4['pj_type'];
 							break;
 							case 'Non-Billable':
 								$rs_name				 = $value4['rs_name'];
 								$rate				 	 = $value4['rateperhr'];
 								$non_billable_hrs		 = $value4['duration'];
 								$total_non_billable_hrs += $non_billable_hrs;
-								$project_type		 	 = $value4['pj_type'];
 							break;
 							case 'Internal':
 								$rs_name			 = $value4['rs_name'];
 								$rate				 = $value4['rateperhr'];
 								$internal_hrs		 = $value4['duration'];
 								$total_internal_hrs += $internal_hrs;
-								$project_type		 = $value4['pj_type'];
 							break;
 						}
 					}
@@ -307,7 +303,6 @@ class Project extends crm_controller {
 		$data['total_internal_hrs']	    = $total_internal_hrs;
 		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
 		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
-		$data['project_type']			= $project_type;
 		return $data;
 	}
 	
@@ -2606,7 +2601,6 @@ HDOC;
 						}
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
 					}
 				}
 
@@ -2915,7 +2909,6 @@ HDOC;
 				}
 				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
-				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['pj_type'] = $ts['project_type_name'];
 			}
 		}
 
