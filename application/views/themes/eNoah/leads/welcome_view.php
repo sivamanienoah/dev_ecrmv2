@@ -10,7 +10,7 @@ $userdata = $this->session->userdata('logged_in_user');
 $usernme = $this->session->userdata('logged_in_user');
 ?>
 var curr_job_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
-var customer_id = <?php echo $quote_data['custid_fk'] ?>;
+var customer_id = <?php echo isset($quote_data['custid_fk']) ? $quote_data['custid_fk'] : 0 ?>;
 var lead_services = [];
 lead_services['not_select'] = '';
 
