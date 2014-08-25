@@ -2581,7 +2581,7 @@ HDOC;
 				$total_non_billable_hrs = 0;
 				$project_type			= '';
 				
-				$bill_type = isset($rec['billing_type']) ? $rec['billing_type'] : 1;
+				$bill_type = ($rec['billing_type'] != 0) ? $rec['billing_type'] : 1;
 				
 				if(!empty($rec['pjt_id']))
 				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type);
