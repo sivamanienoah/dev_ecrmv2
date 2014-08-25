@@ -47,7 +47,9 @@ if (get_default_currency()) {
 					$rag_color = '';
 			}
 			
-			if($record['billing_type'] == 1) {
+			$bill_type = ($record['billing_type'] != 0) ? $record['billing_type'] : 1;
+			
+			if($bill_type == 1) {
 				$milestone_content .= '<tr bgcolor='.$rag_color.'>';
 				$milestone_content .= "<td class='actions' align='center'>";
 				$milestone_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view'></a>";

@@ -2778,7 +2778,9 @@ HDOC;
 				$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
 				$percent = ($plPercent == FALSE)?'-':sprintf('%0.2f', $plPercent);
 				
-				switch ($rec['billing_type']) {
+				$bill_type = ($rec['billing_type'] != 0) ? $rec['billing_type'] : 1;
+				
+				switch ($bill_type) {
 					case 1:
 						$this->excel->setActiveSheetIndex(0);
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
