@@ -122,7 +122,7 @@ if (get_default_currency()) {
 			<div class="clearfix"></div>
 			<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
 			
-			<h2>Legends</h2>
+			<h2>Legend</h2>
 			<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
 				<!--Legends-->
 				<table cellspacing="10" cellpadding="0" style="color:#fff;">
