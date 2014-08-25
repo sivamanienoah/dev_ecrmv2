@@ -95,7 +95,6 @@ class Project extends crm_controller {
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		// $data = array();
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
@@ -2632,9 +2631,8 @@ HDOC;
 					}
 					$project_type = $res['project_type'];
 				}
-				
-				/*For monthly based projects if there is no records for current month, Project type is also empty. So we get the project type individual for dashboard*/
-				if((empty($project_type)) && !empty($rec['pjt_id']) && ($bill_type==2)) {
+
+				if(!empty($rec['pjt_id'])) {
 					$timesheet_project_type = $this->project_model->get_timesheet_project_type($rec['pjt_id']);
 					$project_type = $timesheet_project_type['project_type_name']; 
 				}
