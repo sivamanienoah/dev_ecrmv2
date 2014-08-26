@@ -51,11 +51,10 @@
                         <td><?php echo $client['first_name'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="clients/add_client/update/<?php echo $client['client_id']; ?>/">Edit &raquo;</a>
-							<?php } else { echo "Edit &raquo;"; } ?>
+								<a href="clients/add_client/update/<?php echo $client['client_id']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'></a>
+							<?php } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
-								&nbsp;|&nbsp;
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $client['client_id']; ?>);"> Delete &raquo; </a> 
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $client['client_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a> 
 							<?php } ?>
 						</td>
                     </tr>

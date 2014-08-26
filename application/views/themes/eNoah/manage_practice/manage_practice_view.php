@@ -23,27 +23,26 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th width="12%">Action</th>
-				<th width="40%">Practice</th>
-				<th>Status</th>
+				<th width="20%">Practice</th>
+				<th width="12%">Status</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php if (is_array($practices) && count($practices) > 0) { ?>
 			<?php foreach($practices as $practice_name) { ?>
 				<tr>
-					<td class="actions">
-						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_practice/practice_add/update/<?php echo $practice_name['id']; ?>/">Edit &raquo; </a>
-						<?php } else { echo "Edit"; } ?> 
-						<?php if($this->session->userdata('delete')==1) { ?>
-							&nbsp;|&nbsp;
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $practice_name['id']; ?>);"> Delete &raquo; </a>
-						<?php } ?>
-					</td>
 					<td><?php echo $practice_name['practices']; ?></td>
 					<td>
 						<?php if ($practice_name['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+					</td>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_practice/practice_add/update/<?php echo $practice_name['id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
+						<?php } ?> 
+						<?php if($this->session->userdata('delete')==1) { ?>
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $practice_name['id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
+						<?php } ?>
 						<div class="dialog-err pull-right" id="dialog-message-<?php echo $practice_name['id']; ?>" style="display:none"></div>
 					</td>
 				</tr>

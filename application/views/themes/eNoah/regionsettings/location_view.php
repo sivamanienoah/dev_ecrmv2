@@ -143,11 +143,12 @@ echo '<input type="hidden" name="stateid" id="stateid" value="'.$this->validatio
 								</td>      
 								<td class="actions">
 									<?php if ($this->session->userdata('edit')==1) { ?>
-										<a class="editLocation clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>">Edit &raquo;</a>
-									<?php } else echo "Edit &raquo;"; ?>
-									<?php if($this->session->userdata('delete')==1) { ?> | 
-										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" >Delete &raquo;</a>
-									<?php } ?>		
+										<a class="editLocation clrmarron" href="regionsettings/location/update/<?php echo $customer['locationid']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'></a>
+									<?php } ?>
+									<?php if($this->session->userdata('delete')==1) { ?>
+										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Loc(<?php echo $customer['locationid'] ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete'></a>
+									<?php } ?>
+									<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 								</td>
 							</tr>
 					<?php 

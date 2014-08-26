@@ -106,16 +106,13 @@ class Manage_lead_stage extends crm_controller {
             $html = '';
             foreach ($results as $row) {
 				if(!empty($row['lead_stage_name'])) {
+					$edit = $dele = '';
 					if ($row['status'] == 1) $stat = "<span class=label-success>Active</span>"; else $stat = "<span class=label-warning>Inactive</span>";
 					if ($this->session->userdata('edit')==1)
-						$edit = "<a href='manage_lead_stage/leadStg_add/update/".$row['lead_stage_id']."'>Edit &raquo;</a>";
-					else 
-						$edit = "Edit &raquo;";
+						$edit = "<a href='manage_lead_stage/leadStg_add/update/".$row['lead_stage_id']."' title='Edit'><img src='assets/img/edit.png' alt='edit'></a>";
 					if ($this->session->userdata('delete')==1)
-						$dele = "<a href='javascript:void(0)' onclick='checkStatus(".$row['lead_stage_id'].");'>Delete &raquo;</a>";
-					else 
-						$dele = "Delete &raquo;";
-					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="data-table btm-none" width="100%"><tr><td class="lead-stage" width="38%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="54px">' . $stat . '</td><td width="80px">'. $edit .' | '. $dele .'</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
+						$dele = "<a href='javascript:void(0)' onclick='checkStatus(".$row['lead_stage_id'].");' title='Delete'><img src='assets/img/trash.png' alt='delete'></a>";
+					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="data-table btm-none" width="100%"><tr><td class="lead-stage" width="38%">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td><td width="54px">' . $stat . '</td><td width="80px">'. $edit .' '. $dele .'</td><td class="dialog-err" id="errmsg-' . $row['lead_stage_id'] . '"></td></tr></table></li>';
 				} else {
 					$html .= '<li id="leadst-' . $row['lead_stage_id'] . '"><table cellpadding="0" cellspacing="0" class="quote-item" width="100%"><tr><td class="item-desc" colspan="2">' . nl2br(cleanup_chars(ascii_to_entities($row['lead_stage_name']))) . '</td></tr></table></li>';
 				}

@@ -25,27 +25,26 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th width="12%">Action</th>
-				<th width="38%">Divisions</th>
-				<th>Status</th>
+				<th width="30%">Divisions</th>
+				<th width="10%">Status</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php if (is_array($sales_divisions) && count($sales_divisions) > 0) { ?>
 			<?php foreach($sales_divisions as $sales) { ?>
 				<tr>
-					<td class="actions">
-						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_service/division_add/update/<?php echo $sales['div_id']; ?>/">Edit &raquo;</a> 
-						<?php } else { echo "Edit &raquo;"; } ?> 
-						<?php if($this->session->userdata('delete')==1) { ?>
-							&nbsp;|&nbsp;
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $sales['div_id']; ?>);"> Delete &raquo; </a> 
-						<?php } ?>
-					</td>
 					<td><?php echo $sales['division_name']; ?></td>
 					<td>
 						<?php if ($sales['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+					</td>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_service/division_add/update/<?php echo $sales['div_id']; ?>" title="Edit"><img src="assets/img/edit.png" alt='edit'></a> 
+						<?php } ?> 
+						<?php if($this->session->userdata('delete')==1) { ?>
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $sales['div_id']; ?>);" title="Delete"> <img src="assets/img/trash.png" alt='delete'> </a> 
+						<?php } ?>
 						<div class="dialog-err pull-right" id="dialog-message-<?php echo $sales['div_id'] ?>" style="display:none"></div>
 					</td>
 				</tr>

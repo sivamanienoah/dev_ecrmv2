@@ -132,11 +132,12 @@ echo '<input type="hidden" name="region_update" id="region_update" value="'.$thi
 								</td>                         
 								<td class="actions">
 									<?php if ($this->session->userdata('edit')==1) { ?>
-										<a class="editState clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>">Edit &raquo;</a> 
-									<?php } else echo "Edit &raquo;"; ?>                    
-									<?php if($this->session->userdata('delete')==1) { ?> | 
-										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" >Delete &raquo;</a>
+										<a class="editState clrmarron" href="regionsettings/state/update/<?php echo $customer['stateid']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'></a> 
+									<?php } ?>                    
+									<?php if($this->session->userdata('delete')==1) { ?>
+										<a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus_Ste(<?php echo $customer['stateid'] ?>);" title='Delete' ><img src="assets/img/trash.png" alt='delete'></a>
 									<?php } ?>
+									<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 								</td>
 							</tr>
 					<?php 

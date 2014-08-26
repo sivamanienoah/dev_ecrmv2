@@ -48,7 +48,7 @@
                         <td><?php echo $customer['email_1'] ?></td>
                         <td><?php echo $customer['region_name'] ?></td>
                         <td><?php echo $customer['country_name'] ?></td>
-                        <td align="center">
+                        <td>
 							<?php if($customer['is_client'] == 1) { ?>
 								<img style="width:14px; height:14px" alt="isClient" src="assets/img/tick.png">
 							<?php } else { ?>
@@ -58,10 +58,11 @@
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
 								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
-							<?php } else { echo "Edit &raquo;"; } ?>
+							<?php } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
 								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid']; ?>);"><img src="assets/img/trash.png" alt='delete' ></a>
 							<?php } ?>
+							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						</td>
                     </tr>
                     <?php } ?>

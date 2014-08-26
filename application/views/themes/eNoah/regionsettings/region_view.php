@@ -111,11 +111,12 @@
 							</td> 
 							<td class="actions">
 								<?php if ($this->session->userdata('edit')==1) { ?>
-									<a class="editRegion clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>">Edit &raquo;</a> 
-								<?php } else { echo "Edit &raquo;"; } ?>
-									<?php if($this->session->userdata('delete')==1) { ?> | <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['regionid'] ?>);" >Delete &raquo;</a>
+									<a class="editRegion clrmarron" href="regionsettings/region/update/<?php echo $customer['regionid']; ?>"title='Edit' ><img src="assets/img/edit.png" alt='edit'></a> 
 								<?php } ?>
-							</td>                         
+									<?php if($this->session->userdata('delete')==1) { ?> <a class="delete clrmarron" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['regionid'] ?>);" title='Delete' ><img src="assets/img/trash.png" alt='delete'></a>
+								<?php } ?>
+								<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
+							</td>    
 						</tr>
 						<?php 
 						} 

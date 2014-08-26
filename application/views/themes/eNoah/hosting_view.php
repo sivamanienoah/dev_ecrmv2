@@ -86,11 +86,10 @@
 						</td>
 						<td>
 							<?php if ($this->session->userdata('edit')==1) { ?>
-								<a href="hosting/add_account/update/<?php echo $account['hostingid'] ?>"><?php echo "Edit &raquo;"; ?></a>
-							<?php } else echo "Edit &raquo;"; ?>
-							<?php if ($this->session->userdata('delete')==1) { ?> 
-								&nbsp;|&nbsp;
-								<a class="delete" href="javascript:void(0)" onclick="return delHosting(<?php echo $account['hostingid']; ?>);"> Delete &raquo;</a> 
+								<a href="hosting/add_account/update/<?php echo $account['hostingid'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'></a>
+							<?php } ?>
+							<?php if ($this->session->userdata('delete')==1) { ?>
+								<a class="delete" href="javascript:void(0)" onclick="return delHosting(<?php echo $account['hostingid']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'></a> 
 							<?php } ?>
 						</td>
                     </tr>

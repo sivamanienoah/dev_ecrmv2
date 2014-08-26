@@ -53,12 +53,12 @@
                         <td><?php if ($customer['inactive'] == 0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
 						<td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="user/add_user/update/<?php echo $customer['userid'] ?>">Edit &raquo;</a>
-							<?php } else { echo "Edit &raquo;"; } ?>
-							<?php if($this->session->userdata('delete')==1) { ?>
-								&nbsp;|&nbsp;
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['userid']; ?>);"> Delete &raquo; </a> 
+								<a href="user/add_user/update/<?php echo $customer['userid'] ?>"><img src="assets/img/edit.png" alt='edit' ></a>
 							<?php } ?>
+							<?php if($this->session->userdata('delete')==1) { ?>
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['userid']; ?>);"> <img src="assets/img/trash.png" alt='delete'> </a> 
+							<?php } ?>
+							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						</td>
                     </tr>
                     <?php } ?>

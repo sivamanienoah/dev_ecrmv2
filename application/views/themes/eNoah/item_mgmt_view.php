@@ -40,10 +40,11 @@
 						<tr>
 							<td class="actions">
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="item_mgmt/add/update/<?php echo  $record['itemid'] ?>/<?php echo $table_in_use ?>">Edit &raquo; </a><?php } else { ?> Edit &raquo; <?php } ?> 
+								<a href="item_mgmt/add/update/<?php echo  $record['itemid'] ?>/<?php echo $table_in_use ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'></a><?php } ?> 
 							<?php if($this->session->userdata('delete')==1) { ?>	
-							  | <a class="delete" href="javascript:void(0)" onclick="return deleteItemMgmt(<?php echo $record['itemid']; ?>); return false; "> Delete &raquo; </a> 
-							 <?php } ?> 
+							   <a class="delete" href="javascript:void(0)" onclick="return deleteItemMgmt(<?php echo $record['itemid']; ?>); return false; " title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a> 
+							 <?php } ?>
+							 <?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 							</td>
 							<td><?php echo nl2br($record['item_desc']) ?></td>
 							<td>$<?php echo $record['item_price'] ?></td>

@@ -33,13 +33,17 @@
 				foreach ($accounts as $account) { 
 				?>
 				<tr>
-					<td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo  $account['type_id'] ?>"><?php echo $account['package_name'] ?></a><?php } else echo $account['package_name'] ?></td>
+					<td><?php if($this->session->userdata('edit')==1){ ?><a href="package/update/<?php echo $account['type_id'] ?>"><?php echo $account['package_name'] ?></a><?php } else echo $account['package_name'] ?></td>
 					<td><?php echo  $account['type_months'] ?></td>
-					<td><?php if ($account['package_flag'] == 'active') echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
-					<td><?php if($this->session->userdata('edit')==1) { ?><a href="package/update/<?php echo  $account['type_id'] ?>">Edit &raquo;</a> <?php } else { echo "Edit &raquo;"; } ?>
-					<?php if($this->session->userdata('delete')==1) { ?> |
-					<a class="delete" href="javascript:void(0)" onclick="return checkStatuspk(<?php echo $account['type_id']; ?>);"> Delete &raquo; </a>
-					<?php } ?>
+					<td>
+						<?php if ($account['package_flag'] == 'active') echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+					</td>
+					<td>
+						<?php if($this->session->userdata('edit')==1) { ?><a href="package/update/<?php echo $account['type_id'] ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'></a> <?php } ?>
+						<?php if($this->session->userdata('delete')==1) { ?>
+						<a class="delete" href="javascript:void(0)" onclick="return checkStatuspk(<?php echo $account['type_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
+						<?php } ?>
+						<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 					</td>
 				</tr>
 				<?php } ?>

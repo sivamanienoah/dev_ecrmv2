@@ -33,7 +33,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<tr>
 				<td class="actions" align="center">
 					<?php if ($this->session->userdata('viewlead')==1) { ?>
-						<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'] ?>" title='View'>
+						<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo $filter_result['lead_id'] ?>" title='View'>
 							<img src="assets/img/view.png" alt='view' >
 						</a>
 					<?php } ?>

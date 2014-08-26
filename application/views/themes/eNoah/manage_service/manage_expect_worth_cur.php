@@ -29,26 +29,17 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th width="12%">Action</th>
-				<th>Currency</th>
-				<th>Currency Name</th>
-				<th>Status</th>
-				<th>Default Currency</th>
+				<th width="10%">Currency</th>
+				<th width="18%">Currency Name</th>
+				<th width="8%">Status</th>
+				<th width="12%">Default Currency</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php if (is_array($getExptWorthCur) && count($getExptWorthCur) > 0) { ?>
 			<?php foreach($getExptWorthCur as $source) { ?>
 				<tr>
-					<td class="actions">
-						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_service/expect_worth_cur_edit/update/<?php echo $source['expect_worth_id'] ?>/">Edit &raquo; </a> 
-						<?php } else { echo "Edit &raquo;"; } ?> 
-						<?php if(($this->session->userdata('delete')==1) && ($source['is_default'] != 1) && ($source['expect_worth_id']!=1)) { ?>
-							&nbsp;|&nbsp;
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['expect_worth_id'] ?>);"> Delete &raquo; </a> 
-						<?php } else { echo "&nbsp;|&nbsp; Delete &raquo;"; } ?>
-					</td>
 					<td><?php echo $source['expect_worth_name']; ?></td>
 					<td><?php echo $source['cur_name']; ?></td>
 					<td>
@@ -56,6 +47,15 @@ $userdata = $this->session->userdata('logged_in_user');
 					</td>
 					<td>
 						<?php if ($source['is_default']==1) { ?><img src="assets/img/tick.png" alt="Default Currency" style="width:14px; height:14px" /> <?php } ?>
+					</td>
+					<td class="actions">
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a href="manage_service/expect_worth_cur_edit/update/<?php echo $source['expect_worth_id'] ?>" title='edit'><img src="assets/img/edit.png" alt='edit'></a> 
+						<?php } ?> 
+						<?php if(($this->session->userdata('delete')==1) && ($source['is_default'] != 1) && ($source['expect_worth_id']!=1)) { ?>
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['expect_worth_id'] ?>);" title='delete'> <img src="assets/img/trash.png" alt='delete'> </a> 
+						<?php } ?>
+						<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['expect_worth_id'] ?>" style="display:none"></div>
 					</td>
 				</tr>
