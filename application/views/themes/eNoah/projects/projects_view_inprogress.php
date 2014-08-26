@@ -105,19 +105,19 @@ if (get_default_currency()) {
 		<tr>
 			<th>Action</th>
 			<th>Title</th>
-			<th title="Completion Percentage"><img src="assets/img/completion.png">%</th>
-			<th title="Project Type"><img src="assets/img/type.png"></th>
+			<th title="Completion Percentage">CP % </th>
+			<th title="Project Type">PT</th>
 			<th title="RAG Status">RAG</th>
-			<th title="Planned Hour"><img src="assets/img/planned-hour.png"></th>
-			<th title="Billable Hour"><img src="assets/img/billable-hour.png"></th>
-			<th title="Internal Hour"><img src="assets/img/internal-hour.png"></th>
-			<th title="Non-Billable Hour"><img src="assets/img/non-billable.png"></th>
-			<th title="Total Utilized Hours"><img src="assets/img/total-hours.png"></th>
-			<th title="Effort Variance"><img src="assets/img/variance.png"></th>
-			<th title="Project Value"><img src="assets/img/project_value.png" >(<?php echo $default_cur_name; ?>)</th>
-			<th title="Utilization Cost"><img src="assets/img/utilization_project_value.png" >(<?php echo $default_cur_name; ?>)</th>
-			<th title="P&L"><img src="assets/img/profitloss.png"></th>
-			<th title="P&L %"><img src="assets/img/profitloss.png">%</th>
+			<th title="Planned Hour">PH</th>
+			<th title="Billable Hour">BH</th>
+			<th title="Internal Hour">IH</th>
+			<th title="Non-Billable Hour">NBH</th>
+			<th title="Total Utilized Hours">TUH</th>
+			<th title="Effort Variance">EV</th>
+			<th title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
+			<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+			<th title="P&L">P&L </th>
+			<th title="P&L %">P&L % </th>
 		</tr>
 	</thead>
 	<tbody>
@@ -132,18 +132,18 @@ if (get_default_currency()) {
 		<tr>
 			<th>Action</th>
 			<th>Title</th>
-			<th title="Completion Percentage"><img src="assets/img/completion.png">%</th>
-			<th title="Project Type"><img src="assets/img/type.png"></th>
+			<th title="Completion Percentage">CP%</th>
+			<th title="Project Type">PT</th>
 			<th title="RAG Status">RAG</th>
-			<th title="Planned Hour"><img src="assets/img/planned-hour.png"></th>
-			<th title="Billable Hour"><img src="assets/img/billable-hour.png"></th>
-			<th title="Internal Hour"><img src="assets/img/internal-hour.png"></th>
-			<th title="Non-Billable Hour"><img src="assets/img/non-billable.png"></th>
-			<th title="Total Utilized Hours"><img src="assets/img/total-hours.png"></th>
-			<th title="Project Value"><img src="assets/img/project_value.png" >(<?php echo $default_cur_name; ?>)</th>
-			<th title="Utilization Cost"><img src="assets/img/utilization_project_value.png" >(<?php echo $default_cur_name; ?>)</th>
-			<th title="P&L"><img src="assets/img/profitloss.png"></th>
-			<th title="P&L %"><img src="assets/img/profitloss.png">%</th>
+			<th title="Planned Hour">PH</th>
+			<th title="Billable Hour">BH</th>
+			<th title="Internal Hour">IH</th>
+			<th title="Non-Billable Hour">NBH</th>
+			<th title="Total Utilized Hours">TUH</th>
+			<th title="Project Value">PV</th>
+			<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+			<th title="P&L">P&L </th>
+			<th title="P&L %">P&L %</th>
 		</tr>
 	</thead>
 	<tbody>

@@ -126,16 +126,16 @@ if (get_default_currency()) {
 			<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
 				<!--Legends-->
 				<div class="legend">
-					<div class="pull-left"><img src="assets/img/completion.png"><span> - Completion Percentage</span></div>
-					<div class="pull-left"><img src="assets/img/type.png"><span> - Project Type</span></div>
-					<div class="pull-left"><img src="assets/img/planned-hour.png"><span> - Planned Hours</span></div>
-					<div class="pull-left"><img src="assets/img/billable-hour.png"><span> - Billable Hours</span></div>
-					<div class="pull-left"><img src="assets/img/internal-hour.png"><span> - Internal Hours</span></div>
-					<div class="pull-left"><img src="assets/img/non-billable.png"><span> - Non Billable Hours</span></div>
-					<div class="pull-left"><img src="assets/img/total-hours.png"><span>- Total Utilized Hours</span></div>
-					<div class="pull-left"><img src="assets/img/project_value.png"><span> - Project Value </span></div>
-					<div class="pull-left"><img src="assets/img/utilization_project_value.png"><span> - Utilization Cost</span></div>
-					<div class="pull-left"><img src="assets/img/profitloss.png"><span> - P&L </span></div>
+					<div class="pull-left"><strong>CP</strong> - Completion Percentage</div>
+					<div class="pull-left"><strong>PT</strong> - Project Type</div>
+					<div class="pull-left"><strong>PH</strong> - Planned Hours</div>
+					<div class="pull-left"><strong>BH</strong> - Billable Hours</div>
+					<div class="pull-left"><strong>IH</strong> - Internal Hours</div>
+					<div class="pull-left"><strong>NBH</strong> - Non Billable Hours</div>
+					<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
+					<div class="pull-left"><strong>PV</strong> - Project Value </div>
+					<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
+					<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
 				</div>
 			</div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
