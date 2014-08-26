@@ -39,10 +39,10 @@ $userdata = $this->session->userdata('logged_in_user');
 					</td>
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_service/ls_add/update/<?php echo $source['lead_source_id'] ?>/"><img src="assets/img/edit.png" alt='edit'> </a> 
+							<a href="manage_service/ls_add/update/<?php echo $source['lead_source_id'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'> </a> 
 						<?php } ?> 
 						<?php if($this->session->userdata('delete')==1) { ?>
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['lead_source_id'] ?>);"> <img src="assets/img/trash.png" alt='delete'> </a> 
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $source['lead_source_id'] ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a> 
 						<?php } ?>
 						<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						<div class="dialog-err pull-right" id="dialog-message-<?php echo $source['lead_source_id'] ?>" style="display:none"></div>
