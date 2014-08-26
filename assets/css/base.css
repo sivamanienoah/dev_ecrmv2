@@ -1374,7 +1374,7 @@ ul.ui-sortable li{
 	color: #fff;
 }
 .label-red {
-    background-color: #c0504d;
+    background-color: #c21706;
     border-radius: 10px;
     color: #fff;
     padding: 0 5px 0 10px;
@@ -1793,7 +1793,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 	padding:5px;
 }
 .legend {
-	height:85px;
+	height:48px;
 	color:#fff;
 	width:85%
 }
