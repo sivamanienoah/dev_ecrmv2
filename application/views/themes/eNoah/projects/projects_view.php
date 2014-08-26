@@ -126,16 +126,16 @@ if (get_default_currency()) {
 			<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
 				<!--Legends-->
 				<div class="legend">
-					<div class="pull-left"><img src="assets/img/completion.png"><div> - Completion Percentage</div></div>
-					<div class="pull-left"><img src="assets/img/type.png"><div> - Project Type</div></div>
-					<div class="pull-left"><img src="assets/img/planned-hour.png"><div> - Planned Hours</div></div>
-					<div class="pull-left"><img src="assets/img/billable-hour.png"><div> - Billable Hours</div></div>
-					<div class="pull-left"><img src="assets/img/internal-hour.png"><div> - Internal Hours</div></div>
-					<div class="pull-left"><img src="assets/img/non-billable.png"><div> - Non Billable Hours</div></div>
-					<div class="pull-left"><img src="assets/img/total-hours.png"><div>- Total Utilized Hours</div></div>
-					<div class="pull-left"><img src="assets/img/project_value.png"><div> - Project Value </div></div>
-					<div class="pull-left"><img src="assets/img/utilization_project_value.png"><div> - Utilization Cost</div></div>
-					<div class="pull-left"><img src="assets/img/profitloss.png"><div> - P&L </div></div>
+					<div class="pull-left"><img src="assets/img/completion.png"><span> - Completion Percentage</span></div>
+					<div class="pull-left"><img src="assets/img/type.png"><span> - Project Type</span></div>
+					<div class="pull-left"><img src="assets/img/planned-hour.png"><span> - Planned Hours</span></div>
+					<div class="pull-left"><img src="assets/img/billable-hour.png"><span> - Billable Hours</span></div>
+					<div class="pull-left"><img src="assets/img/internal-hour.png"><span> - Internal Hours</span></div>
+					<div class="pull-left"><img src="assets/img/non-billable.png"><span> - Non Billable Hours</span></div>
+					<div class="pull-left"><img src="assets/img/total-hours.png"><span>- Total Utilized Hours</span></div>
+					<div class="pull-left"><img src="assets/img/project_value.png"><span> - Project Value </span></div>
+					<div class="pull-left"><img src="assets/img/utilization_project_value.png"><span> - Utilization Cost</span></div>
+					<div class="pull-left"><img src="assets/img/profitloss.png"><span> - P&L </span></div>
 				</div>
 			</div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">

@@ -1784,8 +1784,9 @@ button.positive, .pjt-btn a.positive, input.positive{
     overflow: hidden;
 }
 /*project module - legend*/
-.legend div:nth-child(2) {
+.legend span {
 	float: right;
+    padding: 5px;
     vertical-align: middle;
 }
 .legend div {
