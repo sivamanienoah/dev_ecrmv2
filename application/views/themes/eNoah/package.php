@@ -71,7 +71,7 @@
 						<td>
 							<?php if($this->session->userdata('edit')==1) { ?><a href="package/add/<?php echo $account['package_id'] ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'></a><?php } ?> 
 							<?php if($this->session->userdata('delete')==1) { ?>
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatusPack(<?php echo $account['package_id']; ?>);"title='	'> <img src="assets/img/trash.png" alt='delete'> </a>
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatusPack(<?php echo $account['package_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
 							<?php } ?>
 							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						</td>
