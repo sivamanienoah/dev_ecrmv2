@@ -47,17 +47,23 @@ if (get_default_currency()) {
 									<td><?php echo empty($leads->lead_indicator)?'':$leads->lead_indicator; ?></td>
 									<td><?php echo empty($leads->lead_stage_name)?'':$leads->lead_stage_name; ?></td>
 									<td>
-									<?php
-									
-										if($leads->lead_status == 1)
-											$status = 'Active';
-										else if ($leads->lead_status == 2)
-											$status = 'On Hold';
-										else 
-											$status = 'Dropped';
-											
-										echo $status;
-									?>									
+										<?php
+											switch ($leads->lead_status)
+											{
+												case 1:
+													echo $status = 'Active';
+												break;
+												case 2:
+													echo $status = 'On Hold';
+												break;
+												case 3:
+													echo $status = 'Dropped';
+												break;
+												case 4:
+													echo $status = 'Closed';
+												break;
+											}
+										?>									
 									</td>
 									<td align = 'right'>
 										<?php 

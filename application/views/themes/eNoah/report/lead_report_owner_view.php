@@ -63,15 +63,23 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				if($lead->lead_status == 1)
-					$status = 'Active';
-				else if ($lead->lead_status == 2)
-					$status = 'On Hold';
-				else 
-					$status = 'Dropped';
+				switch ($lead->lead_status)
+				{
+					case 1:
+						$status = 'Active';
+					break;
+					case 2:
+						$status = 'On Hold';
+					break;
+					case 3:
+						$status = 'Dropped';
+					break;
+					case 4:
+						$status = 'Closed';
+					break;
+				}					
 				$content .= $status;
 				$content .= "</td>";
-				
 				
 				$content .= "<td align = 'right'>";
 				//$content .= $lead->expect_worth_amount;				 
