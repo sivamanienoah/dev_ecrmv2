@@ -1797,3 +1797,12 @@ button.positive, .pjt-btn a.positive, input.positive{
 	color:#fff;
 	width:85%
 }
+.readonly-status {
+	cursor: not-allowed;
+	text-decoration: none;
+}
+
+.img-opacity {
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+}

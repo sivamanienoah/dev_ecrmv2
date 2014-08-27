@@ -272,7 +272,6 @@ class Project extends crm_controller {
 					$billable_hrs	  = 0;
 					$non_billable_hrs = 0;
 					$internal_hrs	  = 0;
-					$project_type	  = '';
 					foreach($value3 as $key4=>$value4) {
 						switch($key4) {
 							case 'Billable':
@@ -943,6 +942,14 @@ class Project extends crm_controller {
 			$chge_access = $this->project_model->get_access($jid, $usernme['userid']);
 		}
 		
+		$get_pjt_status = $this->project_model->get_lead_det($jid);
+		
+		$readonly_status = false;
+		if($chge_access != 1)
+		$readonly_status = true;
+		if($get_pjt_status['pjt_status'] == 2)
+		$readonly_status = true;
+		
 		$output = '';
 		$total_amount_recieved = '';
 		$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
@@ -975,29 +982,45 @@ class Project extends crm_controller {
 				$payment_amount = number_format($exp['amount'], 2, '.', ',');
 				$total_amount_recieved += $exp['amount'];
 				$payment_received = '';
-				if ($exp['received'] == 0)
-				{
+				if ($exp['received'] == 0) {
 					$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
-				}
-				else if ($exp['received'] == 1)
-				{
+				} else if ($exp['received'] == 1) {
 					$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-				}
-				else
-				{
+				} else {
 					$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-				}							
+				}
+
+				$invoice_stat = '';
+				if ($readonly_status == false) {
+					if ($exp['invoice_status'] == 0) {
+						$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='return generate_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>
+						<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+					} else if ($exp['invoice_status'] == 1) {
+						$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
+						<a href='javascript:void(0)' onclick='return raise_inv(".$exp['expectid']."); return false;' title='Invoice Raised'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+					}
+				} else {
+					$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
+					<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+				}
+				
 				$output .= "<tr>";
 				$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
 				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
 				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
 				$output .= "<td align='center'>".$payment_received."</td>";
-				if( $chge_access == 1 ) {
-				$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' >Edit</a> | ";
-				$output .= "<a class='edit' onclick='paymentProfileDelete(".$exp['expectid']."); return false;' >Delete</a></td>";
+				if ($readonly_status == false) {
+					$output .= "<td align='left'>
+						<a title='Edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
+						<a title='Delete' onclick='return paymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+						".$invoice_stat."
+					</td>";
 				} else {
-				$output .= "<td align='left'><a class='edit' >Edit</a> | ";
-				$output .= "<a class='edit'>Delete</a></td>";
+					$output .= "<td align='left'>
+						<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
+						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+						".$invoice_stat."
+					</td>";
 				}
 				$output .= "</tr>";
 				$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
@@ -1125,73 +1148,13 @@ class Project extends crm_controller {
 
 			if ($job_updated)
 			{
-
 				$up = array('payment_terms'=>1);
 				$wh_condn = array('lead_id' => $data['sp_form_jobid']);
 				$this->project_model->update_row('leads', $up, $wh_condn);
 				
-				$payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
-
 				$output = '';
-				$total_amount_recieved = '';
-				$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
-				$pdi = 1;
-				$pt_select_box = '';
-				$pt_select_box .= '<option value="0"> &nbsp; </option>';
-				$output .= "<table width='100%' class='payment_tbl'>
-				<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
-				<tr>
-				<td><img src=assets/img/payment-received.jpg height='10' width='10' > Payment Received</td>
-				<td><img src=assets/img/payment-pending.jpg height='10' width='10' > Partial Payment</td>
-				<td><img src=assets/img/payment-due.jpg height='10' width='10' > Payment Due</td>
-				</tr>
-				</table>";
-				$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
-				$output .= "<thead>";
-				$output .= "<tr align='left'>";
-				$output .= "<th class='header'>Payment Milestone</th>";
-				$output .= "<th class='header'>Milestone Date</th>";
-				$output .= "<th class='header'>Amount</th>";
-				$output .= "<th class='header'>Status</th>";
-				$output .= "<th class='header'>Action</th>";
-				$output .= "</tr>";
-				$output .= "</thead>";
-				if (count($payment_det>0))
-				{
-					foreach ($payment_det as $pd)
-					{
-						$total_amount_recieved += $pd['amount'];
-						$payment_received = '';
-						if ($pd['received'] == 0)
-						{
-							$payment_received = '<img src="assets/img/payment-due.jpg" alt="due" height="10" width="10" />';
-						}
-						else if ($pd['received'] == 1)
-						{
-							$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-						}
-						else
-						{
-							$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-						}							
-						$output .= "<tr>";
-						$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
-						$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
-						$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
-						$output .= "<td align='center'>".$payment_received."</td>";
-						$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
-						$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid']."); return false;' >Delete</a></td>";
-						$output .= "</tr>";
-						$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \$ ".number_format($pd['amount'], 2, '.', ',')." by ".date('d-m-Y', strtotime($pd['expected_date']))." " . '</option>';
-						$pdi ++;
-					}
-				}
-				$output .= "<tr>";
-				$output .= "<td></td>";
-				$output .= "<td><b>Total Milestone Payment : </b></td><td><b>".$pd['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
-				$output .= "</tr>";
-				$output .= "</table>";
-				$output .= '</div>';
+				// $payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
+				$output .= $this->retrieve_payment_terms($data['sp_form_jobid']);
 				echo $output;
 			}
 			else
@@ -2623,12 +2586,12 @@ HDOC;
 					if($res['total_non_billable_hrs']>0) {
 						$total_non_billable_hrs = $res['total_non_billable_hrs'];
 					}
-					$project_type = $res['project_type'];
 				}
 
 				if(!empty($rec['pjt_id'])) {
 					$timesheet_project_type = $this->project_model->get_timesheet_project_type($rec['pjt_id']);
-					$project_type = $timesheet_project_type['project_type_name']; 
+					if(!empty($timesheet_project_type))
+					$project_type = $timesheet_project_type['project_type_name'];
 				}
 				
 				//Build the Array
@@ -3007,6 +2970,52 @@ HDOC;
 		}
 		echo $htmldata;
 		exit;
+	}
+	
+	public function generateInvoice($eid, $pjtid) {
+		$wh_condn		 = array('expectid' => $eid, 'jobid_fk'=>$pjtid);
+		$updt			 = array('invoice_status' => 1);
+		
+		$output['error'] = FALSE;
+		
+		$updt_payment_ms = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+		if($updt_payment_ms) {
+			$project_details = $this->project_model->get_quote_data($pjtid);
+			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
+			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+			$dis['date_created'] = date('Y-m-d H:i:s');
+			$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+
+			$from		  	 = $this->userdata['email'];
+			$arrEmails    	 = $this->config->item('crm');
+			$arrSetEmails 	 = $arrEmails['director_emails'];
+			$mangement_email = $arrEmails['management_emails'];
+			$mgmt_mail		 = implode(',',$mangement_email);		
+			$admin_mail		 = implode(',',$arrSetEmails);
+			$subject		 = 'Generate Invoice Notificatiion';
+			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
+			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
+			$project_id	 	 = $project_details[0]['invoice_no'];
+			$milestone_name  = $payment_details['project_milestone_name'];
+			$milestone_value = $payment_details['expect_worth_name'] . ' - ' . $payment_details['amount'];
+			//email sent by email template
+			$param = array();
+			
+			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value);
+
+			$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
+			$param['bcc_mail'] 		  = 'raamsri14@gmail.com';
+			$param['from_email']	  = $from;
+			$param['from_email_name'] = $user_name;
+			$param['template_name']	  = "Generate Invoice Notificatiion";
+			$param['subject'] 		  = $subject;
+
+			$this->email_template_model->sent_email($param);
+		} else {
+			$output['error'] = true;
+			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
+		}
+		echo json_encode($output);
 	}
 }
 ?>

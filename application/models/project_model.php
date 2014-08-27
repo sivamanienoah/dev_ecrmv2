@@ -11,7 +11,6 @@ class Project_model extends crm_model
 		$this->stages = @implode('","', $this->stg);
     }
     
-	
 	function get_user_byrole($role_id)
 	{
     	$users = $this->db->get_where($this->cfg['dbpref'] . 'users', array('role_id'=>$role_id))->result_array();
@@ -390,11 +389,8 @@ class Project_model extends crm_model
 	
 	public function get_lead_det($id) 
 	{
-	    $this->db->select('*');
-	    $this->db->from($this->cfg['dbpref'] . 'leads');
-	    $this->db->where('lead_id', $id);
-	    $lead_det = $this->db->get();
-	    return $leads =  $lead_det->row_array();
+		$res = $this->db->get_where($this->cfg['dbpref'] . 'leads', array('lead_id'=>$id))->row_array();
+    	return $res;	
 	}
 	
 	function delete_row($tbl, $condn) 
@@ -433,7 +429,7 @@ class Project_model extends crm_model
 	//get expected payment details for the project.
 	public function get_expect_payment_terms($id) 
 	{
-    	$this->db->select('expm.expectid, expm.expected_date, expm.amount, expm.project_milestone_name, expm.received, jb.expect_worth_id, exnm.expect_worth_name');
+    	$this->db->select('expm.expectid, expm.expected_date, expm.amount, expm.project_milestone_name, expm.received, expm.invoice_status, jb.expect_worth_id, exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.lead_id = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = jb.expect_worth_id', 'left');

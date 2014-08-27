@@ -53,8 +53,6 @@ if (get_default_currency()) {
 	<?php } else { echo "No Comments Found."; }?>
 </div>
 
-<!--Code Added for the Pagination in Comments Section--Ends Here-->
-
 <div id="content">
     <?php
 		$date_used = $quote_data['date_created'];
@@ -527,7 +525,7 @@ if (get_default_currency()) {
 							$output .= "<table width='100%' class='payment_tbl'>
 							<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
 							<tr>
-							<td><img src=assets/img/payment-received.jpg height='10' width='10' > Payment Received</td>
+							<td><img src=assets/img/generate_invoice.png >Generate Invoice</td>
 							<td><img src=assets/img/payment-pending.jpg height='10' width='10' > Partial Payment</td>
 							<td><img src=assets/img/payment-due.jpg height='10' width='10' > Payment Due</td>
 							</tr>
@@ -548,29 +546,44 @@ if (get_default_currency()) {
 								$payment_amount = number_format($pd['amount'], 2, '.', ',');
 								$total_amount_recieved += $pd['amount'];
 								$payment_received = '';
-								if ($pd['received'] == 0)
-								{
+								if ($pd['received'] == 0) {
 									$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
-								}
-								else if ($pd['received'] == 1)
-								{
+								} else if ($pd['received'] == 1) {
 									$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-								}
-								else
-								{
+								} else {
 									$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-								}							
+								}
+								$invoice_stat = '';
+								if ($readonly_status == false) {
+									if ($pd['invoice_status'] == 0) {
+										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='return generate_inv(".$pd['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>
+										<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+									} else if ($pd['invoice_status'] == 1) {
+										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
+										<a href='javascript:void(0)' onclick='return raise_inv(".$pd['expectid']."); return false;' title='Invoice Raised'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+									}
+								} else {
+									$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
+									<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+								}
 								$output .= "<tr>";
 								$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
 								$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
 								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
+								// $output .= "<td align='center'>".$payment_received."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
-								if ($chge_access == 1) {
-								$output .= "<td align='left'><a class='edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' >Edit</a> | ";
-								$output .= "<a class='edit' onclick='paymentProfileDelete(".$pd['expectid'].");' >Delete</a></td>";
+								if ($readonly_status == false) {
+									$output .= "<td align='left'>
+										<a title='Edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>
+										<a title='Delete' href='javascript:void(0)' onclick='return paymentProfileDelete(".$pd['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+										".$invoice_stat."
+									</td>";
 								} else {
-								$output .= "<td align='left'><a class='edit'>Edit</a> | ";
-								$output .= "<a class='edit'>Delete</a></td>";
+									$output .= "<td align='left'>
+										<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
+										<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+										".$invoice_stat."
+									</td>";
 								}
 								$output .= "</tr>";
 								$pt_select_box .= '<option value="'. $pd['expectid'] .'">' . $pd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';

@@ -22,7 +22,7 @@
 			$('.payment-recieved-view').hide(); 
 			$('.payment-terms-mini-view1').show(); 
 			$('.payment-received-mini-view1').hide(); 
-			loadPayment();		
+			loadPayment();	
 			return false;
 		});
 		$('.payment-received-button').click(function() {
@@ -2250,3 +2250,38 @@ $(function(){
 		});
 	});
 /*For Timesheet Metrics Data - End*/
+
+/*Project module Invoice genration*/
+function generate_inv(eid) {
+	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
+	var agree = confirm("Are you sure you want to generate invoice?\nIt will send an email to accounts department.");
+	var pjtid = project_jobid;
+	if (agree) {
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
+		var form_data = csrf_token_name+'='+csrf_hash_token;
+		$.post( 
+			site_base_url+"project/generateInvoice/"+eid+"/"+pjtid,
+			form_data,
+			function(data) {
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					loadPayment();
+				}
+				$.unblockUI();
+			}
+			,'json'
+		);
+	} else {
+		return false;
+	}
+	
+}
+function raise_inv() {
+	alert('raiseInvoice');
+	return false;
+}
