@@ -12,7 +12,7 @@ if ( ! function_exists('getLeadStage'))
 		// $CI->db->from($cfg['dbpref'].'lead_stage');
 		// $CI->db->where('status', 1);
 		// $CI->db->order_by('sequence');
-		$leadStageQuery = $CI->db->query("SELECT `lead_stage_id` FROM (`crm_lead_stage`) WHERE `status` = 1 ORDER BY `sequence`");
+		$leadStageQuery = $CI->db->query("SELECT `lead_stage_id` FROM ".$cfg['dbpref']."lead_stage WHERE `status` = 1 ORDER BY `sequence`");
 		//$leadStageQuery = $CI->db->get();
 		$res1 = $leadStageQuery ->result_array();
 		
