@@ -156,12 +156,12 @@ class Customers extends crm_controller {
 					
 					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
 
-					$param['to_mail'] = $admin_mail.','.$mgmt_mail;
-					$param['bcc_mail'] = $admin_mail;
-					$param['from_email'] = $from;
+					$param['to_mail'] 	      = $admin_mail.','.$mgmt_mail;
+					$param['bcc_mail'] 		  = $admin_mail;
+					$param['from_email']	  = $from;
 					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "Customer Details Modification Notification";
-					$param['subject'] = $subject;
+					$param['template_name']	  = "Customer Details Modification Notification";
+					$param['subject']		  = $subject;
 
 					$this->email_template_model->sent_email($param);
 				
