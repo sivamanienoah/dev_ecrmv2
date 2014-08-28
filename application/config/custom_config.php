@@ -92,6 +92,10 @@ $config['crm']['director_emails']  = array(
 $config['crm']['management_emails'] = array(
 									'Senior Management' => 'ssriram@enoahisolution.com',
 								    );
+									
+$config['crm']['account_emails'] = array(
+									'Accounts' => 'ssriram@enoahisolution.com',
+								    );
 
 # keep in sync with above
 
