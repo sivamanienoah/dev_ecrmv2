@@ -58,10 +58,10 @@ class Userlogin extends crm_controller {
 						'logged_in' => TRUE,
 						'logged_in_user' => $userdata[0]
                         );
-			//echo "<pre>"; print_r($userdata[0]); exit;
+			// echo "<pre>"; print_r($whole); exit;
 			$usid = $array['logged_in_user']['userid'];
 			$userlevel = $array['logged_in_user']['level'];
-			//echo $userlevel; die();
+			// echo $userlevel; die();
 			$array['menu_item_list'] = $whole;			
 			$data['customers'] = $this->regionsettings_model->level_map($array['logged_in_user']['level'] , $usid);
 			foreach($data['customers'] as $cus){			
