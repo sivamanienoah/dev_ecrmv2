@@ -396,7 +396,7 @@
 				if (data.error) {
 					alert(data.errormsg);
 				} else {
-					$('.payment-terms-mini-view1').html(data);	
+					$('.payment-terms-mini-view1').html(data);
 				}
 			}
 		);
@@ -2254,6 +2254,7 @@ $(function(){
 /*Project module Invoice genration*/
 function generate_inv(eid) {
 	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
+	$('#rec_paymentfadeout').empty();
 	var agree = confirm("Are you sure you want to generate invoice?\nIt will send an email to accounts department.");
 	var pjtid = project_jobid;
 	if (agree) {
@@ -2268,14 +2269,17 @@ function generate_inv(eid) {
 			form_data,
 			function(data) {
 				if (data.error) {
-					alert(data.errormsg);
+					// alert(data.errormsg);
+					$('#rec_paymentfadeout').html(data.errormsg);
 				} else {
+					$('#rec_paymentfadeout').html('<span class=ajx_success_msg>Status Updated</span>');
 					loadPayment();
 				}
 				$.unblockUI();
 			}
 			,'json'
 		);
+		setTimeout('timerfadeout()', 4000);
 	} else {
 		return false;
 	}

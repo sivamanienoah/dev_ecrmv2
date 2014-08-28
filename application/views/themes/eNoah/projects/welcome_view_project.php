@@ -501,7 +501,7 @@ if (get_default_currency()) {
 									<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
 									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
 									<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
-									<?php if ($chge_access == 1) { ?>
+									<?php if ($readonly_status == false) { ?>
 									<div class="buttons">
 										<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
 									</div>
@@ -522,14 +522,16 @@ if (get_default_currency()) {
 						{
 							$pdi = 1;
 							$pt_select_box .= '<option value="0"> &nbsp; </option>';
-							$output .= "<table width='100%' class='payment_tbl'>
-							<tr><td colspan='3'><h6>Agreed Payment Terms</h6></td></tr>
-							<tr>
-							<td><img src=assets/img/generate_invoice.png >Generate Invoice</td>
-							<td><img src=assets/img/payment-pending.jpg height='10' width='10' > Partial Payment</td>
-							<td><img src=assets/img/payment-due.jpg height='10' width='10' > Payment Due</td>
-							</tr>
-							</table>";
+							
+							$output .= '<div align="left" style="background: none repeat scroll 0 0;">
+							<h6>Agreed Payment Terms</h6>
+							<div class=payment_legend>
+							<div class="pull-left"><img src=assets/img/payment-received.jpg><span>Payment Received</span></div>
+							<div class="pull-left"><img src=assets/img/payment-pending.jpg><span>Partial Payment</span></div>
+							<div class="pull-left"><img src=assets/img/payment-due.jpg ><span>Payment Due</span></div>
+							<div class="pull-left"><img src=assets/img/generate_invoice.png><span>Generate Invoice</span></div>
+							<div class="pull-left"><img src=assets/img/invoice_raised.png><span>Invoice Raised</span></div>
+							</div></div>';
 							$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
 							$output .= "<thead>";
 							$output .= "<tr align='left' >";
@@ -546,25 +548,26 @@ if (get_default_currency()) {
 								$payment_amount = number_format($pd['amount'], 2, '.', ',');
 								$total_amount_recieved += $pd['amount'];
 								$payment_received = '';
-								if ($pd['received'] == 0) {
-									$payment_received = '<img src="assets/img/payment-due.jpg" alt="Due" height="10" width="10" />';
-								} else if ($pd['received'] == 1) {
-									$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" height="10" width="10" />';
-								} else {
-									$payment_received = '<img src="assets/img/payment-pending.jpg" alt="pending" height="10" width="10" />';
-								}
 								$invoice_stat = '';
+								$raised_invoice_stat = '';
+								if ($pd['invoice_status'] == 1) {
+									$raised_invoice_stat = "<img src='assets/img/invoice_raised.png' alt='Invoice-raised'>";
+								}
+								if ($pd['received'] == 0) {
+									$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-due.jpg" alt="Due" />';
+								} else if ($pd['received'] == 1) {
+									$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" />';
+								} else {
+									$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-pending.jpg" alt="pending" />';
+								}
 								if ($readonly_status == false) {
 									if ($pd['invoice_status'] == 0) {
-										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='return generate_inv(".$pd['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>
-										<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='return generate_inv(".$pd['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
 									} else if ($pd['invoice_status'] == 1) {
-										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
-										<a href='javascript:void(0)' onclick='return raise_inv(".$pd['expectid']."); return false;' title='Invoice Raised'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+										$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 									}
 								} else {
-									$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>
-									<a class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/system-tick.png' alt='Invoice-raised' ></a>";
+									$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 								}
 								$output .= "<tr>";
 								$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
@@ -615,7 +618,7 @@ if (get_default_currency()) {
 							<?php } ?>
 							
 							<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
-							<?php if ($chge_access == 1) { ?>
+							<?php if ($readonly_status == false){ ?>
 							<div class="buttons">
 								<button type="submit" class="positive" onclick="setPaymentRecievedTerms(); return false;">Add Payment</button>
 							</div>
@@ -654,12 +657,11 @@ if (get_default_currency()) {
 								$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
 								$output .= "<td> ".$dd['expect_worth_name'].' '.number_format($dd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td>".$dd['payment_term']."</td>";
-								if ($chge_access == 1) {
-								$output .= "<td align='left'><a class='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' >Edit</a> | ";
-								$output .= "<a class='edit' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' >Delete</a></td>";
+								if ($readonly_status == false) {
+								$output .= "<td align='left'><a class='edit' title='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>";
+								$output .= "<a class='edit' title='Delete' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' ><img src='assets/img/trash.png' alt='delete'></a></td>";
 								} else {
-								$output .= "<td align='left'><a class='edit'>Edit</a> | ";
-								$output .= "<a class='edit'>Delete</a></td>";
+								$output .= "<td align='left'> - </td>";
 								}
 								$output .= "</tr>";
 							}
@@ -984,7 +986,7 @@ if (get_default_currency()) {
 					</table>
 				</form>
 			</div>
-			<?php if ($chge_access == 1) { ?>
+			<?php if ($readonly_status == false) { ?>
 			<div class="buttons task-init ms-toggler" id="addNew-ms">
 				<button type="button" class="positive" onclick="$('.ms-toggler').slideToggle();" style="float:none;">Add New Milestone</button>
 			</div>
@@ -1039,11 +1041,11 @@ if (get_default_currency()) {
 					$output .= "<td align='left'>".$ms_data['ms_percent']."</td>";
 					$output .= "<td align='left'>".$ms_stat."</td>";
 					$output .= "<td align='left'>";
-					if ($chge_access == 1) {
-						$output .= "<a class='edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' >Edit</a> | ";
-						$output .= "<a class='edit' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' >Delete</a>";
+					if ($readonly_status == false) {
+						$output .= "<a class='edit' title='Edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>";
+						$output .= "<a class='edit' title='Delete' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' ><img src='assets/img/trash.png' alt='delete'></a>";
 					} else {
-						$output .= "Edit | Delete";
+						$output .= "-";
 					}
 					$output .= "</td>";
 					$output .= "</tr>";

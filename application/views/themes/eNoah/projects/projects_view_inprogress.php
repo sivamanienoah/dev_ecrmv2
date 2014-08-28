@@ -57,7 +57,7 @@ if (get_default_currency()) {
 				$milestone_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
 				}
 				$milestone_content .= "</td>";
-				$milestone_content .= "<td>".$title."</td>";
+				$milestone_content .= "<td><a href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 				$milestone_content .= "<td>".$complete_stat."</td>";
 				$milestone_content .= "<td>".$project_type."</td>";
 				$milestone_content .= "<td>".$ragStatus."</td>";

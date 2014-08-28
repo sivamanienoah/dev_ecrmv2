@@ -1784,9 +1784,9 @@ button.positive, .pjt-btn a.positive, input.positive{
     overflow: hidden;
 }
 /*project module - legend*/
-.legend span {
+.payment_legend span {
 	float: right;
-    padding: 5px;
+    padding: 0 5px 5px;
     vertical-align: middle;
 }
 .legend div {
@@ -1796,6 +1796,10 @@ button.positive, .pjt-btn a.positive, input.positive{
 	height:48px;
 	color:#fff;
 	width:85%
+}
+.payment_legend {
+	height: 25px;
+    margin-top: 10px;
 }
 .readonly-status {
 	cursor: not-allowed;

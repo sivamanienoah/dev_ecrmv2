@@ -175,6 +175,9 @@ class email_template_model extends crm_model {
 
 		$this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->to($data['to_mail']);
+		if (!empty($data['cc_mail'])) {
+			$this->email->cc($data['cc_mail']);
+		}
 		if (!empty($data['bcc_mail'])) {
 			$this->email->bcc($data['bcc_mail']);
 		}
