@@ -997,7 +997,7 @@ class Project extends crm_controller {
 				}
 				if ($readonly_status == false) {
 					if ($exp['invoice_status'] == 0) {
-						$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='return generate_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
+						$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
 					} else if ($exp['invoice_status'] == 1) {
 						$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 					}
@@ -1013,7 +1013,7 @@ class Project extends crm_controller {
 				if ($readonly_status == false) {
 					$output .= "<td align='left'>
 						<a title='Edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
-						<a title='Delete' onclick='return paymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+						<a title='Delete' onclick='paymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
 						".$invoice_stat."
 					</td>";
 				} else {
@@ -2977,8 +2977,8 @@ HDOC;
 	
 	public function generateInvoice($eid, $pjtid) {
 
-		$wh_condn		 = array('expectid' => $eid, 'jobid_fk'=>$pjtid);
-		$updt			 = array('invoice_status' => 1);
+		$wh_condn		 = array('expectid' => $eid,'jobid_fk'=>$pjtid);
+		$updt			 = array('invoice_status'=>1,'invoice_generate_notify_date'=>date('Y-m-d H:i:s'));
 		
 		$output['error'] = FALSE;
 		
