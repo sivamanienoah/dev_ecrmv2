@@ -15,6 +15,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		if($this->session->userdata('accesspage')==1)
 		{ 
 		?>
+		<div id="invoice_note" class="leadstg_note" style="width: 95%; display: block;">By default displays only the "Current Month" invoices</div>
 		<div id="filter_section">
 			<a class="choice-box" onclick="advanced_filter();" >
 			Advanced Filters
