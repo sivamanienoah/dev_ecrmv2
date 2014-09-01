@@ -26,6 +26,7 @@ class Invoice extends CRM_Controller {
         $this->login_model->check_login();
 		$this->load->model('invoice_model');
 		$this->load->helper('custom_helper');
+		$this->load->helper('text_helper');
 		$this->userdata = $this->session->userdata('logged_in_user');
 		
 		if (get_default_currency()) {
@@ -45,11 +46,19 @@ class Invoice extends CRM_Controller {
     public function index()
 	{
         $data['page_heading'] = 'Invoices';
-		$invoices = $this->invoice_model->get_invoices();
+		
+		$data['projects']  = $this->invoice_model->get_projects();
+		$data['customers'] = $this->invoice_model->get_customers();
+		$data['practices'] = $this->invoice_model->get_practices();
+		
+		$filter   = real_escape_array($this->input->post());
+		$invoices = $this->invoice_model->get_invoices($filter);
+		
 		$rates 	  = $this->get_currency_rates();
 		$data['default_currency'] = $this->default_cur_name;
 		$data['invoices'] = array();
 		$i = 0;
+		$data['total_amt'] = 0;
 		if(count($invoices)>0) {
 			foreach ($invoices as $inv) {
 				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
@@ -59,10 +68,14 @@ class Invoice extends CRM_Controller {
 				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
 				$data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
 				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
+				$data['total_amt'] += $data['invoices'][$i]['coverted_amt'];
 				$i++;
 			}
 		}
-        $this->load->view('invoices/invoice_view', $data);
+		if($this->input->post("filter")!="")
+			$this->load->view('invoices/invoice_view_grid', $data);
+		else
+			$this->load->view('invoices/invoice_view', $data);
 		
 		
 		// [expectid] => 43
