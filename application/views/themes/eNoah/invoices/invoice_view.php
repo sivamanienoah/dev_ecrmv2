@@ -33,6 +33,7 @@ $userdata = $this->session->userdata('logged_in_user');
 								<td class="tblheadbg">By Projects</td>
 								<td class="tblheadbg">By Customers</td>
 								<td class="tblheadbg">By Practices</td>
+								<td class="tblheadbg">By Date</td>
 							</tr>
 							<tr>	
 								<td>
@@ -57,6 +58,11 @@ $userdata = $this->session->userdata('logged_in_user');
 											} 
 										?>
 									</select> 
+								</td>
+								<td>
+									From <input type="text" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+									<br />
+									To <input type="text" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 								</td>
 							</tr>
 							<tr align="right" >
