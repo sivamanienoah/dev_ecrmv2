@@ -63,6 +63,7 @@ class Invoice extends CRM_Controller {
 			foreach ($invoices as $inv) {
 				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
+				$data['invoices'][$i]['lead_id'] 				= $inv['lead_id'];
 				$data['invoices'][$i]['customer'] 			    = $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
 				$data['invoices'][$i]['project_milestone_name'] = $inv['project_milestone_name'];
 				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
