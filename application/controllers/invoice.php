@@ -75,22 +75,7 @@ class Invoice extends CRM_Controller {
 		if($this->input->post("filter")!="")
 			$this->load->view('invoices/invoice_view_grid', $data);
 		else
-			$this->load->view('invoices/invoice_view', $data);
-		
-		
-		// [expectid] => 43
-		// [amount] => 2311.00
-		// [project_milestone_name] => Testing 2
-		// [invoice_generate_notify_date] => 2014-08-28 16:30:30
-		// [expected_date] => 2014-08-27 00:00:00
-		// [lead_title] => test lead title
-		// [custid_fk] => 33
-		// [pjt_id] => ITS-Pan- 01-1113
-		// [expect_worth_name] => AUD
-		// [first_name] => test
-		// [last_name] => tecu
-		// [company] => test
-		
+			$this->load->view('invoices/invoice_view', $data);		
     }
 	
 	/*
