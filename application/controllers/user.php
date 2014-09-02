@@ -38,6 +38,7 @@ class User extends crm_controller {
 	*/
     public function add_user($update = false, $id = false, $ajax = false)
 	{
+		echo "<pre>"; print_r($this->userdata); exit;
 		$post_data = real_escape_array($this->input->post());
 	
         $rules['first_name']   = "trim|required";
@@ -103,8 +104,8 @@ class User extends crm_controller {
             } 
 			else 
 			{
-                $json['error'] = true;
-                $json['ajax_error_str'] = $this->validation->error_string;
+                $json['error']			 = true;
+                $json['ajax_error_str']  = $this->validation->error_string;
                 echo json_encode($json);
             }
 		} 
@@ -144,7 +145,7 @@ class User extends crm_controller {
                 unset($update_data['password']);
             }
             
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) 
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 			{
 				$user_ids = $this->uri->segment(4);
 				$level_id = $update_data['level'];
@@ -159,12 +160,11 @@ class User extends crm_controller {
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 							
-						$from=$this->userdata['email'];
-						$arrEmails = $this->config->item('crm');
-						$arrSetEmails = $arrEmails['director_emails'];
-								
-						$admin_mail = implode(',',$arrSetEmails);
-						$subject='User Role Change Notification';
+						$from		  = $this->userdata['email'];
+						$arrEmails 	  = $this->config->item('crm');
+						$arrSetEmails = $arrEmails['director_emails'];		
+						$admin_mail	  = implode(',',$arrSetEmails);
+						$subject      = 'User Role Change Notification';
 						
 						//email sent by email template
 						$param = array();
