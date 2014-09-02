@@ -374,7 +374,7 @@ class Role_model extends crm_model {
 		if ($subtreeRoot['id'] == 110) {
 			$disableStatusProject = ' disabled';
 		}
-		if ($subtreeRoot['id'] == 113) {
+		if ($subtreeRoot['id'] == 113 || $subtreeRoot['id'] == 132) {
 			$disableStatusReport = ' disabled';
 		}
 		$html .='<span style="width:400px;"> 
