@@ -196,9 +196,9 @@ class Regionsettings extends crm_controller {
 		$this->login_model->check_login();
 		
 		//adding State
-		$rules['country_name']  = "trim|required";         
+		$rules['country_name']  = "trim|required";
 		$this->validation->set_rules($rules);
-		$fields['country_name'] = "Country Name";		 
+		$fields['country_name'] = "Country Name";
 		$fields['inactive']     = 'Inactive';
 		$fields['regionid']     = 'regionid';
 		$this->validation->set_fields($fields);
@@ -312,9 +312,9 @@ class Regionsettings extends crm_controller {
 		$this->login_model->check_login();
 
 		//adding State
-		$rules['state_name']  = "trim|required";         
+		$rules['state_name']  = "trim|required";
 		$this->validation->set_rules($rules);
-		$fields['state_name'] = "State Name";		 
+		$fields['state_name'] = "State Name";
 		$fields['inactive']   = 'Inactive';
 		$fields['countryid']  = 'countryid';
 		$fields['regionid']   = 'regionid';

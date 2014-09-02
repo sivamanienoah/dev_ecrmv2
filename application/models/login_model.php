@@ -18,7 +18,7 @@ class Login_model extends crm_model {
 		{
 			$this->session->set_userdata('web_request_count', 0);
 			
-			$data = $this->session->userdata('logged_in_user');
+			$data  = $this->session->userdata('logged_in_user');
 			$query = $this->process_login($data['email'], $data['password']);
             
 			if ($query == FALSE)
