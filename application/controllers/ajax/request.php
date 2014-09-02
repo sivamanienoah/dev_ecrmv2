@@ -389,7 +389,6 @@ function add_job_task($update = 'NO', $random = 'NO')
 		// $ins['mins'] = (int) $_POST['task_mins'];
 		$ins['remarks'] = $_POST['remarks'];
 		if($update == 'NO') {
-		//$ins['approved'] = ($this->userdata['is_pm'] == 1 ) ? 1 : 0;
 			$ins['approved'] = 1;
 		}
 		if($update == 'NO') {

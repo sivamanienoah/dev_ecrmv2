@@ -36,20 +36,18 @@ class Myaccount extends crm_controller {
         $rules['first_name'] = "trim|required";
 		$rules['last_name']  = "trim|required";
 		$rules['email']      = "trim|required|valid_email";
-		$rules['add_email']  = "trim|valid_email";
 		$rules['signature']  = "trim|required";
 		$this->validation->set_rules($rules);
 		
-		$fields['first_name']      = "First Name";
-		$fields['last_name']       = "Last Name";
-		$fields['email']           = "Email Address";
-		$fields['add_email']       = "Additional Email Address";
-        $fields['phone']           = "Telephone";
-        $fields['mobile']          = "Mobile";
-		$fields['oldpassword']     = "oldPassword";
-		$fields['password']        = "Password";
-		$fields['pass_conf']       = "Password Confirmation";
-		$fields['signature']       = "Email Signature";
+		$fields['first_name']  = "First Name";
+		$fields['last_name']   = "Last Name";
+		$fields['email']       = "Email Address";
+        $fields['phone']       = "Telephone";
+        $fields['mobile'] 	   = "Mobile";
+		$fields['oldpassword'] = "oldPassword";
+		$fields['password']    = "Password";
+		$fields['pass_conf']   = "Password Confirmation";
+		$fields['signature']   = "Email Signature";
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
@@ -73,73 +71,60 @@ class Myaccount extends crm_controller {
                 $update_data[$key] = $this->input->post($key);
             }
 			
-			if(($this->input->post('password')) != "")
-			{	if (strlen($this->input->post('password'))>=6) {
-					
-				
-				if (($this->input->post('password')) == ($this->input->post('pass_conf'))) {
-					if ($userdata[0]['password'] == sha1($this->input->post('oldpassword'))) {
-						unset($update_data['pass_conf'], $update_data['oldpassword']);
-            
-						$update_data['password'] = sha1($this->input->post('password'));
-					// update query
-					if ($this->user_model->update_user($customer['userid'], $update_data))
-					{//echo $this->db->last_query();
-						$new = $this->user_model->get_user($customer['userid']);
-						$this->session->set_userdata('logged_in_user', $new[0]);
-						
-						$this->session->set_flashdata('confirm', array('User details updated!'));
-						
-					}
-					redirect('myaccount/'); 
-					}
-					else {
-						$this->session->set_flashdata('login_errors', array('Your OldPassword is wrong!'));
+			if(($this->input->post('password')) != "") {
+				if (strlen($this->input->post('password'))>=6) {
+					if (($this->input->post('password')) == ($this->input->post('pass_conf'))) {
+						if ($userdata[0]['password'] == sha1($this->input->post('oldpassword'))) {
+							unset($update_data['pass_conf'], $update_data['oldpassword']);
+							$update_data['password'] = sha1($this->input->post('password'));
+							// update query
+							if ($this->user_model->update_user($customer['userid'], $update_data)) {
+								//echo $this->db->last_query();
+								$new = $this->user_model->get_user($customer['userid']);
+								$this->session->set_userdata('logged_in_user', $new[0]);
+								$this->session->set_flashdata('confirm', array('User details updated!'));
+							}
+							redirect('myaccount/'); 
+						} else {
+							$this->session->set_flashdata('login_errors', array('Your OldPassword is wrong!'));
+							redirect('myaccount');
+						}
+					} else {
+						$this->session->set_flashdata('login_errors', array('Password & Password confirmation mismatch!'));
 						redirect('myaccount');
 					}
-				}
-				else {
-					$this->session->set_flashdata('login_errors', array('Password & Password confirmation mismatch!'));
-					redirect('myaccount');
-				}
-				}
-				else {
+				} else {
 					$this->session->set_flashdata('login_errors', array('Your Password must be atleast more than six characters!'));
 					redirect('myaccount');
 				}
-				
-			}
-			else 
-			{
+			} else {
 				 unset($update_data['password'], $update_data['pass_conf'], $update_data['oldpassword']);
-				//update query
+				 //update query
 			
 				if ($this->user_model->update_user($customer['userid'], $update_data))
 				{
 					$new = $this->user_model->get_user($customer['userid']);
 					$this->session->set_userdata('logged_in_user', $new[0]);
 					
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$user_name 			 = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
-					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+					$print_fancydate	 = date('l, jS F y h:iA', strtotime($dis['date_created']));
 							
-					$from=$this->userdata['email'];
-					$arrEmails = $this->config->item('crm');
-					$arrSetEmails=$arrEmails['director_emails'];
+					$from    	  = $this->userdata['email'];
+					$arrEmails 	  = $this->config->item('crm');
+					$arrSetEmails = $arrEmails['director_emails'];
 							
-					$admin_mail=implode(',',$arrSetEmails);
-					$subject='User Profile Changes Notification';
+					$admin_mail = implode(',',$arrSetEmails);
+					$subject    = 'User Profile Changes Notification';
 					
 					//email sent by email template
 					$param = array();
-
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'user_name'=>$user_name,'signature'=>$this->userdata['signature']);
-
-					$param['to_mail'] = $admin_mail;
-					$param['from_email'] = $from;
+					$param['email_data']	  = array('print_fancydate'=>$print_fancydate,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'user_name'=>$user_name,'signature'=>$this->userdata['signature']);
+					$param['to_mail']		  = $admin_mail;
+					$param['from_email']	  = $from;
 					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "User Profile Changes Notification";
-					$param['subject'] = $subject;
+					$param['template_name']	  = "User Profile Changes Notification";
+					$param['subject']		  = $subject;
 
 					$this->email_template_model->sent_email($param);
 
@@ -178,30 +163,29 @@ class Myaccount extends crm_controller {
 		$api_password = $this->input->post("api_password");
 		$api_username = $this->input->post("api_username");
 		
-		$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+		$user_name			 = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 	    $dis['date_created'] = date('Y-m-d H:i:s');
-	    $print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+	    $print_fancydate     = date('l, jS F y h:iA', strtotime($dis['date_created']));
 							
-					$from=$this->userdata['email'];
-					$arrEmails = $this->config->item('crm');
-					$arrSetEmails=$arrEmails['director_emails'];
-					$admin_mail=implode(',',$arrSetEmails);
-					$subject='API Changes Notification';
-					//email sent by email template
-					$param = array();
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'SECRETKEY'=>$apikey,'APIUSERNAME'=>$api_username,'APIPASSWORD'=>$api_password);
-					$param['to_mail'] = $admin_mail;
-					$param['from_email'] = $from;
-					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "API Changes";
-					$param['subject'] = $subject;
-					$data_insert = array("key"=>$apikey,"username"=>$api_username,"password"=>md5($api_password));
-					$ins = $this->user_model->insert_api_details($data_insert);
-					if($ins){
-				      $this->email_template_model->sent_email($param);
-					}
-				
+		$from         = $this->userdata['email'];
+		$arrEmails    = $this->config->item('crm');
+		$arrSetEmails = $arrEmails['director_emails'];
+		$admin_mail   = implode(',',$arrSetEmails);
+		$subject      = 'API Changes Notification';
 		
+		//email sent by email template
+		$param = array();
+		$param['email_data']      = array('print_fancydate'=>$print_fancydate,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'SECRETKEY'=>$apikey,'APIUSERNAME'=>$api_username,'APIPASSWORD'=>$api_password);
+		$param['to_mail'] 		  = $admin_mail;
+		$param['from_email'] 	  = $from;
+		$param['from_email_name'] = $user_name;
+		$param['template_name']   = "API Changes";
+		$param['subject']		  = $subject;
+		$data_insert			  = array("key"=>$apikey,"username"=>$api_username,"password"=>md5($api_password));
+		$ins					  = $this->user_model->insert_api_details($data_insert);
+		if($ins) {
+			$this->email_template_model->sent_email($param);
+		}
 	}
     
 }

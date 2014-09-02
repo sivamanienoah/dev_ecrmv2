@@ -51,7 +51,7 @@ class Login_model extends crm_model {
 	{
         $sql = "SELECT * FROM `{$this->cfg['dbpref']}users` as u JOIN `{$this->cfg['dbpref']}roles` AS r ON r.id = u.role_id  WHERE u.`email` = ? AND u.`password` = ? AND u.`inactive` = 0 LIMIT 1";
         $user = $this->db->query($sql, array($email, $password));
-        
+		// echo $this->db->last_query(); exit;
         if ($user->num_rows() > 0)
 		{
 			$data = $user->result_array();
