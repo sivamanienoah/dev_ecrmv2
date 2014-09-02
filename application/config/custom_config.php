@@ -11,7 +11,7 @@ $config['crm']['app_full_name'] = 'eNoah Customer Relationship Management';
 $config['crm']['app_version']   = '1.1.01';
 $config['crm']['app_date']      = '27-11-2013';
 
-$config['crm']['dbpref']        = 'crms_';
+$config['crm']['dbpref']        = 'crm_';
 $config['crm']['theme']         = 'eNoah';
 $config['crm']['data']          = '';
 
