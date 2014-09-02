@@ -38,7 +38,6 @@ class User extends crm_controller {
 	*/
     public function add_user($update = false, $id = false, $ajax = false)
 	{
-		echo "<pre>"; print_r($this->userdata); exit;
 		$post_data = real_escape_array($this->input->post());
 	
         $rules['first_name']   = "trim|required";
@@ -84,11 +83,11 @@ class User extends crm_controller {
 			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		}
 		
-        $data['roles']=$this->role_model->active_role_list();
+        $data['roles']	= $this->role_model->active_role_list();
 		$data['levels'] = $this->user_model->get_levels();
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_user'])) {
             $customer = $this->user_model->get_user($id);
-            $data['this_user'] = $customer[0]['userid'];
+            $data['this_user']		 = $customer[0]['userid'];
 			$data['this_user_level'] = $customer[0]['level'];
 
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) {
