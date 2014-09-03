@@ -47,10 +47,11 @@ class Login_model extends crm_model {
 		}
     }
     
-    public function process_login($email, $password)
+	/*for local db only using email & password*/
+	/*public function process_login($email, $password)
 	{
         $sql = "SELECT * FROM `{$this->cfg['dbpref']}users` as u JOIN `{$this->cfg['dbpref']}roles` AS r ON r.id = u.role_id  WHERE u.`email` = ? AND u.`password` = ? AND u.`inactive` = 0 LIMIT 1";
-        $user = $this->db->query($sql, array($email, $password));
+        $user = $this->db->query($sql, array($email, sha1($password)));
 		// echo $this->db->last_query(); exit;
         if ($user->num_rows() > 0)
 		{
@@ -62,8 +63,93 @@ class Login_model extends crm_model {
 		{
             return FALSE;
         }
-    }
-    
+    } */
+	
+
+	public function process_login($username, $password)
+	{
+		$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.password,u.email,u.auth_type,u.level,u.role_id,u.signature,
+		u.inactive,r.name');
+		$this->db->from($this->cfg['dbpref'].'users u');
+		$this->db->join($this->cfg['dbpref'].'roles r', 'r.id = u.role_id');
+		$this->db->where('u.username', $username);
+		$this->db->limit(1);
+        $sql = $this->db->get();
+        $data['res'] = $sql->result_array();
+		
+		$data['login_error_code'] = 0;
+		// echo "<pre>"; print_R($res); exit;
+		
+		if ($sql->num_rows() > 0) {
+			if($data['res'][0]['inactive'] == 0) {
+				switch($data['res'][0]['auth_type']) {
+					case 0:	//for ldb authentication
+						if(sha1($password) == $data['res'][0]['password']) {
+							$this->mark_attendance($data['res'][0]['userid']);
+							return $data;
+						} else {
+							$data['login_error_code'] = 1;
+							$data['login_error'] = 'Invalid password supplied';
+							return $data;
+						}
+					break;
+					case 1: //for ladp authentication
+						$LDAPServerAddress1 = "10.0.9.11"; // <- IP address for your 1st DC
+
+						$LDAPServerPort    = "389";
+						$LDAPServerTimeOut = "60";
+						$LDAPContainer = "DC=enoah,DC=chn"; // <- your domain info
+						$BIND_username = $username;
+						$BIND_password = $password;
+						$filter = "sAMAccountName=".$this->input->post('email');
+					   
+						if(($ds=ldap_connect($LDAPServerAddress1))) {
+							ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+							ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+						  
+							if($r = @ldap_bind($ds,$BIND_username,$BIND_password)) {
+								if($sr = ldap_search($ds, $LDAPContainer, $filter, array('distinguishedName'))) {
+									if($info = ldap_get_entries($ds, $sr)) {
+										$BIND_username = $info[0]['distinguishedname'][0];
+										$BIND_password = $password;
+											if($r2=ldap_bind($ds,$BIND_username,$BIND_password)) {
+												if($sr2 = @ldap_search($ds,$LDAPContainer,$filter,array("givenName","sn","displayName","mail"))) {
+													if($info2 = ldap_get_entries($ds, $sr2)) {
+														$data["name"] = $info2[0]["givenname"][0];
+													} else {
+														$data['login_error'] = "Could not read entries"; $data['login_error_code'] = 2;
+													}
+												} else {
+													$data['login_error'] = "Could not search"; $data['login_error_code'] = 3;
+												}
+											} else {
+												$data['login_error'] = "User password incorrect"; $data['login_error_code'] = 4;
+											}
+									} else {
+										$data['login_error'] = "User name not found"; $data['login_error_code'] = 5;
+									}
+								} else {
+									$data['login_error'] = "Could not search"; $data['login_error_code'] = 6;
+								}
+							} else {
+								$data['login_error'] = "Could not bind"; $data['login_error_code'] = 7;
+							}
+					   } else {
+							$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
+					   }
+					   return $data;
+					break;
+				}
+			} else {
+				$data['login_error'] = 'Your Account has been made Inactive'; $data['login_error_code'] = 9;
+				return $data;
+			}
+		} else {
+			$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
+			return $data;
+		}
+	}
+	
     public function check_login_status($level = FALSE)
 	{
         if ($this->session->userdata('logged_in') === TRUE)
