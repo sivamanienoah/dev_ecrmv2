@@ -80,7 +80,7 @@ if (get_default_currency()) {
 				$monthly_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
 				}
 				$monthly_content .= "</td>";
-				$monthly_content .= "<td>".$title."</td>";
+				$monthly_content .= "<td><a href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 				$monthly_content .= "<td>".$complete_stat."</td>";
 				$monthly_content .= "<td>".$project_type."</td>";
 				$monthly_content .= "<td>".$ragStatus."</td>";
