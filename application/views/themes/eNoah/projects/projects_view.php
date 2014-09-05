@@ -125,25 +125,6 @@ if (get_default_currency()) {
 			<div id="ad_filter" class="custom_dashboardfilter">
 				
 			</div>
-			<div class='clear'></div>
-			<fieldset>
-				<legend>Legend</legend>
-				<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
-					<!--Legends-->
-					<div class="legend">
-						<div class="pull-left"><strong>CP</strong> - Completion Percentage</div>
-						<div class="pull-left"><strong>PT</strong> - Project Type</div>
-						<div class="pull-left"><strong>PH</strong> - Planned Hours</div>
-						<div class="pull-left"><strong>BH</strong> - Billable Hours</div>
-						<div class="pull-left"><strong>IH</strong> - Internal Hours</div>
-						<div class="pull-left"><strong>NBH</strong> - Non Billable Hours</div>
-						<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
-						<div class="pull-left"><strong>PV</strong> - Project Value </div>
-						<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
-						<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
-					</div>
-				</div>
-			</fieldset>
 		<?php 
 		} else {
 			echo "You have no rights to access this page";
