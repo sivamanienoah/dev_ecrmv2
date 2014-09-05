@@ -94,8 +94,48 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
+
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		$this->load->view('projects/projects_view_inprogress', $data);
+	}
+	
+	/*
+	 *Advanced Search For Projects
+	 */
+	public function advanceFilterMetrics()
+	{
+ 		$inputData = real_escape_array($this->input->post());
+		
+		if(!empty($inputData)) {
+			$pjtstage 	  = $inputData['pjtstage'];
+			$cust     	  = $inputData['customer1'];
+			$service 	  = $inputData['services'];
+			$practice 	  = $inputData['practices'];
+			$keyword  	  = $inputData['keyword'];
+			$datefilter	  = $inputData['datefilter'];
+			$from_date	  = $inputData['from_date'];
+			$to_date  	  = $inputData['to_date'];
+			$metrics_month = $inputData['metrics_month'];
+			$metrics_year = $inputData['metrics_year'];
+			$metrics_date = date('Y-m-01', strtotime($inputData['metrics_year'].'-'.$inputData['metrics_month']));
+		} else {
+			$pjtstage 	  = '';
+			$cust     	  = '';
+			$service 	  = '';
+			$practice  	  = '';
+			$keyword  	  = '';
+			$datefilter   = '';
+			$from_date	  = '';
+			$to_date  	  = '';
+			$metrics_date = '';
+		}
+		
+		if ($keyword == 'false' || $keyword == 'undefined') {
+			$keyword = 'null';
+		}
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=2);
+		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects,$project_type=3,$metrics_date);
+		$this->load->view('projects/projects_view_inprogress_monthly', $data);
 	}
 	
 	/*
@@ -203,7 +243,7 @@ class Project extends crm_controller {
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			
 			if(!empty($data['quote_data']['pjt_id'])) {
-				$bill_type = isset($data['quote_data']['billing_type']) ? $data['quote_data']['billing_type'] : 1;
+				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type);
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
@@ -2528,8 +2568,9 @@ HDOC;
 	}
 	
 	/* Change the actual worth amount to Default currency */
-	public function getProjectsDataByDefaultCurrency($records)
+	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
 	{
+	
 		$rates = $this->get_currency_rates();
 		
 		$data['project_record'] = array();
@@ -2547,10 +2588,14 @@ HDOC;
 				$total_non_billable_hrs = 0;
 				$project_type			= '';
 				
-				$bill_type = ($rec['billing_type'] != 0) ? $rec['billing_type'] : 1;
+				if(!empty($project_billing_type) && $project_billing_type==3) {
+					$bill_type = 3;
+				} else {
+					$bill_type = $rec['billing_type'];
+				}
 				
 				if(!empty($rec['pjt_id']))
-				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type);
+				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date);
 
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
@@ -2638,7 +2683,8 @@ HDOC;
 		$practice = $this->input->post('practices');
 		$datefilter = $this->input->post('datefilter');
 		$from_date = $this->input->post('from_date');
-		$to_date = $this->input->post('to_date');		
+		$to_date = $this->input->post('to_date');
+		$export_type = $this->input->post('export_type');
 		$keyword = null;
 		
 		if((!empty($pjtstage)) && $pjtstage!='null')
@@ -2662,8 +2708,21 @@ HDOC;
 		else
 		$practice = '';
 		
-    	$getProjectData = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
-		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData);
+		if($export_type == 'milestone') {
+			$billing_type = 1;
+		}
+		
+		if($export_type == 'monthly') {
+			$billing_type = 2;
+			$metrics_month = $this->input->post('metrics_month');
+			$metrics_year = $this->input->post('metrics_year');
+			$metrics_date = date('Y-m-01', strtotime($metrics_year.'-'.$metrics_month));
+			$project_type = 3;
+		}
+		
+
+    	$getProjectData = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type);
+		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData,$project_type,$metrics_date);
 		
     	if(count($pjts_data)>0) {
     		//load our new PHPExcel library
@@ -2671,7 +2730,7 @@ HDOC;
 			//activate worksheet number 1
 			$this->excel->setActiveSheetIndex(0);
 			//name the worksheet
-			$this->excel->getActiveSheet()->setTitle('Milestone Based');
+			$this->excel->getActiveSheet()->setTitle($export_type);
 
 			//set cell A1 content with some text			
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Project Title');
@@ -2693,31 +2752,8 @@ HDOC;
 			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
 			//make the font become bold
 			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
-			
-			//for 2nd sheet
-			$this->excel->createSheet(1);
-			$this->excel->setActiveSheetIndex(1);
-			$this->excel->getActiveSheet()->setTitle('Monthly Billing');
-			$this->excel->getActiveSheet()->setCellValue('A1', 'Project Title');
-			$this->excel->getActiveSheet()->setCellValue('B1', 'Project Completion (%)');
-			$this->excel->getActiveSheet()->setCellValue('C1', 'Project Type');
-			$this->excel->getActiveSheet()->setCellValue('D1', 'RAG Status');
-			$this->excel->getActiveSheet()->setCellValue('E1', 'Planned Hours');
-			$this->excel->getActiveSheet()->setCellValue('F1', 'Billable Hours');
-			$this->excel->getActiveSheet()->setCellValue('G1', 'Internal Hours');
-			$this->excel->getActiveSheet()->setCellValue('H1', 'Non-Billable Hours');
-			$this->excel->getActiveSheet()->setCellValue('I1', 'Total Utilized Hours (Actuals)');
-			$this->excel->getActiveSheet()->setCellValue('J1', 'Project Value ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('K1', 'Utilization Cost ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('L1', 'P&L');
-			$this->excel->getActiveSheet()->setCellValue('M1', 'P&L %');
-			
-			$this->excel->getActiveSheet()->getStyle('A1:M1')->getFont()->setSize(10);
-			//make the font become bold
-			$this->excel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
-			
-			$i=2;	
-			$k=2;	
+
+			$i=2;
 			
     		foreach($pjts_data as $rec) {
 			
@@ -2744,45 +2780,24 @@ HDOC;
 				$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
 				$percent = ($plPercent == FALSE)?'-':sprintf('%0.2f', $plPercent);
 				
-				$bill_type = ($rec['billing_type'] != 0) ? $rec['billing_type'] : 1;
+				$bill_type = $rec['billing_type'];
 				
-				switch ($bill_type) {
-					case 1:
-						$this->excel->setActiveSheetIndex(0);
-						$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
-						$this->excel->getActiveSheet()->setCellValue('B'.$i, $rec['complete_status']);
-						$this->excel->getActiveSheet()->setCellValue('C'.$i, $rec['project_type']);
-						$this->excel->getActiveSheet()->setCellValue('D'.$i, $rag);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $estimate_hr);
-						$this->excel->getActiveSheet()->setCellValue('F'.$i, $bill_hr);
-						$this->excel->getActiveSheet()->setCellValue('G'.$i, $inter_hr);
-						$this->excel->getActiveSheet()->setCellValue('H'.$i, $nbill_hr);
-						$this->excel->getActiveSheet()->setCellValue('I'.$i, $total_hr);
-						$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
-						$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
-						$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
-						$this->excel->getActiveSheet()->setCellValue('M'.$i, $rec['actual_worth_amt']-$rec['total_cost']);
-						$this->excel->getActiveSheet()->setCellValue('N'.$i, $percent);
-						$i++;
-					break;
-					case 2:
-						$this->excel->setActiveSheetIndex(1);
-						$this->excel->getActiveSheet()->setCellValue('A'.$k, $rec['lead_title']);
-						$this->excel->getActiveSheet()->setCellValue('B'.$k, $rec['complete_status']);
-						$this->excel->getActiveSheet()->setCellValue('C'.$k, $rec['project_type']);
-						$this->excel->getActiveSheet()->setCellValue('D'.$k, $rag);
-						$this->excel->getActiveSheet()->setCellValue('E'.$k, $estimate_hr);
-						$this->excel->getActiveSheet()->setCellValue('F'.$k, $bill_hr);
-						$this->excel->getActiveSheet()->setCellValue('G'.$k, $inter_hr);
-						$this->excel->getActiveSheet()->setCellValue('H'.$k, $nbill_hr);
-						$this->excel->getActiveSheet()->setCellValue('I'.$k, $total_hr);
-						$this->excel->getActiveSheet()->setCellValue('J'.$k, $pjt_val);
-						$this->excel->getActiveSheet()->setCellValue('K'.$k, $util_cost);
-						$this->excel->getActiveSheet()->setCellValue('L'.$k, $rec['actual_worth_amt']-$rec['total_cost']);
-						$this->excel->getActiveSheet()->setCellValue('M'.$k, $percent);
-						$k++;
-					break;
-				}
+				$this->excel->setActiveSheetIndex(0);
+				$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
+				$this->excel->getActiveSheet()->setCellValue('B'.$i, $rec['complete_status']);
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, $rec['project_type']);
+				$this->excel->getActiveSheet()->setCellValue('D'.$i, $rag);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $estimate_hr);
+				$this->excel->getActiveSheet()->setCellValue('F'.$i, $bill_hr);
+				$this->excel->getActiveSheet()->setCellValue('G'.$i, $inter_hr);
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $nbill_hr);
+				$this->excel->getActiveSheet()->setCellValue('I'.$i, $total_hr);
+				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
+				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
+				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, $rec['actual_worth_amt']-$rec['total_cost']);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $percent);
+				$i++;
     		}
 			
 			//for first sheet
@@ -2811,31 +2826,6 @@ HDOC;
 			$this->excel->getActiveSheet()->getStyle('I2:I'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('K2:K'.$i)->getNumberFormat()->setFormatCode('0.00');
-			
-			//for second sheet
-			$this->excel->setActiveSheetIndex(1);
-			//Set width for cells
-			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(19);
-			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
-			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(13);
-			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(13);
-			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(17);
-			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
-			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(10);
-			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
-			//Column Alignment
-			$this->excel->getActiveSheet()->getStyle('E2:E'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('F2:F'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('G2:G'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('H2:H'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('I2:I'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('J2:J'.$k)->getNumberFormat()->setFormatCode('0.00');
-			$this->excel->getActiveSheet()->getStyle('K2:K'.$k)->getNumberFormat()->setFormatCode('0.00');
 			
 			// $filename='Project_report.xls'   ; //save our workbook as this file name
 			$filename='Project_report_'.time().'.xls'   ; //save our workbook as this file name
@@ -3019,5 +3009,6 @@ HDOC;
 		}
 		echo json_encode($output);
 	}
+
 }
 ?>

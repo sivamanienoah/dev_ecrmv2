@@ -143,8 +143,8 @@ require (theme_url().'/tpl/header.php');
 									</td>
 								</tr>
 								<tr align="right" >
-									<td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
-									<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+									<td colspan="6"><input type="reset" class="positive input-font" name="advance" value="Reset" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>

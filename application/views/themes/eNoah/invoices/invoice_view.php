@@ -15,7 +15,6 @@ $userdata = $this->session->userdata('logged_in_user');
 		if($this->session->userdata('accesspage')==1)
 		{ 
 		?>
-		<div id="invoice_note" class="leadstg_note" style="width: 95%; display: block;">By default displays only the "Current Month" invoices</div>
 		<div id="filter_section">
 			<a class="choice-box" onclick="advanced_filter();" >
 			Advanced Filters
@@ -68,8 +67,8 @@ $userdata = $this->session->userdata('logged_in_user');
 							</tr>
 							<tr align="right" >
 								<td colspan="6">
-									<input type="reset" class="positive" name="advance" id="filter_reset" value="Reset" />
-									<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>

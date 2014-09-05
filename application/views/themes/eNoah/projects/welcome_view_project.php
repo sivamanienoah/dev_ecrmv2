@@ -29,7 +29,6 @@
 <script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
 
 <?php
-
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
 	$default_currency = get_default_currency();
@@ -1207,7 +1206,7 @@ if (get_default_currency()) {
 							<label><strong>Month & Year</strong></label>
 							<select name="metrics_month" id="metrics_month">
 							<?php foreach ($months as $name) { ?>
-								<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
+								<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
 							<?php } ?>
 							</select>
 							<select name="metrics_year" id="metrics_year">

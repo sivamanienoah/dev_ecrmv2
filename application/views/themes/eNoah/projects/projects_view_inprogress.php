@@ -47,7 +47,7 @@ if (get_default_currency()) {
 					$rag_color = '';
 			}
 			
-			$bill_type = ($record['billing_type'] != 0) ? $record['billing_type'] : 1;
+			$bill_type = $record['billing_type'];
 			
 			if($bill_type == 1) {
 				$milestone_content .= '<tr bgcolor='.$rag_color.'>';
@@ -99,6 +99,11 @@ if (get_default_currency()) {
 		}
 	}
 ?>
+<div style="text-align:right; float: right">
+	<a class="export-btn excel" id='milestone'>
+		Export to Excel
+	</a>
+</div>
 <h2>Milestone Based</h2>
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
@@ -126,32 +131,69 @@ if (get_default_currency()) {
 </table>
 
 <div class="clear"></div>
-<h2>Monthly Billing</h2>
-<table border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable">
-	<thead>
-		<tr>
-			<th>Action</th>
-			<th>Title</th>
-			<th title="Completion Percentage">CP%</th>
-			<th title="Project Type">PT</th>
-			<th title="RAG Status">RAG</th>
-			<th title="Planned Hour">PH</th>
-			<th title="Billable Hour">BH</th>
-			<th title="Internal Hour">IH</th>
-			<th title="Non-Billable Hour">NBH</th>
-			<th title="Total Utilized Hours">TUH</th>
-			<th title="Project Value">PV</th>
-			<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
-			<th title="P&L">P&L </th>
-			<th title="P&L %">P&L %</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php echo $monthly_content; ?>
-	</tbody>
-</table>
+<?php 
+	$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+	$cur_year = date('Y');
+	$end_year = date('Y', strtotime('-15 year'));
+?>
+<div class="clearfix border-bot ver-mspace" style="margin-top: 20px">
+<h2 class="no-mar pull-left no-bor">Monthly Billing</h2>
+<div class="pull-right" style="padding:1px 0 0">
+	<a class="export-btn excel no-mar" id='monthly'>
+		Export to Excel
+	</a>
+</div>
+<div id="filter_metrics_data" class="pull-right hor-mspace">
+	<form name="filter_metrics" id="filter_metrics"  method="post">
+		<label><strong>Month & Year</strong></label>
+		<select name="metrics_month" id="metrics_month" class="no-mar">
+			<?php foreach ($months as $name) { ?>
+				<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
+			<?php } ?>
+		</select>
+		<select name="metrics_year" id="metrics_year" class="no-mar">
+			<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
+				<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
+			<?php } ?>
+		</select>
+		<input type="hidden" name="project_type" id="project_type" value=2 readonly="readonly" />
+		<input id="metrics_data" class="positive input-font" type="submit" value="Search"/>
+		<span style="vertical-align: top;">
+			<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' id='load' style='display:none; width: 60px;' />
+		</span>
+	</form>
+</div>
+</div>
 
 
+
+<div id='monthly_based'>
+	<table border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable" >
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Title</th>
+				<th title="Completion Percentage">CP%</th>
+				<th title="Project Type">PT</th>
+				<th title="RAG Status">RAG</th>
+				<th title="Planned Hour">PH</th>
+				<th title="Billable Hour">BH</th>
+				<th title="Internal Hour">IH</th>
+				<th title="Non-Billable Hour">NBH</th>
+				<th title="Total Utilized Hours">TUH</th>
+				<th title="Project Value">PV</th>
+				<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+				<th title="P&L">P&L </th>
+				<th title="P&L %">P&L %</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php echo $monthly_content; ?>
+		</tbody>
+	</table>
+</div>
+
+<script type="text/javascript" src="assets/js/projects/projects_view_inprogress.js"></script>
 <script type="text/javascript">
 $(function() {
 	dtPjtTable();

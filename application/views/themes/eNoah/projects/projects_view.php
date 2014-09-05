@@ -34,7 +34,6 @@ if (get_default_currency()) {
 			</form>
 		
 			<h2><?php echo $page_heading ?></h2>
-			<div id="project_note" class="leadstg_note" style="width: 95%;">By default displays only the project(s) in "In Progress" status</div>
 		
 			<a class="choice-box" onclick="advanced_filter_pjt();">Advanced Filters<img src="assets/img/advanced_filter.png" class="icon leads" /></a>
 		
@@ -108,8 +107,8 @@ if (get_default_currency()) {
 						</td>
 					</tr>
 					<tr align="right" >
-						<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
-						<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
+						<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
+						<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
 						<div id = 'load' style = 'float:right;display:none;height:1px;'>
 							<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 						</div>
@@ -120,30 +119,31 @@ if (get_default_currency()) {
 				</form>
 			</div>
 			<div class="clearfix"></div>
-			<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
-			
-			<h2>Legend</h2>
-			<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
-				<!--Legends-->
-				<div class="legend">
-					<div class="pull-left"><strong>CP</strong> - Completion Percentage</div>
-					<div class="pull-left"><strong>PT</strong> - Project Type</div>
-					<div class="pull-left"><strong>PH</strong> - Planned Hours</div>
-					<div class="pull-left"><strong>BH</strong> - Billable Hours</div>
-					<div class="pull-left"><strong>IH</strong> - Internal Hours</div>
-					<div class="pull-left"><strong>NBH</strong> - Non Billable Hours</div>
-					<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
-					<div class="pull-left"><strong>PV</strong> - Project Value </div>
-					<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
-					<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
-				</div>
-			</div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
-			<div id="ad_filter" class="custom_dashboardfilter" style="margin-top:15px;">
+			<div id="ad_filter" class="custom_dashboardfilter">
 				
 			</div>
+			<div class='clear'></div>
+			<fieldset>
+				<legend>Legend</legend>
+				<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
+					<!--Legends-->
+					<div class="legend">
+						<div class="pull-left"><strong>CP</strong> - Completion Percentage</div>
+						<div class="pull-left"><strong>PT</strong> - Project Type</div>
+						<div class="pull-left"><strong>PH</strong> - Planned Hours</div>
+						<div class="pull-left"><strong>BH</strong> - Billable Hours</div>
+						<div class="pull-left"><strong>IH</strong> - Internal Hours</div>
+						<div class="pull-left"><strong>NBH</strong> - Non Billable Hours</div>
+						<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
+						<div class="pull-left"><strong>PV</strong> - Project Value </div>
+						<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
+						<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
+					</div>
+				</div>
+			</fieldset>
 		<?php 
 		} else {
 			echo "You have no rights to access this page";

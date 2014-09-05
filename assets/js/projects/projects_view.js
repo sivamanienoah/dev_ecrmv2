@@ -49,7 +49,6 @@ function dtPjtTable() {
 
 		function advanced_filter_pjt(){
 			$('#advance_search_pjt').slideToggle('slow');
-			$('#project_note').slideToggle('slow');
 			var keyword = $("#keywordpjt").val();
 			var status  = document.getElementById('advance_search_pjt').style.display;
 			
@@ -121,35 +120,6 @@ function dtPjtTable() {
 	function cancelDel() {
 		$.unblockUI();
 	}
-	
-	$(function(){
-		$('#excel').click(function() {
-			var stage = $('#pjt_stage').val();
-			// var pm    = $('#pm_acc').val();
-			var customer = $('#customer1').val();
-			var service = $('#services').val();
-			var practice = $('#practices').val();
-			var datefilter  = $("#datefilter").val();
-			var from_date   = $("#from_date").val();
-			var to_date  	= $("#to_date").val();
-
-			var url = site_base_url+"project/excelExport";
-			
-			var form = $('<form action="' + url + '" method="post">' +
-			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			  '<input type="hidden" name="stages" value="' +stage+ '" />' +
-			  '<input type="hidden" name="customers" value="' +customer+ '" />' +
-			  '<input type="hidden" name="services" value="' +service+ '" />' +
-			  '<input type="hidden" name="practices" value="' +practice+ '" />' +
-			  '<input type="hidden" name="datefilter" value="' +datefilter+ '" />' +
-			  '<input type="hidden" name="from_date" value="' +from_date+ '" />' +
-			  '<input type="hidden" name="to_date" value="' +to_date+ '" />' +
-			  '</form>');
-			$('body').append(form);
-			$(form).submit();
-			return false;
-		});
-	});
 	
 	$(function() {
 		// $('#from_date, #to_date').datepicker({dateFormat: 'dd-mm-yy'});

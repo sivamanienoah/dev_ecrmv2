@@ -1,6 +1,5 @@
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
-	$('#invoice_note').slideToggle('slow');
 }
 
 

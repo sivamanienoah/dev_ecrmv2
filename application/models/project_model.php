@@ -28,7 +28,7 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		$stage 		= $pjtstage;
@@ -62,6 +62,9 @@ class Project_model extends crm_model
 			}
 			if(!empty($practices)){		
 				$this->db->where_in('j.practice',$practices);
+			}
+			if(!empty($billing_type)) {
+				$this->db->where("j.billing_type", $billing_type);
 			}
 			if(!empty($from_date)) {
 				switch($datefilter) {
@@ -146,6 +149,9 @@ class Project_model extends crm_model
 			}
 			if(!empty($practices)){		
 				$this->db->where_in('j.practice',$practices);
+			}
+			if(!empty($billing_type) && $billing_type == 2) {
+				$this->db->where("j.billing_type", $billing_type);
 			}
 			if(!empty($from_date)) {
 				switch($datefilter) {
@@ -541,7 +547,7 @@ class Project_model extends crm_model
 		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
 		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
 		
-		// echo $sql; #EXIT;
+		// echo $sql; EXIT;
 		$query = $timesheet_db->query($sql);
 		return $query->result_array();
 	}

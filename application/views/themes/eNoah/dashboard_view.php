@@ -92,7 +92,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 				
-			<div id="advance_search" style="float:left;">
+			<div id="advance_search" style="float:left; margin: 0px 0px 10px;">
 				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
 				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:940px;">
 					
@@ -202,8 +202,8 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 							</tr>
 							<tr align="right" >
 								<td colspan="6">
-									<input type="reset" class="positive" name="advance" id="filter_reset" value="Reset" />
-									<input type="submit" class="positive" name="advance" id="advance" value="Search" />
+									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
@@ -213,6 +213,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					</div>
 				</form>
 			</div>
+
 			<div id="advance_search_dash_res" style="clear:both" ></div>
 		</div>
 		
@@ -499,7 +500,6 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	
 <?php if(($this->session->userdata('viewPjt')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
 <h2 style="padding-bottom:4px; border-bottom:1px solid #ccc; clear:left; margin-bottom:15px;">PROJECTS - LISTS</h2>
-<div id="project_note" class="leadstg_note" style="width: 95%;">By default displays only the project(s) in "In Progress" status</div>
 <form name="pjt_search_form" id="pjt_search_form" action="" method="post" style="float:right;">
 
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -583,8 +583,8 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 				</td>
 			</tr>
 			<tr align="right" >
-				<td colspan="5"><input type="reset" class="positive" name="advance_pjt" value="Reset" />
-					<input type="submit" class="positive" name="advance_pjt" id="advance" value="Search" />
+				<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
+					<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
 					<div id = 'load' style = 'float:right;display:none;height:1px;'>
 						<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 					</div>
@@ -595,7 +595,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		</form>
 	</div>
 	
-<div id="advance_search_results_pjts" style="clear:both; overflow:scroll; height:400px; width:960px;" ></div>
+<div id="advance_search_results_pjts" class="custom_dashboardfilter"></div>
 <?php } ?>
 	
 	</div><!--Inner - close here -->
