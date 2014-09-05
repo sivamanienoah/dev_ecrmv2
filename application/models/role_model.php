@@ -231,7 +231,7 @@ class Role_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'].'roles as rl');
 		$this->db->join($this->cfg['dbpref'].'master_roles as mrl','rl.id=mrl.role_id');
 		$this->db->join($this->cfg['dbpref'].'masters as vm','vm.masterid=mrl.masterid and vm.inactive=0');
-		$this->db->join($this->cfg['dbpref'].'users as vu','vu.role_id=rl.id and  vu.userid='.$userId);		
+		$this->db->join($this->cfg['dbpref'].'users as vu','vu.role_id=rl.id and vu.userid='.$userId);		
 		// $this->db->order_by('vm.master_parent_id', 'desc');			
 		// $this->db->order_by('vm.masterid', 'asc');
 		$this->db->order_by('vm.order_id', 'asc');

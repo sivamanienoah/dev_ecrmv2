@@ -5,14 +5,14 @@
 <div id="content">
     <div class="inner">
 	<?php 
-	if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update')|| (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1))) { 
+	if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update')|| (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1))) {
 	?>
 		<form action="<?php echo  $this->uri->uri_string() ?>" method="post" id="frm">
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
             <h2><?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> User Details</h2>
             <?php 
-			if ($this->validation->error_string != '') { 
+			if ($this->validation->error_string != '') {
 			?>
 				<div class="form_error">
 					<?php echo $this->validation->error_string; ?>
@@ -23,11 +23,11 @@
 
 			<table class="layout">
 				<tr>
-					<td width="100">First Name: *</td>
+					<td width="110">First Name: *</td>
 					<td width="240"><input type="text" id="first_name" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" />
 						<div class="error" style="color:red;" id="error12">required</div>					
 					</td>					
-					<td width="100">Last Name: *</td>
+					<td width="110">Last Name: *</td>
 					<td width="240"><input type="text" id="last_name" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> 
 						<div class="error" style="color:red;" id="error2">required</div>
 					</td>
@@ -77,21 +77,31 @@
 							<div class="error" style="color:red;" id="error5">required</div>
 						<?php } ?>
 					</td>
-					<!--td>Login Authentication:</td>
-					<td><label for="auth-ldap">LDAP&nbsp;&nbsp;&nbsp;</label><input <?php echo ($this->validation->auth == 'ldap') ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth" value="ldap"/>&nbsp;&nbsp;&nbsp;<label for="auth-dp">DB&nbsp;&nbsp;&nbsp;</label><input <?php echo ($this->validation->auth == 'db') ? ' checked="checked"' : '' ?> id="auth-dp" type="radio" name="auth" value="db"/></td-->
                     <td>
 						<?php 
-						if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { 
+						if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) {
 						?>
-							<input type="checkbox" name="update_password" value="1" /> Update Password?
+							Update Password
+					</td>
+					<td>
+							<input type="checkbox" name="update_password" value="1" /> 
 						<?php 
 						} else { 
 						?>
-							&nbsp; <input type="hidden" name="new_user" value="1" />
+							<input type="hidden" name="new_user" value="1" />
 						<?php 
 						} 
 						?>
 					</td>					
+				</tr>
+				<tr>
+					<td>Login Authentication: *</td>
+					<td>
+						<label for="auth-ldb">LDB</label>
+						<input <?php echo ($this->validation->auth_type == 0) ? ' checked="checked"' : '' ?> id="auth-dp" type="radio" name="auth_type" value="0"/>&nbsp;&nbsp;&nbsp;
+						<label for="auth-ldap">LDAP</label>
+						<input <?php echo ($this->validation->auth_type == 1) ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth_type" value="1"/>						
+					</td>
 				</tr>
 				<tr>
 				<!-- Levels and region settings starts here -->

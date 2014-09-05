@@ -106,15 +106,16 @@ class Userlogin extends crm_controller {
 	function process_login()
 	{
 		$userdata = $this->login_model->process_login($this->input->post('email'), $this->input->post('password'));
+
 		if($userdata['login_error_code'] > 0) {
-			// $this->session->set_flashdata('login_errors', array($userdata['login_error']));
-			$this->session->set_flashdata('login_errors', array('Invalid Username, Password or your account is inactive. Access Denied!'));
+
+			$this->session->set_flashdata('login_errors', array($userdata['login_error']));
+			// $this->session->set_flashdata('login_errors', array('Invalid Username, Password or your account is inactive. Access Denied!'));
             redirect('userlogin/');
             exit();
 		} else {
 			$userdata   = $userdata['res'];
 			$menu_items = $this->role_model->UserModuleList($userdata[0]['userid']);
-			// echo $this->db->last_query();exit;
 			$whole = '';
 			$val   = '';
 			for($i=0;$i<count($menu_items);$i++) {				 
@@ -158,11 +159,12 @@ class Userlogin extends crm_controller {
 				$array['locationid'] = implode(',',array_unique($data['locationid'])); 
 			}
 					
-            $this->session->set_userdata($array);
+		   $this->session->set_userdata($array);
 			
             if ($this->input->post('last_url')) {
                 redirect($this->input->post('last_url'));
             } else {
+			
                 redirect('dashboard/');
             }
             exit();

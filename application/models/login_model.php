@@ -68,6 +68,7 @@ class Login_model extends crm_model {
 
 	public function process_login($username, $password)
 	{
+		/*First time check the CRM DB*/
 		$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.password,u.email,u.auth_type,u.level,u.role_id,u.signature,
 		u.inactive,r.name');
 		$this->db->from($this->cfg['dbpref'].'users u');
@@ -76,11 +77,11 @@ class Login_model extends crm_model {
 		$this->db->limit(1);
         $sql = $this->db->get();
         $data['res'] = $sql->result_array();
-		
+		 // echo count($data['res']); echo "<br>";
 		$data['login_error_code'] = 0;
-		// echo "<pre>"; print_R($res); exit;
 		
-		if ($sql->num_rows() > 0) {
+		if (count($data['res']) > 0) {
+		/* if username is exist in CRM DB then it check the inactive & authentication type */
 			if($data['res'][0]['inactive'] == 0) {
 				switch($data['res'][0]['auth_type']) {
 					case 0:	//for ldb authentication
@@ -110,6 +111,7 @@ class Login_model extends crm_model {
 							if($r = @ldap_bind($ds,$BIND_username,$BIND_password)) {
 								if($sr = ldap_search($ds, $LDAPContainer, $filter, array('distinguishedName'))) {
 									if($info = ldap_get_entries($ds, $sr)) {
+								
 										$BIND_username = $info[0]['distinguishedname'][0];
 										$BIND_password = $password;
 											if($r2=ldap_bind($ds,$BIND_username,$BIND_password)) {
@@ -145,8 +147,55 @@ class Login_model extends crm_model {
 				return $data;
 			}
 		} else {
+			/* Here check the username in eConnect db, if username is exist in eConnect DB then insert the user into crm DB */
 			$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
 			return $data;
+		}
+	}
+
+	
+	/*
+	*@method checkUsernameFromEconnectDB
+	*@param username, password
+	*/
+	public function checkUsernameFromEconnectDB($username, $password)
+	{
+		$password = $password;
+		$username = $username;
+		$this->db->select('e.first_name,e.last_name,e.username,e.email,e.active');
+		$this->db->from($this->cfg['dbpref'].'view_econnect_mas e');
+		$this->db->where('e.username', $username);
+		$this->db->limit(1);
+        $sql1 = $this->db->get();
+        $res = $sql1->row_array();
+		
+		if ($sql1->num_rows() > 0) {
+			$data = array(
+			   'role_id' => '1',
+			   'first_name' => $res['first_name'],
+			   'last_name' => $res['last_name'],
+			   'username' => $res['username'],
+			   'password' => sha1('admin123'),
+			   'email' => $res['email'],
+			   'phone' => '',
+			   'mobile' => '',
+			   'level' => 1,
+			   'auth_type' => 1,
+			   'signature' => '',
+			   'inactive' => ($res['active']==1)?0:1
+			);
+			if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
+				//$this->process_login($username, $password);
+				return true;
+			} else {
+				$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
+				return $data;
+				//return false;
+			}
+		} else {
+			$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
+			return $data;
+			//return false;
 		}
 	}
 	
