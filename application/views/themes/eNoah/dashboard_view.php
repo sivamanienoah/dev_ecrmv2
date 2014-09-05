@@ -595,7 +595,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		</form>
 	</div>
 	
-<div id="advance_search_results_pjts" class="custom_dashboardfilter"></div>
+<div id="advance_search_results_pjts" class="custom_dashboardfilter clear"></div>
 <?php } ?>
 	
 	</div><!--Inner - close here -->
