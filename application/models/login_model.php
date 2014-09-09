@@ -153,52 +153,6 @@ class Login_model extends crm_model {
 		}
 	}
 
-	
-	/*
-	*@method checkUsernameFromEconnectDB
-	*@param username, password
-	*/
-	public function checkUsernameFromEconnectDB($username, $password)
-	{
-		$password = $password;
-		$username = $username;
-		$this->db->select('e.first_name,e.last_name,e.username,e.email,e.active');
-		$this->db->from($this->cfg['dbpref'].'view_econnect_mas e');
-		$this->db->where('e.username', $username);
-		$this->db->limit(1);
-        $sql1 = $this->db->get();
-        $res = $sql1->row_array();
-		
-		if ($sql1->num_rows() > 0) {
-			$data = array(
-			   'role_id' => '1',
-			   'first_name' => $res['first_name'],
-			   'last_name' => $res['last_name'],
-			   'username' => $res['username'],
-			   'password' => sha1('admin123'),
-			   'email' => $res['email'],
-			   'phone' => '',
-			   'mobile' => '',
-			   'level' => 1,
-			   'auth_type' => 1,
-			   'signature' => '',
-			   'inactive' => ($res['active']==1)?0:1
-			);
-			if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
-				//$this->process_login($username, $password);
-				return true;
-			} else {
-				$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
-				return $data;
-				//return false;
-			}
-		} else {
-			$data['login_error'] = 'Username doesnot exist'; $data['login_error_code'] = 10;
-			return $data;
-			//return false;
-		}
-	}
-	
     public function check_login_status($level = FALSE)
 	{
         if ($this->session->userdata('logged_in') === TRUE)

@@ -109,8 +109,8 @@ class Userlogin extends crm_controller {
 
 		if($userdata['login_error_code'] > 0) {
 
-			$this->session->set_flashdata('login_errors', array($userdata['login_error']));
-			// $this->session->set_flashdata('login_errors', array('Invalid Username, Password or your account is inactive. Access Denied!'));
+			// $this->session->set_flashdata('login_errors', array($userdata['login_error']));
+			$this->session->set_flashdata('login_errors', array('Invalid Username, Password or your account is inactive. Access Denied!'));
             redirect('userlogin/');
             exit();
 		} else {
