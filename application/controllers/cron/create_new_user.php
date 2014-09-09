@@ -160,13 +160,7 @@ class Create_new_user extends crm_controller
 
 			$this->load->model('email_template_model');
 			$this->email_template_model->sent_email($param);
-		}
-		
-	
-		echo "<pre>"; print_r($user_success);
-		echo "<br>";
-		print_r($user_failed);
-		
+		}	
 	}
 
 }
