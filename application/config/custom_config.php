@@ -82,7 +82,7 @@ $config['crm']['tasks_search']  = array(
                                 );
 
 $config['crm']['max_allowed_users'] = array(
-											0=>100
+											0=>1000
 											);
 											
 $config['crm']['director_emails']  = array(
