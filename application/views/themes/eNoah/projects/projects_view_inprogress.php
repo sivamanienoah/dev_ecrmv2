@@ -158,9 +158,9 @@ if (get_default_currency()) {
 		</select>
 		<input type="hidden" name="project_type" id="project_type" value=2 readonly="readonly" />
 		<input id="metrics_data" class="positive input-font" type="submit" value="Search"/>
-		<span style="vertical-align: top;">
-			<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' id='load' style='display:none; width: 60px;' />
-		</span>
+		<div id="loading" style="float: right; height: 1px; display: none;">
+			<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' style='width: 60px;' />
+		</div>
 	</form>
 </div>
 </div>
