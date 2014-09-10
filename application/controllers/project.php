@@ -274,7 +274,9 @@ class Project extends crm_controller {
 				}
 				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					foreach($timesheet_users['username'] as $u_name) {
-						$ts_team_members[] = $user_details[$u_name]['userid'];
+						if(!empty($user_details[$u_name]['userid'])) {
+							$ts_team_members[] = $user_details[$u_name]['userid'];
+						}
 					}
 				}
 				
