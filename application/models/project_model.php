@@ -342,9 +342,9 @@ class Project_model extends crm_model
 	
 	function get_users() 
 	{
-    	$this->db->select('userid, first_name, last_name, level, role_id, inactive');
-		$this->db->where('inactive', 0);
-    	$this->db->order_by('first_name', "asc");
+    	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive');
+		$this->db->where('inactive',0);
+    	$this->db->order_by('first_name',"asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
     }	
@@ -610,7 +610,8 @@ class Project_model extends crm_model
 		
 		if(count($res) > 0) {
 			foreach($res as $row){
-				$users[] = $row['first_name'] . ' ' .$row['last_name'];
+				$users['name'][] = $row['first_name'] . ' ' .$row['last_name'];
+				$users['username'][] = $row['username'];
 			}
 		}
 		return $users;

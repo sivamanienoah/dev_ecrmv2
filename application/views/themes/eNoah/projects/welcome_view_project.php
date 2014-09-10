@@ -416,12 +416,12 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td> 
-						<input type="text" id="actualEff" value="<?php if ($actual_hour_data != '') echo sprintf('%0.2f', $actual_hour_data); else echo ''; ?>" class="textfield width60px" readonly />
+						<input type="text" id="actualEff" value="<?php echo isset($actual_hour_data) ? sprintf('%0.2f', $actual_hour_data) : ''; ?>" class="textfield width60px" readonly />
 					</td>
 					<?php if($quote_data['billing_type'] != 2) { ?>
 					<td>
 						<?php 
-							if ($actual_hour_data != '')
+							if (isset($actual_hour_data) && $actual_hour_data != '')
 								$varianceProjectHour = $actual_hour_data - $quote_data['estimate_hour'];
 							else
 								$varianceProjectHour = '';

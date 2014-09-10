@@ -205,7 +205,14 @@ class Project extends crm_controller {
             }
 			
 			$data['user_accounts'] = $this->project_model->get_users();
-			$data['practices'] 	   = $this->project_model->get_practices();
+			$user_details = array();
+			if(!empty($data['user_accounts'])){
+				foreach($data['user_accounts'] as $user=>$userdet){
+					$user_details[strtolower($userdet['username'])] = $userdet;
+				}
+			}
+			
+			$data['practices'] 	 = $this->project_model->get_practices();
 			
 			$data['pm_accounts'] = array();
 			$pjt_managers = $this->project_model->get_user_byrole(3);
@@ -235,20 +242,71 @@ class Project extends crm_controller {
 			 * Get the URLs associated with this job
 			 */
 			$data['job_urls_html'] = $this->project_model->get_job_urls($id);
+
+			$timesheet		 = array();
+			$ts_team_members = array();
+			$team_mem 		 = array();
+			if(!empty($data['quote_data']['pjt_id'])) {		
+				$bill_type = $data['quote_data']['billing_type'];
+				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type);
+				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
+				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
+				$timesheet_users = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
+				if(count($timesheet_users['name'])>0) {
+					$data['timesheetAssignedUsers'] = $timesheet_users['name'];
+				}
+
+				//Set the Project Manager in our CRM DB.
+				if(!empty($data['timesheetProjectLead']) && count($data['timesheetProjectLead'])>0) {
+					$proj_leader = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
+					if($proj_leader != $data['quote_data']['assigned_to']){
+						$condn = array('lead_id' => $data['quote_data']['lead_id']);
+						$updt  = array('assigned_to' => $proj_leader);
+						$setPM = $this->project_model->update_row('leads', $updt, $condn);
+					}
+				}
+				
+				$contract_users = $this->project_model->get_contract_users($id);
+				if(!empty($contract_users) && count($contract_users)>0) {
+					foreach($contract_users as $teamMem) {
+						$team_mem[] = $teamMem['userid_fk'];
+					}
+				}
+				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
+					foreach($timesheet_users['username'] as $u_name) {
+						$ts_team_members[] = $user_details[$u_name]['userid'];
+					}
+				}
+				
+				//Set the Project Manager in our CRM DB.
+				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
+					$proj_team_members = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
+					if($proj_leader != $data['quote_data']['assigned_to']){
+						$condn = array('lead_id' => $data['quote_data']['lead_id']);
+						$updt  = array('assigned_to' => $proj_leader);
+						$setPM = $this->project_model->update_row('leads', $updt, $condn);
+					}
+				}
+				
+				//Set the Project Team Members in our CRM DB.
+				$result = $this->identical_values($team_mem,$ts_team_members);
+				if(!$result) {
+					$wh_condn = array('jobid_fk'=>$data['quote_data']['lead_id']);
+					$this->db->delete($this->cfg['dbpref'].'contract_jobs',$wh_condn);
+					
+					$ins['jobid_fk']  =  $data['quote_data']['lead_id'];
+					foreach($ts_team_members as $ts){
+						$ins['userid_fk'] =  $ts;
+						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$ins);
+					}
+				}
+			}
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
 			$data['list_users'] = $this->project_model->get_list_users($id);
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			
-			if(!empty($data['quote_data']['pjt_id'])) {
-				$bill_type = $data['quote_data']['billing_type'];
-				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type);
-				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
-				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
-				$data['timesheetAssignedUsers'] = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
-			}
 			
 			$rates = $this->get_currency_rates();
 			
@@ -291,8 +349,16 @@ class Project extends crm_controller {
         {
             echo "Project does not exist or if you are an account manager you may not be authorised to view this";
         }
-        
     }
+	
+	/*
+	*Check the two arrays
+	*/
+	function identical_values( $arrayA , $arrayB ) {
+		sort( $arrayA );
+		sort( $arrayB );
+		return $arrayA == $arrayB;
+	}
 	
 	/*
 	* calculate the project actual value based on actual hour
