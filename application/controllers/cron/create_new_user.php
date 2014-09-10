@@ -74,6 +74,7 @@ class Create_new_user extends crm_controller
 					   'first_name' => $eusers['first_name'],
 					   'last_name' => $eusers['last_name'],
 					   'username' => $eusers['username'],
+					   'emp_id' => $eusers['empid'],
 					   'password' => sha1('admin123'),
 					   'email' => $eusers['email'],
 					   'phone' => '',
