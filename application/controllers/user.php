@@ -40,12 +40,12 @@ class User extends crm_controller {
 	{
 		$post_data = real_escape_array($this->input->post());
 	
-        $rules['first_name']   = "trim|required";
-		$rules['last_name']    = "trim|required";
-        if ($this->input->post('new_user') || $this->input->post('update_password')) 
-		{
-            $rules['password'] = "trim|required|min_length[6]";
-        }
+        $rules['first_name'] = "trim|required";
+		$rules['last_name']  = "trim|required";
+		$rules['username']   = "trim|required";
+        if ($this->input->post('new_user') || $this->input->post('update_password')) {
+			$rules['password'] = "trim|required|min_length[6]";
+		}
         $rules['level']   = "required|callback_level_check";
 		$rules['role_id'] = "required|callback_level_check";
 		$rules['email']   = "trim|required|valid_email";
@@ -54,6 +54,7 @@ class User extends crm_controller {
 		
 		$fields['first_name']  = "First Name";
 		$fields['last_name']   = "Last Name";
+		$fields['username']    = "Username";
         $fields['phone']       = "Telephone";
         $fields['mobile']      = "Mobile";
 		$fields['email']       = "Email Address";
@@ -209,6 +210,10 @@ class User extends crm_controller {
 					}
 					$this->session->set_flashdata('confirm', array('User Details Updated!'));
 					// redirect('user/add_user/update/' . $id);
+					if($id==$this->userdata['userid']) {
+						unset($this->session->userdata);
+						redirect('userlogin');
+					}
 					redirect('user');
 				}
 			} 
@@ -278,7 +283,7 @@ class User extends crm_controller {
 	*@ Find exist email address by ajax
 	*
 	*/
-	function getUserResult() {	
+	function getUserResult() {
 		$data =	real_escape_array($this->input->post());
 		$this->user_model->find_exist_email($data);
 	}
@@ -653,6 +658,15 @@ class User extends crm_controller {
 			}
 		}
 		echo json_encode($json); exit;
+	}
+	
+	/*
+	*@method checkUniqueUsername
+	*POST var username
+	*/
+	function checkUniqueUsername() {
+		$data =	real_escape_array($this->input->post());
+		$this->user_model->check_username($data['username'],$data['updatedata']);
 	}
 
 }

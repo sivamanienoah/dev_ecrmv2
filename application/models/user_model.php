@@ -837,7 +837,23 @@ class User_model extends crm_model {
 		 $this->db->where('id', "1");
          $this->db->update('crm_keys', $data);
 		 return true;
-		
+	}
+	
+	/*
+	*@Get User 
+	*@Method check_username
+	*@tables users
+    */
+	public function check_username($username,$updt) {
+		$this->db->where('username', $username);
+		if($updt != 'noupdate'){
+		$this->db->where('userid !=', $updt);
+		}
+		$query = $this->db->get($this->cfg['dbpref'].'users')->num_rows();
+		if( $query == 0 )
+		echo 'userOk';
+		else 
+		echo 'userNo';
 	}
   
 }

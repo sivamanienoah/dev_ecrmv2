@@ -23,13 +23,21 @@
 
 			<table class="layout">
 				<tr>
-					<td width="110">First Name: *</td>
+					<td width="115">First Name: *</td>
 					<td width="240"><input type="text" id="first_name" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" />
-						<div class="error" style="color:red;" id="error12">required</div>					
+						<div class="error" style="color:red;" id="error12">required</div>			
 					</td>					
-					<td width="110">Last Name: *</td>
+					<td width="115">Last Name: *</td>
 					<td width="240"><input type="text" id="last_name" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> 
 						<div class="error" style="color:red;" id="error2">required</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Username: *</td>
+					<td>
+						<input type="text" name="username" id="username" value="<?php echo $this->validation->username ?>" class="textfield width200px required" <?php echo ($this->uri->segment(3) == 'update') ? "readonly='readonly'": "" ?> autocomplete="off" />
+						<div class="error" style="color:red;" id="errorun">required</div>
+						<div id='username_errmsg'></div>
 					</td>
 				</tr>
 				<tr>

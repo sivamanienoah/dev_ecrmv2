@@ -11,7 +11,7 @@ if(url_segment[3]!='update'){
 
 		$('button.positive').click(function() {
 			var varFirstname=$('#first_name').val();
-			if(varFirstname == ""){ 
+			if(varFirstname.trim() == ""){
 				$('div#error12.error').show();
 				return false;
 			}else {
@@ -19,11 +19,19 @@ if(url_segment[3]!='update'){
 			}
 			
 			var varLastname=$('#last_name').val();
-			if(varLastname == ""){
+			if(varLastname.trim() == ""){
 				$('div#error2.error').show();
 				return false;
 			} else {
 				$('div#error2.error').hide();
+			}
+			
+			var varusername=$('#username').val();
+			if(varusername.trim() == ""){
+				$('div#errorun.error').show();
+				return false;
+			} else {
+				$('div#errorun.error').hide();
 			}
 			
 			var varRoleid=$('#role_id').val();
@@ -57,7 +65,7 @@ if(url_segment[3]!='update'){
 			
 			
 			var varPassword=$('#password').val();
-			if(varPassword == ""){
+			if(varPassword.trim() == ""){
 				$('div#error5.error').show();
 				return false;
 			} else if(varPassword.length < 6 ) {
@@ -261,7 +269,7 @@ if(url_segment[3]!='update'){
 	//end of adduser
 	
 	
-	if(url_segment[3] == 'update') {	
+	if(url_segment[3] == 'update') {
 		var editlevelid = $('#level_id').val();	
 
 		if(editlevelid == "5") {
@@ -713,7 +721,7 @@ $('.checkUser').hide();
 ////////////////////////////////////////////////////////////////
 
 
-	if(url_segment[3] == 'update') { 
+	if(url_segment[3] == 'update') {
 
 		function last() {
 			var varLevelid=$('#level_id').val();				
@@ -818,4 +826,34 @@ $('.checkUser').hide();
 			}
 			return false;
 		}
-   }	
+   }
+
+
+$('#username').blur(function() {
+	if(url_segment[3]=='update'){
+		var updatedata = url_segment[4];
+	} else {
+		var updatedata = 'noupdate';
+	}
+	$('div#errorun.error').hide();
+	var username = $('#username').val();
+	if(username=='') {
+		return false;
+	}
+	$.ajax({
+		type: 'POST',
+		url : site_base_url + 'user/checkUniqueUsername/',
+		data: 'username='+username+'&'+'updatedata='+updatedata+'&'+csrf_token_name+'='+csrf_hash_token,
+		success: function(response){
+			$('#username_errmsg').empty();
+			if(response == 'userOk') {
+				$('#username_errmsg').html('<span class="ajx_success_msg">Username available.</span>');
+				$("#checkemail").removeAttr("disabled");
+			} else {
+				$('#username_errmsg').html('<span class="ajx_failure_msg">Username already exists.</span>');
+				$("#checkemail").attr("disabled", "disabled");
+			}
+		}
+	});
+	return false;
+});   

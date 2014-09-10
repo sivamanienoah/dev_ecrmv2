@@ -23,6 +23,8 @@
             <thead>
                 <tr>
                     <th>Full Name</th>
+                    <th>User Name</th>
+                    <th>Emp ID</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Roles</th>
@@ -36,20 +38,23 @@
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td><?php if($this->session->userdata('edit')==1){ ?><a href="user/add_user/update/<?php echo  $customer['userid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a><?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?></td>
                         <td>
-						<?php echo $customer['email'] ?>
+							<?php if($this->session->userdata('edit')==1){ ?><a href="user/add_user/update/<?php echo  $customer['userid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a><?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?>
+						</td>
+                        <td><?php echo $customer['username']; ?></td>
+						<td><?php echo $customer['emp_id']; ?></td>
+						<td>
+						<?php echo $customer['email']; ?>&nbsp;
 						<?php
-						if ($userdata['role_id'] == 1)
-						{
-							echo '<a href="user/log_history/' . $customer['userid'] . '">View Logs</a>';
-						}
+							if ($userdata['role_id'] == 1) {
+								echo '<a href="user/log_history/' . $customer['userid'] . '">View Logs</a>';
+							}
 						?>
 						</td>
-                        <td><?php echo  $customer['phone'] ?></td>
-                        <td><?php echo  $customer['name'] ?></td>
+                        <td><?php echo  $customer['phone']; ?></td>
+                        <td><?php echo  $customer['name']; ?></td>
                         <!--<td><?php //echo $customer['level'] ?></td>-->
-                        <td><?php echo  $customer['level_name'] ?></td>
+                        <td><?php echo  $customer['level_name']; ?></td>
                         <td><?php if ($customer['inactive'] == 0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
 						<td>
 							<?php if($this->session->userdata('edit')==1) { ?>
