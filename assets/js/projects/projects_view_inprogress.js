@@ -11,19 +11,19 @@ $(function() {
 		return false;
 		
 		var form_data = $("#filter_metrics").serialize()+'&'+$('#advanceFilters_pjt').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
-		if($(this).attr("id") == 'filter_metrics'){
-			$('#metrics_data').hide();
-			$('#load').show();
-		}
 		
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'project/advanceFilterMetrics',
 			data: form_data,
+			beforeSend: function() {
+				$('#metrics_data').hide();
+				$('#loading').show();
+			},
 			success: function(data) {
-				$("#monthly_based" ).html(data);
+				$("#monthly_based").html(data);
 				$('#metrics_data').show();
-				$('#load').hide();
+				$('#loading').hide();
 			}
 		});
 		return false;
