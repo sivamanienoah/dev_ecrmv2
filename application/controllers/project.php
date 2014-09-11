@@ -413,6 +413,32 @@ class Project extends crm_controller {
 		return $data;
 	}
 	
+	/*
+	*@method set_practices
+	*
+	*/
+	public function update_title()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['lead_title'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt = array('lead_title' => $updt['lead_title']);
+			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			if($updt_id==0)
+			$data['error'] = 'Error in Updation';
+		}
+		echo json_encode($data);
+	}
+	
+	/*
+	*@method set_practices
+	*
+	*/
 	public function set_practices()
 	{
 		$updt = real_escape_array($this->input->post());

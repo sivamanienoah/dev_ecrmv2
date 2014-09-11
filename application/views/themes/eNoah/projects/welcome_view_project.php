@@ -198,6 +198,21 @@ if (get_default_currency()) {
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
+					<label class="practices">Project Title</label>
+					<input type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>">
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="updateTitle(); return false;">Set</button>
+					</div>
+					<div id="resmsg_projecttitle" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
+				</div>
+			</form>
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
 					<label class="practices">Practice</label>
 					<select name="practice" id="practice" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
 						<option value="">Select Practice</option>
@@ -346,7 +361,25 @@ if (get_default_currency()) {
 					}
 				?>
 			</div>
-			
+
+  <div id="project-tabs" style="width:930px;">
+	<div>
+		<ul id="job-view-tabs">
+			<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
+			<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
+		</ul>
+	</div>
+	<div id="jv-tab-0">
+		<div style="overflow: auto;">
+		<div class="pull-left">
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">
 				<tr>
 					<th>Project Dates</th>
@@ -396,8 +429,9 @@ if (get_default_currency()) {
 					</td>
 				</tr>
 			</table>
-			<div id="dates_errmsg" style="color:red"></div>
-			
+			<div id="dates_errmsg" style="color:red; margin:5px"></div>
+			</div>
+		<div class="pull-left">
 			<table id="project-efforts" class="data-table1" cellpadding="0" cellspacing="0">
 				<tr>
 					<th></th>
@@ -439,9 +473,7 @@ if (get_default_currency()) {
 						<?php } ?>
 					</td>
 					<td>
-					<?php
-						$project_cost = (!empty($project_costs)) ? $project_costs : 0;
-					?>
+						<?php $project_cost = (!empty($project_costs)) ? $project_costs : 0; ?>
 						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
 					<?php if($quote_data['billing_type'] != 2) { ?>
@@ -457,22 +489,11 @@ if (get_default_currency()) {
 					<?php } ?>
 				</tr>
 			</table>
-			<div id="msg_project_efforts"></div>
-
-  <div id="project-tabs" style="width:930px;">
-	<div>
-		<ul id="job-view-tabs">
-			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-8">Metrics</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
-		</ul>
-	</div>
+			<div id="msg_project_efforts" style="margin:5px;"></div>
+		</div>
+		</div>
+	</div><!--end of jv-tab-0 -->
+	
 	<div id="jv-tab-1">
 				<div class="q-view-main-top">
 					

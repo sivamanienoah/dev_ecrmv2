@@ -882,6 +882,37 @@
 		}
 	}
 	
+	//Edit the Project Title//
+	function updateTitle() {
+		$('#resmsg_projecttitle').empty();
+		var lead_title = $('#lead_title').val();
+		
+		if(lead_title == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/update_title/',
+			dataType: 'json',
+			data: 'lead_title='+lead_title+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_projecttitle').html("<span class='ajx_success_msg'>Title Updated</span>");
+					$('.job-title').html(lead_title);
+				} else {
+					$('#resmsg_projecttitle').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
 	//Set the Project Practices//
 	function setPractices() {
 		$('#resmsg_practice').empty();
@@ -1689,7 +1720,8 @@
 			$('#msErrNotifyFadeout').fadeOut();
 			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
-			$('#resmsg_practice').fadeOut();
+			$('#resmsg_practice').empty();
+			$('#resmsg_projecttitle').empty();
 		}
 
 		function paymentReceivedEdit(pdid) 
@@ -1737,12 +1769,12 @@
 			h_class = 'estimate-hour';
 
 			if (hour_val=='') {
-				$("#msg_project_efforts").text('Please enter project estimate hour');
+				$("#msg_project_efforts").html('<span class="ajx_failure_msg">Please enter project estimate hour.</span>');
 				$("#msg_project_efforts").show();
 				return false;
 			}else {
 				if(filterFloat(hour_val) == false){
-					$("#msg_project_efforts").text('Please enter valid estimate hour');
+					$("#msg_project_efforts").html('<span class="ajx_failure_msg">Please enter valid estimate hour.</span>');
 					$("#msg_project_efforts").show();
 					return false;
 				}
