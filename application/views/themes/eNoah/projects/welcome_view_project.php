@@ -84,7 +84,7 @@ if (get_default_currency()) {
 			{
 			?>
 				<div class="email-set-options" style="overflow:hidden;">
-					<table border="0" cellpadding="0" cellspacing="0" class="client-comm-options">
+					<!--table border="0" cellpadding="0" cellspacing="0" class="client-comm-options">
 						<tr>
 							<td rowspan="2" class="action-td" valign="top" align="right"><a href="#" onclick="addClientCommOptions(); $(this).blur(); return false;">Communicate<br />to Client via</td>
 							<td><input type="checkbox" name="client_comm_phone" value="<?php echo (isset($quote_data['phone_1'])) ? $quote_data['phone_1'] : '' ?>"> <span>Phone</span></td>
@@ -94,7 +94,7 @@ if (get_default_currency()) {
 							<td><input type="checkbox" name="client_comm_mobile" value="<?php echo (isset($quote_data['phone_3'])) ? $quote_data['phone_3'] : '' ?>"> <span>Mobile</span></td>
 							<td><input type="checkbox" name="client_comm_email" value="<?php echo (isset($quote_data['email_1'])) ? $quote_data['email_1'] : '' ?>"> <span>Email</span></td>
 						</tr>
-					</table>
+					</table-->
 
 					<input type="checkbox" name="email_to_customer" id="email_to_customer" /> <label for="email_to_customer" class="normal">Email Client</label>
 					<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
