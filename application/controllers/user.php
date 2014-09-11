@@ -37,7 +37,7 @@ class User extends crm_controller {
 	*
 	*/
     public function add_user($update = false, $id = false, $ajax = false)
-	{
+	{	
 		$post_data = real_escape_array($this->input->post());
 	
         $rules['first_name'] = "trim|required";
@@ -251,7 +251,7 @@ class User extends crm_controller {
 					//email sent by email template
 					$param = array();
 
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'], 'base_url'=>$this->config->item('base_url'), 'email'=>$update_data['email'], 'password'=>$post_data['password'], 'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'],'login_username'=>$update_data['username'], 'base_url'=>$this->config->item('base_url'), 'email'=>$update_data['email'], 'password'=>$post_data['password'], 'signature'=>$this->userdata['signature']);
 
 					$param['to_mail'] = $update_data['email'];
 					$param['bcc_mail'] = $admin_mail;
