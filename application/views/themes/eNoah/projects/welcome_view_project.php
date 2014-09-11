@@ -361,6 +361,8 @@ if (get_default_currency()) {
 					}
 				?>
 			</div>
+			
+			<div class="clear-both"></div>
 
   <div id="project-tabs" style="width:930px;">
 	<div>
