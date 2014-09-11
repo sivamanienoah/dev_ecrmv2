@@ -186,6 +186,19 @@ form h3 {
 .user-addresses .user input {
 	vertical-align:middle;
 }
+.email-list{
+	height: 190px;
+    overflow-y: scroll;
+}
+.email-list .user {
+	display:block;
+	float:left;
+	width:130px;
+	padding-bottom:5px;
+}
+.email-list .user input {
+	vertical-align:middle;
+}
 .email-set-options input {
 	vertical-align:middle;
 }

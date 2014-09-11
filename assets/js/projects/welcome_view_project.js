@@ -138,7 +138,7 @@
 		}
 
 		var email_set = '';
-		$('.user-addresses input[type="checkbox"]:checked').each(function(){
+		$('.email-list input[type="checkbox"]:checked').each(function(){
 			email_set += $(this).attr('id') + ':';
 		});
 

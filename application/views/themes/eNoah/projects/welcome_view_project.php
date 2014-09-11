@@ -133,7 +133,7 @@ if (get_default_currency()) {
 			}
 			?>
 			
-				<div class="user-addresses">
+				<div class="email-list">
 					<p><label>Email to:</label></p>
 					<?php
 				    $restrict1[] = 0;
