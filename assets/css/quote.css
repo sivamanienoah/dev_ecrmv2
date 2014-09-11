@@ -175,7 +175,8 @@ form h3 {
 	padding-bottom:10px;
 }
 .user-addresses {
-	overflow:hidden;
+	height: 250px;
+    overflow-y: scroll;
 }
 .user-addresses .user {
 	display:block;
