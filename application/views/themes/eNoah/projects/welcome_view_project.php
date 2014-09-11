@@ -199,7 +199,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Project Title</label>
-					<input type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>">
+					<input type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> />
 				</div>
 				<div>
 				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
@@ -251,7 +251,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="project-id">Project ID</label>
-					<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> />
+					<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> style="width: 125px;" />
 					<input type="hidden" class="hiddenUrl"/>
 				</div>
 				<div>

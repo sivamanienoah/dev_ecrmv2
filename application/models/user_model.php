@@ -832,13 +832,6 @@ class User_model extends crm_model {
 		}
 	}
 	
-	public function insert_api_details($data)
-	{
-		 $this->db->where('id', "1");
-         $this->db->update('crm_keys', $data);
-		 return true;
-	}
-	
 	/*
 	*@Get User 
 	*@Method check_username
