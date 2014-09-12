@@ -50,7 +50,7 @@ class Create_new_user extends crm_controller
 			}
 		}
 		
-		$this->db->select('v.id,v.username,v.empid,v.email,v.active,v.first_name,v.last_name');
+		$this->db->select('v.autoid,v.username,v.EmpID,v.email,v.active,v.first_name,v.last_name');
 		$this->db->from($this->cfg['dbpref'].'view_econnect_mas as v');
 		$this->db->where('v.active',1);
 		$this->db->where('v.username !=','');
@@ -65,16 +65,16 @@ class Create_new_user extends crm_controller
 			$query = $this->db->get();
 			$res = $query->row_array();
 			
-			if($query->num_rows() == 0) {
-				//check email
+			if($query->num_rows() == 0) { 
+			//check email
 				if(!in_array($eusers['email'],$crm_email)) {
 					//insert into crm db
 					$data = array(
-					   'role_id' => '1',
+					   'role_id' => 7,
 					   'first_name' => $eusers['first_name'],
 					   'last_name' => $eusers['last_name'],
 					   'username' => $eusers['username'],
-					   'emp_id' => $eusers['empid'],
+					   'emp_id' => $eusers['EmpID'],
 					   'password' => sha1('admin123'),
 					   'email' => $eusers['email'],
 					   'phone' => '',
@@ -86,18 +86,18 @@ class Create_new_user extends crm_controller
 					);
 					if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
 						// $user_success[] = $eusers['empid'].' - '.$eusers['username']." - New user created.";
-						$user_success[] = $eusers['empid'].' => '.$eusers['username'];
+						$user_success[] = $eusers['EmpID'].' => '.$eusers['username'];
 						$crm_email[] = $eusers['email'];
 					}
 				} else {
 					//econnect user cannot be created. Email already exist.
-					$user_failed[] = $eusers['empid'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
+					$user_failed[] = $eusers['EmpID'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 				}
 				
 			} else {
 				if($eusers['email'] != $res['email']) {
 					//econnect user cannot be created. username already exists.
-					$user_failed[] = $eusers['empid'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
+					$user_failed[] = $eusers['EmpID'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
 				}
 			}
 		}
@@ -106,7 +106,7 @@ class Create_new_user extends crm_controller
 		if(!empty($user_success)){
 			$from		  	 = 'webmaster@enoahisolution.com';
 			$arrayEmails   	 = $this->config->item('crm');
-			$to				 = implode(',',$arrayEmails['director_emails']);
+			$to				 = implode(',',$arrayEmails['crm_admin']);
 			$print_fancydate = date('l, jS F y h:iA');
 			
 			$subject		 = 'New User List from eConnect';
@@ -124,7 +124,7 @@ class Create_new_user extends crm_controller
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_list'=>$user_list);
 
 			$param['to_mail'] 		  = $to;
-			// $param['cc_mail'] 		  = 'rshankar@enoahisolution.com';
+			// $param['cc_mail'] 		  = 'ssriram@enoahisolution.com';
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'New User List from eConnect';
@@ -136,7 +136,7 @@ class Create_new_user extends crm_controller
 		if(!empty($user_failed)){
 			$from		  	 = 'webmaster@enoahisolution.com';
 			$arrayEmails   	 = $this->config->item('crm');
-			$to				 = implode(',',$arrayEmails['director_emails']);
+			$to				 = implode(',',$arrayEmails['crm_admin']);
 			$print_fancydate = date('l, jS F y h:iA');
 			
 			$subject		 = 'Failed User List from eConnect';
@@ -153,7 +153,7 @@ class Create_new_user extends crm_controller
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_list'=>$user_lists);
 
 			$param['to_mail'] 		  = $to;
-			// $param['cc_mail'] 		  = 'rshankar@enoahisolution.com';
+			// $param['cc_mail'] 		  = 'ssriram@enoahisolution.com';
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'Failed User List from eConnect';
