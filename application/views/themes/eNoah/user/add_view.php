@@ -35,7 +35,7 @@
 				<tr>
 					<td>Username: *</td>
 					<td>
-						<input type="text" name="username" id="username" value="<?php echo $this->validation->username ?>" class="textfield width200px required" <?php echo ($this->uri->segment(3) == 'update') ? "readonly='readonly'": "" ?> autocomplete="off" />
+						<input type="text" name="username" id="username" value="<?php echo $this->validation->username ?>" class="textfield width200px required" autocomplete="off" />
 						<div class="error" style="color:red;" id="errorun">required</div>
 						<div id='username_errmsg'></div>
 					</td>
