@@ -1205,6 +1205,7 @@ class Project extends crm_controller {
 				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$project_milestone_name.'" class="textfield width200px" /> </p>
 				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" readonly /> </p>
 				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$project_milestone_amt.'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" >'.$payment_details['payment_remark'].'</textarea> </p>
 				<div class="buttons">
 					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
 				</div>
@@ -1230,6 +1231,7 @@ class Project extends crm_controller {
 		$pdate1 = $data['sp_date_1'];
 		$pdate2 = strtotime($data['sp_date_2']);
 		$pdate3 = $data['sp_date_3'];
+		$payment_remark = $data['payment_remark'];
 
 		if (count($errors))
 		{
@@ -1239,7 +1241,7 @@ class Project extends crm_controller {
 		{
 			$job_updated = FALSE;
 			$expected_date = date('Y-m-d', $pdate2);
-			$data3 = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1);
+			$data3 = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark);
 			
 			$payment_details = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']);
 
@@ -1269,7 +1271,7 @@ class Project extends crm_controller {
 					$ins['log_content']   = $pay_det;
 					$insert_logs = $this->project_model->insert_row('logs', $ins);
 					
-					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1);
+					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark );
 					$wh_condn = array('expectid' => $update, 'jobid_fk' => $data['sp_form_jobid']);
 					$updt_pay = $this->project_model->update_row('expected_payments', $updatepayment, $wh_condn);
 					
@@ -1360,6 +1362,7 @@ class Project extends crm_controller {
 				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
 				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
 				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
+				<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea></p>
 				<div class="buttons">
 					<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
 				</div>

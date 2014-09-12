@@ -449,7 +449,7 @@ class Project_model extends crm_model
 	function get_payment_term_det($eid, $jid)
 	{
 		$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid);
-		$this->db->select('expm.expectid, expm.amount, expm.expected_date, expm.received, expm.project_milestone_name, j.expect_worth_id, exnm.expect_worth_name');
+		$this->db->select('expm.expectid,expm.amount,expm.expected_date,expm.received,expm.project_milestone_name, expm.payment_remark,j.expect_worth_id,exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as j', 'j.lead_id = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = j.expect_worth_id', 'left');

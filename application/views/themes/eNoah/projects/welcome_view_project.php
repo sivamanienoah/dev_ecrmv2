@@ -523,6 +523,7 @@ if (get_default_currency()) {
 									<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
 									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
 									<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
+									<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea> </p>
 									<?php if ($readonly_status == false) { ?>
 									<div class="buttons">
 										<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
