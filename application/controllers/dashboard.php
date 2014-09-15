@@ -1058,9 +1058,11 @@ class Dashboard extends crm_controller {
 				$Yr = $curFiscalYear-1;
 			}
 			// echo $Yr; exit;
-			$yer = date("Y" , strtotime($res_query['dateofchange']));
-			$mon = date("m" , strtotime($res_query['dateofchange']));
-			
+			$mon = $yer = '';
+			if(!empty($res_query['dateofchange'])){
+				$yer = date("Y" , strtotime($res_query['dateofchange']));
+				$mon = date("m" , strtotime($res_query['dateofchange']));
+			}
 			if ($yer == $Yr) {
 				if ($mont == $mon) {
 					$jb[] = $res_query['lead_id'];
