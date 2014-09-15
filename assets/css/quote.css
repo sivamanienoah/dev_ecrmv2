@@ -174,9 +174,8 @@ form h3 {
 	zoom:1;
 	padding-bottom:10px;
 }
-.user-addresses {
-	height: 250px;
-    overflow-y: scroll;
+form#comm-log-form{
+	overflow:visible !important;
 }
 .user-addresses .user {
 	display:block;
@@ -186,10 +185,6 @@ form h3 {
 }
 .user-addresses .user input {
 	vertical-align:middle;
-}
-.email-list{
-	height: 190px;
-    overflow-y: scroll;
 }
 .email-list .user {
 	display:block;
@@ -264,6 +259,7 @@ form h3 {
 #sp_date_1 { margin-left : 25px;}
 #sp_date_2 { margin-left : 45px;}
 #sp_date_3 { margin-left : 87px;}
+#payment_remark { margin-left : 76px;}
 #pr_date_1 { margin-left: 70px;}
 #pr_date_2 { margin-left: 35px;}
 #pr_date_3 { margin-left: 50px;}
@@ -775,38 +771,30 @@ select.width100px {
 	border-top: 1px solid #ccc;
 	background: #334433;
 }
-
 #recurring-items #submit-recurring-item, #recurring-items #add-to-recurring-library {
 	width: 145px;
 	float: left;
 }
-
 #recurring-items #cancel-recurring-item, #recurring-items #open-prefill-window {
 	width: 144px;
 	float: left;
 	margin-right: 0;
 }
-
 #recurring-items .discount #submit-recurring-item, #recurring-items .discount #add-to-recurring-library {
 	width: 136px;
 }
-
 #recurring-items .discount #cancel-recurring-item, #recurring-items .discount #open-prefill-window {
 	width: 135px;
 }
 .buttons .payment-received-button{
 	margin:0 0 0 5px !important;
 }
-
 .project-estimate-hour-change {
 	display:none;
 }
-
 .project-type-change {
 	display:none;
 }
-
 .rag-status-change {
 	display:none;
 }
-

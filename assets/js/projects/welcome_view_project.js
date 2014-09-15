@@ -138,10 +138,12 @@
 		}
 
 		var email_set = '';
-		$('.email-list input[type="checkbox"]:checked').each(function(){
+		/* $('.email-list input[type="checkbox"]:checked').each(function(){
 			email_set += $(this).attr('id') + ':';
+		}); */
+		$('.email-list input[type="hidden"]').each(function(){
+			email_set += $(this).attr('value') + ':';
 		});
-
 
 		$.blockUI({
 				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
@@ -2321,3 +2323,4 @@ function raise_inv() {
 	alert('raiseInvoice');
 	return false;
 }
+

@@ -1,11 +1,26 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript">var this_is_home = true;</script>
+<script src="assets/js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> 
+$(function(){
+	var config = {
+	  '.chzn-select'           : {},
+	  '.chzn-select-deselect'  : {allow_single_deselect:true},
+	  '.chzn-select-no-single' : {disable_search_threshold:10},
+	  '.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+	  '.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+	  $(selector).chosen(config[selector]);
+	}
+});
+</script>
 <script type="text/javascript">
 
 /*
@@ -43,7 +58,7 @@ var unid = <?php  echo $userdata['userid'] ?>;
 var belong_to = <?php echo $quote_data['belong_to'] ?>;
 var lead_assign = <?php echo $quote_data['lead_assign'] ?>;
 var role_id = <?php echo $userdata['role_id'] ?>;
-	
+
 var lead_services = [];
 lead_services['not_select'] = '';
 
@@ -112,8 +127,11 @@ function addLog() {
 	}
 	
 	var email_set = '';
-	$('.user-addresses input[type="checkbox"]:checked').each(function(){
+	/* $('.user-addresses input[type="checkbox"]:checked').each(function(){
 		email_set += $(this).attr('id') + ':';
+	}); */
+	$('.user-addresses input[type="hidden"]').each(function(){
+		email_set += $(this).attr('value') + ':';
 	});
 	
 	$.blockUI({
@@ -785,13 +803,21 @@ $(function(){
 				<div class="user-addresses">
 					<?php
 					/* check the condition if role_id = 1 (admin) and role_id = 2 (management)  and leadowner and lead assigned to  */
-					if (count($user_accounts)) foreach ($user_accounts as $ua)
-					{
-						if ( (($ua['level'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
-							echo '<span class="user">' .
-							'<input type="checkbox" name="email-log-' . $ua['userid'] . '" id="email-log-' . $ua['userid'] . '" /> <label for="email-log-' . $ua['userid'] . '">' . $ua['first_name'] . ' ' . $ua['last_name'] . '</label>
-							</span>';
-						}
+					?>
+					<?php if (count($user_accounts)>0) { ?>
+						<label>Email To:</label>
+						<br/>
+						<select data-placeholder="Choose Users..." name="email_users" multiple id="email_users" class="chzn-select" style="width:400px;">
+							<?php foreach ($user_accounts as $ua) {
+								// if ((($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
+								?>
+									<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'] . ' ' . $ua['last_name']; ?></option>
+								<?php 
+								// }
+							}
+					?>
+						</select>
+					<?php	
 					}
 					?>
 				</div>
@@ -1306,7 +1332,6 @@ $(function(){
 						  "sEmptyTable": "No Queries Found..."
 						}
 					});
-					
 				</script>
 			</div>
 		</div>

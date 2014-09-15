@@ -1070,7 +1070,7 @@ class Project extends crm_controller {
 		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jid);
 		
 		$usernme = $this->session->userdata('logged_in_user');
-		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
+		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2|| $usernme['role_id'] == 4) {
 			$chge_access = 1;
 		} else {
 			$chge_access = $this->project_model->get_access($jid, $usernme['userid']);

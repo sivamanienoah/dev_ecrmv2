@@ -662,7 +662,7 @@ foreach ($months as $key => $val) {
 }
 
 foreach( $cls_oppo_values as $key=>$data ) {
-$cls_oppr .= "['". $key ."'" . ',' . $data . "],";
+	$cls_oppr .= "['". $key ."'" . ',' . $data . "],";
 }
 
 

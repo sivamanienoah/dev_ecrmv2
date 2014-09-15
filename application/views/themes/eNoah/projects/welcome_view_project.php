@@ -1,11 +1,15 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 <script type="text/javascript">var this_is_home = true;</script>
+<script src="assets/js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> 
+</script>
 
 <!--Code Added for the Pagination in Comments Section -- Starts Here-->
 <script type="text/javascript">
@@ -23,6 +27,19 @@
   var project_complete_status = "<?php echo isset($quote_data['complete_status']) ? $quote_data['complete_status'] : 0 ?>";
   var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
   var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
+  
+  $(function(){
+		var config = {
+			'.chzn-select'           : {},
+			'.chzn-select-deselect'  : {allow_single_deselect:true},
+			'.chzn-select-no-single' : {disable_search_threshold:10},
+			'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+			'.chzn-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+  });
 
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
@@ -134,7 +151,6 @@ if (get_default_currency()) {
 			?>
 			
 				<div class="email-list">
-					<p><label>Email to:</label></p>
 					<?php
 				    $restrict1[] = 0;
 					if (is_array($contract_users) && count($contract_users) > 0) { 
@@ -154,31 +170,38 @@ if (get_default_currency()) {
 					
 					//Re-Assign the Keys in the array.
 					$final_restrict_user = array_values($restrict_users);
-				
-					$cnt = count($user_accounts);
-					
-					if (count($final_restrict_user)) {
-						for($i=0; $i < $cnt; $i++)
-						{	
-							$usid = $user_accounts[$i]['userid'];
-
-							for($j=0; $j<count($final_restrict_user); $j++) {
-							//echo $restrict[$j];
-
-								if($usid == $final_restrict_user[$j]) {
-									echo '<span class="user">' .
-									'<input type="checkbox" name="email-log-' . $user_accounts[$i]['userid'] . '" id="email-log-' . $user_accounts[$i]['userid'] . '" /> <label for="email-log-' . $user_accounts[$i]['userid'] . '">' . $user_accounts[$i]['first_name'] . ' ' . $user_accounts[$i]['last_name'] . '</label></span>';
-								}	
+					?>
+					<label>Email To:</label>
+					<?php
+					if (count($final_restrict_user)>0) {
+						
+						$user_details_id = array();
+						if(!empty($user_accounts)){
+							foreach($user_accounts as $user=>$userdet){
+								$user_details_id[$userdet['userid']] = $userdet;
 							}
-							
 						}
+						$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
+					?>
+					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:400px;">
+						<?php
+							foreach($final_restrict_user as $ua){
+						?>
+								<option value="<?php echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+						<?php
+							}
+						?>
+					</select>
+					<?php
 					}
-					else {
-						echo "No user found";
-					} 
 					?>
 				</div>
 			</form>
+			<?php 
+				function array_remove_by_value($array, $value) {
+					return array_values(array_diff($array, array($value)));
+				}
+			?>
 			<p>&nbsp;</p>
 		</div>
 		
@@ -598,7 +621,7 @@ if (get_default_currency()) {
 								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
 								// $output .= "<td align='center'>".$payment_received."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
-								if ($readonly_status == false) {
+								if ($readonly_status == false || $this->session->userdata['logged_in_user']['role_id']==4) {
 									$output .= "<td align='left'>
 										<a title='Edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>
 										<a title='Delete' href='javascript:void(0)' onclick='paymentProfileDelete(".$pd['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
