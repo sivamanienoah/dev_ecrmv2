@@ -3087,10 +3087,11 @@ HDOC;
 			$project_id	 	 = $project_details[0]['invoice_no'];
 			$milestone_name  = $payment_details['project_milestone_name'];
 			$milestone_value = $payment_details['expect_worth_name'] . ' - ' . $payment_details['amount'];
+			$payment_remark  = isset($payment_details['payment_remark']) ? $payment_details['payment_remark'] : '-';
 			//email sent by email template
 			$param = array();
 			
-			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value);
+			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
 
 			$param['to_mail'] 		  = $to;
 			$param['cc_mail'] 		  = $this->userdata['email'];
