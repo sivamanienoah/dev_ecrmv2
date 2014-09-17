@@ -311,19 +311,19 @@ class Project extends crm_controller {
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			
 			$rates = $this->get_currency_rates();
-			
+
 			$data['timesheet_data'] = array();
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
 					$costdata = array();
 					if(isset($ts['cost'])) {
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$result[0]['expect_worth_id']]);
+						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 					} else {
 						$costdata = $this->project_model->get_latest_cost($ts['username']);
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
-						$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$result[0]['expect_worth_id']]);
+						$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 					}
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
@@ -332,6 +332,7 @@ class Project extends crm_controller {
 			}
 
 			$data['project_costs'] = array();
+			
 			if(!empty($data['timesheet_data'])) {
 				$res = $this->calcActualProjectCost($data['timesheet_data']);
 				if($res['total_cost']>0) {
@@ -371,6 +372,9 @@ class Project extends crm_controller {
 		$total_non_billable_hrs = 0;
 		$total_internal_hrs		= 0;
 		$data['total_cost']		= 0;
+		
+		// echo "<pre>"; print_r($timesheet_data); exit;
+		
 		foreach($timesheet_data as $key1=>$value1) {
 			$resource_name = $key1;
 			foreach($value1 as $key2=>$value2) {
@@ -532,14 +536,14 @@ class Project extends crm_controller {
 		
 		$data['error'] = FALSE;
 		
-		if($updt['pjt_stat'] == 2) {
+		/* if($updt['pjt_stat'] == 2) {
 			$checkStat = $this->project_model->get_lead_det($updt['lead_id']);
 			if(isset($checkStat['actual_date_due'])) {
 				$data['error'] = FALSE;
 			} else {
 				$data['error'] = 'Actual End Date must be filled';
 			}
-		}
+		} */
 
 		if ($updt['pjt_stat'] == "") {
 			$data['error'] = 'Value must not be Null value!';
@@ -2969,6 +2973,7 @@ HDOC;
 
 		$data['project_costs'] = array();
 		if(!empty($data['timesheet_data'])) {
+			// echo "<pre>"; print_r($data['timesheet_data']); exit;
 			$res = $this->calcActualProjectCost($data['timesheet_data']);
 			if($res['total_cost']>0) {
 				$data['project_costs'] = $res['total_cost'];
