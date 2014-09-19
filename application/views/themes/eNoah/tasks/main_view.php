@@ -44,23 +44,17 @@ $(function(){
 			
 				<table border="0" cellpadding="0" cellspacing="0" class="task-add toggler">
 					<tr>
-						<td colspan="4">
-							<strong>All fields are required!</strong>
-						</td>
+						<td colspan="4"><strong>All fields are required!</strong></td>
 					</tr>
 					<tr>
-						<td valign="top">
-							<br /><br />Task Desc
-						</td>
+						<td valign="top"><br /><br />Task Desc</td>
 						<td colspan="3">
 							<strong><span id="task-desc-countdown">1000</span></strong> characters left.<br />
 							<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
 						</td>
 					</tr>
 					<tr>
-						<td>
-							Allocate to
-						</td>
+						<td>Allocate to</td>
 						<td>
 							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
 							<?php
@@ -71,26 +65,14 @@ $(function(){
 					</tr>
 					
 					<tr>
-						<td>
-							Start Date
-						</td>
-						<td>
-							<input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin-top:5px;"/>
-						</td>
-						<td>
-							End Date
-						</td>
-						<td>
-							<input type="text" name="task_end_date" class="textfield pick-date width100px" />
+						<td>Start Date</td>
+						<td><input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin-top:5px;"/></td>
+						<td>End Date</td>
+						<td><input type="text" name="task_end_date" class="textfield pick-date width100px" />
 					</tr>
 					<tr>
-						<td>
-							Remarks
-						</td>
-						<td>
-							<textarea name="task-remarks" id="task-remarks"></textarea>
-						</td>
-						
+						<td>Remarks</td>
+						<td><textarea name="task-remarks" id="task-remarks"></textarea></td>
 					</tr>
 					<tr>
 						<td colspan="4">
