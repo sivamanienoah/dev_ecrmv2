@@ -538,8 +538,9 @@ function add_job_task($update = 'NO', $random = 'NO')
 
 				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>date('d-m-Y', strtotime($dtask_start_date)),'end_date'=>date('d-m-Y', strtotime($dtask_end_date)),'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
 
-				$param['to_mail'] = $taskAssignedToEmail . ',' .$admin_mail;
-				$param['bcc_mail'] = $admin_mail;
+				$param['to_mail'] = $taskAssignedToEmail;
+				// $param['bcc_mail'] = $admin_mail;
+				$param['cc_mail'] = $from;
 				$param['from_email'] = $from;
 				$param['from_email_name'] = $from_name;
 				$param['template_name'] = "Task Update Notification";
@@ -585,16 +586,15 @@ function add_job_task($update = 'NO', $random = 'NO')
 
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$arrEmails = $this->config->item('crm');
-					$arrSetEmails=$arrEmails['director_emails'];
-					$admin_mail=implode(',',$arrSetEmails);
 					
 					//email sent by using email template
 					$param = array();
 
 					$param['email_data'] = array('job_task'=>$_POST['job_task'], 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>date('d-m-Y', strtotime($dtask_start_date)), 'end_date'=>date('d-m-Y', strtotime($dtask_end_date)), 'first_name'=>$task_owners[0]['first_name'], 'last_name'=>$task_owners[0]['last_name'], 'status'=>$ins['status']);
 
-					$param['to_mail'] 			= $taskSetToEmail.','.$admin_mail;
-					$param['bcc_mail'] 			= $admin_mail;
+					// $param['to_mail'] 			= $taskSetToEmail.','.$admin_mail;
+					$param['to_mail'] 			= $taskSetToEmail;
+					$param['cc_mail'] 			= $from;
 					$param['from_email'] 		= $from;
 					$param['from_email_name'] 	= $user_name;
 					$param['template_name'] 	= "New Task Notification";
@@ -1049,7 +1049,7 @@ EOD;
 					$param['email_data'] = array('task_name'=>$task_name, 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'],'start_date'=>$start_date, 'end_date'=>$end_date,'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'task_status'=>$task_status);
 
 					$param['to_mail'] = $taskStatusToEmail;
-					$param['bcc_mail'] = $admin_mail;
+					$param['cc_mail'] = $from;
 					$param['from_email'] = $from;
 					$param['from_email_name'] = $user_name;
 					$param['template_name'] = "Task Completion Notification";
@@ -1164,8 +1164,8 @@ EOD;
 
 				$param['email_data'] = array('task_name'=>$task_name, 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>$start_date, 'end_date'=>$end_date, 'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'], 'task_status'=>$task_status);
 
-				$param['to_mail'] = $taskStatusToEmail.','.$task_owners[0]['email'];
-				$param['bcc_mail'] = $admin_mail;
+				$param['to_mail'] = $taskStatusToEmail;
+				$param['cc_mail'] = $from;
 				$param['from_email'] = $from;
 				$param['from_email_name'] = $user_name;
 				$param['template_name'] = "Task Notification";
