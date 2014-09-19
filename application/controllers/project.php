@@ -2872,14 +2872,14 @@ HDOC;
 					default:
 						$rag = '-';
 				}
-				$bill_hr = (isset($rec['bill_hr'])) ? sprintf('%0.2f',$rec['bill_hr']) : "-";
-				$inter_hr = (isset($rec['int_hr'])) ? sprintf('%0.2f',$rec['int_hr']) : "-";
-				$nbill_hr = (isset($rec['nbil_hr'])) ? sprintf('%0.2f',$rec['nbil_hr']) : "-";
+				$bill_hr = (isset($rec['bill_hr'])) ? round($rec['bill_hr']) : "-";
+				$inter_hr = (isset($rec['int_hr'])) ? round($rec['int_hr']) : "-";
+				$nbill_hr = (isset($rec['nbil_hr'])) ? round($rec['nbil_hr']) : "-";
 				$total_hr = ($rec['bill_hr']+$rec['int_hr']+$rec['nbil_hr']);
 				$pjt_val = (isset($rec['actual_worth_amt'])) ? $rec['actual_worth_amt'] : "-";
-				$util_cost = (isset($rec['total_cost'])) ? sprintf('%0.2f',$rec['total_cost']) : "-";
+				$util_cost = (isset($rec['total_cost'])) ? round($rec['total_cost']) : "-";
 				$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
-				$percent = ($plPercent == FALSE)?'-':sprintf('%0.2f', $plPercent);
+				$percent = ($plPercent == FALSE)?'-':round($plPercent)*100;
 				
 				$bill_type = $rec['billing_type'];
 				
@@ -2896,7 +2896,7 @@ HDOC;
 				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
 				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
 				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
-				$this->excel->getActiveSheet()->setCellValue('M'.$i, $rec['actual_worth_amt']-$rec['total_cost']);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, round($rec['actual_worth_amt']-$rec['total_cost']));
 				$this->excel->getActiveSheet()->setCellValue('N'.$i, $percent);
 				$i++;
     		}
