@@ -28,7 +28,7 @@ if (get_default_currency()) {
 			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
 			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
 			$profitloss    = round($record['actual_worth_amt']-$total_cost);
-			$profitlossPercent = round(($profitloss/$record['actual_worth_amt']))*100 . " %";
+			$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
 			switch ($record['rag_status']) {
 				case 1:
 					$ragStatus = '<span class=label-red></span>';
@@ -70,7 +70,7 @@ if (get_default_currency()) {
 				$milestone_content .= "<td>".$actual_amt."</td>";
 				$milestone_content .= "<td>".$total_cost."</td>";
 				$milestone_content .= "<td>".$profitloss."</td>";
-				$milestone_content .= "<td>".$profitlossPercent."</td>";
+				$milestone_content .= "<td>".$profitlossPercent." %</td>";
 				$milestone_content .= "</tr>";
 			} else {
 				$monthly_content .= "<tr>";
@@ -92,7 +92,7 @@ if (get_default_currency()) {
 				$monthly_content .= "<td>".$actual_amt."</td>";
 				$monthly_content .= "<td>".$total_cost."</td>";
 				$monthly_content .= "<td>".$profitloss."</td>";
-				$monthly_content .= "<td>".$profitlossPercent."</td>";
+				$monthly_content .= "<td>".$profitlossPercent." %</td>";
 				$monthly_content .= "</tr>";
 			}
 			$complete_stat = $project_type = $estimate_hour = '';
