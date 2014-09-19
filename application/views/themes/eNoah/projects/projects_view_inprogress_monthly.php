@@ -19,15 +19,15 @@ if (get_default_currency()) {
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
  			$project_type  = ($record['project_type']!=null) ? $record['project_type'] : '-';
 			$estimate_hour = (($record['estimate_hour'])) ? $record['estimate_hour'] : '-';
-			$bill_hr 	   = (isset($record['bill_hr'])) ? (sprintf('%0.2f', $record['bill_hr'])) : '-';
-			$int_hr 	   = (isset($record['int_hr'])) ? (sprintf('%0.2f', $record['int_hr'])) : '-';
-			$nbil_hr 	   = (isset($record['nbil_hr'])) ? (sprintf('%0.2f', $record['nbil_hr'])) : '-';
-			$total_hours   = (isset($record['total_hours'])) ? (sprintf('%0.2f', $record['total_hours'])) : '-';
-			$eff_variance  = sprintf('%0.2f', $total_hours-$estimate_hour);
-			$actual_amt    = (isset($record['actual_worth_amt'])) ? (sprintf('%0.2f', $record['actual_worth_amt'])) : '0.00';
-			$total_cost    = (isset($record['total_cost'])) ? (sprintf('%0.2f', $record['total_cost'])) : '0.00';
-			$profitloss    = sprintf('%0.2f', $record['actual_worth_amt']-$total_cost);
-			$profitlossPercent = sprintf('%0.2f', ($profitloss/$record['actual_worth_amt']));
+			$bill_hr 	   = (isset($record['bill_hr'])) ? (round($record['bill_hr'])) : '-';
+			$int_hr 	   = (isset($record['int_hr'])) ? (round($record['int_hr'])) : '-';
+			$nbil_hr 	   = (isset($record['nbil_hr'])) ? (round($record['nbil_hr'])) : '-';
+			$total_hours   = (isset($record['total_hours'])) ? (round($record['total_hours'])) : '-';
+			$eff_variance  = round($total_hours-$estimate_hour);
+			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
+			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
+			$profitloss    = round($record['actual_worth_amt']-$total_cost);
+			$profitlossPercent = round(($profitloss/$record['actual_worth_amt']))*100 . " %";
 			switch ($record['rag_status']) {
 				case 1:
 					$ragStatus = '<span class=label-red></span>';
