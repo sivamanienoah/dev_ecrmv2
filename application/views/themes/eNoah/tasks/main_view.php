@@ -62,7 +62,7 @@ $(function(){
 							Allocate to
 						</td>
 						<td>
-							<select name="task_user" style="width:160px;" class="chzn-select textfield width100px" data-placeholder="Choose a User...">
+							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
 							<?php
 								echo $remind_options, $remind_options_all;
 							?>
@@ -106,7 +106,7 @@ $(function(){
 			</form>
 		</div>
 		<!--<p>To add a job task, please go to the relevant job page and add a task from the tasks tab</p>-->
-		<p>
+		<p style="margin:15px 0 15px;">
 			<img src="assets/img/due_today.jpg" width="10" /> Due Today
 			&nbsp;&nbsp;
 			<img src="assets/img/task_delayed.jpg" width="10" /> Task Delayed
