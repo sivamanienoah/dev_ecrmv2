@@ -4,7 +4,7 @@ require (theme_url().'/tpl/header.php');
 // echo "<pre>"; print_r($this->session->userdata);
 // echo "<pre>"; print_r($created_by);
 ?>
-
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <style type="text/css">
 @import url(assets/css/tasks.css?q=1);
 </style>
@@ -16,8 +16,21 @@ require (theme_url().'/tpl/header.php');
 
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
-<!--script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="assets/js/easypaginate.js"></script-->
+<script src="assets/js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> 
+$(function(){
+	var config = {
+	  '.chzn-select'           : {},
+	  '.chzn-select-deselect'  : {allow_single_deselect:true},
+	  '.chzn-select-no-single' : {disable_search_threshold:10},
+	  '.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+	  '.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+	  $(selector).chosen(config[selector]);
+	}
+});
+</script>
 
 <div id="content">
     <div class="inner" id="jv-tab-4">
@@ -49,9 +62,8 @@ require (theme_url().'/tpl/header.php');
 							Allocate to
 						</td>
 						<td>
-							<select name="task_user" class="textfield width100px">
+							<select name="task_user" style="width:160px;" class="chzn-select textfield width100px" data-placeholder="Choose a User...">
 							<?php
-								//echo $remind_options, $remind_options_all, $contractor_options;
 								echo $remind_options, $remind_options_all;
 							?>
 							</select>
@@ -63,7 +75,7 @@ require (theme_url().'/tpl/header.php');
 							Start Date
 						</td>
 						<td>
-							<input type="text" name="task_start_date" class="textfield pick-date width100px" />
+							<input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin-top:5px;"/>
 						</td>
 						<td>
 							End Date
@@ -177,7 +189,6 @@ require (theme_url().'/tpl/header.php');
 		</div>
 			
 		<form id="edit-job-task" onsubmit="return false;">
-		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
 		<!-- edit task -->
@@ -210,7 +221,7 @@ require (theme_url().'/tpl/header.php');
 						Allocate to
 					</td>
 					<td>
-						<select name="task_user" class="edit-task-allocate textfield width100px" >
+						<select name="task_user" class="chzn-select edit-task-allocate textfield width100px" >
 							<?php						
 							echo $remind_options, $remind_options_all;
 							?>						
@@ -223,7 +234,7 @@ require (theme_url().'/tpl/header.php');
 						Planned Start Date
 					</td>
 					<td>
-						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
+						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin-top:5px;"/>
 					</td>		
 					<td>
 						Planned End Date

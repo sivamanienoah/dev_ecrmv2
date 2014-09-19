@@ -89,7 +89,6 @@ var random_task_edit;
 
 function openEditTask(taskid, random)
 {
-	// alert(taskid);
 
 	task_being_edited = taskid;
 	
@@ -110,7 +109,7 @@ function openEditTask(taskid, random)
 	// alert($('#task-table-' + taskid).length);
 	var the_task_el = $('#task-table-' + taskid);
 	//alert(the_task_el);
-	var the_task_el1 = taskid;	
+	var the_task_el1 = taskid;
 	var edit_table_el = $('.blockUI .task-edit');
 	var createdbyid = $.trim($('.task-cid', the_task_el).text());
 	
@@ -119,7 +118,9 @@ function openEditTask(taskid, random)
 
 	$('.edit-task-remarks', edit_table_el).val($.trim($('.taskremarks', the_task_el).text()));
 	
-	//$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
+	$(".edit-task-allocate").val( $('.user-name', the_task_el).attr('rel') ).prop('selected',true);
+	$('.edit-task-allocate').next("div").find("span").html($(".edit-task-allocate option:selected").text());
+	
 	if (createdbyid == uid)
 	{
 		// alert(createdbyid + "==" + uid);
@@ -127,6 +128,8 @@ function openEditTask(taskid, random)
 		$('.edit-task-allocate', edit_table_el).removeAttr('disabled', ($.trim($('.user-name', the_task_el).attr('rel'))) );
 		$('.edit-job-task-desc', edit_table_el).val($.trim($('.task', the_task_el).text()));	
 	    $('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim($('.task', the_task_el).text())) );
+		// $('.edit-task-allocate').next("div").find(".chzn-drop").show();
+		$(".edit-task-allocate").removeAttr('disabled', true).trigger("liszt:updated");
 		$('.edit-start-date', edit_table_el).val($.trim($('.start-date', the_task_el).text()));
 		$('.edit-start-date', edit_table_el).removeAttr('disabled', ($.trim($('.start-date', the_task_el).text())) );
 		$('.edit-end-date', edit_table_el).val($.trim($('.end-date span.date_part', the_task_el).text()));
@@ -138,8 +141,10 @@ function openEditTask(taskid, random)
 	{
 		$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
 		$('.edit-task-allocate', edit_table_el).attr('disabled', ($.trim($('.user-name', the_task_el).attr('rel'))) );
+		// $('.edit-task-allocate').next("div").find(".chzn-drop").hide();
 		$('.edit-job-task-desc', edit_table_el).val($.trim($('.task', the_task_el).text()));	
 	    $('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim($('.task', the_task_el).text())) );
+		$(".edit-task-allocate").attr('disabled', true).trigger("liszt:updated");
 		$('.edit-start-date', edit_table_el).val($.trim($('.start-date', the_task_el).text()));
 		$('.edit-start-date', edit_table_el).attr('disabled', ($.trim($('.start-date', the_task_el).text())) );
 		$('.edit-end-date', edit_table_el).val($.trim($('.end-date span.date_part', the_task_el).text()));

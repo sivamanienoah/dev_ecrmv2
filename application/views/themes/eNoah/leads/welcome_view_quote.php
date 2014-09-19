@@ -1037,16 +1037,16 @@ $(function(){
 							<tr>
 								<td>Allocate to</td>
 								<td>
-									<select name="task_user" class="edit-task-allocate textfield width100px">
+									<select name="task_user" data-placeholder="Choose a User..." class="chzn-select textfield width100px">
 										<?php
-										echo $remind_options, $remind_options_all, $contractor_options;
+											echo $remind_options, $remind_options_all;
 										?>
 									</select>
 								</td>
 							</tr>				
 							<tr>
 								<td>Planned Start Date</td>
-								<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" /></td>
+								<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin: 5px 0px;"/></td>
 								<td>Planned End Date</td>
 								<td><input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" /></td>
 							</tr>						
@@ -1112,9 +1112,9 @@ $(function(){
 						<tr>
 							<td>Allocate to</td>
 							<td>
-								<select name="task_user" class="edit-task-allocate textfield width100px">
+								<select name="task_user" class="chzn-select edit-task-allocate textfield width100px" data-placeholder="Choose a User...">
 									<?php
-										echo $remind_options, $remind_options_all, $contractor_options;
+										echo $remind_options, $remind_options_all;
 									?>
 								</select>
 							</td>
@@ -1122,7 +1122,7 @@ $(function(){
 
 						<tr>
 							<td>Planned Start Date</td>
-							<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" /></td>
+							<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin: 5px 0px;"/></td>
 							<td>Planned End Date</td>
 							<td><input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px"/></td>
 						</tr>

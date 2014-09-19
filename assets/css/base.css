@@ -1831,6 +1831,21 @@ button.positive, .pjt-btn a.positive, input.positive{
 #filter_metrics_data select {
 	width:70px;
 }
+#jv-tab-4 .chzn-container{
+	width:160px !important;
+}
+.task-edit .chzn-container{
+	width:160px !important;
+}
+#lead_tab .chzn-container .chzn-results {
+	max-height: 100px !important;
+}
+#project-tabs .chzn-container .chzn-results {
+	max-height: 150px !important;
+}
+#tasks-mgmt .chzn-container .chzn-results {
+    max-height: 150px !important;
+}
 /*Clearfix*/
 .clearfix:after {
 	content: ".";

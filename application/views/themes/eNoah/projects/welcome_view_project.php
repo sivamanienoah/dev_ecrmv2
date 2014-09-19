@@ -284,7 +284,7 @@ if (get_default_currency()) {
 					</div>
 					<div class="error-msg">
 						<span id="pjt_id_errormsg" style="color:red"></span>
-						<span class="checkUser" style="color:green">Project Id Saved.</span>
+						<span class="checkUser" style="color:green">Project ID Saved.</span>
 						<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
 					</div>
 				<?php } ?>
@@ -357,7 +357,7 @@ if (get_default_currency()) {
 					}
 				?>
 			</div>
-			<?php require (theme_url().'/tpl/user_accounts_options.php'); ?>
+			<?php //require (theme_url().'/tpl/user_accounts_options.php'); ?>
 			
 			<!--List the project lead from the timesheet-->
 			<label class="pull-left">Project Manager</label>
@@ -784,7 +784,6 @@ if (get_default_currency()) {
 		
 			<h3>Tasks</h3>
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
-				
 				<tr>
 					<td colspan="4">
 						<strong>All fields are required!</strong>
@@ -805,11 +804,17 @@ if (get_default_currency()) {
 						Allocate to
 					</td>
 					<td>
-						<select name="task_user" class="textfield width100px">
-						<?php
-						//echo $remind_options, $remind_options_all, $contractor_options;
-						echo $remind_options, $remind_options_all;
-						?>
+						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select" style="width:140px;">
+							<?php
+							// echo $remind_options, $remind_options_all;
+								foreach($final_restrict_user as $ua){
+									if(!empty($user_details_id[$ua]['userid'])) {
+							?>
+									<option value="<?php echo $user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+							<?php
+									}
+								}
+							?>
 						</select>
 					</td>
 				</tr>
@@ -819,7 +824,7 @@ if (get_default_currency()) {
 						Planned Start Date
 					</td>
 					<td>
-						<input type="text" name="task_start_date" class="textfield pick-date width100px" />
+						<input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin: 5px 0px;"/>
 					</td>
 					<td>
 						Planned End Date
@@ -881,13 +886,18 @@ if (get_default_currency()) {
 						Allocate to
 					</td>
 					<td>
-						<select name="task_user" class="edit-task-allocate textfield width100px">
-						<?php
-						echo $remind_options, $remind_options_all, $contractor_options;
-						?>
+						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select edit-task-allocate textfield" style="width:140px;">
+							<?php
+								foreach($final_restrict_user as $ua){
+									if(!empty($user_details_id[$ua]['userid'])) {
+							?>
+									<option value="<?php echo $user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+							<?php
+									}
+								}
+							?>
 						</select>
 					</td>
-					
 				</tr>
 				
 				<tr>
@@ -895,7 +905,7 @@ if (get_default_currency()) {
 						Planned Start Date
 					</td>
 					<td>
-						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
+						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin: 5px 0px;"/>
 					</td>
 					<td>
 						Planned End Date
