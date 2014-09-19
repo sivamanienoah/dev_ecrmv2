@@ -1108,7 +1108,6 @@ $(function(){
 							<td>Task Owner</td>
 							<td><input type="text" class="edit-task-owner textfield" readonly></td>
 						</tr>
-
 						<tr>
 							<td>Allocate to</td>
 							<td>
@@ -1119,7 +1118,6 @@ $(function(){
 								</select>
 							</td>
 						</tr>
-
 						<tr>
 							<td>Planned Start Date</td>
 							<td><input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin: 5px 0px;"/></td>
