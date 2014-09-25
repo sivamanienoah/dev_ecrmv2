@@ -1,9 +1,9 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Manage Service Model
+ * email_template_model
  *
- * @class 		manage_service_model
+ * @class 		email_template_model
  * @extends		crm_model (application/core)
  * @classes     Model
  * @author 		eNoah
