@@ -341,20 +341,16 @@ h3 .small {
 	color:#777777;
 }
 #upload-container {
-	height:40px;
-	overflow:hidden;
+	height:30px;
+	/*overflow:hidden;*/
 	position:relative;
+	float:left;
 }
-#upload-decoy {
-	position:absolute;
-	top:0;
-	left:0;
-	cursor:pointer;
-}
+
 #ajax_file_uploader {
 	position:absolute;
 	cursor:pointer;
-	width:78px;
+	width:16px;
 	height:24px;
 	top:0;
 	left:0;

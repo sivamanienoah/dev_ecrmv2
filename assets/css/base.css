@@ -1695,7 +1695,7 @@ div#green-radio{
 	width: 285px;
 }
 .test-block label{
-	width: 115px;
+	width: 130px;
 	display: inline-block;
 }
 /*RAG Status - End*/
@@ -1831,6 +1831,9 @@ button.positive, .pjt-btn a.positive, input.positive{
 #filter_metrics_data select {
 	width:70px;
 }
+.tasks-mgmt form {
+	overflow:visible !important;
+}
 #jv-tab-4 .chzn-container{
 	width:160px !important;
 }
@@ -1843,9 +1846,17 @@ button.positive, .pjt-btn a.positive, input.positive{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#tasks-mgmt .chzn-container .chzn-results {
-    max-height: 150px !important;
+#move-file, #create-folder, #moveallfile {
+	display: none;
 }
+/* file_breadcrumb */
+#file_breadcrumb{padding:5px; background-color:#e2e8f3; border-bottom:1px solid #cdd8eb; margin-bottom:2px;}
+#file_breadcrumb a{ color:#3b5998; font-weight:bold; }
+#file_breadcrumb a:hover{ text-decoration:none; color:#6f8bc8;}
+#upload-decoy {cursor:pointer;}
+.pad-right{ padding-right:15px; padding-top:3px;}
+.icon-width{ width:20px;}
+
 /*Clearfix*/
 .clearfix:after {
 	content: ".";
