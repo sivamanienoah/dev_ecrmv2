@@ -543,7 +543,7 @@
 		$('.payment-terms-mini-view1').css('display', 'block');
 	}
 
-	function fullScreenLogs() 
+	function fullScreenLogs()
 	{
 		var fsl_height = parseInt($(window).height()) - 80;
 		fsl_height = fsl_height + 'px';
@@ -555,73 +555,91 @@
 		$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
 	}
 
-	function runAjaxFileUpload() 
+	function runAjaxFileUpload()
 	{
 		var _uid = new Date().getTime();
 		$('<li id="' + _uid +'">Processing <img src="assets/img/ajax-loader.gif" /></li>').appendTo('#job-file-list');
-		var params 				= {};
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.ajaxFileUpload
-		(
-			{
-				url:'ajax/request/file_upload/'+project_jobid,
-				secureuri:false,
-				fileElementId:'ajax_file_uploader',
-				dataType: 'json',
-				data:params,
-				success: function (data, status)
-				{
-					if(typeof(data.error) != 'undefined')
-					{
-						if(data.error != '')
-						{
-							if (window.console)
-							{
-								console.log(data);
-							}
-							if (data.msg)
-							{
-								alert(data.msg);
-							}
-							else
-							{
-								alert('File upload failed!');
-							}
-							$('#'+_uid).hide('slow').remove();
+		var params 				 = {};
+		params[csrf_token_name]  = csrf_hash_token;
+		var ffid = $('#filefolder_id').val();
+
+		$.ajaxFileUpload({
+			url: 'ajax/request/file_upload/'+project_jobid+'/'+ffid,
+			secureuri: false,
+			fileElementId: 'ajax_file_uploader',
+			dataType: 'json',
+			data: params,
+			success: function (data, status) {
+				if(typeof(data.error) != 'undefined') {
+					if(data.error != '') {
+						if (window.console) {
+							console.log(data);
 						}
-						else
-						{	
-							if(data.msg == 'File successfully uploaded!') {
-								var lead_details = "project/lead_fileupload_details/"+project_jobid+"/"+data.file_name+ "/" +userid;														
-								$('#lead_result').load(lead_details);
-							}
-							//alert(data.msg);
-							var _file_link = '<a href="crm_data/'+project_jobid+'/'+data.file_name+'" onclick="window.open(this.href); return false;">'+data.file_name+'</a> <span>'+data.file_size+'</span>';
-							var _del_link = '<a href="#" onclick="ajaxDeleteFile(\'/crm_data/'+project_jobid+'/'+data.file_name+'\', this); return false;" class="file-delete">delete file</a>';
-							$('#'+_uid).html(_del_link + _file_link);
+						if (data.msg) {
+							alert(data.msg);
+						} else {
+							alert('File upload failed!');
 						}
-					}
-				},
-				error: function (data, status, e)
-				{
-					alert('Sorry, the upload failed due to an error!');
-					$('#'+_uid).hide('slow').remove();
-					if (window.console)
-					{
-						console.log('ajax error\n' + e + '\n' + data + '\n' + status);
-						for (i in e) {
-						  console.log(e[i]);
+						// $('#'+_uid).hide('slow').remove();
+					} else {	
+						if(data.msg == 'File successfully uploaded!') {
+							// alert(data.msg);
+							/*Showing successfull message.*/
+							$('#fileupload_msg').html('<span class=ajx_success_msg>'+data.msg+'</span>');
+							setTimeout('timerfadeout()', 3000);
+							// Again loading existing files with new files
+							$('#jv-tab-3').block({
+								message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+								css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+							});
+							$.get(
+								site_base_url+'ajax/request/get_project_files/' + curr_job_id +'/'+ ffid,
+								{},
+								function(data) {
+									$('#list_file').html(data);
+									$('#jv-tab-3').unblock();
+									$('#list_file_tbl').dataTable({
+										"iDisplayLength": 10,
+										"sPaginationType": "full_numbers",
+										"bInfo": true,
+										"bPaginate": true,
+										"bProcessing": true,
+										"bServerSide": false,
+										"bLengthChange": true,
+										"bSort": true,
+										"bFilter": false,
+										"bAutoWidth": false,
+										"bDestroy": true,
+										"aoColumnDefs": [
+											{ 'bSortable': false, 'aTargets': [ 0,6 ] }
+										 ]
+									});
+									$.unblockUI();
+								}
+							);
+							return false;
 						}
 					}
 				}
+			},
+			error: function (data, status, e)
+			{
+				alert('Sorry, the upload failed due to an error!');
+				$('#'+_uid).hide('slow').remove();
+				if (window.console)
+				{
+					console.log('ajax error\n' + e + '\n' + data + '\n' + status);
+					for (i in e) {
+					  console.log(e[i]);
+					}
+				}
 			}
-		);
+		});
 		$('#ajax_file_uploader').val('');
 		return false;
 	}
-
-	function ajaxDeleteFile(path, el) 
+	
+	/* function ajaxDeleteFile(path, el)
 	{
 		if (window.confirm('Are you sure you want to delete this file?')) 
 		{
@@ -652,7 +670,7 @@
 				}
 			);
 		}
-	}
+	} */
 
 	function addURLtoJob() 
 	{
@@ -1197,7 +1215,7 @@
 		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
 		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date').datepicker({
 			dateFormat: 'dd-mm-yy', 
-			minDate: '0',
+			//minDate: '0',
 			beforeShow : function(input, inst) {
 				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 			}
@@ -1238,6 +1256,10 @@
 					// populateJobOverview();
 					$('.payment-received-mini-view1').hide();
 				}
+				if (ui.newPanel[0].id=='jv-tab-3') {
+					loadExistingFiles($('#filefolder_id').val());
+					showBreadCrumbs($('#filefolder_id').val());
+				}
 			}
 		});
 
@@ -1247,6 +1269,42 @@
 				return false;
 			});
 		});
+	
+	//function for getting the files based on ID
+	function loadExistingFiles(ffolder_id) {
+		$('#jv-tab-3').block({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.get(
+			site_base_url+'ajax/request/get_project_files/'+curr_job_id+'/'+ffolder_id,
+			{},
+			function(data) {
+				$('#list_file').html(data);
+				$('#jv-tab-3').unblock();
+				$('#list_file_tbl').dataTable({
+					"iDisplayLength": 10,
+					"sPaginationType": "full_numbers",
+					"bInfo": true,
+					"bPaginate": true,
+					"bProcessing": true,
+					"bServerSide": false,
+					"bLengthChange": true,
+					"bSort": true,
+					"bFilter": false,
+					"bAutoWidth": false,
+					"bDestroy": true,
+					"aoColumnDefs": [
+						{ 'bSortable': false, 'aTargets': [ 0,6 ] }
+					 ]
+				});
+				$.unblockUI();
+			}
+		);
+		return false;
+	}
+	
+
 
 		/* try {
 			var sb_ol = $('.status-bar').offset().left;
@@ -1723,7 +1781,7 @@
 			$('#errmsg_rag_status').fadeOut();
 			$('#errmsg_bill_type').fadeOut();
 			$('#resmsg_practice').empty();
-			$('#resmsg_projecttitle').empty();
+			$('.succ_err_msg').empty();
 		}
 
 		function paymentReceivedEdit(pdid) 
