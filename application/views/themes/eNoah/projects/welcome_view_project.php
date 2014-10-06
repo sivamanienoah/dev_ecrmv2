@@ -1,49 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
-<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
-<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
-<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
-<script type="text/javascript">var this_is_home = true;</script>
-<script src="assets/js/chosen.jquery.js" type="text/javascript"></script>
-<script type="text/javascript"> 
-</script>
-
-<!--Code Added for the Pagination in Comments Section -- Starts Here-->
-<script type="text/javascript">
-
-  var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
-  var project_code            = "<?php echo isset($quote_data['pjt_id']) ? $quote_data['pjt_id'] : 0 ?>";
-  var expect_worth_id         = "<?php echo isset($quote_data['expect_worth_id']) ? $quote_data['expect_worth_id'] : 1 ?>";
-  var project_view_quotation  = "<?php echo $view_quotation; ?>";
-  var project_user_id         = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : 0 ?>";
-  var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>";
-  var project_job_status      = "<?php echo (isset($quote_data['lead_stage'])) ? $quote_data['lead_stage'] : 0 ?>";
-  var project_request_url     = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
-  var project_assigned_to     = "<?php echo $quote_data['assigned_to']; ?>";
-  var project_userdata    	  = "<?php echo $userdata; ?>";
-  var project_complete_status = "<?php echo isset($quote_data['complete_status']) ? $quote_data['complete_status'] : 0 ?>";
-  var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
-  var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
-  
-  $(function(){
-		var config = {
-			'.chzn-select'           : {},
-			'.chzn-select-deselect'  : {allow_single_deselect:true},
-			'.chzn-select-no-single' : {disable_search_threshold:10},
-			'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
-			'.chzn-select-width'     : {width:"95%"}
-		}
-		for (var selector in config) {
-			$(selector).chosen(config[selector]);
-		}
-  });
-
-</script>
-<script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
-<script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
 
 <?php
 $this->load->helper('custom_helper');
@@ -229,7 +186,7 @@ if (get_default_currency()) {
 					<div class="buttons">
 						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="updateTitle(); return false;">Set</button>
 					</div>
-					<div id="resmsg_projecttitle" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+					<div id="resmsg_projecttitle" class='succ_err_msg' style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
 				<?php } ?>
 				</div>
 			</form>
@@ -372,7 +329,7 @@ if (get_default_currency()) {
 			</div>
 			
 			<!--List the project assigned members from the timesheet-->
-			<h6 class="pull-left" style="width: 115px; padding-top:8px;">Project Team Members</h6>
+			<h6 class="pull-left" style="width: 130px; padding-top:8px;">Project Team Members</h6>
 			<div class="team_list">
 				<?php
 					if(count($timesheetAssignedUsers)>0) {
@@ -762,47 +719,159 @@ if (get_default_currency()) {
 	</div><!-- id: jv-tab-2 end -->
 			
 	<div id="jv-tab-3">
-		<form name="ajax_file_upload">
+	
+		<?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
 		
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-			<div id="upload-container">
-				<img src="assets/img/select_file.jpg" alt="Browse" id="upload-decoy" />
-				<input type="file" class="textfield" id="ajax_file_uploader" name="ajax_file_uploader" onchange="return runAjaxFileUpload();" size="1" />
+		<div id="file_breadcrumb"></div>
+		<div>
+		<div class="pull-left pad-right">
+			<form id="file_search">
+				<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
+				<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
+			</form>
+		</div>
+		<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+		<div class="pull-left pad-right">
+			<form name="ajax_file_upload" class="pull-left pad-right">
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div id="upload-container">
+					<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
+					<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
+					<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+				</div>
+			</form>
+			<div class="pull-left pad-right">
+				<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folder.png" class="icon-width" alt="Add Folder" ></a>
 			</div>
-			<ul id="job-file-list">
-			<?php echo $job_files_html ?>
-			</ul>
-		</form>
+			<div class="pull-left pad-right">
+				<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
+			</div>
+		</div>
+		<?php } ?>
+		<div class='clrboth'></div>
+		</div>	
+
+		<div id='fileupload_msg' class='succ_err_msg'></div>
+		<div id="list_file"></div>
 		
-	</div><!-- id: jv-tab-3 end -->
+		<form id="move-file" onsubmit="return false;">
+			<!-- edit file -->
+			<div id='mf_successerrmsg' class='succ_err_msg'></div>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="4"><div id='mf_name'></div></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type='hidden' name='mlead_id' id='mlead_id' value=''>
+						<input type='hidden' name='mfile_id' id='mfile_id' value=''>
+						<input type='hidden' name='mfparent_id' id='mfparent_id' value=''>
+						<input type='hidden' name='mffiletype' id='mffiletype' value=''>
+						<input type='hidden' name='mffilename' id='mffilename' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80">Move to</td>
+					<td colspan="3">
+						<select name='move_destiny' id="file_tree">
+							<option value=''>Select</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="buttons"><button type="submit" class="positive" onclick="move_files();">Move</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
+			</table>
+		<!-- edit end -->
+		</form>
+		<form id="create-folder" onsubmit="return false;">
+			<!-- edit file -->
+			<div id='af_successerrmsg' class='succ_err_msg'></div>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="2"><div id='af_name'><strong><h3>Create Folder</h3></strong></div></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type='hidden' name='aflead_id' id='aflead_id' value=''>
+						<input type='hidden' name='afparent_id' id='afparent_id' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80"><label>Parent</label></td>
+					<td>
+						<select name='add_destiny' id="add_file_tree">
+							<option value=''>Select</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80"><label>New Folder</label></td>
+					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
+			</table>
+		<!-- edit end -->
+		</form>
+		<form id="moveallfile" onsubmit="return false;">
+			<!-- edit file -->
+			<div id='all_mf_successerrmsg' class='succ_err_msg'></div>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="4"><strong><h3>Move</h3></strong></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type='hidden' name='mall_lead_id' id='mall_lead_id' value=''>
+						<input type='hidden' name='mov_folder' id='mov_folder' value=''>
+						<input type='hidden' name='mov_file' id='mov_file' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80">Move to</td>
+					<td colspan="3">
+						<select name='move_destiny' id="file_tree_all">
+							<option value=''>Select</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="buttons"><button type="submit" class="positive" onclick="move_all_files();">Move</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
+			</table>
+		<!-- edit end -->
+		</form>
+	</div><!--id: jv-tab-3 end -->
 			
 	<div id="jv-tab-4">
 		<form id="set-job-task" onsubmit="return false;">
 		
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
 			<h3>Tasks</h3>
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
-				<tr>
-					<td colspan="4">
-						<strong>All fields are required!</strong>
-					</td>
-				</tr>
-				
-				<tr>
-					<td valign="top">
-						<br /><br />Task
-					</td>
+				<tr><td colspan="4"><strong>All fields are required!</strong></td></tr>
+				<tr><td valign="top"><br /><br />Task</td>
 					<td colspan="3">
 						<strong><span id="task-desc-countdown">240</span></strong> characters left.<br />
 						<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						Allocate to
-					</td>
+					<td>Allocate to</td>
 					<td>
 						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select" style="width:140px;">
 							<?php
@@ -1406,4 +1475,47 @@ if (get_default_currency()) {
    display: none;
 }
 </style>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
+<script type="text/javascript" src="assets/js/crm.js?q=13"></script>
+<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
+<script type="text/javascript">var this_is_home = true;</script>
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
+<script type="text/javascript" src="assets/js/jquery.screwdefaultbuttonsV2.js"></script>
+
+
+<!--Code Added for the Pagination in Comments Section -- Starts Here-->
+<script type="text/javascript">
+  var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
+  var project_code            = "<?php echo isset($quote_data['pjt_id']) ? $quote_data['pjt_id'] : 0 ?>";
+  var expect_worth_id         = "<?php echo isset($quote_data['expect_worth_id']) ? $quote_data['expect_worth_id'] : 1 ?>";
+  var project_view_quotation  = "<?php echo $view_quotation; ?>";
+  var project_user_id         = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : 0 ?>";
+  var project_job_title		  = "<?php echo str_replace("'", "\'", $quote_data['lead_title']) ?>";
+  var project_job_status      = "<?php echo (isset($quote_data['lead_stage'])) ? $quote_data['lead_stage'] : 0 ?>";
+  var project_request_url     = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
+  var project_assigned_to     = "<?php echo $quote_data['assigned_to']; ?>";
+  var project_userdata    	  = "<?php echo $userdata; ?>";
+  var project_complete_status = "<?php echo isset($quote_data['complete_status']) ? $quote_data['complete_status'] : 0 ?>";
+  var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
+  var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
+  
+  $(function(){
+		var config = {
+			'.chzn-select'           : {},
+			'.chzn-select-deselect'  : {allow_single_deselect:true},
+			'.chzn-select-no-single' : {disable_search_threshold:10},
+			'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+			'.chzn-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+  });
+</script>
+
+<script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
+<script type="text/javascript" src="assets/js/request/request.js"></script>
+
 <?php require (theme_url().'/tpl/footer.php'); ?>

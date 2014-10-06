@@ -11,6 +11,7 @@ class Project extends crm_controller {
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('project_model');
+		$this->load->model('request_model');
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
 		$this->load->model('email_template_model');
@@ -161,8 +162,7 @@ class Project extends crm_controller {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
 			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
-			
-			// $data['assigned_contractors']   = array();
+
 			$data['timesheetProjectType']   = array();
 			$data['timesheetProjectLead']   = array();
 			$data['timesheetAssignedUsers'] = array();
@@ -236,8 +236,16 @@ class Project extends crm_controller {
 			 */
 			$fcpath = UPLOAD_PATH; 
 		    $f_dir = $fcpath . 'files/' . $id . '/'; 
-			$data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
-
+			// $data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
+			$get_parent_folder_id = $this->request_model->getParentFfolderId($id,$parent=0);
+			
+			if(!empty($get_parent_folder_id)){
+				$data['parent_ffolder_id'] = $get_parent_folder_id['folder_id'];
+			} else {
+				$ins = array('lead_id'=>$id,'folder_name'=>$id,'parent'=>0,'created_by'=>$this->userdata['userid']);
+				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
+			}
+			
 			/**
 			 * Get the URLs associated with this job
 			 */
@@ -1814,8 +1822,6 @@ class Project extends crm_controller {
 	function pjt_add_log()
 	{
 		$data_log = real_escape_array($this->input->post());
-		
-		// echo "<pre>"; print_r($data_log); exit;
 		
 		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
 		$ins['log_content'] = str_replace('\n', "", $data_log['log_content']);

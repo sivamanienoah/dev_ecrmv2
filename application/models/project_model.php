@@ -229,7 +229,7 @@ class Project_model extends crm_model
 		$results = $this->db->get();
         return $results->result_array();
     }
-	
+
 	//get the project assigned members
 	/* function get_contract_jobs($id) 
 	{
@@ -238,7 +238,7 @@ class Project_model extends crm_model
 		return $cq->result_array();
     } */
 	
-	public function get_job_files($f_dir, $fcpath, $lead_details)
+	/* public function get_job_files($f_dir, $fcpath, $lead_details)
     {
 		$userdata = $this->session->userdata('logged_in_user'); 
         $data['job_files_html'] = '';
@@ -251,19 +251,17 @@ class Project_model extends crm_model
                 foreach ($job_files as $jf)
                 {
                     $data['job_files_html'] .= '<li>';
-                     if ( $userdata['role_id'] == 1 || $lead_details['belong_to'] == $userdata['userid'] || $lead_details['lead_assign'] == $userdata['userid'] || $lead_details['assigned_to'] == $userdata['userid'] )  {  
+					if ( $userdata['role_id'] == 1 || $lead_details['belong_to'] == $userdata['userid'] || $lead_details['lead_assign'] == $userdata['userid'] || $lead_details['assigned_to'] == $userdata['userid'] ) {  
                         $data['job_files_html'] .= '<a href="#" onclick="ajaxDeleteFile(\'/' . str_replace($fcpath, '', $jf) . '\', this); return false;" class="file-delete">delete file</a>';
-						}
+					}
 						
                     $fz = filesize($jf);
                     $kb = 1024;
                     $mb = 1024 * $kb;
-                    if ($fz > $mb)
-                    {
+                    if ($fz > $mb) {
                       $out = round($fz/$mb, 2);
                       $out .= 'Mb';
-                    }
-                    else if ($fz > $kb) {
+                    } else if ($fz > $kb) {
                       $out = round($fz/$kb, 2);
                       $out .= 'Kb';
                     } else {
@@ -276,7 +274,7 @@ class Project_model extends crm_model
             }
         }
         return $data['job_files_html'];
-    }
+    } */
 	
 	//get the job url
 	public function get_job_urls($lead_id)

@@ -70,7 +70,7 @@ class Create_new_user extends crm_controller
 				if(!in_array($eusers['email'],$crm_email)) {
 					//insert into crm db
 					$data = array(
-					   'role_id' => 7,
+					   'role_id' => 8,
 					   'first_name' => $eusers['first_name'],
 					   'last_name' => $eusers['last_name'],
 					   'username' => $eusers['username'],
@@ -93,9 +93,8 @@ class Create_new_user extends crm_controller
 					//econnect user cannot be created. Email already exist.
 					$user_failed[] = $eusers['EmpID'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 				}
-				
 			} else {
-				if($eusers['email'] != $res['email']) {
+				if(strtolower($eusers['email']) != $res['email']) {
 					//econnect user cannot be created. username already exists.
 					$user_failed[] = $eusers['EmpID'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
 				}
@@ -124,7 +123,7 @@ class Create_new_user extends crm_controller
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_list'=>$user_list);
 
 			$param['to_mail'] 		  = $to;
-			// $param['cc_mail'] 		  = 'ssriram@enoahisolution.com';
+			$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'New User List from eConnect';
@@ -153,7 +152,7 @@ class Create_new_user extends crm_controller
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_list'=>$user_lists);
 
 			$param['to_mail'] 		  = $to;
-			// $param['cc_mail'] 		  = 'ssriram@enoahisolution.com';
+			$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'Failed User List from eConnect';

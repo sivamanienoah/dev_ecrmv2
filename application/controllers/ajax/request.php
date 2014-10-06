@@ -9,7 +9,9 @@ class Request extends crm_controller {
 	{
 		parent::__construct();
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->load->model('request_model');
 		$this->load->model('email_template_model');
+		$this->load->library('upload');
 	}
     
     function index()
@@ -63,117 +65,98 @@ class Request extends crm_controller {
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
-	public function file_upload($lead_id, $date, $upby, $type = 'job')
-	{	
-		//echo UPLOAD_PATH .'application/'. $lead_id; exit;
-		/**
-		$lead_id = $this->input->post('lead_id');
-		$date = $this->input->post('date');
-		$upby = $this->input->post('userid');
-		 * we need to know errors
-		 * not the stupid ilisys restricted open_base_dir errors
-		 */
-		//error_reporting(E_ERROR);
+	public function file_upload($lead_id, $filefolder_id)
+	{
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['ajax_file_uploader']['name']);
 		
-		$json['error'] = '';
-		$json['msg'] = '';
-		
+		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
+
+		//creating files folder name
 		$f_dir = UPLOAD_PATH.'files/';
-		
-		if (!is_dir($f_dir))
-		{
+		if (!is_dir($f_dir)) {
 			mkdir($f_dir);
 			chmod($f_dir, 0777);
 		}
 		
+		//creating lead_id folder name
 		$f_dir = $f_dir.$lead_id;
-		
-		if (!is_dir($f_dir))
-		{
+		if (!is_dir($f_dir)) {
 			mkdir($f_dir);
 			chmod($f_dir, 0777);
 		}
 		
-		
-		if (isset($_FILES['ajax_file_uploader']) && is_uploaded_file($_FILES['ajax_file_uploader']['tmp_name']))
-		{
-			$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['ajax_file_uploader']['name']);
-			
-			if (preg_match('/\.(php|js|exe)+$/', $f_name, $matches)) // basic sanity
-			{
+		$this->upload->initialize(array(
+		   "upload_path" => $f_dir,
+		   "overwrite" => FALSE,
+		   "remove_spaces" => TRUE,
+		   "max_size" => 204800,
+		   "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		)); 
+		$returnUpload = array();
+		$json  = array();
+		if(!empty($_FILES['ajax_file_uploader']['name'][0])) {
+			if ($this->upload->do_multi_upload("ajax_file_uploader")) { 
+			   $returnUpload  = $this->upload->get_multi_upload_data();
+			   $json['error'] = FALSE;
+			   $json['msg']   = "File successfully uploaded!";
+			   $i = 1;
+			   if(!empty($returnUpload)) {
+				  foreach($returnUpload as $file_up) {
+					$lead_files['lead_files_name']		 = $file_up['file_name'];
+					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+					$lead_files['lead_id'] 				 = $lead_id;
+					$lead_files['folder_id'] 			 = $filefolder_id; //get here folder id from file_management table.
+					$insert_file						 = $this->request_model->insert_row('lead_files', $lead_files);
+					
+					$logs['jobid_fk']	   = $lead_id;
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $file_up['file_name'].' is added.';
+					$logs['attached_docs'] = $file_up['file_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+					$i++;
+				  }
+			   }
+			} else {
+				$this->upload_error = strip_tags($this->upload->display_errors());
 				$json['error'] = TRUE;
-				$json['msg'] = "You uploaded a file type that is not allowed!\nYour file extension : {$matches[1]}";
-			}
-			else // good to go
-			{
-				// full path
-				$full_path = $f_dir . '/' . $f_name;
-				if (is_file($full_path))
-				{
-					$f_name = time() . $f_name;
-					$full_path = $f_dir . '/' . $f_name;
-				}
-				
-				move_uploaded_file($_FILES['ajax_file_uploader']['tmp_name'], $full_path);
-				
-				$fz = filesize($full_path);
-				$kb = 1024;
-				$mb = 1024 * $kb;
-				if ($fz > $mb)
-				{
-				  $out = round($fz/$mb, 2);
-				  $out .= 'Mb';
-				}
-				else if ($fz > $kb) {
-				  $out = round($fz/$kb, 2);
-				  $out .= 'Kb';
-				} else {
-				  $out = $fz . ' Bytes';
-				}
-				
-				$json['error'] = FALSE;
-			
-				
-				$json['msg'] = "File successfully uploaded!";
-				$json['file_name'] = $f_name;
-				$json['file_size'] = $out;
-				$json['date'] = $date;
-				
-			
+				$json['msg']   = $this->upload_error;
+				// return $this->upload_error;						
+				// exit;
 			}
 		}
-		else
-		{
-			$json['error'] = serialize($_FILES);
-		}
-		
-		echo json_encode($json);
-		
+		echo json_encode($json); exit;
 	}
 	
 	/**
 	 * Deletes a file based on a Ajax post request
 	 */
-	public function file_delete()
-	{
-		$userdata = $this->session->userdata('logged_in_user');
-	$userid = $userdata['userid']; 
-	$ex = explode('/',urldecode($_POST['file_path'])); 
+	public function file_delete() {
+		$f_data = real_escape_array($this->input->post());
+		
+		$fcpath = UPLOAD_PATH; 
+		$f_dir = $fcpath . 'files/' . $f_data['job_id'] . '/' . $f_data['f_name'];
 	
-	$lead_id = $ex[2]; 
-	$filename = $ex[3]; //filename
-		if (isset($_POST['file_path']))
+		if (isset($f_dir))
 		{
-			 $path = UPLOAD_PATH.urldecode($_POST['file_path']); 
-			if (is_file($path))
+			if (is_file($f_dir))
 			{
-				if (@unlink($path))
+				if (@unlink($f_dir))
 				{
-				    
-					$json['error'] = FALSE;
-					$logs = "INSERT INTO ".$this->cfg['dbpref']."logs (jobid_fk,userid_fk,date_created,log_content,attached_docs) 
-					VALUES('".$lead_id."','".$userid."','".date('Y-m-d H:i:s')."','".$filename." is deleted.' ,'".$filename."')"; 		
-					$qlogs = $this->db->query($logs);
+					$wh_condn = array('file_id' => $f_data['file_id'], 'lead_id' => $f_data['job_id']);
+					$del_file = $this->request_model->delete_row('lead_files', $wh_condn);
+					
+					$logs['jobid_fk']	   = $f_data['job_id'];
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $f_data['f_name'].' is deleted.';
+					$logs['attached_docs'] = $f_data['f_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+					$json['error'] 		   = FALSE;
+					$json['fparent_id']    = $f_data['fparent_id'];
 				}
 				else
 				{
@@ -190,6 +173,463 @@ class Request extends crm_controller {
 			$json['error'] = TRUE;
 		}
 		echo json_encode($json);
+	}
+	
+	/**
+	 * Deletes a file based on a Ajax post request
+	 */
+	public function folder_delete() {
+		$f_data = real_escape_array($this->input->post());
+			
+		// check first in file management table - whether it contains child folder
+		// if not then check the folder whether it contains files.
+		
+		$fm_condn            = array('lead_id'=>$f_data['lead_id'],'parent'=>$f_data['folder_id']);
+		$folder_check_status = $this->request_model->checkStatus('file_management', $fm_condn);
+		
+		if($folder_check_status) {
+			$lf_condn          = array('lead_id'=>$f_data['lead_id'],'folder_id'=>$f_data['folder_id']);
+			$file_check_status = $this->request_model->checkStatus('lead_files', $lf_condn);
+			if($file_check_status) {
+				//Deleting the folder
+				$del_condn = array('lead_id'=>$f_data['lead_id'],'folder_id'=>$f_data['folder_id']);
+				$del_file  = $this->request_model->delete_row('file_management', $del_condn);
+				if($del_file) {
+					$logs['jobid_fk']	   = $f_data['lead_id'];
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $f_data['folder_name'].' folder is deleted.';
+					$logs['attached_docs'] = $f_data['folder_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+				
+					$json['error'] 	    = FALSE;
+					$json['fparent_id'] = $f_data['fparent_id'];
+					$json['msg']   		= "Folder Deleted.";
+				} else {
+					$json['error'] 	    = TRUE;
+					$json['msg']   		= "Error in Deletion.";
+				}
+			} else {
+				$json['error'] = TRUE;
+				$json['msg']   = "This Folder contains documents. This cannot be Deleted.";
+			}
+		} else {
+			$json['error'] = TRUE;
+			$json['msg']   = "This Folder contains child folder (or) documents. This cannot be Deleted.";
+		}
+		echo json_encode($json);
+	}
+	
+	/**
+	 * @method get_project_files()
+	 * @param $job_id
+	 */
+	public function get_project_files($job_id, $fparent_id=0) {
+	
+		$userdata = $this->session->userdata('logged_in_user');
+		$this->load->helper('file');
+
+		//intial step - Showing 1st child folders and root files
+		$get_parent_data = $this->request_model->getParentData($job_id, $fparent_id);
+		
+		$fcpath = UPLOAD_PATH; 
+		$f_dir = $fcpath . 'files/' . $job_id . '/';
+		
+		$file_array = array();
+		
+		if(!empty($get_parent_data)) {
+			foreach($get_parent_data as $res) {
+				if($res['folder_id'] == $fparent_id) {
+					$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);
+				} else {
+					$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
+				}
+			}
+		}
+		if(!empty($get_files)) {
+			foreach($get_files as $files) {
+				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
+			}
+		}
+		$jobs_files_html = '';
+		
+		if(!empty($file_array)) {
+			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Action</th></tr></thead>';
+			$jobs_files_html .= '<tbody>';
+			foreach($file_array as $fi) {
+				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id) = explode('<=>',$fi);
+					$jobs_files_html .= '<tr>';
+					if($ftype == 'File') {
+						$file_sz = '';
+						$file_info = get_file_info($f_dir.$fname);
+						$kb = 1024;
+						$mb = 1024 * $kb;
+						if ($file_info['size'] > $mb) {
+						  $file_sz = round($file_info['size']/$mb, 2);
+						  $file_sz .= ' Mb';
+						} else if ($file_info['size'] > $kb) {
+						  $file_sz = round($file_info['size']/$kb, 2);
+						  $file_sz .= ' Kb';
+						} else {
+						  $file_sz = $file_info['size'] . ' Bytes';
+						}
+						$file_ext  = end(explode('.',$fname));
+						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=file><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
+						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
+						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
+						$jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
+						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
+						$jobs_files_html .= '<td>'.$file_ext.'</td>';
+						$jobs_files_html .= '<td>'.$file_sz.'</td>';
+						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '<td>'.$f_delete.'</td>';
+					} else {
+						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=folder><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
+						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFolder('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
+						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
+						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
+						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
+						$jobs_files_html .= '<td>'.$ftype.'</td>';
+						$jobs_files_html .= '<td></td>';
+						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '<td>'.$f_delete.'</td>';
+					}
+					$jobs_files_html .= '</tr>';
+			}
+			$jobs_files_html .= '</tbody></table>';
+		}
+		echo $jobs_files_html;
+	}
+	
+	/**
+	 * @method get_file_tree_struct()
+	 * 
+	 */
+	public function get_file_tree_struct() {
+		$data    = real_escape_array($this->input->post());
+		$result  = $this->request_model->get_tree_file_list($data['leadid'],$parentId=0,$counter=0);
+		$res     = array();
+		$res['lead_id'] = $data['leadid'];
+		$res['file_id'] = $data['file_id'];
+		$res['fparent_id'] = $data['fparent_id'];
+		foreach($result as $fid=>$fname){
+			if($fname == $data['leadid']) {
+				$fname = 'root';
+			}
+			if($fid == $data['fparent_id']) {
+				$selected = 'selected=selected';
+			} else {
+				$selected = '';
+			}
+			$res['tree_struture'] .= "<option value='".$fid."' ".$selected.">".$fname."</option>"; 
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	/**
+	 * @method mapfiles()
+	 * @mapping files to another folder
+	 */
+	public function mapfiles() {
+		$mdata = real_escape_array($this->input->post());
+		
+		if($mdata['mffiletype'] == 'file') {
+			$condn = array('file_id' => $mdata['mfile_id'],'lead_id' => $mdata['mlead_id']);
+			$updt  = array('folder_id' => $mdata['move_destiny']);
+			$res   = $this->request_model->update_row('lead_files', $updt, $condn);
+			$err_msg = 'File has not been moved';
+		} else if($mdata['mffiletype'] == 'folder') {
+			if($mdata['mfile_id'] != $mdata['move_destiny']) {
+				$mmf_condn           = array('lead_id'=>$mdata['mlead_id'],'folder_name'=>$mdata['mffilename'],'parent'=>$mdata['move_destiny']);
+				$folder_check_status = $this->request_model->createFolderStatus('file_management', $mmf_condn);
+				if($folder_check_status==0) {
+					$condn = array('folder_id' => $mdata['mfile_id'],'lead_id' => $mdata['mlead_id']);
+					$updt  = array('parent' => $mdata['move_destiny']);
+					$res   = $this->request_model->update_row('file_management', $updt, $condn);
+					$err_msg = 'Folder has not been moved';
+				} else {
+					$res   = FALSE;
+					$err_msg = 'Folder Already exists';
+				}
+			} else {
+				$res   = FALSE;
+				$err_msg = 'Origin & Destiny are the same. Folder cannot be moved';
+			}
+		}
+		if($res){
+			$htm['result'] = TRUE;
+			$htm['mf_msg'] = '<span class="ajx_success_msg"><h5>'.$mdata['mffiletype'].' has been moved</h5></span>';
+		} else {
+			$htm['result'] = FALSE;
+			$htm['mf_msg'] = '<span class="ajx_failure_msg"><h5>'.$err_msg.'</h5></span>';
+		}
+		$htm['mf_reload'] = $mdata['move_destiny'];
+		echo json_encode($htm);
+		exit;
+	}
+	
+	/**
+	 * @method get_folder_tree_struct()
+	 * 
+	 */
+	public function get_folder_tree_struct() {
+		$data    = real_escape_array($this->input->post());
+		$result  = $this->request_model->get_tree_file_list($data['leadid'],$parentId=0,$counter=0);
+		$res     = array();
+		$res['lead_id'] = $data['leadid'];
+		$res['fparent_id'] = $data['fparent_id'];
+		foreach($result as $fid=>$fname){
+			if($fname == $data['leadid']) {
+				$fname = 'root';
+			}
+			if($fid == $data['fparent_id']) {
+				$selected = 'selected=selected';
+			} else {
+				$selected = '';
+			}
+			$res['tree_struture'] .= "<option value='".$fid."' ".$selected.">".$fname."</option>"; 
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	
+	/**
+	 * @method addFolders()
+	 * @mapping files to another folder
+	 */
+	public function addFolders() {
+		$af_data = real_escape_array($this->input->post());
+		
+		$af_condn            = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
+		$folder_check_status = $this->request_model->createFolderStatus('file_management', $af_condn);
+		if($folder_check_status==0){
+			$add_data = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny'],'created_by'=>$this->userdata['userid'],'created_on'=>date('Y-m-d H:i:s'));
+			$res_insert = $this->request_model->insert_row('file_management', $add_data);
+			if(!$res_insert) {
+				$err_msg = 'Folder cannot be added.';
+			}
+		} else {
+			$res_insert = FALSE;
+			$err_msg = "Folder Name already exists.";
+		}
+		
+		if($res_insert){
+			$log_contents  = array('jobid_fk'=>$af_data['aflead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$af_data['new_folder'].' folder is Added.','attached_docs'=>$af_data['new_folder']);
+			$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
+			$htm['af_msg'] = '<span class="ajx_success_msg"><h5>'.$af_data['new_folder'].' has been Added</h5></span>';
+		} else {
+			$htm['af_msg'] = '<span class="ajx_failure_msg"><h5>'.$err_msg.'</h5></span>';
+		}
+		$htm['af_reload'] = $af_data['afparent_id'];
+		echo json_encode($htm);
+		exit;
+	}
+	
+	
+	/**
+	 * @method searchFile()
+	 * @searching files & folder
+	 */
+	public function searchFile() {
+		$sf_data = real_escape_array($this->input->post());
+		
+		$job_id = $sf_data['lead_id'];
+
+		$userdata = $this->session->userdata('logged_in_user');
+		$this->load->helper('file');
+
+		//intial step - Showing 1st child folders and root files
+		$get_parent_data = $this->request_model->search_folder($job_id, $sf_data['search_input']);
+		
+		$fcpath = UPLOAD_PATH; 
+		$f_dir = $fcpath . 'files/' . $job_id . '/';
+		
+		$file_array = array();
+		
+		if(!empty($get_parent_data)) {
+			foreach($get_parent_data as $res) {
+				$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
+			}
+		}
+		$get_files = $this->request_model->search_file($job_id, $sf_data['search_input']);
+		if(!empty($get_files)) {
+			foreach($get_files as $files) {
+				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
+			}
+		}
+		
+		$jobs_files_html = '';
+		
+		if(!empty($file_array)) {
+			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Action</th></tr></thead>';
+			$jobs_files_html .= '<tbody>';
+			foreach($file_array as $fi) {
+				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id) = explode('<=>',$fi);
+					$jobs_files_html .= '<tr>';
+					if($ftype == 'File') {
+						$file_sz = '';
+						$file_info = get_file_info($f_dir.$fname);
+						$kb = 1024;
+						$mb = 1024 * $kb;
+						if ($file_info['size'] > $mb) {
+						  $file_sz = round($file_info['size']/$mb, 2);
+						  $file_sz .= ' Mb';
+						} else if ($file_info['size'] > $kb) {
+						  $file_sz = round($file_info['size']/$kb, 2);
+						  $file_sz .= ' Kb';
+						} else {
+						  $file_sz = $file_info['size'] . ' Bytes';
+						}
+						$file_ext  = end(explode('.',$fname));
+						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=file><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
+						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
+						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
+						$jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
+						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
+						$jobs_files_html .= '<td>'.$file_ext.'</td>';
+						$jobs_files_html .= '<td>'.$file_sz.'</td>';
+						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '<td>'.$f_delete.'</td>';
+					} else {
+						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=folder><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
+						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFolder('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
+						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
+						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
+						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
+						$jobs_files_html .= '<td>'.$ftype.'</td>';
+						$jobs_files_html .= '<td></td>';
+						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '<td>'.$f_delete.'</td>';
+					}
+					$jobs_files_html .= '</tr>';
+			}
+			$jobs_files_html .= '</tbody></table>';
+		}
+		echo $jobs_files_html;
+	}
+
+	/**
+	 * @method get_file_tree_struct()
+	 * 
+	 */
+	public function get_moveall_file_tree_struct() {
+		$data    = real_escape_array($this->input->post());
+
+		$mvfolder = array();
+		
+		if(!empty($data['mv_folder'])) {
+			$mv_folder = rtrim($data['mv_folder'], ",");
+			$mvfolder = explode(',', $mv_folder);
+		}
+		
+		// $result  = $this->request_model->get_tree_file_list($data['curr_job_id'],$parentId=0,$counter=0);
+		$result  = $this->request_model->get_tree_file_list_omit($data['curr_job_id'],$parentId=0,$counter=0,$mvfolder);
+		
+		$res     = '';
+		$res['lead_id'] = $data['curr_job_id'];
+		foreach($result as $fid=>$fname){
+			if($fname == $data['curr_job_id']) {
+				$fname = 'Project Folder';
+			}
+			$res['tree_struture'] .= "<option value='".$fid."'>".$fname."</option>";
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	/**
+	 * @method mapallfiles()
+	 * @mapping multiple files to another folder
+	 */
+	public function mapallfiles() {
+		$madata = real_escape_array($this->input->post());
+		
+		$mov_folder = array();
+		$mov_file   = array();
+		if(!empty($madata['mov_folder'])) {
+			$mov_folder = rtrim($madata['mov_folder'], ",");
+			$mov_folder = explode(',', $mov_folder);
+		}
+		if(!empty($madata['mov_file'])) {
+			$mov_file = rtrim($madata['mov_file'], ",");
+			$mov_file = explode(',', $mov_file);
+		}
+		if(!empty($mov_folder)) {
+			$html['res_folder'] = FALSE;
+			foreach($mov_folder as $mv_fo) {
+				$condn 		= array('folder_id' => $mv_fo, 'lead_id' => $madata['mall_lead_id']);
+				$updt  		= array('parent' => $madata['move_destiny']);
+				$res_folder = $this->request_model->update_row('file_management', $updt, $condn);
+				//insert_log
+				if($res_folder){
+					$get_info = $this->request_model->getInfo($madata['mall_lead_id'], $mv_fo);
+					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['folder_name'].' folder has been moved.','attached_docs'=>$af_data['new_folder']);
+					$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
+				}
+			}
+			$html['res_folder'] = TRUE;
+		} else {
+			$html['res_folder'] = TRUE;
+		}
+		if(!empty($mov_file)) {
+			$html['res_file'] = FALSE;
+			foreach($mov_file as $mv_fi) {
+				$condn = array('file_id' => $mv_fi,'lead_id' => $madata['mall_lead_id']);
+				$updt  = array('folder_id' => $madata['move_destiny']);
+				$res_file   = $this->request_model->update_row('lead_files', $updt, $condn);
+				//insert_log
+				if($res_file){
+					$get_info = $this->request_model->getFilesInfo($madata['mall_lead_id'], $mv_fi);
+					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['lead_files_name'].' file has been moved.','attached_docs'=>$af_data['new_folder']);
+					$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
+				}
+			}
+			$html['res_file'] = TRUE;
+		} else {
+			$html['res_file'] = TRUE;
+		}
+		if(($html['res_file']==TRUE) && ($html['res_folder']==TRUE)) {
+			$htm['result'] = TRUE;
+			$htm['mf_msg'] = '<span class="ajx_success_msg"><h5>Moved Successfully.</h5></span>';
+		} else {
+			$htm['mf_msg'] = '<span class="ajx_failure_msg"><h5>Error in File or Folder movement.</h5></span>';
+		}
+		$htm['mf_reload'] = $madata['move_destiny'];
+		echo json_encode($htm);
+		exit;
+	}
+	
+	/*
+	*Multi delete file&folder function need to be create.
+	*/
+	
+	/*
+	*@method getBreadCrumbs
+	*/
+	function getBreadCrumbs($leadid, $parent, $res) {
+		$data = $this->request_model->getBreadCrumbDet($leadid, $parent);
+		foreach($data as $rec) {
+			$res[$rec['folder_id']] = $rec['folder_name'];
+			$parent_id = $rec['parent'];
+			if( $parent_id !=0 ) {
+				$this->getBreadCrumbs($leadid, $parent_id, $res);
+			} else {
+				$bc = '';
+				$res = array_reverse($res, true);
+				foreach($res as $fid=>$fnm) {
+					if($fnm == $leadid) {
+						$fnm = 'Root';
+					}
+					if($bc!='') {
+						$bc.=' >> ';
+					}
+					$bc.='<a href="javascript:void(0)" onclick="getFolderdata('.$fid.'); return false;">'.$fnm.'</a>';
+				}
+				echo $bc; exit;
+			}
+		}
 	}
 	
 	/**
@@ -368,7 +808,7 @@ HDOC;
 	 * Edits a task
 	 * Adds a random task for a user
 	 */
-function add_job_task($update = 'NO', $random = 'NO')
+	function add_job_task($update = 'NO', $random = 'NO')
 	{	
 		$this->load->model('user_model');
 		$this->load->library('email');
@@ -681,7 +1121,7 @@ function add_job_task($update = 'NO', $random = 'NO')
 	 * Get tasks for a given job
 	 */
 
-	 function get_job_tasks($lead_id)
+	function get_job_tasks($lead_id)
 	{	
 		$uidd = $this->session->userdata['logged_in_user'];
 		$uid = $uidd['userid'];
@@ -1058,7 +1498,7 @@ EOD;
 					$this->email_template_model->sent_email($param);
 					
 					$json['set_complete'] = TRUE;
-					$json['error'] = FALSE;
+					$json['error']        = FALSE;
 				}
 			}
 			else if (isset($_POST['delete_task']))
@@ -1557,11 +1997,11 @@ EOD;
 					
 					$insert_id = $this->db->insert_id();
 			
-			$json['replay_id'] = $insert_id;				
-			$json['up_date'] = date('d-m-Y');
+			$json['replay_id']  = $insert_id;				
+			$json['up_date']    = date('d-m-Y');
 			$json['lead_query'] = str_replace('\\', '', $lead_query);
-			$json['firstname'] = $user[0]['first_name'];
-			$json['lastname'] = $user[0]['last_name'];
+			$json['firstname']  = $user[0]['first_name'];
+			$json['lastname']   = $user[0]['last_name'];
 			
 			
 		}
