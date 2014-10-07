@@ -730,24 +730,28 @@ if (get_default_currency()) {
 				<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
 			</form>
 		</div>
-		<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+		
 		<div class="pull-left pad-right">
 			<form name="ajax_file_upload" class="pull-left pad-right">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div id="upload-container">
-					<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
 					<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
-					<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+					<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+						<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
+						<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+					<?php } ?>
 				</div>
 			</form>
+			<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 			<div class="pull-left pad-right">
 				<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folder.png" class="icon-width" alt="Add Folder" ></a>
 			</div>
 			<div class="pull-left pad-right">
 				<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
 			</div>
+			<?php } ?>
 		</div>
-		<?php } ?>
+		
 		<div class='clrboth'></div>
 		</div>	
 
