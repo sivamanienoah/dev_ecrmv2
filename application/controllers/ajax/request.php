@@ -69,6 +69,8 @@ class Request extends crm_controller {
 	{
 		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['ajax_file_uploader']['name']);
 		
+		// echo "<pre>"; print_r($_FILES); exit;
+		
 		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
 
 		//creating files folder name
@@ -90,8 +92,11 @@ class Request extends crm_controller {
 		   "overwrite" => FALSE,
 		   "remove_spaces" => TRUE,
 		   "max_size" => 204800,
-		   "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		   "allowed_types" => "*"
 		)); 
+		// $config['allowed_types'] = '*';
+		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		
 		$returnUpload = array();
 		$json  = array();
 		if(!empty($_FILES['ajax_file_uploader']['name'][0])) {
