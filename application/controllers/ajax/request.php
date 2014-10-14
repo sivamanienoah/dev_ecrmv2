@@ -91,7 +91,7 @@ class Request extends crm_controller {
 		   "upload_path" => $f_dir,
 		   "overwrite" => FALSE,
 		   "remove_spaces" => TRUE,
-		   "max_size" => 204800,
+		   "max_size" => 51000000,
 		   "allowed_types" => "*"
 		)); 
 		// $config['allowed_types'] = '*';
