@@ -439,7 +439,7 @@
 							$resMb = 0;
 					for($mb=0; $mb<count($_FILES[$field]["name"]); $mb++){
 					    $resMb  =  $resMb + $_FILES[$field]["size"][$mb];
-						if($resMb>10485760)
+						if($resMb>51000000)
 						{
 						 	$this->set_error("upload_file_exceeds_form_limit");
 							return false;
