@@ -3092,6 +3092,7 @@ HDOC;
 			$from		  	 = $this->userdata['email'];
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
+			$bcc_email		 = implode(',',$arrayEmails['account_emails_bcc']);
 			$subject		 = 'Generate Invoice Notificatiion';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
@@ -3106,6 +3107,7 @@ HDOC;
 
 			$param['to_mail'] 		  = $to;
 			$param['cc_mail'] 		  = $this->userdata['email'];
+			$param['bcc_mail'] 		  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = "Generate Invoice Notificatiion";
