@@ -129,6 +129,24 @@ if ( ! function_exists('check_max_users') )
 	}
 }
 
+function get_del_access($id, $uid)
+{
+	$CI = get_instance();
+	$cfg = $CI->config->item('crm'); // load config
+	
+	$CI->db->select('lead_assign, assigned_to, belong_to');
+	$CI->db->where('lead_id', $id);
+	$CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+	$sql = $CI->db->get($cfg['dbpref'].'leads');
+	$res = $sql->result_array();
+	if (empty($res1)) {
+		$chge_access = 0;
+	} else {
+		$chge_access = 1;
+	}
+	return $chge_access;
+}
+
 
 /* End of file number_helper.php */
 /* Location: ./system/helpers/number_helper.php */
