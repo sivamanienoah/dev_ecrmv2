@@ -139,7 +139,7 @@ function get_del_access($id, $uid)
 	$CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
 	$sql = $CI->db->get($cfg['dbpref'].'leads');
 	$res = $sql->result_array();
-	if (empty($res1)) {
+	if (empty($res)) {
 		$chge_access = 0;
 	} else {
 		$chge_access = 1;
