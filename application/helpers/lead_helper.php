@@ -147,6 +147,28 @@ function get_del_access($id, $uid)
 	return $chge_access;
 }
 
+if ( ! function_exists('get_file_access'))
+{
+	function get_file_access($id, $uid)
+	{
+		$CI  = get_instance();
+		$cfg = $CI->config->item('crm'); // load config
+		
+		$CI->db->select('*');
+		$CI->db->where('jobid_fk', $id);
+		$CI->db->where('userid_fk', $uid);
+		$sql = $CI->db->get($cfg['dbpref'].'contract_jobs');
+		$res = $sql->result_array();
+		$res_num = $sql->num_rows();
+		if ($res_num>0) {
+			$file_access = 1;
+		} else {
+			$file_access = 0;
+		}
+		return $file_access;
+	}
+}
+
 
 /* End of file number_helper.php */
 /* Location: ./system/helpers/number_helper.php */

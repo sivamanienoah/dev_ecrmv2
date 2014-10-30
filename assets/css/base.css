@@ -1477,8 +1477,8 @@ Back to top button
 */
 #back-top {
 	position: fixed;
-	bottom: 30px;
-	right:125px;
+	bottom: 10%;
+	right:8%;
 }
 #back-top a {
 	width: 40px;

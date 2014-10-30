@@ -719,7 +719,10 @@ if (get_default_currency()) {
 	</div><!-- id: jv-tab-2 end -->
 			
 	<div id="jv-tab-3">
-	
+		<?php 
+			$this->load->helper('lead_helper'); 
+			$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
+		?>
 		<?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
 		
 		<div id="file_breadcrumb"></div>
@@ -736,13 +739,13 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div id="upload-container">
 					<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
-					<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 						<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
 						<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
 					<?php } ?>
 				</div>
 			</form>
-			<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+			<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 			<div class="pull-left pad-right">
 				<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folder.png" class="icon-width" alt="Add Folder" ></a>
 			</div>

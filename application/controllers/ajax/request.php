@@ -231,12 +231,14 @@ class Request extends crm_controller {
 	 * @param $job_id
 	 */
 	public function get_project_files($job_id, $fparent_id=0) {
-	
+
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$chge_access = 1;
 		} else {
 			$chge_access = get_del_access($job_id, $this->userdata['userid']);
 		}
+	
+		$file_upload_access = get_file_access($job_id, $this->userdata['userid']);
 	
 		$userdata = $this->session->userdata('logged_in_user');
 		$this->load->helper('file');
@@ -287,10 +289,10 @@ class Request extends crm_controller {
 						}
 						$file_ext  = end(explode('.',$fname));
 						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=file><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
-						if($chge_access == 1) {
+						if($chge_access == 1 || $file_upload_access ==1) {
 							$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
 						} else {
-							$f_delete = '<img src="assets/img/trash.png" alt=delete>';
+							$f_delete = '-';
 						}
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
