@@ -136,6 +136,7 @@ class Request extends crm_controller {
 		echo json_encode($json); exit;
 	}
 	
+	
 	/**
 	 * Deletes a file based on a Ajax post request
 	 */
@@ -551,8 +552,7 @@ class Request extends crm_controller {
 			$mv_folder = rtrim($data['mv_folder'], ",");
 			$mvfolder = explode(',', $mv_folder);
 		}
-		
-		// $result  = $this->request_model->get_tree_file_list($data['curr_job_id'],$parentId=0,$counter=0);
+
 		$result  = $this->request_model->get_tree_file_list_omit($data['curr_job_id'],$parentId=0,$counter=0,$mvfolder);
 		
 		$res     = '';
@@ -658,6 +658,40 @@ class Request extends crm_controller {
 				echo $bc; exit;
 			}
 		}
+	}
+	
+	/*
+	*
+	*/
+	public function get_files_tree_structure() {
+
+		$data    = real_escape_array($this->input->post());
+		$result  = $this->request_model->get_tree_file_list_number($data['leadid'],$parentId=0,$counter=0);
+		$res     = array();
+		$html 	 = '';
+		// echo "<pre>"; print_r($result); exit;
+		if(!empty($result)) {
+			foreach($result as $folder_id=>$folder_name) {
+			
+				$exp         = explode("~", $folder_name);
+				$counters    = $exp[0];
+				$folder_name = $exp[1];
+				
+				if(is_numeric($folder_name)) {
+					$folder_name = "&nbsp;root";
+				}
+				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name ."<br />";
+				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
+				
+				if(!empty($res)) {
+					foreach($res as $fname) {
+						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;".$fname['lead_files_name'] ."<br />";
+					}
+				}
+			}
+		}
+		echo $html;
+		exit;
 	}
 	
 	/**

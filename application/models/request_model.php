@@ -12,6 +12,7 @@
 class Request_model extends crm_model {
     
     function __construct() {
+		$this->increment_num = 1;
         parent::__construct();
     }
 	
@@ -23,6 +24,18 @@ class Request_model extends crm_model {
 	 */
 	public function insert_row($tbl, $ins) {
 		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+    }
+	
+	/*
+	 * Common function for inserting row return last_insertId
+	 * @access public
+	 * @param $tbl - Table name
+	 * @param $ins - inserting data
+	 */
+	public function return_insert_id($tbl, $ins) 
+	{
+		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+		return $this->db->insert_id();
     }
 	
 	/*
@@ -127,6 +140,27 @@ class Request_model extends crm_model {
         return $arrayVal;
 	}
 	
+	/*
+	 * @method get_tree_file_list_number()
+	 * @access public
+	 * @param $lead_id - Lead Id, $parentId, $counter
+	 */
+	public function get_tree_file_list_number($lead_id, $parentId=0 , $counter=0) {
+		$arrayVal = array();
+		
+		$this->db->select('folder_id, folder_name, parent');
+		$this->db->from($this->cfg['dbpref'] . 'file_management');
+		$this->db->where('lead_id', $lead_id);
+		$this->db->where('parent = '. (int) $parentId);
+		$results = $this->db->get()->result();
+		foreach($results as $result) {
+			// $arrayVal[$result->folder_id] = str_repeat("&nbsp;-&nbsp;", $counter)."{$result->folder_name}";
+			$arrayVal[$result->folder_id] = $counter."~"."{$result->folder_name}";
+			$arrayVal = $arrayVal + $this->get_tree_file_list_number($lead_id, $result->folder_id, $counter+1);
+		}
+        return $arrayVal;
+	}
+	
 	
 	/*
 	 * @method search_folder()
@@ -214,7 +248,7 @@ class Request_model extends crm_model {
 		return $this->db->get()->result_array();
 	}
 	
-		/*
+	/*
 	 * @method get_tree_file_list()
 	 * @access public
 	 * @param $lead_id - Lead Id, $parentId, $counter, $omission
@@ -251,6 +285,21 @@ class Request_model extends crm_model {
 		$this->db->limit(1);
 		$results = $this->db->get();
         return $results->row_array();
+    }
+	
+	/*
+	 *@method getAssociateFiles()
+	 *@param lead id
+	 */
+	public function getAssociateFiles($job_id, $folder_id) {
+		$file = array();
+		$this->db->select('lf.file_id,lf.lead_files_name,lf.folder_id');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
+	    $this->db->where("lf.lead_id", $job_id);
+	    $this->db->where("lf.folder_id", $folder_id);
+		$this->db->order_by("lf.file_id");
+	    $sql = $this->db->get();
+	    return $sql->result_array();
     }
 	
 }

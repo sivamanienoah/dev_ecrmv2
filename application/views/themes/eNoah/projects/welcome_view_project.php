@@ -1,5 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
+<script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 
 <?php
@@ -13,6 +13,11 @@ if (get_default_currency()) {
 	$default_cur_name = 'USD';
 }
 ?>
+<?php 
+	$this->load->helper('lead_helper'); 
+	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
+?>
+<?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
 
 <div class="comments-log-container" style="display:none;">
 	<?php if ($log_html != "") { ?>
@@ -493,28 +498,80 @@ if (get_default_currency()) {
 				{
 				?>
 					<div class="payment-profile-view" id="payment-profile-view" style="float:left;"><br/>
-						<form id="set-payment-terms">
-						
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						
-						<table class="payment-table">
-							<tr>
-								<td>
-									<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
-									<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
-									<p>Value *<input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></p>
-									<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea> </p>
-									<?php if ($readonly_status == false) { ?>
-									<div class="buttons">
-										<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
-									</div>
+						<?php $attributes = array('id' => 'set-payment-terms','name' => 'set-payment-terms'); ?>
+						<?php echo form_open_multipart("project/set_payment_terms", $attributes); ?>
+						<!--form id="set-payment-terms" -->
+							<input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
+							<table class="payment-table">
+								<tr>
+									<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
+								</tr>
+								<tr>
+									<td>Milestone date *</td><td><input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </td>
+								</tr>
+								<tr>
+									<td>Value *</td><td><input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></td>
+								</tr>
+								<tr>
+									<td>Remarks </td><td><textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea> </td>
+								</tr>
+								<tr>
+									<td>Attachment File </td>
+									<td>
+										<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $quote_data['lead_id']; ?>); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+										<div id="show_files"></div>
+										<div id="add_newfile"></div>
+									</td>
+								</tr>
+									<td></td>
+									<td>
+										<div id="uploadFile"></div>
+									</td>
+								<tr>
+								</tr>
+								<tr>
+									<td colspan='2'>
+										<?php if ($readonly_status == false) { ?>
+										<div class="buttons">
+											<button type="submit" class="positive">Add Payment Terms</button>
+										</div>
+										<?php } ?>
+										<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="<?php echo $quote_data['lead_id']; ?>" />
+										<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+									</td>
+								</tr>
+							</table>
+						<?php echo form_close(); ?>
+					</div>
+					<div id="map_add_file">
+						<div>
+							<ul id="map_add_file-tabs">
+								<li><a href="<?php echo current_url() ?>#map-tab-2">Select File</a></li>
+								<li><a href="<?php echo current_url() ?>#map-tab-4">Add New File</a></li>
+							</ul>
+						</div>
+						<div id="map-tab-2">
+							<div name='all_file_list' id="all_file_list" style="text-align: left;"></div>
+							<div class="buttons">
+								<button type="submit" class="positive" onclick="select_files()">Submit</button>
+							</div>
+						</div>
+						<div id="map-tab-4">
+							<form name="payment_ajax_file_upload">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<div id="upload-container">
+									<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
+										<input type="file" title='upload' class="textfield" multiple id="payment_ajax_file_uploader" name="payment_ajax_file_uploader[]" />						
 									<?php } ?>
-									<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-									<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-								</td>
-							</tr>
-						</table>
-						</form>
+								</div>
+							</form>
+							<div class="buttons">
+								<button type="submit" class="positive" onclick="select_files()">Submit</button>
+							</div>
+						</div>
+						<div class="buttons">
+							<button onclick="file_cancel();" type="submit">Cancel</button>
+						</div>
 					</div>
 					<?php
 						$output = '';
@@ -1508,20 +1565,21 @@ if (get_default_currency()) {
   var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
   var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
   
-  $(function(){
-		var config = {
-			'.chzn-select'           : {},
-			'.chzn-select-deselect'  : {allow_single_deselect:true},
-			'.chzn-select-no-single' : {disable_search_threshold:10},
-			'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
-			'.chzn-select-width'     : {width:"95%"}
-		}
-		for (var selector in config) {
-			$(selector).chosen(config[selector]);
-		}
-  });
+$(function(){
+	var config = {
+		'.chzn-select'           : {},
+		'.chzn-select-deselect'  : {allow_single_deselect:true},
+		'.chzn-select-no-single' : {disable_search_threshold:10},
+		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+		'.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+	
+	
+});  
 </script>
-
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/request/request.js"></script>
 

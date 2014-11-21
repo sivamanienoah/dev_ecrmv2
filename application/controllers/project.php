@@ -17,8 +17,9 @@ class Project extends crm_controller {
 		$this->load->model('email_template_model');
 		$this->load->helper('text');
 		$this->load->library('email');
+		$this->load->helper('form');
 		$this->email->set_newline("\r\n");
-		
+		$this->load->library('upload');
 		$this->load->helper('lead_stage_helper');
 		$this->stg = getLeadStage();
 		$this->stg_name = getLeadStageName();
@@ -1188,45 +1189,20 @@ class Project extends crm_controller {
 	 */
 	function payment_term_edit($eid, $jid)
 	{
+		$exp = array();
 		$payment_details = $this->project_model->get_payment_term_det($eid, $jid);
+		$attached_files  = $this->project_model->get_attached_files($eid);
 		
-		$expected_date = date('d-m-Y', strtotime($payment_details['expected_date']));
-		$project_milestone_name = $payment_details['project_milestone_name'];
-		$project_milestone_amt  = $payment_details['amount'];
-		
-		echo '
-		<script>
-			$(function(){
-				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
-			});
-		function isNumberKey(evt)
-		{
-          var charCode = (evt.which) ? evt.which : event.keyCode;
-          if (charCode != 46 && charCode > 31 
-            && (charCode < 48 || charCode > 57))
-             return false;
-
-          return true;
+		$exp['payment_remark']		   = $payment_details['payment_remark'];
+		$exp['expect_id']			   = $eid;
+		$exp['job_id']			   	   = $jid;
+		$exp['expected_date']          = date('d-m-Y', strtotime($payment_details['expected_date']));
+		$exp['project_milestone_name'] = $payment_details['project_milestone_name'];
+		$exp['project_milestone_amt']  = $payment_details['amount'];
+		if(!empty($attached_files)) {
+			$exp['attached_file'] = $attached_files;
 		}
-		</script>
-		<form id="update-payment-terms">
-		<table class="payment-table">
-			<tr>
-				<td>
-				<br />
-				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" value= "'.$project_milestone_name.'" class="textfield width200px" /> </p>
-				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" value= "'.$expected_date.'" class="textfield width200px pick-date" readonly /> </p>
-				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "'.$project_milestone_amt.'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-				<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" >'.$payment_details['payment_remark'].'</textarea> </p>
-				<div class="buttons">
-					<button type="submit" class="positive" onclick="updateProjectPaymentTerms('.$eid.'); return false;">Update Payment Terms</button>
-				</div>
-				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-				</td>
-			</tr>
-		</table>
-		</form>';
+		$this->load->view("projects/update_payment_term", $exp);
 	}
 	
 	/**
@@ -1236,15 +1212,72 @@ class Project extends crm_controller {
 	function set_payment_terms($update = false)
 	{
 		$errors = array();
+		$res_file = array();
 		$today = time();
 		
 		$data = real_escape_array($this->input->post());
+		
+		$fname = $_FILES['newfile_upload'];
+		if($fname!="") {
+			$f_dir = UPLOAD_PATH.'files/';
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			//creating lead_id folder name
+			$f_dir = $f_dir.$lead_id;
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			$this->upload->initialize(array(
+			   "upload_path" => $f_dir,
+			   "overwrite" => FALSE,
+			   "remove_spaces" => TRUE,
+			   "max_size" => 51000000,
+			   "allowed_types" => "*"
+			)); 
+			$returnUpload = array();
+			if(!empty($_FILES['newfile_upload']['name'][0])) {
+				if ($this->upload->do_multi_upload("newfile_upload")) {
+					$returnUpload  = $this->upload->get_multi_upload_data();
+					$i = 1;
+					if(!empty($returnUpload)) {
+						foreach($returnUpload as $file_up) {
+							$lead_files['lead_files_name']		 = $file_up['file_name'];
+							$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+							$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+							$lead_files['lead_id'] 				 = $data['sp_form_jobid'];
+							$lead_files['folder_id'] 			 = $data['filefolder_id']; //get here folder id from file_management table.
+							$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
+							$res_file[] = $insert_file."~".$lead_files['lead_files_name'];
+							
+							$logs['jobid_fk']	   = $lead_id;
+							$logs['userid_fk']	   = $this->userdata['userid'];
+							$logs['date_created']  = date('Y-m-d H:i:s');
+							$logs['log_content']   = $file_up['file_name'].' is added.';
+							$logs['attached_docs'] = $file_up['file_name'];
+							$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+							
+							$i++;
+						}
+					}
+				}
+			}
+		}
+		
+		echo "<pre>"; print_r($res_file); exit;
 		
 		$pdate1 = $data['sp_date_1'];
 		$pdate2 = strtotime($data['sp_date_2']);
 		$pdate3 = $data['sp_date_3'];
 		$payment_remark = $data['payment_remark'];
-
+		
+		
+		// $new_file_res = $this->payment_file_upload($data['sp_form_jobid'], $data['filefolder_id'])
+		
 		if (count($errors))
 		{
 			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
@@ -1259,7 +1292,17 @@ class Project extends crm_controller {
 
 			if ($update == "") 
 			{
-				$ins_exp_pay = $this->project_model->insert_row('expected_payments', $data3);
+				$ins_exp_pay = $this->project_model->return_insert_id('expected_payments', $data3);
+				
+				if($ins_exp_pay) {
+					$attach['expectid'] = $ins_exp_pay;
+					if(!empty($data['file_id'])) {
+						foreach($data['file_id'] as $files) {
+							$attach['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach);
+						}
+					}
+				}
 				
 				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
 				
@@ -1282,6 +1325,16 @@ class Project extends crm_controller {
 					$ins['date_created']  = date('Y-m-d H:i:s');
 					$ins['log_content']   = $pay_det;
 					$insert_logs = $this->project_model->insert_row('logs', $ins);
+					
+					$this->project_model->delete_row('expected_payments_attach_file', array("expectid"=>$update));
+					
+					if(!empty($data['file_id'])){
+						$attach_updt['expectid'] = $update;
+						foreach($data['file_id'] as $files) {
+							$attach_updt['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach_updt);
+						}
+					}
 					
 					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark );
 					$wh_condn = array('expectid' => $update, 'jobid_fk' => $data['sp_form_jobid']);
@@ -1313,6 +1366,11 @@ class Project extends crm_controller {
 		}
 	}
 	
+	/**
+	 * Uploads a file by payment milestone posted to a specified job
+	 * works with the Ajax file uploader
+	 *
+	/
 	/*
 	 *Delete the expected payment
 	 *@params expect_id, lead_id
@@ -1351,39 +1409,10 @@ class Project extends crm_controller {
 	}
 	
 	//list the expected payments
-	function agreedPaymentView() 
+	function agreedPaymentView($jobId)
 	{
-		echo '<script type="text/javascript">
-		$(function(){
-				$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
-			});
-		function isNumberKey(evt)
-       {
-          var charCode = (evt.which) ? evt.which : event.keyCode;
-          if (charCode != 46 && charCode > 31 
-            && (charCode < 48 || charCode > 57))
-             return false;
-
-          return true;
-       }
-		</script>
-		<br /><form id="set-payment-terms">
-		<table class="payment-table">
-		<tr>
-			<td>
-				<p>Payment Milestone *<input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </p>
-				<p>Milestone date *<input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </p>
-				<p>Value *<input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-				<p>Remarks <textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea></p>
-				<div class="buttons">
-					<button type="submit" class="positive" onclick="setProjectPaymentTerms(); return false;">Add Payment Terms</button>
-				</div>
-				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="0" />
-				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
-			</td>
-		</tr>
-		</table>
-		</form>';
+		$data['jobid'] = $jobId;
+		$this->load->view("projects/add_payment_term", $data);
 	}
 	
 	/*

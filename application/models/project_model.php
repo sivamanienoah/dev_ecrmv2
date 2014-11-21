@@ -382,6 +382,13 @@ class Project_model extends crm_model
 		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
     }
 	
+	function return_insert_id($tbl, $ins) 
+	{
+		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+		return $this->db->insert_id();
+    }
+	
+	
 	function get_userlist($userList) 
 	{
     	$this->db->select('userid, first_name, last_name, email, level, role_id, inactive');
@@ -747,6 +754,21 @@ class Project_model extends crm_model
 		$this->db->where($wh_condn);
 		$query = $this->db->get();
 		return $query->row_array();
+	}
+	
+	/*
+	 *@Method get_attached_files
+	 *@Param expect id
+	 */
+	function get_attached_files($eid)
+	{
+		$wh_condn = array('expectid' => $eid);
+		$this->db->select('lf.lead_files_name, lf.file_id');
+		$this->db->from($this->cfg['dbpref'].'expected_payments_attach_file as expa');
+		$this->db->join($this->cfg['dbpref'].'lead_files as lf', 'lf.file_id = expa.file_id');
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 	
 }
