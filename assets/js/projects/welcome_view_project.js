@@ -404,7 +404,7 @@
 		);
 	}
 
-	function setProjectPaymentTerms() 
+	/* function setProjectPaymentTerms() 
 	{
 		$('#sp_form_jobid').val(curr_job_id);
 		$(".payment-terms-mini-view1").css("display","block");
@@ -464,15 +464,16 @@
 					}
 					$.unblockUI();
 					$('#set-payment-terms')[0].reset();
+					$('#show_files').empty();
 				}
 			);
 		}
 		
 		$('.payment-terms-mini-view1').css('display', 'block');
-	}
+	} */
 
 	//Update functionality for set payment terms Starts here.
-	function updateProjectPaymentTerms(eid) 
+	/* function updateProjectPaymentTerms(eid) 
 	{
 		$('#rec_paymentfadeout').hide();
 		$('#sp_form_jobid').val(curr_job_id);
@@ -541,7 +542,7 @@
 			
 		}
 		$('.payment-terms-mini-view1').css('display', 'block');
-	}
+	} */
 
 	function fullScreenLogs()
 	{
@@ -1262,6 +1263,8 @@
 				}
 			}
 		});
+		
+		$( "#map_add_file" ).tabs();
 
 		$('#job-url-list li a:not(.file-delete)').livequery(function(){
 			$(this).click(function(){
@@ -1529,125 +1532,6 @@
 	
 	
 	//////////////////////////----------------------X-----------------////////////////////////////
-	
-	/* var milestones_cached_row = false;
-	function addMilestoneField()
-	{
-		if ( ! milestones_cached_row)
-		{
-			milestones_cached_row = $('#milestone-clone tr:first');
-		}
-		
-		milestones_cached_row.clone().appendTo('#milestone-data tbody');
-		$('#milestone-data tr:last .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-	} */
-	
-	/* function removeMilestoneRow(el)
-	{
-		var agree=confirm("Are you sure you want to delete this milestone?");
-			if (agree) {
-				$(el).parent().parent().remove();
-			}
-			var data = $('#milestone-management').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
-		
-		$('#jv-tab-4-5').block({
-							message:'<img src="assets/img/ajax-loader.gif" />',
-							css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-						});
-		
-		$.post(
-			'ajax/request/save_job_overview/' + curr_job_id,
-			data,
-			function(detail)
-			{
-				if ($.trim(detail) != '')
-				{
-					$('#milestone-data tbody').html(detail);
-					$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-				}
-				$('#jv-tab-4-5').unblock();
-			}
-		);
-		return false;
-	} */
-	
-	/* 
-	function saveMilestones()
-	{
-		var error = false;
-		
-		$('#milestone-data tbody tr').each(function(){
-			if ($('.milestone input', $(this)).val() == '' || $('.milestone-date input', $(this)).val() == '')
-			{
-				error = 'All milestones and dates are required!';
-			}
-		});
-		
-		if (error)
-		{
-			alert(error);
-			return;
-		}
-		
-		var data = $('#milestone-management').serialize()+'&csrf_token_name'+'='+csrf_hash_token;
-		
-		$('#jv-tab-4-5').block({
-							message:'<img src="assets/img/ajax-loader.gif" />',
-							css: {background:'transparent', border: 'none', padding:'4px', height:'12px', color:'#333', top:'4px'}
-						});
-		
-		$.post(
-			'ajax/request/save_job_overview/' + curr_job_id,
-			data,
-			function(detail)
-			{
-				if ($.trim(detail) != '')
-				{
-					$('#milestone-data tbody').html(detail);
-					$('#milestone-data tbody tr .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '-6M', maxDate: '+24M'});
-				}
-				$('#jv-tab-4-5').unblock();
-			}
-		);
-	} */
-	
-	/* function emailMilestones()
-	{
-		var qc_job_title = project_job_title;
-		var obj = $('#milestone-data tbody tr');
-		
-		if (obj.length == 0)
-		{
-			alert('No records are there to email!');
-			return false;
-		}
-		var email_data = '';
-		obj.each(function(){
-			var ddate = $('.milestone-date input', $(this)).val();
-			var mstone = $('.milestone input', $(this)).val();
-			var mstat = $('.milestone-status select option:selected', $(this)).val();
-			
-			email_data += ddate + ' : ' + mstone;
-			if (mstat == 0)
-			{
-				email_data += ' [Scheduled]';
-			}
-			if (mstat == 1)
-			{
-				email_data += ' [In Progress]';
-			}
-			if (mstat == 2)
-			{
-				email_data += ' [completed]';
-			}
-			email_data += '\n';
-		});
-		
-		$('#job_log').focus().val('\nTimeline for the project: ' + qc_job_title + '\n' +  email_data);
-		$('html, body').animate({ scrollTop: $('#job_log').offset().top }, 500);
-		
-		return false;
-	} */
 	//////////////////////////----------------------X-----------------////////////////////////////
 	
 	function populateJobOverview()
@@ -1749,7 +1633,7 @@
 		function paymentProfileView() 
 		{
 			setTimeout('timerfadeout()', 2000);
-			var url = site_base_url+"project/agreedPaymentView";
+			var url = site_base_url+"project/agreedPaymentView/"+project_jobid;
 			$('#payment-profile-view').load(url);
 		}
 		function paymentProfileDelete(eid) 
@@ -2314,7 +2198,7 @@ $(function(){
 /*RAG Status Script - End*/
 
 /*For Timesheet Metrics Data - Start*/
-	$(function() {		
+	$(function() {
 		$('#filter_metrics').submit(function() {
 			var start_date = $("#metrics_month").val()+'-'+$("#metrics_year").val();
 			var cur_name   = $("#expect_worth_name").val();
@@ -2377,8 +2261,127 @@ function generate_inv(eid) {
 	}
 	
 }
-function raise_inv() {
-	alert('raiseInvoice');
+/*
+*FOR PAYMENT MILESTONES 
+*/
+function open_files(leadid) {
+	var params				= {'leadid':leadid};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/get_files_tree_structure',
+		// dataType: 'json',
+		data: params,
+		success: function(data) {
+			// console.info(data);
+			$('#all_file_list').html(data);
+			$.blockUI({
+				message: $('#map_add_file'), 
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto'} 
+			});
+		}
+	});
 	return false;
 }
 
+function select_files() {
+	var data = '';
+	var id = '';
+	jQuery.each( $(".attach_file:checked"), function( i, val ) {
+		filename = $(this).val().split('~');
+		id += filename[0] + ',';
+		data += '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+filename[0]+'"><span style="float: left;">'+filename[1]+'</span> <a id="'+filename[0]+'" class="del_file"> </a></div>';
+	});
+
+	$('#show_files').append(data);
+	$.unblockUI();
+	return false;
+}
+
+function file_cancel() {
+    $.unblockUI();
+    return false;
+}
+
+$(function() {
+	$("#show_files").delegate("a.del_file","click",function() {
+		var str_delete = $(this).attr("id");
+		
+		var result = confirm("Are you sure you want to delete this attachment?");
+		if (result==true) {
+			$('#'+str_delete).parent("div").remove();
+		}
+	});
+});
+
+/*
+*Adding Payment terms
+*/
+$( document ).ajaxSuccess(function( event, xhr, settings ) {
+	if(settings.target=="#output1") {
+		$('.payment-profile-view:visible').slideUp(400);
+		$('.payment-terms-mini-view1').html(xhr.responseText);
+		$('#set-payment-terms')[0].reset();
+		$('#show_files').empty();
+		$('.payment-terms-mini-view1').css('display', 'block');
+	}
+});
+
+$(function(){
+	var options = { 
+		target:      '#output1',   // target element(s) to be updated with server response 
+		beforeSubmit: showRequest, // pre-submit callback 
+		success:      ''  // post-submit callback 
+	}; 
+	$('#set-payment-terms').ajaxForm(options);
+});
+function showRequest()
+{
+	var date_entered = true;
+	var errors = [];
+	if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
+		date_entered = false;
+	}
+	/* if ($('#sp_form_jobid').val() == 0) { 
+		errors.push('Project Id missing!');
+	} */
+	if(($.trim($('#sp_date_1').val()) == '')) {
+		errors.push('<p>Enter Payment Milestone Name.</p>');
+	}
+	if(($.trim($('#sp_date_2').val()) == ''))  { //|| valid_date == false) {
+		errors.push('<p>Enter valid Date.</p>');
+	}
+	if(($.trim($('#sp_date_3').val()) == '')) {
+		errors.push('<p>Enter Milestone Value.</p>');
+	}
+	if (errors.length > 0) {
+		//alert(errors.join('\n'));
+		setTimeout('timerfadeout()', 8000);
+		$('#rec_paymentfadeout').show();
+		$('#rec_paymentfadeout').html(errors.join(''));
+		return false;
+	}
+}
+$(function(){
+	$("#payment_ajax_file_uploader").change(function(){
+		var files = $('#payment_ajax_file_uploader')[0].files;
+		$("#uploadFile").html("");
+		var filesize = 0;
+		for (var i = 0; i < files.length; i++) {
+			var fname	= files[i].name;
+			alert(fname);
+			filesize+= files[i].size;
+			$("#uploadFile").append(files[i].name + "<br>" );
+		}
+	
+		var real = $("#payment_ajax_file_uploader");
+		var cloned = real.clone(true);
+		$("#newfile_upload").remove();
+		// cloned.insertAfter(real);
+		$("#set-payment-terms").find("#add_newfile").append(cloned);
+		cloned.attr("id","newfile_upload");
+		cloned.attr("name","newfile_upload");
+		$.unblockUI();
+	});
+});
