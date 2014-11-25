@@ -1,6 +1,6 @@
 <?php $attributes = array('id' => 'set-payment-terms','name' => 'set-payment-terms'); ?>
 <?php echo form_open_multipart("project/set_payment_terms", $attributes); ?>			
-
+<input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
@@ -17,8 +17,15 @@
 		<tr>
 			<td>Attachment File </td>
 			<td>
-				<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $jobid; ?>); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+				<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $jobid; ?>,'set'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
 				<div id="show_files"></div>
+				<div id="add_newfile"></div>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<div id="uploadFile"></div>
 			</td>
 		</tr>
 		<tr>

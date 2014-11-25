@@ -1199,9 +1199,12 @@ class Project extends crm_controller {
 		$exp['expected_date']          = date('d-m-Y', strtotime($payment_details['expected_date']));
 		$exp['project_milestone_name'] = $payment_details['project_milestone_name'];
 		$exp['project_milestone_amt']  = $payment_details['amount'];
+		$exp['invoice_status']  	   = $payment_details['invoice_status'];
 		if(!empty($attached_files)) {
-			$exp['attached_file'] = $attached_files;
+			$exp['attached_file']      = $attached_files;
 		}
+		$get_parent_folder_id = $this->request_model->getParentFfolderId($jid,$parent=0);
+		$exp['ff_id'] = $get_parent_folder_id['folder_id'];
 		$this->load->view("projects/update_payment_term", $exp);
 	}
 	
@@ -1218,6 +1221,7 @@ class Project extends crm_controller {
 		$data = real_escape_array($this->input->post());
 		
 		$fname = $_FILES['newfile_upload'];
+	
 		if($fname!="") {
 			$f_dir = UPLOAD_PATH.'files/';
 			if (!is_dir($f_dir)) {
@@ -1226,7 +1230,7 @@ class Project extends crm_controller {
 			}
 			
 			//creating lead_id folder name
-			$f_dir = $f_dir.$lead_id;
+			$f_dir = $f_dir.$data['sp_form_jobid'];
 			if (!is_dir($f_dir)) {
 				mkdir($f_dir);
 				chmod($f_dir, 0777);
@@ -1252,9 +1256,9 @@ class Project extends crm_controller {
 							$lead_files['lead_id'] 				 = $data['sp_form_jobid'];
 							$lead_files['folder_id'] 			 = $data['filefolder_id']; //get here folder id from file_management table.
 							$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
-							$res_file[] = $insert_file."~".$lead_files['lead_files_name'];
+							$res_file[] = $insert_file;
 							
-							$logs['jobid_fk']	   = $lead_id;
+							$logs['jobid_fk']	   = $data['sp_form_jobid'];
 							$logs['userid_fk']	   = $this->userdata['userid'];
 							$logs['date_created']  = date('Y-m-d H:i:s');
 							$logs['log_content']   = $file_up['file_name'].' is added.';
@@ -1268,7 +1272,7 @@ class Project extends crm_controller {
 			}
 		}
 		
-		echo "<pre>"; print_r($res_file); exit;
+		// echo "<pre>"; print_r($res_file); exit;
 		
 		$pdate1 = $data['sp_date_1'];
 		$pdate2 = strtotime($data['sp_date_2']);
@@ -1294,6 +1298,8 @@ class Project extends crm_controller {
 			{
 				$ins_exp_pay = $this->project_model->return_insert_id('expected_payments', $data3);
 				
+				$attach		= array();
+				$new_attach = array();
 				if($ins_exp_pay) {
 					$attach['expectid'] = $ins_exp_pay;
 					if(!empty($data['file_id'])) {
@@ -1302,7 +1308,15 @@ class Project extends crm_controller {
 							$this->project_model->insert_row('expected_payments_attach_file', $attach);
 						}
 					}
+					$new_attach['expectid'] = $ins_exp_pay;
+					if(!empty($res_file)) {
+						foreach($res_file as $files) {
+							$new_attach['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $new_attach);
+						}
+					}
 				}
+				
 				
 				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
 				
@@ -1333,6 +1347,13 @@ class Project extends crm_controller {
 						foreach($data['file_id'] as $files) {
 							$attach_updt['file_id'] = $files;
 							$this->project_model->insert_row('expected_payments_attach_file', $attach_updt);
+						}
+					}
+					if(!empty($res_file)) {
+						$attach_new_updt['expectid'] = $update;
+						foreach($res_file as $files) {
+							$attach_new_updt['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach_new_updt);
 						}
 					}
 					
@@ -1389,10 +1410,12 @@ class Project extends crm_controller {
 			
 			//delete the record
 			$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid, 'received' => 0);
-			$del = $this->project_model->delete_row('expected_payments', $wh_condn);
+			$del      = $this->project_model->delete_row('expected_payments', $wh_condn);
 			if ($del)
 			{
 				//insert the log
+				$wh_condn = array('expectid' => $eid);
+				$this->project_model->delete_row('expected_payments_attach_file', $wh_condn);
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
 				echo "<span id=paymentfadeout><h6>Payment Deleted!</h6></span>";
 			}
@@ -1411,8 +1434,11 @@ class Project extends crm_controller {
 	//list the expected payments
 	function agreedPaymentView($jobId)
 	{
+		$get_parent_folder_id = $this->request_model->getParentFfolderId($jobId,$parent=0);
+		$data['ff_id'] = $get_parent_folder_id['folder_id'];
 		$data['jobid'] = $jobId;
 		$this->load->view("projects/add_payment_term", $data);
+		
 	}
 	
 	/*
@@ -3110,10 +3136,13 @@ HDOC;
 		$output['error'] = FALSE;
 		
 		$updt_payment_ms = $this->project_model->update_row('expected_payments', $updt, $wh_condn);
+		// $updt_payment_ms = 1;
 		
 		if($updt_payment_ms) {
 			$project_details = $this->project_model->get_quote_data($pjtid);
 			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
+			$attached_files  = $this->project_model->get_attached_files($eid);
+			
 			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 			$dis['date_created'] = date('Y-m-d H:i:s');
 			$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
@@ -3141,6 +3170,8 @@ HDOC;
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = "Generate Invoice Notificatiion";
 			$param['subject'] 		  = $subject;
+			$param['attach'] 		  = $attached_files;
+			$param['job_id'] 		  = $pjtid;
 
 			$this->email_template_model->sent_email($param);
 		} else {
@@ -3148,6 +3179,92 @@ HDOC;
 			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
 		}
 		echo json_encode($output);
+	}
+	
+		/**
+	 * Uploads a file posted to a specified job
+	 * works with the Ajax file uploader
+	 */
+	public function payment_file_upload($lead_id, $filefolder_id)
+	{
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['payment_ajax_file_uploader']['name']);
+		
+		// echo "<pre>"; print_r($_FILES); exit;
+		
+		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
+
+		//creating files folder name
+		$f_dir = UPLOAD_PATH.'files/';
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		//creating lead_id folder name
+		$f_dir = $f_dir.$lead_id;
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		$this->upload->initialize(array(
+		   "upload_path" => $f_dir,
+		   "overwrite" => FALSE,
+		   "remove_spaces" => TRUE,
+		   "max_size" => 51000000,
+		   "allowed_types" => "*"
+		)); 
+		// $config['allowed_types'] = '*';
+		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		
+		$returnUpload = array();
+		$json  		  = array();
+		$res_file     = array();
+		if(!empty($_FILES['payment_ajax_file_uploader']['name'][0])) {
+			if ($this->upload->do_multi_upload("payment_ajax_file_uploader")) { 
+			   $returnUpload  = $this->upload->get_multi_upload_data();
+			   $json['error'] = FALSE;
+			   $json['msg']   = "File successfully uploaded!";
+			   $i = 1;
+			   if(!empty($returnUpload)) {
+				  foreach($returnUpload as $file_up) {
+					$lead_files['lead_files_name']		 = $file_up['file_name'];
+					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+					$lead_files['lead_id'] 				 = $lead_id;
+					$lead_files['folder_id'] 			 = $filefolder_id; //get here folder id from file_management table.
+					$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
+					$json['res_file'][]					 = $insert_file.'~'.$file_up['file_name'];
+					
+					$logs['jobid_fk']	   = $lead_id;
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $file_up['file_name'].' is added.';
+					$logs['attached_docs'] = $file_up['file_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+					$i++;
+				  }
+			   }
+			} else {
+				$this->upload_error = strip_tags($this->upload->display_errors());
+				$json['error'] = TRUE;
+				$json['msg']   = $this->upload_error;
+				// return $this->upload_error;						
+				// exit;
+			}
+		}
+		echo json_encode($json); exit;
+	}
+	
+	function download_file($job_id,$file_name)
+	{
+		$this->load->helper('download');
+		$file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$file_name;
+		$data = file_get_contents($file_dir); // Read the file's contents
+		$name = $file_name;
+
+		force_download($name, $data); 
 	}
 
 }

@@ -518,16 +518,16 @@ if (get_default_currency()) {
 								<tr>
 									<td>Attachment File </td>
 									<td>
-										<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $quote_data['lead_id']; ?>); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+										<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $quote_data['lead_id']; ?>,'set'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
 										<div id="show_files"></div>
 										<div id="add_newfile"></div>
 									</td>
 								</tr>
+								<tr>
 									<td></td>
 									<td>
 										<div id="uploadFile"></div>
 									</td>
-								<tr>
 								</tr>
 								<tr>
 									<td colspan='2'>
@@ -544,6 +544,7 @@ if (get_default_currency()) {
 						<?php echo form_close(); ?>
 					</div>
 					<div id="map_add_file">
+						<div class="file-tabs-close" id="file-tabs-close"></div>
 						<div>
 							<ul id="map_add_file-tabs">
 								<li><a href="<?php echo current_url() ?>#map-tab-2">Select File</a></li>
@@ -552,25 +553,21 @@ if (get_default_currency()) {
 						</div>
 						<div id="map-tab-2">
 							<div name='all_file_list' id="all_file_list" style="text-align: left;"></div>
-							<div class="buttons">
+							<div style="padding: 10px 0px 0px;">
 								<button type="submit" class="positive" onclick="select_files()">Submit</button>
 							</div>
 						</div>
 						<div id="map-tab-4">
-							<form name="payment_ajax_file_upload">
+							<form name="payment_ajax_file_upload" style="height: 35px;">
 								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 								<div id="upload-container">
 									<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
-										<input type="file" title='upload' class="textfield" multiple id="payment_ajax_file_uploader" name="payment_ajax_file_uploader[]" />						
-									<?php } ?>
+										<label>Browse file</label>
+										<input type="file" title='upload' class="textfield" multiple id="payment_ajax_file_uploader" name="payment_ajax_file_uploader[]" onchange="return runPaymentAjaxFileUpload();"/>
+										<input type="hidden" id="exp_type" value="">
+									<?php } ?> 
 								</div>
 							</form>
-							<div class="buttons">
-								<button type="submit" class="positive" onclick="select_files()">Submit</button>
-							</div>
-						</div>
-						<div class="buttons">
-							<button onclick="file_cancel();" type="submit">Cancel</button>
 						</div>
 					</div>
 					<?php
@@ -808,6 +805,9 @@ if (get_default_currency()) {
 			</div>
 			<div class="pull-left pad-right">
 				<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
+			</div>
+			<div class="pull-left pad-right">
+				<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
 			</div>
 			<?php } ?>
 		</div>

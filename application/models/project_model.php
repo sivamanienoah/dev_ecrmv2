@@ -229,52 +229,6 @@ class Project_model extends crm_model
 		$results = $this->db->get();
         return $results->result_array();
     }
-
-	//get the project assigned members
-	/* function get_contract_jobs($id) 
-	{
-    	$this->db->where('jobid_fk', $id);
-		$cq = $this->db->get($this->cfg['dbpref'].'contract_jobs');
-		return $cq->result_array();
-    } */
-	
-	/* public function get_job_files($f_dir, $fcpath, $lead_details)
-    {
-		$userdata = $this->session->userdata('logged_in_user'); 
-        $data['job_files_html'] = '';
-        if (is_dir($f_dir))
-        {
-            $job_files = glob($f_dir . '*.*');
-			
-            if (is_array($job_files) && count($job_files))
-            {
-                foreach ($job_files as $jf)
-                {
-                    $data['job_files_html'] .= '<li>';
-					if ( $userdata['role_id'] == 1 || $lead_details['belong_to'] == $userdata['userid'] || $lead_details['lead_assign'] == $userdata['userid'] || $lead_details['assigned_to'] == $userdata['userid'] ) {  
-                        $data['job_files_html'] .= '<a href="#" onclick="ajaxDeleteFile(\'/' . str_replace($fcpath, '', $jf) . '\', this); return false;" class="file-delete">delete file</a>';
-					}
-						
-                    $fz = filesize($jf);
-                    $kb = 1024;
-                    $mb = 1024 * $kb;
-                    if ($fz > $mb) {
-                      $out = round($fz/$mb, 2);
-                      $out .= 'Mb';
-                    } else if ($fz > $kb) {
-                      $out = round($fz/$kb, 2);
-                      $out .= 'Kb';
-                    } else {
-                      $out = $fz . ' Bytes';
-                    }
-					
-                    $data['job_files_html'] .= '<a href="crm_data/' . str_replace($fcpath, '', $jf) . '" onclick="window.open(this.href); return false;">' . str_replace($f_dir, '', $jf) . '</a> <span>' . $out . '</span>';
-					$data['job_files_html'] .='</li>';
-                }
-            }
-        }
-        return $data['job_files_html'];
-    } */
 	
 	//get the job url
 	public function get_job_urls($lead_id)
@@ -454,7 +408,7 @@ class Project_model extends crm_model
 	function get_payment_term_det($eid, $jid)
 	{
 		$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid);
-		$this->db->select('expm.expectid,expm.amount,expm.expected_date,expm.received,expm.project_milestone_name, expm.payment_remark,j.expect_worth_id,exnm.expect_worth_name');
+		$this->db->select('expm.expectid,expm.amount,expm.expected_date,expm.received,expm.project_milestone_name,expm.payment_remark, expm.invoice_status,j.expect_worth_id,exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as j', 'j.lead_id = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = j.expect_worth_id', 'left');

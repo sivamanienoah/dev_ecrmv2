@@ -640,74 +640,95 @@
 		return false;
 	}
 	
-	/* function ajaxDeleteFile(path, el)
-	{
-		if (window.confirm('Are you sure you want to delete this file?')) 
-		{
-			path = js_urlencode(path);
-			$(el).parent().hide('slow');
-			
-			var params 				= {file_path : path};
-			params[csrf_token_name] = csrf_hash_token;
-			
-			$.post(
-				site_base_url+'ajax/request/file_delete/',
-				params,
-				function(data) {
-					try {
-						var _data;
-						eval('_data = ' + data);
-						if (!_data.error) {
-							$(el).remove();
-						} else {
-							$(el).parent().show('slow');
-							alert('File could not be deleted!');
-						}
-					} catch (e) {
-						alert(e);
-						$(el).parent().show('slow');
-						alert('File could not be deleted!');
-					}
-				}
-			);
-		}
-	} */
+function runPaymentAjaxFileUpload() {
+	var _uid				 = new Date().getTime();
+	var params 				 = {};
+	params[csrf_token_name]  = csrf_hash_token;
+	var ffid				 = $('#filefolder_id').val();
 
-	function addURLtoJob() 
-	{
-		var url = $.trim($('#job-add-url').val());
-		var cont = $.trim($('#job-url-content').val());
-		if (url == '') {
-			alert('Please enter a URL to add');
-			return false;
-		}
-		url 					  = js_urlencode(url);
-		var params 				  = {'lead_id':curr_job_id, 'url':url, 'content':cont};
-		params[csrf_token_name]   = csrf_hash_token;
-		
-		$.post(
-			site_base_url+'ajax/request/add_url_tojob/',
-			params,
-			function(_data) {
-				try {
-					eval ('var data = ' + _data);
-					if (typeof(data) == 'object') {
-						if (data.error == false) {
-							$('#job-url-list').append(data.html);
-							$('#job-add-url').val('');
-							$('#job-url-content').val('');
-						} else {
-							alert(data.error);
-						}
-					} else {
-						alert('URL addition failed! Please try again.');
+	$.ajaxFileUpload({
+		url: 'project/payment_file_upload/'+curr_job_id+'/'+ffid,
+		secureuri: false,
+		fileElementId: 'payment_ajax_file_uploader',
+		dataType: 'json',
+		data: params,
+		success: function (data, status) {
+			if(typeof(data.error) != 'undefined') {
+				if(data.error != '') {
+					if (window.console) {
+						console.log(data);
 					}
-				} catch (e) {
-					alert('Invalid response, your session may have timed out.');
+					if (data.msg) {
+						alert(data.msg);
+					} else {
+						alert('File upload failed!');
+					}
+				} else {	
+					if(data.msg == 'File successfully uploaded!') {
+						// alert(data.msg);				
+						$.each(data.res_file, function(i, item) {
+							var res = item.split("~",2);
+							// alert(res[0]+res[1]);	
+							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" class="del_file"> </a></div>';
+							$("#uploadFile").append(name);
+						});
+						$.unblockUI();
+					}
 				}
 			}
-		);
+		},
+		error: function (data, status, e)
+		{
+			alert('Sorry, the upload failed due to an error!');
+			$('#'+_uid).hide('slow').remove();
+			if (window.console)
+			{
+				console.log('ajax error\n' + e + '\n' + data + '\n' + status);
+				for (i in e) {
+				  console.log(e[i]);
+				}
+			}
+		}
+	});
+	$('#payment_ajax_file_uploader').val('');
+	return false;
+}
+
+function addURLtoJob() 
+{
+	var url = $.trim($('#job-add-url').val());
+	var cont = $.trim($('#job-url-content').val());
+	if (url == '') {
+		alert('Please enter a URL to add');
+		return false;
 	}
+	url 					  = js_urlencode(url);
+	var params 				  = {'lead_id':curr_job_id, 'url':url, 'content':cont};
+	params[csrf_token_name]   = csrf_hash_token;
+	
+	$.post(
+		site_base_url+'ajax/request/add_url_tojob/',
+		params,
+		function(_data) {
+			try {
+				eval ('var data = ' + _data);
+				if (typeof(data) == 'object') {
+					if (data.error == false) {
+						$('#job-url-list').append(data.html);
+						$('#job-add-url').val('');
+						$('#job-url-content').val('');
+					} else {
+						alert(data.error);
+					}
+				} else {
+					alert('URL addition failed! Please try again.');
+				}
+			} catch (e) {
+				alert('Invalid response, your session may have timed out.');
+			}
+		}
+	);
+}
 
 	function ajaxDeleteJobURL(id, el) {
 		$.get(
@@ -2264,7 +2285,7 @@ function generate_inv(eid) {
 /*
 *FOR PAYMENT MILESTONES 
 */
-function open_files(leadid) {
+function open_files(leadid,type) {
 	var params				= {'leadid':leadid};
 	params[csrf_token_name] = csrf_hash_token;
 	
@@ -2276,9 +2297,10 @@ function open_files(leadid) {
 		success: function(data) {
 			// console.info(data);
 			$('#all_file_list').html(data);
+			$('#exp_type').val(type);
 			$.blockUI({
 				message: $('#map_add_file'), 
-				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto'} 
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto', 'overflow-x':'hidden'} 
 			});
 		}
 	});
@@ -2299,19 +2321,24 @@ function select_files() {
 	return false;
 }
 
-function file_cancel() {
-    $.unblockUI();
-    return false;
-}
-
 $(function() {
 	$("#show_files").delegate("a.del_file","click",function() {
 		var str_delete = $(this).attr("id");
-		
 		var result = confirm("Are you sure you want to delete this attachment?");
 		if (result==true) {
 			$('#'+str_delete).parent("div").remove();
 		}
+	});
+	$("#uploadFile").delegate("a.del_file","click",function() {
+		var str_delete = $(this).attr("id");
+		var result = confirm("Are you sure you want to delete this attachment?");
+		if (result==true) {
+			$('#'+str_delete).parent("div").remove();
+		}
+	});
+	$("#file-tabs-close").click(function() {
+		$.unblockUI();
+		return false;
 	});
 });
 
@@ -2336,6 +2363,7 @@ $(function(){
 	}; 
 	$('#set-payment-terms').ajaxForm(options);
 });
+
 function showRequest()
 {
 	var date_entered = true;
@@ -2363,25 +2391,6 @@ function showRequest()
 		return false;
 	}
 }
-$(function(){
-	$("#payment_ajax_file_uploader").change(function(){
-		var files = $('#payment_ajax_file_uploader')[0].files;
-		$("#uploadFile").html("");
-		var filesize = 0;
-		for (var i = 0; i < files.length; i++) {
-			var fname	= files[i].name;
-			alert(fname);
-			filesize+= files[i].size;
-			$("#uploadFile").append(files[i].name + "<br>" );
-		}
-	
-		var real = $("#payment_ajax_file_uploader");
-		var cloned = real.clone(true);
-		$("#newfile_upload").remove();
-		// cloned.insertAfter(real);
-		$("#set-payment-terms").find("#add_newfile").append(cloned);
-		cloned.attr("id","newfile_upload");
-		cloned.attr("name","newfile_upload");
-		$.unblockUI();
-	});
-});
+function download_files(job_id,f_name){
+	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+f_name;
+}

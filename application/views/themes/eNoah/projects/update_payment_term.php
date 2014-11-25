@@ -2,7 +2,7 @@
 <?php $attributes = array('id' => 'update-payment-terms','name' => 'update-payment-terms'); ?>
 <?php echo form_open_multipart("project/set_payment_terms/".$expect_id, $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	
+	<input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Payment Milestone *</td>
@@ -26,20 +26,33 @@
 		<tr>
 			<td>Attachment File </td>
 			<td>
-				<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $job_id; ?>); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+				<?php if($invoice_status!=1) { ?>
+				<a title="Add Folder" href='javascript:void(0)' onclick="open_files('<?php echo $job_id; ?>','update'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+				<?php } else { ?>
+				<a title="Add Folder" class="readonly-status readonly-status img-opacity" href='javascript:void(0)'><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+				<?php }  ?>
 				<div id="show_files">
-					<?php 
+					<?php
 						foreach($attached_file as $att_file){
 					?>
 							<div style="float: left; width: 100%;">
 								<input type="hidden" value="<?php echo $att_file['file_id']; ?>" name="file_id[]" />
-								<span style="float: left;"><?php echo $att_file['lead_files_name']; ?></span>
+								<span style="float: left;"><a onclick="download_files('<?php echo $job_id; ?>','<?php echo $att_file['lead_files_name']; ?>'); return false;"><?php echo $att_file['lead_files_name']; ?></a></span>
+								<?php if($invoice_status!=1) { ?>
 								<a class="del_file" id="<?php echo $att_file['file_id']; ?>"> </a>
+								<?php } ?>
 							</div>
 					<?php
 						}
 					?>
 				</div>
+				<div id="add_newfile"></div>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<div id="uploadFile"></div>
 			</td>
 		</tr>
 		<tr>
@@ -85,7 +98,6 @@ $(function(){
 			$('#'+str_delete).parent("div").remove();
 		}
 	});
-	
 });
 function isNumberKey(evt)
 {
@@ -138,5 +150,8 @@ function showRequest2()
 		$('#rec_paymentfadeout').html(errors.join(''));
 		return false;
 	}
+}
+function download_files(job_id,f_name){
+	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+f_name;
 }
 </script>

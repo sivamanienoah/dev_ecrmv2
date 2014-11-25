@@ -183,6 +183,15 @@ class email_template_model extends crm_model {
 		}
 		$this->email->subject($email_subject);
 		$this->email->message($email_template);
+		
+		if(!empty($data['attach'])) {
+			$file_path = UPLOAD_PATH.'files/'.$data['job_id'].'/';
+			foreach ($data['attach'] as $attach){
+				$this->email->attach($file_path.$attach['lead_files_name']);
+			}
+			
+		}
+		
 		if($this->email->send())
 		{
 			return true;

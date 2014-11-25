@@ -262,7 +262,7 @@ function searchFileFolder() {
 		url: site_base_url+'ajax/request/searchFile',
 		data: params,
 		success: function(data) {
-			console.info(data);
+			// console.info(data);
 			$('#list_file').html(data);
 			$('#jv-tab-3').unblock();
 			$('#list_file_tbl').dataTable({
@@ -316,7 +316,6 @@ function moveAllFiles() {
 	if((mv_folder=='') && (mv_files=='')) {
 		alert('No files or folders selected');
 		return false;
-		
 	}
 	
 	var params				= {'mv_folder':mv_folder, 'mv_files':mv_files, 'curr_job_id':curr_job_id};
@@ -378,6 +377,44 @@ function move_all_files() {
 	return false;
 }
 
+/*
+*Moving Multiple files
+*/
+function deleteAllFiles() {
+	var ff_id = $('#filefolder_id').val();
+	var del_folder = '';
+	var del_files = '';
+	$( ".file_chk:checked" ).each(function( index ) {
+		if($(this).attr('file-type') == 'folder') {
+			del_folder += $(this).val()+',';
+		} else if($(this).attr('file-type') == 'file') {
+			del_files += $(this).val()+',';
+		}
+	});
+	// alert(del_folder+'+++'+del_files); return false;
+	
+	if((del_folder=='') && (del_files=='')) {
+		alert('No files or folders selected');
+		return false;
+	}
+	
+	var params				= {'del_folder':del_folder, 'del_files':del_files, 'curr_job_id':curr_job_id, 'ff_id':ff_id};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/delete_files',
+		dataType: 'json',
+		data: params,
+		success: function(data) {
+			// console.info(data);
+			alert(data.del_status);
+			getFolderdata(data.folder_parent_id);
+		}
+	});
+	return false;
+}
+
 
 function showBreadCrumbs(parent_id) {
 	$.get(
@@ -390,4 +427,6 @@ function showBreadCrumbs(parent_id) {
 	return false;
 }
 
-
+function download_files_id(job_id,file_id) {
+	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+$("#file_"+file_id).val();
+}

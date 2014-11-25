@@ -1846,7 +1846,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file {
+#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile{
 	display: none;
 }
 /* file_breadcrumb */
@@ -1857,7 +1857,18 @@ button.positive, .pjt-btn a.positive, input.positive{
 .pad-right{ padding-right:15px; padding-top:3px;}
 .icon-width{ width:20px;}
 a.del_file{
-	background: url("../img/cross.png") no-repeat 0 0 !important; width:16px; height:16px; float:left;
+	background: url("../img/cross2.png") no-repeat 0 0 !important; width:16px; height:16px; float:left;
+}
+.file-tabs-close {
+	background: url("../img/icon-close-circle.png") no-repeat 0 0 !important; width:24px; height:24px;
+    float: right;
+    padding: 0;
+    position: absolute;
+    right: -8px;
+    top: -6px;
+}
+#all_file_list ul li{
+	list-style: none;
 }
 /*Clearfix*/
 .clearfix:after {

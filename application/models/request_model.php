@@ -62,6 +62,19 @@ class Request_model extends crm_model {
     }
 	
 	/*
+	 * Common function for getting single row
+	 * @access public
+	 * @param $tbl   - Table name, $condn - where condition.
+	 */
+	public function get_record($tbl,$condn)
+	{
+		$this->db->select('*');
+		$this->db->where($condn);
+		$sql = $this->db->get($this->cfg['dbpref'] . $tbl);
+		return $sql->row_array();
+	}
+	
+	/*
 	 * @method getParentData()
 	 * @access public
 	 * @param $job_id - Table name

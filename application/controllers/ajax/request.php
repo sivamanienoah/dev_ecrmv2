@@ -136,7 +136,6 @@ class Request extends crm_controller {
 		echo json_encode($json); exit;
 	}
 	
-	
 	/**
 	 * Deletes a file based on a Ajax post request
 	 */
@@ -296,7 +295,8 @@ class Request extends crm_controller {
 							$f_delete = '-';
 						}
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
-						$jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
+						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
+						// $jobs_files_html .= '<td><a onclick=download_files('.$job_id.'); return false;>'.$fname.'</a></td>';	
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
@@ -515,7 +515,8 @@ class Request extends crm_controller {
 							$f_delete = '<img src="assets/img/trash.png" alt=delete>';
 						}
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
-						$jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
+						// $jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
+						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
@@ -680,18 +681,145 @@ class Request extends crm_controller {
 				if(is_numeric($folder_name)) {
 					$folder_name = "&nbsp;root";
 				}
-				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name ."<br />";
+				$html .="<ul>";
+				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
 				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
 				
 				if(!empty($res)) {
 					foreach($res as $fname) {
-						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;".$fname['lead_files_name'] ."<br />";
+						$html .= "<li>";
+						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
+						$html .= "</li>";
 					}
 				}
+				$html .="</ul>";
 			}
 		}
 		echo $html;
 		exit;
+	}
+	
+	/*
+	* Delete the selected files
+	*/
+	public function delete_files(){
+		// echo "<pre>"; print_r($_POST); exit;
+		$delData           = real_escape_array($this->input->post());
+		$json			   = array();
+		$del_status		   = array();
+		
+		if(!empty($delData['ff_id'])) {
+			$json['folder_parent_id'] = $delData['ff_id'];
+		} else {
+			$get_parent_folder_id = $this->request_model->getParentFfolderId($delData['curr_job_id'],$parent=0);
+			$json['folder_parent_id'] = $get_parent_folder_id['folder_id'];
+		}
+		if(!empty($delData['del_folder'])) {
+			$del_folder = rtrim($delData['del_folder'], ",");
+			$del_folder = explode(',', $del_folder);
+		}
+		if(!empty($del_folder)) {
+			$res = $this->del_folder_all($delData['curr_job_id'],$del_folder);
+			$json['del_status'] = $res;
+		}
+		if(!empty($delData['del_files'])) {
+			$del_files = rtrim($delData['del_files'], ",");
+			$del_files = explode(',', $del_files);
+		}
+		if(!empty($del_files)) {
+			$file_res = $this->del_file_all($delData['curr_job_id'],$del_files);
+			$json['del_status'] = $file_res;
+		}
+		
+		echo json_encode($json); 
+		exit;
+	}
+	
+	/**
+	 * Deletes a folder based on a above function delete_files() request
+	 */
+	public function del_folder_all($jobid,$array_folder_id) {
+		$res = array();
+		foreach($array_folder_id as $folder_id) {
+		
+			$condn = array("lead_id"=>$jobid,"folder_id"=>$folder_id);
+			$get_file_data = $this->request_model->get_record("file_management", $condn);
+		
+			$fm_condn            = array('lead_id'=>$jobid,'parent'=>$folder_id);
+			$folder_check_status = $this->request_model->checkStatus('file_management', $fm_condn);
+			
+			if($folder_check_status) {
+				$lf_condn          = array('lead_id'=>$jobid,'folder_id'=>$folder_id);
+				$file_check_status = $this->request_model->checkStatus('lead_files', $lf_condn);
+				if($file_check_status) {
+					//Deleting the folder
+					$del_condn = array('lead_id'=>$jobid,'folder_id'=>$folder_id);
+					$del_file  = $this->request_model->delete_row('file_management', $del_condn);
+					if($del_file) {
+						$logs['jobid_fk']	   = $jobid;
+						$logs['userid_fk']	   = $this->userdata['userid'];
+						$logs['date_created']  = date('Y-m-d H:i:s');
+						$logs['log_content']   = $get_file_data['folder_name'].' folder is deleted.';
+						$logs['attached_docs'] = $get_file_data['folder_name'];
+						$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+						$res[] = $get_file_data['folder_name'].' folder is deleted.';
+					} else {
+						$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+					}
+				} else {
+					$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+				}
+			} else {
+				$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+			}
+		}
+		return $res;
+	}
+	
+	/**
+	 * Deletes a files based on a above function delete_files() request
+	 */
+	public function del_file_all($jobid,$array_file_id) {
+		$f_data = real_escape_array($this->input->post());
+		
+		foreach($array_file_id as $file_id) {
+			$condn = array("lead_id"=>$jobid,"file_id"=>$file_id);
+			$get_file_data = $this->request_model->get_record("lead_files", $condn);
+		
+			$fcpath = UPLOAD_PATH; 
+			$f_dir = $fcpath . 'files/' . $jobid . '/' . $get_file_data['lead_files_name'];
+	
+			if (isset($f_dir))
+			{
+				$file_condn          = array('file_id'=>$file_id);
+				$file_check_status   = $this->request_model->checkStatus('expected_payments_attach_file', $file_condn);
+				if ($file_check_status)
+				{
+					if (@unlink($f_dir))
+					{
+						$wh_condn = array('file_id' => $file_id, 'lead_id' => $jobid);
+						$del_file = $this->request_model->delete_row('lead_files', $wh_condn);
+						
+						$logs['jobid_fk']	   = $jobid;
+						$logs['userid_fk']	   = $this->userdata['userid'];
+						$logs['date_created']  = date('Y-m-d H:i:s');
+						$logs['log_content']   = $get_file_data['lead_files_name'].' is deleted.';
+						$logs['attached_docs'] = $get_file_data['lead_files_name'];
+						$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+						
+						$res[] 		  		   = $get_file_data['lead_files_name'].' is deleted.';
+					} else {
+						$res[]		  		   = $get_file_data['lead_files_name'].' file cannot be deleted.';
+					}
+				} else {
+					$res[]		  		   	   = $get_file_data['lead_files_name'].' file can be used as attachment in Payment milestones.';
+				}
+			} else {
+				$res[]		  		           = $get_file_data['lead_files_name'].' file cannot be deleted.';
+			}
+		}
+		return $res;
 	}
 	
 	/**
