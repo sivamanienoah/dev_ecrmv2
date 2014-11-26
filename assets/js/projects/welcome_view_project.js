@@ -392,6 +392,7 @@
 	//function for load the payment terms every time click the 'Add Payment Terms' button
 	function loadPayment() 
 	{
+		$("#uploadFile").empty();
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
 		$.post( 
