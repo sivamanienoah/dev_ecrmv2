@@ -3178,8 +3178,8 @@ HDOC;
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
 
 			$param['to_mail'] 		  = $to;
-			$param['cc_mail'] 		  = $this->userdata['email'];
-			$param['bcc_mail'] 		  = $bcc_email;
+			$param['cc_mail'] 		  = $this->userdata['email'].','.$bcc_email;
+			// $param['bcc_mail'] 		  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = "Generate Invoice Notificatiion";
