@@ -3164,7 +3164,7 @@ HDOC;
 			$from		  	 = $this->userdata['email'];
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
-			$bcc_email		 = implode(',',$arrayEmails['account_emails_bcc']);
+			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
 			$subject		 = 'Generate Invoice Notificatiion';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
@@ -3178,7 +3178,7 @@ HDOC;
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
 
 			$param['to_mail'] 		  = $to;
-			$param['cc_mail'] 		  = $this->userdata['email'].','.$bcc_email;
+			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
 			// $param['bcc_mail'] 		  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
