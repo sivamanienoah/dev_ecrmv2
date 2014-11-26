@@ -37,27 +37,29 @@
 		
 	});
 
-	$().ready(function() {  
-			$('#add').click(function() {  
-				$('#project-member').val($('#select1').val());	
-				return !$('#select1 option:selected').remove().appendTo('#select2'); 
-			});  
-			$('#remove').click(function() {  
-				$('#project-member').val($('#select2').val());
-				return !$('#select2 option:selected').remove().appendTo('#select1');  
-			});  
-		   /* when double clicking on select1 project member will added to select 2 */
-			$('#select1').dblclick(function() {
-				$('#project-member').val($('#select1').val());
-				return !$('#select1 option:selected').remove().appendTo('#select2');  	
-		   });
-		   /* when double clicking on select2 project member will added to select 1 */
-			$('#select2').dblclick(function() {
-				$('#project-member').val($('#select2').val());
-				return !$('#select2 option:selected').remove().appendTo('#select1');  
-		   });
-		   
-		   $('.logstbl').dataTable( {
+	$().ready(function() {
+		$('#add').click(function() {  
+			$('#project-member').val($('#select1').val());	
+			return !$('#select1 option:selected').remove().appendTo('#select2'); 
+		});  
+		$('#remove').click(function() {  
+			$('#project-member').val($('#select2').val());
+			return !$('#select2 option:selected').remove().appendTo('#select1');  
+		});  
+	   /* when double clicking on select1 project member will added to select 2 */
+		$('#select1').dblclick(function() {
+			$('#project-member').val($('#select1').val());
+			return !$('#select1 option:selected').remove().appendTo('#select2');  	
+	   });
+	   /* when double clicking on select2 project member will added to select 1 */
+		$('#select2').dblclick(function() {
+			$('#project-member').val($('#select2').val());
+			return !$('#select2 option:selected').remove().appendTo('#select1');  
+	   });
+	});
+	
+	function logsDataTable(){
+		$('.logstbl').dataTable( {
 			"iDisplayLength": 10,
 			"sPaginationType": "full_numbers",
 			"bInfo": false,
@@ -72,7 +74,7 @@
 			  "sEmptyTable": "No Comments Found..."
 			}
 		});
-	});
+	}
 
  ////////////////////////----------------------------X---------------------////////////////////////////
  
@@ -404,150 +406,24 @@
 		);
 	}
 
-	/* function setProjectPaymentTerms() 
-	{
-		$('#sp_form_jobid').val(curr_job_id);
-		$(".payment-terms-mini-view1").css("display","block");
-		$(".payment-received-mini-view1").css("display","none");	
-		var valid_date = true;
-		var date_entered = true;
-		var errors = [];
-
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
-		if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
-		var pdate2 = $.trim($('#sp_date_2').val());	
-
-		if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
-			date_entered = false;
-		}
-
-		if ($('#sp_form_jobid').val() == 0) { 
-			errors.push('Invoice not properly loaded!');
-		}
-		if(($.trim($('#sp_date_1').val()) == '')) {
-			errors.push('<p>Enter Payment Milestone Name.</p>');
-		}
-		if(($.trim($('#sp_date_2').val()) == ''))  { //|| valid_date == false) {
-			errors.push('<p>Enter valid Date.</p>');
-		}
-		if (valid_date == false) {
-			errors.push('<p>You have selected an invalid date.</p>');
-		}
-		if(($.trim($('#sp_date_3').val()) == '')) {
-			errors.push('<p>Enter Milestone Value.</p>');
-		}
-		if (errors.length > 0) {
-			//alert(errors.join('\n'));
-			setTimeout('timerfadeout()', 8000);
-			$('#rec_paymentfadeout').show();
-			$('#rec_paymentfadeout').html(errors.join(''));
-			return false;
-		} else {
-			$.blockUI({
-				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-			});
-			
-			var form_data = $('#set-payment-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
-			$.post( 
-				site_base_url+'project/set_payment_terms',
-				form_data,
-				function(data) {
-					if (data.error) {
-						alert(data.errormsg);
-					} else {
-						$('.payment-profile-view:visible').slideUp(400);
-						$('.payment-terms-mini-view1').html(data);
-					}
-					$.unblockUI();
-					$('#set-payment-terms')[0].reset();
-					$('#show_files').empty();
-				}
-			);
-		}
-		
-		$('.payment-terms-mini-view1').css('display', 'block');
-	} */
-
-	//Update functionality for set payment terms Starts here.
-	/* function updateProjectPaymentTerms(eid) 
-	{
-		$('#rec_paymentfadeout').hide();
-		$('#sp_form_jobid').val(curr_job_id);
-		$(".payment-terms-mini-view1").css("display","block");
-		$(".payment-received-mini-view1").css("display","none");
-		var valid_date = true;
-		var date_entered = true;
-		var errors = [];
-
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
-
-		if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = dd+'-'+mm+'-'+yyyy;
-		var pdate2 = $.trim($('#sp_date_2').val());	
-
-		if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
-			date_entered = false;
-		}
-
-		if ($('#sp_form_jobid').val() == 0) { 
-			errors.push('Invoice not properly loaded!');
-		}
-		if(($.trim($('#sp_date_1').val()) == '')) {
-			errors.push('<p>Enter Payment Milestone Name.</p>');
-		}
-		if(($.trim($('#sp_date_2').val()) == ''))  { //|| valid_date == false) {
-			errors.push('<p>Enter valid Date.</p>');
-		}
-		if (valid_date == false) {
-			errors.push('<p>You have selected an invalid date</p>');
-		}
-		if(($.trim($('#sp_date_3').val()) == '')) {
-			errors.push('<p>Enter Milestone Value.</p>');
-		}
-		if (errors.length > 0) {
-			//alert(errors.join('\n'));
-			setTimeout('timerfadeout()', 8000);
-			$('#rec_paymentfadeout').show();
-			$('#rec_paymentfadeout').html(errors.join(''));
-			return false;
-			
-		} else {
-			
-			$.blockUI({
-				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-			});
-			var form_data = $('#update-payment-terms').serialize()+'&'+csrf_token_name+'='+csrf_hash_token;
-			$.post( 
-				site_base_url+'project/set_payment_terms/'+eid,
-				form_data,
-				function(data) {
-						if (data.error) {
-							alert(data.errormsg);
-						} else {
-							$('.payment-profile-view:visible').slideUp(400);
-							$('.payment-terms-mini-view1').html(data);
-						}
-					$.unblockUI();
-					$('#update-payment-terms').remove();
-					paymentProfileView();
-				}
-			);
-			
-		}
-		$('.payment-terms-mini-view1').css('display', 'block');
-	} */
-
 	function fullScreenLogs()
 	{
 		var fsl_height = parseInt($(window).height()) - 80;
 		fsl_height = fsl_height + 'px';
+
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		$.post( 
+			site_base_url+'project/getLogs/'+project_jobid,params,
+			function(data) {
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.comments-log-container').html(data);
+				}
+			}
+		);
+		
 		$.blockUI({
 			message:$('.comments-log-container'),
 			css: {background:'#fff', border: '1px solid #999', padding:'4px', height:fsl_height, color:'#000000', width:'600px', overflow:'auto', top:'40px', left:'50%', marginLeft:'-300px'},
@@ -612,8 +488,8 @@
 										"bAutoWidth": false,
 										"bDestroy": true,
 										"aoColumnDefs": [
-											{ 'bSortable': false, 'aTargets': [ 0,6 ] }
-										 ]
+											{ 'bSortable': false, 'aTargets': [ 0 ] }
+										]
 									});
 									$.unblockUI();
 								}
@@ -1282,6 +1158,9 @@ function addURLtoJob()
 					loadExistingFiles($('#filefolder_id').val());
 					showBreadCrumbs($('#filefolder_id').val());
 				}
+				if (ui.newPanel[0].id=='jv-tab-9') {
+					loadLogs(project_jobid);
+				}
 			}
 		});
 		
@@ -1294,41 +1173,6 @@ function addURLtoJob()
 			});
 		});
 	
-	//function for getting the files based on ID
-	function loadExistingFiles(ffolder_id) {
-		$('#jv-tab-3').block({
-			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-		});
-		$.get(
-			site_base_url+'ajax/request/get_project_files/'+curr_job_id+'/'+ffolder_id,
-			{},
-			function(data) {
-				$('#list_file').html(data);
-				$('#jv-tab-3').unblock();
-				$('#list_file_tbl').dataTable({
-					"iDisplayLength": 10,
-					"sPaginationType": "full_numbers",
-					"bInfo": true,
-					"bPaginate": true,
-					"bProcessing": true,
-					"bServerSide": false,
-					"bLengthChange": true,
-					"bSort": true,
-					"bFilter": false,
-					"bAutoWidth": false,
-					"bDestroy": true,
-					"aoColumnDefs": [
-						{ 'bSortable': false, 'aTargets': [ 0,6 ] }
-					 ]
-				});
-				$.unblockUI();
-			}
-		);
-		return false;
-	}
-	
-
 
 		/* try {
 			var sb_ol = $('.status-bar').offset().left;
@@ -1353,12 +1197,11 @@ function addURLtoJob()
 			});
 		} catch (e) { if (window.console) console.log(e); } */
 
-		
-		$(document).ready(function() {
-			if (project_complete_status!='') {
-				updateVisualStatus(project_complete_status);
-			}
-		});
+
+		if (project_complete_status!='') {
+			updateVisualStatus(project_complete_status);
+		}
+
 		
 		$('.jump-to-job select').change(function(){
 			var _new_location = proj_location;
@@ -1451,8 +1294,41 @@ function addURLtoJob()
 				return false;
 			}
 		});
-
 	});
+	
+	//function for getting the files based on ID
+	function loadExistingFiles(ffolder_id) {
+		$('#jv-tab-3').block({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.get(
+			site_base_url+'ajax/request/get_project_files/'+curr_job_id+'/'+ffolder_id,
+			{},
+			function(data) {
+				$('#list_file').html(data);
+				$('#jv-tab-3').unblock();
+				$('#list_file_tbl').dataTable({
+					"iDisplayLength": 10,
+					"sPaginationType": "full_numbers",
+					"bInfo": true,
+					"bPaginate": true,
+					"bProcessing": true,
+					"bServerSide": false,
+					"bLengthChange": true,
+					"bSort": true,
+					"bFilter": false,
+					"bAutoWidth": false,
+					"bDestroy": true,
+					"aoColumnDefs": [
+						{ 'bSortable': false, 'aTargets': [ 0 ] }
+					]
+				});
+				$.unblockUI();
+			}
+		);
+		return false;
+	}
 	
 	var job_complete_percentage;
 
@@ -2288,7 +2164,6 @@ function generate_inv(eid) {
 function open_files(leadid,type) {
 	var params				= {'leadid':leadid};
 	params[csrf_token_name] = csrf_hash_token;
-	
 	$.ajax({
 		type: 'POST',
 		url: site_base_url+'ajax/request/get_files_tree_structure',
@@ -2299,9 +2174,9 @@ function open_files(leadid,type) {
 			$('#all_file_list').html(data);
 			$('#exp_type').val(type);
 			$.blockUI({
-				message: $('#map_add_file'), 
-				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto', 'overflow-x':'hidden'} 
-			});
+				message: $('#map_add_file'),
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto', 'overflow-x':'hidden'}			
+			});			
 		}
 	});
 	return false;
@@ -2393,4 +2268,21 @@ function showRequest()
 }
 function download_files(job_id,f_name){
 	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+f_name;
+}
+
+function loadLogs(id) 
+{
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	$.post( 
+		site_base_url+'project/getLogs/'+id,params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('#load-log').html(data);
+				logsDataTable();
+			}
+		}
+	);
 }

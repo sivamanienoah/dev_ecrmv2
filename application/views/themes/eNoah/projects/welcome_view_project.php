@@ -19,17 +19,7 @@ if (get_default_currency()) {
 ?>
 <?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
 
-<div class="comments-log-container" style="display:none;">
-	<?php if ($log_html != "") { ?>
-			<table width="100%" class="log-container"> 
-				<tbody>
-				<?php 
-					echo $log_html;
-				?>				
-				</tbody> 
-			</table>
-	<?php } else { echo "No Comments Found."; }?>
-</div>
+
 
 <div id="content">
     <?php
@@ -1505,35 +1495,16 @@ if (get_default_currency()) {
 				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
 				|
 				<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
-				<?php 
-				if (isset($userdata) && $userdata['level']==1 && $userdata['role_id']==1)
-				{
-				?>
-				|
-				<a href="#" onclick="qcOKlog(); return false;">All Logs OK?</a>
-				<?php 
-				}
-				?>
 		</span>
 		<h4>Job History</h4>
-		<table width="100%" id="lead_log_list" class="log-container logstbl"> 
-			<thead> 
-				<tr> 
-					<th>&nbsp;</th> 
-				</tr> 
-			</thead>
-			<tbody>
-			<?php 
-				echo $log_html;
-			?>				
-			</tbody> 
-		</table>
+		<div id="load-log"></div>
 	</div><!-- id: jv-tab-9 end -->
 	
   </div>
 </div>
 </div><!--end of project-tabs-->
 </div>
+<div class="comments-log-container"></div>
 <style>
 .hide-calendar .ui-datepicker-calendar {
    display: none;

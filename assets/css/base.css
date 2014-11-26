@@ -1846,7 +1846,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile{
+#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, .comments-log-container{
 	display: none;
 }
 /* file_breadcrumb */

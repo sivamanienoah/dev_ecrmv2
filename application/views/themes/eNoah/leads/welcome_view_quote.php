@@ -22,23 +22,7 @@ $(function(){
 });
 </script>
 
-<div class="comments-log-container" style= "display:none;">
-	<?php 
-		if ($log_html != "") { 
-	?>
-			<table width="100%" class="log-container"> 
-				<tbody>
-				<?php 
-					echo $log_html;
-				?>				
-				</tbody> 
-			</table>
-	<?php 
-		} else { 
-			echo "No Comments Found."; 
-		}
-	?>
-</div>
+<div class="comments-log-container"></div>
 
 <script type="text/javascript">
 var unid = <?php  echo $userdata['userid'] ?>;
@@ -53,10 +37,10 @@ lead_services['not_select'] = '';
 lead_services[<?php echo $job["sid"] ?>] = '<?php echo $job["services"] ?>';
 <?php } ?>
 
-var quote_id = <?php echo  isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
+var quote_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
 var ex_cust_id = 0;
 var item_sort_order = '';
-var curr_job_id = <?php echo  $quote_data['lead_id'] ?>;
+var curr_job_id = <?php echo $quote_data['lead_id'] ?>;
 
 $(function(){
 	<?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
@@ -212,9 +196,24 @@ function addLog() {
 }
 
 
-function fullScreenLogs() {
+function fullScreenLogs()
+{
 	var fsl_height = parseInt($(window).height()) - 80;
 	fsl_height = fsl_height + 'px';
+
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	$.post( 
+		site_base_url+'welcome/getLogs/'+curr_job_id,params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('.comments-log-container').html(data);
+			}
+		}
+	);
+	
 	$.blockUI({
 		message:$('.comments-log-container'),
 		css: {background:'#fff', border: '1px solid #999', padding:'4px', height:fsl_height, color:'#000000', width:'600px', overflow:'auto', top:'40px', left:'50%', marginLeft:'-300px'},
@@ -520,6 +519,9 @@ $(function(){
 			if (ui.newPanel[0].id=='jv-tab-3') {
 				getFolderdata($('#filefolder_id').val());
 				// showBreadCrumbs($('#filefolder_id').val());
+			}
+			if (ui.newPanel[0].id=='jv-tab-8') {
+				loadLogs(quote_id);
 			}
 		}
 	});
@@ -1328,39 +1330,54 @@ $(function(){
 	</div>
 	<div id="jv-tab-8">
 		<span style="float:right;"> 
-				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
-				|
-				<a href="#" onclick="$('.log > :not(.stickie),#pager').toggle(); return false;">View/Hide Stickies</a>
-				<?php 
-				if (isset($userdata) && $userdata['level']==1 && $userdata['role_id']==1)
-				{
-				?>
-				|
-				<a href="#" onclick="qcOKlog(); return false;">All Logs OK?</a>
-				<?php 
-				}
-				?>
-			</span>
-			<h4>Comments</h4>
-
-			<table width="100%" id="lead_log_list" class="log-container logstbl">
-				<thead><tr><th>&nbsp;</th></tr></thead>
-				<tbody>
-					<?php echo $log_html; ?>
-				</tbody>
-			</table>
+			<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
+			|
+			<a href="#" onclick="$('.log > :not(.stickie),#pager').toggle(); return false;">View/Hide Stickies</a>
+		</span>
+		<h4>Comments</h4>
+		<div id="load-log"></div>
 	</div>
    </div>
  </div>
 </div>
 <script>
-	$(function(){
-		$(".cancel").click(function(){
-			$('#querylead_table').slideToggle();
-			$('#query, #query_file').val('');
-		})
+$(function(){
+	$(".cancel").click(function(){
+		$('#querylead_table').slideToggle();
+		$('#query, #query_file').val('');
 	})
-			
+});
+$('.queriestbl').dataTable( {
+	"iDisplayLength": 5,
+	"sPaginationType": "full_numbers",
+	"bInfo": false,
+	"bPaginate": true,
+	"bProcessing": true,
+	"bServerSide": false,
+	"bLengthChange": false,
+	"bSort": false,
+	"bFilter": false,
+	"bAutoWidth": false,
+	"oLanguage": {
+	  "sEmptyTable": "No Queries Found..."
+	}
+});
+function loadLogs(id) {
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	$.post( 
+		site_base_url+'welcome/getLogs/'+id,params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('#load-log').html(data);
+				logsDataTable();
+			}
+		}
+	);
+}
+function logsDataTable() {
 	$('#lead_log_list').dataTable( {
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
@@ -1376,22 +1393,7 @@ $(function(){
 		  "sEmptyTable": "No Comments Found..."
 		}
 	});
-	
-	$('.queriestbl').dataTable( {
-		"iDisplayLength": 5,
-		"sPaginationType": "full_numbers",
-		"bInfo": false,
-		"bPaginate": true,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": false,
-		"bSort": false,
-		"bFilter": false,
-		"bAutoWidth": false,
-		"oLanguage": {
-		  "sEmptyTable": "No Queries Found..."
-		}
-	});
-		</script>	
+}
+</script>	
 <script type="text/javascript" src="assets/js/request/request.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

@@ -135,97 +135,7 @@ class Request extends crm_controller {
 		}
 		echo json_encode($json); exit;
 	}
-	
-	/**
-	 * Deletes a file based on a Ajax post request
-	 */
-	public function file_delete() {
-		$f_data = real_escape_array($this->input->post());
-		
-		$fcpath = UPLOAD_PATH; 
-		$f_dir = $fcpath . 'files/' . $f_data['job_id'] . '/' . $f_data['f_name'];
-	
-		if (isset($f_dir))
-		{
-			if (is_file($f_dir))
-			{
-				if (@unlink($f_dir))
-				{
-					$wh_condn = array('file_id' => $f_data['file_id'], 'lead_id' => $f_data['job_id']);
-					$del_file = $this->request_model->delete_row('lead_files', $wh_condn);
-					
-					$logs['jobid_fk']	   = $f_data['job_id'];
-					$logs['userid_fk']	   = $this->userdata['userid'];
-					$logs['date_created']  = date('Y-m-d H:i:s');
-					$logs['log_content']   = $f_data['f_name'].' is deleted.';
-					$logs['attached_docs'] = $f_data['f_name'];
-					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
-					
-					$json['error'] 		   = FALSE;
-					$json['fparent_id']    = $f_data['fparent_id'];
-				}
-				else
-				{
-					$json['error'] = TRUE;
-				}
-			}
-			else
-			{
-				$json['error'] = TRUE;
-			}
-		}
-		else
-		{
-			$json['error'] = TRUE;
-		}
-		echo json_encode($json);
-	}
-	
-	/**
-	 * Deletes a file based on a Ajax post request
-	 */
-	public function folder_delete() {
-		$f_data = real_escape_array($this->input->post());
-			
-		// check first in file management table - whether it contains child folder
-		// if not then check the folder whether it contains files.
-		
-		$fm_condn            = array('lead_id'=>$f_data['lead_id'],'parent'=>$f_data['folder_id']);
-		$folder_check_status = $this->request_model->checkStatus('file_management', $fm_condn);
-		
-		if($folder_check_status) {
-			$lf_condn          = array('lead_id'=>$f_data['lead_id'],'folder_id'=>$f_data['folder_id']);
-			$file_check_status = $this->request_model->checkStatus('lead_files', $lf_condn);
-			if($file_check_status) {
-				//Deleting the folder
-				$del_condn = array('lead_id'=>$f_data['lead_id'],'folder_id'=>$f_data['folder_id']);
-				$del_file  = $this->request_model->delete_row('file_management', $del_condn);
-				if($del_file) {
-					$logs['jobid_fk']	   = $f_data['lead_id'];
-					$logs['userid_fk']	   = $this->userdata['userid'];
-					$logs['date_created']  = date('Y-m-d H:i:s');
-					$logs['log_content']   = $f_data['folder_name'].' folder is deleted.';
-					$logs['attached_docs'] = $f_data['folder_name'];
-					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
-				
-					$json['error'] 	    = FALSE;
-					$json['fparent_id'] = $f_data['fparent_id'];
-					$json['msg']   		= "Folder Deleted.";
-				} else {
-					$json['error'] 	    = TRUE;
-					$json['msg']   		= "Error in Deletion.";
-				}
-			} else {
-				$json['error'] = TRUE;
-				$json['msg']   = "This Folder contains documents. This cannot be Deleted.";
-			}
-		} else {
-			$json['error'] = TRUE;
-			$json['msg']   = "This Folder contains child folder (or) documents. This cannot be Deleted.";
-		}
-		echo json_encode($json);
-	}
-	
+
 	/**
 	 * @method get_project_files()
 	 * @param $job_id
@@ -266,9 +176,8 @@ class Request extends crm_controller {
 			}
 		}
 		$jobs_files_html = '';
-		
+		$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
 		if(!empty($file_array)) {
-			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Action</th></tr></thead>';
 			$jobs_files_html .= '<tbody>';
 			foreach($file_array as $fi) {
 				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id) = explode('<=>',$fi);
@@ -288,12 +197,6 @@ class Request extends crm_controller {
 						  $file_sz = $file_info['size'] . ' Bytes';
 						}
 						$file_ext  = end(explode('.',$fname));
-						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=file><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
-						if($chge_access == 1 || $file_upload_access ==1) {
-							$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
-						} else {
-							$f_delete = '-';
-						}
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
 						// $jobs_files_html .= '<td><a onclick=download_files('.$job_id.'); return false;>'.$fname.'</a></td>';	
@@ -301,22 +204,18 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
-						$jobs_files_html .= '<td>'.$f_delete.'</td>';
 					} else {
-						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=folder><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
-						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFolder('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
 						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
-						$jobs_files_html .= '<td>'.$f_delete.'</td>';
 					}
 					$jobs_files_html .= '</tr>';
 			}
-			$jobs_files_html .= '</tbody></table>';
 		}
+		$jobs_files_html .= '</tbody></table>';
 		echo $jobs_files_html;
 	}
 	
@@ -441,7 +340,8 @@ class Request extends crm_controller {
 		} else {
 			$htm['af_msg'] = '<span class="ajx_failure_msg"><h5>'.$err_msg.'</h5></span>';
 		}
-		$htm['af_reload'] = $af_data['afparent_id'];
+		// $htm['af_reload'] = $af_data['afparent_id'];
+		$htm['af_reload'] = $af_data['add_destiny'];
 		echo json_encode($htm);
 		exit;
 	}
@@ -488,7 +388,7 @@ class Request extends crm_controller {
 		$jobs_files_html = '';
 		
 		if(!empty($file_array)) {
-			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Action</th></tr></thead>';
+			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
 			$jobs_files_html .= '<tbody>';
 			foreach($file_array as $fi) {
 				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id) = explode('<=>',$fi);
@@ -508,12 +408,6 @@ class Request extends crm_controller {
 						  $file_sz = $file_info['size'] . ' Bytes';
 						}
 						$file_ext  = end(explode('.',$fname));
-						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=file><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
-						if($chge_access == 1) {
-							$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
-						} else {
-							$f_delete = '<img src="assets/img/trash.png" alt=delete>';
-						}
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						// $jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
@@ -521,17 +415,13 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
-						$jobs_files_html .= '<td>'.$f_delete.'</td>';
 					} else {
-						$f_move   = '<input type=hidden id="mf_'.$file_id.'" value="'.$fname.'"><input type=hidden id="mftype_'.$file_id.'" value=folder><a title=move onclick="moveFile('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/document_move.png" alt=Move></a>';
-						$f_delete = '<input type=hidden id="filename_'.$file_id.'" value="'.$fname.'"><a title=Delete onclick="ajaxDeleteFolder('.$job_id.','.$file_id.','.$fparent_id.'); return false;" ><img src="assets/img/trash.png" alt=delete></a>';
 						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
-						$jobs_files_html .= '<td>'.$f_delete.'</td>';
 					}
 					$jobs_files_html .= '</tr>';
 			}
@@ -704,9 +594,8 @@ class Request extends crm_controller {
 	*/
 	public function delete_files(){
 		// echo "<pre>"; print_r($_POST); exit;
-		$delData           = real_escape_array($this->input->post());
-		$json			   = array();
-		$del_status		   = array();
+		$delData            = real_escape_array($this->input->post());
+		$json	            = array();
 		
 		if(!empty($delData['ff_id'])) {
 			$json['folder_parent_id'] = $delData['ff_id'];
@@ -720,7 +609,7 @@ class Request extends crm_controller {
 		}
 		if(!empty($del_folder)) {
 			$res = $this->del_folder_all($delData['curr_job_id'],$del_folder);
-			$json['del_status'] = $res;
+			$json['folder_del_status'] = $res;
 		}
 		if(!empty($delData['del_files'])) {
 			$del_files = rtrim($delData['del_files'], ",");
@@ -728,9 +617,12 @@ class Request extends crm_controller {
 		}
 		if(!empty($del_files)) {
 			$file_res = $this->del_file_all($delData['curr_job_id'],$del_files);
-			$json['del_status'] = $file_res;
+			$json['file_del_status'] = $file_res;
 		}
-		
+		if(empty($json['folder_del_status']))
+		$json['folder_del_status'] = "no_folder_del";
+		if(empty($json['file_del_status']))
+		$json['file_del_status'] = "no_file_del";
 		echo json_encode($json); 
 		exit;
 	}

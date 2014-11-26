@@ -122,46 +122,6 @@ class Welcome extends crm_controller {
 				$logViewStatus = $this->welcome_model->updt_log_view_status($id, $log_view_status);
 			}
             
-			$data['log_html'] = '';
-			$getLogs = $this->welcome_model->get_logs($id);
-            
-            if (!empty($getLogs)) {
-                $log_data = $getLogs;
-                $this->load->helper('url');
-
-                foreach ($log_data as $ld) {
-					$user_data = $this->welcome_model->get_user_data_by_id($ld['userid_fk']);
-					
-					if (count($user_data) < 1)
-					{
-						echo '<!-- ', print_r($ld, TRUE), ' -->';
-						continue;
-					}
-                    
-                    $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $ld['log_content'])))), 'url', TRUE));
-                    
-					$fancy_date = date('l, jS F y h:iA', strtotime($ld['date_created']));
-					
-					$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';					
-
-					$table = '
-					<tr class="log'.$stick_class.'">
-						<td class="log'.$stick_class.'">
-							<p class="data log'.$stick_class.'">
-								<span class="log'.$stick_class.'">'.$fancy_date.'</span>
-								'.$user_data[0]['first_name'].' '.$user_data[0]['last_name'].'
-							</p>
-							<p class="desc log'.$stick_class.'">
-								'.$log_content.'
-							</p>
-						</td>
-					</tr>';
-
-                    $data['log_html'] .= $table;
-					unset($table, $user_data, $user, $log_content);
-                }
-            }
-			
 			/**
 			 * Get files associated with this job
 			 **/
@@ -206,6 +166,49 @@ class Welcome extends crm_controller {
 			redirect('welcome/quotation');
         }
     }
+	
+	/*
+	*Get the logs
+	*/
+	function getLogs($id){
+	
+		$data['log_html'] = '';
+		$getLogsData = $this->welcome_model->get_logs($id);
+		// echo "<pre>"; print_r($getLogsData); exit;
+		$data['log_html'] .= '<table width="100%" id="lead_log_list" class="log-container logstbl">';
+		$data['log_html'] .= '<thead><tr><th>&nbsp;</th></tr></thead><tbody>';
+		
+		if (!empty($getLogsData)) {
+			$log_data = $getLogsData;
+			$this->load->helper('url');
+			$this->load->helper('text');
+			$this->load->helper('fix_text');
+			
+			foreach ($log_data as $ld) {
+				// $wh_condn = array('userid'=>$ld['userid_fk']);
+				$user_data = $this->welcome_model->get_user_data_by_id($ld['userid_fk']);
+				
+				if (count($user_data) < 1) {
+					echo '<!-- ', print_r($ld, TRUE), ' -->'; 
+					continue;
+				}
+				
+				$log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $ld['log_content'])))), 'url', TRUE));
+				
+				$fancy_date = date('l, jS F y h:iA', strtotime($ld['date_created']));
+				
+				$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';
+				
+				$table ='<tr id="log" class="log'.$stick_class.'"><td id="log" class="log'.$stick_class.'">
+						 <p class="data log'.$stick_class.'"><span class="log'.$stick_class.'">'.$fancy_date.'</span>'.$user_data[0]['first_name'].' '.$user_data[0]['last_name'].'</p>
+						 <p class="desc log'.$stick_class.'">'.$log_content.'</p></td></tr>';
+				$data['log_html'] .= $table;
+				unset($table, $user_data, $user, $log_content);
+			}
+		}
+		$data['log_html'] .= '</tbody></table>';
+		echo $data['log_html'];
+	}
 	
 	 /*
      * provides the list of items

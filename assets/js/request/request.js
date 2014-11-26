@@ -29,138 +29,12 @@ function getFolderdata(ffolder_id) {
 				"bAutoWidth": false,
 				"bDestroy": true,
 				"aoColumnDefs": [
-					{ 'bSortable': false, 'aTargets': [ 0,6 ] }
+					{ 'bSortable': false, 'aTargets': [ 0 ] }
 				]
 			});
 			$.unblockUI();
 		}
 	);
-	return false;
-}
-
-function ajaxDeleteFile(job_id, file_id, fparent_id) {
-	var f_name = $('#filename_'+file_id).val();
-	if (window.confirm('Are you sure you want to delete this file?')) 
-	{
-		var params 				= {'job_id':job_id,'file_id':file_id,'f_name':f_name,'fparent_id':fparent_id};
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.post(
-			site_base_url+'ajax/request/file_delete/',
-			params,
-			function(data) {
-				try {
-					var _data;
-					eval('_data = ' + data);
-					if (!_data.error) {
-						getFolderdata(_data.fparent_id);
-					} else {
-						alert('File could not be deleted!');
-					}
-				} catch (e) {
-					alert(e);
-					alert('File could not be deleted!');
-				}
-			}
-		);
-	}
-}
-
-function ajaxDeleteFolder(lead_id, folder_id, fparent_id) {
-	var folder_name = $('#filename_'+folder_id).val();
-	if (window.confirm('Are you sure you want to delete this folder?')) 
-	{
-		var params 				= {'lead_id':lead_id,'folder_id':folder_id,'folder_name':folder_name,'fparent_id':fparent_id};
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.post(
-			site_base_url+'ajax/request/folder_delete/',
-			params,
-			function(data) {
-				try {
-					var _data;
-					eval('_data = ' + data);
-					if (!_data.error) {
-						$("#fileupload_msg").html("<span class='ajx_success_msg'>"+_data.msg+"</span>");
-						getFolderdata(_data.fparent_id);
-						
-					} else {
-						// alert(_data.msg);
-						$("#fileupload_msg").html("<span class='ajx_failure_msg'>"+_data.msg+"</span>");
-					}
-				} catch (e) {
-					// alert(e);
-					alert('Folder could not be deleted!');
-				}
-			setTimeout('timerfadeout()', 3000);
-			}
-		);
-	}
-}
-
-
-function ajaxMoveFile(job_id, file_id, fparent_id) {
-	var f_name = $('#filename_'+file_id).val();
-	if (window.confirm('Are you sure you want to delete this file?')) 
-	{
-		var params 				= {'job_id':job_id,'file_id':file_id,'f_name':f_name,'fparent_id':fparent_id};
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.post(
-			site_base_url+'ajax/request/file_delete/',
-			params,
-			function(data) {
-				try {
-					var _data;
-					eval('_data = ' + data);
-					if (!_data.error) {
-						getFolderdata(_data.fparent_id);
-					} else {
-						alert('File could not be deleted!');
-					}
-				} catch (e) {
-					alert(e);
-					alert('File could not be deleted!');
-				}
-			}
-		);
-	}
-}
-
-/*
- * Show as tree structure files for moving file
- */
-function moveFile(leadid, file_id, fparent_id) {
-	var params				= {'leadid':leadid, 'file_id':file_id, 'fparent_id':fparent_id};
-	params[csrf_token_name] = csrf_hash_token;
-	
-	$.ajax({
-		type: 'POST',
-		url: site_base_url+'ajax/request/get_file_tree_struct',
-		dataType: 'json',
-		data: params,
-		success: function(data) {
-			// console.info(data);
-			$('#mlead_id').val(data.lead_id);
-			$('#mfile_id').val(data.file_id);
-			$('#mfparent_id').val(data.fparent_id);
-			$('#mffilename').val($('#mf_'+file_id).val());
-			$('#mffiletype').val($('#mftype_'+file_id).val());
-			$('#mf_name').html('<strong><h3>Move '+$('#mf_'+file_id).val()+'</h3></strong>');
-			$('#file_tree').html(data.tree_struture);
-			$.blockUI({ 
-				message: $('#move-file'), 
-				css: {
-					border: '2px solid #999',
-					color:'#333',
-					padding:'8px',
-					top:  ($(window).height() - 400) /2 + 'px', 
-					left: ($(window).width() - 400) /2 + 'px', 
-					width: '400px' 
-				} 
-			});
-		}
-	});
 	return false;
 }
 
@@ -223,6 +97,10 @@ function create_folder(leadid, fparent_id) {
  *Adding folder
  */
 function add_folder() {
+	if($("#new_folder").val() == "") {
+		alert("Folder Name cannot be empty");
+		return false;
+	}
 	var form_data = $('#create-folder').serialize();
 	$.ajax({
 		type: 'POST',
@@ -278,8 +156,8 @@ function searchFileFolder() {
 				"bAutoWidth": false,
 				"bDestroy": true,
 				"aoColumnDefs": [
-					{ 'bSortable': false, 'aTargets': [ 0,6 ] }
-				 ]
+					{ 'bSortable': false, 'aTargets': [ 0 ] }
+				]
 			});
 			$.unblockUI();
 		}
@@ -381,6 +259,7 @@ function move_all_files() {
 *Moving Multiple files
 */
 function deleteAllFiles() {
+
 	var ff_id = $('#filefolder_id').val();
 	var del_folder = '';
 	var del_files = '';
@@ -397,6 +276,10 @@ function deleteAllFiles() {
 		alert('No files or folders selected');
 		return false;
 	}
+	var result = confirm("Are you sure you want to delete this files?");
+	if (result==false) {
+		return false;
+	}
 	
 	var params				= {'del_folder':del_folder, 'del_files':del_files, 'curr_job_id':curr_job_id, 'ff_id':ff_id};
 	params[csrf_token_name] = csrf_hash_token;
@@ -408,7 +291,18 @@ function deleteAllFiles() {
 		data: params,
 		success: function(data) {
 			// console.info(data);
-			alert(data.del_status);
+			var delete_status = '';
+			if(data.folder_del_status!='no_folder_del'){
+				$.each(data.folder_del_status, function(i, item) {
+					delete_status += item+"\n";
+				});
+			}
+			if(data.file_del_status!='no_file_del'){
+				$.each(data.file_del_status, function(i, item) {
+					delete_status += item+"\n";
+				});
+			}
+			alert(delete_status);
 			getFolderdata(data.folder_parent_id);
 		}
 	});
