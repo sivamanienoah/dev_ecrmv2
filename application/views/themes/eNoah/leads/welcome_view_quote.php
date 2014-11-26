@@ -929,6 +929,9 @@ $(function(){
 						<div class="pull-left pad-right">
 							<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
 						</div>
+						<div class="pull-left pad-right">
+							<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
+						</div>
 					</div>
 					<?php } ?>
 					<div class='clrboth'></div>
