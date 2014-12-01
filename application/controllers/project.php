@@ -1132,6 +1132,7 @@ class Project extends crm_controller {
 		$output .= "<th class='header'>Payment Milestone</th>";
 		$output .= "<th class='header'>Milestone Date</th>";
 		$output .= "<th class='header'>Amount</th>";
+		$output .= "<th class='header'>Attachments</th>";
 		$output .= "<th class='header'>Status</th>";
 		$output .= "<th class='header'>Action</th>";
 		$output .= "</tr>";
@@ -1140,6 +1141,8 @@ class Project extends crm_controller {
 		{
 			foreach ($expect_payment_terms as $exp)
 			{
+				$att_condn   = array("expectid"=>$exp['expectid']);
+				$attachments = $this->project_model->get_records_by_num("expected_payments_attach_file",$att_condn);
 				$expected_date = date('d-m-Y', strtotime($exp['expected_date']));
 				$payment_amount = number_format($exp['amount'], 2, '.', ',');
 				$total_amount_recieved += $exp['amount'];
@@ -1165,11 +1168,15 @@ class Project extends crm_controller {
 				} else {
 					$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 				}
-				
+				$att = "";
+				if($attachments>0){
+					$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
+				}
 				$output .= "<tr>";
 				$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
 				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
 				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
+				$output .= "<td align='center'>".$att."</td>";
 				$output .= "<td align='center'>".$payment_received."</td>";
 				if ($readonly_status == false) {
 					$output .= "<td align='left'>
