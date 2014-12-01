@@ -725,5 +725,14 @@ class Project_model extends crm_model
 		return $query->result_array();
 	}
 	
+	function get_records_by_num($tbl, $wh_condn)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->num_rows();
+	}
+	
 }
 ?>
