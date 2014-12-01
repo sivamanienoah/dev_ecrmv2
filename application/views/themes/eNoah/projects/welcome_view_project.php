@@ -564,6 +564,7 @@ if (get_default_currency()) {
 						$output = '';
 						$total_amount_recieved = '';
 						$pt_select_box = '';
+						
 						$output .= '<div class="payment-terms-mini-view1" style="display:block; float:left; margin-top:5px;">';
 					    if(!empty($payment_data))
 						{
@@ -585,12 +586,16 @@ if (get_default_currency()) {
 							$output .= "<th class='header'>Payment Milestone</th>";
 							$output .= "<th class='header'>Milestone Date</th>";
 							$output .= "<th class='header'>Amount</th>";
+							$output .= "<th class='header'>Attachments</th>";
 							$output .= "<th class='header'>Status</th>";
 							$output .= "<th class='header'>Action</th>";
 							$output .= "</tr>";
 							$output .= "</thead>";
 							foreach ($payment_data as $pd)
 							{
+								$att_condn = array("expectid"=>$pd['expectid']);
+								$attachments = $this->project_model->get_records_by_num("expected_payments_attach_file",$att_condn);
+							
 								$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
 								$payment_amount = number_format($pd['amount'], 2, '.', ',');
 								$total_amount_recieved += $pd['amount'];
@@ -616,11 +621,15 @@ if (get_default_currency()) {
 								} else {
 									$invoice_stat = "<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 								}
+								$att = "";
+								if($attachments!=0){
+									$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
+								}
 								$output .= "<tr>";
 								$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
 								$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
 								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
-								// $output .= "<td align='center'>".$payment_received."</td>";
+								$output .= "<td align='center'>".$att."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
 								if ($readonly_status == false || $this->session->userdata['logged_in_user']['role_id']==4) {
 									$output .= "<td align='left'>
