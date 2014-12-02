@@ -276,10 +276,10 @@ class Project extends crm_controller {
 					$wh_condn = array('jobid_fk'=>$data['quote_data']['lead_id']);
 					$this->db->delete($this->cfg['dbpref'].'contract_jobs',$wh_condn);
 					
-					$ins['jobid_fk']  =  $data['quote_data']['lead_id'];
+					$inse['jobid_fk']  =  $data['quote_data']['lead_id'];
 					foreach($ts_team_members as $ts){
-						$ins['userid_fk'] =  $ts;
-						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$ins);
+						$inse['userid_fk'] =  $ts;
+						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$inse);
 					}
 				}
 			}
