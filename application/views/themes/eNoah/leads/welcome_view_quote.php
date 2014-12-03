@@ -932,6 +932,9 @@ $(function(){
 				<div class="pull-left pad-right">
 					<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
 				</div>
+				<div class="pull-left pad-right">
+					<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
+				</div>
 			</div>
 			<?php } ?>
 			<div class='clrboth'></div>

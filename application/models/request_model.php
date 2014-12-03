@@ -315,5 +315,16 @@ class Request_model extends crm_model {
 	    return $sql->result_array();
     }
 	
+	public function get_project_members($id)
+	{
+		$this->db->select('us.userid,us.first_name,us.last_name');
+		$this->db->from($this->cfg['dbpref'] . 'contract_jobs AS cj');
+		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = cj.userid_fk', 'LEFT');
+		$this->db->where('cj.jobid_fk', $id);
+		$this->db->where('us.inactive', 0);
+		$contract_users = $this->db->get();
+		return $contract_users->result_array();
+	}
+	
 }
 ?>

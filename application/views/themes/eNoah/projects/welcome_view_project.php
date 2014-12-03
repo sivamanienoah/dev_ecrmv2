@@ -808,6 +808,9 @@ if (get_default_currency()) {
 			<div class="pull-left pad-right">
 				<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
 			</div>
+			<div class="pull-left pad-right">
+				<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
+			</div>
 			<?php } ?>
 		</div>
 		
@@ -917,6 +920,31 @@ if (get_default_currency()) {
 				</tr>
 			</table>
 		<!-- edit end -->
+		</form>
+		<form id="folderAccessRights" onsubmit="return false;">
+			<div id='fa_successerrmsg' class='succ_err_msg'></div>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="4"><strong><h3>Access Rights</h3></strong></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type='hidden' name='fa_lead_id' id='fa_lead_id' value=''>
+						<input type='hidden' name='fa_folder' id='fa_folder' value=''>
+						<input type='hidden' name='fa_file' id='fa_file' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" id="accessStruct"></td>
+				</tr>
+				<tr>
+					<td class="pad-all" colspan="4">
+						<div class="buttons"><button type="submit" class="positive" onclick="savefolderAccess(); return false;">Save</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
+			</table>
 		</form>
 	</div><!--id: jv-tab-3 end -->
 			

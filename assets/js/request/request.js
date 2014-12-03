@@ -324,3 +324,81 @@ function showBreadCrumbs(parent_id) {
 function download_files_id(job_id,file_id) {
 	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+$("#file_"+file_id).val();
 }
+
+/*
+* folder access rights
+*/
+function folderAccess() {
+	var fa_folder = '';
+	var fa_files  = '';
+	$( ".file_chk:checked" ).each(function( index ) {
+		if($(this).attr('file-type') == 'folder') {
+			fa_folder += $(this).val()+',';
+		} else if($(this).attr('file-type') == 'file') {
+			fa_files += $(this).val()+',';
+		}
+	});
+	// alert(fa_folder+'+++'+fa_files); return false;
+	
+	if((fa_folder=='') && (fa_files=='')) {
+		alert('No files or folders selected');
+		return false;
+	}
+	
+	var params				= {'fa_folder':fa_folder, 'fa_files':fa_files, 'curr_job_id':curr_job_id};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/getProjectMembers',
+		data: params,
+		success: function(data) {
+			// console.info(data);
+			$('#fa_lead_id').val(curr_job_id);
+			$('#fa_folder').val(fa_folder);
+			$('#fa_file').val(fa_files);
+			$('#accessStruct').html(data);
+			$.blockUI({ 
+				message: $('#folderAccessRights'),
+				css: {
+					border: '2px solid #999',
+					color:'#333',
+					padding:'8px',
+					top:  ($(window).height() - 400) /2 + 'px', 
+					left: ($(window).width() - 400) /2 + 'px', 
+					width: '400px' 
+				} 
+			});
+		}
+	});
+	return false;
+}
+
+function savefolderAccess() {
+	var form_data = $('#folderAccessRights').serialize();
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/saveAccessRights',
+		dataType: 'json',
+		data: form_data,
+		success: function(data) {
+			// console.info(data);
+			if( data.result == true ) {
+				$('#all_mf_successerrmsg').html(data.mf_msg);
+				setTimeout(function() {
+					$.unblockUI({ 
+						onUnblock: function(){ getFolderdata(data.mf_reload),$('.succ_err_msg').empty(); }
+					}); 
+				}, 2000);
+			} else {
+				$('#all_mf_successerrmsg').html(data.mf_msg);
+				setTimeout('timerfadeout()', 3000);
+			}
+		}
+	});
+	return false;
+	
+	alert(form_data);
+	return false;
+}

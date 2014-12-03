@@ -1846,7 +1846,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, .comments-log-container{
+#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, .comments-log-container{
 	display: none;
 }
 /* file_breadcrumb */
@@ -1869,6 +1869,9 @@ a.del_file{
 }
 #all_file_list ul li{
 	list-style: none;
+}
+.pad-all{
+	padding: 5px;
 }
 /*Clearfix*/
 .clearfix:after {

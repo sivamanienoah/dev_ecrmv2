@@ -2017,16 +2017,16 @@ EOD;
 					$userdata = $this->session->userdata('logged_in_user');
 					$lead_query = addslashes($lead_query);
 					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (lead_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
-					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
+					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','".$f_name."','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";
 					$q = $this->db->query($query);
 					
 					$insert_id = $this->db->insert_id();
 					
-							$json['up_date'] = date('d-m-Y');
-							$json['lead_query'] = $lead_query;
-							$json['firstname'] = $user[0]['first_name'];
-							$json['lastname'] = $user[0]['last_name'];
-							$json['replay_id'] = $insert_id;
+					$json['up_date'] = date('d-m-Y');
+					$json['lead_query'] = $lead_query;
+					$json['firstname'] = $user[0]['first_name'];
+					$json['lastname'] = $user[0]['last_name'];
+					$json['replay_id'] = $insert_id;
 					//echo $this->db->last_query();
 				
 				}
@@ -2056,37 +2056,65 @@ EOD;
 		else 
 		{
 			$qry = "SELECT first_name, last_name, email FROM ".$this->cfg['dbpref']."users WHERE userid=".$this->session->userdata['logged_in_user']['userid'];
-					$users = $this->db->query($qry);
-					$user = $users->result_array();
+			$users = $this->db->query($qry);
+			$user = $users->result_array();
 
-					$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE lead_id=".$lead_id.")";
-					$customers = $this->db->query($qry1);
-					$customer = $customers->result_array();
-					if($status == 'query') {
-						$st = $status;
-						$rep_to = 0;
-					} else {
-						$status = explode('-',$status);
-						$st = $status[0];
-						$rep_to = $status[1];
-					}
-										
-					$userdata = $this->session->userdata('logged_in_user');
-					$lead_query = addslashes($lead_query);
-					$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (lead_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
-					VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
-					$q = $this->db->query($query);	
-					
-					$insert_id = $this->db->insert_id();
+			$qry1 = "SELECT email_1 FROM ".$this->cfg['dbpref']."customers WHERE custid = (SELECT custid_fk FROM ".$this->cfg['dbpref']."leads WHERE lead_id=".$lead_id.")";
+			$customers = $this->db->query($qry1);
+			$customer = $customers->result_array();
+			if($status == 'query') {
+				$st = $status;
+				$rep_to = 0;
+			} else {
+				$status = explode('-',$status);
+				$st = $status[0];
+				$rep_to = $status[1];
+			}
+			$userdata = $this->session->userdata('logged_in_user');
+			$lead_query = addslashes($lead_query);
+			$query = "INSERT INTO ".$this->cfg['dbpref']."lead_query (lead_id,user_id,query_msg,query_file_name,query_sent_date,query_sent_to,query_from,status,replay_query) 
+			VALUES(".$lead_id.",'".$userdata['userid']."','".$lead_query."','File Not Attached','".date('Y-m-d H:i:s')."','".$customer[0]['email_1']."','".$user[0]['email']."','".$st."',".$rep_to.")";		
+			$q = $this->db->query($query);	
+			
+			$insert_id = $this->db->insert_id();
 			
 			$json['replay_id']  = $insert_id;				
 			$json['up_date']    = date('d-m-Y');
 			$json['lead_query'] = str_replace('\\', '', $lead_query);
 			$json['firstname']  = $user[0]['first_name'];
 			$json['lastname']   = $user[0]['last_name'];
-			
-			
 		}
 		echo json_encode($json);
+	}
+	
+	public function getProjectMembers() {
+	
+		$user_data = $this->session->userdata('logged_in_user');
+	
+		$data = real_escape_array($this->input->post());
+		$project_members = $this->request_model->get_project_members($data['curr_job_id']);
+		// echo "<pre>"; print_r($project_members); exit;
+		$html ="<ul>";
+		foreach($project_members as $members){
+			if($user_data['userid'] != $members['userid']) {
+				$html .="<li class=pad-all>";
+				$html .=$members['first_name']." ".$members['last_name'];
+				$html .="<input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'>";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='read_".$members['userid']."' value='1'>&nbsp;Read";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='write_".$members['userid']."' value='1'>&nbsp;Write";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='delete_".$members['userid']."' value='1'>&nbsp;Delete";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='read[".$members['userid']."]' value='1'>&nbsp;Read";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='write[".$members['userid']."]' value='1'>&nbsp;Write";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='delete[".$members['userid']."]' value='1'>&nbsp;Delete";
+				$html .="</li>";
+			}
+		}
+		$html .="</ul>";
+		echo $html;
+	}
+	
+	public function saveAccessRights() {
+		$data = real_escape_array($this->input->post());
+		echo "<pre>"; print_r($data); exit;
 	}
 }
