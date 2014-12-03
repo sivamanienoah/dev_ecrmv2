@@ -11,7 +11,7 @@
 	<select class="textfield width300px" name="lead_stage" id="general_convert_quote_status" style="width:298px;">
 		<?php foreach ($lead_stage as $stage) { ?>
                <option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['lead_stage'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> ><?php echo  $stage['lead_stage_name'] ?></option>
-         <?	} ?>
+         <?php	} ?>
 	</select>					
 
 	<div class="quote-invoice convert">
