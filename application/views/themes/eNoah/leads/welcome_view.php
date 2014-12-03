@@ -999,7 +999,7 @@ h3 .small {
 								?>
 								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
 								
-							<?
+							<?php
 								
 							}
 							?>
@@ -1044,7 +1044,7 @@ h3 .small {
 								?>
 								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
 								
-							<?
+							<?php 
 								
 							}
 							?>
