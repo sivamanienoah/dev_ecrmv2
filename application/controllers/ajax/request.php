@@ -705,8 +705,8 @@ class Request extends crm_controller {
 						$res[]		  		   = $get_file_data['lead_files_name'].' file cannot be deleted.';
 					}
 				} else {
-				}
 					$res[]		  		   	   = $get_file_data['lead_files_name'].' file cannot be deleted. It is linked with the Payment milestones.';
+				}
 			} else {
 				$res[]		  		           = $get_file_data['lead_files_name'].' file cannot be deleted.';
 			}
