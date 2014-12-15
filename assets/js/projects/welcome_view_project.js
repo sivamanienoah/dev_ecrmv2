@@ -433,6 +433,19 @@
 		$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
 	}
 
+	function checkAccessPermissions(lead_id, filed_column, filed_id, checking_column)
+	{
+	
+	var date_return = '';
+	
+	$.get(site_base_url+'ajax/request/check_access_permissions/', {lead_id:lead_id,filed_column:filed_column,filed_id:filed_id,checking_column:checking_column},
+			function(data) {
+				date_return  = data;
+			}
+	);
+			return date_return;
+	}
+	
 	function runAjaxFileUpload()
 	{
 		var _uid = new Date().getTime();
@@ -440,6 +453,15 @@
 		var params 				 = {};
 		params[csrf_token_name]  = csrf_hash_token;
 		var ffid = $('#filefolder_id').val();
+		
+		
+		if(ffid == 'Files') 
+		{ 
+		alert('Please open root folder and upload your files'); 
+		return false;
+		}
+		
+		
 
 		$.ajaxFileUpload({
 			url: 'ajax/request/file_upload/'+project_jobid+'/'+ffid,
@@ -516,6 +538,8 @@
 		$('#ajax_file_uploader').val('');
 		return false;
 	}
+
+
 	
 function runPaymentAjaxFileUpload() {
 	var _uid				 = new Date().getTime();
@@ -1156,8 +1180,9 @@ function addURLtoJob()
 					$('.payment-received-mini-view1').hide();
 				}
 				if (ui.newPanel[0].id=='jv-tab-3') {
-					loadExistingFiles($('#filefolder_id').val());
-					showBreadCrumbs($('#filefolder_id').val());
+					loadExistingFiles(0);	
+					showBreadCrumbs('Files');
+					$('#filefolder_id').val('Files');
 				}
 				if (ui.newPanel[0].id=='jv-tab-9') {
 					loadLogs(project_jobid);
@@ -1297,6 +1322,8 @@ function addURLtoJob()
 		});
 	});
 	
+
+	
 	//function for getting the files based on ID
 	function loadExistingFiles(ffolder_id) {
 		$('#jv-tab-3').block({
@@ -1309,8 +1336,18 @@ function addURLtoJob()
 			function(data) {
 				$('#list_file').html(data);
 				$('#jv-tab-3').unblock();
-				$('#list_file_tbl').dataTable({
-					"iDisplayLength": 10,
+				dataTable();
+				$.unblockUI();
+			}
+		);
+		return false;
+	}
+	
+	
+	function dataTable()
+	{
+	$('#list_file_tbl').dataTable({
+					"iDisplayLength": 15,
 					"sPaginationType": "full_numbers",
 					"bInfo": true,
 					"bPaginate": true,
@@ -1325,12 +1362,7 @@ function addURLtoJob()
 						{ 'bSortable': false, 'aTargets': [ 0 ] }
 					]
 				});
-				$.unblockUI();
-			}
-		);
-		return false;
 	}
-	
 	var job_complete_percentage;
 
 	function updateJobStatus(status) {
