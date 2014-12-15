@@ -150,6 +150,8 @@ class Project extends crm_controller {
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
+		
+		//echo '<pre>'; print_r($usernme);
 
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
 			$data['chge_access'] = 1;
@@ -162,6 +164,9 @@ class Project extends crm_controller {
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
+			
+			// Get User Role
+			$data['user_roles']		= $usernme['role_id']; 
 			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 
 			$data['timesheetProjectType']   = array();
@@ -3213,6 +3218,15 @@ HDOC;
 		// echo "<pre>"; print_r($_FILES); exit;
 		
 		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
+		
+		// CHANGES BY MANI START HERE
+		if($filefolder_id == 'Files') {
+		$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
+		$filefolder_id = $arrFolderId['folder_id'];
+		}
+		// CHANGES BY MANI END HERE
+	
+		
 
 		//creating files folder name
 		$f_dir = UPLOAD_PATH.'files/';
