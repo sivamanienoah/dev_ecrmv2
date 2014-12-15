@@ -4,6 +4,10 @@
 */
 
 function getFolderdata(ffolder_id) {
+
+	if(ffolder_id == 0) var ffolder_id  = 'Files' 
+	else var ffolder_id  = ffolder_id;
+
 	showBreadCrumbs(ffolder_id);
 	$('#jv-tab-3').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
@@ -191,6 +195,19 @@ function moveAllFiles() {
 	});
 	// alert(mv_folder+'+++'+mv_files); return false;
 	
+		/*
+		*Mani Changes Start Here
+		*/
+	    var ffid = $('#filefolder_id').val();		
+		if(ffid == 'Files') 
+		{ 
+		alert('Please open root folder and continue your actions!'); 
+		return false;
+		}
+		/*
+		*Mani Changes End Here
+		*/
+	
 	if((mv_folder=='') && (mv_files=='')) {
 		alert('No files or folders selected');
 		return false;
@@ -272,10 +289,25 @@ function deleteAllFiles() {
 	});
 	// alert(del_folder+'+++'+del_files); return false;
 	
+	
+	
 	if((del_folder=='') && (del_files=='')) {
 		alert('No files or folders selected');
 		return false;
 	}
+	
+		/*
+		*Mani Changes Start Here
+		*/
+	   	if(ff_id == 'Files') 
+		{ 
+		alert('You have no permissions to delete root folder!'); 
+		return false;
+		}
+		/*
+		*Mani Changes End Here
+		*/
+	
 	var result = confirm("Are you sure you want to delete this files?");
 	if (result==false) {
 		return false;
@@ -338,7 +370,7 @@ function folderAccess() {
 			fa_files += $(this).val()+',';
 		}
 	});
-	// alert(fa_folder+'+++'+fa_files); return false;
+	//alert(fa_folder+'+++'+fa_files); return false;
 	
 	if((fa_folder=='') && (fa_files=='')) {
 		alert('No files or folders selected');
@@ -376,29 +408,32 @@ function folderAccess() {
 
 function savefolderAccess() {
 	var form_data = $('#folderAccessRights').serialize();
-	
+	var ffolder_id = $('#filefolder_id').val();
+	$('#load_save_folder_access').css('display', 'block');
+	$('#folder_access_save').css('display', 'none');
 	$.ajax({
 		type: 'POST',
 		url: site_base_url+'ajax/request/saveAccessRights',
 		dataType: 'json',
 		data: form_data,
 		success: function(data) {
-			// console.info(data);
+			// console.info(data);			
+			$('#folder_access_save').css('display', 'block');
+			$('#load_save_folder_access').css('display', 'none');
 			if( data.result == true ) {
-				$('#all_mf_successerrmsg').html(data.mf_msg);
+				//$('#all_mf_successerrmsg').html(data.msg);
+				alert(data.msg);
 				setTimeout(function() {
 					$.unblockUI({ 
-						onUnblock: function(){ getFolderdata(data.mf_reload),$('.succ_err_msg').empty(); }
+						onUnblock: function(){ getFolderdata(ffolder_id),$('.succ_err_msg').empty(); }
 					}); 
-				}, 2000);
+				}, 1000);
 			} else {
-				$('#all_mf_successerrmsg').html(data.mf_msg);
-				setTimeout('timerfadeout()', 3000);
+				alert(data.msg);
+				//$('#all_mf_successerrmsg').html(data.msg);
+				setTimeout('timerfadeout()', 1000);
 			}
 		}
 	});
-	return false;
 	
-	alert(form_data);
-	return false;
 }
