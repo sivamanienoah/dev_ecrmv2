@@ -808,17 +808,21 @@ if (get_default_currency()) {
 			<div class="pull-left pad-right">
 				<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
 			</div>
+			
+			<?php if($user_roles == 1) { ?>
 			<div class="pull-left pad-right">
 				<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
-			</div>
-			<?php } ?>
+			</div>			
+			<?php } 
+			}?>
 		</div>
 		
 		<div class='clrboth'></div>
 		</div>	
 
 		<div id='fileupload_msg' class='succ_err_msg'></div>
-		<div id="list_file"></div>
+		<div id="list_file">		
+		</div>
 		
 		<form id="move-file" onsubmit="return false;">
 			<!-- edit file -->
@@ -922,10 +926,11 @@ if (get_default_currency()) {
 		<!-- edit end -->
 		</form>
 		<form id="folderAccessRights" onsubmit="return false;">
+		<span style="float:right; cursor:pointer;" onclick="$.unblockUI();"><img src='<?php echo base_url().'assets/img/cross.png'; ?>' /></span>
 			<div id='fa_successerrmsg' class='succ_err_msg'></div>
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td colspan="4"><strong><h3>Access Rights</h3></strong></td>
+					<td colspan="4"><strong><h3 style="text-align:center;">Access Rights</h3></strong></td>
 				</tr>
 				<tr>
 					<td colspan="4">
@@ -939,9 +944,15 @@ if (get_default_currency()) {
 					<td colspan="4" id="accessStruct"></td>
 				</tr>
 				<tr>
-					<td class="pad-all" colspan="4">
-						<div class="buttons"><button type="submit" class="positive" onclick="savefolderAccess(); return false;">Save</button></div>
-						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					<td class="pad-all" colspan="4" align="right">
+						<div class="buttons">
+						
+						<button type="submit" class="positive" onclick="savefolderAccess(); return false;"  id="folder_access_save">Save</button>		
+
+							<img width="61px" height="27px" style=" display:none; float:left;" id="load_save_folder_access" src="<?php echo base_url().'assets/images/loading.gif'; ?>">
+						
+						</div>
+						
 					</td>
 				</tr>
 			</table>
