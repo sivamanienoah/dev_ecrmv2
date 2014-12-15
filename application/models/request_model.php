@@ -326,5 +326,121 @@ class Request_model extends crm_model {
 		return $contract_users->result_array();
 	}
 	
+	/*
+	 * @method get_project_folders()
+	 * @access public
+	 * @param $folder_ids - crm_file_management
+	 */
+	public function get_project_folders($folders) {
+		$this->db->select('f.folder_id, f.folder_name, f.created_on');
+	    $this->db->from($this->cfg['dbpref'] . 'file_management AS f');	
+		$this->db->where('`f`.`folder_id` IN ('.$folders.')', NULL, FALSE);				
+		$this->db->order_by("f.parent");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
+	
+	/*
+	 * @method get_project_folders()
+	 * @access public
+	 * @param $folder_ids - crm_file_management
+	 */
+	public function get_project_files($files) {
+		$this->db->select('f.file_id, f.lead_files_name, f.lead_id, f.folder_id');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS f');		
+		$this->db->where('`f`.`file_id` IN ('.$files.')', NULL, FALSE);
+		$this->db->order_by("f.lead_files_name");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
+	
+	/*
+	 * @method check_lead_file_access()
+	 * @access public	
+	 * @Table Name - crm_lead_file_access	 
+	 */
+	public function check_lead_file_access($lead_id, $filed_column, $fild_id, $user_id) {
+		$this->db->select('userid, lead_id, folder_id, file_id, lead_file_access_read, lead_file_access_write, lead_file_access_delete');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_file_access');	
+		$this->db->where('lead_id', $lead_id);		
+		$this->db->where($filed_column, $fild_id);
+		$this->db->where('userid', $user_id);		
+	    $sql = $this->db->get();	
+	    return $sql->row();
+		}
+	
+	/*
+	 * @method insert_new_row()
+	 * @access public	
+	 * @Table Name -  $tbl
+	 */	
+	public function insert_new_row($tbl, $ins) {		
+		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins); //Manis
+		return $this->db->insert_id();
+    }
+	
+	/*
+	 * @method get_lead_files_by_folder_id()
+	 * @access public
+	 * @param  folder_id - crm_lead_files
+	 * @Table  Name -  crm_lead_files
+	 */
+	public function get_lead_files_by_folder_id($folder_id) {
+		$this->db->select('f.file_id, f.lead_files_name, f.lead_id, f.folder_id');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS f');		
+		$this->db->where('f.folder_id', $folder_id);
+		$this->db->order_by("f.file_id");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
+	
+	/*
+	 * @method get_tree_file_list()
+	 * @access public
+	 * @param $lead_id - Lead Id, $parentId, $counter
+	 */
+	public function get_tree_parents_file_list($lead_id, $folder_id=0 , $counter=0) {
+		$arrayVal = array();
+		
+		$folder_path = '';
+		
+		$this->db->select('lead_id, folder_id, folder_name, parent');
+		$this->db->from($this->cfg['dbpref'] . 'file_management');
+		$this->db->where('lead_id', $lead_id);
+		$this->db->where('folder_id = '. (int) $folder_id);
+		$results = $this->db->get()->result();
+		$path = '';
+		foreach($results as $result) {
+			
+			$path .= $this->get_tree_parents_file_list($lead_id, $result->parent).'/'."{$result->folder_name}";
+			 		
+			
+		}
+			
+        return $path;
+	}
+	
+	/*
+	 * @Author Mani.S
+	 * @method get_tree_folder_lists()
+	 * @access public
+	 * @param $lead_id - Lead Id, $parentId, $counter
+	 */
+	public function get_tree_folder_lists($lead_id, $parentId=0 , $counter=0) {
+		$arrayVal = array();
+		
+		$this->db->select('folder_id, folder_name, parent');
+		$this->db->from($this->cfg['dbpref'] . 'file_management');
+		$this->db->where('lead_id', $lead_id);
+		$this->db->where('parent = '. (int) $parentId);
+		$results = $this->db->get()->result();
+		
+		foreach($results as $result) {
+			$arrayVal[$result->folder_id] = "{$result->folder_name}";
+			$arrayVal = $arrayVal + $this->get_tree_file_list($lead_id, $result->folder_id, $counter+1);
+		}
+        return $arrayVal;
+	}
+	
 }
 ?>
