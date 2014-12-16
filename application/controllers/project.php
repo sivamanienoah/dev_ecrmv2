@@ -98,7 +98,7 @@ class Project extends crm_controller {
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
 
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		$this->load->view('projects/projects_view_inprogress', $data);
+		// $this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
 	/*
