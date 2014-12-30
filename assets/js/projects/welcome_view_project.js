@@ -2300,7 +2300,7 @@ function showRequest()
 	}
 }
 function download_files(job_id,f_name){
-	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+f_name;
+	window.location.href = site_base_url+'project/download_file/'+job_id+'/'+f_name;
 }
 
 function loadLogs(id) 
