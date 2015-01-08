@@ -18,9 +18,11 @@ function getFolderdata(ffolder_id) {
 		{},
 		function(data) {
 			$('#list_file').html(data);
-			$('#filefolder_id').val(ffolder_id);
+			$('#filefolder_id').val(ffolder_id);			
+			$('#parent_folder_id').val($('#filefolder_id').val());			
 			$('#jv-tab-3').unblock();
 			$('#list_file_tbl').dataTable({
+			
 				"iDisplayLength": 10,
 				"sPaginationType": "full_numbers",
 				"bInfo": true,
@@ -136,7 +138,13 @@ function searchFileFolder() {
 	if(search_input == '')
 	return false;
 	
-	var params				= {'search_input':search_input, 'lead_id':curr_job_id};
+	
+	var parent_folder_id = $('#parent_folder_id').val();
+	
+	
+	
+	
+	var params				= {'search_input':search_input, 'lead_id':curr_job_id, 'currently_selected_folder':parent_folder_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.ajax({
@@ -354,7 +362,8 @@ function showBreadCrumbs(parent_id) {
 }
 
 function download_files_id(job_id,file_id) {
-	window.location.href = site_base_url+'/project/download_file/'+job_id+'/'+$("#file_"+file_id).val();
+
+	window.location.href = site_base_url+'project/download_file/'+job_id+'/'+$("#file_"+file_id).val();
 }
 
 /*
@@ -363,6 +372,8 @@ function download_files_id(job_id,file_id) {
 function folderAccess() {
 	var fa_folder = '';
 	var fa_files  = '';
+	var parent_folder_id = '';
+	
 	$( ".file_chk:checked" ).each(function( index ) {
 		if($(this).attr('file-type') == 'folder') {
 			fa_folder += $(this).val()+',';
@@ -370,14 +381,19 @@ function folderAccess() {
 			fa_files += $(this).val()+',';
 		}
 	});
+	
 	//alert(fa_folder+'+++'+fa_files); return false;
 	
-	if((fa_folder=='') && (fa_files=='')) {
+	var parent_folder_id = $('#filefolder_id').val();
+	
+	//alert(parent_folder_id); return false;
+	
+	/*if((fa_folder=='') && (fa_files=='')) {
 		alert('No files or folders selected');
 		return false;
-	}
+	}*/
 	
-	var params				= {'fa_folder':fa_folder, 'fa_files':fa_files, 'curr_job_id':curr_job_id};
+	var params				= {'fa_folder':fa_folder, 'fa_files':fa_files, 'curr_job_id':curr_job_id, 'parent_folder_id':parent_folder_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.ajax({
