@@ -3,6 +3,7 @@
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
+<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
 <?php 
@@ -188,6 +189,7 @@ function getUserForLeadAssign(regId,cntryId,stId,locId) {
 }
 
 function get_user_infm(users) {
+
 	var baseurl = $('.hiddenUrl').val();
 	var user = users.toString();
 	$.ajax({
@@ -210,6 +212,7 @@ function ndf_cancel() {
 }
 
 function ndf_add() {
+
     $('.new-cust-form-loader .error-handle:visible').slideUp(300);
     var form_data = $('#customer_detail_form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
 	
@@ -1115,7 +1118,9 @@ h3 .small {
 						</div>
 						<?php if($quote_data['lead_status'] == 4) { ?>
 							<div class="buttons clearfix pull-left">
-								<button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button>
+								<button type="submit" class="positive" onclick="confirmaMoveLeadsToProject(); return false;">Move To Project</button>
+								
+								<!-- <button type="submit" class="positive" onclick="is_project(); return false;">Move To Project</button> -->
 							</div>
 						<?php } ?>
 						</div>
@@ -1261,7 +1266,119 @@ h3 .small {
 		
     </div>
 </div>
+<div class="comments-log-container"></div>
 <script type="text/javascript">
+/*
+*@Method runSOWAjaxFileUpload
+*@Use Upload SOW Files
+*File projects/leads_confirm_view.php
+*Author eNoah - Mani.S
+*/
+function runSOWAjaxFileUpload() {
+	var _uid				 = new Date().getTime();
+	var params 				 = {};
+	params[csrf_token_name]  = csrf_hash_token;	
+
+	$.ajaxFileUpload({
+		url: 'project/sow_file_upload/'+curr_job_id,
+		secureuri: false,
+		fileElementId: 'sow_ajax_file_uploader',
+		dataType: 'json',
+		data: params,
+		success: function (data, status) {
+		
+			if(typeof(data.error) != 'undefined') {
+				if(data.error != '') {
+					if (window.console) {
+						console.log(data);
+					}
+					if (data.msg) {
+						alert(data.msg);
+					} else {
+						alert('File upload failed!');
+					}
+				} else {	
+					if(data.msg == 'File successfully uploaded!') {
+						// alert(data.msg);				
+						$.each(data.res_file, function(i, item) {
+							var res = item.split("~",2);
+							// alert(res[0]+res[1]);	
+							var name = '<div style="float: left; width: 100%;"><span style="float: left;">'+res[1]+'</span></div>';
+							$("#sowUploadFile").append(name);
+						});
+						//$.unblockUI();
+					}
+				}
+			}
+		},
+		error: function (data, status, e)
+		{
+			alert('Sorry, the upload failed due to an error!');
+			$('#'+_uid).hide('slow').remove();
+			if (window.console)
+			{
+				console.log('ajax error\n' + e + '\n' + data + '\n' + status);
+				for (i in e) {
+				  console.log(e[i]);
+				}
+			}
+		}
+	});
+	$('#sow_ajax_file_uploader').val('');
+	return false;
+}
+
+/*
+*@Method change_project_category
+*@Use Show and hide the project and cost center tr
+*Author eNoah - Mani.S
+*/
+function change_project_category(val)
+{
+
+	if(val == 1) {
+		$('#project_center_tr').show();
+		$('#cost_center_tr').hide();
+	}else if(val == 2) {
+		$('#cost_center_tr').show();
+		$('#project_center_tr').hide();
+	}else {
+		$('#cost_center_tr').hide();
+		$('#project_center_tr').hide();
+	}
+
+}
+
+function confirmaMoveLeadsToProject()
+	{
+		var fsl_height = parseInt($(window).height()) - 80;
+		fsl_height = fsl_height + 'px';
+		var params = {};
+		$.post( 
+			site_base_url+'project/getCurentLeadsDetails/', {job_id:curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+			function(data) {
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.comments-log-container').html(data);
+				}
+			}
+		);	
+		
+		$.blockUI({
+			message:$('.comments-log-container'),
+			css: {
+					border: '2px solid #999',
+					color:'#333',
+					padding:'8px',
+					top:  ($(window).height() - 450) /2 + 'px', 
+					left: ($(window).width() - 700) /2 + 'px', 
+					width: '800px' 
+				} 
+		});
+		
+	}
+
 $(function(){
 
 	$('#drag-item-list').draggable({handle:$('.handle', $(this))});
@@ -1548,30 +1665,84 @@ $(function(){
 });
 	
 });
+
+/*
+*@ Move lead to projects
+*@ Last Changed on 26/12/2014 By Mani.S
+*/
 function is_project() {
-	// alert(curr_job_id); return false;
+	// alert(curr_job_id); return false;	
+	var err = [];
+  
+    if ($.trim($('#department_id_fk').val()) == 'not_select') {
+        err.push('Project department must be selected');
+    }
+	if ($.trim($('#resource_type').val()) == 'not_select') {
+        err.push('Resource type must be selected');
+    }
+    if ($('#project_name').val() == '') {
+        err.push('Project name is required');
+    }
+	/*if ($('#project_types').val() == 'not_select') {
+        err.push('Project types must be selected');
+    }*/
+	if ($('#timesheet_project_types').val() == 'not_select') {
+        err.push('Timesheet project types must be selected');
+    }
+   if ($("input[name=project_category]").is(":checked") == false) {
+        err.push('Project category must be selected');
+    }else if ($("input[name=project_category]").is(":checked") == true && $("input[name=project_category]:checked").val() == 1 && $('#project_center_value').val() == 'not_select') {
+	
+		 err.push('Project center must be selected');
+	
+	}else if ($("input[name=project_category]").is(":checked") == true && $("input[name=project_category]:checked").val() == 2 && $('#cost_center_value').val() == 'not_select') {
+	
+		 err.push('Cost center must be selected');
+	
+	}	
+	if ($("input[name=sow_status]").is(":checked") == false) {
+        err.push('SOW status must be selected');
+    }
+	 
+    if (err.length > 0) {
+         alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+		/*$.blockUI({
+			message:'<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">'+err.join('<br />')+'</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
+			css:{width:'440px'}
+		});*/
+        return false;
+    }else {
     
 	$.blockUI({
 		message:'<h2>Processing your request...</h2>'
-	});
-	$.getJSON('welcome/ajax_update_lead_status/' + curr_job_id,
-		function(data){
-			if (typeof(data) == 'object') {
-				if (data.error) {
-					alert(data.errormsg);
+	});	
+	
+	 // get form data
+        var form_data = $('#project-confirm-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+        $.post(
+            'welcome/ajax_update_lead_status/' + curr_job_id,
+            form_data,
+            function (res) {
+                if (typeof (res) == 'object') {
+                    if (res.error == true) {
+                        // good to go
+                        alert(data.errormsg);						
+						window.location.href = site_base_url+"welcome/edit_quote" + "/" + curr_job_id +"/";
+						$.unblockUI();
+                    } else {
+                       reloadWithMessagePjt('Lead Successfully moved to Project', curr_job_id);
+                    }
+                } else {
+                    alert('Unexpected response from server!')
 					$.unblockUI();
-					window.location.href = site_base_url+"welcome/edit_quote" + "/" + curr_job_id +"/";
-					//alert('status Changed');
-				} else {
-					//alert(qstatus);
-					reloadWithMessagePjt('Lead Successfully moved to Project', curr_job_id);
-				}
-			} else {
-				alert('Unexpected response from server!')
+                }              
 				$.unblockUI();
-			}
-		});
-   
+            },
+            "json"
+        );
+		
+
+	}
 }
 
 function reloadWithMessagePjt(str, statusid) {
