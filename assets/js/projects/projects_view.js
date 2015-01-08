@@ -40,7 +40,7 @@ function dtPjtTable() {
 	var service	 = $("#services").val();
 	var practice = $("#practices").val();
 	var keyword	 = $("#keywordpjt").val(); 
-	//alert(keyword);
+	var divisions	 = $("#divisions").val(); 	
 	if(keyword == "Project Title, Name or Company")
 		keyword = 'null';
 
@@ -57,13 +57,15 @@ function dtPjtTable() {
 				// var pm_acc	 = $("#pm_acc").val();
 				var cust	 = $("#customer1").val(); 
 				var service	 = $("#services").val();
-				var practice = $("#practices").val();				
+				var practice = $("#practices").val();	
+				var divisions = $("#divisions").val();					
 			} else {
 				$("#pjt_stage").val("");
 				// $("#pm_acc").val("");
 				$("#customer1").val("");
 				$("#services").val("");
 				$("#practices").val("");
+				$("#divisions").val("");
 			}
 		}
 		
@@ -77,10 +79,11 @@ function dtPjtTable() {
 			var datefilter  = $("#datefilter").val();
 			var from_date   = $("#from_date").val();
 			var to_date  	= $("#to_date").val();
+			var divisions  	= $("#divisions").val();
 			if(keyword == "Project Title, Name or Company")
 			keyword = '';
 			
-			var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'practice':practice,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+			var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'practice':practice,'divisions':divisions,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 			params[csrf_token_name] = csrf_hash_token; 
 			if($(this).attr("id") == 'advanceFilters_pjt'){
 				$('#advance').hide();
