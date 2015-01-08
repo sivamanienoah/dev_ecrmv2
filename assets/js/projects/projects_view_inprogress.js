@@ -38,6 +38,7 @@ $(function() {
 		var datefilter  = $("#datefilter").val();
 		var from_date   = $("#from_date").val();
 		var to_date  	= $("#to_date").val();
+		var divisions  	= $("#divisions").val();
 		var export_type = $(this).attr("id");
 		
 		var monthly = '';
@@ -54,6 +55,7 @@ $(function() {
 		  '<input type="hidden" name="customers" value="' +customer+ '" />' +
 		  '<input type="hidden" name="services" value="' +service+ '" />' +
 		  '<input type="hidden" name="practices" value="' +practice+ '" />' +
+		  '<input type="hidden" name="divisions" value="' +divisions+ '" />' +
 		  '<input type="hidden" name="datefilter" value="' +datefilter+ '" />' +
 		  '<input type="hidden" name="from_date" value="' +from_date+ '" />' +
 		  '<input type="hidden" name="to_date" value="' +to_date+ '" />' +
