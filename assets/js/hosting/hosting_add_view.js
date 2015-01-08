@@ -75,6 +75,7 @@
 	}
 
 	function ndf_add() {
+	
 		$('.new-cust-form-loader .error-handle:visible').slideUp(300);
 		var form_data = $('#customer_detail_form').serialize();
 		
