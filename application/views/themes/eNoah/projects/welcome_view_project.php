@@ -185,6 +185,145 @@ if (get_default_currency()) {
 				<?php } ?>
 				</div>
 			</form>
+			
+			<?php if($quote_data['project_category'] == 1) { ?>			
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Profit Center</label>
+					<select name="project_center" id="project_center" class="textfield" disabled>
+						<option value="">Select Profit Center</option>
+						<?php if(!empty($arr_profit_center)) {
+							foreach($arr_profit_center as $list_profit_center) {
+								$selected_profit_center = '';
+								if($list_profit_center['id'] == $quote_data['project_center']) {
+									$selected_profit_center = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $list_profit_center['id']; ?>" <?php echo $selected_profit_center; ?>><?php echo $list_profit_center['profit_center']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>				
+			</form>			
+			<?php }?>
+			
+			<?php if($quote_data['project_category'] == 2) { ?>		
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Cost Center</label>
+					<select name="cost_center" id="cost_center" class="textfield"  disabled>
+						<option value="">Select Cost Center</option>
+						<?php if(!empty($arr_cost_center)) {
+							foreach($arr_cost_center as $list_cost_center) {
+								$selected_cost_center = '';
+								if($list_cost_center['id'] == $quote_data['cost_center']) {
+									$selected_cost_center = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $list_cost_center['id']; ?>" <?php echo $selected_cost_center; ?>><?php echo $list_cost_center['cost_center']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>
+			</form>
+			<?php }?>
+			
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Departments</label>
+					<select name="department_id_fk" id="department_id_fk" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="">Select Departments</option>
+						<?php if(!empty($departments)) {
+							foreach($departments as $listDepartments) {
+								$selectedDepartments = '';
+								if($listDepartments['department_id'] == $quote_data['department_id_fk']) {
+									$selectedDepartments = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $listDepartments['department_id']; ?>" <?php echo $selectedDepartments; ?>><?php echo $listDepartments['department_name']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setDepartments(); return false;">Set</button>
+					</div>
+					<div id="resmsg_departments" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
+				</div>
+			</form>
+			
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Resource Type</label>
+					<select name="resource_type" id="resource_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="">Select Resource Type</option>
+						<?php if(!empty($billing_categories)) {
+							foreach($billing_categories as $list_resource_type) {
+								$selected_resource_type = '';
+								if($list_resource_type['bill_id'] == $quote_data['resource_type']) {
+									$selected_resource_type = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $list_resource_type['bill_id']; ?>" <?php echo $selected_resource_type; ?>><?php echo $list_resource_type['category']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setResourceType(); return false;">Set</button>
+					</div>
+					<div id="resmsg_resource_type" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
+				</div>
+			</form>
+			
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Project Types</label>
+					<select name="project_types" id="project_types" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="">Select Project Types</option>
+						<?php if(!empty($timesheet_project_types)) {
+							foreach($timesheet_project_types as $list_project_types) {
+								$selected_project_types = '';
+								if($list_project_types['project_type_id'] == $quote_data['project_type']) {
+									$selected_project_types = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $list_project_types['project_type_id']; ?>" <?php echo $selected_project_types; ?>><?php echo $list_project_types['project_type_name']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setProjectTypes(); return false;">Set</button>
+					</div>
+					<div id="resmsg_project_types" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
+				</div>
+			</form>
+														
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
@@ -214,6 +353,14 @@ if (get_default_currency()) {
 				<?php } ?>
 				</div>
 			</form>
+						
+			<label class="pull-left">SOW Status</label>
+			<div style="line-height: 25px;">
+				<input type="radio" name="sow_status" class="sow_stat" value="1" id="sow_status_signed" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['sow_status'] == 1) { echo 'checked="checked"'; } ?> > Signed
+				<input type="radio" name="sow_status" value="0" class="sow_stat" id="sow_status_unsigned" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['sow_status'] == 0) { echo 'checked="checked"'; } ?> > Un signed
+				<span id="errmsg_sow_status" style="color:red"></span>
+			</div>
+			<div class="clear"></div>
 			
 			<label class="pull-left">Billing Type</label>
 			<div style="line-height: 25px;">
@@ -225,20 +372,20 @@ if (get_default_currency()) {
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
-					<label class="project-id">Project ID</label>
-					<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" <?php if ($readonly_status == true) { ?>readonly<?php } ?> style="width: 125px;" />
+					<label class="project-id">Project Code</label>
+					<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php if (isset($varPjtId)) echo $varPjtId; ?>" readonly style="width: 125px;" />
 					<input type="hidden" class="hiddenUrl"/>
 				</div>
 				<div>
 				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-					<div class="buttons">
+					<!--<div class="buttons">
 						<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px;" onclick="setProjectId(); return false;">Set</button>
 					</div>
 					<div class="error-msg">
 						<span id="pjt_id_errormsg" style="color:red"></span>
-						<span class="checkUser" style="color:green">Project ID Saved.</span>
+						<span class="checkUser" style="color:green">Project Code Saved.</span>
 						<span class="checkUser1" id="id-existsval" style="color:red">Project ID Already Exists.</span>
-					</div>
+					</div>-->
 				<?php } ?>
 				</div>
 			</form>
@@ -299,7 +446,7 @@ if (get_default_currency()) {
 			<!-- Project Progress Thermometer - End -->
 
 			<!--List the project Type from the timesheet-->
-			<label class="pull-left">Project Type</label>
+			<?php /*?><label class="pull-left">Project Type</label>
 			<div class="displaycontent">
 				<?php
 					if(count($timesheetProjectType)>0) {
@@ -308,7 +455,7 @@ if (get_default_currency()) {
 						echo '-';
 					}
 				?>
-			</div>
+			</div><?php */?>
 			<?php //require (theme_url().'/tpl/user_accounts_options.php'); ?>
 			
 			<!--List the project lead from the timesheet-->
@@ -787,31 +934,31 @@ if (get_default_currency()) {
 			</form>
 		</div>
 		
-		<div class="pull-left pad-right">
+		<div class="pull-left pad-right" id="files_actions">
 			<form name="ajax_file_upload" class="pull-left pad-right">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div id="upload-container">
 					<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
 					<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
-						<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
-						<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+						<img src="assets/img/uploads.png" alt="Browse" title="Browse" class="icon-width" id="upload-decoy" />
+						<input type="file" title='Upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
 					<?php } ?>
 				</div>
 			</form>
 			<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 			<div class="pull-left pad-right">
-				<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folder.png" class="icon-width" alt="Add Folder" ></a>
+				<a title="Add Folder" href='javascript:void(0)'  onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
 			</div>
 			<div class="pull-left pad-right">
 				<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
 			</div>
 			<div class="pull-left pad-right">
-				<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
+				<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
 			</div>
 			
-			<?php if($user_roles == 1) { ?>
+			<?php if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
 			<div class="pull-left pad-right">
-				<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
+				<a  onclick="folderAccess(); return false;" title="Folder & File Access" ><img src="assets/img/permissions.png" class="icon-width" alt="Folder & File Access"></a>
 			</div>			
 			<?php } 
 			}?>
@@ -936,6 +1083,7 @@ if (get_default_currency()) {
 					<td colspan="4">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						<input type='hidden' name='fa_lead_id' id='fa_lead_id' value=''>
+						<input type='hidden' name='parent_folder_id' id='parent_folder_id' value=''>
 						<input type='hidden' name='fa_folder' id='fa_folder' value=''>
 						<input type='hidden' name='fa_file' id='fa_file' value=''>
 					</td>
@@ -1291,6 +1439,10 @@ if (get_default_currency()) {
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
 		<table class="tabbed-cust-layout" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="120"><label><b>Client Code:</b></label></td>
+				<td><b><?php echo $quote_data['client_code'] ?></b></td>
+			</tr>
 			<tr>
 				<td width="120"><label><b>First Name:</b></label></td>
 				<td><b><?php echo $quote_data['first_name'] ?></b></td>
