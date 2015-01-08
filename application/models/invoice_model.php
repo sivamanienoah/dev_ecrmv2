@@ -40,6 +40,11 @@ class Invoice_model extends crm_model {
 			$filter['customer'] = explode(',',$filter['customer']);
 			$this->db->where_in('l.custid_fk', $filter['customer']);
 		}
+		
+		if (!empty($filter['divisions']) && $filter['divisions']!='null') {
+			$filter['divisions'] = explode(',',$filter['divisions']);
+			$this->db->where_in('l.division', $filter['divisions']);
+		}
 		if (!empty($filter['practice']) && $filter['practice']!='null') {
 			$filter['practice'] = explode(',',$filter['practice']);
 			$this->db->where_in('l.practice', $filter['practice']);
