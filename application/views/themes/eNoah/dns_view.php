@@ -6,7 +6,7 @@ $(function(){
 </script>
 <div id="content">
     <div id="left-menu">
-		<a href="hosting/">Back To Hosting</a>
+		<a href="hosting/">Back to subscriptions</a>
 	</div>
     <div class="inner">
 	<?php
