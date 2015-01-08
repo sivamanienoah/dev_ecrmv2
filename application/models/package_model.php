@@ -81,5 +81,53 @@ class Package_model extends crm_model {
 		$account = $this->db->query("SELECT * FROM {$this->cfg['dbpref']}package_type WHERE package_flag='active'");
 	    return $account->result_array();
 	}
+	
+	/*######################### Subscription Type Module Functions Start Here ############################*/
+	
+	function list_subscription_type($offset, $search) {
+        
+        $this->db->order_by('subscriptions_type_id', 'asc');
+        if ($search != false) {
+            $search = urldecode($search);
+            $this->db->like('subscriptions_type_name', $search);
+        }
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'] . 'subscriptions_type');
+		$this->db->limit(20,$offset);
+		$accounts=$this->db->get();
+        $list = $accounts->result_array();
+		return $list;
+    }
+	function subscription_type_count() {
+        return $count = $this->db->count_all($this->cfg['dbpref'] . 'subscriptions_type');
+    }
+	function subscription_type_active(){
+		$account = $this->db->query("SELECT * FROM {$this->cfg['dbpref']}subscriptions_type WHERE subscriptions_type_flag='active'");
+	    return $account->result_array();
+	}
+	
+	function get_subscription_type($id=false) {
+       $account = $this->db->get_where($this->cfg['dbpref'] . 'subscriptions_type', array('subscriptions_type_id' => $id), 1);
+	   return $account->result_array();
+    }
+	function update_subscription_type($id,$data) {
+		$this->db->where('subscriptions_type_id', $id);
+        return $this->db->update($this->cfg['dbpref'].'subscriptions_type', $data);   
+    }
+	function delete_subscription_type($id) {
+		$this->db->where('subscriptions_type_id', $id);
+		return $this->db->delete($this->cfg['dbpref'].'subscriptions_type');
+    }
+	
+	function insert_subscription_type($data) {
+		if ( $this->db->insert($this->cfg['dbpref'].'subscriptions_type', $data) ) {
+			return true;
+        } else {
+            return false;
+        }
+    }
+	
+	/*######################### Subscription Type Module Functions End Here ############################*/
+	
 }
 ?>
