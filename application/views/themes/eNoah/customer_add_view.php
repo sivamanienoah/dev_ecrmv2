@@ -29,6 +29,14 @@ $usernme = $this->session->userdata('logged_in_user');
             <?php } ?>
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
+			
+			<?php if ($this->uri->segment(3) == 'update') { ?>
+			<tr>
+					<td width="100">Client Code</td>
+					<td width="240"><input type="text" name="client_code" value="<?php echo $this->validation->client_code; ?>" class="textfield width200px" readonly /> </td>
+			</tr>
+			<?php } ?>
+			
 				<tr>
 					<td width="100">First name: *</td>
 					<td width="240"><input type="text" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
@@ -106,7 +114,7 @@ $usernme = $this->session->userdata('logged_in_user');
 						<td width="240" id="def_loc"></td>
 					<?php } else { ?>
 						<td width="240" id='location_row'>
-							<select id="add1_location" name="add1_location" class="textfield width200px required">
+							<select id="add1_location" name="add1_location" class="textfield width200px required" onchange="getSalescontactDetails(this.value)">
 							<option value="0">Select Location</option>                           
 							</select>
 							<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4) { ?>
@@ -159,6 +167,16 @@ $usernme = $this->session->userdata('logged_in_user');
 				<tr>
 					<td>Skype Name:</td>
 					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
+					
+					
+					
+				<?php /*?>  <td>Is a Client: </td>
+					<td>
+						<lable for="is_client_yes"><input type="radio" name="is_client"  id="is_client_yes" value="1" <?php if ((isset($this->validation->is_client) && $this->validation->is_client == 1) || $client_projects !=0 ) echo ' checked="checked"' ?> <?php if($client_projects != 0) { ?> disabled <?php }?>> Yes </lable>
+						<lable for="is_client_no"><input type="radio" name="is_client" id="is_client_no" value="0" <?php if (!isset($this->validation->is_client) ||  $this->validation->is_client == 0 && $client_projects == 0)  echo ' checked="checked"' ?> <?php if($client_projects != 0) { ?> disabled <?php }?> > No </lable>
+					</td><?php */?>
+					
+					
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 					<td>Is a Client:</td>
 					<td>
@@ -176,6 +194,16 @@ $usernme = $this->session->userdata('logged_in_user');
 					<td><input type="text" name="www_2" value="<?php echo  $this->validation->www_2 ?>" class="textfield width200px required" />
 					</td>
 				</tr>
+				
+				 <tr>
+					<td>Sales Contact Name:</td>
+					<td><input type="text" name="sales_contact_name" value="<?php if(!empty($this->validation->sales_contact_name)) echo $this->validation->sales_contact_name; else echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+					</td>
+                    <td>Sales Contact Email:</td>
+					<td><input type="text" name="sales_contact_email" value="<?php if(!empty($this->validation->sales_contact_email)) echo $this->validation->sales_contact_email; else echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
+					</td>
+				</tr>
+				
                 <tr>
 					<td valign="top">Comments:</td>
 					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo  $this->validation->comments ?></textarea></td>
