@@ -181,11 +181,12 @@ class Request_model extends crm_model {
 	 * @access public
 	 * @param $lead_id - Lead Id,$search
 	 */
-	public function search_folder($lead_id, $search_name){
+	public function search_folder($lead_id, $parent_folder_id, $search_name){
 		$this->db->select('f.folder_id,f.folder_name,f.parent,u.first_name,u.last_name,f.created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'file_management AS f');
 		$this->db->join($this->cfg['dbpref'].'users AS u', 'u.userid = f.created_by', 'LEFT');
 		$this->db->where("f.lead_id", $lead_id);
+		$this->db->like("f.parent", $parent_folder_id);
 		$this->db->like("f.folder_name", $search_name);
 		$this->db->order_by("f.parent");
 	    $sql = $this->db->get();
@@ -225,11 +226,12 @@ class Request_model extends crm_model {
 	    return $sql->row_array();
     }
 	
-	public function search_file($lead_id, $search_name){
+	public function search_file($lead_id, $folder_id, $search_name){
 		$this->db->select('lf.file_id,lf.lead_files_name,lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 	    $this->db->where("lf.lead_id", $lead_id);
+		 $this->db->where("lf.folder_id", $folder_id);
 	    $this->db->like("lf.lead_files_name", $search_name);
 		$this->db->order_by("lf.lead_files_created_on");
 	    $sql = $this->db->get();
@@ -441,6 +443,182 @@ class Request_model extends crm_model {
 		}
         return $arrayVal;
 	}
+	/*
+	 * @method get_lead_info()
+	 * @access public	
+	 * @Table Name - crm_lleads	 
+	  * @parameter - lead_id	 
+	 */
+	   public function get_lead_info($lead_id) {
+		$this->db->select('belong_to, lead_id, assigned_to, lead_assign');
+	    $this->db->from($this->cfg['dbpref'] . 'leads');	
+		$this->db->where('lead_id', $lead_id);			
+	    $sql = $this->db->get();	
+	    return $sql->row_array();
+	 }
+	 
+	 
+	 /*
+	 * @Author - Mani.S
+	 * @method get_all_lead_info()
+	 * @access public	
+	 * @Table Name - crm_lleads	 
+	 * @parameter - 
+	 */
+	   public function get_all_lead_info() {
+		$this->db->select('lead_id');
+	    $this->db->from($this->cfg['dbpref'] . 'leads');			
+	    $sql = $this->db->get();	
+	    return $sql->result_array();
+	 }
+	 
+	 
+	 
+	 /*
+	 * @method check_lead_file_access_by_ids()
+	 * @access public	
+	 * @Table Name - crm_lead_file_access	 
+	 * @Parameter - $lead_id, 	 $fild_id OR $folder_id
+	 */
+		public function check_lead_file_access_by_ids($lead_id, $filed_column, $fild_id, $userid=false) {
+		$this->db->select('userid, lead_id, folder_id, file_id, lead_file_access_read, lead_file_access_write, lead_file_access_delete');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_file_access');	
+		$this->db->where('lead_id', $lead_id);	
+if($userid != false) {
+$this->db->where('userid', $userid);	
+}
+		$this->db->where($filed_column, $fild_id);		
+	    $sql = $this->db->get();	
+	    return $sql->result_array();
+		}
+		
+		 /*
+	 * @method check_lead_file_access_by_id()
+	 * @access public	
+	 * @Table Name - crm_lead_file_access	 
+	 * @Parameter - $lead_id, 	 $fild_id OR $folder_id, $userid
+	 */
+		public function check_lead_file_access_by_id($lead_id, $filed_column, $fild_id, $userid) {
+		$this->db->select('userid, lead_id, folder_id, file_id, lead_file_access_read, lead_file_access_write, lead_file_access_delete');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_file_access');	
+		$this->db->where('lead_id', $lead_id);	
+		$this->db->where('userid', $userid);	
+		$this->db->where($filed_column, $fild_id);		
+	    $sql = $this->db->get();	
+	    return $sql->row();
+		}
+		
+	/*
+	 * @method get_all_project_folders()
+	 * @access public
+	 * @param $lead_id - crm_file_management
+	 */
+	public function get_all_project_folders($lead_id) {
+		$this->db->select('f.folder_id,f.lead_id, f.folder_name, f.created_on');
+	    $this->db->from($this->cfg['dbpref'] . 'file_management AS f');	
+		$this->db->where('`f`.`lead_id`', $lead_id);				
+		$this->db->order_by("f.parent");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
 	
+	/*
+	 * @method get_all_project_files()
+	 * @access public
+	 * @param $folder_ids - crm_file_management
+	 */
+	public function get_all_project_files($lead_id) {
+		$this->db->select('f.file_id, f.lead_files_name, f.lead_id, f.folder_id');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS f');		
+		$this->db->where('`f`.`lead_id`', $lead_id);	
+		$this->db->order_by("f.lead_files_name");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
+	
+	
+	/*
+	 * @Author Mani.S
+	 * @method getUsersById()
+	 * @Use Get a purdicular user "userid", "first_name", "last_name"
+	 * @access public
+	 * @param $userid
+	 * @table users
+	 */
+	public function getUsersById($userid){
+		$this->db->select('u.userid,u.first_name,u.last_name');
+	    $this->db->from($this->cfg['dbpref'] . 'users AS u');		
+		$this->db->where("u.userid", $userid);		
+	    $sql = $this->db->get();	
+	    return $sql->row_array();
+	}
+	
+	/*
+	 * @Author Mani.S
+	 * @method getUsersById()
+	 * @Use Get a purdicular user "userid", "first_name", "last_name"
+	 * @access public
+	 * @param $userid
+	 * @table users
+	 */
+	public function getUserInfomationById($userid){
+		$this->db->select('*');
+	    $this->db->from($this->cfg['dbpref'] . 'users AS u');		
+		$this->db->where("u.userid", $userid);		
+	    $sql = $this->db->get();	
+	    return $sql->row_array();
+	}
+	
+	/*
+	 * @Author Mani.S
+	 * @method get_project_leads()
+	 * @Use Get a leads "belong_to", "assigned_to", "lead_assign" details.
+	 * @access public
+	 * @param $lead_id
+	 * @table leads
+	 */
+	public function get_project_leads($lead_id) {
+		$this->db->select('belong_to, assigned_to, lead_assign');
+	    $this->db->from($this->cfg['dbpref'] . 'leads');	
+		$this->db->where('lead_id', $lead_id);							
+	    $sql = $this->db->get();	
+		$arrLeadsManager = $sql->row_array();
+		
+		if(isset($arrLeadsManager) && !empty($arrLeadsManager)) {
+		
+		$arrLeadsManager = 	array_unique($arrLeadsManager);
+			$arrLeaders = array();
+			
+			foreach($arrLeadsManager as $key=>$value) {
+			
+					$arrLeaders[] = $this->getUsersById($value);
+			
+			}
+			return $arrLeaders;
+			
+		}else {
+		
+			return false;
+		
+		}	  
+    }
+	
+	/*
+	 * @Author Mani.S
+	 * @method twoDimentionalArrayToSingle()
+	 * @Used Converting two-dimentional array to single-dimentional user array	
+	 * @access public
+	 * @param Two Dimentional users array
+	 */	
+	public function usersArraysToSingleDimetioal($arrUsers)
+	{
+		$arrNewUserArray = array();	
+		foreach($arrUsers as $listUsers) {
+								
+				array_push($arrNewUserArray, $listUsers['userid']);
+			}
+			
+		return $arrNewUserArray;	
+	}	
 }
 ?>
