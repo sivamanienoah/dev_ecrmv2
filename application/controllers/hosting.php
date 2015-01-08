@@ -34,9 +34,13 @@ class Hosting extends crm_controller {
 
 		$data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
 		$data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
+		$data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
+		
+		
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
 		$rules['domain_name'] = "trim|required|callback_domain_check";
+		$rules['subscriptions_type_id_fk'] = "trim|required";
 
 		if (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'ENOAH' && $_POST['domain_mgmt'] != 'CM') {	
 			//$rules['domain_expiry'] = "trim|required|callback_is_valid_domain_date";
@@ -44,12 +48,13 @@ class Hosting extends crm_controller {
 		}
 		$this->validation->set_rules($rules);
 		$fields['customer_id']	 = "Customer Name";
-		$fields['domain_name']	 = "Domain Name";
-		$fields['domain_expiry'] = "Domain Name Expiry";
+		$fields['domain_name']	 = "Subscription Name";
+		$fields['domain_expiry'] = "Subscription Name Expiry";
 		$fields['expiry_date']	 = "Expiry Date";
-        $fields['domain_status'] = 'Domain Status';
+        $fields['domain_status'] = 'Subscription Status';
 		$fields['ssl']			 = 'SSL';
 		$fields['other_info']	 = 'Other information';
+		$fields['subscriptions_type_id_fk']	 = 'Subscription Type';
 		
 		$this->validation->set_fields($fields);
         if (!$this->input->post('expiry_date') && !$update)
@@ -134,10 +139,10 @@ class Hosting extends crm_controller {
 	
     function domain_check($domain) {
         if (!preg_match('/^[a-z0-9\-_\.]+\.[a-z]{2,}$/i', $domain)) {
-            $this->validation->set_message('domain_check', 'The domain name specified does not appear to be a properly formatted domain name.');
+            $this->validation->set_message('domain_check', 'The subscription name specified does not appear to be a properly formatted subscription name.');
 			return false;
         } else if ( $this->hosting_model->check_unique(trim($domain)) && $this->uri->segment(3) != 'update') {
-            $this->validation->set_message('domain_check', 'The domain name specified already exists! Please supply a different domain name.');
+            $this->validation->set_message('domain_check', 'The subscription name specified already exists! Please supply a different subscription name.');
 			return false;
         } else {
             return true;
