@@ -14,6 +14,9 @@ if (get_default_currency()) {
 	$monthly_content   = '';
 	
 	if (is_array($pjts_data) && count($pjts_data) > 0) {
+		$total_pv_amt = 0;
+		$total_uc_amt = 0;
+		$total_pl_amt = 0;
 		foreach($pjts_data as $record){
 			$title		   = character_limiter($record['lead_title'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
@@ -69,6 +72,9 @@ if (get_default_currency()) {
 			$monthly_content .= "<td>".$profitloss."</td>";
 			$monthly_content .= "<td>".$profitlossPercent." %</td>";
 			$monthly_content .= "</tr>";
+				$total_pv_amt += $actual_amt;
+				$total_uc_amt += $total_cost;
+				$total_pl_amt += $profitloss;
 
 			$complete_stat = $project_type = $estimate_hour = '';
 		}
@@ -96,6 +102,18 @@ if (get_default_currency()) {
 	<tbody>
 		<?php echo $monthly_content; ?>
 	</tbody>
+	
+	<tfoot>
+					<tr>
+						<td colspan='10' align='right'><strong>Total: </strong></td>
+						
+						<td><?php echo $total_pv_amt; ?></td>
+						<td><?php echo $total_uc_amt; ?></td>
+						<td><?php echo $total_pl_amt; ?></td>
+						<td></td>
+						
+					</tr>
+				</tfoot>
 </table>
 <script type="text/javascript">
 $(function() {
