@@ -32,10 +32,11 @@
 					<th>Region</th>
 					<th>Country</th>
 					<th>Is Client</th>
+					<th>Client Code</th>
                     <th>Action</th>
                 </tr>
             </thead>
-            
+            <?php //echo '<pre>'; print_r($customers);?>
             <tbody>
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
@@ -55,6 +56,7 @@
 								<?php echo "-"; ?>
 							<?php } ?>
 						</td>
+						<td><?php echo $customer['client_code'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
 								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
