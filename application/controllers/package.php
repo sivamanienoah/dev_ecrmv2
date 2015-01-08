@@ -208,5 +208,102 @@ class Package extends crm_controller {
 		exit;
 	}
 	
+	
+	function subscription_type($limit = 0, $search = false){
+		$data['arrSubscriptionsType'] = $this->package_model->list_subscription_type($limit, $search);
+        $data['pagination'] = '';
+        if ($search == false) {
+            $this->load->library('pagination');
+            
+            $config['base_url'] = $this->config->item('base_url') . 'package/subscription_type/';
+            $config['total_rows'] = (string) $this->package_model->subscription_type_count();
+            $config['per_page'] = 5;
+			$config['uri_segment'] = 3;
+            
+            $this->pagination->initialize($config);
+            
+            $data['pagination'] = $this->pagination->create_links();
+        }
+		$this->load->view('subscription_type_view', $data);
+	}
+	
+	function subscription_type_update($id = false){
+	
+		if(!empty($id)){
+		
+			$arrSubscription=$this->package_model->get_subscription_type($id);
+			$arrSubscription=$arrSubscription[0];
+			
+			//echo '<pre>'; print_r($arrSubscription); exit;
+			
+			$arrSubscription['toDB']='update';		
+		
+		}else { 		
+			$arrSubscription['toDB']='';$arrSubscription['subscriptions_type_name']='';$arrSubscription['subscriptions_type_flag']='';
+		}
+	
+		$rules['subscriptions_type_name'] = "trim|required";
+		$rules['subscriptions_type_flag'] = "trim|required";		
+		$this->validation->set_rules($rules);
+		
+		$fields['subscriptions_type_name'] = 'Subscriptions Type Title';		
+		$fields['subscriptions_type_flag'] = "Flag";
+		
+		$this->validation->set_fields($fields);
+		$this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+		if ($this->validation->run() == false) {
+			
+			$this->load->view('subscriptions_type_add_view',$arrSubscription);
+		}
+		else {
+			foreach($fields as $key=>$val)	$data[$key]=$this->input->post($key);
+			unset($data['toDB']);
+			if ($this->input->post('toDB') == 'update') {
+				
+				if ($this->package_model->update_subscription_type($id, $data)) {
+					
+                    $this->session->set_flashdata('confirm', array('Subscriptions Type Updated!'));
+                    redirect('package/subscription_type');
+                }
+            } else {
+                if ($newid = $this->package_model->insert_subscription_type($data)) {
+                    $this->session->set_flashdata('confirm', array('Subscriptions Type Added!'));
+                    redirect('package/subscription_type');
+                }
+            }
+		}
+	}
+	
+	function subscription_type_delete($id = false)
+	{	
+	if ($this->session->userdata('delete')==1){
+		$this->login_model->check_login();
+					
+			if ($this->package_model->delete_subscription_type($id, $data)) {
+				$this->session->set_flashdata('confirm', array('Subscription Type Has Been Deleted!'));
+				redirect('package/subscription_type');
+			}
+		}
+		else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			redirect('package/subscription_type');
+		}
+	}
+	
+	
+	
+	
+	function subscription_type_search(){
+		if (isset($_POST['cancel_submit'])) {
+            redirect('package/type');
+        } else if ($name = $this->input->post('account_search')) {
+            redirect('package/type/0/' . $name);
+        } else {
+            redirect('package/type');
+        }
+	}
+	
+	
+	
 }
 ?>
