@@ -457,7 +457,7 @@
 		
 		if(ffid == 'Files') 
 		{ 
-		alert('Please open root folder and upload your files'); 
+		alert('You have no permissions to upload files to current locations. Please contact to administrators!.'); 
 		return false;
 		}
 		
@@ -470,6 +470,7 @@
 			dataType: 'json',
 			data: params,
 			success: function (data, status) {
+			
 				if(typeof(data.error) != 'undefined') {
 					if(data.error != '') {
 						if (window.console) {
@@ -886,6 +887,115 @@ function addURLtoJob()
 		});
 		setTimeout('timerfadeout()', 2000);
 	}
+	
+	/*
+	*@Method setDepartments
+	*@parameters department_id_fk, lead_id
+	*@Use update department for particular leads
+	*@Author eNoah - Mani.S
+	*/
+	function setDepartments() {
+		$('#resmsg_departments').empty();
+		var department_id_fk = $('#department_id_fk').val();
+		
+		if(department_id_fk == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_departments/',
+			dataType: 'json',
+			data: 'department_id_fk='+department_id_fk+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_departments').html("<span class='ajx_success_msg'>Status Updated</span>");
+				} else {
+					$('#resmsg_departments').show();
+					$('#resmsg_departments').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
+	/*
+	*@Method setProjectTypes
+	*@parameters project_types, lead_id
+	*@Use update project types for particular leads
+	*@Author eNoah - Mani.S
+	*/
+	function setProjectTypes() {
+		$('#resmsg_project_types').empty();
+		var project_types = $('#project_types').val();
+		
+		if(project_types == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_project_types/',
+			dataType: 'json',
+			data: 'project_types='+project_types+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_project_types').html("<span class='ajx_success_msg'>Status Updated</span>");
+				} else {
+					$('#resmsg_project_types').show();
+					$('#resmsg_project_types').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
+	/*
+	*@Method setDepartments
+	*@parameters department_id_fk, lead_id
+	*@Use update department for particular leads
+	*@Author eNoah - Mani.S
+	*/
+	function setResourceType() {
+		$('#resmsg_resource_type').empty();
+		var resource_type = $('#resource_type').val();
+		
+		if(resource_type == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_resource_type/',
+			dataType: 'json',
+			data: 'resource_type='+resource_type+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_resource_type').html("<span class='ajx_success_msg'>Status Updated</span>");
+				} else {
+					$('#resmsg_resource_type').show();
+					$('#resmsg_resource_type').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
 
 	//update the project status.
 	function setProjectStatus() {
@@ -1179,10 +1289,12 @@ function addURLtoJob()
 					// populateJobOverview();
 					$('.payment-received-mini-view1').hide();
 				}
-				if (ui.newPanel[0].id=='jv-tab-3') {
+				if (ui.newPanel[0].id=='jv-tab-3') {				
+					checkRootReadAccess();							
 					loadExistingFiles(0);	
 					showBreadCrumbs('Files');
-					$('#filefolder_id').val('Files');
+					$('#filefolder_id').val('Files');					
+					
 				}
 				if (ui.newPanel[0].id=='jv-tab-9') {
 					loadLogs(project_jobid);
@@ -1323,6 +1435,16 @@ function addURLtoJob()
 	});
 	
 
+	function checkRootReadAccess()
+	{
+		$.get(site_base_url+'ajax/request/check_root_folder_read_access/'+curr_job_id,{},function(data) {
+		
+			if(data !=1) {
+				$('#files_actions').hide();
+			}
+		
+		});
+	}
 	
 	//function for getting the files based on ID
 	function loadExistingFiles(ffolder_id) {
@@ -1338,6 +1460,20 @@ function addURLtoJob()
 				$('#jv-tab-3').unblock();
 				dataTable();
 				$.unblockUI();
+				
+				var parent_folder_id = $('#filefolder_id').val();
+				var current_folder_parent_id = $('#current_folder_parent_id').val();
+				if(parent_folder_id == 'Files') {
+				//alert(current_folder_parent_id);
+				if(current_folder_parent_id != undefined) {
+				
+				showBreadCrumbs(current_folder_parent_id);
+				loadExistingFiles(current_folder_parent_id);				
+				$('#filefolder_id').val(current_folder_parent_id);		
+				}
+				}				
+				$('#parent_folder_id').val(parent_folder_id);				
+				
 			}
 		);
 		return false;
@@ -2057,6 +2193,51 @@ function addURLtoJob()
 			}
 			setTimeout('timerfadeout()', 2000);
 		});
+		
+		$( ".sow_stat" ).change(function() {
+			$("#errmsg_sow_status").empty();
+			$("#errmsg_sow_status").hide();
+			var sow_status = $(this).val();
+			if (sow_status=='') {
+				$("#errmsg_sow_status").text('Please Check SOW Status');
+				$("#errmsg_sow_status").show();
+				return false;
+			} else {
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
+				var params 				= {'lead_id':curr_job_id, 'sow_status':sow_status};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					site_base_url+'project/set_sow_status/',
+					params,
+					function(_data) {
+						if (typeof(_data) == 'object') {
+							if (_data.error == false) {
+								$('#errmsg_sow_status').html("<span class='ajx_success_msg'>Status Updated.</span>");
+								setTimeout(function(){
+									$.blockUI({
+										message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+										css: {background:'#666', border: '2px solid #999', padding:'2px', height:'35px', color:'#333'}
+									});
+									window.location.reload(true);
+								},500);
+							} else {
+								$("#errmsg_sow_status").text(data.error);
+							}
+						} else {
+							$("#errmsg_sow_status").text('Updating faild, please try again.');
+						}
+					},"json"
+				);
+			}
+			$("#errmsg_sow_status").show();
+		});
+		
+		
+		
 		
 		$( ".bill_type" ).change(function() {
 			$("#errmsg_bill_type").empty();
