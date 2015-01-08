@@ -32,6 +32,7 @@ class Invoice extends CRM_Controller {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('invoice_model');
+		$this->load->model('welcome_model');
 		$this->load->helper('custom_helper');
 		$this->load->helper('text_helper');
 		$this->userdata = $this->session->userdata('logged_in_user');
@@ -57,6 +58,7 @@ class Invoice extends CRM_Controller {
 		$data['projects']  = $this->invoice_model->get_projects();
 		$data['customers'] = $this->invoice_model->get_customers();
 		$data['practices'] = $this->invoice_model->get_practices();
+		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		
 		$filter   = real_escape_array($this->input->post());
 		$invoices = $this->invoice_model->get_invoices($filter);
