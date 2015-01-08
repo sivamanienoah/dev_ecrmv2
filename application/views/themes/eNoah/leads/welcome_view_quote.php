@@ -901,146 +901,184 @@ $(function(){
 				</div>
 			</div><!-- id: jv-tab-2 end -->
 			
-	<div id="jv-tab-3">
+			<div id="jv-tab-3">
 	
-		<?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
-		
-		<div id="file_breadcrumb"></div>
-		<div>
-			<div class="pull-left pad-right">
-				<form id="file_search">
-					<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
-					<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
-				</form>
-			</div>
-			<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
-			<div class="pull-left pad-right">
-				<form name="ajax_file_upload" class="pull-left pad-right">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<div id="upload-container">
-						<img src="assets/img/document_upload.png" alt="Browse" class="icon-width" id="upload-decoy" />
-						<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
-						<input type="file" title='upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
-					</div>
-				</form>
-				<div class="pull-left pad-right">
-					<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folder.png" class="icon-width" alt="Add Folder" ></a>
-				</div>
-				<div class="pull-left pad-right">
-					<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
-				</div>
-				<div class="pull-left pad-right">
-					<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/trash.png" alt="Delete"></a>
-				</div>
-				<div class="pull-left pad-right">
-					<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
-				</div>
-			</div>
-			<?php } ?>
-			<div class='clrboth'></div>
-		</div>
-
-		<div id='fileupload_msg' class='succ_err_msg'></div>
-		<div id="list_file"></div>
+				<?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
 				
-		<form id="move-file" onsubmit="return false;">
-			<!-- edit file -->
-			<div id='mf_successerrmsg' class='succ_err_msg'></div>
+				<div id="file_breadcrumb"></div>
+				<div>
+					<div class="pull-left pad-right">
+						<form id="file_search">
+							<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
+							<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
+						</form>
+					</div>
+					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
+					<div class="pull-left pad-right">
+						<form name="ajax_file_upload" class="pull-left pad-right">
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+							<div id="upload-container">
+								<img src="assets/img/uploads.png" alt="Browse" class="icon-width" id="upload-decoy" />
+								<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
+								<input type="file" title='Upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+							</div>
+						</form>
+						<div class="pull-left pad-right">
+							<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
+						</div>
+						<div class="pull-left pad-right">
+							<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
+						</div>
+						<div class="pull-left pad-right">
+							<a title="Delete All" onclick="deleteAllFiles(); return false;" ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
+						</div>
+						
+					<?php /*?>	<?php if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
+			<div class="pull-left pad-right">
+				<a title="Folder Access" onclick="folderAccess(); return false;" ><img src="assets/img/folder-access.png" alt="Folder Access"></a>
+			</div>			
+			<?php } 
+			?>
+			<?php */?>
+					</div>
+					<?php } ?>
+					<div class='clrboth'></div>
+				</div>	
+
+				<div id='fileupload_msg' class='succ_err_msg'></div>
+				<div id="list_file"></div>
+				
+				<form id="move-file" onsubmit="return false;">
+					<!-- edit file -->
+					<div id='mf_successerrmsg' class='succ_err_msg'></div>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr><td colspan="4"><div id='mf_name'></div></td></tr>
+						<tr>
+							<td colspan="4">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<input type='hidden' name='mlead_id' id='mlead_id' value=''>
+								<input type='hidden' name='mfile_id' id='mfile_id' value=''>
+								<input type='hidden' name='mfparent_id' id='mfparent_id' value=''>
+								<input type='hidden' name='mffiletype' id='mffiletype' value=''>
+								<input type='hidden' name='mffilename' id='mffilename' value=''>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" width="80">Move to</td>
+							<td colspan="3">
+								<select name='move_destiny' id="file_tree">
+									<option value=''>Select</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<div class="buttons"><button type="submit" class="positive" onclick="move_files();">Move</button></div>
+								<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+							</td>
+						</tr>
+					</table>
+				<!-- edit end -->
+				</form>
+				<form id="create-folder" onsubmit="return false;">
+					<!-- edit file -->
+					<div id='af_successerrmsg' class='succ_err_msg'></div>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td colspan="2"><div id='af_name'><strong><h3>Create Folder</h3></strong></div></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<input type='hidden' name='aflead_id' id='aflead_id' value=''>
+								<input type='hidden' name='afparent_id' id='afparent_id' value=''>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" width="80"><label>Parent</label></td>
+							<td>
+								<select name='add_destiny' id="add_file_tree">
+									<option value=''>Select</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" width="80"><label>New Folder</label></td>
+							<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
+								<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+							</td>
+						</tr>
+					</table>
+				<!-- edit end -->
+				</form>
+				<form id="moveallfile" onsubmit="return false;">
+					<!-- edit file -->
+					<div id='all_mf_successerrmsg' class='succ_err_msg'></div>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td colspan="4"><strong><h3>Move</h3></strong></td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<input type='hidden' name='mall_lead_id' id='mall_lead_id' value=''>
+								<input type='hidden' name='mov_folder' id='mov_folder' value=''>
+								<input type='hidden' name='mov_file' id='mov_file' value=''>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" width="80">Move to</td>
+							<td colspan="3">
+								<select name='move_destiny' id="file_tree_all">
+									<option value=''>Select</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<div class="buttons"><button type="submit" class="positive" onclick="move_all_files();">Move</button></div>
+								<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+							</td>
+						</tr>
+					</table>
+				<!-- edit end -->
+				</form>
+				
+				<form id="folderAccessRights" onsubmit="return false;">
+		<span style="float:right; cursor:pointer;" onclick="$.unblockUI();"><img src='<?php echo base_url().'assets/img/cross.png'; ?>' /></span>
+			<div id='fa_successerrmsg' class='succ_err_msg'></div>
 			<table border="0" cellpadding="0" cellspacing="0">
-				<tr><td colspan="4"><div id='mf_name'></div></td></tr>
+				<tr>
+					<td colspan="4"><strong><h3 style="text-align:center;">Access Rights</h3></strong></td>
+				</tr>
 				<tr>
 					<td colspan="4">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<input type='hidden' name='mlead_id' id='mlead_id' value=''>
-						<input type='hidden' name='mfile_id' id='mfile_id' value=''>
-						<input type='hidden' name='mfparent_id' id='mfparent_id' value=''>
-						<input type='hidden' name='mffiletype' id='mffiletype' value=''>
-						<input type='hidden' name='mffilename' id='mffilename' value=''>
+						<input type='hidden' name='fa_lead_id' id='fa_lead_id' value=''>
+						<input type='hidden' name='fa_folder' id='fa_folder' value=''>
+						<input type='hidden' name='fa_file' id='fa_file' value=''>
 					</td>
 				</tr>
 				<tr>
-					<td valign="top" width="80">Move to</td>
-					<td colspan="3">
-						<select name='move_destiny' id="file_tree">
-							<option value=''>Select</option>
-						</select>
-					</td>
+					<td colspan="4" id="accessStruct"></td>
 				</tr>
 				<tr>
-					<td colspan="4">
-						<div class="buttons"><button type="submit" class="positive" onclick="move_files();">Move</button></div>
-						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
-					</td>
-				</tr>
-			</table>
-		<!-- edit end -->
-		</form>
-		<form id="create-folder" onsubmit="return false;">
-			<!-- edit file -->
-			<div id='af_successerrmsg' class='succ_err_msg'></div>
-			<table border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td colspan="2"><div id='af_name'><strong><h3>Create Folder</h3></strong></div></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<input type='hidden' name='aflead_id' id='aflead_id' value=''>
-						<input type='hidden' name='afparent_id' id='afparent_id' value=''>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" width="80"><label>Parent</label></td>
-					<td>
-						<select name='add_destiny' id="add_file_tree">
-							<option value=''>Select</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" width="80"><label>New Folder</label></td>
-					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
-						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					<td class="pad-all" colspan="4" align="right">
+						<div class="buttons">
+						
+						<button type="submit" class="positive" onclick="savefolderAccess(); return false;"  id="folder_access_save">Save</button>		
+
+							<img width="61px" height="27px" style=" display:none; float:left;" id="load_save_folder_access" src="<?php echo base_url().'assets/images/loading.gif'; ?>">
+						
+						</div>
+						
 					</td>
 				</tr>
 			</table>
-		<!-- edit end -->
-		</form>
-		<form id="moveallfile" onsubmit="return false;">
-			<!-- edit file -->
-			<div id='all_mf_successerrmsg' class='succ_err_msg'></div>
-			<table border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td colspan="4"><strong><h3>Move</h3></strong></td>
-				</tr>
-				<tr>
-					<td colspan="4">
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<input type='hidden' name='mall_lead_id' id='mall_lead_id' value=''>
-						<input type='hidden' name='mov_folder' id='mov_folder' value=''>
-						<input type='hidden' name='mov_file' id='mov_file' value=''>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" width="80">Move to</td>
-					<td colspan="3">
-						<select name='move_destiny' id="file_tree_all">
-							<option value=''>Select</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4">
-						<div class="buttons"><button type="submit" class="positive" onclick="move_all_files();">Move</button></div>
-						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
-					</td>
-				</tr>
-			</table>
-		<!-- edit end -->
 		</form>
 	</div><!--id: jv-tab-3 end -->
 			
