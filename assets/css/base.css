@@ -1265,6 +1265,7 @@ width:100%; background:#fff;}
     float: left;
     padding: 0 7px;
     width: 150px;
+	text-align: left;
 }
 .tabbed-cust-layout{
 	background:#fff;
@@ -1846,7 +1847,7 @@ button.positive, .pjt-btn a.positive, input.positive{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, .comments-log-container{
+#move-file, #create-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container{
 	display: none;
 }
 /* file_breadcrumb */
