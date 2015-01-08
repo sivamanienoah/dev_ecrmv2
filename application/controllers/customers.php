@@ -10,6 +10,7 @@ class Customers extends crm_controller {
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('customer_model');
+		$this->load->model('project_model');		
         $this->load->model('regionsettings_model');
 		$this->load->model('email_template_model');
         $this->load->library('validation');
@@ -43,6 +44,13 @@ class Customers extends crm_controller {
     function add_customer($update = false, $id = false, $ajax = false) 
 	{
 		$data['regions'] = $this->regionsettings_model->region_list();
+		
+		$arrUsers = $this->session->userdata('logged_in_user');
+		
+		$data['login_sales_contact_name'] = $arrUsers['first_name'].' '.$arrUsers['last_name'];
+		$data['login_sales_contact_email'] = $arrUsers['email'];
+		
+		//echo '<pre>'; print_r($arrUsers);exit;
 
         $rules['first_name'] = "trim|required";
 		// $rules['last_name'] = "trim|required";
@@ -88,7 +96,10 @@ class Customers extends crm_controller {
 		$fields['is_client'] = '';
 		$fields['www_1'] = "Primary Web Address";
 		$fields['www_2'] = "";
+		$fields['sales_contact_name'] = 'Sales Contact Name';
+		$fields['sales_contact_email'] = 'Sales Contact Email';
         $fields['comments'] = '';
+		$fields['client_code'] = '';
 		
 		$this->validation->set_fields($fields);
         
@@ -100,11 +111,20 @@ class Customers extends crm_controller {
 		{
             $customer = $this->customer_model->get_customer($id);
 			
+			
+			$data['client_projects'] = $this->project_model->get_records_by_num('leads', array('custid_fk'=>$id, 'pjt_status !='=>0));
+			
+			if($data['client_projects'] !=0) {
+			$this->customer_model->customer_update($id, array('is_client'=>1));		
+			}
+			
 			//echo '<!--' . print_r($customer, true) . '-->';
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) 
 			{
                 if (isset($this->validation->$k)) $this->validation->$k = $v;
             }
+			
+			//echo '<pre>'; print_r($this->validation);exit;
         }
 		
 		if ($this->validation->run() == false) 
@@ -172,6 +192,8 @@ class Customers extends crm_controller {
 			} 
 			else 
 			{
+			
+			//print_r($update_data);exit;
 				//insert
 				if ($newid = $this->customer_model->insert_customer($update_data)) 
 				{	
