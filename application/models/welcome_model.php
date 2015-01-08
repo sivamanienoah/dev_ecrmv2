@@ -15,7 +15,7 @@ class Welcome_model extends crm_model {
 	*/
 	public function get_lead_detail($leadid) {
 	
-		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.custid_fk, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
 		j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
@@ -39,7 +39,7 @@ class Welcome_model extends crm_model {
 		$this->db->where('j.pjt_status', 0);
 		
 		$sql = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		//echo $this->db->last_query(); exit;
 	    $res =  $sql->result_array();
 	    return $res;
 	}
@@ -949,6 +949,21 @@ class Welcome_model extends crm_model {
 	{
     	$this->db->where('custid', $cus_id);
 		return $this->db->update($this->cfg['dbpref'] . 'customers', $updt);
+	}
+	
+	/*
+	*@method updtCustomerIsClient()
+	*@param customer_id
+	*
+	*/	
+	public function get_field_values($table, $where_filed, $where_field_value, $filed_name) 
+	{	
+		$this->db->select($filed_name);
+		$this->db->from($this->cfg['dbpref'].$table);
+		$this->db->where($where_filed, $where_field_value);		
+		$query = $this->db->get();
+		$result =  $query->row_array();
+		return $result[$filed_name];
 	}
 }
 
