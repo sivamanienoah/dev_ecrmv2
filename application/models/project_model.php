@@ -28,7 +28,7 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false, $divisions=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		$stage 		= $pjtstage;
@@ -38,9 +38,10 @@ class Project_model extends crm_model
 		$datefilter = $datefilter;
 		$from_date 	= $from_date;
 		$to_date	= $to_date;
+		$divisions	= $divisions;
 	
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
@@ -62,6 +63,9 @@ class Project_model extends crm_model
 			}
 			if(!empty($practices)){		
 				$this->db->where_in('j.practice',$practices);
+			}
+			if(!empty($divisions)){		
+				$this->db->where_in('j.division',$divisions);
 			}
 			if(!empty($billing_type)) {
 				$this->db->where("j.billing_type", $billing_type);
@@ -732,6 +736,36 @@ class Project_model extends crm_model
 		$this->db->where($wh_condn);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+	
+	/*
+	 *@Database timesheet
+	 *@method get_billing_types
+	 *@Use Get billing categories
+	 *@Author eNoah - Mani.S
+	 */
+	public function get_billing_types()
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);		
+		$timesheet_db->select('*');
+		$timesheet_db->from($timesheet_db->dbprefix('bill_categories'));		
+		$query = $timesheet_db->get();
+		return $query->result_array();		
+	}
+	
+	/*
+	 *@Database timesheet
+	 *@method get_timesheet_project_types
+	 *@Use Get Timesheet project types
+	 *@Author eNoah - Mani.S
+	 */
+	public function get_timesheet_project_types()
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);		
+		$timesheet_db->select('*');
+		$timesheet_db->from($timesheet_db->dbprefix('project_types'));		
+		$query = $timesheet_db->get();
+		return $query->result_array();		
 	}
 	
 }
