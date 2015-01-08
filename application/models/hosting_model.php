@@ -18,7 +18,8 @@ class Hosting_model extends crm_model {
 		$this->db->select('*, '.$this->cfg['dbpref'] . 'hosting.hostingid');
 		$this->db->from($this->cfg['dbpref'] . 'hosting');
 		$this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'hosting.hostingid ='. $this->cfg['dbpref'] . 'dns.hostingid','left');
-		$this->db->limit(20,$offset);
+		$this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk','left');
+		//$this->db->limit(30,$offset);
 		$accounts=$this->db->get();
         //$accounts = $this->db->get($this->login_model->cfg['dbpref'] . 'hosting', 20, $offset);
         $list = $accounts->result();
@@ -40,6 +41,7 @@ class Hosting_model extends crm_model {
 			$delist[$key]['host_location'] = $val['host_location'];
 			$delist[$key]['login_url'] = $val['login_url'];
 			$delist[$key]['login'] = $val['login'];
+			$delist[$key]['subscriptions_type_name'] = $val['subscriptions_type_name'];
 			$delist[$key]['email'] = $val['email'];
 			$delist[$key]['registrar_password'] = $val['registrar_password'];
 			$delist[$key]['cur_smtp_setting'] = $val['cur_smtp_setting'];
@@ -120,5 +122,25 @@ class Hosting_model extends crm_model {
 		$this->db->where('jb.lead_id', $cond);
     	return $this->db->get()->result_array();
     }
+	
+	/*
+	*
+	*@ Author eNoah - Mani.S
+	*@ Function get_subscription_types
+	*@ Table Name: subscriptions_type
+	*@ Purpose: Get Subscriptions List To Hosting Page
+	*	
+	*/
+	
+	function get_subscription_types() {        
+        $this->db->order_by('subscriptions_type_name', 'asc');        
+		$this->db->select('subscriptions_type_id, subscriptions_type_name, subscriptions_type_flag');
+		$this->db->from($this->cfg['dbpref'] . 'subscriptions_type');
+		$this->db->where('subscriptions_type_flag', 'active');
+		$accounts=$this->db->get();
+        $list = $accounts->result_array();
+		return $list;
+    }
+	
 }
 ?>
