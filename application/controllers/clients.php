@@ -114,7 +114,7 @@ class Clients extends crm_controller {
 					$param['template_name'] = "Customer Details Modification Notification";
 					$param['subject'] = $subject;
 
-					// $this->email_template_model->sent_email($param);
+					 $this->email_template_model->sent_email($param);
 				
 					$this->session->set_flashdata('confirm', array('Customer Details Updated!'));
 					redirect('clients');
@@ -150,7 +150,7 @@ class Clients extends crm_controller {
 					$param['template_name'] = "New Customer Creation";
 					$param['subject'] = $subject;
 
-					// $this->email_template_model->sent_email($param);
+					$this->email_template_model->sent_email($param);
 
 					if ($ajax == false)
 					{
