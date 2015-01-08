@@ -260,6 +260,11 @@ function getDefaultLocation(id, upd) {
     $('#def_loc').load(sturl);
     return false;	
 }
+function getSalescontactDetails(location_id) {
+
+alert('location=='+location_id);
+
+}
 
 
 /////////////////
