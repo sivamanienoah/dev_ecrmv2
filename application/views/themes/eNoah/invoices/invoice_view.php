@@ -26,13 +26,14 @@ $userdata = $this->session->userdata('logged_in_user');
 			<div id="advance_search" style="padding-bottom:15px;">
 				<form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="width:940px;">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
+					<?php //echo '<pre>'; print_r($sales_divisions);?>
 					<div style="border: 1px solid #DCDCDC;">
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td class="tblheadbg">By Projects</td>
 								<td class="tblheadbg">By Customers</td>
-								<td class="tblheadbg">By Practices</td>
+								<td class="tblheadbg">By Entity</td>
+								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
 							</tr>
 							<tr>	
@@ -44,12 +45,22 @@ $userdata = $this->session->userdata('logged_in_user');
 									</select> 
 								</td>
 								<td>
-									<select multiple="multiple" id="customer" name="customer[]" class="advfilter">
+									<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:200px;">
 										<?php foreach($customers as $customer) { ?>
 											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
+								<td>
+									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter">
+										<?php foreach ($sales_divisions as $division) { ?>
+												<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+										<?php
+											} 
+										?>
+									</select> 
+								</td>
+								
 								<td>
 									<select multiple="multiple" id="practice" name="practice[]" class="advfilter">
 										<?php foreach ($practices as $pr) { ?>
@@ -59,6 +70,8 @@ $userdata = $this->session->userdata('logged_in_user');
 										?>
 									</select> 
 								</td>
+								
+								
 								<td>
 									From <input type="text" name="from_date" id="from_date" class="textfield" style="width:57px;" />
 									<br />
