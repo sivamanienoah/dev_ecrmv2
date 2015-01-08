@@ -12,6 +12,8 @@ $("#advanceFiltersDash").submit(function() {
 	$('#load').show();
 	var project   = $("#project").val();
 	var customer  = $("#customer").val();
+	var divisions  = $("#divisions").val();
+	
 	var practice  = $("#practice").val();
 	var from_date = $("#from_date").val();
 	var to_date   = $("#to_date").val();
@@ -20,7 +22,7 @@ $("#advanceFiltersDash").submit(function() {
 		type: "POST",	
 		url: site_base_url+"invoice/index/",
 		// dataType: "json",
-		data: "filter=filter"+"&project="+project+"&customer="+customer+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "filter=filter"+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#results').empty();
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
