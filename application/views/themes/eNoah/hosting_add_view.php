@@ -7,6 +7,8 @@ if(!empty($packageid_fk)){
 	}
 }
 $usernme = $this->session->userdata('logged_in_user');
+
+//echo '<pre>'; print_r($subscription_types);
 ?>
 <style type="text/css">
 #domain-expiry-date 
@@ -24,7 +26,7 @@ $usernme = $this->session->userdata('logged_in_user');
 			
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
-            <h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Hosting Account Details</h2>
+            <h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Subscription Details</h2>
             <?php if (!$this->input->post('domain_name') && $this->uri->segment(3) != 'update') { ?>
             <p class="notice">If this is a new customer, please be sure to <a href="#" class="modal-new-cust" >add the customer</a> to the database before adding the hosting account.</p>
 			<?php } ?>
@@ -36,30 +38,47 @@ $usernme = $this->session->userdata('logged_in_user');
             <p>All mandatory fields marked * must be filled in correctly.</p>
 			<table class="layout">
 				<tr>
-					<td width="120">Customer Name: *</td>
+					<td width="150">Customer Name: *</td>
 					<td width="300">
                         <input type="text" name="customer_name" id="cust_name" value="<?php echo  (isset($customer_name)) ? $customer_name : '' ?>" class="textfield width200px" /> 
                         <input type="hidden" name="customer_id" id="cust_id" value="<?php echo  (isset($customer_id)) ? $customer_id : '' ?>" />
                     </td>
 				</tr>
+				
+				
 				<tr>
-					<td>Domain Name: *</td>
-					<td><input type="text" name="domain_name" value="<?php echo  $this->validation->domain_name ?>" class="textfield width200px required" /> </td>
+					<td>Subscription Types: *</td>
+					<td>
+						<select name="subscriptions_type_id_fk" class="textfield width200px">
+						<option value="">Select Subscription Type</option>
+						<?php
+							foreach ($subscription_types as $listSubscriptionTypes) {
+								$selected = ($this->validation->subscriptions_type_id_fk == $listSubscriptionTypes['subscriptions_type_id']) ? ' selected="selected"' : ''; ?>
+								<option value="<?php echo  $listSubscriptionTypes['subscriptions_type_id'] ?>"<?php echo  $selected ?>><?php echo  $listSubscriptionTypes['subscriptions_type_name'] ?></option>
+						<?php	} ?>
+						</select> 
+					</td>
+                </tr>
+				
+				
+				<tr>
+					<td>Subscription Name: *</td>
+					<td><input type="text" name="domain_name" value="<?php echo  $this->validation->domain_name ?>" class="textfield width200px required" /> <br> (Example: www.google.com)</td>
 				</tr>
 				<tr>
-					<td>Domain Management:</td>
+					<td>Subscription Management:</td>
 					<td>
 						<input type="radio" name="domain_mgmt" value="ENOAH"<?php echo ((!isset($_POST['domain_mgmt']) && !is_null($this->validation->domain_expiry)) || (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'ENOAH')) ? ' checked="checked"' : '' ?> /> eNoahiSolution &nbsp;&nbsp;
 						<input type="radio" name="domain_mgmt" value="CM"<?php echo ((!isset($_POST['domain_mgmt']) && is_null($this->validation->domain_expiry)) || (isset($_POST['domain_mgmt']) && $_POST['domain_mgmt'] == 'CM')) ? ' checked="checked"' : '' ?> /> Client Managed &nbsp;&nbsp;
 					</td>
 				</tr>
 				<tr id="domain-expiry-date">
-					<td>Domain Expiry Date: *</td>
+					<td>Subscription Expiry Date: *</td>
 					<td><input type="text" name="domain_expiry" value="<?php echo  $this->validation->domain_expiry ?>" class="textfield width200px pick-date" /> </td>
                     
 				</tr>
 				<tr>
-					<td>Domain Status: *</td>
+					<td>Subscription Status: *</td>
 					<td>
 						<select name="domain_status" class="textfield width200px">
 						<?php
