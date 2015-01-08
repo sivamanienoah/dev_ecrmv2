@@ -12,9 +12,14 @@ class Project extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('project_model');
 		$this->load->model('request_model');
+		$this->load->model('welcome_model');
 		$this->load->model('customer_model');
+		$this->load->model('department_model'); //Mani.S
+		$this->load->model('project_types_model'); //Mani.S
+		$this->load->model('cost_center_model'); //Mani.S 
+		$this->load->model('profit_center_model'); //Mani.S
 		$this->load->model('regionsettings_model');
-		$this->load->model('email_template_model');
+		$this->load->model('email_template_model');		
 		$this->load->helper('text');
 		$this->load->library('email');
 		$this->load->helper('form');
@@ -53,6 +58,7 @@ class Project extends crm_controller {
 		$data['customers']   = $this->project_model->get_customers();
 		$data['services']    = $this->project_model->get_services();
 		$data['practices']   = $this->project_model->get_practices();
+		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		// $data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
 		// $data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
 		// echo "<pre>"; print_r($data['project_record']); exit;
@@ -78,6 +84,7 @@ class Project extends crm_controller {
 			$datefilter = $inputData['datefilter'];
 			$from_date	= $inputData['from_date'];
 			$to_date  	= $inputData['to_date'];
+			$divisions  = $inputData['divisions'];
 		} else {
 			$pjtstage 	= '';
 			$cust     	= '';
@@ -87,6 +94,7 @@ class Project extends crm_controller {
 			$datefilter = '';
 			$from_date	= '';
 			$to_date  	= '';
+			$divisions  	= '';
 		}
 		
 	    /*
@@ -95,7 +103,9 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
+		
+		//echo '<pre>'; print_r($getProjects);
 
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		$this->load->view('projects/projects_view_inprogress', $data);
@@ -113,6 +123,7 @@ class Project extends crm_controller {
 			$cust     	  = $inputData['customer1'];
 			$service 	  = $inputData['services'];
 			$practice 	  = $inputData['practices'];
+			$divisions 	  = $inputData['divisions'];
 			$keyword  	  = $inputData['keyword'];
 			$datefilter	  = $inputData['datefilter'];
 			$from_date	  = $inputData['from_date'];
@@ -125,6 +136,7 @@ class Project extends crm_controller {
 			$cust     	  = '';
 			$service 	  = '';
 			$practice  	  = '';
+			$divisions    = '';
 			$keyword  	  = '';
 			$datefilter   = '';
 			$from_date	  = '';
@@ -135,7 +147,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=2);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=2, $divisions);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects,$project_type=3,$metrics_date);
 		$this->load->view('projects/projects_view_inprogress_monthly', $data);
 	}
@@ -161,12 +173,20 @@ class Project extends crm_controller {
 		
 		$result = $this->project_model->get_quote_data($id);
 		
+		$arrLeadInfo = $this->request_model->get_lead_info($id);
+		
+		
+		
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
 			
 			// Get User Role
 			$data['user_roles']		= $usernme['role_id']; 
+			$data['login_userid']		= $usernme['userid']; 
+			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
+			$data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
+			$data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
 			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 
 			$data['timesheetProjectType']   = array();
@@ -216,11 +236,73 @@ class Project extends crm_controller {
 			// $data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
 			$get_parent_folder_id = $this->request_model->getParentFfolderId($id,$parent=0);
 			
+			$project_members = array();
+			$project_leaders = array();
+			
+			
+			
+			//$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR);
+			
+			
+			
+			//echo '<pre>'; print_r($get_parent_folder_id);exit;
+			//echo '<pre>'; print_r($project_leaders);
+			//echo '<pre>'; print_r($project_members);exit;
+			
 			if(!empty($get_parent_folder_id)){
+			
 				$data['parent_ffolder_id'] = $get_parent_folder_id['folder_id'];
 			} else {
+			
+			
+				//creating files folder name
+				$f_dir = UPLOAD_PATH.'files/';
+				if (!is_dir($f_dir)) {
+					mkdir($f_dir);
+					chmod($f_dir, 0777);
+				}
+				
+				//creating lead_id folder name
+				$f_dir = $f_dir.$id;
+				if (!is_dir($f_dir)) {
+					mkdir($f_dir);
+					chmod($f_dir, 0777);
+				}
+			
 				$ins = array('lead_id'=>$id,'folder_name'=>$id,'parent'=>0,'created_by'=>$this->userdata['userid']);
 				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
+				
+				
+				$project_members = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details.
+				$project_leaders = $this->request_model->get_project_leads($id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
+							
+					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+	
+						foreach($arrProjectMembers as $members){
+							
+							$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
+								if(empty($arrLeadExistFolderAccess)) {	
+								
+									$read_access = 0;
+									$write_access = 0;
+									$delete_access = 0;									
+									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+									$read_access = 1;
+									$write_access = 1;
+									$delete_access = 1;								
+									}
+								$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$members['userid']);
+								$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
+								
+							}							
+						}
+					}
+							
+							
 			}
 			
 			/**
@@ -330,6 +412,36 @@ class Project extends crm_controller {
 		
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
+			
+			/**
+			*@Initiate to get all departments data
+			**/
+			$data['departments'] = $this->department_model->get_departments_list(array('active'=>1));
+			
+			/**
+			*@Initiate to get all project types data
+			**/
+			$data['project_types'] = $this->project_types_model->get_project_types_list(array('status'=>1));
+			
+			/**
+			*@Initiate to get all project types data from timesheet database
+			**/
+			$data['timesheet_project_types'] = $this->project_model->get_timesheet_project_types();
+			
+			/**
+			*@Initiate to get all cost center data
+			**/
+			$data['arr_cost_center'] = $this->cost_center_model->get_cost_center_list(array('status'=>1));
+			
+			/**
+			*@Initiate to get all billing category data from timesheet database
+			**/
+			$data['billing_categories'] = $this->project_model->get_billing_types();
+			
+			/**
+			*@Initiate to get all profit center data
+			**/
+			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list(array('status'=>1));
 			
             $this->load->view('projects/welcome_view_project', $data);
         }
@@ -461,6 +573,8 @@ class Project extends crm_controller {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('lead_title' => $updt['lead_title']);
 			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
 			if($updt_id==0)
 			$data['error'] = 'Error in Updation';
 		}
@@ -483,6 +597,8 @@ class Project extends crm_controller {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt = array('practice' => $updt['practice']);
 			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
 			if($updt_id==0)
 			$data['error'] = 'Error in Updation';
 		}
@@ -594,11 +710,14 @@ class Project extends crm_controller {
 		
 		if( $data['error'] == FALSE ) {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('pjt_status' => $updt['pjt_stat']);
+			$updt = array('pjt_status' => $updt['pjt_stat']);			
 			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
+				
 		}
 		
 		if($updt_pjt) {
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id',$this->input->post('lead_id'), 'pjt_id');		
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect		
 			$ins['userid_fk'] = $this->userdata['userid'];
 			$ins['jobid_fk'] = $this->input->post('lead_id');
 			$ins['date_created'] = date('Y-m-d H:i:s');
@@ -898,6 +1017,8 @@ class Project extends crm_controller {
 					$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 					$updt = array('date_start'=>date('Y-m-d H:i:s', $timestamp));
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					
 				}
 			}
 			else
@@ -917,6 +1038,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					} 
 					else 
@@ -990,21 +1112,25 @@ class Project extends crm_controller {
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('date_start' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'due';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('date_due' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'act-start';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('actual_date_start' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'act-due';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('actual_date_due' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 			}
 		} else {
@@ -1059,6 +1185,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					}
 				} 
@@ -1082,6 +1209,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					} 
 					else 
@@ -2288,6 +2416,8 @@ HDOC;
 			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
 			$updt 	   = array('billing_type'=>$billing_type);
 			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
 		}
 		echo json_encode($data);
 	}
@@ -2833,6 +2963,7 @@ HDOC;
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
 				$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
+				$data['project_record'][$i]['division'] 		= $rec['division'];
 				$data['project_record'][$i]['lead_title']		= $rec['lead_title'];
 				$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
 				$data['project_record'][$i]['lead_stage']		= $rec['lead_stage'];
@@ -2869,6 +3000,7 @@ HDOC;
 		$cust = $this->input->post('customers');
 		$service = $this->input->post('services');
 		$practice = $this->input->post('practices');
+		$divisions = $this->input->post('divisions');
 		$datefilter = $this->input->post('datefilter');
 		$from_date = $this->input->post('from_date');
 		$to_date = $this->input->post('to_date');
@@ -2895,6 +3027,10 @@ HDOC;
 		$practice = explode(",",$practice);
 		else
 		$practice = '';
+		if((!empty($divisions)) && $divisions!='null')
+		$divisions = explode(",",$divisions);
+		else
+		$divisions = '';
 		
 		if($export_type == 'milestone') {
 			$billing_type = 1;
@@ -2909,7 +3045,7 @@ HDOC;
 		}
 		
 
-    	$getProjectData = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type);
+    	$getProjectData = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type,$divisions);
 		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData,$project_type,$metrics_date);
 		
     	if(count($pjts_data)>0) {
@@ -3207,13 +3343,25 @@ HDOC;
 		echo json_encode($output);
 	}
 	
-		/**
+	/**
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
 	public function payment_file_upload($lead_id, $filefolder_id)
 	{
 		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['payment_ajax_file_uploader']['name']);
+		
+		$user_data = $this->session->userdata('logged_in_user');
+		
+		
+
+		$project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
+		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+		$arrLeadInfo = $this->request_model->get_lead_info($lead_id); // This function to get a current lead informations.		
+
+				
 		
 		// echo "<pre>"; print_r($_FILES); exit;
 		
@@ -3278,6 +3426,45 @@ HDOC;
 					$logs['attached_docs'] = $file_up['file_name'];
 					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
 					
+					
+					/* #################  Permission add new file owner start here  ################## */
+				if($user_data['role_id'] != 1) {
+				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
+				}
+				/* #################  Permission add new file owner end here  ################## */
+				
+				
+				/* #################  Assing permission to all users by lead id start here  ################## */
+					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+		
+							foreach($arrProjectMembers as $members){
+								if($user_data['userid'] != $members['userid']) {
+								
+								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
+								if(empty($arrLeadExistFolderAccess)) {	
+								
+									$read_access = 0;
+									$write_access = 0;
+									$delete_access = 0;									
+									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+									$read_access = 1;
+									$write_access = 1;
+									$delete_access = 1;								
+									}
+	
+									$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+									$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
+										
+								}
+							}
+						}
+					}
+				/* #################  Assing permission to all users by lead id end here  ################## */
+				
+				
+					
 					$i++;
 				  }
 			   }
@@ -3298,9 +3485,319 @@ HDOC;
 		$file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$file_name;
 		$data = file_get_contents($file_dir); // Read the file's contents
 		$name = $file_name;
-
 		force_download($name, $data); 
 	}
+	
+	
+	/*
+	*
+	*@ Author Mani.S
+	*@ Method Name getCurentLeadsDetails
+	*@ Parameter current job id
+	*@ Usage Display Client and project details with model window
+	*
+	*/
+	
+	public function getCurentLeadsDetails()
+	{
+	
+		$inputData = real_escape_array($this->input->post());		
+		$id = $inputData['job_id'];
+		
+		$getLeadDet = $this->welcome_model->get_lead_detail($id);
+		$arrLeadInfo = $this->request_model->get_lead_info($id);
+		
+		//echo '<pre>'; print_r($arrLeadInfo);exit;
+		
+		if(!empty($getLeadDet)) {
+		
+		    $data['quote_data'] = $getLeadDet[0];
+				
+			$customer = $this->customer_model->get_customer($data['quote_data']['custid_fk']);				
+			$data['customer_data'] = $customer[0];		
+		 	$data['customer_region'] = $this->welcome_model->get_field_values('region', 'regionid', $customer[0]['add1_region'], 'region_name');
+			$data['customer_country'] = $this->welcome_model->get_field_values('country', 'countryid', $customer[0]['add1_country'], 'country_name');
+			$data['customer_state'] = $this->welcome_model->get_field_values('state', 'stateid', $customer[0]['add1_state'], 'state_name');
+			$data['customer_location'] = $this->welcome_model->get_field_values('location', 'locationid', $customer[0]['add1_location'], 'location_name');	
+			
+            $data['view_quotation'] = true;
+			$data['user_accounts'] = $this->welcome_model->get_users();
+			
+			$data['user_roles']		= $usid['role_id']; 
+			$data['login_userid']		= $usid['userid']; 
+			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
+			$data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
+			$data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
+			            
+			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
+			/**
+			 * Get URLs associated with this job
+			 */
+			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
+			
+			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
+			
+			$data['job_cate'] = $this->welcome_model->get_lead_services();
+			
+			/**
+			*@Initiate to get all departments data
+			**/
+			$data['departments'] = $this->department_model->get_departments_list(array('active'=>1));
+			
+			/**
+			*@Initiate to get all project types data
+			**/
+			$data['project_types'] = $this->project_types_model->get_project_types_list(array('status'=>1));
+			
+			/**
+			*@Initiate to get all cost center data
+			**/
+			$data['arr_cost_center'] = $this->cost_center_model->get_cost_center_list(array('status'=>1));
+			
+			/**
+			*@Initiate to get all billing category data from timesheet database
+			**/
+			$data['billing_categories'] = $this->project_model->get_billing_types();
+			
+			/**
+			*@Initiate to get all project types data from timesheet database
+			**/
+			$data['timesheet_project_types'] = $this->project_model->get_timesheet_project_types();
+			
+			/**
+			*@Initiate to get all billing category data from timesheet database
+			**/
+			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list();
+			
+			$this->load->view('leads/leads_confirmations_view', $data);
+        }
+	
+	}
+	
+	/*
+	*@method set_departments
+	*@Use update department to leads
+	*@Author eNoah - Mani.S
+	*/
+	public function set_departments()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
 
+		if (($updt['department_id_fk'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt = array('department_id_fk' => $updt['department_id_fk']);
+			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+			if($updt_id==0)
+			$data['error'] = 'Error in Updation';
+		}
+		echo json_encode($data);
+	}	
+	
+	/*
+	*@method set_project_types
+	*@Use update project_types to leads
+	*@Author eNoah - Mani.S
+	*/
+	public function set_project_types()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['project_types'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt = array('project_type' => $updt['project_types']);
+			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+			if($updt_id==0)
+			$data['error'] = 'Error in Updation';
+		}
+		echo json_encode($data);
+	}
+	
+	/*
+	 *@method set_bill_type
+	 *@set the bill type for the Project
+	 */
+	public function set_sow_status()
+	{
+		$updt_data = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$sow_status = $updt_data['sow_status'];
+		if ($updt_data['sow_status'] == '') {
+			$data['error'] = 'Please Check SOW Status';
+		} else {
+			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
+			$updt 	   = array('sow_status'=>$sow_status);
+			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+		}
+		echo json_encode($data);
+	}
+	
+	/*
+	*@method set_resource_type
+	*@Use update resource_types to leads table
+	*@Table leads
+	*@Author eNoah - Mani.S
+	*/
+	public function set_resource_type()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['resource_type'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt = array('resource_type' => $updt['resource_type']);
+			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+			if($updt_id==0)
+			$data['error'] = 'Error in Updation';
+		}
+		echo json_encode($data);
+	}
+	
+	/**
+	 * Uploads a file posted to a specified project
+	 * works with the Ajax SOW file uploader
+	 */
+	public function sow_file_upload($lead_id)
+	{
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['sow_ajax_file_uploader']['name']);
+		
+		$user_data = $this->session->userdata('logged_in_user');		
+
+		$project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
+		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+		$arrLeadInfo = $this->request_model->get_lead_info($lead_id); // This function to get a current lead informations.		
+
+				
+		
+		// echo "<pre>"; print_r($_FILES); exit;
+		
+		$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
+		$filefolder_id = $arrFolderId['folder_id'];
+		
+
+		//creating files folder name
+		$f_dir = UPLOAD_PATH.'files/';
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		//creating lead_id folder name
+		$f_dir = $f_dir.$lead_id;
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		$this->upload->initialize(array(
+		   "upload_path" => $f_dir,
+		   "overwrite" => FALSE,
+		   "remove_spaces" => TRUE,
+		   "max_size" => 51000000,
+		   "allowed_types" => "*"
+		)); 
+		// $config['allowed_types'] = '*';
+		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		
+		$returnUpload = array();
+		$json  		  = array();
+		$res_file     = array();
+		if(!empty($_FILES['sow_ajax_file_uploader']['name'][0])) {
+			if ($this->upload->do_multi_upload("sow_ajax_file_uploader")) { 
+			   $returnUpload  = $this->upload->get_multi_upload_data();
+			   $json['error'] = FALSE;
+			   $json['msg']   = "File successfully uploaded!";
+			   $i = 1;			  
+			   if(!empty($returnUpload)) {
+				  foreach($returnUpload as $file_up) {
+					$lead_files['lead_files_name']		 = $file_up['file_name'];
+					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+					$lead_files['lead_id'] 				 = $lead_id;
+					$lead_files['folder_id'] 			 = $filefolder_id; //get here folder id from file_management table.
+					$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
+					$json['res_file'][]					 = $insert_file.'~'.$file_up['file_name'];
+					
+					$logs['jobid_fk']	   = $lead_id;
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $file_up['file_name'].' is added.';
+					$logs['attached_docs'] = $file_up['file_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+					
+					/* #################  Permission add new file owner start here  ################## */
+				if($user_data['role_id'] != 1) {
+				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
+				}
+				/* #################  Permission add new file owner end here  ################## */
+				
+				
+				/* #################  Assing permission to all users by lead id start here  ################## */
+					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+		
+							foreach($arrProjectMembers as $members){
+								if($user_data['userid'] != $members['userid']) {
+								
+								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
+								if(empty($arrLeadExistFolderAccess)) {	
+								
+									$read_access = 0;
+									$write_access = 0;
+									$delete_access = 0;									
+									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+									$read_access = 1;
+									$write_access = 1;
+									$delete_access = 1;								
+									}
+	
+									$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+									$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
+										
+								}
+							}
+						}
+					}
+				/* #################  Assing permission to all users by lead id end here  ################## */
+				
+				
+					
+					$i++;
+				  }
+			   }
+			} else {
+				$this->upload_error = strip_tags($this->upload->display_errors());
+				$json['error'] = TRUE;
+				$json['msg']   = $this->upload_error;
+				// return $this->upload_error;						
+				// exit;
+			}
+		}
+		echo json_encode($json); exit;
+	}
+	
+	
 }
 ?>
