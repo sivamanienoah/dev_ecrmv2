@@ -23,11 +23,11 @@
 	{	
 	?>
 		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Hosting Accounts</h2>
+			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Subscription Accounts</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
 					<div class="buttons pull-right">
 						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
-							Add New Hosting Account
+							Add new subscription
 						</button>
 					</div>
 				<?php } ?>
@@ -38,11 +38,12 @@
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             <thead>
                 <tr>
-                    <th>Domain Name</th>
+                    <th>Subscription Name</th>
+					<th>Subscription type</th>
                     <th>Customer</th>
-                    <th>Domain Status</th>
+                    <th>Subscription Status</th>
 					<th>DNS</th>
-                    <th>Domain Expiry Date</th>
+                    <th>Subscription Expiry Date</th>
                     <th>Hosting Expiry Date</th>
 					<th>SSL Status</th>
 					<th>Actions</th>
@@ -64,6 +65,10 @@
                         <td>
 							<?php if ($this->session->userdata('edit')==1) {?><a href="hosting/add_account/update/<?php echo  $account['hostingid'] ?>"><?php echo  $account['domain_name'] ?></a><?php } else echo "Edit"; ?>
 						</td>
+						<td>
+							<?php echo  ($account['subscriptions_type_name'])?$account['subscriptions_type_name']:'---'; ?>
+						</td>
+						
                         <td>
 							<?php echo  $account['customer'] ?>
 						</td>
