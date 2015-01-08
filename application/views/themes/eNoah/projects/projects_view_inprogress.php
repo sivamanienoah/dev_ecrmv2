@@ -15,10 +15,17 @@ if (get_default_currency()) {
 	$monthly_content   = '';
 	
 	if (is_array($pjts_data) && count($pjts_data) > 0) {
+		$total_pv_amt = 0;
+		$total_uc_amt = 0;
+		$total_pl_amt = 0;		
+		$total_mile_pv_amt = 0;
+		$total_mile_uc_amt = 0;
+		$total_mile_pl_amt = 0;	
 		foreach($pjts_data as $record){
 			$title		   = character_limiter($record['lead_title'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
  			$project_type  = ($record['project_type']!=null) ? $record['project_type'] : '-';
+			$division  = ($record['division']!=null) ? $record['division'] : '-';
 			$estimate_hour = (($record['estimate_hour'])) ? $record['estimate_hour'] : '-';
 			$bill_hr 	   = (isset($record['bill_hr'])) ? (round($record['bill_hr'])) : '-';
 			$int_hr 	   = (isset($record['int_hr'])) ? (round($record['int_hr'])) : '-';
@@ -59,7 +66,7 @@ if (get_default_currency()) {
 				$milestone_content .= "</td>";
 				$milestone_content .= "<td><a href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 				$milestone_content .= "<td>".$complete_stat."</td>";
-				$milestone_content .= "<td>".$project_type."</td>";
+				$milestone_content .= "<td>".$project_type."</td>";				
 				$milestone_content .= "<td>".$ragStatus."</td>";
 				$milestone_content .= "<td>".$estimate_hour."</td>";
 				$milestone_content .= "<td>".$bill_hr."</td>";
@@ -72,7 +79,12 @@ if (get_default_currency()) {
 				$milestone_content .= "<td>".$profitloss."</td>";
 				$milestone_content .= "<td>".$profitlossPercent." %</td>";
 				$milestone_content .= "</tr>";
+				$total_mile_pv_amt += $actual_amt;
+				$total_mile_uc_amt += $total_cost;
+				$total_mile_pl_amt += $profitloss;	
+			
 			} else {
+			
 				$monthly_content .= "<tr>";
 				$monthly_content .= "<td class='actions' align='center'>";
 				$monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a>";
@@ -82,7 +94,7 @@ if (get_default_currency()) {
 				$monthly_content .= "</td>";
 				$monthly_content .= "<td><a href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 				$monthly_content .= "<td>".$complete_stat."</td>";
-				$monthly_content .= "<td>".$project_type."</td>";
+				$monthly_content .= "<td>".$project_type."</td>";				
 				$monthly_content .= "<td>".$ragStatus."</td>";
 				$monthly_content .= "<td>".$estimate_hour."</td>";
 				$monthly_content .= "<td>".$bill_hr."</td>";
@@ -94,6 +106,10 @@ if (get_default_currency()) {
 				$monthly_content .= "<td>".$profitloss."</td>";
 				$monthly_content .= "<td>".$profitlossPercent." %</td>";
 				$monthly_content .= "</tr>";
+				$total_pv_amt += $actual_amt;
+				$total_uc_amt += $total_cost;
+				$total_pl_amt += $profitloss;
+				
 			}
 			$complete_stat = $project_type = $estimate_hour = '';
 		}
@@ -111,7 +127,7 @@ if (get_default_currency()) {
 			<th>Action</th>
 			<th>Title</th>
 			<th title="Completion Percentage">CP % </th>
-			<th title="Project Type">PT</th>
+			<th title="Project Type">PT</th>			
 			<th title="RAG Status">RAG</th>
 			<th title="Planned Hour">PH</th>
 			<th title="Billable Hour">BH</th>
@@ -128,6 +144,20 @@ if (get_default_currency()) {
 	<tbody>
 		<?php echo $milestone_content; ?>
 	</tbody>
+	
+	<?php /* ?><tfoot>
+					<tr>
+						<td colspan='11' align='right'><strong>Total: </strong></td>
+						
+						<td><?php echo sprintf('%0.2f', $total_mile_pv_amt); ?></td>
+						<td><?php echo sprintf('%0.2f', $total_mile_uc_amt); ?></td>
+						<td><?php echo sprintf('%0.2f', $total_mile_pl_amt); ?></td>
+						<td></td>
+						
+					</tr>
+	</tfoot><?php */?>
+				
+				
 </table>
 
 <div class="clear"></div>
@@ -172,7 +202,7 @@ if (get_default_currency()) {
 				<th>Action</th>
 				<th>Title</th>
 				<th title="Completion Percentage">CP%</th>
-				<th title="Project Type">PT</th>
+				<th title="Project Type">PT</th>				
 				<th title="RAG Status">RAG</th>
 				<th title="Planned Hour">PH</th>
 				<th title="Billable Hour">BH</th>
@@ -188,6 +218,18 @@ if (get_default_currency()) {
 		<tbody>
 			<?php echo $monthly_content; ?>
 		</tbody>
+		
+		<tfoot>
+					<tr>
+						<td colspan='10' align='right'><strong>Total: </strong></td>
+						
+						<td><?php echo $total_pv_amt; ?></td>
+						<td><?php echo $total_uc_amt; ?></td>
+						<td><?php echo $total_pl_amt; ?></td>
+						<td></td>
+						
+					</tr>
+				</tfoot>
 	</table>
 </div>
 
