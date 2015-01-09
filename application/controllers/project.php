@@ -571,12 +571,15 @@ class Project extends crm_controller {
 			$data['error'] = 'Error in Updation';
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('lead_title' => $updt['lead_title']);
-			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
-			if($updt_id==0)
-			$data['error'] = 'Error in Updation';
+			$data     = array('lead_title'=>$updt['lead_title']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id){				
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}
@@ -595,12 +598,15 @@ class Project extends crm_controller {
 			$data['error'] = 'Error in Updation';
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('practice' => $updt['practice']);
-			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
-			if($updt_id==0)
-			$data['error'] = 'Error in Updation';
+			$data = array('practice' => $updt['practice']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}
@@ -710,19 +716,19 @@ class Project extends crm_controller {
 		
 		if( $data['error'] == FALSE ) {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('pjt_status' => $updt['pjt_stat']);			
-			$updt_pjt = $this->project_model->update_row('leads', $updt, $wh_condn);
-				
+			$data = array('pjt_status' => $updt['pjt_stat']);			
+			$updt_pjt = $this->project_model->update_row('leads', $data, $wh_condn);
 		}
 		
-		if($updt_pjt) {
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id',$this->input->post('lead_id'), 'pjt_id');		
+		if($updt_pjt) {		
+			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id',$updt['lead_id'], 'pjt_id');		
 			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect		
 			$ins['userid_fk'] = $this->userdata['userid'];
 			$ins['jobid_fk'] = $this->input->post('lead_id');
 			$ins['date_created'] = date('Y-m-d H:i:s');
 			$ins['log_content'] = "Status Change:\n" . urldecode($log_status);
 			$insert_logs = $this->project_model->insert_row('logs', $ins);
+			$data['error'] = FALSE;
 		}
 		echo json_encode($data);
 	}
@@ -2414,10 +2420,17 @@ HDOC;
 			$data['error'] = 'Please Check Billing Type';
 		} else {
 			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
-			$updt 	   = array('billing_type'=>$billing_type);
-			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+			$data 	   = array('billing_type'=>$billing_type);
+			$updt_date = $this->project_model->update_row('leads', $data, $wh_condn);
+			
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+
 		}
 		echo json_encode($data);
 	}
@@ -3589,12 +3602,15 @@ HDOC;
 			$data['error'] = 'Error in Updation';
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('department_id_fk' => $updt['department_id_fk']);
-			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
-			if($updt_id==0)
-			$data['error'] = 'Error in Updation';
+			$data = array('department_id_fk' => $updt['department_id_fk']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}	
@@ -3614,12 +3630,16 @@ HDOC;
 			$data['error'] = 'Error in Updation';
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('project_type' => $updt['project_types']);
-			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
-			if($updt_id==0)
-			$data['error'] = 'Error in Updation';
+			$data = array('project_type' => $updt['project_types']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}
@@ -3637,10 +3657,16 @@ HDOC;
 			$data['error'] = 'Please Check SOW Status';
 		} else {
 			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
-			$updt 	   = array('sow_status'=>$sow_status);
-			$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+			$data 	   = array('sow_status'=>$sow_status);
+			$updt_date = $this->project_model->update_row('leads', $data, $wh_condn);
+			
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}
@@ -3661,12 +3687,16 @@ HDOC;
 			$data['error'] = 'Error in Updation';
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
-			$updt = array('resource_type' => $updt['resource_type']);
-			$updt_id = $this->project_model->update_practice('leads', $updt, $wh_condn);
-			$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
-			$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
-			if($updt_id==0)
-			$data['error'] = 'Error in Updation';
+			$data	  = array('resource_type' => $updt['resource_type']);
+			$updt_id  = $this->project_model->update_practice('leads', $data, $wh_condn);
+			
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
 		}
 		echo json_encode($data);
 	}

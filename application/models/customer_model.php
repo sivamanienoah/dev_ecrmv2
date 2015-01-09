@@ -754,13 +754,11 @@ class Customer_model extends crm_model {
 	 */
 	function get_filed_id_by_name($table, $filed_id, $filed_id_value, $files_name)
 	{
-	
 		$this->db->select('*');
 		$this->db->where($filed_id, $filed_id_value);
 		$query = $this->db->get($this->cfg['dbpref'].$table);
 		$result = $query->row_array();
 		return $result[$files_name];
-	
 	}
 	
 	/*
@@ -772,7 +770,7 @@ class Customer_model extends crm_model {
 	public function get_billing_type_by_id($bill_id)
 	{
 		$timesheet_db = $this->load->database('timesheet',TRUE);		
-		$timesheet_db->select('*');
+		$timesheet_db->select('bill_id,category');
 		$timesheet_db->where('bill_id', $bill_id);
 		$timesheet_db->from($timesheet_db->dbprefix('bill_categories'));		
 		$query = $timesheet_db->get();
