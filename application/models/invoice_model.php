@@ -24,7 +24,7 @@ class Invoice_model extends crm_model {
 	*@Invoice_model
 	*/
 	public function get_invoices($filter = false) {
-		$this->db->select('expm.expectid,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
+		$this->db->select('expm.expectid,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
@@ -59,6 +59,12 @@ class Invoice_model extends crm_model {
 			$end  = date('Y-m-t');
 			$this->db->where('DATE(expm.invoice_generate_notify_date) >=', $from);
 			$this->db->where('DATE(expm.invoice_generate_notify_date) <=', $end);
+		}
+		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
+			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
+			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
 		}
 		$query  = $this->db->get();
 		// echo $this->db->last_query();

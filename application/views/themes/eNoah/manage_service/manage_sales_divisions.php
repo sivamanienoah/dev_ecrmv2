@@ -14,7 +14,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php if($this->session->userdata('add')==1) { ?>
 				<div class="buttons pull-right">
 					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/division_add'">
-						Add New Division
+						Add New Entity
 					</button>
 				</div>
 			<?php } ?>
@@ -25,7 +25,7 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th width="30%">Divisions</th>
+				<th width="30%">Entity</th>
 				<th width="10%">Status</th>
 				<th>Action</th>
 			</tr>

@@ -20,7 +20,7 @@ function chk_sale_dup() {
 	
 	if (division_name == "") {
 		$('#sales_div_msg').show();
-		$('#sales_div_msg').append("<span class='ajx_failure_msg'>Sale Division Required.</span>");
+		$('#sales_div_msg').append("<span class='ajx_failure_msg'>Entity Required.</span>");
 		return false;
 	} else {
 		$.ajax({
@@ -31,7 +31,7 @@ function chk_sale_dup() {
 			success: function(data) {
 				if(data == 'fail') {
 					$('#sales_div_msg').show();
-					$('#sales_div_msg').append("<span class='ajx_failure_msg'>Sale Division Already Exists.</span>");
+					$('#sales_div_msg').append("<span class='ajx_failure_msg'>Entity Already Exists.</span>");
 					return false;
 				} else {
 					document.sale_div.submit();

@@ -149,9 +149,7 @@ class Customer_model extends crm_model {
     function insert_customer($data) {
 	
 	    if ( $this->db->insert($this->cfg['dbpref'] . 'customers', $data) ) {
-            $insert_id = $this->db->insert_id();			
-			$client_code = $this->update_client_code($data['first_name'].$data['last_name'], $insert_id);
-			$this->update_client_details_to_timesheet($client_code);
+            $insert_id = $this->db->insert_id();
             return $insert_id;
         } else {
             return false;
@@ -241,7 +239,7 @@ class Customer_model extends crm_model {
 	
 	function customer_update($id, $data) {
 		$this->db->where('custid', $id);
-		$this->db->update($this->cfg['dbpref'].'customers', $data);	
+		$this->db->update($this->cfg['dbpref'].'customers', $data);
 	}
 	
 	/*
@@ -349,7 +347,7 @@ class Customer_model extends crm_model {
 	*@return as true or false
 	*@Author Mani.S
 	*/
-	public function update_client_code($client_name, $custid) { 
+	public function update_client_code($client_name, $custid) {
 		
 		$arrClientCodes = $this->create_client_code($client_name, 3);
 		$randomCode = $this->create_client_code_randomly($client_name, 3);
@@ -555,32 +553,30 @@ class Customer_model extends crm_model {
 	*/
 	function update_project_details($project_code=false)
 	{
-		
 		$arrProjects = $this->get_all_projects($project_code);
-		//echo '<pre>'; print_r($arrProjects);exit;
+		// echo '<pre>'; print_r($arrProjects);exit;
 		$timesheet_db = $this->load->database('timesheet',TRUE);
 		$econnect_db = $this->load->database('econnect',TRUE);		
 		
 		if(isset($arrProjects) && !empty($arrProjects)) {
 		
 			foreach($arrProjects as $listProjects) {
-						
 			/*
 			*@Timesheet to insert project details start here 
 			*/
 				$timesheet_projects = $this->get_timesheet_project($listProjects['pjt_id']);
 				$client_code = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
-				$client = $this->get_client_id_by_code_from_timesheer($client_code);
+				$client = $this->get_client_id_by_code_from_timesheet($client_code);
 				
 				
 				if($listProjects['pjt_status'] == 1) {
-				$project_status = "Pending";
-				}else if($listProjects['pjt_status'] == 2) {
-				$project_status = "Complete";
-				}else if($listProjects['pjt_status'] == 3) {
-				$project_status = "Started";
-				}else if($listProjects['pjt_status'] == 4) {
-				$project_status = "Suspended";
+					$project_status = "Started";
+				} else if($listProjects['pjt_status'] == 2) {
+					$project_status = "Complete";
+				} else if($listProjects['pjt_status'] == 3) {
+					$project_status = "Suspended";
+				} else if($listProjects['pjt_status'] == 4) {
+					$project_status = "Pending";
 				}
 				$strt_date = strtotime($listProjects['date_start']);
 				$end_date = strtotime($listProjects['date_due']);
@@ -694,51 +690,45 @@ class Customer_model extends crm_model {
 	
 	/*
 	 *@Database E-Connect and Timesheet
-	 *@method update_date_to_timesheer_econnect
+	 *@method update_date_to_timesheet_econnect
 	 *@Update Start date, End date, Actual start date and Actual end date
 	 *@Parameter lead_id.
 	 *@Author eNoah - Mani.S
 	 */
-	function update_date_to_timesheer_econnect($lead_id=false)
+	function update_date_to_timesheet_econnect($lead_id=false)
 	{
 		$timesheet_db = $this->load->database('timesheet',TRUE);
-		$econnect_db = $this->load->database('econnect',TRUE);		
-		$arrProjects = $this->get_all_projects(false, $lead_id);
+		$econnect_db  = $this->load->database('econnect',TRUE);		
+		$arrProjects  = $this->get_all_projects(false, $lead_id);
 		
 		if(isset($arrProjects) && !empty($arrProjects)) {
 		
 			foreach($arrProjects as $listProjects) {
 			
-				$project_code = $listProjects['pjt_id'];
-				$timesheet_projects = $this->get_timesheet_project($listProjects['pjt_id']);
+				$project_code 		   = $listProjects['pjt_id'];
+				$timesheet_projects    = $this->get_timesheet_project($listProjects['pjt_id']);
 				if($timesheet_projects == TRUE) {
+					$strt_date = strtotime($listProjects['actual_date_start']);
+					$end_date  = strtotime($listProjects['actual_date_due']);
 				
-					$strt_date = strtotime($listProjects['date_start']);
-					$end_date = strtotime($listProjects['date_due']);				
-				
-					$timesheet_db->query( '  UPDATE  '.$timesheet_db->dbprefix('project').'   SET 
-																					`start_date` = "'.date('Y-m-d', $strt_date).'",
-																					`deadline` = "'.date('Y-m-d', $end_date).'"
-																					 WHERE `project_code` = "'.$listProjects['pjt_id'].'"');
-				
+					$timesheet_db->query( ' UPDATE  '.$timesheet_db->dbprefix('project').' SET 
+											`start_date` = "'.date('Y-m-d', $strt_date).'",
+											`deadline`   = "'.date('Y-m-d', $end_date).'"
+											WHERE `project_code` = "'.$listProjects['pjt_id'].'"');
 				}
 				
 				$econnect_projects = $this->get_econnect_project($listProjects['pjt_id']);
+				
 				if($econnect_projects == TRUE) {
-				
-				$strt_date = strtotime($listProjects['date_start']);
-				$end_date = strtotime($listProjects['date_due']);
-				$contract_strt_date = strtotime($listProjects['actual_date_start']);
-				$contract_end_date = strtotime($listProjects['actual_date_due']);
-				
-				
-				$econnect_db->query( '  UPDATE  '.$econnect_db->dbprefix('project_master').'   SET 
-																						`ProjectStartDate` = "'.date('Y-m-d', $strt_date).'",
-																						`ProjectEndDate` = "'.date('Y-m-d', $end_date).'",
-																						`ContractStartdate` = "'.date('Y-m-d', $contract_strt_date).'",
-																						`ContractEndDate` = "'.date('Y-m-d', $contract_end_date).'"
-																						 WHERE `ProjectCode` = "'.$listProjects['pjt_id'].'"');	
-				
+					$strt_date = strtotime($listProjects['actual_date_start']);
+					$end_date  = strtotime($listProjects['actual_date_due']);
+					// $contract_strt_date = strtotime($listProjects['actual_date_start']);
+					// $contract_end_date  = strtotime($listProjects['actual_date_due']);
+					
+					$econnect_db->query( ' UPDATE  '.$econnect_db->dbprefix('project_master').' SET 
+											`ProjectStartDate` = "'.date('Y-m-d', $strt_date).'",
+											`ProjectEndDate` = "'.date('Y-m-d', $end_date).'"
+											WHERE `ProjectCode` = "'.$listProjects['pjt_id'].'"');
 				}			
 			}
 		}
@@ -783,7 +773,7 @@ class Customer_model extends crm_model {
 	 *@Use Get Client code
 	 *@Author eNoah - Mani.S
 	 */
-	public function get_client_id_by_code_from_timesheer($client_code)
+	public function get_client_id_by_code_from_timesheet($client_code)
 	{
 	//echo $client_code;exit;
 		$timesheet_db = $this->load->database('timesheet',TRUE);		
@@ -809,6 +799,15 @@ class Customer_model extends crm_model {
 		$timesheet_db->from($timesheet_db->dbprefix('project_types'));		
 		$query = $timesheet_db->get();
 		return $query->row_array();		
+	}
+	
+	function get_records_by_num($tbl, $wh_condn)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->num_rows();
 	}
     
 }

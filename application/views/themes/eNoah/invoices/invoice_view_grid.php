@@ -2,6 +2,7 @@
 	<thead>
 		<tr>
 			<th>Invoice Date</th>
+			<th>For tbe Month & Year</th>
 			<th>Customer Name</th>
 			<th>Project Title</th>
 			<th>Project Code</th>
@@ -15,6 +16,7 @@
 		<?php foreach($invoices as $inv) { ?>
 			<tr>
 				<td><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></td>
+				<td><?php echo date('F Y', strtotime($inv['month_year'])); ?></td>
 				<td><?php echo $inv['customer']; ?></td>
 				<td><a title='View' href="project/view_project/<?php echo $inv['lead_id'] ?>"><?php echo character_limiter($inv['lead_title'], 30); ?></a></td>
 				<td><?php echo isset($inv['pjt_id']) ? $inv['pjt_id'] : '-'; ?></td>
@@ -27,7 +29,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<td colspan='6' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
+			<td colspan='7' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
 		</tr>
 	</tfoot>
 </table>

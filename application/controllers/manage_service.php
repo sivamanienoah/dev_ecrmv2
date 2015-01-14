@@ -104,7 +104,7 @@ class Manage_service extends crm_controller {
 	*@Method  manage_sales
 	*/
 	public function manage_sales($search = FALSE) {
-		$data['page_heading'] = 'Manage Sales Divisions';
+		$data['page_heading'] = 'Manage Entity';
 		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
 		$this->load->view('manage_service/manage_sales_divisions', $data);
 	}
@@ -361,7 +361,7 @@ class Manage_service extends crm_controller {
 		$rules['division_name'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
-		$fields['division_name'] = 'Division Name';
+		$fields['division_name'] = 'Entity Name';
 		$fields['status'] = 'Status';
 		
 		$this->validation->set_fields($fields);
@@ -402,14 +402,14 @@ class Manage_service extends crm_controller {
                 
                 if ($this->db->update($this->cfg['dbpref']."sales_divisions", $update_data))
                 {	
-                    $this->session->set_flashdata('confirm', array('Division Details Updated!'));
+                    $this->session->set_flashdata('confirm', array('Entity Details Updated!'));
                 }
             }
             else
             {
                 //insert
                 $this->db->insert($this->cfg['dbpref']."sales_divisions", $update_data);
-                $this->session->set_flashdata('confirm', array('New Division Added!'));
+                $this->session->set_flashdata('confirm', array('New Entity Added!'));
             }
 				/* //write into array
 				$get_salesDiv = $this->manage_service_model->get_list_active(sales_divisions);
@@ -450,7 +450,7 @@ class Manage_service extends crm_controller {
 			{
 				// $this->db->delete("sales_divisions", array('div_id' => $id));
 				$this->manage_service_model->delete_row("sales_divisions", array('div_id' => $id));
-				$this->session->set_flashdata('confirm', array('Division Deleted!'));
+				$this->session->set_flashdata('confirm', array('Entity Deleted!'));
 				$get_salesDiv = $this->manage_service_model->get_list_active($this->cfg['dbpref']."sales_divisions");
 				/* $filename = APPPATH."config/sales_divisions.ini";
 					$file = fopen($filename, "w");

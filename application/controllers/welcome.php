@@ -12,7 +12,6 @@ class Welcome extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('welcome_model');
 		$this->load->model('request_model');
-		$this->load->model('project_model'); //Mani.S
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
 		$this->load->model('email_template_model');
@@ -1262,8 +1261,6 @@ class Welcome extends crm_controller {
 	//Closed lead - move to project
 	public function ajax_update_lead_status($lead_id) 
 	{
-	
-	
         if ($lead_id != 0 && preg_match('/^[0-9]+$/', $lead_id))
         {
 		
@@ -1294,22 +1291,22 @@ class Welcome extends crm_controller {
 			
 			$month_year = date('my'); 		
 			
-			$client_projects_count = $this->project_model->get_records_by_num('leads', array('pjt_status !='=>0, 'custid_fk'=>$lead_det['custid_fk']));
+			$client_projects_count = $this->customer_model->get_records_by_num('leads', array('pjt_status !='=>0, 'custid_fk'=>$lead_det['custid_fk']));
 			
-		 	 $total_projects = sprintf("%02d", (int)$client_projects_count+1);
-			 
-			$project_code = $code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
-						
+			$total_projects   = sprintf("%02d", (int)$client_projects_count+1);
+			
+			$project_code     = $code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
+			
 			$update['pjt_id'] = $project_code;
 			
 			$update['project_category'] = $this->input->post('project_category');
 			$update['resource_type'] = $this->input->post('resource_type');
-			$update['lead_title'] = $this->input->post('project_name');
+			$update['lead_title']    = $this->input->post('project_name');
 			//$update['project_types'] = $this->input->post('project_types');
-			$update['project_type'] = $this->input->post('timesheet_project_types');
-			$update['sow_status'] = $this->input->post('sow_status');			
-			$update['pjt_status'] = 1;			
-			$update['modified_by'] = $this->userdata['userid'];
+			$update['project_type']  = $this->input->post('timesheet_project_types');
+			$update['sow_status']	 = $this->input->post('sow_status');			
+			$update['pjt_status']    = 1;			
+			$update['modified_by']   = $this->userdata['userid'];
 			$update['date_modified'] = date('Y-m-d H:i:s');
 			
 			$updt_job = $this->welcome_model->update_row('leads', $update, $lead_id);
@@ -1318,7 +1315,6 @@ class Welcome extends crm_controller {
 			$json = array();
 			if ($updt_job) 
 			{
-				
 				$ins['userid_fk'] = $this->userdata['userid'];
 				$ins['jobid_fk'] = $lead_id;
 				$ins['date_created'] = date('Y-m-d H:i:s');
@@ -1326,14 +1322,14 @@ class Welcome extends crm_controller {
 				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$lead_id.'> ' .word_limiter($lead_det['lead_title'], 4).' </a> is Successfully Moved to Project.';
 
 				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
-				$lead_owner = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
+				$lead_owner       = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
 				
 				// insert the new log
-				$insert_log = $this->welcome_model->insert_row('logs', $ins);
+				$insert_log          = $this->welcome_model->insert_row('logs', $ins);
 				
-				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$user_name           = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				$dis['date_created'] = date('Y-m-d H:i:s');
-				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+				$print_fancydate     = date('l, jS F y h:iA', strtotime($dis['date_created']));
 				
 
 				$arrEmails = $this->config->item('crm');

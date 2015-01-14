@@ -1,7 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
-
 <?php
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
@@ -215,7 +214,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Cost Center</label>
-					<select name="cost_center" id="cost_center" class="textfield"  disabled>
+					<select name="cost_center" id="cost_center" class="textfield" style="width: 135px;" disabled>
 						<option value="">Select Cost Center</option>
 						<?php if(!empty($arr_cost_center)) {
 							foreach($arr_cost_center as $list_cost_center) {
@@ -399,6 +398,7 @@ if (get_default_currency()) {
 						<option value="4"  <?php if($quote_data['pjt_status'] == 4) echo 'selected="selected"'; ?>>Inactive</option>
 					</select>
 					<input type="hidden" class="hiddenUrl"/>
+					<input type="hidden" id="pjt_status_hidden" value=<?php echo $quote_data['pjt_status']; ?> />
 				</div>					
 				<?php if ($chge_access == 1) { ?>
 				<div class="buttons">
@@ -644,7 +644,11 @@ if (get_default_currency()) {
 									<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
 								</tr>
 								<tr>
-									<td>Milestone date *</td><td><input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </td>
+									<td>Milestone date *</td><td><input type="text" data-calendar="true" name="sp_date_2" id="sp_date_2" class="textfield width200px" readonly /> </td>
+								</tr>
+								<tr>
+									<td>For the Month & Year *</td>
+									<td><input type="text" data-calendar="false" class="textfield width200px" name="month_year" id="month_year" readonly /></td>
 								</tr>
 								<tr>
 									<td>Value *</td><td><input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></td>
@@ -662,9 +666,7 @@ if (get_default_currency()) {
 								</tr>
 								<tr>
 									<td></td>
-									<td>
-										<div id="uploadFile"></div>
-									</td>
+									<td><div id="uploadFile"></div></td>
 								</tr>
 								<tr>
 									<td colspan='2'>
@@ -732,6 +734,7 @@ if (get_default_currency()) {
 							$output .= "<tr align='left' >";
 							$output .= "<th class='header'>Payment Milestone</th>";
 							$output .= "<th class='header'>Milestone Date</th>";
+							$output .= "<th class='header'>For the Month & Year</th>";
 							$output .= "<th class='header'>Amount</th>";
 							$output .= "<th class='header'>Attachments</th>";
 							$output .= "<th class='header'>Status</th>";
@@ -740,10 +743,10 @@ if (get_default_currency()) {
 							$output .= "</thead>";
 							foreach ($payment_data as $pd)
 							{
-								$att_condn = array("expectid"=>$pd['expectid']);
-								$attachments = $this->project_model->get_records_by_num("expected_payments_attach_file",$att_condn);
-							
-								$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
+								$att_condn   = array("expectid"=>$pd['expectid']);
+								$attachments = $this->customer_model->get_records_by_num("expected_payments_attach_file",$att_condn);
+
+								$month_year     = ($pd['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($pd['month_year'])) :'';
 								$payment_amount = number_format($pd['amount'], 2, '.', ',');
 								$total_amount_recieved += $pd['amount'];
 								$payment_received = '';
@@ -775,6 +778,7 @@ if (get_default_currency()) {
 								$output .= "<tr>";
 								$output .= "<td align='left'>".$pd['project_milestone_name']."</td>";
 								$output .= "<td align='left'>".date('d-m-Y', strtotime($pd['expected_date']))."</td>";
+								$output .= "<td align='left'>".$month_year."</td>";
 								$output .= "<td align='left'> ".$pd['expect_worth_name'].' '.number_format($pd['amount'], 2, '.', ',')."</td>";
 								$output .= "<td align='center'>".$att."</td>";
 								$output .= "<td align='center'>".$payment_received."</td>";
@@ -812,7 +816,7 @@ if (get_default_currency()) {
 						
 							<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
 							<p>Amount Received *<input type="text" name="pr_date_2" onkeypress="return isNumberKey(event)" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span></p>
-							<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" readonly /> </p>
+							<p>Date Received *<input type="text" data-calendar="true" name="pr_date_3" id="pr_date_3" class="textfield width200px" readonly /> </p>
 							
 							<?php if (isset($pt_select_box)) { ?>
 								<p>Map to a payment term *<select name="deposit_map_field" class="deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>

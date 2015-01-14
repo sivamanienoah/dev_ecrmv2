@@ -10,8 +10,11 @@
 		</tr>
 		<tr>
 			<td>Milestone date *</td>
-			<td><input type="text" name="sp_date_2" id="sp_date_2" value= "<?php echo $expected_date; ?>" class="textfield width200px pick-date" readonly /></td>
-			
+			<td><input type="text" data-calendar="true" name="sp_date_2" id="sp_date_2" value= "<?php echo $expected_date; ?>" class="textfield width200px pick-date" readonly /></td>
+		</tr>
+		<tr>
+			<td>For the Month & Year *</td>
+			<td><input type="text" data-calendar="false" class="textfield width200px" value= "<?php echo $month_year; ?>" name="month_year" id="month_year" readonly /></td>
 		</tr>
 		<tr>
 			<td>Value *</td>
@@ -88,7 +91,13 @@ $(function(){
 	}; 
 	$('#update-payment-terms').ajaxForm(options_updt);
 	
-	$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
+	$('#sp_date_2').datepicker({
+		dateFormat: 'dd-mm-yy', 
+		//minDate: '0',
+		beforeShow : function(input, inst) {
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
 	
 	$("#show_files").delegate("a.del_file","click",function() {
 		var str_delete = $(this).attr("id");
@@ -98,6 +107,28 @@ $(function(){
 			$('#'+str_delete).parent("div").remove();
 		}
 	});
+	
+	$('#month_year').datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'MM yy',
+		onClose: function(input, inst) {
+			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+			$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+		},
+		beforeShow: function(input, inst) {
+			if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			}
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+	
 });
 function isNumberKey(evt)
 {

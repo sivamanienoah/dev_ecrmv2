@@ -2,7 +2,7 @@
 /********************************************************************************
 File Name       : invoice.php
 Created Date    : 31/08/2014
-Modified Date   : 09/09/2014
+Modified Date   : 14/01/2015
 Created By      : Sriram.S
 Modified By     : Sriram.S
 Reviewed By     : Karthikeyan.S
@@ -78,7 +78,8 @@ class Invoice extends CRM_Controller {
 				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
 				$data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
 				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
-				$data['total_amt'] += $data['invoices'][$i]['coverted_amt'];
+				$data['invoices'][$i]['month_year'] 			= $inv['month_year'];
+				$data['total_amt'] 	                           += $data['invoices'][$i]['coverted_amt'];
 				$i++;
 			}
 		}

@@ -61,13 +61,13 @@ class Request extends crm_controller {
 	/*
 	*@Update project DATE details to timesheet database - project table and econnect database - project table
 	*@Model Customer_model
-	*@Method update_date_to_timesheer_econnect
+	*@Method update_date_to_timesheet_econnect
 	*@Parameter --
 	*@Author eNoah - Mani.S
 	*/
-    public function update_date_to_timesheer_econnect() 
+    public function update_date_to_timesheet_econnect() 
 	{
-       $this->customer_model->update_date_to_timesheer_econnect();
+       $this->customer_model->update_date_to_timesheet_econnect();
     }
 	
 	function update_existing_file_permissions()
@@ -243,8 +243,8 @@ class Request extends crm_controller {
 		$user_data = $this->session->userdata('logged_in_user');
 		
 		if($filefolder_id == 'Files') {
-		$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
-		$filefolder_id = $arrFolderId['folder_id'];
+			$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
+			$filefolder_id = $arrFolderId['folder_id'];
 		}
 		$check_permissions = $this->check_access_permissions($lead_id, 'folder_id', $filefolder_id, 'write');			
 		 
@@ -324,34 +324,38 @@ class Request extends crm_controller {
 				/* #################  Permission add new file owner start here  ################## */
 				if($user_data['role_id'] != 1) {
 				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+				
 				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani						
 				}
 				/* #################  Permission add new file owner end here  ################## */
-				
-				
+
 				
 				/* #################  Assing permission to all users by lead id start here  ################## */
 					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 		
-							foreach($arrProjectMembers as $members){
+						foreach($arrProjectMembers as $members){
+						
+							if(!empty($members)) {
+							
 								if($user_data['userid'] != $members['userid']) {
-								
-								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($lead_id, 'file_id', $insert_file, $members['userid']);						
-								if(empty($arrLeadExistFolderAccess)) {	
-								
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}	
-									$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-									$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
-										
+									
+									$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($lead_id, 'file_id', $insert_file, $members['userid']);						
+									if(empty($arrLeadExistFolderAccess)) {	
+									
+										$read_access = 0;
+										$write_access = 0;
+										$delete_access = 0;									
+										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+											$read_access = 1;
+											$write_access = 1;
+											$delete_access = 1;								
+										}	
+										$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+										$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
+									}
 								}
+							
 							}
 						}
 					}
@@ -994,7 +998,6 @@ class Request extends crm_controller {
 	*
 	*/
 	public function get_files_tree_structure() {
-
 		$data    = real_escape_array($this->input->post());
 		$result  = $this->request_model->get_tree_file_list_number($data['leadid'],$parentId=0,$counter=0);
 		$res     = array();
@@ -1011,14 +1014,23 @@ class Request extends crm_controller {
 					$folder_name = "&nbsp;root";
 				}
 				$html .="<ul>";
-				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
+				// CHECK ACCESS PERMISSIONS START HERE //		
+				$check_permissions =  $this->check_access_permissions($data['leadid'], 'folder_id', $folder_id, 'read');	
+				if($check_permissions == 1 || $this->userdata['role_id'] == 1) {
+					$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
+				}
+
 				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
 				
 				if(!empty($res)) {
 					foreach($res as $fname) {
-						$html .= "<li>";
-						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
-						$html .= "</li>";
+						// CHECK ACCESS PERMISSIONS START HERE //		
+						$check_file_permissions =  $this->check_access_permissions($data['leadid'], 'file_id', $fname['file_id'], 'read');	
+						if($check_file_permissions == 1 || $this->userdata['role_id'] == 1) {
+							$html .= "<li>";
+							$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
+							$html .= "</li>";
+						}				
 					}
 				}
 				$html .="</ul>";

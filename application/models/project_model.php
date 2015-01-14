@@ -398,7 +398,7 @@ class Project_model extends crm_model
 	//get expected payment details for the project.
 	public function get_expect_payment_terms($id) 
 	{
-    	$this->db->select('expm.expectid, expm.expected_date, expm.amount, expm.project_milestone_name, expm.received, expm.invoice_status, jb.expect_worth_id, exnm.expect_worth_name');
+    	$this->db->select('expm.expectid, expm.expected_date, expm.month_year, expm.amount, expm.project_milestone_name, expm.received, expm.invoice_status, jb.expect_worth_id, exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.lead_id = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = jb.expect_worth_id', 'left');
@@ -412,7 +412,7 @@ class Project_model extends crm_model
 	function get_payment_term_det($eid, $jid)
 	{
 		$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid);
-		$this->db->select('expm.expectid,expm.amount,expm.expected_date,expm.received,expm.project_milestone_name,expm.payment_remark, expm.invoice_status,j.expect_worth_id,exnm.expect_worth_name');
+		$this->db->select('expm.expectid,expm.amount,expm.expected_date,expm.month_year,expm.received,expm.project_milestone_name,expm.payment_remark, expm.invoice_status,j.expect_worth_id,exnm.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as j', 'j.lead_id = expm.jobid_fk', 'left');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exnm', 'exnm.expect_worth_id = j.expect_worth_id', 'left');
@@ -727,15 +727,6 @@ class Project_model extends crm_model
 		$this->db->where($wh_condn);
 		$query = $this->db->get();
 		return $query->result_array();
-	}
-	
-	function get_records_by_num($tbl, $wh_condn)
-	{
-		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].$tbl);
-		$this->db->where($wh_condn);
-		$query = $this->db->get();
-		return $query->num_rows();
 	}
 	
 	/*

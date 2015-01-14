@@ -9,8 +9,7 @@ class Customers extends crm_controller {
         parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
-        $this->load->model('customer_model');
-		$this->load->model('project_model');		
+        $this->load->model('customer_model');	
         $this->load->model('regionsettings_model');
 		$this->load->model('email_template_model');
         $this->load->library('validation');
@@ -47,7 +46,7 @@ class Customers extends crm_controller {
 		
 		$arrUsers = $this->session->userdata('logged_in_user');
 		
-		$data['login_sales_contact_name'] = $arrUsers['first_name'].' '.$arrUsers['last_name'];
+		$data['login_sales_contact_name']  = $arrUsers['first_name'].' '.$arrUsers['last_name'];
 		$data['login_sales_contact_email'] = $arrUsers['email'];
 		
 		//echo '<pre>'; print_r($arrUsers);exit;
@@ -111,11 +110,10 @@ class Customers extends crm_controller {
 		{
             $customer = $this->customer_model->get_customer($id);
 			
-			
-			$data['client_projects'] = $this->project_model->get_records_by_num('leads', array('custid_fk'=>$id, 'pjt_status !='=>0));
+			$data['client_projects'] = $this->customer_model->get_records_by_num('leads', array('custid_fk'=>$id, 'pjt_status !='=>0));
 			
 			if($data['client_projects'] !=0) {
-			$this->customer_model->customer_update($id, array('is_client'=>1));		
+				$this->customer_model->customer_update($id, array('is_client'=>1));		
 			}
 			
 			//echo '<!--' . print_r($customer, true) . '-->';

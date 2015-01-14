@@ -21,7 +21,7 @@ function checkStatus(id) {
 			if (response.html == 'NO') {
 				// alert("You can't Delete the Sales Division!. \n This Division is used in Leads.");
 				$('#dialog-message-'+id).show();
-				$('#dialog-message-'+id).append("One or more leads currently assigned for this sales division. This cannot be deleted.");
+				$('#dialog-message-'+id).append("One or more leads currently assigned for this Entity. This cannot be deleted.");
 				setTimeout('timerfadeout()', 4000);
 			} else {
 				$.blockUI({

@@ -283,7 +283,7 @@ function startQuote() {
         err.push('Lead Assigned to must be selected');
     }
 	 if ($('#job_division').val() == 'not_select') {
-        err.push('Division must be selected');
+        err.push('Entity must be selected');
     }
 	if ($('#expect_worth').val() == 'not_select') {
         err.push('Expected Worth Curreny must be selected');
@@ -532,7 +532,7 @@ function editQuoteDetails(arg) {
         err.push('Lead Assigned to must be selected');
     }
 	if ($('#job_division_edit').val() == 'not_select') {
-        err.push('Division must be selected');
+        err.push('Entity must be selected');
     }
 	if ($('#expect_worth_edit').val() == 'not_select') {
         err.push('Expected Worth Currency must be selected');
@@ -805,7 +805,7 @@ h3 .small {
 				
 					<input name="job_belong_to" id="job_belong_to" type="hidden"  value="<?php echo $userdata['userid'] ?>" class="textfield width300px">
 					
-					<p><label>Division</label></p>
+					<p><label>Entity</label></p>
 					<p>
 						<select name="job_division" id="job_division" class="textfield width300px">
 							<option value="not_select">Please Select</option>
@@ -955,7 +955,7 @@ h3 .small {
 							<input name="job_belong_to" id="job_belong_to_edit"  class="textfield width300px">
 								
 						</p> -->
-						<p><label>Division</label></p>
+						<p><label>Entity</label></p>
 						<p>
 							<select name="job_division" id="job_division_edit" class="textfield width300px">
 								<option value="not_select">Please Select</option>
@@ -1372,7 +1372,7 @@ function confirmaMoveLeadsToProject()
 					color:'#333',
 					padding:'8px',
 					top:  ($(window).height() - 450) /2 + 'px', 
-					left: ($(window).width() - 700) /2 + 'px', 
+					left: ($(window).width() - 800) /2 + 'px', 
 					width: '800px' 
 				} 
 		});

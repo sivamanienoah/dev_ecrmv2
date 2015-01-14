@@ -1023,7 +1023,7 @@ class Project extends crm_controller {
 					$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 					$updt = array('date_start'=>date('Y-m-d H:i:s', $timestamp));
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					// $this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 					
 				}
 			}
@@ -1044,7 +1044,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+							// $this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					} 
 					else 
@@ -1118,25 +1118,25 @@ class Project extends crm_controller {
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('date_start' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'due';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('date_due' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'act-start';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('actual_date_start' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 				case 'act-due';
 					$wh_condn  = array('lead_id' => $updt_data['lead_id']);
 					$updt	   = array('actual_date_due' => NULL);
 					$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-					$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+					$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 				break;
 			}
 		} else {
@@ -1191,7 +1191,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_start'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+							$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					}
 				} 
@@ -1215,7 +1215,7 @@ class Project extends crm_controller {
 							$wh_condn = array('lead_id'=>$updt_data['lead_id']);
 							$updt = array('actual_date_due'=>date('Y-m-d H:i:s', $timestamp));
 							$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-							$this->customer_model->update_date_to_timesheer_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
+							$this->customer_model->update_date_to_timesheet_econnect($updt_data['lead_id']); // Update date to timesheet and econnect
 						}
 					} 
 					else 
@@ -1270,6 +1270,7 @@ class Project extends crm_controller {
 		$output .= "<tr align='left'>";
 		$output .= "<th class='header'>Payment Milestone</th>";
 		$output .= "<th class='header'>Milestone Date</th>";
+		$output .= "<th class='header'>For the Month & Year</th>";
 		$output .= "<th class='header'>Amount</th>";
 		$output .= "<th class='header'>Attachments</th>";
 		$output .= "<th class='header'>Status</th>";
@@ -1281,8 +1282,8 @@ class Project extends crm_controller {
 			foreach ($expect_payment_terms as $exp)
 			{
 				$att_condn   = array("expectid"=>$exp['expectid']);
-				$attachments = $this->project_model->get_records_by_num("expected_payments_attach_file",$att_condn);
-				$expected_date = date('d-m-Y', strtotime($exp['expected_date']));
+				$attachments = $this->customer_model->get_records_by_num("expected_payments_attach_file",$att_condn);
+				$month_year     = ($exp['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($exp['month_year'])) :'';
 				$payment_amount = number_format($exp['amount'], 2, '.', ',');
 				$total_amount_recieved += $exp['amount'];
 				$payment_received = '';
@@ -1314,6 +1315,7 @@ class Project extends crm_controller {
 				$output .= "<tr>";
 				$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
 				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
+				$output .= "<td align='left'>".$month_year."</td>";
 				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
 				$output .= "<td align='center'>".$att."</td>";
 				$output .= "<td align='center'>".$payment_received."</td>";
@@ -1357,6 +1359,7 @@ class Project extends crm_controller {
 		$exp['expect_id']			   = $eid;
 		$exp['job_id']			   	   = $jid;
 		$exp['expected_date']          = date('d-m-Y', strtotime($payment_details['expected_date']));
+		$exp['month_year']             = ($payment_details['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($payment_details['month_year'])) : '';
 		$exp['project_milestone_name'] = $payment_details['project_milestone_name'];
 		$exp['project_milestone_amt']  = $payment_details['amount'];
 		$exp['invoice_status']  	   = $payment_details['invoice_status'];
@@ -1448,9 +1451,10 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			$job_updated = FALSE;
+			$job_updated   = FALSE;
 			$expected_date = date('Y-m-d', $pdate2);
-			$data3 = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark);
+			$month_year    = date('Y-m-d', strtotime($data['month_year']));
+			$data3         = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 'month_year' => $month_year,'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark);
 			
 			$payment_details = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']);
 
@@ -1476,8 +1480,7 @@ class Project extends crm_controller {
 						}
 					}
 				}
-				
-				
+
 				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
 				
 				$ins['jobid_fk']      = $data['sp_form_jobid'];
@@ -1517,7 +1520,7 @@ class Project extends crm_controller {
 						}
 					}
 					
-					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark );
+					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'month_year' => $month_year, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark );
 					$wh_condn = array('expectid' => $update, 'jobid_fk' => $data['sp_form_jobid']);
 					$updt_pay = $this->project_model->update_row('expected_payments', $updatepayment, $wh_condn);
 					
@@ -1794,7 +1797,13 @@ class Project extends crm_controller {
 	{
 		echo '<script type="text/javascript">
 		$(function(){
-			$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+			$("#pr_date_3").datepicker({
+				dateFormat: "dd-mm-yy", 
+				maxDate: "0",
+				beforeShow : function(input, inst) {
+					$("#ui-datepicker-div")[ $(input).is("[data-calendar=false]") ? "addClass" : "removeClass" ]("hide-calendar");
+				}
+			});
 		});
 		function isNumberKey(evt)
 		{
@@ -1810,7 +1819,7 @@ class Project extends crm_controller {
 		<form id="payment-recieved-terms">
 			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
 			<p>Amount Received *<input onkeypress="return isNumberKey(event)" type="text" name="pr_date_2" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" readonly /> </p>
+			<p>Date Received *<input type="text" data-calendar="true" name="pr_date_3" id="pr_date_3" class="textfield width200px pick-date" readonly /> </p>
 			
 			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
 
@@ -1832,9 +1841,14 @@ class Project extends crm_controller {
 		$updt = $this->retrieveRecordEdit($jid, $eid);
 		echo '<br />
 			<script>
-				$(function(){
-					$("#pr_date_3").datepicker({dateFormat: "dd-mm-yy", maxDate: "0"});
+				$("#pr_date_3").datepicker({
+					dateFormat: "dd-mm-yy", 
+					maxDate: "0",
+					beforeShow : function(input, inst) {
+						$("#ui-datepicker-div")[ $(input).is("[data-calendar=false]") ? "addClass" : "removeClass" ]("hide-calendar");
+					}
 				});
+				
 				function isNumberKey(evt)
 				{
 				  var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -1848,7 +1862,7 @@ class Project extends crm_controller {
 			<form id="update-payment-recieved-terms">
 			<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" value="'.$received_payment_details['invoice_no'].'" class="textfield width200px" /> </p>
 			<p>Amount Received *<input type="text" onkeypress="return isNumberKey(event)" name="pr_date_2" id="pr_date_2" value="'.$received_payment_details['amount'].'" class="textfield width200px" /><span style="color:red;">(Numbers only)</span> </p>
-			<p>Date Received *<input type="text" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px pick-date" readonly /> </p>
+			<p>Date Received *<input type="text" data-calendar="true" name="pr_date_3" id="pr_date_3" value="'.$received_deposit_date.'" class="textfield width200px" readonly /> </p>
 			
 			<p>Map to a payment term *<select name="deposit_map_field" id="deposit_map_field" class="deposit_map_field" style="width:210px;"> "'.$updt.'" </select></p>
 
@@ -3330,13 +3344,15 @@ HDOC;
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
 			$project_id	 	 = $project_details[0]['invoice_no'];
+			$project_code	 = $project_details[0]['pjt_id'];
 			$milestone_name  = $payment_details['project_milestone_name'];
+			$month_year  	 = date('F Y', strtotime($payment_details['month_year']));
 			$milestone_value = $payment_details['expect_worth_name'] . ' - ' . $payment_details['amount'];
 			$payment_remark  = isset($payment_details['payment_remark']) ? $payment_details['payment_remark'] : '-';
 			//email sent by email template
 			$param = array();
 			
-			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
+			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'month_year'=>$month_year,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'project_code'=>$project_code,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
 
 			$param['to_mail'] 		  = $to;
 			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;

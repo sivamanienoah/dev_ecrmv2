@@ -3,6 +3,11 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
 ?>
+<style>
+.hide-calendar .ui-datepicker-calendar {
+   display: none;
+}
+</style>
 <div id="content">
 	<div class="inner">	
 		<div style="padding-bottom: 10px;">
@@ -35,10 +40,11 @@ $userdata = $this->session->userdata('logged_in_user');
 								<td class="tblheadbg">By Entity</td>
 								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
+								<td class="tblheadbg">For the Month & Year</td>
 							</tr>
 							<tr>	
 								<td>
-									<select multiple="multiple" id="project" name="project[]" class="advfilter">
+									<select multiple="multiple" id="project" name="project[]" class="advfilter" style="width:200px;">
 										<?php foreach($projects as $pj) { ?>
 											<option value="<?php echo $pj['lead_id']; ?>"><?php echo character_limiter($pj['lead_title'], 30); ?></option>
 										<?php } ?>					
@@ -55,27 +61,25 @@ $userdata = $this->session->userdata('logged_in_user');
 									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter">
 										<?php foreach ($sales_divisions as $division) { ?>
 												<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
-										<?php
-											} 
-										?>
+										<?php } ?>
 									</select> 
 								</td>
-								
 								<td>
 									<select multiple="multiple" id="practice" name="practice[]" class="advfilter">
 										<?php foreach ($practices as $pr) { ?>
 												<option value="<?php echo $pr['id'] ?>"><?php echo $pr['practices']; ?></option>
-										<?php
-											} 
-										?>
+										<?php } ?>
 									</select> 
-								</td>
-								
-								
+								</td>								
 								<td>
-									From <input type="text" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+									From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
 									<br />
-									To <input type="text" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+									To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+								</td>
+								<td>
+									From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" style="width:78px;" />
+									<br />
+									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
 								</td>
 							</tr>
 							<tr align="right" >
@@ -98,6 +102,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<thead>
 					<tr>
 						<th>Invoice Date</th>
+						<th>For the Month & Year</th>
 						<th>Customer Name</th>
 						<th>Project Title</th>
 						<th>Project Code</th>
@@ -111,6 +116,7 @@ $userdata = $this->session->userdata('logged_in_user');
 					<?php foreach($invoices as $inv) { ?>
 						<tr>
 							<td><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></td>
+							<td><?php echo ($inv['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($inv['month_year'])) : ''; ?></td>
 							<td><?php echo $inv['customer']; ?></td>
 							<td><a title='View' href="project/view_project/<?php echo $inv['lead_id'] ?>"><?php echo character_limiter($inv['lead_title'], 30); ?></a></td>
 							<td><?php echo isset($inv['pjt_id']) ? $inv['pjt_id'] : '-'; ?></td>
@@ -123,7 +129,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan='6' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
+						<td colspan='7' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
 					</tr>
 				</tfoot>
 			</table>

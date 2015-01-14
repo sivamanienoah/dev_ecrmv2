@@ -809,7 +809,7 @@ $(function(){
 								?>
 						</span>
 						</p>
-						<p class="clearfix"><label>Division </label><span><?php echo $quote_data['division_name'] ?></span></p>
+						<p class="clearfix"><label>Entity </label><span><?php echo $quote_data['division_name'] ?></span></p>
 						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
 						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
 						<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
