@@ -399,6 +399,7 @@
 							$this->file_name = preg_replace("/\s+/", "_", $this->file_name);
 						}
 						
+						//Remove Special character & white space
 						$this->file_name = preg_replace("/[^a-zA-Z0-9._\-]/", "", $this->file_name);
 						
 						/* Validate the file name
