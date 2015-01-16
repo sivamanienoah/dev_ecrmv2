@@ -896,7 +896,7 @@ h3 .small {
 					</table>
 				</form>
 
-				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">
+				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">				
 					<div>
 						<p><label>Lead No</label></p>
 						<p><input type="text" name="lead_no" id="lead_no" class="textfield width300px" value="<?php echo $quote_data['invoice_no'] ?>" disabled /></p>
@@ -1022,14 +1022,10 @@ h3 .small {
 						<p><label>Lead Assigned To</label></p>
 						<p>
 						<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) { ?>
-						
 							<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px">
-							<?php foreach ($lead_assign_edit as $leadassignedit) {
-								
-								?>
-								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
+							<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+								<option value="<?php echo $leadassignedit['userid'] ?>"<?php echo ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
 							<?php
-								
 							}
 							?>
 							</select>
@@ -1041,7 +1037,7 @@ h3 .small {
 							});
 							</script>
 						<?php } else {	?>
-										<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px" disabled=true>
+								<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px" disabled=true>
 							<?php foreach ($lead_assign_edit as $leadassignedit) {
 								
 								?>

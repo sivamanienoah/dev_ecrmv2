@@ -2638,7 +2638,7 @@ EOD;
 	public function getProjectMembers() {
 	
 		$user_data = $this->session->userdata('logged_in_user');
-	//$usid['role_id']; 
+		//$usid['role_id']; 
 		$data = real_escape_array($this->input->post());
 		
 		$fa_folder = $this->input->post('fa_folder');
@@ -2648,36 +2648,32 @@ EOD;
 		$arrFiles = array();
 		$arrFolders = array();
 		$existing_rows = 0;
-				 
-		 
+
 		if(isset($fa_folder) && !empty($fa_folder)) {
-		$arrFolder = rtrim($fa_folder, ',');		
-		$arrFolders = explode(',', $arrFolder);		
+			$arrFolder = rtrim($fa_folder, ',');		
+			$arrFolders = explode(',', $arrFolder);
 		}
 		
-		
 		if(isset($fa_files) && !empty($fa_files)) {	
-		$arrFile = rtrim($fa_files, ',');		
-		$arrFiles = explode(',', $arrFile);		
+			$arrFile = rtrim($fa_files, ',');		
+			$arrFiles = explode(',', $arrFile);		
 		}
 		
 		if(empty($arrFolders) && empty($arrFiles) && !empty($parent_folder_id)) {			
-		$arrFolders = explode(',', $parent_folder_id);		
+			$arrFolders = explode(',', $parent_folder_id);		
 		}
-				
-			
-		$array_merge = array_merge($arrFolders, $arrFiles);
-		
-	
-				$project_members = $this->request_model->get_project_members($data['curr_job_id']); // This array to get a project normal members(Developers) details.
-				$project_leaders = $this->request_model->get_project_leads($data['curr_job_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				$arrLeadInfo = $this->request_model->get_lead_info($data['curr_job_id']); // This function to get a current lead informations.		
-				
-				$arrLeaders = $this->request_model->usersArraysToSingleDimetioal($project_leaders); // This function convert users two dimentional array to single dimentional array.
 
-				//echo '<pre>'; print_r($arrLeaders);exit;
+		$array_merge = array_merge($arrFolders, $arrFiles);
+	
+		$project_members   = $this->request_model->get_project_members($data['curr_job_id']); // This array to get a project normal members(Developers) details.
+		$project_leaders   = $this->request_model->get_project_leads($data['curr_job_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+		$arrLeadInfo       = $this->request_model->get_lead_info($data['curr_job_id']); // This function to get a current lead informations.		
+		
+		$arrLeaders = $this->request_model->usersArraysToSingleDimetioal($project_leaders); // This function convert users two dimentional array to single dimentional array.
+
+		//echo '<pre>'; print_r($arrLeaders);exit;
 		
 		
 		$html = '';		
@@ -2688,68 +2684,69 @@ EOD;
 		$delete_array = array();
 		$arr_disabled_users = array();
 		foreach($arrProjectMembers as $members){
-			if($user_data['userid'] != $members['userid']) {	
+			if(!empty($members)) {
+				if($user_data['userid'] != $members['userid']) {
 
-
-				$arrUserInfo= $this->request_model->getUserInfomationById($members['userid']);			
-			
-				//##############  Check already Checked Start Here  ################//
-				$read_folder_checked = '';
-				$write_folder_checked = '';
-				$delete_folder_checked = '';
+					$arrUserInfo= $this->request_model->getUserInfomationById($members['userid']);			
 				
-				$read_folder_disabled = '';
-				$write_folder_disabled = '';
-				$delete_folder_disabled = '';
-				
+					//##############  Check already Checked Start Here  ################//
+					$read_folder_checked = '';
+					$write_folder_checked = '';
+					$delete_folder_checked = '';
 					
-				//echo $arrFolders[0]['folder_id'].'====='.$members['userid'];
-				if(isset($arrFolders) && !empty($arrFolders)) {
-				$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'folder_id', $arrFolders[0], $members['userid']);
-				}else if(isset($arrFiles) && !empty($arrFiles)) {
-				$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'file_id', $arrFiles[0], $members['userid']);
-				}
-								
-				if(isset($checkFolderAccess) && !empty($checkFolderAccess)) {
-				
-					$read_folder_checked = ($checkFolderAccess->lead_file_access_read == 1)?'checked':'';
-					$write_folder_checked = ($checkFolderAccess->lead_file_access_write == 1)?'checked':'';
-					$delete_folder_checked = ($checkFolderAccess->lead_file_access_delete == 1)?'checked':'';		
-				//	$existing_rows = 1;					
-				}
+					$read_folder_disabled = '';
+					$write_folder_disabled = '';
+					$delete_folder_disabled = '';
+					
+						
+					//echo $arrFolders[0]['folder_id'].'====='.$members['userid'];
+					if(isset($arrFolders) && !empty($arrFolders)) {
+					$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'folder_id', $arrFolders[0], $members['userid']);
+					}else if(isset($arrFiles) && !empty($arrFiles)) {
+					$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'file_id', $arrFiles[0], $members['userid']);
+					}
 
-				array_push($read_array, $read_folder_checked);
-				array_push($write_array, $write_folder_checked);
-				array_push($delete_array, $delete_folder_checked);
-				
-				//##############  Check already Checked End Here  ################//
-				$html .="<tr>";
-				$html .="<td>";				
-				if($user_data['role_id'] !=1 && in_array($members['userid'], $arrLeaders)) {				
-				$read_folder_disabled = 'disabled';
-				$write_folder_disabled = 'disabled';
-				$delete_folder_disabled = 'disabled';	
-				$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
-				$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
-				$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
-				array_push($arr_disabled_users, $members['userid']);			
-				}else if($arrUserInfo['role_id'] ==1 && in_array($members['userid'], $arrLeaders)) {				
-				$read_folder_disabled = 'disabled';
-				$write_folder_disabled = 'disabled';
-				$delete_folder_disabled = 'disabled';	
-				$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
-				$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
-				$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
-				array_push($arr_disabled_users, $members['userid']);
+					if(isset($checkFolderAccess) && !empty($checkFolderAccess)) {
+					
+						$read_folder_checked = ($checkFolderAccess->lead_file_access_read == 1)?'checked':'';
+						$write_folder_checked = ($checkFolderAccess->lead_file_access_write == 1)?'checked':'';
+						$delete_folder_checked = ($checkFolderAccess->lead_file_access_delete == 1)?'checked':'';		
+					//	$existing_rows = 1;					
+					}
+
+					array_push($read_array, $read_folder_checked);
+					array_push($write_array, $write_folder_checked);
+					array_push($delete_array, $delete_folder_checked);
+					
+					//##############  Check already Checked End Here  ################//
+					$html .="<tr>";
+					$html .="<td>";				
+					if($user_data['role_id'] !=1 && in_array($members['userid'], $arrLeaders)) {				
+					$read_folder_disabled = 'disabled';
+					$write_folder_disabled = 'disabled';
+					$delete_folder_disabled = 'disabled';	
+					$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
+					$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
+					$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
+					array_push($arr_disabled_users, $members['userid']);			
+					}else if($arrUserInfo['role_id'] ==1 && in_array($members['userid'], $arrLeaders)) {				
+					$read_folder_disabled = 'disabled';
+					$write_folder_disabled = 'disabled';
+					$delete_folder_disabled = 'disabled';	
+					$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
+					$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
+					$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
+					array_push($arr_disabled_users, $members['userid']);
+					}
+											
+					
+					$html .=$members['first_name']." ".$members['last_name']."</td>
+							<input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'></td>";			
+					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$read_folder_checked." ".$read_folder_disabled." name='read[".$members['userid']."]' value='1'></td>";
+					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$write_folder_checked." ".$write_folder_disabled." name='write[".$members['userid']."]' value='1'></td>";
+					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$delete_folder_checked." ".$delete_folder_disabled." name='delete[".$members['userid']."]' value='1'></td>";
+					$html .="</tr>";
 				}
-										
-				
-				$html .=$members['first_name']." ".$members['last_name']."</td>
-						<input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'></td>";			
-				$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$read_folder_checked." ".$read_folder_disabled." name='read[".$members['userid']."]' value='1'></td>";
-				$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$write_folder_checked." ".$write_folder_disabled." name='write[".$members['userid']."]' value='1'></td>";
-				$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$delete_folder_checked." ".$delete_folder_disabled." name='delete[".$members['userid']."]' value='1'></td>";
-				$html .="</tr>";
 			}
 		}
 		$html .="</table>";		
@@ -2767,40 +2764,31 @@ EOD;
 		$arrFileDeleteTotal = array();		
 		if(isset($arrFiles) && !empty($arrFiles)) {
 		
-					for($i=0; $i<count($arrFiles); $i++) 
-					{
-					
-								$checkAccess = array();
-								$arrLeadFilesAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'file_id', $arrFiles[$i]);
-								
-								if(isset($arrLeadFilesAccess) && !empty($arrLeadFilesAccess)) {
-								
-									foreach($arrLeadFilesAccess as $listLeadAccessFile) {
+			for($i=0; $i<count($arrFiles); $i++) 
+			{
+				$checkAccess = array();
+				$arrLeadFilesAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'file_id', $arrFiles[$i]);
+				
+				if(isset($arrLeadFilesAccess) && !empty($arrLeadFilesAccess)) {
+				
+					foreach($arrLeadFilesAccess as $listLeadAccessFile) {
 
-									if($user_data['userid'] != $listLeadAccessFile['userid']) {									
+						if($user_data['userid'] != $listLeadAccessFile['userid']) {									
 
-									if(!in_array($listLeadAccessFile['userid'], $arr_disabled_users)) {									
-									
-									$arrFileReadAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_read'];
-									$arrFileWriteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_write'];
-									$arrFileDeleteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_delete'];
-									
-									}
-								}
-																												
+							if(!in_array($listLeadAccessFile['userid'], $arr_disabled_users)) {									
+								$arrFileReadAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_read'];
+								$arrFileWriteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_write'];
+								$arrFileDeleteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_delete'];
 							}
-									
-									$existing_rows = 1;
-								
 						}
-								
-								$arrFileReadTotal[$i] = array_sum($arrFileReadAccess[$arrFiles[$i]]);
-								$arrFileWriteTotal[$i] = array_sum($arrFileWriteAccess[$arrFiles[$i]]);
-								$arrFileDeleteTotal[$i] = array_sum($arrFileDeleteAccess[$arrFiles[$i]]);
-					
-					}				
-		
-	}
+					}
+				$existing_rows = 1;
+				}
+				$arrFileReadTotal[$i] = array_sum($arrFileReadAccess[$arrFiles[$i]]);
+				$arrFileWriteTotal[$i] = array_sum($arrFileWriteAccess[$arrFiles[$i]]);
+				$arrFileDeleteTotal[$i] = array_sum($arrFileDeleteAccess[$arrFiles[$i]]);
+			}
+		}
 	
 		//##############  Check all selected files have a same permissions or not end here  ################//
 		
@@ -2813,39 +2801,37 @@ EOD;
 		$arrFolderDeleteTotal = array();		
 		if(isset($arrFolders) && !empty($arrFolders)) {
 			
-						for($j=0; $j<count($arrFolders); $j++) 
-						{					
-						
-									$arrLeadFolderAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'folder_id', $arrFolders[$j]);
-									
-									if(isset($arrLeadFolderAccess) && !empty($arrLeadFolderAccess)) {
-									
-										foreach($arrLeadFolderAccess as $listLeadAccessFolder) {	
-
-											if($user_data['userid'] != $listLeadAccessFolder['userid']) {									
-
-												if(!in_array($listLeadAccessFolder['userid'], $arr_disabled_users)) {											
-										
-										$arrFolderReadAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_read'];
-										$arrFolderWriteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_write'];
-										$arrFolderDeleteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_delete'];		
-											}
-										}										
-										
-									}
-										
-										$existing_rows = 1;
-									
-								}
-									
-									$arrFolderReadTotal[$j] = array_sum($arrFolderReadAccess[$arrFolders[$j]]);
-									$arrFolderWriteTotal[$j] = array_sum($arrFolderWriteAccess[$arrFolders[$j]]);
-									$arrFolderDeleteTotal[$j] = array_sum($arrFolderDeleteAccess[$arrFolders[$j]]);
-						
-						}
-						
-					
+			for($j=0; $j<count($arrFolders); $j++) 
+			{					
 			
+				$arrLeadFolderAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'folder_id', $arrFolders[$j]);
+				
+				if(isset($arrLeadFolderAccess) && !empty($arrLeadFolderAccess)) {
+				
+					foreach($arrLeadFolderAccess as $listLeadAccessFolder) {	
+
+						if($user_data['userid'] != $listLeadAccessFolder['userid']) {									
+
+							if(!in_array($listLeadAccessFolder['userid'], $arr_disabled_users)) {										
+					
+								$arrFolderReadAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_read'];
+								$arrFolderWriteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_write'];
+								$arrFolderDeleteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_delete'];		
+							}
+						}										
+					
+					}
+					
+					$existing_rows = 1;
+				
+				}
+				
+				$arrFolderReadTotal[$j] = array_sum($arrFolderReadAccess[$arrFolders[$j]]);
+				$arrFolderWriteTotal[$j] = array_sum($arrFolderWriteAccess[$arrFolders[$j]]);
+				$arrFolderDeleteTotal[$j] = array_sum($arrFolderDeleteAccess[$arrFolders[$j]]);
+			
+			}
+
 		}
 		//##############  Check all selected folders have a same permissions or not end here  ################//
 	
@@ -2933,6 +2919,9 @@ EOD;
 			*@ Checking the folder and file access
 			*
 			*/	
+			
+			
+			
 		if(isset($arrFolders) && !empty($arrFolders)  && empty($arrFiles)) {
 		
 			if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && (count($read_folder_result) != 1  || count($write_folder_result) != 1 || count($delete_folder_result) != 1) ) {

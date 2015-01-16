@@ -155,14 +155,17 @@
 					<lable for="sow_status_unsigned"><input type="radio" name="sow_status" id="sow_status_unsigned"  checked value="0" /> Un signed</lable>				
 					</td></tr>
 					
-					<tr style="height:40px;"><th width="350">Browse file (SOW)</th><td>:</td><td>					
-					<form name="payment_ajax_file_upload">
-								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-								<div id="upload-container">
-									<input type="file" title='upload' class="textfield" multiple id="sow_ajax_file_uploader" name="sow_ajax_file_uploader[]" onchange="return runSOWAjaxFileUpload();"/><input type="hidden" id="exp_type" value="">									
-								</div>
-							</form>	
-<div id="sowUploadFile"></div>							
+					<tr style="height:40px;">
+					<th width="350">Browse file (SOW)</th>
+					<td>:</td>
+					<td>					
+						<form name="payment_ajax_file_upload">
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+							<div id="upload-container">
+								<input type="file" title='upload' class="textfield" multiple id="sow_ajax_file_uploader" name="sow_ajax_file_uploader[]" onchange="return runSOWAjaxFileUpload();"/><input type="hidden" id="exp_type" value="">									
+							</div>
+						</form>	
+						<div id="sowUploadFile"></div>							
 					</td></tr>
 					
 					

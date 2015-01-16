@@ -3725,7 +3725,7 @@ HDOC;
 	{
 		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['sow_ajax_file_uploader']['name']);
 		
-		$user_data = $this->session->userdata('logged_in_user');		
+		// $user_data = $this->session->userdata('logged_in_user');
 
 		$project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
 		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
@@ -3793,35 +3793,32 @@ HDOC;
 					
 					
 					/* #################  Permission add new file owner start here  ################## */
-				if($user_data['role_id'] != 1) {
-				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
+				if($this->userdata['role_id'] != 1) {
+					$permissions_contents  = array('userid'=>$this->userdata['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$this->userdata['userid']);
+					
+					$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
 				}
 				/* #################  Permission add new file owner end here  ################## */
 				
-				
 				/* #################  Assing permission to all users by lead id start here  ################## */
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-		
-							foreach($arrProjectMembers as $members){
-								if($user_data['userid'] != $members['userid']) {
-								
-								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
-								if(empty($arrLeadExistFolderAccess)) {	
-								
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
+					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
+						foreach($arrProjectMembers as $members){
+							if(!empty($members)) {
+								if($this->userdata['userid'] != $members['userid']) {
+									$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);
+									if(empty($arrLeadExistFolderAccess)) {
+										$read_access = 0;
+										$write_access = 0;
+										$delete_access = 0;									
+										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+											$read_access = 1;
+											$write_access = 1;
+											$delete_access = 1;
+										}
+										$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$this->userdata['userid']);
+										$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
 									}
-	
-									$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-									$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
-										
 								}
 							}
 						}
