@@ -624,38 +624,33 @@ class Customer_model extends crm_model {
 				$bill_currency = $this->get_filed_id_by_name('expect_worth', 'expect_worth_id', $listProjects['expect_worth_id'], 'expect_worth_name');
 				
 				if($listProjects['project_category'] == 1) {
-				$is_profit = 1;
-				$cost = 0;
-				$p_category = "Profit Cen";
-				}else {
-				$is_profit = 0;
-				$cost = 1;
-				$p_category = "Cost Cen";
+					$is_profit = 1;
+					$cost = 0;
+					$p_category = "Profit Cen";
+				} else {
+					$is_profit = 0;
+					$cost = 1;
+					$p_category = "Cost Cen";
 				}
 				
-				if($listProjects['sow_status'] == 1) {
+				if($listProjects['sow_status'] == 1)
 				$sow_status = "Signed";				
-				}else {
+				else
 				$sow_status = "Unsigned";				
-				}
 				
 				$bill_type = '';
 				if($listProjects['billing_type'] == 2) {
-				$bill_type = "Monthly";
+					$bill_type = "Monthly";
 				}else if($listProjects['billing_type'] == 1) {
-				$bill_type = "Milestone Driven ";
+					$bill_type = "Milestone Driven ";
 				}
-							
+
 				$econnect_sql = '';
 				
 				if($econnect_projects == FALSE) {					
-				
 					$econnect_sql = '  INSERT INTO  '.$econnect_db->dbprefix('project_master').'   SET '; $where_econnect = '';
-												
-				}else {
-				
+				} else {
 					$econnect_sql = '  UPDATE  '.$econnect_db->dbprefix('project_master').'   SET  '; $where_econnect = '  WHERE   `ProjectCode` = "'.$listProjects['pjt_id'].'" ';
-								
 				}
 					$econnect_sql .= '													`ClientCode` = "'.$client_code.'",
 																						`ProjectName` = "'.$listProjects['lead_title'].'",
@@ -679,7 +674,7 @@ class Customer_model extends crm_model {
 																						`BillingCycle` = "'.$bill_type.'",
 																						`ProjectValue` = "'.$listProjects['actual_worth_amount'].'"  '.$where_econnect.' ';	
 
-					$econnect_db->query($econnect_sql);			
+				$econnect_db->query($econnect_sql);			
 			/*
 			*@E-Connect to insert project details end here 
 			*/

@@ -3676,7 +3676,7 @@ HDOC;
 			$data 	   = array('sow_status'=>$sow_status);
 			$updt_date = $this->project_model->update_row('leads', $data, $wh_condn);
 			
-			if($updt_id) {
+			if($updt_date) {
 				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
 				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
 				$data['error'] = FALSE;
