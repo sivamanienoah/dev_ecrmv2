@@ -10,7 +10,7 @@ class Customer_model extends crm_model {
         $this->userdata = $this->session->userdata('logged_in_user');
     }
     
-    function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc') {
+    function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false) {
         $restrict = '';
         $restrict_search = '';
 		//customer restriction on level based.
@@ -70,7 +70,7 @@ class Customer_model extends crm_model {
         $offset = mysql_real_escape_string($offset);		
 		$this->db->select('CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
 		$this->db->from($this->cfg['dbpref'].'customers as CUST');
-		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');		
+		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
 		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
         if ($this->userdata['level'] == 2) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);				
@@ -91,6 +91,8 @@ class Customer_model extends crm_model {
 			$search = mysql_real_escape_string(urldecode($search));
 			$this->db->where("(first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR company LIKE '%$search%' OR email_1 LIKE '%$search%')");
 		}
+		if(!empty($limit))
+		$this->db->limit($limit);
 		$customers = $this->db->get();        
         // echo $this->db->last_query();
         return $customers->result_array(); 
