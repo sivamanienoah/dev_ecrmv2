@@ -112,7 +112,6 @@ class Master extends crm_controller {
 				 $update_data['modified']=date('Y-m-d H:i:s');	
 				
                 if ($newid = $this->master_model->insert_master($update_data)) {
-                    
                     if ($ajax == false) {
                         $this->session->set_flashdata('confirm', array('New Master Added!'));
                         redirect('master/add_master/update/' . $newid);
