@@ -73,121 +73,107 @@ class Request extends crm_controller {
 	function update_existing_file_permissions()
 	{
 	
-	$arrLeads = $this->request_model->get_all_lead_info();
-	$user_data = $this->session->userdata('logged_in_user');
-	
-	
-	if(isset($arrLeads) && !empty($arrLeads)) {
-	
-		foreach($arrLeads as $listLeads) {
+		$arrLeads = $this->request_model->get_all_lead_info();
+		$user_data = $this->session->userdata('logged_in_user');
 		
+		if(isset($arrLeads) && !empty($arrLeads)) {
+		
+			foreach($arrLeads as $listLeads) {
 			
-			$arrProjectFolders = $this->request_model->get_all_project_folders($listLeads['lead_id']);		
+				$arrProjectFolders = $this->request_model->get_all_project_folders($listLeads['lead_id']);		
+				
+				$project_members = $this->request_model->get_project_members($listLeads['lead_id']); // This array to get a project normal members(Developers) details.
+				$project_leaders = $this->request_model->get_project_leads($listLeads['lead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+				$arrLeadInfo = $this->request_model->get_lead_info($listLeads['lead_id']); // This function to get a current lead informations.
+				
+				if(isset($arrProjectFolders) && !empty($arrProjectFolders)) { 
 			
+					foreach($arrProjectFolders as $listFolders) {
+					
+						if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+		
+							foreach($arrProjectMembers as $members){
+								
+								if(!empty($members)) {
+								
+									$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($listLeads['lead_id'], 'folder_id', $listFolders['folder_id'], $members['userid']);						
+									
+									if(empty($arrLeadExistFolderAccess)) {
+
+										$read_access = 0;
+										$write_access = 0;
+										$delete_access = 0;									
+										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+											$read_access = 1;
+											$write_access = 1;
+											$delete_access = 1;								
+										}								
+
+										$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'folder_id'=>$listFolders['folder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
+										$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	
+		if(isset($arrLeads) && !empty($arrLeads)) {
+		
+			foreach($arrLeads as $listLeads) {
+
+				$arrProjectFiles = $this->request_model->get_all_project_files($listLeads['lead_id']);
+				
 				$project_members = $this->request_model->get_project_members($listLeads['lead_id']); // This array to get a project normal members(Developers) details.
 				$project_leaders = $this->request_model->get_project_leads($listLeads['lead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
 				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				$arrLeadInfo = $this->request_model->get_lead_info($listLeads['lead_id']); // This function to get a current lead informations.		
-				
-				
- 			
-		if(isset($arrProjectFolders) && !empty($arrProjectFolders)) { 
-		
-			foreach($arrProjectFolders as $listFolders){
-			
-			if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-	
-						foreach($arrProjectMembers as $members){
-							
-							$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($listLeads['lead_id'], 'folder_id', $listFolders['folder_id'], $members['userid']);						
-							
-							if(empty($arrLeadExistFolderAccess)) {
-							
-							
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}								
 
-								$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'folder_id'=>$listFolders['folder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
-								$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
+				if(isset($arrProjectFiles) && !empty($arrProjectFiles)) { 
+				
+					foreach($arrProjectFiles as $listFiles){
+					
+						if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
+			
+							foreach($arrProjectMembers as $members){
+							
+								if(!empty($members)) {
 								
-							}							
+									$arrLeadExistFileAccess= $this->request_model->check_lead_file_access_by_id($listLeads['lead_id'], 'file_id', $listFiles['file_id'], $members['userid']);						
+									
+									if(empty($arrLeadExistFileAccess)) {
+									
+										$read_access = 0;
+										$write_access = 0;
+										$delete_access = 0;									
+										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+											$read_access = 1;
+											$write_access = 1;
+											$delete_access = 1;								
+										}	
+
+										$file_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'file_id'=>$listFiles['file_id'],'lead_file_access_read'=>0,'lead_file_access_delete'=>0,'lead_file_access_write'=>0,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
+										$insert_file_permissions   = $this->request_model->insert_new_row('lead_file_access', $file_permissions_contents); //Mani
+										
+									}
+								}
+							}
 						}
 					}
-				
 				}
 			}
-					
+		
 		}
-	
-	}
-	
-	if(isset($arrLeads) && !empty($arrLeads)) {
-	
-		foreach($arrLeads as $listLeads) {
-		
-			
-			
-			
-			$arrProjectFiles = $this->request_model->get_all_project_files($listLeads['lead_id']);
-			
-				$project_members = $this->request_model->get_project_members($listLeads['lead_id']); // This array to get a project normal members(Developers) details.
-				$project_leaders = $this->request_model->get_project_leads($listLeads['lead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				$arrLeadInfo = $this->request_model->get_lead_info($listLeads['lead_id']); // This function to get a current lead informations.		
-				
-				
-			
-			
- 			
-		if(isset($arrProjectFiles) && !empty($arrProjectFiles)) { 
-		
-			foreach($arrProjectFiles as $listFiles){
-			
-			if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-	
-						foreach($arrProjectMembers as $members){
-							
-							$arrLeadExistFileAccess= $this->request_model->check_lead_file_access_by_id($listLeads['lead_id'], 'file_id', $listFiles['file_id'], $members['userid']);						
-							
-							if(empty($arrLeadExistFileAccess)) {
-							
-							
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}	
 
-								$file_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'file_id'=>$listFiles['file_id'],'lead_file_access_read'=>0,'lead_file_access_delete'=>0,'lead_file_access_write'=>0,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
-								$insert_file_permissions   = $this->request_model->insert_new_row('lead_file_access', $file_permissions_contents); //Mani
-								
-							}							
-						}
-					}
-				
-				}
-			}
-					
-		}
-	
-	}
-	
-	
-	echo 'Thank You!'; exit;
-		
+		echo 'Thank You!'; exit;
+
 	}
     
     function set_flash_data($type = 'header_messages')

@@ -96,7 +96,6 @@ class Master extends crm_controller {
                 //update
 		 
                 if ($this->master_model->update_master($id, $update_data)) {
-                    
                     $this->session->set_flashdata('confirm', array('Master Details Updated!'));
                     redirect('master/add_master/update/' . $id);                    
                 }                
