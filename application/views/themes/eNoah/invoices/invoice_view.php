@@ -58,14 +58,14 @@ $userdata = $this->session->userdata('logged_in_user');
 									</select> 
 								</td> 
 								<td>
-									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter">
+									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width: 135px;">
 										<?php foreach ($sales_divisions as $division) { ?>
 												<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
 										<?php } ?>
 									</select> 
 								</td>
 								<td>
-									<select multiple="multiple" id="practice" name="practice[]" class="advfilter">
+									<select multiple="multiple" id="practice" name="practice[]" class="advfilter" style="width: 100px;">
 										<?php foreach ($practices as $pr) { ?>
 												<option value="<?php echo $pr['id'] ?>"><?php echo $pr['practices']; ?></option>
 										<?php } ?>
