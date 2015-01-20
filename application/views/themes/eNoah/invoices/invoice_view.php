@@ -65,7 +65,7 @@ $userdata = $this->session->userdata('logged_in_user');
 									</select> 
 								</td>
 								<td>
-									<select multiple="multiple" id="practice" name="practice[]" class="advfilter" style="width: 100px;">
+									<select multiple="multiple" id="practice" name="practice[]" class="advfilter" style="width: 99px;">
 										<?php foreach ($practices as $pr) { ?>
 												<option value="<?php echo $pr['id'] ?>"><?php echo $pr['practices']; ?></option>
 										<?php } ?>
