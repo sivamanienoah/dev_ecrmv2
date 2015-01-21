@@ -77,7 +77,7 @@ class Login_model extends crm_model {
 		$this->db->limit(1);
         $sql = $this->db->get();
         $data['res'] = $sql->result_array();
-		 // echo count($data['res']); echo "<br>";
+		// echo count($data['res']); echo "<br>"; exit;
 		$data['login_error_code'] = 0;
 		
 		if (count($data['res']) > 0) {
@@ -107,26 +107,25 @@ class Login_model extends crm_model {
 						if(($ds=ldap_connect($LDAPServerAddress1))) {
 							ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
 							ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-						  
+							
 							if($r = @ldap_bind($ds,$BIND_username,$BIND_password)) {
 								if($sr = ldap_search($ds, $LDAPContainer, $filter, array('distinguishedName'))) {
 									if($info = ldap_get_entries($ds, $sr)) {
-								
 										$BIND_username = $info[0]['distinguishedname'][0];
 										$BIND_password = $password;
-											if($r2=ldap_bind($ds,$BIND_username,$BIND_password)) {
-												if($sr2 = @ldap_search($ds,$LDAPContainer,$filter,array("givenName","sn","displayName","mail"))) {
-													if($info2 = ldap_get_entries($ds, $sr2)) {
-														$data["name"] = $info2[0]["givenname"][0];
-													} else {
-														$data['login_error'] = "Could not read entries"; $data['login_error_code'] = 2;
-													}
+										if($r2=ldap_bind($ds,$BIND_username,$BIND_password)) {
+											if($sr2 = @ldap_search($ds,$LDAPContainer,$filter,array("givenName","sn","displayName","mail"))) {
+												if($info2 = ldap_get_entries($ds, $sr2)) {
+													$data["name"] = $info2[0]["givenname"][0];
 												} else {
-													$data['login_error'] = "Could not search"; $data['login_error_code'] = 3;
+													$data['login_error'] = "Could not read entries"; $data['login_error_code'] = 2;
 												}
 											} else {
-												$data['login_error'] = "User password incorrect"; $data['login_error_code'] = 4;
+												$data['login_error'] = "Could not search"; $data['login_error_code'] = 3;
 											}
+										} else {
+											$data['login_error'] = "User password incorrect"; $data['login_error_code'] = 4;
+										}
 									} else {
 										$data['login_error'] = "User name not found"; $data['login_error_code'] = 5;
 									}
@@ -136,10 +135,10 @@ class Login_model extends crm_model {
 							} else {
 								$data['login_error'] = "Could not bind"; $data['login_error_code'] = 7;
 							}
-					   } else {
+						} else {
 							$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
-					   }
-					   return $data;
+						}
+						return $data;
 					break;
 				}
 			} else {
