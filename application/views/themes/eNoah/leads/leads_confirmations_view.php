@@ -111,7 +111,7 @@ button.ui-datepicker-current { display: none; }
 					<td><strong>Email:</strong></td>
 					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo $customer_data['email_1']; ?>" class="textfield width200px required" /> 
 					<div class="errmsg"></div>
-					<input type="hidden" value="<?php echo $customer_data['custid']; ?>" name="email_1" id="email_1" />
+					<!--input type="hidden" value="<?php #echo $customer_data['custid']; ?>" name="email_1" id="email_1" /-->
 					</td>
                     <td><strong>Secondary Email:</strong></td>
 					<td><input type="text" name="email_2" value="<?php echo $customer_data['email_2']; ?>" class="textfield width200px required" /> 
@@ -310,7 +310,7 @@ button.ui-datepicker-current { display: none; }
 		</div>
 		
 		<div id="tabs-milestone">
-			<form id="set-milestones">
+			<form id="set-milestones" class="layout">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<table class="payment-table" id="milestone-tbl" >
 					<thead>

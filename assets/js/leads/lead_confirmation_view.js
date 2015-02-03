@@ -402,6 +402,10 @@ function move_project(project_id)
 				$('.blockUI .layout').unblock();
 				return false;
 			}
+			$('.blockUI .layout').block({
+				message:'<h3>Processing</h3>',
+				css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
+			});
 			if(response.error == true) {
 				alert(data.errormsg);						
 				window.location.href = site_base_url+"welcome/edit_quote" + "/" + project_id +"/";
@@ -409,7 +413,7 @@ function move_project(project_id)
 			} else {
 				reloadWithMessagePjt('Lead has been Successfully moved to Project', project_id);
 			}
-			$('.blockUI .layout').unblock();	
+			// $('.blockUI .layout').unblock();
 		}
 	});
 }
