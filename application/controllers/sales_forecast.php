@@ -69,7 +69,11 @@ class Sales_forecast extends crm_controller {
 	public function add_sale_forecast($update = false, $id = false) {
 	
 		$this->load->library('validation');
-        $data               = array();
+		$data               = array();
+		$this->load->model('regionsettings_model');
+		$data['regions']    = $this->regionsettings_model->region_list();
+		
+		$data['currency_type'] = $this->sales_forecast_model->get_records('expect_worth', $wh_condn = array('status'=>1), $order = array("expect_worth_id"=>"asc"));
 		$data['entity'] 	= $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
         $post_data          = real_escape_array($this->input->post());
 		$rules['entity']    = "trim|required";

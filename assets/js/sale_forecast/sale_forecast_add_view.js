@@ -12,6 +12,7 @@ $(function() {
 		changeMonth: true,
 		changeYear: true,
 		dateFormat: 'MM yy',
+		showButtonPanel: true,
 		onClose: function(input, inst) {
 			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -93,7 +94,7 @@ $("#advanceFiltersForecast").submit(function() {
 	var month_year_to_date   = $("#month_year_to_date").val();
 
 	$.ajax({
-		type: "POST",	
+		type: "POST",
 		url: site_base_url+"sales_forecast/index/",
 		// dataType: "json",
 		data: "filter=filter"+"&lead_names="+lead_names+"&customer="+customer+"&entity="+entity+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
@@ -110,4 +111,182 @@ $("#advanceFiltersForecast").submit(function() {
 	return false;  //stop the actual form post !important!
 });
 
+var updt = '';
+
+if(document.getElementById('region_update')) {
+	var reg = document.getElementById('region_update').value;
+
+	if (document.getElementById('country_update'))
+	var cty = document.getElementById('country_update').value;
+
+	if (document.getElementById('state_update'))
+	var st = document.getElementById('state_update').value;
+
+	if (document.getElementById('location_update'))
+	var loc = document.getElementById('location_update').value;
+
+	if (document.getElementById('varEdit'))
+	var updt = document.getElementById('varEdit').value;
+
+	if(reg != 0 && cty != 0)
+	getCountry(reg,cty,updt);
+
+	if(cty != 0 && st != 0)
+	getState(cty,st,updt);
+
+	if(st != 0 && loc != 0)
+	getLocation(st,loc,updt);
+}
+function getCountry(val,id,updt) {
+	var sturl = "regionsettings/getCountry/"+ val+"/"+id+"/"+updt;	
+	//alert("SDfds");
+    $('#country_row').load(sturl);	
+    return false;	
+}
+function getState(val,id,updt) {
+	var sturl = "regionsettings/getState/"+ val+"/"+id+"/"+updt;	
+    $('#state_row').load(sturl);	
+    return false;	
+}
+function getLocation(val,id,updt) {
+	var sturl = "regionsettings/getLocation/"+ val+"/"+id+"/"+updt;	
+    $('#location_row').load(sturl);	
+    return false;	
+}
+
+function ajxCty(){
+	$("#addcountry").slideToggle("slow");
+}
+function ajxSt() {
+	$("#addstate").slideToggle("slow");
+}
+function ajxLoc() {
+	$("#addLocation").slideToggle("slow");
+}
+
+function ajxSaveCty(){
+	if ($('#newcountry').val() == "") {
+		alert("Country Required.");
+	} else {
+		var regionId = $("#add1_region").val();
+		var newCty = $('#newcountry').val();
+		getCty(newCty, regionId);
+	}	
+
+    function getCty(newCty){
+		var params = {regionid: $("#region_id").val(),country_name:$("#newcountry").val(),created_by:(customer_user_id)};
+		params[csrf_token_name]      = csrf_hash_token; 
+
+		$.ajax({
+            url : site_base_url + 'customers/getCtyRes/' + newCty + "/" + regionId,
+            cache : false,
+            success : function(response){
+                if(response == 'userOk') 
+				{ 
+					$.post("regionsettings/country_add_ajax",params, 
+					function(info){$("#country_row").html(info);});
+					$("#addcountry").hide();
+
+					//var regId = $("#add1_region").val();
+					$("#state_row").load("regionsettings/getState");
+				}
+                else
+				{ 
+					alert('Country Exists.'); 
+				}
+            }
+        });
+	}
+}
+function ajxSaveSt() {
+	if ($('#newstate').val() == "") {
+		alert("State Required.");
+	} else {
+		var cntyId = $("#add1_country").val()
+		var newSte = $('#newstate').val();
+		getSte(newSte,cntyId);
+	}
+		
+	function getSte(newSte,cntyId) {
+		var params = {countryid: $("#add1_country").val(),state_name:$("#newstate").val(),created_by:(customer_user_id)};
+		params[csrf_token_name]      = csrf_hash_token; 
+			
+		$.ajax({
+            url : site_base_url + 'customers/getSteRes/' + newSte + "/" + cntyId,
+            cache : false,
+            success : function(response) {
+                if(response == 'userOk') 
+				{
+					$.post("regionsettings/state_add_ajax",params, 
+					function(info){ $("#state_row").html(info); });
+					$("#addstate").hide();
+
+					$("#location_row").load("regionsettings/getLocation");
+				}
+                else
+				{ 
+					alert('State Exists.');
+				}
+            }
+        });
+	}
+}
+
+function ajxSaveLoc() {
+	if ($('#newlocation').val() == "") {
+		alert("Location Required.");
+	} else {
+		var stId   = $("#add1_state").val();
+		var newLoc = $('#newlocation').val();
+		getLoc(newLoc,stId);
+	}
+		
+	function getLoc(newLoc,stId) {
+		var baseurl = $('.hiddenUrl').val();
+		var params = {stateid: $("#add1_state").val(),location_name:$("#newlocation").val(),created_by:(customer_user_id)};
+		params[csrf_token_name]  = csrf_hash_token; 
+		$.ajax({
+			url : site_base_url + 'customers/getLocRes/' + newLoc + '/' +stId,
+			cache : false,
+			success : function(response){
+				if(response == 'userOk') 
+				{
+					$.post("regionsettings/location_add_ajax",params, 
+					function(info){ $("#location_row").html(info); });
+					$("#addstate").hide();
+				}
+				else
+				{
+					alert('Location Exists.');
+				}
+			}
+		});
+	}
+}
+
+//pre-populate the default region, country, state & location
+if(usr_level >= 2 && cus_updt != 'update' ) {
+	getDefaultRegion(usr_level, cus_updt);
+}
+
+function getDefaultRegion(lvl, upd) {
+	var sturl = "regionsettings/getRegDefault/"+lvl+"/"+upd;
+    $('#def_reg').load(sturl);
+    return false;
+}
+function getDefaultCountry(id, upd) {
+	var sturl = "regionsettings/getCntryDefault/"+id+"/"+upd;
+    $('#def_cntry').load(sturl);
+    return false;	
+}
+function getDefaultState(id, upd) {
+	var sturl = "regionsettings/getSteDefault/"+id+"/"+upd;
+    $('#def_ste').load(sturl);
+    return false;	
+}
+function getDefaultLocation(id, upd) {
+	var sturl = "regionsettings/getLocDefault/"+id+"/"+upd;
+    $('#def_loc').load(sturl);
+    return false;	
+}
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
