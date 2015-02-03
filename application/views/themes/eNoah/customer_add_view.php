@@ -1,19 +1,20 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <?php
-if($this->validation->add1_region != 0) 
-echo '<input type="hidden" name="region_update" id="region_update" value="'.$this->validation->add1_region.'" />';
-if($this->validation->add1_country != 0)
-echo '<input type="hidden" name="country_update" id="country_update" value="'.$this->validation->add1_country.'" />';
-if($this->validation->add1_state != 0)
-echo '<input type="hidden" name="state_update" id="state_update" value="'.$this->validation->add1_state.'" />';
-if($this->validation->add1_location != 0)
-echo '<input type="hidden" name="location_update" id="location_update" value="'.$this->validation->add1_location.'" />';
-//When user edit the customer details the add button will not appear for the country, state & Location -starts here
-if($this->uri->segment(3)=='update')
-echo '<input type="hidden" name="varEdit" id="varEdit" value="update" />';
-//When user edit the customer details the add button will not appear for the country, state & Location -Ends here
-$usernme = $this->session->userdata('logged_in_user');
+	if($this->validation->add1_region != 0) 
+	echo '<input type="hidden" name="region_update" id="region_update" value="'.$this->validation->add1_region.'" />';
+	if($this->validation->add1_country != 0)
+	echo '<input type="hidden" name="country_update" id="country_update" value="'.$this->validation->add1_country.'" />';
+	if($this->validation->add1_state != 0)
+	echo '<input type="hidden" name="state_update" id="state_update" value="'.$this->validation->add1_state.'" />';
+	if($this->validation->add1_location != 0)
+	echo '<input type="hidden" name="location_update" id="location_update" value="'.$this->validation->add1_location.'" />';
+	//When user edit the customer details the add button will not appear for the country, state & Location -starts here
+	if($this->uri->segment(3)=='update')
+	echo '<input type="hidden" name="varEdit" id="varEdit" value="update" />';
+	//When user edit the customer details the add button will not appear for the country, state & Location -Ends here
+	$usernme = $this->session->userdata('logged_in_user');
 ?>
+
 <div id="content">
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || ($this->session->userdata('edit')==1 && $this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4)))) { ?>
@@ -70,7 +71,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				<?php } else { ?>
 					<td width="240">
 						<select id="add1_region" name="add1_region" onchange="getCountry(this.value)" class="textfield width200px required">
-						<option value="0">Select Region</option>
+							<option value="0">Select Region</option>
 							<?php
 							if(count($regions>0)) {
 								foreach ($regions as $region) { ?>
@@ -167,9 +168,7 @@ $usernme = $this->session->userdata('logged_in_user');
 				<tr>
 					<td>Skype Name:</td>
 					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
-					
-					
-					
+
 				<?php /*?>  <td>Is a Client: </td>
 					<td>
 						<lable for="is_client_yes"><input type="radio" name="is_client"  id="is_client_yes" value="1" <?php if ((isset($this->validation->is_client) && $this->validation->is_client == 1) || $client_projects !=0 ) echo ' checked="checked"' ?> <?php if($client_projects != 0) { ?> disabled <?php }?>> Yes </lable>
@@ -188,25 +187,38 @@ $usernme = $this->session->userdata('logged_in_user');
 				</tr>
                 <tr>
 					<td>Web:</td>
-					<td><input type="text" name="www_1" value="<?php echo  $this->validation->www_1 ?>" class="textfield width200px required" />
+					<td><input type="text" name="www_1" value="<?php echo $this->validation->www_1 ?>" class="textfield width200px required" />
 					</td>
                     <td>Secondary Web:</td>
-					<td><input type="text" name="www_2" value="<?php echo  $this->validation->www_2 ?>" class="textfield width200px required" />
+					<td><input type="text" name="www_2" value="<?php echo $this->validation->www_2 ?>" class="textfield width200px required" />
 					</td>
 				</tr>
-				
-				 <tr>
+				<tr>
 					<td>Sales Contact Name:</td>
-					<td><input type="text" name="sales_contact_name" value="<?php if(!empty($this->validation->sales_contact_name)) echo $this->validation->sales_contact_name; else echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+					<td>
+						<?php if ($this->uri->segment(3) != 'update') { ?>
+							<input type="text" name="sales_contact_name" value="<?php echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+						<?php } else { ?>
+							<?php if(!empty($sales_person_detail)) {
+									$login_sales_contact_name  = $sales_person_detail['first_name'].' '.$sales_person_detail['last_name'];
+									$login_sales_contact_email = $sales_person_detail['email'];
+								}
+							?>
+							<input type="text" name="sales_contact_name" value="<?php echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+						<?php } ?>
+						<?php if ($this->uri->segment(3) != 'update') { ?>
+						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $usernme['userid']; ?>" class="textfield width200px" readonly />
+						<?php } else { ?>
+						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo ($this->validation->sales_contact_userid_fk == 0) ? $usernme['userid'] : $this->validation->sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
+						<?php } ?>
 					</td>
                     <td>Sales Contact Email:</td>
-					<td><input type="text" name="sales_contact_email" value="<?php if(!empty($this->validation->sales_contact_email)) echo $this->validation->sales_contact_email; else echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
+					<td><input type="text" name="sales_contact_email" value="<?php echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
 					</td>
 				</tr>
-				
                 <tr>
 					<td valign="top">Comments:</td>
-					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo  $this->validation->comments ?></textarea></td>
+					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo $this->validation->comments ?></textarea></td>
 				</tr>
                 <tr>
 					<td>

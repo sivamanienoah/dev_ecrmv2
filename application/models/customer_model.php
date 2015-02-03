@@ -555,10 +555,11 @@ class Customer_model extends crm_model {
 	*/
 	function update_project_details($project_code=false)
 	{
+		$error = false;
 		$arrProjects = $this->get_all_projects($project_code);
 		// echo '<pre>'; print_r($arrProjects);exit;
 		$timesheet_db = $this->load->database('timesheet',TRUE);
-		$econnect_db = $this->load->database('econnect',TRUE);		
+		$econnect_db  = $this->load->database('econnect',TRUE);		
 		
 		if(isset($arrProjects) && !empty($arrProjects)) {
 		
@@ -567,9 +568,8 @@ class Customer_model extends crm_model {
 			*@Timesheet to insert project details start here 
 			*/
 				$timesheet_projects = $this->get_timesheet_project($listProjects['pjt_id']);
-				$client_code = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
-				$client = $this->get_client_id_by_code_from_timesheet($client_code);
-				
+				$client_code        = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
+				$client             = $this->get_client_id_by_code_from_timesheet($client_code);
 				
 				if($listProjects['pjt_status'] == 1) {
 					$project_status = "Started";
@@ -580,32 +580,31 @@ class Customer_model extends crm_model {
 				} else if($listProjects['pjt_status'] == 4) {
 					$project_status = "Pending";
 				}
+				
 				$strt_date = strtotime($listProjects['date_start']);
-				$end_date = strtotime($listProjects['date_due']);
+				$end_date  = strtotime($listProjects['date_due']);
 				$contract_strt_date = strtotime($listProjects['actual_date_start']);
-				$contract_end_date = strtotime($listProjects['actual_date_due']);
+				$contract_end_date  = strtotime($listProjects['actual_date_due']);
 				$timesheet_sql = '';
 				if($timesheet_projects == false) {
-							
 					$timesheet_sql =  '  INSERT INTO  '.$timesheet_db->dbprefix('project').'   SET '; $where = '';
-								
-				}else {
-				
+				} else {
 					$timesheet_sql =  '  UPDATE  '.$timesheet_db->dbprefix('project').'   SET '; $where = '  WHERE  `project_code` = "'.$listProjects['pjt_id'].'" ';
-				
 				}
-					$timesheet_sql .= 		'											`title` = "'.$listProjects['lead_title'].'",
-																						`client_id` = "'.$client['client_id'].'",
-																						`project_type_id` = '.$listProjects['project_type'].',
-																						`start_date` = "'.date('Y-m-d', $strt_date).'",
-																						`deadline` = "'.date('Y-m-d', $end_date).'",
-																						`proj_status` = "'.$project_status.'",
-																						`project_code` = "'.$listProjects['pjt_id'].'",
-																						`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';	
-																						
-																					//	echo $timesheet_sql;
+				$timesheet_sql .= 		'						`title` = "'.$listProjects['lead_title'].'",
+																`client_id` = "'.$client['client_id'].'",
+																`project_type_id` = '.$listProjects['project_type'].',
+																`start_date` = "'.date('Y-m-d', $strt_date).'",
+																`deadline` = "'.date('Y-m-d', $end_date).'",
+																`proj_status` = "'.$project_status.'",
+																`project_code` = "'.$listProjects['pjt_id'].'",
+																`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';
+				// echo $timesheet_sql; exit;
+				$timesheet_ins = $timesheet_db->query($timesheet_sql);
 				
-					$timesheet_db->query($timesheet_sql);
+				if($timesheet_ins) {
+					$error = true;
+				}
 				
 			/*
 			*@Timesheet to insert project details end here 
@@ -614,11 +613,10 @@ class Customer_model extends crm_model {
 			/*
 			*@E-Connect to insert project details start here 
 			*/
-			
 				$econnect_projects = $this->get_econnect_project($listProjects['pjt_id']);
-				$client_code = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
+				$client_code       = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
 				
-				$project_types = $this->get_projecttype_name_by_name_from_timesheet($listProjects['project_type']);
+				$project_types     = $this->get_projecttype_name_by_name_from_timesheet($listProjects['project_type']);
 				
 				$arrBillCategory = $this->get_billing_type_by_id($listProjects['resource_type']);
 				$project_center = $this->get_filed_id_by_name('profit_center', 'id', $listProjects['project_center'], 'profit_center');
@@ -654,33 +652,36 @@ class Customer_model extends crm_model {
 				} else {
 					$econnect_sql = '  UPDATE  '.$econnect_db->dbprefix('project_master').'   SET  '; $where_econnect = '  WHERE   `ProjectCode` = "'.$listProjects['pjt_id'].'" ';
 				}
-					$econnect_sql .= '													`ClientCode` = "'.$client_code.'",
-																						`ProjectName` = "'.$listProjects['lead_title'].'",
-																						`ProjectCode` = "'.$listProjects['pjt_id'].'",
-																						`ProjectType` = "'.$project_types['project_type_name'].'",
-																						`ProjectBillingType` = "'.$arrBillCategory['category'].'",
-																						`ProjectStartDate` = "'.date('Y-m-d', $strt_date).'",
-																						`ProjectEndDate` = "'.date('Y-m-d', $end_date).'",
-																						`ContractStartdate` = "'.date('Y-m-d', $contract_strt_date).'",
-																						`ContractEndDate` = "'.date('Y-m-d', $contract_end_date).'",
-																						`Duration` = "'.$listProjects['estimate_hour'].'",
-																						`ProfitCenter` = "'.$project_center.'",
-																						`isprofit` = '.$is_profit.',
-																						`Department_id` = "'.$listProjects['department_id_fk'].'",
-																						`ProjectCategory` = "'.$p_category.'",
-																						`CostCentre` = "'.$cost_center.'",
-																						`ProjectCost` = "'.$cost.'",
-																						`BillingCurrency` = "'.$bill_currency.'",
-																						`ProjectStatus` = "'.$project_status.'",
-																						`SOWStatus` = "'.$sow_status.'",
-																						`BillingCycle` = "'.$bill_type.'",
-																						`ProjectValue` = "'.$listProjects['actual_worth_amount'].'"  '.$where_econnect.' ';	
+					$econnect_sql .= '				`ClientCode` = "'.$client_code.'",
+													`ProjectName` = "'.$listProjects['lead_title'].'",
+													`ProjectCode` = "'.$listProjects['pjt_id'].'",
+													`ProjectType` = "'.$project_types['project_type_name'].'",
+													`ProjectBillingType` = "'.$arrBillCategory['category'].'",
+													`ProjectStartDate` = "'.date('Y-m-d', $strt_date).'",
+													`ProjectEndDate` = "'.date('Y-m-d', $end_date).'",
+													`ContractStartdate` = "'.date('Y-m-d', $contract_strt_date).'",
+													`ContractEndDate` = "'.date('Y-m-d', $contract_end_date).'",
+													`Duration` = "'.$listProjects['estimate_hour'].'",
+													`ProfitCenter` = "'.$project_center.'",
+													`isprofit` = '.$is_profit.',
+													`Department_id` = "'.$listProjects['department_id_fk'].'",
+													`ProjectCategory` = "'.$p_category.'",
+													`CostCentre` = "'.$cost_center.'",
+													`ProjectCost` = "'.$cost.'",
+													`BillingCurrency` = "'.$bill_currency.'",
+													`ProjectStatus` = "'.$project_status.'",
+													`SOWStatus` = "'.$sow_status.'",
+													`BillingCycle` = "'.$bill_type.'",
+													`ProjectValue` = "'.$listProjects['actual_worth_amount'].'"  '.  $where_econnect.' ';	
 
-				$econnect_db->query($econnect_sql);			
+			$econnect_ins = $econnect_db->query($econnect_sql);
+			if($econnect_ins) {
+				$error = true;
+			}
+			return $error;
 			/*
 			*@E-Connect to insert project details end here 
 			*/
-			
 			}		
 		}
 	}
@@ -805,6 +806,16 @@ class Customer_model extends crm_model {
 		$this->db->where($wh_condn);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+	
+	function get_records_by_id($tbl, $wh_condn)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->row_array();
 	}
     
 }

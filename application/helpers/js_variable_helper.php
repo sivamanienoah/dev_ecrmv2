@@ -42,7 +42,7 @@ if ( ! function_exists('js_global_variable'))
 	{
 			$CI = get_instance();
 		?>
-				<script language="javascript">
+			<script language="javascript">
 
 				$(document).ready(function() {
 					$(window).scroll(function () {

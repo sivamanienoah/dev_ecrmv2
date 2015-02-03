@@ -28,7 +28,7 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false, $divisions=false) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		$stage 		= $pjtstage;
@@ -132,7 +132,7 @@ class Project_model extends crm_model
 			$result_ids = array_unique($res);
 			$curusid= $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, j.division, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
 			$this->db->from($this->cfg['dbpref'] . 'customers as c');
 			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
@@ -153,6 +153,9 @@ class Project_model extends crm_model
 			}
 			if(!empty($practices)){		
 				$this->db->where_in('j.practice',$practices);
+			}
+			if(!empty($divisions)){		
+				$this->db->where_in('j.division',$divisions);
 			}
 			if(!empty($billing_type) && $billing_type == 2) {
 				$this->db->where("j.billing_type", $billing_type);

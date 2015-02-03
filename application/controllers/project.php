@@ -2915,7 +2915,6 @@ HDOC;
 	/* Change the actual worth amount to Default currency */
 	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
 	{
-	
 		$rates = $this->get_currency_rates();
 		
 		$data['project_record'] = array();
@@ -3531,33 +3530,35 @@ HDOC;
 	{
 	
 		$inputData = real_escape_array($this->input->post());		
-		$id = $inputData['job_id'];
+		$id        = $inputData['job_id'];
 		
 		$getLeadDet = $this->welcome_model->get_lead_detail($id);
+		// echo $this->db->last_query(); exit;
 		$arrLeadInfo = $this->request_model->get_lead_info($id);
-		
-		//echo '<pre>'; print_r($arrLeadInfo);exit;
 		
 		if(!empty($getLeadDet)) {
 		
 		    $data['quote_data'] = $getLeadDet[0];
-				
+
 			$customer = $this->customer_model->get_customer($data['quote_data']['custid_fk']);				
-			$data['customer_data'] = $customer[0];		
-		 	$data['customer_region'] = $this->welcome_model->get_field_values('region', 'regionid', $customer[0]['add1_region'], 'region_name');
-			$data['customer_country'] = $this->welcome_model->get_field_values('country', 'countryid', $customer[0]['add1_country'], 'country_name');
-			$data['customer_state'] = $this->welcome_model->get_field_values('state', 'stateid', $customer[0]['add1_state'], 'state_name');
-			$data['customer_location'] = $this->welcome_model->get_field_values('location', 'locationid', $customer[0]['add1_location'], 'location_name');	
+			$data['customer_data'] = $customer[0];
+
+			if($customer[0]['sales_contact_userid_fk']!='0') {
+				$data['sales_person_detail'] = $this->customer_model->get_records_by_id('users', array('userid'=>$customer[0]['sales_contact_userid_fk']));
+			}
+			
+		 	$data['regions']    = $this->regionsettings_model->region_list();
+		 	$data['project_id'] = $inputData['job_id'];
 			
             $data['view_quotation'] = true;
 			$data['user_accounts'] = $this->welcome_model->get_users();
 			
-			$data['user_roles']		= $usid['role_id']; 
-			$data['login_userid']		= $usid['userid']; 
-			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
-			$data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
-			$data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
-			            
+			$data['user_roles']		     = $usid['role_id']; 
+			$data['login_userid']		 = $usid['userid']; 
+			$data['project_belong_to']	 = $arrLeadInfo['belong_to']; 
+			$data['project_assigned_to'] = $arrLeadInfo['assigned_to']; 
+			$data['project_lead_assign'] = $arrLeadInfo['lead_assign']; 
+
 			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
 			/**
 			 * Get URLs associated with this job

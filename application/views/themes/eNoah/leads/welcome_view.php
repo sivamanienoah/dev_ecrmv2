@@ -1346,34 +1346,37 @@ function change_project_category(val)
 }
 
 function confirmaMoveLeadsToProject()
-	{
-		var fsl_height = parseInt($(window).height()) - 80;
-		fsl_height = fsl_height + 'px';
-		var params = {};
-		$.post( 
-			site_base_url+'project/getCurentLeadsDetails/', {job_id:curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-			function(data) {
-				if (data.error) {
-					alert(data.errormsg);
-				} else {
-					$('.comments-log-container').html(data);
-				}
+{
+	var fsl_height = parseInt($(window).height()) - 80;
+	fsl_height = fsl_height + 'px';
+	var params = {};
+	$.post( 
+		site_base_url+'project/getCurentLeadsDetails/', {job_id:curr_job_id,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('.comments-log-container').html(data);
 			}
-		);	
-		
-		$.blockUI({
-			message:$('.comments-log-container'),
-			css: {
-					border: '2px solid #999',
-					color:'#333',
-					padding:'8px',
-					top:  ($(window).height() - 450) /2 + 'px', 
-					left: ($(window).width() - 800) /2 + 'px', 
-					width: '800px' 
-				} 
-		});
-		
-	}
+		}
+	);	
+	
+	$.blockUI({
+		message:$('.comments-log-container'),
+		css:{ 
+			border: '2px solid #999',
+			color:'#333',
+			padding:'8px',
+			top:  '400px',
+			left: ($(window).width() - 720) /2 + 'px',
+			width: '720px',
+			position: 'absolute',
+			'overflow-y':'auto',
+			'overflow-x':'hidden'
+		}
+	});
+	$('html, body').animate({ scrollTop: $(".comments-log-container").offset().top }, 1000);
+}
 
 $(function(){
 
@@ -1667,7 +1670,7 @@ $(function(){
 *@ Last Changed on 26/12/2014 By Mani.S
 */
 function is_project() {
-	// alert(curr_job_id); return false;	
+	alert(curr_job_id); return false;
 	var err = [];
   
     if ($.trim($('#department_id_fk').val()) == 'not_select') {

@@ -118,6 +118,17 @@
 					</td>
 				</tr>
 				<tr>
+					<td>Sales Contact Name:</td>
+					<td>
+						<input type="text" name="sales_contact_name" value="<?php echo $usernme['first_name'].' '.$usernme['last_name']; ?>" class="textfield width200px" readonly />
+						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $usernme['userid']; ?>" class="textfield width200px" readonly />
+					</td>
+                    <td>Sales Contact Email:</td>
+					<td>
+					<input type="text" name="sales_contact_email" value="<?php echo $usernme['email']; ?>" class="textfield width200px" readonly />
+					</td>
+				</tr>
+				<tr>
 					<td>&nbsp;</td>
 					<td>
                         <div id="subBtn" class="buttons">

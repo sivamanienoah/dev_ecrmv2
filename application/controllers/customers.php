@@ -95,8 +95,9 @@ class Customers extends crm_controller {
 		$fields['is_client'] = '';
 		$fields['www_1'] = "Primary Web Address";
 		$fields['www_2'] = "";
-		$fields['sales_contact_name'] = 'Sales Contact Name';
-		$fields['sales_contact_email'] = 'Sales Contact Email';
+		// $fields['sales_contact_name'] = 'Sales Contact Name';
+		$fields['sales_contact_userid_fk'] = 'Sales Contact ID';
+		// $fields['sales_contact_email'] = 'Sales Contact Email';
         $fields['comments'] = '';
 		$fields['client_code'] = '';
 		
@@ -109,7 +110,10 @@ class Customers extends crm_controller {
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($pst_data['update_customer']))
 		{
             $customer = $this->customer_model->get_customer($id);
-			
+			if($customer[0]['sales_contact_userid_fk']!='0') {
+				$data['sales_person_detail'] = $this->customer_model->get_records_by_id('users', array('userid'=>$customer[0]['sales_contact_userid_fk']));
+			}
+
 			$data['client_projects'] = $this->customer_model->get_records_by_num('leads', array('custid_fk'=>$id, 'pjt_status !='=>0));
 			
 			if($data['client_projects'] !=0) {
@@ -161,13 +165,13 @@ class Customers extends crm_controller {
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 
-					$from=$this->userdata['email'];
-					$arrEmails = $this->config->item('crm');
-					$arrSetEmails=$arrEmails['director_emails'];
+					$from			 = $this->userdata['email'];
+					$arrEmails       = $this->config->item('crm');
+					$arrSetEmails 	 = $arrEmails['director_emails'];
 					$mangement_email = $arrEmails['management_emails'];
-					$mgmt_mail = implode(',',$mangement_email);		
-					$admin_mail=implode(',',$arrSetEmails);
-					$subject='Customer Details Modification Notification';
+					$mgmt_mail 		 = implode(',',$mangement_email);		
+					$admin_mail		 = implode(',',$arrSetEmails);
+					$subject 		 = 'Customer Details Modification Notification';
 
 					//email sent by email template
 					$param = array();
@@ -191,7 +195,7 @@ class Customers extends crm_controller {
 			else 
 			{
 			
-			//print_r($update_data);exit;
+				// print_r($update_data);exit;
 				//insert
 				if ($newid = $this->customer_model->insert_customer($update_data)) 
 				{	
@@ -245,6 +249,24 @@ class Customers extends crm_controller {
 			}
 		}
     }
+	
+	function custom_update_customer()
+	{
+		$res = array();
+		$post_data = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($post_data); exit;
+		unset($post_data['sales_contact_name']);
+		unset($post_data['sales_contact_email']);
+		unset($post_data['addcountry']);
+		unset($post_data['addlocation']);
+		unset($post_data['addstate']);
+		
+		$id = $post_data['custid'];
+		if ($this->customer_model->update_customer($id, $post_data))
+		$res['result'] = 'ok';
+		
+		echo json_encode($res);
+	}
 	
 	function email_1_check($email) 
 	{

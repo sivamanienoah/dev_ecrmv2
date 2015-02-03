@@ -50,7 +50,6 @@ if (get_default_currency()) {
 							<!--th>By Project Manager Wise</th-->
 							<th>By Customer Wise</th>
 							<th>By Services Wise</th>
-							
 							<th>By Practices</th>
 							<th>By Date(Actual)</th>
 						</tr>	
@@ -89,9 +88,7 @@ if (get_default_currency()) {
 								<?php } ?>
 							</select>
 						</td>
-						
-					
-						
+
 						<td>
 							<select style="width:150px;" multiple="multiple" id="practices" name="practices[]">
 								<?php foreach($practices as $pract) {?>
@@ -110,46 +107,34 @@ if (get_default_currency()) {
 							To <input type="text" name="to_date" id="to_date" class="pick-date textfield" style="width:57px;" />
 						</td>
 					</tr>
-					<thead>
-						<tr>
-						<th >By Entity</th>
-							<th></th>
-							<!--th>By Project Manager Wise</th-->
-							<th></th>
-							<th></th>
-							
-							
-							<th></th>
-						</tr>	
-					</thead>
+					</tbody>
+						<thead>
+							<tr>
+							<th >By Entity</th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>	
+						</thead>
 					<tbody>
-					<tr>	
-					
+						<tr>
 							<td colspan="6">
-									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
-										<?php foreach ($sales_divisions as $division) { ?>
-												<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
-										<?php
-											} 
-										?>
-									</select> 
-								</td>
-								
-								
-					
-						
-					
-						
-					
-					</tr>
-					<tr align="right" >
-						<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
-						<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
-						<div id = 'load' style = 'float:right;display:none;height:1px;'>
-							<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-						</div>
-						</td>
-					</tr>
+								<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
+									<?php foreach ($sales_divisions as $division) { ?>
+										<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+									<?php } ?>
+								</select> 
+							</td>
+						</tr>
+						<tr align="right" >
+							<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
+							<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
+							<div id = 'load' style = 'float:right;display:none;height:1px;'>
+								<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+							</div>
+							</td>
+						</tr>
 					</tbody>
 					</table>
 				</form>
@@ -158,9 +143,7 @@ if (get_default_currency()) {
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
-			<div id="ad_filter" class="custom_dashboardfilter">
-				
-			</div>
+			<div id="ad_filter" class="custom_dashboardfilter"></div>
 		<?php 
 		} else {
 			echo "You have no rights to access this page";

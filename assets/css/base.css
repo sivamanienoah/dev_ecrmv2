@@ -363,6 +363,9 @@ button:hover, .buttons a:hover{
 .width99pct {
 	width: 97%;
 }
+.width160px {
+	width: 160px;
+}
 .width180px {
 	width: 180px;
 }
@@ -374,6 +377,10 @@ button:hover, .buttons a:hover{
 }
 select.width200px {
 	width:208px;
+	float: left;
+}
+select.width160px {
+	width:170px;
 	float: left;
 }
 .width250px {
@@ -1006,6 +1013,13 @@ h3 {
     color: #777777 !important;
     font-size: 16px !important;
     text-transform: uppercase !important;
+}
+.createBtn {
+	background: url(../img/round-plus.png) no-repeat;
+	display: inline-block;
+	float: left;
+	width: 16px;
+	height: 16px;
 }
 /*Add Button in the Customers page -- Starts here*/
 .addNew {
@@ -1860,14 +1874,30 @@ button.positive, .pjt-btn a.positive, input.positive{
 a.del_file{
 	background: url("../img/cross2.png") no-repeat 0 0 !important; width:16px; height:16px; float:left;
 }
-.file-tabs-close {
-	background: url("../img/icon-close-circle.png") no-repeat 0 0 !important; width:24px; height:24px;
+.file-tabs-close-project {
+	background: url("../img/icon-close-circle.png") no-repeat 0 0 !important; 
+	width:24px; 
+	height:24px;
+	cursor: pointer;
     float: right;
     padding: 0;
     position: absolute;
     right: -8px;
     top: -6px;
 }
+.file-tabs-close-confirm-tab {
+	background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    cursor: pointer;
+    float: right;
+    height: 24px;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 24px;
+    z-index: 9;
+}
+	
 #all_file_list ul li{
 	list-style: none;
 }

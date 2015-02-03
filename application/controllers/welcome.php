@@ -110,6 +110,7 @@ class Welcome extends crm_controller {
 		$usid = $this->session->userdata('logged_in_user');
 		
 		$getLeadDet = $this->welcome_model->get_lead_detail($id);
+
 		$arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($getLeadDet)) {
@@ -165,34 +166,32 @@ class Welcome extends crm_controller {
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
 
-		
-							
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-	
-						foreach($arrProjectMembers as $members){
-							
-							$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
-							
-							if(empty($arrLeadExistFolderAccess)) {
-							
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}
-									
-									
+				if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 
-								$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>0);
-								$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
+					foreach($arrProjectMembers as $members){
+						
+						$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
+						
+						if(empty($arrLeadExistFolderAccess)) {
+						
+								$read_access = 0;
+								$write_access = 0;
+								$delete_access = 0;									
+								// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
+								if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+								$read_access = 1;
+								$write_access = 1;
+								$delete_access = 1;								
+								}
 								
-							}							
-						}
+								
+
+							$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>0);
+							$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
+							
+						}							
 					}
+				}
 					
 			}
 			
@@ -1257,13 +1256,16 @@ class Welcome extends crm_controller {
 		}
 		
 	}
-	
-	//Closed lead - move to project
-	public function ajax_update_lead_status($lead_id) 
+
+	/*
+	*@method ajax_update_lead_status
+	*@param lead_id
+	*@Lead Closed & move to project
+	*/
+	public function ajax_update_lead_status($lead_id)
 	{
         if ($lead_id != 0 && preg_match('/^[0-9]+$/', $lead_id))
         {
-		
 			$lead_det = $this->welcome_model->get_lead_det($lead_id);
 			
 			$customer = $this->customer_model->get_customer($lead_det['custid_fk']);
@@ -1299,11 +1301,10 @@ class Welcome extends crm_controller {
 			
 			$update['pjt_id'] = $project_code;
 			
+			$update['lead_title']    = $this->input->post('project_name');
+			$update['project_type']  = $this->input->post('timesheet_project_types');
 			$update['project_category'] = $this->input->post('project_category');
 			$update['resource_type'] = $this->input->post('resource_type');
-			$update['lead_title']    = $this->input->post('project_name');
-			//$update['project_types'] = $this->input->post('project_types');
-			$update['project_type']  = $this->input->post('timesheet_project_types');
 			$update['sow_status']	 = $this->input->post('sow_status');			
 			$update['pjt_status']    = 1;			
 			$update['modified_by']   = $this->userdata['userid'];
@@ -1369,6 +1370,186 @@ class Welcome extends crm_controller {
 		}
     }
 	
+	public function update_project_info($project_id)
+	{
+		$res 	   = array();
+		$post_data = real_escape_array($this->input->post());
+		
+		// [project_name] => tetst lead ititle
+		// [timesheet_project_types] => 1
+		// [department_id_fk] => 3
+		// [cost_center_value] => 3|Cost Center
+		// [project_center_value] => 1|BPO
+		// [project_category] => 1
+		// [sow_status] => 1
+		// [resource_type] => 1
+		
+		$update['lead_title']    	= $post_data['project_name'];
+		$update['project_type']  	= $post_data['timesheet_project_types'];
+		$update['department_id_fk'] = $post_data['department_id_fk'];
+		
+		if($post_data['project_category'] == 1) {
+			$project_center 		  = explode('|', $post_data['project_center_value']);
+			$update['project_center'] = $project_center[0];
+			$code 					  = substr($project_center[1], 0, 3);
+		} else if($post_data['project_category'] == 2) {
+			$cost_center 			  = explode('|', $post_data['cost_center_value']);
+			$update['cost_center'] 	  = $cost_center[0];
+			$code 					  = substr($cost_center[1], 0, 3);
+		}
+		
+		$update['project_category'] = $post_data['project_category'];
+		$update['sow_status']	    = $post_data['sow_status'];
+		$update['resource_type']	= $post_data['resource_type'];
+		$update['modified_by']   	= $this->userdata['userid'];
+		$update['date_modified']    = date('Y-m-d H:i:s');
+		
+		$updt_project_info = $this->welcome_model->update_row('leads', $update, $project_id);
+		if($updt_project_info) {
+			$res['result'] = 'ok';
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	/*
+	*@confirm_project
+	*set milestones
+	*@param project_id
+	*/
+	public function confirm_project($project_id)
+	{
+		$res 	   = array();
+		$ins 	   = array();
+		$project_category_code = '';
+		$post_data = real_escape_array($this->input->post());
+		
+		if(!empty($post_data)) {
+			$currency_type = $post_data['currency_type'];
+			foreach($post_data['project_milestone_name'] as $key=>$value) {
+				$ins[$key]['jobid_fk']               = $project_id;
+				$ins[$key]['project_milestone_name'] = $value;
+				$ins[$key]['expected_date']          = date('Y-m-d', strtotime($post_data['expected_date'][$key]));
+				$ins[$key]['month_year']             = date('Y-m-d', strtotime($post_data['month_year'][$key]));
+				$ins[$key]['amount']                 = $post_data['amount'][$key];
+			}
+		}
+
+		if(!empty($ins)) {
+			foreach($ins as $row) {
+				$log = array();
+				$exp_res = '';
+				if(!empty($row['project_milestone_name'])) {
+					$exp_res = $this->welcome_model->insert_row("expected_payments", $row);
+					
+					if($exp_res)
+					$res['result'] = 'ok';
+					else
+					$res['result'] = 'fail';
+				
+					$log_detail = 'Project Milestone Name: '.$row['project_milestone_name'].'  Amount: '.$currency_type.' '.$row['amount'].' Expected Date: '.date('Y-m-d', strtotime($row['expected_date']));
+					$log['jobid_fk']      = $project_id;
+					$log['userid_fk']     = $this->userdata['userid'];
+					$log['date_created']  = date('Y-m-d H:i:s');
+					$log['log_content']   = $log_detail;
+					$log_res = $this->welcome_model->insert_row("logs", $log);
+
+				}
+			}
+		}
+		$lead_det = $this->welcome_model->get_lead_det($project_id);
+		
+		$customer = $this->customer_model->get_customer($lead_det['custid_fk']);
+		
+		$client_code = $customer[0]['client_code'];
+		
+		if($client_code == '') {			
+			$client_code = $this->customer_model->update_client_code($customer[0]['first_name'].$customer[0]['last_name'], $lead_det['custid_fk']);
+		}
+		
+		switch($lead_det['project_category']) {
+			case 1:
+				$pc_code = $this->welcome_model->get_data_by_id("profit_center", array('id'=>$lead_det['project_center']));
+				$project_category_code = $pc_code['profit_center'];
+			break;
+			case 2:
+				$cc_code = $this->welcome_model->get_data_by_id("cost_center", array('id'=>$lead_det['cost_center']));
+				$project_category_code = $cc_code['cost_center'];
+			break;
+		}
+		$project_category_code = substr($project_category_code, 0, 3);
+		
+		$project_category_code = strtoupper($project_category_code);
+		
+		$month_year 		   = date('my');
+		
+		$client_projects_count = $this->customer_model->get_records_by_num('leads', array('pjt_status !='=>0, 'custid_fk'=>$lead_det['custid_fk']));
+		
+		$total_projects   = sprintf("%02d", (int)$client_projects_count+1);
+		
+		$project_code     = $project_category_code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
+		
+		$update['pjt_id']        = $project_code;
+		$update['pjt_status']    = 1;
+		$update['modified_by']   = $this->userdata['userid'];
+		$update['date_modified'] = date('Y-m-d H:i:s');
+	
+		$updt_job = $this->welcome_model->update_row('leads', $update, $project_id);
+		$pjt_id   = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $project_id, 'pjt_id');
+
+		$this->customer_model->customer_update($lead_det['custid_fk'], array('is_client'=>1));		
+		$this->customer_model->update_client_details_to_timesheet($client_code);
+		
+		if($updt_job) {
+			$createTimesheet = $this->customer_model->update_project_details($pjt_id);
+		}
+
+		if ($createTimesheet) {
+			$log_ins['userid_fk']           = $this->userdata['userid'];
+			$log_ins['jobid_fk']            = $project_id;
+			$log_ins['date_created']        = date('Y-m-d H:i:s');
+			$log_ins['log_content']         = 'The Lead "'.word_limiter($lead_det['lead_title'], 4).'" is Successfully Moved to Project.';
+			$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$project_id.'> ' .word_limiter($lead_det['lead_title'], 4).' </a> is Successfully Moved to Project.';
+
+			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
+			$lead_owner       = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
+			
+			// insert the new log
+			$insert_log          = $this->welcome_model->insert_row('logs', $log_ins);
+			
+			$user_name           = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+			$dis['date_created'] = date('Y-m-d H:i:s');
+			$print_fancydate     = date('l, jS F y h:iA', strtotime($dis['date_created']));
+
+			$arrEmails    = $this->config->item('crm');
+			$arrSetEmails = $arrEmails['director_emails'];
+			
+			$admin_mail = implode(',',$arrSetEmails);
+		
+			//email sent by email template
+			$param = array();
+			
+			$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content_email'=>$ins_email['log_content_email'], 'signature'=>$this->userdata['signature']);
+
+			$param['to_mail'] 		  = $lead_assign_mail[0]['email'] .','. $lead_owner[0]['email'];
+			$param['bcc_mail'] 		  = $admin_mail;
+			$param['from_email'] 	  = $this->userdata['email'];
+			$param['from_email_name'] = $user_name;
+			$param['template_name']   = "Lead to Project Change Notification";
+			$param['subject']         = "Lead to Project Change Notification";
+
+			$this->email_template_model->sent_email($param);
+			
+			$res['error'] = false;
+		} else {
+			$res['error'] = true;
+			$res['errormsg'] = 'eConnect or Timesheet updation failed!';
+		}	
+		
+		echo json_encode($res);
+		exit;
+	}
+	
 	/*
 	 *Exporting data(leads) to the excel
 	 */
@@ -1427,7 +1608,7 @@ class Welcome extends crm_controller {
 		$this->excel->getActiveSheet()->setCellValue('K1', 'Updated By');
 		$this->excel->getActiveSheet()->setCellValue('L1', 'Lead Stage');
 		$this->excel->getActiveSheet()->setCellValue('M1', 'Expected Proposal Date');
-		//$this->excel->getActiveSheet()->setCellValue('N1', 'Proposal Sent on');
+		// $this->excel->getActiveSheet()->setCellValue('N1', 'Proposal Sent on');
 		// $this->excel->getActiveSheet()->setCellValue('O1', 'Variance');
 		$this->excel->getActiveSheet()->setCellValue('N1', 'Lead Indicator');
 		$this->excel->getActiveSheet()->setCellValue('O1', 'Status');
@@ -1469,50 +1650,48 @@ class Welcome extends crm_controller {
 					$status = 'Closed';
 				break;
 			}
-			
 			$this->excel->getActiveSheet()->setCellValue('O'.$i, $status);
-
 			$i++;
 		}
 		
-			//make the font become bold
-			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
-			//merge cell A1 until D1
-			//$this->excel->getActiveSheet()->mergeCells('A1:D1');
-			//set aligment to center for that merged cell (A1 to D1)
-			
-			//Set width for cells
-			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
-			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);			
-			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
-			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
-			
-			//cell format
-			$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
-			
-			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-			
-			$filename='Lead Dashboard.xls'   ; //save our workbook as this file name
-			header('Content-Type: application/vnd.ms-excel'); //mime type
-			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
-			header('Cache-Control: max-age=0'); //no cache
-						 
-			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
-			//if you want to save it as .XLSX Excel 2007 format
-			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
-			//force user to download the Excel file without writing it to server's HD
-			$objWriter->save('php://output');
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
+		//merge cell A1 until D1
+		//$this->excel->getActiveSheet()->mergeCells('A1:D1');
+		//set aligment to center for that merged cell (A1 to D1)
+		
+		//Set width for cells
+		$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+		$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);			
+		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+		$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+		
+		//cell format
+		$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+		
+		$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		
+		$filename='Lead Dashboard.xls'   ; //save our workbook as this file name
+		header('Content-Type: application/vnd.ms-excel'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+					 
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
 	}
 	
 	/**

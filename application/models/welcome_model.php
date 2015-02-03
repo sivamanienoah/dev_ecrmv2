@@ -39,7 +39,7 @@ class Welcome_model extends crm_model {
 		$this->db->where('j.pjt_status', 0);
 		
 		$sql = $this->db->get();
-		//echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 	    $res =  $sql->result_array();
 	    return $res;
 	}
@@ -105,6 +105,12 @@ class Welcome_model extends crm_model {
 		$this->db->where('userid', $ld);
 		$user = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $user->result_array();
+	}
+	
+	function get_data_by_id($table, $wh_condn) {
+		$this->db->where($wh_condn);
+		$user = $this->db->get($this->cfg['dbpref'] . $table);
+		return $user->row_array();
 	}
 	
 	function get_user_byrole($role_id) {

@@ -1,6 +1,8 @@
 /*
  *@Customer Add View Jquery
 */
+var id='';
+var updt='';
 
 if(document.getElementById('region_update')) {
 var reg = document.getElementById('region_update').value;
@@ -25,8 +27,6 @@ getState(cty,st,updt);
 if(st != 0 && loc != 0)
 getLocation(st,loc,updt);
 }
-var id='';
-var updt='';
 
 function getCountry(val,id,updt) {
 	var sturl = "regionsettings/getCountry/"+ val+"/"+id+"/"+updt;	
@@ -258,7 +258,7 @@ function getDefaultState(id, upd) {
 function getDefaultLocation(id, upd) {
 	var sturl = "regionsettings/getLocDefault/"+id+"/"+upd;
     $('#def_loc').load(sturl);
-    return false;	
+    return false;
 }
 function getSalescontactDetails(location_id) {
 

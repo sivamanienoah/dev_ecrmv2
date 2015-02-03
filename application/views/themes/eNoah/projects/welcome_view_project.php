@@ -683,7 +683,7 @@ if (get_default_currency()) {
 						<?php echo form_close(); ?>
 					</div>
 					<div id="map_add_file">
-						<div class="file-tabs-close" id="file-tabs-close"></div>
+						<div class="file-tabs-close-project" id="file-tabs-close"></div>
 						<div>
 							<ul id="map_add_file-tabs">
 								<li><a href="<?php echo current_url() ?>#map-tab-2">Select File</a></li>

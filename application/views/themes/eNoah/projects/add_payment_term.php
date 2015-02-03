@@ -104,4 +104,7 @@ function showRequest()
 		return false;
 	}
 }
+function timerfadeout() {
+	$('.dialog-err').empty();
+}
 </script>
