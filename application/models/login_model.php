@@ -100,14 +100,19 @@ class Login_model extends crm_model {
 						$LDAPServerPort    = "389";
 						$LDAPServerTimeOut = "60";
 						$LDAPContainer = "DC=enoah,DC=chn"; // <- your domain info
-						$BIND_username = $username;
+						
+						// $BIND_username = $username;
+						$usernameData="enoah\\".$username; // <- added domain name before username
+						$BIND_username = $usernameData;
 						$BIND_password = $password;
-						$filter = "sAMAccountName=".$this->input->post('email');
+						//$filter = "sAMAccountName=".$this->input->post('email');
+						$filter = "sAMAccountName=".$username;
 					   
 						if(($ds=ldap_connect($LDAPServerAddress1))) {
 							ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
 							ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 							
+							// if($r = @ldap_bind($ds,$BIND_username,$BIND_password)) {
 							if($r = @ldap_bind($ds,$BIND_username,$BIND_password)) {
 								if($sr = ldap_search($ds, $LDAPContainer, $filter, array('distinguishedName'))) {
 									if($info = ldap_get_entries($ds, $sr)) {
@@ -134,6 +139,12 @@ class Login_model extends crm_model {
 								}
 							} else {
 								$data['login_error'] = "Could not bind"; $data['login_error_code'] = 7;
+								/* ldap_error($r);
+								if (ldap_get_option($r, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+								echo "Error Binding to LDAP: $extended_error";
+								} else {
+									echo "Error Binding to LDAP: No2 additional information is available.";
+								} */
 							}
 						} else {
 							$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
