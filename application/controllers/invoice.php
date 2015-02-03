@@ -86,7 +86,7 @@ class Invoice extends CRM_Controller {
 		if($this->input->post("filter")!="")
 			$this->load->view('invoices/invoice_view_grid', $data);
 		else
-			$this->load->view('invoices/invoice_view', $data);		
+			$this->load->view('invoices/invoice_view', $data);
     }
 	
 	/*
