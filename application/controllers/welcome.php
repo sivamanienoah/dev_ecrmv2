@@ -1464,7 +1464,8 @@ class Welcome extends crm_controller {
 		$client_code = $customer[0]['client_code'];
 		
 		if($client_code == '') {			
-			$client_code = $this->customer_model->update_client_code($customer[0]['first_name'].$customer[0]['last_name'], $lead_det['custid_fk']);
+			// $client_code = $this->customer_model->update_client_code($customer[0]['first_name'].$customer[0]['last_name'], $lead_det['custid_fk']);
+			$client_code = $this->customer_model->update_client_code($customer[0]['company'], $lead_det['custid_fk']);
 		}
 		
 		switch($lead_det['project_category']) {
