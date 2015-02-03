@@ -385,7 +385,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			include theme_url() . '/tpl/user_accounts_options.php';
 			$uio = $userdata['userid'];
 			foreach($created_by as $value) {
-				$b[] = $value[created_by];						
+				$b[] = $value['created_by'];					
 			}
 		?>
 
@@ -525,7 +525,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	<img src="assets/img/advanced_filter.png" class="icon leads" />
 </a>
 
-<div id="advance_search_pjt" style="float:left; width:100%;" >
+	<div id="advance_search_pjt" style="float:left; width:100%;" >
 		<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -537,6 +537,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					<!--th>By Project Manager Wise</th-->
 					<th>By Customer Wise</th>
 					<th>By Services Wise</th>
+					<th>By Practices</th>
 					<th>By Date(Actual)</th>
 				</tr>	
 			</thead>
@@ -550,13 +551,6 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 						<option value="4">Inactive</option>
 					</select> 
 				</td>
-				<!--td>
-					<select style="width:150px;" multiple="multiple" id="pm_acc" name="pm_acc[]">
-						<?php foreach($pm_accounts as $pm_acc) {?>
-							<option value="<?php echo $pm_acc['userid']; ?>"><?php echo $pm_acc['first_name'].' '.$pm_acc['last_name']?></option>	
-						<?php } ?>
-					</select> 
-				</td-->
 				<td>
 					<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">
 						<?php foreach($customers as $customer) {?>
@@ -572,6 +566,13 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					</select>
 				</td>
 				<td>
+					<select style="width:150px;" multiple="multiple" id="practices" name="practices[]">
+						<?php foreach($practices as $pract) {?>
+						<option value="<?php echo $pract['id']; ?>"><?php echo $pract['practices'];?></option>	
+						<?php } ?>
+					</select>
+				</td>
+				<td>
 					<select style="width:178px;" id="datefilter" name="datefilter">
 						<option value="1">All</option>
 						<option value="2">Start Date</option>
@@ -580,6 +581,26 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					<br />
 					From <input type="text" name="from_date" id="from_date" class="pick-date textfield" style="width:57px;" />
 					To <input type="text" name="to_date" id="to_date" class="pick-date textfield" style="width:57px;" />
+				</td>
+			</tr>
+			</tbody>
+			<thead>
+				<tr>
+				<th >By Entity</th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>	
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="6">
+					<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
+						<?php foreach ($sales_divisions as $division) { ?>
+							<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+						<?php } ?>
+					</select> 
 				</td>
 			</tr>
 			<tr align="right" >
@@ -594,8 +615,12 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			</table>
 		</form>
 	</div>
-	
-<div id="advance_search_results_pjts" class="custom_dashboardfilter clear"></div>
+	<div class="clearfix"></div>
+	<div id="ajax_loader" style="margin:20px;display:none" align="center">
+		Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
+	</div>
+	<div class="clearfix"></div>
+	<div id="advance_search_results_pjts" class="custom_dashboardfilter clear"></div>
 <?php } ?>
 	
 	</div><!--Inner - close here -->

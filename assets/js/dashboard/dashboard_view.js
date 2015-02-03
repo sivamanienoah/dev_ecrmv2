@@ -1412,6 +1412,9 @@ if(viewlead==1) {
 }
 
 if(viewPjt==1) {
+
+	$('#ajax_loader').show();
+
 	//For Projects
 	var pjtstage = $("#pjt_stage").val();
 	var cust = $("#customer1").val();
@@ -1426,7 +1429,11 @@ if(viewPjt==1) {
 	// var sturl = "project/advance_filter_search_pjt/"+pjtstage+'/'+pm_acc+'/'+cust+'/'+encodeURIComponent(keyword);
 	var sturl = site_base_url+"project/advance_filter_search_pjt/";
 	//alert(sturl);	
-	$('#advance_search_results_pjts').load(sturl);
+	// $('#advance_search_results_pjts').load(sturl);
+	$('#advance_search_results_pjts').load(sturl,function(){
+		$('#ajax_loader').hide();
+		$('#advance_search_results_pjts').show();
+	});
 		
 	function advanced_filter_pjt() {
 		$('#advance_search_pjt').slideToggle('slow');
@@ -1480,21 +1487,25 @@ if(viewPjt==1) {
 	*/
 	
 	$('#advanceFilters_pjt,#pjt_search_form').submit(function() {
-		var pjtstage = $("#pjt_stage").val();
-		var cust 	 = $("#customer1").val(); 
-		var service  = $("#services").val(); 
-		var keyword  = $("#keywordpjt").val();
+		var pjtstage    = $("#pjt_stage").val();
+		var cust 	    = $("#customer1").val(); 
+		var service     = $("#services").val(); 
+		var keyword     = $("#keywordpjt").val();
+		var practice    = $('#practices').val();
+		var divisions  	= $("#divisions").val();
 		var datefilter  = $("#datefilter").val();
 		var from_date   = $("#from_date").val();
 		var to_date  	= $("#to_date").val();
 		if(keyword == "Project Title, Name or Company")
 		keyword = '';
 		
-		var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+		var params = {'pjtstage':pjtstage,'cust':cust,'service':service,'practice':practice,'divisions':divisions,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 		params[csrf_token_name] = csrf_hash_token; 
 		if($(this).attr("id") == 'advanceFilters_pjt'){
 			$('#advance').hide();
 			$('#load').show();
+			$('#ajax_loader').show();
+			$("#advance_search_results_pjts" ).empty();
 		}
 		
 		$.ajax({
@@ -1505,6 +1516,7 @@ if(viewPjt==1) {
 				$("#advance_search_results_pjts" ).html(data);
 				$('#advance').show();
 				$('#load').hide();
+				$('#ajax_loader').hide();
 			}
 		});
 		return false;

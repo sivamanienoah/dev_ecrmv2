@@ -1494,6 +1494,15 @@ class Dashboard_model extends crm_model {
 		return $query->result_array();
 	}
 	
+	public function get_practices()
+	{
+    	$this->db->select('id, practices');
+		$this->db->where('status', 1);
+    	$this->db->order_by('id');
+		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
+		return $query->result_array();
+    }
+	
 	/*
 	*Get the Lead Sources
 	*/
