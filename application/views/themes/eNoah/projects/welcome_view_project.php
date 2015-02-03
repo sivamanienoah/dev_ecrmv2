@@ -1710,9 +1710,8 @@ if (get_default_currency()) {
 </div>
 <div class="comments-log-container"></div>
 <style>
-.hide-calendar .ui-datepicker-calendar {
-   display: none;
-}
+.hide-calendar .ui-datepicker-calendar { display: none; }
+button.ui-datepicker-current { display: none; }
 </style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>

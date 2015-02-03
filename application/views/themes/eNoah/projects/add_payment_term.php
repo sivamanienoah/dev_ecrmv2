@@ -1,3 +1,7 @@
+<style>
+.hide-calendar .ui-datepicker-calendar { display: none; }
+button.ui-datepicker-current { display: none; }
+</style>
 <?php $attributes = array('id' => 'set-payment-terms','name' => 'set-payment-terms'); ?>
 <?php echo form_open_multipart("project/set_payment_terms", $attributes); ?>			
 <input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
@@ -6,7 +10,11 @@
 			<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
 		</tr>
 		<tr>
-			<td>Milestone date *</td><td><input type="text" name="sp_date_2" id="sp_date_2" class="textfield width200px pick-date" readonly /> </td>
+			<td>Milestone date *</td><td><input type="text" name="sp_date_2" id="sp_date_2" data-calendar="true" class="textfield width200px pick-date" readonly /> </td>
+		</tr>
+		<tr>
+			<td>For the Month & Year *</td>
+			<td><input type="text" data-calendar="false" class="textfield width200px" name="month_year" id="month_year" readonly /></td>
 		</tr>
 		<tr>
 			<td>Value *</td><td><input onkeypress="return isNumberKey(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></td>
@@ -63,6 +71,28 @@ $(function(){
 	$('#set-payment-terms').ajaxForm(options);
 
 	$("#sp_date_2").datepicker({dateFormat: "dd-mm-yy"});
+	
+	$('#month_year').datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'MM yy',
+		showButtonPanel: true,
+		onClose: function(input, inst) {
+			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+			$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+		},
+		beforeShow: function(input, inst) {
+			if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			}
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
 	
 	$("#show_files").delegate("a.del_file","click",function() {
 		var str_delete = $(this).attr("id");

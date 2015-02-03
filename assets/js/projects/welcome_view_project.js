@@ -1268,6 +1268,7 @@ function addURLtoJob()
 			changeMonth: true,
 			changeYear: true,
 			dateFormat: 'MM yy',
+			showButtonPanel: true,
 			onClose: function(input, inst) {
 				var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 				var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
