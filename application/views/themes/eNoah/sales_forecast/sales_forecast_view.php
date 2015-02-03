@@ -4,9 +4,7 @@ require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
 ?>
 <style>
-.hide-calendar .ui-datepicker-calendar {
-   display: none;
-}
+.hide-calendar .ui-datepicker-calendar { display: none; }
 </style>
 <div id="content">
 	<div class="inner">
