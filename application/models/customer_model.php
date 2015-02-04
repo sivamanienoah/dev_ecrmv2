@@ -142,7 +142,7 @@ class Customer_model extends crm_model {
     function update_customer($id, $data) {	
 		
         $this->db->where('custid', $id);
-         $this->db->update($this->cfg['dbpref'] . 'customers', $data);
+		$this->db->update($this->cfg['dbpref'] . 'customers', $data);
 		$this->update_client_details_to_timesheet($data['client_code']);
 		return true;
 		
@@ -330,16 +330,13 @@ class Customer_model extends crm_model {
 	*/
 	public function check_client_code_exists($client_code) { 
 		
-		$this->db->where('client_code ', $client_code);
+		$this->db->where('client_code', $client_code);
 		$query = $this->db->get($this->cfg['dbpref'].'customers');
-		if($query->num_rows == 0)
-		{		
+		if($query->num_rows == 0) {
 			return true;
-			
-		}else {		
+		} else {
 			return false;
-		
-		}		
+		}
     }	
 	
 	/*
@@ -351,30 +348,50 @@ class Customer_model extends crm_model {
 	*/
 	public function update_client_code($client_name, $custid) {
 		
-		$arrClientCodes = $this->create_client_code($client_name, 3);
-		$randomCode = $this->create_client_code_randomly($client_name, 3);
-		array_push($arrClientCodes, $randomCode);
-		$available_code = '';		
+		/*
+		*same company but different contacts(first name & last name)
+		*if the company name is same use the same client code for the client
+		*/
+		$exist_client   = array();
+		$available_code = '';
 		
-		if(isset($arrClientCodes) && !empty($arrClientCodes)) {
+		$this->db->select('client_code');
+		$this->db->where('custid !=', $custid);
+		$this->db->where('is_client', 1);
+		$this->db->where('company', $client_name);
+		$this->db->group_by('client_code');
+		$query = $this->db->get($this->cfg['dbpref'].'customers');
+		$result = $query->row_array();
 		
-			for($i=0; $i<count($arrClientCodes); $i++) {
-			
-				$client_code_status = $this->check_client_code_exists($arrClientCodes[$i]);
-				
-				if($client_code_status == true) {
-				
-					$available_code = $arrClientCodes[$i];
-					break;				
-				}			
-			}		
+		if(!empty($result)) {
+			$exist_client   = $result['client_code'];
+			$available_code = $result['client_code'];
 		}
 		
-		if($available_code != '') {		
-		$available_code = strtoupper($available_code);
-		$data=array('client_code'=>$available_code);
-		$this->db->where('custid',$custid);
-		$this->db->update($this->cfg['dbpref'] . 'customers', $data);
+		if($exist_client == '') {
+			$arrClientCodes = $this->create_client_code($client_name, 3);
+			$randomCode     = $this->create_client_code_randomly($client_name, 3);
+			array_push($arrClientCodes, $randomCode);
+			
+			if(isset($arrClientCodes) && !empty($arrClientCodes)) {
+			
+				for($i=0; $i<count($arrClientCodes); $i++) {
+				
+					$client_code_status = $this->check_client_code_exists($arrClientCodes[$i]);
+					
+					if($client_code_status == true) {
+						$available_code = $arrClientCodes[$i];
+						break;				
+					}			
+				}
+			}
+		}
+		
+		if($available_code != '') {
+			$available_code = strtoupper($available_code);
+			$data = array('client_code'=>$available_code);
+			$this->db->where('custid',$custid);
+			$this->db->update($this->cfg['dbpref'] . 'customers', $data);
 		}
 		return $available_code;
     }

@@ -1463,10 +1463,13 @@ class Welcome extends crm_controller {
 		
 		$client_code = $customer[0]['client_code'];
 		
-		if($client_code == '') {			
-			// $client_code = $this->customer_model->update_client_code($customer[0]['first_name'].$customer[0]['last_name'], $lead_det['custid_fk']);
+		if($client_code == '') {
 			$client_code = $this->customer_model->update_client_code($customer[0]['company'], $lead_det['custid_fk']);
 		}
+		
+		//update client code to this lead - for project count
+		$this->db->where('lead_id', $project_id);
+		$this->db->update($this->cfg['dbpref'] . 'leads', array('client_code'=>$client_code));
 		
 		switch($lead_det['project_category']) {
 			case 1:
@@ -1484,11 +1487,11 @@ class Welcome extends crm_controller {
 		
 		$month_year 		   = date('my');
 		
-		$client_projects_count = $this->customer_model->get_records_by_num('leads', array('pjt_status !='=>0, 'custid_fk'=>$lead_det['custid_fk']));
+		$client_projects_count = $this->customer_model->get_records_by_num('leads', array('pjt_status !='=>0, 'client_code'=>$client_code));
 		
-		$total_projects   = sprintf("%02d", (int)$client_projects_count+1);
+		$total_projects        = sprintf("%02d", (int)$client_projects_count+1);
 		
-		$project_code     = $project_category_code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
+		$project_code          = $project_category_code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
 		
 		$update['pjt_id']        = $project_code;
 		$update['pjt_status']    = 1;

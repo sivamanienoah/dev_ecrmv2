@@ -1041,6 +1041,16 @@ h3 {
 	float:left;
 	width:234px;
 }
+.addSaveSales{
+	background: url(../img/save-icon.png) no-repeat;
+	width: 18px;
+	height: 18px;
+	display: inline-block;
+}
+.addCusSales{
+	display:none; 
+	float:left;
+}
 select.width118px {
 	width:118px;
 }
