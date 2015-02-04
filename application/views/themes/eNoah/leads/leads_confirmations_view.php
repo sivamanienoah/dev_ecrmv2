@@ -318,6 +318,7 @@ button.ui-datepicker-current { display: none; }
 							<th>Payment Milestone</th>
 							<th>Milestone date</th>
 							<th>For the Month & Year</th>
+							<th>Currency</th>
 							<th>Value</th>
 							<th>Action</th>
 						</tr>
@@ -326,7 +327,7 @@ button.ui-datepicker-current { display: none; }
 						<td><input type="text" name="project_milestone_name[]" class="project_milestone_name textfield" /></td>
 						<td><input type="text" data-calendar="true" name="expected_date[]" class="expected_date textfield" /></td>
 						<td><input type="text" data-calendar="false" class="month_year textfield" name="month_year[]" /></td>
-						<td><input type="text" class="textfield" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly name="currency_type" style="width: 30px;" /></td>
+						<td><input type="text" class="textfield" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly name="currency_type" style="width: 41px;" /></td>
 						<td><input onkeypress="return isNumberKey(event)" type="text" name="amount[]" class="amount textfield" maxlength="10" /></td>
 						<td>
 							<a id="addMilestoneRow" class="createBtn"></a>
