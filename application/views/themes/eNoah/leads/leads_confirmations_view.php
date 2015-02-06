@@ -165,6 +165,7 @@ button.ui-datepicker-current { display: none; }
 			<!--p class="clearfix" ><h3>Project Details*</h3></p-->
 			<form action="" method="post" id="project-confirm-form" onsubmit="return false;">
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="errmsg_confirm ajx_failure_msg"></div>
 				<table class="layout" cellspacing="10">
 					<tr>
 						<td width="115"><strong>Departments:*</strong></td>

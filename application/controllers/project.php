@@ -1338,7 +1338,7 @@ class Project extends crm_controller {
 			}
 		}
 		$output .= "<tr>";
-		$output .= "<td></td>";
+		$output .= "<td></td><td></td>";
 		$output .= "<td><b>Total Milestone Payment : </b></td><td><b>".$exp['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
 		$output .= "</tr>";
 		$output .= "</table>";

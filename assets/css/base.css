@@ -568,7 +568,7 @@ ul.menuStyle li:hover ul{display:block; }
 	background-color: #f5f5f5;
 }
 #content .inner {
-	padding:15px 30px;
+	padding:15px 26px;
 	overflow:auto;
 	clear:left;
 }
@@ -580,6 +580,11 @@ ul.menuStyle li:hover ul{display:block; }
 .borderBtm {
 	border-bottom: none !important;
 	padding: 0 !important;
+}
+.bdr-btm h6 {
+	border-bottom: 1px solid #cccccc;
+    margin: 0 0 10px;
+    padding: 8px 0;
 }
 #content .inner p {
 	margin-bottom:4px;
@@ -1913,6 +1918,9 @@ a.del_file{
 }
 .pad-all{
 	padding: 5px;
+}
+.errmsg_confirm {
+	text-align: left;
 }
 /*Clearfix*/
 .clearfix:after {

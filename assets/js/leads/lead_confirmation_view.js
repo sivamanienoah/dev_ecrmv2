@@ -407,7 +407,14 @@ function move_project(project_id)
 				css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
 			});
 			if(response.error == true) {
-				alert(data.errormsg);						
+				if(response.errortype==1) {
+					setTimeout('timerfadeout()', 6000);
+					$('.tabs-confirm li').eq(1).find("a").trigger('click');
+					$('.errmsg_confirm').html(response.errormsg);
+					$('.blockUI .layout').unblock();
+					return false;
+				}
+				alert(response.errormsg);
 				window.location.href = site_base_url+"welcome/edit_quote" + "/" + project_id +"/";
 				$.unblockUI();
 			} else {

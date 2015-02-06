@@ -1421,6 +1421,29 @@ class Welcome extends crm_controller {
 	{
 		$res 	   = array();
 		$ins 	   = array();
+		
+		$lead_det = $this->welcome_model->get_lead_det($project_id);
+		
+		if( ($lead_det['project_category'] == 0) && ($lead_det['department_id_fk'] == 0) && ($lead_det['resource_type'] == 0) && ($lead_det['project_type'] == 0) ) {
+		
+			$res['error'] = true;
+			$res['errortype'] = 1;
+			if($lead_det['department_id_fk'] == 0){
+				$res['errormsg'][] = 'Please Update Department! <br />';
+			}
+			if($lead_det['project_category'] == 0){
+				$res['errormsg'][] = 'Please Update Project Category! <br />';
+			}
+			if($lead_det['resource_type'] == 0){
+				$res['errormsg'][] = 'Please Update Resource Type! <br />';
+			}
+			if($lead_det['project_type'] == 0){
+				$res['errormsg'][] = 'Please Update Project Type!';
+			}
+			echo json_encode($res);
+			exit;
+		}
+
 		$project_category_code = '';
 		$post_data = real_escape_array($this->input->post());
 		
@@ -1457,7 +1480,6 @@ class Welcome extends crm_controller {
 				}
 			}
 		}
-		$lead_det = $this->welcome_model->get_lead_det($project_id);
 		
 		$customer = $this->customer_model->get_customer($lead_det['custid_fk']);
 		
@@ -1471,16 +1493,19 @@ class Welcome extends crm_controller {
 		$this->db->where('lead_id', $project_id);
 		$this->db->update($this->cfg['dbpref'] . 'leads', array('client_code'=>$client_code));
 		
-		switch($lead_det['project_category']) {
-			case 1:
-				$pc_code = $this->welcome_model->get_data_by_id("profit_center", array('id'=>$lead_det['project_center']));
-				$project_category_code = $pc_code['profit_center'];
-			break;
-			case 2:
-				$cc_code = $this->welcome_model->get_data_by_id("cost_center", array('id'=>$lead_det['cost_center']));
-				$project_category_code = $cc_code['cost_center'];
-			break;
+		if( $lead_det['project_category'] !=0 ) {
+			switch($lead_det['project_category']) {
+				case 1:
+					$pc_code = $this->welcome_model->get_data_by_id("profit_center", array('id'=>$lead_det['project_center']));
+					$project_category_code = $pc_code['profit_center'];
+				break;
+				case 2:
+					$cc_code = $this->welcome_model->get_data_by_id("cost_center", array('id'=>$lead_det['cost_center']));
+					$project_category_code = $cc_code['cost_center'];
+				break;
+			}
 		}
+		
 		$project_category_code = substr($project_category_code, 0, 3);
 		
 		$project_category_code = strtoupper($project_category_code);
