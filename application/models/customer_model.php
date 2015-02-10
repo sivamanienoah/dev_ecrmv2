@@ -139,13 +139,13 @@ class Customer_model extends crm_model {
         }
     }
     
-    function update_customer($id, $data) {	
-		
+    function update_customer($id, $data) {
         $this->db->where('custid', $id);
 		$this->db->update($this->cfg['dbpref'] . 'customers', $data);
-		$this->update_client_details_to_timesheet($data['client_code']);
+		if(!empty($data['client_code'])) {
+			$this->update_client_details_to_timesheet($data['client_code']);
+		}
 		return true;
-		
     }
     
     function insert_customer($data) {
