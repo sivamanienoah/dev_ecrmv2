@@ -363,12 +363,12 @@ class Customer_model extends crm_model {
 		$query = $this->db->get($this->cfg['dbpref'].'customers');
 		$result = $query->row_array();
 		
-		if(!empty($result)) {
-			$exist_client   = $result['client_code'];
+		if(!empty($result['client_code'])) {
+			// $exist_client   = $result['client_code'];
 			$available_code = $result['client_code'];
 		}
 		
-		if($exist_client == '') {
+		if(empty($available_code)) {
 			$arrClientCodes = $this->create_client_code($client_name, 3);
 			$randomCode     = $this->create_client_code_randomly($client_name, 3);
 			array_push($arrClientCodes, $randomCode);
@@ -386,7 +386,7 @@ class Customer_model extends crm_model {
 				}
 			}
 		}
-		
+
 		if($available_code != '') {
 			$available_code = strtoupper($available_code);
 			$data = array('client_code'=>$available_code);
