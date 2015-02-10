@@ -60,7 +60,7 @@ $(document).ready(function(){
 				locId = ui.item.locId;
 				prepareQuoteForClient(ex_cust_id);
 				getUserForLeadAssign(regId,cntryId,stId,locId);
-			} 
+			}
 		});
 		
 		<?php
@@ -518,6 +518,7 @@ function cancelDelEdit() {
 }
 
 function editQuoteDetails(arg) {
+
     var err = [];
     if ($.trim($('#job_title_edit').val()) == '') {
         err.push('Lead title is required');
@@ -573,13 +574,23 @@ function editQuoteDetails(arg) {
             function (res) {
 				if (typeof (res) == 'object') {				
                     if (res.error == false) {
-						showMSGS('Details Successfully Updated!', csrf_token, csrf_hasf);
-                        // good to go
-                        $('.q-title').html(res.lead_title);
-                        $('.q-service-type span').html(lead_services[res.lead_service]);
-                        if(arg == 'view') {
-							window.location.href = site_base_url+"welcome/view_quote" + "/" + curr_job_id;
+						var params  = {str: 'Details Successfully Updated!'};
+
+						params[csrf_token_name] = csrf_hash_token;
+						
+						$.post("ajax/request/set_flash_data",params, 
+						function(info){
+							// good to go
+							if(arg == 'view') {
+								window.location.href = site_base_url+"welcome/view_quote/" + curr_job_id;
+							} else {
+								document.location.href = site_base_url+'welcome/edit_quote/' + curr_job_id;
+								$('.q-title').html(res.lead_title);
+								$('.q-service-type span').html(lead_services[res.lead_service]);
+							}
 						}
+						);                        
+                        
                     } else {
                         alert(res.errormsg);
                     }
