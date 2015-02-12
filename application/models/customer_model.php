@@ -602,6 +602,7 @@ class Customer_model extends crm_model {
 				$end_date  = strtotime($listProjects['date_due']);
 				$contract_strt_date = strtotime($listProjects['actual_date_start']);
 				$contract_end_date  = strtotime($listProjects['actual_date_due']);
+				$project_description = $listProjects['lead_title'] .'; ' .$listProjects['pjt_id'];
 				$timesheet_sql = '';
 				if($timesheet_projects == false) {
 					$timesheet_sql =  '  INSERT INTO  '.$timesheet_db->dbprefix('project').'   SET '; $where = '';
@@ -611,6 +612,7 @@ class Customer_model extends crm_model {
 				$timesheet_sql .= 		'						`title` = "'.$listProjects['lead_title'].'",
 																`client_id` = "'.$client['client_id'].'",
 																`project_type_id` = '.$listProjects['project_type'].',
+																`description` = "'.$project_description.'",
 																`start_date` = "'.date('Y-m-d', $strt_date).'",
 																`deadline` = "'.date('Y-m-d', $end_date).'",
 																`proj_status` = "'.$project_status.'",
