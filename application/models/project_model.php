@@ -232,6 +232,7 @@ class Project_model extends crm_model
     	$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = jb.lead_stage', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_services as jbcat', 'jbcat.sid = jb.lead_service', 'left');
     	$this->db->where('jb.lead_id', $id);
+    	$this->db->where('jb.pjt_status !=', 0);
 		$this->db->limit(1);
 		$results = $this->db->get();
         return $results->result_array();

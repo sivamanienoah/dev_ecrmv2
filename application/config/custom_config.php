@@ -75,6 +75,11 @@ $config['crm']['milestones_status'] = array(
                                     2 => 'Completed'
                                 );
 								
+$config['crm']['billing_type'] = array(
+                                    1 => 'Milestone Based',
+                                    2 => 'Monthly Based'
+                                );
+								
 $config['crm']['tasks_search']  = array(
                                     0 => 'Work In Progress',
                                     1 => 'Completed',
@@ -97,9 +102,8 @@ $config['crm']['account_emails'] = array(
 									'Accounts' => 'ssriram@enoahisolution.com',
 								    );
 
-$config['crm']['account_emails_bcc'] = array(
-									'mukesh' => 'mukesh@enoahisolution.com',
-									'hari' => 'gharihara@enoahisolution.com',
+$config['crm']['account_emails_cc'] = array(
+									'mukesh' => 'rshankar@enoahisolution.com',
 								    );									
 									
 $config['crm']['crm_admin'] = array(

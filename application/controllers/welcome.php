@@ -1398,11 +1398,14 @@ class Welcome extends crm_controller {
 			$code 					  = substr($cost_center[1], 0, 3);
 		}
 		
-		$update['project_category'] = $post_data['project_category'];
-		$update['sow_status']	    = $post_data['sow_status'];
-		$update['resource_type']	= $post_data['resource_type'];
-		$update['modified_by']   	= $this->userdata['userid'];
-		$update['date_modified']    = date('Y-m-d H:i:s');
+		$update['date_start']	       = date('Y-m-d H:i:s', strtotime($post_data['date_start']));
+		$update['date_due']	           = date('Y-m-d H:i:s', strtotime($post_data['date_due']));
+		$update['actual_worth_amount'] = $post_data['actual_worth_amount'];
+		$update['project_category']    = $post_data['project_category'];
+		$update['sow_status']	       = $post_data['sow_status'];
+		$update['resource_type']	   = $post_data['resource_type'];
+		$update['modified_by']         = $this->userdata['userid'];
+		$update['date_modified']       = date('Y-m-d H:i:s');
 		
 		$updt_project_info = $this->welcome_model->update_row('leads', $update, $project_id);
 		if($updt_project_info) {
@@ -1424,24 +1427,34 @@ class Welcome extends crm_controller {
 		
 		$lead_det = $this->welcome_model->get_lead_det($project_id);
 		
-		if( ($lead_det['project_category'] == 0) && ($lead_det['department_id_fk'] == 0) && ($lead_det['resource_type'] == 0) && ($lead_det['project_type'] == 0) ) {
+		if( ($lead_det['project_category'] == 0) || ($lead_det['department_id_fk'] == 0) || ($lead_det['resource_type'] == 0) || ($lead_det['project_type'] == 0) || ($lead_det['date_start'] == "") || ($lead_det['date_due'] == "") || ($lead_det['actual_worth_amount'] == '0.00') ) {
 		
 			$res['error'] = true;
 			$res['errortype'] = 1;
-			if($lead_det['department_id_fk'] == 0){
-				$res['errormsg'][] = 'Please Update Department! <br />';
+			if($lead_det['department_id_fk'] == 0) {
+				$res['errormsg'][] = 'Department is Required! <br />';
 			}
-			if($lead_det['project_category'] == 0){
-				$res['errormsg'][] = 'Please Update Project Category! <br />';
+			if($lead_det['project_category'] == 0) {
+				$res['errormsg'][] = 'Project Category is Required! <br />';
 			}
-			if($lead_det['resource_type'] == 0){
-				$res['errormsg'][] = 'Please Update Resource Type! <br />';
+			if($lead_det['resource_type'] == 0) {
+				$res['errormsg'][] = 'Resource Type is Required! <br />';
 			}
-			if($lead_det['project_type'] == 0){
-				$res['errormsg'][] = 'Please Update Project Type!';
+			if($lead_det['project_type'] == 0) {
+				$res['errormsg'][] = 'Project Type is Required! <br />';
+			}
+			if($lead_det['actual_worth_amount'] == '0.00') {
+				$res['errormsg'][] = 'SOW Value should be greater than Zero! <br />';
+			}
+			if($lead_det['date_start'] == "") {
+				$res['errormsg'][] = 'SOW Start Date is required! <br />';
+			}
+			if($lead_det['date_due'] == "") {
+				$res['errormsg'][] = 'SOW End Date is required!';
 			}
 			echo json_encode($res);
 			exit;
+			
 		}
 
 		$project_category_code = '';

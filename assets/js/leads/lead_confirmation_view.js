@@ -9,8 +9,46 @@ $( "#tabs" ).tabs();
 $(function() {
 	$('#succes_err_msg').empty();
 	$('#ui-datepicker-div').addClass('blockMsg');
+	
+	$('#date_start').datepicker({
+		dateFormat: 'dd-mm-yy',
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function(date) {
+			if($('#date_due').val!='')
+			{
+				$('#date_due').val('');
+			}
+			var return_date = $('#date_start').val();
+			$('#date_due').datepicker("option", "minDate", return_date);
+		},
+		beforeShow: function(input, inst) {
+			if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			}
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+	$('#date_due').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+	
+	if(project_category == 1) {
+		$('#project_center_tr').show();
+		$('#cost_center_tr').hide();
+	} else if(project_category == 2) {
+		$('#cost_center_tr').show();
+		$('#project_center_tr').hide();
+	} else {
+		$('#cost_center_tr').hide();
+		$('#project_center_tr').hide();
+	}
+	
 	datefield_datepicker();
 	monthyear_datepicker();
+
 });
 
 var updt = '';
@@ -264,7 +302,18 @@ function update_project_detail(project_id) {
         err.push('SOW status must be selected');
 		$('#sow_status_err').html('SOW status must be selected');
     }
-	 
+	if ($('#actual_worth_amount').val() == '') {
+        err.push('SOW Value is required');
+		$('#sow_value_err').html('SOW Value is required');
+    }
+	if ($('#date_start').val() == '') {
+        err.push('SOW Start Date is required');
+		$('#date_start_err').html('SOW Start Date is required');
+    }
+	if ($('#date_due').val() == '') {
+        err.push('SOW End Date is required');
+		$('#date_due_err').html('SOW End Date is required');
+    }
     if (err.length > 0) {
 		setTimeout('timerfadeout()', 6000);
 		// $('.errmsg_confirm').html('<b>Few errors occured! Please correct them and submit again!</b><br />' + err.join('<br />'));
@@ -344,6 +393,7 @@ $('#milestone-tbl').delegate( '#addMilestoneRow', 'click', function () {
 	$("#milestone-tbl tbody tr").find('.del_file').show();	
 	var obj = $(thisRow).clone().insertAfter(thisRow);
 	obj.find(".project_milestone_name,.expected_date,.month_year,.amount").val("");
+	obj.find(".project_milestone_name,.expected_date,.month_year,.amount").css('border','');
 	obj.find('.createBtn').show();
 	$('input[name^="expected_date[]"], input[name^="month_year[]"]').each(function(index){
 	$(this).attr('id',index+$(this).attr("class"));
@@ -375,9 +425,51 @@ $('#milestone-tbl').delegate( '.del_file', 'click', function () {
 });
 
 function confirm_project(project_id) 
-{	
+{
+	$("#milestone-tbl").find('.textfield').css('border-color', '');
+	var ms_error = false;
+	var rowCount = $("#milestone-tbl tbody tr").length;
+	//alert($("#milestone-tbl tbody tr").length);
+	$("#milestone-tbl tbody tr").each(function(i){
+		var innerIndex = 0;
+		var textBoxClass = [];
+		if($(this).find("td").find('.project_milestone_name').val()!="") {
+			innerIndex++;
+		} else {
+			textBoxClass.push('project_milestone_name');
+		}
+		if($(this).find("td").find('.expected_date').val()!="") {
+			innerIndex++;
+		} else {
+			textBoxClass.push('expected_date');
+		}
+		if($(this).find("td").find('.month_year').val()!="") {
+			innerIndex++;
+		} else {
+			textBoxClass.push('month_year');
+		}
+		if($(this).find("td").find('.amount').val()!="") {
+			innerIndex++;
+		} else {
+			textBoxClass.push('amount');
+		}
+		
+		currentRow = $(this);
+		
+		if((innerIndex != 0 && innerIndex !=4 && rowCount==1) || rowCount>1) {
+			ms_error = (textBoxClass.length>0) ? true : false;
+			$.each(textBoxClass, function(index, value) {
+				currentRow.find('.'+value).css('border-color', 'red');
+			});
+		}
+	});
+	
+	if(ms_error == true) {
+		return false;
+	}
+	
 	if (confirm('Are you sure you want to move \nthis lead to Project?') == true) {
-        move_project(project_id)
+        move_project(project_id);
     }
 }
 
@@ -440,6 +532,25 @@ function reloadWithMessagePjt(str, project_id)
 			document.location.href = site_base_url+'project/view_project/' + project_id;}
 		);
 
+}
+
+/*
+*@Method change_project_category
+*@Use Show and hide the project and cost center tr
+*Author eNoah - Mani.S
+*/
+function change_project_category(val)
+{
+	if(val == 1) {
+		$('#project_center_tr').show();
+		$('#cost_center_tr').hide();
+	}else if(val == 2) {
+		$('#cost_center_tr').show();
+		$('#project_center_tr').hide();
+	}else {
+		$('#cost_center_tr').hide();
+		$('#project_center_tr').hide();
+	}
 }
 
 

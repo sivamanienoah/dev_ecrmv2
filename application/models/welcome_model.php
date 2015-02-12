@@ -15,9 +15,10 @@ class Welcome_model extends crm_model {
 	*/
 	public function get_lead_detail($leadid) {
 	
-		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.custid_fk, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
-		j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division, j.lead_indicator, j.lead_status, j.lead_assign, 
-		j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.custid_fk, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division,
+		j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
+		j.department_id_fk, j.resource_type, j.project_type, j.project_category, j.cost_center, j.project_center, j.sow_status, 
+		j.date_start, j.date_due,
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name');

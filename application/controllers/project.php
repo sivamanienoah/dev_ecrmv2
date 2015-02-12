@@ -447,7 +447,9 @@ class Project extends crm_controller {
         }
         else
         {
-            echo "Project does not exist or if you are an account manager you may not be authorised to view this";
+			$this->session->set_flashdata('login_errors', array("Project does not exist."));
+			redirect('project');
+            // echo "Project does not exist or if you are an account manager you may not be authorised to view this";
         }
     }
 	

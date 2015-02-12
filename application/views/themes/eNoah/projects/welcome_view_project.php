@@ -800,7 +800,7 @@ if (get_default_currency()) {
 								$pdi ++;
 							}
 							$output .= "<tr>";
-							$output .= "<td></td>";
+							$output .= "<td></td><td></td>";
 							$output .= "<td colspan='0'><b>Total Milestone Payment :</b></td><td><b>".$pd['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
 							$output .= "</tr>";
 							$output .= "</table>";

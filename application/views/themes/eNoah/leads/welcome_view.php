@@ -1335,27 +1335,6 @@ function runSOWAjaxFileUpload() {
 	return false;
 }
 
-/*
-*@Method change_project_category
-*@Use Show and hide the project and cost center tr
-*Author eNoah - Mani.S
-*/
-function change_project_category(val)
-{
-
-	if(val == 1) {
-		$('#project_center_tr').show();
-		$('#cost_center_tr').hide();
-	}else if(val == 2) {
-		$('#cost_center_tr').show();
-		$('#project_center_tr').hide();
-	}else {
-		$('#cost_center_tr').hide();
-		$('#project_center_tr').hide();
-	}
-
-}
-
 function confirmaMoveLeadsToProject()
 {
 	var fsl_height = parseInt($(window).height()) - 80;
