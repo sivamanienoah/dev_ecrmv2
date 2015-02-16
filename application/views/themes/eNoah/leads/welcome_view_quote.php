@@ -277,7 +277,7 @@ function runAjaxFileUpload() {
 									"bAutoWidth": false,
 									"bDestroy": true,
 									"aoColumnDefs": [
-										{ 'bSortable': false, 'aTargets': [ 0,6 ] }
+										{ 'bSortable': false, 'aTargets': [ 0 ] }
 									 ]
 								});
 								$.unblockUI();
