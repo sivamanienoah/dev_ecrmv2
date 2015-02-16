@@ -3601,6 +3601,11 @@ HDOC;
 			**/
 			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list();
 			
+			/**
+			*@Initiate to get all Practice data database
+			**/
+			$data['practices'] = $this->project_model->get_practices();
+			
 			$this->load->view('leads/leads_confirmations_view', $data);
         }
 	

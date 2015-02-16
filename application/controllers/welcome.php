@@ -1402,6 +1402,8 @@ class Welcome extends crm_controller {
 		$update['date_due']	           = date('Y-m-d H:i:s', strtotime($post_data['date_due']));
 		$update['actual_worth_amount'] = $post_data['actual_worth_amount'];
 		$update['project_category']    = $post_data['project_category'];
+		$update['practice']    	       = $post_data['practice'];
+		$update['rag_status']    	   = 3;
 		$update['sow_status']	       = $post_data['sow_status'];
 		$update['resource_type']	   = $post_data['resource_type'];
 		$update['modified_by']         = $this->userdata['userid'];
@@ -1427,7 +1429,7 @@ class Welcome extends crm_controller {
 		
 		$lead_det = $this->welcome_model->get_lead_det($project_id);
 		
-		if( ($lead_det['project_category'] == 0) || ($lead_det['department_id_fk'] == 0) || ($lead_det['resource_type'] == 0) || ($lead_det['project_type'] == 0) || ($lead_det['date_start'] == "") || ($lead_det['date_due'] == "") || ($lead_det['actual_worth_amount'] == '0.00') ) {
+		if( ($lead_det['project_category'] == 0) || ($lead_det['department_id_fk'] == 0) || ($lead_det['resource_type'] == 0) || ($lead_det['project_type'] == 0) || ($lead_det['date_start'] == "") || ($lead_det['date_due'] == "") || ($lead_det['actual_worth_amount'] == '0.00') || ($lead_det['practice'] == "") ) {
 		
 			$res['error'] = true;
 			$res['errortype'] = 1;
@@ -1450,8 +1452,12 @@ class Welcome extends crm_controller {
 				$res['errormsg'][] = 'SOW Start Date is required! <br />';
 			}
 			if($lead_det['date_due'] == "") {
-				$res['errormsg'][] = 'SOW End Date is required!';
+				$res['errormsg'][] = 'SOW End Date is required! <br />';
 			}
+			if($lead_det['practice'] == "") {
+				$res['errormsg'][] = 'Practice is required!';
+			}
+			
 			echo json_encode($res);
 			exit;
 			

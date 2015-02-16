@@ -280,6 +280,10 @@ function update_project_detail(project_id) {
         err.push('Resource type must be selected');
 		$('#resource_type_err').html('Resource type must be selected');
     }
+	if ($.trim($('#practice').val()) == 'not_select') {
+        err.push('Practice must be selected');
+		$('#practice_err').html('Practice must be selected');
+    }
     if ($('#project_name').val() == '') {
         err.push('Project name is required');
 		$('#project_name_err').html('Project name is required');
