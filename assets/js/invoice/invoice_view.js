@@ -38,7 +38,7 @@ $("#advanceFiltersDash").submit(function() {
 });
 
 $(function() {
-	$('#from_date').datepicker({ 
+	/* $('#from_date').datepicker({ 
 		dateFormat: 'dd-mm-yy', 
 		changeMonth: true, 
 		changeYear: true, 
@@ -61,6 +61,16 @@ $(function() {
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
 	});
+	$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true }); */
+	
+	$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
+		if($('#to_date').val!='')
+		{
+			$('#to_date').val('');
+		}
+		var return_date = $('#from_date').val();
+		$('#to_date').datepicker("option", "minDate", return_date);
+	}});
 	$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	
 	$( "#month_year_from_date, #month_year_to_date" ).datepicker({

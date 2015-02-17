@@ -10,7 +10,7 @@ $(function() {
 	$('#succes_err_msg').empty();
 	$('#ui-datepicker-div').addClass('blockMsg');
 	
-	$('#date_start').datepicker({
+	/* $('#date_start').datepicker({
 		dateFormat: 'dd-mm-yy',
 		changeMonth: true,
 		changeYear: true,
@@ -33,6 +33,16 @@ $(function() {
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
 	});
+	$('#date_due').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true }); */
+	
+	$('#date_start').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
+		if($('#date_due').val!='')
+		{
+			$('#date_due').val('');
+		}
+		var return_date = $('#date_start').val();
+		$('#date_due').datepicker("option", "minDate", return_date);
+	}});
 	$('#date_due').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	
 	if(project_category == 1) {

@@ -1608,131 +1608,51 @@ $(function(){
 	// Sasha's quick keys
 	$('#job_log').keydown(function (e) {
 
-	if (e.ctrlKey && e.keyCode == 13) {
+		if (e.ctrlKey && e.keyCode == 13) {
 
-		// Entered values:
-		var minutesInput = $('#log_minutes');
-		var minutes = minutesInput.val();
+			// Entered values:
+			var minutesInput = $('#log_minutes');
+			var minutes = minutesInput.val();
 
-		// Check the values that are required (time and recipients)
-		//
-		// if either are empty, use prompt() dialog boxes to use them.
-		// EDIT: In fact, a prompt will use enter, so we can jam it down if needed.
-
-		var newMinutes = prompt('Time in minutes', minutes);
-		if(minutes != newMinutes) {
-			minutesInput.val(newMinutes);
-		}
-
-		var contactsText = prompt('Select contacts (min 3 letters). Seperate with a space.');
-		var contacts = contactsText.split(' ');
-		for(i in contacts) {
-			// Check the ones that match.
+			// Check the values that are required (time and recipients)
 			//
-			// Modifications needed: this needs to be case insensitive.
-			if(contacts[i].length >= 3) {
-				contacts[i].replace(/\w+/g, function(a){
-					contacts[i]  = a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
-				});
-				
-				var scope = $('.user label:contains("' + contacts[i] + '")').parent();
-				$('input[type=checkbox]', scope).attr('checked', true);
-			}
-		}
-		var recipients = 'Send to the following recipients:\n';
-		$('.user input[type=checkbox]:checked').each(
-			function () {
-				recipients += $('label', $(this).parent()).text() + '\n';
-			}
-		);
-		
-		if(confirm(recipients)) {
-			addLog();
-		}
-		return false;
-	}
-});
-	
-});
+			// if either are empty, use prompt() dialog boxes to use them.
+			// EDIT: In fact, a prompt will use enter, so we can jam it down if needed.
 
-/*
-*@ Move lead to projects
-*@ Last Changed on 26/12/2014 By Mani.S
-*/
-function is_project() {
-	alert(curr_job_id); return false;
-	var err = [];
-  
-    if ($.trim($('#department_id_fk').val()) == 'not_select') {
-        err.push('Project department must be selected');
-    }
-	if ($.trim($('#resource_type').val()) == 'not_select') {
-        err.push('Resource type must be selected');
-    }
-    if ($('#project_name').val() == '') {
-        err.push('Project name is required');
-    }
-	/*if ($('#project_types').val() == 'not_select') {
-        err.push('Project types must be selected');
-    }*/
-	if ($('#timesheet_project_types').val() == 'not_select') {
-        err.push('Timesheet project types must be selected');
-    }
-   if ($("input[name=project_category]").is(":checked") == false) {
-        err.push('Project category must be selected');
-    }else if ($("input[name=project_category]").is(":checked") == true && $("input[name=project_category]:checked").val() == 1 && $('#project_center_value').val() == 'not_select') {
-	
-		 err.push('Project center must be selected');
-	
-	}else if ($("input[name=project_category]").is(":checked") == true && $("input[name=project_category]:checked").val() == 2 && $('#cost_center_value').val() == 'not_select') {
-	
-		 err.push('Cost center must be selected');
-	
-	}	
-	if ($("input[name=sow_status]").is(":checked") == false) {
-        err.push('SOW status must be selected');
-    }
-	 
-    if (err.length > 0) {
-         alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
-		/*$.blockUI({
-			message:'<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">'+err.join('<br />')+'</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
-			css:{width:'440px'}
-		});*/
-        return false;
-    }else {
-    
-	$.blockUI({
-		message:'<h2>Processing your request...</h2>'
-	});	
-	
-	 // get form data
-        var form_data = $('#project-confirm-form').serialize()+'&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-        $.post(
-            'welcome/ajax_update_lead_status/' + curr_job_id,
-            form_data,
-            function (res) {
-                if (typeof (res) == 'object') {
-                    if (res.error == true) {
-                        // good to go
-                        alert(data.errormsg);						
-						window.location.href = site_base_url+"welcome/edit_quote" + "/" + curr_job_id +"/";
-						$.unblockUI();
-                    } else {
-                       reloadWithMessagePjt('Lead Successfully moved to Project', curr_job_id);
-                    }
-                } else {
-                    alert('Unexpected response from server!')
-					$.unblockUI();
-                }              
-				$.unblockUI();
-            },
-            "json"
-        );
-		
+			var newMinutes = prompt('Time in minutes', minutes);
+			if(minutes != newMinutes) {
+				minutesInput.val(newMinutes);
+			}
 
-	}
-}
+			var contactsText = prompt('Select contacts (min 3 letters). Seperate with a space.');
+			var contacts = contactsText.split(' ');
+			for(i in contacts) {
+				// Check the ones that match.
+				//
+				// Modifications needed: this needs to be case insensitive.
+				if(contacts[i].length >= 3) {
+					contacts[i].replace(/\w+/g, function(a){
+						contacts[i]  = a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
+					});
+					
+					var scope = $('.user label:contains("' + contacts[i] + '")').parent();
+					$('input[type=checkbox]', scope).attr('checked', true);
+				}
+			}
+			var recipients = 'Send to the following recipients:\n';
+			$('.user input[type=checkbox]:checked').each(
+				function () {
+					recipients += $('label', $(this).parent()).text() + '\n';
+				}
+			);
+			
+			if(confirm(recipients)) {
+				addLog();
+			}
+			return false;
+		}
+	});
+});
 
 function reloadWithMessagePjt(str, statusid) {
 	$.get('ajax/request/set_flash_data/' + str,{},function(data){

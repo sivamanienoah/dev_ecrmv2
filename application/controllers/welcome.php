@@ -1256,119 +1256,6 @@ class Welcome extends crm_controller {
 		}
 		
 	}
-
-	/*
-	*@method ajax_update_lead_status
-	*@param lead_id
-	*@Lead Closed & move to project
-	*/
-	public function ajax_update_lead_status($lead_id)
-	{
-        if ($lead_id != 0 && preg_match('/^[0-9]+$/', $lead_id))
-        {
-			$lead_det = $this->welcome_model->get_lead_det($lead_id);
-			
-			$customer = $this->customer_model->get_customer($lead_det['custid_fk']);
-			
-			$client_code = $customer[0]['client_code'];
-			
-			if($client_code == '') {			
-				$client_code = $this->customer_model->update_client_code($customer[0]['first_name'].$customer[0]['last_name'], $lead_det['custid_fk']);
-			}
-			$this->customer_model->customer_update($lead_det['custid_fk'], array('is_client'=>1));		
-			$this->customer_model->update_client_details_to_timesheet($client_code);	
-			
-			$update['department_id_fk'] = $this->input->post('department_id_fk');
-			if($this->input->post('project_category') == 1) {			
-				$project_center = explode('|', $this->input->post('project_center_value'));			
-				$update['project_center'] = $project_center[0];
-				$code = substr($project_center[1], 0, 3);
-			}else if($this->input->post('project_category') == 2) {
-				$cost_center = explode('|', $this->input->post('cost_center_value'));
-				$update['cost_center'] = $cost_center[0];
-				$code = substr($cost_center[1], 0, 3);
-			}
-			
-			$code = strtoupper($code);
-			
-			$month_year = date('my'); 		
-			
-			$client_projects_count = $this->customer_model->get_records_by_num('leads', array('pjt_status !='=>0, 'custid_fk'=>$lead_det['custid_fk']));
-			
-			$total_projects   = sprintf("%02d", (int)$client_projects_count+1);
-			
-			$project_code     = $code.'-'.$client_code.'-'.$total_projects.'-'.$month_year;
-			
-			$update['pjt_id'] = $project_code;
-			
-			$update['lead_title']    = $this->input->post('project_name');
-			$update['project_type']  = $this->input->post('timesheet_project_types');
-			$update['project_category'] = $this->input->post('project_category');
-			$update['resource_type'] = $this->input->post('resource_type');
-			$update['sow_status']	 = $this->input->post('sow_status');			
-			$update['pjt_status']    = 1;			
-			$update['modified_by']   = $this->userdata['userid'];
-			$update['date_modified'] = date('Y-m-d H:i:s');
-			
-			$updt_job = $this->welcome_model->update_row('leads', $update, $lead_id);
-			$pjt_id = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $lead_id, 'pjt_id');
-			$this->customer_model->update_project_details($pjt_id);
-			$json = array();
-			if ($updt_job) 
-			{
-				$ins['userid_fk'] = $this->userdata['userid'];
-				$ins['jobid_fk'] = $lead_id;
-				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = 'The Lead "'.word_limiter($lead_det['lead_title'], 4).'" is Successfully Moved to Project.';
-				$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$lead_id.'> ' .word_limiter($lead_det['lead_title'], 4).' </a> is Successfully Moved to Project.';
-
-				$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
-				$lead_owner       = $this->welcome_model->get_user_data_by_id($lead_det['belong_to']);
-				
-				// insert the new log
-				$insert_log          = $this->welcome_model->insert_row('logs', $ins);
-				
-				$user_name           = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-				$dis['date_created'] = date('Y-m-d H:i:s');
-				$print_fancydate     = date('l, jS F y h:iA', strtotime($dis['date_created']));
-				
-
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				
-				$admin_mail=implode(',',$arrSetEmails);
-			
-				//email sent by email template
-				$param = array();
-				
-				$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content_email'=>$ins_email['log_content_email'], 'signature'=>$this->userdata['signature']);
-
-				$param['to_mail'] = $lead_assign_mail[0]['email'] .','. $lead_owner[0]['email'];
-				$param['bcc_mail'] = $admin_mail;
-				$param['from_email'] = $this->userdata['email'];
-				$param['from_email_name'] = $user_name;
-				$param['template_name'] = "Lead to Project Change Notification";
-				$param['subject'] = "Lead to Project Change Notification";
-
-				$this->email_template_model->sent_email($param);
-				
-				$json['error'] = false;
-				echo json_encode($json);
-			}
-			else
-			{
-				$json['error'] = true;
-				$json['errormsg'] = 'Database update failed!';
-				echo json_encode($json);
-			}	
-        }
-        else
-		{
-			$json['error'] = true;
-			$json['errormsg'] = 'Invalid Lead ID or Stage!';
-			echo json_encode($json);
-		}
-    }
 	
 	public function update_project_info($project_id)
 	{
@@ -1556,7 +1443,7 @@ class Welcome extends crm_controller {
 			$log_ins['userid_fk']           = $this->userdata['userid'];
 			$log_ins['jobid_fk']            = $project_id;
 			$log_ins['date_created']        = date('Y-m-d H:i:s');
-			$log_ins['log_content']         = 'The Lead "'.word_limiter($lead_det['lead_title'], 4).'" is Successfully Moved to Project.';
+			$log_ins['log_content']         = 'The Lead "'.$lead_det['lead_title'].'" is Successfully Moved to Project.';
 			$ins_email['log_content_email'] = 'The Lead <a href='.$this->config->item('base_url').'project/view_project/'.$project_id.'> ' .word_limiter($lead_det['lead_title'], 4).' </a> is Successfully Moved to Project.';
 
 			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($lead_det['lead_assign']);
