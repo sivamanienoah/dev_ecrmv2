@@ -238,12 +238,8 @@ class Project extends crm_controller {
 			
 			$project_members = array();
 			$project_leaders = array();
-			
-			
-			
+		
 			//$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR);
-			
-			
 			
 			//echo '<pre>'; print_r($get_parent_folder_id);exit;
 			//echo '<pre>'; print_r($project_leaders);
@@ -278,7 +274,7 @@ class Project extends crm_controller {
 				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
-							
+
 					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 	
 						foreach($arrProjectMembers as $members){
@@ -301,8 +297,6 @@ class Project extends crm_controller {
 							}							
 						}
 					}
-							
-							
 			}
 			
 			/**
