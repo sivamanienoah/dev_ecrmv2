@@ -55,10 +55,17 @@ class Invoice_model extends crm_model {
 			$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));
 			$this->db->where('DATE(expm.invoice_generate_notify_date) <=', date('Y-m-d', strtotime($filter['to_date'])));
 		} else {
-			$from = date('Y-m-01');
-			$end  = date('Y-m-t');
-			$this->db->where('DATE(expm.invoice_generate_notify_date) >=', $from);
-			$this->db->where('DATE(expm.invoice_generate_notify_date) <=', $end);
+			if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
+				$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+			} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
+				$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+				$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
+			} else {
+				$from = date('Y-m-01');
+				$end  = date('Y-m-t');
+				$this->db->where('DATE(expm.invoice_generate_notify_date) >=', $from);
+				$this->db->where('DATE(expm.invoice_generate_notify_date) <=', $end);
+			}
 		}
 		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
 			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
