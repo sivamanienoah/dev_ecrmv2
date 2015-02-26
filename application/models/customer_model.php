@@ -463,8 +463,8 @@ class Customer_model extends crm_model {
 				if($timesheet_clients == FALSE) {						
 				
 					$sql =  '  INSERT INTO  '.$timesheet_db->dbprefix('client').'   SET '; $where = '';
-																		
-				}else {
+
+				} else {
 				
 					$sql =  '  UPDATE  '.$timesheet_db->dbprefix('client').'   SET '; $where  = '  WHERE `client_code` = "'.$listCustomers['client_code'].'"';
 				
