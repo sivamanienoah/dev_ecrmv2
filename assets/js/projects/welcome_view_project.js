@@ -931,6 +931,42 @@ function addURLtoJob()
 	*/
 	function setProjectTypes() {
 		$('#resmsg_project_types').empty();
+		var project_type = $('#project_type').val();
+		
+		if(project_type == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_project_types/',
+			dataType: 'json',
+			data: 'project_types='+project_type+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_project_types').html("<span class='ajx_success_msg'>Status Updated</span>");
+				} else {
+					$('#resmsg_project_types').show();
+					$('#resmsg_project_types').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
+	/*
+	*@Method setProjectTypes
+	*@parameters project_types, lead_id
+	*@Use update project types for particular leads
+	*@Author eNoah - Mani.S
+	*/
+	function setEconProjectTypes() {
+		$('#resmsg_econ_project_types').empty();
 		var project_types = $('#project_types').val();
 		
 		if(project_types == '') {
@@ -943,15 +979,15 @@ function addURLtoJob()
 		});
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'project/set_project_types/',
+			url: site_base_url+'project/set_econ_project_types/',
 			dataType: 'json',
 			data: 'project_types='+project_types+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
 			success: function(data) {
 				if (data.error == false) {
-					$('#resmsg_project_types').html("<span class='ajx_success_msg'>Status Updated</span>");
+					$('#resmsg_econ_project_types').html("<span class='ajx_success_msg'>Status Updated</span>");
 				} else {
-					$('#resmsg_project_types').show();
-					$('#resmsg_project_types').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+					$('#resmsg_econ_project_types').show();
+					$('#resmsg_econ_project_types').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
 				}
 				$.unblockUI();
 			}
@@ -1322,10 +1358,12 @@ function addURLtoJob()
 					$('.payment-received-mini-view1').hide();
 				}
 				if (ui.newPanel[0].id=='jv-tab-3') {				
-					checkRootReadAccess();							
-					loadExistingFiles(0);	
-					showBreadCrumbs('Files');
-					$('#filefolder_id').val('Files');
+					// checkRootReadAccess();						
+					// loadExistingFiles(0);	
+					// showBreadCrumbs('Files');
+					// $('#filefolder_id').val('Files');
+					loadExistingFiles($('#filefolder_id').val());
+					showBreadCrumbs($('#filefolder_id').val());
 				}
 				if (ui.newPanel[0].id=='jv-tab-9') {
 					loadLogs(project_jobid);

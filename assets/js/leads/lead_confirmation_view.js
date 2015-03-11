@@ -299,8 +299,12 @@ function update_project_detail(project_id) {
 		$('#project_name_err').html('Project name is required');
     }
 	if ($('#timesheet_project_types').val() == 'not_select') {
-        err.push('Project types must be selected');
-		$('#timesheet_project_types_err').html('Project types must be selected');
+        err.push('Project billing type must be selected');
+		$('#timesheet_project_types_err').html('Project billing type must be selected');
+    }
+	if ($('#project_types').val() == 'not_select') {
+        err.push('Project type must be selected');
+		$('#project_type_err').html('Project type must be selected');
     }
 	if ($("input[name=project_category]").is(":checked") == false) {
         err.push('Project category must be selected');

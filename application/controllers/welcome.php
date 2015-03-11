@@ -1262,8 +1262,11 @@ class Welcome extends crm_controller {
 		$res 	   = array();
 		$post_data = real_escape_array($this->input->post());
 		
+		// echo "<pre>"; print_r($post_data); exit;
+		
 		// [project_name] => tetst lead ititle
-		// [timesheet_project_types] => 1
+		// [timesheet_project_types]=[project_type] => 1 //billing_type
+		// [project_types] => 1
 		// [department_id_fk] => 3
 		// [cost_center_value] => 3|Cost Center
 		// [project_center_value] => 1|BPO
@@ -1273,6 +1276,7 @@ class Welcome extends crm_controller {
 		
 		$update['lead_title']    	= $post_data['project_name'];
 		$update['project_type']  	= $post_data['timesheet_project_types'];
+		$update['project_types']  	= $post_data['project_types'];
 		$update['department_id_fk'] = $post_data['department_id_fk'];
 		
 		if($post_data['project_category'] == 1) {
@@ -1330,7 +1334,10 @@ class Welcome extends crm_controller {
 				$res['errormsg'][] = 'Resource Type is Required! <br />';
 			}
 			if($lead_det['project_type'] == 0) {
-				$res['errormsg'][] = 'Project Type is Required! <br />';
+				$res['errormsg'][] = 'Project billing type is Required! <br />';
+			}
+			if($lead_det['project_types'] == 0) {
+				$res['errormsg'][] = 'Project type is Required! <br />';
 			}
 			if($lead_det['actual_worth_amount'] == '0.00') {
 				$res['errormsg'][] = 'SOW Value should be greater than Zero! <br />';

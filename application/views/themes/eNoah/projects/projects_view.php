@@ -1,4 +1,3 @@
-<?php ob_start(); ?>
 <?php require (theme_url().'/tpl/header.php'); ?>
 <?php
 $this->load->helper('custom_helper');
@@ -13,7 +12,7 @@ if (get_default_currency()) {
 ?>
 <div id="content">
 	<div class="inner">
-		<?php if($this->session->userdata('viewPjt')==1) { ?>
+		<?php if($this->session->userdata('accesspage')==1) { ?>
 			<form action="" id="pjt_search_form" name="pjt_search_form" method="post" style="float:right;">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
@@ -155,4 +154,3 @@ if (get_default_currency()) {
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/projects/projects_view.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
-<?php ob_end_flush(); ?>

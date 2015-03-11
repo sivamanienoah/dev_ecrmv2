@@ -1,0 +1,220 @@
+<?php
+
+/********************************************************************************
+File Name       : timesheet_data.php
+Created Date    : 18/02/2015
+Modified Date   : 04/03/2015
+Created By      : Sriram.S
+Modified By     : Sriram.S
+Reviewed By     : Subbiah.S
+*********************************************************************************/
+
+/**
+ * timesheet_data
+ *
+ * @class 		Timesheet_data
+ * @extends		crm_controller (application/core/CRM_Controller.php)
+ * @parent      Cron
+ * @Menu        Cron
+ * @author 		eNoah
+ * @Controller
+ */
+
+class Timesheet_data extends crm_controller 
+{
+	public $userdata;
+	
+    public function __construct()
+	{
+        parent::__construct();
+		$this->load->library('email');
+		$this->load->helper('text');
+    }
+	
+	public function index() 
+	{
+		@set_time_limit(-1); //disable the mysql query maximum execution time
+		
+		$timesheet_db = $this->load->database('timesheet', TRUE);
+		
+		$totalMonths  = 3;
+		
+		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
+		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
+		// $startMonthYearArr = date('d-m-Y', strtotime('2014-03-01')); //For uploading old data
+		
+		$monthYearIn  = 0;
+		
+		$userCostArr  = array();
+		
+		for($i=1;$i<=$totalMonths;$i++) {
+			$monthYear[] 	= $monthYearArr;
+			$monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months')); //For uploading last 4 months data
+			// $monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months', strtotime ( $startMonthYearArr ))); //For uploading old data
+		}
+		
+		echo "<br> Start Date ".$start_date = date('Y-m-01',strtotime(end($monthYear)));
+		$end_date   = date('Y-m-d'); //For uploading last 4 months data
+		// echo "<br> End Date ".$end_date   = date('Y-m-d', strtotime('2014-03-01')); //For uploading old data
+		
+		// echo "<pre>"; print_r($monthYear);
+		
+		$monthYearIn = implode("','",$monthYear);
+		
+		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') ";
+		
+		// echo $sql; #exit;
+		// echo "<br>";
+		$query  = $timesheet_db->query($sql);
+		$result = $query->result_array();
+		
+		if(!empty($result)) {
+			foreach($result as $row) {
+				$userCostArr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'] + $row['overheads_cost'];
+			}
+		}
+		
+		ksort($userCostArr);
+
+		echo "<br>Started = ".date("Y-m-d H:i:s");
+		$started_at  = date("Y-m-d H:i:s");
+		
+		$times_sql  = 	"SELECT  
+						c.client_id,c.client_code, 
+						p.project_code,
+						u.username,u.emp_id,concat(u.first_name,' ',u.last_name) as empname,
+
+						t.resoursetype, 
+						YEAR(t.start_time) entry_year,Monthname(t.start_time) entry_month,
+						t.start_time,t.end_time, t.duration,(t.duration/60) as duration_hours, 
+
+						t.added_by, t.added_date, t.modified_by, t.modified_date
+						FROM enoah_times t
+						left join enoah_user u on u.username=t.uid
+						left join enoah_project p on p.proj_id=t.proj_id
+						left join enoah_client c on c.client_id=p.client_id
+						left join enoah_billrate_type brt on brt.billrate_type_id=t.billrate_type_id
+						WHERE
+						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
+						p.title is not null AND 
+						p.project_code is not null
+						order by p.client_id,t.proj_id,t.uid,t.start_time";
+		
+		// echo $times_sql; exit;
+
+		$times_query  = $timesheet_db->query($times_sql);
+		$times_result = $times_query->result_array();
+		
+		if(!empty($times_result)) {
+		
+			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
+			//echo $this->db->last_query();
+			
+		}
+		
+		if($del_status) {
+		
+			foreach($times_result as $key=>$val) {
+				
+				$costPerHour = 0;
+				
+				if( !empty($val['emp_id']) && !empty($val['entry_year']) && !empty($val['entry_month']) ) {
+				
+					$cost = $userCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']]; 
+					
+					if(!empty($cost)) {
+						$costPerHour = $cost;
+					} else {
+						if(is_null($userCostArr['final_cost'][$val['emp_id']])){ 
+							ksort($userCostArr[$val['emp_id']]);
+							$arr = end($userCostArr[$val['emp_id']]);
+							sort($arr);
+							$costPerHour = end($arr);
+							if(!is_null($costPerHour)){
+								$userCostArr['final_cost'][$val['emp_id']]=$costPerHour;
+							}
+						}else{
+							$costPerHour =  $userCostArr['final_cost'][$val['emp_id']];
+						}
+
+						if( is_null($costPerHour) ) {
+							if(!is_null($userCostArr['final_cost'][$val['emp_id']])) { 
+								$costPerHour = $userCostArr['final_cost'][$val['emp_id']];
+							} else { 
+								$sql_finalcost = "SELECT round((direct_cost+overheads_cost),2) as cost  FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE uc.employee_id= '".$val['emp_id']."' order by year desc, month desc limit 0,1 ";
+
+								 // echo "<br>sql_finalcost = ".$sql_finalcost;
+
+								$query_finalcost  = $timesheet_db->query($sql_finalcost);
+								$result_finalcost = $query_finalcost->row_array();
+								if($result_finalcost["cost"]) {
+									$userCostArr['final_cost'][$val['emp_id']] = $result_finalcost["cost"];
+									$costPerHour =  $result_finalcost["cost"];
+								}
+							}
+						}
+					}
+				}
+			
+				$ins_row[$key] = $val;
+				$ins_row[$key]['cost_per_hour'] = (!is_null($costPerHour)) ? $costPerHour : '';
+				$costPerHr = (!is_null($costPerHour)) ? $costPerHour : 0;
+				$ins_row[$key]['resource_duration_cost'] = ($costPerHr * $val['duration_hours']);
+
+				$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
+				// echo $this->db->last_query() . "<br />";
+			}
+		}
+		
+		echo "<br>End Time = ".date("Y-m-d H:i:s");
+		$ended_at = date("Y-m-d H:i:s");
+		
+		if($ins_res) {
+		
+			$upload_status = "Insert successfully";
+			echo "<br>Insert successfully";
+			
+			$this->load->model('email_template_model');
+			
+			$param = array();
+
+			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
+
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com, raamsri14@gmail.com';
+			$param['from_email'] 	  = 'webmaster@enoahisolution.com';
+			$param['from_email_name'] = 'Webmaster';
+			$param['template_name']   = "Timesheet data uploaded status";
+			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
+			
+			$this->email_template_model->sent_email($param);
+
+			
+		} else {
+			
+			echo "<br>Insertion Failed";
+			
+			$upload_status = "Failed to Insert the timesheet data";
+
+			$this->load->model('email_template_model');
+			
+			$param = array();
+
+			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
+
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com, raamsri14@gmail.com';
+			$param['from_email'] 	  = 'webmaster@enoahisolution.com';
+			$param['from_email_name'] = 'Webmaster';
+			$param['template_name']   = "Timesheet data uploaded status";
+			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
+			
+			$this->email_template_model->sent_email($param);
+			
+			
+		}
+
+		
+
+	}
+
+}
+?>

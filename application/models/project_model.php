@@ -39,13 +39,17 @@ class Project_model extends crm_model
 		$from_date 	= $from_date;
 		$to_date	= $to_date;
 		$divisions	= $divisions;
-	
+		
+
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+		
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
+			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
+			
 			if(!empty($stage)){	
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
@@ -70,6 +74,7 @@ class Project_model extends crm_model
 			if(!empty($billing_type)) {
 				$this->db->where("j.billing_type", $billing_type);
 			}
+			
 			if(!empty($from_date)) {
 				switch($datefilter) {
 					case 1:
@@ -98,12 +103,7 @@ class Project_model extends crm_model
 					break;
 				}
 			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && !empty($keyword)){	
-				
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
-			}
-			$this->db->order_by("j.lead_id", "desc");
+			
 		} else {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
@@ -130,26 +130,32 @@ class Project_model extends crm_model
 				}
 			}
 			$result_ids = array_unique($res);
-			$curusid= $this->session->userdata['logged_in_user']['userid'];
+			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, j.division, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm');
-			$this->db->from($this->cfg['dbpref'] . 'customers as c');
-			$this->db->join($this->cfg['dbpref'] . 'leads as j', 'j.custid_fk = c.custid AND j.lead_id != "null"');
+			
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->from($this->cfg['dbpref'] . 'leads as j');
+			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
+			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
+			//For Regionwise filtering
 			$this->db->where_in('j.lead_id', $result_ids);
-
-			if(!empty($stage)) {
-				$this->db->where("j.lead_status", 4);
+		
+			if(!empty($stage)){	
+				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
-			if(!empty($customer)) {		
-				$this->db->where_in('j.custid_fk',$customer);		
+			if(!empty($customer)){		
+				$this->db->where_in('j.custid_fk',$customer); 
 			}
+			/* if(!empty($pm)){		
+				$this->db->where_in('j.assigned_to',$pm); 
+			} */
 			if(!empty($services)){		
-				$this->db->where_in('j.lead_service',$services); 
+				$this->db->where_in('j.lead_service',$services);
 			}
 			if(!empty($practices)){		
 				$this->db->where_in('j.practice',$practices);
@@ -157,9 +163,10 @@ class Project_model extends crm_model
 			if(!empty($divisions)){		
 				$this->db->where_in('j.division',$divisions);
 			}
-			if(!empty($billing_type) && $billing_type == 2) {
+			if(!empty($billing_type)) {
 				$this->db->where("j.billing_type", $billing_type);
 			}
+			
 			if(!empty($from_date)) {
 				switch($datefilter) {
 					case 1:
@@ -188,13 +195,15 @@ class Project_model extends crm_model
 					break;
 				}
 			}
-			if($keyword != 'Project Title, Name or Company' && !empty($keyword)){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
-			}
-			$this->db->order_by("j.lead_id", "desc");
-			
+
 		}
+		
+		if($keyword != 'Project Title, Name or Company' && !empty($keyword)) {	
+			$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+			$this->db->where($invwhere);
+		}
+		
+		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();		
@@ -476,20 +485,21 @@ class Project_model extends crm_model
 		return $query->result_array();
 	} */
 	
-	public function get_timesheet_data($pjt_code, $lead_id, $bill_type, $st_date=false)
+	public function get_timesheet_data($pjt_code, $lead_id, $bill_type, $st_date=false, $groupby_type)
 	{
 		//$bill_type == 3 for view the particular month metrics data
 		$start_date = $end_date = '';
 		switch($bill_type){
 			case 1:
-				if(!empty($lead_id)) {
+				/* if(!empty($lead_id)) {
 					$getActDate = $this->get_quote_data($lead_id);
 				}
 				if(!empty($getActDate[0]['date_created'])) {
 					$start_date = date('Y-m-d', strtotime($getActDate[0]['date_created']));
 				} else {
 					$start_date = '0000-00-00';
-				}
+				} */		
+				$start_date = '2006-01-01';
 				$end_date   = date('Y-m-d');
 			break;
 			case 2:
@@ -502,7 +512,7 @@ class Project_model extends crm_model
 			break;
 		}
 
-		$timesheet_db = $this->load->database('timesheet', TRUE);
+		/* $timesheet_db = $this->load->database('timesheet', TRUE);
 		
 		$sql = "SELECT ROUND((ct.direct_cost + ct.overheads_cost), 2) as cost, Monthname(t.start_time) as month_name, YEAR(t.start_time) as yr, u.emp_id, u.first_name, u.last_name, u.username, t.start_time AS start_time_str, t.end_time AS end_time_str, SUM((t.duration/60)) as Duration, t.resoursetype, WEEK(t.start_time) AS Week, p.project_type_id, pt.project_type_name
 		FROM ".$timesheet_db->dbprefix('user')." AS u
@@ -510,12 +520,33 @@ class Project_model extends crm_model
 		LEFT JOIN ".$timesheet_db->dbprefix('user_cost')." as ct ON ct.employee_id = u.emp_id AND ct.month=MONTH(t.start_time) AND ct.year=YEAR(t.start_time) 
 		LEFT JOIN ".$timesheet_db->dbprefix('project')." as p ON p.proj_id = t.proj_id
 		LEFT JOIN ".$timesheet_db->dbprefix('project_types')." as pt ON pt.project_type_id = p.project_type_id
-		WHERE ((DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."')) AND u.status='ACTIVE' AND p.project_code = '".$pjt_code."'
+		WHERE ((DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."')) AND p.project_code = '".$pjt_code."'
 		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
 		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
 		
 		// echo $sql; EXIT;
 		$query = $timesheet_db->query($sql);
+		return $query->result_array(); */
+
+		// $where_condn = " ((DATE(ts.start_time) >= '".$start_date."') AND (DATE(ts.end_time) <= '".$end_date."')) ";
+		
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, sum( ts.`resource_duration_cost`) as duration_cost');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		$this->db->where("ts.project_code",$pjt_code);
+		$this->db->where("DATE(ts.start_time) >= ",$start_date);
+		$this->db->where("DATE(ts.end_time) <= ",$end_date);
+		if($groupby_type == 1) {
+			$this->db->group_by(array("ts.resoursetype"));
+		} else if($groupby_type == 2) {
+			$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		}
+		
+		$query = $this->db->get();
+		
+		// echo $this->db->last_query() . "<br />";
+		// exit;
+		
 		return $query->result_array();
 	}
 	
@@ -756,11 +787,11 @@ class Project_model extends crm_model
 	 */
 	public function get_timesheet_project_types()
 	{
-		$timesheet_db = $this->load->database('timesheet',TRUE);		
-		$timesheet_db->select('*');
-		$timesheet_db->from($timesheet_db->dbprefix('project_types'));		
-		$query = $timesheet_db->get();
-		return $query->result_array();		
+		$this->db->select('id as project_type_id,project_billing_type as project_type_name');
+		$this->db->where('status',1);
+    	$this->db->order_by('id',"asc");
+		$query = $this->db->get($this->cfg['dbpref'] . 'project_billing_type');
+		return $query->result_array();
 	}
 	
 }

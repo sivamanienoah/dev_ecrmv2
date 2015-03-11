@@ -162,35 +162,34 @@ button.ui-datepicker-current { display: none; }
 		</div>
 		
 		<div id="tabs-project" >
-			<?php #echo "<pre>"; print_r($quote_data); ?>
+			<?php #echo "<pre>"; print_r($quote_data); exit; ?>
 			<!--p class="clearfix" ><h3>Project Details*</h3></p-->
 			<form action="" method="post" id="project-confirm-form" onsubmit="return false;">
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="errmsg_confirm ajx_failure_msg"></div>
 				<table class="layout" cellspacing="10">
 					<tr>
-						<td width="115"><strong>Departments:*</strong></td>
+						<td width="115"><strong>Project Name:*</strong></td>
 						<td width="200">
-							<select name="department_id_fk" id="department_id_fk" class="textfield width200px" tabindex="1">
+							<input type="text" name="project_name" id="project_name" class="textfield" style=" width:200px" value="<?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?>" tabindex="1" />
+							<div class="ajx_failure_msg" id="project_name_err"></div>
+						</td>
+						<td width="115"><strong>Practice:*</strong></td>
+						<td width="200">					
+							<select name="practice" id="practice" class="textfield width200px" tabindex="10">
 								<option value="not_select">Please Select</option>
 								<?php 
-									if(isset($departments) && !empty($departments)) {
-										foreach ($departments as $listDepartments) 
-										{
+								if(isset($practices) && !empty($practices)) {
+									foreach ($practices as $practice) 
+									{
 								?>
-									<option value="<?php echo $listDepartments['department_id'] ?>" <?php echo ($quote_data['department_id_fk'] == $listDepartments['department_id']) ? ' selected="selected"' : '' ?> > <?php echo $listDepartments['department_name'] ?> </option>
+									<option value="<?php echo $practice['id'] ?>" <?php echo ($quote_data['practice'] == $practice['id']) ? ' selected="selected"' : '' ?>><?php echo $practice['practices'] ?></option>
 								<?php
-										}
 									}
+								}
 								?>
 							</select>
-							<div class="ajx_failure_msg" id="department_err"></div>
-						</td>
-						<td><strong>SOW Status:*</strong></td>
-						<td>					
-							<label for="sow_status_signed"><input type="radio" name="sow_status" <?php echo ($quote_data['sow_status']==1) ?" checked='checked'" : "";  ?> id="sow_status_signed" value="1" tabindex="10" /> Signed</label>
-							<label for="sow_status_unsigned"><input type="radio" name="sow_status" id="sow_status_unsigned" <?php echo ($quote_data['sow_status']==0) ?" checked='checked'" : "";  ?> value="0" tabindex="11" /> Un signed</label>
-							<div class="ajx_failure_msg" id="sow_status_err"></div>
+							<div class="ajx_failure_msg" id="practice_err"></div>							
 						</td>
 					</tr>
 					<tr>
@@ -211,27 +210,40 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="resource_type_err"></div>
 						</td>
+						<td><strong>SOW Status:*</strong></td>
+						<td>					
+							<label for="sow_status_signed"><input type="radio" name="sow_status" <?php echo ($quote_data['sow_status']==1) ?" checked='checked'" : "";  ?> id="sow_status_signed" value="1" tabindex="11" /> Signed</label>
+							<label for="sow_status_unsigned"><input type="radio" name="sow_status" id="sow_status_unsigned" <?php echo ($quote_data['sow_status']==0) ?" checked='checked'" : "";  ?> value="0" tabindex="12" /> Un signed</label>
+							<div class="ajx_failure_msg" id="sow_status_err"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><strong>Departments:*</strong></td>
+						<td>
+							<select name="department_id_fk" id="department_id_fk" class="textfield width200px" tabindex="3">
+								<option value="not_select">Please Select</option>
+								<?php 
+									if(isset($departments) && !empty($departments)) {
+										foreach ($departments as $listDepartments) 
+										{
+								?>
+									<option value="<?php echo $listDepartments['department_id'] ?>" <?php echo ($quote_data['department_id_fk'] == $listDepartments['department_id']) ? ' selected="selected"' : '' ?> > <?php echo $listDepartments['department_name'] ?> </option>
+								<?php
+										}
+									}
+								?>
+							</select>
+							<div class="ajx_failure_msg" id="department_err"></div>
+						</td>
 						<td width="115"><strong>SOW Value:*</strong></td>
 						<td width="200">
 							<input type="text" name="expect_worth_name" id="expect_worth_name" class="textfield" style=" width:23px" readonly value="<?php echo $quote_data['expect_worth_name']; ?>" />
-							<input type="text" name="actual_worth_amount" id="actual_worth_amount" class="textfield" style=" width:163px" value="<?php echo $quote_data['actual_worth_amount']; ?>" tabindex="12" />
+							<input type="text" name="actual_worth_amount" id="actual_worth_amount" class="textfield" style=" width:163px" value="<?php echo $quote_data['actual_worth_amount']; ?>" tabindex="13" />
 							<div class="ajx_failure_msg" id="sow_value_err"></div>
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Project Name:*</strong></td>
-						<td>
-							<input type="text" name="project_name" id="project_name" class="textfield" style=" width:200px" value="<?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?>" tabindex="3" />
-							<div class="ajx_failure_msg" id="project_name_err"></div>
-						</td>
-						<td width="115"><strong>Planned Start Date (SOW Start Date):*</strong></td>
-						<td width="200">
-							<input type="text" data-calendar="true" name="date_start" id="date_start" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" readonly tabindex="13" />
-							<div class="ajx_failure_msg" id="date_start_err"></div>
-						</td>
-					</tr>
-					<tr>
-						<td><strong>Project Types:*</strong></td>
+						<td><strong>Project Billing Type:*</strong></td>
 						<td>
 							<select name="timesheet_project_types" id="timesheet_project_types" class="textfield width200px" tabindex="4">
 								<option value="not_select">Please Select</option>
@@ -248,39 +260,34 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="timesheet_project_types_err"></div>
 						</td>
-						<td width="115"><strong>Planned End Date (SOW End Date):*</strong></td>
+						<td width="115"><strong>Planned Start Date (SOW Start Date):*</strong></td>
 						<td width="200">
-							<input type="text" data-calendar="true" name="date_due" id="date_due" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" readonly tabindex="14" />
-							<div class="ajx_failure_msg" id="date_due_err"></div>
+							<input type="text" data-calendar="true" name="date_start" id="date_start" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" readonly tabindex="14" />
+							<div class="ajx_failure_msg" id="date_start_err"></div>
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Practice:*</strong></td>
+						<td><strong>Project Type:*</strong></td>
 						<td>					
-							<select name="practice" id="practice" class="textfield width200px" tabindex="5">
+							<select name="project_types" id="project_types" class="textfield width200px" tabindex="5">
 								<option value="not_select">Please Select</option>
 								<?php 
-								if(isset($practices) && !empty($practices)) {
-									foreach ($practices as $practice) 
+								if(isset($project_types) && !empty($project_types)) {
+									foreach ($project_types as $type) 
 									{
 								?>
-									<option value="<?php echo $practice['id'] ?>" <?php echo ($quote_data['practice'] == $practice['id']) ? ' selected="selected"' : '' ?>><?php echo $practice['practices'] ?></option>
+									<option value="<?php echo $type['id'] ?>" <?php echo ($quote_data['project_types'] == $type['id']) ? ' selected="selected"' : '' ?>><?php echo $type['project_types'] ?></option>
 								<?php
 									}
 								}
 								?>
 							</select>
-							<div class="ajx_failure_msg" id="practice_err"></div>							
+							<div class="ajx_failure_msg" id="project_type_err"></div>							
 						</td>
-						<td><strong>Browse file (SOW):</strong></td>
-						<td>					
-							<form name="payment_ajax_file_upload">
-								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-								<div id="upload-container">
-									<input type="file" title='upload' class="textfield" multiple id="sow_ajax_file_uploader" name="sow_ajax_file_uploader[]" onchange="return runSOWAjaxFileUpload();" tabindex="15" /><input type="hidden" id="exp_type" value="">									
-								</div>
-							</form>	
-							<div id="sowUploadFile"></div>							
+						<td width="115"><strong>Planned End Date (SOW End Date):*</strong></td>
+						<td width="200">
+							<input type="text" data-calendar="true" name="date_due" id="date_due" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" readonly tabindex="15" />
+							<div class="ajx_failure_msg" id="date_due_err"></div>
 						</td>
 					</tr>
 					<tr>
@@ -289,6 +296,16 @@ button.ui-datepicker-current { display: none; }
 							<label for="project_center"><input type="radio" name="project_category" onclick="change_project_category(1);" id="project_center" <?php echo ($quote_data['project_category']==1) ? "checked='checked'" : ""; ?> value="1" tabindex="6" /> Profit Center</label>
 							<label for="cost_center"><input type="radio" name="project_category" id="cost_center" onclick="change_project_category(2);" <?php echo ($quote_data['project_category']==2) ? "checked='checked'" : ""; ?> value="2" tabindex="7" /> Cost Center</label>
 							<div class="ajx_failure_msg" id="project_category_err"></div>							
+						</td>
+						<td><strong>Browse file (SOW):</strong></td>
+						<td>					
+							<form name="payment_ajax_file_upload">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<div id="upload-container">
+									<input type="file" title='upload' class="textfield" multiple id="sow_ajax_file_uploader" name="sow_ajax_file_uploader[]" onchange="return runSOWAjaxFileUpload();" tabindex="16" /><input type="hidden" id="exp_type" value="">									
+								</div>
+							</form>	
+							<div id="sowUploadFile"></div>							
 						</td>
 					</tr>
 					<tr id="project_center_tr" style="display:none;">
@@ -333,7 +350,7 @@ button.ui-datepicker-current { display: none; }
 
 					<tr>
 						<td colspan="4">
-							<button type="submit" class="positive" style="float:right;" onclick="update_project_detail('<?php echo $project_id; ?>'); return false;" tabindex="16" >Update</button>
+							<button type="submit" class="positive" style="float:right;" onclick="update_project_detail('<?php echo $project_id; ?>'); return false;" tabindex="17" >Update</button>
 						</td>
 					</tr>
 				</table>

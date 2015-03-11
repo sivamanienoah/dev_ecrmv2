@@ -245,12 +245,12 @@ class Request extends crm_controller {
 		 
 		// echo '<pre>'; print_r($arrLeadInfo); exit;
 
-			if($check_permissions == 0 && $user_data['role_id'] != 1) {			
+			/* if($check_permissions == 0 && $user_data['role_id'] != 1) {			
 				$this->upload_error = 'You have no permissions to upload file';
 				$json['error'] = TRUE;
 				$json['msg']   = $this->upload_error;
 				echo json_encode($json); exit;			
-			}
+			} */
 				
 		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
 
@@ -393,39 +393,36 @@ class Request extends crm_controller {
 		if(!empty($get_parent_data)) {
 			
 			foreach($get_parent_data as $res) {
-			
-			// CHECK ACCESS PERMISSIONS START HERE //		
-			$check_permissions =  $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');	
-			
-			
+				
+				// CHECK ACCESS PERMISSIONS START HERE //		
+				// $check_permissions = $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');//check_permission
+
+				// if($check_permissions == 1 || $userdata['role_id'] == 1) { //check_permission
 						
-			if($check_permissions == 1 || $userdata['role_id'] == 1) {
-					
-				if($res['folder_id'] == $fparent_id) {				
-					$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);					
-				} else {			
-					$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
-				}
+					if($res['folder_id'] == $fparent_id) {				
+						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);					
+					} else {			
+						$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
+					}
+				// } //check_permission
+				
 			}
-			
-		}
-	}	
+		}	
 
 		
 		if(!empty($get_files)) {
 		
 			foreach($get_files as $files) {
 			
-			// CHECK ACCESS PERMISSIONS START HERE //		
-			$check_permissions =  $this->check_access_permissions($job_id, 'file_id', $files['file_id'], 'read');	
+				// CHECK ACCESS PERMISSIONS START HERE //		
+				// $check_permissions =  $this->check_access_permissions($job_id, 'file_id', $files['file_id'], 'read'); //check_permission
+					
+				// if($check_permissions == 1 || $userdata['role_id'] == 1) {
 				
-			if($check_permissions == 1 || $userdata['role_id'] == 1) {
-			
-				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
+					$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
+				// }
 			}
-			
-		}
-	}		
+		}		
 		
 		//echo '<pre>'; print_r($file_array);
 		$jobs_files_html = '';
@@ -453,7 +450,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'">';
 						
-						$file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$fname;
+						// $file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$fname;
 						
 						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a>';
 						
@@ -465,7 +462,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
 					} else {					
 					if($fparent_id == 0) $fname = 'Root';	
-						$jobs_files_html .= "<input type='hidden' name='current_folder_parent_id' id='current_folder_parent_id' value='".$file_id."'>";
+						// $jobs_files_html .= "<input type='hidden' name='current_folder_parent_id' id='current_folder_parent_id' value='".$file_id."'>";
 						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
@@ -584,27 +581,24 @@ class Request extends crm_controller {
 		
 		// CHECK ACCESS PERMISSIONS END HERE //	
 		
-		$check_permissions =  $this->check_access_permissions($af_data['aflead_id'], 'folder_id', $af_data['add_destiny'], 'write');	
-		 $user_data = $this->session->userdata('logged_in_user');
-		 
-		
+		// $check_permissions =  $this->check_access_permissions($af_data['aflead_id'], 'folder_id', $af_data['add_destiny'], 'write');	
+		// $user_data = $this->session->userdata('logged_in_user');
 
-				$project_members = $this->request_model->get_project_members($af_data['aflead_id']); // This array to get a project normal members(Developers) details.
-				$project_leaders = $this->request_model->get_project_leads($af_data['aflead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				$arrLeadInfo = $this->request_model->get_lead_info($af_data['aflead_id']); // This function to get a current lead informations.				 
+		// $project_members = $this->request_model->get_project_members($af_data['aflead_id']); // This array to get a project normal members(Developers) details.
+		// $project_leaders = $this->request_model->get_project_leads($af_data['aflead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.
+		// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.
+		// $arrLeadInfo = $this->request_model->get_lead_info($af_data['aflead_id']); // This function to get a current lead informations.
 		
-		 
-			if($check_permissions == 0 && $user_data['role_id'] != 1) {
-			
-				$this->upload_error = 'You have no permissions to create folder here';
-				$htm['af_reload'] = $af_data['add_destiny'];
-				$htm['error'] = TRUE;
-				$htm['af_msg']   = $this->upload_error;
-				echo json_encode($htm); exit;
-			
-			}
+		/* if($check_permissions == 0 && $user_data['role_id'] != 1) {
+		
+			$this->upload_error = 'You have no permissions to create folder here';
+			$htm['af_reload'] = $af_data['add_destiny'];
+			$htm['error'] = TRUE;
+			$htm['af_msg']   = $this->upload_error;
+			echo json_encode($htm); exit;
+		
+		} */
 		// CHECK ACCESS PERMISSIONS START HERE //	
 		
 		$af_condn            = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
@@ -625,14 +619,14 @@ class Request extends crm_controller {
 			$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
 			
 		    /* #################  Permission add folder owner start here  ################## */
-			if($user_data['role_id'] != 1) {
+			/* if($user_data['role_id'] != 1) {
 			$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$af_data['aflead_id'],'folder_id'=>$res_insert,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
 			$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
-			}
+			} */
 			/* #################  Permission add folder owner end here  ################## */
 			
 			/* #################  Assing permission to all users by lead id start here  ################## */
-				if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 	
 						foreach($arrProjectMembers as $members){
 							if($user_data['userid'] != $members['userid']) {
@@ -656,7 +650,7 @@ class Request extends crm_controller {
 							}
 							}
 						}
-				}
+				} */
 			/* #################  Assing permission to all users by lead id end here  ################## */
 			 
 			$htm['af_msg'] = '<span class="ajx_success_msg"><h5>'.$af_data['new_folder'].' has been Added</h5></span>';
@@ -678,7 +672,7 @@ class Request extends crm_controller {
 		$sf_data = real_escape_array($this->input->post());		
 		
 		$job_id = $sf_data['lead_id'];
-		$parent_folder_id = $sf_data['currently_selected_folder'];
+		// $parent_folder_id = $sf_data['currently_selected_folder'];
 		
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$chge_access = 1;
@@ -687,43 +681,39 @@ class Request extends crm_controller {
 		}
 
 		$userdata = $this->session->userdata('logged_in_user');
-		$arrLeadInfo = $this->request_model->get_lead_info($job_id);
+		// $arrLeadInfo = $this->request_model->get_lead_info($job_id);
 		$this->load->helper('file');
 
 		//intial step - Showing 1st child folders and root files
 		$get_parent_data = $this->request_model->search_folder($job_id, $parent_folder_id, $sf_data['search_input']);
-		
 		
 		$fcpath = UPLOAD_PATH; 
 		$f_dir = $fcpath . 'files/' . $job_id . '/';
 		
 		$file_array = array();
 		
-						
-		
 		if(!empty($get_parent_data)) {
-			foreach($get_parent_data as $res) {			
-			$check_permissions =  $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');				
-			if($check_permissions == 1 || $userdata['role_id'] == 1) {	
+			foreach($get_parent_data as $res) {	
+			// $check_permissions =  $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');
+			// if($check_permissions == 1 || $userdata['role_id'] == 1) {
 			
 				$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
 				
-				}
+				// }
 			}
 		}
 		$get_files = $this->request_model->search_file($job_id, $parent_folder_id, $sf_data['search_input']);
 		
-		
 		if(!empty($get_files)) {
 			foreach($get_files as $files) {
 			
-			$check_permissions_files =  $this->check_access_permissions($job_id, 'file_id', $files['file_id'], 'read');			
+			// $check_permissions_files =  $this->check_access_permissions($job_id, 'file_id', $files['file_id'], 'read');
 			
-			if($check_permissions_files == 1 || $userdata['role_id'] == 1) {	
+			// if($check_permissions_files == 1 || $userdata['role_id'] == 1) {
 			
 				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
 				
-				}
+				// }
 			}
 		}
 		
@@ -782,7 +772,7 @@ class Request extends crm_controller {
 	 */
 	public function get_moveall_file_tree_struct() {
 		$data    = real_escape_array($this->input->post());
-		$user_data = $this->session->userdata('logged_in_user'); //Mani
+		// $user_data = $this->session->userdata('logged_in_user'); //Mani
 
 		$mvfolder = array();
 		
@@ -796,25 +786,22 @@ class Request extends crm_controller {
 		$res     = '';
 		$res['lead_id'] = $data['curr_job_id'];
 		
-		$arrLeadInfo = $this->request_model->get_lead_info($data['curr_job_id']);
+		// $arrLeadInfo = $this->request_model->get_lead_info($data['curr_job_id']);
 		foreach($result as $fid=>$fname){
 			if($fname == $data['curr_job_id']) {
 				$fname = 'Root';
 			}
 			
 			// CHECK ACCESS PERMISSIONS START HERE //			
-			$check_permissions =  $this->check_access_permissions($data['curr_job_id'], 'folder_id', $fid, 'write');		
-
-
+			// $check_permissions =  $this->check_access_permissions($data['curr_job_id'], 'folder_id', $fid, 'write');
 	
-			if($check_permissions == 1 || $user_data['role_id'] == 1 || $arrLeadInfo['belong_to'] == $user_data['userid'] || $arrLeadInfo['assigned_to'] == $user_data['userid'] || $arrLeadInfo['lead_assign'] == $user_data['userid']) {
+			// if($check_permissions == 1 || $user_data['role_id'] == 1 || $arrLeadInfo['belong_to'] == $user_data['userid'] || $arrLeadInfo['assigned_to'] == $user_data['userid'] || $arrLeadInfo['lead_assign'] == $user_data['userid']) {
 			
 				$res['tree_struture'] .= "<option value='".$fid."'>".$fname."</option>";
-						
-			}
+
+			// }
 			// CHECK ACCESS PERMISSIONS END HERE //	
 			
-					
 		}
 		echo json_encode($res);
 		exit;
@@ -826,27 +813,21 @@ class Request extends crm_controller {
 	 */
 	public function mapallfiles() {
 		$madata = real_escape_array($this->input->post());
-		 $user_data = $this->session->userdata('logged_in_user'); //Mani
-		 $arrLeadInfo = $this->request_model->get_lead_info($madata['mall_lead_id']);
+		// $user_data = $this->session->userdata('logged_in_user'); //Mani
+		// $arrLeadInfo = $this->request_model->get_lead_info($madata['mall_lead_id']);
 		
 		// CHECK ACCESS PERMISSIONS START HERE //			
-			$check_permissions =  $this->check_access_permissions($madata['mall_lead_id'], 'folder_id', $madata['move_destiny'], 'write');
+			// $check_permissions =  $this->check_access_permissions($madata['mall_lead_id'], 'folder_id', $madata['move_destiny'], 'write');
 
-		
-
-
-			
-			if($check_permissions == 0 && $user_data['role_id'] != 1) {
+			/* if($check_permissions == 0 && $user_data['role_id'] != 1) {
 			
 				$htm['mf_reload'] = $madata['move_destiny'];
 				$htm['error'] = TRUE;
 				$htm['mf_msg'] = '<span class="ajx_failure_msg"><h5>you have no permissions move file(s) or folder(s) to you selected folder</h5></span>';
 				echo json_encode($htm); exit;
 			
-			}
+			} */
 		// CHECK ACCESS PERMISSIONS END HERE //	
-		
-		
 		
 		$mov_folder = array();
 		$mov_file   = array();
@@ -861,27 +842,19 @@ class Request extends crm_controller {
 		if(!empty($mov_folder)) {
 			$html['res_folder'] = FALSE;
 			foreach($mov_folder as $mv_fo) {
-			
-			
-				
+
 			// CHECK ACCESS PERMISSIONS START HERE //		
-			$get_moveing_folder_info = $this->request_model->getInfo($madata['mall_lead_id'], $mv_fo);			
-			$check_permissions =  $this->check_access_permissions($madata['mall_lead_id'], 'folder_id', $mv_fo, 'delete');			
+			// $get_moveing_folder_info = $this->request_model->getInfo($madata['mall_lead_id'], $mv_fo);		
+			// $check_permissions =  $this->check_access_permissions($madata['mall_lead_id'], 'folder_id', $mv_fo, 'delete');
 			
-			
-			
-			
-			if($check_permissions == 0 && $user_data['role_id'] != 1) {
-			
+			/* if($check_permissions == 0 && $user_data['role_id'] != 1) {
 				$htm['mf_reload'] = $madata['move_destiny'];
 				$htm['error'] = TRUE;
 				$htm['mf_msg'] = '<span class="ajx_failure_msg"><h5>You don\'t have a  permissions to access Folder: '.$get_moveing_folder_info['folder_name'].'</h5></span>';
 				echo json_encode($htm); exit;
 				break;
-			
-			}
-			// CHECK ACCESS PERMISSIONS END HERE //	
-		
+			} */
+			// CHECK ACCESS PERMISSIONS END HERE //
 			
 				$condn 		= array('folder_id' => $mv_fo, 'lead_id' => $madata['mall_lead_id']);
 				$updt  		= array('parent' => $madata['move_destiny']);
@@ -901,9 +874,8 @@ class Request extends crm_controller {
 			$html['res_file'] = FALSE;
 			foreach($mov_file as $mv_fi) {
 			
-			
 			// CHECK ACCESS PERMISSIONS START HERE //		
-			$get_moveing_files_info = $this->request_model->getFilesInfo($madata['mall_lead_id'], $mv_fi);			
+			/* $get_moveing_files_info = $this->request_model->getFilesInfo($madata['mall_lead_id'], $mv_fi);			
 			$check_file_permissions =  $this->check_access_permissions($madata['mall_lead_id'], 'file_id', $mv_fi, 'delete');			
 			if($check_permissions == 0 && $user_data['role_id'] != 1) {
 			
@@ -913,7 +885,7 @@ class Request extends crm_controller {
 				echo json_encode($htm); exit;
 				break;
 			
-			}
+			} */
 			// CHECK ACCESS PERMISSIONS END HERE //	
 			
 				$condn = array('file_id' => $mv_fi,'lead_id' => $madata['mall_lead_id']);
@@ -950,11 +922,11 @@ class Request extends crm_controller {
 	*/
 	function getBreadCrumbs($leadid, $parent, $res) {
 	
-	if($parent == 'Files') {
-	
-		echo $bc='<span>Files</span> ';exit;
-	
-	}else{
+		// if($parent == 'Files') {
+		
+			// echo $bc='<span>Files</span> ';exit;
+		
+		// }else{
 	
 			$data = $this->request_model->getBreadCrumbDet($leadid, $parent);
 			foreach($data as $rec) {
@@ -977,7 +949,7 @@ class Request extends crm_controller {
 					echo $bc; exit;
 				}
 			}
-		}
+		// }
 	}
 	
 	/*
@@ -1001,22 +973,22 @@ class Request extends crm_controller {
 				}
 				$html .="<ul>";
 				// CHECK ACCESS PERMISSIONS START HERE //		
-				$check_permissions =  $this->check_access_permissions($data['leadid'], 'folder_id', $folder_id, 'read');	
-				if($check_permissions == 1 || $this->userdata['role_id'] == 1) {
+				// $check_permissions =  $this->check_access_permissions($data['leadid'], 'folder_id', $folder_id, 'read');
+				// if($check_permissions == 1 || $this->userdata['role_id'] == 1) {
 					$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
-				}
+				// }
 
 				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
 				
 				if(!empty($res)) {
 					foreach($res as $fname) {
 						// CHECK ACCESS PERMISSIONS START HERE //		
-						$check_file_permissions =  $this->check_access_permissions($data['leadid'], 'file_id', $fname['file_id'], 'read');	
-						if($check_file_permissions == 1 || $this->userdata['role_id'] == 1) {
+						// $check_file_permissions =  $this->check_access_permissions($data['leadid'], 'file_id', $fname['file_id'], 'read');	
+						// if($check_file_permissions == 1 || $this->userdata['role_id'] == 1) {
 							$html .= "<li>";
 							$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
 							$html .= "</li>";
-						}				
+						// }
 					}
 				}
 				$html .="</ul>";
@@ -1067,7 +1039,7 @@ class Request extends crm_controller {
 	/**
 	 * Deletes a folder based on a above function delete_files() request
 	 */
-	public function del_folder_all($jobid,$array_folder_id) {
+	/* public function del_folder_all($jobid,$array_folder_id) {
 		$res = array();
 		$user_data = $this->session->userdata('logged_in_user');
 		$arrLeadInfo = $this->request_model->get_lead_info($jobid);
@@ -1148,6 +1120,45 @@ class Request extends crm_controller {
 		
 		}
 		return $res;
+	} */
+	
+	public function del_folder_all($jobid,$array_folder_id) {
+		$res = array();
+		foreach($array_folder_id as $folder_id) {
+		
+			$condn = array("lead_id"=>$jobid,"folder_id"=>$folder_id);
+			$get_file_data = $this->request_model->get_record("file_management", $condn);
+		
+			$fm_condn            = array('lead_id'=>$jobid,'parent'=>$folder_id);
+			$folder_check_status = $this->request_model->checkStatus('file_management', $fm_condn);
+			
+			if($folder_check_status) {
+				$lf_condn          = array('lead_id'=>$jobid,'folder_id'=>$folder_id);
+				$file_check_status = $this->request_model->checkStatus('lead_files', $lf_condn);
+				if($file_check_status) {
+					//Deleting the folder
+					$del_condn = array('lead_id'=>$jobid,'folder_id'=>$folder_id);
+					$del_file  = $this->request_model->delete_row('file_management', $del_condn);
+					if($del_file) {
+						$logs['jobid_fk']	   = $jobid;
+						$logs['userid_fk']	   = $this->userdata['userid'];
+						$logs['date_created']  = date('Y-m-d H:i:s');
+						$logs['log_content']   = $get_file_data['folder_name'].' folder is deleted.';
+						$logs['attached_docs'] = $get_file_data['folder_name'];
+						$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+					
+						$res[] = $get_file_data['folder_name'].' folder is deleted.';
+					} else {
+						$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+					}
+				} else {
+					$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+				}
+			} else {
+				$res[] = $get_file_data['folder_name'].' folder cannot be deleted.';
+			}
+		}
+		return $res;
 	}
 	
 	public function delete_leadfiles($jobid, $arrLeadFiles)
@@ -1186,7 +1197,7 @@ class Request extends crm_controller {
 	/**
 	 * Deletes a files based on a above function delete_files() request
 	 */
-	public function del_file_all($jobid,$array_file_id) {
+	/* public function del_file_all($jobid,$array_file_id) {
 		$f_data = real_escape_array($this->input->post());
 		$user_data = $this->session->userdata('logged_in_user');
 		
@@ -1244,6 +1255,48 @@ class Request extends crm_controller {
 		//	} else {
 				//$res[]		  		           = $get_file_data['lead_files_name'].' file cannot be deleted.';
 			//}
+		}
+		return $res;
+	} */
+	
+	public function del_file_all($jobid,$array_file_id) {
+		$f_data = real_escape_array($this->input->post());
+		
+		foreach($array_file_id as $file_id) {
+			$condn = array("lead_id"=>$jobid,"file_id"=>$file_id);
+			$get_file_data = $this->request_model->get_record("lead_files", $condn);
+		
+			$fcpath = UPLOAD_PATH; 
+			$f_dir = $fcpath . 'files/' . $jobid . '/' . $get_file_data['lead_files_name'];
+	
+			if (isset($f_dir))
+			{
+				$file_condn          = array('file_id'=>$file_id);
+				$file_check_status   = $this->request_model->checkStatus('expected_payments_attach_file', $file_condn);
+				if ($file_check_status)
+				{
+					if (@unlink($f_dir))
+					{
+						$wh_condn = array('file_id' => $file_id, 'lead_id' => $jobid);
+						$del_file = $this->request_model->delete_row('lead_files', $wh_condn);
+						
+						$logs['jobid_fk']	   = $jobid;
+						$logs['userid_fk']	   = $this->userdata['userid'];
+						$logs['date_created']  = date('Y-m-d H:i:s');
+						$logs['log_content']   = $get_file_data['lead_files_name'].' is deleted.';
+						$logs['attached_docs'] = $get_file_data['lead_files_name'];
+						$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+						
+						$res[] 		  		   = $get_file_data['lead_files_name'].' is deleted.';
+					} else {
+						$res[]		  		   = $get_file_data['lead_files_name'].' file cannot be deleted.';
+					}
+				} else {
+					$res[]		  		   	   = $get_file_data['lead_files_name'].' file cannot be deleted. It is linked with the Payment milestones.';
+				}
+			} else {
+				$res[]		  		           = $get_file_data['lead_files_name'].' file cannot be deleted.';
+			}
 		}
 		return $res;
 	}
@@ -2621,204 +2674,204 @@ EOD;
 		echo json_encode($json);
 	}
 	
-	public function getProjectMembers() {
+	// public function getProjectMembers() {
 	
-		$user_data = $this->session->userdata('logged_in_user');
-		//$usid['role_id']; 
-		$data = real_escape_array($this->input->post());
+		// $user_data = $this->session->userdata('logged_in_user');
+		// // $usid['role_id']; 
+		// $data = real_escape_array($this->input->post());
 		
-		$fa_folder = $this->input->post('fa_folder');
-		$fa_files = $this->input->post('fa_files');
-		$parent_folder_id = $this->input->post('parent_folder_id');
+		// $fa_folder = $this->input->post('fa_folder');
+		// $fa_files = $this->input->post('fa_files');
+		// $parent_folder_id = $this->input->post('parent_folder_id');
 		
-		$arrFiles = array();
-		$arrFolders = array();
-		$existing_rows = 0;
+		// $arrFiles = array();
+		// $arrFolders = array();
+		// $existing_rows = 0;
 
-		if(isset($fa_folder) && !empty($fa_folder)) {
-			$arrFolder = rtrim($fa_folder, ',');		
-			$arrFolders = explode(',', $arrFolder);
-		}
+		// if(isset($fa_folder) && !empty($fa_folder)) {
+			// $arrFolder = rtrim($fa_folder, ',');		
+			// $arrFolders = explode(',', $arrFolder);
+		// }
 		
-		if(isset($fa_files) && !empty($fa_files)) {	
-			$arrFile = rtrim($fa_files, ',');		
-			$arrFiles = explode(',', $arrFile);		
-		}
+		// if(isset($fa_files) && !empty($fa_files)) {	
+			// $arrFile = rtrim($fa_files, ',');		
+			// $arrFiles = explode(',', $arrFile);		
+		// }
 		
-		if(empty($arrFolders) && empty($arrFiles) && !empty($parent_folder_id)) {			
-			$arrFolders = explode(',', $parent_folder_id);		
-		}
+		// if(empty($arrFolders) && empty($arrFiles) && !empty($parent_folder_id)) {			
+			// $arrFolders = explode(',', $parent_folder_id);		
+		// }
 
-		$array_merge = array_merge($arrFolders, $arrFiles);
+		// $array_merge = array_merge($arrFolders, $arrFiles);
 	
-		$project_members   = $this->request_model->get_project_members($data['curr_job_id']); // This array to get a project normal members(Developers) details.
-		$project_leaders   = $this->request_model->get_project_leads($data['curr_job_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-		$arrLeadInfo       = $this->request_model->get_lead_info($data['curr_job_id']); // This function to get a current lead informations.		
+		// $project_members   = $this->request_model->get_project_members($data['curr_job_id']); // This array to get a project normal members(Developers) details.
+		// $project_leaders   = $this->request_model->get_project_leads($data['curr_job_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+		// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+		// $arrLeadInfo       = $this->request_model->get_lead_info($data['curr_job_id']); // This function to get a current lead informations.		
 		
-		$arrLeaders = $this->request_model->usersArraysToSingleDimetioal($project_leaders); // This function convert users two dimentional array to single dimentional array.
+		// $arrLeaders = $this->request_model->usersArraysToSingleDimetioal($project_leaders); // This function convert users two dimentional array to single dimentional array.
 
 		//echo '<pre>'; print_r($arrLeaders);exit;
 		
 		
-		$html = '';		
-		$html .="<table style='margin-bottom:10px;'>";		
-		$html .="<tr height='20'><th width='170'>Users</th> <th width='60'>Read</th> <th width='60'>Write</th> <th width='60'>Delete</th></tr>";
-		$read_array = array();
-		$write_array = array();
-		$delete_array = array();
-		$arr_disabled_users = array();
-		foreach($arrProjectMembers as $members){
-			if(!empty($members)) {
-				if($user_data['userid'] != $members['userid']) {
+		// $html = '';		
+		// $html .="<table style='margin-bottom:10px;'>";		
+		// $html .="<tr height='20'><th width='170'>Users</th> <th width='60'>Read</th> <th width='60'>Write</th> <th width='60'>Delete</th></tr>";
+		// $read_array = array();
+		// $write_array = array();
+		// $delete_array = array();
+		// $arr_disabled_users = array();
+		// foreach($arrProjectMembers as $members){
+			// if(!empty($members)) {
+				// if($user_data['userid'] != $members['userid']) {
 
-					$arrUserInfo= $this->request_model->getUserInfomationById($members['userid']);			
+					// $arrUserInfo= $this->request_model->getUserInfomationById($members['userid']);			
 				
-					//##############  Check already Checked Start Here  ################//
-					$read_folder_checked = '';
-					$write_folder_checked = '';
-					$delete_folder_checked = '';
+					##############  Check already Checked Start Here  ################//
+					// $read_folder_checked = '';
+					// $write_folder_checked = '';
+					// $delete_folder_checked = '';
 					
-					$read_folder_disabled = '';
-					$write_folder_disabled = '';
-					$delete_folder_disabled = '';
+					// $read_folder_disabled = '';
+					// $write_folder_disabled = '';
+					// $delete_folder_disabled = '';
 					
 						
-					//echo $arrFolders[0]['folder_id'].'====='.$members['userid'];
-					if(isset($arrFolders) && !empty($arrFolders)) {
-					$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'folder_id', $arrFolders[0], $members['userid']);
-					}else if(isset($arrFiles) && !empty($arrFiles)) {
-					$checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'file_id', $arrFiles[0], $members['userid']);
-					}
+					// // echo $arrFolders[0]['folder_id'].'====='.$members['userid'];
+					// if(isset($arrFolders) && !empty($arrFolders)) {
+					// $checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'folder_id', $arrFolders[0], $members['userid']);
+					// }else if(isset($arrFiles) && !empty($arrFiles)) {
+					// $checkFolderAccess= $this->request_model->check_lead_file_access($data['curr_job_id'], 'file_id', $arrFiles[0], $members['userid']);
+					// }
 
-					if(isset($checkFolderAccess) && !empty($checkFolderAccess)) {
+					// if(isset($checkFolderAccess) && !empty($checkFolderAccess)) {
 					
-						$read_folder_checked = ($checkFolderAccess->lead_file_access_read == 1)?'checked':'';
-						$write_folder_checked = ($checkFolderAccess->lead_file_access_write == 1)?'checked':'';
-						$delete_folder_checked = ($checkFolderAccess->lead_file_access_delete == 1)?'checked':'';		
-					//	$existing_rows = 1;					
-					}
+						// $read_folder_checked = ($checkFolderAccess->lead_file_access_read == 1)?'checked':'';
+						// $write_folder_checked = ($checkFolderAccess->lead_file_access_write == 1)?'checked':'';
+						// $delete_folder_checked = ($checkFolderAccess->lead_file_access_delete == 1)?'checked':'';		
+						// $existing_rows = 1;					
+					// }
 
-					array_push($read_array, $read_folder_checked);
-					array_push($write_array, $write_folder_checked);
-					array_push($delete_array, $delete_folder_checked);
+					// array_push($read_array, $read_folder_checked);
+					// array_push($write_array, $write_folder_checked);
+					// array_push($delete_array, $delete_folder_checked);
 					
-					//##############  Check already Checked End Here  ################//
-					$html .="<tr>";
-					$html .="<td>";				
-					if($user_data['role_id'] !=1 && in_array($members['userid'], $arrLeaders)) {				
-					$read_folder_disabled = 'disabled';
-					$write_folder_disabled = 'disabled';
-					$delete_folder_disabled = 'disabled';	
-					$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
-					$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
-					$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
-					array_push($arr_disabled_users, $members['userid']);			
-					}else if($arrUserInfo['role_id'] ==1 && in_array($members['userid'], $arrLeaders)) {				
-					$read_folder_disabled = 'disabled';
-					$write_folder_disabled = 'disabled';
-					$delete_folder_disabled = 'disabled';	
-					$html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
-					$html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
-					$html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
-					array_push($arr_disabled_users, $members['userid']);
-					}
+					##############  Check already Checked End Here  ################//
+					// $html .="<tr>";
+					// $html .="<td>";				
+					// if($user_data['role_id'] !=1 && in_array($members['userid'], $arrLeaders)) {				
+					// $read_folder_disabled = 'disabled';
+					// $write_folder_disabled = 'disabled';
+					// $delete_folder_disabled = 'disabled';	
+					// $html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
+					// $html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
+					// $html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
+					// array_push($arr_disabled_users, $members['userid']);			
+					// }else if($arrUserInfo['role_id'] ==1 && in_array($members['userid'], $arrLeaders)) {				
+					// $read_folder_disabled = 'disabled';
+					// $write_folder_disabled = 'disabled';
+					// $delete_folder_disabled = 'disabled';	
+					// $html .="<input type='hidden'  name='read[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_read."'>";
+					// $html .="<input type='hidden'  name='write[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_write."'>";
+					// $html .="<input type='hidden'  name='delete[".$members['userid']."]' value='".$checkFolderAccess->lead_file_access_delete."'>";
+					// array_push($arr_disabled_users, $members['userid']);
+					// }
 											
 					
-					$html .=$members['first_name']." ".$members['last_name']."</td>
-							<input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'></td>";			
-					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$read_folder_checked." ".$read_folder_disabled." name='read[".$members['userid']."]' value='1'></td>";
-					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$write_folder_checked." ".$write_folder_disabled." name='write[".$members['userid']."]' value='1'></td>";
-					$html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$delete_folder_checked." ".$delete_folder_disabled." name='delete[".$members['userid']."]' value='1'></td>";
-					$html .="</tr>";
-				}
-			}
-		}
-		$html .="</table>";		
+					// $html .=$members['first_name']." ".$members['last_name']."</td>
+							// <input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'></td>";			
+					// $html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$read_folder_checked." ".$read_folder_disabled." name='read[".$members['userid']."]' value='1'></td>";
+					// $html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$write_folder_checked." ".$write_folder_disabled." name='write[".$members['userid']."]' value='1'></td>";
+					// $html .="<td>&nbsp;&nbsp;<input type='checkbox'  ".$delete_folder_checked." ".$delete_folder_disabled." name='delete[".$members['userid']."]' value='1'></td>";
+					// $html .="</tr>";
+				// }
+			// }
+		// }
+		// $html .="</table>";
 		
 		
 		//echo '<pre>'; print_r($arr_disabled_users); exit;
 		
 		
 		//##############  Check all selected files have a same permissions or not start here  ################//
-		$arrFileReadAccess = array();
-		$arrFileWriteAccess = array();
-		$arrFileDeleteAccess = array();
-		$arrFileReadTotal = array();
-		$arrFileWriteTotal = array();
-		$arrFileDeleteTotal = array();		
-		if(isset($arrFiles) && !empty($arrFiles)) {
+		// $arrFileReadAccess = array();
+		// $arrFileWriteAccess = array();
+		// $arrFileDeleteAccess = array();
+		// $arrFileReadTotal = array();
+		// $arrFileWriteTotal = array();
+		// $arrFileDeleteTotal = array();		
+		// if(isset($arrFiles) && !empty($arrFiles)) {
 		
-			for($i=0; $i<count($arrFiles); $i++) 
-			{
-				$checkAccess = array();
-				$arrLeadFilesAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'file_id', $arrFiles[$i]);
+			// for($i=0; $i<count($arrFiles); $i++) 
+			// {
+				// $checkAccess = array();
+				// $arrLeadFilesAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'file_id', $arrFiles[$i]);
 				
-				if(isset($arrLeadFilesAccess) && !empty($arrLeadFilesAccess)) {
+				// if(isset($arrLeadFilesAccess) && !empty($arrLeadFilesAccess)) {
 				
-					foreach($arrLeadFilesAccess as $listLeadAccessFile) {
+					// foreach($arrLeadFilesAccess as $listLeadAccessFile) {
 
-						if($user_data['userid'] != $listLeadAccessFile['userid']) {									
+						// if($user_data['userid'] != $listLeadAccessFile['userid']) {									
 
-							if(!in_array($listLeadAccessFile['userid'], $arr_disabled_users)) {									
-								$arrFileReadAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_read'];
-								$arrFileWriteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_write'];
-								$arrFileDeleteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_delete'];
-							}
-						}
-					}
-				$existing_rows = 1;
-				}
-				$arrFileReadTotal[$i] = array_sum($arrFileReadAccess[$arrFiles[$i]]);
-				$arrFileWriteTotal[$i] = array_sum($arrFileWriteAccess[$arrFiles[$i]]);
-				$arrFileDeleteTotal[$i] = array_sum($arrFileDeleteAccess[$arrFiles[$i]]);
-			}
-		}
+							// if(!in_array($listLeadAccessFile['userid'], $arr_disabled_users)) {									
+								// $arrFileReadAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_read'];
+								// $arrFileWriteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_write'];
+								// $arrFileDeleteAccess[$listLeadAccessFile['file_id']][$listLeadAccessFile['userid']] = $listLeadAccessFile['lead_file_access_delete'];
+							// }
+						// }
+					// }
+				// $existing_rows = 1;
+				// }
+				// $arrFileReadTotal[$i] = array_sum($arrFileReadAccess[$arrFiles[$i]]);
+				// $arrFileWriteTotal[$i] = array_sum($arrFileWriteAccess[$arrFiles[$i]]);
+				// $arrFileDeleteTotal[$i] = array_sum($arrFileDeleteAccess[$arrFiles[$i]]);
+			// }
+		// }
 	
 		//##############  Check all selected files have a same permissions or not end here  ################//
 		
 		//##############  Check all selected folders have a same permissions or not start here  ################//	
-		$arrFolderReadAccess = array();
-		$arrFolderWriteAccess = array();
-		$arrFolderDeleteAccess = array();
-		$arrFolderReadTotal = array();
-		$arrFolderWriteTotal = array();
-		$arrFolderDeleteTotal = array();		
-		if(isset($arrFolders) && !empty($arrFolders)) {
+		// $arrFolderReadAccess = array();
+		// $arrFolderWriteAccess = array();
+		// $arrFolderDeleteAccess = array();
+		// $arrFolderReadTotal = array();
+		// $arrFolderWriteTotal = array();
+		// $arrFolderDeleteTotal = array();		
+		// if(isset($arrFolders) && !empty($arrFolders)) {
 			
-			for($j=0; $j<count($arrFolders); $j++) 
-			{					
+			// for($j=0; $j<count($arrFolders); $j++) 
+			// {					
 			
-				$arrLeadFolderAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'folder_id', $arrFolders[$j]);
+				// $arrLeadFolderAccess= $this->request_model->check_lead_file_access_by_ids($data['curr_job_id'], 'folder_id', $arrFolders[$j]);
 				
-				if(isset($arrLeadFolderAccess) && !empty($arrLeadFolderAccess)) {
+				// if(isset($arrLeadFolderAccess) && !empty($arrLeadFolderAccess)) {
 				
-					foreach($arrLeadFolderAccess as $listLeadAccessFolder) {	
+					// foreach($arrLeadFolderAccess as $listLeadAccessFolder) {	
 
-						if($user_data['userid'] != $listLeadAccessFolder['userid']) {									
+						// if($user_data['userid'] != $listLeadAccessFolder['userid']) {									
 
-							if(!in_array($listLeadAccessFolder['userid'], $arr_disabled_users)) {										
+							// if(!in_array($listLeadAccessFolder['userid'], $arr_disabled_users)) {										
 					
-								$arrFolderReadAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_read'];
-								$arrFolderWriteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_write'];
-								$arrFolderDeleteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_delete'];		
-							}
-						}										
+								// $arrFolderReadAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_read'];
+								// $arrFolderWriteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_write'];
+								// $arrFolderDeleteAccess[$listLeadAccessFolder['folder_id']][$listLeadAccessFolder['userid']] = $listLeadAccessFolder['lead_file_access_delete'];		
+							// }
+						// }										
 					
-					}
+					// }
 					
-					$existing_rows = 1;
+					// $existing_rows = 1;
 				
-				}
+				// }
 				
-				$arrFolderReadTotal[$j] = array_sum($arrFolderReadAccess[$arrFolders[$j]]);
-				$arrFolderWriteTotal[$j] = array_sum($arrFolderWriteAccess[$arrFolders[$j]]);
-				$arrFolderDeleteTotal[$j] = array_sum($arrFolderDeleteAccess[$arrFolders[$j]]);
+				// $arrFolderReadTotal[$j] = array_sum($arrFolderReadAccess[$arrFolders[$j]]);
+				// $arrFolderWriteTotal[$j] = array_sum($arrFolderWriteAccess[$arrFolders[$j]]);
+				// $arrFolderDeleteTotal[$j] = array_sum($arrFolderDeleteAccess[$arrFolders[$j]]);
 			
-			}
+			// }
 
-		}
+		// }
 		//##############  Check all selected folders have a same permissions or not end here  ################//
 	
 
@@ -2826,67 +2879,67 @@ EOD;
 //echo '<pre>';print_r($arrFolderWriteTotal);
 //echo '<pre>';print_r($delete_folder_result1);		
 
-			/*		
-			*
-			*@ Remove empty file array values.
-			*
-			*/
-			$read_file_result1 = array_diff($arrFileReadTotal, array( '' ) );
-			$write_file_result1 = array_diff($arrFileWriteTotal, array( '' ) );
-			$delete_file_result1 = array_diff($arrFileDeleteTotal, array( '' ) );
+			// /*		
+			// *
+			// *@ Remove empty file array values.
+			// *
+			// */
+			// $read_file_result1 = array_diff($arrFileReadTotal, array( '' ) );
+			// $write_file_result1 = array_diff($arrFileWriteTotal, array( '' ) );
+			// $delete_file_result1 = array_diff($arrFileDeleteTotal, array( '' ) );
 			
 
-			/*		
-			*
-			*@ Create files unique values.
-			*
-			*/
-			$read_file_result = array_unique($read_file_result1);
-			$write_file_result = array_unique($write_file_result1);
-			$delete_file_result = array_unique($delete_file_result1);
+			// /*		
+			// *
+			// *@ Create files unique values.
+			// *
+			// */
+			// $read_file_result = array_unique($read_file_result1);
+			// $write_file_result = array_unique($write_file_result1);
+			// $delete_file_result = array_unique($delete_file_result1);
 
-			/*		
-			*
-			*@ Remove empty folder array values.
-			*
-			*/
+			// /*		
+			// *
+			// *@ Remove empty folder array values.
+			// *
+			// */
 
-			$read_folder_result1 = array_diff($arrFolderReadTotal, array( '' ) );
-			$write_folder_result1 = array_diff($arrFolderWriteTotal, array( '' ) );
-			$delete_folder_result1 = array_diff($arrFolderDeleteTotal, array( '' ) );
+			// $read_folder_result1 = array_diff($arrFolderReadTotal, array( '' ) );
+			// $write_folder_result1 = array_diff($arrFolderWriteTotal, array( '' ) );
+			// $delete_folder_result1 = array_diff($arrFolderDeleteTotal, array( '' ) );
 
 
-			/*		
-			*
-			*@ Create folder unique values.
-			*
-			*/
-			$read_folder_result = array_unique($read_folder_result1);
-			$write_folder_result = array_unique($write_folder_result1);
-			$delete_folder_result = array_unique($delete_folder_result1);
+			// /*		
+			// *
+			// *@ Create folder unique values.
+			// *
+			// */
+			// $read_folder_result = array_unique($read_folder_result1);
+			// $write_folder_result = array_unique($write_folder_result1);
+			// $delete_folder_result = array_unique($delete_folder_result1);
 		
 		
-		if(isset($arrFiles) && !empty($arrFiles)  && !empty($arrFolders)) {
+		// if(isset($arrFiles) && !empty($arrFiles)  && !empty($arrFolders)) {
 		
-			/*		
-			*
-			*@ Merge selected files array and selected folders array values.
-			*
-			*/
-			$read_merge_result1 = array_merge($read_file_result1, $read_folder_result1);
-			$write_merge_result1 = array_merge($write_file_result1, $write_folder_result1);
-			$delete_merge_result1 = array_merge($delete_file_result1, $delete_folder_result1);
+			// /*		
+			// *
+			// *@ Merge selected files array and selected folders array values.
+			// *
+			// */
+			// $read_merge_result1 = array_merge($read_file_result1, $read_folder_result1);
+			// $write_merge_result1 = array_merge($write_file_result1, $write_folder_result1);
+			// $delete_merge_result1 = array_merge($delete_file_result1, $delete_folder_result1);
 			
-			/*		
-			*
-			*@ Create unique Merged files array and folders array values.
-			*
-			*/			
-			$read_merge_result = array_unique($read_merge_result1);
-			$write_merge_result = array_unique($write_merge_result1);
-			$delete_merge_result = array_unique($delete_merge_result1);
+			// /*		
+			// *
+			// *@ Create unique Merged files array and folders array values.
+			// *
+			// */			
+			// $read_merge_result = array_unique($read_merge_result1);
+			// $write_merge_result = array_unique($write_merge_result1);
+			// $delete_merge_result = array_unique($delete_merge_result1);
 		
-		}
+		// }
 		
 //echo '<pre>';print_r($read_file_result1);
 //echo '<pre>';print_r($write_file_result1);
@@ -2908,28 +2961,54 @@ EOD;
 			
 			
 			
-		if(isset($arrFolders) && !empty($arrFolders)  && empty($arrFiles)) {
+		// if(isset($arrFolders) && !empty($arrFolders)  && empty($arrFiles)) {
 		
-			if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && (count($read_folder_result) != 1  || count($write_folder_result) != 1 || count($delete_folder_result) != 1) ) {
-			$html .='<div id="messages" style="width:74%;"><p>Some folders have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
+			// if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && (count($read_folder_result) != 1  || count($write_folder_result) != 1 || count($delete_folder_result) != 1) ) {
+			// $html .='<div id="messages" style="width:74%;"><p>Some folders have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
+			// }
+		
+		// }else if(isset($arrFiles) && !empty($arrFiles)  && empty($arrFolders)) {
+		
+			// if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && ( count($read_file_result) != 1  || count($write_file_result) != 1 || count($delete_file_result) != 1 )) {
+			// $html .='<div id="messages" style="width:74%;"><p>Some files have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
+			// }
+		
+		// }else if(isset($arrFiles) && !empty($arrFiles)  && !empty($arrFolders)) {
+		
+			// if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && ( (count($read_file_result) != 1  || count($write_file_result) != 1 || count($delete_file_result) != 1)  ||  (count($read_folder_result) != 1  || count($write_folder_result) != 1 || count($delete_folder_result) != 1) )) {
+			// $html .='<div id="messages" style="width:74%;"><p>Some files or folders have a different permissions. If you save means its overwrite existing file permissions. </p></div>';
+			// }else if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && (count($read_merge_result) != 1  || count($write_merge_result) != 1 || count($delete_merge_result) != 1)) {
+			// $html .='<div id="messages" style="width:74%;"><p>Some files or folders have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
+			// }
+		
+		// }
+		
+		// echo $html;
+	// }
+	
+	public function getProjectMembers() {
+	
+		$user_data = $this->session->userdata('logged_in_user');
+	
+		$data = real_escape_array($this->input->post());
+		$project_members = $this->request_model->get_project_members($data['curr_job_id']);
+		// echo "<pre>"; print_r($project_members); exit;
+		$html ="<ul>";
+		foreach($project_members as $members){
+			if($user_data['userid'] != $members['userid']) {
+				$html .="<li class=pad-all>";
+				$html .=$members['first_name']." ".$members['last_name'];
+				$html .="<input type='hidden' name='users[".$members['userid']."]' value='".$members['userid']."'>";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='read_".$members['userid']."' value='1'>&nbsp;Read";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='write_".$members['userid']."' value='1'>&nbsp;Write";
+				// $html .="&nbsp;&nbsp;<input type='checkbox' name='delete_".$members['userid']."' value='1'>&nbsp;Delete";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='read[".$members['userid']."]' value='1'>&nbsp;Read";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='write[".$members['userid']."]' value='1'>&nbsp;Write";
+				$html .="&nbsp;&nbsp;<input type='checkbox' name='delete[".$members['userid']."]' value='1'>&nbsp;Delete";
+				$html .="</li>";
 			}
-		
-		}else if(isset($arrFiles) && !empty($arrFiles)  && empty($arrFolders)) {
-		
-			if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && ( count($read_file_result) != 1  || count($write_file_result) != 1 || count($delete_file_result) != 1 )) {
-			$html .='<div id="messages" style="width:74%;"><p>Some files have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
-			}
-		
-		}else if(isset($arrFiles) && !empty($arrFiles)  && !empty($arrFolders)) {
-		
-			if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && ( (count($read_file_result) != 1  || count($write_file_result) != 1 || count($delete_file_result) != 1)  ||  (count($read_folder_result) != 1  || count($write_folder_result) != 1 || count($delete_folder_result) != 1) )) {
-			$html .='<div id="messages" style="width:74%;"><p>Some files or folders have a different permissions. If you save means its overwrite existing file permissions. </p></div>';
-			}else if(isset($array_merge) && (int)count($array_merge)>1  && $existing_rows == 1 && (count($read_merge_result) != 1  || count($write_merge_result) != 1 || count($delete_merge_result) != 1)) {
-			$html .='<div id="messages" style="width:74%;"><p>Some files or folders have a different permissions. If you save means its overwrite existing file permissions.</p></div>';
-			}
-		
 		}
-		
+		$html .="</ul>";
 		echo $html;
 	}
 	

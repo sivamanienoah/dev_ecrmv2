@@ -5,8 +5,8 @@
 
 function getFolderdata(ffolder_id) {
 
-	if(ffolder_id == 0) var ffolder_id  = 'Files' 
-	else var ffolder_id  = ffolder_id;
+	// if(ffolder_id == 0) var ffolder_id  = 'Files' 
+	// else var ffolder_id  = ffolder_id;
 
 	showBreadCrumbs(ffolder_id);
 	$('#jv-tab-3').block({
@@ -138,13 +138,10 @@ function searchFileFolder() {
 	if(search_input == '')
 	return false;
 	
+	// var parent_folder_id = $('#parent_folder_id').val();
 	
-	var parent_folder_id = $('#parent_folder_id').val();
-	
-	
-	
-	
-	var params				= {'search_input':search_input, 'lead_id':curr_job_id, 'currently_selected_folder':parent_folder_id};
+	// var params				= {'search_input':search_input, 'lead_id':curr_job_id, 'currently_selected_folder':parent_folder_id};
+	var params				= {'search_input':search_input, 'lead_id':curr_job_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.ajax({
@@ -206,12 +203,12 @@ function moveAllFiles() {
 		/*
 		*Mani Changes Start Here
 		*/
-	    var ffid = $('#filefolder_id').val();		
+	    /* var ffid = $('#filefolder_id').val();		
 		if(ffid == 'Files') 
 		{ 
 		alert('Please open root folder and continue your actions!'); 
 		return false;
-		}
+		} */
 		/*
 		*Mani Changes End Here
 		*/
@@ -307,11 +304,11 @@ function deleteAllFiles() {
 		/*
 		*Mani Changes Start Here
 		*/
-	   	if(ff_id == 'Files') 
+	   	/* if(ff_id == 'Files') 
 		{ 
 		alert('You have no permissions to delete root folder!'); 
 		return false;
-		}
+		} */
 		/*
 		*Mani Changes End Here
 		*/

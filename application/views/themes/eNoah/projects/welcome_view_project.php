@@ -292,12 +292,40 @@ if (get_default_currency()) {
 				<?php } ?>
 				</div>
 			</form>
-			
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
-					<label class="practices">Project Types</label>
+					<label class="practices">Project Type</label>
 					<select name="project_types" id="project_types" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+						<option value="">Select Project Types</option>
+						<?php if(!empty($project_types)) {
+							foreach($project_types as $types) {
+								$selected_project_types = '';
+								if($types['id'] == $quote_data['project_types']) {
+									$selected_project_types = 'selected="selected"';
+								}
+						?>
+								<option value="<?php echo $types['id']; ?>" <?php echo $selected_project_types; ?>><?php echo $types['project_types']; ?></option>
+						<?php
+							}
+						} 
+						?>
+					</select>
+				</div>
+				<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setEconProjectTypes(); return false;">Set</button>
+					</div>
+					<div id="resmsg_econ_project_types" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
+				</div>
+			</form>
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<div class="pull-left">
+					<label class="practices">Project Billing Type</label>
+					<select name="project_type" id="project_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
 						<option value="">Select Project Types</option>
 						<?php if(!empty($timesheet_project_types)) {
 							foreach($timesheet_project_types as $list_project_types) {
@@ -322,7 +350,6 @@ if (get_default_currency()) {
 				<?php } ?>
 				</div>
 			</form>
-														
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
@@ -361,7 +388,7 @@ if (get_default_currency()) {
 			</div>
 			<div class="clear"></div>
 			
-			<label class="pull-left">Billing Type</label>
+			<label class="pull-left">Billing Frequency</label>
 			<div style="line-height: 25px;">
 				<input type="radio" name="billing_type" class="bill_type" value="1" id="milestone_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 1) { echo 'checked="checked"'; } ?> > Milestone Driven
 				<input type="radio" name="billing_type" value="2" class="bill_type" id="monthly_driven" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if($quote_data['billing_type'] == 2) { echo 'checked="checked"'; } ?> > Monthly
@@ -961,10 +988,10 @@ if (get_default_currency()) {
 			</div>
 			
 			<?php if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
-			<div class="pull-left pad-right">
-				<a  onclick="folderAccess(); return false;" title="Folder & File Access" ><img src="assets/img/permissions.png" class="icon-width" alt="Folder & File Access"></a>
-			</div>			
-			<?php } 
+			<!--div class="pull-left pad-right">
+				<a onclick="folderAccess(); return false;" title="Folder & File Access" ><img src="assets/img/permissions.png" class="icon-width" alt="Folder & File Access"></a>
+			</div-->
+			<?php }
 			}?>
 		</div>
 		

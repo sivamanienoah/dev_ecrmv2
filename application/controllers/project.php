@@ -173,20 +173,18 @@ class Project extends crm_controller {
 		
 		$result = $this->project_model->get_quote_data($id);
 		
-		$arrLeadInfo = $this->request_model->get_lead_info($id);
-		
-		
+		// $arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($result)) {
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
 			
 			// Get User Role
-			$data['user_roles']		= $usernme['role_id']; 
-			$data['login_userid']		= $usernme['userid']; 
-			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
-			$data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
-			$data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
+			// $data['user_roles']		= $usernme['role_id']; 
+			// $data['login_userid']		= $usernme['userid']; 
+			// $data['project_belong_to']		= $arrLeadInfo['belong_to']; 
+			// $data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
+			// $data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
 			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 
 			$data['timesheetProjectType']   = array();
@@ -213,6 +211,7 @@ class Project extends crm_controller {
 			
 			$data['pm_accounts'] = array();
 			$pjt_managers = $this->project_model->get_user_byrole(3);
+			
 			if(!empty($pjt_managers))
 			$data['pm_accounts'] = $pjt_managers;
 			
@@ -236,8 +235,8 @@ class Project extends crm_controller {
 			// $data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
 			$get_parent_folder_id = $this->request_model->getParentFfolderId($id,$parent=0);
 			
-			$project_members = array();
-			$project_leaders = array();
+			// $project_members = array();
+			// $project_leaders = array();
 		
 			//$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR);
 			
@@ -269,13 +268,13 @@ class Project extends crm_controller {
 				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
 				
 				
-				$project_members = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details.
-				$project_leaders = $this->request_model->get_project_leads($id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
+				// $project_members = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details.
+				// $project_leaders = $this->request_model->get_project_leads($id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+				// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+				// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+				// $arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
 
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 	
 						foreach($arrProjectMembers as $members){
 							
@@ -296,7 +295,7 @@ class Project extends crm_controller {
 								
 							}							
 						}
-					}
+					} */
 			}
 			
 			/**
@@ -307,9 +306,10 @@ class Project extends crm_controller {
 			$timesheet		 = array();
 			$ts_team_members = array();
 			$team_mem 		 = array();
-			if(!empty($data['quote_data']['pjt_id'])) {		
+			
+			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
-				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type);
+				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$timesheet_users = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
@@ -374,7 +374,7 @@ class Project extends crm_controller {
 			$rates = $this->get_currency_rates();
 
 			$data['timesheet_data'] = array();
-			if(count($timesheet)>0) {
+			/* if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
 					$costdata = array();
 					if(isset($ts['cost'])) {
@@ -389,6 +389,18 @@ class Project extends crm_controller {
 					}
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
+				}
+			} */
+			
+			if(count($timesheet)>0) {
+				foreach($timesheet as $ts) {
+					if(isset($ts['cost'])) {
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+					}
 				}
 			}
 
@@ -2935,9 +2947,9 @@ HDOC;
 				}
 				
 				if(!empty($rec['pjt_id']))
-				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date);
-
-				if(count($timesheet)>0) {
+				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=1);
+				
+				/* if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
 						$costdata = array();
 						if(isset($ts['cost'])) {
@@ -2953,34 +2965,71 @@ HDOC;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
 					}
-				}
-
-				if(!empty($data['timesheet_data'])) {
+				} */
 				
-					$res = $this->calcActualProjectCost($data['timesheet_data']);
-					// echo "<pre>"; print_r($res); exit;
-					if($res['total_cost']>0) {
-						$total_cost = $res['total_cost'];
-					}
-					if($res['total_hours']>0) {
-						$total_hours = $res['total_hours'];
-					}
-					if($res['total_billable_hrs']>0) {
-						$total_billable_hrs = $res['total_billable_hrs'];
-					}
-					if($res['total_internal_hrs']>0) {
-						$total_internal_hrs = $res['total_internal_hrs'];
-					}
-					if($res['total_non_billable_hrs']>0) {
-						$total_non_billable_hrs = $res['total_non_billable_hrs'];
+				// if(count($timesheet)>0) {
+					// foreach($timesheet as $ts) {
+						// if(isset($ts['cost'])) {
+							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+							// $rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+						// }
+					// }
+				// }
+				$total_billable_hrs = 0;
+				$total_internal_hrs = 0;
+				$total_non_billable_hrs = 0;
+				$total_cost  = 0;
+				$total_hours = 0;
+				
+				if(count($timesheet)>0) {
+					foreach($timesheet as $ts) {
+						$total_cost  += $ts['duration_cost'];
+						$total_hours += $ts['duration_hours'];
+						switch($ts['resoursetype']) {
+							case 'Billable':
+								$total_billable_hrs = $ts['duration_hours'];
+							break;
+							case 'Non-Billable':
+								$total_non_billable_hrs = $ts['duration_hours'];
+							break;
+							case 'Internal':
+								$total_internal_hrs = $ts['duration_hours'];
+							break;
+						}
 					}
 				}
+				
+				$total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
 
-				if(!empty($rec['pjt_id'])) {
+				// if(!empty($data['timesheet_data'])) {
+				
+					// $res = $this->calcActualProjectCost($data['timesheet_data']);
+					// echo "<pre>"; print_r($res); exit;
+					// if($res['total_cost']>0) {
+						// $total_cost = $res['total_cost'];
+					// }
+					// if($res['total_hours']>0) {
+						// $total_hours = $res['total_hours'];
+					// }
+					// if($res['total_billable_hrs']>0) {
+						// $total_billable_hrs = $res['total_billable_hrs'];
+					// }
+					// if($res['total_internal_hrs']>0) {
+						// $total_internal_hrs = $res['total_internal_hrs'];
+					// }
+					// if($res['total_non_billable_hrs']>0) {
+						// $total_non_billable_hrs = $res['total_non_billable_hrs'];
+					// }
+				// }
+
+				/* if(!empty($rec['pjt_id'])) {
 					$timesheet_project_type = $this->project_model->get_timesheet_project_type($rec['pjt_id']);
 					if(!empty($timesheet_project_type))
 					$project_type = $timesheet_project_type['project_type_name'];
-				}
+				} */
 				
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
@@ -2996,7 +3045,7 @@ HDOC;
 				$data['project_record'][$i]['complete_status'] 	= $rec['complete_status'];
 				$data['project_record'][$i]['pjt_status'] 		= $rec['pjt_status'];
 				$data['project_record'][$i]['estimate_hour'] 	= $rec['estimate_hour'];
-				$data['project_record'][$i]['project_type']	 	= $project_type;
+				$data['project_record'][$i]['project_type']	 	= $rec['project_billing_type'];
 				$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
 				$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
 				$data['project_record'][$i]['clname'] 			= $rec['clname'];
@@ -3194,11 +3243,11 @@ HDOC;
 
 		//for differentiate sending the past date in search.
 		$bill_type  = 3;
-		$timesheet  = $this->project_model->get_timesheet_data($postdata['project_code'], $postdata['project_id'], $bill_type, $start_date);
+		$timesheet  = $this->project_model->get_timesheet_data($postdata['project_code'], $postdata['project_id'], $bill_type, $start_date, $groupby_type=2);
 		
 		$rates = $this->get_currency_rates();
 		$data['timesheet_data'] = array();
-		if(count($timesheet)>0) {
+		/* if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
 				$costdata = array();
 				if(isset($ts['cost'])) {
@@ -3213,6 +3262,18 @@ HDOC;
 				}
 				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
 				$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
+			}
+		} */
+		
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				if(isset($ts['cost'])) {
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+					$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+				}
 			}
 		}
 
@@ -3468,9 +3529,12 @@ HDOC;
 								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
 								if(empty($arrLeadExistFolderAccess)) {	
 								
-									$read_access = 0;
+									/* $read_access = 0;
 									$write_access = 0;
-									$delete_access = 0;									
+									$delete_access = 0;	 */	
+									$read_access = 1;
+									$write_access = 1;
+									$delete_access = 1;									
 									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
 									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
 									$read_access = 1;
@@ -3663,6 +3727,36 @@ HDOC;
 	}
 	
 	/*
+	*@method set_econ_project_types
+	*@Use update project_types to leads
+	*@Author eNoah
+	*/
+	public function set_econ_project_types()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['project_types'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$data = array('project_types' => $updt['project_types']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+
+			if($updt_id) {
+				// $project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				// $this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	
+	/*
 	 *@method set_bill_type
 	 *@set the bill type for the Project
 	 */
@@ -3809,9 +3903,12 @@ HDOC;
 								if($this->userdata['userid'] != $members['userid']) {
 									$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);
 									if(empty($arrLeadExistFolderAccess)) {
-										$read_access = 0;
-										$write_access = 0;
-										$delete_access = 0;									
+										// $read_access = 0;
+										// $write_access = 0;
+										// $delete_access = 0;
+											$read_access = 1;
+											$write_access = 1;
+											$delete_access = 1;										
 										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
 										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
 											$read_access = 1;
