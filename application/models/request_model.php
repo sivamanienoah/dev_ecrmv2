@@ -226,12 +226,13 @@ class Request_model extends crm_model {
 	    return $sql->row_array();
     }
 	
-	public function search_file($lead_id, $folder_id, $search_name){
+	public function search_file($lead_id, $folder_id = null, $search_name){
+		 
 		$this->db->select('lf.file_id,lf.lead_files_name,lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 	    $this->db->where("lf.lead_id", $lead_id);
-		 $this->db->where("lf.folder_id", $folder_id);
+		if($folder_id)	$this->db->where("lf.folder_id", $folder_id);
 	    $this->db->like("lf.lead_files_name", $search_name);
 		$this->db->order_by("lf.lead_files_created_on");
 	    $sql = $this->db->get();
