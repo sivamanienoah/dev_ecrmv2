@@ -3396,7 +3396,7 @@ HDOC;
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
 			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
-			$subject		 = 'Generate Invoice Notificatiion';
+			$subject		 = 'Generate Invoice Notification';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
 			$project_id	 	 = $project_details[0]['invoice_no'];
@@ -3415,7 +3415,7 @@ HDOC;
 			// $param['bcc_mail'] 		  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
-			$param['template_name']	  = "Generate Invoice Notificatiion";
+			$param['template_name']	  = "Generate Invoice Notification";
 			$param['subject'] 		  = $subject;
 			$param['attach'] 		  = $attached_files;
 			$param['job_id'] 		  = $pjtid;
@@ -3513,15 +3513,15 @@ HDOC;
 					
 					
 					/* #################  Permission add new file owner start here  ################## */
-				if($user_data['role_id'] != 1) {
+				/* if($user_data['role_id'] != 1) {
 				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
 				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
-				}
+				} */
 				/* #################  Permission add new file owner end here  ################## */
 				
 				
 				/* #################  Assing permission to all users by lead id start here  ################## */
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 		
 							foreach($arrProjectMembers as $members){
 								if($user_data['userid'] != $members['userid']) {
@@ -3529,12 +3529,10 @@ HDOC;
 								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
 								if(empty($arrLeadExistFolderAccess)) {	
 								
-									/* $read_access = 0;
+									$read_access = 0;
 									$write_access = 0;
-									$delete_access = 0;	 */	
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;									
+									$delete_access = 0;	 	
+					
 									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
 									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
 									$read_access = 1;
@@ -3548,7 +3546,7 @@ HDOC;
 								}
 							}
 						}
-					}
+					} */
 				/* #################  Assing permission to all users by lead id end here  ################## */
 				
 				
@@ -3889,15 +3887,15 @@ HDOC;
 					
 					
 					/* #################  Permission add new file owner start here  ################## */
-				if($this->userdata['role_id'] != 1) {
+				/* if($this->userdata['role_id'] != 1) {
 					$permissions_contents  = array('userid'=>$this->userdata['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$this->userdata['userid']);
 					
 					$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
-				}
+				} */
 				/* #################  Permission add new file owner end here  ################## */
 				
 				/* #################  Assing permission to all users by lead id start here  ################## */
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
+					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
 						foreach($arrProjectMembers as $members){
 							if(!empty($members)) {
 								if($this->userdata['userid'] != $members['userid']) {
@@ -3921,7 +3919,7 @@ HDOC;
 								}
 							}
 						}
-					}
+					} */
 				/* #################  Assing permission to all users by lead id end here  ################## */
 				
 				
