@@ -232,7 +232,7 @@ class Request extends crm_controller {
 			$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
 			$filefolder_id = $arrFolderId['folder_id'];
 		}
-		$check_permissions = $this->check_access_permissions($lead_id, 'folder_id', $filefolder_id, 'write');			
+		// $check_permissions = $this->check_access_permissions($lead_id, 'folder_id', $filefolder_id, 'write');	
 		 
 		$project_members = array();
 		$project_leaders = array();
@@ -308,16 +308,16 @@ class Request extends crm_controller {
 					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
 					
 				/* #################  Permission add new file owner start here  ################## */
-				if($user_data['role_id'] != 1) {
-				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
+				// if($user_data['role_id'] != 1) {
+				// $permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
 				
-				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani						
-				}
+				// $insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani		
+				// }
 				/* #################  Permission add new file owner end here  ################## */
 
 				
 				/* #################  Assing permission to all users by lead id start here  ################## */
-					if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 		
 						foreach($arrProjectMembers as $members){
 						
@@ -344,7 +344,7 @@ class Request extends crm_controller {
 							
 							}
 						}
-					}
+					} */
 				/* #################  Assing permission to all users by lead id end here  ################## */
 					
 					
