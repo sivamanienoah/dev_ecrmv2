@@ -32,9 +32,10 @@ class Sales_forecast extends crm_controller {
 	*@Get practice List
 	*@Method index
 	*/
-    public function index($search = FALSE) 
+    public function index($search = FALSE)
 	{
         $data['page_heading']   = 'Sales Forecast';
+		
 		$data['entity'] 		= $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		
 		$filter   = real_escape_array($this->input->post());
@@ -60,104 +61,303 @@ class Sales_forecast extends crm_controller {
             redirect('sales_forecast/');
         }
     }
-
 	
 	/*
-	*@For Add practices
-	*@Method practice_add
+	*@For Add SalesForecast
+	*@Method add_sale_forecast
 	*/
-	public function add_sale_forecast($update = false, $id = false) {
-	
-		$this->load->library('validation');
-		$data               = array();
-		$this->load->model('regionsettings_model');
-		$data['regions']    = $this->regionsettings_model->region_list();
+	public function add_sale_forecast($update = false, $id = false)
+	{
 		
-		$data['currency_type'] = $this->sales_forecast_model->get_records('expect_worth', $wh_condn = array('status'=>1), $order = array("expect_worth_id"=>"asc"));
-		$data['entity'] 	= $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
-        $post_data          = real_escape_array($this->input->post());
-		$rules['entity']    = "trim|required";
-		$rules['customer_name']  = "trim|required";
-		$rules['lead_name']	     = "trim|required";
-		$rules['milestone']      = "trim|required";
-		$rules['for_month_year'] = "trim|required";
-		
-		$this->validation->set_rules($rules);
-		$fields['entity'] 		  = 'Entity';
-		$fields['customer_name']  = 'Customer';
-		$fields['lead_name'] 	  = 'Lead/Project';
-		$fields['milestone'] 	  = 'Milestone';
-		$fields['for_month_year'] = 'For the Month & Year';
-
-		
-		$this->validation->set_fields($fields);
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
-        {
-            $item_data = $this->db->get_where($this->cfg['dbpref']."sales_forecast", array('forecast_id' => $id));
-            if ($item_data->num_rows() > 0) $src = $item_data->result_array();
-            if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
-            {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
+		if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
+		{
+            $data['salesforecast_data'] = $this->sales_forecast_model->get_record('*',"sales_forecast",array('forecast_id' => $id));
+			$data['milestone_data']     = $this->sales_forecast_model->get_records("sales_forecast_milestone",array('forecast_id_fk' => $id),array('for_month_year' => 'desc'));
+			$sf_category = $this->sales_forecast_model->get_sf_category($id);
+			if(!empty($sf_category))
+			$data['salesforecast_category'] = $sf_category['forecast_category'];
         }
-		
-		if ($this->validation->run() != false)
-        {
-			// all good
-            foreach($fields as $key => $val)
-            {
-                $update_data[$key] = $this->input->post($key);
-            }
-			$update_data['for_month_year'] = date('Y-m-d', strtotime($update_data['for_month_year']));
-			$update_data['modified_by']    = $this->userdata['userid'];
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-            {
-                //update
-                $this->db->where('forecast_id', $id);
-				
-                if ($this->db->update($this->cfg['dbpref']."sales_forecast", $update_data))
-                {	
-                    $this->session->set_flashdata('confirm', array('Forecast Details Updated!'));
-                }
-            }
-            else
-            {
-                //insert
-				$update_data['created_by']     = $this->userdata['userid'];
-				$update_data['created_on']     = date("Y-m-d H:i:s");
-                $this->db->insert($this->cfg['dbpref']."sales_forecast", $update_data);
-                $this->session->set_flashdata('confirm', array('New Forecast Added!'));
-            }
-
-			redirect('sales_forecast/');
-		}
 		$this->load->view('sales_forecast/sales_forecast_add_view', $data);
+		
+	}
+	
+	/*
+	*@For Add SalesForecast
+	*@Method add_sale_forecast
+	*/
+	public function save_sale_forecast($sf_id = false)
+	{
+
+		$data = array();
+		
+		$data['error'] = false;
+		
+		$post_data = real_escape_array($this->input->post());
+		
+		if (!empty($post_data))
+        {
+			
+			$post_data['created_by'] = $this->userdata['userid'];
+			$post_data['created_on'] = date("Y-m-d H:i:s");
+			
+			$forecast_data = array('job_id'=>$post_data['job_id'],'customer_id'=>$post_data['customer_id'],'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
+			if(isset($sf_id) && is_numeric($sf_id)) {
+				unset($forecast_data['created_by']);
+				unset($forecast_data['created_on']);
+				$forecast_data['modified_by'] = $this->userdata['userid'];
+				$sf_updt = $this->sales_forecast_model->update_row('sales_forecast', $wh_condn=array('forecast_id'=>$sf_id), $forecast_data);
+				if($sf_updt) {
+					$forecast_id = $sf_id;
+				} else {
+					$data['error'] = true;
+					exit;
+				}
+			} else {
+				$forecast_id = $this->sales_forecast_model->insert_row_return_id('sales_forecast', $forecast_data);
+			}
+			
+			if( !empty($forecast_id) && is_numeric($forecast_id) ) {
+			
+				if(!empty($post_data['exist_ms'])) {
+					$get_insert_data = $this->sales_forecast_model->get_milestone_records($post_data['exist_ms']);
+					foreach($get_insert_data as $ins) {
+						$ms = array('forecast_id_fk'=>$forecast_id, 'forecast_category'=>$post_data['category'], 'milestone_name'=>$ins['project_milestone_name'], 'milestone_value'=>$ins['amount'], 'milestone_ref_no'=>$ins['expectid'], 'for_month_year'=>date("Y-m-d", strtotime($ins['month_year'])),'created_by'=>$this->userdata['userid'], 'created_on'=>date("Y-m-d H:i:s"));
+						$this->sales_forecast_model->insert_row("sales_forecast_milestone", $ms);
+					}
+				}
+			
+				if($post_data['milestone_name']!="" && $post_data['milestone_value']!="" && $post_data['for_month_year']!="") {
+					$milestone_data = array('forecast_id_fk'=>$forecast_id,'forecast_category'=>$post_data['category'],'milestone_name'=>$post_data['milestone_name'],'milestone_value'=>$post_data['milestone_value'],'for_month_year'=>date("Y-m-d", strtotime($post_data['for_month_year'])),'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
+					$exp_res = $this->sales_forecast_model->insert_row("sales_forecast_milestone", $milestone_data);
+				}
+				$data['forecast_id'] = $forecast_id;
+			}
+			if(!$exp_res) {
+				$data['error'] = true;
+			}	
+			echo json_encode($data);
+		}
+		
+	}
+	/*
+	*@method getCustomerRecords()
+	*/
+	function getCustomerRecords($type = false, $id = false)
+	{
+	
+		$data     = array();
+		$wh_condn = array(); 
+		
+		$post_data = real_escape_array($this->input->post());
+		
+		$order     = array('company'=>'asc');
+		
+		if ($type == 1)
+		$wh_condn = array('l.lead_status'=>'1', 'l.pjt_status'=>'0');
+		if ($type == 2)
+		$wh_condn = array('l.lead_status'=>'4', 'l.pjt_status'=>'1');
+		
+		$customer_data = $this->sales_forecast_model->get_customers($wh_condn, $order);
+		
+		$data['customers'] = '<option value="">Select</option>';
+		
+		if(!empty($customer_data)) {
+		
+			foreach($customer_data as $cs) {
+				$selected = "";
+				if( $id != '' && is_numeric($id) && ($cs['custid'] == $id) ) {
+					$selected = "selected='selectd'";
+				}
+				$data['customers'] .= '<option value='.$cs['custid'].' '.$selected.'>'.stripslashes($cs['company']).' - '.stripslashes($cs['first_name']).' '.stripslashes($cs['last_name']).'</option>';
+			}
+			
+		}
+		
+		echo json_encode($data);
+		exit;
+
+	}
+	
+	/*
+	*@method getRecords()
+	*/
+	function getRecords($job_id)
+	{
+		$post_data = real_escape_array($this->input->post());
+		
+		$data = array();
+	
+		$order = array('lead_title'=>'asc');
+		
+		if($post_data['category'] == 1)
+		$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'1', 'pjt_status'=>'0');
+		else if ($post_data['category'] == 2)
+		$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
+		
+		$get_data = $this->sales_forecast_model->get_records('leads', $wh_condn, $order);
+
+		$data['records'] = '<option value="">Select</option>';
+		
+		if(!empty($get_data)) {
+		
+			foreach($get_data as $dt) {
+				$selected = '';
+				if( $job_id != '' && is_numeric($job_id) && ($dt['lead_id'] == $job_id) ) {
+					$selected = "selected='selectd'";
+				}
+				$data['records'] .= '<option value='.$dt['lead_id'].' '.$selected.'>'.stripslashes($dt['lead_title']).'</option>';
+			}
+			
+		}
+		
+		echo json_encode($data); 
+		exit;
+		
+	}
+	
+	
+	/*
+	*@method getLeadDetail()
+	*/
+	function getLeadDetail()
+	{
+		$post_data = real_escape_array($this->input->post());
+		
+		$current_month_year   = date('d-m-Y'); 
+		$data = array();
+		$ms_id = array('0');
+		
+		$get_data = $this->sales_forecast_model->get_lead_detail($post_data['id']);
+		
+		// echo "<pre>"; print_R($get_data); exit;
+		
+		if($post_data['category'] == 2) {
+			$get_exist_ms = $this->sales_forecast_model->get_exists_ms_records($post_data['sf_id']);
+			$get_ms_data = $this->sales_forecast_model->get_ms_records($post_data['id']);
+			if(!empty($get_exist_ms)) {
+				foreach($get_exist_ms as $ems) {
+					$ms_id[] = $ems['milestone_ref_no'];
+				}
+			}
+		}
+
+		if(!empty($get_data)) {
+		
+			if($post_data['category'] == 1) {
+				$res['det'] .= 'Entity - '.$get_data['division_name'] . "<br>";
+				$res['det'] .= 'Currency Type - '.$get_data['expect_worth_name'] . "<br>";
+				$res['det'] .= 'Estimated Worth - '.$get_data['expect_worth_amount'];
+			} else if($post_data['category'] == 2) {
+				$res['det'] .= 'Entity - '.$get_data['division_name'] . "<br>";
+				$res['det'] .= 'Currency Type - '.$get_data['expect_worth_name'] . "<br>";
+				$res['det'] .= 'Estimated Worth - '.$get_data['expect_worth_amount'] . "<br>";
+				$res['det'] .= 'Billing Type - '.$get_data['project_billing_type'];
+			}
+			
+		}
+		
+		if(!empty($get_ms_data) && $post_data['category'] == 2) {
+			$res['ms_det'] .= '<table><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
+			foreach($get_ms_data as $ms) {
+				if(!in_array($ms['expectid'], $ms_id)) {
+					$milestone_month_year = date('d-m-Y', strtotime($ms['month_year'])); 
+					$ms_month_year = ($ms['month_year'] !='0000-00-00 00:00:00') ? date('M-Y', strtotime($ms['month_year'])) : '-';
+					$res['ms_det'] .= '<tr>';
+					$res['ms_det'] .= '<td>'.$ms['project_milestone_name'].'</td><td>'.$ms_month_year.'</td><td>'.$ms['expect_worth_name'].'</td><td>'.$ms['amount'].'</td><td>';
+					if(strtotime($milestone_month_year) > strtotime($current_month_year)) {
+						$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
+					}
+					$res['ms_det'] .= '</td></tr>';
+				}
+			}
+			$res['ms_det'] .= '</table>';
+			
+		}
+		
+		echo json_encode($res);
+		exit;
+		
 	}
 
+	/*
+	*@For Editing Sales forecast
+	*@Method edit_sale_forecast
+	*/
+	public function edit_sale_forecast($id) 
+	{	
+		$error = false;
+		if ($this->session->userdata('edit')==1)
+		{
+			if (preg_match('/^[0-9]+$/', $id))
+			{
+				$data['sf_data'] = $this->sales_forecast_model->get_record('*',"sales_forecast_milestone",array('milestone_id' => $id));
+			} else {
+				$error = true;
+			}
+		}
+		if($error==true){
+			return false;
+		} else {
+			$this->load->view('sales_forecast/sale_forecast_edit_view', $data);
+		}
+	}
+
+	/*
+	*@For Editing Sales forecast
+	*@Method edit_sale_forecast
+	*/
+	public function save_sale_forecast_milestone($id)
+	{
+		$res = array();
+		
+		$post_data = real_escape_array($this->input->post());
+		
+		$ins_data = array('milestone_name'=>$post_data['milestone_name'],'milestone_value'=>$post_data['milestone_value'],'for_month_year'=>date("Y-m-d", strtotime($post_data['for_month_year'])),'modified_by'=>$this->userdata['userid'],'modified_on'=>date("Y-m-d H:i:s"));
+		
+		$updt = $this->sales_forecast_model->update_row("sales_forecast_milestone", $cond=array("milestone_id"=>$id), $ins_data);
+		
+		if($updt)
+		$res['result'] = 'ok';
+		else
+		$res['result'] = 'fail';
+		
+		echo json_encode($res);
+		exit;
+	}
+	
 	/*
 	*@For Delete Sales forecast
 	*@Method delete_sale_forecast
 	*/
-	public function delete_sale_forecast($update, $id) 
-	{	
+	public function delete_sale_forecast($update, $milestone_id, $forecast_id) 
+	{
 		if ($this->session->userdata('delete')==1)
 		{
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $milestone_id) && preg_match('/^[0-9]+$/', $forecast_id))
 			{
-				$this->db->delete($this->cfg['dbpref']."sales_forecast", array('forecast_id' => $id));
-				$this->session->set_flashdata('confirm', array('Sale Forecast Deleted!'));
-				redirect('sales_forecast/');
+				$del_res = $this->db->delete($this->cfg['dbpref']."sales_forecast_milestone", array('milestone_id' => $milestone_id));
+				if($del_res) {
+					$record_count = $this->sales_forecast_model->get_num_row('sales_forecast_milestone', $cond = array('forecast_id_fk'=>$forecast_id));
+					$this->session->set_flashdata('confirm', array('Sale Forecast Milestone Deleted!'));
+					if($record_count>0)
+					redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
+					else
+					redirect('/sales_forecast/add_sale_forecast/');
+				} else {
+					$this->session->set_flashdata('login_errors', array("Error has been an occured!"));
+					redirect('sales_forecast/add_sale_forecast/update/'.$forecast_id);
+				}
 			} else {
-				$this->session->set_flashdata('login_errors', array("Error Occured!"));
-				redirect('sales_forecast/');
+				$this->session->set_flashdata('login_errors', array("Error has been an occured!"));
+				redirect('sales_forecast/add_sale_forecast/update/'.$forecast_id);
 			}
 		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!"));
-			redirect('sales_forecast/');
+			$this->session->set_flashdata('login_errors', array("You have no rights to delete!"));
+			redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
 		}
 	}
+
+	
 	
 	/*
 	*@method ajax_customer_search()
@@ -172,6 +372,10 @@ class Sales_forecast extends crm_controller {
 				if(!empty($cust)) {
 					$res[$i]['id']    = $cust['custid'];
 					$res[$i]['label'] = $cust['company'];
+					$res[$i]['reg']   = $cust['add1_region'];
+					$res[$i]['cty']   = $cust['add1_country'];
+					$res[$i]['ste']   = $cust['add1_state'];
+					$res[$i]['loc']   = $cust['add1_location'];
 				}
 		 		$i++;
             }

@@ -1,7 +1,9 @@
 <?php
 ob_start();
 require (theme_url().'/tpl/header.php');
-$userdata = $this->session->userdata('logged_in_user');
+$userdata  = $this->session->userdata('logged_in_user');
+$bill_info = $this->config->item('crm');
+$bill_type = $bill_info['billing_type'];
 ?>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
@@ -119,37 +121,36 @@ $userdata = $this->session->userdata('logged_in_user');
 					<th>Entity</th>
 					<th>Customer Name</th>
 					<th>Lead/Project</th>
-					<th>Milestone</th>
-					<th>For the Month & Year</th>
+					<th>Billing Type</th>
+					<th>Value</th>
 					<th>Created By</th>
 					<th>Created On</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-			
-			<?php if (is_array($sales_forecast) && count($sales_forecast) > 0) { ?>
-				<?php foreach($sales_forecast as $forecast) { ?>
-					<tr>
-						<td><?php echo $forecast['division_name']; ?></td>
-						<td><?php echo $forecast['customer_name']; ?></td>
-						<td><?php echo $forecast['lead_name']; ?></td>
-						<td><?php echo $forecast['milestone']; ?></td>
-						<td><?php echo date('F Y', strtotime($forecast['for_month_year'])); ?></td>
-						<td><?php echo $forecast['first_name']. ' ' .$forecast['last_name']; ?></td>
-						<td><?php echo date('d-m-Y', strtotime($forecast['created_on'])); ?></td>
-						<td class="actions">
-							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
-							<?php } ?> 
-							<?php if($this->session->userdata('delete')==1) { ?>
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $forecast['forecast_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
-							<?php } ?>
-							<div class="dialog-err pull-right" id="dialog-message-<?php echo $forecast['forecast_id']; ?>" style="display:none"></div>
-						</td>
-					</tr>
+				<?php if (is_array($sales_forecast) && count($sales_forecast) > 0) { ?>
+					<?php foreach($sales_forecast as $forecast) { ?>
+						<tr>
+							<td><?php echo $forecast['division_name']; ?></td>
+							<td><?php echo $forecast['company']; ?></td>
+							<td><?php echo $forecast['lead_name']; ?></td>
+							<td><?php echo $bill_type[$forecast['billing_type']]; ?></td>
+							<td><?php echo $forecast['lead_value']; ?></td>
+							<td><?php echo $forecast['first_name']. ' ' .$forecast['last_name']; ?></td>
+							<td><?php echo date('d-m-Y', strtotime($forecast['created_on'])); ?></td>
+							<td class="actions">
+								<?php if($this->session->userdata('edit')==1) { ?>
+									<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
+								<?php } ?> 
+								<?php if($this->session->userdata('delete')==1) { ?>
+									<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $forecast['forecast_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
+								<?php } ?>
+								<div class="dialog-err pull-right" id="dialog-message-<?php echo $forecast['forecast_id']; ?>" style="display:none"></div>
+							</td>
+						</tr>
+					<?php } ?>
 				<?php } ?>
-			<?php } ?>
 			</tbody>
 		</table>
 	</div>
@@ -160,6 +161,10 @@ $userdata = $this->session->userdata('logged_in_user');
 	?>
 	</div><!--Inner div-close here -->
 </div><!--Content div-close here -->
+<script>
+	var sf_updt = '';
+	var sf_id = '';
+</script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_view.js"></script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_add_view.js"></script>
