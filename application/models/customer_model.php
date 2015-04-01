@@ -463,8 +463,8 @@ class Customer_model extends crm_model {
 				if($timesheet_clients == FALSE) {						
 				
 					$sql =  '  INSERT INTO  '.$timesheet_db->dbprefix('client').'   SET '; $where = '';
-
-				} else {
+																		
+				}else {
 				
 					$sql =  '  UPDATE  '.$timesheet_db->dbprefix('client').'   SET '; $where  = '  WHERE `client_code` = "'.$listCustomers['client_code'].'"';
 				
@@ -582,7 +582,7 @@ class Customer_model extends crm_model {
 		
 			foreach($arrProjects as $listProjects) {
 			/*
-			*@Timesheet to insert project details start here 
+			*@Timesheet to insert project details start here
 			*/
 				$timesheet_projects = $this->get_timesheet_project($listProjects['pjt_id']);
 				$client_code        = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
@@ -660,7 +660,7 @@ class Customer_model extends crm_model {
 				$bill_type = '';
 				if($listProjects['billing_type'] == 2) {
 					$bill_type = "Monthly";
-				}else if($listProjects['billing_type'] == 1) {
+				} else if($listProjects['billing_type'] == 1) {
 					$bill_type = "Milestone Driven ";
 				}
 
