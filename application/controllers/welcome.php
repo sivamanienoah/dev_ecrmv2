@@ -166,7 +166,7 @@ class Welcome extends crm_controller {
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
 
-				if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
+				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 
 					foreach($arrProjectMembers as $members){
 						
@@ -191,7 +191,7 @@ class Welcome extends crm_controller {
 							
 						}							
 					}
-				}
+				} */
 					
 			}
 			
