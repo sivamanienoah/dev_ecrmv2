@@ -88,8 +88,7 @@ var task_being_edited = 0;
 var random_task_edit;
 
 function openEditTask(taskid, random)
-{
-
+{ 
 	task_being_edited = taskid;
 	
 	if (random == 'random')
