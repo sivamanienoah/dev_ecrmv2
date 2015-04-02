@@ -25,34 +25,40 @@ class Sales_forecast_model extends crm_model {
 	*@Get Sale Records
 	*@Sales Forecast Model
 	*/
-	public function get_sale_records($filter = false) {
+	public function get_sf_milestone_records($filter = false) {
 		
-		$this->db->select('sfc.forecast_id, c.company, l.lead_title, l.expect_worth_amount, enti.division_name');
-		$this->db->from($this->cfg['dbpref'].'sales_forecast as sfc');
+		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, l.lead_title, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
+		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfc.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
-			$this->db->where_in('sfc.entity', $filter['entity']);
+			$this->db->where_in('l.division', $filter['entity']);
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('sfc.customer_name', $filter['customer']);
+			$this->db->where_in('sfc.customer_id', $filter['customer']);
 		}
-		if (!empty($filter['lead_names']) && $filter['lead_names']!='null') {
-			$filter['lead_names'] = explode(',',$filter['lead_names']);
-			$this->db->where_in('sfc.lead_name', $filter['lead_names']);
+		if (!empty($filter['lead_ids']) && $filter['lead_ids']!='null') {
+			$filter['lead_ids'] = explode(',',$filter['lead_ids']);
+			$this->db->where_in('l.lead_id', $filter['lead_ids']);
+		}
+		if (!empty($filter['project_ids']) && $filter['project_ids']!='null') {
+			$filter['project_ids'] = explode(',',$filter['project_ids']);
+			$this->db->where_in('l.lead_id', $filter['project_ids']);
 		}
 		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
-			$this->db->where('DATE(sfc.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+			$this->db->where('DATE(sfm.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
 		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
-			$this->db->where('DATE(sfc.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
-			$this->db->where('DATE(sfc.for_month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
+			$this->db->where('DATE(sfm.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+			$this->db->where('DATE(sfm.for_month_year) <=', date('Y-m-t', strtotime($filter['month_year_to_date'])));
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		// echo $this->db->last_query();
 		return $query->result_array();
     }
 	
@@ -178,7 +184,7 @@ class Sales_forecast_model extends crm_model {
 	*@Get Row for Customers
 	*@Method  get_customers
 	*/
-	function get_customers($wh_condn, $order='') 
+	function get_customers($wh_condn='', $order='') 
 	{
 		//customer restriction on level based.
 		if ($this->userdata['level'] != 1) {
