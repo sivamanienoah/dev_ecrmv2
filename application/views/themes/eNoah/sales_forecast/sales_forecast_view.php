@@ -7,6 +7,7 @@ $bill_type = $bill_info['billing_type'];
 ?>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
+button.ui-datepicker-current { display: none; }
 </style>
 <div id="content">
 	<div class="inner">
@@ -42,37 +43,26 @@ $bill_type = $bill_info['billing_type'];
 						<tr>
 							<td class="tblheadbg">By Entity</td>
 							<td class="tblheadbg">By Customers</td>
+							<td class="tblheadbg">By Leads</td>
 							<td class="tblheadbg">By Projects</td>
 							<td class="tblheadbg">For the Month & Year</td>
 						</tr>
 						<tr>	
 							<td>
-								<select multiple="multiple" id="entity" name="entity[]" class="advfilter" style="width:200px;">
+								<select multiple="multiple" id="entity" name="entity[]" class="advfilter" style="width:150px;">
 									<?php foreach($entity as $ent) { ?>
 										<option value="<?php echo $ent['div_id']; ?>"><?php echo $ent['division_name']; ?></option>
 									<?php } ?>					
 								</select> 
 							</td>
-							<?php $customer_name = array(); ?>
-							<?php $lead_name 	 = array(); ?>
-							<?php
-								if (is_array($sales_forecast) && count($sales_forecast) > 0) {
-									foreach($sales_forecast as $forecast) { 
-										if(!in_array($forecast['customer_name'], $customer_name))
-										$customer_name[] = $forecast['customer_name'];
-										if(!in_array($forecast['lead_name'], $lead_name))
-										$lead_name[]     = $forecast['lead_name'];
-									}
-								}
-							?>
 							<td>
-								<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:200px;">
+								<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:195px;">
 									<?php 
-										if(!empty($customer_name)) {
-										array_unique($customer_name);
-										foreach($customer_name as $cust) {
+										if(!empty($customers)) {
+										array_unique($customers);
+										foreach($customers as $cust) {
 									?>
-											<option value="<?php echo $cust; ?>"><?php echo $cust; ?></option>
+											<option value="<?php echo $cust['custid']; ?>"><?php echo $cust['first_name'] . ' - ' . $cust['company']; ?></option>
 									<?php
 										}
 									}
@@ -80,13 +70,25 @@ $bill_type = $bill_info['billing_type'];
 								</select> 
 							</td> 
 							<td>
-								<select multiple="multiple" id="lead_names" name="lead_names[]" class="advfilter">
+								<select multiple="multiple" id="lead_ids" name="lead_ids[]" class="advfilter" style="width: 200px;">
 									<?php 
-										if(!empty($lead_name)) {
-										array_unique($lead_name);
-										foreach($lead_name as $lead) {
+										if(!empty($leads_data)) {
+										foreach($leads_data as $ld) {
 									?>
-											<option value="<?php echo $lead; ?>"><?php echo $lead; ?></option>
+											<option value="<?php echo $ld['lead_id']; ?>"><?php echo $ld['lead_title']; ?></option>
+									<?php
+										}
+									}
+									?>
+								</select> 
+							</td>
+							<td>
+								<select multiple="multiple" id="project_ids" name="project_ids[]" class="advfilter" style="width: 200px;">
+									<?php 
+										if(!empty($projects_data)) {
+										foreach($projects_data as $pj) {
+									?>
+											<option value="<?php echo $pj['lead_id']; ?>"><?php echo $pj['lead_title']; ?></option>
 									<?php
 										}
 									}
@@ -119,34 +121,38 @@ $bill_type = $bill_info['billing_type'];
 			<thead>
 				<tr>
 					<th>Entity</th>
-					<th>Customer Name</th>
+					<th>Customer</th>
+					<th>Lead/Project Name</th>
 					<th>Lead/Project</th>
-					<th>Billing Type</th>
+					<th>Milestone Name</th>
+					<th>For Month & Year</th>
 					<th>Value</th>
-					<th>Created By</th>
-					<th>Created On</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (is_array($sales_forecast) && count($sales_forecast) > 0) { ?>
 					<?php foreach($sales_forecast as $forecast) { ?>
+						<?php $milestone_month_year = date('d-m-Y', strtotime($forecast['for_month_year'])); ?>
+						<?php $current_month_year   = date('d-m-Y'); ?>
 						<tr>
 							<td><?php echo $forecast['division_name']; ?></td>
 							<td><?php echo $forecast['company']; ?></td>
-							<td><?php echo $forecast['lead_name']; ?></td>
-							<td><?php echo $bill_type[$forecast['billing_type']]; ?></td>
-							<td><?php echo $forecast['lead_value']; ?></td>
-							<td><?php echo $forecast['first_name']. ' ' .$forecast['last_name']; ?></td>
-							<td><?php echo date('d-m-Y', strtotime($forecast['created_on'])); ?></td>
+							<td><?php echo character_limiter($forecast['lead_title'], 35); ?></td>
+							<td><?php if($forecast['forecast_category'] == 1) echo "Lead"; else echo "Project" ?></td>
+							<td><?php echo $forecast['milestone_name']; ?></td>
+							<td><?php echo date('F y', strtotime($forecast['for_month_year'])); ?></td>
+							<td><?php echo $forecast['expect_worth_name']. ' ' .$forecast['milestone_value']; ?></td>
 							<td class="actions">
+							<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
 								<?php if($this->session->userdata('edit')==1) { ?>
-									<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
+									<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>/?ms_id=<?php echo $forecast['milestone_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
 								<?php } ?> 
 								<?php if($this->session->userdata('delete')==1) { ?>
 									<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $forecast['forecast_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
 								<?php } ?>
 								<div class="dialog-err pull-right" id="dialog-message-<?php echo $forecast['forecast_id']; ?>" style="display:none"></div>
+							<?php } ?>
 							</td>
 						</tr>
 					<?php } ?>
@@ -166,8 +172,8 @@ $bill_type = $bill_info['billing_type'];
 	var sf_id = '';
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_view.js"></script>
-<script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_add_view.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

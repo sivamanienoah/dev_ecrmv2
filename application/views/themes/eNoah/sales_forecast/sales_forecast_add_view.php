@@ -148,14 +148,14 @@
 
 <script>
 	var current_user_id = "<?php echo $username['userid'] ?>";
+	var cur_year 	= "<?php echo date('Y') ?>";
+	var cur_month 	= "<?php echo date('m') ?>";
+	var ms_id       = '<?php echo isset($_GET['ms_id']) ? $_GET['ms_id'] : '' ?>';
 	// sf_categ = 'no_update';
 	<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
 		var job_id      = "<?php echo $salesforecast_data['job_id'] ?>";
 		var customer_id = "<?php echo $salesforecast_data['customer_id'] ?>";
 		var sf_categ    = "<?php echo $salesforecast_category ?>";
-		var cur_year 	= "<?php echo date('Y') ?>";
-		var cur_month 	= "<?php echo date('m') ?>";
-		var ms_id       = '<?php echo isset($_GET['ms_id']) ? $_GET['ms_id'] : '' ?>';
 	<?php } ?>
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>

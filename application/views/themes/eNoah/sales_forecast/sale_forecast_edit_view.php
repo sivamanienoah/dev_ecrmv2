@@ -85,7 +85,8 @@ function update_sf_data(id) {
 						message:'<h4>Updating...</h4><img src="'+site_base_url+'assets/img/ajax-loader.gif" />',
 						css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 					});
-					window.location.reload(true);
+					window.location.href = site_base_url + "sales_forecast/add_sale_forecast/update/"+url_segment[4];
+					// window.location.reload(true);
 				},500);
 			} else {
 				alert("Update Failed");
