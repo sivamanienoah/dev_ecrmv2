@@ -37,11 +37,15 @@ class Sales_forecast extends crm_controller {
         $data['page_heading']   = 'Sales Forecast';
 		
 		$data['entity'] 		= $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
+		$this->load->model('customer_model');
+		$data['customers']      = $this->customer_model->customer_list();
+		$data['leads_data']     = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>1,'pjt_status'=>0), $order = array("lead_id"=>"asc"));
+		$data['projects_data']  = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>4,'pjt_status'=>1), $order = array("lead_id"=>"asc"));
 		
 		$filter   = real_escape_array($this->input->post());
 		
-		$data['sales_forecast'] = $this->sales_forecast_model->get_sale_records($filter);
-		
+		$data['sales_forecast'] = $this->sales_forecast_model->get_sf_milestone_records($filter);
+
 		if($this->input->post("filter")!="")
 		$this->load->view('sales_forecast/sales_forecast_view_grid', $data);
 		else
@@ -339,10 +343,12 @@ class Sales_forecast extends crm_controller {
 				if($del_res) {
 					$record_count = $this->sales_forecast_model->get_num_row('sales_forecast_milestone', $cond = array('forecast_id_fk'=>$forecast_id));
 					$this->session->set_flashdata('confirm', array('Sale Forecast Milestone Deleted!'));
-					if($record_count>0)
-					redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
-					else
-					redirect('/sales_forecast/add_sale_forecast/');
+					if($record_count>0) {
+						redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
+					} else {
+						$rs = $this->db->delete($this->cfg['dbpref']."sales_forecast", array('forecast_id' => $forecast_id));
+						if( $rs ) redirect('/sales_forecast/add_sale_forecast/');
+					}
 				} else {
 					$this->session->set_flashdata('login_errors', array("Error has been an occured!"));
 					redirect('sales_forecast/add_sale_forecast/update/'.$forecast_id);
