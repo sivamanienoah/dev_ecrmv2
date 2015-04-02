@@ -45,32 +45,13 @@
 | the active record class
 */
 
-// Third Database
-// $active_group = "econnect";
-// $active_record = false;
-$db['econnect']['hostname'] = 'localhost';
-$db['econnect']['username'] = 'tes_econnectv8';
-$db['econnect']['password'] = 'eConn@v8';
-$db['econnect']['database'] = 'tes_econnectv8';
-$db['econnect']['dbdriver'] = 'mysql';
-$db['econnect']['dbprefix'] = '';
-$db['econnect']['pconnect'] = FALSE;
-$db['econnect']['db_debug'] = TRUE;
-$db['econnect']['cache_on'] = FALSE;
-$db['econnect']['cachedir'] = '';
-$db['econnect']['char_set'] = 'utf8';
-$db['econnect']['dbcollat'] = 'utf8_general_ci';
-$db['econnect']['swap_pre'] = '';
-$db['econnect']['autoinit'] = TRUE;
-$db['econnect']['stricton'] = FALSE;
-
 // Second Database
-// $active_group = "timesheet";
-// $active_record = false;
+$active_group = "timesheet";
+$active_record = TRUE;
 $db['timesheet']['hostname'] = 'localhost';
-$db['timesheet']['username'] = 'tes_timesheet';
-$db['timesheet']['password'] = 'Time@eN4';
-$db['timesheet']['database'] = 'tes_timesheet';
+$db['timesheet']['username'] = 'dev_timesheet';
+$db['timesheet']['password'] = 'tim@Dev4';
+$db['timesheet']['database'] = 'dev_timesheet';
 $db['timesheet']['dbdriver'] = 'mysql';
 $db['timesheet']['dbprefix'] = 'enoah_';
 $db['timesheet']['pconnect'] = FALSE;
