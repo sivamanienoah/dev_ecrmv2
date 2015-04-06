@@ -45,6 +45,25 @@
 | the active record class
 */
 
+// Third Database
+// $active_group = "econnect";
+// $active_record = false;
+$db['econnect']['hostname'] = 'localhost';
+$db['econnect']['username'] = 'dev_econnectv9';
+$db['econnect']['password'] = 'ecoNewv9';
+$db['econnect']['database'] = 'dev_econnectv9';
+$db['econnect']['dbdriver'] = 'mysql';
+$db['econnect']['dbprefix'] = '';
+$db['econnect']['pconnect'] = FALSE;
+$db['econnect']['db_debug'] = TRUE;
+$db['econnect']['cache_on'] = FALSE;
+$db['econnect']['cachedir'] = '';
+$db['econnect']['char_set'] = 'utf8';
+$db['econnect']['dbcollat'] = 'utf8_general_ci';
+$db['econnect']['swap_pre'] = '';
+$db['econnect']['autoinit'] = TRUE;
+$db['econnect']['stricton'] = FALSE;
+
 // Second Database
 $active_group = "timesheet";
 $active_record = TRUE;
