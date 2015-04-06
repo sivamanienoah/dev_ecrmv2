@@ -29,16 +29,14 @@ class Dms_search_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers AS cus', 'cus.custid = le.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'file_management as f', 'f.folder_id = lf.folder_id', 'LEFT');
 		if($user_role !=1){
-			$this->db->where("le.lead_assign", $user_id);
-			$this->db->or_where("le.assigned_to", $user_id);
-			$this->db->or_where("le.belong_to", $user_id);
+			$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id)");
 		}
 		$this->db->like("lf.lead_files_name", $search_name);
 		$this->db->order_by("lf.lead_files_created_on");
 	    $sql = $this->db->get();
 		//echo $this->db->last_query(); exit;
 	    return $sql->result_array();
-	}	
+	}
 }
 
 /* End of dms search model file */
