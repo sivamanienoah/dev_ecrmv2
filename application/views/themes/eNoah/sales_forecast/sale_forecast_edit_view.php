@@ -18,7 +18,7 @@ button.ui-datepicker-current { display: none; }
 			</tr>
 			<tr>
 				<td>Milestone Value:</td>
-				<td><input type="text" name="milestone_value" value="<?php echo $sf_data['milestone_value']; ?>" class="textfield width200px" /></td>
+				<td><input type="text" name="milestone_value" onkeypress="return isNumberKey(event)" value="<?php echo $sf_data['milestone_value']; ?>" class="textfield width200px" /></td>
 			</tr>
 			<tr>
 				<td>
@@ -73,7 +73,7 @@ function update_sf_data(id) {
 	});
 	
 	$.ajax({
-		url: site_base_url + 'sales_forecast/save_sale_forecast_milestone/'+id,
+		url: site_base_url + 'sales_forecast/save_sale_forecast_milestone/'+id+'/'+url_segment[4],
 		cache: false,
 		type: "POST",
 		dataType: 'json',
@@ -89,11 +89,19 @@ function update_sf_data(id) {
 					// window.location.reload(true);
 				},500);
 			} else {
-				alert("Update Failed");
+				alert("No Updation");
 				$.unblockUI();
 			}
 		}
 	});
+}
+
+function isNumberKey(evt) {
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+	return false;
+	else
+	return true;
 }
 
 </script>

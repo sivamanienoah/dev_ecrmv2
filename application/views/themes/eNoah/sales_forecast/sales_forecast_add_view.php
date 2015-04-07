@@ -47,13 +47,13 @@
 				<tr id="lead-data">
 					<td>Lead: *</td>
 					<td>
-						<select name="job_id" id="lead_job_id" class="textfield width160px" onchange="get_lead_detail(this.value)"></select>
+						<select name="job_id" id="lead_job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
 					</td>
 				</tr>
 				<tr id="project-data">
 					<td>Project: *</td>
 					<td>
-						<select name="job_id" id="project_job_id" class="textfield width160px" onchange="get_lead_detail(this.value)"></select>
+						<select name="job_id" id="project_job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
 					</td>
 				</tr>
 				<tr id="leaddetail">
@@ -108,7 +108,7 @@
 		</form>
 		
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<table border=1>
+			<table border=1 id="ms_list">
 				<tr>
 					<th>Milestone Name</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
 				</tr>
@@ -122,42 +122,46 @@
 							<td><?php echo $ms_rec['milestone_value'] ?></td>
 							<td>
 								<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
-								<a title="Edit" onClick="editSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
-									<img alt="edit" src="assets/img/edit.png">
-								</a>
-								<a title="Delete" onclick="return deleteSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
-									<img alt="delete" src="assets/img/trash.png">
-								</a>
+								<?php if($this->session->userdata('edit')==1) { ?>
+									<a title="Edit" onClick="editSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
+										<img alt="edit" src="assets/img/edit.png">
+									</a>
+								<?php } ?> 
+									<?php if($this->session->userdata('delete')==1) { ?>
+									<a title="Delete" onclick="return deleteSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
+										<img alt="delete" src="assets/img/trash.png">
+									</a>
 								<?php } ?>
+								<?php } ?>
+								<a class="delete" href="javascript:void(0)" onclick="return view_logs(<?php echo $ms_rec['milestone_id']; ?>);" title='View Logs'> <img src="assets/img/log-icon.png" alt='Logs'> </a>
 							</td>
 						</tr>
 					<?php } ?>	
 				<?php } ?>	
 			</table>
 		<?php } ?>
-		
-		<?php 
-} else {
+<?php 
+	} else {
 	echo "You have no rights to access this page";
-}
+	}
 ?>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 
 <div id="edit_sales_forecast_container"></div>
-
-<script>
-	var current_user_id = "<?php echo $username['userid'] ?>";
-	var cur_year 	= "<?php echo date('Y') ?>";
-	var cur_month 	= "<?php echo date('m') ?>";
-	var ms_id       = '<?php echo isset($_GET['ms_id']) ? $_GET['ms_id'] : '' ?>';
-	// sf_categ = 'no_update';
-	<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-		var job_id      = "<?php echo $salesforecast_data['job_id'] ?>";
-		var customer_id = "<?php echo $salesforecast_data['customer_id'] ?>";
-		var sf_categ    = "<?php echo $salesforecast_category ?>";
-	<?php } ?>
-</script>
+<div id="view-log-container"></div>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script>
+var current_user_id = "<?php echo $username['userid'] ?>";
+var cur_year 	    = "<?php echo date('Y') ?>";
+var cur_month 	= "<?php echo date('m') ?>";
+var ms_id       = '<?php echo isset($_GET['ms_id']) ? $_GET['ms_id'] : '' ?>';
+// sf_categ = 'no_update';
+<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
+	var job_id      = "<?php echo $salesforecast_data['job_id'] ?>";
+	var customer_id = "<?php echo $salesforecast_data['customer_id'] ?>";
+	var sf_categ    = "<?php echo $salesforecast_category ?>";
+<?php } ?>
+</script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_add_view.js"></script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>

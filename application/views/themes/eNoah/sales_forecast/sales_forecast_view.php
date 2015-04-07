@@ -151,8 +151,8 @@ button.ui-datepicker-current { display: none; }
 								<?php if($this->session->userdata('delete')==1) { ?>
 									<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $forecast['forecast_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
 								<?php } ?>
-								<div class="dialog-err pull-right" id="dialog-message-<?php echo $forecast['forecast_id']; ?>" style="display:none"></div>
 							<?php } ?>
+							<a class="delete" href="javascript:void(0)" onclick="return view_logs(<?php echo $forecast['milestone_id']; ?>);" title='View Logs'> <img src="assets/img/log-icon.png" alt='Logs'> </a>
 							</td>
 						</tr>
 					<?php } ?>
@@ -160,6 +160,7 @@ button.ui-datepicker-current { display: none; }
 			</tbody>
 		</table>
 	</div>
+	<div id="view-log-container"></div>
 	<?php 
 	} else { 
 		echo "You have no rights to access this page"; 
@@ -169,7 +170,7 @@ button.ui-datepicker-current { display: none; }
 </div><!--Content div-close here -->
 <script>
 	var sf_updt = '';
-	var sf_id = '';
+	var sf_id   = '';
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>

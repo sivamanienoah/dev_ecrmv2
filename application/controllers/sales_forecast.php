@@ -105,6 +105,7 @@ class Sales_forecast extends crm_controller {
 			$post_data['created_on'] = date("Y-m-d H:i:s");
 			
 			$forecast_data = array('job_id'=>$post_data['job_id'],'customer_id'=>$post_data['customer_id'],'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
+			
 			if(isset($sf_id) && is_numeric($sf_id)) {
 				unset($forecast_data['created_by']);
 				unset($forecast_data['created_on']);
@@ -127,12 +128,27 @@ class Sales_forecast extends crm_controller {
 					foreach($get_insert_data as $ins) {
 						$ms = array('forecast_id_fk'=>$forecast_id, 'forecast_category'=>$post_data['category'], 'milestone_name'=>$ins['project_milestone_name'], 'milestone_value'=>$ins['amount'], 'milestone_ref_no'=>$ins['expectid'], 'for_month_year'=>date("Y-m-d", strtotime($ins['month_year'])),'created_by'=>$this->userdata['userid'], 'created_on'=>date("Y-m-d H:i:s"));
 						$this->sales_forecast_model->insert_row("sales_forecast_milestone", $ms);
+						$ms['milestone_id'] = $this->db->insert_id();
+						$ms['modified_by']  = $this->userdata['userid'];
+						$ms['modified_on']  = date("Y-m-d H:i:s");
+						unset($ms['milestone_ref_no']);
+						unset($ms['created_by']);
+						unset($ms['created_on']);
+						unset($ms['forecast_category']);
+						$this->sales_forecast_model->insert_row("sales_forecast_milestone_audit_log", $ms);
 					}
 				}
 			
 				if($post_data['milestone_name']!="" && $post_data['milestone_value']!="" && $post_data['for_month_year']!="") {
 					$milestone_data = array('forecast_id_fk'=>$forecast_id,'forecast_category'=>$post_data['category'],'milestone_name'=>$post_data['milestone_name'],'milestone_value'=>$post_data['milestone_value'],'for_month_year'=>date("Y-m-d", strtotime($post_data['for_month_year'])),'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
 					$exp_res = $this->sales_forecast_model->insert_row("sales_forecast_milestone", $milestone_data);
+					$milestone_data['milestone_id'] = $this->db->insert_id();
+					$milestone_data['modified_by']  = $this->userdata['userid'];
+					$milestone_data['modified_on']  = date("Y-m-d H:i:s");
+					unset($milestone_data['forecast_category']);
+					unset($milestone_data['created_by']);
+					unset($milestone_data['created_on']);
+					$this->sales_forecast_model->insert_row("sales_forecast_milestone_audit_log", $milestone_data);
 				}
 				$data['forecast_id'] = $forecast_id;
 			}
@@ -219,25 +235,47 @@ class Sales_forecast extends crm_controller {
 		
 	}
 	
+	/*
+	*check_exist_sf_info
+	*/
+	function check_exist_sf_info()
+	{
+		$post_data 			= real_escape_array($this->input->post());
+		
+		$res 				= array();
+		$res['redirect']	= false;
+		
+		//check whether adding milestones for existing leads or projects. If exists redirect to sale forecast edit page
+		$check_data 		= $this->sales_forecast_model->get_record('forecast_id','sales_forecast', $cond = array('job_id'=>$post_data['id']));
+		
+		if(!empty($check_data['forecast_id'])) {
+			$res['redirect']    = true;
+			$res['forecast_id'] = $check_data['forecast_id'];
+		}
+		
+		echo json_encode($res);
+		exit;
+	}
+	
 	
 	/*
 	*@method getLeadDetail()
 	*/
 	function getLeadDetail()
 	{
-		$post_data = real_escape_array($this->input->post());
+		$post_data 			= real_escape_array($this->input->post());
 		
-		$current_month_year   = date('d-m-Y'); 
-		$data = array();
-		$ms_id = array('0');
+		$current_month_year = date('d-m-Y'); 
+		$res 				= array();
+		$ms_id 				= array('0');
 		
-		$get_data = $this->sales_forecast_model->get_lead_detail($post_data['id']);
+		$get_data           = $this->sales_forecast_model->get_lead_detail($post_data['id']);
 		
 		// echo "<pre>"; print_R($get_data); exit;
 		
 		if($post_data['category'] == 2) {
 			$get_exist_ms = $this->sales_forecast_model->get_exists_ms_records($post_data['sf_id']);
-			$get_ms_data = $this->sales_forecast_model->get_ms_records($post_data['id']);
+			$get_ms_data  = $this->sales_forecast_model->get_ms_records($post_data['id']);
 			if(!empty($get_exist_ms)) {
 				foreach($get_exist_ms as $ems) {
 					$ms_id[] = $ems['milestone_ref_no'];
@@ -310,7 +348,7 @@ class Sales_forecast extends crm_controller {
 	*@For Editing Sales forecast
 	*@Method edit_sale_forecast
 	*/
-	public function save_sale_forecast_milestone($id)
+	public function save_sale_forecast_milestone($id,$fc_id)
 	{
 		$res = array();
 		
@@ -318,12 +356,18 @@ class Sales_forecast extends crm_controller {
 		
 		$ins_data = array('milestone_name'=>$post_data['milestone_name'],'milestone_value'=>$post_data['milestone_value'],'for_month_year'=>date("Y-m-d", strtotime($post_data['for_month_year'])),'modified_by'=>$this->userdata['userid'],'modified_on'=>date("Y-m-d H:i:s"));
 		
-		$updt = $this->sales_forecast_model->update_row("sales_forecast_milestone", $cond=array("milestone_id"=>$id), $ins_data);
+		// $updt = $this->sales_forecast_model->update_row_return_affected_rows("sales_forecast_milestone", $cond=array("milestone_id"=>$id), $ins_data);
+		$updt = $this->sales_forecast_model->update_row_return_affected_rows("sales_forecast_milestone", $id, $ins_data);
 		
-		if($updt)
-		$res['result'] = 'ok';
-		else
-		$res['result'] = 'fail';
+		if($updt == 1) {
+			$res['result'] = 'ok';
+			$updt = $this->sales_forecast_model->update_row("sales_forecast_milestone", $cond=array("milestone_id"=>$id), $ins=array('modified_on'=>date("Y-m-d H:i:s")));
+			$ins_data['milestone_id'] = $id;
+			$ins_data['forecast_id_fk'] = $fc_id;
+			$this->sales_forecast_model->insert_row("sales_forecast_milestone_audit_log", $ins_data);
+		} else {
+			$res['result'] = 'fail';
+		}
 		
 		echo json_encode($res);
 		exit;
@@ -360,6 +404,29 @@ class Sales_forecast extends crm_controller {
 		} else {
 			$this->session->set_flashdata('login_errors', array("You have no rights to delete!"));
 			redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
+		}
+	}
+	
+	
+	/*
+	*@For Get the logs for Sales forecast milestones
+	*@Method edit_sale_forecast
+	*/
+	public function get_logs($id) 
+	{	
+		$error = false;
+
+		if (preg_match('/^[0-9]+$/', $id))
+		{
+			$data['log_data'] = $this->sales_forecast_model->get_ms_logs($id);
+		} else {
+			$error = true;
+		}
+		
+		if($error==true) {
+			return false;
+		} else {
+			$this->load->view('sales_forecast/sale_forecast_log_view', $data);
 		}
 	}
 

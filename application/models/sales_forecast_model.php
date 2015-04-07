@@ -26,7 +26,72 @@ class Sales_forecast_model extends crm_model {
 	*@Sales Forecast Model
 	*/
 	public function get_sf_milestone_records($filter = false) {
+	
+		$job_ids = array();
+	
+		//LEVEL BASED RESTIRCTION
+		if( $this->userdata['level'] != 1 ) {
+			if (isset($this->session->userdata['region_id']))
+			$region = explode(',',$this->session->userdata['region_id']);
+			if (isset($this->session->userdata['countryid']))
+			$countryid = explode(',',$this->session->userdata['countryid']);
+			if (isset($this->session->userdata['stateid']))
+			$stateid = explode(',',$this->session->userdata['stateid']);
+			if (isset($this->session->userdata['locationid']))
+			$locationid = explode(',',$this->session->userdata['locationid']);
+			
+			$this->db->select('ls.lead_id');
+			$this->db->from($this->cfg['dbpref'].'leads as ls');
+			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			
+			switch($this->userdata['level']) {
+				case 2:
+					$this->db->where_in('cs.add1_region',$region);
+				break;
+				case 3:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+				break;
+				case 4:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cs.add1_state',$stateid);
+				break;
+				case 5:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cs.add1_location',$locationid);
+				break;
+			}
+			
+			$query = $this->db->get();
+			// echo $this->db->last_query();
+			$rowscust1 = $query->result_array();
+			
+			$this->db->select('ld.lead_id');
+			$this->db->from($this->cfg['dbpref'].'leads as ld');
+			$this->db->where("(ld.assigned_to = '".$this->userdata['userid']."' OR ld.lead_assign = '".$this->userdata['userid']."' OR ld.belong_to = '".$this->userdata['userid']."')");
+			$this->db->where("ld.lead_status", 4);
+			$this->db->where("ld.pjt_status", 1);
+			$query1 = $this->db->get();
+			// echo $this->db->last_query();
+			$rowscust2 = $query1->result_array();
+			
+			$customers = array_merge_recursive($rowscust1, $rowscust2);
+			
+			$res[] = 0;
+			if (is_array($customers) && count($customers) > 0) { 
+				foreach ($customers as $cus) {
+					$res[] = $cus['lead_id'];
+				}
+			}
+			$job_ids = array_unique($res);
+			
+		}
+		//LEVEL BASED RESTIRCTION
 		
+
 		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, l.lead_title, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
@@ -34,6 +99,10 @@ class Sales_forecast_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		
+		if(!empty($job_ids) && count($job_ids)>0) {
+			$this->db->where_in('sfc.job_id', $job_ids);
+		}
 		
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
@@ -94,8 +163,8 @@ class Sales_forecast_model extends crm_model {
 
 	/*
 	*@Update Exist Currency
-	*@Method  insert_new_currency
-	*@table   expect_worth
+	*@Method insert_new_currency
+	*@table expect_worth
 	*/
 	public function updt_exist_currency($updt, $id) {
 		$res = $this->db->update($this->cfg['dbpref'].'expect_worth', $updt, "expect_worth_id = ".$id." ");
@@ -134,6 +203,23 @@ class Sales_forecast_model extends crm_model {
     public function update_row($table, $cond, $data) {
     	$this->db->where($cond);
 		return $this->db->update($this->cfg['dbpref'].$table, $data);
+    }
+	
+	/*
+	*@Update Row for dynamic table
+	*@Method  update_row_return_affected_rows
+	*/
+    public function update_row_return_affected_rows($table, $cond, $data) {
+    	$sql =  '
+				UPDATE `'.$this->cfg['dbpref'].'sales_forecast_milestone` SET 
+				milestone_name = "'.$data['milestone_name'].'",
+				milestone_value = '.$data['milestone_value'].',
+				for_month_year = "'.date("Y-m-d", strtotime($data['for_month_year'])).'",
+				modified_by = '.$this->userdata['userid'].'
+				WHERE milestone_id = '.$cond.'
+				';
+		mysql_query($sql);
+		return mysql_affected_rows();
     }
 
 	/*
@@ -302,6 +388,22 @@ class Sales_forecast_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expect_worth as exp', 'exp.expect_worth_id = l.expect_worth_id');
 		$this->db->where('ep.invoice_status', 0);
 		$this->db->where('ep.jobid_fk', $id);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+ 		return $query->result_array();
+	}
+
+	/*
+	*@Get Logs for Milestones
+	*@Method  get_ms_logs
+	*/
+	function get_ms_logs($id)
+	{
+		$this->db->select('msl.milestone_name, msl.milestone_value, msl.for_month_year, msl.modified_by, msl.modified_on, us.first_name, us.last_name');
+		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone_audit_log as msl');
+		$this->db->join($this->cfg['dbpref'].'users as us', 'us.userid = msl.modified_by');
+		$this->db->where('msl.milestone_id', $id);
+		$this->db->order_by('modified_on', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query();
  		return $query->result_array();
