@@ -7,6 +7,9 @@
 
 $('#advance_search').hide();
 
+var params  = {};
+params[csrf_token_name] = csrf_hash_token;
+
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
@@ -83,4 +86,37 @@ $( "#month_year_from_date, #month_year_to_date" ).datepicker({
 		$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 	}
 });
+
+
+/*
+* view_logs for milestones
+*/
+function view_logs(id) {
+	$.ajax({
+		url : site_base_url + 'sales_forecast/get_logs/'+id,
+		cache: false,
+		type: "POST",
+		data:params,
+		success : function(response) {
+			// console.info(response);
+			// return false;
+			$('#view-log-container').html(response);
+			$.blockUI({
+				message:$('#view-log-container'),
+				css:{ 
+					border: '2px solid #999',
+					color:'#333',
+					padding:'8px',
+					top:  '250px',
+					left: ($(window).width() - 700) /2 + 'px',
+					width: '765px',
+					position: 'absolute',
+					'overflow-y':'auto',
+					'overflow-x':'hidden',
+					position: 'absolute'
+				}
+			});
+		}
+	});
+}
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

@@ -13,8 +13,9 @@ var params  = {};
 params[csrf_token_name] = csrf_hash_token;
 
 $(function() {
+	
 	if(url_segment[3] == 'update' && $.isNumeric(url_segment[4])) {
-		// alert(url_segment[4] + ' ' +job_id+ ' ' +customer_id); return false;
+		// alert(url_segment[4] + ' ' +job_id+ ' ' +customer_id); return false; 
 		$(':radio[value="' + sf_categ + '"]').attr('checked', 'checked');
 		get_customers(sf_categ, customer_id);
 		get_records(customer_id, job_id);
@@ -147,6 +148,28 @@ function get_records(custid, job_id) {
 	
 }
 
+function check_existing_add_saleforecast(id) {
+	
+	params['id']       = id;
+	
+	$.ajax({
+		url: site_base_url+"sales_forecast/check_exist_sf_info/",
+		data: params,
+		type: "POST",
+		dataType: 'json',
+		async: false,
+		success: function(response) {
+			if(response.redirect == true) {
+				document.location.href = site_base_url+'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
+				return false;
+			} else {
+				get_lead_detail(id);
+				$('#ms_list').hide();
+			}
+		}
+	});
+}
+
 function get_lead_detail(id, sf_id) {
 
 	$('#leaddetail').hide();
@@ -157,10 +180,12 @@ function get_lead_detail(id, sf_id) {
 	if(id=='')
 	return false;
 	
-	params['id'] = id;
-	category = $('input[name=category]:checked', '.addForm').val();
+	params['id']       = id;
+	category           = $('input[name=category]:checked', '.addForm').val();
 	params['category'] = category;
-	params['sf_id'] = sf_id;
+	params['sf_id']    = sf_id;
+	//check whether
+
 	
 	$.ajax({
 		url: site_base_url+"sales_forecast/getLeadDetail/",
@@ -168,12 +193,18 @@ function get_lead_detail(id, sf_id) {
 		type: "POST",
 		dataType: 'json',
 		async: false,
-		success: function(data) {
-			$('#show-lead-detail').html(data.det);
-			$('#leaddetail').show();
-			if(category == 2) {
-				$('#show-project-ms-detail').html(data.ms_det);
-				$('#project-ms-detail').show();
+		success: function(response) {
+			if(response.redirect == true && sf_id == 'undefined') {
+				alert('redirect');
+				document.location.href = site_base_url+'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
+				return false;
+			} else {
+				$('#show-lead-detail').html(response.det);
+				$('#leaddetail').show();
+				if(category == 2) {
+					$('#show-project-ms-detail').html(response.ms_det);
+					$('#project-ms-detail').show();
+				}
 			}
 		}
 	});
@@ -305,6 +336,35 @@ function addform_reset() {
 	$('input[name=milestone_name]', '.addForm').val("");
 	$('input[name=milestone_value]', '.addForm').val("");
 	$('input[name=for_month_year]', '.addForm').val("");
+}
+
+function view_logs(id) {
+	$.ajax({
+		url : site_base_url + 'sales_forecast/get_logs/'+id,
+		cache: false,
+		type: "POST",
+		data:params,
+		success : function(response) {
+			// console.info(response);
+			// return false;
+			$('#view-log-container').html(response);
+			$.blockUI({
+				message:$('#view-log-container'),
+				css:{ 
+					border: '2px solid #999',
+					color:'#333',
+					padding:'8px',
+					top:  '250px',
+					left: ($(window).width() - 700) /2 + 'px',
+					width: '765px',
+					position: 'absolute',
+					'overflow-y':'auto',
+					'overflow-x':'hidden',
+					position: 'absolute'
+				}
+			});
+		}
+	});
 }
 
 //Adding multiple milestone rows - End here
