@@ -464,50 +464,6 @@ class Sales_forecast extends crm_controller {
             }
         }
         echo json_encode($res); exit;
-    }	
-	
-	/*
-	*@For ajax check status
-	*@Method ajax_check_status
-	*/
-	public function ajax_check_status()
-	{
-		$post_data  = real_escape_array($this->input->post());
-		$leadId     = $post_data['data'];
-		$this->db->where('practice', $leadId);
-		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
-		$res = array();
-		if($query == 0) {
-			$res['html'] .= "YES";
-		} else {
-			$res['html'] .= "NO";
-		}
-		echo json_encode($res);
-		exit;
-	}
+    }
 
-	/**
-	 * Check Duplicates for Lead source is already exits or not.
-	 */
-	function chk_duplicate() {
-		$post_data = real_escape_array($this->input->post());
-
-		$tbl_cont = array();
-
-		$tbl_cont['name'] = 'practices';
-		$tbl_cont['id']   = 'id';
-		if(empty($post_data['id'])) {
-			$condn = array('name'=>$post_data['name']);
-			$res = $this->sales_forecast_model->check_duplicate($tbl_cont, $condn, 'practices');
-		} else {
-			$condn = array('name'=>$post_data['name'], 'id'=>$post_data['id']);
-			$res = $this->sales_forecast_model->check_duplicate($tbl_cont, $condn, 'practices');
-		}
-
-		if($res == 0)
-		echo json_encode('success');
-		else
-		echo json_encode('fail');
-		exit;
-	}
 }
