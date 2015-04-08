@@ -440,8 +440,6 @@ class Sales_forecast extends crm_controller {
 		}
 	}
 
-	
-	
 	/*
 	*@method ajax_customer_search()
 	*/
