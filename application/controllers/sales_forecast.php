@@ -78,8 +78,14 @@ class Sales_forecast extends crm_controller {
             $data['salesforecast_data'] = $this->sales_forecast_model->get_record('*',"sales_forecast",array('forecast_id' => $id));
 			$data['milestone_data']     = $this->sales_forecast_model->get_records("sales_forecast_milestone",array('forecast_id_fk' => $id),array('for_month_year' => 'desc'));
 			$sf_category = $this->sales_forecast_model->get_sf_category($id);
-			if(!empty($sf_category))
-			$data['salesforecast_category'] = $sf_category['forecast_category'];
+	
+			if(!empty($sf_category)) {
+				if(($sf_category['lead_status']==4) && ($sf_category['pjt_status']==1 || $sf_category['pjt_status']==2 || $sf_category['pjt_status']==3 || $sf_category['pjt_status']==4)) {
+					$data['salesforecast_category'] = 2;
+				} else if (($sf_category['lead_status']==1) && ($sf_category['pjt_status']==0)) {
+					$data['salesforecast_category'] = 1;
+				}
+			}
         }
 		$this->load->view('sales_forecast/sales_forecast_add_view', $data);
 		
@@ -297,7 +303,7 @@ class Sales_forecast extends crm_controller {
 			}
 			
 		}
-		
+		$row = false;
 		if(!empty($get_ms_data) && $post_data['category'] == 2) {
 			$res['ms_det'] .= '<table border=1 cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
 			foreach($get_ms_data as $ms) {
@@ -309,8 +315,12 @@ class Sales_forecast extends crm_controller {
 					if(strtotime($milestone_month_year) > strtotime($current_month_year)) {
 						$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
 					}
+					$row = true;
 					$res['ms_det'] .= '</td></tr>';
 				}
+			}
+			if($row == false){
+				$res['ms_det'] .= '<tr><td colspan=5>No Records Availble</td></tr>';
 			}
 			$res['ms_det'] .= '</table>';
 			

@@ -430,15 +430,12 @@ class Sales_forecast_model extends crm_model {
 	*@Sales Forecast Model
 	*/
 	public function get_sf_category($wh_condn) {
-		$this->db->select('forecast_category');
-		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone');
-		if(!empty($wh_condn))
-		$this->db->where('forecast_id_fk', $wh_condn);
-		
-		$this->db->order_by('forecast_category', 'desc');
-		$this->db->limit(1);
+		$this->db->select('l.lead_status,l.pjt_status');
+		$this->db->from($this->cfg['dbpref'].'leads as l');
+		$this->db->join($this->cfg['dbpref'].'sales_forecast as sf','sf.job_id = l.lead_id');
+		$this->db->where('sf.forecast_id', $wh_condn);
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); #exit;
 		return $query->row_array();
     }
 	

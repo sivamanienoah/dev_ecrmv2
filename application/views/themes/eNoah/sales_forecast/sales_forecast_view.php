@@ -123,7 +123,7 @@ button.ui-datepicker-current { display: none; }
 					<th>Entity</th>
 					<th>Customer</th>
 					<th>Lead/Project Name</th>
-					<th>Lead/Project</th>
+					<th>Type</th>
 					<th>Milestone Name</th>
 					<th>For Month & Year</th>
 					<th>Value</th>

@@ -113,7 +113,7 @@
 			<table border=1 id="ms_list" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th>Milestone Name</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
+						<th>Milestone Name</th><th>Type</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -123,6 +123,14 @@
 							<?php $milestone_month_year = date('d-m-Y', strtotime($ms_rec['for_month_year'])); ?>
 							<?php $current_month_year   = date('d-m-Y'); ?>
 							<td><?php echo $ms_rec['milestone_name'] ?></td>
+							<td>
+								<?php 
+									if($ms_rec['forecast_category']==1) 
+									echo "Lead";
+									else if($ms_rec['forecast_category']==2)
+									echo "Project";
+								?>
+							</td>
 							<td><?php echo date('F Y', strtotime($ms_rec['for_month_year'])); ?></td>
 							<td><?php echo $ms_rec['milestone_value'] ?></td>
 							<td>
