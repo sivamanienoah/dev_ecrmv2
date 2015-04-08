@@ -12,7 +12,7 @@
 			<th>Action</th>
 		</tr>
 	</thead>
-	<tbody>	
+	<tbody>
 		<?php if (is_array($sales_forecast) && count($sales_forecast) > 0) { ?>
 			<?php foreach($sales_forecast as $forecast) { ?>
 				<?php $milestone_month_year = date('d-m-Y', strtotime($forecast['for_month_year'])); ?>

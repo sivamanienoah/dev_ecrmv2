@@ -18,6 +18,7 @@
 	<?php } ?>
 	
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
+	<div>
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
@@ -106,12 +107,16 @@
 				</tr>
             </table>
 		</form>
-		
+	</div>
+	<div>
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<table border=1 id="ms_list">
-				<tr>
-					<th>Milestone Name</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
-				</tr>
+			<table border=1 id="ms_list" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Milestone Name</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
 				<?php if(!empty($milestone_data)) { ?>
 					<?php foreach($milestone_data as $ms_rec) { ?>
 						<tr>
@@ -137,9 +142,11 @@
 							</td>
 						</tr>
 					<?php } ?>	
-				<?php } ?>	
+				<?php } ?>
+				</tbody>
 			</table>
 		<?php } ?>
+	</div>
 <?php 
 	} else {
 	echo "You have no rights to access this page";

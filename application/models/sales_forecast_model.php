@@ -92,7 +92,7 @@ class Sales_forecast_model extends crm_model {
 		//LEVEL BASED RESTIRCTION
 		
 
-		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, l.lead_title, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
+		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfc.job_id');
