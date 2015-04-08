@@ -254,19 +254,6 @@ class Sales_forecast_model extends crm_model {
     }
 	
 	/*
-	*Checking duplicates
-	*/
-	function check_duplicate($tbl_cont, $condn, $tbl_name) {
-		$this->db->select($tbl_cont['name']);
-		$this->db->where($tbl_cont['name'], $condn['name']);
-		if(!empty($condn['id'])) {
-			$this->db->where($tbl_cont['id'].' !=', $condn['id']);
-		}
-		$res = $this->db->get($this->cfg['dbpref'].$tbl_name);
-        return $res->num_rows();
-	}
-	
-	/*
 	*@Get Row for Customers
 	*@Method  get_customers
 	*/
