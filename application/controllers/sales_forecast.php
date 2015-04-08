@@ -188,7 +188,7 @@ class Sales_forecast extends crm_controller {
 				if( $id != '' && is_numeric($id) && ($cs['custid'] == $id) ) {
 					$selected = "selected='selectd'";
 				}
-				$data['customers'] .= '<option value='.$cs['custid'].' '.$selected.'>'.stripslashes($cs['first_name']).' '.stripslashes($cs['last_name']).' - '.stripslashes($cs['company']).'</option>';
+				$data['customers'] .= '<option value='.$cs['custid'].' '.$selected.'>'.stripslashes($cs['company']).' - '.stripslashes($cs['first_name']).' '.stripslashes($cs['last_name']).'</option>';
 			}
 			
 		}
