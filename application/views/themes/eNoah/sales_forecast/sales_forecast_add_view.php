@@ -6,17 +6,6 @@
 <?php $username = $this->session->userdata('logged_in_user'); ?>
 <div id="content">
     <div class="inner">
-	
-	<?php if ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-		<? 	
-			// echo $salesforecast_category;
-			// echo "<pre>";
-			// print_r($salesforecast_data);
-			// echo "<br>";
-			// print_r($milestone_data);
-		?>
-	<?php } ?>
-	
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
 	<div>
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
