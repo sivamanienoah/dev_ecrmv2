@@ -107,8 +107,11 @@
             </thead>
             <tbody>
 			<?php
+			//echo '<pre>';print_r($files);exit;
 			if (is_array($files) && count(files) > 0) { 
-				foreach ($files as $file) {
+				foreach ($files as $file) {?>
+				 
+					<?php
 					$file_ext  = end(explode('.',$file['lead_files_name']));
 					$file_full_path = UPLOAD_PATH.'files/'.$file['lead_id'].'/'.$file['lead_files_name'];
 					$filesize = filesize($file_full_path);
@@ -194,5 +197,21 @@
 		}});
 		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
 	});
+$(function() {	
+	$('.data-tbl1').dataTable({
+
+		"bSort": true,
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,		
+		"bFilter": true,
+		"aaSorting": [[ 4, "desc" ]],
+		"bAutoWidth": false,
+	});
+});	
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

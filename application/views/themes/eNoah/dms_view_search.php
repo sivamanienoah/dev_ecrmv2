@@ -47,7 +47,7 @@
 	}
 $(function() {	
 	$('.data-tbl1').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
+		"aaSorting": [[ 4, "desc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,

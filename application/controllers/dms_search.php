@@ -21,7 +21,7 @@ class Dms_search extends crm_controller {
 		$data['keyword'] = $keyword;
 		
 		$data['page_heading'] = "DMS Search";
-		$data['customers']   = $this->customer_model->customer_list();
+		$data['customers']   = $this->dms_search_model->customer_list();
 		 
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		//$data['projects']   = $this->dms_search_model->get_projects();
@@ -47,7 +47,7 @@ class Dms_search extends crm_controller {
 		$data['keyword'] = $keyword;
 		
 		$data['page_heading'] = "DMS Search";
-		$data['customers']   = $this->customer_model->customer_list();
+		$data['customers']   = $this->dms_search_model->customer_list();
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		$data['extension']   = $this->dms_search_model->get_extensions();		
 		

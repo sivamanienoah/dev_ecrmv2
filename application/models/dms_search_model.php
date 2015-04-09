@@ -47,13 +47,13 @@ class Dms_search_model extends crm_model {
 			$this->db->where("lead_files_created_on <=",$td);
 		}
 		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);
-		$this->db->order_by("lf.lead_files_created_on");
+		$this->db->order_by("lf.lead_files_created_on",'DESC');
 	    $sql = $this->db->get();
 		//echo $this->db->last_query();exit;
 	    return $sql->result_array();
 	}
 	
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {		 
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {
 		 
 		$stage 		= $pjtstage;
 		$customer 	= $cust;
@@ -225,11 +225,102 @@ class Dms_search_model extends crm_model {
 			$this->db->where($invwhere);
 		}
 		
-		$this->db->order_by("j.lead_id", "asc");
+		$this->db->order_by("j.lead_title", "asc");
 		$query = $this->db->get();
 		$pjts =  $query->result_array();
 		return $pjts;
 	}	
+	
+	function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false) {
+        $restrict = '';
+        $restrict_search = '';
+		//customer restriction on level based.
+		if ($this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4 || $this->userdata['level'] == 5) {
+			$cond = array('level_id' => $this->userdata['level'], 'user_id' => $this->userdata['userid']);
+			
+			$this->db->select('region_id');
+		 	$reg_res = $this->db->get_where($this->cfg['dbpref']."levels_region", $cond);
+			$reg_details = $reg_res->result_array();
+			foreach($reg_details as $reg) {
+				$regions[] = $reg['region_id'];
+			}
+			$regions_ids = array_unique($regions);
+			$regions_ids = (array_values($regions)); //reset the keys in the array
+			//$regions_ids = implode(",", $regions_ids);
+		
+			//restriction for country
+			$this->db->select('country_id');
+			$coun_res = $this->db->get_where($this->cfg['dbpref']."levels_country", $cond);
+			$coun_details = $coun_res->result_array();
+			foreach($coun_details as $coun) {
+				$countries[] = $coun['country_id'];
+			}
+			if (!empty($countries)) {
+				$countries_ids = array_unique($countries);
+				$countries_ids = (array_values($countries)); //reset the keys in the array
+				//$countries_ids = @implode(",",$countries_ids);
+			}
+		
+			//restriction for state
+			$this->db->select('state_id');
+			$state_res = $this->db->get_where($this->cfg['dbpref']."levels_state", $cond);
+			$ste_details = $state_res->result_array();
+			foreach($ste_details as $ste) {
+				$states[] = $ste['state_id'];
+			}
+			if (!empty($states)) {
+				$states_ids = array_unique($states);
+				$states_ids = (array_values($states)); //reset the keys in the array				
+			}
+			//$states_ids = implode(",",$states_ids);
+		
+			//restriction for location
+			$this->db->select('location_id');
+			$loc_res = $this->db->get_where($this->cfg['dbpref']."levels_location", $cond);
+			$loc_details = $loc_res->result_array();
+			foreach($loc_details as $loc) {
+				$locations[] = $loc['location_id'];
+			}
+			if (!empty($locations)) {
+				$locations_ids = array_unique($locations);
+				$locations_ids = (array_values($locations)); //reset the keys in the array
+			}
+			//$locations_ids = implode(",",$locations_ids);
+		}
+       
+        $offset = mysql_real_escape_string($offset);		
+		$this->db->select('CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
+		$this->db->from($this->cfg['dbpref'].'customers as CUST');
+		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
+		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
+        if ($this->userdata['level'] == 2) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);				
+		} else if ($this->userdata['level'] == 3) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+		} else if ($this->userdata['level'] == 4) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+		} else if ($this->userdata['level'] == 5) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+			$this->db->where_in('CUST.add1_location', $locations_ids);
+		}
+		if($search != false) {
+			$search = mysql_real_escape_string(urldecode($search));
+			$this->db->where("(first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR company LIKE '%$search%' OR email_1 LIKE '%$search%')");
+		}
+		$this->db->order_by("CUST.company","ASC");
+		
+		if(!empty($limit))	
+		$this->db->limit($limit);
+		
+		$customers = $this->db->get();        
+        // echo $this->db->last_query();
+        return $customers->result_array(); 
+    }	
 	
 	
 	function get_extensions(){
