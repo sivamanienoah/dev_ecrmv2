@@ -113,7 +113,7 @@ class Sales_forecast extends crm_controller {
 			$forecast_data = array('job_id'=>$post_data['job_id'],'customer_id'=>$post_data['customer_id'],'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
 			
 			if(isset($sf_id) && is_numeric($sf_id)) {
-				unset($forecast_data['created_by']);
+				/* unset($forecast_data['created_by']);
 				unset($forecast_data['created_on']);
 				$forecast_data['modified_by'] = $this->userdata['userid'];
 				$sf_updt = $this->sales_forecast_model->update_row('sales_forecast', $wh_condn=array('forecast_id'=>$sf_id), $forecast_data);
@@ -122,7 +122,8 @@ class Sales_forecast extends crm_controller {
 				} else {
 					$data['error'] = true;
 					exit;
-				}
+				} */
+				$forecast_id = $sf_id;
 			} else {
 				$forecast_id = $this->sales_forecast_model->insert_row_return_id('sales_forecast', $forecast_data);
 			}
@@ -463,5 +464,39 @@ class Sales_forecast extends crm_controller {
         }
         echo json_encode($res); exit;
     }
+	
+	/*
+	 *Reports
+	 */
+	public function reports()
+	{	
+		$data['page_heading'] = 'Sales Forecast Reports';
+		
+		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
+		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
+		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
+		$curFiscalYear       = $this->sales_forecast_model->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$data['month_array'] = array('Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar');
+		
+		$sf_data 		     = $this->sales_forecast_model->get_sf_milestone_records();
+		
+		// $report_data = array();
+		$highest_month = date('Y-m-d');
+		foreach($sf_data as $sf) {
+			$month = date('M', strtotime($sf['for_month_year']));
+			$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
+			$data['report_data'][$sf['forecast_id']]['customer']  = $sf['company'].' - '.$sf['first_name'].' '.$sf['last_name'];
+			$data['report_data'][$sf['forecast_id']]['lead_name'] = $sf['lead_title'];
+			$data['report_data'][$sf['forecast_id']]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
+			$data['report_data'][$sf['forecast_id']]['milestones'][$month]['ms_name'] = $sf['milestone_name'];
+			$data['report_data'][$sf['forecast_id']]['milestones'][$month]['ms_value'] = $sf['milestone_value'];
+		}
+		
+		$data['highest_month'] = $highest_month;
+		
+		// echo "<pre>"; print_r($data['report_data']); exit;
+		
+		$this->load->view('sales_forecast/sale_forecast_report_view', $data);
+	}
 
 }

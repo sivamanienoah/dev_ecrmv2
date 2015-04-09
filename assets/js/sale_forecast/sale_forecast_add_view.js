@@ -17,6 +17,7 @@ $(function() {
 	if(url_segment[3] == 'update' && $.isNumeric(url_segment[4])) {
 		// alert(url_segment[4] + ' ' +job_id+ ' ' +customer_id); return false; 
 		$(':radio[value="' + sf_categ + '"]').attr('checked', 'checked');
+		$(':radio[name="category"]').attr('disabled', 'disabled');
 		get_customers(sf_categ, customer_id);
 		get_records(customer_id, job_id);
 		get_lead_detail(job_id, url_segment[4]);
@@ -104,6 +105,10 @@ function get_customers(data_type, cust_id) {
 		success: function(data) {
 			// console.info(data.customers);
 			$('#customer_id').html(data.customers);
+			
+			if(!isNaN(cust_id) && (cust_id!='undefined')) {
+				$('#customer_id').attr('disabled', 'disabled');
+			}
 		}
 	});
 }
@@ -133,16 +138,22 @@ function get_records(custid, job_id) {
 		async: false,
 		success: function(data) {
 		
-			// alert(data)
 			if(category == 1) {
 				$('#lead_job_id').html(data.records);
 				$('#lead-data').show();
 				$('#project-data').hide();
+				if(!isNaN(job_id) && (job_id!='undefined')) {
+					$('#lead_job_id').attr('disabled', 'disabled');
+				}
 			} else if(category == 2) {
 				$('#project_job_id').html(data.records);
 				$('#lead-data').hide();
 				$('#project-data').show();
+				if(!isNaN(job_id) && (job_id!='undefined')) {
+					$('#project_job_id').attr('disabled', 'disabled');
+				}
 			}
+			
 		}
 	});
 	

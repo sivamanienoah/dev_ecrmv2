@@ -24,6 +24,13 @@
 					<td>
 						<input type="radio" name="category" id="category_for_lead" <?php echo ($this->validation->category==1) ?" checked='checked'" : ""; ?> value="1" /> Lead
 						<input type="radio" name="category" id="category_for_project" <?php echo ($this->validation->category==2) ?" checked='checked'" : ""; ?> value="2" /> Project
+						<?php 
+							if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) {
+						?>
+								<input type="hidden" name="category" value="<?php echo $salesforecast_category; ?>" />
+						<?php
+							}
+						?>
 					</td>
 				</tr>
 				<tr>

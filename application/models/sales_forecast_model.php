@@ -162,23 +162,6 @@ class Sales_forecast_model extends crm_model {
     }
 
 	/*
-	*@Update Exist Currency
-	*@Method insert_new_currency
-	*@table expect_worth
-	*/
-	public function updt_exist_currency($updt, $id) {
-		$res = $this->db->update($this->cfg['dbpref'].'expect_worth', $updt, "expect_worth_id = ".$id." ");
-		if (array_key_exists('is_default', $updt)) {
-			$data[is_default] = 0;
-			$cur_conver['to'] = $id;
-			$this->db->update($this->cfg['dbpref'].'expect_worth', $data, "expect_worth_id != ".$id." ");
-			$this->db->truncate($this->cfg['dbpref'].'currency_rate');
-		}
-		currency_convert();
-		return $res;
-    }
-
-	/*
 	*@Get row record for dynamic table
 	*@Method  get_row
 	*/
@@ -438,6 +421,82 @@ class Sales_forecast_model extends crm_model {
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
+	}
+	
+	/*
+	*@get_sf_customers
+	*@Sales Forecast Model
+	*/
+	public function get_sf_records($type) {
+	
+		//LEVEL BASED RESTIRCTION
+		if( $this->userdata['level'] != 1 ) {
+			if (isset($this->session->userdata['region_id']))
+			$region = explode(',',$this->session->userdata['region_id']);
+			if (isset($this->session->userdata['countryid']))
+			$countryid = explode(',',$this->session->userdata['countryid']);
+			if (isset($this->session->userdata['stateid']))
+			$stateid = explode(',',$this->session->userdata['stateid']);
+			if (isset($this->session->userdata['locationid']))
+			$locationid = explode(',',$this->session->userdata['locationid']);
+			if($type=='customers')
+			$this->db->select('c.custid, c.company, c.first_name, c.last_name');
+			else if($type=='jobs')
+			$this->db->select('c.custid, c.company, c.first_name, c.last_name, l.lead_id, l.lead_title');
+			
+			$this->db->from($this->cfg['dbpref'].'customers as c');
+			$this->db->join($this->cfg['dbpref'].'sales_forecast as sf', 'sf.customer_id  = c.custid');
+			if($type=='jobs') {
+			$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id  = sf.job_id');
+			}
+			
+			switch($this->userdata['level']) {
+				case 2:
+					$this->db->where_in('c.add1_region',$region);
+				break;
+				case 3:
+					$this->db->where_in('c.add1_region',$region);
+					$this->db->where_in('c.add1_country',$countryid);
+				break;
+				case 4:
+					$this->db->where_in('c.add1_region',$region);
+					$this->db->where_in('c.add1_country',$countryid);
+					$this->db->where_in('c.add1_state',$stateid);
+				break;
+				case 5:
+					$this->db->where_in('c.add1_region',$region);
+					$this->db->where_in('c.add1_country',$countryid);
+					$this->db->where_in('c.add1_state',$stateid);
+					$this->db->where_in('c.add1_location',$locationid);
+				break;
+			}
+			if($type=='customers') {
+			$this->db->group_by('c.custid');
+			}
+			$query = $this->db->get();
+			// echo $this->db->last_query();
+			return $query->result_array();
+		}
+	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate){
+			$fy = intval($inputyear);
+		}else{
+			$fy = intval(intval($inputyear) + 1);
+		}
+	 
+		return $fy;
 	}
     
 }
