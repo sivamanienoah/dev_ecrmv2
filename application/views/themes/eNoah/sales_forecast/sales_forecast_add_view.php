@@ -109,7 +109,12 @@
 			<table border=1 id="ms_list" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th>Milestone Name</th><th>Type</th><th>For the Month & Year</th><th>Milestone Value</th><th>Action</th>
+						<th>Milestone Name</th>
+						<th>Type</th>
+						<th>For the Month & Year</th>
+						<th>Currency</th>
+						<th>Milestone Value</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -128,7 +133,8 @@
 								?>
 							</td>
 							<td><?php echo date('F Y', strtotime($ms_rec['for_month_year'])); ?></td>
-							<td><?php echo $ms_rec['milestone_value'] ?></td>
+							<td><?php echo $salesforecast_currency; ?></td>
+							<td><?php echo $ms_rec['milestone_value']; ?></td>
 							<td>
 								<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
 								<?php if($this->session->userdata('edit')==1) { ?>

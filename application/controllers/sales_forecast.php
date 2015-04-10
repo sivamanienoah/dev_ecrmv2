@@ -85,6 +85,7 @@ class Sales_forecast extends crm_controller {
 				} else if (($sf_category['lead_status']==1) && ($sf_category['pjt_status']==0)) {
 					$data['salesforecast_category'] = 1;
 				}
+				$data['salesforecast_currency'] = $sf_category['expect_worth_name'];
 			}
         }
 		$this->load->view('sales_forecast/sales_forecast_add_view', $data);

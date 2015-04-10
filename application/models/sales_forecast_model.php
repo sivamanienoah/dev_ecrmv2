@@ -92,7 +92,7 @@ class Sales_forecast_model extends crm_model {
 		//LEVEL BASED RESTIRCTION
 		
 
-		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
+		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.expect_worth_amount, enti.division_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfc.job_id');
@@ -400,9 +400,10 @@ class Sales_forecast_model extends crm_model {
 	*@Sales Forecast Model
 	*/
 	public function get_sf_category($wh_condn) {
-		$this->db->select('l.lead_status,l.pjt_status');
+		$this->db->select('l.lead_status,l.pjt_status,exp.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads as l');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sf','sf.job_id = l.lead_id');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as exp', 'exp.expect_worth_id = l.expect_worth_id');
 		$this->db->where('sf.forecast_id', $wh_condn);
 		$query = $this->db->get();
 		// echo $this->db->last_query(); #exit;
