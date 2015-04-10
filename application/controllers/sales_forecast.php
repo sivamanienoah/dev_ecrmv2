@@ -32,7 +32,7 @@ class Sales_forecast extends crm_controller {
 	*@Get practice List
 	*@Method index
 	*/
-    public function index($search = FALSE)
+    public function index()
 	{
         $data['page_heading']   = 'Sales Forecast';
 		
@@ -476,12 +476,16 @@ class Sales_forecast extends crm_controller {
 		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
 		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
 		$curFiscalYear       = $this->sales_forecast_model->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$data['month_array'] = array('Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar');
+		$data['month_array'] = array(04=>'Apr',05=>'May',06=>'Jun',07=>'Jul',08=>'Aug',09=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec',01=>'Jan',02=>'Feb',03=>'Mar');
 		
-		$sf_data 		     = $this->sales_forecast_model->get_sf_milestone_records();
+		$filter   			 = real_escape_array($this->input->post());
 		
-		// $report_data = array();
-		$highest_month = date('Y-m-d');
+		// echo "<pre>"; print_R($filter); exit;
+		
+		$sf_data 		     = $this->sales_forecast_model->get_sf_milestone_records($filter);
+		
+		/*Month - Milestone Name|Milestone Value(Milestones Clubbed)-Start*/
+		/* $highest_month = date('Y-m-d');
 		foreach($sf_data as $sf) {
 			$month = date('M', strtotime($sf['for_month_year']));
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
@@ -490,12 +494,40 @@ class Sales_forecast extends crm_controller {
 			$data['report_data'][$sf['forecast_id']]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 			$data['report_data'][$sf['forecast_id']]['milestones'][$month]['ms_name'] = $sf['milestone_name'];
 			$data['report_data'][$sf['forecast_id']]['milestones'][$month]['ms_value'] = $sf['milestone_value'];
-		}
+		} 
+		$data['highest_month'] = $highest_month;
+		*/
+		/*Month - Milestone Name|Milestone Value(Milestones Clubbed)-End*/
 		
+		/*Month|Milestone Name|Milestone Value(Individual Milestone)*/
+		$highest_month = date('Y-m-d');
+		foreach($sf_data as $sf) {
+			$month = date('m', strtotime($sf['for_month_year']));
+			$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['customer']  = $sf['company'].' - '.$sf['first_name'].' '.$sf['last_name'];
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['lead_name'] = $sf['lead_title'];
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['type']      = ($sf['forecast_category']==1)?'Lead':'Project';
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['ms_name']   = $sf['milestone_name'];
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['ms_value']  = $sf['milestone_value'];
+		}
+		/*Month|Milestone Name|Milestone Value(Individual Milestone)*/
+		
+		if(($this->input->post("filter")!="") && $filter['month_year_to_date'])
+		$data['highest_month'] = date('Y-m-d', strtotime($filter['month_year_to_date']));
+		else
 		$data['highest_month'] = $highest_month;
 		
-		// echo "<pre>"; print_r($data['report_data']); exit;
 		
+		if(($this->input->post("filter")!="") && $filter['month_year_from_date'])
+		$data['current_month'] = date('Y-m', strtotime($filter['month_year_from_date']));
+		else
+		$data['current_month'] = date('Y-m');
+
+		// echo "<pre>"; print_r($data['report_data']); exit;
+
+		if($this->input->post("filter")!="")
+		$this->load->view('sales_forecast/sale_forecast_report_view_grid', $data);
+		else
 		$this->load->view('sales_forecast/sale_forecast_report_view', $data);
 	}
 

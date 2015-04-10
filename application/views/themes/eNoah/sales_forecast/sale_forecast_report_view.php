@@ -26,7 +26,7 @@
 			<div class="clear"></div>
 			
 			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="advanceFiltersForecast" id="advanceFiltersForecast" method="post" style="width:940px;">
+				<form name="advanceFiltersSFReport" id="advanceFiltersSFReport" method="post" style="width:940px;">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<?php //echo '<pre>'; print_r($sales_divisions);?>
 					<div style="border: 1px solid #DCDCDC;">
@@ -93,58 +93,76 @@
 			</div>
 		</div>
 		<div class="clear"></div>
-		<div id='results'>
-			
+		<div id='results' style="width:auto; overflow:scroll; overflow-y: hidden;">
 			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 				<thead>
 					<tr>
-						<th rowspan=2>Customer</th>
-						<th rowspan=2>Lead/Project Name</th>
-						<th rowspan=2>Type</th>
+						<th>Customer</th>
+						<th>Customer</th>
+						<th>Lead/Project Name</th>
+						<th>Milestone</th>
 						<?php
-							$current_month = date('Y-m');
+							// $current_month = date('Y-m');
+							$from_month = $current_month;
 							$k = 1;
 							
-							for($i=$current_month; $i<=date('Y-m', strtotime($highest_month)); $i++) {
+							for($i=$from_month; $i<=date('Y-m', strtotime($highest_month)); $i++) {
 						?>
-								<th colspan=2>
-									<?php echo date('M', strtotime($current_month)); ?>
-								</th>
+								<th><?php echo date('M', strtotime($from_month)); ?></th>
 								
 						<?php
-								$month_arr[] = date('M', strtotime($current_month));
-								$current_month = date("Y-m", strtotime('+'.$k.' month'));
+								$month_arr[date('m', strtotime($from_month))] = date('M', strtotime($from_month));
+								// $month_arr[] = date('M', strtotime($current_month));
+								// $from_month = date("Y-m", strtotime('+'.$k.' month'));
+								// $from_month = date('Y-m', strtotime('+'.$k.' month', strtotime($from_month)));
+								$from_month = date('Y-m', strtotime('+1 month', strtotime($from_month)));
 								$k++;
 							}
 						?>
 					</tr>
-					<tr>
-						<?php for($a=0;$a<count($month_arr);$a++) { ?>
-							<th>Milestone</th>
-							<th>Value</th>
-						<?php } ?>
-					</tr>
 				</thead>
 				<tbody>
+					<?php $tot = array(); ?>
 					<?php foreach($report_data as $fc_data=>$ms_data) { ?>
-					<tr>
-						<td><?php echo $ms_data['customer']; ?></td>
-						<td><?php echo $ms_data['lead_name']; ?></td>
-						<td><?php echo $ms_data['type']; ?></td>
-						<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
-							<?php foreach($month_arr as $mon) { ?>
-								<td>
-								<?php foreach($ms_data['milestones'] as $key=>$val) {
-									if($mon == $key)
-									echo "$mon == $key"; ?>
-									
-								<?php } ?>	
-							<?php } ?><!-- j for loop-->
-							</td>
-						<?php } ?><!-- if condition-->
-					</tr>
+						<?php ksort($ms_data); ?>
+						<?php foreach($ms_data as $mon_no=>$ms_det) { ?>
+							<?php foreach($ms_det as $ms=>$ms_val) { ?>
+								<tr>
+									<td><?php echo $ms_val['customer']; ?></td>
+									<td><?php echo $ms_val['lead_name']; ?></td>
+									<td><?php echo $ms_val['lead_name']; ?></td>
+									<td><?php echo $ms_val['ms_name']; ?></td>
+									<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
+										<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
+											<?php if($mon_no==$mon_number) { ?>
+												<td align="right">
+													<?php echo $ms_val['ms_value']; ?>
+													<?php 
+														$tot[$mon_no] += $ms_val['ms_value'];
+													?>
+												</td>
+											<?php } else { ?>
+												<td align="center"><?php echo '-'; ?></td>
+											<?php } ?>
+										<?php } ?><!-- j for loop-->
+									<?php } ?><!-- if condition-->
+								</tr>
+							<?php } ?><!-- ms_det foreach loop-->
+						<?php } ?><!-- ms_data foreach loop-->
 					<?php } ?><!-- foreach loop-->
 				</tbody>
+				<tfoot>
+					<tr>
+						<td text align=right colspan="4"><strong>Overall Total:</strong></td>
+						<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
+							<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
+								<td align="right">
+									<?php echo ($tot[$mon_number]!='') ? number_format($tot[$mon_number],2,'.','') : ''; ?>
+								</td>
+							<?php } ?>
+						<?php } ?>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 <?php
