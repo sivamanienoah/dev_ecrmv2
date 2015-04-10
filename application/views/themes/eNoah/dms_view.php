@@ -9,30 +9,30 @@
 		</div>
 		<a class="choice-box js_advanced_filter">Advanced Filters<img src="assets/img/advanced_filter.png" class="icon leads" /></a>
         <div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
-		<!--<form style="float:left; margin:0;" method="post" action="<?php echo base_url().'dms_search/search/';?>" name="dms_search_form" onsubmit="return check_search_form();" id="dms_search_form">
-			<table cellspacing="0" cellpadding="0" border="0" class="search-table">
-				<tbody><tr>
-					<td>
-						Document Name:
-					</td>
-					<td>
-						<input type="text" class="textfield width200px" value="<?php echo $keyword;?>" id="keyword" name="keyword" style="color: rgb(119, 119, 119);">
-					</td>
-					<td>
-						<div class="buttons">
-							<button class="positive" type="submit">Search</button>
-							<button onclick="window.location='<?php echo base_url().'dms_search';?>'" class="positive" type="reset">Reset</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-			</table>
-		</form>-->
+ 
 		<div id="advance_filters" style="float:left; display:none;width:100%;" >
 		
 				<form name="dmssearch" id="dmssearch"  method="post">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				
+					<table cellspacing="0" cellpadding="0" border="0" class="search-table">
+						<tbody><tr>
+							<td>
+								Document Name:
+							</td>
+							<td>
+								<input type="text" class="textfield width200px" value="<?php echo $keyword;?>" id="keyword" name="keyword" style="color: rgb(119, 119, 119);">
+							</td>
+							<!--<td>
+								<div class="buttons">
+									<button class="positive" type="submit">Search</button>
+									<button onclick="window.location='<?php echo base_url().'dms_search';?>'" class="positive" type="reset">Reset</button>
+								</div>
+							</td> -->
+						</tr>
+					</tbody>
+					</table>				
 				
 					<table border="0" cellpadding="0" cellspacing="0" class="data-table">
 					<thead>
@@ -55,7 +55,7 @@
 						<td>
 							<select style="width:210px;" multiple="multiple" id="projects" name="projects[]">
 								<?php if(count($projects)>0):foreach($projects as $project) {?>
-								<option value="<?php echo $project['lead_id']; ?>"><?php echo $project['lead_title']; ?></option>	
+								<option value="<?php echo $project->lead_id; ?>"><?php echo $project->lead_title; ?></option>	
 								<?php } endif;?>
 							</select>
 						</td>
@@ -75,7 +75,7 @@
 					</tbody>						 
 					<tbody>						 
 						<tr align="right" >
-							<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
+							<td colspan="5"><input type="reset" class="positive js_reset input-font" name="advance_pjt" value="Reset" />
 							<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
 							<div id = 'load' style = 'float:right;display:none;height:1px;'>
 								<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
@@ -92,14 +92,14 @@
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>	
 			<div id="default_view">
-			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl1 dashboard-heads dataTable" style="width:100%">
             <thead>
                 <tr>
+					<th>Created On</th>
                     <th>File Name</th>
                     <th>Client</th>
                     <th>Project</th>
-					<th>Folder</th>
-					<th>Created On</th>
+					<th>Folder</th>					
 					<th>Type</th>
 					<th>Size</th>
 					<th>Created By</th>
@@ -117,6 +117,7 @@
 					$filesize = filesize($file_full_path);
 					$filesize_bytes = formatSizeUnits($filesize);?>			
 					<tr>
+						<td><?php echo date("d-M-Y",strtotime($file['lead_files_created_on']));?></td>
 						<td>
 							<?php if(file_exists($file_full_path)){ ?>
 									<a onclick="download_files('<?php echo $file['lead_id']; ?>','<?php echo $file['lead_files_name']; ?>'); return false;"><?php echo $file['lead_files_name'];?></a>
@@ -128,7 +129,6 @@
 						<td><?php echo $file['company'].' - '.$file['cust_firstname'].' '.$file['cust_lastname'];?></td>
 						<td><?php echo $file['lead_title'];?></td>
 						<td><?php echo is_numeric($file['folder_name'])?"Root":$file['folder_name'];?></td>
-						<td><?php echo date("d-m-Y",strtotime($file['lead_files_created_on']));?></td>
 						<td><?php echo $file_ext;?></td>
 						<td><?php echo $filesize_bytes;?></td>
 						<td><?php echo $file['first_name'].' '.$file['last_name'];?></td>
@@ -144,74 +144,5 @@
 </div>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript">
-	
-	function download_files(job_id,f_name){
-		window.location.href = site_base_url+'project/download_file/'+job_id+'/'+f_name;
-	}
-	
-	$(document).ready(function(){	
-		 $('.js_advanced_filter').click(function(){
-			 $('#advance_filters').slideToggle();
-		 })
-		 $('#dmssearch').submit(function(){
-			 
-			 $('#load').show();
-			 $('#ajax_loader').show();
-			 $('#default_view').html('');
-			 $('#default_view').hide()
-			 var customers = $("#customers").val();			 
-			 var projects = $("#projects").val();			 
-			 var extension = $("#extension").val();			 
-			 var from_date = $("#from_date").val();			 
-			 var to_date = $("#to_date").val();
-			 var params = {'customers':customers,'projects':projects,'extension':extension,'from_date':from_date,'to_date':to_date};
-			params[csrf_token_name] = csrf_hash_token;
-		    
-			$.ajax({
-		        type: 'POST',
-		        url: site_base_url+'dms_search/search',
-		        data: params,
-		        success: function(data) {					
-					$('#load').hide();
-					$('#ajax_loader').hide();					
-					$('#default_view').html(data);						
-					$('.data-tbl').dataTable();
-					$('#default_view').show();
-					
-		        }
-		    });
-		    return false;			
-		 })
-	})
-	
-	$(function() {
-		// $('#from_date, #to_date').datepicker({dateFormat: 'dd-mm-yy'});
-		$('#from_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
-			if($('#to_date').val!='')
-			{
-				$('#to_date').val('');
-			}
-			var return_date = $('#from_date').val();
-			$('#to_date').datepicker("option", "minDate", return_date);
-		}});
-		$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
-	});
-$(function() {	
-	$('.data-tbl1').dataTable({
-
-		"bSort": true,
-		"iDisplayLength": 10,
-		"sPaginationType": "full_numbers",
-		"bInfo": true,
-		"bPaginate": true,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": true,		
-		"bFilter": true,
-		"aaSorting": [[ 4, "desc" ]],
-		"bAutoWidth": false,
-	});
-});	
-</script>
+<script type="text/javascript" src="assets/js/dms_search.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

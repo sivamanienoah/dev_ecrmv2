@@ -28,10 +28,8 @@ class Dms_search_model extends crm_model {
 			$this->db->where_in("cus.custid",$customers);			
 		}
 		
-		if(!empty($projects) && count($projects)>0 && empty($customers)){
+		if(!empty($projects) && count($projects)>0){
 			$this->db->where_in("le.lead_id",$projects);
-		}else if(!empty($projects) && count($projects)>0){
-			$this->db->or_where_in("le.lead_id",$projects);
 		}
 		
 		if(!empty($extension) && count($extension)>0){
@@ -66,9 +64,10 @@ class Dms_search_model extends crm_model {
 		
 		if (($this->user_role == '1' && $this->level == '1') || ($this->user_role == '2' && $this->level == '1')) {
 		
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id,j.lead_title');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+			//$this->db->join($this->cfg['dbpref'] . 'lead_files as lf', 'lf.lead_id = j.lead_id','join');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
@@ -155,7 +154,7 @@ class Dms_search_model extends crm_model {
 			$curusid = $this->user_id;
 			
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id,j.lead_title');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
@@ -227,7 +226,8 @@ class Dms_search_model extends crm_model {
 		
 		$this->db->order_by("j.lead_title", "asc");
 		$query = $this->db->get();
-		$pjts =  $query->result_array();
+	//	echo $this->db->last_query();exit;
+		$pjts =  $query->result();
 		return $pjts;
 	}	
 	
@@ -289,8 +289,10 @@ class Dms_search_model extends crm_model {
 		}
        
         $offset = mysql_real_escape_string($offset);		
-		$this->db->select('CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
+		$this->db->select('lds.lead_id,CUST.custid,CUST.first_name,CUST.last_name,CUST.company, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
 		$this->db->from($this->cfg['dbpref'].'customers as CUST');
+		$this->db->join($this->cfg['dbpref'].'leads as lds', 'CUST.custid = lds.custid_fk', 'join');
+		$this->db->join($this->cfg['dbpref'].'lead_files as lf', 'lds.lead_id = lf.lead_id', 'join');
 		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
 		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
         if ($this->userdata['level'] == 2) {
@@ -308,17 +310,16 @@ class Dms_search_model extends crm_model {
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
 		}
-		if($search != false) {
-			$search = mysql_real_escape_string(urldecode($search));
-			$this->db->where("(first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR company LIKE '%$search%' OR email_1 LIKE '%$search%')");
-		}
+		$this->db->where("lds.lead_id != 'null' AND lds.lead_status IN ('4') AND lds.pjt_status = 1 "); 
+		
+		$this->db->group_by("CUST.custid");
 		$this->db->order_by("CUST.company","ASC");
 		
 		if(!empty($limit))	
 		$this->db->limit($limit);
 		
 		$customers = $this->db->get();        
-        // echo $this->db->last_query();
+		//echo $this->db->last_query();
         return $customers->result_array(); 
     }	
 	

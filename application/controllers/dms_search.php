@@ -39,24 +39,39 @@ class Dms_search extends crm_controller {
 		$this->load->view('dms_view', $data);
 	}
 	
+	function get_projects(){
+		$customers = $this->input->post("customers");
+		$json_projects = '';
+		if($customers){
+			$projects = $this->dms_search_model->get_projects_results('',$customers,'','','','','','','','');
+			if(count($projects)>0){
+				$json_projects = json_encode($projects);				
+			}
+		}
+		echo $json_projects;
+		exit;
+	}
+	
 	function search(){
 		$data  = array();
 		$user_details = $this->session->userdata("logged_in_user");
 		$user_id = $user_details['userid'];
 		$user_role = $user_details['role_id'];
-		$data['keyword'] = $keyword;
+		
 		
 		$data['page_heading'] = "DMS Search";
 		$data['customers']   = $this->dms_search_model->customer_list();
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		$data['extension']   = $this->dms_search_model->get_extensions();		
 		
+		
+		$keyword = $this->input->post('keyword');
 		$customers = $this->input->post('customers');
 		$projects = $this->input->post('projects');
 		$extension = $this->input->post('extension');
 		$from_date = $this->input->post('from_date');
 		$to_date = $this->input->post('to_date');
-		
+		$data['keyword'] = $keyword;
 		$data['files'] = $this->dms_search_model->search_files($keyword,$customers,$projects,$extension,$from_date,$to_date);
 		if(count($data['files']>0))		$this->load->view('dms_view_search', $data);		
 	}
