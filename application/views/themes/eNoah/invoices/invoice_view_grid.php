@@ -2,7 +2,7 @@
 	<thead>
 		<tr>
 			<th>Invoice Date</th>
-			<th>For tbe Month & Year</th>
+			<th>For the Month & Year</th>
 			<th>Customer Name</th>
 			<th>Project Title</th>
 			<th>Project Code</th>
