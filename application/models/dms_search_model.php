@@ -68,7 +68,7 @@ class Dms_search_model extends crm_model {
 			$this->db->select('j.lead_id,j.lead_title');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
-			$this->db->join($this->cfg['dbpref'] . 'lead_files as lf', 'lf.lead_id = j.lead_id','join');
+			
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
