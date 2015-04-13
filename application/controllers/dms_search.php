@@ -22,7 +22,7 @@ class Dms_search extends crm_controller {
 		
 		$data['page_heading'] = "DMS Search";
 		$data['customers']   = $this->dms_search_model->customer_list();
-		 
+		//echo count($data['customers']);exit; 
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		//$data['projects']   = $this->dms_search_model->get_projects();
 		$data['extension']   = $this->dms_search_model->get_extensions();

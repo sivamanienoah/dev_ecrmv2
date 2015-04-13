@@ -38,7 +38,7 @@
 					<thead>
 						<tr>							
 							<th>By Customer Wise</th>
-							<th>By Project Wise</th>							
+							<th>By Lead/Project Wise</th>							
 							<th>By File Type Wise</th>
 							<th>By Created Date</th>
 						</tr>	

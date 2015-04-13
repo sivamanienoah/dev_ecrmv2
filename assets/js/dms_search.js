@@ -129,10 +129,8 @@ jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-desc'] = function (a, b) {
 	
 $(function() {	
 	$('.data-tbl1').dataTable({
-		"aaSorting": [[ 0, "desc" ]],
-		"columnDefs": [
-			   { type: 'date-dd-mmm-yyyy', targets: 0 }
-		],
+		"aaSorting": [[ 2, "asc" ]],
+ 
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,

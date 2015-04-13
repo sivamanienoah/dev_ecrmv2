@@ -45,7 +45,8 @@ class Dms_search_model extends crm_model {
 			$this->db->where("lead_files_created_on <=",$td);
 		}
 		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);
-		$this->db->order_by("lf.lead_files_created_on",'DESC');
+	//	$this->db->order_by("lf.lead_files_created_on",'DESC');
+		$this->db->order_by("cus.company",'ASC');
 	    $sql = $this->db->get();
 		//echo $this->db->last_query();exit;
 	    return $sql->result_array();
@@ -72,11 +73,13 @@ class Dms_search_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
 			
-			if(!empty($stage)){	
+		/*	if(!empty($stage)){	
 				$this->db->where("j.lead_status", '4');
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
+		*/	
+			
 			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
@@ -137,8 +140,8 @@ class Dms_search_model extends crm_model {
 			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
 			$this->db->select('lead_id');
 			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
-			$this->db->where("lead_status", 4);
-			$this->db->where("pjt_status", 1);
+			//$this->db->where("lead_status", 4);
+			//$this->db->where("pjt_status", 1);
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
 			$data['jobids1'] = $rowsJobs->result_array();
 
@@ -163,12 +166,12 @@ class Dms_search_model extends crm_model {
 			//For Regionwise filtering
 			$this->db->where_in('j.lead_id', $result_ids);
 		
-			if(!empty($stage)){	
+			/* if(!empty($stage)){	
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
-			}
+			} */
 			if(!empty($customer)){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
@@ -310,7 +313,7 @@ class Dms_search_model extends crm_model {
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
 		}
-		$this->db->where("lds.lead_id != 'null' AND lds.lead_status IN ('4') AND lds.pjt_status = 1 "); 
+		//$this->db->where("lds.lead_id != 'null' AND lds.lead_status IN ('4') AND lds.pjt_status = 1 "); 
 		
 		$this->db->group_by("CUST.custid");
 		$this->db->order_by("CUST.company","ASC");
