@@ -471,7 +471,21 @@ class Sales_forecast extends crm_controller {
 	 */
 	public function reports()
 	{	
+		$this->load->helper('custom_helper');
+		
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id   = '1';
+			$this->default_cur_name = 'USD';
+		}
+		$rates = $this->get_currency_rates();
+		
 		$data['page_heading'] = 'Sales Forecast Reports';
+		
+		$data['default_currency'] = $this->default_cur_name;
 		
 		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
@@ -481,7 +495,7 @@ class Sales_forecast extends crm_controller {
 		
 		$filter   			 = real_escape_array($this->input->post());
 		
-		// echo "<pre>"; print_R($filter); exit;
+		// echo "<pre>"; print_R($rates); exit;
 		
 		$sf_data 		     = $this->sales_forecast_model->get_sf_milestone_records($filter);
 		
@@ -509,7 +523,7 @@ class Sales_forecast extends crm_controller {
 			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['lead_name'] = $sf['lead_title'];
 			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['type']      = ($sf['forecast_category']==1)?'Lead':'Project';
 			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['ms_name']   = $sf['milestone_name'];
-			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['ms_value']  = $sf['milestone_value'];
+			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['ms_value']  = $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
 		}
 		/*Month|Milestone Name|Milestone Value(Individual Milestone)*/
 		
@@ -531,5 +545,27 @@ class Sales_forecast extends crm_controller {
 		else
 		$this->load->view('sales_forecast/sale_forecast_report_view', $data);
 	}
-
+	
+	/*
+	*method : get_currency_rates
+	*/
+	public function get_currency_rates() 
+	{
+		$currency_rates = $this->sales_forecast_model->get_currency_rate();
+    	$rates 			= array();
+    	if(!empty($currency_rates)){
+    		foreach ($currency_rates as $currency)
+    		{
+    			$rates[$currency->from][$currency->to] = $currency->value;
+    		}
+    	}
+    	return $rates;
+	}
+	
+	/*
+	*method : conver_currency
+	*/
+	public function conver_currency($amount,$val) {
+		return round($amount*$val);
+	}
 }

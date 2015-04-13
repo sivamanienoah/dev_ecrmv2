@@ -3,7 +3,6 @@
 	<thead>
 		<tr>
 			<th>Customer</th>
-			<th>Customer</th>
 			<th>Lead/Project Name</th>
 			<th>Milestone</th>
 			<?php
@@ -34,13 +33,12 @@
 					<tr>
 						<td><?php echo $ms_val['customer']; ?></td>
 						<td><?php echo $ms_val['lead_name']; ?></td>
-						<td><?php echo $ms_val['lead_name']; ?></td>
 						<td><?php echo $ms_val['ms_name']; ?></td>
 						<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 							<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 								<?php if($mon_no==$mon_number) { ?>
 									<td align="right">
-										<?php echo $ms_val['ms_value']; ?>
+										<?php echo number_format($ms_val['ms_value'],2,'.',''); ?>
 										<?php 
 											$tot[$mon_no] += $ms_val['ms_value'];
 										?>
@@ -57,7 +55,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<td text align=right colspan="4"><strong>Overall Total:</strong></td>
+			<td text align=right colspan="3"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
 			<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 				<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 					<td align="right">

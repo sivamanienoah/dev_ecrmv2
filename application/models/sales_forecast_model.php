@@ -500,6 +500,16 @@ class Sales_forecast_model extends crm_model {
 	 
 		return $fy;
 	}
+	
+	/*
+	*@Get currency rates
+	*@Method  get_currency_rate
+	*/
+	public function get_currency_rate()
+	{		
+		$query = $this->db->get($this->cfg['dbpref'].'currency_rate');
+		return $query->result();
+	}
     
 }
 
