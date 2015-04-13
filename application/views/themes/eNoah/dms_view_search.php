@@ -5,7 +5,7 @@
 					<th>Created On</th>
                     <th>File Name</th>
                     <th>Client</th>
-                    <th>Project</th>
+                    <th>Lead/Project</th>
 					<th>Folder</th>					
 					<th>Type</th>
 					<th>Size</th>
