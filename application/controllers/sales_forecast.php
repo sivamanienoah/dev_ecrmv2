@@ -470,7 +470,7 @@ class Sales_forecast extends crm_controller {
 	 *Reports
 	 */
 	public function reports()
-	{	
+	{
 		$this->load->helper('custom_helper');
 		
 		if (get_default_currency()) {
@@ -517,7 +517,7 @@ class Sales_forecast extends crm_controller {
 		/*Month|Milestone Name|Milestone Value(Individual Milestone)*/
 		$highest_month = date('Y-m-d');
 		foreach($sf_data as $sf) {
-			$month = date('m', strtotime($sf['for_month_year']));
+			$month = date('Y-m', strtotime($sf['for_month_year']));
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
 			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['customer']  = $sf['company'].' - '.$sf['first_name'].' '.$sf['last_name'];
 			$data['report_data'][$sf['forecast_id']][$month][$sf['milestone_name']]['lead_name'] = $sf['lead_title'];
@@ -531,7 +531,6 @@ class Sales_forecast extends crm_controller {
 		$data['highest_month'] = date('Y-m-d', strtotime($filter['month_year_to_date']));
 		else
 		$data['highest_month'] = $highest_month;
-		
 		
 		if(($this->input->post("filter")!="") && $filter['month_year_from_date'])
 		$data['current_month'] = date('Y-m', strtotime($filter['month_year_from_date']));
