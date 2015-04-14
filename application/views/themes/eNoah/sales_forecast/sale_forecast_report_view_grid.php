@@ -6,20 +6,37 @@
 			<th>Lead/Project Name</th>
 			<th>Milestone</th>
 			<?php
-				$from_month = $current_month;
+				// $from_month = $current_month;
 				// $current_month = date('Y-m');
-				$k = 1;
-				for($i=$from_month; $i<=date('Y-m', strtotime($highest_month)); $i++) {
+				// $k = 1;
+				// for($i=$from_month; $i<=date('Y-m', strtotime($highest_month)); $i++) {
 			?>
-					<th><?php echo date('M', strtotime($from_month)); ?></th>
+					<!--<th><?php #echo date('M', strtotime($from_month)); ?></th>-->
 					
 			<?php
-					$month_arr[date('m', strtotime($from_month))] = date('M', strtotime($from_month));
+					// $month_arr[date('Y-m', strtotime($from_month))] = date('Y-M', strtotime($from_month));
 					// $month_arr[] = date('M', strtotime($current_month));
 					// $current_month = date('Y-m', strtotime('+'.$k.' month'));
 					// $from_month = date('Y-m', strtotime('+'.$k.' month', strtotime($from_month)));
-					$from_month = date('Y-m', strtotime('+1 month', strtotime($from_month)));
-					$k++;
+					// if(substr($i, 5, 2) == "12")
+					// $i = (date("Y", strtotime($i."-01")) + 1)."-01";
+					
+					// $from_month = date('Y-m', strtotime('+1 month', strtotime($from_month)));
+					
+				// }
+			?>
+			<?php
+				$i = date("Y-m", strtotime($current_month)); 
+				while($i <= date("Y-m", strtotime($highest_month))) {
+			?>
+					<th><?php echo date('M', strtotime($i)); ?></th>
+			<?php
+					$month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
+					
+					if(substr($i, 5, 2) == "12")
+					$i = (date("Y", strtotime($i."-01")) + 1)."-01";
+					else
+					$i++;
 				}
 			?>
 		</tr>
