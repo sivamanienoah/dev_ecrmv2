@@ -32,6 +32,7 @@
 					<th><?php echo date('M', strtotime($i)); ?></th>
 			<?php
 					$month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
+					$month_no_arr[] = date('Y-m', strtotime($i));
 					
 					if(substr($i, 5, 2) == "12")
 					$i = (date("Y", strtotime($i."-01")) + 1)."-01";
@@ -47,25 +48,27 @@
 			<?php ksort($ms_data); ?>
 			<?php foreach($ms_data as $mon_no=>$ms_det) { ?>
 				<?php foreach($ms_det as $ms=>$ms_val) { ?>
-					<tr>
-						<td><?php echo $ms_val['customer']; ?></td>
-						<td><?php echo $ms_val['lead_name']; ?></td>
-						<td><?php echo $ms_val['ms_name']; ?></td>
-						<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
-							<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
-								<?php if($mon_no==$mon_number) { ?>
-									<td align="right">
-										<?php echo number_format($ms_val['ms_value'],2,'.',''); ?>
-										<?php 
-											$tot[$mon_no] += $ms_val['ms_value'];
-										?>
-									</td>
-								<?php } else { ?>
-									<td align="center"><?php echo '-'; ?></td>
-								<?php } ?>
-							<?php } ?><!-- j for loop-->
-						<?php } ?><!-- if condition-->
-					</tr>
+					<?php if(in_array($mon_no, $month_no_arr)) { ?>
+						<tr>
+							<td><?php echo $ms_val['customer']; ?></td>
+							<td><?php echo $ms_val['lead_name']; ?></td>
+							<td><?php echo $ms_val['ms_name']; ?></td>
+							<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
+								<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
+									<?php if($mon_no==$mon_number) { ?>
+										<td align="right">
+											<?php echo number_format($ms_val['ms_value'],2,'.',''); ?>
+											<?php 
+												$tot[$mon_no] += $ms_val['ms_value'];
+											?>
+										</td>
+									<?php } else { ?>
+										<td align="center"><?php echo '-'; ?></td>
+									<?php } ?>
+								<?php } ?><!-- j for loop-->
+							<?php } ?><!-- if condition-->
+						</tr>
+					<?php } ?><!-- in_array - if condition-->
 				<?php } ?><!-- ms_det foreach loop-->
 			<?php } ?><!-- ms_data foreach loop-->
 		<?php } ?><!-- foreach loop-->
