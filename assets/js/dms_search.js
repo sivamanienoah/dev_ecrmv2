@@ -129,8 +129,7 @@ jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-desc'] = function (a, b) {
 	
 $(function() {	
 	$('.data-tbl1').dataTable({
-		"aaSorting": [[ 2, "asc" ]],
- 
+		"aaSorting": [[ 2, "asc" ]], 
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
@@ -140,6 +139,7 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"aoColumns": [{"sWidth":"5%"},{"sWidth":"15%"},{"sWidth":"25%"},{"sWidth":"25%"},{"sWidth":"10%"},{"sWidth":"5%"},{"sWidth":"6%"},{"sWidth":"10%"}]
 	});
 });	

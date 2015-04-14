@@ -58,7 +58,8 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"aoColumns": [{"sWidth":"5%"},{"sWidth":"15%"},{"sWidth":"25%"},{"sWidth":"25%"},{"sWidth":"10%"},{"sWidth":"5%"},{"sWidth":"6%"},{"sWidth":"10%"}]
 	});
 });	
 </script>
