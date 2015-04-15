@@ -238,8 +238,9 @@ class Dms_search_model extends crm_model {
         $restrict = '';
         $restrict_search = '';
 		//customer restriction on level based.
-		if ($this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4 || $this->userdata['level'] == 5) {
-			$cond = array('level_id' => $this->userdata['level'], 'user_id' => $this->userdata['userid']);
+		 
+		if ($this->level == 2 || $this->level == 3 || $this->level == 4 || $this->level == 5) {
+			$cond = array('level_id' => $this->level, 'user_id' => $this->user_id);
 			
 			$this->db->select('region_id');
 		 	$reg_res = $this->db->get_where($this->cfg['dbpref']."levels_region", $cond);
@@ -298,16 +299,16 @@ class Dms_search_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'lead_files as lf', 'lds.lead_id = lf.lead_id', 'join');
 		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
 		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
-        if ($this->userdata['level'] == 2) {
+        if ($this->level == 2) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);				
-		} else if ($this->userdata['level'] == 3) {
+		} else if ($this->level == 3) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
 			$this->db->where_in('CUST.add1_country', $countries_ids);
-		} else if ($this->userdata['level'] == 4) {
+		} else if ($this->level == 4) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
 			$this->db->where_in('CUST.add1_country', $countries_ids);
 			$this->db->where_in('CUST.add1_state', $states_ids);
-		} else if ($this->userdata['level'] == 5) {
+		} else if ($this->level == 5) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
 			$this->db->where_in('CUST.add1_country', $countries_ids);
 			$this->db->where_in('CUST.add1_state', $states_ids);
