@@ -35,7 +35,7 @@
 				<?php ksort($ms_date); ?>
 				<?php foreach($ms_date as $ms_det=>$ms_val) { ?>
 					<?php foreach($ms_val as $type=>$val) { ?>
-					<?php echo "<pre>"; print_r($ms_val); ?>
+					<?php #echo "<pre>"; print_r($ms_val); ?>
 						<?php if(in_array($ms_det, $month_no_arr)) { ?>
 							<tr>
 								<td><?php echo $val['customer']; ?></td>

@@ -602,7 +602,7 @@ class Sales_forecast extends crm_controller {
 		else
 		$data['current_month'] = date('Y-m');
 		
-		echo "<pre>"; print_r($data['report_data']); exit;
+		// echo "<pre>"; print_r($data['report_data']); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('sales_forecast/sale_forecast_var_report_view_grid', $data);
