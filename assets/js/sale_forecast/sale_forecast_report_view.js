@@ -44,7 +44,7 @@ $(function() {
 	});
 	
 	//dataTable
-	$('.data-tbl').dataTable({
+ 	$('.data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 25,
 		"sPaginationType": "full_numbers",
@@ -53,7 +53,7 @@ $(function() {
 		"bProcessing": true,
 		"bServerSide": false,
 		"bLengthChange": true,
-		"bSort": true,
+		"bSort": false,
 		"bFilter": true,
 		"bAutoWidth": false,	
 	});
