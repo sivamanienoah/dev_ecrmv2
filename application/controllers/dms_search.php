@@ -20,13 +20,13 @@ class Dms_search extends crm_controller {
 		$user_role = $user_details['role_id'];
 		$data['keyword'] = $keyword;
 		
-		$data['page_heading'] = "DMS Search";
+		$data['page_heading'] = "File Search";
 		$data['customers']   = $this->dms_search_model->customer_list();
-		//echo count($data['customers']);exit; 
+		
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		//$data['projects']   = $this->dms_search_model->get_projects();
 		$data['extension']   = $this->dms_search_model->get_extensions();
-		
+		//echo count($data['customers']).'--'.count($data['projects']);exit; 
 
 		$customers = $this->input->post('customers');
 		$projects = $this->input->post('projects');
@@ -59,7 +59,7 @@ class Dms_search extends crm_controller {
 		$user_role = $user_details['role_id'];
 		
 		
-		$data['page_heading'] = "DMS Search";
+		$data['page_heading'] = "File Search";
 		$data['customers']   = $this->dms_search_model->customer_list();
 		$data['projects']   = $this->dms_search_model->get_projects_results();
 		$data['extension']   = $this->dms_search_model->get_extensions();		
