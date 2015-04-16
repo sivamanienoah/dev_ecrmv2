@@ -581,13 +581,22 @@ class Sales_forecast extends crm_controller {
 		// echo '<pre>'; print_r($variance_data); exit;
 		
 		$highest_month = date('Y-m-d');
-		foreach($variance_data as $vr) {
+		/* foreach($variance_data as $vr) {
 			$month = date('Y-m', strtotime($vr['for_month_year']));
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]['customer']  = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]['lead_name'] = $vr['lead_title'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]['ms_name']   = $vr['milestone_name'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]['ms_value']  = $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
+		} */
+		
+		foreach($variance_data as $vr) {
+			$month = date('Y-m', strtotime($vr['for_month_year']));
+			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
+			
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month]['customer']   = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month]['lead_name'] = $vr['lead_title'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  = $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
 		}
 		
 		//Set the Highest_month

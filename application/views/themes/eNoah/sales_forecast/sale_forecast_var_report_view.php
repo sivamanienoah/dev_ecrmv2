@@ -124,40 +124,34 @@
 				</thead>
 				<tbody>
 					<?php $tot = array(); ?>
+					<?php #echo "<pre>"; print_r($report_data); exit; ?>
 					<?php foreach($report_data as $lead_id=>$ms_data) { ?>
-						<?php foreach($ms_data as $ms_name=>$ms_date) { ?>
-							<?php ksort($ms_date); ?>
-							<?php foreach($ms_date as $ms_det=>$ms_val) { ?>
-								<?php foreach($ms_val as $type=>$val) { ?>
-									<?php if(in_array($ms_det, $month_no_arr)) { ?>
-										<tr>
-											<td><?php echo $val['customer']; ?></td>
-											<td><?php echo $val['lead_name']; ?></td>
-											<td><?php echo $val['ms_name']; ?></td>
-											<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
-												<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
-													<?php if($ms_det==$mon_number) { ?>
-														<td align="right">
-															<?php if($type == 'F') { ?>
-																<?php echo number_format($val['ms_value'], 2, '.', ''); ?>
-																<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
-															<?php } ?>
-														</td>
-														<td align="right">
-															<?php if($type == 'A') { ?>
-																<?php echo number_format($val['ms_value'], 2, '.', ''); ?>
-																<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
-															<?php } ?>
-														</td>
-													<?php } else { ?>
-														<td align="center"></td>
-														<td align="center"></td>
-													<?php } ?>
-												<?php } ?><!-- j for loop-->
-											<?php } ?><!-- if condition-->
-										</tr>
-									<?php } ?><!-- in_array - if condition-->
-								<?php } ?><!-- ms_val - foreach-->
+						<?php foreach($ms_data as $ms_name=>$ms_value) { ?>
+							<?php foreach($ms_value as $ms_date=>$ms_val) { ?>
+								<?php if(in_array($ms_date, $month_no_arr)) { ?>
+									<tr>
+										<td><?php echo $ms_val['customer']; ?></td>
+										<td><?php echo $ms_val['lead_name']; ?></td>
+										<td><?php echo $ms_name; ?></td>
+										<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
+											<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
+												<?php if($ms_date==$mon_number) { ?>
+													<td align="right">
+														<?php echo isset($ms_val['F']) ? number_format($ms_val['F'], 2, '.', '') : ''; ?>
+														<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
+													</td>
+													<td align="right">
+														<?php echo isset($ms_val['A']) ? number_format($ms_val['A'], 2, '.', '') : ''; ?>
+														<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
+													</td>
+												<?php } else { ?>
+													<td align="center"></td>
+													<td align="center"></td>
+												<?php } ?>
+											<?php } ?><!-- j for loop-->
+										<?php } ?><!-- if condition-->
+									</tr>
+								<?php } ?><!-- in_array - if condition-->
 							<?php } ?><!-- ms_det foreach loop-->
 						<?php } ?><!-- ms_data foreach loop-->
 					<?php } ?><!-- foreach loop-->
