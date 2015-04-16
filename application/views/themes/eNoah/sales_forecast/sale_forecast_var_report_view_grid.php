@@ -44,37 +44,39 @@
 									<?php if($ms_date==$mon_number) { ?>
 										<td align="right">
 											<?php echo isset($ms_val['F']) ? number_format($ms_val['F'], 2, '.', '') : ''; ?>
-											<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
+											<?php $tot['F'][$mon_number] += $ms_val['F']; ?>
 										</td>
 										<td align="right">
 											<?php echo isset($ms_val['A']) ? number_format($ms_val['A'], 2, '.', '') : ''; ?>
-											<?php #$tot[$ms_date] += $ms_val['ms_value']; ?>
+											<?php $tot['A'][$mon_number] += $ms_val['A']; ?>
 										</td>
 									<?php } else { ?>
 										<td align="center"></td>
 										<td align="center"></td>
 									<?php } ?>
-								<?php } ?><!-- j for loop-->
+								<?php } ?><!-- month_arr foreach loop-->
 							<?php } ?><!-- if condition-->
 						</tr>
 					<?php } ?><!-- in_array - if condition-->
-				<?php } ?><!-- ms_det foreach loop-->
+				<?php } ?><!-- ms_value foreach loop-->
 			<?php } ?><!-- ms_data foreach loop-->
-		<?php } ?><!-- foreach loop-->
+		<?php } ?><!-- report_data foreach loop-->
 	</tbody>
-	<!--tfoot>
+	<tfoot>
 		<tr>
 			<td text align=right colspan="3"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
 			<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 				<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 					<td align="right">
-						<?php echo ($tot[$mon_number]!='') ? number_format($tot[$mon_number],2,'.','') : ''; ?>
+						<?php echo ($tot['F'][$mon_number]!='') ? number_format($tot['F'][$mon_number],2,'.','') : ''; ?>
 					</td>
-					<td align="center"> - </td>
+					<td align="right">
+						<?php echo ($tot['A'][$mon_number]!='') ? number_format($tot['A'][$mon_number],2,'.','') : ''; ?>
+					</td>
 				<?php } ?>
 			<?php } ?>
 		</tr>
-	</tfoot-->
+	</tfoot>
 </table>
 <script>
 $(function(){
