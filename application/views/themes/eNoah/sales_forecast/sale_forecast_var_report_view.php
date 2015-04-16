@@ -96,8 +96,8 @@
 			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 				<thead>
 					<tr>
-						<th rowspan=2>Customer</th>
-						<th rowspan=2>Lead/Project Name</th>
+						<th width="30%" rowspan=2>Customer</th>
+						<th width="30%" rowspan=2>Lead/Project Name</th>
 						<th rowspan=2>Milestone</th>						
 						<?php
 							$i = date("Y-m", strtotime($current_month)); 
@@ -136,17 +136,18 @@
 										<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 											<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 												<?php if($ms_date==$mon_number) { ?>
-													<td align="right">
-														<?php echo isset($ms_val['F']) ? number_format($ms_val['F'], 2, '.', '') : ''; ?>
+													<td align="<?php echo isset($ms_val['F']) ? 'right' : 'center'; ?>">
+														<?php echo isset($ms_val['F']) ? number_format($ms_val['F'], 2, '.', '') : '-'; ?>
 														<?php $tot['F'][$mon_number] += $ms_val['F']; ?>
 													</td>
-													<td align="right">
-														<?php echo isset($ms_val['A']) ? number_format($ms_val['A'], 2, '.', '') : ''; ?>
+													<td align="<?php echo isset($ms_val['A']) ? 'right' : 'center'; ?>">
+														<?php echo isset($ms_val['A']) ? number_format($ms_val['A'], 2, '.', '') : '-'; ?>
 														<?php $tot['A'][$mon_number] += $ms_val['A']; ?>
 													</td>
-												<?php } else { ?>
-													<td align="center"></td>
-													<td align="center"></td>
+												<?php 
+												} else { ?>
+													<td align="center">-</td>
+													<td align="center">-</td>
 												<?php } ?>
 											<?php } ?><!-- month_arr foreach loop-->
 										<?php } ?><!-- if condition-->
