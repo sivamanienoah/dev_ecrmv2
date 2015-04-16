@@ -653,6 +653,9 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
 			$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-t', strtotime($filter['month_year_to_date'])));
 		}
+		if(empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])){
+			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d'));
+		}
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
