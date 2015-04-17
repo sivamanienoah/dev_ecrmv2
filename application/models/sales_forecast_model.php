@@ -125,6 +125,9 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where('DATE(sfm.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
 			$this->db->where('DATE(sfm.for_month_year) <=', date('Y-m-t', strtotime($filter['month_year_to_date'])));
 		}
+		if(empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])){
+			$this->db->where('DATE(sfm.for_month_year) >=', date('Y-m'));
+		}
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
@@ -511,45 +514,6 @@ class Sales_forecast_model extends crm_model {
 	}
 	
 	/*
-	*@Get the invoices
-	*@method get_invoices
-	*/
-	public function get_invoices($filter = false) 
-	{
-		$this->db->select('expm.expectid,expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.month_year,  l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.first_name, c.last_name, c.company');
-		// $this->db->select( "date_format(expm.month_year, '%Y-%m') as for_month_year", FALSE );
-		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
-		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
-		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
-		$this->db->where('expm.invoice_status',1);
-		$this->db->where('expm.received !=',1);
-		
-		if (!empty($filter['project']) && $filter['project']!='null') {
-			$filter['project'] = explode(',',$filter['project']);
-			$this->db->where_in('l.lead_id', $filter['project']);
-		}
-		if (!empty($filter['customer']) && $filter['customer']!='null') {
-			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('l.custid_fk', $filter['customer']);
-		}
-		if (!empty($filter['divisions']) && $filter['divisions']!='null') {
-			$filter['divisions'] = explode(',',$filter['divisions']);
-			$this->db->where_in('l.division', $filter['divisions']);
-		}
-		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
-			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
-		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
-			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
-			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
-		}
-		$query  = $this->db->get();
-		// echo $this->db->last_query(); exit;
-		$res 	= $query->result_array();
-		return $res;
-    }
-	
-	/*
 	*@Get saleforecast & invoices Records
 	*@method get_variance_records
 	*@table crm_view_sales_forecast_variance
@@ -654,7 +618,7 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-t', strtotime($filter['month_year_to_date'])));
 		}
 		if(empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])){
-			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d'));
+			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m'));
 		}
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
