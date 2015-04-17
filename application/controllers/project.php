@@ -328,6 +328,7 @@ class Project extends crm_controller {
 						$condn = array('lead_id' => $data['quote_data']['lead_id']);
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
+						$data['quote_data']['assigned_to'] = $proj_leader;
 					}
 				}
 				
@@ -346,14 +347,15 @@ class Project extends crm_controller {
 				}
 				
 				//Set the Project Manager in our CRM DB.
-				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
+				/* if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
+					 
 					$proj_team_members = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
 					if($proj_leader != $data['quote_data']['assigned_to']){
 						$condn = array('lead_id' => $data['quote_data']['lead_id']);
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
-				}
+				} */
 				
 				/* echo '<pre>';
 				print_r($team_mem);
