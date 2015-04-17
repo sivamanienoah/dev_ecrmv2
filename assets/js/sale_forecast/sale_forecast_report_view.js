@@ -89,4 +89,26 @@ $("#advanceFiltersSFReport").submit(function() {
 	return false;  //stop the actual form post !important!
 });
 
+//export to excel
+$('#export_excel_forecast').click(function() {
+	var entity               = $("#entity").val();
+	var customer    		 = $("#customer").val();
+	var lead_ids   			 = $("#lead_ids").val();
+	var month_year_from_date = $("#month_year_from_date").val();
+	var month_year_to_date   = $("#month_year_to_date").val();
+	
+	var url = site_base_url+"sales_forecast/export_excel_forecast";
+	
+	var form = $('<form action="' + url + '" method="post">' +
+	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	  '<input type="hidden" name="entity" value="' +entity+ '" />' +
+	  '<input type="hidden" name="customer" value="' +customer+ '" />' +
+	  '<input type="hidden" name="lead_ids" value="' +lead_ids+ '" />' +
+	  '<input type="hidden" name="month_year_from_date" value="' +month_year_from_date+ '" />' +
+	  '<input type="hidden" name="month_year_to_date" value="' +month_year_to_date+ '" /></form>');
+	$('body').append(form);
+	$(form).submit();
+	return false;
+});
+
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
