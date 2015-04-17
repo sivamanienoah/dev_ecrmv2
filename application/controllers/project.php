@@ -354,6 +354,8 @@ class Project extends crm_controller {
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
 				}
+				echo '<pre>'; print_r($team_mem); print_r($ts_team_members);
+				exit;
 				
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
