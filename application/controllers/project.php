@@ -722,7 +722,7 @@ class Project extends crm_controller {
 				$time_ins['proj_id'] = $timesheet_proj_id;
 				if(count($rs_cm_users) > 0){
 					foreach($rs_cm_users as $muser){
-						$time_ins['username'] = $muser->username;
+						$time_ins['username'] = strtolower($muser->username);
 						$time_ins['rate_id'] = 1;
 						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);
 					}
