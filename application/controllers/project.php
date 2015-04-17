@@ -657,7 +657,7 @@ class Project extends crm_controller {
 				// update in timesheet project table
 				$userrow = $qry->row();
 				$timesheet_db = $this->load->database('timesheet', TRUE); 
-				$timesheet_db->update($timesheet_db->dbprefix('project'),array("proj_leader" => $userrow->username),array("project_code" => $project_code));
+				$timesheet_db->update($timesheet_db->dbprefix('project'),array("proj_leader" => strtolower($userrow->username)),array("project_code" => $project_code));
 				$timesheet_db->close();
 			}else{
 				$data['error'] = 'Project Manager mismatch in Timesheet.';
