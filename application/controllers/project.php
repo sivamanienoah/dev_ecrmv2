@@ -310,7 +310,7 @@ class Project extends crm_controller {
 			$timesheet		 = array();
 			$ts_team_members = array();
 			$team_mem 		 = array();
-			/*
+			
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
@@ -340,7 +340,7 @@ class Project extends crm_controller {
 				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					foreach($timesheet_users['username'] as $u_name) {
 						if(!empty($user_details[$u_name]['userid'])) {
-							$ts_team_members[] = $user_details[$u_name]['userid'];
+							$ts_team_members[] = $user_details[strtolower($u_name)]['userid'];
 						}
 					}
 				}
@@ -369,9 +369,6 @@ class Project extends crm_controller {
 					}
 				}
 			}
-			*/
-			
-			
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
 			$data['list_users'] = $this->project_model->get_list_users($id);
