@@ -526,14 +526,27 @@ if (get_default_currency()) {
 			<div style="margin:10px;" class="clear-both"></div>	
 			
 			<!--List the project assigned members from the timesheet-->
+			
+			<?php
+				// get stake holders 
+				$stake_users_array = array();
+				
+				if(count($stake_holders) > 0 && !empty($stake_holders)):
+					foreach($stake_holders as $sh):
+						$stake_users_array[] = $sh['user_id'];
+					endforeach;
+				endif;
+			//	echo '<pre>';print_r($restrict1);exit;
+			?>
+			
 			<div class="pull-left">
 			<label class="project-stake-members">Stake Holders</label>
 				<select multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
 					<?php if(!empty($all_users)):?>
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):
-									$selected = (in_array($pms['userid'],$restrict1))?'selected="selected"':'';?>
-									<option <?php //echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+									$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
+									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
 							<?php endforeach;?>
 					<?php endif; ?>
 				</select>

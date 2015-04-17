@@ -290,6 +290,14 @@ class Project_model extends crm_model
 		return $contract_users->result_array();
 	}
 	
+	public function get_stake_holders($id)
+	{
+		$this->db->select('user_id');
+		$this->db->where('lead_id', $id);
+		$stake_holders = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+		return $stake_holders->result_array();
+	}	
+	
 	function updt_log_view_status($id, $log) 
 	{
 		$this->db->where('lead_id', $id);

@@ -374,6 +374,7 @@ class Project extends crm_controller {
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
+			$data['stake_holders'] = $this->project_model->get_stake_holders($id);
 			//echo '<pre>';print_r($project_members); 
 			//echo '<pre>';print_r($data['contract_users']);exit;
 			$rates = $this->get_currency_rates();
@@ -642,7 +643,7 @@ class Project extends crm_controller {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$updt1 = array('assigned_to' => $updt['project_manager']);
 			$updt_id = $this->project_model->update_row('leads', $updt1, $wh_condn);
-			
+			 
 			$this->db->select("username");
 			$qry = $this->db->get_where($this->cfg['dbpref']."users",array("userid" => $updt['project_manager']));
 			$nos = $qry->num_rows();
@@ -653,6 +654,8 @@ class Project extends crm_controller {
 				$timesheet_db = $this->load->database('timesheet', TRUE); 
 				$timesheet_db->update($timesheet_db->dbprefix('project'),array("proj_leader" => $userrow->username),array("project_code" => $project_code));
 				$timesheet_db->close();
+			}else{
+				$data['error'] = 'Project Manager mismatch in Timesheet.';
 			}
 			
 			if($updt_id==0)
@@ -715,9 +718,12 @@ class Project extends crm_controller {
 				if(count($rs_cm_users) > 0){
 					foreach($rs_cm_users as $muser){
 						$time_ins['username'] = $muser->username;
+						$time_ins['rate_id'] = 1;
 						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);
 					}
 				}
+			}else{
+				$data['error'] = 'Project Members not Updated in Timesheet!';
 			}
 			$timesheet_db->close();
 			//timesheet db end
@@ -726,6 +732,31 @@ class Project extends crm_controller {
 			$data['error'] = 'Project Members Not Updated.';
 		}
 		echo json_encode($data);		
+	}
+	
+	public function set_stake_holders()
+	{
+		$data['error'] = FALSE;
+		$stake_members = $this->input->post("stake_members");
+		$lead_id = $this->input->post("lead_id");
+		
+		if ($stake_members == "")
+		{
+			$data['error'] = 'State Holders must not be Null value!';
+		}
+		
+		$stms = explode(",",$stake_members);
+		$ins = array();
+		if(count($stms) > 0){
+			$this->db->delete($this->cfg['dbpref']."stake_holders",array("lead_id" => $lead_id));
+			$ins['lead_id'] = $lead_id;
+			foreach($stms as $sm){
+				$ins['user_id'] = $sm;
+				$this->project_model->insert_row("stake_holders", $ins);				 
+			}
+		}
+		
+		echo json_encode($data);	
 	}
 	
 	function chkPjtIdFromdb()

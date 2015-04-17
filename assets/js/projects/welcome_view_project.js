@@ -1165,6 +1165,39 @@ function addURLtoJob()
 		return false;
 	}
 	
+
+	function setStakeMembers() {
+		
+		$('#resmsg3').hide();
+		var stake_members = $('#stake_members').val();
+		if(!stake_members) {
+			$('#resmsg3').show();
+			$('#resmsg3').html("<span class='ajx_failure_msg'>Please select Project Team Members!.</span>");
+			return false;
+		}
+		
+		show_processing();
+		 
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_stake_holders/',
+			dataType: 'json',
+			data: 'stake_members='+stake_members+'&project_code='+project_code+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg3').show();
+					$('#resmsg3').html("<span class='ajx_success_msg'>Project Stake Holders Updated.</span>");
+					show_updating();
+				} else {
+					$('#resmsg3').show();
+					$('#resmsg3').html("<span class='ajx_failure_msg'>"+data.error+".</span>");
+					$.unblockUI();
+				}
+			}
+		});
+		setTimeout('timerfadeout()', 3000);
+		return false;
+	}
 	
 	function setProjectStatusDate(date_type) {
 		
