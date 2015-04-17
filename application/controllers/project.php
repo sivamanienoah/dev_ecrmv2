@@ -310,7 +310,7 @@ class Project extends crm_controller {
 			$timesheet		 = array();
 			$ts_team_members = array();
 			$team_mem 		 = array();
-			
+			/*
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
@@ -354,8 +354,7 @@ class Project extends crm_controller {
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
 				}
-				echo '<pre>'; print_r($team_mem); print_r($ts_team_members);
-				exit;
+				
 				
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
@@ -370,6 +369,9 @@ class Project extends crm_controller {
 					}
 				}
 			}
+			*/
+			
+			
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
 			$data['list_users'] = $this->project_model->get_list_users($id);
