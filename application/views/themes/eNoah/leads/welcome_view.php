@@ -36,7 +36,6 @@ var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
 nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
 
 $(document).ready(function(){
-	
 		$( "#ex-cust-name" ).autocomplete({
 			minLength: 2,
 			source: function(request, response) {

@@ -355,7 +355,9 @@ class Project extends crm_controller {
 					}
 				}
 				
-				
+				/* echo '<pre>';
+				print_r($team_mem);
+				print_r($ts_team_members); */
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
 				if(!$result) {

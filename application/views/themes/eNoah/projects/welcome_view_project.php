@@ -1108,6 +1108,7 @@ if (get_default_currency()) {
 					<td valign="top" width="80"><label>New Folder</label></td>
 					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
 				</tr>
+				<?php /*
 				<tr>
 					<td colspan="2">
 					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
@@ -1131,6 +1132,7 @@ if (get_default_currency()) {
 					</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>
+				*/ ?>
 				<tr>
 					<td colspan="2">
 						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>

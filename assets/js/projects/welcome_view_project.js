@@ -1172,7 +1172,7 @@ function addURLtoJob()
 		var stake_members = $('#stake_members').val();
 		if(!stake_members) {
 			$('#resmsg3').show();
-			$('#resmsg3').html("<span class='ajx_failure_msg'>Please select Project Team Members!.</span>");
+			$('#resmsg3').html("<span class='ajx_failure_msg'>Please select Stake Holders!.</span>");
 			return false;
 		}
 		

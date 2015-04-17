@@ -433,7 +433,8 @@ class Request extends crm_controller {
 		
 		//echo '<pre>'; print_r($file_array);
 		$jobs_files_html = '';
-		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Permissions</th></tr></thead>';
+		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
+		//<th>Permissions</th>
 		if(!empty($file_array)) {
 			$jobs_files_html .= '<tbody>';
 			foreach($file_array as $fi) {
@@ -477,7 +478,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
-						$jobs_files_html .= '<td><a onclick="show_permissions('.$job_id.','.$file_id.'); return false;">Permissions</a></td>';
+						//$jobs_files_html .= '<td><a onclick="show_permissions('.$job_id.','.$file_id.'); return false;">Permissions</a></td>';
 					}
 					$jobs_files_html .= '</tr>';
 			}
