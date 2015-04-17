@@ -381,7 +381,7 @@ class Project extends crm_controller {
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			$data['stake_holders'] = $this->project_model->get_stake_holders($id);
 			//echo '<pre>';print_r($project_members); 
-			//echo count($data['contract_users']);echo '<pre>';print_r($data['contract_users']);exit;
+			echo count($data['contract_users']);echo '<pre>';print_r($data['contract_users']);exit;
 			$rates = $this->get_currency_rates();
 
 			$data['timesheet_data'] = array();
