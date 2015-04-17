@@ -154,7 +154,7 @@
 										<?php if(array_key_exists($mon_number, $ms_value)) { ?>
 											<td align="<?php echo isset($ms_value[$mon_number]['ms_value']) ? 'right' : 'center'; ?>">
 												<?php echo isset($ms_value[$mon_number]['ms_value']) ? number_format($ms_value[$mon_number]['ms_value'], 2, '.', '') : '-'; ?>
-												<?php $tot['ms_value'][$mon_number] += $ms_value[$mon_number]['ms_value']; ?>
+												<?php $tot[$mon_number] += $ms_value[$mon_number]['ms_value']; ?>
 											</td>
 										<?php } else { ?>
 											<td align="center">-</td>
