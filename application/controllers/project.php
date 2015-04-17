@@ -322,14 +322,14 @@ class Project extends crm_controller {
 				}
 
 				//Set the Project Manager in our CRM DB.
-				if(!empty($data['timesheetProjectLead']) && count($data['timesheetProjectLead'])>0) {
+				/* if(!empty($data['timesheetProjectLead']) && count($data['timesheetProjectLead'])>0) {
 					$proj_leader = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
 					if($proj_leader != $data['quote_data']['assigned_to']){
 						$condn = array('lead_id' => $data['quote_data']['lead_id']);
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
-				}
+				} */
 				
 				$contract_users = $this->project_model->get_contract_users($id);
 				if(!empty($contract_users) && count($contract_users)>0) {
@@ -346,17 +346,17 @@ class Project extends crm_controller {
 				}
 				
 				//Set the Project Manager in our CRM DB.
-				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
+				/* if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					$proj_team_members = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
 					if($proj_leader != $data['quote_data']['assigned_to']){
 						$condn = array('lead_id' => $data['quote_data']['lead_id']);
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
-				}
+				} */
 				
 				//Set the Project Team Members in our CRM DB.
-				$result = $this->identical_values($team_mem,$ts_team_members);
+			/* 	$result = $this->identical_values($team_mem,$ts_team_members);
 				if(!$result) {
 					$wh_condn = array('jobid_fk'=>$data['quote_data']['lead_id']);
 					$this->db->delete($this->cfg['dbpref'].'contract_jobs',$wh_condn);
@@ -366,7 +366,7 @@ class Project extends crm_controller {
 						$inse['userid_fk'] =  $ts;
 						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$inse);
 					}
-				}
+				} */
 			}
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
