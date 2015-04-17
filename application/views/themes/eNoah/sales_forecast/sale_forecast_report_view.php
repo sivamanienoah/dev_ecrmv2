@@ -144,7 +144,7 @@
 				<tbody>
 					<?php $tot = array(); ?>
 					<?php foreach($report_data as $lead_id=>$ms_data) { ?>
-						<?php foreach($ms_data as $ms_name=>$ms_value) {    ?>
+						<?php foreach($ms_data as $ms_name=>$ms_value) { ?>
 							<tr>
 								<td><?php echo $ms_value['customer']; ?></td>
 								<td><?php echo $ms_value['lead_name']; ?></td>
