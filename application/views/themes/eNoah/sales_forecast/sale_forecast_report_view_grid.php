@@ -44,34 +44,27 @@
 	</thead>
 	<tbody>
 		<?php $tot = array(); ?>
-		<?php foreach($report_data as $fc_data=>$ms_data) { ?>
-			<?php ksort($ms_data); ?>
-			<?php foreach($ms_data as $mon_no=>$ms_det) { ?>
-				<?php foreach($ms_det as $ms=>$ms_val) { ?>
-					<?php if(in_array($mon_no, $month_no_arr)) { ?>
-						<tr>
-							<td><?php echo $ms_val['customer']; ?></td>
-							<td><?php echo $ms_val['lead_name']; ?></td>
-							<td><?php echo $ms_val['ms_name']; ?></td>
-							<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
-								<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
-									<?php if($mon_no==$mon_number) { ?>
-										<td align="right">
-											<?php echo number_format($ms_val['ms_value'],2,'.',''); ?>
-											<?php 
-												$tot[$mon_no] += $ms_val['ms_value'];
-											?>
-										</td>
-									<?php } else { ?>
-										<td align="center"><?php echo '-'; ?></td>
-									<?php } ?>
-								<?php } ?><!-- j for loop-->
-							<?php } ?><!-- if condition-->
-						</tr>
-					<?php } ?><!-- in_array - if condition-->
-				<?php } ?><!-- ms_det foreach loop-->
+		<?php foreach($report_data as $lead_id=>$ms_data) { ?>
+			<?php foreach($ms_data as $ms_name=>$ms_value) {    ?>
+				<tr>
+					<td><?php echo $ms_value['customer']; ?></td>
+					<td><?php echo $ms_value['lead_name']; ?></td>
+					<td><?php echo $ms_name; ?></td>
+					<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
+						<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
+							<?php if(array_key_exists($mon_number, $ms_value)) { ?>
+								<td align="<?php echo isset($ms_value[$mon_number]['ms_value']) ? 'right' : 'center'; ?>">
+									<?php echo isset($ms_value[$mon_number]['ms_value']) ? number_format($ms_value[$mon_number]['ms_value'], 2, '.', '') : '-'; ?>
+									<?php $tot['ms_value'][$mon_number] += $ms_value[$mon_number]['ms_value']; ?>
+								</td>
+							<?php } else { ?>
+								<td align="center">-</td>
+							<?php } ?>
+						<?php } ?><!-- month_arr foreach loop-->
+					<?php } ?><!-- if condition-->
+				</tr>
 			<?php } ?><!-- ms_data foreach loop-->
-		<?php } ?><!-- foreach loop-->
+		<?php } ?><!-- report_data foreach loop-->
 	</tbody>
 	<tfoot>
 		<tr>
