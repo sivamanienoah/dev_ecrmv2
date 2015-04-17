@@ -327,6 +327,15 @@ class Project_model extends crm_model
 		return $q->result_array();
     }	
 	
+	function get_all_users() 
+	{
+    	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive');
+		//$this->db->where('inactive',0);
+    	$this->db->order_by('first_name',"asc");
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+		return $q->result_array();
+    }
+	
 	public function get_practices()
 	{
     	$this->db->select('id, practices');

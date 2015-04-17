@@ -456,7 +456,7 @@ class Project extends crm_controller {
 			**/
 			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list(array('status'=>1));
 			
-			$data['all_users'] = $this->project_model->get_users();
+			$data['all_users'] = $this->project_model->get_all_users();
 			
             $this->load->view('projects/welcome_view_project', $data);
         }
