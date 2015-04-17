@@ -21,8 +21,7 @@ function getFolderdata(ffolder_id) {
 			$('#filefolder_id').val(ffolder_id);			
 			$('#parent_folder_id').val($('#filefolder_id').val());			
 			$('#jv-tab-3').unblock();
-			$('#list_file_tbl').dataTable({
-			
+			$('#list_file_tbl').dataTable({			
 				"iDisplayLength": 10,
 				"sPaginationType": "full_numbers",
 				"bInfo": true,
@@ -77,7 +76,9 @@ function move_files() {
  * Adding folders
  */
 function create_folder(leadid, fparent_id) {
-	var params				= {'leadid':leadid, 'fparent_id':fparent_id};
+	
+	var parent_folder_id = $('#parent_folder_id').val();
+	var params				= {'leadid':leadid, 'fparent_id':fparent_id,'parent_folder_id': parent_folder_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.ajax({
@@ -86,13 +87,15 @@ function create_folder(leadid, fparent_id) {
 		dataType: 'json',
 		data: params,
 		success: function(data) {
-			// console.info(data);
 			$('#aflead_id').val(data.lead_id);
 			$('#afparent_id').val(data.fparent_id);
 			$('#add_file_tree').html(data.tree_struture);
+			var ht = $('#create-folder').height();
+			ht += 50;
+			$('.js_checkbox').prop('checked',false);
 			$.blockUI({
 				message: $('#create-folder'), 
-				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px' } 
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
 			});
 		}
 	});
@@ -129,6 +132,76 @@ function add_folder() {
 function timerfadeout() {
 	$('.succ_err_msg').empty();
 }
+
+/*method to show the permission for the users for the respective folder */
+function show_permissions(leadid, fparent_id) {
+	var params				= {'leadid':leadid, 'fparent_id':fparent_id};
+	params[csrf_token_name] = csrf_hash_token; 
+ 
+	$('.js_checkbox').prop('checked',false);
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/get_assigned_users',
+		dataType: 'json',
+		data: params,
+		success: function(data) {
+			//console.info(data);
+			$('#cplead_id').val(data.lead_id);
+			$('#folder_name').text(data.folder_name);
+			$('#cpparent_id').val(data.fparent_id);
+			
+			var obj = data.result_set;
+			var html = '';
+			var recur_checked,add_checked,down_checked;
+			if(obj.length){
+				html += '<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">';
+				html += '<tr><th>Users</th><th>Is Recursive?</th><th>Add Access</th><th>Download Access</th></tr>';
+				for(var i=0; i<obj.length;i++){
+					
+					recur_checked = (obj[i].is_recursive != 0)?'checked="checked"':' ';
+					add_checked = (obj[i].add_access != 0)?'checked="checked"':' ';
+					down_checked = (obj[i].download_access != 0)?'checked="checked"':' ';
+					
+					html += '<tr><td><input type="hidden" name="pjt_users_id[]" value="'+obj[i].user_id+'" />'+obj[i].first_name+' '+obj[i].last_name+'</td><td><input class=js_checkbox" type="checkbox" name="is_recursive['+obj[i].user_id+']"   value="1" '+recur_checked+' /></td><td><input class="js_checkbox" type="checkbox" name="add_access['+obj[i].user_id+']" value="1" '+add_checked+' /></td><td><input class="js_checkbox" type="checkbox" name="download_access['+obj[i].user_id+']" value="1" '+down_checked+' /></td></tr>';
+				}
+				$('#add_users_tree_1').html(html);
+			}else{
+				$('.assign_permissions').css('display','block');
+			}
+			var ht = $('#check-permissions').height();
+			ht += 50;
+			
+			$.blockUI({
+				message: $('#check-permissions'), 
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
+			});
+		}
+	});
+	return false;
+}
+
+/* Method used to assign the users to the already created folders */
+function assign_folder(){
+	var form_data = $('#check-permissions').serialize();
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/assignFolders',
+		dataType: 'json',
+		data: form_data,
+		success: function(data) {
+			// console.info(data);			
+			$('#af_successerrmsg-1').html(data.af_msg);
+			setTimeout(function() { 
+				$.unblockUI({ 
+					message: $('#check-permissions'), 
+					onUnblock: function(){ getFolderdata(data.af_reload),$('.succ_err_msg').empty() }
+				}); 
+			}, 2000);
+		}
+	});
+	return false;	
+}
+
 
 /*
 *@method searchFileFolder

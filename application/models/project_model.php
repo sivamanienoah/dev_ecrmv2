@@ -42,7 +42,7 @@ class Project_model extends crm_model
 		
 
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
-		
+		 
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
@@ -206,7 +206,8 @@ class Project_model extends crm_model
 		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
-		$pjts =  $query->result_array();		
+		$pjts =  $query->result_array();
+		//echo '<pre>';print_r($pjts);exit;		
 		return $pjts;
 	}
 	

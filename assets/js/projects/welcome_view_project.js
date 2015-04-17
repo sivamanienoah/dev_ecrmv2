@@ -1071,7 +1071,101 @@ function addURLtoJob()
 		setTimeout('timerfadeout()', 3000);
 		return false;
 	}
-
+	
+	function show_processing(){
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});		
+	}
+	
+	function show_updating(){
+		setTimeout(function(){
+			$.blockUI({
+				message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+			window.location.reload(true);
+		},500);
+		$.unblockUI();
+	}
+	
+	//update the project status.
+	function setProjectManager() {
+		
+		$('#resmsg1').hide();
+		var project_manager = $('#project_manager').val();
+		
+		if(project_manager == '') {
+			$('#resmsg1').show();
+			$('#resmsg1').html("<span class='ajx_failure_msg'>Please select Project Manager!.</span>");
+			return false;
+		}
+		
+		show_processing();
+		 
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_project_manager/',
+			dataType: 'json',
+			data: 'project_manager='+project_manager+'&project_code='+project_code+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg1').show();
+					$('#resmsg1').html("<span class='ajx_success_msg'>Project Manager Updated.</span>");
+					setTimeout(function(){
+						$.blockUI({
+							message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+							css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+						});
+						window.location.reload(true);
+					},500);
+					$.unblockUI();
+				} else {
+					$('#resmsg1').show();
+					$('#resmsg1').html("<span class='ajx_failure_msg'>"+data.error+".</span>");
+					$.unblockUI();
+				}
+			}
+		});
+		setTimeout('timerfadeout()', 3000);
+		return false;
+	}
+	
+	function setProjectMembers() {
+		
+		$('#resmsg2').hide();
+		var project_team_members = $('#project_team_members').val();
+		if(!project_team_members) {
+			$('#resmsg2').show();
+			$('#resmsg2').html("<span class='ajx_failure_msg'>Please select Project Team Members!.</span>");
+			return false;
+		}
+		
+		show_processing();
+		 
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_project_members/',
+			dataType: 'json',
+			data: 'project_team_members='+project_team_members+'&project_code='+project_code+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg2').show();
+					$('#resmsg2').html("<span class='ajx_success_msg'>Project Team Members Updated.</span>");
+					show_updating();
+				} else {
+					$('#resmsg2').show();
+					$('#resmsg2').html("<span class='ajx_failure_msg'>"+data.error+".</span>");
+					$.unblockUI();
+				}
+			}
+		});
+		setTimeout('timerfadeout()', 3000);
+		return false;
+	}
+	
+	
 	function setProjectStatusDate(date_type) {
 		
 		$.blockUI({

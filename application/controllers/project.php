@@ -172,10 +172,11 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
-		
+		//echo '<pre>';print_r($result[0]);exit;
 		// $arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($result)) {
+			
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
 			
@@ -244,11 +245,12 @@ class Project extends crm_controller {
 			//echo '<pre>'; print_r($project_leaders);
 			//echo '<pre>'; print_r($project_members);exit;
 			
-			if(!empty($get_parent_folder_id)){
+			$data['project_members'] = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details
 			
+			if(!empty($get_parent_folder_id)){			
 				$data['parent_ffolder_id'] = $get_parent_folder_id['folder_id'];
+				 
 			} else {
-			
 			
 				//creating files folder name
 				$f_dir = UPLOAD_PATH.'files/';
@@ -273,7 +275,9 @@ class Project extends crm_controller {
 				// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
 				// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				// $arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
-
+				
+				
+				
 					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
 	
 						foreach($arrProjectMembers as $members){
@@ -317,7 +321,7 @@ class Project extends crm_controller {
 					$data['timesheetAssignedUsers'] = $timesheet_users['name'];
 				}
 
-				//Set the Project Manager in our CRM DB.
+				/* //Set the Project Manager in our CRM DB.
 				if(!empty($data['timesheetProjectLead']) && count($data['timesheetProjectLead'])>0) {
 					$proj_leader = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
 					if($proj_leader != $data['quote_data']['assigned_to']){
@@ -325,7 +329,7 @@ class Project extends crm_controller {
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
-				}
+				} */
 				
 				$contract_users = $this->project_model->get_contract_users($id);
 				if(!empty($contract_users) && count($contract_users)>0) {
@@ -341,7 +345,7 @@ class Project extends crm_controller {
 					}
 				}
 				
-				//Set the Project Manager in our CRM DB.
+			/* 	//Set the Project Manager in our CRM DB.
 				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					$proj_team_members = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
 					if($proj_leader != $data['quote_data']['assigned_to']){
@@ -349,10 +353,10 @@ class Project extends crm_controller {
 						$updt  = array('assigned_to' => $proj_leader);
 						$setPM = $this->project_model->update_row('leads', $updt, $condn);
 					}
-				}
+				} */
 				
 				//Set the Project Team Members in our CRM DB.
-				$result = $this->identical_values($team_mem,$ts_team_members);
+				/*$result = $this->identical_values($team_mem,$ts_team_members);
 				if(!$result) {
 					$wh_condn = array('jobid_fk'=>$data['quote_data']['lead_id']);
 					$this->db->delete($this->cfg['dbpref'].'contract_jobs',$wh_condn);
@@ -362,7 +366,7 @@ class Project extends crm_controller {
 						$inse['userid_fk'] =  $ts;
 						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$inse);
 					}
-				}
+				} */
 			}
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
@@ -370,7 +374,8 @@ class Project extends crm_controller {
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			
+			//echo '<pre>';print_r($project_members); 
+			//echo '<pre>';print_r($data['contract_users']);exit;
 			$rates = $this->get_currency_rates();
 
 			$data['timesheet_data'] = array();
@@ -448,6 +453,8 @@ class Project extends crm_controller {
 			*@Initiate to get all profit center data
 			**/
 			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list(array('status'=>1));
+			
+			$data['all_users'] = $this->project_model->get_users();
 			
             $this->load->view('projects/welcome_view_project', $data);
         }
@@ -618,7 +625,109 @@ class Project extends crm_controller {
 		}
 		echo json_encode($data);
 	}
-
+	
+	public function set_project_manager()
+	{
+		$updt = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		
+		$project_code = $updt['project_code'];
+		
+		if ($updt['project_manager'] == "")
+		{
+			$data['error'] = 'Project Manager must not be Null value!';
+		}
+		else
+		{
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updt1 = array('assigned_to' => $updt['project_manager']);
+			$updt_id = $this->project_model->update_row('leads', $updt1, $wh_condn);
+			
+			$this->db->select("username");
+			$qry = $this->db->get_where($this->cfg['dbpref']."users",array("userid" => $updt['project_manager']));
+			$nos = $qry->num_rows();
+					 
+			if($nos){
+				// update in timesheet project table
+				$userrow = $qry->row();
+				$timesheet_db = $this->load->database('timesheet', TRUE); 
+				$timesheet_db->update($timesheet_db->dbprefix('project'),array("proj_leader" => $userrow->username),array("project_code" => $project_code));
+				$timesheet_db->close();
+			}
+			
+			if($updt_id==0)
+			$data['error'] = 'Project Manager Not Updated.';
+		}
+		echo json_encode($data);
+	}
+	
+	public function set_project_members(){
+		$updt = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$ins = array();
+		
+		$project_team_members = $this->input->post('project_team_members');
+		$project_code = $this->input->post('project_code');
+		$lead_id = $this->input->post('lead_id');
+		
+		if ($project_team_members == "")
+		{
+			$data['error'] = 'Project Members must not be Null value!';
+		}
+		else
+		{
+			//update in crm			
+			if($project_team_members)
+			{
+				$ins['jobid_fk'] = $lead_id;
+				$ptms = explode(",",$project_team_members);
+				if(count($ptms)>0){
+					// query to get the username from the selected users in crm users table.
+					$this->db->select("username");
+					$this->db->where_in("userid",$ptms);
+					$res_cm_users = $this->db->get($this->cfg['dbpref']."users");
+					$rs_cm_users = $res_cm_users->result();
+					
+					// delete the existing assigned users from the contract jobs table before inserting the new things.
+					$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
+					
+					//inserting the assigned users in the contract jobs table.
+					foreach($ptms as $pmembers){
+						$ins['userid_fk'] = $pmembers;
+						$insert = $this->project_model->insert_row('contract_jobs', $ins);
+					}
+				}
+			}
+			
+			//update in timesheet starts
+			// get the project id from project table of timesheet 
+			$timesheet_db = $this->load->database('timesheet', TRUE); 
+			$qry = $timesheet_db->get_where($timesheet_db->dbprefix('project'),array("project_code" => $project_code));
+			if($qry->num_rows())
+			{
+				$res_t = $qry->row();
+				$timesheet_proj_id =  $res_t->proj_id;
+				$time_ins = array();
+				
+				//delete the existing assigned users in the timesheet assignment table, before inserting.
+				$timesheet_db->delete($timesheet_db->dbprefix("assignments"),array("proj_id" => $timesheet_proj_id));
+				$time_ins['proj_id'] = $timesheet_proj_id;
+				if(count($rs_cm_users) > 0){
+					foreach($rs_cm_users as $muser){
+						$time_ins['username'] = $muser->username;
+						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);
+					}
+				}
+			}
+			$timesheet_db->close();
+			//timesheet db end
+			
+			if($insert==0)
+			$data['error'] = 'Project Members Not Updated.';
+		}
+		echo json_encode($data);		
+	}
+	
 	function chkPjtIdFromdb()
 	{	
 		$data = real_escape_array($this->input->post());

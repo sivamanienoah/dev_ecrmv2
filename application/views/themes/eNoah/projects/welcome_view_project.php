@@ -11,14 +11,14 @@ if (get_default_currency()) {
 	$default_cur_id = '1';
 	$default_cur_name = 'USD';
 }
+
+ 
 ?>
 <?php 
 	$this->load->helper('lead_helper'); 
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 ?>
 <?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
-
-
 
 <div id="content">
     <?php
@@ -36,17 +36,15 @@ if (get_default_currency()) {
 					<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
 				</div>
 				
-				<div style="overflow:hidden;">
-					
+				<div style="overflow:hidden;">					
 					<p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p>
 					<div class="button-container">
 						<div class="buttons">
 							<button type="submit" class="positive" onclick="addLog();  return false;" id="add-log-submit-button">Add Post</button>
 						</div>
-					</div>
-				
+					</div>				
 				</div>
-			
+				
 			<?php
 			if (isset($userdata))
 			{
@@ -486,32 +484,67 @@ if (get_default_currency()) {
 			<?php //require (theme_url().'/tpl/user_accounts_options.php'); ?>
 			
 			<!--List the project lead from the timesheet-->
-			<label class="pull-left">Project Manager</label>
-			<div class="displaycontent">
-				<?php
-					if(count($timesheetProjectLead)>0) {
-						echo $timesheetProjectLead['project_lead'];
-					} else {
-						echo '-';
-					}
-				?>
+			 
+			<div class="pull-left">
+			<label class="project-manager">Project Manager</label>
+				<select class="chzn-select"  id="project_manager" name="project_manager">
+					<?php if(!empty($all_users)):?>
+							<option value="">Select</option>
+							<?php foreach($all_users as $pms):?>
+								<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+							<?php endforeach;?>
+					<?php endif; ?>
+				</select>
 			</div>
+			<div>
+				<div class="buttons">
+						<button onclick="setProjectManager(); return false;" style="margin:0 0 0 5px;" id="project_manager_id" class="positive" type="submit">Set</button>
+						<div class="error-msg" id="resmsg1"></div>
+				</div>
+			</div>
+			<div style="margin-bottom:15px;" class="clear-both"></div>	
 			
 			<!--List the project assigned members from the timesheet-->
-			<h6 class="pull-left" style="width: 130px; padding-top:8px;">Project Team Members</h6>
-			<div class="team_list">
-				<?php
-					if(count($timesheetAssignedUsers)>0) {
-						foreach($timesheetAssignedUsers as $project_assignees) {
-							echo $project_assignees . "<br />";
-						}
-					} else {
-						echo '-';
-					}
-				?>
+			<div class="pull-left">
+			<label class="project-team-members">Team Members</label>
+				<select multiple="multiple" class="chzn-select"  id="project_team_members" name="project_team_members[]">
+					<?php if(!empty($all_users)):?>
+							<option value="">Select</option>
+							<?php foreach($all_users as $pms):
+									$selected = (in_array($pms['userid'],$restrict1))?'selected="selected"':'';?>
+									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+							<?php endforeach;?>
+					<?php endif; ?>
+				</select>
 			</div>
+			<div>
+				<div class="buttons">
+					<button onclick="setProjectMembers(); return false;" style="margin:0 0 0 5px;" id="project_members_id" class="positive" type="submit">Set</button>
+					<div class="error-msg" id="resmsg2"></div>
+				</div>
+			</div>
+			<div style="margin:10px;" class="clear-both"></div>	
 			
-			<div class="clear-both"></div>
+			<!--List the project assigned members from the timesheet-->
+			<div class="pull-left">
+			<label class="project-stake-members">Stake Holders</label>
+				<select multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
+					<?php if(!empty($all_users)):?>
+							<option value="">Select</option>
+							<?php foreach($all_users as $pms):
+									$selected = (in_array($pms['userid'],$restrict1))?'selected="selected"':'';?>
+									<option <?php //echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+							<?php endforeach;?>
+					<?php endif; ?>
+				</select>
+			</div>
+			<div>
+				<div class="buttons">
+						<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
+						<div class="error-msg" id="resmsg3"></div>
+				</div>
+			</div>
+			<div style="margin:10px;" class="clear-both"></div>			
 
   <div id="project-tabs" style="width:930px;">
 	<div>
@@ -987,11 +1020,11 @@ if (get_default_currency()) {
 				<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
 			</div>
 			
-			<?php if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
-			<!--div class="pull-left pad-right">
+			<?php /*if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
+			<div class="pull-left pad-right">
 				<a onclick="folderAccess(); return false;" title="Folder & File Access" ><img src="assets/img/permissions.png" class="icon-width" alt="Folder & File Access"></a>
-			</div-->
-			<?php }
+			</div>
+			<?php } */
 			}?>
 		</div>
 		
@@ -1039,7 +1072,7 @@ if (get_default_currency()) {
 		<form id="create-folder" onsubmit="return false;">
 			<!-- edit file -->
 			<div id='af_successerrmsg' class='succ_err_msg'></div>
-			<table border="0" cellpadding="0" cellspacing="0">
+			<table border="0" cellpadding="5" cellspacing="5">
 				<tr>
 					<td colspan="2"><div id='af_name'><strong><h3>Create Folder</h3></strong></div></td>
 				</tr>
@@ -1064,6 +1097,29 @@ if (get_default_currency()) {
 				</tr>
 				<tr>
 					<td colspan="2">
+					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
+					<?php if(!empty($project_members) && count($project_members)>0):?>
+							<tr>
+								<th>Users</th>
+								<th>Is Recursive?</th>
+								<th>Add Access</th>
+								<th>Download Access</th>
+							</tr>
+							<?php foreach($project_members as $pusers):?>							 
+								<tr>
+									<td><input type="hidden" name="pjt_users_id[]" value="<?php echo $pusers['userid'];?>" /><?php echo $pusers['first_name'].' '.$pusers['last_name'];?></td>
+									<td><input class="js_checkbox" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]"   value="1" /></td>
+									<td><input class="js_checkbox" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]"   value="1" /></td>
+									<td><input class="js_checkbox" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
+								</tr>							
+						<?php endforeach;?>
+						<?php endif;?>
+					</table>	
+					</td>
+				</tr>
+				<tr><td colspan="2">&nbsp;</td></tr>
+				<tr>
+					<td colspan="2">
 						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
 						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
 					</td>
@@ -1071,6 +1127,57 @@ if (get_default_currency()) {
 			</table>
 		<!-- edit end -->
 		</form>
+		<form id="check-permissions" onsubmit="return false;">
+			<!-- edit file -->
+			<div id='af_successerrmsg' class='succ_err_msg'></div>
+			<table border="0" cellpadding="5" cellspacing="5">
+				<tr>
+					<td colspan="2"><div id='af_name'><strong><h3>Assign Folder - <span id="folder_name"></span></h3></strong></div></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type='hidden' name='cplead_id' id='cplead_id' value=''>
+						<input type='hidden' name='cpparent_id' id='cpparent_id' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						 <div id="add_users_tree_1"></div>
+					</td>
+				</tr>			
+				 <tr>
+					<td colspan="2">
+					<table style="display:none;" class="dashboard-heads assign_permissions" cellpadding="0" cellspacing="0">
+					<?php if(!empty($project_members) && count($project_members)>0):?>
+							<tr>
+								<th>Users</th>
+								<th>Is Recursive?</th>
+								<th>Add Access</th>
+								<th>Download Access</th>
+							</tr>
+							<?php foreach($project_members as $pusers):?>							 
+								<tr>
+									<td><input type="hidden" name="pjt_users_id[]" value="<?php echo $pusers['userid'];?>" /><?php echo $pusers['first_name'].' '.$pusers['last_name'];?></td>
+									<td><input class="js_checkbox" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]" value="1" /></td>
+									<td><input class="js_checkbox" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]" value="1" /></td>
+									<td><input class="js_checkbox" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
+								</tr>							
+						<?php endforeach;?>
+						<?php endif;?>
+					</table>	
+					</td>
+				</tr>				
+				  
+				<tr>
+					<td colspan="2">
+						<div class="buttons"><button type="submit" class="positive" onclick="assign_folder();">Save</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
+			</table>
+		<!-- edit end -->
+		</form>		
 		<form id="moveallfile" onsubmit="return false;">
 			<!-- edit file -->
 			<div id='all_mf_successerrmsg' class='succ_err_msg'></div>
@@ -1136,8 +1243,11 @@ if (get_default_currency()) {
 				</tr>
 			</table>
 		</form>
-	</div><!--id: jv-tab-3 end -->
-			
+	</div>
+	<!--id: jv-tab-3 end -->
+
+	 
+	
 	<div id="jv-tab-4">
 		<form id="set-job-task" onsubmit="return false;">
 		

@@ -13,6 +13,7 @@ class Request extends crm_controller {
 		$this->load->model('department_model');
 		$this->load->model('customer_model');
 		$this->load->model('email_template_model');
+		$this->load->model('project_model');
 		$this->load->library('upload');
 		$this->load->helper('lead_helper');
 	}
@@ -217,6 +218,12 @@ class Request extends crm_controller {
 		$dir->close();
 		return rmdir($dirname);
 	}
+	
+	function get_users_assigned_folder()
+	{
+		echo 'test';exit;
+	}
+	
 	
 	/**
 	 * Uploads a file posted to a specified job
@@ -426,7 +433,7 @@ class Request extends crm_controller {
 		
 		//echo '<pre>'; print_r($file_array);
 		$jobs_files_html = '';
-		$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
+		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th><th>Permissions</th></tr></thead>';
 		if(!empty($file_array)) {
 			$jobs_files_html .= '<tbody>';
 			foreach($file_array as $fi) {
@@ -460,6 +467,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '';
 					} else {					
 					if($fparent_id == 0) $fname = 'Root';	
 						// $jobs_files_html .= "<input type='hidden' name='current_folder_parent_id' id='current_folder_parent_id' value='".$file_id."'>";
@@ -469,6 +477,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.$fcreatedby.'</td>';
+						$jobs_files_html .= '<td><a onclick="show_permissions('.$job_id.','.$file_id.'); return false;">Permissions</a></td>';
 					}
 					$jobs_files_html .= '</tr>';
 			}
@@ -554,22 +563,60 @@ class Request extends crm_controller {
 		$result  = $this->request_model->get_tree_file_list($data['leadid'],$parentId=0,$counter=0);
 		$res     = array();
 		$res['lead_id'] = $data['leadid'];
+		$res['parent_folder_id'] = $data['parent_folder_id'];
 		$res['fparent_id'] = $data['fparent_id'];
+		$res['project_members_list'] = '';
 		foreach($result as $fid=>$fname){
 			if($fname == $data['leadid']) {
 				$fname = 'root';
 			}
-			if($fid == $data['fparent_id']) {
+			if(($fid == $data['fparent_id']) || ($fid == $data['parent_folder_id'])) {
 				$selected = 'selected=selected';
 			} else {
 				$selected = '';
 			}
 			$res['tree_struture'] .= "<option value='".$fid."' ".$selected.">".$fname."</option>"; 
 		}
+		
+		/*$project_members = $this->request_model->get_project_members($data['leadid']);
+		if(count($project_members)>0){
+			
+			foreach($project_members as $project_member){
+				$res['project_members_list'] .= "<option value='".$project_member['userid']."'>".$project_member['first_name']." ".$project_member['last_name']."</option>"; 
+			}
+		}*/
+		 
 		echo json_encode($res);
 		exit;
 	}
 	
+
+	public function get_assigned_users() {
+		$data    = real_escape_array($this->input->post());
+	
+		$res     = array();
+		$res['lead_id'] = $data['leadid'];
+		$res['fparent_id'] = $data['fparent_id'];
+		$res['project_members_list'] = '';
+		
+		$rs = $this->db->get_where($this->cfg['dbpref']."file_management",array("folder_id" => $data['fparent_id']));
+		$fol = $rs->row();
+		$res['folder_name'] = $fol->folder_name;
+		
+		//project folder access
+		$folder_id = $data['fparent_id'];
+		$project_members = $this->project_model->get_contract_users($data['leadid']);
+		$users_arr = array();
+		foreach($project_members as $key=>$val){
+			$users_arr[] = $val['userid_fk'];
+		}
+		$exist_users = implode($users_arr,',');
+		$qry = $this->db->query("SELECT a.*,b.first_name,b.last_name FROM crm_project_folder_access as a join `crm_users` as b on a.user_id = b.userid where a.folder_id=$folder_id and a.user_id in ($exist_users)");
+		$faccess = $qry->result();
+		$res['result_set'] = $faccess;
+		echo json_encode($res);
+		exit;
+	}
 	
 	/**
 	 * @method addFolders()
@@ -577,7 +624,6 @@ class Request extends crm_controller {
 	 */
 	public function addFolders() {
 		$af_data = real_escape_array($this->input->post());
-		
 		
 		// CHECK ACCESS PERMISSIONS END HERE //	
 		
@@ -605,9 +651,31 @@ class Request extends crm_controller {
 		$folder_check_status = $this->request_model->createFolderStatus('file_management', $af_condn);
 		if($folder_check_status==0){
 			$add_data = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny'],'created_by'=>$this->userdata['userid'],'created_on'=>date('Y-m-d H:i:s'));
-			$res_insert = $this->request_model->insert_new_row('file_management', $add_data);
+			$res_insert = $this->request_model->insert_new_row('file_management', $add_data);			 
+			
 			if(!$res_insert) {
 				$err_msg = 'Folder cannot be added.';
+			}else{
+				
+				$folder_id = $res_insert;				
+				
+				$pjt_users_id = $this->input->post('pjt_users_id');
+				$is_recursive = $this->input->post('is_recursive');
+				$add_access = $this->input->post('add_access');
+				$download_access = $this->input->post('download_access');
+				$users_count = count(array_unique($pjt_users_id));
+			
+				if($users_count>0){					
+					for($i=0;$i<$users_count;$i++){
+						$user_id = (isset($pjt_users_id[$i])?$pjt_users_id[$i]:'');
+						$is_recursive1 = (isset($is_recursive[$user_id])?$is_recursive[$user_id]:0);
+						$add_access1 = (isset($add_access[$user_id])?$add_access[$user_id]:0);
+						$download_access1 = (isset($download_access[$user_id])?$download_access[$user_id]:0);
+						
+
+						$this->db->insert($this->cfg['dbpref']."project_folder_access",array("folder_id" => $folder_id,"user_id" => $user_id,"is_recursive" => $is_recursive1, "add_access" => $add_access1, "download_access" => $download_access1,"created_on" => date("Y-m-d H:i:s"),"created_by" => $this->userdata['userid']));
+					}
+				}
 			}
 		} else {
 			$res_insert = FALSE;
@@ -663,6 +731,56 @@ class Request extends crm_controller {
 		exit;
 	}
 	
+	/**
+	* @method assignFolders()
+	* @Assign the folders
+	*/
+	
+	
+	public function assignFolders() {
+		$af_data = real_escape_array($this->input->post());
+		
+		$af_condn = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
+		
+		
+		$folder_id = $this->input->post('cpparent_id');
+		$pjt_users_id = $this->input->post('pjt_users_id');
+		$is_recursive = $this->input->post('is_recursive');
+		$add_access = $this->input->post('add_access');
+		$download_access = $this->input->post('download_access');
+		$users_count = count(array_unique($pjt_users_id));
+	
+		 
+		if($users_count>0){					
+			for($i=0;$i<$users_count;$i++){				
+				$user_id = (isset($pjt_users_id[$i])?$pjt_users_id[$i]:'');
+				$is_recursive1 = (isset($is_recursive[$user_id])?$is_recursive[$user_id]:0);
+				$add_access1 = (isset($add_access[$user_id])?$add_access[$user_id]:0);
+				$download_access1 = (isset($download_access[$user_id])?$download_access[$user_id]:0);
+				
+				$qry = $this->db->get_where($this->cfg['dbpref']."project_folder_access",array("folder_id" => $folder_id,"user_id" => $user_id));
+				$nos = $qry->num_rows();
+				 
+				if($nos){
+					$this->db->update($this->cfg['dbpref']."project_folder_access",array("folder_id" => $folder_id,"user_id" => $user_id,"is_recursive" => $is_recursive1, "add_access" => $add_access1, "download_access" => $download_access1),array("folder_id" => $folder_id,"user_id" => $user_id));
+				}else{
+					$this->db->insert($this->cfg['dbpref']."project_folder_access",array("folder_id" => $folder_id,"user_id" => $user_id,"is_recursive" => $is_recursive1, "add_access" => $add_access1, "download_access" => $download_access1,"created_on" => date("Y-m-d H:i:s"),"created_by" => $this->userdata['userid']));	
+				}
+				//echo $this->db->last_query();exit;
+			}
+		}
+		$htm['af_msg'] = '<span class="ajx_success_msg"><h5>Permission(s) has been Updated</h5></span>';
+		
+		//get 1 parent alone
+		$this->db->select('parent');
+		$res = $this->db->get_where($this->cfg['dbpref']."file_management",array("folder_id" => $folder_id));
+		$rs = $res->row();
+				
+		$htm['af_reload'] = $rs->parent;
+		echo json_encode($htm);
+		exit;
+	}
+	
 	
 	/**
 	 * @method searchFile()
@@ -702,6 +820,8 @@ class Request extends crm_controller {
 				// }
 			}
 		}
+
+		
 		$get_files = $this->request_model->search_file($job_id, $parent_folder_id, $sf_data['search_input']);
 		
 		if(!empty($get_files)) {
