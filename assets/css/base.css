@@ -2075,7 +2075,8 @@ ul.topstrip li:last-child{border-right:0;padding-right:0;margin-right:0;}
 .table-edit img{border-right: 1px solid #dadada;display: inline-block;margin: 0 5px 0 0;padding: 0 5px 0 0;}
 .table-delete img{border-right: 1px solid #dadada;display: inline-block;margin: 0 5px 0 0;padding: 0 5px 0 0;}
 .table-view-log img{display: inline-block;margin:0;padding:0;}
-td.action a:hover{text-decoration:none;}
+td.action a:hover{text-decoration:none;opacity:0.6;}
+td.actions a:hover{text-decoration:none;opacity:0.6;}
 
 
 
