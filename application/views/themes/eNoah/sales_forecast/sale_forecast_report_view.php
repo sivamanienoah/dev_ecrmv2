@@ -100,10 +100,10 @@
 			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 				<thead>
 					<tr>
-						<th>Entity</th>
-						<th>Customer</th>
-						<th>Lead/Project Name</th>
-						<th>Milestone</th>
+						<th style="text-align:center;">Entity</th>
+						<th style="text-align:center;">Customer</th>
+						<th style="text-align:center;">Lead/Project Name</th>
+						<th style="text-align:center;">Milestone</th>
 						<?php
 							// $current_month = date('Y-m');
 							// $from_month = $current_month;
@@ -128,7 +128,7 @@
 							$i = date("Y-m", strtotime($current_month)); 
 							while($i <= date("Y-m", strtotime($highest_month))) {
 						?>
-								<th><?php echo date('M', strtotime($i)); ?></th>
+								<th style="text-align:center;"><?php echo date('M', strtotime($i)); ?></th>
 						<?php
 								$month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
 								$month_no_arr[] = date('Y-m', strtotime($i));
