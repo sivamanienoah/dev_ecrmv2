@@ -2,6 +2,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 	<thead>
 		<tr>
+			<th>Entity</th>
 			<th>Customer</th>
 			<th>Lead/Project Name</th>
 			<th>Milestone</th>
@@ -47,6 +48,7 @@
 		<?php foreach($report_data as $lead_id=>$ms_data) { ?>
 			<?php foreach($ms_data as $ms_name=>$ms_value) {    ?>
 				<tr>
+					<td><?php echo $ms_value['entity']; ?></td>
 					<td><?php echo $ms_value['customer']; ?></td>
 					<td><?php echo $ms_value['lead_name']; ?></td>
 					<td><?php echo $ms_name; ?></td>
@@ -68,7 +70,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<td text align=right colspan="3"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
+			<td text align=right colspan="4"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
 			<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 				<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 					<td align="right">
@@ -83,7 +85,7 @@
 $(function(){
 	$('.data-tbl').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
-		"iDisplayLength": 25,
+		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
 		"bPaginate": true,

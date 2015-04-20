@@ -13,7 +13,7 @@
 		<div style="padding-bottom: 10px;">
 			<div style="width:100%; border-bottom:1px solid #ccc;">
 				<div style="text-align:right; float: right">
-					<a id="export_excel" class="export-btn excel">Export to Excel</a>
+					<a id="export_excel_variance" class="export-btn excel">Export to Excel</a>
 				</div>
 				<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 				<div class="clearfix"></div>
@@ -99,14 +99,15 @@
 			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 				<thead>
 					<tr>
-						<th width="30%" rowspan=2>Customer</th>
-						<th width="30%" rowspan=2>Lead/Project Name</th>
-						<th rowspan=2>Milestone</th>						
+						<th rowspan=2 style="text-align:center;">Entity</th>
+						<th rowspan=2 style="text-align:center;">Customer</th>
+						<th rowspan=2 style="text-align:center;">Lead/Project Name</th>
+						<th rowspan=2 style="text-align:center;">Milestone</th>						
 						<?php
 							$i = date("Y-m", strtotime($current_month)); 
 							while($i <= date("Y-m", strtotime($highest_month))) {
 						?>
-								<th colspan=2><?php echo date('M', strtotime($i)); ?></th>
+								<th colspan=2 style="text-align:center;"><?php echo date('M', strtotime($i)); ?></th>
 						<?php
 								$month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
 								$month_no_arr[]                        = date('Y-m', strtotime($i));
@@ -131,6 +132,7 @@
 					<?php foreach($report_data as $lead_id=>$ms_data) { ?>
 						<?php foreach($ms_data as $ms_name=>$ms_value) {    ?>
 							<tr>
+								<td><?php echo $ms_value['entity']; ?></td>
 								<td><?php echo $ms_value['customer']; ?></td>
 								<td><?php echo $ms_value['lead_name']; ?></td>
 								<td><?php echo $ms_name; ?></td>
@@ -157,7 +159,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td text align=right colspan="3"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
+						<td text align=right colspan="4"><strong>Overall Total(<?php echo $default_currency; ?>):</strong></td>
 						<?php if(is_array($month_arr) && count($month_arr)>0) { ?>
 							<?php foreach($month_arr as $mon_number=>$mon_val) { ?>
 								<td align="<?php echo ($tot['F'][$mon_number]!='') ? 'right' : 'center'; ?>">
