@@ -1512,7 +1512,7 @@ class Welcome extends crm_controller {
 			$param['template_name']   = "Lead to Project Change Notification";
 			$param['subject']         = "Lead to Project Change Notification";
 
-			$this->email_template_model->sent_email($param);
+			//$this->email_template_model->sent_email($param);
 			
 			$res['error'] = false;
 		} else {
