@@ -92,6 +92,21 @@ $(function() {
 		}
 	}); */
 	
+	//data-table
+	$('#ms_list').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 20,
+		"sPaginationType": "full_numbers",
+		"bInfo": false,
+		"bPaginate": false,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": false,
+		"bFilter": false,
+		"bAutoWidth": false,	
+	});
+	
 });
 
 function get_customers(data_type, cust_id) {
