@@ -2194,4 +2194,12 @@ a.account p#user {padding:0 25px 0 0;margin:0;}
 .page-title-head .choice-box{margin:0;}
 #content .inner .page-title-head h2{margin:11px 0 0;} 
 
+
+/**light box**/
+.ui-tabs-panel.ui-corner-bottom form#set-assign-users {overflow: visible;}
+.blockUI.blockMsg .comments-log-container {overflow: visible;}
+.blockUI.blockMsg.blockPage {overflow: visible !important;}
+/**light box**/
+
+
 /**table-styles**/
