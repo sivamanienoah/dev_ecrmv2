@@ -390,8 +390,8 @@ button.ui-datepicker-current { display: none; }
 					</thead>
 					<tbody>
 					 <tr>						 
-						<td width="240">
-							<select class="chzn-select" id="project_manager" name="project_manager">
+						<td valign="top" style="height:100px;" width="240">
+							<select  class="chzn-select" id="project_manager" name="project_manager">
 							<?php if(!empty($user_accounts)):?>
 								<option value="">Select</option>
 								<?php foreach($user_accounts as $pms):?>
@@ -408,8 +408,8 @@ button.ui-datepicker-current { display: none; }
 							}
 						}
 						?>
-						<td width="240">
-						<select class="chzn-select" multiple="multiple" id="project_team_members" name="project_team_members[]">
+						<td valign="top"  width="240">
+						<select  class="chzn-select" multiple="multiple" id="project_team_members" name="project_team_members[]">
 						<?php if(!empty($user_accounts)):?>
 							<option value="">Select</option>
 							<?php foreach($user_accounts as $pms):
@@ -429,7 +429,7 @@ button.ui-datepicker-current { display: none; }
 							endif;
 						//	echo '<pre>';print_r($restrict1);exit;
 						?>						
-						<td width="240">
+						<td valign="top"  width="150">
 							<select class="chzn-select" multiple="multiple" id="stake_members" name="stake_members[]">
 							<?php if(!empty($user_accounts)):?>
 								<option value="">Select</option>
