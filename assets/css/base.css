@@ -1585,11 +1585,10 @@ ul.ui-sortable li{
 /*
 Back to top button 
 */
-#back-top {
-	position: fixed;
-	bottom: 10%;
-	right:8%;
-}
+/* #back-top {position: fixed;bottom: 10%;right:8%;} */
+#back-top {position:fixed;bottom:2%;right:2%;}
+
+
 #back-top a {
 	width: 40px;
 	display: block;
