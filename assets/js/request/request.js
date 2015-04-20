@@ -174,7 +174,9 @@ function show_permissions(leadid, fparent_id) {
 			$.blockUI({
 				message: $('#check-permissions'), 
 				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
+				
 			});
+			 $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI); 
 		}
 	});
 	return false;

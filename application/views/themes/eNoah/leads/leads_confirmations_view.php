@@ -1,3 +1,21 @@
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+	var config = {
+		'.chzn-select'           : {},
+		'.chzn-select-deselect'  : {allow_single_deselect:true},
+		'.chzn-select-no-single' : {disable_search_threshold:10},
+		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+		'.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+	
+	
+});  
+</script>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
@@ -12,14 +30,15 @@ button.ui-datepicker-current { display: none; }
 	if($customer_data['add1_location'] != 0)
 	echo '<input type="hidden" name="location_update" id="location_update" value="'.$customer_data['add1_location'].'" />';
 	$username = $this->session->userdata('logged_in_user');
-?>
+	//echo '<pre>';print_r($quote_data);exit;?>
 <div style="width:100%;">
 	<div class="file-tabs-close-confirm-tab"></div>
 	<div id="tabs">
 		<ul class="tabs-confirm">
 			<li><a href="#tabs-client">Client Details</a></li>
 			<li><a href="#tabs-project">Project Details</a></li>
-			<li><a href="#tabs-milestone">Milestone</a></li>
+			<li><a href="#tabs-assign-users">Assign Users</a></li>
+			<li><a href="#tabs-milestone">Milestone</a></li>			
 		</ul>
 		<div id="tabs-client">
 			<!--p class="clearfix" ><h3>Client Details</h3></p-->
@@ -357,6 +376,81 @@ button.ui-datepicker-current { display: none; }
 			</form>
 		</div>
 		
+		<div id="tabs-assign-users" >
+			<form id="set-assign-users" class="layout">
+				<input type="hidden" name="project_lead_id" value='<?php echo $project_id; ?>' />
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				 <table class="payment-table">
+					<thead>
+					<tr>
+						<th align="left"><strong>Select Project Manager:</strong></th>
+						<th align="left"><strong>Select Team Members:</strong></th>
+						<th align="left"><strong>Select Stake Holders:</strong></th>						
+					</tr>
+					</thead>
+					<tbody>
+					 <tr>						 
+						<td width="240">
+							<select class="chzn-select" id="project_manager" name="project_manager">
+							<?php if(!empty($user_accounts)):?>
+								<option value="">Select</option>
+								<?php foreach($user_accounts as $pms):?>
+									<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+								<?php endforeach;?>
+							<?php endif; ?>
+							</select>
+						</td>
+						<?php 
+						$team_members = array();
+						if (is_array($contract_users) && count($contract_users) > 0) { 
+							foreach ($contract_users as $data) {
+								$team_members[] = $data['userid_fk'];
+							}
+						}
+						?>
+						<td width="240">
+						<select class="chzn-select" multiple="multiple" id="project_team_members" name="project_team_members[]">
+						<?php if(!empty($user_accounts)):?>
+							<option value="">Select</option>
+							<?php foreach($user_accounts as $pms):
+									$selected = (in_array($pms['userid'],$team_members))?'selected="selected"':'';?>
+								<option <?php echo $selected;?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+							<?php endforeach;?>
+						<?php endif; ?>
+						</select>	
+						</td>
+						<?php
+							// get stake holders 
+							$stake_users_array = array();							
+							if(count($stake_holders) > 0 && !empty($stake_holders)):
+								foreach($stake_holders as $sh):
+									$stake_users_array[] = $sh['user_id'];
+								endforeach;
+							endif;
+						//	echo '<pre>';print_r($restrict1);exit;
+						?>						
+						<td width="240">
+							<select class="chzn-select" multiple="multiple" id="stake_members" name="stake_members[]">
+							<?php if(!empty($user_accounts)):?>
+								<option value="">Select</option>
+								<?php foreach($user_accounts as $pms):
+								$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
+								<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+								<?php endforeach;?>
+							<?php endif; ?>
+							</select>	
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<button type="submit" class="positive" style="float:right;" onclick="update_project_users(); return false;" tabindex="17" >Update</button>
+						</td>
+					</tr>	
+					</tbody>
+				 </table>
+			</form>
+		</div>
+		
 		<div id="tabs-milestone">
 			<form id="set-milestones" class="layout">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -388,6 +482,9 @@ button.ui-datepicker-current { display: none; }
 				</div>
 			</form>
 		</div>
+		
+				
+		
 	</div>
 </div>
 <script>

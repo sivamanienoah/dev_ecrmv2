@@ -361,6 +361,33 @@ function update_project_detail(project_id) {
 		}
 	});
 }
+
+function update_project_users() {
+	var form_data = $('#set-assign-users').serialize();	
+	
+	/* $('.blockUI .layout').block({
+		message:'<h3>Processing</h3>',
+		css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
+	}); */
+		
+	$.ajax({
+		url : site_base_url + 'welcome/custom_update_users',
+		cache : false,
+		type: "POST",
+		dataType: 'json',
+		data:form_data,
+		success : function(response){
+			if(response.result=='ok') {
+				$('.tabs-confirm li').eq(3).find("a").trigger('click');
+			} else {
+				alert("Update Failed");
+			}
+			$('.blockUI .layout').unblock();
+		}
+	});
+}
+
+
 function timerfadeout() {
 	$('.ajx_failure_msg').empty();
 }

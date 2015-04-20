@@ -3806,6 +3806,10 @@ HDOC;
 			*@Initiate to get all Practice data database
 			**/
 			$data['practices'] = $this->project_model->get_practices();
+
+			$data['contract_users'] = $this->project_model->get_contract_users($id);
+			$data['stake_holders'] = $this->project_model->get_stake_holders($id);
+
 			
 			$this->load->view('leads/leads_confirmations_view', $data);
         }

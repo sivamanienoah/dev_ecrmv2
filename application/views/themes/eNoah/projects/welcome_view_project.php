@@ -496,6 +496,7 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
+			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 			<div>
 				<div class="buttons">
 						<button onclick="setProjectManager(); return false;" style="margin:0 0 0 5px;" id="project_manager_id" class="positive" type="submit">Set</button>
@@ -503,7 +504,7 @@ if (get_default_currency()) {
 				</div>
 			</div>
 			<div style="margin-bottom:15px;" class="clear-both"></div>	
-			
+			<?php } ?>
 			<!--List the project assigned members from the timesheet-->
 			<div class="pull-left">
 			<label class="project-team-members">Team Members</label>
@@ -517,6 +518,7 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
+			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 			<div>
 				<div class="buttons">
 					<button onclick="setProjectMembers(); return false;" style="margin:0 0 0 5px;" id="project_members_id" class="positive" type="submit">Set</button>
@@ -524,7 +526,7 @@ if (get_default_currency()) {
 				</div>
 			</div>
 			<div style="margin:10px;" class="clear-both"></div>	
-			
+			<?php } ?>
 			<!--List the project assigned members from the timesheet-->
 			
 			<?php
@@ -551,6 +553,7 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
+			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 			<div>
 				<div class="buttons">
 						<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
@@ -558,7 +561,7 @@ if (get_default_currency()) {
 				</div>
 			</div>
 			<div style="margin:10px;" class="clear-both"></div>			
-
+			<?php } ?>
   <div id="project-tabs" style="width:930px;">
 	<div>
 		<ul id="job-view-tabs">

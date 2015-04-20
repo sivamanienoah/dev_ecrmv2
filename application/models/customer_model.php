@@ -604,10 +604,14 @@ class Customer_model extends crm_model {
 				$contract_end_date  = strtotime($listProjects['actual_date_due']);
 				$project_description = $listProjects['lead_title'] .'; ' .$listProjects['pjt_id'];
 				$timesheet_sql = '';
+				
+				
+				
 				if($timesheet_projects == false) {
 					$timesheet_sql =  '  INSERT INTO  '.$timesheet_db->dbprefix('project').'   SET '; $where = '';
 				} else {
-					$timesheet_sql =  '  UPDATE  '.$timesheet_db->dbprefix('project').'   SET '; $where = '  WHERE  `project_code` = "'.$listProjects['pjt_id'].'" ';
+					$timesheet_sql =  '  UPDATE  '.$timesheet_db->dbprefix('project').'   SET '; 
+					$where = '  WHERE  `project_code` = "'.$listProjects['pjt_id'].'" ';
 				}
 				$timesheet_sql .= 		'						`title` = "'.$listProjects['lead_title'].'",
 																`client_id` = "'.$client['client_id'].'",
@@ -620,6 +624,56 @@ class Customer_model extends crm_model {
 																`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';
 				// echo $timesheet_sql; exit;
 				$timesheet_ins = $timesheet_db->query($timesheet_sql);
+				
+				// update project leader in timesheet			
+				if($listProjects['assigned_to'])
+				{
+					$qry = "select crm_leads.assigned_to,crm_users.username from ".$this->cfg['dbpref']."leads join ".$this->cfg['dbpref']."users on crm_leads.assigned_to = crm_users.userid and crm_leads.assigned_to=".$listProjects['assigned_to']." group by crm_users.username";
+					
+					$result = $this->db->query($qry);
+					$nos = $result->num_rows();
+					if($nos){
+						$rs = $result->row();
+						$proj_leader = strtolower($rs->username);
+					}
+					
+					$timesheet_db->update($timesheet_db->dbprefix('project'),array("proj_leader" => $proj_leader),array("project_code" => $project_code));
+				}
+				
+				//update team members in timesheet
+				$crm_lead_id = $listProjects['lead_id'];
+				$timesheet_proj_id = '';
+				$res_tm = $this->db->get_where($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $crm_lead_id));
+				
+				$timesheet = $timesheet_db->get_where($timesheet_db->dbprefix('project'),array("project_code" => $project_code));
+				if($timesheet->num_rows()>0){
+					$tspid = $timesheet->row();
+					$timesheet_proj_id = $tspid->proj_id;
+				}
+				//$timesheet_db->close();
+				
+				
+				if($res_tm->num_rows()>0 && $timesheet_proj_id){
+					$rs_tm = $res_tm->result_array();
+					$crm_username = array();
+					foreach($rs_tm as $tm){
+						$user_id = $tm['userid_fk'];
+						$this->db->select("username");
+						$get_crm_user = $this->db->get_where($this->cfg['dbpref']."users",array("userid" => $user_id ));
+						if($get_crm_user->num_rows()>0){
+							$crm_user_details = $get_crm_user->row();
+							$crm_username  = strtolower($crm_user_details->username);
+							$timesheet_db->insert($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));	
+						}
+					}
+					
+					/* if(count($crm_username) > 0){
+						$timesheet_db = $this->load->database('timesheet',TRUE);
+						foreach($crm_username as $c_user){
+							
+						}
+					} */
+				}
 				
 				if($timesheet_ins) {
 					$error = true;

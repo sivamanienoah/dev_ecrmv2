@@ -422,6 +422,38 @@ class Welcome extends crm_controller {
         
     }
 	
+	function custom_update_users(){
+		$res 	   = array();
+		$post_data = real_escape_array($this->input->post());
+		$res['result'] = 'error';
+		if($post_data['project_lead_id']){
+			// update project manager
+			$this->db->update($this->cfg['dbpref']."leads",array("assigned_to" => $post_data['project_manager']),array("lead_id" => $post_data['project_lead_id']));
+			$project_team_members = $this->input->post('project_team_members');
+			$stake_members = $this->input->post('stake_members');
+			
+			//update project team members
+			if(count($project_team_members) > 0)
+			{
+				$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id']));
+				foreach($project_team_members as $pusers){
+					$this->db->insert($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id'],"userid_fk" => $pusers));
+				}
+			}
+			
+			//update project stake holders
+			if(count($stake_members) > 0)
+			{
+				$this->db->delete($this->cfg['dbpref']."stake_holders",array("lead_id" => $post_data['project_lead_id']));
+				foreach($stake_members as $susers){
+					$this->db->insert($this->cfg['dbpref']."stake_holders",array("lead_id" => $post_data['project_lead_id'],"user_id" => $susers));
+				}
+			}
+			$res['result'] = 'ok';			
+		}
+		echo json_encode($res);
+	}
+	
 	/**
 	 * Initiates and create the quote based on an ajax request
 	 */
@@ -1480,7 +1512,7 @@ class Welcome extends crm_controller {
 			$param['template_name']   = "Lead to Project Change Notification";
 			$param['subject']         = "Lead to Project Change Notification";
 
-			$this->email_template_model->sent_email($param);
+			//$this->email_template_model->sent_email($param);
 			
 			$res['error'] = false;
 		} else {
