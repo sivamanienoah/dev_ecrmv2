@@ -147,6 +147,9 @@ button.ui-datepicker-current { display: none; }
 							<td class="actions">
 							<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
 								<?php if($this->session->userdata('edit')==1) { ?>
+									<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>" title='Add Milestone' ><img src="assets/img/add-details.png" alt='add milestone'> </a>
+								<?php } ?> 
+								<?php if($this->session->userdata('edit')==1) { ?>
 									<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>/?ms_id=<?php echo $forecast['milestone_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
 								<?php } ?> 
 								<?php if($this->session->userdata('delete')==1) { ?>
