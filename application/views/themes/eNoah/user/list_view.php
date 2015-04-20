@@ -4,10 +4,11 @@
 <div id="content">
     <div class="inner">
     <?php if($this->session->userdata('accesspage')==1) { ?>       
-        <div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">User Database</h2>
+       
+			<div class="page-title-head">
+			<h2 class="pull-left borderBtm">User Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons pull-right">
+					<div class="buttons add-new-button">
 						<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='<?php echo base_url(); ?>user/add_user'" <?php } ?> >
 							Add New User
 						</button>
@@ -15,7 +16,7 @@
 				<?php } ?>
 			<div class="clearfix"></div>
 			</div>
-		</div>
+
 		
 		<div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
 		

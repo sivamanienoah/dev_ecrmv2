@@ -7,7 +7,7 @@
 <div id="content">
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
-	<div>
+	<div class="content-split-left">
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
@@ -104,9 +104,14 @@
             </table>
 		</form>
 	</div>
-	<div>
+	
+	
+	
+	<!--table-->
+	<div class="content-split-right">
+		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<table border=1 id="ms_list" cellpadding="0" cellspacing="0">
+			<table border=1 id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>
 						<th>Milestone Name</th>
@@ -135,20 +140,22 @@
 							<td><?php echo date('F Y', strtotime($ms_rec['for_month_year'])); ?></td>
 							<td><?php echo $salesforecast_currency; ?></td>
 							<td><?php echo $ms_rec['milestone_value']; ?></td>
-							<td>
+							<td class="action">
 								<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
 								<?php if($this->session->userdata('edit')==1) { ?>
-									<a title="Edit" onClick="editSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
+									<a class="table-edit" title="Edit" onClick="editSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
 										<img alt="edit" src="assets/img/edit.png">
 									</a>
 								<?php } ?> 
 									<?php if($this->session->userdata('delete')==1) { ?>
-									<a title="Delete" onclick="return deleteSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
+									<a class="table-delete" title="Delete" onclick="return deleteSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
 										<img alt="delete" src="assets/img/trash.png">
 									</a>
 								<?php } ?>
 								<?php } ?>
-								<a class="delete" href="javascript:void(0)" onclick="return view_logs(<?php echo $ms_rec['milestone_id']; ?>);" title='View Logs'> <img src="assets/img/log-icon.png" alt='Logs'> </a>
+									<a class="delete table-view-log" href="javascript:void(0)" onclick="return view_logs(<?php echo $ms_rec['milestone_id']; ?>);" title='View Logs'>
+										<img src="assets/img/log-icon.png" alt='Logs'>
+									</a>
 							</td>
 						</tr>
 					<?php } ?>	
@@ -156,7 +163,14 @@
 				</tbody>
 			</table>
 		<?php } ?>
+		</div>
 	</div>
+	
+	<!--table-->
+	
+	
+	
+	
 <?php 
 	} else {
 	echo "You have no rights to access this page";

@@ -87,10 +87,12 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		<div>
 		<!--Advance filters-->
 		<div>
+			
 			<a class="choice-box" onclick="advanced_filter();" >
-				Advanced Filters
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
+				<span>Advanced Filters</span>
 			</a>
+			
 				
 			<div id="advance_search" style="float:left; margin: 0px 0px 10px;">
 				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->

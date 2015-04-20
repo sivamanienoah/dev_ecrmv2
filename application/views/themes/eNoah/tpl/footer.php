@@ -1,5 +1,7 @@
 <div id="footer">
-	<p>Copyright &copy; <?php echo  date ('Y'); ?> <a href="http://www.enoahisolution.com" target="_blank">eNoah iSolution Pvt Ltd.</a> <?php echo  $cfg['app_name'] . ' ' . $cfg['app_version'] ?> was last updated <?php echo  $cfg['app_date'] ?></p> 
+	<p class="footer-text">Copyright &copy; <?php echo  date ('Y'); ?> <a href="http://www.enoahisolution.com" target="_blank">eNoah iSolution Pvt Ltd.</a> <?php echo  $cfg['app_name'] . ' ' . $cfg['app_version'] ?> was last updated <?php echo  $cfg['app_date'] ?></p> 
+	
+	<p class="footer-logo"><img src="assets/img/footer-enoah-logo.png" alt=""/></p>
 	
 	<p id="back-top">
 		<a href="#top"><span></span>Back to Top</a>

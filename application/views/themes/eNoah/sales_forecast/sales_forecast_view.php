@@ -13,8 +13,9 @@ button.ui-datepicker-current { display: none; }
 	<div class="inner">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
 	
-	<div style="padding-bottom: 10px;">
-		<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+	
+		<div class="page-title-head">
+		<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 			<?php if($this->session->userdata('add')==1) { ?>
 				<div class="buttons pull-right">
 					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>sales_forecast/add_sale_forecast'">
@@ -22,9 +23,9 @@ button.ui-datepicker-current { display: none; }
 					</button>
 				</div>
 			<?php } ?>
-		<div class="clearfix"></div>
+	
 		</div>
-	</div>
+	
 	
 	<div id="filter_section">
 		<a class="choice-box" onclick="advanced_filter();" >
@@ -35,7 +36,7 @@ button.ui-datepicker-current { display: none; }
 		<div class="clear"></div>
 			
 		<div id="advance_search" style="padding-bottom:15px;">
-			<form name="advanceFiltersForecast" id="advanceFiltersForecast" method="post" style="width:940px;">
+			<form name="advanceFiltersForecast" id="advanceFiltersForecast" method="post" style="width:100%;">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<?php //echo '<pre>'; print_r($sales_divisions);?>
 				<div style="border: 1px solid #DCDCDC;">

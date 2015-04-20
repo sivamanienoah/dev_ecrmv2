@@ -307,7 +307,7 @@ class Sales_forecast extends crm_controller {
 		}
 		$row = false;
 		if(!empty($get_ms_data) && $post_data['category'] == 2) {
-			$res['ms_det'] .= '<table border=1 cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
+			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det" border=1 cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
 			foreach($get_ms_data as $ms) {
 				if(!in_array($ms['expectid'], $ms_id)) {
 					$milestone_month_year = date('d-m-Y', strtotime($ms['month_year'])); 
@@ -324,7 +324,7 @@ class Sales_forecast extends crm_controller {
 			if($row == false){
 				$res['ms_det'] .= '<tr><td colspan=5>No Records Availble</td></tr>';
 			}
-			$res['ms_det'] .= '</table>';
+			$res['ms_det'] .= '</table></div>';
 			
 		}
 		

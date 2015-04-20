@@ -78,20 +78,32 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			<?php } ?>
 		</div>
 		<div id="user-status">
-			<?php  
-			if ($this->session->userdata('logged_in') == TRUE) {
-			?>
-				<p id="user">
-					<?php echo ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | 
-					<?php echo isset($userdata['name']) ? $userdata['name']: ''; ?> &nbsp; <a href="userlogin/">Sign out?</a>
-				</p>
-			<?php 
-			} else {
-			?>
-				<p id="user"><a href="userlogin/">Login</a></p>
-			<?php 
-			}
-			?>
+		
+					
+						<div class="dropdown">
+							<a class="account" >
+								
+								<?php  
+									if ($this->session->userdata('logged_in') == TRUE) {
+									?>
+										<p id="user">
+											<?php echo ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | 
+											<?php echo isset($userdata['name']) ? $userdata['name']: ''; ?> <!--&nbsp; <a href="userlogin/">Sign out?</a>-->
+										</p>
+									<?php 
+									}
+								?>
+									
+								
+							</a>
+								<div class="submenu" style="display: none; ">
+									<ul class="root">
+										<li><a class="my-profile" href="javascript:void(0);" >My Profile</a></li>
+										<li><a class="sign-out" href="javascript:void(0);" >Sign Out</a></li>
+									</ul>
+								</div>
+						</div>
+			
 			<p class="date-time"><?php echo date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
 		</div>
 	</div>
@@ -310,3 +322,47 @@ function setCookie(c_name,value,exdays)
 	document.cookie=c_name + "=" + c_value;
 }
 </script>
+
+
+<script type="text/javascript" >
+$(document).ready(function()
+{
+$(".account").click(function()
+{
+var X=$(this).attr('id');
+
+if(X==1)
+{
+$(".submenu").hide();
+$(this).attr('id', '0');	
+}
+else
+{
+
+$(".submenu").show();
+$(this).attr('id', '1');
+}
+	
+});
+
+//Mouseup textarea false
+$(".submenu").mouseup(function()
+{
+return false
+});
+$(".account").mouseup(function()
+{
+return false
+});
+
+
+//Textarea without editing.
+$(document).mouseup(function()
+{
+$(".submenu").hide();
+$(".account").attr('id', '');
+});
+	
+});
+	
+	</script>
