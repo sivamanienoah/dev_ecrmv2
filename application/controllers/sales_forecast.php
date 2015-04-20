@@ -499,6 +499,8 @@ class Sales_forecast extends crm_controller {
 		
 		$sf_data 		     = $this->sales_forecast_model->get_sf_milestone_records($filter);
 		
+		// echo "<pre>"; print_R($sf_data); exit;
+		
 		/*Month - Milestone Name|Milestone Value(Milestones Clubbed)-Start*/
 		/* $highest_month = date('Y-m-d');
 		foreach($sf_data as $sf) {
@@ -521,6 +523,7 @@ class Sales_forecast extends crm_controller {
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['customer']  = $sf['company'].' - '.$sf['first_name'].' '.$sf['last_name'];
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['lead_name'] = $sf['lead_title'];
+			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['entity'] = $sf['division_name'];
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['type']      = ($sf['forecast_category']==1)?'Lead':'Project';
 			// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['ms_name']   = $sf['milestone_name'];
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value']  = $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
@@ -592,6 +595,7 @@ class Sales_forecast extends crm_controller {
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['customer']   = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  = $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
 		}
 		
@@ -686,10 +690,11 @@ class Sales_forecast extends crm_controller {
 		foreach($forecast_data as $fc) {
 			$month = date('Y-m', strtotime($fc['for_month_year']));
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($fc['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($fc['for_month_year']));
-			$report_data[$fc['forecast_id']][$fc['milestone_name']]['customer']  = $fc['company'].' - '.$fc['first_name'].' '.$fc['last_name'];
-			$report_data[$fc['forecast_id']][$fc['milestone_name']]['lead_name'] = $fc['lead_title'];
-			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['type']      = ($fc['forecast_category']==1)?'Lead':'Project';
-			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value']  = $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
+			$report_data[$fc['forecast_id']][$fc['milestone_name']]['customer']         = $fc['company'].' - '.$fc['first_name'].' '.$fc['last_name'];
+			$report_data[$fc['forecast_id']][$fc['milestone_name']]['lead_name']        = $fc['lead_title'];
+			$report_data[$fc['forecast_id']][$fc['milestone_name']]['entity']           = $fc['division_name'];
+			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['type']     = ($fc['forecast_category']==1)?'Lead':'Project';
+			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] = $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
 		}
 		
 		//Set the Current month
@@ -725,10 +730,11 @@ class Sales_forecast extends crm_controller {
 
 			//set cell A1 content with some text
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 			//Set width for cells
-			$this->excel->getActiveSheet()->setCellValue('B1', 'Lead/Project Name');
-			$this->excel->getActiveSheet()->setCellValue('C1', 'Milestone');
-			$lastcolumn = 'C';
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'Milestone');
+			$lastcolumn = 'D';
 			$row = 1;
 			$i = date("Y-m", strtotime($current_month));
 			while($i <= date("Y-m", strtotime($highest_month))) {
@@ -757,15 +763,17 @@ class Sales_forecast extends crm_controller {
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 			$this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
 			
 			$row++;
 			
 			foreach($report_data as $lead_id=>$ms_data) {
 				 foreach($ms_data as $ms_name=>$ms_value) { 
-					$this->excel->getActiveSheet()->setCellValue('A'.$row, $ms_value['customer']);
-					$this->excel->getActiveSheet()->setCellValue('B'.$row, $ms_value['lead_name']);
-					$this->excel->getActiveSheet()->setCellValue('C'.$row, $ms_name);
-					$lastcolumn = 'C';
+					$this->excel->getActiveSheet()->setCellValue('A'.$row, $ms_value['entity']);
+					$this->excel->getActiveSheet()->setCellValue('B'.$row, $ms_value['customer']);
+					$this->excel->getActiveSheet()->setCellValue('C'.$row, $ms_value['lead_name']);
+					$this->excel->getActiveSheet()->setCellValue('D'.$row, $ms_name);
+					$lastcolumn = 'D';
 					if(is_array($month_arr) && count($month_arr)>0) {
 						foreach($month_arr as $mon_number=>$mon_val) {
 							$lastcolumn++;
@@ -781,12 +789,12 @@ class Sales_forecast extends crm_controller {
 					}
 				}
 			}
-			$this->excel->setActiveSheetIndex(0)->mergeCells('A'.$row.':C'.$row);
+			$this->excel->setActiveSheetIndex(0)->mergeCells('A'.$row.':D'.$row);
 			$this->excel->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
 			$this->excel->getActiveSheet()->getStyle('A'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 			$this->excel->getActiveSheet()->setCellValue('A'.$row, 'Overall Total ('.$this->default_cur_name.')');
 			if(is_array($month_arr) && count($month_arr)>0) {
-				$lastcolumn = 'C';
+				$lastcolumn = 'D';
 				foreach($month_arr as $mon_number=>$mon_val) {
 					$lastcolumn++;
 					$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $tot[$mon_number]);
@@ -795,9 +803,9 @@ class Sales_forecast extends crm_controller {
 			
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->applyFromArray($borderBlack);
 			
-			$this->excel->getActiveSheet()->getStyle('D2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 			
-			$filename='saleforecast_report'.time().'.xls'   ; //save our workbook as this file name
+			$filename='saleforecast_report.xls'   ; //save our workbook as this file name
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
@@ -806,7 +814,7 @@ class Sales_forecast extends crm_controller {
 			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 			////////force user to download the Excel file without writing it to server's HD
 			$objWriter->save('php://output');
-    	}    	
+    	}   	
     	redirect('/sales_forecast/reports');
 	}
 	
@@ -815,7 +823,6 @@ class Sales_forecast extends crm_controller {
 	*/
 	function export_excel_variance()
 	{
-	
 		$this->load->helper('custom_helper');
 		
 		if (get_default_currency()) {
@@ -862,6 +869,7 @@ class Sales_forecast extends crm_controller {
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
 			$report_data[$vr['job_id']][$vr['milestone_name']]['customer']   = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
 			$report_data[$vr['job_id']][$vr['milestone_name']]['lead_name']  = $vr['lead_title'];
+			$report_data[$vr['job_id']][$vr['milestone_name']]['entity']     = $vr['division_name'];
 			$report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] = $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
 		}
 		
@@ -893,17 +901,30 @@ class Sales_forecast extends crm_controller {
 			$this->excel->getActiveSheet()->setTitle('Salesforecast Variance');
 
 			//set cell A1 content with some text
+			$this->excel->setActiveSheetIndex(0)->mergeCells('A1:A2');
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
-			//Set width for cells
-			$this->excel->getActiveSheet()->setCellValue('B1', 'Lead/Project Name');
-			$this->excel->getActiveSheet()->setCellValue('C1', 'Milestone');
-			$lastcolumn = 'C';
+			$this->excel->setActiveSheetIndex(0)->mergeCells('B1:B2');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
+			$this->excel->setActiveSheetIndex(0)->mergeCells('C1:C2');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
+			$this->excel->setActiveSheetIndex(0)->mergeCells('D1:D2');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'Milestone');
+			$lastcolumn = 'D';
 			$row = 1;
 			$i = date("Y-m", strtotime($current_month));
 			while($i <= date("Y-m", strtotime($highest_month))) {
-				// echo date('M', strtotime($i)); 
+				// echo date('M', strtotime($i));
 				$lastcolumn++;
-				$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, date('M',strtotime($i)));
+				$a = $lastcolumn;
+				$lastcolumn++;
+				$b = $lastcolumn;
+				$this->excel->setActiveSheetIndex(0)->mergeCells($a.$row.':'.$b.$row);
+				$this->excel->getActiveSheet()->setCellValue($a.$row, date('M',strtotime($i)));
+				// $this->excel->getActiveSheet()->getStyle('A1:C1')->applyFromArray($borderBlackbackGray);
+				$row++;
+				$this->excel->getActiveSheet()->setCellValue($a.$row, 'Forecast');
+				$this->excel->getActiveSheet()->setCellValue($b.$row, 'Actual');
+			
 				$month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
 				$month_no_arr[] = date('Y-m', strtotime($i));
 				
@@ -911,37 +932,54 @@ class Sales_forecast extends crm_controller {
 				$i = (date("Y", strtotime($i."-01")) + 1)."-01";
 				else
 				$i++;
+				
+				$row = 1;
 			}
 			
+			//make the font become bold
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->applyFromArray($borderBlackbackGray);
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->getFont()->setBold(true);
 			$this->excel->getActiveSheet()->getRowDimension(1)->setRowHeight(18);
 			
-			//make the font become bold
-			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->getFont()->setBold(true);
+			$row = 2;
+			
+			$this->excel->getActiveSheet()->getStyle('E'.$row.':'.$lastcolumn.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$this->excel->getActiveSheet()->getStyle('E'.$row.':'.$lastcolumn.$row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+			$this->excel->getActiveSheet()->getStyle('E'.$row.':'.$lastcolumn.$row)->applyFromArray($borderBlackbackGray);
+			$this->excel->getActiveSheet()->getStyle('E'.$row.':'.$lastcolumn.$row)->getFont()->setBold(true);
+			// $this->excel->getActiveSheet()->getRowDimension(1)->setRowHeight(18);
 			
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 			$this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
 			
 			$row++;
 			
 			foreach($report_data as $lead_id=>$ms_data) {
-				 foreach($ms_data as $ms_name=>$ms_value) { 
-					$this->excel->getActiveSheet()->setCellValue('A'.$row, $ms_value['customer']);
-					$this->excel->getActiveSheet()->setCellValue('B'.$row, $ms_value['lead_name']);
-					$this->excel->getActiveSheet()->setCellValue('C'.$row, $ms_name);
-					$lastcolumn = 'C';
+				foreach($ms_data as $ms_name=>$ms_value) {
+					$this->excel->getActiveSheet()->setCellValue('A'.$row, $ms_value['entity']);
+					$this->excel->getActiveSheet()->setCellValue('B'.$row, $ms_value['customer']);
+					$this->excel->getActiveSheet()->setCellValue('C'.$row, $ms_value['lead_name']);
+					$this->excel->getActiveSheet()->setCellValue('D'.$row, $ms_name);
+					$lastcolumn = 'D';
 					if(is_array($month_arr) && count($month_arr)>0) {
 						foreach($month_arr as $mon_number=>$mon_val) {
 							$lastcolumn++;
 							if(array_key_exists($mon_number, $ms_value)) {
-								$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $ms_value[$mon_number]['ms_value']);
-								$tot[$mon_number] += $ms_value[$mon_number]['ms_value']; 
+								$forecast_val = isset($ms_value[$mon_number]['F']) ? $ms_value[$mon_number]['F'] : '-';
+								$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $forecast_val);
+								$tot['F'][$mon_number] += $ms_value[$mon_number]['F'];
+								$lastcolumn++;
+								$actual_val = isset($ms_value[$mon_number]['A']) ? $ms_value[$mon_number]['A'] : '-';
+								$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $actual_val);
+								$tot['A'][$mon_number] += $ms_value[$mon_number]['A'];
 							} else { 
+								$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, '-');
+								$lastcolumn++;
 								$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, '-');
 							} 
 						}
@@ -951,54 +989,28 @@ class Sales_forecast extends crm_controller {
 				}
 			}
 			
-			/*
-			
-			foreach($report_data as $lead_id=>$ms_data) {
-						foreach($ms_data as $ms_name=>$ms_value) {   
-							
-								echo $ms_value['customer'];
-								echo $ms_value['lead_name'];
-								echo $ms_name;
-								if(is_array($month_arr) && count($month_arr)>0) {
-									foreach($month_arr as $mon_number=>$mon_val) {
-										if(array_key_exists($mon_number, $ms_value)) {
-											
-												echo isset($ms_value[$mon_number]['F']) ? number_format($ms_value[$mon_number]['F'], 2, '.', '') : '-';
-												$tot['F'][$mon_number] += $ms_value[$mon_number]['F'];
-											
-											<td align="echo isset($ms_value[$mon_number]['A']) ? 'right' : 'center';">
-												echo isset($ms_value[$mon_number]['A']) ? number_format($ms_value[$mon_number]['A'], 2, '.', '') : '-';
-												$tot['A'][$mon_number] += $ms_value[$mon_number]['A'];
-											
-										} else {
-											-
-											-
-										}
-									}
-								}
-						}
-					}
-			
-			*/
-			
-			
-			$this->excel->setActiveSheetIndex(0)->mergeCells('A'.$row.':C'.$row);
+			$this->excel->setActiveSheetIndex(0)->mergeCells('A'.$row.':D'.$row);
 			$this->excel->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
 			$this->excel->getActiveSheet()->getStyle('A'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 			$this->excel->getActiveSheet()->setCellValue('A'.$row, 'Overall Total ('.$this->default_cur_name.')');
 			if(is_array($month_arr) && count($month_arr)>0) {
-				$lastcolumn = 'C';
+				$lastcolumn = 'D';
 				foreach($month_arr as $mon_number=>$mon_val) {
 					$lastcolumn++;
-					$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $tot[$mon_number]);
+					$forecast_tot_val = isset($tot['F'][$mon_number]) ? $tot['F'][$mon_number] : '-';
+					$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $forecast_tot_val);
+					$lastcolumn++;
+					$actual_tot_val = isset($tot['A'][$mon_number]) ? $tot['A'][$mon_number] : '-';
+					$this->excel->getActiveSheet()->setCellValue($lastcolumn.$row, $actual_tot_val);
 				}
 			}
 			
 			$this->excel->getActiveSheet()->getStyle('A'.$row.':'.$lastcolumn.$row)->applyFromArray($borderBlack);
 			
-			$this->excel->getActiveSheet()->getStyle('D2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 			
-			$filename='saleforecast_report'.time().'.xls'   ; //save our workbook as this file name
+			// $filename='saleforecast_variance_report'.time().'.xls'   ; //save our workbook as this file name
+			$filename='saleforecast_variance_report.xls'   ; //save our workbook as this file name
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
