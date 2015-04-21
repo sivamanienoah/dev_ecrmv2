@@ -6,7 +6,7 @@
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 				<?php if($this->session->userdata('add')==1) { ?>
 					<div class="buttons add-new-button">
-						<button type="button" class="positive" style="margin:0px 0px 10px 10px;" onclick="location.href='<?php echo base_url(); ?>item_mgmt/add'">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>item_mgmt/add'">
 							Add New Item
 						</button>
 					</div>
