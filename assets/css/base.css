@@ -2230,4 +2230,18 @@ th.header{float:none;width:auto;}
 
 .brand-logo{float:left;}
 
+
+.login-container {margin: 0 auto;width: 400px;}
+.login-box h2 {text-align: center;}
+#content .login-box h2 {padding:0 0 20px;text-align: center;margin:0 0 20px;}
+.login-box form table tr td.label{font-size:12px;}
+.login-box label{ display: inline-block;margin: 0;width: 100%;}
+.login-box input{width:100%;box-sizing:border-box;padding:12px;font-size: 12px;}
+.login-box input:focus{border-color:#a5a5a5;background:#fff;transition: all 0.5s ease;}
+.login-box {background: none repeat scroll 0 0 #fff;border: 1px solid #dadada;padding: 25px;margin:12% 0;}
+
+.login-box form button {border: none;float: right;padding: 10px 15px;text-align: center;}
+.login-box form button:hover{border:none;}
+.login-inner{border-top:1px solid #dadada;}
+
 /**table-styles**/
