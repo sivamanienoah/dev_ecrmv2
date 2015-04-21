@@ -90,33 +90,23 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	
 	
 	<div class="row-two">
-		
 		<div id="user-status">
-		
-					
-						<div class="dropdown">
-							<a class="account" >
-								
-								<?php  
-									if ($this->session->userdata('logged_in') == TRUE) {
-									?>
-										<p id="user">
-											<?php echo ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | 
-											<?php echo isset($userdata['name']) ? $userdata['name']: ''; ?> <!--&nbsp; <a href="userlogin/">Sign out?</a>-->
-										</p>
-									<?php 
-									}
-								?>
-									
-								
-							</a>
-								<div class="submenu" style="display: none; ">
-									<ul class="root">
-										<li><a class="my-profile" href="javascript:void(0);" >My Profile</a></li>
-										<li><a class="sign-out" href="javascript:void(0);" >Sign Out</a></li>
-									</ul>
-								</div>
-						</div>
+			<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
+				<div class="dropdown">
+					<a class="account" >
+						<p id="user">
+							<?php echo ucfirst($userdata['first_name']) . ' ' . ucfirst($userdata['last_name']) ?> | 
+							<?php echo isset($userdata['name']) ? $userdata['name']: ''; ?>
+						</p>
+					</a>
+					<div class="submenu" style="display: none; ">
+						<ul class="root">
+							<li><a class="my-profile" href="javascript:void(0);" >My Profile</a></li>
+							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/" >Sign Out</a></li>
+						</ul>
+					</div>
+				</div>
+			<?php } ?>
 			
 			<p class="date-time"><?php echo date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
 		</div>
