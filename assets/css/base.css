@@ -528,7 +528,7 @@ border-bottom:4px solid #3c5b9b;
 ul.menuStyle li{float:left;display:block;border-bottom:none;margin-right:0px;font-family:Arial, Helvetica, sans-serif;font-weight:bold;
 text-decoration:none;color:#737986;font-size:9pt;background:url(../img/divider.png) right 0 no-repeat;}
 /* ul.menuStyle li a{color:#222;display:block;padding:8px 10px 8px 10px;} */
-ul.menuStyle li a{color:#222;display:block;padding:15px 12px;}
+ul.menuStyle li a{color:#222;display:block;padding:13px 12px;}
 
 
 /* ul.menuStyle li a:hover,ul.menuStyle li a.selected{text-decoration:none;color:#fff;background:url(../img/toolbar_hover.png) repeat-x; display:block;}  */
@@ -1023,7 +1023,7 @@ color:#595959;
 }
 
 /* .topstrip{background-color:#4b6fb9;margin:0px;float:left;width:990px;padding:4px 0px 5px 10px;} */ 
-.topstrip{background-color:#4b6fb9;margin:0px;float:left;width:100%;padding:8px 20px 5px;box-sizing:border-box;border-bottom:4px solid #3c5b9b;}
+.topstrip{background-color:#4b6fb9;margin:0px;float:left;width:100%;padding:4px 20px 2px;box-sizing:border-box;border-bottom:4px solid #3c5b9b;}
 
  .topstrip li a{padding:5px 11px; float:left;
  font-size:9pt; 
@@ -2186,7 +2186,7 @@ border:1px solid #dedede;
 }
 
 
-.header {float: left;padding: 25px 0;width: 100%;}
+.header {float: left;padding:15px 0;width: 100%;}
 .date-time{background:url("../img/calender-icon.png") no-repeat left;border-right: 1px solid #dadada;float: left;margin: 0 20px 0 0;padding: 10px 20px 10px 25px;}
 a.account p#user {padding:0 25px 0 0;margin:0;}
 #footer img {margin: 0 10px;}
