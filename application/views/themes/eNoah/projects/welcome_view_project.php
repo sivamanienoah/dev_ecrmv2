@@ -503,8 +503,8 @@ if (get_default_currency()) {
 						<div class="error-msg" id="resmsg1"></div>
 				</div>
 			</div>
-			<div style="margin-bottom:15px;" class="clear-both"></div>	
 			<?php } ?>
+			<div style="margin-bottom:15px;" class="clear-both"></div>	
 			<!--List the project assigned members from the timesheet-->
 			<div class="pull-left">
 			<label class="project-team-members">Team Members</label>
@@ -524,9 +524,9 @@ if (get_default_currency()) {
 					<button onclick="setProjectMembers(); return false;" style="margin:0 0 0 5px;" id="project_members_id" class="positive" type="submit">Set</button>
 					<div class="error-msg" id="resmsg2"></div>
 				</div>
-			</div>
-			<div style="margin:10px;" class="clear-both"></div>	
+			</div>			
 			<?php } ?>
+			<div style="margin:10px;" class="clear-both"></div>	
 			<!--List the project assigned members from the timesheet-->
 			
 			<?php
@@ -560,9 +560,9 @@ if (get_default_currency()) {
 						<div class="error-msg" id="resmsg3"></div>
 				</div>
 			</div>
-			<div style="margin:10px;" class="clear-both"></div>			
 			<?php } ?>
-  <div id="project-tabs" style="width:930px;">
+			<div style="margin:10px;" class="clear-both"></div>			
+  <div id="project-tabs" style="width:930px;float:left;margin:10px 0 0 0;">
 	<div>
 		<ul id="job-view-tabs">
 			<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
@@ -1111,7 +1111,7 @@ if (get_default_currency()) {
 					<td valign="top" width="80"><label>New Folder</label></td>
 					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
 				</tr>
-				<?php /*
+				
 				<tr>
 					<td colspan="2">
 					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
@@ -1135,7 +1135,7 @@ if (get_default_currency()) {
 					</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>
-				*/ ?>
+				
 				<tr>
 					<td colspan="2">
 						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
