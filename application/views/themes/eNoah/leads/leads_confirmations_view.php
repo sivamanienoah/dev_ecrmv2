@@ -389,8 +389,8 @@ button.ui-datepicker-current { display: none; }
 					</tr>
 					</thead>
 					<tbody>
-					 <tr>						 
-						<td valign="top" width="240">
+					 <tr>
+						<td valign="top"  width="240">
 							<select  class="chzn-select" id="project_manager" name="project_manager">
 							<?php if(!empty($user_accounts)):?>
 								<option value="">Select</option>
