@@ -2,18 +2,16 @@
 <div id="content">
 	<?php if($this->session->userdata('accesspage')==1){ ?>
 	<div class="inner hosting-section">
-	
-		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Package Types</h2>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Package Types</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons pull-right">
+					<div class="buttons add-new-button">
 						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/update'">
 							Add New Package Type
 						</button>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>
-			</div>
 		</div>
         
 		<div id="dialog-pk-msg" class="dialog-err" style="font-size: 13px; font-weight: bold; padding: 0px 0px 10px; text-align: center;"> </div>

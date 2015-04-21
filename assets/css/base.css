@@ -1449,15 +1449,10 @@ ul.ui-sortable li{
 	text-align:left;
 	padding:7px !important;
 }
-.leadstg_note {
-	background: url("../../assets/img/Document-Write-icon.png") no-repeat scroll 10px 6px #E7EAF1;
-    border: 1px solid #4B6FB9;
-    color: #800000;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding: 10px 10px 10px 36px;
-}
+/* .leadstg_note {background: url("../../assets/img/Document-Write-icon.png") no-repeat scroll 10px 6px #E7EAF1; border: 1px solid #4B6FB9;color: #800000;font-size: 13px;font-weight: bold;margin-bottom: 10px;padding: 10px 10px 10px 36px;} */
+.leadstg_note {background: url("../../assets/img/Document-Write-icon.png") no-repeat scroll 10px 6px #E7EAF1; border: 1px solid #4B6FB9;color: #800000;font-size: 13px;font-weight: bold;margin-bottom: 10px;padding: 10px 10px 10px 36px;float:left;width:100%;box-sizing:border-box;}
+
+
 .leadstg_note_top {
     background: url("../../assets/img/Document-Write-icon.png") no-repeat scroll 10px 6px #E7EAF1;
     border: 1px solid #4B6FB9;

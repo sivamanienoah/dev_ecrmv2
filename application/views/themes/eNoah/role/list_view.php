@@ -4,17 +4,16 @@ require (theme_url().'/tpl/header.php'); ?>
     <div class="inner">
 		<?php if($this->session->userdata('accesspage')==1) { ?>
 		
-		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm">Role Database</h2>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Role Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons pull-right">
+					<div class="buttons add-new-button">
 						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>role/add_role'">
 							Add New Role
 						</button>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>
-			</div>
 		</div>
 		
         

@@ -1022,4 +1022,68 @@ class Sales_forecast extends crm_controller {
     	}    	
     	redirect('/sales_forecast/variance_reports');
 	}
+	
+	
+	/*
+	 *@method: dashboard
+	 *@show data in graph
+	 */
+	public function forecast_dashboard()
+	{
+		$data['page_heading'] = 'Sales Forecast Dashboard';
+		$this->load->helper('custom_helper');
+		
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id   = '1';
+			$this->default_cur_name = 'USD';
+		}
+		$rates = $this->get_currency_rates();
+		
+		$data['default_currency'] = $this->default_cur_name;
+		
+		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
+		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
+		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
+		$curFiscalYear       = $this->sales_forecast_model->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$data['month_array'] = array(04=>'Apr',05=>'May',06=>'Jun',07=>'Jul',08=>'Aug',09=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec',01=>'Jan',02=>'Feb',03=>'Mar');
+		
+		$filter   			 = real_escape_array($this->input->post());
+		
+		$variance_data 		 = $this->sales_forecast_model->get_variance_records($filter);
+		// echo '<pre>'; print_r($variance_data); exit;
+		
+		$highest_month = date('Y-m-d');
+		
+		foreach($variance_data as $vr) {
+			$month = date('Y-m', strtotime($vr['for_month_year']));
+			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['customer']   = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  = $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
+		}
+		
+		//Set the Highest_month
+		if(($this->input->post("filter")!="") && $filter['month_year_to_date'])
+		$data['highest_month'] = date('Y-m-d', strtotime($filter['month_year_to_date']));
+		else
+		$data['highest_month'] = $highest_month;
+		
+		//Set the Current month
+		if(($this->input->post("filter")!="") && $filter['month_year_from_date'])
+		$data['current_month'] = date('Y-m', strtotime($filter['month_year_from_date']));
+		else
+		$data['current_month'] = date('Y-m');
+		
+		// echo "<pre>"; print_r($data['report_data']); exit;
+		
+		if($this->input->post("filter")!="")
+		$this->load->view('sales_forecast/sale_forecast_dashboard_view_grid', $data);
+		else
+		$this->load->view('sales_forecast/sale_forecast_dashboard_view', $data);
+	}
 }

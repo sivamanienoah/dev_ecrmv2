@@ -3,47 +3,17 @@
 	<?php //include 'tpl/hosting_submenu.php'; ?>
 	<div class="inner hosting-section">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-	    <h2>Package Accounts</h2>
-        <form action="package/search/" method="post" id="cust_search_form">
-			
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td valign="middle">
-                        Search by Package Name
-                    </td>
-                    <td valign="middle">
-                        <input type="text" name="account_search" value="<?php echo  $this->uri->segment(4) ?>" class="textfield width200px" />
-                    </td>
-                    <td valign="middle">
-                        <div class="buttons">
-                            <button type="submit" class="positive">
-                                Search
-                            </button>
-                        </div>
-                    </td>
-					<?php if($this->session->userdata('add')==1) { ?>
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/add'">
-								Add New Package
-							</button>
-						</div>
-					</td>
-					<?php } ?>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td valign="middle">
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-		</form>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Package Accounts</h2>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons add-new-button">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/add'">
+							Add New Package
+						</button>
+					</div>
+				<?php } ?>
+			<div class="clearfix"></div>
+		</div>
         <div id="dialog-msg" class="dialog-err" style="font-size: 13px; font-weight: bold; padding: 0px 0px 10px; text-align: center;"> </div>
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             <thead>
