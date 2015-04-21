@@ -7,7 +7,7 @@
 			<div class="clearfix"></div>
 			</div>
 		</div>
-		<a class="choice-box js_advanced_filter">Advanced Filters<img src="assets/img/advanced_filter.png" class="icon leads" /></a>
+		<a class="choice-box js_advanced_filter"><span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" /></a>
         <div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
  
 		<div id="advance_filters" style="float:left; display:none;width:100%;" >

@@ -38,7 +38,7 @@ require (theme_url().'/tpl/header.php');
 			</table>
 			
 			<a class="choice-box" onclick="advanced_filter();" >
-				Advanced Filters
+				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 		</div>

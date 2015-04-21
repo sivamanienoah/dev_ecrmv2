@@ -17,19 +17,18 @@ button.ui-datepicker-current { display: none; }
 		<div class="page-title-head">
 		<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 			<?php if($this->session->userdata('add')==1) { ?>
-				<div class="buttons pull-right">
+				<div class="buttons add-new-button">
 					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>sales_forecast/add_sale_forecast'">
 						Add Sale Forecast
 					</button>
 				</div>
 			<?php } ?>
-	
 		</div>
 	
 	
 	<div id="filter_section">
 		<a class="choice-box" onclick="advanced_filter();" >
-		Advanced Filters
+		<span>Advanced Filters</span>
 		<img src="assets/img/advanced_filter.png" class="icon leads" />
 		</a>
 			

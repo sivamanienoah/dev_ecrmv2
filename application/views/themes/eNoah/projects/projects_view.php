@@ -35,7 +35,7 @@ if (get_default_currency()) {
 		
 			<h2><?php echo $page_heading ?></h2>
 		
-			<a class="choice-box" onclick="advanced_filter_pjt();">Advanced Filters<img src="assets/img/advanced_filter.png" class="icon leads" /></a>
+			<a class="choice-box" onclick="advanced_filter_pjt();"><span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" /></a>
 		
 			<div id="advance_search_pjt" style="float:left; width:100%;" >
 		

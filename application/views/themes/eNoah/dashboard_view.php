@@ -523,7 +523,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	</table>
 </form>
 <a class="choice-box" onclick="advanced_filter_pjt();" >
-	Advanced Filters
+	<span>Advanced Filters</span>
 	<img src="assets/img/advanced_filter.png" class="icon leads" />
 </a>
 

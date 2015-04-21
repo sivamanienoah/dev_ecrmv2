@@ -21,7 +21,7 @@ button.ui-datepicker-current { display: none; }
 		?>
 		<div id="filter_section">
 			<a class="choice-box" onclick="advanced_filter();" >
-			Advanced Filters
+			<span>Advanced Filters</span>
 			<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 			

@@ -16,7 +16,7 @@
 					<button id="export_excel_variance" class="export-btn excel">Export to Excel</button>
 				</div>
 				<a class="choice-box pull-right" onclick="advanced_filter();" >
-				Advanced Filters
+				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				</a>
 				
