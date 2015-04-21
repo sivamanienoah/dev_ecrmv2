@@ -1,4 +1,4 @@
-<?php require (theme_url().'/tpl/header.php'); ?>
+	<?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <?php

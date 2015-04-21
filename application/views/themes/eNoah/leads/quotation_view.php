@@ -4,11 +4,26 @@ require (theme_url().'/tpl/header.php');
 ?>
 <div id="content">
 	<div class="inner">
-		<?php if($this->session->userdata('accesspage')==1) { ?>
-			<form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
+	
+	
+			<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Lead Dashboard</h2>
+			
+			<div class="buttons add-new-button">
+			<button onclick="location.href='http://localhost/dev_ecrmv2/user/add_user'" class="positive" type="button">
+			Add new user
+			</button>
+			</div>
+			
+			
+			<div class="buttons export-to-excel">
+			<button onclick="location.href='http://localhost/dev_ecrmv2/user/add_user'" class="positive" type="button">
+			Export to Excel
+			</button>
+			</div>
+			
+			
+			
 				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 					<tr>
 						<td>
@@ -24,18 +39,32 @@ require (theme_url().'/tpl/header.php');
 						</td>
 					</tr>
 				</table>
+			
+			
+			<a class="choice-box" onclick="advanced_filter();" >
+			Advanced Filters
+			<img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
+			
+			</div>
+	
+	
+	
+		<?php if($this->session->userdata('accesspage')==1) { ?>
+			<form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
+				
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				
+				
 			</form>
 
 			<h2>Lead Dashboard</h2>
 		
 			<div>
-				<a class="choice-box" onclick="advanced_filter();" >
-					Advanced Filters
-					<img src="assets/img/advanced_filter.png" class="icon leads" />
-				</a>
 				
-				<div id="advance_search" style="float:left;">
-					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:280px; width:940px;">
+				
+				<div id="advance_search" style="float:left;width:100%;">
+					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:280px; width:100%;">
 						
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						

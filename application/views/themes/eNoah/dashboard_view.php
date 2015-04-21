@@ -94,9 +94,9 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			</a>
 			
 				
-			<div id="advance_search" style="float:left; margin: 0px 0px 10px;">
+			<div id="advance_search" style="float:left; margin: 0px 0px 10px;width:100%;">
 				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
-				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:940px;">
+				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:100%;">
 					
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
