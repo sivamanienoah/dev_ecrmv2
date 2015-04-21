@@ -7,8 +7,8 @@ html, body {
 	padding: 0;
 	color: #333;
 	font-family: Arial, Helvetica, sans-serif;
-	/* font-size: 11px; */
-	font-size: 12px;
+	font-size: 11px;
+	/* font-size: 12px; */
 	/* background:#f5f5f5 url(../img/bg.jpg) repeat; */
 	background:url(../img/bg.jpg) repeat;
 	
