@@ -63,20 +63,34 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <div id="page">
 
 <div class="header">
-	<div id="logo"><a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt=""/></a></div>
+
+
+	<div id="logo" class="logo-header">
+	
+	<div class="brand-logo">
+	<a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt=""/></a>
+	</div>
+	
+	<div class="client-logo">
+	<?php 
+	if (getClientLogo()) {
+	$cilentLogo = getClientLogo();
+	?>
+	<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="crm_data/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
+	<?php	
+	} else {
+	?>
+	<a href="dashboard"></a>
+	<?php } ?>
+	</div>
+	
+	
+	</div>
+	
+	
+	
 	<div class="row-two">
-		<div class="client-logo">
-			<?php 
-			if (getClientLogo()) {
-				$cilentLogo = getClientLogo();
-			?>
-			<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="crm_data/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
-			<?php	
-			} else {
-			?>
-			<a href="dashboard"></a>
-			<?php } ?>
-		</div>
+		
 		<div id="user-status">
 		
 					
