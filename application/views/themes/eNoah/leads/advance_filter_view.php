@@ -2,10 +2,6 @@
 $cfg = $this->config->item('crm');
 $userdata = $this->session->userdata('logged_in_user'); 
 ?>
-<!--div style="text-align:right; padding-bottom:5px; padding-right:0px;" >
-	<a id="excel" class="export-btn">Export to Excel</a>
-</div-->
-
 <div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; width:100%;" >
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
