@@ -470,11 +470,12 @@ select.width300px {
 }
 
 /* .row-two{width:65%;float:left;} */
-.row-two{float:right;padding:15px 20px;width: 50%;}
+.row-two{float:right;padding:15px 20px;width: 45%;}
 
 
 /* .client-logo{padding:13px 6px 5px 0;text-align:right;height:50px;} */
-.client-logo{padding:0 0 5px;text-align:right;height:50px;}
+.client-logo{border-left: 1px solid #dadada;float: left;margin: 0 0 0 20px;padding: 0 0 0 20px;text-align: right;}
+
 
 /* #user-status p {padding:10px 5px;text-align:right;}  */
 
@@ -2184,7 +2185,7 @@ border:1px solid #dedede;
 -webkit-box-shadow: 0 1px 3px #C2C2C2;
 }
 
-.client-logo{display:none;}
+
 .header {float: left;padding: 25px 0;width: 100%;}
 .date-time{background:url("../img/calender-icon.png") no-repeat left;border-right: 1px solid #dadada;float: left;margin: 0 20px 0 0;padding: 10px 20px 10px 25px;}
 a.account p#user {padding:0 25px 0 0;margin:0;}
@@ -2218,4 +2219,8 @@ th.header{float:none;width:auto;}
 
 .page-title-head table.search-table {float: left;margin:4px 0 0 35px;}
 #advanceFiltersDash {width: 100% !important;}
+
+
+.brand-logo{float:left;}
+
 /**table-styles**/
