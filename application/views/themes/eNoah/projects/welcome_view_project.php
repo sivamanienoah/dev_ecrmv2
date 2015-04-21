@@ -11,10 +11,9 @@ if (get_default_currency()) {
 	$default_cur_id = '1';
 	$default_cur_name = 'USD';
 }
+	
+	
 
- 
-?>
-<?php 
 	$this->load->helper('lead_helper'); 
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 ?>
@@ -553,11 +552,12 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
-			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+			<?php 
+			if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 			<div>
 				<div class="buttons">
-						<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
-						<div class="error-msg" id="resmsg3"></div>
+					<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
+					<div class="error-msg" id="resmsg3"></div>
 				</div>
 			</div>
 			<?php } ?>
@@ -565,18 +565,23 @@ if (get_default_currency()) {
   <div id="project-tabs" style="width:930px;float:left;margin:10px 0 0 0;">
 	<div>
 		<ul id="job-view-tabs">
-			<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
-			<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
+			<?php if($this->userdata['role_id'] != 8):?>
+				<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
+			<?php endif; ?>
+				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>			
+				<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
+			<?php if($this->userdata['role_id'] != 8):?>
+				<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
+			<?php endif; ?>
 		</ul>
 	</div>
+	<?php if($this->userdata['role_id'] != 8):?>
 	<div id="jv-tab-0">
 		<div style="overflow: auto;">
 		<div class="pull-left">
@@ -997,7 +1002,7 @@ if (get_default_currency()) {
 		</div>
 
 	</div><!-- id: jv-tab-2 end -->
-			
+	<?php endif; ?>		
 	<div id="jv-tab-3">
 		<?php 
 			$this->load->helper('lead_helper'); 
@@ -1025,7 +1030,9 @@ if (get_default_currency()) {
 					<?php } ?>
 				</div>
 			</form>
-			<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
+			<?php 
+			//($file_upload_access == 1 && $quote_data['pjt_status'] != 2) ||
+			if ( ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 			<div class="pull-left pad-right">
 				<a title="Add Folder" href='javascript:void(0)'  onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
 			</div>
@@ -1591,7 +1598,25 @@ if (get_default_currency()) {
 			?>
 		</div> <!--end of milestone-top-view-->
 	</div><!-- id: jv-tab-4-5 end -->
-
+	<div id="jv-tab-7">
+		<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
+		
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<p>Add URL to this job (full URL including http://)</p>
+			<p><input type="text" class="textfield" id="job-add-url" style="margin:0; width:250px;" /></p>
+			<p>Details (optional)</p>
+			<p><textarea id="job-url-content" class="textfield" style="margin:0; width:250px;"></textarea></p>
+			<div class="buttons">
+				<button type="submit" class="positive" onclick="addURLtoJob(); return false;">Add</button>
+			</div>
+		</form>
+		<ul id="job-url-list">
+			<?php echo $job_urls_html ?>
+		</ul>
+	</div><!-- id: jv-tab-7 end -->
+	
+	<?php if($this->userdata['role_id'] != 8):?>
 	<div id="jv-tab-5">
 		<form id="customer-detail-read-only" onsubmit="return false;">
 		
@@ -1715,23 +1740,7 @@ if (get_default_currency()) {
 		</form>
 	</div><!-- id: jv-tab-5 end -->
 			
-	<div id="jv-tab-7">
-		<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
-		
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-			<p>Add URL to this job (full URL including http://)</p>
-			<p><input type="text" class="textfield" id="job-add-url" style="margin:0; width:250px;" /></p>
-			<p>Details (optional)</p>
-			<p><textarea id="job-url-content" class="textfield" style="margin:0; width:250px;"></textarea></p>
-			<div class="buttons">
-				<button type="submit" class="positive" onclick="addURLtoJob(); return false;">Add</button>
-			</div>
-		</form>
-		<ul id="job-url-list">
-			<?php echo $job_urls_html ?>
-		</ul>
-	</div><!-- id: jv-tab-7 end -->
+	
 	<?php 
 		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 		$cur_year = date('Y');
@@ -1848,7 +1857,6 @@ if (get_default_currency()) {
 			</div>
 		</div>
 	</div><!-- id: jv-tab-8 end -->
-	
 	<div id="jv-tab-9">
 		<span style="float:right;" class="job_history"> 
 				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
@@ -1858,7 +1866,7 @@ if (get_default_currency()) {
 		<h4>Job History</h4>
 		<div id="load-log"></div>
 	</div><!-- id: jv-tab-9 end -->
-	
+	<?php endif;?>
   </div>
 </div>
 </div><!--end of project-tabs-->
@@ -1911,5 +1919,13 @@ $(function(){
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/request/request.js"></script>
+
+<?php // loaded files/folders manually when logged in user is developer
+if($this->userdata['role_id'] == 8): ?>
+<script>
+loadExistingFiles($('#filefolder_id').val());
+showBreadCrumbs($('#filefolder_id').val());
+</script>
+<?php endif; ?>
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
