@@ -1049,11 +1049,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', end
  }
  
  /*mychanges*/
- .task-contents {
+ /* .task-contents {
 	height: 400px;
 	width: 960px;
 	overflow: scroll;
- }
+ } */
+ 
+ 
+ .task-contents {height: 400px;width: 100%;overflow: scroll;}
+ 
+ 
  .first {
 	width : 700px;
  }
@@ -2200,6 +2205,8 @@ a.account p#user {padding:0 25px 0 0;margin:0;}
 .blockUI.blockMsg .comments-log-container {overflow: visible;}
 .blockUI.blockMsg.blockPage {overflow: visible !important;}
 /**light box**/
+
+th.header{float:none;width:auto;}
 
 
 /**table-styles**/
