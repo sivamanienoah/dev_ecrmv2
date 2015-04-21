@@ -2212,9 +2212,16 @@ th.header{float:none;width:auto;}
 
 #pie2, #pie3 {height: 460px;}
 
-.export-to-excel, .add-new-button{float:left;}
+.export-to-excel, .add-new-button, .import-cus-list{float:left;}
 .export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+
+
+
+
+.import-cus-list button {background:url("../img/import-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+.import-cus-list button:hover{background:url("../img/import-icon.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+
 
 
 .page-title-head table.search-table {float: left;margin:4px 0 0 35px;}
