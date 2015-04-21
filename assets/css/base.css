@@ -2185,6 +2185,7 @@ border:1px solid #dedede;
 a.account p#user {padding:0 25px 0 0;margin:0;}
 #footer img {margin: 0 10px;}
 .footer-text{float:left;margin:10px 0 0 0 !important;}
+p.footer-text a{color:#f57025;}
 .footer-logo{float:right;}
 .page-title-head{width:100%; border-bottom:1px solid #ccc;padding:0px 0 15px;float:left;margin:0 0 20px;}
 
