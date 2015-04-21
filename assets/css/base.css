@@ -2082,11 +2082,7 @@ td.actions a:hover{text-decoration:none;opacity:0.6;}
 
 
 
-div.dropdown {
-color: #555;
-position: relative;
-float:right;
-}
+
 div.submenu
 {
 background: #fff;
@@ -2181,7 +2177,11 @@ border:1px solid #dedede;
 
 
 .header {float: left;padding:15px 0;width: 100%;}
-.date-time{background:url("../img/calender-icon.png") no-repeat left;border-right: 1px solid #dadada;float: left;margin: 0 20px 0 0;padding: 10px 20px 10px 25px;}
+
+
+.date-time{background:url("../img/calender-icon.png") no-repeat left;float: left;margin:0;padding: 10px 0px 10px 25px;}
+div.dropdown {color: #555;position: relative;float:right;border-left: 1px solid #dadada;margin:0 0 0 20px;padding:0 0 0 20px;}
+
 a.account p#user {padding:0 25px 0 0;margin:0;}
 #footer img {margin: 0 10px;}
 .footer-text{float:left;margin:10px 0 0 0 !important;}
