@@ -1344,7 +1344,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5174be', end
 
 
 /* .choice-box{background:#4B6FB9 !important;width:175px;padding:10px;border-radius:8px;-moz-border-radius:8px;-webkit-border-radius:8px;background:#a8cb17;float:left;margin:0 0 20px;	cursor:pointer;position:relative;color:#fefffd;font-weight:bold;margin: 0 0 10px;} */
-.choice-box{background:#4B6FB9 !important;width:auto;padding:10px;background:#a8cb17;float:right;margin:0 0 20px;	cursor:pointer;position:relative;color:#fefffd;font-weight:bold;margin: 0 0 10px;font-size: 12px;border:1px solid #274686;}
+.choice-box{background:#4B6FB9 !important;width:auto;padding:7px;background:#a8cb17;float:right;margin:0 0 20px;	cursor:pointer;position:relative;color:#fefffd;font-weight:bold;margin: 0 0 10px;font-size: 12px;border:1px solid #274686;}
 .choice-box:hover{opacity:0.8;}
 .choice-box img {position: static;float:left;margin:0 7px 0 0;}
 
@@ -2141,7 +2141,7 @@ color:#59585d;
 /* position: absolute; */
 position:relative;
 /* z-index: 110; */
-z-index:9999;
+z-index:1;
 display: block;
 /* padding: 11px 0 0 20px;
 height: 28px; 
@@ -2254,5 +2254,24 @@ th.header{float:none;width:auto;}
 .choice-box span {
     float: right;
 }
+.page-title-head form {
+    overflow: inherit;
+}
 
+
+
+.page-title-head #filter_metrics_data {
+    float: left;
+    margin: 10px 0 0 20px;
+}
+.page-title-head #filter_metrics_data label {
+    margin: 0 6px 0 0;
+    position: relative;
+    top: 2px;
+}
+.page-title-head #filter_metrics_data input {
+    padding: 3px 10px 4px;
+    position: relative;
+    top: 1px;
+}
 /**table-styles**/
