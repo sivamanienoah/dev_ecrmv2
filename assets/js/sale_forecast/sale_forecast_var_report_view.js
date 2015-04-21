@@ -59,14 +59,14 @@ $(function() {
 	});
 	
 	//export to excel
-	$('#export_excel_forecast').click(function() {
+	$('#export_excel_variance').click(function() {
 		var entity               = $("#entity").val();
 		var customer    		 = $("#customer").val();
 		var lead_ids   			 = $("#lead_ids").val();
 		var month_year_from_date = $("#month_year_from_date").val();
 		var month_year_to_date   = $("#month_year_to_date").val();
 		
-		var url = site_base_url+"sales_forecast/export_excel_forecast";
+		var url = site_base_url+"sales_forecast/export_excel_variance";
 		
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
