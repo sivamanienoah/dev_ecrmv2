@@ -9,10 +9,14 @@ button.ui-datepicker-current { display: none; }
 </style>
 <div id="content">
 	<div class="inner">	
-		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+			<a class="choice-box" onclick="advanced_filter();" >
+				<span>Advanced Filters</span>
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
 			<div class="clearfix"></div>
-			</div>
+			
 		</div>
 		
 		<?php 
@@ -20,11 +24,7 @@ button.ui-datepicker-current { display: none; }
 		{ 
 		?>
 		<div id="filter_section">
-			<a class="choice-box" onclick="advanced_filter();" >
-			<span>Advanced Filters</span>
-			<img src="assets/img/advanced_filter.png" class="icon leads" />
-			</a>
-			
+
 			<div class="clear"></div>
 			
 			<div id="advance_search" style="padding-bottom:15px;">

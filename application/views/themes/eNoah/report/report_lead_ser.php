@@ -8,19 +8,26 @@
 	    	<form name = 'report_lead_frm' id = 'report_lead_frm' action="<?php echo  $this->uri->uri_string() ?>" method="post" >
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				
+				<div class="page-title-head">
+					<h2 class="pull-left borderBtm">Leads Report By Service Requirement</h2>
+					<div class="buttons export-to-excel">
+						<button type="button" id="excel" class="positive" onclick="location.href='#'">
+							Export to Excel
+						</button>
+					</div>
+					<a class="choice-box advanced_filter">
+						<span>Advanced Filters</span>
+						<img class="icon leads" src="assets/img/advanced_filter.png">
+					</a>
+				</div>
 			
-	            <h2>Leads Report By Service Requirement</h2>
 	            <?php if ($this->validation->error_string != '') { ?>
 	            <div class="form_error">
 	                <?php echo $this->validation->error_string; ?>
 	            </div>
 	            <?php } ?>       	
-	        	
-	        	<a class="choice-box advanced_filter">
-					<span>Advanced Filters</span>
-					<img class="icon leads" src="assets/img/advanced_filter.png">
-				</a>
-				
+
 	        	<div class="clear"><div>
 	            <div id="advance_search" style="display:none;">
 				

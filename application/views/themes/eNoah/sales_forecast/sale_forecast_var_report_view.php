@@ -10,22 +10,19 @@
 <?php
 	if($this->session->userdata('accesspage')==1) { ?>
 	
-			<div class="page-title-head">
-				<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
-				<div class="buttons add-new-button">
-					<button id="export_excel_variance" class="export-btn excel">Export to Excel</button>
-				</div>
-				<a class="choice-box pull-right" onclick="advanced_filter();" >
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+			<div class="buttons export-to-excel">
+				<button id="export_excel_variance" class="export-btn excel">Export to Excel</button>
+			</div>
+			<a class="choice-box pull-right" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
-				</a>
-				
-			</div>
-		
+			</a>
+			
+		</div>
 	
 		<div id="filter_section">
-			
-			
 			<div class="clear"></div>
 			
 			<div id="advance_search" style="padding-bottom:15px;">

@@ -23,15 +23,15 @@ button.ui-datepicker-current { display: none; }
 					</button>
 				</div>
 			<?php } ?>
+			<a class="choice-box" onclick="advanced_filter();" >
+				<span>Advanced Filters</span>
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
 		</div>
 	
 	
 	<div id="filter_section">
-		<a class="choice-box" onclick="advanced_filter();" >
-		<span>Advanced Filters</span>
-		<img src="assets/img/advanced_filter.png" class="icon leads" />
-		</a>
-			
+
 		<div class="clear"></div>
 			
 		<div id="advance_search" style="padding-bottom:15px;">

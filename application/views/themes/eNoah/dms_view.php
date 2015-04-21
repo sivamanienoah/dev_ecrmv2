@@ -2,12 +2,14 @@
 <div id="content">
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
-		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
+			<a class="choice-box js_advanced_filter">
+				<span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
 			<div class="clearfix"></div>
-			</div>
 		</div>
-		<a class="choice-box js_advanced_filter"><span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" /></a>
+
         <div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
  
 		<div id="advance_filters" style="float:left; display:none;width:100%;" >

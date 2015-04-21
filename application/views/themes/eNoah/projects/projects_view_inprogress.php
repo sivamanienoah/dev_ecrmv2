@@ -115,12 +115,16 @@ if (get_default_currency()) {
 		}
 	}
 ?>
-<div style="text-align:right; float: right">
-	<a class="export-btn excel" id='milestone'>
+<div class="page-title-head">
+	<h2 class="pull-left borderBtm">Milestone Based</h2>
+	
+	<div class="buttons export-to-excel">
+		<button type="button" id='milestone' class="positive excel" onclick="location.href='#'">
 		Export to Excel
-	</a>
+		</button>
+	</div>
 </div>
-<h2>Milestone Based</h2>
+
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
 		<tr>
@@ -167,32 +171,37 @@ if (get_default_currency()) {
 	$end_year = date('Y', strtotime('-15 year'));
 ?>
 <div class="clearfix border-bot ver-mspace" style="margin-top: 20px">
-<h2 class="no-mar pull-left no-bor">Monthly Billing</h2>
-<div class="pull-right" style="padding:1px 0 0">
-	<a class="export-btn excel no-mar" id='monthly'>
+
+<div class="page-title-head">
+
+	<h2 class="pull-left borderBtm">Monthly Billing</h2>
+
+	<div class="buttons export-to-excel">
+		<button type="button" id='monthly' class="positive excel" onclick="location.href='#'">
 		Export to Excel
-	</a>
-</div>
-<div id="filter_metrics_data" class="pull-right hor-mspace">
-	<form name="filter_metrics" id="filter_metrics"  method="post">
-		<label><strong>Month & Year</strong></label>
-		<select name="metrics_month" id="metrics_month" class="no-mar">
-			<?php foreach ($months as $name) { ?>
-				<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
-			<?php } ?>
-		</select>
-		<select name="metrics_year" id="metrics_year" class="no-mar">
-			<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
-				<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
-			<?php } ?>
-		</select>
-		<input type="hidden" name="project_type" id="project_type" value=2 readonly="readonly" />
-		<input id="metrics_data" class="positive input-font" type="submit" value="Search"/>
-		<div id="loading" style="float: right; height: 1px; display: none;">
-			<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' style='width: 60px;' />
-		</div>
-	</form>
-</div>
+		</button>
+	</div>
+
+	<div id="filter_metrics_data" class="hor-mspace">
+		<form name="filter_metrics" id="filter_metrics"  method="post">
+			<label><strong>Month & Year</strong></label>
+			<select name="metrics_month" id="metrics_month" class="no-mar">
+				<?php foreach ($months as $name) { ?>
+					<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
+				<?php } ?>
+			</select>
+			<select name="metrics_year" id="metrics_year" class="no-mar">
+				<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
+					<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
+				<?php } ?>
+			</select>
+			<input type="hidden" name="project_type" id="project_type" value=2 readonly="readonly" />
+			<input id="metrics_data" class="positive input-font" type="submit" value="Search"/>
+			<div id="loading" style="float: right; height: 1px; display: none;">
+				<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' style='width: 60px;' />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div id='monthly_based'>

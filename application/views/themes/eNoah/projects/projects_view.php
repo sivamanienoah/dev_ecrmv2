@@ -13,7 +13,12 @@ if (get_default_currency()) {
 <div id="content">
 	<div class="inner">
 		<?php if($this->session->userdata('accesspage')==1) { ?>
-			<form action="" id="pjt_search_form" name="pjt_search_form" method="post" style="float:right;">
+		
+		<div class="page-title-head">
+		
+			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
+		
+			<form action="" id="pjt_search_form" name="pjt_search_form" method="post" >
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
 				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
@@ -32,10 +37,11 @@ if (get_default_currency()) {
 					</tr>
 				</table>
 			</form>
-		
-			<h2><?php echo $page_heading ?></h2>
-		
-			<a class="choice-box" onclick="advanced_filter_pjt();"><span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" /></a>
+			
+			<a class="choice-box" onclick="advanced_filter_pjt();">
+				<span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" />
+			</a>
+		</div>
 		
 			<div id="advance_search_pjt" style="float:left; width:100%;" >
 		

@@ -10,95 +10,87 @@ if (get_default_currency()) {
 }
 ?>
 <div id="ad_filter" class="clear">
-<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
-	        	
-	            <table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table">
-					<thead>
-						<tr>
-							<th>Lead No.</th>
-							<th>Lead Title</th>
-							<th>Customer</th>
-							<th>Region</th>
-							<th>Lead Owner</th>	
-							<th>Lead Assignee</th>	
-							<th>Lead Indicator</th>
-							<th>Lead Stage</th>
-							<th>Status</th>
-							<th>Expected Worth (<?php echo $default_cur_name; ?>)</th>
-						</tr>
-					</thead>
-					
-						<?php
-						if(!empty($res))
-						{
-							$amt_converted = 0;
-							$total = 0;
-							foreach ($res as $leads)
-							{
-						?>
-								<tr>
-									<td><?php echo empty($leads->invoice_no)?'':$leads->invoice_no; ?></td>
-									<td><?php echo empty($leads->lead_title)?'':$leads->lead_title; ?></td>
-									<td><?php echo $leads->cust_first_name.''.$leads->cust_last_name; ?></td>
-									<td><?php echo empty($leads->region_name)?'':$leads->region_name; ?></td>
-									<td><?php echo $leads->ownrfname.' '.$leads->ownrlname; ?></td>
-									<td><?php echo $leads->usrfname.' '.$leads->usrlname; ?></td>
-									<td><?php echo empty($leads->lead_indicator)?'':$leads->lead_indicator; ?></td>
-									<td><?php echo empty($leads->lead_stage_name)?'':$leads->lead_stage_name; ?></td>
-									<td>
-										<?php
-											switch ($leads->lead_status)
-											{
-												case 1:
-													echo $status = 'Active';
-												break;
-												case 2:
-													echo $status = 'On Hold';
-												break;
-												case 3:
-													echo $status = 'Dropped';
-												break;
-												case 4:
-													echo $status = 'Closed';
-												break;
-											}
-										?>									
-									</td>
-									<td align = 'right'>
-										<?php 
-											$amt_converted = conver_currency($leads->expect_worth_amount,$rates[$leads->expect_worth_id][$default_cur_id]);
-											$total+=$amt_converted;
-											echo empty($leads->expect_worth_amount)?'':$amt_converted;
-										?>
-									</td>
-								</tr>
-						<?php 
-							}
-							?>
-							<tfoot>
-								<tr>
-									<td colspan="9" align="right"><strong>Total (<?php echo $default_cur_name; ?>)</strong></td>
-									<td align = 'right'><strong><?php echo $total; ?></strong></td>
-								</tr>
-							</tfoot>
+	<table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table">
+		<thead>
+			<tr>
+				<th>Lead No.</th>
+				<th>Lead Title</th>
+				<th>Customer</th>
+				<th>Region</th>
+				<th>Lead Owner</th>	
+				<th>Lead Assignee</th>	
+				<th>Lead Indicator</th>
+				<th>Lead Stage</th>
+				<th>Status</th>
+				<th>Expected Worth (<?php echo $default_cur_name; ?>)</th>
+			</tr>
+		</thead>
+		
+			<?php
+			if(!empty($res))
+			{
+				$amt_converted = 0;
+				$total = 0;
+				foreach ($res as $leads)
+				{
+			?>
+					<tr>
+						<td><?php echo empty($leads->invoice_no)?'':$leads->invoice_no; ?></td>
+						<td><?php echo empty($leads->lead_title)?'':$leads->lead_title; ?></td>
+						<td><?php echo $leads->cust_first_name.''.$leads->cust_last_name; ?></td>
+						<td><?php echo empty($leads->region_name)?'':$leads->region_name; ?></td>
+						<td><?php echo $leads->ownrfname.' '.$leads->ownrlname; ?></td>
+						<td><?php echo $leads->usrfname.' '.$leads->usrlname; ?></td>
+						<td><?php echo empty($leads->lead_indicator)?'':$leads->lead_indicator; ?></td>
+						<td><?php echo empty($leads->lead_stage_name)?'':$leads->lead_stage_name; ?></td>
+						<td>
 							<?php
-							
-						} else{
-							?>
-							<tr>
-								<td colspan = '10' align="center">No result</td>
-							</tr>
+								switch ($leads->lead_status)
+								{
+									case 1:
+										echo $status = 'Active';
+									break;
+									case 2:
+										echo $status = 'On Hold';
+									break;
+									case 3:
+										echo $status = 'Dropped';
+									break;
+									case 4:
+										echo $status = 'Closed';
+									break;
+								}
+							?>									
+						</td>
+						<td align = 'right'>
 							<?php 
-						}
-						?>
-						
-						
-					
-				</table>
-				<br/>    
-	            
+								$amt_converted = conver_currency($leads->expect_worth_amount,$rates[$leads->expect_worth_id][$default_cur_id]);
+								$total+=$amt_converted;
+								echo empty($leads->expect_worth_amount)?'':$amt_converted;
+							?>
+						</td>
+					</tr>
+			<?php 
+				}
+				?>
+				<tfoot>
+					<tr>
+						<td colspan="9" align="right"><strong>Total (<?php echo $default_cur_name; ?>)</strong></td>
+						<td align = 'right'><strong><?php echo $total; ?></strong></td>
+					</tr>
+				</tfoot>
+				<?php
 				
-	
+			} else{
+				?>
+				<tr>
+					<td colspan = '10' align="center">No result</td>
+				</tr>
+				<?php 
+			}
+			?>
+	</table>
+<br/>
 </div>
 
 <?php 

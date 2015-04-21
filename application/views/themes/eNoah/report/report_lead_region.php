@@ -9,17 +9,27 @@
 
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
-	            <h2>Leads Report By Region</h2>
+	            <div class="page-title-head">
+					<h2 class="pull-left borderBtm">Leads Report By Region</h2>
+					
+					<div class="buttons export-to-excel">
+						<button type="button" id="excel" class="positive" onclick="location.href='#'">
+							Export to Excel
+						</button>
+					</div>
+					
+					<a class="choice-box advanced_filter">
+						<span>Advanced Filters</span>
+						<img class="icon leads" src="assets/img/advanced_filter.png">
+					</a>
+				</div>
+
 	            <?php if ($this->validation->error_string != '') { ?>
 	            <div class="form_error">
 	                <?php echo  $this->validation->error_string ?>
 	            </div>
 	            <?php } ?>
 	            <!-- <p>Configure the task alerts.</p> -->
-	        	<a class="choice-box advanced_filter">
-					<span>Advanced Filters</span>
-					<img class="icon leads" src="assets/img/advanced_filter.png">
-				</a>	
 	        	
 	            <div class="clear"><div>    
 	            <div id="advance_search" style="display:none;">

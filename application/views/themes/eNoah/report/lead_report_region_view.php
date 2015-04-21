@@ -16,7 +16,7 @@ if (get_default_currency()) {
 
 <div id="ad_filter" class="clear">
 <!-- style="overflow:scroll; height:400px; width:940px;" -->
-<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
+
 <?php 
 //echo $regionname.','.$countryname.','.$statename.','.$locname."<br/>";
 $sort = 'region_name';

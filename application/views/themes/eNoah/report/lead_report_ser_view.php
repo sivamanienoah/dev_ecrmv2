@@ -14,7 +14,7 @@ if (get_default_currency()) {
 //echo $this->session->userdata('viewlead');
 ?>
 <div id="ad_filter" class="clear">
-<div style="text-align:right"><a id="excel" class="export-btn">Export to Excel</a></div>
+
 <?php 
 if($num>0)
 {
