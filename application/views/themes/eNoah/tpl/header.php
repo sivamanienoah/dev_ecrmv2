@@ -101,8 +101,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 					</a>
 					<div class="submenu" style="display: none; ">
 						<ul class="root">
-							<li><a class="my-profile" href="javascript:void(0);" >My Profile</a></li>
-							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/" >Sign Out</a></li>
+							<li><a class="my-profile" href="<?php echo base_url() ?>myaccount/">My Profile</a></li>
+							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/">Sign Out</a></li>
 						</ul>
 					</div>
 				</div>

@@ -230,6 +230,7 @@ function get_lead_detail(id, sf_id) {
 				if(category == 2) {
 					$('#show-project-ms-detail').html(response.ms_det);
 					$('#project-ms-detail').show();
+					// ms_detail_datatbl();
 				}
 			}
 		}
@@ -390,6 +391,22 @@ function view_logs(id) {
 				}
 			});
 		}
+	});
+}
+
+function ms_detail_datatbl(){
+	$('.class_ms_det').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 20,
+		"sPaginationType": "full_numbers",
+		"bInfo": false,
+		"bPaginate": false,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": false,
+		"bFilter": false,
+		"bAutoWidth": false,	
 	});
 }
 

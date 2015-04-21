@@ -105,13 +105,11 @@
 		</form>
 	</div>
 	
-	
-	
 	<!--table-->
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<table border=1 id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
+			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="margin:50px 0 0 0;">
 				<thead>
 					<tr>
 						<th>Milestone Name</th>

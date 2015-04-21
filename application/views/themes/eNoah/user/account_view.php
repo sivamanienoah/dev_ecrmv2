@@ -2,9 +2,7 @@
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <div id="content">
     <div class="inner">
-		<?php 
-		if($this->session->userdata('accesspage')==1) { 
-		?>
+		<?php // if($this->session->userdata('accesspage')==1) { ?>
 			<form action="<?php echo $this->uri->uri_string() ?>" method="post" >
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -73,9 +71,9 @@
 				</table>
 			</form>
 		<?php
-		} else {
-			echo "You have no rights to access this page";
-		}
+		//} else {
+		//	echo "You have no rights to access this page";
+		//}
 		?>
 	</div>
 </div>

@@ -2240,13 +2240,13 @@ th.header{float:none;width:auto;}
 .login-box input:focus{border-color:#a5a5a5;transition: all 0.5s ease; -webkit-box-shadow: 0 8px 6px -6px #dadada;
      -moz-box-shadow: 0 8px 6px -6px #dadada;
           box-shadow: 0 8px 6px -6px #dadada;outline:none;}
-.login-box {background: none repeat scroll 0 0 #fff;border: 1px solid #dadada;padding: 25px;margin:12% 0;-webkit-box-shadow: 0 8px 6px -6px #afafaf;
+.login-box {background: none repeat scroll 0 0 #fff;border: 1px solid #dadada;padding: 25px;margin:11% 0;-webkit-box-shadow: 0 8px 6px -6px #afafaf;
      -moz-box-shadow: 0 8px 6px -6px #afafaf;
           box-shadow: 0 8px 6px -6px #afafaf;}
 
 .login-box form button {border: none;float: right;padding: 10px 15px;text-align: center;}
 .login-box form button:hover{border:none;}
-.login-inner{border-top:1px solid #dadada;}
+.login-inner{border-top:1px solid #dadada;padding:0 !important}
 
 .ui-tabs.ui-widget.ui-widget-content.ui-corner-all {
     display: inline-block;
