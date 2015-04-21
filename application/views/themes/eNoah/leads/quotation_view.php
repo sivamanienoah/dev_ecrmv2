@@ -4,65 +4,51 @@ require (theme_url().'/tpl/header.php');
 ?>
 <div id="content">
 	<div class="inner">
-	
-	
-			<div class="page-title-head">
+		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Lead Dashboard</h2>
-			
+			<?php if($this->session->userdata('add')==1) { ?>
 			<div class="buttons add-new-button">
-			<button onclick="location.href='http://localhost/dev_ecrmv2/user/add_user'" class="positive" type="button">
-			Add new user
-			</button>
+				<button onclick="location.href='<?php echo base_url(); ?>welcome/new_quote'" class="positive" type="button">
+					Add New Lead
+				</button>
 			</div>
-			
+			<?php } ?>
 			
 			<div class="buttons export-to-excel">
-			<button onclick="location.href='http://localhost/dev_ecrmv2/user/add_user'" class="positive" type="button">
-			Export to Excel
-			</button>
+				<!--a class="export-btn">Export to Excel</a-->
+				<button id="excel" onclick="location.href='#'" class="positive" type="button">
+					Export to Excel
+				</button>
 			</div>
-			
-			
-			
-				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-					<tr>
-						<td>
-							Lead Search
-						</td>
-						<td>
-							<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-						</td>
-						<td>
-							<div class="buttons">
-								<button type="submit" class="positive">Search</button>
-							</div>
-						</td>
-					</tr>
-				</table>
-			
+
+			<table border="0" cellpadding="0" cellspacing="0" class="search-table">
+				<tr>
+					<td>
+						Lead Search
+					</td>
+					<td>
+						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
+					</td>
+					<td>
+						<div class="buttons">
+							<button type="submit" class="positive">Search</button>
+						</div>
+					</td>
+				</tr>
+			</table>
 			
 			<a class="choice-box" onclick="advanced_filter();" >
-			Advanced Filters
-			<img src="assets/img/advanced_filter.png" class="icon leads" />
+				Advanced Filters
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
-			
-			</div>
-	
-	
+		</div>
 	
 		<?php if($this->session->userdata('accesspage')==1) { ?>
 			<form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
-				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				
-				
 			</form>
-
-			<h2>Lead Dashboard</h2>
 		
-			<div>
-				
-				
+			<div>			
 				<div id="advance_search" style="float:left;width:100%;">
 					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:280px; width:100%;">
 						
