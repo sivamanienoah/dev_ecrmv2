@@ -28,7 +28,7 @@ button.ui-datepicker-current { display: none; }
 			<div class="clear"></div>
 			
 			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="width:940px;">
+				<form name="advanceFiltersDash" id="advanceFiltersDash" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<?php //echo '<pre>'; print_r($sales_divisions);?>
 					<div style="border: 1px solid #DCDCDC;">

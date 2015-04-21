@@ -2,17 +2,16 @@
 <div id="content">
 	<div class="inner q-view">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-		<div style="padding-bottom: 10px;">
-			<div style="width:100%; border-bottom:1px solid #ccc;"><h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons pull-right">
+					<div class="buttons add-new-button">
 						<button type="button" class="positive" style="margin:0px 0px 10px 10px;" onclick="location.href='<?php echo base_url(); ?>item_mgmt/add'">
 							Add New Item
 						</button>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>
-			</div>
 		</div>
 		
 		<?php
