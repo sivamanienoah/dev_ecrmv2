@@ -504,7 +504,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm">PROJECTS - LISTS</h2>
 
-	<form name="pjt_search_form" id="pjt_search_form" action="" method="post" style="float:right;">
+	<form name="pjt_search_form" id="pjt_search_form" action="" method="post">
 		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 			<tr>
