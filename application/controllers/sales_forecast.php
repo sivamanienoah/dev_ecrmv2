@@ -98,7 +98,6 @@ class Sales_forecast extends crm_controller {
 	*/
 	public function save_sale_forecast($sf_id = false)
 	{
-
 		$data = array();
 		
 		$data['error'] = false;
@@ -168,11 +167,59 @@ class Sales_forecast extends crm_controller {
 		
 	}
 	/*
+	*@method moveMilestone()
+	*@parameter - payment milestone id
+	*/
+	function moveMilestone()
+	{
+		$res = array();
+		
+		if($this->input->post('forecast_id')=='no_id') {
+			$forecast_data = array('job_id'=>$this->input->post('job_id'),'customer_id'=>$this->input->post('customer_id'),'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"));
+			$forecast_id = $this->sales_forecast_model->insert_row_return_id('sales_forecast', $forecast_data);
+		} else {
+			$forecast_id = $this->input->post('forecast_id');
+		}
+		
+		$ms_data = $this->sales_forecast_model->get_milestone_records($this->input->post('payment_milestone_id'));
+
+		$ms = array('forecast_id_fk'=>$forecast_id, 
+					'forecast_category'=>2, 
+					'milestone_name'=>$ms_data[0]['project_milestone_name'], 
+					'milestone_value'=>$ms_data[0]['amount'], 
+					'milestone_ref_no'=>$ms_data[0]['expectid'], 
+					'for_month_year'=>date("Y-m-d", strtotime($ms_data[0]['month_year'])),
+					'created_by'=>$this->userdata['userid'], 
+					'created_on'=>date("Y-m-d H:i:s"));
+					
+		$sf_ms_ins = $this->sales_forecast_model->insert_row("sales_forecast_milestone", $ms);
+		
+		$ms['milestone_id'] = $this->db->insert_id();
+		$ms['modified_by']  = $this->userdata['userid'];
+		$ms['modified_on']  = date("Y-m-d H:i:s");
+		unset($ms['milestone_ref_no']);
+		unset($ms['created_by']);
+		unset($ms['created_on']);
+		unset($ms['forecast_category']);
+		
+		$this->sales_forecast_model->insert_row("sales_forecast_milestone_audit_log", $ms);
+		
+		if($sf_ms_ins){
+			$res['result']      = true;
+			$res['forecast_id'] = $forecast_id;
+		} else {
+			$res['result'] = false;
+		}
+		
+		echo json_encode($res);
+		exit;
+	}
+	
+	/*
 	*@method getCustomerRecords()
 	*/
 	function getCustomerRecords($type = false, $id = false)
 	{
-	
 		$data     = array();
 		$wh_condn = array(); 
 		
@@ -293,7 +340,12 @@ class Sales_forecast extends crm_controller {
 
 		if(!empty($get_data)) {
 		
-			if($post_data['category'] == 1) {
+			$res['entity']         .= $get_data['division_name'];
+			$res['currency_type']  .= $get_data['expect_worth_name'];
+			$res['expected_worth'] .= $get_data['expect_worth_amount'];
+			$res['billing_type']   .= isset($get_data['project_billing_type']) ? $get_data['project_billing_type'] : '-';
+		
+			/* if($post_data['category'] == 1) {
 				$res['det'] .= 'Entity - '.$get_data['division_name'] . "<br>";
 				$res['det'] .= 'Currency Type - '.$get_data['expect_worth_name'] . "<br>";
 				$res['det'] .= 'Estimated Worth - '.$get_data['expect_worth_amount'];
@@ -302,10 +354,11 @@ class Sales_forecast extends crm_controller {
 				$res['det'] .= 'Currency Type - '.$get_data['expect_worth_name'] . "<br>";
 				$res['det'] .= 'Estimated Worth - '.$get_data['expect_worth_amount'] . "<br>";
 				$res['det'] .= 'Billing Type - '.$get_data['project_billing_type'];
-			}
+			} */
 			
 		}
 		$row = false;
+		
 		if(!empty($get_ms_data) && $post_data['category'] == 2) {
 			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det data-tbl dashboard-heads dataTable" cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
 			foreach($get_ms_data as $ms) {
@@ -315,19 +368,22 @@ class Sales_forecast extends crm_controller {
 					$res['ms_det'] .= '<tr>';
 					$res['ms_det'] .= '<td>'.$ms['project_milestone_name'].'</td><td>'.$ms_month_year.'</td><td>'.$ms['expect_worth_name'].'</td><td>'.$ms['amount'].'</td><td>';
 					if(strtotime($milestone_month_year) > strtotime($current_month_year)) {
-						$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
+						//$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
+						$res['ms_det'] .= '<a onclick="moveMilestone('.$ms['expectid'].'); return false;" title="Move">';
+						$res['ms_det'] .= '<img alt="edit" src="assets/img/arrow-move.png">';
+						$res['ms_det'] .= '</a>';
 					}
-					$row = true;
 					$res['ms_det'] .= '</td></tr>';
+					$row = true;
 				}
 			}
 			if($row == false){
-				$res['ms_det'] .= '<tr><td colspan=5>No Records Availble</td></tr>';
+				$res['ms_det'] .= '<tr><td colspan=5>No records availble</td></tr>';
 			}
 			$res['ms_det'] .= '</table></div>';
-			
+		} else {
+			$res['ms_det'] .= 'No records availble';
 		}
-		
 		echo json_encode($res);
 		exit;
 		
