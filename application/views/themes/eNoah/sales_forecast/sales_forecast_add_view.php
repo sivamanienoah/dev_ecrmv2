@@ -7,11 +7,11 @@
 <div id="content">
     <div class="inner">
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
+	<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
 	<div class="content-split-left">
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
-			<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
             <?php if ($this->validation->error_string != '') { ?>
 				<div class="form_error">
 					<?php echo $this->validation->error_string; ?>
