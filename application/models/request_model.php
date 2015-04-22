@@ -303,6 +303,21 @@ class Request_model extends crm_model {
         return $results->row_array();
     }
 	
+	public function check_folder_permission($user_id,$folder_id,$parent_id){
+		$qry_current_folder = $this->db->get_where($this->cfg['dbpref']."project_folder_access",array("user_id" => $user_id,"folder_id" => $folder_id));
+		
+		$qry_parent_folder = $this->db->get_where($this->cfg['dbpref']."project_folder_access",array("user_id" => $user_id,"folder_id" => $parent_id,"is_recursive" => 1));
+
+		if($qry_current_folder->num_rows()>0 || $qry_parent_folder->num_rows()>0){
+			$rs = $qry_current_folder->row();
+			$rs1 = $qry_parent_folder->row();
+			$ret = $rs1->download_access;
+			$ret = ($ret==1)?$ret:$rs->download_access;
+			return $ret;
+		}
+		return false;
+	}
+	
 	/*
 	 *@method getAssociateFiles()
 	 *@param lead id
