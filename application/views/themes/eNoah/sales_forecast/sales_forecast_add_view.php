@@ -175,7 +175,9 @@
 </div><!--Content div close-->
 
 <div id="edit_sales_forecast_container"></div>
+
 <div id="view-log-container"></div>
+
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script>
 var current_user_id = "<?php echo $username['userid'] ?>";

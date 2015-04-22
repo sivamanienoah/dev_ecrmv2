@@ -2,7 +2,7 @@
 	<div class="file-tabs-close-confirm-tab"></div>
 	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+	<table border="0" cellpadding="0" cellspacing="0" id="ms_log_table" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
 				<th>Milestone Name</th>
@@ -41,7 +41,7 @@ $(function() {
 		return false;
 	});
 	
-	$('.data-tbl').dataTable({
+	$('#ms_log_table').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",

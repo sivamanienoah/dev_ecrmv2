@@ -375,6 +375,7 @@ function view_logs(id) {
 			// console.info(response);
 			// return false;
 			$('#view-log-container').html(response);
+			
 			$.blockUI({
 				message:$('#view-log-container'),
 				css:{ 
