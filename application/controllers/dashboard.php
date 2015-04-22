@@ -282,22 +282,22 @@ class Dashboard extends crm_controller {
 		switch($type) {
 		
 			case "funnel":
-				$res['html'] .= '<a id="current-pipeline-export" class="export-btn" name="'.$lead_stage[0].'">Export to Excel</a>';
+				$res['html'] .= '<div class="export-to-excel"><a id="current-pipeline-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
 				$res['html'] .= "<input id='lead-type-name' type='hidden' value='".$type."'/>";	
 				$dt_id = "example_funnel";
 			break;
 			case "pie1":
-				$res['html'] .= '<a id="leads-by-region-export" class="export-btn" name="'.$lead_stage[0].'">Export to Excel</a>';
+				$res['html'] .= '<div class="export-to-excel"><a id="leads-by-region-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
 				$res['html'] .= "<input id='lead-by-region' type='hidden' value='".$type."'/>";
 				$dt_id = "example_pie1";
 			break;
 			case "pie2":
-				$res['html'] .= '<a id="leads-by-leadsource-export" class="export-btn" name="'.$lead_stage[0].'">Export to Excel</a>';
+				$res['html'] .= '<div class="export-to-excel"><a id="leads-by-leadsource-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
 				$res['html'] .= "<input id='lead-by-leadsource' type='hidden' value='".$type."'/>";
 				$dt_id = "example_pie2";
 			break;
 			case "pie3":
-				$res['html'] .= '<a id="leads-by-service-req-export" class="export-btn" name="'.$lead_stage[0].'">Export to Excel</a>';
+				$res['html'] .= '<div class="export-to-excel"><a id="leads-by-service-req-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
 				$res['html'] .= "<input id='lead-by-service-req' type='hidden' value='".$type."'/>";
 				$dt_id = "example_pie3";
 			break;
@@ -353,7 +353,7 @@ class Dashboard extends crm_controller {
 		$lead_table_output .= '<div class="dash-section dash-section1"><h5 id="lead-owner-scroll">Lead Owner Opportunities - '.urldecode($username).'</h5><div class="grid-close"></div></div>';
         $lead_table_output .= "<div class='dashbrd charts-info-block'>";	
         $lead_table_output .= "<input id='lead-owner-username' type='hidden' value='".$username."'/>";			
-		$lead_table_output .= '<a id="lead-ownner-export" class="export-btn">Export to Excel</a>';
+		$lead_table_output .= '<div class="export-to-excel"><a id="lead-ownner-export">Export to Excel</a></div>';
 		$lead_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-dependency-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
 			$lead_det['invoice_no']   		 = $lead_info->invoice_no;
@@ -443,7 +443,7 @@ class Dashboard extends crm_controller {
 		$assignee_table_output .= '<div class="dash-section dash-section1"><h5 id="lead-assignee-scroll">Lead Assignee Opportunities - '.urldecode($username).'</h5><div class="grid-close"></div></div>';
         $assignee_table_output .= "<div class='dashbrd charts-info-block'>";
 		$assignee_table_output .= "<input id='lead-assignee-username' type='hidden' value='".$username."'/>";		
-		$assignee_table_output .= '<a id="lead-assignee-export" class="export-btn">Export to Excel</a>';
+		$assignee_table_output .= '<div class="export-to-excel"><a id="lead-assignee-export">Export to Excel</a></div>';
 		$assignee_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-assignee-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th></thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
 		
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
@@ -832,11 +832,11 @@ class Dashboard extends crm_controller {
 		$rates = $this->get_currency_rates();
 		//for excel
 		if($type == 'bar1') {
-			$res['html'] .= '<a id="least-active-report" class="export-btn" name="'.$ind.'">Export to Excel</a>';
+			$res['html'] .= '<div class="export-to-excel"><a id="least-active-report" name="'.$ind.'">Export to Excel</a></div>';
 			$res['html'] .= "<input id='least-active-type' type='hidden' value='".$type."'/>";
 		}
 		if($type == 'line1') {
-			$res['html'] .= '<a id="lead-aging-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
+			$res['html'] .= '<div class="export-to-excel"><a id="lead-aging-report" name="'.$gid.'">Export to Excel</a></div>';
 			$res['html'] .= "<input id='lead-aging-type' type='hidden' value='".$type."'/>";
 		}
 		
@@ -896,7 +896,7 @@ class Dashboard extends crm_controller {
 		$rates = $this->get_currency_rates();
 		//for excel
 
-		$res['html'] .= '<a id="closed-oppor-report" class="export-btn" name="'.$gid.'">Export to Excel</a>';
+		$res['html'] .= '<div class="export-to-excel"><a id="closed-oppor-report" name="'.$gid.'">Export to Excel</a></div>';
 		$res['html'] .= "<input id='cls-oppr-type' type='hidden' value='".$type."'/>";
 
 		$res['html'] .= '<table cellspacing="0" id='.$tid.' class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Actual Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
