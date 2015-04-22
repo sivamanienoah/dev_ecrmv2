@@ -1170,7 +1170,7 @@ function addURLtoJob()
 		
 		$('#resmsg3').hide();
 		var stake_members = $('#stake_members').val();
-		if(!stake_members) {
+		if(!confirm("Are you sure to update Stake Holders?")) {
 			$('#resmsg3').show();
 			$('#resmsg3').html("<span class='ajx_failure_msg'>Please select Stake Holders!.</span>");
 			return false;
