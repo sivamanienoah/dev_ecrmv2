@@ -40,7 +40,7 @@ class Login_model extends crm_model {
 		else if ($this->session->userdata('logged_in') != TRUE)
 		{
 		
-            $this->session->set_flashdata('header_messages', array('You are required to be logged in to access this area.'));
+            // $this->session->set_flashdata('header_messages', array('You are required to be logged in to access this area.'));
             $this->session->set_flashdata('last_url', ltrim($this->uri->uri_string(), '/'));
 			redirect('userlogin/');
             exit();
