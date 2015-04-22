@@ -168,7 +168,7 @@
 <!--table-->
 <?php 
 	} else {
-	echo "You have no rights to access this page";
+		echo "You have no rights to access this page";
 	}
 ?>
 	</div><!--Inner div close-->
