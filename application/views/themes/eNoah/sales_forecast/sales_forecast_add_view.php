@@ -53,18 +53,37 @@
 						<select name="job_id" id="project_job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
 					</td>
 				</tr>
-				<tr id="leaddetail">
-					<td>Detail</td>
-					<td id="show-lead-detail"></td>
+				<tr class="show-entity">
+					<td>Entity: </td>
+					<td>
+						<input type="text" readonly name="show-entity" id="show-entity" value="" class="textfield width160px" />
+					</td>
 				</tr>
-				<tr style="height:3px;"></tr>
-				<tr id="project-ms-detail">
-					<td>Milestone Detail</td>
+				<tr class="show-currency">
+					<td>Currency Type: </td>
+					<td>
+						<input type="text" readonly name="show-currency" id="show-currency" value="" class="textfield width160px" />
+					</td>
+				</tr>
+				<tr class="show-exp-worth">
+					<td>Expected Worth: </td>
+					<td>
+						<input type="text" readonly name="show-exp-worth" id="show-exp-worth" value="" class="textfield width160px" />
+					</td>
+				</tr>
+				<tr class="show-bill-type">
+					<td>Billing Type: </td>
+					<td>
+						<input type="text" readonly name="show-bill-type" id="show-bill-type" value="" class="textfield width160px" />
+					</td>
+				</tr>
+				<tr class="project-ms-detail">
+					<td>Payment Milestone Detail:</td>
 					<td id="show-project-ms-detail"></td>
 				</tr>
-				<tr style="height:3px;"></tr>
+				<tr class="project-ms-detail" style="height:3px;"></tr>
 				<tr>
-					<td>Milestone Name:  </td>
+					<td>Milestone Name:</td>
 					<td>
 						<input type="text" name="milestone_name" value="<?php echo $this->validation->milestone; ?>" class="textfield width160px" />
 					</td>
@@ -111,6 +130,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
+			<h4>Saleforecast Milestone Detail:</h4>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>
@@ -184,11 +204,13 @@ var current_user_id = "<?php echo $username['userid'] ?>";
 var cur_year 	    = "<?php echo date('Y') ?>";
 var cur_month 	= "<?php echo date('m') ?>";
 var ms_id       = '<?php echo isset($_GET['ms_id']) ? $_GET['ms_id'] : '' ?>';
+var forecast_id = 'no_id';
 // sf_categ = 'no_update';
 <?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
 	var job_id      = "<?php echo $salesforecast_data['job_id'] ?>";
 	var customer_id = "<?php echo $salesforecast_data['customer_id'] ?>";
 	var sf_categ    = "<?php echo $salesforecast_category ?>";
+	forecast_id = "<?php echo $this->uri->segment(4) ?>";
 <?php } ?>
 </script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_add_view.js"></script>
