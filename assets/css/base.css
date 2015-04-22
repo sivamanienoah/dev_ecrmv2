@@ -2002,7 +2002,7 @@ a.del_file{
 }
 
 
-/* .file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right: 0;top: 0;width: 24px;z-index: 9;} */
+.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right: 0;top: 0;width: 24px;z-index: 9;}
 
 
 	
@@ -2269,6 +2269,6 @@ th.header{float:none;width:auto;}
     top: 1px;
 }
 
-.blockUI.blockMsg.blockPage {overflow: visible !important;background:#fff !important;border: 5px solid rgba(255, 255, 255, .5) !important;border-radius: 5px;padding: 20px !important;}
-.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right:-25px;top:-25px;width: 24px;z-index: 9;border-radius:50%;border:2px solid #fff;}
+/* .blockUI.blockMsg.blockPage {overflow: visible !important;background:#fff !important;border: 5px solid rgba(255, 255, 255, .5) !important;border-radius: 5px;padding: 20px !important;}
+.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right:-25px;top:-25px;width: 24px;z-index: 9;border-radius:50%;border:2px solid #fff;} */
 /**table-styles**/
