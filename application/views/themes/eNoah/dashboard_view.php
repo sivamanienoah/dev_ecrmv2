@@ -17,7 +17,7 @@ require (theme_url().'/tpl/header.php');
 //echo baseurl();
 ?>
 <?php 
-if($this->session->userdata('viewlead')==1) { 
+if($this->session->userdata('viewlead')==1) {
 ?>
 	<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
