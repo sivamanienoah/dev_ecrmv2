@@ -111,7 +111,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="margin:50px 0 0 0;">
+			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>
 						<th>Milestone Name</th>
@@ -165,12 +165,7 @@
 		<?php } ?>
 		</div>
 	</div>
-	
-	<!--table-->
-	
-	
-	
-	
+<!--table-->
 <?php 
 	} else {
 	echo "You have no rights to access this page";
