@@ -529,7 +529,7 @@ border-bottom:4px solid #3c5b9b;
 ul.menuStyle li{float:left;display:block;border-bottom:none;margin-right:0px;font-family:Arial, Helvetica, sans-serif;font-weight:bold;
 text-decoration:none;color:#737986;font-size:9pt;background:url(../img/divider.png) right 0 no-repeat;}
 /* ul.menuStyle li a{color:#222;display:block;padding:8px 10px 8px 10px;} */
-ul.menuStyle li a{color:#222;display:block;padding:13px 12px;}
+ul.menuStyle li a{color:#222;display:block;padding:8px 10px 8px 10px;}
 
 
 /* ul.menuStyle li a:hover,ul.menuStyle li a.selected{text-decoration:none;color:#fff;background:url(../img/toolbar_hover.png) repeat-x; display:block;}  */
@@ -1024,7 +1024,7 @@ color:#595959;
 }
 
 /* .topstrip{background-color:#4b6fb9;margin:0px;float:left;width:990px;padding:4px 0px 5px 10px;} */ 
-.topstrip{background-color:#4b6fb9;margin:0px;float:left;width:100%;padding:4px 20px 2px;box-sizing:border-box;border-bottom:4px solid #3c5b9b;}
+.topstrip{background-color:#4b6fb9;margin:0px;float:left;width:100%;padding:4px 0px 5px 10px;box-sizing:border-box;border-bottom:0;}
 
  .topstrip li a{padding:5px 11px; float:left;
  font-size:9pt; 
@@ -1036,17 +1036,16 @@ color:#595959;
  
  /* .topstrip li a:hover{ color:#222;background:#d4dbe5 url(../img/submenu_bg.jpg) repeat-x; -moz-border-radius:4px 4px 4px 4px;-webkit-border-radius:4px 4px 4px 4px;} */
  .topstrip li a:hover{
- /* color:#222; */
+ color:#222; 
  background:#3c5b9b;
-/*  background: #fefefe;
+background: #fefefe;
 background: -moz-linear-gradient(top,  #fefefe 0%, #e5e9ef 50%, #d4dae4 100%);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(50%,#e5e9ef), color-stop(100%,#d4dae4));
 background: -webkit-linear-gradient(top,  #fefefe 0%,#e5e9ef 50%,#d4dae4 100%);
 background: -o-linear-gradient(top,  #fefefe 0%,#e5e9ef 50%,#d4dae4 100%);
 background: -ms-linear-gradient(top,  #fefefe 0%,#e5e9ef 50%,#d4dae4 100%);
 background: linear-gradient(to bottom,  #fefefe 0%,#e5e9ef 50%,#d4dae4 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#d4dae4',GradientType=0 ); */
-
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#d4dae4',GradientType=0 );
  }
  
  /*mychanges*/
@@ -2037,7 +2036,7 @@ a.del_file{
 .table-design table th{padding:15px 5px;}
 .table-design table{border-bottom:none;width: 100%;}
 #page {background-color: #ffffff;width:1200px;max-width:100%;margin:0 auto;box-shadow:0 0 22px 5px #dadada;}
-ul.topstrip li {border-right: 1px solid #304e89;float: left;margin:0 0 3px;}
+ul.topstrip li {border-right: 1px solid #304e89;float: left;margin:0;}
 ul.topstrip li:last-child{border-right:0;padding-right:0;margin-right:0;}
 .content-split-left{float:left;width:49%;margin:0 20px 0 0;}
 .content-split-right{float:left;width:49%;}
@@ -2147,7 +2146,7 @@ border:1px solid #dedede;
 }
 
 
-.header {float: left;padding:15px 0;width: 100%;}
+.header {float: left;padding:5px 0;width: 100%;}
 
 
 .date-time{background:url("../img/calender-icon.png") no-repeat left;float: left;margin:0;padding: 10px 0px 10px 25px;}
@@ -2249,6 +2248,11 @@ th.header{float:none;width:auto;}
     padding: 3px 10px 4px;
     position: relative;
     top: 1px;
+}
+.dpwn-arw {
+    position: absolute;
+    right: 20px;
+    top: -7px;
 }
 
 /* .blockUI.blockMsg.blockPage {overflow: visible !important;background:#fff !important;border: 5px solid rgba(255, 255, 255, .5) !important;border-radius: 5px;padding: 20px !important;}
