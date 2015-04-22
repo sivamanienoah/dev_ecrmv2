@@ -663,7 +663,11 @@ class Customer_model extends crm_model {
 						if($get_crm_user->num_rows()>0){
 							$crm_user_details = $get_crm_user->row();
 							$crm_username  = strtolower($crm_user_details->username);
-							$timesheet_db->insert($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));	
+							
+							$tm_nos = $timesheet_db->get_where($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));
+							if(!$tm_nos->num_rows()){
+								$timesheet_db->insert($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));	
+							}
 						}
 					}
 					
