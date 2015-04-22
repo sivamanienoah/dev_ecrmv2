@@ -6,8 +6,8 @@
 
 $('#lead-data').hide();
 $('#project-data').hide();
-$('#leaddetail').hide();
-$('#project-ms-detail').hide();
+$('.show-entity, .show-currency, .show-exp-worth, .show-bill-type').hide();
+$('.project-ms-detail').hide();
 
 var params  = {};
 params[csrf_token_name] = csrf_hash_token;
@@ -28,7 +28,7 @@ $(function() {
 		$('#lead-data').hide();
 		$('#project-data').hide();
 		$('#leaddetail').hide();
-		$('#project-ms-detail').hide();
+		$('.project-ms-detail').hide();
 	});
 	
 	$( "#category_for_project" ).on( "click", function() {
@@ -36,7 +36,7 @@ $(function() {
 		$('#lead-data').hide();
 		$('#project-data').hide();
 		$('#leaddetail').hide();
-		$('#project-ms-detail').hide();
+		$('.project-ms-detail').hide();
 	});
 	
 	monthyear_datepicker();
@@ -110,7 +110,8 @@ $(function() {
 });
 
 function get_customers(data_type, cust_id) {
-		
+	$('.show-entity, .show-currency, .show-exp-worth, .show-bill-type').hide();
+	$('#show-entity, #show-currency, #show-exp-worth, #show-bill-type').val();
 	$.ajax({
 		url: site_base_url+"sales_forecast/getCustomerRecords/"+data_type+"/"+cust_id,
 		data: params,
@@ -130,11 +131,11 @@ function get_customers(data_type, cust_id) {
 
 function get_records(custid, job_id) {
 	
-	$('#leaddetail').hide();
+	$('.show-entity, .show-currency, .show-exp-worth, .show-bill-type').hide();
 	$('#project-data').hide();
-	$('#project-ms-detail').hide();
-	
-	$('#show-lead-detail').empty();
+	$('.project-ms-detail').hide();
+
+	$('#show-entity, #show-currency, #show-exp-worth, #show-bill-type').val();
 	$('#show-project-ms-detail').empty();
 	
 	if(custid == '')
@@ -200,7 +201,7 @@ function get_lead_detail(id, sf_id) {
 
 	$('#leaddetail').hide();
 	$('#show-lead-detail').empty();
-	$('#project-ms-detail').hide();
+	$('.project-ms-detail').hide();
 	$('#show-project-ms-detail').empty();
 	
 	if(id=='')
@@ -221,16 +222,21 @@ function get_lead_detail(id, sf_id) {
 		async: false,
 		success: function(response) {
 			if(response.redirect == true && sf_id == 'undefined') {
-				alert('redirect');
+				//alert('redirect');
 				document.location.href = site_base_url+'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
 				return false;
 			} else {
-				$('#show-lead-detail').html(response.det);
-				$('#leaddetail').show();
+				$('#show-entity').val(response.entity);
+				$('.show-entity').show();
+				$('#show-currency').val(response.currency_type);
+				$('.show-currency').show();
+				$('#show-exp-worth').val(response.expected_worth);
+				$('.show-exp-worth').show();
 				if(category == 2) {
+					$('#show-bill-type').val(response.billing_type);
+					$('.show-bill-type').show();
 					$('#show-project-ms-detail').html(response.ms_det);
-					$('#project-ms-detail').show();
-					// ms_detail_datatbl();
+					$('.project-ms-detail').show();
 				}
 			}
 		}
@@ -395,20 +401,42 @@ function view_logs(id) {
 	});
 }
 
-function ms_detail_datatbl(){
-	$('.class_ms_det').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
-		"iDisplayLength": 20,
-		"sPaginationType": "full_numbers",
-		"bInfo": false,
-		"bPaginate": false,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": true,
-		"bSort": false,
-		"bFilter": false,
-		"bAutoWidth": false,	
+function moveMilestone(id) {
+	$.blockUI({
+		message:'<br /><h5>Are You Sure Want to Add Sale Forecast Milestone?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="confirmMoveMilestone('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		css:{width:'440px'}
 	});
+}
+
+function confirmMoveMilestone(id) {
+	var param  = {};
+	param[csrf_token_name] = csrf_hash_token;
+	
+	param['payment_milestone_id'] = id;
+	param['forecast_id']   	      = forecast_id;
+	param['customer_id']		  = $('#customer_id').val();
+	param['job_id']			      = $('#project_job_id').val();
+	
+	$.ajax({
+		url: site_base_url+"sales_forecast/moveMilestone/",
+		data: param,
+		type: "POST",
+		dataType: 'json',
+		async: false,
+		success: function(response) {
+			console.info(response);
+			if(response.result == true) {
+				setTimeout(function(){
+					$.blockUI({
+						message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+						css: {background:'#666', border: '2px solid #999', padding:'2px', height:'35px', color:'#333'}
+					});
+					document.location.href = site_base_url + 'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
+				},500);
+			}
+		}
+	});
+	
 }
 
 //Adding multiple milestone rows - End here
