@@ -2000,18 +2000,11 @@ a.del_file{
     right: -8px;
     top: -6px;
 }
-.file-tabs-close-confirm-tab {
-	background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
-    cursor: pointer;
-    float: right;
-    height: 24px;
-    padding: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 24px;
-    z-index: 9;
-}
+
+
+/* .file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right: 0;top: 0;width: 24px;z-index: 9;} */
+
+
 	
 #all_file_list ul li{
 	list-style: none;
@@ -2200,7 +2193,7 @@ p.footer-text a{color:#f57025;}
 /**light box**/
 .ui-tabs-panel.ui-corner-bottom form#set-assign-users {overflow: visible;}
 .blockUI.blockMsg .comments-log-container {overflow: visible;}
-.blockUI.blockMsg.blockPage {overflow: visible !important;}
+/* .blockUI.blockMsg.blockPage {overflow: visible !important;} */
 /**light box**/
 
 th.header{float:none;width:auto;}
@@ -2275,4 +2268,7 @@ th.header{float:none;width:auto;}
     position: relative;
     top: 1px;
 }
+
+.blockUI.blockMsg.blockPage {overflow: visible !important;background:#fff !important;border: 5px solid rgba(255, 255, 255, .5) !important;border-radius: 5px;padding: 20px !important;}
+.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right:-25px;top:-25px;width: 24px;z-index: 9;border-radius:50%;border:2px solid #fff;}
 /**table-styles**/
