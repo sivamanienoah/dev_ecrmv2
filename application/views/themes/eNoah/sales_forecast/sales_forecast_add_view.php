@@ -57,10 +57,12 @@
 					<td>Detail</td>
 					<td id="show-lead-detail"></td>
 				</tr>
+				<tr style="height:3px;"></tr>
 				<tr id="project-ms-detail">
 					<td>Milestone Detail</td>
 					<td id="show-project-ms-detail"></td>
 				</tr>
+				<tr style="height:3px;"></tr>
 				<tr>
 					<td>Milestone Name:  </td>
 					<td>
