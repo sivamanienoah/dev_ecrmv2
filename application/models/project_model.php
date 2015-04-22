@@ -125,6 +125,8 @@ class Project_model extends crm_model
 			$data['jobids2'] = array();
 			$this->db->select('lead_id');
 			$this->db->where("user_id",$varSessionId);
+			$this->db->where("lead_status", 4);
+			$this->db->where("pjt_status", 1);			
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
 			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
