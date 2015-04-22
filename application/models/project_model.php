@@ -121,24 +121,15 @@ class Project_model extends crm_model
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
 			$data['jobids1'] = $rowsJobs->result_array();
 
-			//Fetching Stake Holders from active projects.
+			//Fetching Stake Holders.
 			$data['jobids2'] = array();
-			$this->db->select('sh.lead_id');
-			$this->db->from($this->cfg['dbpref'] . 'stake_holders as sh');
-			$this->db->join($this->cfg['dbpref'] . 'leads as leads','sh.lead_id = leads.lead_id');
-			$this->db->where("sh.user_id",$varSessionId);						
-			$this->db->where("leads.lead_status", 4);
-			$this->db->where("leads.pjt_status", 1);					
-			$rowsJobs = $this->db->get();
-			
-			 
-			
-			if($rowsJobs->num_rows()>0)	{
-				$data['jobids2'] = $rowsJobs->result_array();				
-			}
+			$this->db->select('lead_id');
+			$this->db->where("user_id",$varSessionId);
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
 			$data = array_merge_recursive($data['jobids'], $data['jobids1'],$data['jobids2']);
-
+ 
 			$res[] = 0;
 			if (is_array($data) && count($data) > 0) { 
 				foreach ($data as $data) {
