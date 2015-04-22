@@ -2206,7 +2206,7 @@ th.header{float:none;width:auto;}
 
 
 .export-to-excel a {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:0;}
-.export-to-excel a:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+.export-to-excel a:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;text-decoration:none;}
 
 
 
