@@ -1119,7 +1119,7 @@ if (get_default_currency()) {
 					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
 				</tr>
 				
-				<tr>
+				<?php /* <tr>
 					<td colspan="2">
 					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
 					<?php if(!empty($project_members) && count($project_members)>0):?>
@@ -1141,7 +1141,7 @@ if (get_default_currency()) {
 					</table>	
 					</td>
 				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr>
+				<tr><td colspan="2">&nbsp;</td></tr> */ ?>
 				
 				<tr>
 					<td colspan="2">
@@ -1190,16 +1190,17 @@ if (get_default_currency()) {
 								</tr>							
 						<?php endforeach;?>
 						<?php endif;?>
+						<tr>
+							<td colspan="4">
+								<div class="buttons"><button type="submit" class="positive" onclick="assign_folder();">Save</button></div>
+								<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+							</td>
+						</tr>						
 					</table>	
 					</td>
 				</tr>				
 				  
-				<tr>
-					<td colspan="2">
-						<div class="buttons"><button type="submit" class="positive" onclick="assign_folder();">Save</button></div>
-						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
-					</td>
-				</tr>
+
 			</table>
 		<!-- edit end -->
 		</form>		
@@ -1925,6 +1926,7 @@ if($this->userdata['role_id'] == 8): ?>
 <script>
 loadExistingFiles($('#filefolder_id').val());
 showBreadCrumbs($('#filefolder_id').val());
+$('#files_actions').hide();
 </script>
 <?php endif; ?>
 

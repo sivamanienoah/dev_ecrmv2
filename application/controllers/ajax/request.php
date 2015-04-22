@@ -397,22 +397,21 @@ class Request extends crm_controller {
 		
 		$file_array = array();
 		
-		if(!empty($get_parent_data)) {
-			
-			foreach($get_parent_data as $res) {
+		if(!empty($get_parent_data)) {			
+			foreach($get_parent_data as $res) {				
+				// CHECK ACCESS PERMISSIONS START HERE //	
 				
-				// CHECK ACCESS PERMISSIONS START HERE //		
 				// $check_permissions = $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');//check_permission
 
 				// if($check_permissions == 1 || $userdata['role_id'] == 1) { //check_permission
-						
+					//echo '<pre>';print_r($res);
 					if($res['folder_id'] == $fparent_id) {				
-						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);					
-					} else {			
+						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);
+					} else {
+					
 						$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
 					}
 				// } //check_permission
-				
 			}
 		}	
 
@@ -608,13 +607,20 @@ class Request extends crm_controller {
 		$folder_id = $data['fparent_id'];
 		$project_members = $this->project_model->get_contract_users($data['leadid']);
 		$users_arr = array();
-		foreach($project_members as $key=>$val){
-			$users_arr[] = $val['userid_fk'];
+		$res['result_set'] = array();
+		
+		if(count($project_members) > 0){
+			foreach($project_members as $key=>$val){
+				$users_arr[] = $val['userid_fk'];
+			}
+			$exist_users = implode($users_arr,',');
+			if(count($exist_users) > 0){
+				$qry = $this->db->query("SELECT a.*,b.first_name,b.last_name FROM crm_project_folder_access as a join `crm_users` as b on a.user_id = b.userid where a.folder_id=$folder_id and a.user_id in ($exist_users)");
+				$faccess = $qry->result();
+				$res['result_set'] = $faccess;
+			}
+			
 		}
-		$exist_users = implode($users_arr,',');
-		$qry = $this->db->query("SELECT a.*,b.first_name,b.last_name FROM crm_project_folder_access as a join `crm_users` as b on a.user_id = b.userid where a.folder_id=$folder_id and a.user_id in ($exist_users)");
-		$faccess = $qry->result();
-		$res['result_set'] = $faccess;
 		echo json_encode($res);
 		exit;
 	}

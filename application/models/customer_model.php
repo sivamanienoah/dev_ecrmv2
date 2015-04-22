@@ -759,6 +759,73 @@ class Customer_model extends crm_model {
 		}
 	}
 	
+	function create_cdefault_folders($lead_id){
+		$qry = $this->db->get_where($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
+		if($qry->num_rows() > 0){
+			$users = $qry->result_array();
+			$default_folders = $this->get_default_folders();
+			if(count($default_folders)>0){
+				$ch_num = $this->db->get_where($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id));
+				if($ch_num->num_rows()>0){
+					$ch_res = $ch_num->row();
+					$minsert_id = $ch_res->folder_id;
+				}else{
+					$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id,"parent" => 0,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));					
+					$minsert_id = $this->db->insert_id();					
+				}
+
+				 foreach($default_folders as $dfs){
+					$folder_name = $dfs['folder_name'];									
+					$this->insert_folders($lead_id,$folder_name,$dfs['fid'],$minsert_id);
+				 }
+			}
+		}			
+	}
+	
+	function insert_folders($lead_id,$folder_name,$parent_id,$minsert_id){
+		 $this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $folder_name,"parent" => $minsert_id,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));
+		 $second_insert = $this->db->insert_id();
+		$check = $this->check_sub_exist($parent_id);
+		if(count($check)>0){
+			foreach($check as $ck):
+				$this->insert_folders($lead_id,$ck['folder_name'],$ck['fid'],$second_insert);
+			endforeach;	
+		}
+		
+	}
+	
+	function check_sub_exist($folder_id){
+		$qry = $this->db->get_where($this->cfg['dbpref']."default_folders",array("parent_id" => $folder_id));
+		if($qry->num_rows()>0){
+			return $qry->result_array();
+		}
+		return false;
+	}
+	
+	function get_default_folders(){
+		$result = '';
+		$qry = $this->db->get_where($this->cfg['dbpref']."default_folders",array("status" => 1,"parent_id" => 0));
+		if($qry->num_rows()){
+			$result = $qry->result_array();
+		}
+		return $result;
+	}
+	
+	function assign_default_folders($lead_id){
+		$lead_users = $this->db->get_where($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
+		$lead_folders = $this->db->get_where($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id));
+		if($lead_users->num_rows()>0 && $lead_folders->num_rows()>0){
+			$users_result = $lead_users->result_array();
+			$folders_result = $lead_folders->result_array();
+			foreach($users_result as $urs){
+				$user = $urs['userid_fk'];
+				foreach($folders_result as $frs){
+					$this->db->insert($this->cfg['dbpref']."project_folder_access",array("folder_id" => $frs['folder_id'],"user_id" => $user,"is_recursive" => 1,"add_access" => 1,"download_access" => 1,"created_on" => date("Y-m-d H:i:s"),"created_by" => $this->userdata['userid']));
+				}
+			}
+		}
+	}
+	
 	/*
 	 *@Database E-Connect and Timesheet
 	 *@method update_date_to_timesheet_econnect

@@ -1340,6 +1340,12 @@ class Welcome extends crm_controller {
 		exit;
 	}
 	
+	/* testing purpose used dont use in live
+	function test_insert($project_id){
+		$this->customer_model->create_cdefault_folders($project_id);
+		$this->customer_model->assign_default_folders($project_id);
+	} */
+	
 	/*
 	*@confirm_project
 	*set milestones
@@ -1473,6 +1479,11 @@ class Welcome extends crm_controller {
 
 		$this->customer_model->customer_update($lead_det['custid_fk'], array('is_client'=>1));		
 		$this->customer_model->update_client_details_to_timesheet($client_code);
+		
+		// give default folder access to the assigned users.
+		$this->customer_model->create_cdefault_folders($project_id);
+		$this->customer_model->assign_default_folders($project_id);
+		
 		
 		if($updt_job) {
 			$createTimesheet = $this->customer_model->update_project_details($pjt_id);
