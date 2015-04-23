@@ -2348,3 +2348,7 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
     float: right;
 }
 .go-back a.choice-box {background:url("../img/go-back-icon.png") no-repeat left;padding:3px 0 4px 30px !important;}
+
+.choice-box.filter-home {
+    margin: 10px 0 20px;
+}
