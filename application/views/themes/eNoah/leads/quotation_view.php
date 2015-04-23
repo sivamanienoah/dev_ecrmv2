@@ -11,21 +11,15 @@ require (theme_url().'/tpl/header.php');
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
-			
-			
-			
+
 			<div class="section-right">
 				<!--search-->
-				
-					<div class="form-cont search-table">
-						<form>
-							<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-							<button type="submit" class="positive">Lead Search</button>			
-						</form>
-					</div>
-					
-					
-				
+				<div class="form-cont search-table">
+					<form id="lead_search_form" name="lead_search_form" method="post">
+						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
+						<button type="submit" class="positive">Lead Search</button>			
+					</form>
+				</div>
 				<!--search-->
 				<!--add-->
 				<?php if($this->session->userdata('add')==1) { ?>
