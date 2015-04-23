@@ -26,7 +26,7 @@
 			<div class="clear"></div>
 			
 			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="advanceFiltersSFVReport" id="advanceFiltersSFVReport" method="post" style="width:940px;">
+				<form name="advanceFiltersSFVReport" id="advanceFiltersSFVReport" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div style="border: 1px solid #DCDCDC;">
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
