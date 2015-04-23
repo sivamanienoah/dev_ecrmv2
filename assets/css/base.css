@@ -764,8 +764,12 @@ color:#595959;
 .search-table td input {
 	margin:0;
 }
+/* .search-table .buttons button {
+	margin:0;
+} */
 .search-table .buttons button {
 	margin:0;
+	background:red;
 }
 
 .q-main-left {
@@ -2179,11 +2183,11 @@ p.footer-text a{color:#f57025;}
 .page-title-head{width:100%; border-bottom:1px solid #ccc;padding:0px 0 15px;float:left;margin:0 0 20px;}
 
 
-.add-new-button{margin:9px 0 0 30px;}
+.add-new-button{margin:5px 0 0 30px;}
 .add-new-button button {background:url("../img/add-new-user.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
 .add-new-button button:hover{background:url("../img/add-new-user.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 /* .page-title-head .choice-box{margin:0;} */
-#content .inner .page-title-head h2{margin:11px 0 0;} 
+#content .inner .page-title-head h2{margin:6px 0 0;} 
 
 
 /**light box**/
@@ -2198,7 +2202,7 @@ th.header{float:none;width:auto;}
 
 .export-to-excel, .add-new-button, .import-cus-list{float:left;}
 
-.export-to-excel{margin:9px 0 0 30px;}
+.export-to-excel{margin:5px 0 0 30px;}
 .export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
@@ -2219,7 +2223,7 @@ th.header{float:none;width:auto;}
 
 
 
-.page-title-head table.search-table {float: left;margin:4px 0 0 35px;}
+.page-title-head table.search-table {float: left;margin:4px 0 0 0px;}
 #advanceFiltersDash {width: 100% !important;}
 
 
@@ -2251,7 +2255,7 @@ th.header{float:none;width:auto;}
 
 
 .choice-box span{float: right;}
-a.choice-box {background:url("../img/filter-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+a.choice-box {background:url("../img/filter-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:5px 0 0 30px;}
 a.choice-box:hover{background:url("../img/filter-icon.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
 
@@ -2298,3 +2302,19 @@ html[xmlns] .clearfix {display: block;}
 .section-right {
     float: right;
 }
+
+.form-cont {
+    float: left;
+    margin: 0;
+}
+
+.form-cont label {
+    float: left;
+    font-size: 11px !important;
+    font-weight: normal !important;
+    margin: 0 10px 0 0;
+	line-height: 32px !important;
+}
+.form-cont input{float:left;margin:0;padding:8px;}
+.form-cont button{float:left;background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
+.form-cont button:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
