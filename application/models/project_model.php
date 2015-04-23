@@ -329,6 +329,8 @@ class Project_model extends crm_model
 	{
     	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive');
 		$this->db->where('inactive',0);
+		$this->db->where('username != ',"admin.enoah");
+		
     	$this->db->order_by('first_name',"asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
@@ -338,6 +340,7 @@ class Project_model extends crm_model
 	{
     	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive');
 		//$this->db->where('inactive',0);
+		$this->db->where('username != ',"admin.enoah");
     	$this->db->order_by('first_name',"asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
 		return $q->result_array();
