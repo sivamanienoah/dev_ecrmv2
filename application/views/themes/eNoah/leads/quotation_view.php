@@ -16,21 +16,17 @@ require (theme_url().'/tpl/header.php');
 			
 			<div class="section-right">
 				<!--search-->
-				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-					<tr>
-						<td>
-							Lead Search
-						</td>
-						<td>
+				
+					<div class="form-cont search-table">
+						<form>
+							<label>Lead Search</label>
 							<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-						</td>
-						<td>
-							<div class="buttons">
-								<button type="submit" class="positive">Search</button>
-							</div>
-						</td>
-					</tr>
-				</table>
+							<button type="submit" class="positive">Search</button>			
+						</form>
+					</div>
+					
+					
+				
 				<!--search-->
 				<!--add-->
 				<?php if($this->session->userdata('add')==1) { ?>
