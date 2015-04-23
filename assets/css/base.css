@@ -1344,9 +1344,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5174be', end
 
 
 /* .choice-box{background:#4B6FB9 !important;width:175px;padding:10px;border-radius:8px;-moz-border-radius:8px;-webkit-border-radius:8px;background:#a8cb17;float:left;margin:0 0 20px;	cursor:pointer;position:relative;color:#fefffd;font-weight:bold;margin: 0 0 10px;} */
-.choice-box{background:#4B6FB9 !important;width:auto;padding:7px;background:#a8cb17;float:right;margin:0 0 20px;	cursor:pointer;position:relative;color:#fefffd;font-weight:bold;margin: 0 0 10px;font-size: 12px;border:1px solid #274686;}
+
+.choice-box{
+/* background:#4B6FB9 !important; */
+width:auto;
+/* padding:7px; */
+background:none;
+float:right;
+margin:0 0 20px;
+cursor:pointer;
+position:relative;
+color:#fefffd;
+font-weight:bold;
+margin: 0 0 10px;
+font-size: 12px;
+/* border:1px solid #274686; */
+}
+
+
+
 .choice-box:hover{opacity:0.8;}
-.choice-box img {position: static;float:left;margin:0 7px 0 0;}
+.choice-box img {position: static;float:left;margin:0 7px 0 0;display:none;}
 
 
 /* .choice-box img { */
@@ -2161,10 +2179,10 @@ p.footer-text a{color:#f57025;}
 .page-title-head{width:100%; border-bottom:1px solid #ccc;padding:0px 0 15px;float:left;margin:0 0 20px;}
 
 
-
-.add-new-button button {background:url("../img/add-new-user.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+.add-new-button{margin:9px 0 0 30px;}
+.add-new-button button {background:url("../img/add-new-user.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
 .add-new-button button:hover{background:url("../img/add-new-user.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
-.page-title-head .choice-box{margin:0;}
+/* .page-title-head .choice-box{margin:0;} */
 #content .inner .page-title-head h2{margin:11px 0 0;} 
 
 
@@ -2179,7 +2197,9 @@ th.header{float:none;width:auto;}
 #pie2, #pie3 {height: 460px;}
 
 .export-to-excel, .add-new-button, .import-cus-list{float:left;}
-.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+
+.export-to-excel{margin:9px 0 0 30px;}
+.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
 
@@ -2227,9 +2247,14 @@ th.header{float:none;width:auto;}
     display: inline-block;
     width: 100%;
 }
-.choice-box span {
-    float: right;
-}
+
+
+
+.choice-box span{float: right;}
+a.choice-box {background:url("../img/filter-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+a.choice-box:hover{background:url("../img/filter-icon.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+
+
 .page-title-head form {
     overflow: inherit;
 }
@@ -2266,3 +2291,10 @@ th.header{float:none;width:auto;}
 html[xmlns] .clearfix {display: block;}
 * html .clearfix {height: 1%;}
 /*End*/
+
+
+
+
+.section-right {
+    float: right;
+}
