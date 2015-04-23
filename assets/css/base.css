@@ -2184,7 +2184,7 @@ p.footer-text a{color:#f57025;}
 
 
 .add-new-button{margin:5px 0 0 30px;}
-.add-new-button button {background:url("../img/add-new-user.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
+.add-new-button button {background:url("../img/add-new-user.png") no-repeat left !important;border:none !important;font-size: 12px;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;font-weight:bold  !important;}
 .add-new-button button:hover{background:url("../img/add-new-user.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 /* .page-title-head .choice-box{margin:0;} */
 #content .inner .page-title-head h2{margin:6px 0 0;} 
@@ -2203,7 +2203,7 @@ th.header{float:none;width:auto;}
 .export-to-excel, .add-new-button, .import-cus-list{float:left;}
 
 .export-to-excel{margin:5px 0 0 30px;}
-.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
+.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left !important;border:none !important;font-size: 12px;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold !important;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
 
@@ -2212,8 +2212,8 @@ th.header{float:none;width:auto;}
 
 
 
-
-.import-cus-list button {background:url("../img/import-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:9px 0 0 30px;}
+.import-cus-list{margin:5px 0 0 30px;}
+.import-cus-list button {background:url("../img/import-icon.png") no-repeat left !important;border:none !important;font-size: 12px;font-weight: bold  !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;}
 .import-cus-list button:hover{background:url("../img/import-icon.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
 
@@ -2254,7 +2254,7 @@ th.header{float:none;width:auto;}
 
 
 
-.choice-box span{float: right;}
+.choice-box span{float: right;font-size:13px;}
 a.choice-box {background:url("../img/filter-icon.png") no-repeat left;border:none;font-size: 12px;font-weight: normal;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;margin:5px 0 0 30px;}
 a.choice-box:hover{background:url("../img/filter-icon.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
@@ -2318,3 +2318,7 @@ html[xmlns] .clearfix {display: block;}
 .form-cont input{float:left;margin:0;padding:8px;}
 .form-cont button{float:left;background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
 .form-cont button:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
+
+
+button.positive{background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
+button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
