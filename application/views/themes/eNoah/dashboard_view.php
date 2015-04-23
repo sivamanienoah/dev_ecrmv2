@@ -88,10 +88,12 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		<!--Advance filters-->
 		<div>
 			
-			<a class="choice-box" onclick="advanced_filter();" >
+
+			<a class="choice-box filter-home" onclick="advanced_filter();" >
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
+
 			
 				
 			<div id="advance_search" style="float:left; margin: 0px 0px 10px;width:100%;">
