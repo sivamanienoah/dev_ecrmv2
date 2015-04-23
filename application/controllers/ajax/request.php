@@ -404,7 +404,7 @@ class Request extends crm_controller {
 				// $check_permissions = $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');//check_permission
 
 				// if($check_permissions == 1 || $userdata['role_id'] == 1) { //check_permission
-					echo '<pre>';print_r($res);
+					//echo '<pre>';print_r($res);
 					if($res['folder_id'] == $fparent_id) {				
 						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);
 					} else {
