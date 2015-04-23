@@ -771,20 +771,19 @@ class Customer_model extends crm_model {
 				$ch_res = $ch_num->row();
 				$minsert_id = $ch_res->folder_id;
 			}else{
-				$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id,"parent" => 0,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));					
-				$minsert_id = $this->db->insert_id();					
+				$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id,"parent" => 0,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));
+				$minsert_id = $this->db->insert_id();
 			}
-
-			 foreach($default_folders as $dfs){
+			foreach($default_folders as $dfs){
 				$folder_name = $dfs['folder_name'];
 				$this->insert_folders($lead_id,$folder_name,$dfs['fid'],$minsert_id);
-			 }
+			}
 		}
 	}
 	
 	function insert_folders($lead_id,$folder_name,$parent_id,$minsert_id){
-		 $this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $folder_name,"parent" => $minsert_id,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));
-		 $second_insert = $this->db->insert_id();
+		$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $folder_name,"parent" => $minsert_id,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));
+		$second_insert = $this->db->insert_id();
 		$check = $this->check_sub_exist($parent_id);
 		if(count($check)>0){
 			foreach($check as $ck):
