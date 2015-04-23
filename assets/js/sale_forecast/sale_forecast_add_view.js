@@ -194,11 +194,15 @@ function check_existing_add_saleforecast(id) {
 		type: "POST",
 		dataType: 'json',
 		async: false,
+		beforeSend: function() {
+			$('.layout').block();
+		},
 		success: function(response) {
 			if(response.redirect == true) {
 				document.location.href = site_base_url+'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
 				return false;
 			} else {
+				$('.layout').unblock();
 				get_lead_detail(id);
 				$('#ms_list').hide();
 			}

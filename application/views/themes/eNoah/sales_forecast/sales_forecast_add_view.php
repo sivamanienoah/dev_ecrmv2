@@ -10,15 +10,6 @@
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
 	<div class="page-title-head">
 		<h2 class="pull-left borderBtm"><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
-	
-	<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-		<div class="buttons go-back">
-		<a class="choice-box" onclick="window.history.back();" >
-			<span>Go Back</span>
-			<img src="assets/img/advanced_filter.png" class="icon leads" />
-		</a>
-		</div>
-	<?php } ?>
 	</div>
 	<div class="content-split-left">
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
@@ -48,7 +39,7 @@
 				<tr>
 					<td>Customer: * </td>
 					<td width="210">
-						<select name="customer_id" id="customer_id" class="textfield width160px" onchange="get_records(this.value)" >
+						<select name="customer_id" id="customer_id" style="width: 250px;" class="textfield" onchange="get_records(this.value)" >
 							<option value="">Select</option>
 							<?php 
 								foreach($customers as $cs) {
@@ -62,7 +53,7 @@
 				<tr>
 					<td>Lead/Project: *</td>
 					<td>
-						<select name="job_id" id="job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
+						<select name="job_id" id="job_id" class="textfield" style="width: 250px;" onchange="check_existing_add_saleforecast(this.value)"></select>
 					</td>
 				</tr>
 				<!--tr id="lead-data">
@@ -80,49 +71,51 @@
 				<tr class="show-entity">
 					<td>Entity: </td>
 					<td>
-						<input type="text" readonly name="show-entity" id="show-entity" value="" class="textfield width160px" />
+						<input type="text" readonly name="show-entity" id="show-entity" value="" class="textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr class="show-currency">
 					<td>Currency Type: </td>
 					<td>
-						<input type="text" readonly name="show-currency" id="show-currency" value="" class="textfield width160px" />
+						<input type="text" readonly name="show-currency" id="show-currency" value="" class="textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr class="show-exp-worth">
 					<td>Expected Worth: </td>
 					<td>
-						<input type="text" readonly name="show-exp-worth" id="show-exp-worth" value="" class="textfield width160px" />
+						<input type="text" readonly name="show-exp-worth" id="show-exp-worth" value="" class="textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr class="show-bill-type">
 					<td>Billing Type: </td>
 					<td>
-						<input type="text" readonly name="show-bill-type" id="show-bill-type" value="" class="textfield width160px" />
+						<input type="text" readonly name="show-bill-type" id="show-bill-type" value="" class="textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr class="project-ms-detail">
-					<td valign="top">Payment Milestone Details:</td>
-					<td id="show-project-ms-detail"></td>
+					<td colspan=2 valign="top"><h5>Payment Milestone Details:</h5></td>
+				</tr>
+				<tr class="project-ms-detail">
+					<td colspan=2 id="show-project-ms-detail"></td>
 				</tr>
 				<tr class="project-ms-detail" style="height:3px;"></tr>
-				<tr><td colspan=2><h4>Add New Milestone</h4></td></tr>
+				<tr><td colspan=2><h5>Add Saleforecast Milestone</h5></td></tr>
 				<tr>
 					<td>Milestone Name:</td>
 					<td>
-						<input type="text" name="milestone_name" value="<?php echo $this->validation->milestone; ?>" class="textfield width160px" />
+						<input type="text" name="milestone_name" value="<?php echo $this->validation->milestone; ?>" class="textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr>
 					<td>Milestone Value:  </td>
 					<td>
-						<input type="text" name="milestone_value" autocomplete="off" value="<?php $this->validation->milestone_value; ?>" class="milestone_value textfield width160px" onkeypress="return isNumberKey(event)" />
+						<input type="text" name="milestone_value" autocomplete="off" value="<?php $this->validation->milestone_value; ?>" class="milestone_value textfield" onkeypress="return isNumberKey(event)" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr>
 					<td>Month & Year: </td>
 					<td>
-						<input type="text" data-calendar="false" name="for_month_year" autocomplete="off" value="<?php if(!empty($this->validation->for_month_year)) echo date('F Y', strtotime($this->validation->for_month_year)); ?>" readonly class="for_month_year textfield width160px" />
+						<input type="text" data-calendar="false" name="for_month_year" autocomplete="off" value="<?php if(!empty($this->validation->for_month_year)) echo date('F Y', strtotime($this->validation->for_month_year)); ?>" readonly class="for_month_year textfield" style="width: 240px;" />
 					</td>
 				</tr>
 				<tr>
@@ -155,7 +148,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<h4>Saleforecast Milestone Details:</h4>
+			<h5>Saleforecast Milestone Details:</h5>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>

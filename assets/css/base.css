@@ -2321,16 +2321,13 @@ html[xmlns] .clearfix {display: block;}
 * html .clearfix {height: 1%;}
 /*End*/
 
-
-
-
 .section-right {
     float: right;
 }
 
 .form-cont {
     float: left;
-    margin:5px 0 0 0;
+    margin:7px 0 0 0;
 }
 
 .form-cont label {

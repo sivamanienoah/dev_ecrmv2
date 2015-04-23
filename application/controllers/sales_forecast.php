@@ -272,6 +272,8 @@ class Sales_forecast extends crm_controller {
 			// $wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
 			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4');
 			$or_where = '(pjt_status=0 or pjt_status=1)';
+		} else {
+			$wh_condn = array('custid_fk'=>$post_data['custid']);
 		}
 		
 		$get_data = $this->sales_forecast_model->get_records('leads', $wh_condn, $order, $or_where);
