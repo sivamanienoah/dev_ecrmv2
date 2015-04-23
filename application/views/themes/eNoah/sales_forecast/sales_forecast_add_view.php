@@ -10,9 +10,9 @@
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
 	<div class="page-title-head">
 		<h2 class="pull-left borderBtm"><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
-	<div class="clearfix"></div>
+	
 	<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-		<div class="buttons">
+		<div class="buttons go-back">
 		<a class="choice-box" onclick="window.history.back();" >
 			<span>Go Back</span>
 			<img src="assets/img/advanced_filter.png" class="icon leads" />
