@@ -2322,3 +2322,7 @@ html[xmlns] .clearfix {display: block;}
 
 button.positive{background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
 button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
+.go-back {
+    float: right;
+}
+.go-back a.choice-box {background:url("../img/go-back-icon.png") no-repeat left;padding:3px 0 4px 30px !important;}
