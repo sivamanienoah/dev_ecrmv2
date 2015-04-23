@@ -36,9 +36,9 @@ button.ui-datepicker-current { display: none; }
 	<div id="tabs">
 		<ul class="tabs-confirm">
 			<li><a href="#tabs-client">Client Details</a></li>
-			<li><a href="#tabs-project">Project Details</a></li>
-			<li><a href="#tabs-assign-users">Assign Users</a></li>
-			<li><a href="#tabs-milestone">Milestone</a></li>			
+			<li><a onclick="update_client('<?php echo $project_id; ?>','tabs-project')" href="#tabs-project">Project Details</a></li>
+			<li><a onclick="update_customer_project('<?php echo $project_id; ?>','tabs-assign-users')" href="#tabs-assign-users">Assign Users</a></li>
+			<li><a onclick="update_cust_proj_users('<?php echo $project_id;?>','tabs-milestone')" href="#tabs-milestone">Milestone</a></li>			
 		</ul>
 		<div id="tabs-client">
 			<!--p class="clearfix" ><h3>Client Details</h3></p-->
@@ -172,7 +172,7 @@ button.ui-datepicker-current { display: none; }
 					<td>&nbsp;</td>
 					<td>
                         <div id="subBtn" class="buttons pull-right" style="padding-right: 30px;">
-							<button type="submit" class="positive" id="positiveBtn" onclick="update_customer('<?php echo $customer_data['custid'] ?>'); return false;">Update</button>
+							<button type="submit" class="positive" id="positiveBtn" onclick="update_customer('<?php echo $customer_data['custid'] ?>','tabs-milestone'); return false;">Update</button>
 						</div>
                     </td>
 				</tr>
@@ -369,7 +369,7 @@ button.ui-datepicker-current { display: none; }
 
 					<tr>
 						<td colspan="4">
-							<button type="submit" class="positive" style="float:right;" onclick="update_project_detail('<?php echo $project_id; ?>'); return false;" tabindex="17" >Update</button>
+							<button type="submit" class="positive" style="float:right;" onclick="update_project_detail('<?php echo $project_id; ?>','tabs-project'); return false;" tabindex="17" >Update</button>
 						</td>
 					</tr>
 				</table>
@@ -443,7 +443,7 @@ button.ui-datepicker-current { display: none; }
 					</tr>
 					<tr>
 						<td colspan="4">
-							<button type="submit" class="positive" style="float:right;" onclick="update_project_users(); return false;" tabindex="17" >Update</button>
+							<button type="submit" class="positive" style="float:right;" onclick="update_project_users('tabs-assigned-users'); return false;" tabindex="17" >Update</button>
 						</td>
 					</tr>	
 					</tbody>

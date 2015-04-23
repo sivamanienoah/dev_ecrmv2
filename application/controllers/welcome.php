@@ -1335,6 +1335,8 @@ class Welcome extends crm_controller {
 		$updt_project_info = $this->welcome_model->update_row('leads', $update, $project_id);
 		if($updt_project_info) {
 			$res['result'] = 'ok';
+		}else{
+			$res['result'] = 'not updated';
 		}
 		echo json_encode($res);
 		exit;

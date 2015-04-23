@@ -764,26 +764,22 @@ class Customer_model extends crm_model {
 	}
 	
 	function create_cdefault_folders($lead_id){
-		$qry = $this->db->get_where($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
-		if($qry->num_rows() > 0){
-			$users = $qry->result_array();
-			$default_folders = $this->get_default_folders();
-			if(count($default_folders)>0){
-				$ch_num = $this->db->get_where($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id));
-				if($ch_num->num_rows()>0){
-					$ch_res = $ch_num->row();
-					$minsert_id = $ch_res->folder_id;
-				}else{
-					$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id,"parent" => 0,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));					
-					$minsert_id = $this->db->insert_id();					
-				}
-
-				 foreach($default_folders as $dfs){
-					$folder_name = $dfs['folder_name'];									
-					$this->insert_folders($lead_id,$folder_name,$dfs['fid'],$minsert_id);
-				 }
+		$default_folders = $this->get_default_folders();
+		if(count($default_folders)>0){
+			$ch_num = $this->db->get_where($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id));
+			if($ch_num->num_rows()>0){
+				$ch_res = $ch_num->row();
+				$minsert_id = $ch_res->folder_id;
+			}else{
+				$this->db->insert($this->cfg['dbpref']."file_management",array("lead_id" => $lead_id,"folder_name" => $lead_id,"parent" => 0,"created_by" => $this->userdata['userid'],"created_on" => date("Y-m-d H:i:s")));					
+				$minsert_id = $this->db->insert_id();					
 			}
-		}			
+
+			 foreach($default_folders as $dfs){
+				$folder_name = $dfs['folder_name'];
+				$this->insert_folders($lead_id,$folder_name,$dfs['fid'],$minsert_id);
+			 }
+		}
 	}
 	
 	function insert_folders($lead_id,$folder_name,$parent_id,$minsert_id){
@@ -793,9 +789,8 @@ class Customer_model extends crm_model {
 		if(count($check)>0){
 			foreach($check as $ck):
 				$this->insert_folders($lead_id,$ck['folder_name'],$ck['fid'],$second_insert);
-			endforeach;	
+			endforeach;
 		}
-		
 	}
 	
 	function check_sub_exist($folder_id){
