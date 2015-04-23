@@ -38,10 +38,22 @@
 					<td width="210">
 						<select name="customer_id" id="customer_id" class="textfield width160px" onchange="get_records(this.value)" >
 							<option value="">Select</option>
+							<?php 
+								foreach($customers as $cs) {
+							?>		<option value="<?php echo $cs['custid'] ?>"><?php echo stripslashes($cs['company']).' - '.stripslashes($cs['first_name']).' '.stripslashes($cs['last_name']) ?></option>
+							<?php
+								}
+							?>
 						</select>
 					</td>
 				</tr>
-				<tr id="lead-data">
+				<tr>
+					<td>Lead/Project: *</td>
+					<td>
+						<select name="job_id" id="job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
+					</td>
+				</tr>
+				<!--tr id="lead-data">
 					<td>Lead: *</td>
 					<td>
 						<select name="job_id" id="lead_job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
@@ -52,7 +64,7 @@
 					<td>
 						<select name="job_id" id="project_job_id" class="textfield width160px" onchange="check_existing_add_saleforecast(this.value)"></select>
 					</td>
-				</tr>
+				</tr-->
 				<tr class="show-entity">
 					<td>Entity: </td>
 					<td>

@@ -72,6 +72,7 @@ class Sales_forecast extends crm_controller {
 	*/
 	public function add_sale_forecast($update = false, $id = false)
 	{
+		$data['customers'] = $this->sales_forecast_model->get_customers($wh_condn, $order = array('company'=>'asc'));
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 		{
@@ -261,15 +262,19 @@ class Sales_forecast extends crm_controller {
 		$post_data = real_escape_array($this->input->post());
 		
 		$data = array();
+		$or_where = array();
 	
 		$order = array('lead_title'=>'asc');
 		
-		if($post_data['category'] == 1)
-		$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'1', 'pjt_status'=>'0');
-		else if ($post_data['category'] == 2)
-		$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
+		if($post_data['category'] == 1) {
+			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'1', 'pjt_status'=>'0');
+		} else if ($post_data['category'] == 2) {
+			// $wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
+			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4');
+			$or_where = '(pjt_status=0 or pjt_status=1)';
+		}
 		
-		$get_data = $this->sales_forecast_model->get_records('leads', $wh_condn, $order);
+		$get_data = $this->sales_forecast_model->get_records('leads', $wh_condn, $order, $or_where);
 
 		$data['records'] = '<option value="">Select</option>';
 		

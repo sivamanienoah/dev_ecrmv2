@@ -4,8 +4,8 @@
 */
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
 
-$('#lead-data').hide();
-$('#project-data').hide();
+// $('#lead-data').hide();
+// $('#project-data').hide();
 $('.show-entity, .show-currency, .show-exp-worth, .show-bill-type').hide();
 $('.project-ms-detail').hide();
 
@@ -24,18 +24,25 @@ $(function() {
 	}
 	
 	$( "#category_for_lead" ).on( "click", function() {
-		get_customers(1);
-		$('#lead-data').hide();
-		$('#project-data').hide();
-		$('#leaddetail').hide();
+		if($('#customer_id').val()!=''){
+			get_records($('#customer_id').val());
+		}
+		// get_customers(1);
+		// $('#lead-data').hide();
+		// $('#project-data').hide();
+		// $('#leaddetail').hide();
 		$('.project-ms-detail').hide();
 	});
 	
 	$( "#category_for_project" ).on( "click", function() {
-		get_customers(2);
-		$('#lead-data').hide();
-		$('#project-data').hide();
-		$('#leaddetail').hide();
+		if($('#customer_id').val()!='') {
+			get_records($('#customer_id').val());
+		}
+		
+		// get_customers(2);
+		// $('#lead-data').hide();
+		// $('#project-data').hide();
+		// $('#leaddetail').hide();
 		$('.project-ms-detail').hide();
 	});
 	
@@ -153,8 +160,8 @@ function get_records(custid, job_id) {
 		dataType: 'json',
 		async: false,
 		success: function(data) {
-		
-			if(category == 1) {
+			$('#job_id').html(data.records);
+			/* if(category == 1) {
 				$('#lead_job_id').html(data.records);
 				$('#lead-data').show();
 				$('#project-data').hide();
@@ -168,8 +175,7 @@ function get_records(custid, job_id) {
 				if(!isNaN(job_id) && (job_id!='undefined')) {
 					$('#project_job_id').attr('disabled', 'disabled');
 				}
-			}
-			
+			} */			
 		}
 	});
 	

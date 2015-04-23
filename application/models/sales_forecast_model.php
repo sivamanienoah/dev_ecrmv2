@@ -148,7 +148,7 @@ class Sales_forecast_model extends crm_model {
 	*@Get records for Search
 	*@Sales Forecast Model
 	*/
-	public function get_records($tbl, $wh_condn='', $order='') {
+	public function get_records($tbl, $wh_condn='', $order='', $or_where='') {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].$tbl);
 		if(!empty($wh_condn))
@@ -158,8 +158,11 @@ class Sales_forecast_model extends crm_model {
 				$this->db->order_by($key,$value);
 			}
 		}
+		if(!empty($or_where)) {
+			$this->db->where($or_where);
+		}
 		$query = $this->db->get();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
 		return $query->result_array();
     }
 
