@@ -118,10 +118,12 @@ if (get_default_currency()) {
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm">Milestone Based</h2>
 	
-	<div class="buttons export-to-excel">
-		<button type="button" id='milestone' class="positive excel" onclick="location.href='#'">
-		Export to Excel
-		</button>
+	<div class="section-right">
+		<div class="buttons export-to-excel">
+			<button type="button" id='milestone' class="positive excel" onclick="location.href='#'">
+			Export to Excel
+			</button>
+		</div>
 	</div>
 </div>
 
@@ -175,13 +177,7 @@ if (get_default_currency()) {
 <div class="page-title-head">
 
 	<h2 class="pull-left borderBtm">Monthly Billing</h2>
-
-	<div class="buttons export-to-excel">
-		<button type="button" id='monthly' class="positive excel" onclick="location.href='#'">
-		Export to Excel
-		</button>
-	</div>
-
+	
 	<div id="filter_metrics_data" class="hor-mspace">
 		<form name="filter_metrics" id="filter_metrics"  method="post">
 			<label><strong>Month & Year</strong></label>
@@ -202,6 +198,15 @@ if (get_default_currency()) {
 			</div>
 		</form>
 	</div>
+	
+	<div class="section-right">
+		<div class="buttons export-to-excel">
+			<button type="button" id='monthly' class="positive excel" onclick="location.href='#'">
+			Export to Excel
+			</button>
+		</div>
+	</div>
+
 </div>
 
 <div id='monthly_based'>

@@ -2,7 +2,7 @@
 $cfg = $this->config->item('crm');
 $userdata = $this->session->userdata('logged_in_user'); 
 ?>
-<div id="ad_filter" class="custom_dashboardfilter" style="overflow:scroll; width:100%;" >
+<div id="ad_filter" class="custom_dashboardfilter" style="overflow-x:scroll; width:100%;" >
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
 	<tr>
