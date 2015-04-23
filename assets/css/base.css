@@ -948,6 +948,7 @@ color:#595959;
 }
 .blockMsg {
     cursor: default !important;
+	overflow:visible !important;
 }
 
 /* Bk Styles Updated on 10/04/2012 */
