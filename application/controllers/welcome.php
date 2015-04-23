@@ -1483,8 +1483,8 @@ class Welcome extends crm_controller {
 		$this->customer_model->update_client_details_to_timesheet($client_code);
 		
 		// give default folder access to the assigned users.
-		$this->customer_model->create_cdefault_folders($project_id);
-		$this->customer_model->assign_default_folders($project_id);
+		//$this->customer_model->create_cdefault_folders($project_id);
+		//$this->customer_model->assign_default_folders($project_id);
 		
 		
 		if($updt_job) {
