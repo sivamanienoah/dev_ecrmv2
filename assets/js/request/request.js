@@ -153,11 +153,11 @@ function show_permissions(leadid, fparent_id) {
 			var obj = data.result_set;
 			var html = '';
 			var recur_checked,add_checked,down_checked;
+			
 			if(obj.length){
 				html += '<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">';
 				html += '<tr><th>Users</th><th>Is Recursive?</th><th>Add Access</th><th>Download Access</th></tr>';
 				for(var i=0; i<obj.length;i++){
-					
 					recur_checked = (obj[i].is_recursive != 0)?'checked="checked"':' ';
 					add_checked = (obj[i].add_access != 0)?'checked="checked"':' ';
 					down_checked = (obj[i].download_access != 0)?'checked="checked"':' ';
@@ -165,6 +165,9 @@ function show_permissions(leadid, fparent_id) {
 					html += '<tr><td><input type="hidden" name="pjt_users_id[]" value="'+obj[i].user_id+'" />'+obj[i].first_name+' '+obj[i].last_name+'</td><td><input class=js_checkbox" type="checkbox" name="is_recursive['+obj[i].user_id+']"   value="1" '+recur_checked+' /></td><td><input class="js_checkbox" type="checkbox" name="add_access['+obj[i].user_id+']" value="1" '+add_checked+' /></td><td><input class="js_checkbox" type="checkbox" name="download_access['+obj[i].user_id+']" value="1" '+down_checked+' /></td></tr>';
 				}
 				$('#add_users_tree_1').html(html);
+			}else if(obj==''){
+				$('.assign_permissions').html("<div>No Users Available.</div>")
+				$('.assign_permissions').css('display','block');
 			}else{
 				$('.assign_permissions').css('display','block');
 			}
