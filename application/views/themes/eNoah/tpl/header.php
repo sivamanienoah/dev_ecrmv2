@@ -117,9 +117,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	<?php
 	$notify = $this->session->flashdata('notify_msg');
 	$messages = $this->session->flashdata('header_messages');
-	if (isset($userdata['signature']) && trim($userdata['signature']) == '') {
+	/* if (isset($userdata['signature']) && trim($userdata['signature']) == '') {
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
-	}
+	} */
 	
 		$content = '';
 	// if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
