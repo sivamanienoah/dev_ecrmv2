@@ -6,8 +6,20 @@
 <?php $username = $this->session->userdata('logged_in_user'); ?>
 <div id="content">
     <div class="inner">
+	
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
-	<h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
+	<div class="page-title-head">
+		<h2 class="pull-left borderBtm"><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
+	<div class="clearfix"></div>
+	<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
+		<div class="buttons">
+		<a class="choice-box" onclick="window.history.back();" >
+			<span>Go Back</span>
+			<img src="assets/img/advanced_filter.png" class="icon leads" />
+		</a>
+		</div>
+	<?php } ?>
+	</div>
 	<div class="content-split-left">
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -94,6 +106,7 @@
 					<td id="show-project-ms-detail"></td>
 				</tr>
 				<tr class="project-ms-detail" style="height:3px;"></tr>
+				<tr><td colspan=2><h4>Add New Milestone</h4></td></tr>
 				<tr>
 					<td>Milestone Name:</td>
 					<td>

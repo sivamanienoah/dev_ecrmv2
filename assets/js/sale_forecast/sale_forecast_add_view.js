@@ -161,6 +161,9 @@ function get_records(custid, job_id) {
 		async: false,
 		success: function(data) {
 			$('#job_id').html(data.records);
+			if(!isNaN(job_id) && (job_id!='undefined')) {
+				$('#job_id').attr('disabled', 'disabled');
+			}
 			/* if(category == 1) {
 				$('#lead_job_id').html(data.records);
 				$('#lead-data').show();

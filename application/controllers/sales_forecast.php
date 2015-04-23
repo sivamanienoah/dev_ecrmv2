@@ -81,7 +81,7 @@ class Sales_forecast extends crm_controller {
 			$sf_category = $this->sales_forecast_model->get_sf_category($id);
 	
 			if(!empty($sf_category)) {
-				if(($sf_category['lead_status']==4) && ($sf_category['pjt_status']==1 || $sf_category['pjt_status']==2 || $sf_category['pjt_status']==3 || $sf_category['pjt_status']==4)) {
+				if(($sf_category['lead_status']==4) && ($sf_category['pjt_status']==0 || $sf_category['pjt_status']==1 || $sf_category['pjt_status']==2 || $sf_category['pjt_status']==3 || $sf_category['pjt_status']==4)) {
 					$data['salesforecast_category'] = 2;
 				} else if (($sf_category['lead_status']==1) && ($sf_category['pjt_status']==0)) {
 					$data['salesforecast_category'] = 1;
@@ -387,7 +387,7 @@ class Sales_forecast extends crm_controller {
 			}
 			$res['ms_det'] .= '</table></div>';
 		} else {
-			$res['ms_det'] .= 'No records availble';
+			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det data-tbl dashboard-heads dataTable" cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr><tr><td colspan=5>No records availble</td></tr></table></div>';
 		}
 		echo json_encode($res);
 		exit;

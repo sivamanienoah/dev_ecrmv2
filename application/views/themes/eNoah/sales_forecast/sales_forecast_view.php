@@ -12,10 +12,8 @@ button.ui-datepicker-current { display: none; }
 <div id="content">
 	<div class="inner">
 	<?php if($this->session->userdata('accesspage')==1) { ?>
-	
-	
 		<div class="page-title-head">
-		<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
+			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 			<?php if($this->session->userdata('add')==1) { ?>
 				<div class="buttons add-new-button">
 					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>sales_forecast/add_sale_forecast'">
