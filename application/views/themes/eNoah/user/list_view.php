@@ -8,10 +8,12 @@
 			<div class="page-title-head">
 			<h2 class="pull-left borderBtm">User Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons add-new-button">
-						<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='<?php echo base_url(); ?>user/add_user'" <?php } ?> >
-							Add New User
-						</button>
+					<div class="section-right">
+						<div class="buttons add-new-button">
+							<button type="button" <?php if($max_allow_user <= $availed_users['avail_users']) { ?> class="negative_disable" onclick="" <?php } else { ?> class="positive" onclick="location.href='<?php echo base_url(); ?>user/add_user'" <?php } ?> >
+								Add New User
+							</button>
+						</div>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>

@@ -6,10 +6,12 @@
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Subscription Types</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons add-new-button">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/subscription_type_update'">
-							Add New Subscriptions Type
-						</button>
+					<div class="section-right">
+						<div class="buttons add-new-button">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>package/subscription_type_update'">
+								Add New Subscriptions Type
+							</button>
+						</div>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>

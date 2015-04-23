@@ -25,10 +25,12 @@
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Subscription Accounts</h2>
 			<?php if($this->session->userdata('add')==1) { ?>
-				<div class="buttons add-new-button">
-					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
-						Add New Subscription
-					</button>
+				<div class="section-right">
+					<div class="buttons add-new-button">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
+							Add New Subscription
+						</button>
+					</div>
 				</div>
 			<?php } ?>
 			<div class="clearfix"></div>

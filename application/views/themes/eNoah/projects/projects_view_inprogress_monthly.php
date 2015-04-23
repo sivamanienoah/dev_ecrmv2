@@ -53,7 +53,7 @@ if (get_default_currency()) {
 			
 			$monthly_content .= "<tr>";
 			$monthly_content .= "<td class='actions' align='center'>";
-			$monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a>";
+			$monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a> ";
 			if($this->session->userdata('delete')==1) {
 			$monthly_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
 			}

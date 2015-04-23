@@ -13,10 +13,12 @@ $userdata = $this->session->userdata('logged_in_user');
 			<div class="page-title-head">
 				<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons add-new-button">
-						<button type="button" class="positive btn-leadStgAdd" onclick="location.href='<?php echo base_url(); ?>manage_lead_stage/leadStg_add'">
-							Add New Lead Stage
-						</button>
+					<div class="section-right">
+						<div class="buttons add-new-button">
+							<button type="button" class="positive btn-leadStgAdd" onclick="location.href='<?php echo base_url(); ?>manage_lead_stage/leadStg_add'">
+								Add New Lead Stage
+							</button>
+						</div>
 					</div>
 				<?php } ?>
 				<div class="clearfix"></div>

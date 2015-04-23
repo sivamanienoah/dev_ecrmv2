@@ -11,10 +11,12 @@ $userdata = $this->session->userdata('logged_in_user');
 	<div class="page-title-head">
 		<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 		<?php if($this->session->userdata('add')==1) { ?>
-			<div class="buttons add-new-button">
-				<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ls_add'">
-					Add New Lead Source
-				</button>
+			<div class="section-right">
+				<div class="buttons add-new-button">
+					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/ls_add'">
+						Add New Lead Source
+					</button>
+				</div>
 			</div>
 		<?php } ?>
 		<div class="clearfix"></div>

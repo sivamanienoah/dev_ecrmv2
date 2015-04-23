@@ -6,16 +6,19 @@
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Customer Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons add-new-button">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>customers/add_customer'">
-							Add New Customer
-						</button>
+					<div class="section-right">
+						<div class="buttons add-new-button">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>customers/add_customer'">
+								Add New Customer
+							</button>
+						</div>
+						<div class="buttons import-cus-list">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>importcustomers'">
+								Import Customer List
+							</button>
+						</div>
 					</div>
-					<div class="buttons import-cus-list">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>importcustomers'">
-							Import Customer List
-						</button>
-					</div>
+					
 				<?php } ?>
 			<div class="clearfix"></div>
 		</div>

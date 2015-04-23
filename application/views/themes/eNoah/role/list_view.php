@@ -7,10 +7,12 @@ require (theme_url().'/tpl/header.php'); ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Role Database</h2>
 				<?php if($this->session->userdata('add')==1) { ?>
-					<div class="buttons add-new-button">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>role/add_role'">
-							Add New Role
-						</button>
+					<div class="section-right">
+						<div class="buttons add-new-button">
+							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>role/add_role'">
+								Add New Role
+							</button>
+						</div>
 					</div>
 				<?php } ?>
 			<div class="clearfix"></div>
