@@ -93,7 +93,7 @@
 					</td>
 				</tr>
 				<tr class="project-ms-detail">
-					<td colspan=2 valign="top"><h5>Payment Milestone Details:</h5></td>
+					<td colspan=2 valign="top"><h5>Payment Milestone Details</h5></td>
 				</tr>
 				<tr class="project-ms-detail">
 					<td colspan=2 id="show-project-ms-detail"></td>
@@ -148,7 +148,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<h5>Saleforecast Milestone Details:</h5>
+			<h5>Saleforecast Milestone Details</h5>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>
