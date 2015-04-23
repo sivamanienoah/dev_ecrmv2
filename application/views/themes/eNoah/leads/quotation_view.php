@@ -19,9 +19,8 @@ require (theme_url().'/tpl/header.php');
 				
 					<div class="form-cont search-table">
 						<form>
-							<label>Lead Search</label>
 							<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-							<button type="submit" class="positive">Search</button>			
+							<button type="submit" class="positive">Lead Search</button>			
 						</form>
 					</div>
 					

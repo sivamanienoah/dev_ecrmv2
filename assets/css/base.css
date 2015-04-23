@@ -2305,7 +2305,7 @@ html[xmlns] .clearfix {display: block;}
 
 .form-cont {
     float: left;
-    margin: 0;
+    margin:5px 0 0 0;
 }
 
 .form-cont label {
@@ -2315,12 +2315,12 @@ html[xmlns] .clearfix {display: block;}
     margin: 0 10px 0 0;
 	line-height: 32px !important;
 }
-.form-cont input{float:left;margin:0;padding:8px;}
+.form-cont input{float:left;margin:0;padding:3px 6px;border-right:0;}
 .form-cont button{float:left;background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
 .form-cont button:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 
 
-button.positive{background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:6px 10px;}
+button.positive{background:#4b6fb9;border:1px solid #274686;font-weight:normal;padding:2px 6px;font-size:11px}
 button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .go-back {
     float: right;
