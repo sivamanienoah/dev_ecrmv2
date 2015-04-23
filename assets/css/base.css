@@ -2292,7 +2292,7 @@ a.choice-box:hover{background:url("../img/filter-icon.png") no-repeat left;borde
 
 .page-title-head #filter_metrics_data {
     float: left;
-    margin: 10px 0 0 20px;
+    margin: 2px 0 0 20px;
 }
 .page-title-head #filter_metrics_data label {
     margin: 0 6px 0 0;
