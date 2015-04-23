@@ -6,41 +6,52 @@ require (theme_url().'/tpl/header.php');
 	<div class="inner">
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Lead Dashboard</h2>
-			<?php if($this->session->userdata('add')==1) { ?>
-			<div class="buttons add-new-button">
-				<button onclick="location.href='<?php echo base_url(); ?>welcome/new_quote'" class="positive" type="button">
-					Add New Lead
-				</button>
-			</div>
-			<?php } ?>
-			
-			<div class="buttons export-to-excel">
-				<!--a class="export-btn">Export to Excel</a-->
-				<button id="excel" onclick="location.href='#'" class="positive" type="button">
-					Export to Excel
-				</button>
-			</div>
-
-			<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-				<tr>
-					<td>
-						Lead Search
-					</td>
-					<td>
-						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-					</td>
-					<td>
-						<div class="buttons">
-							<button type="submit" class="positive">Search</button>
-						</div>
-					</td>
-				</tr>
-			</table>
 			
 			<a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
+			
+			
+			
+			<div class="section-right">
+				<!--search-->
+				<table border="0" cellpadding="0" cellspacing="0" class="search-table">
+					<tr>
+						<td>
+							Lead Search
+						</td>
+						<td>
+							<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
+						</td>
+						<td>
+							<div class="buttons">
+								<button type="submit" class="positive">Search</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<!--search-->
+				<!--add-->
+				<?php if($this->session->userdata('add')==1) { ?>
+				<div class="buttons add-new-button">
+					<button onclick="location.href='<?php echo base_url(); ?>welcome/new_quote'" class="positive" type="button">
+						Add New Lead
+					</button>
+				</div>
+				<?php } ?>
+				<!--add-->
+				<!--export-->
+				<div class="buttons export-to-excel">
+					<!--a class="export-btn">Export to Excel</a-->
+					<button id="excel" onclick="location.href='#'" class="positive" type="button">
+						Export to Excel
+					</button>
+				</div>
+				<!--export-->
+			</div>
+			
+			
 		</div>
 	
 		<?php if($this->session->userdata('accesspage')==1) { ?>

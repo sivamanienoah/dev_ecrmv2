@@ -100,6 +100,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 						</p>
 					</a>
 					<div class="submenu" style="display: none; ">
+						<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
 						<ul class="root">
 							<li><a class="my-profile" href="<?php echo base_url() ?>myaccount/">My Profile</a></li>
 							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/">Sign Out</a></li>
