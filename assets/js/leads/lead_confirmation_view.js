@@ -213,6 +213,20 @@ function ajxSaveLoc() {
 	}
 }
 
+
+function update_client(lead_id,current_tab){
+	update_customer(lead_id,current_tab);		
+}
+function update_customer_project(lead_id,current_tab){
+	update_customer(lead_id,'');
+	update_project_detail(lead_id,current_tab);
+}
+function update_cust_proj_users(lead_id,current_tab){
+	update_customer(lead_id,'');
+	update_project_detail(lead_id,'');		
+	update_project_users(current_tab)
+}
+
 //pre-populate the default region, country, state & location
 /* if(usr_level >= 2 && cus_updt != 'update' ) {
 	getDefaultRegion(usr_level, cus_updt);
@@ -238,7 +252,7 @@ function getDefaultLocation(id, upd) {
     $('#def_loc').load(sturl);
     return false;	
 } */
-function update_customer(id) {
+function update_customer(id,current_tab) {
 	var form_data = $('#customer_detail_form').serialize();	
 	$('.blockUI .layout').block({
 		message:'<h3>Processing</h3>',
@@ -253,7 +267,12 @@ function update_customer(id) {
 		data:form_data,
 		success : function(response){
 			if(response.result=='ok') {
-				$('.tabs-confirm li').eq(1).find("a").trigger('click');
+				if(current_tab){
+					var cs = $('.tabs-confirm li').eq(1).find("a").attr('href');
+					var v = cs.split("#")
+					if(v[1] !=current_tab)	$('.tabs-confirm li').eq(1).find("a").trigger('click');	
+				}
+				
 			} else {
 				alert("Update Failed");
 			}
@@ -278,7 +297,7 @@ $('#emailval').keyup(function(){
 	return false;
 });
 
-function update_project_detail(project_id) {
+function update_project_detail(project_id,current_tab) {
 
 	var err = [];
   
@@ -353,8 +372,12 @@ function update_project_detail(project_id) {
 		data:form_data,
 		success : function(response) {
 			if(response.result=='ok') {
-				$('.tabs-confirm li').eq(2).find("a").trigger('click');
-			} else {
+				if(current_tab){
+					var cs = $('.tabs-confirm li').eq(2).find("a").attr('href');
+					var v = cs.split("#")
+					if(v[1] !=current_tab)	$('.tabs-confirm li').eq(2).find("a").trigger('click');	
+				}
+			} else if(response.result=='') {
 				alert("Update Failed");
 			}
 			$('.blockUI .layout').unblock();
@@ -362,7 +385,7 @@ function update_project_detail(project_id) {
 	});
 }
 
-function update_project_users() {
+function update_project_users(current_tab) {
 	var form_data = $('#set-assign-users').serialize();	
 	
 	/* $('.blockUI .layout').block({
@@ -378,7 +401,11 @@ function update_project_users() {
 		data:form_data,
 		success : function(response){
 			if(response.result=='ok') {
-				$('.tabs-confirm li').eq(3).find("a").trigger('click');
+				if(current_tab){
+					var cs = $('.tabs-confirm li').eq(3).find("a").attr('href');
+					var v = cs.split("#")
+					if(v[1] !=current_tab)	$('.tabs-confirm li').eq(3).find("a").trigger('click');	
+				}
 			} else {
 				alert("Update Failed");
 			}
