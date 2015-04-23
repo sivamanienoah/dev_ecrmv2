@@ -1926,23 +1926,48 @@ button:hover, .pjt-btn a:hover{
     padding: 2px 7px;
 } */
 
-button.positive, .pjt-btn a.positive, input.positive{
-	background: #606c88; /* Old browsers */
-	background: -moz-linear-gradient(top,  #606c88 0%, #44506f 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#44506f)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #606c88 0%,#44506f 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #606c88 0%,#44506f 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#44506f',GradientType=0 ); /* IE6-9 */
-
+/* button.positive, .pjt-btn a.positive, input.positive{
+	background: #606c88;
+	background: -moz-linear-gradient(top,  #606c88 0%, #44506f 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#44506f));
+	background: -webkit-linear-gradient(top,  #606c88 0%,#44506f 100%);
+	background: -o-linear-gradient(top,  #606c88 0%,#44506f 100%);
+	background: -ms-linear-gradient(top,  #606c88 0%,#44506f 100%);
+	background: linear-gradient(to bottom,  #606c88 0%,#44506f 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#44506f',GradientType=0 );
     border: 1px solid #CCCCCC;
     color: #fff;
     cursor: pointer;
     font-weight: bold;
     margin:0;
     padding: 2px 7px;
+} */
+
+
+
+
+button.positive, .pjt-btn a.positive, input.positive{
+	background:#4b6fb9;
+    border: 1px solid #274686;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    margin:0;
+    padding: 2px 7px;
+	font-size:11px;
+	font-weight:normal;
 }
+button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
+	background:#4b6fb9;
+    border: 1px solid #274686;
+	opacity:0.8;
+}
+
+
+
+
+
+
 
 .team_list {
     max-height: 100px;
@@ -2184,7 +2209,7 @@ p.footer-text a{color:#f57025;}
 
 
 .add-new-button{margin:5px 0 0 30px;}
-.add-new-button button {background:url("../img/add-new-user.png") no-repeat left !important;border:none !important;font-size: 12px;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;font-weight:bold  !important;}
+.add-new-button button {background:url("../img/add-new-user.png") no-repeat left !important;border:none !important;font-size: 12px !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;font-weight:bold  !important;}
 .add-new-button button:hover{background:url("../img/add-new-user.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 /* .page-title-head .choice-box{margin:0;} */
 #content .inner .page-title-head h2{margin:6px 0 0;} 
@@ -2203,7 +2228,7 @@ th.header{float:none;width:auto;}
 .export-to-excel, .add-new-button, .import-cus-list{float:left;}
 
 .export-to-excel{margin:5px 0 0 30px;}
-.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left !important;border:none !important;font-size: 12px;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold !important;}
+.export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left !important;border:none !important;font-size: 12px !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold !important;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
 
 
