@@ -78,7 +78,7 @@
 					</td>
 				</tr>
 				<tr class="project-ms-detail">
-					<td>Payment Milestone Detail:</td>
+					<td valign="top">Payment Milestone Details:</td>
 					<td id="show-project-ms-detail"></td>
 				</tr>
 				<tr class="project-ms-detail" style="height:3px;"></tr>
@@ -130,7 +130,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<h4>Saleforecast Milestone Detail:</h4>
+			<h4>Saleforecast Milestone Details:</h4>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>

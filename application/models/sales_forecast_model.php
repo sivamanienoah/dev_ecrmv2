@@ -298,9 +298,11 @@ class Sales_forecast_model extends crm_model {
 			//$locations_ids = implode(",",$locations_ids);
 		}
 		
-		$this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company,l.lead_status,l.pjt_status');
+		/* $this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company,l.lead_status,l.pjt_status');
 		$this->db->from($this->cfg['dbpref'].'customers as c');
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.custid_fk = c.custid');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.custid_fk = c.custid'); */
+		$this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
 		if(!empty($wh_condn))
 		$this->db->where($wh_condn);
 

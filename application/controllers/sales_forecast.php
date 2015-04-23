@@ -227,10 +227,10 @@ class Sales_forecast extends crm_controller {
 		
 		$order     = array('company'=>'asc');
 		
-		if ($type == 1)
+		/* if ($type == 1)
 		$wh_condn = array('l.lead_status'=>'1', 'l.pjt_status'=>'0');
 		if ($type == 2)
-		$wh_condn = array('l.lead_status'=>'4', 'l.pjt_status'=>'1');
+		$wh_condn = array('l.lead_status'=>'4', 'l.pjt_status'=>'1'); */
 		
 		$customer_data = $this->sales_forecast_model->get_customers($wh_condn, $order);
 		
@@ -369,7 +369,7 @@ class Sales_forecast extends crm_controller {
 					$res['ms_det'] .= '<td>'.$ms['project_milestone_name'].'</td><td>'.$ms_month_year.'</td><td>'.$ms['expect_worth_name'].'</td><td>'.$ms['amount'].'</td><td>';
 					if(strtotime($milestone_month_year) > strtotime($current_month_year)) {
 						//$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
-						$res['ms_det'] .= '<a onclick="moveMilestone('.$ms['expectid'].'); return false;" title="Move">';
+						$res['ms_det'] .= '<a onclick="moveMilestone('.$ms['expectid'].'); return false;" title="Move to Forecast">';
 						$res['ms_det'] .= '<img alt="edit" src="assets/img/arrow-move.png">';
 						$res['ms_det'] .= '</a>';
 					}

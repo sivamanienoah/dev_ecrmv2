@@ -1,9 +1,9 @@
 /*
- *@Manage Practice
- *@Manage Practice Controller
+ *@Sale Forecast
+ *@Sale Forecast Controller
 */
 
-// csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
+// csrf_token_name,csrf_hash_token,site_base_url & accesspage are global js variable
 
 $('#advance_search').hide();
 

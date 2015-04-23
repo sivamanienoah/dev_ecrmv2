@@ -2033,7 +2033,7 @@ a.del_file{
 
 .dashboard-heads td{border-top:none;border-right:1px solid #dadada;border-left:none;border-bottom:1px solid #dadada;padding: 8px 10px;}
 .table-design table td{padding: 8px 10px;}
-.table-design table th{padding:15px 5px;}
+.table-design table th{padding:7px 7px;}
 .table-design table{border-bottom:none;width: 100%;}
 #page {background-color: #ffffff;width:1200px;max-width:100%;margin:0 auto;box-shadow:0 0 22px 5px #dadada;}
 ul.topstrip li {border-right: 1px solid #304e89;float: left;margin:0;}
