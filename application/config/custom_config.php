@@ -8,8 +8,8 @@
 */
 $config['crm']['app_name']      = 'eNoah';
 $config['crm']['app_full_name'] = 'eNoah Customer Relationship Management';
-$config['crm']['app_version']   = '1.1.02';
-$config['crm']['app_date']      = '24-02-2015';
+$config['crm']['app_version']   = '1.1.03';
+$config['crm']['app_date']      = '24-04-2015';
 
 $config['crm']['dbpref']        = 'crm_';
 $config['crm']['theme']         = 'eNoah';
