@@ -2188,3 +2188,6 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .go-back a.choice-box {background:url("../img/go-back-icon.png") no-repeat left;padding:3px 0 4px 30px !important;}
 .choice-box.filter-home {margin: 10px 0 20px;}
 .dataTables_wrapper input {border: 1px solid #dadada;margin: 0 0 0 5px;padding: 3px 8px;}
+.search-table button {
+    height: 21px;
+}
