@@ -78,7 +78,7 @@ class Login_model extends crm_model {
         $sql = $this->db->get();
         $data['res'] = $sql->result_array();
 		// echo count($data['res']); echo "<br>"; exit;
-		$data['login_error_code'] = 0;
+		$data['login_error_code'] = 0; 
 		
 		if (count($data['res']) > 0) {
 		/* if username is exist in CRM DB then it check the inactive & authentication type */

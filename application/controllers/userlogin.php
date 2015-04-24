@@ -16,7 +16,7 @@ class Userlogin extends crm_controller {
     
     function index()
 	{
-		$SSO_Status = $this->config->item('IS_SSO'); 
+		$SSO_Status = $this->config->item('IS_SSO');  
 		if(isset($_COOKIE['sso_token']) && $this->session->userdata('logoutType')!='ldb' && $SSO_Status=='1')
 		{ 
 			$checkCookie=$this->login_model->checkCookie($_COOKIE['sso_token']);
