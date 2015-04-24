@@ -24,7 +24,7 @@ if(isset($_COOKIE['sso_token']) && $CI->session->userdata('SSO_Status')=='1')
 	if((!$data['success'] && $url!='userlogin') )
 	{
 	?>
-		<script>window.location="http://<?php echo $_SERVER['HTTP_HOST'];?>/userlogin/logout";</script>
+		<script>window.location="http://<?php echo $_SERVER['HTTP_HOST'];?>/dev/projects/ecrmv2/userlogin/logout";</script>
 	<?php exit;}	
 }
 else if($url!='userlogin' && !isset($_COOKIE['sso_token']) && $CI->session->userdata('loggedType')=='ldap' && $CI->session->userdata('SSO_Status')=='1') //&& $CI->session->userdata('SSO_Status')=='1' )
@@ -32,7 +32,7 @@ else if($url!='userlogin' && !isset($_COOKIE['sso_token']) && $CI->session->user
  
 ?>
 
-	<script>window.location="http://<?php echo $_SERVER['HTTP_HOST'];?>/userlogin/logout";</script>
+	<script>window.location="http://<?php echo $_SERVER['HTTP_HOST'];?>/dev/projects/ecrmv2/userlogin/logout";</script>
 <?php exit;}
 }
 ?>
