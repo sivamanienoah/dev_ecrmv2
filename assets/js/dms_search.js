@@ -44,6 +44,7 @@ function download_files(job_id,f_name){
 		 
 		 $('#dmssearch').submit(function(){
 			 
+			 $('#advance').hide();
 			 $('#load').show();
 			 $('#ajax_loader').show();
 			 $('#default_view').html('');
@@ -63,6 +64,7 @@ function download_files(job_id,f_name){
 		        data: params,
 		        success: function(data) {					
 					$('#load').hide();
+					 $('#advance').show();
 					$('#ajax_loader').hide();					
 					$('#default_view').html(data);						
 					$('.data-tbl').dataTable();
