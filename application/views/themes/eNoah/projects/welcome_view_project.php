@@ -106,6 +106,13 @@ if (get_default_currency()) {
 							$restrict1[] = $data['userid_fk'];
 						}
 					}
+				    $restrict2[] = 0;
+					if (is_array($stake_holders) && count($stake_holders) > 0) { 
+						foreach ($stake_holders as $data1) {
+							$restrict2[] = $data1['user_id'];
+						}
+					}					
+					
 					//echo "<pre>"; print_r($restrict1);
 					
 					$r_users = implode(",",$list_users);
@@ -114,8 +121,13 @@ if (get_default_currency()) {
 					
 					//Merge the contract users, lead owner, lead sssigned_to & project Manager.
 					$rest_users = array_merge_recursive($restrict, $restrict1);
-					$restrict_users = array_unique($rest_users);
 					
+					if(count($stake_holders)>0){
+						$rest_users = array_merge_recursive($rest_users, $restrict2);	
+					}
+					
+					$restrict_users = array_unique($rest_users);
+				 
 					//Re-Assign the Keys in the array.
 					$final_restrict_user = array_values($restrict_users);
 					?>
