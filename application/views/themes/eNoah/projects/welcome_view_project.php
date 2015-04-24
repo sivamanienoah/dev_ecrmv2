@@ -130,6 +130,7 @@ if (get_default_currency()) {
 				 
 					//Re-Assign the Keys in the array.
 					$final_restrict_user = array_values($restrict_users);
+					
 					?>
 					<label>Email To:</label>
 					<?php
@@ -142,6 +143,7 @@ if (get_default_currency()) {
 							}
 						}
 						$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
+					 
 					?>
 					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:400px;">
 						<?php
