@@ -19,8 +19,9 @@ class Dms_search_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'leads AS le', 'le.lead_id = lf.lead_id', 'join');
 		$this->db->join($this->cfg['dbpref'].'customers AS cus', 'cus.custid = le.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'file_management as f', 'f.folder_id = lf.folder_id', 'LEFT');
-	 
-		if($this->user_role !=1){
+		
+		 
+		if (($this->user_role != 1 && $this->user_role != 2 && $this->user_role != 4)) {
 			$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id)");
 		}
 		
@@ -63,7 +64,7 @@ class Dms_search_model extends crm_model {
 		$to_date	= $to_date;
 		$divisions	= $divisions;
 		
-		if (($this->user_role == '1' && $this->level == '1') || ($this->user_role == '2' && $this->level == '1')) {
+		if (($this->user_role == 1 && $this->level == 1) || ($this->user_role == 2 && $this->level == 1) || ($this->user_role == 4 && $this->level == 1)) {
 		
 			$this->db->select('j.lead_id,j.lead_title');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
