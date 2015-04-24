@@ -312,7 +312,7 @@ class Login_model extends crm_model {
 	   
 	   $post = curl_init();
 	   curl_setopt($post, CURLOPT_URL, $url);
-	   curl_setopt($post, CURLOPT_PROXY, '10.0.9.36:80');
+	   curl_setopt($post, CURLOPT_PROXY, '10.0.9.32:80');
 	   curl_setopt($post, CURLOPT_POST, count($data));
 	   curl_setopt($post, CURLOPT_POSTFIELDS, $fields);
 	   curl_setopt($post, CURLOPT_RETURNTRANSFER, 1);
