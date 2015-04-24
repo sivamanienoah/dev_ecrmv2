@@ -2191,3 +2191,6 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .search-table button {
     height: 21px;
 }
+.search-table input {
+    height: 14px;
+}
