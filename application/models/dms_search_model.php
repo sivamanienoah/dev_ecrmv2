@@ -16,7 +16,7 @@ class Dms_search_model extends crm_model {
 		$this->db->select('f.folder_name,cus.company,cus.first_name as cust_firstname ,cus.last_name as cust_lastname,le.lead_title,lf.file_id,lf.lead_id,lf.lead_files_name,lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
-		$this->db->join($this->cfg['dbpref'].'leads AS le', 'le.lead_id = lf.lead_id', 'join');
+		$this->db->join($this->cfg['dbpref'].'leads AS le', 'le.lead_id = lf.lead_id', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'customers AS cus', 'cus.custid = le.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'file_management as f', 'f.folder_id = lf.folder_id', 'LEFT');
 	 
