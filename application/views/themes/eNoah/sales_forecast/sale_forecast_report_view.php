@@ -12,15 +12,18 @@
 	
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
-			<div class="buttons export-to-excel">
-				<button id="export_excel_forecast" type="button" class="positive" onclick="location.href='#'">
-					Export to Excel
-				</button>
-			</div>
+			
 			<a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
+			<div class="section-right">
+				<div class="buttons export-to-excel">
+					<button id="export_excel_forecast" type="button" class="positive" onclick="location.href='javascript:void(0);'">
+						Export to Excel
+					</button>
+				</div>
+			</div>
 			<div class="clearfix"></div>
 		</div>
 	

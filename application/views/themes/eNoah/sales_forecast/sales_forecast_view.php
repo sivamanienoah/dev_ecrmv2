@@ -18,7 +18,7 @@ button.ui-datepicker-current { display: none; }
 				<div class="section-right">
 					<div class="buttons add-new-button">
 						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>sales_forecast/add_sale_forecast'">
-							Add Sale Forecast
+							Add Sales Forecast
 						</button>
 					</div>
 				</div>

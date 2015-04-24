@@ -416,7 +416,7 @@ function view_logs(id) {
 
 function moveMilestone(id) {
 	$.blockUI({
-		message:'<br /><h5>Are you sure want to add this as a <br />sale forecast milestone?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="confirmMoveMilestone('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		message:'<br /><h5>Are you sure want to add this as a <br />sales forecast milestone?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="confirmMoveMilestone('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 		css:{width:'440px'}
 	});
 }

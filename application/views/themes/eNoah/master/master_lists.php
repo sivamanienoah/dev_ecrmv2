@@ -4,49 +4,32 @@
  
     <div class="inner">
 		<?php if($this->session->userdata('accesspage')==1){ ?>
-        <h2>Module Database</h2>
-       
-        <form action="master/search/" method="post" id="cust_search_form">
 		
-			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
-            <table border="0" cellpadding="0" cellspacing="0" class="search-table">
-                <tr>
-                    <td>
-                        Search by Name
-                    </td>
-                    <td>
-                        <input type="text" name="cust_search" value="<?php echo  $this->uri->segment(4) ?>" class="textfield width200px" />
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" class="positive">
-                                
-                                Search
-                            </button>
-                        </div>
-                    </td>
-					<?php if($this->session->userdata('add')==1) { ?>
-					<td valign="middle";>
-						<div class="buttons">
-							<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>master/add_master'">
-								Add New Module
-							</button>
-						</div>
-					</td>
-					<?php } ?>
-                    <?php if ($this->uri->segment(4)) { ?>
-                    <td>
-                        <div class="buttons">
-                            <button type="submit" name="cancel_submit" class="negative">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
-                    <?php } ?>
-                </tr>
-            </table>
-		</form>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Module Database</h2>
+			
+			<div class="section-right">
+				<!--search-->
+				<!--div class="form-cont search-table">
+					<form id="cust_search_form" name="cust_search_form" action="master/search/" method="post">
+						<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<input type="text" name="cust_search" value="<?php echo  $this->uri->segment(4) ?>" class="textfield width200px" />
+						<button type="submit" class="positive">Module Search</button>			
+					</form>
+				</div-->
+				<!--search-->
+				<!--add-->
+				<?php if($this->session->userdata('add')==1) { ?>
+				<div class="buttons add-new-button">
+					<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>master/add_master'">
+						Add New Master
+					</button>
+				</div>
+				<?php } ?>
+				<!--add-->
+			</div>
+			<div class="clearfix"></div>
+		</div>
         
         <!--table border="0" cellpadding="0" cellspacing="0" class="data-table"-->
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">

@@ -9,7 +9,7 @@
 	
 	<?php if(($this->session->userdata('add')==1) || ($this->session->userdata('edit')==1)) { ?>
 	<div class="page-title-head">
-		<h2 class="pull-left borderBtm"><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sale Forecast </h2>
+		<h2 class="pull-left borderBtm"><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Sales Forecast </h2>
 	</div>
 	<div class="content-split-left">
     	<form action="<?php echo $this->uri->uri_string() ?>" method="post" id="add_sales_forecast_form" onsubmit="return false;" class='addForm' >
@@ -93,13 +93,13 @@
 					</td>
 				</tr>
 				<tr class="project-ms-detail">
-					<td colspan=2 valign="top"><h5>Payment Milestone Details</h5></td>
+					<td colspan=2 valign="top"><h5>Project Payment Milestone</h5></td>
 				</tr>
 				<tr class="project-ms-detail">
 					<td colspan=2 id="show-project-ms-detail"></td>
 				</tr>
 				<tr class="project-ms-detail" style="height:3px;"></tr>
-				<tr><td colspan=2><h5>Add Saleforecast Milestone</h5></td></tr>
+				<tr><td colspan=2><h5>Add Sales Forecast Milestone</h5></td></tr>
 				<tr>
 					<td>Milestone Name:</td>
 					<td>
@@ -148,7 +148,7 @@
 	<div class="content-split-right">
 		<div class="table-design">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
-			<h5>Saleforecast Milestone Details</h5>
+			<h5>Milestone Added to Sales Forecast</h5>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
 				<thead>
 					<tr>

@@ -385,11 +385,11 @@ class Sales_forecast extends crm_controller {
 				}
 			}
 			if($row == false){
-				$res['ms_det'] .= '<tr><td colspan=5>No records availble</td></tr>';
+				$res['ms_det'] .= '<tr><td colspan=5>All records are added to Sales Forecast Milestone</td></tr>';
 			}
 			$res['ms_det'] .= '</table></div>';
 		} else {
-			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det data-tbl dashboard-heads dataTable" cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr><tr><td colspan=5>No records availble</td></tr></table></div>';
+			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det data-tbl dashboard-heads dataTable" cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr><tr><td colspan=5>No Payment Milestones are added</td></tr></table></div>';
 		}
 		echo json_encode($res);
 		exit;
