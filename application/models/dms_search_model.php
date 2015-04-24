@@ -20,7 +20,7 @@ class Dms_search_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers AS cus', 'cus.custid = le.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'file_management as f', 'f.folder_id = lf.folder_id', 'LEFT');
 	 
-		if($this->user_role !=1 && $this->level != 1){
+		if($this->user_role !=1){
 			$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id)");
 		}
 		
@@ -52,7 +52,7 @@ class Dms_search_model extends crm_model {
 	    return $sql->result_array();
 	}
 	
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {
+	public function get_projects_results($pjtstage=false,$cust=false,$service=false,$practice=false,$keyword=false,$datefilter=false,$from_date=false,$to_date=false,$billing_type=false,$divisions=false) {
 		 
 		$stage 		= $pjtstage;
 		$customer 	= $cust;
