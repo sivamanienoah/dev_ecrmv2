@@ -364,6 +364,8 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+$config['IS_SSO'] = '1';
+
 //require (SITE_FILE_PATH.'/application/core/CRM_controller.php');
 /* End of file config.php */
 /* Location: ./application/config/config.php */
