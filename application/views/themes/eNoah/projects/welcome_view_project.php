@@ -495,7 +495,11 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
-			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+			<?php 
+			$show_disable = true;
+			if($chge_access == 1 && $quote_data['pjt_status'] != 2) {
+			$show_disable = false;		
+			?>
 			<div>
 				<div class="buttons">
 						<button onclick="setProjectManager(); return false;" style="margin:0 0 0 5px;" id="project_manager_id" class="positive" type="submit">Set</button>
@@ -507,7 +511,7 @@ if (get_default_currency()) {
 			<!--List the project assigned members from the timesheet-->
 			<div class="pull-left">
 			<label class="project-team-members">Team Members</label>
-				<select multiple="multiple" class="chzn-select"  id="project_team_members" name="project_team_members[]">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="project_team_members" name="project_team_members[]">
 					<?php if(!empty($all_users)):?>
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):
@@ -542,7 +546,7 @@ if (get_default_currency()) {
 			
 			<div class="pull-left">
 			<label class="project-stake-members">Stake Holders</label>
-				<select multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
 					<?php if(!empty($all_users)):?>
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):
