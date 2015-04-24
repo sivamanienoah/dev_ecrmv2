@@ -87,18 +87,14 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		<div>
 		<!--Advance filters-->
 		<div>
-			
-
-			<a class="choice-box filter-home" onclick="advanced_filter();" >
+			<a class="choice-box" onclick="advanced_filter();" >
+				Advanced Filters
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
-				<span>Advanced Filters</span>
 			</a>
-
-			
 				
-			<div id="advance_search" style="float:left; margin: 0px 0px 10px;width:100%;">
+			<div id="advance_search" style="float:left; margin: 0px 0px 10px;">
 				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
-				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:100%;">
+				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:940px;">
 					
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
@@ -503,129 +499,128 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	<!--Task Module for Non Lead Acces users only- End here-->
 	
 <?php if(($this->session->userdata('viewPjt')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
-<div class="page-title-head">
-	<h2 class="pull-left borderBtm">PROJECTS - LISTS</h2>
+<h2 style="padding-bottom:4px; border-bottom:1px solid #ccc; clear:left; margin-bottom:15px;">PROJECTS - LISTS</h2>
+<form name="pjt_search_form" id="pjt_search_form" action="" method="post" style="float:right;">
 
-	<form name="pjt_search_form" id="pjt_search_form" action="" method="post">
-		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-			<tr>
-				<td>
-					Project Search
-				</td>
-				<td>
-					<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
-				</td>
-				<td rowspan=2>
-					<div class="buttons">
-						<button type="submit" class="positive">Search</button>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>
-	<a class="choice-box" onclick="advanced_filter_pjt();" >
-		<span>Advanced Filters</span>
-		<img src="assets/img/advanced_filter.png" class="icon leads" />
-	</a>
-</div>
+	<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-<div id="advance_search_pjt" style="float:left; width:100%;" >
-	<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
-	
-		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	
-		<table border="0" cellpadding="0" cellspacing="0" class="data-table">
-		<thead>
-			<tr>
-				<th>By Project Status Wise</th>
-				<!--th>By Project Manager Wise</th-->
-				<th>By Customer Wise</th>
-				<th>By Services Wise</th>
-				<th>By Practices</th>
-				<th>By Date(Actual)</th>
-			</tr>	
-		</thead>
-		<tbody>
-		<tr>	
-			<td>
-				<select style="width:125px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
-					<option value="1">Project In Progress</option>
-					<option value="2">Project Completed</option>
-					<option value="3">Project Onhold</option>
-					<option value="4">Inactive</option>
-				</select> 
-			</td>
-			<td>
-				<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">
-					<?php foreach($customers as $customer) {?>
-						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
-					<?php } ?>
-				</select>
-			</td>
-			<td>
-				<select style="width:170px;" multiple="multiple" id="services" name="services[]">
-					<?php foreach($services as $service) {?>
-					<option value="<?php echo $service['sid']; ?>"><?php echo $service['services'];?></option>	
-					<?php } ?>
-				</select>
-			</td>
-			<td>
-				<select style="width:150px;" multiple="multiple" id="practices" name="practices[]">
-					<?php foreach($practices as $pract) {?>
-					<option value="<?php echo $pract['id']; ?>"><?php echo $pract['practices'];?></option>	
-					<?php } ?>
-				</select>
-			</td>
-			<td>
-				<select style="width:178px;" id="datefilter" name="datefilter">
-					<option value="1">All</option>
-					<option value="2">Start Date</option>
-					<option value="3">End Date</option>
-				</select>
-				<br />
-				From <input type="text" name="from_date" id="from_date" class="pick-date textfield" style="width:57px;" />
-				To <input type="text" name="to_date" id="to_date" class="pick-date textfield" style="width:57px;" />
-			</td>
-		</tr>
-		</tbody>
-		<thead>
-			<tr>
-			<th >By Entity</th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-			</tr>	
-		</thead>
-		<tbody>
+	<table border="0" cellpadding="0" cellspacing="0" class="search-table">
 		<tr>
-			<td colspan="6">
-				<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
-					<?php foreach ($sales_divisions as $division) { ?>
-						<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
-					<?php } ?>
-				</select> 
+			<td>
+				Project Search
 			</td>
-		</tr>
-		<tr align="right" >
-			<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
-				<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
-				<div id = 'load' style = 'float:right;display:none;height:1px;'>
-					<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+			<td>
+				<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
+			</td>
+			<td rowspan=2>
+				<div class="buttons">
+					<button type="submit" class="positive">Search</button>
 				</div>
 			</td>
 		</tr>
-		</tbody>
-		</table>
-	</form>
-</div>
-<div class="clearfix"></div>
-<div id="ajax_loader" style="margin:20px;display:none" align="center">
-	Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
-</div>
-<div class="clearfix"></div>
-<div id="advance_search_results_pjts" class="custom_dashboardfilter clear"></div>
+	</table>
+</form>
+<a class="choice-box" onclick="advanced_filter_pjt();" >
+	Advanced Filters
+	<img src="assets/img/advanced_filter.png" class="icon leads" />
+</a>
+
+	<div id="advance_search_pjt" style="float:left; width:100%;" >
+		<form name="advanceFilters_pjt" id="advanceFilters_pjt"  method="post">
+		
+			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		
+			<table border="0" cellpadding="0" cellspacing="0" class="data-table">
+			<thead>
+				<tr>
+					<th>By Project Status Wise</th>
+					<!--th>By Project Manager Wise</th-->
+					<th>By Customer Wise</th>
+					<th>By Services Wise</th>
+					<th>By Practices</th>
+					<th>By Date(Actual)</th>
+				</tr>	
+			</thead>
+			<tbody>
+			<tr>	
+				<td>
+					<select style="width:125px;" multiple="multiple" id="pjt_stage" name="pjt_stage[]">
+						<option value="1">Project In Progress</option>
+						<option value="2">Project Completed</option>
+						<option value="3">Project Onhold</option>
+						<option value="4">Inactive</option>
+					</select> 
+				</td>
+				<td>
+					<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">
+						<?php foreach($customers as $customer) {?>
+							<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+						<?php } ?>
+					</select>
+				</td>
+				<td>
+					<select style="width:170px;" multiple="multiple" id="services" name="services[]">
+						<?php foreach($services as $service) {?>
+						<option value="<?php echo $service['sid']; ?>"><?php echo $service['services'];?></option>	
+						<?php } ?>
+					</select>
+				</td>
+				<td>
+					<select style="width:150px;" multiple="multiple" id="practices" name="practices[]">
+						<?php foreach($practices as $pract) {?>
+						<option value="<?php echo $pract['id']; ?>"><?php echo $pract['practices'];?></option>	
+						<?php } ?>
+					</select>
+				</td>
+				<td>
+					<select style="width:178px;" id="datefilter" name="datefilter">
+						<option value="1">All</option>
+						<option value="2">Start Date</option>
+						<option value="3">End Date</option>
+					</select>
+					<br />
+					From <input type="text" name="from_date" id="from_date" class="pick-date textfield" style="width:57px;" />
+					To <input type="text" name="to_date" id="to_date" class="pick-date textfield" style="width:57px;" />
+				</td>
+			</tr>
+			</tbody>
+			<thead>
+				<tr>
+				<th >By Entity</th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>	
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="6">
+					<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
+						<?php foreach ($sales_divisions as $division) { ?>
+							<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+						<?php } ?>
+					</select> 
+				</td>
+			</tr>
+			<tr align="right" >
+				<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
+					<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
+					<div id = 'load' style = 'float:right;display:none;height:1px;'>
+						<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+					</div>
+				</td>
+			</tr>
+			</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="clearfix"></div>
+	<div id="ajax_loader" style="margin:20px;display:none" align="center">
+		Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
+	</div>
+	<div class="clearfix"></div>
+	<div id="advance_search_results_pjts" class="custom_dashboardfilter clear"></div>
 <?php } ?>
 	
 	</div><!--Inner - close here -->
