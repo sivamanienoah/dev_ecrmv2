@@ -364,7 +364,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			</div>
 			</div>
 			<div id="lead-dependency-list" style="display:none;"></div><!--Opportunities By Lead Owner & Opportunities By Lead Assignee Info display here -->
-			
+
 		</div>
 	<?php } ?>
 	
