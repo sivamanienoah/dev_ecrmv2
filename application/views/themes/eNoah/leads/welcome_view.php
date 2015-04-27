@@ -1366,6 +1366,7 @@ function confirmaMoveLeadsToProject()
 		}
 	});
 	$('html, body').animate({ scrollTop: $(".comments-log-container").offset().top }, 1000);
+	$( ".comments-log-container" ).parent().addClass( "assign-user" );
 }
 
 $(function(){
