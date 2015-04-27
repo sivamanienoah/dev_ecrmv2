@@ -7,7 +7,7 @@ $userdata = $this->session->userdata('logged_in_user');
 <div id="content">
 	<div class="inner">	
 	<h2><?php echo $page_heading; ?></h2>
-	<?php if($this->session->userdata('accesspage')==1) { ?>
+	<?php //if($this->session->userdata('accesspage')==1) { ?>
 	
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
@@ -39,9 +39,10 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php $i++; } ?>
 		</tbody>
 	</table>
-	<?php } else { 
-		echo "You have no rights to access this page"; 
-	} ?>
+	<?php //} else { 
+		//echo "You have no rights to access this page"; 
+	//} 
+	?>
 	</div><!--/Inner div -->
 </div><!--/Content div -->
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
