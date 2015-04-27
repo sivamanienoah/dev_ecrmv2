@@ -103,7 +103,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 						<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
 						<ul class="root">
 							<li><a class="my-profile" href="<?php echo base_url() ?>myaccount/">My Profile</a></li>
-							<li><a class="my-profile" href="<?php echo base_url() ?>notifications/">Manage Notifications</a></li>
+							<li><a class="notifications" href="<?php echo base_url() ?>notifications/">Manage Notifications</a></li>
 							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/logout">Sign Out</a></li>
 						</ul>
 					</div>
