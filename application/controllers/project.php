@@ -685,6 +685,10 @@ class Project extends crm_controller {
 		else
 		{
 			//update in crm			
+			
+			// delete the existing assigned users from the contract jobs table before inserting the new things.
+			$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
+					
 			if($project_team_members)
 			{
 				$ins['jobid_fk'] = $lead_id;
@@ -695,10 +699,7 @@ class Project extends crm_controller {
 					$this->db->where_in("userid",$ptms);
 					$res_cm_users = $this->db->get($this->cfg['dbpref']."users");
 					$rs_cm_users = $res_cm_users->result();
-					
-					// delete the existing assigned users from the contract jobs table before inserting the new things.
-					$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
-					
+										
 					//inserting the assigned users in the contract jobs table.
 					foreach($ptms as $pmembers){
 						$ins['userid_fk'] = $pmembers;
@@ -747,13 +748,13 @@ class Project extends crm_controller {
 		
 		if ($stake_members == "")
 		{
-			$data['error'] = 'State Holders must not be Null value!';
+			$data['error'] = 'Stake Holders must not be Null value!';
 		}
 		
 		$stms = explode(",",$stake_members);
 		$ins = array();
+		$this->db->delete($this->cfg['dbpref']."stake_holders",array("lead_id" => $lead_id));
 		if(count($stms) > 0){
-			$this->db->delete($this->cfg['dbpref']."stake_holders",array("lead_id" => $lead_id));
 			$ins['lead_id'] = $lead_id;
 			foreach($stms as $sm){
 				$ins['user_id'] = $sm;

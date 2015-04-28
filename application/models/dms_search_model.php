@@ -13,6 +13,17 @@ class Dms_search_model extends crm_model {
 	public function search_files($search_name = null,$customers = null,$projects = null,$extension = null,$from_date = null,$to_date = null){
 	
 		$user_id = $this->user_id;
+		
+		$qry = $this->db->get_where($this->cfg['dbpref']."stake_holders",array("user_id" => $user_id));
+		if($qry->num_rows()>0){
+			$res = $qry->result();
+			$stake_arr = array();
+			foreach($res as $r){
+				$stake_arr[] = $r->lead_id;
+			}
+			$st = implode(",",$stake_arr);
+		}		
+		 
 		$this->db->select('f.folder_name,cus.company,cus.first_name as cust_firstname ,cus.last_name as cust_lastname,le.lead_title,lf.file_id,lf.lead_id,lf.lead_files_name,lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
@@ -22,7 +33,11 @@ class Dms_search_model extends crm_model {
 		
 		 
 		if (($this->user_role != 1 && $this->user_role != 2 && $this->user_role != 4)) {
-			$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id)");
+			if($st){
+				$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id or le.lead_id in ($st))");
+			}else{
+				$this->db->where("(le.lead_assign = $user_id or le.assigned_to = $user_id or le.belong_to = $user_id)");	
+			}
 		}
 		
 		if(!empty($customers) && count($customers)>0){
@@ -31,7 +46,7 @@ class Dms_search_model extends crm_model {
 		
 		if(!empty($projects) && count($projects)>0){
 			$this->db->where_in("le.lead_id",$projects);
-		}
+		} 
 		
 		if(!empty($extension) && count($extension)>0){
 			$this->db->where_in('SUBSTRING_INDEX(lf.lead_files_name,".","-1")',$extension);
@@ -146,7 +161,17 @@ class Dms_search_model extends crm_model {
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
 			$data['jobids1'] = $rowsJobs->result_array();
 
-			$data = array_merge_recursive($data['jobids'], $data['jobids1']);
+			//fetching stake holders
+			$this->db->select('lead_id');
+			$data['jobids2'] = array();
+			$qry = $this->db->get_where($this->cfg['dbpref']."stake_holders",array("user_id" => $varSessionId));
+			if($qry->num_rows()>0){
+				$data['jobids2'] = $qry->result_array();
+			}			
+
+			$data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
+			
+			 		 
 
 			$res[] = 0;
 			if (is_array($data) && count($data) > 0) { 
@@ -324,7 +349,7 @@ class Dms_search_model extends crm_model {
 		$this->db->limit($limit);
 		
 		$customers = $this->db->get();        
-		//echo $this->db->last_query();
+		
         return $customers->result_array(); 
     }	
 	
