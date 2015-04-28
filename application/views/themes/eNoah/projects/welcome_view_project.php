@@ -438,7 +438,11 @@ if (get_default_currency()) {
 					<input type="hidden" class="hiddenUrl"/>
 					<input type="hidden" id="pjt_status_hidden" value=<?php echo $quote_data['pjt_status']; ?> />
 				</div>					
-				<?php if ($chge_access == 1) { ?>
+				<?php 
+				$show_disable = true;				
+				if ($chge_access == 1) { 
+				$show_disable = false;
+				?>
 				<div class="buttons">
 					<button type="submit" class="positive" id="submitid" style="margin:0 0 0 5px;" onclick="setProjectStatus(); return false;">Set</button>
 					<div id="resmsg" class="error-msg"></div>
@@ -500,7 +504,7 @@ if (get_default_currency()) {
 			 
 			<div class="pull-left">
 			<label class="project-manager">Project Manager</label>
-				<select class="chzn-select"  id="project_manager" name="project_manager">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> class="chzn-select"  id="project_manager" name="project_manager">
 					<?php if(!empty($all_users)):?>
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):?>
@@ -509,10 +513,8 @@ if (get_default_currency()) {
 					<?php endif; ?>
 				</select>
 			</div>
-			<?php 
-			$show_disable = true;
+			<?php 			
 			if($chge_access == 1 && $quote_data['pjt_status'] != 2) {
-			$show_disable = false;		
 			?>
 			<div>
 				<div class="buttons">
