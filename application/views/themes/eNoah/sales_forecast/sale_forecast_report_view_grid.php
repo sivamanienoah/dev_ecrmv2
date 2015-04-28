@@ -92,9 +92,9 @@ $(function(){
 		"bProcessing": true,
 		"bServerSide": false,
 		"bLengthChange": true,
-		"bSort": true,
+		"bSort": false,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false
 	});
 });
 </script>
