@@ -489,26 +489,6 @@ class Sales_forecast_model extends crm_model {
 	}
 	
 	/*
-	*@Get Current Financial year
-	*@Method  calculateFiscalYearForDate
-	*/
-	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
-		$date = strtotime($inputDate);
-		$inputyear = strftime('%Y',$date);
-	 
-		$fystartdate = strtotime($fyStart.'/'.$inputyear);
-		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
-	 
-		if($date <= $fyenddate){
-			$fy = intval($inputyear);
-		}else{
-			$fy = intval(intval($inputyear) + 1);
-		}
-	 
-		return $fy;
-	}
-	
-	/*
 	*@Get currency rates
 	*@Method  get_currency_rate
 	*/

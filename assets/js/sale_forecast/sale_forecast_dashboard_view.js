@@ -7,7 +7,7 @@
 var params  = {};
 params[csrf_token_name] = csrf_hash_token;
 
-$('#advance_search').hide();
+// $('#advance_search').hide();
 
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
@@ -15,6 +15,7 @@ function advanced_filter() {
 
 $(function() {
 	
+	/*Date Picker*/
 	$( "#month_year_from_date, #month_year_to_date" ).datepicker({
 		changeMonth: true,
 		changeYear: true,
@@ -42,27 +43,10 @@ $(function() {
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
 	});
-	
-	//dataTable
- 	$('.data-tbl').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
-		"iDisplayLength": 10,
-		"sPaginationType": "full_numbers",
-		"bInfo": true,
-		"bPaginate": true,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": true,
-		"bSort": false,
-		"bFilter": true,
-		"bAutoWidth": false
-	});
-	
 });
 
-
 //For Advance Filters functionality.
-$("#advanceFiltersSFReport").submit(function() {
+$("#advanceFiltersDashboard").submit(function() {
 	$('#advance').hide();
 	$('#load').show();
 	var entity      = $("#entity").val();
@@ -73,11 +57,12 @@ $("#advanceFiltersSFReport").submit(function() {
 
 	$.ajax({
 		type: "POST",
-		url: site_base_url+"sales_forecast/reports/",
+		url: site_base_url+"sales_forecast/forecast_dashboard/",
+		async: false,
 		// dataType: "json",
 		data: "filter=filter"+"&lead_ids="+lead_ids+"&customer="+customer+"&entity="+entity+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
-			$('#results').empty();
+			$('#results').html('');
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(res) {
@@ -90,14 +75,18 @@ $("#advanceFiltersSFReport").submit(function() {
 });
 
 //export to excel
-$('#export_excel_forecast').click(function() {
+$('#item-export').click(function() {
 	var entity               = $("#entity").val();
 	var customer    		 = $("#customer").val();
 	var lead_ids   			 = $("#lead_ids").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
 	
-	var url = site_base_url+"sales_forecast/export_excel_forecast";
+	var item_name            = $("#item_name").val();
+	var item_category		 = $("#item_category").val();
+	var item_type		 	 = $("#item_type").val();
+
+	var url = site_base_url+'sales_forecast/export_data/';
 	
 	var form = $('<form action="' + url + '" method="post">' +
 	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
@@ -105,7 +94,10 @@ $('#export_excel_forecast').click(function() {
 	  '<input type="hidden" name="customer" value="' +customer+ '" />' +
 	  '<input type="hidden" name="lead_ids" value="' +lead_ids+ '" />' +
 	  '<input type="hidden" name="month_year_from_date" value="' +month_year_from_date+ '" />' +
-	  '<input type="hidden" name="month_year_to_date" value="' +month_year_to_date+ '" /></form>');
+	  '<input type="hidden" name="month_year_to_date" value="' +month_year_to_date+ '" />' +
+	  '<input type="hidden" name="item_name" value="' +item_name+ '" />' +
+	  '<input type="hidden" name="item_type" value="' +item_type+ '" />' +
+	  '<input type="hidden" name="item_category" value="' +item_category+ '" /></form>');
 	$('body').append(form);
 	$(form).submit();
 	return false;

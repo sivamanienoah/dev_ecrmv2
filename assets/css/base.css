@@ -2109,7 +2109,7 @@ div.submenu{background: #fff;position: absolute;/* top: -12px;left: -20px; */rig
 a.account {font-size: 11px;line-height: 16px;color:#59585d;/* position: absolute; */position:relative;/* z-index: 110; */z-index:1;display: block;/* padding: 11px 0 0 20px;height: 28px; width: 121px;*/margin:0px;padding:9px 0 9px 44px;text-decoration: none;cursor:pointer;background:url("../img/user-icon.png") no-repeat left;float:left;}
 a.account p{color:#363636;font-size:13px;background:url("../img/user-drop-icon.png") no-repeat  100% 8px;padding:0 25px 0 0;}
 .root{list-style:none;margin:0px;padding:0px;font-size: 11px;padding:0px;border:1px solid #dedede;}
-#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2 {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
+#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2, #entity-chart, #forecast-compare-chart {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
 .header {float: left;padding:5px 0;width: 100%;}
 .date-time{background:url("../img/calender-icon.png") no-repeat left;float: left;margin:0;padding: 10px 0px 10px 25px;}
 div.dropdown {color: #555;position: relative;float:right;border-left: 1px solid #dadada;margin:0 0 0 20px;padding:0 0 0 20px;}
@@ -2198,6 +2198,10 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .blockUI.blockMsg.blockPage.assign-user {
 	overflow: visible !important;
 }
+/*sales forecast dashboard*/
+#entity-chart .jqplot-title, #forecast-compare-chart .jqplot-title {display:none;}
+#forecast-compare-chart .jqplot-grid-canvas { top: 0 !important; }
+/*sales forecast dashboard*/
 /*Clearfix*/
 .clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
 .clearfix {display: inline-block;}
