@@ -229,7 +229,6 @@ class Dashboard extends crm_controller {
 	}
 	
 	public function conver_currency($amount,$val) {
-	
 		return round($amount*$val);
 	}
 	
@@ -814,17 +813,15 @@ class Dashboard extends crm_controller {
 				}
 				$data['leadDeta'] = $this->dashboard_model->getIndiLeads($cusId, $ind, $filters);
 				$heading = "Lead Indicator - ".$ind;
-				$tid = "example_bar1";
+				$tid     = "example_bar1";
 				$linkurl = "welcome/view_quote/";
 			break;
-			
 			case "line1":
 				$data['leadDeta'] = $this->dashboard_model->leadAgingLeads($cusId, $gid, $filters);
 				$heading = "Leads Aging";
-				$tid = "example_line1";
+				$tid     = "example_line1";
 				$linkurl = "welcome/view_quote/";
 			break;
-
 		}
 		
 		$res['html'] .= '<div class="dash-section dash-section1"><h5>'.$heading.'</h5><div class="grid-close"></div></div>';

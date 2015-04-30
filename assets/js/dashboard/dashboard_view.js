@@ -576,7 +576,6 @@ if(viewlead==1) {
 				smooth: true
 				}
 			},
-
 			grid: {
 				drawGridLines: false,        // wether to draw lines across the grid or not.
 				gridLineColor: '#C7C7C7',   // CSS color spec of the grid lines.

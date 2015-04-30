@@ -120,7 +120,7 @@ class Invoice_model extends crm_model {
 	    $this->db->from($this->cfg['dbpref'] . 'customers');
 		$this->db->order_by("first_name");
 	    $customers = $this->db->get();
-	    $customers =  $customers->result_array();
+	    $customers = $customers->result_array();
 	    return $customers;
 	}
 	
