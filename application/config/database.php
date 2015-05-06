@@ -45,6 +45,25 @@
 | the active record class
 */
 
+// Fourth Database
+// $active_group = "support";
+// $active_record = false;
+$db['support']['hostname'] = 'localhost';
+$db['support']['username'] = 'dev_support';
+$db['support']['password'] = 'Su996thj';
+$db['support']['database'] = 'dev_support';
+$db['support']['dbdriver'] = 'mysql';
+$db['support']['dbprefix'] = 'mantis_';
+$db['support']['pconnect'] = FALSE;
+$db['support']['db_debug'] = TRUE;
+$db['support']['cache_on'] = FALSE;
+$db['support']['cachedir'] = '';
+$db['support']['char_set'] = 'utf8';
+$db['support']['dbcollat'] = 'utf8_general_ci';
+$db['support']['swap_pre'] = '';
+$db['support']['autoinit'] = TRUE;
+$db['support']['stricton'] = FALSE;
+
 // Third Database
 // $active_group = "econnect";
 // $active_record = false;
