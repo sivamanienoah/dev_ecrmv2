@@ -45,7 +45,7 @@
 | the active record class
 */
 
-// Fourth Database
+// Fourth Database added
 // $active_group = "support";
 // $active_record = false;
 $db['support']['hostname'] = 'localhost';
