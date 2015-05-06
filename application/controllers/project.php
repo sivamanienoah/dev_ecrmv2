@@ -462,6 +462,47 @@ class Project extends crm_controller {
 			
 			$data['all_users'] = $this->project_model->get_all_users();
 			
+			
+			/**
+			get the bug summary from the mantis bug table
+			**/
+			
+			$support_db = $this->load->database("support",true);
+			$data['bug_status'] = '';
+			$data['bug_severity'] = '';
+			$data['bug_category'] = '';
+			if($support_db){
+				$support_db->select('id');
+				$qry = $support_db->get_where($support_db->dbprefix("project_table"),array("code" => $data['quote_data']['pjt_id']));
+				if($qry->num_rows()>0){
+					$res = $qry->result();
+					$pjtIds = array();
+					foreach($res as $r){
+						$pjtIds[] = $r->id;
+					}
+					$AllPjtIds = implode(",",$pjtIds);
+					
+					//get all bug list based on the status
+					$qry1 = $support_db->query("SELECT COUNT(id) as bugcount, status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY status ORDER BY status") ;
+					if($qry1->num_rows()>0) {
+						$data['bug_status'] = $qry1->result();
+					}
+					
+					// get all the bug list based on the severity
+					$qry_severity = $support_db->query("SELECT COUNT(id) as bugcount, severity ,status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY severity ,status ORDER BY severity ,status ");
+					if($qry_severity->num_rows()>0){
+						$data['bug_severity'] = $qry_severity->result_array();
+					}
+ 					
+					//get all bug list based on the category
+					$qry_category = $support_db->query("SELECT COUNT(b.id) as bugcount, c.name AS category_name, category_id, b.status FROM ".$support_db->dbprefix("bug_table")." b JOIN ".$support_db->dbprefix("category_table")." AS c ON b.category_id=c.id WHERE b.project_id IN ($AllPjtIds) GROUP BY category_id, c.name, b.status ORDER BY category_id, c.name, b.status");
+					if($qry_category->num_rows()>0){
+						$data['bug_category'] = $qry_category->result_array();
+					}
+				}
+				$support_db->close();	
+			}			
+			
             $this->load->view('projects/welcome_view_project', $data);
         }
         else

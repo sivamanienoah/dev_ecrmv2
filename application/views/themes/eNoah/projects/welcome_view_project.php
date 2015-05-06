@@ -597,6 +597,7 @@ if (get_default_currency()) {
 			<?php if($this->userdata['role_id'] != 8):?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-8-5">Bug Summary</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
 			<?php endif; ?>
 		</ul>
@@ -1878,6 +1879,121 @@ if (get_default_currency()) {
 			</div>
 		</div>
 	</div><!-- id: jv-tab-8 end -->
+	<div id="jv-tab-8-5">
+
+	<?php 
+		$checkValue = true;
+		$statusArray = array(20 => "FEEDBACK",30 => "ACKNOWLEDGED",40 => "CONFIRMED",50 => "ASSIGNED",80 => "RESOLVED",90 => "CLOSED");?>		
+		<div style="overflow: auto;">
+		<?php if(count($bug_status)>0 && !empty($bug_status)): 
+				$checkValue = false;
+		?>
+			<div class="pull-left">
+			<table width="200" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
+				<tbody>
+				<tr>
+					<th>Status</th>
+					<th>Bug Count</th>
+				</tr>
+				<?php 
+				foreach($bug_status as $stat):?>
+				<tr>					
+					<td><strong><?php echo ucfirst(strtolower($statusArray[$stat->status]));?></strong></td>
+					<td><?php echo $stat->bugcount;?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+			</table>
+			</div>
+		<?php	endif;	?>		
+		<?php if(count($bug_severity)>0 && !empty($bug_status)) :	
+			$checkValue = false;
+		?>
+		<div class="pull-left">
+			<table width="300" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+				<tbody>
+				<tr>
+					<th>Severity</th>
+					<th>Open</th>
+					<th>Resolved</th>
+					<th>Closed</th>
+					<th>Total</th>
+				</tr>
+				<?php 
+					$severityArray = array(10 => "FEATURE",20 => "TRIVIAL",30 => "TEXT",40 => "TWEAK",50 => "MINOR",60 => "MAJOR",70 => "CRASH",80 => "BLOCK");
+					$sev_arr = array();
+					$sev_status_arr = array();
+					//echo '<pre>';print_r($bug_severity);
+					foreach($bug_severity as $val):
+						$sev_arr[$val['severity']][$val['status']] = $val['bugcount'];
+						$sev_status_arr[] = $val['status'];
+					endforeach;	
+					$statusUnique = array_unique($sev_status_arr);
+					sort($statusUnique);
+					if(count($sev_arr)>0 && !empty($sev_arr)):
+						foreach($sev_arr as $key=>$row):
+						$total = 0;?>
+							<tr>					
+								<td><strong><?php echo ucfirst(strtolower($severityArray[$key]));?></strong></td>
+								<?php foreach($statusUnique as $s): $total += $row[$s];?>
+								<td> <?php echo (!empty($row[$s])?$row[$s]:0);?></td>
+								<?php endforeach;?>
+								<td> <?php echo $total;?></td>
+							</tr>
+							<?php
+						endforeach;
+					endif;
+					?>
+				</tbody>
+			</table>
+		</div>
+		<?php endif; ?>
+
+		<?php
+		$cat_arr = array();
+		$cat_status_arr = array();
+		if(count($bug_category)>0 && !empty($bug_category)) :	
+			$checkValue = false;
+			foreach($bug_category as $val):
+				$cat_arr[$val['category_id'].'##'.$val['category_name']][$val['status']] = $val['bugcount'];
+				$cat_status_arr[] = $val['status'];
+			endforeach;
+			$catstatusUnique = array_unique($cat_status_arr);
+			sort($catstatusUnique);			
+			?>
+			<div class="pull-left">
+				<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+					<tbody>
+					<tr>
+						<th>Category</th>
+						<th>Open</th>
+						<th>Resolved</th>
+						<th>Closed</th>
+						<th>Total</th>
+					</tr>
+					<?php
+					if(count($cat_arr)>0 && !empty($cat_arr)):
+						foreach($cat_arr as $key=>$res): 
+							$total = 0;
+							$ex = explode("#",$key);?>
+							<tr>					
+								<td><strong><?php echo $ex[2];?></strong></td>
+								<?php foreach($catstatusUnique as $c): $total += $res[$c];?>
+								<td> <?php echo (!empty($res[$c])?$res[$c]:0);?></td>
+								<?php endforeach;?> 
+								<td> <?php echo $total;?></td>
+							</tr>
+							<?php
+						endforeach; 
+					endif;	?>
+					</tbody>
+				</table>
+			</div>
+		<?php endif; ?>	
+		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>
+		</div>
+	</div><!-- id: jv-tab-9 end -->
+	
 	<div id="jv-tab-9">
 		<span style="float:right;" class="job_history"> 
 				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>

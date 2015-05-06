@@ -821,6 +821,6 @@ class Project_model extends crm_model
 		$query = $this->db->get($this->cfg['dbpref'] . 'project_billing_type');
 		return $query->result_array();
 	}
-	
+
 }
 ?>
