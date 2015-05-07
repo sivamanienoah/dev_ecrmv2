@@ -2029,7 +2029,7 @@ if (get_default_currency()) {
 							endforeach;
 							$opened = $total - ($resolved+$closed);
 							$ex = explode("#",$key);
-							echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+							//echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
 						endforeach; 
 					endif;	?>
 					</tbody>
