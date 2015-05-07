@@ -1992,7 +1992,7 @@ if (get_default_currency()) {
 				</table>			
 			</div>
 		<?php endif;  
-		
+		echo '<pre>';print_r($AllPjtIds);
 	 	if(count($AllPjtIds)==1 && count($AllPjtIds)>0):
 		$cat_arr = array();
 		$cat_status_arr = array();
@@ -2003,7 +2003,9 @@ if (get_default_currency()) {
 				$cat_status_arr[] = $val['status'];
 			endforeach;
 			$catstatusUnique = array_unique($cat_status_arr);
-			sort($catstatusUnique);	?>
+			sort($catstatusUnique);	
+			echo '<pre>';print_r($catstatusUnique);
+			?>
 			<div class="pull-left">
 			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
 					<tbody>
