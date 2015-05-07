@@ -466,8 +466,9 @@ class Project extends crm_controller {
 			/**
 			get the bug summary from the mantis bug table
 			**/
-			 
+			
 			$support_db = $this->load->database("support",true);
+			echo 'here';exit;
 			$data['bug_status'] = '';
 			$data['bug_severity'] = '';
 			$data['bug_category'] = '';
