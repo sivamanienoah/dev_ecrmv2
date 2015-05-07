@@ -2018,12 +2018,12 @@ if (get_default_currency()) {
 					</tr>
 					<?php
 					if(count($cat_arr)>0 && !empty($cat_arr)):
-						foreach($cat_arr as $key=>$res): 
+						foreach($cat_arr as $key => $res): 
 							$total = 0;
 							$opened = 0;
 							$resolved = 0;
 							$closed = 0;
-							if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
+							/* if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
 								 foreach($catstatusUnique as $c): 
 									$total += $res[$c];
 									if(!empty($c==80)) $resolved = $res[$c];
@@ -2032,7 +2032,7 @@ if (get_default_currency()) {
 								$opened = $total - ($resolved+$closed);
 								$ex = explode("#",$key);
 								echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
-							endif;
+							endif; */
 						endforeach; 
 					endif;	?>
 					</tbody>
