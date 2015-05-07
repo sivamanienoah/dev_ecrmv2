@@ -1052,6 +1052,7 @@ if (get_default_currency()) {
 				</div>
 			</form>
 			<?php 
+			
 			//($file_upload_access == 1 && $quote_data['pjt_status'] != 2) ||
 			if ( ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 			<div class="pull-left pad-right">
@@ -1139,31 +1140,31 @@ if (get_default_currency()) {
 					<td valign="top" width="80"><label>New Folder</label></td>
 					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
 				</tr>
-				
-				<?php /* <tr>
+				<?php if(!empty($project_members) && count($project_members)>0):?>
+				<tr>
 					<td colspan="2">
 					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
-					<?php if(!empty($project_members) && count($project_members)>0):?>
+				
 							<tr>
 								<th>Users</th>
 								<th>Is Recursive?</th>
 								<th>Add Access</th>
-								<th>Download Access</th>
+								<th>View Access</th>
 							</tr>
 							<?php foreach($project_members as $pusers):?>							 
 								<tr>
 									<td><input type="hidden" name="pjt_users_id[]" value="<?php echo $pusers['userid'];?>" /><?php echo $pusers['first_name'].' '.$pusers['last_name'];?></td>
-									<td><input class="js_checkbox" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]"   value="1" /></td>
-									<td><input class="js_checkbox" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]"   value="1" /></td>
-									<td><input class="js_checkbox" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
+									<td><input class="js_recursive js_active_recur_<?php echo $pusers['userid'];?>" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]"   value="1" /></td>
+									<td><input class="js_add_access js_active_add_<?php echo $pusers['userid'];?>" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]"   value="1" /></td>
+									<td><input class="js_view_access js_active_view_<?php echo $pusers['userid'];?>" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
 								</tr>							
 						<?php endforeach;?>
-						<?php endif;?>
+						
 					</table>	
 					</td>
 				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr> */ ?>
-				
+				<tr><td colspan="2">&nbsp;</td></tr>
+				<?php endif;?>
 				<tr>
 					<td colspan="2">
 						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>
@@ -1200,27 +1201,26 @@ if (get_default_currency()) {
 								<th>Users</th>
 								<th>Is Recursive?</th>
 								<th>Add Access</th>
-								<th>Download Access</th>
+								<th>View Access</th>
 							</tr>
 							<?php foreach($project_members as $pusers):?>							 
 								<tr>
 									<td><input type="hidden" name="pjt_users_id[]" value="<?php echo $pusers['userid'];?>" /><?php echo $pusers['first_name'].' '.$pusers['last_name'];?></td>
-									<td><input class="js_checkbox" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]" value="1" /></td>
+									<td><input class="js_recursive" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]" value="1" /></td>
 									<td><input class="js_checkbox" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]" value="1" /></td>
-									<td><input class="js_checkbox" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
+									<td><input class="js_view_access" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
 								</tr>							
 						<?php endforeach;?>
 						<?php endif;?>
-						<tr>
-							<td colspan="4">
-								<div class="buttons"><button type="submit" class="positive" onclick="assign_folder();">Save</button></div>
-								<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
-							</td>
-						</tr>						
 					</table>	
 					</td>
 				</tr>				
-				  
+				<tr>
+					<td colspan="2">
+						<div class="buttons"><button type="submit" class="positive" onclick="assign_folder();">Save</button></div>
+						<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+					</td>
+				</tr>
 
 			</table>
 		<!-- edit end -->
@@ -2006,7 +2006,34 @@ if (get_default_currency()) {
 			sort($catstatusUnique);			
 			?>
 			<div class="pull-left">
-				
+<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+					<tbody>
+					<tr>
+						<th>Category</th>
+						<th>Open</th>
+						<th>Resolved</th>
+						<th>Closed</th>
+						<th>Total</th>
+					</tr>
+					<?php
+					if(count($cat_arr)>0 && !empty($cat_arr)):
+						foreach($cat_arr as $key=>$res): 
+							$total = 0;
+							$opened = 0;
+							$resolved = 0;
+							$closed = 0;
+							foreach($catstatusUnique as $c): 
+								$total += $res[$c];
+								if(!empty($c==80)) $resolved = $res[$c];
+								if(!empty($c==90)) $closed = $res[$c];
+							endforeach;
+							$opened = $total - ($resolved+$closed);
+							$ex = explode("#",$key);
+							echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+						endforeach; 
+					endif;	?>
+					</tbody>
+				</table>				
 			</div>
 		<?php endif; endif;  ?>	
 		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>	
@@ -2056,6 +2083,17 @@ button.ui-datepicker-current { display: none; }
   var project_complete_status = "<?php echo isset($quote_data['complete_status']) ? $quote_data['complete_status'] : 0 ?>";
   var proj_location			  = 'http://<?php echo $_SERVER['HTTP_HOST'], preg_replace('/[0-9]+/', '{{lead_id}}', $_SERVER['REQUEST_URI']) ?>';
   var rag_stat_id			  = "<?php echo $quote_data['rag_status']; ?>";
+  var user_role_id			  = "<?php echo $userdata['role_id']; ?>";
+  
+$(document).ready(function(){
+	$('body').on('click','.js_recursive',function(){
+		if($(this).prop("checked")){
+			$(this).parent().next().next().children('.js_view_access').prop("checked",true);
+		}else{
+			$(this).parent().next().next().children('.js_view_access').prop("checked",false);
+		}
+	})
+});  
   
 $(function(){
 	var config = {
