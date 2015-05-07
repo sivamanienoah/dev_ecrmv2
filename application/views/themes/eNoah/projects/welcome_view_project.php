@@ -1885,7 +1885,7 @@ if (get_default_currency()) {
 	<div id="jv-tab-8-5">
 		<?php  
 			$checkValue = true;
-			/*if(count($bug_project)>0 && !empty($bug_project)):?>
+			 if(count($bug_project)>0 && !empty($bug_project)):?>
 				<div style="margin-bottom:10px;" class="pull-left">
 				<?php 
 				$checkValue = false;
@@ -1920,10 +1920,10 @@ if (get_default_currency()) {
 				</tbody>
 				</table>	
 			</div>					
-		<?php endif; */?>
+		<?php endif;  ?>
 		
 		<?php 
-		/*if(count($bug_severity)>0 && !empty($bug_severity)) :	
+		 if(count($bug_severity)>0 && !empty($bug_severity)) :	
 			$checkValue = false;
 			$bs_arr = array();
 			$opened_arr = array();
@@ -1991,7 +1991,7 @@ if (get_default_currency()) {
 				</tbody>
 				</table>			
 			</div>
-		<?php endif;  */
+		<?php endif;  
 		
 	/*	if(count($AllPjtIds)==1):
 		$cat_arr = array();
