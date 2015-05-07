@@ -2004,7 +2004,7 @@ if (get_default_currency()) {
 			endforeach;
 			$catstatusUnique = array_unique($cat_status_arr);
 			sort($catstatusUnique);	
-			echo '<pre>';print_r($catstatusUnique);
+			 
 			?>
 			<div class="pull-left">
 			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
