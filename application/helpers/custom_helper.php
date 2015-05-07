@@ -113,7 +113,7 @@ function updt_currency($frm, $to_Currency_id, $conversion_value)
 	$opened = isset($opened)?$opened:0;
 	$resolved = isset($resolved)?$resolved:0;
 	$closed = isset($closed)?$closed:0;
-	return '<tr><td><strong>'.$label.'</strong></td><td>'.$opened.'</td><td>'.$resolved.'</td><td>'.$closed.'</td><td>'.$total.'</td></tr>';
+	return '<tr><td><strong>'.$label.'</strong></td><td>'.$opened.'</td><td>'.$resolved.'</td><td>'.$closed.'</td><td>'.$total.'</td></tr>'; 
 }
 
 function formatSizeUnits($bytes)
