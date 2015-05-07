@@ -1993,7 +1993,7 @@ if (get_default_currency()) {
 			</div>
 		<?php endif;  
 		
-	 //	if(count($AllPjtIds)==1 && count($AllPjtIds)>0):
+	 	if(count($AllPjtIds)==1 && count($AllPjtIds)>0):
 		$cat_arr = array();
 		$cat_status_arr = array();
 		if(count($bug_category)>0 && !empty($bug_category)) :	
@@ -2003,9 +2003,7 @@ if (get_default_currency()) {
 				$cat_status_arr[] = $val['status'];
 			endforeach;
 			$catstatusUnique = array_unique($cat_status_arr);
-			sort($catstatusUnique);	
-			
-			?>
+			sort($catstatusUnique);	?>
 			<div class="pull-left">
 			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
 					<tbody>
@@ -2024,11 +2022,11 @@ if (get_default_currency()) {
 							$resolved = 0;
 							$closed = 0;
 							 if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
-								 foreach($catstatusUnique as $c): 
+								 /* foreach($catstatusUnique as $c): 
 									$total += $res[$c];
 									if(!empty($c==80)) $resolved = $res[$c];
 									if(!empty($c==90)) $closed = $res[$c];
-								endforeach; 
+								endforeach;  */
 								$opened = $total - ($resolved+$closed);
 								$ex = explode("#",$key);
 								echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
@@ -2038,7 +2036,7 @@ if (get_default_currency()) {
 					</tbody>
 				</table>				
 			</div>
-		<?php endif; //endif;  ?>	
+		<?php endif; endif;  ?>	
 		
 		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>	
 	</div>
