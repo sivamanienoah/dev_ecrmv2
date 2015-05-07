@@ -468,7 +468,7 @@ class Project extends crm_controller {
 			**/
 			
 			$support_db = $this->load->database("support",true);
-			echo 'here';exit;
+		
 			$data['bug_status'] = '';
 			$data['bug_severity'] = '';
 			$data['bug_category'] = '';
@@ -535,7 +535,7 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}			
-			
+				echo 'here';exit;
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
