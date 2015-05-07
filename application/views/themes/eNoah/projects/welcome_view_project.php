@@ -1993,7 +1993,7 @@ if (get_default_currency()) {
 			</div>
 		<?php endif;  */
 		
-		if(count($AllPjtIds)==1):
+	/*	if(count($AllPjtIds)==1):
 		$cat_arr = array();
 		$cat_status_arr = array();
 		if(count($bug_category)>0 && !empty($bug_category)) :	
@@ -2035,7 +2035,7 @@ if (get_default_currency()) {
 					</tbody>
 				</table>
 			</div>
-		<?php endif; endif;?>	
+		<?php endif; endif; */?>	
 		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>	
 	</div>
 	<!-- id: jv-tab-9 end -->
