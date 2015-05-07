@@ -1883,7 +1883,7 @@ if (get_default_currency()) {
 	
 	
 	<div id="jv-tab-8-5">
-		<?php  
+		<?php 		echo 'here';exit; 
 			$checkValue = true;
 			if(count($bug_project)>0 && !empty($bug_project)):?>
 				<div style="margin-bottom:10px;" class="pull-left">
