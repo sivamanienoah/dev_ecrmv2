@@ -1993,7 +1993,7 @@ if (get_default_currency()) {
 			</div>
 		<?php endif;  
 		
-	 	if(count($AllPjtIds)==1):
+	 	if(count($AllPjtIds)==1 && count($AllPjtIds)>0):
 		$cat_arr = array();
 		$cat_status_arr = array();
 		if(count($bug_category)>0 && !empty($bug_category)) :	
@@ -2031,7 +2031,7 @@ if (get_default_currency()) {
 								endforeach; 
 								$opened = $total - ($resolved+$closed);
 								$ex = explode("#",$key);
-								//echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+								echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
 							endif; 
 						endforeach; 
 					endif;	?>
