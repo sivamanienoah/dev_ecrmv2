@@ -109,6 +109,13 @@ function updt_currency($frm, $to_Currency_id, $conversion_value)
 	}
 }
 
+ function show_detail_html($label='',$opened=0,$resolved=0,$closed=0,$total=0){
+	$opened = isset($opened)?$opened:0;
+	$resolved = isset($resolved)?$resolved:0;
+	$closed = isset($closed)?$closed:0;
+	return '<tr><td><strong>'.$label.'</strong></td><td>'.$opened.'</td><td>'.$resolved.'</td><td>'.$closed.'</td><td>'.$total.'</td></tr>';
+}
+
 function formatSizeUnits($bytes)
     {
         if ($bytes >= 1073741824)

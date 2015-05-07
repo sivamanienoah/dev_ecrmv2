@@ -1880,10 +1880,45 @@ if (get_default_currency()) {
 		</div>
 	</div><!-- id: jv-tab-8 end -->
 	<div id="jv-tab-8-5">
-
+	
+	<div class="pull-left">
+		<?php if(count($bug_project)>0 && !empty($bug_project)):
+				$bp_arr = array();
+				foreach($bug_project as $bp):
+					$bp_arr['values'][$bp->project_id][$bp->status] = $bp->bugcount;
+				endforeach;
+				ksort($bp_arr['values']);?>
+				<table width="200" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
+					<tbody>
+					<tr>
+						<th>Project Name</th>
+						<th>Open</th>
+						<th>Resolved</th>
+						<th>Closed</th>
+						<th>Total</th>
+					</tr>
+					<?php 
+					foreach($bp_arr['values'] as $key => $stat):
+						$total = 0;
+						$opened = 0;
+						$resolved = 0;
+						$closed = 0;
+						foreach($stat as $key1 => $s): 
+							$total += $s;
+							if(!empty($key1==80)) $resolved = $s;
+							if(!empty($key1==90)) $closed = $s;
+						endforeach;
+						$opened = $total - ($resolved+$closed);	
+						echo show_detail_html(ucfirst(strtolower($project_names[$key])),$opened,$resolved,$closed,$total);
+						endforeach; ?>
+				</tbody>
+				</table>				
+		<?php endif; ?>
+	</div>
+	
 	<?php 
 		$checkValue = true;
-		$statusArray = array(20 => "FEEDBACK",30 => "ACKNOWLEDGED",40 => "CONFIRMED",50 => "ASSIGNED",80 => "RESOLVED",90 => "CLOSED");?>		
+		$statusArray = array(10 => "New", 20 => "FEEDBACK",30 => "ACKNOWLEDGED",40 => "CONFIRMED",50 => "ASSIGNED",80 => "RESOLVED",90 => "CLOSED");?>		
 		<div style="overflow: auto;">
 		<?php if(count($bug_status)>0 && !empty($bug_status)): 
 				$checkValue = false;
@@ -1923,24 +1958,27 @@ if (get_default_currency()) {
 					$severityArray = array(10 => "FEATURE",20 => "TRIVIAL",30 => "TEXT",40 => "TWEAK",50 => "MINOR",60 => "MAJOR",70 => "CRASH",80 => "BLOCK");
 					$sev_arr = array();
 					$sev_status_arr = array();
-					//echo '<pre>';print_r($bug_severity);
+					
 					foreach($bug_severity as $val):
 						$sev_arr[$val['severity']][$val['status']] = $val['bugcount'];
 						$sev_status_arr[] = $val['status'];
 					endforeach;	
 					$statusUnique = array_unique($sev_status_arr);
 					sort($statusUnique);
+ 
 					if(count($sev_arr)>0 && !empty($sev_arr)):
 						foreach($sev_arr as $key=>$row):
-						$total = 0;?>
-							<tr>					
-								<td><strong><?php echo ucfirst(strtolower($severityArray[$key]));?></strong></td>
-								<?php foreach($statusUnique as $s): $total += $row[$s];?>
-								<td> <?php echo (!empty($row[$s])?$row[$s]:0);?></td>
-								<?php endforeach;?>
-								<td> <?php echo $total;?></td>
-							</tr>
-							<?php
+							$total = 0;
+							$opened = 0;
+							$resolved = 0;
+							$closed = 0;
+							foreach($statusUnique as $s): 
+								$total += $row[$s];
+								if(!empty($s==80)) $resolved = $row[$s];
+								if(!empty($s==90)) $closed = $row[$s];
+							endforeach;
+							$opened = $total - ($resolved+$closed);
+							echo show_detail_html(ucfirst(strtolower($severityArray[$key])),$opened,$resolved,$closed,$total);
 						endforeach;
 					endif;
 					?>
@@ -1975,15 +2013,17 @@ if (get_default_currency()) {
 					if(count($cat_arr)>0 && !empty($cat_arr)):
 						foreach($cat_arr as $key=>$res): 
 							$total = 0;
-							$ex = explode("#",$key);?>
-							<tr>					
-								<td><strong><?php echo $ex[2];?></strong></td>
-								<?php foreach($catstatusUnique as $c): $total += $res[$c];?>
-								<td> <?php echo (!empty($res[$c])?$res[$c]:0);?></td>
-								<?php endforeach;?> 
-								<td> <?php echo $total;?></td>
-							</tr>
-							<?php
+							$opened = 0;
+							$resolved = 0;
+							$closed = 0;
+							foreach($catstatusUnique as $c): 
+								$total += $res[$c];
+								if(!empty($c==80)) $resolved = $res[$c];
+								if(!empty($c==90)) $closed = $res[$c];
+							endforeach;
+							$opened = $total - ($resolved+$closed);
+							$ex = explode("#",$key);
+							echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
 						endforeach; 
 					endif;	?>
 					</tbody>

@@ -472,20 +472,51 @@ class Project extends crm_controller {
 			$data['bug_severity'] = '';
 			$data['bug_category'] = '';
 			if($support_db){
-				$support_db->select('id');
+				$support_db->select('id,name');
 				$qry = $support_db->get_where($support_db->dbprefix("project_table"),array("code" => $data['quote_data']['pjt_id']));
 				if($qry->num_rows()>0){
 					$res = $qry->result();
-					$pjtIds = array();
+					$pjtIds = array();					
+					$pjtNames = array();					
+					$pnames_arr = array();					
 					foreach($res as $r){
 						$pjtIds[] = $r->id;
+						//get sub projects as well.
+/* 						$support_db->select("child_id");
+						$childProjects = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("parent_id" => $r->id));
+						if($childProjects->num_rows()>0){
+							$cPresult = $childProjects->result();
+							foreach($cPresult as $cp){
+								$pjtIds[] = $cp->child_id;
+							}
+						} */
 					}
+					$pjtIds = array_unique($pjtIds);
+					//echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
 					
+					// get project wise report
+					$support_db->select("id,name");
+					$support_db->where_in("id",$pjtIds);
+					$pNames = $support_db->get($support_db->dbprefix("project_table"));
+					if($pNames->num_rows()>0){
+						$pNamesRes = $pNames->result();
+						foreach($pNamesRes as $pnames){
+							$pnames_arr[$pnames->id] = $pnames->name;
+						}
+						$data['project_names'] = $pnames_arr;
+					}
+					
+					
+					$qry_project = $support_db->query("SELECT project_id, status, COUNT( status ) AS bugcount FROM mantis_bug_table where project_id in ($AllPjtIds) GROUP BY project_id, status ORDER BY status");
+					if($qry_project->num_rows()>0) {
+						$data['bug_project'] = $qry_project->result();
+					}					
+					
 					//get all bug list based on the status
-					$qry1 = $support_db->query("SELECT COUNT(id) as bugcount, status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY status ORDER BY status") ;
-					if($qry1->num_rows()>0) {
-						$data['bug_status'] = $qry1->result();
+					$qry_status = $support_db->query("SELECT COUNT(id) as bugcount, status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY status ORDER BY status") ;
+					if($qry_status->num_rows()>0) {
+						$data['bug_status'] = $qry_status->result();
 					}
 					
 					// get all the bug list based on the severity

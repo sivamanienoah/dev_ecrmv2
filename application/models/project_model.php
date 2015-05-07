@@ -1,8 +1,7 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Project_model extends crm_model 
-{
-    
+{   
     public function __construct()
     {
 		parent::__construct();
@@ -821,6 +820,7 @@ class Project_model extends crm_model
 		$query = $this->db->get($this->cfg['dbpref'] . 'project_billing_type');
 		return $query->result_array();
 	}
+	
 
 }
 ?>
