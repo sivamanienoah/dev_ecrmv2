@@ -535,7 +535,7 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}			
-				echo 'here';exit;
+		
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
