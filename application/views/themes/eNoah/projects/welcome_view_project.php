@@ -2025,9 +2025,9 @@ if (get_default_currency()) {
 							$closed = 0;
 							 if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
 								  foreach($catstatusUnique as $c): 
-									//$total += $res[$c];
-									if(!empty($c==80)) $resolved = $res[$c];
-									if(!empty($c==90)) $closed = $res[$c];
+									$total += $res[$c];
+									//if(!empty($c==80)) $resolved = $res[$c];
+									//if(!empty($c==90)) $closed = $res[$c];
 								endforeach;  
 								$opened = $total - ($resolved+$closed);
 								$ex = explode("#",$key);
