@@ -2095,12 +2095,32 @@ class Sales_forecast extends crm_controller {
 		
 		$month_year_from_date = $this->input->post('month_year_from_date');
 		$month_year_to_date   = $this->input->post('month_year_to_date');
+
+		$calc_date  = strtotime(date('Y-m') .' -4 months');
+		$calcul_date  = strtotime(date('Y-m') .' -4 months');
+		$current_month = date('Y-m', $calc_date);
+		// $highest_month = date('Y-m-d', $calcul_date);
+		$highest_month = date('Y-m-d');
 		
-		if((!empty($month_year_from_date)) && $month_year_from_date!='null')
+		if((!empty($month_year_from_date)) && $month_year_from_date!='null') {
+			$from_month = date('Y-m', strtotime($this->input->post('month_year_from_date')));
+			$filter['month_year_from_date'] = $this->input->post('month_year_from_date');
+		} else {
+			$from_month = $current_month;
+		}
+		
+		if((!empty($month_year_to_date)) && $month_year_to_date!='null') {
+			$highest_month = $to_month = date('Y-m-d', strtotime($this->input->post('month_year_to_date')));
+			$filter['month_year_to_date'] = $this->input->post('month_year_to_date');
+		} else {
+			$to_month = $highest_month;
+		}
+
+		/* if((!empty($month_year_from_date)) && $month_year_from_date!='null')
 		$filter['month_year_from_date'] = $this->input->post('month_year_from_date');
 		
 		if((!empty($month_year_to_date)) && $month_year_to_date!='null')
-		$filter['month_year_to_date'] = $this->input->post('month_year_to_date');
+		$filter['month_year_to_date'] = $this->input->post('month_year_to_date'); */
 
 		switch($filter['item_category']) {
 			case 0:
@@ -2118,12 +2138,15 @@ class Sales_forecast extends crm_controller {
 		
 		
 		
-		$variance_data = $this->sales_forecast_model->get_variance_records($filter);
+		$variance_data = $this->sales_forecast_model->get_variance_records_for_dashboard($filter);
 		
 		// echo "<pre>"; print_r($variance_data); exit;
 	
-		$current_month = date('Y-m');
-		$highest_month = date('Y-m-d');
+		/* $current_month = date('Y-m');
+		$highest_month = date('Y-m-d'); */
+		
+		$data['current_month'] = $from_month;
+		$data['highest_month'] = $to_month;
 	
 		if($clicked_type != 'FA') {
 		
