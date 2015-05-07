@@ -2006,7 +2006,7 @@ if (get_default_currency()) {
 			sort($catstatusUnique);			
 			?>
 			<div class="pull-left">
-				<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
 					<tbody>
 					<tr>
 						<th>Category</th>
@@ -2015,7 +2015,23 @@ if (get_default_currency()) {
 						<th>Closed</th>
 						<th>Total</th>
 					</tr>
-				
+					<?php
+					if(count($cat_arr)>0 && !empty($cat_arr)):
+						foreach($cat_arr as $key=>$res): 
+							/* $total = 0;
+							$opened = 0;
+							$resolved = 0;
+							$closed = 0;
+							foreach($catstatusUnique as $c): 
+								$total += $res[$c];
+								if(!empty($c==80)) $resolved = $res[$c];
+								if(!empty($c==90)) $closed = $res[$c];
+							endforeach;
+							$opened = $total - ($resolved+$closed);
+							$ex = explode("#",$key); */
+							//echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+						endforeach; 
+					endif;	?>
 					</tbody>
 				</table>				
 			</div>
