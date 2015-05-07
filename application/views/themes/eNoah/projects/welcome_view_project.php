@@ -597,7 +597,7 @@ if (get_default_currency()) {
 			<?php if($this->userdata['role_id'] != 8):?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-8-5">Bug Summary</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-8-5">Quality Metrics</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
 			<?php endif; ?>
 		</ul>
@@ -1879,115 +1879,121 @@ if (get_default_currency()) {
 			</div>
 		</div>
 	</div><!-- id: jv-tab-8 end -->
-	<div id="jv-tab-8-5">
 	
-	<div class="pull-left">
-		<?php if(count($bug_project)>0 && !empty($bug_project)):
+	
+	
+	<div id="jv-tab-8-5">
+		<?php  
+			$checkValue = true;
+			if(count($bug_project)>0 && !empty($bug_project)):?>
+				<div style="margin-bottom:10px;" class="pull-left">
+				<?php 
+				$checkValue = false;
 				$bp_arr = array();
+				$tot = array();
 				foreach($bug_project as $bp):
 					$bp_arr['values'][$bp->project_id][$bp->status] = $bp->bugcount;
 				endforeach;
-				ksort($bp_arr['values']);?>
-				<table width="200" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
+				ksort($bp_arr['values']);
+				$statusArray = array(10 => "New", 20 => "Feedback",30 => "Acknowledged",40 => "Confirmed",50 => "Assigned",80 => "Resolved",90 => "Closed");				
+				?>
+				<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
 					<tbody>
 					<tr>
-						<th>Project Name</th>
-						<th>Open</th>
-						<th>Resolved</th>
-						<th>Closed</th>
-						<th>Total</th>
+						<th>Status</th>
+						<?php foreach($project_names as $pnames):	echo '<th style="width:400px;">'.$pnames.'</th>';endforeach;	?>
 					</tr>
-					<?php 
-					foreach($bp_arr['values'] as $key => $stat):
-						$total = 0;
-						$opened = 0;
-						$resolved = 0;
-						$closed = 0;
-						foreach($stat as $key1 => $s): 
-							$total += $s;
-							if(!empty($key1==80)) $resolved = $s;
-							if(!empty($key1==90)) $closed = $s;
-						endforeach;
-						$opened = $total - ($resolved+$closed);	
-						echo show_detail_html(ucfirst(strtolower($project_names[$key])),$opened,$resolved,$closed,$total);
-						endforeach; ?>
+							<tr><td><strong>Open</strong></td><?php foreach($project_names as $key2 => $pnames): ?>
+								<?php $bgstatus_open = $bp_arr['values'][$key2][10]+$bp_arr['values'][$key2][20]+$bp_arr['values'][$key2][30]+$bp_arr['values'][$key2][40]+$bp_arr['values'][$key2][50];
+								echo '<td>'.$bgstatus_open.'</td>';	
+								$tot[$key2][50] = $bgstatus_open;
+								endforeach;?></tr>							
+							
+					<?php foreach($statusArray as $key => $sname): 
+							if($key == 80 || $key == 90){?>
+								<tr><td><strong><?php echo $sname;?></strong></td><?php foreach($project_names as $key2 => $pnames): $showValue = (isset($bp_arr['values'][$key2][$key])?$bp_arr['values'][$key2][$key]:0); echo '<td>'.$showValue.'</td>'; $tot[$key2][$key] = $showValue; endforeach;?></tr>
+							<?php }	endforeach; ?>
+						<tr><td><strong>Total</strong></td>
+						 <?php 
+						 foreach($tot as $t): echo '<td><strong>'.array_sum($t).'</strong></td>'; endforeach;?>
+						</tr>
 				</tbody>
-				</table>				
+				</table>	
+			</div>					
 		<?php endif; ?>
-	</div>
-	
-	<?php 
-		$checkValue = true;
-		$statusArray = array(10 => "New", 20 => "FEEDBACK",30 => "ACKNOWLEDGED",40 => "CONFIRMED",50 => "ASSIGNED",80 => "RESOLVED",90 => "CLOSED");?>		
-		<div style="overflow: auto;">
-		<?php if(count($bug_status)>0 && !empty($bug_status)): 
-				$checkValue = false;
-		?>
-			<div class="pull-left">
-			<table width="200" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
-				<tbody>
-				<tr>
-					<th>Status</th>
-					<th>Bug Count</th>
-				</tr>
-				<?php 
-				foreach($bug_status as $stat):?>
-				<tr>					
-					<td><strong><?php echo ucfirst(strtolower($statusArray[$stat->status]));?></strong></td>
-					<td><?php echo $stat->bugcount;?></td>
-				</tr>
-				<?php endforeach; ?>
-			</tbody>
-			</table>
-			</div>
-		<?php	endif;	?>		
-		<?php if(count($bug_severity)>0 && !empty($bug_status)) :	
+		
+		<?php 
+		if(count($bug_severity)>0 && !empty($bug_severity)) :	
 			$checkValue = false;
-		?>
-		<div class="pull-left">
-			<table width="300" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+			$bs_arr = array();
+			$opened_arr = array();
+			$resolved_arr = array();
+			$closed_arr = array();
+			
+			foreach($bug_severity as $bs):
+				$bs_arr['values'][$bs->project_id][$bs->severity][$bs->status] = $bs->bugcount;
+			endforeach;
+			ksort($bs_arr['values']);
+			$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");	?>
+			
+	
+			<div class="pull-left">
+				<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1 table-style" id="project-date-assign">
 				<tbody>
 				<tr>
-					<th>Severity</th>
-					<th>Open</th>
-					<th>Resolved</th>
-					<th>Closed</th>
-					<th>Total</th>
+				<th>Severity</th>
+				<?php foreach($project_names as $pnames):	echo '<th style="width:400px; text-align:center;">'.$pnames.'<table  width="180"><tr><th style="border-width:1px;" width="33%">Open</th><th style="border-width:1px;" width="33%">Resolved</th><th style="border-width:1px;" width="34%">Closed</th></tr></table></th>';endforeach;	?>
+				<th>Total</th>
 				</tr>
 				<?php 
-					$severityArray = array(10 => "FEATURE",20 => "TRIVIAL",30 => "TEXT",40 => "TWEAK",50 => "MINOR",60 => "MAJOR",70 => "CRASH",80 => "BLOCK");
-					$sev_arr = array();
-					$sev_status_arr = array();
-					
-					foreach($bug_severity as $val):
-						$sev_arr[$val['severity']][$val['status']] = $val['bugcount'];
-						$sev_status_arr[] = $val['status'];
-					endforeach;	
-					$statusUnique = array_unique($sev_status_arr);
-					sort($statusUnique);
- 
-					if(count($sev_arr)>0 && !empty($sev_arr)):
-						foreach($sev_arr as $key=>$row):
-							$total = 0;
-							$opened = 0;
-							$resolved = 0;
-							$closed = 0;
-							foreach($statusUnique as $s): 
-								$total += $row[$s];
-								if(!empty($s==80)) $resolved = $row[$s];
-								if(!empty($s==90)) $closed = $row[$s];
+					$mast_tot = 0;
+					foreach($severityArray as $key => $sname):
+						$tot_sev = 0;?>
+						<tr>
+						<td><strong><?php echo $sname;?></strong></td>
+						<?php foreach($project_names as $key2 => $pnames):
+								$opened = $bs_arr['values'][$key2][$key][10]+$bs_arr['values'][$key2][$key][20]+$bs_arr['values'][$key2][$key][30]+$bs_arr['values'][$key2][$key][40]+$bs_arr['values'][$key2][$key][50];								
+								
+								$opened = isset($opened)?$opened:0;
+								$resolved = (isset($bs_arr['values'][$key2][$key][80])?$bs_arr['values'][$key2][$key][80]:0);
+								$closed = (isset($bs_arr['values'][$key2][$key][90])?$bs_arr['values'][$key2][$key][90]:0);
+								
+								$tot_sev += $opened+$resolved+$closed;
+								$mast_tot += $opened+$resolved+$closed;
+								
+								$tot1[$key2][$key]['opened'] = $opened;
+								$tot1[$key2][$key]['resolved'] = $resolved;
+								$tot1[$key2][$key]['closed'] = $closed; ?>
+								<td>
+									<table class="sub-table" width="180">
+									<tr>
+										<td width="33%"><?php echo $opened;?></td>
+										<td width="33%"><?php echo $resolved;?></td>
+										<td width="34%"><?php echo $closed?></td>
+									</tr>
+									</table>
+								</td>
+						<?php endforeach;?>
+						<td><strong><?php echo $tot_sev;?></strong></td>
+						</tr>
+						<?php endforeach; 
+						foreach($tot1 as $k => $t): 
+							foreach($t as $s):
+								$opened_arr[$k][] = $s['opened'];
+								$resolved_arr[$k][] = $s['resolved'];
+								$closed_arr[$k][] = $s['closed'];
 							endforeach;
-							$opened = $total - ($resolved+$closed);
-							echo show_detail_html(ucfirst(strtolower($severityArray[$key])),$opened,$resolved,$closed,$total);
-						endforeach;
-					endif;
-					?>
+						 endforeach;?>
+						<tr><td><strong>Total</strong></td>
+						 <?php foreach($project_names as $pid => $pnames):	echo '<td style="width:400px;"><table width="180" class="sub-table" ><tr><td width="33%"><strong>'.array_sum($opened_arr[$pid]).'</strong></td><td width="33%"><strong>'.array_sum($resolved_arr[$pid]).'</strong></td><td width="34%"><strong>'.array_sum($closed_arr[$pid]).'</strong></td></tr></table></td>';endforeach;	?>
+						 <td><strong><?php echo $mast_tot;?></strong></td>
+						</tr>
 				</tbody>
-			</table>
-		</div>
-		<?php endif; ?>
-
-		<?php
+				</table>			
+			</div>
+		<?php endif;  
+		
+		if(count($AllPjtIds)==1):
 		$cat_arr = array();
 		$cat_status_arr = array();
 		if(count($bug_category)>0 && !empty($bug_category)) :	
@@ -2029,11 +2035,10 @@ if (get_default_currency()) {
 					</tbody>
 				</table>
 			</div>
-		<?php endif; ?>	
-		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>
-		</div>
-	</div><!-- id: jv-tab-9 end -->
-	
+		<?php endif; endif;?>	
+		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>	
+	</div>
+	<!-- id: jv-tab-9 end -->
 	<div id="jv-tab-9">
 		<span style="float:right;" class="job_history"> 
 				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>

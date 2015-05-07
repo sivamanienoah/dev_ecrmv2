@@ -494,6 +494,7 @@ class Project extends crm_controller {
 					$pjtIds = array_unique($pjtIds);
 					//echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
+					$data['AllPjtIds'] = $pjtIds;
 					
 					// get project wise report
 					$support_db->select("id,name");
@@ -508,7 +509,7 @@ class Project extends crm_controller {
 					}
 					
 					
-					$qry_project = $support_db->query("SELECT project_id, status, COUNT( status ) AS bugcount FROM mantis_bug_table where project_id in ($AllPjtIds) GROUP BY project_id, status ORDER BY status");
+					$qry_project = $support_db->query("SELECT project_id, status, COUNT( status ) AS bugcount FROM ".$support_db->dbprefix("bug_table")." where project_id in ($AllPjtIds) GROUP BY project_id, status ORDER BY project_id asc");
 					if($qry_project->num_rows()>0) {
 						$data['bug_project'] = $qry_project->result();
 					}					
@@ -520,9 +521,9 @@ class Project extends crm_controller {
 					}
 					
 					// get all the bug list based on the severity
-					$qry_severity = $support_db->query("SELECT COUNT(id) as bugcount, severity ,status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY severity ,status ORDER BY severity ,status ");
+					$qry_severity = $support_db->query("SELECT project_id,COUNT(id) as bugcount, severity ,status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY severity ,status ORDER BY project_id asc ");
 					if($qry_severity->num_rows()>0){
-						$data['bug_severity'] = $qry_severity->result_array();
+						$data['bug_severity'] = $qry_severity->result();
 					}
  					
 					//get all bug list based on the category

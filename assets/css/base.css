@@ -2208,3 +2208,17 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 html[xmlns] .clearfix {display: block;}
 * html .clearfix {height: 1%;}
 /*End*/
+
+
+/**7-5-2015**/
+/* table.table-style tr td {
+    border-bottom: 0 none;
+    border-right: 1px solid #dadada;
+    padding: 0;
+}
+table.table-style tr td table tr td {
+    border:none;
+} */
+.sub-table td{ border:none; text-align:center; padding:0;}
+
+/**7-5-2015**/
