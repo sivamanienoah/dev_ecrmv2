@@ -2023,11 +2023,11 @@ if (get_default_currency()) {
 							$opened = 0;
 							$resolved = 0;
 							$closed = 0;
-							foreach($catstatusUnique as $c): 
+							/* foreach($catstatusUnique as $c): 
 								$total += $res[$c];
 								if(!empty($c==80)) $resolved = $res[$c];
 								if(!empty($c==90)) $closed = $res[$c];
-							endforeach;
+							endforeach; */
 							$opened = $total - ($resolved+$closed);
 							$ex = explode("#",$key);
 							echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
