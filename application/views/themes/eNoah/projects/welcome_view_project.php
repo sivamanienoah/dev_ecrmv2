@@ -2004,7 +2004,7 @@ if (get_default_currency()) {
 			endforeach;
 			$catstatusUnique = array_unique($cat_status_arr);
 			sort($catstatusUnique);	
-echo '<pre>';print_r($catstatusUnique);
+			
 			?>
 			<div class="pull-left">
 			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
@@ -2023,14 +2023,14 @@ echo '<pre>';print_r($catstatusUnique);
 							$opened = 0;
 							$resolved = 0;
 							$closed = 0;
-							/*foreach($catstatusUnique as $c): 
+							foreach($catstatusUnique as $c): 
 								$total += $res[$c];
 								if(!empty($c==80)) $resolved = $res[$c];
 								if(!empty($c==90)) $closed = $res[$c];
 							endforeach;
 							$opened = $total - ($resolved+$closed);
-							$ex = explode("#",$key); */
-							//echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+							$ex = explode("#",$key);
+							echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
 						endforeach; 
 					endif;	?>
 					</tbody>
