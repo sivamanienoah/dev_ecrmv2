@@ -2003,7 +2003,8 @@ if (get_default_currency()) {
 				$cat_status_arr[] = $val['status'];
 			endforeach;
 			$catstatusUnique = array_unique($cat_status_arr);
-			sort($catstatusUnique);			
+			sort($catstatusUnique);	
+echo '<pre>';print_r($catstatusUnique);
 			?>
 			<div class="pull-left">
 			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
@@ -2018,11 +2019,11 @@ if (get_default_currency()) {
 					<?php
 					if(count($cat_arr)>0 && !empty($cat_arr)):
 						foreach($cat_arr as $key=>$res): 
-							/* $total = 0;
+							 $total = 0;
 							$opened = 0;
 							$resolved = 0;
 							$closed = 0;
-							foreach($catstatusUnique as $c): 
+							/*foreach($catstatusUnique as $c): 
 								$total += $res[$c];
 								if(!empty($c==80)) $resolved = $res[$c];
 								if(!empty($c==90)) $closed = $res[$c];
