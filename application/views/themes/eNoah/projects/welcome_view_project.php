@@ -1992,7 +1992,7 @@ if (get_default_currency()) {
 				</table>			
 			</div>
 		<?php endif;  
-		
+		echo count($AllPjtIds);exit;
 	/*	if(count($AllPjtIds)==1):
 		$cat_arr = array();
 		$cat_status_arr = array();
