@@ -609,6 +609,119 @@ class Sales_forecast_model extends crm_model {
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
     }
+	
+	/*
+	*@Get saleforecast & invoices Records
+	*@method get_variance_records_for_dashboard
+	*@table crm_view_sales_forecast_variance
+	*/
+	public function get_variance_records_for_dashboard($filter = false) 
+	{
+		$job_ids = array();
+	
+		//LEVEL BASED RESTIRCTION
+		if( $this->userdata['level'] != 1 ) {
+			if (isset($this->session->userdata['region_id']))
+			$region = explode(',',$this->session->userdata['region_id']);
+			if (isset($this->session->userdata['countryid']))
+			$countryid = explode(',',$this->session->userdata['countryid']);
+			if (isset($this->session->userdata['stateid']))
+			$stateid = explode(',',$this->session->userdata['stateid']);
+			if (isset($this->session->userdata['locationid']))
+			$locationid = explode(',',$this->session->userdata['locationid']);
+			
+			$this->db->select('ls.lead_id');
+			$this->db->from($this->cfg['dbpref'].'leads as ls');
+			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			
+			switch($this->userdata['level']) {
+				case 2:
+					$this->db->where_in('cs.add1_region',$region);
+				break;
+				case 3:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+				break;
+				case 4:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cs.add1_state',$stateid);
+				break;
+				case 5:
+					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cs.add1_location',$locationid);
+				break;
+			}
+			
+			$query = $this->db->get();
+			// echo $this->db->last_query();
+			$rowscust1 = $query->result_array();
+			
+			$this->db->select('ld.lead_id');
+			$this->db->from($this->cfg['dbpref'].'leads as ld');
+			$this->db->where("(ld.assigned_to = '".$this->userdata['userid']."' OR ld.lead_assign = '".$this->userdata['userid']."' OR ld.belong_to = '".$this->userdata['userid']."')");
+			$this->db->where("ld.lead_status", 4);
+			$this->db->where("ld.pjt_status", 1);
+			$query1 = $this->db->get();
+			// echo $this->db->last_query();
+			$rowscust2 = $query1->result_array();
+			
+			$customers = array_merge_recursive($rowscust1, $rowscust2);
+			
+			$res[] = 0;
+			if (is_array($customers) && count($customers) > 0) { 
+				foreach ($customers as $cus) {
+					$res[] = $cus['lead_id'];
+				}
+			}
+			$job_ids = array_unique($res);
+			
+		}
+		//LEVEL BASED RESTIRCTION
+		
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		
+		if(!empty($job_ids) && count($job_ids)>0) {
+			$this->db->where_in('sfv.job_id', $job_ids);
+		}
+		
+		if (!empty($filter['entity']) && $filter['entity']!='null') {
+			$filter['entity'] = explode(',',$filter['entity']);
+			$this->db->where_in('l.division', $filter['entity']);
+		}
+		if (!empty($filter['customer']) && $filter['customer']!='null') {
+			$filter['customer'] = explode(',',$filter['customer']);
+			$this->db->where_in('c.custid', $filter['customer']);
+		}
+		if (!empty($filter['lead_ids']) && $filter['lead_ids']!='null') {
+			$filter['lead_ids'] = explode(',',$filter['lead_ids']);
+			$this->db->where_in('l.lead_id', $filter['lead_ids']);
+		}
+		if (!empty($filter['project_ids']) && $filter['project_ids']!='null') {
+			$filter['project_ids'] = explode(',',$filter['project_ids']);
+			$this->db->where_in('l.lead_id', $filter['project_ids']);
+		}
+		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
+			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
+			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+			$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-t', strtotime($filter['month_year_to_date'])));
+		}
+		if(empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])){
+			$calc_date  = strtotime(date('Y-m') .' -4 months');
+			$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m', $calc_date));
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		return $query->result_array();
+    }
     
 }
 

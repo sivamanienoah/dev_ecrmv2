@@ -99,7 +99,7 @@
 		</div>
 		<div class="clear"></div>
 		<div id='results' style="width:auto; overflow:scroll; overflow-y: hidden;">
-			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" id="forecast_view" style="width:100%">
 				<thead>
 					<tr>
 						<th style="text-align:center;">Entity</th>

@@ -1143,7 +1143,7 @@ box-shadow: 0 1px 3px #C2C2C2;
 -moz-box-shadow: 0 1px 3px #C2C2C2;
 -o-box-shadow: 0 1px 3px #C2C2C2;
 -webkit-box-shadow: 0 1px 3px #C2C2C2; }
-#charts_info {position: relative;}
+#charts_info,#entity_charts_info,#entity_actual_charts_info {position: relative;}
 .grid-close {    
 	background: url("../img/close.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
@@ -2023,7 +2023,7 @@ button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container,#check-permissions{
+#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container, #check-permissions, #popup-filter-section {
 	display: none;
 }
 /* file_breadcrumb */
@@ -2109,7 +2109,7 @@ div.submenu{background: #fff;position: absolute;/* top: -12px;left: -20px; */rig
 a.account {font-size: 11px;line-height: 16px;color:#59585d;/* position: absolute; */position:relative;/* z-index: 110; */z-index:1;display: block;/* padding: 11px 0 0 20px;height: 28px; width: 121px;*/margin:0px;padding:9px 0 9px 44px;text-decoration: none;cursor:pointer;background:url("../img/user-icon.png") no-repeat left;float:left;}
 a.account p{color:#363636;font-size:13px;background:url("../img/user-drop-icon.png") no-repeat  100% 8px;padding:0 25px 0 0;}
 .root{list-style:none;margin:0px;padding:0px;font-size: 11px;padding:0px;border:1px solid #dedede;}
-#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2, #entity-chart, #forecast-compare-chart {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
+#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2, #forecast_entity_chart, #actual_entity_chart, #forecast_compare_chart {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
 .header {float: left;padding:5px 0;width: 100%;}
 .date-time{background:url("../img/calender-icon.png") no-repeat left;float: left;margin:0;padding: 10px 0px 10px 25px;}
 div.dropdown {color: #555;position: relative;float:right;border-left: 1px solid #dadada;margin:0 0 0 20px;padding:0 0 0 20px;}
@@ -2185,23 +2185,18 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .go-back a.choice-box {background:url("../img/go-back-icon.png") no-repeat left;padding:3px 0 4px 30px !important;}
 .choice-box.filter-home {margin: 10px 0 20px;}
 .dataTables_wrapper input {border: 1px solid #dadada;margin: 0 0 0 5px;padding: 3px 8px;}
-.search-table button {
-    height: 21px;
-}
-.search-table input {
-    height: 13.8px;
-}
+.search-table button {height: 21px;}
+.search-table input {height: 13.8px;}
 
-.blockUI.blockMsg.blockPage {
-    overflow: scroll !important;
-}
-.blockUI.blockMsg.blockPage.assign-user {
-	overflow: visible !important;
-}
+.blockUI.blockMsg.blockPage {overflow: scroll !important;}
+.blockUI.blockMsg.blockPage.assign-user, .blockUI.blockMsg.blockPage.no-scroll {overflow: visible !important;}
 /*sales forecast dashboard*/
-#entity-chart .jqplot-title, #forecast-compare-chart .jqplot-title {display:none;}
-#forecast-compare-chart .jqplot-grid-canvas { top: 0 !important; }
+#forecast_entity_chart .jqplot-title, #actual_entity_chart .jqplot-title, #forecast_compare_chart .jqplot-title {display:none;}
+#forecast_compare_chart .jqplot-grid-canvas { top: 0 !important; }
 /*sales forecast dashboard*/
+
+.link-btn {background: none repeat scroll 0 0 #4b6fb9;border: 1px solid #274686;color: #fff;cursor: pointer;font-size: 11px;font-weight: normal;margin: 0;padding: 3px 7px;text-decoration:none !important;}
+
 /*Clearfix*/
 .clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
 .clearfix {display: inline-block;}

@@ -1,5 +1,5 @@
 <?php $this->load->helper('text'); ?>
-<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" id="forecast_view" style="width:100%">
 	<thead>
 		<tr>
 			<th style="text-align:center;">Entity</th>
@@ -83,7 +83,7 @@
 </table>
 <script>
 $(function(){
-	$('.data-tbl').dataTable({
+	$('.dataTable').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
@@ -94,7 +94,9 @@ $(function(){
 		"bLengthChange": true,
 		"bSort": false,
 		"bFilter": true,
-		"bAutoWidth": false
+		"bAutoWidth": false,
+		"bRetrieve": true, 
+		"bDestroy": true
 	});
 });
 </script>

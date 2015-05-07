@@ -1353,7 +1353,7 @@ function confirmaMoveLeadsToProject()
 	
 	$.blockUI({
 		message:$('.comments-log-container'),
-		css:{ 
+		css:{
 			border: '2px solid #999',
 			color:'#333',
 			padding:'8px',

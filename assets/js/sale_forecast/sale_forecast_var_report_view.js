@@ -44,7 +44,7 @@ $(function() {
 	});
 	
 	//dataTable
- 	$('.data-tbl').dataTable({
+ 	$('#var_reports').dataTable({
 		"aaSorting": [[ 0, "asc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
@@ -55,7 +55,9 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": false,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"bRetrieve": true, 
+		"bDestroy": true		
 	});
 	
 	//export to excel
