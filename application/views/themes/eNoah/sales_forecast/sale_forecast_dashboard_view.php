@@ -122,7 +122,7 @@
 				<!--div class="pull-left dash-section forecast-new" id="compare_bar_container"-->
 				<div class="pull-left forecast-new dash-section-full" id="compare_bar_container" style="margin-top: 20px;">
 					<h5 class="forecast_chartbar">
-						<span class="forecast-heading">Forecast vs Actual</span>
+						<span class="forecast-heading">Forecast Vs Actual</span>
 						<div class="forecast-details"> 
 							<a onclick="showFilter('FA'); return false;" title="Filter" class="white-filter"></a>
 						</div>

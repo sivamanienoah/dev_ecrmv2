@@ -42,7 +42,8 @@ $(function() {
 			}
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
-	});	
+	});
+	
 });
 
 function showFilter(forecast_type) {
@@ -51,14 +52,10 @@ function showFilter(forecast_type) {
 	
 	switch(forecast_type) {
 		case 'F':
-			var top_pixel   = '370px';
-			var width_pixel = '145px';
-			var left_pixel  = ($(window).width() - 720) /2 + 'px';
-        break;
 		case 'A':
 			var top_pixel   = '370px';
-			var width_pixel = '145px';
-			var left_pixel  = '910px';
+			var width_pixel = '280px';
+			var left_pixel  = ($(window).width() - 320) /2 + 'px';
         break;
 		case 'FA':
 			var top_pixel   = '570px';

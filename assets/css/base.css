@@ -2251,8 +2251,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
  h5 .forecast-heading { float: left !important; margin:0 0 0 20px;}
 .forecast-details { margin: 0 20px 0 0; text-align: right; }
 .white-filter{background:url(../img/filter-icon-white.png) no-repeat;float: right;height: 17px;width: 16px;margin:2px 0 0 10px;}
-.forcast-new .forecast-details span {font-size: 11px;font-weight: normal;}
-.forcast-new .forecast-details span.from {margin: 0 10px 0 0;}
+.forcast-new .forecast-details span { font-size: 11px; font-weight: normal; margin: 0 10px; }
+/* .forcast-new .forecast-details span.from {margin: 0 10px 0 0;} */
 .dash-section-full{width: 100%;}
 .dash-section-full #forecast_compare_chart {width: 99.8% !important;}
 
@@ -2260,5 +2260,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 .entity-chart-heading-new .export-to-excel {margin:0 30px 0 0;position: absolute;right: 22px;top: 12px;}
 .entity-chart-heading-new .export-to-excel a{color:#fff;background:url("../img/white-export-icon.png") no-repeat left;}
 .entity-chart-heading-new h5{box-sizing: border-box;float: left;padding-left: 15px;text-align: left;width: 100%;}
+
+#forecast_compare_chart .jqplot-xaxis-tick { margin: 6px 0; }
+#forecast_compare_chart .jqplot-grid-canvas { margin: 0 6px; }
+.popup-forecast-head { font-size: 12px; text-align: left; font-weight: bold;}
 
 /**8-5-2015**/

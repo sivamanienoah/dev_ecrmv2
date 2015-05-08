@@ -3,7 +3,7 @@
 	button.ui-datepicker-current { display: none; }
 </style>
 <div class="file-tabs-close-confirm-tab"></div>
-
+<div class="popup-forecast-head">Filter for Forecast Vs Actual</div>
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
 <div style="border: 1px solid #DCDCDC;">

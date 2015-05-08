@@ -3,8 +3,16 @@
 	button.ui-datepicker-current { display: none; }
 </style>
 <div class="file-tabs-close-confirm-tab"></div>
-
+<?php
+	$filter_name = '';
+	if($forecast_type == 'A') 
+	$filter_name = 'Actual';
+	if($forecast_type == 'F')
+	$filter_name = 'Forecast';
+?>
+<div class="popup-forecast-head"><?php echo "Filter for ".$filter_name." - Entity"; ?></div>
 <div style="border: 1px solid #DCDCDC;">
+	
 	<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 		<tr>
 			<td class="tblheadbg">For the Month & Year</td>
@@ -12,8 +20,7 @@
 		<tr>
 			<td>
 				From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" style="width:78px;" />
-				<br />
-				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
+				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px;" />
 			</td>
 		</tr>
 		<tr>

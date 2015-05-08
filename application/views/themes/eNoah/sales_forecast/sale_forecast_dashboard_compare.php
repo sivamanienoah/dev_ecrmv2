@@ -1,5 +1,5 @@
 <h5 class="forecast_chartbar">
-	<span class="forecast-heading">Forecast vs Actual</span>
+	<span class="forecast-heading">Forecast Vs Actual</span>
 	<div class="forecast-details"> 
 		<a onclick="showFilter('FA'); return false;" class="white-filter"></a>
 	</div>
