@@ -7,6 +7,7 @@
 <script type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.logAxisRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
@@ -35,8 +36,7 @@
 					<h5 class="dash-tlt">
 						<span class="forecast-heading">Forecast - Entity</span>
 						<div class="forecast-details">
-							<span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($forecast_from_month)); ?></span>
-							<span><strong>To:</strong> <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> 
+							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($forecast_from_month)); ?><strong> -</strong> <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> 
 							<a onclick="showFilter('F'); return false;" title="Filter" class="white-filter"></a>
 						</div>
 					</h5>
@@ -62,8 +62,7 @@
 					<h5 class="dash-tlt">
 						<span class="forecast-heading">Actual - Entity</span>
 						<div class="forecast-details">
-							<span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($actual_from_month)); ?></span>
-							<span><strong>To:</strong> <?php echo date("M Y", strtotime($actual_to_month)); ?></span> 
+							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($actual_from_month)); ?><strong>-</strong> <?php echo date("M Y", strtotime($actual_to_month)); ?></span>
 							<a onclick="showFilter('A'); return false;" title="Filter" class="white-filter"></a>
 						</div>
 					</h5>
