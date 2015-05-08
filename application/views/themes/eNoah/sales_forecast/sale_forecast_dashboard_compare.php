@@ -1,7 +1,7 @@
 <h5 class="forecast_chartbar">
-	<span class="forecast-heading">Forecast Vs Actual</span>
+	<span class="forecast-heading">Forecast Vs Actuals</span>
 	<div class="forecast-details"> 
-		<a onclick="showFilter('FA'); return false;" class="white-filter"></a>
+		Advanced Filter<a onclick="showFilter('FA'); return false;" class="white-filter"></a>
 	</div>
 </h5>
 <div id="forecast_compare_chart" class="plot"></div>

@@ -34,7 +34,7 @@
 				<div class="pull-left forcast-new" id="forecast_pie_container">
 					
 					<h5 class="dash-tlt">
-						<span class="forecast-heading">Forecast - Entity</span>
+						<span class="forecast-heading">Entitywise Forecast</span>
 						<div class="forecast-details">
 							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($forecast_from_month)); ?><strong> -</strong> <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> 
 							<a onclick="showFilter('F'); return false;" title="Filter" class="white-filter"></a>
@@ -60,7 +60,7 @@
 				
 				<div class="pull-right  forcast-new" id="actual_pie_container">
 					<h5 class="dash-tlt">
-						<span class="forecast-heading">Actual - Entity</span>
+						<span class="forecast-heading">Entitywise Actuals</span>
 						<div class="forecast-details">
 							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($actual_from_month)); ?><strong>-</strong> <?php echo date("M Y", strtotime($actual_to_month)); ?></span>
 							<a onclick="showFilter('A'); return false;" title="Filter" class="white-filter"></a>
@@ -122,9 +122,9 @@
 				<!--div class="pull-left dash-section forecast-new" id="compare_bar_container"-->
 				<div class="pull-left forecast-new dash-section-full" id="compare_bar_container" style="margin-top: 20px;">
 					<h5 class="forecast_chartbar">
-						<span class="forecast-heading">Forecast Vs Actual</span>
+						<span class="forecast-heading">Forecast Vs Actuals</span>
 						<div class="forecast-details"> 
-							<a onclick="showFilter('FA'); return false;" title="Filter" class="white-filter"></a>
+							Advanced Filter<a onclick="showFilter('FA'); return false;" title="Filter" class="white-filter"></a>
 						</div>
 					</h5>
 					<div id="forecast_compare_chart" class="plot" style="width:450px"></div>

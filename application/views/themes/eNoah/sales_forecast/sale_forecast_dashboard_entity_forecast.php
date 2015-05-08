@@ -1,5 +1,5 @@
 <h5 class="dash-tlt">
-<span class="forecast-heading">Forecast - Entity</span>
+<span class="forecast-heading">Entitywise Forecast</span>
 <div class="forecast-details">
 	<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($current_month)); ?><strong> -</strong> <?php echo date("M Y", strtotime($highest_month)); ?></span>
 	<a onclick="showFilter('F'); return false;" class="white-filter"></a></div>

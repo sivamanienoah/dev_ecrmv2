@@ -1857,7 +1857,7 @@ class Sales_forecast extends crm_controller {
 					$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 					
 					// $filename='saleforecast_variance_report'.time().'.xls'   ; //save our workbook as this file name
-					$filename='saleforecast_variance_report.xls'   ; //save our workbook as this file name
+					$filename='forecast_entitywise_'.$filter['item_name'].'.xls'   ; //save our workbook as this file name
 					header('Content-Type: application/vnd.ms-excel'); //mime type
 					header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 					header('Cache-Control: max-age=0'); //no cache
@@ -2055,7 +2055,7 @@ class Sales_forecast extends crm_controller {
 				
 				$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 				
-				$filename='saleforecast_report_'.$filter['item_name'].'.xls'   ; //save our workbook as this file name
+				$filename='actuals_entitywise_'.$filter['item_name'].'.xls'   ; //save our workbook as this file name
 				header('Content-Type: application/vnd.ms-excel'); //mime type
 				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 				header('Cache-Control: max-age=0'); //no cache
@@ -2265,7 +2265,7 @@ class Sales_forecast extends crm_controller {
 				
 				$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 				
-				$filename='saleforecast_report_'.$filter['item_name'].'.xls'   ; //save our workbook as this file name
+				$filename='forecast_vs_actuals_'.$filter['item_name'].'.xls'   ; //save our workbook as this file name
 				header('Content-Type: application/vnd.ms-excel'); //mime type
 				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 				header('Cache-Control: max-age=0'); //no cache
@@ -2420,7 +2420,7 @@ class Sales_forecast extends crm_controller {
 				$this->excel->getActiveSheet()->getStyle('E2:'.$lastcolumn.$row)->getNumberFormat()->setFormatCode('0.00');
 				
 				// $filename='saleforecast_variance_report'.time().'.xls'   ; //save our workbook as this file name
-				$filename='saleforecast_variance_report.xls'   ; //save our workbook as this file name
+				$filename='forecast_vs_actuals_'.$filter['item_name'].'.xls'; 
 				header('Content-Type: application/vnd.ms-excel'); //mime type
 				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 				header('Cache-Control: max-age=0'); //no cache
