@@ -49,7 +49,7 @@ $(function() {
 				show:true, 
 				fontSize: '10pt',
 				// placement : "outside",
-				location: 'e',
+				location: 'ne',
 				border: true
 			},
 			seriesColors: ["#48596a", "#027997", "#cc0000", "#c747a3", "#910000", "#66ffcc", "#bfdde5", "#cc99cc", "#492970", "#f0eded", "#0d233a", "#4bb2c5", "#a35b2e", "#4b5de4", "#422460", "#953579"],
@@ -77,8 +77,10 @@ $(function() {
 				cache: false,
 				beforeSend:function(){
 					$('#entity_actual_charts_info_export').hide();
+					$('#compare_charts_info_export').hide();
 					$('#entity_charts_info_export').hide();
 					$('#entity_charts_info').empty();
+					$('#compare_charts_info').empty();
 					$('#entity_actual_charts_info').show();
 					$('#entity_actual_charts_info').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 				},

@@ -36,8 +36,12 @@ $(function() {
 			}
 		},
 		legend: {
+			renderer: jQuery.jqplot.EnhancedLegendRenderer,
 			show: true,
 			placement: 'insideGrid',
+			rendererOptions: {
+				numberRows: '1',
+			}
 			// placement: 'outsideGrid',
 			// labels: ticks
 		},
@@ -55,12 +59,12 @@ $(function() {
 		},
 		axes: {
 			xaxis: {
-				label:'Month--->',
+				label:'Month --->',
 				renderer: $.jqplot.CategoryAxisRenderer,
 				ticks: ticks
 			},
 			yaxis: {
-				label:'Values('+currency_name+')--->',
+				label:'Values('+currency_name+') --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
@@ -112,6 +116,10 @@ $(function() {
 			cache: false,
 			beforeSend:function(){
 				$('#compare_charts_info_export').hide();
+				$('#entity_actual_charts_info_export').hide();
+				$('#entity_actual_charts_info').empty();
+				$('#entity_charts_info_export').hide();
+				$('#entity_charts_info').empty();
 				$('#compare_charts_info').show();
 				$('#compare_charts_info').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 			},
