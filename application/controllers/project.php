@@ -495,7 +495,18 @@ class Project extends crm_controller {
 					$pjtIds = array_unique($pjtIds);
 					//echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
+					
 					$data['AllPjtIds'] = $pjtIds;
+					$parent_proj =  $pjtIds[0];
+					$parent_proj =  $pjtIds[0];
+					
+					$check_child = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("child_id" => $parent_proj));
+					if($check_child->num_rows()>0){
+						$check_child_row = $check_child->row();
+						$parent_proj = $check_child_row->parent_id.';'.$parent_proj;
+					}
+					
+					$data['AllPjtIds_summary'] = $parent_proj;
 					
 					// get project wise report
 					$support_db->select("id,name");
