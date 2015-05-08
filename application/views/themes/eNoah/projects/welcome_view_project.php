@@ -2044,7 +2044,7 @@ if (get_default_currency()) {
 			</div>
 		<?php endif; endif;  ?>	
 		
-		<?php if($checkValue): echo '<div align="center"><b> Bug Summary not available!</b></div>'; endif;?>	
+		<?php if($checkValue): echo '<div align="center"><b> Please assign the project code in mantis and check!</b></div>'; endif;?>	
 	</div>
 	<!-- id: jv-tab-9 end -->
 	<div id="jv-tab-9">
