@@ -1,5 +1,10 @@
-<h5 class="dash-tlt">Forecast vs Actual</h5> <a onclick="showFilter('FA'); return false;">Filter</a>
-<div id="forecast_compare_chart" class="plot" style="width:650px"></div>
+<h5 class="forecast_chartbar">
+	<span class="forecast-heading">Forecast vs Actual</span>
+	<div class="forecast-details"> 
+		<a onclick="showFilter('FA'); return false;" class="white-filter"></a>
+	</div>
+</h5>
+<div id="forecast_compare_chart" class="plot"></div>
 <!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->
 <?php 
 	$i = date("Y-m", strtotime($compare_from_month)); 

@@ -16,14 +16,11 @@
 				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
 			</td>
 		</tr>
-		<tr align="right" >
+		<tr>
 			<td colspan="4">
+				<a class='link-btn' id="filtersForecastEntity" href="javascript:void(0);" onclick="advanceFiltersEntity('<?php echo $forecast_type ?>')">Search</a>
 				<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 				<!--input type="button" class="positive input-font" id="advance_filter" value="Search" /-->
-				<a class='link-btn' id="filtersForecastEntity" href="javascript:void(0);" onclick="advanceFiltersEntity('<?php echo $forecast_type ?>')">Search</a>
-				<div id = 'load' style = 'float:right;display:none;height:1px;'>
-					<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-				</div>
 			</td>
 		</tr>
 	</table>
@@ -32,9 +29,8 @@
 <script type="text/javascript">
 	var params  = {};
 	params[csrf_token_name] = csrf_hash_token;
-
+	
 	$(function() {
-
 		$('#ui-datepicker-div').addClass('blockMsg');
 
 		$( ".file-tabs-close-confirm-tab" ).on( "click", function() {
@@ -46,7 +42,7 @@
 			changeMonth: true,
 			changeYear: true,
 			dateFormat: 'MM yy',
-			showButtonPanel: true,	
+			showButtonPanel: true,
 			onClose: function(dateText, inst) {
 				var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 				var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
@@ -102,5 +98,5 @@
 		return false;  //stop the actual form post !important!
 	}
 
-	
+
 </script>

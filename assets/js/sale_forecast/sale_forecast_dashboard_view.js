@@ -49,6 +49,24 @@ function showFilter(forecast_type) {
 	var fsl_height = parseInt($(window).height()) - 80;
 	fsl_height = fsl_height + 'px';
 	
+	switch(forecast_type) {
+		case 'F':
+			var top_pixel   = '370px';
+			var width_pixel = '145px';
+			var left_pixel  = ($(window).width() - 720) /2 + 'px';
+        break;
+		case 'A':
+			var top_pixel   = '370px';
+			var width_pixel = '145px';
+			var left_pixel  = '910px';
+        break;
+		case 'FA':
+			var top_pixel   = '570px';
+			var width_pixel = '750px';
+			var left_pixel  = ($(window).width() - 720) /2 + 'px';
+        break;
+	}
+	
 	$.ajax({
 		type: "POST",
 		url: site_base_url+"sales_forecast/show_popup_filter/"+forecast_type,
@@ -62,7 +80,8 @@ function showFilter(forecast_type) {
 			$('#popup-filter-section').html(res);
 			$.blockUI({
 				message:$('#popup-filter-section'),
-				css:{border: '2px solid #999',color:'#333',padding:'8px',top:'570px',left:($(window).width() - 720) /2 + 'px',width: '750px',position: 'absolute'}
+				css:{border: '2px solid #999', color:'#333', padding:'8px', top:top_pixel, left:left_pixel, width: width_pixel, position: 'absolute'},
+				focusInput: false
 			});
 			$( "#popup-filter-section" ).parent().addClass( "no-scroll" );
 		}
@@ -149,8 +168,18 @@ $('#export_compare_data').click(function() {
 });
 
 $('#grid_close_entity').click(function() {
-	$('#entity_charts_info_export, #entity_charts_info').slideUp('fast', function(){ 
-		$('#entity_charts_info_export, #entity_charts_info').css('display','none');
+	$('#entity_charts_info_export').slideUp('fast', function(){ 
+		$('#entity_charts_info').css('display','none');
+	});
+})
+$('#grid_close_actual_entity').click(function() {
+	$('#entity_actual_charts_info_export').slideUp('fast', function(){ 
+		$('#entity_actual_charts_info').css('display','none');
+	});
+})
+$('#grid_close_compare_entity').click(function() {
+	$('#compare_charts_info_export').slideUp('fast', function(){ 
+		$('#compare_charts_info').css('display','none');
 	});
 })
 

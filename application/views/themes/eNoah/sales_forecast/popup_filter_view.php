@@ -54,14 +54,11 @@
 				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
 			</td>
 		</tr>
-		<tr align="right" >
+		<tr>
 			<td colspan="6">
+				<a class='link-btn' id="filtersForecastEntity" href="javascript:void(0);" onclick="advanceFiltersCompare('<?php echo $forecast_type ?>')">Search</a>
 				<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 				<!--input type="button" class="positive input-font" id="advance_filter" value="Search" /-->
-				<a class='link-btn' id="filtersForecastEntity" href="javascript:void(0);" onclick="advanceFiltersCompare('<?php echo $forecast_type ?>')">Search</a>
-				<div id = 'load' style = 'float:right;display:none;height:1px;'>
-					<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
-				</div>
 			</td>
 		</tr>
 	</table>

@@ -1144,7 +1144,7 @@ box-shadow: 0 1px 3px #C2C2C2;
 -o-box-shadow: 0 1px 3px #C2C2C2;
 -webkit-box-shadow: 0 1px 3px #C2C2C2; }
 #charts_info,#entity_charts_info,#entity_actual_charts_info {position: relative;}
-.grid-close {    
+/* .grid-close {    
 	background: url("../img/close.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
     height: 8px;
@@ -1152,6 +1152,16 @@ box-shadow: 0 1px 3px #C2C2C2;
     right: 8px;
     top: 10px;
     width: 9px;
+	} */
+	
+	.grid-close {    
+	background: url("../img/close.png") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    height: 42px;
+    position: absolute;
+    right: 0;
+    top: 1px;
+    width: 32px;
 	}
 .grid-close1 {    
 	background: url("../img/close_black.png") no-repeat scroll 0 0 transparent;
@@ -2217,3 +2227,38 @@ table.table-style tr td table tr td {
 .sub-table td{ border:none; text-align:center; padding:0;}
 
 /**7-5-2015**/
+/**8-5-2015**/
+.forecast_chartbar{
+	text-align:center;
+	line-height:22px;
+	padding:10px 0;
+	background: #606c88; /* Old browsers */
+background: -moz-linear-gradient(top,  #606c88 0%, #44506f 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#44506f)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #606c88 0%,#44506f 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #606c88 0%,#44506f 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#44506f',GradientType=0 ); /* IE6-9 */
+	border:1px solid #cecece;
+	border-width:1px 1px 0;
+	color: #fff !important;
+	font-size: 12px !important;
+	display:table;
+	width:100%;
+
+}
+ h5 .forecast-heading { float: left !important; margin:0 0 0 20px;}
+.forecast-details { margin: 0 20px 0 0; text-align: right; }
+.white-filter{background:url(../img/filter-icon-white.png) no-repeat;float: right;height: 17px;width: 16px;margin:2px 0 0 10px;}
+.forcast-new .forecast-details span {font-size: 11px;font-weight: normal;}
+.forcast-new .forecast-details span.from {margin: 0 10px 0 0;}
+.dash-section-full{width: 100%;}
+.dash-section-full #forecast_compare_chart {width: 99.8% !important;}
+
+.entity-chart-heading-new{position:relative;}
+.entity-chart-heading-new .export-to-excel {margin:0 30px 0 0;position: absolute;right: 22px;top: 12px;}
+.entity-chart-heading-new .export-to-excel a{color:#fff;background:url("../img/white-export-icon.png") no-repeat left;}
+.entity-chart-heading-new h5{box-sizing: border-box;float: left;padding-left: 15px;text-align: left;width: 100%;}
+
+/**8-5-2015**/

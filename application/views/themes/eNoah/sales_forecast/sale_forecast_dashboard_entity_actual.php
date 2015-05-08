@@ -1,4 +1,11 @@
-<h5 class="dash-tlt">Forecast - Actual</h5> <span>From: <?php echo date("M Y", strtotime($current_month)); ?></span><span> To: <?php echo date("M Y", strtotime($highest_month)); ?></span> <a onclick="showFilter('A'); return false;">Filter</a>
+<h5 class="dash-tlt">
+<span class="forecast-heading">Forecast - Actual</span>
+<div class="forecast-details">
+	<span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($current_month)); ?></span>
+	<span><strong>To:</strong> <?php echo date("M Y", strtotime($highest_month)); ?></span> 
+	<a onclick="showFilter('A'); return false;" class="white-filter"></a>
+</div>
+</h5>
 <div id="actual_entity_chart" class="plot" style="width:650px"></div>
 <!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->
 <?php 

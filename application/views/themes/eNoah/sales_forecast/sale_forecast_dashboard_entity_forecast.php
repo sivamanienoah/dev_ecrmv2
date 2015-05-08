@@ -1,4 +1,7 @@
-<h5 class="dash-tlt">Forecast - Entity</h5> <span>From: <?php echo date("M Y", strtotime($current_month)); ?></span><span> To: <?php echo date("M Y", strtotime($highest_month)); ?></span> <a onclick="showFilter('F'); return false;">Filter</a>
+<h5 class="dash-tlt">
+<span class="forecast-heading">Forecast - Entity</span>
+<div class="forecast-details"><span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($current_month)); ?></span><span><strong>To:</strong> <?php echo date("M Y", strtotime($highest_month)); ?></span> <a onclick="showFilter('F'); return false;" class="white-filter"></a></div>
+</h5>
 <div id="forecast_entity_chart" class="plot" style="width:650px"></div>
 <!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->
 <?php 

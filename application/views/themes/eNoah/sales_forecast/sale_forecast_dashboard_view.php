@@ -30,8 +30,18 @@
 		<div id='results' style="width:auto;">
 			
 			<div class="clearfix">
-				<div class="pull-left" id="forecast_pie_container">
-					<h5 class="dash-tlt">Forecast - Entity</h5><span>From: <?php echo date("M Y", strtotime($forecast_from_month)); ?></span><span> To: <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> <a onclick="showFilter('F'); return false;">Filter</a>
+				<div class="pull-left forcast-new" id="forecast_pie_container">
+					
+					<h5 class="dash-tlt">
+						<span class="forecast-heading">Forecast - Entity</span>
+						<div class="forecast-details">
+							<span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($forecast_from_month)); ?></span>
+							<span><strong>To:</strong> <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> 
+							<a onclick="showFilter('F'); return false;" title="Filter" class="white-filter"></a>
+						</div>
+					</h5>
+					
+					
 					<div id="forecast_entity_chart" class="plot" style="width:650px"></div>
 					<!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->
 					<?php 
@@ -48,8 +58,15 @@
 					<script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_dashboard_entity_forecast.js"></script>
 				</div>
 				
-				<div class="pull-right" id="actual_pie_container">
-					<h5 class="dash-tlt">Actual - Entity</h5><span>From: <?php echo date("M Y", strtotime($actual_from_month)); ?></span><span> To: <?php echo date("M Y", strtotime($actual_to_month)); ?></span> <a onclick="showFilter('A'); return false;">Filter</a>
+				<div class="pull-right  forcast-new" id="actual_pie_container">
+					<h5 class="dash-tlt">
+						<span class="forecast-heading">Actual - Entity</span>
+						<div class="forecast-details">
+							<span class="from"><strong>From:</strong> <?php echo date("M Y", strtotime($actual_from_month)); ?></span>
+							<span><strong>To:</strong> <?php echo date("M Y", strtotime($actual_to_month)); ?></span> 
+							<a onclick="showFilter('A'); return false;" title="Filter" class="white-filter"></a>
+						</div>
+					</h5>
 					<div id="actual_entity_chart" class="plot" style="width:450px"></div>
 					<!--div id="funnelimg"><button type="button">PDF</button></div-->
 					<?php 
@@ -68,35 +85,49 @@
 			</div>
 			
 			<div id="entity_charts_info_export" class="dash-section dash-section1" style="display:none;">
-				<div class="export-to-excel">
-					<input type='hidden' id='item_name' name='item_name' value=''>
-					<input type='hidden' id='item_category' name='item_category' value=''>
-					<input type='hidden' id='item_type' name='item_type' value=''>
-					<a id="item_export">Export to Excel</a>
+				
+				<div class="entity-chart-heading-new">
+					<h5 id='item_tag_name'></h5>
+					<div class="export-to-excel">
+						<input type='hidden' id='item_name' name='item_name' value=''>
+						<input type='hidden' id='item_category' name='item_category' value=''>
+						<input type='hidden' id='item_type' name='item_type' value=''>
+						<a id="item_export">Export to Excel</a>
+					</div>
+					<div class="grid-close" id="grid_close_entity"></div>
 				</div>
-				<h5 id='item_tag_name'></h5>
-				<div class="grid-close" id="grid_close_entity"></div>
+
 			</div>
 			<div class="clearfix"></div>
 			<div id="entity_charts_info" class="" style="margin: 10px 0px 0px; display:none; width:auto;"></div>
 			
 			<div id="entity_actual_charts_info_export" class="dash-section dash-section1" style="display:none;">
-				<div class="export-to-excel">
-					<input type='hidden' id='actual_item_name' name='actual_item_name' value=''>
-					<input type='hidden' id='actual_item_category' name='actual_item_category' value=''>
-					<input type='hidden' id='actual_item_type' name='actual_item_type' value=''>
-					<a id="actual_item_export">Export to Excel</a>
+			
+				<div class="entity-chart-heading-new">
+					<h5 id='actual_item_tag_name'></h5>
+					<div class="export-to-excel">
+						<input type='hidden' id='actual_item_name' name='actual_item_name' value=''>
+						<input type='hidden' id='actual_item_category' name='actual_item_category' value=''>
+						<input type='hidden' id='actual_item_type' name='actual_item_type' value=''>
+						<a id="actual_item_export">Export to Excel</a>
+					</div>
+					
+					<div class="grid-close" id="grid_close_actual_entity"></div>
 				</div>
-				<h5 id='actual_item_tag_name'></h5>
-				<div class="grid-close" id="grid_close_entity"></div>
+	
 			</div>
 			<div class="clearfix"></div>
 			<div id="entity_actual_charts_info" class="" style="margin: 10px 0px 0px; display:none; width:auto;"></div>
 			
-			<div class="clearfix"></div>
 			<div class="clearfix">
-				<div class="pull-left dash-section" id="compare_bar_container">
-					<h5 class="dash-tlt">Forecast vs Actual</h5> <a onclick="showFilter('FA'); return false;">Filter</a>
+				<!--div class="pull-left dash-section forecast-new" id="compare_bar_container"-->
+				<div class="pull-left forecast-new dash-section-full" id="compare_bar_container" style="margin-top: 20px;">
+					<h5 class="forecast_chartbar">
+						<span class="forecast-heading">Forecast vs Actual</span>
+						<div class="forecast-details"> 
+							<a onclick="showFilter('FA'); return false;" title="Filter" class="white-filter"></a>
+						</div>
+					</h5>
 					<div id="forecast_compare_chart" class="plot" style="width:450px"></div>
 					<!--div id="funnelimg"><button type="button">PDF</button></div-->
 					
@@ -141,14 +172,17 @@
 				</div>
 			</div>
 			<div id="compare_charts_info_export" class="dash-section dash-section1" style="display:none;">
-				<div class="export-to-excel">
-					<input type='hidden' id='compare_item_name' name='compare_item_name' value=''>
-					<input type='hidden' id='compare_item_category' name='compare_item_category' value=''>
-					<input type='hidden' id='compare_item_type' name='compare_item_type' value=''>
-					<a id="export_compare_data">Export to Excel</a>
+				<div class="entity-chart-heading-new">
+					<h5 id='compare_item_tag_name'></h5>
+					<div class="export-to-excel">
+						<input type='hidden' id='compare_item_name' name='compare_item_name' value=''>
+						<input type='hidden' id='compare_item_category' name='compare_item_category' value=''>
+						<input type='hidden' id='compare_item_type' name='compare_item_type' value=''>
+						<a id="export_compare_data">Export to Excel</a>
+					</div>
+					
+					<div class="grid-close" id="grid_close_compare_entity"></div>
 				</div>
-				<h5 id='compare_item_tag_name'></h5>
-				<div class="grid-close"></div>
 			</div>
 			
 			<div class="clearfix"></div>
