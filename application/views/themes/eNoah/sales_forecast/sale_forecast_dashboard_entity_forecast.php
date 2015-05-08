@@ -2,7 +2,7 @@
 <span class="forecast-heading">Entitywise Forecast</span>
 <div class="forecast-details">
 	<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($current_month)); ?><strong> -</strong> <?php echo date("M Y", strtotime($highest_month)); ?></span>
-	<a onclick="showFilter('F'); return false;" class="white-filter"></a></div>
+	<a onclick="showFilter('F'); return false;" title="Date Filter" class="date-icon-filter"></a></div>
 </h5>
 <div id="forecast_entity_chart" class="plot" style="width:650px"></div>
 <!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->

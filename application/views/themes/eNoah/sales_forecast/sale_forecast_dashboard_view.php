@@ -37,7 +37,7 @@
 						<span class="forecast-heading">Entitywise Forecast</span>
 						<div class="forecast-details">
 							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($forecast_from_month)); ?><strong> -</strong> <?php echo date("M Y", strtotime($forecast_to_month)); ?></span> 
-							<a onclick="showFilter('F'); return false;" title="Filter" class="white-filter"></a>
+							<a onclick="showFilter('F'); return false;" title="Date Filter" class="date-icon-filter"></a>
 						</div>
 					</h5>
 					
@@ -63,7 +63,7 @@
 						<span class="forecast-heading">Entitywise Actuals</span>
 						<div class="forecast-details">
 							<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($actual_from_month)); ?><strong>-</strong> <?php echo date("M Y", strtotime($actual_to_month)); ?></span>
-							<a onclick="showFilter('A'); return false;" title="Filter" class="white-filter"></a>
+							<a onclick="showFilter('A'); return false;" title="Date Filter" class="date-icon-filter"></a>
 						</div>
 					</h5>
 					<div id="actual_entity_chart" class="plot" style="width:450px"></div>

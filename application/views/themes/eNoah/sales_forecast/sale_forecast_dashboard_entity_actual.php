@@ -3,7 +3,7 @@
 <div class="forecast-details">
 	<span class="from"><strong>Period: </strong> <?php echo date("M Y", strtotime($current_month)); ?>
 	<strong> -</strong> <?php echo date("M Y", strtotime($highest_month)); ?></span>
-	<a onclick="showFilter('A'); return false;" class="white-filter"></a>
+	<a onclick="showFilter('A'); return false;" title="Date Filter" class="date-icon-filter"></a>
 </div>
 </h5>
 <div id="actual_entity_chart" class="plot" style="width:650px"></div>

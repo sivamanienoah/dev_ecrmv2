@@ -2251,6 +2251,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
  h5 .forecast-heading { float: left !important; margin:0 0 0 20px;}
 .forecast-details { margin: 0 20px 0 0; text-align: right; }
 .white-filter{background:url(../img/filter-icon-white.png) no-repeat;float: right;height: 17px;width: 16px;margin:2px 0 0 10px;}
+.date-icon-filter{background:url(../img/calender-white-icon.png) no-repeat;float: right;height: 17px;width: 16px;margin:2px 0 0 10px;}
 .forcast-new .forecast-details span { font-size: 11px; font-weight: normal; margin: 0 10px; }
 /* .forcast-new .forecast-details span.from {margin: 0 10px 0 0;} */
 .dash-section-full{width: 100%;}
