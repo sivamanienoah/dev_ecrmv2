@@ -1887,7 +1887,7 @@ if (get_default_currency()) {
 			$checkValue = true;
 			 if(count($bug_project)>0 && !empty($bug_project)):?>
 				<div class="buttons task-init  toggler">
-					<div style="float:right;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="<?php echo "http://".$_SERVER['HTTP_HOST']."/sso-mantis/set_project.php";?>"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
+					<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="<?php echo "http://".$_SERVER['HTTP_HOST']."/sso-mantis/set_project.php";?>"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
 					<div class="clear"></div>
 				</div>
 				<div style="margin-bottom:10px;" class="pull-left">
@@ -1941,7 +1941,7 @@ if (get_default_currency()) {
 			$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");	?>
 			
 	
-			<div class="pull-left">
+			<div style="margin-bottom:10px;" class="pull-left">
 				<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1 table-style" id="project-date-assign">
 				<tbody>
 				<tr>
@@ -1997,7 +1997,7 @@ if (get_default_currency()) {
 			</div>
 		<?php endif;  
 		 
-	 	if(count($AllPjtIds)==1 && count($AllPjtIds)>0):
+	 	if(count($AllPjtIds)>0 && !empty($AllPjtIds)):
 		$cat_arr = array();
 		$cat_status_arr = array();
 		if(count($bug_category)>0 && !empty($bug_category)) :	
