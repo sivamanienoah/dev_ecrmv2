@@ -24,150 +24,63 @@ if (get_default_currency()) {
 		$date_used = $quote_data['date_created'];
 	?>
     <div class="inner q-view">
-		<div class="right-communication">		
-			<form id="comm-log-form">
-			
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			
-				<textarea name="job_log" id="job_log" class="textfield width99pct height100px gray-text">Click to view options</textarea>
-				<div style="position:relative;">
-					<textarea name="signature" class="textfield width99pct" rows="4" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
-					<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
-				</div>
-				
-				<div style="overflow:hidden;">					
-					<p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p>
-					<div class="button-container">
-						<div class="buttons">
-							<button type="submit" class="positive" onclick="addLog();  return false;" id="add-log-submit-button">Add Post</button>
-						</div>
-					</div>				
-				</div>
-				
-			<?php
-			if (isset($userdata))
-			{
-			?>
-				<div class="email-set-options" style="overflow:hidden;">
-					<!--table border="0" cellpadding="0" cellspacing="0" class="client-comm-options">
-						<tr>
-							<td rowspan="2" class="action-td" valign="top" align="right"><a href="#" onclick="addClientCommOptions(); $(this).blur(); return false;">Communicate<br />to Client via</td>
-							<td><input type="checkbox" name="client_comm_phone" value="<?php echo (isset($quote_data['phone_1'])) ? $quote_data['phone_1'] : '' ?>"> <span>Phone</span></td>
-							<td><input type="checkbox" name="client_comm_sms" value="<?php echo (isset($quote_data['phone_3'])) ? $quote_data['phone_3'] : '' ?>"> <span>SMS</span></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="client_comm_mobile" value="<?php echo (isset($quote_data['phone_3'])) ? $quote_data['phone_3'] : '' ?>"> <span>Mobile</span></td>
-							<td><input type="checkbox" name="client_comm_email" value="<?php echo (isset($quote_data['email_1'])) ? $quote_data['email_1'] : '' ?>"> <span>Email</span></td>
-						</tr>
-					</table-->
-
-					<input type="checkbox" name="email_to_customer" id="email_to_customer" /> <label for="email_to_customer" class="normal">Email Client</label>
-					<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo  (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
-					<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo  (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
-					<input type="hidden" name="requesting_client_approval" id="requesting_client_approval" value="0" />
-					
-					<p id="multiple-client-emails">
-						<input type="checkbox" name="client_emails_1" id="client_emails_1" value="<?php echo $quote_data['email_1'] ?>" /> <?php echo $quote_data['email_1'] ?>
-						<?php
-						if ($quote_data['email_2'] != '')
-						{
-							?>
-							<br /><input type="checkbox" name="client_emails_2" id="client_emails_2" value="<?php echo $quote_data['email_2'] ?>" /> <?php echo $quote_data['email_2'] ?>
-							<?php
-						}
-						if ($quote_data['email_3'] != '')
-						{
-							?>
-							<br /><input type="checkbox" name="client_emails_3" id="client_emails_3" value="<?php echo $quote_data['email_3'] ?>" /> <?php echo $quote_data['email_3'] ?>
-							<?php
-						}
-						if ($quote_data['email_4'] != '')
-						{
-							?>
-							<br /><input type="checkbox" name="client_emails_4" id="client_emails_4" value="<?php echo $quote_data['email_4'] ?>" /> <?php echo $quote_data['email_4'] ?>
-							<?php
-						}
-						?>
-						<br />
-						Additional Emails (separate addresses with a comma)<br />
-						<input type="text" name="additional_client_emails" id="additional_client_emails" class="textfield width99pct" />
-					</p>
-					
-				</div>
-			<?php
-			}
-			?>
-			
-				<div class="email-list">
-					<?php
-				    $restrict1[] = 0;
-					if (is_array($contract_users) && count($contract_users) > 0) { 
-						foreach ($contract_users as $data) {
-							$restrict1[] = $data['userid_fk'];
-						}
-					}
-				    $restrict2[] = 0;
-					if (is_array($stake_holders) && count($stake_holders) > 0) { 
-						foreach ($stake_holders as $data1) {
-							$restrict2[] = $data1['user_id'];
-						}
-					}					
-					
-					//echo "<pre>"; print_r($restrict1);
-					
-					$r_users = implode(",",$list_users);
-					$restrict = explode(",",$r_users);
-					//print_r($restrict);
-					
-					//Merge the contract users, lead owner, lead sssigned_to & project Manager.
-					$rest_users = array_merge_recursive($restrict, $restrict1);
-					
-					if(count($stake_holders)>0){
-						$rest_users = array_merge_recursive($rest_users, $restrict2);	
-					}
-					
-					$restrict_users = array_unique($rest_users);
-				 
-					//Re-Assign the Keys in the array.
-					$final_restrict_user = array_values($restrict_users);
-					
-					?>
-					<label>Email To:</label>
-					<?php
-					if (count($final_restrict_user)>0) {
-						
-						$user_details_id = array();
-						if(!empty($user_accounts)){
-							foreach($user_accounts as $user=>$userdet){
-								$user_details_id[$userdet['userid']] = $userdet;
-							}
-						}
-						$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
-					 
-					?>
-					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:400px;">
-						<?php
-							foreach($final_restrict_user as $ua){
-						?>
-								<option value="<?php echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
-						<?php
-							}
-						?>
-					</select>
-					<?php
-					}
-					?>
-				</div>
-			</form>
-			<?php 
-				function array_remove_by_value($array, $value) {
-					return array_values(array_diff($array, array($value)));
-				}
-			?>
-			<p>&nbsp;</p>
-		</div>
 		
-        <div class="pull-left side1 test-block"> 
+		<?php
+			$restrict1[] = 0;
+			if (is_array($contract_users) && count($contract_users) > 0) { 
+				foreach ($contract_users as $data) {
+					$restrict1[] = $data['userid_fk'];
+				}
+			}
+			$restrict2[] = 0;
+			if (is_array($stake_holders) && count($stake_holders) > 0) { 
+				foreach ($stake_holders as $data1) {
+					$restrict2[] = $data1['user_id'];
+				}
+			}					
+			
+			//echo "<pre>"; print_r($restrict1);
+			
+			$r_users = implode(",",$list_users);
+			$restrict = explode(",",$r_users);
+			//print_r($restrict);
+			
+			//Merge the contract users, lead owner, lead sssigned_to & project Manager.
+			$rest_users = array_merge_recursive($restrict, $restrict1);
+			
+			if(count($stake_holders)>0){
+				$rest_users = array_merge_recursive($rest_users, $restrict2);	
+			}
+			
+			$restrict_users = array_unique($rest_users);
+		 
+			//Re-Assign the Keys in the array.
+			$final_restrict_user = array_values($restrict_users);
+			
+		?>
+		
+		
+		<?php
+			if (count($final_restrict_user)>0) {
+			
+				$user_details_id = array();
+				if(!empty($user_accounts)){
+					foreach($user_accounts as $user=>$userdet){
+						$user_details_id[$userdet['userid']] = $userdet;
+					}
+				}
+				$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
+			}
+			
+			
+			function array_remove_by_value($array, $value) {
+				return array_values(array_diff($array, array($value)));
+			}
+			
+		?>
+		
+		
+        <div class="pull-left side1 test-block full-div"> 
 			<h2 class="job-title"> <?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES); ?> </h2>
 			<?php
 				if (isset($quote_data['pjt_id'])) {
@@ -180,11 +93,26 @@ if (get_default_currency()) {
 				if($quote_data['pjt_status'] == 2)
 				$readonly_status = true;
 			?>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!---------------------------------SECTION LEFT--------------------------------->
+			<div class="sec-left">
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Project Title</label>
-					<input type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> />
+					<input style="width:180px;" type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> />
 				</div>
 				<div>
 				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
@@ -225,7 +153,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Cost Center</label>
-					<select name="cost_center" id="cost_center" class="textfield" style="width: 135px;" disabled>
+					<select name="cost_center" id="cost_center" class="textfield" style="width: 190px;" disabled>
 						<option value="">Select Cost Center</option>
 						<?php if(!empty($arr_cost_center)) {
 							foreach($arr_cost_center as $list_cost_center) {
@@ -248,7 +176,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Departments</label>
-					<select name="department_id_fk" id="department_id_fk" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="department_id_fk" id="department_id_fk" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="">Select Departments</option>
 						<?php if(!empty($departments)) {
 							foreach($departments as $listDepartments) {
@@ -278,7 +206,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Resource Type</label>
-					<select name="resource_type" id="resource_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="resource_type" id="resource_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="">Select Resource Type</option>
 						<?php if(!empty($billing_categories)) {
 							foreach($billing_categories as $list_resource_type) {
@@ -307,7 +235,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Project Type</label>
-					<select name="project_types" id="project_types" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="project_types" id="project_types" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="">Select Project Types</option>
 						<?php if(!empty($project_types)) {
 							foreach($project_types as $types) {
@@ -336,7 +264,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Project Billing Type</label>
-					<select name="project_type" id="project_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="project_type" id="project_type" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="">Select Project Types</option>
 						<?php if(!empty($timesheet_project_types)) {
 							foreach($timesheet_project_types as $list_project_types) {
@@ -365,7 +293,7 @@ if (get_default_currency()) {
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="practices">Practice</label>
-					<select name="practice" id="practice" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="practice" id="practice" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="">Select Practice</option>
 						<?php if(!empty($practices)) {
 							foreach($practices as $pract) {
@@ -429,7 +357,7 @@ if (get_default_currency()) {
 			<form>
 				<div class="pull-left">
 					<label class="project-status">Project Status</label>
-					<select name="pjt_status" id="pjt_status" class="textfield" <?php if ($chge_access != 1) { ?> disabled <?php } ?> style="width: 135px;">
+					<select name="pjt_status" id="pjt_status" class="textfield" <?php if ($chge_access != 1) { ?> disabled <?php } ?> style="width: 190px;">
 						<option value="1"  <?php if($quote_data['pjt_status'] == 1) echo 'selected="selected"'; ?>>Project In Progress</option>
 						<option value="2"  <?php if($quote_data['pjt_status'] == 2) echo 'selected="selected"'; ?>>Project Completed</option>
 						<option value="3"  <?php if($quote_data['pjt_status'] == 3) echo 'selected="selected"'; ?>>Project Onhold</option>
@@ -501,7 +429,19 @@ if (get_default_currency()) {
 			<?php //require (theme_url().'/tpl/user_accounts_options.php'); ?>
 			
 			<!--List the project lead from the timesheet-->
+			</div>
+			<!---------------------------------SECTION LEFT--------------------------------->
 			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			<!---------------------------------SECTION RIGHT--------------------------------->
+			<div class="sec-right">
 			<div class="pull-left">
 			<label class="project-manager">Project Manager</label>
 				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> class="chzn-select"  id="project_manager" name="project_manager">
@@ -524,8 +464,34 @@ if (get_default_currency()) {
 			</div>
 			<?php } ?>
 			<div style="margin-bottom:15px;" class="clear-both"></div>	
+			
+			<!--Stake Holders-->
+			<div class="pull-left team-mem">
+			<label class="project-stake-members">Stake Holders</label>
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
+					<?php if(!empty($all_users)):?>
+							<option value="">Select</option>
+							<?php foreach($all_users as $pms):
+									$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
+									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
+							<?php endforeach;?>
+					<?php endif; ?>
+				</select>
+			</div>
+			<?php 
+			if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+			<div class="team-mem-btn">
+				<div class="buttons">
+					<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
+					<div class="error-msg" id="resmsg3"></div>
+				</div>
+			</div>
+			<?php } ?>
+			<div style="margin:10px;" class="clear-both"></div>		
+			<!--Stake Holders-->
+			
 			<!--List the project assigned members from the timesheet-->
-			<div class="pull-left">
+			<div class="pull-left team-mem">
 			<label class="project-team-members">Team Members</label>
 				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="project_team_members" name="project_team_members[]">
 					<?php if(!empty($all_users)):?>
@@ -538,7 +504,7 @@ if (get_default_currency()) {
 				</select>
 			</div>
 			<?php if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-			<div>
+			<div class="team-mem-btn">
 				<div class="buttons">
 					<button onclick="setProjectMembers(); return false;" style="margin:0 0 0 5px;" id="project_members_id" class="positive" type="submit">Set</button>
 					<div class="error-msg" id="resmsg2"></div>
@@ -560,29 +526,30 @@ if (get_default_currency()) {
 			//	echo '<pre>';print_r($restrict1);exit;
 			?>
 			
-			<div class="pull-left">
-			<label class="project-stake-members">Stake Holders</label>
-				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
-					<?php if(!empty($all_users)):?>
-							<option value="">Select</option>
-							<?php foreach($all_users as $pms):
-									$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
-									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'];?></option>
-							<?php endforeach;?>
-					<?php endif; ?>
-				</select>
+			
 			</div>
-			<?php 
-			if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-			<div>
-				<div class="buttons">
-					<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
-					<div class="error-msg" id="resmsg3"></div>
-				</div>
-			</div>
-			<?php } ?>
-			<div style="margin:10px;" class="clear-both"></div>			
-  <div id="project-tabs" style="width:930px;float:left;margin:10px 0 0 0;">
+			<!---------------------------------SECTION RIGHT--------------------------------->
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+  <div id="project-tabs" style="width:99.5%;float:left;margin:10px 0 0 0;">
 	<div>
 		<ul id="job-view-tabs">
 			<?php if($this->userdata['role_id'] != 8):?>
