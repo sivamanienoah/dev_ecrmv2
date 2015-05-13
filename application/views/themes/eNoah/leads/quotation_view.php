@@ -12,6 +12,34 @@ require (theme_url().'/tpl/header.php');
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 
+			<div class="search-dropdown">
+				<a class="saved-search-head" >
+					<p>Saved Search</p>
+				</a>
+				<div class="saved-search-criteria" style="display: none; ">
+					<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
+					<?php 
+					if(sizeof($saved_search)>0) {
+						foreach($saved_search as $searc) { 
+					?>
+						<ul class="search-root">
+							<li><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a>
+							<a title="Set Default" href="javascript:void(0)" <?php if($searc['is_default']==0) { ?> onclick="set_default_search('<?php echo $searc['search_id'] ?>')" <?php } ?> >Set Default</a>
+							<a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></li>
+						</ul>
+						<?php 
+						}
+					} else {
+					?>
+						<ul class="search-root">
+							<li>No search found</li>
+						</ul>
+					<?php
+					}
+					?>
+				</div>
+			</div>
+
 			<div class="section-right">
 				<!--search-->
 				<div class="form-cont search-table">
@@ -159,10 +187,12 @@ require (theme_url().'/tpl/header.php');
 								</tr>
 								<tr align="right" >
 									<td colspan="6"><input type="reset" class="positive input-font" name="advance" value="Reset" />
-									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
+									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
+									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -177,6 +207,7 @@ require (theme_url().'/tpl/header.php');
 	?>
 	</div>
 </div>
+<div id='popupGetSearchName'></div>
 
 <script type="text/javascript" src="assets/js/leads/quotation_view.js"></script>
 <?php

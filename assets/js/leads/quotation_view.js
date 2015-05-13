@@ -26,9 +26,12 @@
 	$('#advance_search_results').load(sturl);
 
 //For Advance Filters functionality.
-$("#advanceFilters").submit(function() {
-	$('#advance').hide();
+$("#search_advance").click(function() {
+
+	$('#search_advance').hide();
+	$('#save_advance').hide();
 	$('#load').show();
+	
 	var owner        = $("#owner").val();
 	var leadassignee = $("#leadassignee").val();
 	var regionname   = $("#regionname").val();
@@ -39,25 +42,178 @@ $("#advanceFilters").submit(function() {
 	var customer     = $("#customer").val(); 
 	var worth        = $("#worth").val();	
 	var lead_status  = $("#lead_status").val();
-	var lead_indi  = $("#lead_indi").val();
-	var keyword      = $("#keyword").val();
-		
-	 $.ajax({
-	   type: "POST",
-	   url: site_base_url+"welcome/advance_filter_search",
-	   cache: false,
-	   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
-	   success: function(data){
+	var lead_indi    = $("#lead_indi").val();
+	var keyword      = '';
+
+	$.ajax({
+		type: "POST",
+		url: site_base_url+"welcome/advance_filter_search/search",
+		cache: false,
+		data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+		success: function(data){
 			$('#advance_search_results').html(data);
-			$('#advance').show();
-			$('#load').hide();	
-	   }
-	 });
+			$('#load').hide();
+			$('#search_advance').show();
+			$('#save_advance').show();
+		}
+	});
 	return false;  //stop the actual form post !important!
 });
 
+
+function show_search_results(search_id) {
+	$.ajax({
+		type: "POST",
+		url: site_base_url+"welcome/advance_filter_search/search/"+search_id,
+		cache: false,
+		data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+		success: function(data){
+			$('#advance_search_results').html(data);
+			$('#search_advance').show();
+			$('#save_advance').show();
+			$('#load').hide();	
+		}
+	});
+}
+
+function set_default_search(search_id) {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/set_default_search/"+search_id+'/1',
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(response){
+			if(response.resu=='updated') {
+				$('.search-dropdown').html(response.search_div);
+				saveSearchScript();
+				// show_search_results(search_id);
+			} else {
+				alert('Not updated');
+			}
+			
+		}
+	});
+}
+
+function delete_save_search(search_id) {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/delete_save_search/"+search_id+'/1',
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(response){
+			if(response.resu=='deleted') {
+				$('.search-dropdown').html(response.search_div);
+				saveSearchScript();
+			} else {
+				alert('Not updated');
+			}
+		}
+	});
+}
+
+$("#save_advance").click(function() {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/get_search_name_form",
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(res){
+			// alert(res.html)
+			// return false;
+			$('#popupGetSearchName').html(res);
+			$.blockUI({
+				message:$('#popupGetSearchName'),
+				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'},
+				focusInput: false 
+			});
+			$( "#popupGetSearchName" ).parent().addClass( "no-scroll" );
+		}
+	});
+});
+
+function save_cancel() {
+	$.unblockUI();
+}
+
+function save_search() {
+
+	if($('#search_name').val()=='') {
+		$("#search_name").css("border-color", "red");
+		return false;
+	}
+	
+	$("#search_name").keyup(function(){
+		$("#search_name").css("border-color", "");
+	});
+	
+	$('#search_advance').hide();
+	$('#save_advance').hide();
+	$('#load').show();
+	
+	var is_defalut_val = 0;
+	
+	if($( "#is_default:checked" ).val() == 1) {
+		is_defalut_val = 1;
+	}
+	
+	var search_name  = $('#search_name').val();
+	var is_default   = is_defalut_val;
+	var owner        = $("#owner").val();
+	var leadassignee = $("#leadassignee").val();
+	var regionname   = $("#regionname").val();
+	var countryname  = $("#countryname").val();
+	var statename    = $("#statename").val();
+	var locname      = $("#locname").val();
+	var stage        = $("#stage").val(); 
+	var customer     = $("#customer").val(); 
+	var worth        = $("#worth").val();	
+	var lead_status  = $("#lead_status").val();
+	var lead_indi    = $("#lead_indi").val();
+	var keyword      = '';
+	
+	//Save the search criteria
+	
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/save_search/1",
+		cache: false,
+		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success: function(response){
+			// if(response.res == true) {
+				// alert(response.msg)
+			// }
+			
+			$('.search-dropdown').html(response.search_div);
+			saveSearchScript();
+			
+			$.ajax({
+				type: "POST",
+				url: site_base_url+"welcome/advance_filter_search/search",
+				cache: false,
+				data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+				success: function(data){
+					$.unblockUI();
+					$('#advance_search_results').html(data);
+					$('#search_advance').show();
+					$('#save_advance').show();
+					$('#load').hide();	
+				}
+			});
+		}
+	});
+	return false;  //stop the actual form post !important!
+}
+
 //for lead search functionality.
- $(function(){
+$(function(){
        $("#lead_search_form").submit(function(){
 		var  keyword 		= $("#keyword").val(); 
 		if(keyword == "Lead No, Job Title, Name or Company")
@@ -84,8 +240,11 @@ $("#advanceFilters").submit(function() {
          return false;  //stop the actual form post !important!
  
       });
+	  
+	saveSearchScript();
+	  
    });
-
+   
 function advanced_filter(){
 	$('#advance_search').slideToggle('slow');
 	var  keyword = $("#keyword").val();
@@ -185,4 +344,35 @@ function loadLocations() {
 			}
 		);
 	}
+}
+
+function saveSearchScript(){
+	/*for saved search - start*/
+	  	$(".saved-search-head").click(function(){
+			var X=$(this).attr('id');
+
+			if(X==1) {
+				$(".saved-search-criteria").hide();
+				$(this).attr('id', '0');
+			} else {
+				$(".saved-search-criteria").show();
+				$(this).attr('id', '1');
+			}
+		});
+
+		//Mouseup textarea false
+		$(".saved-search-criteria").mouseup(function() {
+			return false
+		});
+		$(".saved-search-head").mouseup(function() {
+			return false
+		});
+
+		//Textarea without editing.
+		$(document).mouseup(function() {
+			$(".saved-search-criteria").hide();
+			$(".saved-search-head").attr('id', '');
+		});
+	  
+	  /*for saved search - end*/
 }

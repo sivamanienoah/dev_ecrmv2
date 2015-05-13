@@ -1580,8 +1580,8 @@ ul.ui-sortable li{
 {
 	padding:8px 0 6px;
 	margin-bottom:10px;
-	border-bottom:1px solid #757575;
-	border-top:1px solid #757575;
+/* 	border-bottom:1px solid #757575;
+	border-top:1px solid #757575; */
 }
 .client-comm-options 
 {
@@ -2179,10 +2179,6 @@ a.choice-box:hover{background:url("../img/filter-icon.png") no-repeat left;borde
 .page-title-head #filter_metrics_data label {margin: 0 6px 0 0;position: relative;top: 2px;}
 .page-title-head #filter_metrics_data input {padding: 3px 10px 4px;position: relative;top: 1px;}
 .dpwn-arw {position: absolute;right: 20px;top: -7px;}
-/* .blockUI.blockMsg.blockPage {overflow: visible !important;background:#fff !important;border: 5px solid rgba(255, 255, 255, .5) !important;border-radius: 5px;padding: 20px !important;}
-.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right:-25px;top:-25px;width: 24px;z-index: 9;border-radius:50%;border:2px solid #fff;} */
-/**table-styles**/
-
 .section-right {float: right;}
 .form-cont {float: left;margin:7px 0 0 0;}
 .form-cont label {float: left;font-size: 11px !important;font-weight: normal !important;margin: 0 10px 0 0;line-height: 32px !important;}
@@ -2207,25 +2203,8 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 
 .link-btn {background: none repeat scroll 0 0 #4b6fb9;border: 1px solid #274686;color: #fff;cursor: pointer;font-size: 11px;font-weight: normal;margin: 0;padding: 3px 7px;text-decoration:none !important;}
 
-/*Clearfix*/
-.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
-.clearfix {display: inline-block;}
-html[xmlns] .clearfix {display: block;}
-* html .clearfix {height: 1%;}
-/*End*/
-
-
 /**7-5-2015**/
-/* table.table-style tr td {
-    border-bottom: 0 none;
-    border-right: 1px solid #dadada;
-    padding: 0;
-}
-table.table-style tr td table tr td {
-    border:none;
-} */
 .sub-table td{ border:none; text-align:center; padding:0;}
-
 /**7-5-2015**/
 /**8-5-2015**/
 .forecast_chartbar{
@@ -2266,9 +2245,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 #forecast_compare_chart .jqplot-grid-canvas { margin: 0 6px; }
 .popup-forecast-head { font-size: 12px; text-align: left; font-weight: bold;}
 
+#popupGetSearchName { display:none; }
+
 /**8-5-2015**/
-
-
 
 /**12-5-2015**/
 .full-div{width:100%;}
@@ -2277,6 +2256,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 .pull-left.team-mem {width: 90%;}
 .sec-right .team-mem .chzn-container {float: left;width: 100% !important;}
 .team-mem-btn {float: left;margin:25px 0 0 10px;}
-
-
 /**12-5-2015**/
+
+a.saved-search-head p { margin: 0; color:#375695; font-size:13px; background:url("../img/user-drop-icon.png") no-repeat 100% 8px; padding:0 25px 0 0; font-weight: bold;}
+a.saved-search-head {font-size: 11px;line-height: 16px;color:#59585d;position:relative;z-index:1;display: block; margin:0px;padding:9px 0 9px 24px;text-decoration: none;cursor:pointer;background:url("../img/search-drop-down-icon.png") no-repeat left;float:left;}
+.search-root{ border: 1px solid #dedede; box-sizing: border-box; float: left; font-size: 11px; list-style: outside none none; margin: 0; padding: 10px; width: 100%; }
+.search-dropdown  li a { color: #555555; display: block; font-family: arial; font-weight: normal; cursor: pointer; text-decoration:none; font-size: 12px; float: left; padding:0 11px 0 0; margin:0 11px 0 0; border-right:1px solid #dadada; }
+.search-dropdown  li a:last-child{border:none;padding:0;margin:0;}
+.search-dropdown li a:hover{color: #4b6fb9;text-decoration: none;}
+div.search-dropdown { color: #555; float: left; position: relative; margin:0 0 0 20px;}
+div.saved-search-criteria { background: none repeat scroll 0 0 #fff; box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.45); display: none; margin: 0; padding: 0; position: absolute; right: 0; top: 40px; width:175px; z-index: 100; }
+
+/*Clearfix*/
+.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
+.clearfix {display: inline-block;}
+html[xmlns] .clearfix {display: block;}
+* html .clearfix {height: 1%;}
+/*End*/
+a.saved-search-head:hover{opacity:0.8;}

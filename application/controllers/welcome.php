@@ -40,10 +40,12 @@ class Welcome extends crm_controller {
 
 		$page_label = 'Leads List' ;
 		
-		$data['lead_stage'] = $this->stg_name;
-		$data['customers'] = $this->welcome_model->get_customers();
-		$data['lead_owner'] = $this->welcome_model->get_users();
-		$data['regions'] = $this->regionsettings_model->region_list();
+		$data['lead_stage']   = $this->stg_name;
+		$data['customers']    = $this->welcome_model->get_customers();
+		$data['lead_owner']   = $this->welcome_model->get_users();
+		$data['regions']      = $this->regionsettings_model->region_list();
+		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
+		// echo "<pre>"; print_r($data['saved_search']); exit;
 		
 		$this->load->view('leads/quotation_view', $data);
 	}
@@ -51,9 +53,39 @@ class Welcome extends crm_controller {
 	/*
 	 * List all the Leads based on levels with advanced search filter.
 	 */
-	public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
+	// public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
+	public function advance_filter_search($search_type = false, $search_id = false)
 	{
-		$filt = real_escape_array($this->input->post());
+		$filt = array();
+		$stage	      ='null'; 
+		$customer	  ='null'; 
+		$worth		  ='null'; 
+		$owner	 	  ='null'; 
+		$leadassignee ='null'; 
+		$regionname	  ='null';
+		$countryname  ='null'; 
+		$statename	  ='null'; 
+		$locname	  ='null'; 
+		$lead_status  ='null'; 
+		$lead_indi    ='null'; 
+		$keyword      ='null';
+		
+		if($search_type == 'search' && $search_id == false) {
+			$filt = real_escape_array($this->input->post());
+		} else if ($search_type == 'search' && is_numeric($search_id)) {
+			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec))
+			$filt	  = real_escape_array($get_rec);
+		} else {
+			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec))
+			$filt	  = real_escape_array($get_rec);
+		}
+		
+		// echo "<pre>"; print_r($filt); exit;
+		
 		if (count($filt)>0) {
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
@@ -66,7 +98,7 @@ class Welcome extends crm_controller {
 			$locname 	  = $filt['locname'];
 			$lead_status  = $filt['lead_status'];
 			$lead_indi 	  = $filt['lead_indi'];
-			$keyword 	  = $filt['keyword'];
+			$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : 'null';
 			$excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
@@ -76,9 +108,10 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		// echo "<pre>"; print_r($this->session->userdata);
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);	
-		// echo $this->db->last_query();
+		// echo "<pre>"; print_r($filt); exit;
+
+		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		// echo $this->db->last_query(); exit;
 		$data['filter_results'] = $filter_results;
 
 		$data['stage'] 		  = $stage;
@@ -2042,6 +2075,158 @@ HDOC;
 		    $output .= '<option value="'.$st['locationid'].'">'.$st['location_name'].'</option>';
 		}
 		echo $output;
+	}
+	
+	//For Saving the search criteria
+	public function save_search($type)
+	{
+		$post_data = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($post_data); exit;
+		$ins = array();
+		
+		$ins['search_for']   = $type;
+		$ins['search_name']  = $post_data['search_name'];
+		$ins['user_id']	  	 = $this->userdata['userid'];
+		$ins['is_default']	 = $post_data['is_default'];
+		$ins['stage'] 		 = $post_data['stage'];
+		$ins['customer']	 = $post_data['customer'];
+		$ins['worth']		 = $post_data['worth'];
+		$ins['owner']	  	 = $post_data['owner'];
+		$ins['leadassignee'] = $post_data['leadassignee'];
+		$ins['regionname'] 	 = $post_data['regionname'];
+		$ins['countryname']	 = $post_data['countryname'];
+		$ins['statename']	 = $post_data['statename'];
+		$ins['locname']	  	 = $post_data['locname'];
+		$ins['lead_status']  = $post_data['lead_status'];
+		$ins['lead_indi']	 = $post_data['lead_indi'];
+		$ins['created_on'] 	 = date('Y-m-d H:i:s');
+		// echo "<pre>"; print_r($ins); exit;
+		$last_ins_id = $this->welcome_model->insert_row_return_id('saved_search_critriea', $ins);
+		if($last_ins_id) {
+			if($ins['is_default'] == 1) {
+				$updt['is_default'] = 0;
+				$this->db->where('search_id != ', $last_ins_id);
+				$this->db->where('user_id', $this->userdata['userid']);
+				$this->db->where('search_for', $type);
+				$this->db->update($this->cfg['dbpref'] . 'saved_search_critriea', $updt);
+			}
+			
+			$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
+			
+			$result['res'] = true;
+			$result['msg'] = 'Search Criteria Saved.';
+
+			$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
+			$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
+			$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
+			foreach($saved_search as $searc) {
+				$result['search_div'] .= '<ul class="search-root">';
+				$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
+				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
+				if($searc['is_default']==0) {
+					$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+				}
+				$result['search_div'] .= '>Set Default</a>';
+				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
+				$result['search_div'] .= '</ul>';
+			}
+			$result['search_div'] .= '</div>';
+
+		} else {
+			$result['res'] = false;
+			$result['msg'] = 'Search Criteria cant be Saved.';
+		}
+		echo json_encode($result);
+		exit;
+	}
+	
+	public function get_search_name_form() {
+		$html = '<table><tr>';
+		$html .= '<td><label>Search Name:</label></td>';
+		$html .= '<td><input type="text"  class="textfield width160px" name="search_name" id="search_name" value="" /></td></tr><tr>';
+		$html .= '<td><label>Is Default:</label></td>';
+		$html .= '<td><input type="checkbox" name="is_default" id="is_default" value="1" /></td></tr><tr><td colspan=2>';
+		$html .= '<div class="buttons"><button onclick="save_search(); return false;" class="positive" type="submit">Save</button>
+		<button onclick="save_cancel(); return false;" class="negative" type="submit">Cancel</button></div></td></tr></table>';
+		echo json_encode($html);
+		exit;
+	}
+	
+	public function set_default_search($search_id, $type) {
+		
+		$result = array();
+		
+		$tbl = 'saved_search_critriea';
+		$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid']);
+		
+		$updt = $this->welcome_model->update_records($tbl,$wh_condn,'',$up_arg=array('is_default'=>0));
+		$updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>1));
+
+		if($updt_condn) {
+			$result['resu'] = 'updated';
+		}
+		
+		$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
+		$result['search_div'] = '';
+		if(!empty($saved_search)) {
+
+		$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
+		$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
+		$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
+		foreach($saved_search as $searc) {
+			$result['search_div'] .= '<ul class="search-root">';
+			$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
+			$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
+			if($searc['is_default']==0) {
+				$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+			}
+			$result['search_div'] .= '>Set Default</a>';
+			$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
+			$result['search_div'] .= '</ul>';
+		}
+		$result['search_div'] .= '</div>';
+
+		}
+		echo json_encode($result);
+		exit;
+	}
+
+	public function delete_save_search($search_id, $type) {
+		
+		$result = array();
+		
+		$tbl = 'saved_search_critriea';
+		$wh_condn = array('search_for'=>1, 'search_id'=>$search_id);
+
+		if($this->welcome_model->delete_records($tbl, $wh_condn)) {
+			$result['resu'] = 'deleted';
+		}
+		
+		$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
+		$result['search_div'] = '';
+		$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
+		$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
+		$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
+		if(!empty($saved_search)) {
+			foreach($saved_search as $searc) {
+				$result['search_div'] .= '<ul class="search-root">';
+				$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
+				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
+				if($searc['is_default']==0) {
+					$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+				}
+				$result['search_div'] .= '>Set Default</a>';
+				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
+				$result['search_div'] .= '</ul>';
+			}
+		} else {
+			$result['search_div'] .= '<ul class="search-root">';
+			$result['search_div'] .= '<li>No Search Found</li>';
+			$result['search_div'] .= '</ul>';
+		}
+		$result['search_div'] .= '</div>';
+		echo json_encode($result);
+		exit;
 	}
 	
 }

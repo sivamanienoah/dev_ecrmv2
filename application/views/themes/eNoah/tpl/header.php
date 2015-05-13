@@ -331,43 +331,32 @@ function setCookie(c_name,value,exdays)
 
 
 <script type="text/javascript" >
-$(document).ready(function()
-{
-$(".account").click(function()
-{
-var X=$(this).attr('id');
+$(document).ready(function(){
+	$(".account").click(function(){
+		var X=$(this).attr('id');
 
-if(X==1)
-{
-$(".submenu").hide();
-$(this).attr('id', '0');	
-}
-else
-{
+		if(X==1) {
+			$(".submenu").hide();
+			$(this).attr('id', '0');
+		} else {
+			$(".submenu").show();
+			$(this).attr('id', '1');
+		}
+	});
 
-$(".submenu").show();
-$(this).attr('id', '1');
-}
-	
-});
+	//Mouseup textarea false
+	$(".submenu").mouseup(function() {
+		return false
+	});
+	$(".account").mouseup(function() {
+		return false
+	});
 
-//Mouseup textarea false
-$(".submenu").mouseup(function()
-{
-return false
-});
-$(".account").mouseup(function()
-{
-return false
-});
-
-
-//Textarea without editing.
-$(document).mouseup(function()
-{
-$(".submenu").hide();
-$(".account").attr('id', '');
-});
+	//Textarea without editing.
+	$(document).mouseup(function() {
+		$(".submenu").hide();
+		$(".account").attr('id', '');
+	});
 	
 });
 	

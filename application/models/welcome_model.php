@@ -973,6 +973,36 @@ class Welcome_model extends crm_model {
 		$result =  $query->row_array();
 		return $result[$filed_name];
 	}
+	
+	/*
+	*@method get_saved_search
+	*/
+	function get_saved_search($user_id, $search_for) 
+	{
+    	$this->db->select('search_id,search_name,is_default');
+		$this->db->where('user_id', $user_id);
+		$this->db->where('search_for', $search_for);
+    	$this->db->order_by('search_id');
+		$sql = $this->db->get($this->cfg['dbpref'] . 'saved_search_critriea');
+		return $sql->result_array();
+    }
+	
+	function update_records($tbl, $wh_condn, $not_wh_condn, $up_arg) {
+    	$this->db->where($wh_condn);
+		if(!empty($not_wh_condn) && $not_wh_condn != '') {
+			foreach($not_wh_condn as $key=>$value) {
+				$this->db->where($key.'!=',$value);
+			}
+		}
+		return $this->db->update($this->cfg['dbpref'] . $tbl, $up_arg);
+    }
+	
+	function delete_records($tbl, $condn) 
+	{
+		$this->db->where($condn);
+        $this->db->delete($this->cfg['dbpref'].$tbl);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
 }
 
 ?>
