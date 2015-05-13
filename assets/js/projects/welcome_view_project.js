@@ -1543,7 +1543,7 @@ function addURLtoJob()
 		});
 
 
-		$('#job_log').siblings().hide();
+		/* $('#job_log').siblings().hide();
 
 		$('#job_log').focus(function(){
 			$(this).siblings(':hidden').not('#multiple-client-emails').slideDown('fast');
@@ -1551,7 +1551,7 @@ function addURLtoJob()
 				$(this).val('');
 				$(this).removeClass('gray-text');
 			}
-		});
+		}); */
 
 
 		/* job tasks character limit */

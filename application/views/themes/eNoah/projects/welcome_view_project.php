@@ -12,8 +12,6 @@ if (get_default_currency()) {
 	$default_cur_name = 'USD';
 }
 	
-	
-
 	$this->load->helper('lead_helper'); 
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 ?>
@@ -565,6 +563,7 @@ if (get_default_currency()) {
 				<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-8">Timesheet</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-8-5">Quality Metrics</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-10">Send Email</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
 			<?php endif; ?>
 		</ul>
@@ -1730,299 +1729,382 @@ if (get_default_currency()) {
 	</div><!-- id: jv-tab-5 end -->
 			
 	
-	<?php 
-		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-		$cur_year = date('Y');
-		$end_year = date('Y', strtotime('-15 year'));
-	?>
-	<div id="jv-tab-8">
-		<div class="wrap_timesheet">
-				<?php if($quote_data['billing_type'] == 2) { ?>
-					<div id="filter_metrics_data" align="right" style="margin:0 0 10px">
-						<form name="filter_metrics" id="filter_metrics"  method="post">
-							<label><strong>Month & Year</strong></label>
-							<select name="metrics_month" id="metrics_month">
-							<?php foreach ($months as $name) { ?>
-								<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
-							<?php } ?>
-							</select>
-							<select name="metrics_year" id="metrics_year">
-							<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
-								<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
-							<?php } ?>
-							</select>
-							<input type="hidden" name="expect_worth_name" id="expect_worth_name" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly="readonly" />
-							<input id="metrics_data" class="positive" type="submit" value="Search"/>
-							<span style="vertical-align: top;">
-								<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' id='load' style='display:none; width: 60px;' />
-							</span>
-						</form>
-					</div>
-				<?php } ?>
-				<div class="inner_timesheet">
-				<?php if(count($timesheet_data) >0 ) { ?>
-			    <table class="head_timesheet data-table">
-			        <tr>
-			            <th>Resource</th>
-			            <th>Month & Year</th>
-			            <th>Billable Hours</th>
-			            <th>Internal Hours</th>
-			            <th>Non-Billable Hours</th>
-			            <th>Cost Per Hour(<?php echo $quote_data['expect_worth_name']; ?>)</th>
-			            <th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
-			        </tr>
-			    </table>
-				<table class="data-table">
-					<?php
-					$total_billable_hrs		= 0;
-					$total_non_billable_hrs = 0;
-					$total_internal_hrs		= 0;
-					$total_cost				= 0;
-					foreach($timesheet_data as $key1=>$value1) {
-						$resource_name = $key1;
-						foreach($value1 as $key2=>$value2) {
-							$year = $key2;
-							foreach($value2 as $key3=>$value3) {
-								$month		 	  = $key3;
-								$billable_hrs	  = 0;
-								$non_billable_hrs = 0;
-								$internal_hrs	  = 0;
-								foreach($value3 as $key4=>$value4) {
-									switch($key4) {
-										case 'Billable':
-											$rs_name			 = $value4['rs_name'];
-											$rate				 = $value4['rateperhr'];
-											$billable_hrs		 = $value4['duration'];
-											$total_billable_hrs += $billable_hrs;
-										break;
-										case 'Non-Billable':
-											$rs_name				 = $value4['rs_name'];
-											$rate					 = $value4['rateperhr'];
-											$non_billable_hrs		 = $value4['duration'];
-											$total_non_billable_hrs += $non_billable_hrs;
-										break;
-										case 'Internal':
-											$rs_name			 = $value4['rs_name'];
-											$rate				 = $value4['rateperhr'];
-											$internal_hrs 		 = $value4['duration'];
-											$total_internal_hrs += $internal_hrs;
-										break;
+		<?php 
+			$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+			$cur_year = date('Y');
+			$end_year = date('Y', strtotime('-15 year'));
+		?>
+		<div id="jv-tab-8">
+			<div class="wrap_timesheet">
+					<?php if($quote_data['billing_type'] == 2) { ?>
+						<div id="filter_metrics_data" align="right" style="margin:0 0 10px">
+							<form name="filter_metrics" id="filter_metrics"  method="post">
+								<label><strong>Month & Year</strong></label>
+								<select name="metrics_month" id="metrics_month">
+								<?php foreach ($months as $name) { ?>
+									<option value="<?php echo $name; ?>" <?php if($name == date('M')) echo 'selected="selected"'; ?>><?php echo $name; ?></option>
+								<?php } ?>
+								</select>
+								<select name="metrics_year" id="metrics_year">
+								<?php for($yr=$cur_year; $yr>=$end_year; $yr--) { ?>
+									<option value="<?php echo $yr; ?>"><?php echo $yr; ?></option>
+								<?php } ?>
+								</select>
+								<input type="hidden" name="expect_worth_name" id="expect_worth_name" value="<?php echo $quote_data['expect_worth_name']; ?>" readonly="readonly" />
+								<input id="metrics_data" class="positive" type="submit" value="Search"/>
+								<span style="vertical-align: top;">
+									<img src='<?php echo base_url().'assets/images/loading.gif'; ?>' id='load' style='display:none; width: 60px;' />
+								</span>
+							</form>
+						</div>
+					<?php } ?>
+					<div class="inner_timesheet">
+					<?php if(count($timesheet_data) >0 ) { ?>
+					<table class="head_timesheet data-table">
+						<tr>
+							<th>Resource</th>
+							<th>Month & Year</th>
+							<th>Billable Hours</th>
+							<th>Internal Hours</th>
+							<th>Non-Billable Hours</th>
+							<th>Cost Per Hour(<?php echo $quote_data['expect_worth_name']; ?>)</th>
+							<th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
+						</tr>
+					</table>
+					<table class="data-table">
+						<?php
+						$total_billable_hrs		= 0;
+						$total_non_billable_hrs = 0;
+						$total_internal_hrs		= 0;
+						$total_cost				= 0;
+						foreach($timesheet_data as $key1=>$value1) {
+							$resource_name = $key1;
+							foreach($value1 as $key2=>$value2) {
+								$year = $key2;
+								foreach($value2 as $key3=>$value3) {
+									$month		 	  = $key3;
+									$billable_hrs	  = 0;
+									$non_billable_hrs = 0;
+									$internal_hrs	  = 0;
+									foreach($value3 as $key4=>$value4) {
+										switch($key4) {
+											case 'Billable':
+												$rs_name			 = $value4['rs_name'];
+												$rate				 = $value4['rateperhr'];
+												$billable_hrs		 = $value4['duration'];
+												$total_billable_hrs += $billable_hrs;
+											break;
+											case 'Non-Billable':
+												$rs_name				 = $value4['rs_name'];
+												$rate					 = $value4['rateperhr'];
+												$non_billable_hrs		 = $value4['duration'];
+												$total_non_billable_hrs += $non_billable_hrs;
+											break;
+											case 'Internal':
+												$rs_name			 = $value4['rs_name'];
+												$rate				 = $value4['rateperhr'];
+												$internal_hrs 		 = $value4['duration'];
+												$total_internal_hrs += $internal_hrs;
+											break;
+										}
 									}
+									echo "<tr>
+										<td>".$rs_name."</td>
+										<td>".substr($month, 0, 3). " " . $year."</td>
+										<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
+										<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
+										<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
+										<td align=right>".$rate."</td>
+										<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
+									</tr>";
+									
+									$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 								}
-								echo "<tr>
-									<td>".$rs_name."</td>
-									<td>".substr($month, 0, 3). " " . $year."</td>
-									<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
-									<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
-									<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
-									<td align=right>".$rate."</td>
-									<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
-								</tr>";
-								
-								$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 							}
 						}
-					}
-					echo "<tr>
-						<td align=right><b>Total</b></td>
-						<td></td>
-						<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
-						<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
-						<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
-						<td></td>
-						<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
-					</tr>";
-					?>
-				</table>
-		    <?php 
-				} else {
-					if($quote_data['billing_type'] == 2) {
-						echo '<div align="center" style="margin: 20px 0 0;"><b> No data available for Current Month</b></div>';
+						echo "<tr>
+							<td align=right><b>Total</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_billable_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_internal_hrs)."</b></td>
+							<td align=right><b>".sprintf('%0.2f', $total_non_billable_hrs)."</b></td>
+							<td></td>
+							<td align=right><b>".sprintf('%0.2f', $total_cost)."</b></td>
+						</tr>";
+						?>
+					</table>
+				<?php 
 					} else {
-						echo '<div align="center" style="margin: 20px 0 0;"><b> Unable to extract project hours from timesheet system </b></div>';
+						if($quote_data['billing_type'] == 2) {
+							echo '<div align="center" style="margin: 20px 0 0;"><b> No data available for Current Month</b></div>';
+						} else {
+							echo '<div align="center" style="margin: 20px 0 0;"><b> Unable to extract project hours from timesheet system </b></div>';
+						}
 					}
-				}
-			?>
-			</div>
-		</div>
-	</div><!-- id: jv-tab-8 end -->
-	
-	
-	
-	<div id="jv-tab-8-5">
-		<?php  
-			$checkValue = true;
-			 if(count($bug_project)>0 && !empty($bug_project)):?>
-				<div class="buttons task-init  toggler">
-					<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="<?php echo "http://".$_SERVER['HTTP_HOST']."/sso-mantis/set_project.php";?>"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
-					<div class="clear"></div>
-				</div>
-				<div style="margin-bottom:10px;" class="pull-left">
-				<?php 
-				$checkValue = false;
-				$bp_arr = array();
-				$tot = array();
-				foreach($bug_project as $bp):
-					$bp_arr['values'][$bp->project_id][$bp->status] = $bp->bugcount;
-				endforeach;
-				ksort($bp_arr['values']);
-				$statusArray = array(10 => "New", 20 => "Feedback",30 => "Acknowledged",40 => "Confirmed",50 => "Assigned",80 => "Resolved",90 => "Closed");				
 				?>
-				<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
-					<tbody>
-					<tr>
-						<th>Status</th>
-						<?php foreach($project_names as $pnames):	echo '<th style="width:400px;">'.$pnames.'</th>';endforeach;	?>
-					</tr>
-							<tr><td><strong>Open</strong></td><?php foreach($project_names as $key2 => $pnames): ?>
-								<?php $bgstatus_open = $bp_arr['values'][$key2][10]+$bp_arr['values'][$key2][20]+$bp_arr['values'][$key2][30]+$bp_arr['values'][$key2][40]+$bp_arr['values'][$key2][50];
-								echo '<td>'.$bgstatus_open.'</td>';	
-								$tot[$key2][50] = $bgstatus_open;
-								endforeach;?></tr>							
-							
-					<?php foreach($statusArray as $key => $sname): 
-							if($key == 80 || $key == 90){?>
-								<tr><td><strong><?php echo $sname;?></strong></td><?php foreach($project_names as $key2 => $pnames): $showValue = (isset($bp_arr['values'][$key2][$key])?$bp_arr['values'][$key2][$key]:0); echo '<td>'.$showValue.'</td>'; $tot[$key2][$key] = $showValue; endforeach;?></tr>
-							<?php }	endforeach; ?>
-						<tr><td><strong>Total</strong></td>
-						 <?php 
-						 foreach($tot as $t): echo '<td><strong>'.array_sum($t).'</strong></td>'; endforeach;?>
-						</tr>
-				</tbody>
-				</table>	
-			</div>					
-		<?php endif;  ?>
-		
-		<?php 
-		 if(count($bug_severity)>0 && !empty($bug_severity)) :	
-			$checkValue = false;
-			$bs_arr = array();
-			$opened_arr = array();
-			$resolved_arr = array();
-			$closed_arr = array();
-			
-			foreach($bug_severity as $bs):
-				$bs_arr['values'][$bs->project_id][$bs->severity][$bs->status] = $bs->bugcount;
-			endforeach;
-			ksort($bs_arr['values']);
-			$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");	?>
-			
+				</div>
+			</div>
+		</div><!-- id: jv-tab-8 end -->
 	
-			<div style="margin-bottom:10px;" class="pull-left">
-				<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1 table-style" id="project-date-assign">
-				<tbody>
-				<tr>
-				<th>Severity</th>
-				<?php foreach($project_names as $pnames):	echo '<th style="width:400px; text-align:center;">'.$pnames.'<table  width="180"><tr><th style="border-width:1px;" width="33%">Open</th><th style="border-width:1px;" width="33%">Resolved</th><th style="border-width:1px;" width="34%">Closed</th></tr></table></th>';endforeach;	?>
-				<th>Total</th>
-				</tr>
-				<?php 
-					$mast_tot = 0;
-					foreach($severityArray as $key => $sname):
-						$tot_sev = 0;?>
+
+		<div id="jv-tab-8-5">
+			<?php  
+				$checkValue = true;
+				 if(count($bug_project)>0 && !empty($bug_project)):?>
+					<div class="buttons task-init  toggler">
+						<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="<?php echo "http://".$_SERVER['HTTP_HOST']."/sso-mantis/set_project.php";?>"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
+						<div class="clear"></div>
+					</div>
+					<div style="margin-bottom:10px;" class="pull-left">
+					<?php 
+					$checkValue = false;
+					$bp_arr = array();
+					$tot = array();
+					foreach($bug_project as $bp):
+						$bp_arr['values'][$bp->project_id][$bp->status] = $bp->bugcount;
+					endforeach;
+					ksort($bp_arr['values']);
+					$statusArray = array(10 => "New", 20 => "Feedback",30 => "Acknowledged",40 => "Confirmed",50 => "Assigned",80 => "Resolved",90 => "Closed");				
+					?>
+					<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
+						<tbody>
 						<tr>
-						<td><strong><?php echo $sname;?></strong></td>
-						<?php foreach($project_names as $key2 => $pnames):
-								$opened = $bs_arr['values'][$key2][$key][10]+$bs_arr['values'][$key2][$key][20]+$bs_arr['values'][$key2][$key][30]+$bs_arr['values'][$key2][$key][40]+$bs_arr['values'][$key2][$key][50];								
-								
-								$opened = isset($opened)?$opened:0;
-								$resolved = (isset($bs_arr['values'][$key2][$key][80])?$bs_arr['values'][$key2][$key][80]:0);
-								$closed = (isset($bs_arr['values'][$key2][$key][90])?$bs_arr['values'][$key2][$key][90]:0);
-								
-								$tot_sev += $opened+$resolved+$closed;
-								$mast_tot += $opened+$resolved+$closed;
-								
-								$tot1[$key2][$key]['opened'] = $opened;
-								$tot1[$key2][$key]['resolved'] = $resolved;
-								$tot1[$key2][$key]['closed'] = $closed; ?>
-								<td>
-									<table class="sub-table" width="180">
-									<tr>
-										<td width="33%"><?php echo $opened;?></td>
-										<td width="33%"><?php echo $resolved;?></td>
-										<td width="34%"><?php echo $closed?></td>
-									</tr>
-									</table>
-								</td>
-						<?php endforeach;?>
-						<td><strong><?php echo $tot_sev;?></strong></td>
+							<th>Status</th>
+							<?php foreach($project_names as $pnames):	echo '<th style="width:400px;">'.$pnames.'</th>';endforeach;	?>
 						</tr>
-						<?php endforeach; 
-						foreach($tot1 as $k => $t): 
-							foreach($t as $s):
-								$opened_arr[$k][] = $s['opened'];
-								$resolved_arr[$k][] = $s['resolved'];
-								$closed_arr[$k][] = $s['closed'];
-							endforeach;
-						 endforeach;?>
-						<tr><td><strong>Total</strong></td>
-						 <?php foreach($project_names as $pid => $pnames):	echo '<td style="width:400px;"><table width="180" class="sub-table" ><tr><td width="33%"><strong>'.array_sum($opened_arr[$pid]).'</strong></td><td width="33%"><strong>'.array_sum($resolved_arr[$pid]).'</strong></td><td width="34%"><strong>'.array_sum($closed_arr[$pid]).'</strong></td></tr></table></td>';endforeach;	?>
-						 <td><strong><?php echo $mast_tot;?></strong></td>
-						</tr>
-				</tbody>
-				</table>			
-			</div>
-		<?php endif;  
-		 
-	 	if(count($AllPjtIds)>0 && !empty($AllPjtIds)):
-		$cat_arr = array();
-		$cat_status_arr = array();
-		if(count($bug_category)>0 && !empty($bug_category)) :	
-			$checkValue = false;
-			foreach($bug_category as $val):
-				$cat_arr[$val['category_id'].'##'.$val['category_name']][$val['status']] = $val['bugcount'];
-				$cat_status_arr[] = $val['status'];
-			endforeach;
-			$catstatusUnique = array_unique($cat_status_arr);
-			sort($catstatusUnique);	
-			 
-			?>
-			<div class="pull-left">
-			<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+								<tr><td><strong>Open</strong></td><?php foreach($project_names as $key2 => $pnames): ?>
+									<?php $bgstatus_open = $bp_arr['values'][$key2][10]+$bp_arr['values'][$key2][20]+$bp_arr['values'][$key2][30]+$bp_arr['values'][$key2][40]+$bp_arr['values'][$key2][50];
+									echo '<td>'.$bgstatus_open.'</td>';	
+									$tot[$key2][50] = $bgstatus_open;
+									endforeach;?></tr>							
+								
+						<?php foreach($statusArray as $key => $sname): 
+								if($key == 80 || $key == 90){?>
+									<tr><td><strong><?php echo $sname;?></strong></td><?php foreach($project_names as $key2 => $pnames): $showValue = (isset($bp_arr['values'][$key2][$key])?$bp_arr['values'][$key2][$key]:0); echo '<td>'.$showValue.'</td>'; $tot[$key2][$key] = $showValue; endforeach;?></tr>
+								<?php }	endforeach; ?>
+							<tr><td><strong>Total</strong></td>
+							 <?php 
+							 foreach($tot as $t): echo '<td><strong>'.array_sum($t).'</strong></td>'; endforeach;?>
+							</tr>
+					</tbody>
+					</table>	
+				</div>					
+			<?php endif;  ?>
+			
+			<?php 
+			 if(count($bug_severity)>0 && !empty($bug_severity)) :	
+				$checkValue = false;
+				$bs_arr = array();
+				$opened_arr = array();
+				$resolved_arr = array();
+				$closed_arr = array();
+				
+				foreach($bug_severity as $bs):
+					$bs_arr['values'][$bs->project_id][$bs->severity][$bs->status] = $bs->bugcount;
+				endforeach;
+				ksort($bs_arr['values']);
+				$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");	?>
+				
+		
+				<div style="margin-bottom:10px;" class="pull-left">
+					<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1 table-style" id="project-date-assign">
 					<tbody>
 					<tr>
-						<th>Category</th>
-						<th>Open</th>
-						<th>Resolved</th>
-						<th>Closed</th>
-						<th>Total</th>
+					<th>Severity</th>
+					<?php foreach($project_names as $pnames):	echo '<th style="width:400px; text-align:center;">'.$pnames.'<table  width="180"><tr><th style="border-width:1px;" width="33%">Open</th><th style="border-width:1px;" width="33%">Resolved</th><th style="border-width:1px;" width="34%">Closed</th></tr></table></th>';endforeach;	?>
+					<th>Total</th>
 					</tr>
-					<?php
-					if(count($cat_arr)>0 && !empty($cat_arr)):
-						foreach($cat_arr as $key => $res): 
-							$total = 0;
-							$opened = 0;
-							$resolved = 0;
-							$closed = 0;
-							 if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
-								  foreach($catstatusUnique as $c): 
-									$total += $res[$c];
-									if($c==80) $resolved = $res[$c];
-									if($c==90) $closed = $res[$c];
-								endforeach;  
-								$opened = $total - ($resolved+$closed);
-								$ex = explode("#",$key);
-								echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
-							endif; 
-						endforeach; 
-					endif;	?>
+					<?php 
+						$mast_tot = 0;
+						foreach($severityArray as $key => $sname):
+							$tot_sev = 0;?>
+							<tr>
+							<td><strong><?php echo $sname;?></strong></td>
+							<?php foreach($project_names as $key2 => $pnames):
+									$opened = $bs_arr['values'][$key2][$key][10]+$bs_arr['values'][$key2][$key][20]+$bs_arr['values'][$key2][$key][30]+$bs_arr['values'][$key2][$key][40]+$bs_arr['values'][$key2][$key][50];								
+									
+									$opened = isset($opened)?$opened:0;
+									$resolved = (isset($bs_arr['values'][$key2][$key][80])?$bs_arr['values'][$key2][$key][80]:0);
+									$closed = (isset($bs_arr['values'][$key2][$key][90])?$bs_arr['values'][$key2][$key][90]:0);
+									
+									$tot_sev += $opened+$resolved+$closed;
+									$mast_tot += $opened+$resolved+$closed;
+									
+									$tot1[$key2][$key]['opened'] = $opened;
+									$tot1[$key2][$key]['resolved'] = $resolved;
+									$tot1[$key2][$key]['closed'] = $closed; ?>
+									<td>
+										<table class="sub-table" width="180">
+										<tr>
+											<td width="33%"><?php echo $opened;?></td>
+											<td width="33%"><?php echo $resolved;?></td>
+											<td width="34%"><?php echo $closed?></td>
+										</tr>
+										</table>
+									</td>
+							<?php endforeach;?>
+							<td><strong><?php echo $tot_sev;?></strong></td>
+							</tr>
+							<?php endforeach; 
+							foreach($tot1 as $k => $t): 
+								foreach($t as $s):
+									$opened_arr[$k][] = $s['opened'];
+									$resolved_arr[$k][] = $s['resolved'];
+									$closed_arr[$k][] = $s['closed'];
+								endforeach;
+							 endforeach;?>
+							<tr><td><strong>Total</strong></td>
+							 <?php foreach($project_names as $pid => $pnames):	echo '<td style="width:400px;"><table width="180" class="sub-table" ><tr><td width="33%"><strong>'.array_sum($opened_arr[$pid]).'</strong></td><td width="33%"><strong>'.array_sum($resolved_arr[$pid]).'</strong></td><td width="34%"><strong>'.array_sum($closed_arr[$pid]).'</strong></td></tr></table></td>';endforeach;	?>
+							 <td><strong><?php echo $mast_tot;?></strong></td>
+							</tr>
 					</tbody>
-				</table>				
-			</div>
-		<?php endif; endif;  ?>	
-		
-		<?php if($checkValue): echo '<div align="center"><b> Please assign the project code in mantis and check!</b></div>'; endif;?>	
-	</div>
-	<!-- id: jv-tab-9 end -->
-	<div id="jv-tab-9">
-		<span style="float:right;" class="job_history"> 
-				<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
-				|
-				<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
-		</span>
-		<h4>Job History</h4>
-		<div id="load-log"></div>
-	</div><!-- id: jv-tab-9 end -->
+					</table>			
+				</div>
+			<?php endif;  
+			 
+			if(count($AllPjtIds)>0 && !empty($AllPjtIds)):
+			$cat_arr = array();
+			$cat_status_arr = array();
+			if(count($bug_category)>0 && !empty($bug_category)) :	
+				$checkValue = false;
+				foreach($bug_category as $val):
+					$cat_arr[$val['category_id'].'##'.$val['category_name']][$val['status']] = $val['bugcount'];
+					$cat_status_arr[] = $val['status'];
+				endforeach;
+				$catstatusUnique = array_unique($cat_status_arr);
+				sort($catstatusUnique);	
+				 
+				?>
+				<div class="pull-left">
+				<table width="395" cellspacing="0" cellpadding="0" class="data-table1" id="project-efforts">
+						<tbody>
+						<tr>
+							<th>Category</th>
+							<th>Open</th>
+							<th>Resolved</th>
+							<th>Closed</th>
+							<th>Total</th>
+						</tr>
+						<?php
+						if(count($cat_arr)>0 && !empty($cat_arr)):
+							foreach($cat_arr as $key => $res): 
+								$total = 0;
+								$opened = 0;
+								$resolved = 0;
+								$closed = 0;
+								 if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
+									  foreach($catstatusUnique as $c): 
+										$total += $res[$c];
+										if($c==80) $resolved = $res[$c];
+										if($c==90) $closed = $res[$c];
+									endforeach;  
+									$opened = $total - ($resolved+$closed);
+									$ex = explode("#",$key);
+									echo show_detail_html($ex[2],$opened,$resolved,$closed,$total);
+								endif; 
+							endforeach; 
+						endif;	?>
+						</tbody>
+					</table>				
+				</div>
+			<?php endif; endif;  ?>	
+			
+			<?php if($checkValue): echo '<div align="center"><b> Please assign the project code in mantis and check!</b></div>'; endif;?>	
+		</div>
+	<!-- id: jv-tab-8 end -->
+	
+	
+		<div id="jv-tab-10">
+			<form id="comm-log-form">
+			
+				<div class="email-list">
+					<label>Email To:</label>
+					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:400px;">
+						<?php
+						foreach($final_restrict_user as $ua) {
+						?>
+						<option value="<?php echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+						<?php
+						}
+						?>
+					</select>
+				</div>
+				
+				<?php
+				if (isset($userdata)) {
+				?>
+					<div class="email-set-options" style="overflow:hidden;">
+
+						<label for="email_to_customer" class="normal">Email Client</label> <input type="checkbox" name="email_to_customer" id="email_to_customer" />
+						<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
+						<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
+						<input type="hidden" name="requesting_client_approval" id="requesting_client_approval" value="0" />
+
+						<p id="multiple-client-emails">
+							<input type="checkbox" name="client_emails_1" id="client_emails_1" value="<?php echo $quote_data['email_1'] ?>" /> <?php echo $quote_data['email_1'] ?>
+							<?php
+							if ($quote_data['email_2'] != '')
+							{
+							?>
+								<br /><input type="checkbox" name="client_emails_2" id="client_emails_2" value="<?php echo $quote_data['email_2'] ?>" /> <?php echo $quote_data['email_2'] ?>
+							<?php
+							}
+							if ($quote_data['email_3'] != '')
+							{
+							?>
+								<br /><input type="checkbox" name="client_emails_3" id="client_emails_3" value="<?php echo $quote_data['email_3'] ?>" /> <?php echo $quote_data['email_3'] ?>
+							<?php
+							}
+							if ($quote_data['email_4'] != '')
+							{
+							?>
+								<br /><input type="checkbox" name="client_emails_4" id="client_emails_4" value="<?php echo $quote_data['email_4'] ?>" /> <?php echo $quote_data['email_4'] ?>
+							<?php
+							}
+							?>
+							<br />
+							Additional Emails (separate addresses with a comma)<br />
+							<input type="text" name="additional_client_emails" id="additional_client_emails" class="textfield width99pct" />
+						</p>
+
+					</div>
+				<?php
+				}
+				?>
+
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+
+				<label class="normal">Message</label>
+				<textarea name="job_log" id="job_log" class="textfield height100px" style="width:400px;"></textarea>
+				<div style="position:relative; width:49%">
+				<label class="normal">Signature</label>
+				<textarea name="signature" class="textfield" style="width:400px;" rows="3" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
+				<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
+				</div>
+
+				<div style="overflow:hidden;">					
+					<!--p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p-->
+					<div class="button-container">
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="addLog();  return false;" id="add-log-submit-button">Add Post</button>
+						</div>
+					</div>				
+				</div>
+			</form>
+		</div><!-- id: jv-tab-10 end -->
+	
+	
+		<div id="jv-tab-9">
+			<span style="float:right;" class="job_history"> 
+					<a href="#" onclick="fullScreenLogs(); return false;">View Full Screen</a>
+					|
+					<a href="#" onclick="$('.log > :not(.stickie), #pager').toggle(); return false;">View/Hide Stickies</a>
+			</span>
+			<h4>Job History</h4>
+			<div id="load-log"></div>
+		</div><!-- id: jv-tab-9 end -->
+	
+	
 	<?php endif;?>
   </div>
 </div>
