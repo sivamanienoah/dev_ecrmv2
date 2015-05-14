@@ -2324,3 +2324,15 @@ li.save-search-heading span:first-child {
 }
 
 li.saved-search-res span:first-child {width: 135px !important;}
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+#content .inner .left-canvas .plot {width: 99.6% !important;}
+#content .inner .right-canvas .plot {width: 99.6% !important;}
+.left-canvas{width:50%;}
+.right-canvas{width:48%;}
+.left-canvas .plot {}
+.right-canvas .plot {}
+.canvas100 canvas{width:100%;}
+}
+
+

@@ -223,27 +223,27 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 		
 		<!--Advance filters-->
 		   <div class="clearfix">
-			<div class="pull-left">
+			<div class="pull-left left-canvas">
 				<h5 class="dash-tlt">Leads - Current Pipeline</h5>
-				<div id="funnel1" class="plot" style="width:450px"></div>
+				<div id="funnel1" class="plot canvas100" style=""></div>
 				<!--div id="funnelimg"><button type="button">PDF</button></div-->
 			</div>
-			<div class="pull-right">
+			<div class="pull-right right-canvas">
 				<h5 class="dash-tlt"><?php echo $chart_title; ?></h5>
-				<div id="pie1" class="plot" style="width:450px"></div>
+				<div id="pie1" class="plot canvas100" style=""></div>
 				<!--div id="pieimg"><button type="button">PDF</button></div-->
 			</div>
 			</div>
 			<div id="charts_info" class="charts-info-block" style="display:none;"></div> <!--For funnel and pie charts information-->
 
 			<div class="clearfix">
-				<div class="pull-left dash-section lead_ind_title">
+				<div class="pull-left dash-section lead_ind_title left-canvas">
 					<h5>Lead Indicator</h5>
 					<div id="bar1" class="plot" ></div>
 					<!--div id="barimg"><button type="button">PDF</button></div-->
 				</div>
 
-				<div class="pull-right dash-section">
+				<div class="pull-right dash-section right-canvas">
 					<div class="clearfix">
 						<h5>
 							<span>Currently Active Leads</span>
@@ -284,12 +284,12 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			<div id="leads-current-activity-list"></div>
 			
 			<div class="clearfix">
-			<div class="pull-left dash-section">
+			<div class="pull-left dash-section left-canvas">
 				<h5>Lead Aging</h5>
 				<div id="line1" class="plot"></div>
 				<!--div id="lineimg"><button type="button">PDF</button></div-->
 			</div>
-			<div class="pull-right dash-section">
+			<div class="pull-right dash-section right-canvas">
 				<h5>Closed Opportunities - Cumulative Sales: <?php echo $totClosedOppor ." ".$default_cur_name; ?></h5>
 				<div id="line2" class="plot"></div>
 				<!--div id="line2img"><button type="button">PDF</button></div-->
@@ -299,19 +299,19 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			
 			<!--For Pie2 & Pie3 charts-->
 			<div class="clearfix">
-				<div class="pull-left dash-section">
+				<div class="pull-left dash-section left-canvas">
 					<h5 class="dash-tlt">Leads By Lead Source</h5>
-					<div id="pie2" class="plot" style="width:450px"></div>
+					<div id="pie2" class="plot" style=""></div>
 				</div>
-				<div class="pull-right dash-section">
+				<div class="pull-right dash-section right-canvas">
 					<h5 class="dash-tlt">Leads By Service Requirement</h5>
-					<div id="pie3" class="plot" style="width:450px"></div>
+					<div id="pie3" class="plot canvas100" style=""></div>
 				</div>
 			</div>
 			<div id="charts_info3" class="charts-info-block" style="display:none;"></div><!--Pie2 & pie3 charts info display here-->
 			
 			<div class="clearfix">
-			<div class="dash-section pull-left">
+			<div class="dash-section pull-left left-canvas">
 				<h5>Opportunities By Lead Owner</h5>
 				<div id="tbl_grid1" class="dashbrd">
 					<table class="dashboard-heads table_grid" cellspacing="0" cellpadding="10px;" border="0" width="100%">
@@ -337,7 +337,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 				</div>
 			</div>
 			
-			<div class="pull-right dash-section">
+			<div class="pull-right dash-section right-canvas">
 				<h5>Opportunities By Lead Assignee</h5>
 				<div id="tbl_grid2" class="dashbrd">
 					<table class="dashboard-heads table_grid" cellspacing="0" cellpadding="10px;" border="0" width="100%">
