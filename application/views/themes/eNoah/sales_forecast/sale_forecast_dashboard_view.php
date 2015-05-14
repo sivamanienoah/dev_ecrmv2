@@ -66,7 +66,7 @@
 							<a onclick="showFilter('A'); return false;" title="Date Filter" class="date-icon-filter"></a>
 						</div>
 					</h5>
-					<div id="actual_entity_chart" class="plot" style="width:450px"></div>
+					<div id="actual_entity_chart" class="plot canvas100" style="width:450px"></div>
 					<!--div id="funnelimg"><button type="button">PDF</button></div-->
 					<?php 
 						foreach($actual_entity as $a_ent_name=>$a_ent_val){
