@@ -18,25 +18,26 @@ require (theme_url().'/tpl/header.php');
 				</a>
 				<div class="saved-search-criteria" style="display: none; ">
 					<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
+					<ul class="search-root">
+					<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
 					<?php 
 					if(sizeof($saved_search)>0) {
 						foreach($saved_search as $searc) { 
 					?>
-						<ul class="search-root">
-							<li><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a>
-							<a title="Set Default" href="javascript:void(0)" <?php if($searc['is_default']==0) { ?> onclick="set_default_search('<?php echo $searc['search_id'] ?>')" <?php } ?> >Set Default</a>
-							<a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></li>
-						</ul>
-						<?php 
+							<li class="saved-search-res">
+								<span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
+								<span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
+								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
+							</li>
+					<?php 
 						}
 					} else {
 					?>
-						<ul class="search-root">
-							<li>No search found</li>
-						</ul>
+						<li style="text-align: center; margin: 5px;">No Save & search found</li>
 					<?php
 					}
 					?>
+					</ul>
 				</div>
 			</div>
 

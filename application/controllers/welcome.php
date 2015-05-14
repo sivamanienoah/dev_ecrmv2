@@ -2119,17 +2119,20 @@ HDOC;
 			$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
 			$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
 			$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
-			foreach($saved_search as $searc) {
-				$result['search_div'] .= '<ul class="search-root">';
-				$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
-				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
-				if($searc['is_default']==0) {
-					$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+			$result['search_div'] .= '<ul class="search-root">';
+			$result['search_div'] .= '<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>';
+			foreach($saved_search as $searc) {				
+				$result['search_div'] .= '<li class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a></span>';
+				$result['search_div'] .= '<span class="rd-set-default">';
+				$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$searc['search_id'].'" ';
+				if($searc['is_default']==1) { 
+					$result['search_div'] .= 'checked="checked"';
 				}
-				$result['search_div'] .= '>Set Default</a>';
-				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
-				$result['search_div'] .= '</ul>';
+				$result['search_div'] .= '/>';
+				$result['search_div'] .= '</span>';
+				$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
 			}
+			$result['search_div'] .= '</ul>';
 			$result['search_div'] .= '</div>';
 
 		} else {
@@ -2173,17 +2176,20 @@ HDOC;
 		$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
 		$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
 		$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
+		$result['search_div'] .= '<ul class="search-root">';
+		$result['search_div'] .= '<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>';
 		foreach($saved_search as $searc) {
-			$result['search_div'] .= '<ul class="search-root">';
-			$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
-			$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
-			if($searc['is_default']==0) {
-				$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+			$result['search_div'] .= '<li class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a></span>';
+			$result['search_div'] .= '<span class="rd-set-default">';
+			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$searc['search_id'].'" ';
+			if($searc['is_default']==1) { 
+				$result['search_div'] .= 'checked="checked"';
 			}
-			$result['search_div'] .= '>Set Default</a>';
-			$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
-			$result['search_div'] .= '</ul>';
+			$result['search_div'] .= '/>';
+			$result['search_div'] .= '</span>';
+			$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
 		}
+		$result['search_div'] .= '</ul>';
 		$result['search_div'] .= '</div>';
 
 		}
@@ -2207,23 +2213,26 @@ HDOC;
 		$result['search_div'] .= '<a class="saved-search-head" ><p>Saved Search</p></a>';
 		$result['search_div'] .= '<div class="saved-search-criteria" style="display: none; ">';
 		$result['search_div'] .= '<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />';
+		$result['search_div'] .= '<ul class="search-root">';
+		$result['search_div'] .= '<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>';
 		if(!empty($saved_search)) {
 			foreach($saved_search as $searc) {
-				$result['search_div'] .= '<ul class="search-root">';
-				$result['search_div'] .= '<li><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a>';
-				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)"';
-				if($searc['is_default']==0) {
-					$result['search_div'] .= 'onclick="set_default_search('.$searc['search_id'].')"';
+				
+				$result['search_div'] .= '<li class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$searc['search_id'].')">'.$searc["search_name"].'</a></span>';
+				$result['search_div'] .= '<span class="rd-set-default">';
+				$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$searc['search_id'].'" ';
+				if($searc['is_default']==1) { 
+					$result['search_div'] .= 'checked="checked"';
 				}
-				$result['search_div'] .= '>Set Default</a>';
-				$result['search_div'] .= '<a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a>';
-				$result['search_div'] .= '</ul>';
+				$result['search_div'] .= '/>';
+				$result['search_div'] .= '</span>';
+				$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$searc['search_id'].')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
+				
 			}
 		} else {
-			$result['search_div'] .= '<ul class="search-root">';
-			$result['search_div'] .= '<li>No Search Found</li>';
-			$result['search_div'] .= '</ul>';
+			$result['search_div'] .= '<li style="text-align: center; margin: 5px;">No Save & Search Found</li>';
 		}
+		$result['search_div'] .= '</ul>';
 		$result['search_div'] .= '</div>';
 		echo json_encode($result);
 		exit;

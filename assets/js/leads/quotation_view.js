@@ -76,7 +76,7 @@ function show_search_results(search_id) {
 	});
 }
 
-function set_default_search(search_id) {
+/* function set_default_search(search_id) {
 	$.ajax({
 		type: "POST",
 		dataType: 'json',
@@ -94,7 +94,7 @@ function set_default_search(search_id) {
 			
 		}
 	});
-}
+} */
 
 function delete_save_search(search_id) {
 	$.ajax({
@@ -215,34 +215,34 @@ function save_search() {
 //for lead search functionality.
 $(function(){
        $("#lead_search_form").submit(function(){
-		var  keyword 		= $("#keyword").val(); 
-		if(keyword == "Lead No, Job Title, Name or Company")
-		keyword 			= 'null';
-		var stage 			= $("#stage").val(); 
-		var customer 		= $("#customer").val();
-		var owner 			= $("#owner").val();
-		var leadassignee 	= $("#leadassignee").val();
-		var regionname 		= $("#regionname").val();
-		var countryname 	= $("#countryname").val();
-		var statename 		= $("#statename").val();
-		var locname 		= $("#locname").val();
-		var lead_indi 		= $("#lead_indi").val();
-		var worth 			= $("#worth").val();
- 
-         $.ajax({
-           type: "POST",
-           url: site_base_url+"welcome/advance_filter_search",
-           data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
-           success: function(data){
-			   $('#advance_search_results').html(data);
-           }
-         });
-         return false;  //stop the actual form post !important!
- 
-      });
+			var  keyword 		= $("#keyword").val(); 
+			if(keyword == "Lead No, Job Title, Name or Company")
+			keyword 			= 'null';
+			var stage 			= $("#stage").val(); 
+			var customer 		= $("#customer").val();
+			var owner 			= $("#owner").val();
+			var leadassignee 	= $("#leadassignee").val();
+			var regionname 		= $("#regionname").val();
+			var countryname 	= $("#countryname").val();
+			var statename 		= $("#statename").val();
+			var locname 		= $("#locname").val();
+			var lead_indi 		= $("#lead_indi").val();
+			var worth 			= $("#worth").val();
+	 
+			 $.ajax({
+			   type: "POST",
+			   url: site_base_url+"welcome/advance_filter_search",
+			   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+			   success: function(data){
+				   $('#advance_search_results').html(data);
+			   }
+			 });
+			 return false;  //stop the actual form post !important!
+		});
 	  
-	saveSearchScript();
-	  
+		saveSearchScript();
+	
+
    });
    
 function advanced_filter(){
