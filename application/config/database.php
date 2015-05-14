@@ -64,6 +64,7 @@ $db['support']['swap_pre'] = '';
 $db['support']['autoinit'] = TRUE;
 $db['support']['stricton'] = FALSE;
  */
+/* 
 // Third Database
 // $active_group = "econnect";
 // $active_record = false;
@@ -101,7 +102,7 @@ $db['timesheet']['dbcollat'] = 'utf8_general_ci';
 $db['timesheet']['swap_pre'] = '';
 $db['timesheet']['autoinit'] = TRUE;
 $db['timesheet']['stricton'] = FALSE;
-
+ */
 
 $active_group = 'default';
 $active_record = TRUE;
