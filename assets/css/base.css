@@ -2335,6 +2335,9 @@ li.saved-search-res span:first-child {width: 135px !important;}
 .canvas100 canvas{width:100%;}
 .section-right {width: 50%;}
 .section-right .form-cont form input {width: 85px;}
+
+.sec-left{width: 40%;}
+.sec-right{width: 55%;}
 }
 
 
