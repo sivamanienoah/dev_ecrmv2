@@ -44,7 +44,7 @@
 | The $active_record variables lets you determine whether or not to load
 | the active record class
 */
-
+/* 
 // Fourth Database added
 // $active_group = "support";
 // $active_record = false;
@@ -63,7 +63,7 @@ $db['support']['dbcollat'] = 'utf8_general_ci';
 $db['support']['swap_pre'] = '';
 $db['support']['autoinit'] = TRUE;
 $db['support']['stricton'] = FALSE;
-
+ */
 // Third Database
 // $active_group = "econnect";
 // $active_record = false;
