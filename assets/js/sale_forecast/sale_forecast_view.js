@@ -48,11 +48,12 @@ function checkStatus(id) {
 		message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 		css:{width:'440px'}
 	});
+	$( ".modal-confirmation" ).parent().addClass( "no-scroll" );
 	return false;
 }
 
-function processDelete(id) {
-	window.location.href = site_base_url+'sales_forecast/delete_sale_forecast/update/'+id;
+function processDelete(milestone_id) {
+	window.location.href = site_base_url+'sales_forecast/delete_sale_forecast/update/'+milestone_id;
 }
 
 function cancelDel() {
@@ -116,6 +117,7 @@ function view_logs(id) {
 					position: 'absolute'
 				}
 			});
+			$( "#view-log-container" ).parent().addClass( "no-scroll" );
 		}
 	});
 }

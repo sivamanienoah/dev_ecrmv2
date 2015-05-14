@@ -164,8 +164,10 @@
 				<?php if(!empty($milestone_data)) { ?>
 					<?php foreach($milestone_data as $ms_rec) { ?>
 						<tr>
-							<?php $milestone_month_year = date('d-m-Y', strtotime($ms_rec['for_month_year'])); ?>
+							<?php //$milestone_month_year = date('d-m-Y', strtotime($ms_rec['for_month_year'])); ?>
+							<?php $milestone_month_year = date('m-Y', strtotime($ms_rec['for_month_year'])); ?>
 							<?php $current_month_year   = date('d-m-Y'); ?>
+							<?php $curr_month_year   = date('m-Y'); ?>
 							<td><?php echo $ms_rec['milestone_name'] ?></td>
 							<td>
 								<?php 
@@ -179,7 +181,7 @@
 							<td><?php echo $salesforecast_currency; ?></td>
 							<td><?php echo $ms_rec['milestone_value']; ?></td>
 							<td class="action">
-								<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
+								<?php if(strtotime($milestone_month_year) >= strtotime($curr_month_year)) { ?>
 								<?php if($this->session->userdata('edit')==1) { ?>
 									<a class="table-edit" title="Edit" onClick="editSalesForecast(<?php echo $ms_rec['milestone_id'] ?>); return false;" href="javascript:void(0)">
 										<img alt="edit" src="assets/img/edit.png">

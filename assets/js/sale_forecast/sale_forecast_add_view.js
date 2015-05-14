@@ -267,7 +267,8 @@ function monthyear_datepicker() {
 		changeYear: true,
 		dateFormat: 'MM yy',
 		showButtonPanel: true,
-		minDate: new Date(cur_year, cur_month, 1),
+		// minDate: new Date(cur_year, cur_month, 1),
+		minDate: 0,
 		onClose: function(input, inst) {
 			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -351,6 +352,7 @@ function editSalesForecast(sf_id) {
 					'overflow-x':'hidden'
 				}
 			});
+			$( "#edit_sales_forecast_container" ).parent().addClass( "no-scroll" );
 		}
 	});
 }
@@ -366,6 +368,7 @@ function deleteSalesForecast(id) {
 		message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 		css:{width:'440px'}
 	});
+	$( ".modal-confirmation" ).parent().addClass( "no-scroll" );
 }
 
 function processDelete(id) {
@@ -410,6 +413,7 @@ function view_logs(id) {
 					position: 'absolute'
 				}
 			});
+			$( "#view-log-container" ).parent().addClass( "no-scroll" );
 		}
 	});
 }
@@ -419,6 +423,7 @@ function moveMilestone(id) {
 		message:'<br /><h5>Are you sure want to add this as a <br />sales forecast milestone?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="confirmMoveMilestone('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 		css:{width:'440px'}
 	});
+	$( ".modal-confirmation" ).parent().addClass( "no-scroll" );
 }
 
 function confirmMoveMilestone(id) {
@@ -428,7 +433,7 @@ function confirmMoveMilestone(id) {
 	param['payment_milestone_id'] = id;
 	param['forecast_id']   	      = forecast_id;
 	param['customer_id']		  = $('#customer_id').val();
-	param['job_id']			      = $('#project_job_id').val();
+	param['job_id']			      = $('#job_id').val();
 	
 	$.ajax({
 		url: site_base_url+"sales_forecast/moveMilestone/",
@@ -437,7 +442,7 @@ function confirmMoveMilestone(id) {
 		dataType: 'json',
 		async: false,
 		success: function(response) {
-			console.info(response);
+			// console.info(response);
 			if(response.result == true) {
 				setTimeout(function(){
 					$.blockUI({

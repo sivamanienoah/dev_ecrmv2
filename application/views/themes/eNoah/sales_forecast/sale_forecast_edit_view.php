@@ -46,7 +46,8 @@ $(function() {
 		changeYear: true,
 		dateFormat: 'MM yy',
 		showButtonPanel: true,
-		minDate: new Date(<?php echo date('Y') ?>, <?php echo date('m') ?>, 1),
+		// minDate: new Date(<?php echo date('Y') ?>, <?php echo date('m') ?>, 1),
+		minDate: 0,
 		onClose: function(input, inst) {
 			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();

@@ -15,8 +15,10 @@
 	<tbody>
 		<?php if (is_array($sales_forecast) && count($sales_forecast) > 0) { ?>
 			<?php foreach($sales_forecast as $forecast) { ?>
-				<?php $milestone_month_year = date('d-m-Y', strtotime($forecast['for_month_year'])); ?>
+				<?php //$milestone_month_year = date('d-m-Y', strtotime($forecast['for_month_year'])); ?>
+				<?php $milestone_month_year = date('m-Y', strtotime($forecast['for_month_year'])); ?>
 				<?php $current_month_year   = date('d-m-Y'); ?>
+				<?php $curr_month_year      = date('m-Y'); ?>
 				<tr>
 					<td><?php echo $forecast['division_name']; ?></td>
 					<td><?php echo $forecast['company'].' - '.$forecast['first_name'].' '.$forecast['last_name']; ?></td>
@@ -26,7 +28,7 @@
 					<td><?php echo date('F y', strtotime($forecast['for_month_year'])); ?></td>
 					<td><?php echo $forecast['expect_worth_name']. ' ' .$forecast['milestone_value']; ?></td>
 					<td class="actions">
-					<?php if(strtotime($milestone_month_year) > strtotime($current_month_year)) { ?>
+					<?php if(strtotime($milestone_month_year) >= strtotime($curr_month_year)) { ?>
 						<?php if($this->session->userdata('edit')==1) { ?>
 							<a href="sales_forecast/add_sale_forecast/update/<?php echo $forecast['forecast_id']; ?>/?ms_id=<?php echo $forecast['milestone_id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
 						<?php } ?> 

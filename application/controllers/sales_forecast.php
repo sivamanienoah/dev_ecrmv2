@@ -329,7 +329,8 @@ class Sales_forecast extends crm_controller {
 	{
 		$post_data 			= real_escape_array($this->input->post());
 		
-		$current_month_year = date('d-m-Y'); 
+		$current_month_year = date('d-m-Y');
+		$curr_month_year    = date('m-Y');
 		$res 				= array();
 		$ms_id 				= array('0');
 		
@@ -372,11 +373,12 @@ class Sales_forecast extends crm_controller {
 			$res['ms_det'] .= '<div class="table-design"><table class="class_ms_det data-tbl dashboard-heads dataTable" cellpadding="0" cellspacing="0"><tr><th>Milestone Name</th><th>Month & Year</th><th>Currency</th><th>Amount</th><th>Action</th></tr>';
 			foreach($get_ms_data as $ms) {
 				if(!in_array($ms['expectid'], $ms_id)) {
-					$milestone_month_year = date('d-m-Y', strtotime($ms['month_year'])); 
+					// $milestone_month_year = date('d-m-Y', strtotime($ms['month_year']));
+					$milestone_month_year = date('m-Y', strtotime($ms['month_year']));
 					$ms_month_year = ($ms['month_year'] !='0000-00-00 00:00:00') ? date('M-Y', strtotime($ms['month_year'])) : '-';
 					$res['ms_det'] .= '<tr>';
 					$res['ms_det'] .= '<td>'.$ms['project_milestone_name'].'</td><td>'.$ms_month_year.'</td><td>'.$ms['expect_worth_name'].'</td><td>'.$ms['amount'].'</td><td>';
-					if(strtotime($milestone_month_year) > strtotime($current_month_year)) {
+					if(strtotime($milestone_month_year) >= strtotime($curr_month_year)) {
 						//$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
 						$res['ms_det'] .= '<a onclick="moveMilestone('.$ms['expectid'].'); return false;" title="Move to Forecast">';
 						$res['ms_det'] .= '<img alt="Move" src="assets/img/arrow-move.png">';
@@ -458,7 +460,8 @@ class Sales_forecast extends crm_controller {
 	{
 		if ($this->session->userdata('delete')==1)
 		{
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $milestone_id) && preg_match('/^[0-9]+$/', $forecast_id))
+			// if ($update == 'update' && preg_match('/^[0-9]+$/', $milestone_id) && preg_match('/^[0-9]+$/', $forecast_id))
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $milestone_id))
 			{
 				$del_res = $this->db->delete($this->cfg['dbpref']."sales_forecast_milestone", array('milestone_id' => $milestone_id));
 				if($del_res) {
@@ -467,8 +470,12 @@ class Sales_forecast extends crm_controller {
 					if($record_count>0) {
 						redirect('/sales_forecast/add_sale_forecast/update/'.$forecast_id);
 					} else {
-						$rs = $this->db->delete($this->cfg['dbpref']."sales_forecast", array('forecast_id' => $forecast_id));
-						if( $rs ) redirect('/sales_forecast/add_sale_forecast/');
+						if($forecast_id == '') {
+							redirect('/sales_forecast/add_sale_forecast/');
+						} else {
+							$rs = $this->db->delete($this->cfg['dbpref']."sales_forecast", array('forecast_id' => $forecast_id));
+							if( $rs ) redirect('/sales_forecast/add_sale_forecast/');
+						}
 					}
 				} else {
 					$this->session->set_flashdata('login_errors', array("Error has been an occured!"));
