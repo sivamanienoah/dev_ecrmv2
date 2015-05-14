@@ -31,7 +31,7 @@
 		<div id='results' style="width:auto;">
 			
 			<div class="clearfix">
-				<div class="pull-left forcast-new" id="forecast_pie_container">
+				<div class="pull-left forcast-new left-canvas" id="forecast_pie_container">
 					
 					<h5 class="dash-tlt">
 						<span class="forecast-heading">Entitywise Forecast</span>
@@ -58,7 +58,7 @@
 					<script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_dashboard_entity_forecast.js"></script>
 				</div>
 				
-				<div class="pull-right  forcast-new" id="actual_pie_container">
+				<div class="pull-right right-canvas forcast-new" id="actual_pie_container">
 					<h5 class="dash-tlt">
 						<span class="forecast-heading">Entitywise Actuals</span>
 						<div class="forecast-details">
