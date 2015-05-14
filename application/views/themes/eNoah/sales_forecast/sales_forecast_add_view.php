@@ -165,9 +165,9 @@
 					<?php foreach($milestone_data as $ms_rec) { ?>
 						<tr>
 							<?php //$milestone_month_year = date('d-m-Y', strtotime($ms_rec['for_month_year'])); ?>
-							<?php $milestone_month_year = date('m-Y', strtotime($ms_rec['for_month_year'])); ?>
+							<?php $milestone_month_year = date('t-m-Y', strtotime($ms_rec['for_month_year'])); ?>
 							<?php $current_month_year   = date('d-m-Y'); ?>
-							<?php $curr_month_year   = date('m-Y'); ?>
+							<?php $curr_month_year   = date('t-m-Y'); ?>
 							<td><?php echo $ms_rec['milestone_name'] ?></td>
 							<td>
 								<?php 

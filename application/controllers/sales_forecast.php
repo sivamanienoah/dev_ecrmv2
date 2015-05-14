@@ -330,7 +330,7 @@ class Sales_forecast extends crm_controller {
 		$post_data 			= real_escape_array($this->input->post());
 		
 		$current_month_year = date('d-m-Y');
-		$curr_month_year    = date('m-Y');
+		$curr_month_year    = date('t-m-Y');
 		$res 				= array();
 		$ms_id 				= array('0');
 		
@@ -374,11 +374,13 @@ class Sales_forecast extends crm_controller {
 			foreach($get_ms_data as $ms) {
 				if(!in_array($ms['expectid'], $ms_id)) {
 					// $milestone_month_year = date('d-m-Y', strtotime($ms['month_year']));
-					$milestone_month_year = date('m-Y', strtotime($ms['month_year']));
+					$milestone_month_year = date('t-m-Y', strtotime($ms['month_year']));
 					$ms_month_year = ($ms['month_year'] !='0000-00-00 00:00:00') ? date('M-Y', strtotime($ms['month_year'])) : '-';
 					$res['ms_det'] .= '<tr>';
 					$res['ms_det'] .= '<td>'.$ms['project_milestone_name'].'</td><td>'.$ms_month_year.'</td><td>'.$ms['expect_worth_name'].'</td><td>'.$ms['amount'].'</td><td>';
+					// echo $milestone_month_year . '>=' .$curr_month_year;
 					if(strtotime($milestone_month_year) >= strtotime($curr_month_year)) {
+					// echo "asdfasdf"; exit;
 						//$res['ms_det'] .= '<input type="checkbox" name="exist_ms[]" value='.$ms['expectid'].'>';
 						$res['ms_det'] .= '<a onclick="moveMilestone('.$ms['expectid'].'); return false;" title="Move to Forecast">';
 						$res['ms_det'] .= '<img alt="Move" src="assets/img/arrow-move.png">';
