@@ -2019,7 +2019,7 @@ if (get_default_currency()) {
 			
 				<div class="email-list">
 					<label>Email To:</label>
-					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:400px;">
+					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
 						<?php
 						foreach($final_restrict_user as $ua) {
 						?>
@@ -2035,12 +2035,13 @@ if (get_default_currency()) {
 				?>
 					<div class="email-set-options" style="overflow:hidden;">
 
-						<label for="email_to_customer" class="normal">Email Client</label> <input type="checkbox" name="email_to_customer" id="email_to_customer" />
+						<label for="email_to_customer" class="normal">Email Client:</label> <input type="checkbox" name="email_to_customer" id="email_to_customer" />
 						<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
 						<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
 						<input type="hidden" name="requesting_client_approval" id="requesting_client_approval" value="0" />
 
 						<p id="multiple-client-emails">
+							<label></label>
 							<input type="checkbox" name="client_emails_1" id="client_emails_1" value="<?php echo $quote_data['email_1'] ?>" /> <?php echo $quote_data['email_1'] ?>
 							<?php
 							if ($quote_data['email_2'] != '')
@@ -2063,8 +2064,10 @@ if (get_default_currency()) {
 							}
 							?>
 							<br />
+							<label></label>
 							Additional Emails (separate addresses with a comma)<br />
-							<input type="text" name="additional_client_emails" id="additional_client_emails" class="textfield width99pct" />
+							<label></label>
+							<input type="text" name="additional_client_emails" id="additional_client_emails" style="width: 410px;" class="textfield" />
 						</p>
 
 					</div>
@@ -2074,12 +2077,12 @@ if (get_default_currency()) {
 
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 
-				<label class="normal">Message</label>
-				<textarea name="job_log" id="job_log" class="textfield height100px" style="width:400px;"></textarea>
-				<div style="position:relative; width:49%">
-				<label class="normal">Signature</label>
-				<textarea name="signature" class="textfield" style="width:400px;" rows="3" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
-				<span style="position:absolute; top:5px; right:18px;"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
+				<label class="normal">Message:</label>
+				<textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea>
+				<div style="position:relative; width:560px;">
+				<label class="normal">Signature:</label>
+				<textarea name="signature" class="textfield" style="width:410px;" rows="3" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
+				<span style="position:absolute; top:5px; right:10px"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
 				</div>
 
 				<div style="overflow:hidden;">					
