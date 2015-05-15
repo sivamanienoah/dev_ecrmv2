@@ -2261,7 +2261,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 .save-search-heading { font-size: 11.5px; font-weight: bold; }
 
 a.saved-search-head p { margin: 0; color:#375695; font-size:13px; background:url("../img/user-drop-icon.png") no-repeat 100% 8px; padding:0 25px 0 0; font-weight: bold;}
-a.saved-search-head {font-size: 11px;line-height: 16px;color:#59585d;position:relative;z-index:1;display: block; margin:0px;padding:9px 0 9px 24px;text-decoration: none;cursor:pointer;background:url("../img/search-drop-down-icon.png") no-repeat left;float:left;}
+a.saved-search-head {font-size: 11px;line-height: 16px;color:#59585d;position:relative;z-index:1;display: block; margin:0px;padding:9px 0 9px 24px;text-decoration: none;cursor:pointer;background:url("../img/search-drop-down-icon.png") no-repeat 0px 5px;float:left;}
 .search-root{ border: 1px solid #dedede; box-sizing: border-box; float: left; font-size: 11px; list-style: outside none none; margin: 0; padding: 10px; width: 100%; }
 
 
@@ -2334,10 +2334,10 @@ li.saved-search-res span:first-child {width: 135px !important;}
 .right-canvas .plot {}
 .canvas100 canvas{width:100%;}
 /*.section-right {width: 50%;}*/
-.section-right .form-cont form input {width:160px;}
+.section-right .form-cont form input {width:90px;}
 
 .sec-left{width: 40%;}
-.sec-right{width: 55%;}
+.sec-right{width: 50%;}
 .team-mem-btn{margin:25px 0 0 5px;}
 }
 
