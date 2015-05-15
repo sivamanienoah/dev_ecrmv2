@@ -108,7 +108,7 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		// echo "<pre>"; print_r($filt); exit;
+		// echo "<pre>"; print_r($this->session->userdata("excel_download"));
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		// echo $this->db->last_query(); exit;
@@ -1589,6 +1589,8 @@ class Welcome extends crm_controller {
 		$keyword='null';
 
 		$exporttoexcel = $this->session->userdata['excel_download'];
+		
+		// echo "<pre>"; print_r($exporttoexcel); exit;
 
 		if (count($exporttoexcel)>0) {
 

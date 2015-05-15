@@ -221,7 +221,7 @@ $(function() {
 	$( "#month_year_from_date, #month_year_to_date" ).datepicker({
 		changeMonth: true,
 		changeYear: true,
-		dateFormat: 'MM yy',
+		dateFormat: 'M yy',
 		showButtonPanel: true,
 		onClose: function(dateText, inst) {
 			var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();

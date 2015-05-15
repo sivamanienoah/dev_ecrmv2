@@ -209,7 +209,6 @@ require (theme_url().'/tpl/header.php');
 	</div>
 </div>
 <div id='popupGetSearchName'></div>
-
 <script type="text/javascript" src="assets/js/leads/quotation_view.js"></script>
 <?php
 require (theme_url().'/tpl/footer.php'); 

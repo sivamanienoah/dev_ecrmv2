@@ -69,7 +69,7 @@ button.ui-datepicker-current { display: none; }
 								<td class="tblheadbg">By Entity</td>
 								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
-								<td class="tblheadbg">For the Month & Year</td>
+								<td class="tblheadbg">Month & Year</td>
 							</tr>
 							<tr>	
 								<td>
@@ -132,7 +132,7 @@ button.ui-datepicker-current { display: none; }
 				<thead>
 					<tr>
 						<th>Invoice Date</th>
-						<th>For the Month & Year</th>
+						<th>Month & Year</th>
 						<th>Customer Name</th>
 						<th>Project Title</th>
 						<th>Project Code</th>
@@ -146,7 +146,7 @@ button.ui-datepicker-current { display: none; }
 					<?php foreach($invoices as $inv) { ?>
 						<tr>
 							<td><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></td>
-							<td><?php echo ($inv['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($inv['month_year'])) : ''; ?></td>
+							<td><?php echo ($inv['month_year']!='0000-00-00 00:00:00') ? date('M Y', strtotime($inv['month_year'])) : ''; ?></td>
 							<td><?php echo $inv['customer']; ?></td>
 							<td><a title='View' href="project/view_project/<?php echo $inv['lead_id'] ?>"><?php echo character_limiter($inv['lead_title'], 30); ?></a></td>
 							<td><?php echo isset($inv['pjt_id']) ? $inv['pjt_id'] : '-'; ?></td>
