@@ -76,26 +76,6 @@ function show_search_results(search_id) {
 	});
 }
 
-/* function set_default_search(search_id) {
-	$.ajax({
-		type: "POST",
-		dataType: 'json',
-		url: site_base_url+"welcome/set_default_search/"+search_id+'/1',
-		cache: false,
-		data: csrf_token_name+'='+csrf_hash_token,
-		success: function(response){
-			if(response.resu=='updated') {
-				$('.search-dropdown').html(response.search_div);
-				saveSearchScript();
-				// show_search_results(search_id);
-			} else {
-				alert('Not updated');
-			}
-			
-		}
-	});
-} */
-
 function delete_save_search(search_id) {
 	$.ajax({
 		type: "POST",
@@ -105,8 +85,10 @@ function delete_save_search(search_id) {
 		data: csrf_token_name+'='+csrf_hash_token,
 		success: function(response){
 			if(response.resu=='deleted') {
-				$('.search-dropdown').html(response.search_div);
-				saveSearchScript();
+				$('#item_'+search_id).remove();
+				if($(".search-root li").length == 1) {
+					$('.search-root').append('<li id="no_record" style="text-align: center; margin: 5px;">No Save & Search Found</li>');
+				}
 			} else {
 				alert('Not updated');
 			}
@@ -127,8 +109,8 @@ $("#save_advance").click(function() {
 			$('#popupGetSearchName').html(res);
 			$.blockUI({
 				message:$('#popupGetSearchName'),
-				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'},
-				focusInput: false 
+				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'}
+				// focusInput: false 
 			});
 			$( "#popupGetSearchName" ).parent().addClass( "no-scroll" );
 		}
@@ -187,12 +169,11 @@ function save_search() {
 			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(response){
-			// if(response.res == true) {
-				// alert(response.msg)
-			// }
 			
-			$('.search-dropdown').html(response.search_div);
-			saveSearchScript();
+			if(response.res == true) {
+				$('#no_record').remove();
+				$('.search-root').append(response.search_div);
+			}
 			
 			$.ajax({
 				type: "POST",
@@ -241,7 +222,29 @@ $(function(){
 		});
 	  
 		saveSearchScript();
-	
+		
+		/*
+		*Save & Search script
+		**/
+		// $( ".set_default_search" ).on( "click", function() {
+		$('.search-root').on('click', '.set_default_search', function() {
+			var search_id = $( this ).val();
+			$.ajax({
+				type: "POST",
+				dataType: 'json',
+				url: site_base_url+"welcome/set_default_search/"+search_id+'/1',
+				cache: false,
+				data: csrf_token_name+'='+csrf_hash_token,
+				success: function(response){
+					if(response.resu=='updated') {
+						show_search_results(search_id);
+					} else {
+						alert('Not updated');
+					}
+					
+				}
+			});
+		});
 
    });
    

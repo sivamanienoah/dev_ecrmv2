@@ -53,8 +53,8 @@ $("#save_advance").click(function() {
 			$('#popupGetSearchName').html(res);
 			$.blockUI({
 				message:$('#popupGetSearchName'),
-				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'},
-				focusInput: false 
+				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'}
+				// focusInput: false 
 			});
 			$( "#popupGetSearchName" ).parent().addClass( "no-scroll" );
 		}
@@ -113,7 +113,6 @@ function save_search() {
 				$('#no_record').remove();
 				$('.search-root').append(response.search_div);
 			}
-			
 			
 			$.ajax({
 				type: "POST",
@@ -241,7 +240,9 @@ $(function() {
 	});
 	saveSearchDropDownScript();
 	
-	$( ".set_default_search" ).on( "click", function() {
+	//$( ".set_default_search" ).on( "click", function() {
+	$('.search-root').on('click', '.set_default_search', function() {
+
 		var search_id = $( this ).val();
 		$.ajax({
 			type: "POST",

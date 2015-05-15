@@ -51,7 +51,7 @@ button.ui-datepicker-current { display: none; }
 		
 		<?php 
 		if($this->session->userdata('accesspage')==1)
-		{ 
+		{
 		?>
 		<div id="filter_section">
 

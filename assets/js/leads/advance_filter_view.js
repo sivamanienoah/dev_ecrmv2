@@ -48,27 +48,5 @@ $.ajaxSetup ({
     cache: false
 });
 
-/*
-*Save & Search script
-**/
-$( ".set_default_search" ).on( "click", function() {
-var search_id = $( this ).val();
-	$.ajax({
-		type: "POST",
-		dataType: 'json',
-		url: site_base_url+"welcome/set_default_search/"+search_id+'/1',
-		cache: false,
-		data: csrf_token_name+'='+csrf_hash_token,
-		success: function(response){
-			if(response.resu=='updated') {
-				$('.search-dropdown').html(response.search_div);
-				saveSearchScript();
-				show_search_results(search_id);
-			} else {
-				alert('Not updated');
-			}
-			
-		}
-	});
-});
+
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

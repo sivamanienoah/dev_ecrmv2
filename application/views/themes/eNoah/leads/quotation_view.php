@@ -24,7 +24,7 @@ require (theme_url().'/tpl/header.php');
 					if(sizeof($saved_search)>0) {
 						foreach($saved_search as $searc) { 
 					?>
-							<li class="saved-search-res">
+							<li class="saved-search-res" id="item_<?php echo $searc['search_id']; ?>">
 								<span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
 								<span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
 								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
@@ -33,7 +33,7 @@ require (theme_url().'/tpl/header.php');
 						}
 					} else {
 					?>
-						<li style="text-align: center; margin: 5px;">No Save & search found</li>
+						<li id="no_record" style="text-align: center; margin: 5px;">No Save & search found</li>
 					<?php
 					}
 					?>
