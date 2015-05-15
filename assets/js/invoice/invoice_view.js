@@ -160,7 +160,7 @@ function delete_save_search(search_id) {
 			if(response.resu=='deleted') {
 				$('#item_'+search_id).remove();
 				if($(".search-root li").length == 1) {
-					$('.search-root').append('<li style="text-align: center; margin: 5px;">No Save & Search Found</li>');
+					$('.search-root').append('<li id="no_record" style="text-align: center; margin: 5px;">No Save & Search Found</li>');
 				}
 			} else {
 				alert('Not updated');
