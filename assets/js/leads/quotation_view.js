@@ -83,6 +83,12 @@ function delete_save_search(search_id) {
 		url: site_base_url+"welcome/delete_save_search/"+search_id+'/1',
 		cache: false,
 		data: csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('.search-root').block({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
 		success: function(response){
 			if(response.resu=='deleted') {
 				$('#item_'+search_id).remove();
@@ -92,6 +98,7 @@ function delete_save_search(search_id) {
 			} else {
 				alert('Not updated');
 			}
+			$('.search-root').unblock();
 		}
 	});
 }
@@ -235,13 +242,19 @@ $(function(){
 				url: site_base_url+"welcome/set_default_search/"+search_id+'/1',
 				cache: false,
 				data: csrf_token_name+'='+csrf_hash_token,
+				beforeSend:function(){
+					$('.search-root').block({
+						message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif />',
+						css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+					});
+				},
 				success: function(response){
 					if(response.resu=='updated') {
 						show_search_results(search_id);
 					} else {
 						alert('Not updated');
 					}
-					
+					$('.search-root').unblock();
 				}
 			});
 		});
