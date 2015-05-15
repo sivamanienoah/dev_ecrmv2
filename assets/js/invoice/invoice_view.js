@@ -3,16 +3,18 @@ function advanced_filter() {
 }
 
 
-$('#advance_search').hide();
+// $('#advance_search').hide();
 
 //For Advance Filters functionality.
-$("#advanceFiltersDash").submit(function() {
+// $("#advanceFiltersDash").submit(function() {
+$("#search_advance").click(function() {
 	
-	$('#advance').hide();
+	$('#search_advance').hide();
+	$('#save_advance').hide();
 	$('#load').show();
 	var project   = $("#project").val();
 	var customer  = $("#customer").val();
-	var divisions  = $("#divisions").val();
+	var divisions = $("#divisions").val();
 	var practice  = $("#practice").val();
 	var from_date = $("#from_date").val();
 	var to_date   = $("#to_date").val();
@@ -21,7 +23,7 @@ $("#advanceFiltersDash").submit(function() {
 
 	$.ajax({
 		type: "POST",	
-		url: site_base_url+"invoice/index/",
+		url: site_base_url+"invoice/index/search",
 		// dataType: "json",
 		data: "filter=filter"+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
@@ -29,13 +31,143 @@ $("#advanceFiltersDash").submit(function() {
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(res) {
-			$('#advance').show();
 			$('#results').html(res);
 			$('#load').hide();
+			$('#search_advance').show();
+			$('#save_advance').show();
 		}
 	});
 	return false;  //stop the actual form post !important!
 });
+
+$("#save_advance").click(function() {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"invoice/get_search_name_form",
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(res){
+			// alert(res.html)
+			// return false;
+			$('#popupGetSearchName').html(res);
+			$.blockUI({
+				message:$('#popupGetSearchName'),
+				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'},
+				focusInput: false 
+			});
+			$( "#popupGetSearchName" ).parent().addClass( "no-scroll" );
+		}
+	});
+});
+
+function save_cancel() {
+	$.unblockUI();
+}
+
+function save_search() {
+
+	if($('#search_name').val()=='') {
+		$("#search_name").css("border-color", "red");
+		return false;
+	}
+	
+	$("#search_name").keyup(function(){
+		$("#search_name").css("border-color", "");
+	});
+	
+	$('#search_advance').hide();
+	$('#save_advance').hide();
+	$('#load').show();
+	
+	var is_defalut_val = 0;
+	
+	if($( "#is_default:checked" ).val() == 1) {
+		is_defalut_val = 1;
+	}
+	
+	var search_name = $('#search_name').val();
+	var is_default  = is_defalut_val;
+	var project     = $("#project").val();
+	var customer 	= $("#customer").val();
+	var divisions	= $("#divisions").val();
+	var practice 	= $("#practice").val();
+	var from_date	= $("#from_date").val();
+	var to_date  	= $("#to_date").val();
+	var month_year_from_date = $("#month_year_from_date").val();
+	var month_year_to_date   = $("#month_year_to_date").val();
+	
+	//Save the search criteria
+	
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"invoice/save_search/3",
+		cache: false,
+		data: "search_name="+search_name+"&is_default="+is_default+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success: function(response){
+			if(response.res == true) {
+				$('#no_record').remove();
+				$('.search-root').append(response.search_div);
+			}
+			
+			
+			$.ajax({
+				type: "POST",
+				url: site_base_url+"invoice/index/search",
+				cache: false,
+				data: "&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+				success: function(data){
+					$.unblockUI();
+					$('#advance_search_results').html(data);
+					$('#search_advance').show();
+					$('#save_advance').show();
+					$('#load').hide();	
+				}
+			});
+		}
+	});
+	return false;  //stop the actual form post !important!
+}
+
+function show_search_results(search_id) {
+	$.ajax({
+		type: "POST",
+		url: site_base_url+"invoice/index/search/"+search_id,
+		cache: false,
+		data: "&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		success: function(data){
+			// $('#advance_search_results').html(data);
+			$('#results').html(data);
+			$('#search_advance').show();
+			$('#save_advance').show();
+			$('#load').hide();	
+		}
+	});
+}
+
+function delete_save_search(search_id) {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"invoice/delete_save_search/"+search_id+'/3',
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(response){
+			if(response.resu=='deleted') {
+				$('#item_'+search_id).remove();
+				if($(".search-root li").length == 1) {
+					$('.search-root').append('<li style="text-align: center; margin: 5px;">No Save & Search Found</li>');
+				}
+			} else {
+				alert('Not updated');
+			}
+		}
+	});
+}
 
 $(function() {
 	$('#from_date').datepicker({ 
@@ -107,5 +239,56 @@ $(function() {
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
 	});
+	saveSearchDropDownScript();
+	
+	$( ".set_default_search" ).on( "click", function() {
+		var search_id = $( this ).val();
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: site_base_url+"invoice/set_default_search/"+search_id+'/3',
+			cache: false,
+			data: "filter=filter&"+csrf_token_name+'='+csrf_hash_token,
+			success: function(response){
+				if(response.resu=='updated') {
+					show_search_results(search_id);
+				} else {
+					alert('Not updated');
+				}
+				
+			}
+		});
+	});
 	
 });
+
+function saveSearchDropDownScript(){
+/*for saved search - start*/
+	$(".saved-search-head").click(function(){
+		var X=$(this).attr('id');
+
+		if(X==1) {
+			$(".saved-search-criteria").hide();
+			$(this).attr('id', '0');
+		} else {
+			$(".saved-search-criteria").show();
+			$(this).attr('id', '1');
+		}
+	});
+
+	//Mouseup textarea false
+	$(".saved-search-criteria").mouseup(function() {
+		return false
+	});
+	$(".saved-search-head").mouseup(function() {
+		return false
+	});
+
+	//Textarea without editing.
+	$(document).mouseup(function() {
+		$(".saved-search-criteria").hide();
+		$(".saved-search-head").attr('id', '');
+	});
+  
+  /*for saved search - end*/
+}

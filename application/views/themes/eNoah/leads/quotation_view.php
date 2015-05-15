@@ -13,7 +13,7 @@ require (theme_url().'/tpl/header.php');
 			</a>
 
 			<div class="search-dropdown">
-				<a class="saved-search-head" >
+				<a class="saved-search-head">
 					<p>Saved Search</p>
 				</a>
 				<div class="saved-search-criteria" style="display: none; ">

@@ -34,4 +34,3 @@
 	</tfoot>
 </table>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
-	
