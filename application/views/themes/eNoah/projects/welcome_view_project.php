@@ -464,6 +464,17 @@ if (get_default_currency()) {
 			<div style="margin-bottom:15px;" class="clear-both"></div>	
 			
 			<!--Stake Holders-->
+			<?php
+				// get stake holders 
+				$stake_users_array = array();
+				
+				if(count($stake_holders) > 0 && !empty($stake_holders)):
+					foreach($stake_holders as $sh):
+						$stake_users_array[] = $sh['user_id'];
+					endforeach;
+				endif;
+			//	echo '<pre>';print_r($restrict1);exit;
+			?>
 			<div class="pull-left team-mem">
 			<label class="project-stake-members">Stake Holders</label>
 				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
@@ -512,41 +523,12 @@ if (get_default_currency()) {
 			<div style="margin:10px;" class="clear-both"></div>	
 			<!--List the project assigned members from the timesheet-->
 			
-			<?php
-				// get stake holders 
-				$stake_users_array = array();
-				
-				if(count($stake_holders) > 0 && !empty($stake_holders)):
-					foreach($stake_holders as $sh):
-						$stake_users_array[] = $sh['user_id'];
-					endforeach;
-				endif;
-			//	echo '<pre>';print_r($restrict1);exit;
-			?>
+			
 			
 			
 			</div>
 			<!---------------------------------SECTION RIGHT--------------------------------->
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
   <div id="project-tabs" style="width:99.5%;float:left;margin:10px 0 0 0;">
 	<div>
 		<ul id="job-view-tabs">
