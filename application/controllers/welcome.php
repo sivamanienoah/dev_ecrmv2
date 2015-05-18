@@ -94,8 +94,6 @@ class Welcome extends crm_controller {
 			$filt	  = real_escape_array($get_rec);
 		}
 		
-		// echo "<pre>"; print_r($filt);
-		
 		if (count($filt)>0) {
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];

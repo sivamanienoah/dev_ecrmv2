@@ -59,6 +59,7 @@ class Project extends crm_controller {
 		$data['services']    = $this->project_model->get_services();
 		$data['practices']   = $this->project_model->get_practices();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
 		// $data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
 		// $data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
 		// echo "<pre>"; print_r($data['project_record']); exit;
@@ -70,32 +71,88 @@ class Project extends crm_controller {
 	/*
 	 *Advanced Search For Projects
 	 */
-	public function advance_filter_search_pjt()
+	public function advance_filter_search_pjt($search_type = false, $search_id = false)
 	{
- 		$inputData = real_escape_array($this->input->post());
+	
+		if($search_type == 'search' && $search_id == false) {
+			$inputData = real_escape_array($this->input->post());
+		} else if ($search_type == 'search' && is_numeric($search_id)) {
+			$wh_condn = array('search_id'=>$search_id, 'search_for'=>2, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			unset($get_rec['stage']);
+			unset($get_rec['worth']);
+			unset($get_rec['owner']);
+			unset($get_rec['leadassignee']);
+			unset($get_rec['regionname']);
+			unset($get_rec['countryname']);
+			unset($get_rec['statename']);
+			unset($get_rec['locname']);
+			unset($get_rec['lead_status']);
+			unset($get_rec['lead_indi']);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
+			unset($get_rec['month_year_from_date']);
+			unset($get_rec['month_year_to_date']);
+			if(!empty($get_rec))
+			$inputData	  = real_escape_array($get_rec);
+		} else {
+			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			
+			unset($get_rec['stage']);
+			unset($get_rec['worth']);
+			unset($get_rec['owner']);
+			unset($get_rec['leadassignee']);
+			unset($get_rec['regionname']);
+			unset($get_rec['countryname']);
+			unset($get_rec['statename']);
+			unset($get_rec['locname']);
+			unset($get_rec['lead_status']);
+			unset($get_rec['lead_indi']);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
+			unset($get_rec['month_year_from_date']);
+			unset($get_rec['month_year_to_date']);
+			
+			if(!empty($get_rec))
+			$inputData	  = real_escape_array($get_rec);
+		}
 		
 		if(!empty($inputData)) {
 			$pjtstage 	= $inputData['pjtstage'];
-			// $pm_acc   	= $inputData['pm_acc'];
-			$cust     	= $inputData['cust'];
+			$cust     	= $inputData['customer'];
 			$service 	= $inputData['service'];
 			$practice 	= $inputData['practice'];
 			$keyword  	= $inputData['keyword'];
+			$divisions  = $inputData['divisions'];
 			$datefilter = $inputData['datefilter'];
 			$from_date	= $inputData['from_date'];
 			$to_date  	= $inputData['to_date'];
-			$divisions  = $inputData['divisions'];
+			$project_excel_arr = array();
+			foreach ($inputData as $key => $val) {
+				$project_excel_arr[$key] = $val;
+			}
+			$this->session->set_userdata(array("project_excel"=>$project_excel_arr));
 		} else {
 			$pjtstage 	= '';
 			$cust     	= '';
 			$service 	= '';
 			$practice 	= '';
 			$keyword  	= '';
+			$divisions  = '';
 			$datefilter = '';
 			$from_date	= '';
 			$to_date  	= '';
-			$divisions  	= '';
+			$this->session->unset_userdata(array("project_excel"=>''));
 		}
+		
+		// echo "<pre>"; print_r($this->session->userdata['project_excel']);
 		
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
@@ -104,7 +161,7 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-		
+		echo $this->db->last_query();
 		//echo '<pre>'; print_r($getProjects);
 
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
@@ -3297,16 +3354,36 @@ HDOC;
 	
 	/* Export to Excel */
 	public function excelExport() {
-		$pjtstage = $this->input->post('stages');
-		// $pm_acc = $this->input->post('pm');
-		$cust = $this->input->post('customers');
-		$service = $this->input->post('services');
-		$practice = $this->input->post('practices');
-		$divisions = $this->input->post('divisions');
-		$datefilter = $this->input->post('datefilter');
-		$from_date = $this->input->post('from_date');
-		$to_date = $this->input->post('to_date');
+	
+		/* $pjtstage 	= 'null';
+		$cust     	= 'null';
+		$service 	= 'null';
+		$practice 	= 'null';
+		$keyword  	= 'null';
+		$divisions  = 'null';
+		$datefilter = 'null';
+		$from_date	= 'null';
+		$to_date  	= 'null'; */
+		
+		// $project_excel = $this->session->userdata['project_excel'];
+		
+		// echo "<pre>"; print_r($project_excel); exit;
+
+		if (count($exporttoexcel)>0) {
+		
+			$pjtstage 	= $exporttoexcel['pjtstage'];
+			$cust     	= $exporttoexcel['customer'];
+			$service 	= $exporttoexcel['service'];
+			$practice 	= $exporttoexcel['practice'];
+			$divisions  = $exporttoexcel['divisions'];
+			$datefilter = $exporttoexcel['datefilter'];
+			$from_date	= $exporttoexcel['from_date'];
+			$to_date  	= $exporttoexcel['to_date'];
+			$keyword    = $exporttoexcel['keyword'];
+		}
+	
 		$export_type = $this->input->post('export_type');
+		
 		$keyword = null;
 		
 		if((!empty($pjtstage)) && $pjtstage!='null')
@@ -4171,6 +4248,107 @@ HDOC;
 			}
 		}
 		echo json_encode($json); exit;
+	}
+	
+	
+	//For Saving the search criteria
+	public function save_search($type)
+	{
+		$post_data = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($post_data); exit;
+		$ins = array();
+		
+		$ins['search_for']   = $type;
+		$ins['search_name']  = $post_data['search_name'];
+		$ins['user_id']	  	 = $this->userdata['userid'];
+		$ins['is_default']	 = $post_data['is_default'];
+		$ins['pjtstage'] 	 = $post_data['pjtstage'];
+		$ins['customer']	 = $post_data['customer'];
+		$ins['service']		 = $post_data['service'];
+		$ins['divisions']	 = $post_data['divisions'];
+		$ins['practice']     = $post_data['practice'];
+		$ins['datefilter']   = $post_data['datefilter'];
+		$ins['from_date'] 	 = $post_data['from_date'];
+		$ins['to_date']	 	 = $post_data['to_date'];
+		$ins['created_on'] 	 = date('Y-m-d H:i:s');
+		// echo "<pre>"; print_r($ins); exit;
+		
+		$last_ins_id = $this->welcome_model->insert_row_return_id('saved_search_critriea', $ins);
+		if($last_ins_id) {
+			if($ins['is_default'] == 1) {
+				$updt['is_default'] = 0;
+				$this->db->where('search_id != ', $last_ins_id);
+				$this->db->where('user_id', $this->userdata['userid']);
+				$this->db->where('search_for', $type);
+				$this->db->update($this->cfg['dbpref'] . 'saved_search_critriea', $updt);
+			}
+			
+			$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=$type);
+			
+			$result['res'] = true;
+			$result['msg'] = 'Search Criteria Saved.';
+			
+			$result['search_div'] .= '<li id="item_'.$last_ins_id.'" class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$last_ins_id.')">'.$post_data['search_name'].'</a></span>';
+			$result['search_div'] .= '<span class="rd-set-default">';
+			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$last_ins_id.'" ';
+			if($searc['is_default']==1) { 
+				$result['search_div'] .= 'checked="checked"';
+			}
+			$result['search_div'] .= '/>';
+			$result['search_div'] .= '</span>';
+			$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$last_ins_id.')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
+
+		} else {
+			$result['res'] = false;
+			$result['msg'] = 'Search Criteria cant be Saved.';
+		}
+		echo json_encode($result);
+		exit;
+	}
+	
+	public function get_search_name_form() {
+		$html = '<table><tr>';
+		$html .= '<td><label>Search Name:</label></td>';
+		$html .= '<td><input type="text"  class="textfield width160px" name="search_name" id="search_name" value="" /></td></tr><tr>';
+		$html .= '<td><label>Is Default:</label></td>';
+		$html .= '<td><input type="checkbox" name="is_default" id="is_default" value="1" /></td></tr><tr><td colspan=2>';
+		$html .= '<div class="buttons"><button onclick="save_search(); return false;" class="positive" type="submit">Save</button>
+		<button onclick="save_cancel(); return false;" class="negative" type="submit">Cancel</button></div></td></tr></table>';
+		echo json_encode($html);
+		exit;
+	}
+	
+	public function set_default_search($search_id, $type) {
+		
+		$result = array();
+		
+		$tbl = 'saved_search_critriea';
+		$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid']);
+		
+		$updt = $this->welcome_model->update_records($tbl,$wh_condn,'',$up_arg=array('is_default'=>0));
+		$updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>1));
+
+		if($updt_condn) {
+			$result['resu'] = 'updated';
+		}
+		
+		echo json_encode($result);
+		exit;
+	}
+
+	public function delete_save_search($search_id, $type) {
+		
+		$result = array();
+		
+		$tbl = 'saved_search_critriea';
+		$wh_condn = array('search_for'=>$type, 'search_id'=>$search_id);
+
+		if($this->welcome_model->delete_records($tbl, $wh_condn)) {
+			$result['resu'] = 'deleted';
+		}
+		
+		echo json_encode($result);
+		exit;
 	}
 	
 	

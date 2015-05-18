@@ -21,6 +21,36 @@ if (get_default_currency()) {
 			<a class="choice-box" onclick="advanced_filter_pjt();">
 				<span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
+			
+			<div class="search-dropdown">
+				<a class="saved-search-head">
+					<p>Saved Search</p>
+				</a>
+				<div class="saved-search-criteria" style="display: none; ">
+					<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
+					<ul class="search-root">
+					<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
+					<?php 
+					if(sizeof($saved_search)>0) {
+						foreach($saved_search as $searc) { 
+					?>
+							<li class="saved-search-res" id="item_<?php echo $searc['search_id']; ?>">
+								<span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
+								<span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
+								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
+							</li>
+					<?php 
+						}
+					} else {
+					?>
+						<li id="no_record" style="text-align: center; margin: 5px;">No Save & search found</li>
+					<?php
+					}
+					?>
+					</ul>
+				</div>
+			</div>
+			
 			<div class="section-right">
 				<div class="form-cont search-table">
 					<form id="pjt_search_form" name="pjt_search_form" method="post">
@@ -125,7 +155,10 @@ if (get_default_currency()) {
 						</tr>
 						<tr align="right" >
 							<td colspan="5"><input type="reset" class="positive input-font" name="advance_pjt" value="Reset" />
-							<input type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
+							
+							<input type="button" class="positive input-font show-ajax-loader" name="advance_pjt" id="search_advance" value="Search" />
+							<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
+							
 							<div id = 'load' style = 'float:right;display:none;height:1px;'>
 								<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 							</div>
@@ -135,6 +168,7 @@ if (get_default_currency()) {
 					</table>
 				</form>
 			</div>
+			
 			<div class="clearfix"></div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
@@ -146,6 +180,7 @@ if (get_default_currency()) {
 		}
 		?>
 	</div>
+	<div id='popupGetSearchName'></div>
 </div>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/projects/projects_view.js"></script>

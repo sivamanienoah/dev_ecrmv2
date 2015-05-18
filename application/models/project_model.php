@@ -30,6 +30,17 @@ class Project_model extends crm_model
 	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
+		
+		if($from_date=='0000-00-00 00:00:00'){
+			$from_date = '';
+		}
+		if($to_date=='0000-00-00 00:00:00'){
+			$to_date = '';
+		}
+		if($datefilter=='0'){
+			$datefilter = '';
+		}
+		
 		$stage 		= $pjtstage;
 		$customer 	= $cust;
 		$services	= $service;
@@ -39,7 +50,6 @@ class Project_model extends crm_model
 		$to_date	= $to_date;
 		$divisions	= $divisions;
 		
-
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
 		 
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
@@ -49,25 +59,25 @@ class Project_model extends crm_model
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
 			
-			if(!empty($stage)){	
+			if (!empty($stage) && $stage!='null') {
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
-			if(!empty($customer)){		
+			if (!empty($customer) && $customer!='null') {
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
 			/* if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
 			} */
-			if(!empty($services)){		
+			if(!empty($services) && $services!='null'){		
 				$this->db->where_in('j.lead_service',$services);
 			}
-			if(!empty($practices)){		
+			if(!empty($practices) && $practices!='null'){	
 				$this->db->where_in('j.practice',$practices);
 			}
-			if(!empty($divisions)){		
+			if(!empty($divisions) && $divisions!='null'){		
 				$this->db->where_in('j.division',$divisions);
 			}
 			if(!empty($billing_type)) {
