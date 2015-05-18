@@ -1581,7 +1581,7 @@ class Welcome extends crm_controller {
 	 *Exporting data(leads) to the excel
 	 */
 	public function excelExport() {
-		echo '<pre>';print_r($_SESSION);
+		
 		$stage='null';
 		$customer='null';
 		$worth='null';
