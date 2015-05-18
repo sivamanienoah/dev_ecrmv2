@@ -492,7 +492,7 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
 			
-			/* if($stage[0] != 'null' && $stage[0] != 'all') {		
+			if($stage[0] != 'null' && $stage[0] != 'all') {		
 				$this->db->where_in('j.lead_stage',$stage); 
 			}
 			
@@ -528,7 +528,7 @@ class Welcome_model extends crm_model {
 			}
 			if($lead_indi[0] != 'null' && $lead_indi[0] !='') {	
 				$this->db->where_in('j.lead_indicator', $lead_indi);
-			} */
+			}
 			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
 				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 				$this->db->where($invwhere);
