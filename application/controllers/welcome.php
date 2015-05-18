@@ -1617,7 +1617,7 @@ echo '<pre>';print_r($exporttoexcel);exit;
 
 		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
-		//load our new PHPExcel library
+/* 		//load our new PHPExcel library
 		$this->load->library('excel');
 		//activate worksheet number 1
 		$this->excel->setActiveSheetIndex(0);
@@ -1720,7 +1720,7 @@ echo '<pre>';print_r($exporttoexcel);exit;
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
-		$objWriter->save('php://output');
+		$objWriter->save('php://output'); */
 	}
 	
 	/**
