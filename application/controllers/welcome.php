@@ -111,7 +111,7 @@ class Welcome extends crm_controller {
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
 			}
-			// print_r($excel_arr); exit;
+			 print_r($excel_arr); exit;
 			$this->session->set_userdata(array("excel_download"=>$excel_arr));
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
