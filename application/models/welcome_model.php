@@ -473,7 +473,7 @@ class Welcome_model extends crm_model {
 		$locname 		= explode(',',$locname);
 		$lead_status 	= explode(',',$lead_status);
 		$lead_indi 		= explode(',',$lead_indi);
-echo $stage.'<br>'.$customer.'<br>'.$owner;
+print_r($owner);
 exit;
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
