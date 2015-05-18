@@ -75,16 +75,26 @@ class Welcome extends crm_controller {
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
 		}
 		
-		// echo "<pre>"; print_r($this->session->userdata['excel_download']); exit;
+		// echo "<pre>"; print_r($filt);
 		
 		if (count($filt)>0) {
 			$stage 		  = $filt['stage'];
@@ -108,7 +118,7 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		// echo "<pre>"; print_r($this->session->userdata['excel_download']); exit;
+		// print_r($this->session->userdata['excel_download']); exit;
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		// echo $this->db->last_query(); exit;
@@ -1590,7 +1600,7 @@ class Welcome extends crm_controller {
 
 		$exporttoexcel = $this->session->userdata['excel_download'];
 		
-		// echo "<pre>"; print_r($this->session->userdata); exit;
+		// echo "<pre>"; print_r($this->session->userdata['excel_download']); exit;
 
 		if (count($exporttoexcel)>0) {
 
