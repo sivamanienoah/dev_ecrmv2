@@ -467,13 +467,11 @@ if (get_default_currency()) {
 			<?php
 				// get stake holders 
 				$stake_users_array = array();
-				
 				if(count($stake_holders) > 0 && !empty($stake_holders)):
 					foreach($stake_holders as $sh):
 						$stake_users_array[] = $sh['user_id'];
 					endforeach;
 				endif;
-			//	echo '<pre>';print_r($restrict1);exit;
 			?>
 			<div class="pull-left team-mem">
 			<label class="project-stake-members">Stake Holders</label>
