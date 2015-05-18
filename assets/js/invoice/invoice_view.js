@@ -276,6 +276,12 @@ $(function() {
 	
 });
 
+$('#inv_excel').click(function() {
+	var sturl = site_base_url+"invoice/excelExport/";
+	document.location.href = sturl;
+	return false;
+});
+
 function saveSearchDropDownScript(){
 /*for saved search - start*/
 	$(".saved-search-head").click(function(){

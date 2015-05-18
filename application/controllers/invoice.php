@@ -60,26 +60,93 @@ class Invoice extends CRM_Controller {
 		$data['sales_divisions'] = $this->invoice_model->get_sales_divisions();
 		$data['saved_search'] = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
 		
+		$project   = 'null';
+		$customer  = 'null';
+		$divisions = 'null';
+		$practice  = 'null';
+		$from_date = 'null';
+		$to_date   = 'null';
+		$month_year_from_date = 'null';
+		$month_year_to_date   = 'null';
+		
 		$filter =  array();
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filter = real_escape_array($this->input->post());
+			// echo "<pre>"; print_r($filter); exit;
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>3, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			if(!empty($get_rec))
-			$filter	  = real_escape_array($get_rec);
-			$filter['filter'] = 'filter';
+			if(!empty($get_rec)) {
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['stage']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['leadassignee']);
+				unset($get_rec['owner']);
+				unset($get_rec['worth']);
+				unset($get_rec['regionname']);
+				unset($get_rec['countryname']);
+				unset($get_rec['statename']);
+				unset($get_rec['locname']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['lead_indi']);
+				unset($get_rec['service']);
+				$filter	  = real_escape_array($get_rec);
+				$filter['filter'] = 'filter';
+			}
 		} else {
 			$wh_condn = array('search_for'=>3, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			// echo $this->db->last_query(); exit;
-			if(!empty($get_rec))
-			$filter	  = real_escape_array($get_rec);
+			if(!empty($get_rec)) {
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['stage']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['leadassignee']);
+				unset($get_rec['owner']);
+				unset($get_rec['worth']);
+				unset($get_rec['regionname']);
+				unset($get_rec['countryname']);
+				unset($get_rec['statename']);
+				unset($get_rec['locname']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['lead_indi']);
+				unset($get_rec['service']);
+				$filter	  = real_escape_array($get_rec);
+			}
 		}
-		// echo "<pre>"; print_r($filter); exit;
-		$invoices = $this->invoice_model->get_invoices($filter);
 		
+		if (count($filter)>0) {
+			
+			$project   = $filter['project'];
+			$customer  = $filter['customer'];
+			$divisions = $filter['divisions'];
+			$practice  = $filter['practice'];
+			$from_date = $filter['from_date'];
+			$to_date   = $filter['to_date'];
+			$month_year_from_date = $filter['month_year_from_date'];
+			$month_year_to_date   = $filter['month_year_to_date'];
+			
+			$inv_excel_arr 	  = array();
+			foreach ($filter as $key => $val) {
+				$inv_excel_arr[$key] = $val;
+			}
+			// print_r($excel_arr); exit;
+			$this->session->set_userdata(array("inv_excel_export"=>$inv_excel_arr));
+		} else {
+			$this->session->unset_userdata(array("inv_excel_export"=>''));
+		}
+		// echo "<pre>"; print_r($this->session->userdata('inv_excel_export')); exit;
+		$invoices = $this->invoice_model->get_invoices($filter);
+		// echo $this->db->last_query();
 		$rates 	  = $this->get_currency_rates();
 		$data['default_currency'] = $this->default_cur_name;
 		$data['invoices'] = array();
@@ -243,4 +310,126 @@ class Invoice extends CRM_Controller {
 		echo json_encode($result);
 		exit;
 	}
+	
+	
+	/*
+	 *Exporting data(leads) to the excel
+	 */
+	public function excelExport() 
+	{
+		$filter = array();
+		$rates 	  = $this->get_currency_rates();
+		$default_currency = $this->default_cur_name;
+		
+		$project='null';
+		$customer='null';
+		$divisions='null';
+		$practice='null';
+		$from_date='null';
+		$to_date='null';
+		$month_year_from_date='null';
+		$month_year_to_date='null';
+		
+
+		$exporttoexcel = $this->session->userdata('inv_excel_export');
+
+		if (count($exporttoexcel)>0) {
+
+			$stage 		  = $exporttoexcel['stage'];
+			$customer 	  = $exporttoexcel['customer'];
+			$worth		  = $exporttoexcel['worth'];
+			$owner		  = $exporttoexcel['owner'];
+			$leadassignee = $exporttoexcel['leadassignee'];
+			$regionname	  = $exporttoexcel['regionname'];
+			$countryname  = $exporttoexcel['countryname'];
+			$statename    = $exporttoexcel['statename'];
+			$locname      = $exporttoexcel['locname'];
+			$lead_status  = $exporttoexcel['lead_status'];
+			$lead_indi	  = $exporttoexcel['lead_indi'];
+			$keyword      = $exporttoexcel['keyword'];
+		}
+
+		$invoices_res = $this->invoice_model->get_invoices($filter);
+		
+		//load our new PHPExcel library
+		$this->load->library('excel');
+		//activate worksheet number 1
+		$this->excel->setActiveSheetIndex(0);
+		//name the worksheet
+		$this->excel->getActiveSheet()->setTitle('Invoices');
+		//set cell A1 content with some text
+		$this->excel->getActiveSheet()->setCellValue('A1', 'Invoice Date');
+		$this->excel->getActiveSheet()->setCellValue('B1', 'Month & Year');
+		$this->excel->getActiveSheet()->setCellValue('C1', 'Customer Name');
+		$this->excel->getActiveSheet()->setCellValue('D1', 'Project Title');
+		$this->excel->getActiveSheet()->setCellValue('E1', 'Project Code');
+		$this->excel->getActiveSheet()->setCellValue('F1', 'Milestone Name');
+		$this->excel->getActiveSheet()->setCellValue('G1', 'Actual Value');
+		$this->excel->getActiveSheet()->setCellValue('H1', 'Value('.$default_currency.')');
+		
+		//change the font size
+		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
+		$i=2;		
+		
+		if(count($invoices_res)>0) {
+			foreach($invoices_res as $excelarr) {
+				//display only date
+				$this->excel->getActiveSheet()->setCellValue('A'.$i, date('d-m-Y', strtotime($excelarr['invoice_generate_notify_date'])));
+				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('M Y', strtotime($excelarr['month_year'])));
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['first_name'].' '.$excelarr['last_name'].' - '.$excelarr['company']);
+				$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['lead_title']);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['pjt_id']);
+				$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['project_milestone_name']);
+				$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['expect_worth_name'].' '.$excelarr['amount']);
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]));
+				
+				$amt 	   = $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]);
+				$total_amt += $amt;
+				$i++;
+			}
+		}
+		$this->excel->getActiveSheet()->setCellValue('H'.$i, $total_amt);
+		
+		$this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
+		$this->excel->getActiveSheet()->getStyle('H2:H'.$i)->getNumberFormat()->setFormatCode('0.00');
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+		//merge cell A1 until D1
+		//$this->excel->getActiveSheet()->mergeCells('A1:D1');
+		//set aligment to center for that merged cell (A1 to D1)
+		
+		//Set width for cells
+		$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);			
+		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+		$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+		
+		//cell format
+		$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+		
+		$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		
+		$filename='Invoice.xls'   ; //save our workbook as this file name
+		header('Content-Type: application/vnd.ms-excel'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+					 
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+	}
+	
 }

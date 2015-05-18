@@ -63,8 +63,8 @@ class Invoice_model extends crm_model {
 					$this->db->where_in('cs.add1_location',$locationid);
 				break;
 			}
-			$this->db->where("ls.lead_status", 4); //for active projects only
-			$this->db->where("ls.pjt_status", 1); //for active projects only
+			// $this->db->where("ls.lead_status", 4); //for active projects only
+			// $this->db->where("ls.pjt_status", 1); //for active projects only
 			$query = $this->db->get();
 			// echo $this->db->last_query(); exit;
 			$rowscust1 = $query->result_array();

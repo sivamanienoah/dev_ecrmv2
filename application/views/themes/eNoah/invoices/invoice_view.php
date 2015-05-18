@@ -44,6 +44,13 @@ button.ui-datepicker-current { display: none; }
 					</ul>
 				</div>
 			</div>
+			<div class="section-right">
+				<div class="buttons export-to-excel">
+					<button id="inv_excel" onclick="location.href='#'" class="positive" type="button">
+						Export to Excel
+					</button>
+				</div>
+			</div>
 			
 			<div class="clearfix"></div>
 			
