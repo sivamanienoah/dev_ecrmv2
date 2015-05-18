@@ -1620,8 +1620,8 @@ echo '<pre>';print_r($this->session->userdata("excel_download"));  echo '</pre>'
     ['to_date'] => 
     ['month_year_from_date'] => 
     ['month_year_to_date'] => 
-    ['created_on'] => 2015-05-18 18:53:12
-)
+    ['created_on'] => '2015-05-18 18:53:12'
+);
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
