@@ -16,7 +16,7 @@ button.ui-datepicker-current { display: none; }
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 			
-			<div class="search-dropdown">
+			<!--div class="search-dropdown">
 				<a class="saved-search-head" >
 					<p>Saved Search</p>
 				</a>
@@ -43,7 +43,7 @@ button.ui-datepicker-current { display: none; }
 					?>
 					</ul>
 				</div>
-			</div>
+			</div-->
 			<div class="section-right">
 				<div class="buttons export-to-excel">
 					<button id="inv_excel" onclick="location.href='#'" class="positive" type="button">

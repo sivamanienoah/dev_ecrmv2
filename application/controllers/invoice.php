@@ -315,41 +315,64 @@ class Invoice extends CRM_Controller {
 	/*
 	 *Exporting data(leads) to the excel
 	 */
-	public function excelExport() 
+	public function invExcelExport() 
 	{
 		$filter = array();
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
+	
+		// $exporttoexcel = $this->session->userdata('inv_excel_export');
+		$filter = real_escape_array($this->input->post());
 		
-		$project='null';
-		$customer='null';
-		$divisions='null';
-		$practice='null';
-		$from_date='null';
-		$to_date='null';
-		$month_year_from_date='null';
-		$month_year_to_date='null';
+		// echo "<pre>"; print_r($filter);
 		
-
-		$exporttoexcel = $this->session->userdata('inv_excel_export');
-
-		if (count($exporttoexcel)>0) {
-
-			$stage 		  = $exporttoexcel['stage'];
-			$customer 	  = $exporttoexcel['customer'];
-			$worth		  = $exporttoexcel['worth'];
-			$owner		  = $exporttoexcel['owner'];
-			$leadassignee = $exporttoexcel['leadassignee'];
-			$regionname	  = $exporttoexcel['regionname'];
-			$countryname  = $exporttoexcel['countryname'];
-			$statename    = $exporttoexcel['statename'];
-			$locname      = $exporttoexcel['locname'];
-			$lead_status  = $exporttoexcel['lead_status'];
-			$lead_indi	  = $exporttoexcel['lead_indi'];
-			$keyword      = $exporttoexcel['keyword'];
-		}
+		if((!empty($filter['project'])) && $filter['project']!='null')
+		$filter['project'] = explode(",",$filter['project']);
+		else 
+		$filter['project'] = '';
+		
+		if((!empty($filter['customer'])) && $filter['customer']!='null')
+		$filter['customer'] = explode(",",$filter['customer']);
+		else
+		$filter['customer'] = '';
+		
+		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
+		$filter['divisions'] = explode(",",$filter['divisions']);
+		else
+		$filter['divisions'] = '';
+		
+		if((!empty($filter['practice'])) && $filter['practice']!='null')
+		$filter['practice'] = explode(",",$filter['practice']);
+		else
+		$filter['practice'] = '';
+		
+		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
+		$filter['divisions'] = explode(",",$filter['divisions']);
+		else
+		$filter['divisions'] = '';
+		
+		if(!empty($filter['from_date']))
+		$filter['from_date'] = $filter['from_date'];
+		else
+		$filter['from_date'] = '';
+		
+		if(!empty($filter['to_date']))
+		$filter['to_date'] = $filter['to_date'];
+		else
+		$filter['to_date'] = '';
+		
+		if(!empty($filter['month_year_from_date']))
+		$filter['month_year_from_date'] = $filter['month_year_from_date'];
+		else
+		$filter['month_year_from_date'] = '';
+		
+		if(!empty($filter['month_year_to_date']))
+		$filter['month_year_to_date'] = $filter['month_year_to_date'];
+		else
+		$filter['month_year_to_date'] = '';
 
 		$invoices_res = $this->invoice_model->get_invoices($filter);
+		// echo $this->db->last_query(); exit;
 		
 		//load our new PHPExcel library
 		$this->load->library('excel');
