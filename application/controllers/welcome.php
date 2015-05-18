@@ -1598,7 +1598,30 @@ echo '<pre>';print_r($this->session->userdata("excel_download"));  echo '</pre>'
 		$exporttoexcel = $this->session->userdata('excel_download');
 		
 		// echo "<pre>"; print_r($this->session->userdata); exit;
-echo '<pre>';print_r($exporttoexcel);exit;
+		//echo '<pre>';print_r($exporttoexcel);exit;
+		$exporttoexcel = Array( [stage] => 1
+    [pjtstage] => 
+    [customer] => null
+    [worth] => null
+    [owner] => null
+    [leadassignee] => null
+    [regionname] => 1
+    [countryname] => 18
+    [statename] => 38
+    [locname] => null
+    [lead_status] => null
+    [lead_indi] => null
+    [project] => 
+    [divisions] => 
+    [practice] => 
+    [service] => 
+    [datefilter] => 0
+    [from_date] => 
+    [to_date] => 
+    [month_year_from_date] => 
+    [month_year_to_date] => 
+    [created_on] => 2015-05-18 18:53:12
+)
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
