@@ -1597,7 +1597,8 @@ class Welcome extends crm_controller {
 		$keyword='null';
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-	 
+		echo '<pre>';print_r($exporttoexcel);
+		exit;
 
 		if (count($exporttoexcel)>0) {
 
