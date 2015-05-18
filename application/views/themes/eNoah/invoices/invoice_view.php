@@ -122,7 +122,7 @@ button.ui-datepicker-current { display: none; }
 								<td colspan="6">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
-									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
+									<!--input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" /-->
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
