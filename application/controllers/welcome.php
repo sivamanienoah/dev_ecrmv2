@@ -112,7 +112,7 @@ class Welcome extends crm_controller {
 				$excel_arr[$key] = $val;
 			}
 			//echo '<pre>'; print_r($excel_arr); exit;
-			$this->session->set_userdata(array("excel_download"=>$excel_arr));
+			$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
@@ -1597,8 +1597,7 @@ class Welcome extends crm_controller {
 		$keyword='null';
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		echo '<pre>';print_r($exporttoexcel);
-		exit;
+ 
 
 		if (count($exporttoexcel)>0) {
 
@@ -2129,9 +2128,9 @@ HDOC;
 			$result['search_div'] .= '<li id="item_'.$last_ins_id.'" class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$last_ins_id.')">'.$post_data['search_name'].'</a></span>';
 			$result['search_div'] .= '<span class="rd-set-default">';
 			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$last_ins_id.'" ';
-			/* if($searc['is_default']==1) { 
+			if($ins['is_default']==1) { 
 				$result['search_div'] .= 'checked="checked"';
-			} */
+			}
 			$result['search_div'] .= '/>';
 			$result['search_div'] .= '</span>';
 			$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$last_ins_id.')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
