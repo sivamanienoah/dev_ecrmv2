@@ -1595,11 +1595,11 @@ class Welcome extends crm_controller {
 		$lead_indi='null';
 		$keyword='null'; */
 
-		$exporttoexcel = $this->session->userdata('excel_download');
+		//$exporttoexcel = $this->session->userdata('excel_download');
 		
 		// echo "<pre>"; print_r($this->session->userdata); exit;
 		//echo '<pre>';print_r($exporttoexcel);exit;
-		$exporttoexcel = Array( 'stage' => 1,
+		$exporttoexcel = array( 'stage' => 1,
     'pjtstage' => ,
     'customer' => null,
     'worth' => null,
