@@ -1582,7 +1582,7 @@ class Welcome extends crm_controller {
 	 */
 	public function excelExport() {
 		
-/* 		$stage='null';
+		$stage='null';
 		$customer='null';
 		$worth='null';
 		$owner='null';
@@ -1593,7 +1593,7 @@ class Welcome extends crm_controller {
 		$locname='null';
 		$lead_status='null';
 		$lead_indi='null';
-		$keyword='null'; */
+		$keyword='null';
 
 		//$exporttoexcel = $this->session->userdata('excel_download');
 		
@@ -1638,7 +1638,7 @@ class Welcome extends crm_controller {
 			$keyword      = $exporttoexcel['keyword'];
 		}
 
-/*		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
  		//load our new PHPExcel library
 		$this->load->library('excel');
@@ -1743,7 +1743,7 @@ class Welcome extends crm_controller {
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
-		$objWriter->save('php://output'); */
+		$objWriter->save('php://output');
 	}
 	
 	/**
