@@ -116,7 +116,7 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		// print_r($this->session->userdata['excel_download']); exit;
+		 print_r($this->session->userdata('excel_download'); exit;
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		// echo $this->db->last_query(); exit;
