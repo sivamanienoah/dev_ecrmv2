@@ -1599,7 +1599,6 @@ class Welcome extends crm_controller {
 		
 		// echo "<pre>"; print_r($this->session->userdata); exit;
 
-
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
