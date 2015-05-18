@@ -116,7 +116,6 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		// print_r($this->session->userdata('excel_download'); exit;
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		// echo $this->db->last_query(); exit;
@@ -1597,7 +1596,9 @@ class Welcome extends crm_controller {
 		$keyword='null';
 
 		$exporttoexcel = $this->session->userdata('excel_download');
- 
+		
+		// echo "<pre>"; print_r($this->session->userdata); exit;
+
 
 		if (count($exporttoexcel)>0) {
 
@@ -2128,7 +2129,7 @@ HDOC;
 			$result['search_div'] .= '<li id="item_'.$last_ins_id.'" class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$last_ins_id.')">'.$post_data['search_name'].'</a></span>';
 			$result['search_div'] .= '<span class="rd-set-default">';
 			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$last_ins_id.'" ';
-			if($ins['is_default']==1) { 
+			if($ins['is_default']==1) {
 				$result['search_div'] .= 'checked="checked"';
 			}
 			$result['search_div'] .= '/>';
