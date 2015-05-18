@@ -112,7 +112,7 @@ class Welcome extends crm_controller {
 				$excel_arr[$key] = $val;
 			}
 			//echo '<pre>'; print_r($excel_arr); exit;
-			$this->session->set_userdata($excel_arr);
+			$this->session->set_userdata(array("excel_download"=>$excel_arr));
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
@@ -1597,11 +1597,7 @@ class Welcome extends crm_controller {
 		$keyword='null';
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		
-		 echo "<pre>"; 
-		 echo $this->session->userdata('stage');
-		  print_r($this->session->userdata('excel_download'));
-		 print_r($exporttoexcel); exit;
+	 
 
 		if (count($exporttoexcel)>0) {
 
