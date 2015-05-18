@@ -116,7 +116,7 @@ class Welcome extends crm_controller {
 		} else {
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
-		//echo '<pre>';print_r($this->session->userdata("excel_download"));  echo '</pre>';
+
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		// echo $this->db->last_query(); exit;
 		$data['filter_results'] = $filter_results;
@@ -1595,33 +1595,10 @@ class Welcome extends crm_controller {
 		$lead_indi='null';
 		$keyword='null';
 
-		//$exporttoexcel = $this->session->userdata('excel_download');
+		$exporttoexcel = $this->session->userdata('excel_download');
 		
 		// echo "<pre>"; print_r($this->session->userdata); exit;
-		//echo '<pre>';print_r($exporttoexcel);exit;
-		$exporttoexcel = array( 'stage' => 1,
-    'pjtstage' => ,
-    'customer' => null,
-    'worth' => null,
-    'owner' => null,
-    'leadassignee' => null,
-    'regionname' => 1,
-    'countryname' => 18,
-    'statename' => 38,
-    'locname' => null,
-    'lead_status' => null,
-    'lead_indi' => null,
-    'project' => ,
-    'divisions' => ,
-    'practice' => ,
-    'service' => ,
-    'datefilter' => 0,
-    'from_date' => ,
-    'to_date' => ,
-    'month_year_from_date' => ,
-    'month_year_to_date' => ,
-    'created_on' => '2015-05-18 18:53:12',
-);
+
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
@@ -1640,7 +1617,7 @@ class Welcome extends crm_controller {
 
 		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
- 		//load our new PHPExcel library
+		//load our new PHPExcel library
 		$this->load->library('excel');
 		//activate worksheet number 1
 		$this->excel->setActiveSheetIndex(0);
