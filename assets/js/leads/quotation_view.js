@@ -228,7 +228,7 @@ $(function(){
 			 return false;  //stop the actual form post !important!
 		});
 	  
-		saveSearchScript();
+		saveSearchDropDownScript();
 		
 		/*
 		*Save & Search script
@@ -362,7 +362,7 @@ function loadLocations() {
 	}
 }
 
-function saveSearchScript(){
+function saveSearchDropDownScript(){
 	/*for saved search - start*/
 	  	$(".saved-search-head").click(function(){
 			var X=$(this).attr('id');
@@ -390,5 +390,5 @@ function saveSearchScript(){
 			$(".saved-search-head").attr('id', '');
 		});
 	  
-	  /*for saved search - end*/
+	/*for saved search - end*/
 }
