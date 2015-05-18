@@ -473,8 +473,7 @@ class Welcome_model extends crm_model {
 		$locname 		= explode(',',$locname);
 		$lead_status 	= explode(',',$lead_status);
 		$lead_indi 		= explode(',',$lead_indi);
-print_r($owner);
-exit;
+
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
@@ -497,16 +496,16 @@ exit;
 				$this->db->where_in('j.lead_stage',$stage); 
 			}
 			
-			if($customer[0] != 'null' && $customer[0] != 'all'){		
+			if(!empty($customer) && $customer[0] != 'null' && $customer[0] != 'all'){		
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
-			if($worth[0] != 'null' && $worth[0] != 'all'){	
+			if(!empty($worth) && $worth[0] != 'null' && $worth[0] != 'all'){	
 				if($worth[1] == 'above')
 				$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
 				else
 				$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
 			}
-			if($owner[0] != 'null' && $owner[0] != 'all'){
+			if(!empty($owner) && $owner[0] != 'null' && $owner[0] != 'all'){
 				$this->db->where_in('j.belong_to',$owner); 
 			}
 			if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
