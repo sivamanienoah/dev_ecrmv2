@@ -1582,7 +1582,7 @@ echo '<pre>';print_r($this->session->userdata("excel_download"));  echo '</pre>'
 	 */
 	public function excelExport() {
 		
-		$stage='null';
+/* 		$stage='null';
 		$customer='null';
 		$worth='null';
 		$owner='null';
@@ -1593,7 +1593,7 @@ echo '<pre>';print_r($this->session->userdata("excel_download"));  echo '</pre>'
 		$locname='null';
 		$lead_status='null';
 		$lead_indi='null';
-		$keyword='null';
+		$keyword='null'; */
 
 		$exporttoexcel = $this->session->userdata('excel_download');
 		
@@ -1615,9 +1615,9 @@ echo '<pre>';print_r($exporttoexcel);exit;
 			$keyword      = $exporttoexcel['keyword'];
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+/*		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
-/* 		//load our new PHPExcel library
+ 		//load our new PHPExcel library
 		$this->load->library('excel');
 		//activate worksheet number 1
 		$this->excel->setActiveSheetIndex(0);
