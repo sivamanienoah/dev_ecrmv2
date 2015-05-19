@@ -123,11 +123,10 @@ class Welcome extends crm_controller {
 				//$excel_arr[$key] = $val;
 				$this->session->set_userdata($key, $val);
 			}  */
-			echo $stage.'<br>';
-			echo $regionname.'<br>';
-			echo $countryname.'<br>';
-			echo $statename.'<br>';
-			echo $customer.'<br>';
+			$_SESSION['stage'] = $stage;
+			$_SESSION['regionname'] = $regionname;
+			$_SESSION['countryname'] = $countryname;
+			$_SESSION['statename'] = $statename;
 			$this->session->set_userdata("stage", $stage);
 			$this->session->set_userdata("regionname", $regionname);
 			$this->session->set_userdata("countryname", $countryname);
@@ -1624,6 +1623,8 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata;
+		print_r($_SESSION);
+		exit;
 		echo '<pre>';print_r($exporttoexcel); exit;
 		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
