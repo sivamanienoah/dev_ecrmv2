@@ -123,6 +123,11 @@ class Welcome extends crm_controller {
 				//$excel_arr[$key] = $val;
 				$this->session->set_userdata($key, $val);
 			}  */
+			echo $stage.'<br>';
+			echo $regionname.'<br>';
+			echo $countryname.'<br>';
+			echo $statename.'<br>';
+			echo $customer.'<br>';
 			$this->session->set_userdata("stage", $stage);
 			$this->session->set_userdata("regionname", $regionname);
 			$this->session->set_userdata("countryname", $countryname);
