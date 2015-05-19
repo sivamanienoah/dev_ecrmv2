@@ -76,7 +76,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_by_user_id",false);
 			echo '<pre>';print_r($filt); echo '</pre>';
 			$this->session->set_userdata(array("excel_download" => $filt));
-			
+			echo '<pre>';print_r($this->session->userdata); echo '</pre>';
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -1601,7 +1601,7 @@ class Welcome extends crm_controller {
 	 */
 	public function excelExport() {
 		
-/* 		$stage=null;
+		$stage=null;
 		$customer=null;
 		$worth=null;
 		$owner=null;
@@ -1612,13 +1612,10 @@ class Welcome extends crm_controller {
 		$locname=null;
 		$lead_status=null;
 		$lead_indi=null;
-		$keyword=null; */
+		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		echo $this->session->userdata("search_by_user_id");
-		echo $this->session->userdata("search_by_user_default");
-		echo '<pre>';print_r($exporttoexcel);
-		exit;
+		
 		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
