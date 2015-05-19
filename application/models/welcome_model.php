@@ -464,6 +464,7 @@ class Welcome_model extends crm_model {
 
 		
 		$userdata 		= $this->session->userdata('logged_in_user');
+		echo count($owner);exit;
 		$stage 			= explode(',',$stage);
 		$customer 		= explode(',',$customer);
 		$worth 			= explode('-',$worth);		
