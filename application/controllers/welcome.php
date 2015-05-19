@@ -125,7 +125,7 @@ class Welcome extends crm_controller {
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
-		echo $this->db->last_query(); exit;
+		echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
 
 		$data['stage'] 		  = $stage;
