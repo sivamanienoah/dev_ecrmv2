@@ -159,6 +159,9 @@ class Welcome extends crm_controller {
                    'stage'  => 11,
                    'customer'  => 11,
                    'worth'  => 11,
+                   'owner'  => 11,
+                   'leadassignee'  => 11,
+                   'regionname'  => 11,
 
                );
 			$this->session->set_userdata(array("testing_array" => $testing_arr)); 			
