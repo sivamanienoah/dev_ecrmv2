@@ -534,7 +534,7 @@ class Welcome_model extends crm_model {
 					$this->db->where_in('j.belong_to',$owner); 
 				}
 			}
-			exit;
+		 
 			if(!empty($leadassignee) && count($leadassignee)>0){
 				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
 					$this->db->where_in('j.lead_assign', $leadassignee);
