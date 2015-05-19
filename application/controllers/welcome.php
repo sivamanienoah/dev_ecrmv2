@@ -124,6 +124,7 @@ class Welcome extends crm_controller {
 			//$this->session->set_userdata("search_by_user_default",true);
 		}
 		
+		echo '<pre>';print_r($filt);
 		if (count($filt)>0) { 
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
