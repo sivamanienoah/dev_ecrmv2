@@ -124,13 +124,14 @@ class Welcome extends crm_controller {
 				$this->session->set_userdata($key, $val);
 			}  */
 			$this->session->set_userdata("stage", $stage);
+			$this->session->set_userdata("regionname", $regionname);
+			$this->session->set_userdata("countryname", $countryname);
+			$this->session->set_userdata("statename", $statename);
 			$this->session->set_userdata("customer", $customer);
 			$this->session->set_userdata("worth", $worth);
 			$this->session->set_userdata("owner", $owner);
 			$this->session->set_userdata("leadassignee", $leadassignee);
-			$this->session->set_userdata("regionname", $regionname);
-			$this->session->set_userdata("countryname", $countryname);
-			$this->session->set_userdata("statename", $statename);
+			
 			$this->session->set_userdata("locname", $locname);
 			$this->session->set_userdata("lead_status", $lead_status);
 			$this->session->set_userdata("lead_indi", $lead_indi);
