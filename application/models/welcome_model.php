@@ -508,48 +508,81 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
-			
-			/* if(!empty($stage) && $stage[0] != 'null' && $stage[0] != 'all') {		
-				$this->db->where_in('j.lead_stage',$stage); 
+			 
+			if(!empty($stage) && count($stage)>0){
+				if($stage[0] != 'null' && $stage[0] != 'all') {		
+					$this->db->where_in('j.lead_stage',$stage); 
+				}	
 			}
 			
-			if(!empty($customer) && $customer[0] != 'null' && $customer[0] != 'all'){		
-				$this->db->where_in('j.custid_fk',$customer); 
+			if(!empty($customer) && count($customer)>0){
+				if($customer[0] != 'null' && $customer[0] != 'all'){		
+					$this->db->where_in('j.custid_fk',$customer); 
+				}
 			}
-			if(!empty($worth) && $worth[0] != 'null' && $worth[0] != 'all'){	
-				if($worth[1] == 'above')
-				$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
-				else
-				$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
+			if(!empty($worth) && count($worth)>0){
+				if($worth[0] != 'null' && $worth[0] != 'all'){	
+					if($worth[1] == 'above')
+					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
+					else
+					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
+				}
 			}
-			if(!empty($owner) && $owner[0] != 'null' && $owner[0] != 'all'){
-				$this->db->where_in('j.belong_to',$owner); 
+			
+			if(!empty($owner) && count($owner)>0){
+				if($owner[0] != 'null' && $owner[0] != 'all'){
+					$this->db->where_in('j.belong_to',$owner); 
+				}
 			}
-			if(!empty($leadassignee) && $leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
-				$this->db->where_in('j.lead_assign', $leadassignee);
+			
+			if(!empty($leadassignee) && count($leadassignee)>0){
+				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
+					$this->db->where_in('j.lead_assign', $leadassignee);
+				}
 			}
-			if(!empty($regionname) && $regionname[0] != 'null' && $regionname[0] != 'all'){
-				$this->db->where_in('c.add1_region', $regionname);
+			
+			if(!empty($regionname) && count($regionname)>0){
+				if($regionname[0] != 'null' && $regionname[0] != 'all'){
+					$this->db->where_in('c.add1_region', $regionname);
+				}
 			}
-			if(!empty($countryname) && $countryname[0] != 'null' && $countryname[0] != 'all'){
-				$this->db->where_in('c.add1_country', $countryname);
+			
+			if(!empty($countryname) && count($countryname)>0){
+				if(!empty($countryname) && $countryname[0] != 'null' && $countryname[0] != 'all'){
+					$this->db->where_in('c.add1_country', $countryname);
+				}
 			}
-			if(!empty($statename) && $statename[0] != 'null' && $statename[0] != 'all'){	
-				$this->db->where_in('c.add1_state', $statename);
+			
+			if(!empty($statename) && count($statename)>0){
+				if(!empty($statename) && $statename[0] != 'null' && $statename[0] != 'all'){	
+					$this->db->where_in('c.add1_state', $statename);
+				}
 			}
-			if(!empty($locname) && $locname[0] != 'null' && $locname[0] != 'all'){	
-				$this->db->where_in('c.add1_location', $locname);
+			
+			if(!empty($locname) && count($locname)>0){
+				if(!empty($locname) && $locname[0] != 'null' && $locname[0] != 'all'){	
+					$this->db->where_in('c.add1_location', $locname);
+				}
 			}
-			if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='') {	
-				$this->db->where_in('j.lead_status', $lead_status);
+			
+			if(!empty($lead_status) && count($lead_status)>0){
+				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='') {	
+					$this->db->where_in('j.lead_status', $lead_status);
+				}
 			}
-			if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
-				$this->db->where_in('j.lead_indicator', $lead_indi);
+			
+			if(!empty($lead_indi) && count($lead_indi)>0){
+				if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
+					$this->db->where_in('j.lead_indicator', $lead_indi);
+				}
 			}
-			if(!empty($keyword) && $keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
-			} */
+			
+			if(!empty($keyword) && count($keyword)>0){
+				if(!empty($keyword) && $keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
+					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+					$this->db->where($invwhere);
+				}
+			}
 			$this->db->order_by("j.lead_id", "desc");
 			
 		}
