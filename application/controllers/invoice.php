@@ -70,14 +70,17 @@ class Invoice extends CRM_Controller {
 		$month_year_to_date   = 'null';
 		
 		$filter =  array();
-		
+		$data['val_export'] = 'no_search';
 		if($search_type == 'search' && $search_id == false) {
 			$filter = real_escape_array($this->input->post());
 			// echo "<pre>"; print_r($filter); exit;
+			$data['val_export'] = 'search';
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
+			
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>3, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			if(!empty($get_rec)) {
+				$data['val_export'] = $search_id;
 				unset($get_rec['search_id']);
 				unset($get_rec['search_for']);
 				unset($get_rec['search_name']);
@@ -101,8 +104,9 @@ class Invoice extends CRM_Controller {
 		} else {
 			$wh_condn = array('search_for'=>3, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			// echo $this->db->last_query(); exit;
+			// echo $this->db->last_query(); # exit;
 			if(!empty($get_rec)) {
+				$data['val_export'] = $get_rec['search_id'];
 				unset($get_rec['search_id']);
 				unset($get_rec['search_for']);
 				unset($get_rec['search_name']);
@@ -123,7 +127,7 @@ class Invoice extends CRM_Controller {
 				$filter	  = real_escape_array($get_rec);
 			}
 		}
-		
+		// echo 'val_export '.$data['val_export']; exit;
 		if (count($filter)>0) {
 			
 			$project   = $filter['project'];
@@ -315,17 +319,22 @@ class Invoice extends CRM_Controller {
 	/*
 	 *Exporting data(leads) to the excel
 	 */
-	public function invExcelExport() 
+	public function invExcelExport($searchId=false) 
 	{
 		$filter = array();
+	
+		if($searchId != '' & is_numeric($searchId)) {
+			$wh_condn = array('search_id'=>$searchId, 'search_for'=>3, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec))
+			$filter	= real_escape_array($get_rec);
+		} else {
+			$filter = real_escape_array($this->input->post());
+		}
+	
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
 	
-		// $exporttoexcel = $this->session->userdata('inv_excel_export');
-		$filter = real_escape_array($this->input->post());
-		
-		// echo "<pre>"; print_r($filter);
-		
 		if((!empty($filter['project'])) && $filter['project']!='null')
 		$filter['project'] = explode(",",$filter['project']);
 		else 

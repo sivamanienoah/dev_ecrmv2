@@ -35,6 +35,7 @@ $("#search_advance").click(function() {
 			$('#load').hide();
 			$('#search_advance').show();
 			$('#save_advance').show();
+			$('#val_export').val('search');
 		}
 	});
 	return false;  //stop the actual form post !important!
@@ -143,7 +144,8 @@ function show_search_results(search_id) {
 			$('#results').html(data);
 			$('#search_advance').show();
 			$('#save_advance').show();
-			$('#load').hide();	
+			$('#load').hide();
+			$("#val_export").val(search_id);
 		}
 	});
 }
@@ -266,10 +268,11 @@ $(function() {
 			success: function(response){
 				if(response.resu=='updated') {
 					show_search_results(search_id);
+					$('#val_export').val(search_id);
 				} else {
 					alert('Not updated');
 				}
-				$('.search-root').unblock();	
+				$('.search-root').unblock();
 			}
 		});
 	});
@@ -277,30 +280,54 @@ $(function() {
 });
 
 $('#inv_excel').click(function() {
-	var project     = $("#project").val();
-	var customer 	= $("#customer").val();
-	var divisions	= $("#divisions").val();
-	var practice 	= $("#practice").val();
-	var from_date	= $("#from_date").val();
-	var to_date  	= $("#to_date").val();
-	var month_year_from_date = $("#month_year_from_date").val();
-	var month_year_to_date   = $("#month_year_to_date").val();
+
+	var export_inv_type = $("#val_export").val();
+	var search_mode = '';
 	
-	var url = site_base_url+"invoice/invExcelExport";
-	
-	var form = $('<form action="' + url + '" method="post">' +
-	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-	  '<input id="project" type="hidden" name="project" value="'+project+'" />'+
-	  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
-	  '<input id="divisions" type="hidden" name="divisions" value="'+divisions+'" />'+
-	  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
-	  '<input id="from_date" type="hidden" name="from_date" value="'+from_date+'" />'+
-	  '<input id="to_date" type="hidden" name="to_date" value="'+to_date+'" />'+
-	  '<input type="hidden" name="month_year_from_date" id="month_year_from_date" value="'+month_year_from_date+ '" />' +
-	  '<input type="hidden" name="month_year_to_date" id="month_year_to_date" value="'+month_year_to_date+ '" /></form>');
-	$('body').append(form);
-	$(form).submit();
-	return false;
+	if(!isNaN(export_inv_type)) {
+		export_inv_type = 'number';
+	}
+
+	switch(export_inv_type) {
+		
+		case 'search':
+		case 'no_search':
+			var project     = $("#project").val();
+			var customer 	= $("#customer").val();
+			var divisions	= $("#divisions").val();
+			var practice 	= $("#practice").val();
+			var from_date	= $("#from_date").val();
+			var to_date  	= $("#to_date").val();
+			var month_year_from_date = $("#month_year_from_date").val();
+			var month_year_to_date   = $("#month_year_to_date").val();
+			
+			var url = site_base_url+"invoice/invExcelExport";
+			
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+			  '<input id="project" type="hidden" name="project" value="'+project+'" />'+
+			  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
+			  '<input id="divisions" type="hidden" name="divisions" value="'+divisions+'" />'+
+			  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
+			  '<input id="from_date" type="hidden" name="from_date" value="'+from_date+'" />'+
+			  '<input id="to_date" type="hidden" name="to_date" value="'+to_date+'" />'+
+			  '<input type="hidden" name="month_year_from_date" id="month_year_from_date" value="'+month_year_from_date+ '" />' +
+			  '<input type="hidden" name="month_year_to_date" id="month_year_to_date" value="'+month_year_to_date+ '" /></form>');
+			$('body').append(form);
+			$(form).submit(); 
+			return false;
+		break;
+		case 'number':
+			var url = site_base_url+"invoice/invExcelExport/"+$("#val_export").val();
+			var form = $('<form action="' + url + '" method="post">' +
+			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" /></form>');
+			$('body').append(form);
+			$(form).submit(); 
+			return false;
+		break;
+		
+	}
+/* 	*/
 });
 
 

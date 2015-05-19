@@ -16,7 +16,7 @@ button.ui-datepicker-current { display: none; }
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
 			
-			<!--div class="search-dropdown">
+			<div class="search-dropdown">
 				<a class="saved-search-head" >
 					<p>Saved Search</p>
 				</a>
@@ -43,11 +43,12 @@ button.ui-datepicker-current { display: none; }
 					?>
 					</ul>
 				</div>
-			</div-->
+			</div>
 			<div class="section-right">
 				<div class="buttons export-to-excel">
 					<button id="inv_excel" onclick="location.href='#'" class="positive" type="button">
 						Export to Excel
+						<input type="hidden" id="val_export" name="val_export" value="<?php echo $val_export ?>" />
 					</button>
 				</div>
 			</div>
@@ -122,7 +123,7 @@ button.ui-datepicker-current { display: none; }
 								<td colspan="6">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
-									<!--input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" /-->
+									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
