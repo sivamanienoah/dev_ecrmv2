@@ -72,8 +72,8 @@ class Welcome extends crm_controller {
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filt = real_escape_array($this->input->post());
-			$this->session->set_userdata("search_by_user_default",false);
-			$this->session->set_userdata("search_by_user_id",false);
+		/* 	$this->session->set_userdata("search_by_user_default",false);
+			$this->session->set_userdata("search_by_user_id",false); */
 			
 			/* echo '<pre>';print_r($filt); echo '</pre>';
 			$newdata = array(
@@ -100,34 +100,31 @@ class Welcome extends crm_controller {
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			//unset($get_rec['search_id']);
-		//	unset($get_rec['search_for']);
-			//unset($get_rec['search_name']);
-			//unset($get_rec['user_id']);
-			//unset($get_rec['is_default']);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-		//	echo 'search';
-		//	echo '<pre>';print_r($filt); echo '</pre>';
-			$this->session->set_userdata("search_by_user_id",$search_id);
-			$this->session->set_userdata("search_by_user_default",false);
+			//$this->session->set_userdata("search_by_user_id",$search_id);
+			//$this->session->set_userdata("search_by_user_default",false);
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			//unset($get_rec['search_id']);
-			//unset($get_rec['search_for']);
-			//unset($get_rec['search_name']);
-			//unset($get_rec['user_id']);
-			//unset($get_rec['is_default']);
+			unset($get_rec['search_id']);
+			unset($get_rec['search_for']);
+			unset($get_rec['search_name']);
+			unset($get_rec['user_id']);
+			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
  
-			$this->session->set_userdata("search_by_user_id",'');
-			$this->session->set_userdata("search_by_user_default",true);
+			//$this->session->set_userdata("search_by_user_id",'');
+			//$this->session->set_userdata("search_by_user_default",true);
 		}
 		
 		if (count($filt)>0) { 
-		//echo 'yes';
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$worth   	  = $filt['worth'];
@@ -1636,14 +1633,8 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata("Lead_excel_download");
-		print_r($exporttoexcel);exit;
-		$stagess = $this->session->userdata("stagesss");
-		echo $this->session->userdata("search_by_user_default");
-		echo $this->session->userdata("search_by_user_id");
-		//print_r($exporttoexcel);
-		echo $stagess; exit;
 		
-		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
+		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
 			}else{
@@ -1658,7 +1649,7 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$exporttoexcel	  = real_escape_array($get_rec);
-		}
+		} */
 		
 		if (count($exporttoexcel)>0) {
 
