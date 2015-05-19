@@ -472,6 +472,7 @@ class Welcome_model extends crm_model {
 		$leadassignee 			= (count($leadassignee)>0)?explode(',',$leadassignee):'';
 		$regionname 			= (count($regionname)>0)?explode(',',$regionname):'';
 		$countryname 			= (count($countryname)>0)?explode(',',$countryname):'';
+		$statename 			= (count($statename)>0)?explode(',',$statename):'';
 		$locname 			= (count($locname)>0)?explode(',',$locname):'';
 		$lead_status 			= (count($lead_status)>0)?explode(',',$lead_status):'';
 		$lead_indi 			= (count($lead_indi)>0)?explode(',',$lead_indi):'';
