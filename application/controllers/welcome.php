@@ -55,20 +55,21 @@ class Welcome extends crm_controller {
 	 */
 	// public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
 	public function advance_filter_search($search_type = false, $search_id = false)
-	{
+	{ 
+		echo $this->input->post("keyword");
 		$filt = array();
-		$stage	      ='null'; 
-		$customer	  ='null'; 
-		$worth		  ='null'; 
-		$owner	 	  ='null'; 
-		$leadassignee ='null'; 
-		$regionname	  ='null';
-		$countryname  ='null'; 
-		$statename	  ='null'; 
-		$locname	  ='null'; 
-		$lead_status  ='null'; 
-		$lead_indi    ='null'; 
-		$keyword      ='null';
+		$stage	      =null; 
+		$customer	  =null; 
+		$worth		  =null; 
+		$owner	 	  =null; 
+		$leadassignee =null; 
+		$regionname	  =null;
+		$countryname  =null; 
+		$statename	  =null; 
+		$locname	  =null; 
+		$lead_status  =null; 
+		$lead_indi    =null; 
+		$keyword      =null;
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filt = real_escape_array($this->input->post());
@@ -106,7 +107,13 @@ class Welcome extends crm_controller {
 			$locname 	  = $filt['locname'];
 			$lead_status  = $filt['lead_status'];
 			$lead_indi 	  = $filt['lead_indi'];
-			$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : 'null';
+			if($this->input->post("keyword")){
+				$filt['keyword'] = $this->input->post("keyword");
+				$keyword = $this->input->post("keyword");
+			}
+			
+			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
+			 
 			$excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
@@ -1582,18 +1589,18 @@ class Welcome extends crm_controller {
 	 */
 	public function excelExport() {
 		
-		$stage='null';
-		$customer='null';
-		$worth='null';
-		$owner='null';
-		$leadassignee='null';
-		$regionname='null';
-		$countryname='null';
-		$statename='null';
-		$locname='null';
-		$lead_status='null';
-		$lead_indi='null';
-		$keyword='null';
+		$stage=null;
+		$customer=null;
+		$worth=null;
+		$owner=null;
+		$leadassignee=null;
+		$regionname=null;
+		$countryname=null;
+		$statename=null;
+		$locname=null;
+		$lead_status=null;
+		$lead_indi=null;
+		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata('excel_download');
 		
@@ -1612,7 +1619,7 @@ class Welcome extends crm_controller {
 			$locname      = $exporttoexcel['locname'];
 			$lead_status  = $exporttoexcel['lead_status'];
 			$lead_indi	  = $exporttoexcel['lead_indi'];
-			$keyword      = $exporttoexcel['keyword'];
+			$keyword      = (!empty($exporttoexcel['keyword'])?$exporttoexcel['keyword']:'');
 		}
 
 		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
