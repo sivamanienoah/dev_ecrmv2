@@ -152,6 +152,7 @@ class Welcome extends crm_controller {
 					$excel_arr[$key] = 'null';
 				}
 			}
+			echo '<pre>';print_r($excel_arr);
 			exit;
 			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 		} else { 
