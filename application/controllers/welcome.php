@@ -74,11 +74,11 @@ class Welcome extends crm_controller {
 			$filt = real_escape_array($this->input->post());
 			$this->session->set_userdata("search_by_user_default",false);
 			$this->session->set_userdata("search_by_user_id",false);
-			//echo '<pre>';print_r($filt); echo '</pre>';
-			$this->session->set_userdata(array("excel_download" => $filt));
+			echo '<pre>';print_r($filt); echo '</pre>';
+			//$this->session->set_userdata(array("excel_download" => $filt));
 			//echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
 			//$sess = $this->session->userdata("excel_download");
-			$this->session->set_userdata("stage",$filt['stage']);
+			$this->session->set_userdata("stagesss",$filt['stage']);
 			//echo $sess['stage'];
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
@@ -1618,7 +1618,7 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata;
-		$stagess = $this->session->userdata("stage");
+		$stagess = $this->session->userdata("stagesss");
 		echo $this->session->userdata("search_by_user_default");
 		echo $this->session->userdata("search_by_user_id");
 		//print_r($exporttoexcel);
