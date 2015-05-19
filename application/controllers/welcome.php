@@ -118,11 +118,22 @@ class Welcome extends crm_controller {
 			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
 			 
 			//$excel_arr 	  = array();
-			echo '<pre>';print_r($filt);
+			/* echo '<pre>';print_r($filt);
 			foreach ($filt as $key => $val) {
 				//$excel_arr[$key] = $val;
 				$this->session->set_userdata($key, $val);
-			} 
+			}  */
+			$this->session->set_userdata("stage", $stage);
+			$this->session->set_userdata("customer", $customer);
+			$this->session->set_userdata("worth", $worth);
+			$this->session->set_userdata("owner", $owner);
+			$this->session->set_userdata("leadassignee", $leadassignee);
+			$this->session->set_userdata("regionname", $regionname);
+			$this->session->set_userdata("countryname", $countryname);
+			$this->session->set_userdata("statename", $statename);
+			$this->session->set_userdata("locname", $locname);
+			$this->session->set_userdata("lead_status", $lead_status);
+			$this->session->set_userdata("lead_indi", $lead_indi);
 			
 		} else { 
 			$this->session->unset_userdata(array("stage"=>'',"customer" => '',"worth" => '',"owner" => '',"leadassignee" => '',"regionname" => '',"countryname" => '',"statename" =>'',"locname" => '',"lead_status" => '',"lead_indi" => '' ));
