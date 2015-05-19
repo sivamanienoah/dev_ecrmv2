@@ -55,8 +55,7 @@ class Welcome extends crm_controller {
 	 */
 	// public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
 	public function advance_filter_search($search_type = false, $search_id = false)
-	{ 
-		echo $this->input->post("keyword");
+	{
 		$filt = array();
 		$stage	      =null; 
 		$customer	  =null; 
@@ -119,14 +118,14 @@ class Welcome extends crm_controller {
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
 			}
-			//echo '<pre>'; print_r($excel_arr); exit;
+			
 			$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else { 
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
-		// echo $this->db->last_query(); exit;
+		 echo $this->db->last_query(); exit;
 		$data['filter_results'] = $filter_results;
 
 		$data['stage'] 		  = $stage;
