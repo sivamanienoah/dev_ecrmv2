@@ -74,7 +74,7 @@ class Welcome extends crm_controller {
 			$filt = real_escape_array($this->input->post());
 			$this->session->set_userdata("search_by_user_default",false);
 			$this->session->set_userdata("search_by_user_id",false);
-			 
+			echo '<pre>';print_r($filt); echo '</pre>';
 			$this->session->set_userdata(array("excel_download" => $filt));
 			
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
