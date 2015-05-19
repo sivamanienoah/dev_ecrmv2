@@ -147,6 +147,8 @@ class Welcome extends crm_controller {
 			foreach ($filt as $key => $val) {
 				if($val){
 					$excel_arr[$key] = $val;
+				}else{
+					$excel_arr[$key] = '';
 				}
 			}
 			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
@@ -1633,7 +1635,7 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata("Lead_excel_download");
-		
+		echo '<pre>';print_r($exporttoexcel);
 		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
