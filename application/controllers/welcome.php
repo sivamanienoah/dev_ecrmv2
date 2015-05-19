@@ -83,8 +83,8 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-			echo 'search';
-			echo '<pre>';print_r($filt); echo '</pre>';
+		//	echo 'search';
+		//	echo '<pre>';print_r($filt); echo '</pre>';
 			$this->session->set_userdata("search_by_user_default",false);
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -96,13 +96,13 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-			echo 'search-else';
-			echo '<pre>';print_r($filt); echo '</pre>';
+		//	echo 'search-else';
+		//	echo '<pre>';print_r($filt); echo '</pre>';
 			$this->session->set_userdata("search_by_user_default",true);
 		}
 		
 		if (count($filt)>0) { 
-		echo 'yes';
+		//echo 'yes';
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$worth   	  = $filt['worth'];
@@ -128,7 +128,7 @@ class Welcome extends crm_controller {
 			echo 'excel_arr';print_r($excel_arr);
 			$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else { 
-		echo 'no';
+		//echo 'no';
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 
@@ -1611,6 +1611,7 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata('excel_download');
+		echo '<pre>';print_r($this->session->userdata);
 		
 /* 		$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 		$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
