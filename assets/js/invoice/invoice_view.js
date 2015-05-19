@@ -280,16 +280,13 @@ $(function() {
 });
 
 $('#inv_excel').click(function() {
-
 	var export_inv_type = $("#val_export").val();
-	var search_mode = '';
 	
 	if(!isNaN(export_inv_type)) {
 		export_inv_type = 'number';
 	}
 
 	switch(export_inv_type) {
-		
 		case 'search':
 		case 'no_search':
 			var project     = $("#project").val();
@@ -325,9 +322,7 @@ $('#inv_excel').click(function() {
 			$(form).submit(); 
 			return false;
 		break;
-		
 	}
-/* 	*/
 });
 
 
