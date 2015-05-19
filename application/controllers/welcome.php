@@ -155,7 +155,7 @@ class Welcome extends crm_controller {
 			} 
 			//$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 			
-			$newdata = array(
+			$testing_arr = array(
                    'stage'  => 11,
                    'customer'  => 11,
                    'worth'  => 11,
@@ -168,10 +168,10 @@ class Welcome extends crm_controller {
                    'lead_status'  => 11,
                    'lead_indi'  =>11,
                );
-			$this->session->set_userdata(array("Lead_excel_download" => $newdata)); 			
-			
+			$this->session->set_userdata(array("testing_array" => $newdata)); 			
+			echo '<pre>';print_r($this->session->userdata("testing_array"));exit;
 		} else { 
-			$this->session->unset_userdata(array("Lead_excel_download"=>''));
+			$this->session->unset_userdata(array("testing_array"=>''));
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
