@@ -182,7 +182,7 @@ button.ui-datepicker-current { display: none; }
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
 <div id='popupGetSearchName'></div>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/invoice/invoice_data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/invoice/invoice_view.js"></script>
 <?php

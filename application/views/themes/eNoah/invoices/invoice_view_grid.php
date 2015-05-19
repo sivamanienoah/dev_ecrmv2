@@ -33,4 +33,4 @@
 		</tr>
 	</tfoot>
 </table>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/invoice/invoice_data-tbl.js"></script>
