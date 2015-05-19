@@ -676,7 +676,7 @@ class CI_Session {
 	 */
 	function _serialize($data)
 	{
-		if (is_array($data))
+		/* if (is_array($data))
 		{
 			foreach ($data as $key => $val)
 			{
@@ -688,7 +688,26 @@ class CI_Session {
 			$data = str_replace('\\', '{{slash}}', $data);
 		}
 
-		return serialize($data);
+		return serialize($data); */
+        if (is_array($data))
+        {
+            array_walk_recursive($data, function(&$item,$key){
+                if (is_string($item))
+                {
+                    $item = str_replace('\\', '{{slash}}', $item);
+                }
+            });
+        }
+        else
+        {
+            if (is_string($data))
+            {
+                $data = str_replace('\\', '{{slash}}', $data);
+            }
+        }
+
+        return serialize($data);		
+		
 	}
 
 	// --------------------------------------------------------------------
@@ -705,7 +724,7 @@ class CI_Session {
 	 */
 	function _unserialize($data)
 	{
-		$data = @unserialize(strip_slashes($data));
+/* 		$data = @unserialize(strip_slashes($data));
 
 		if (is_array($data))
 		{
@@ -717,7 +736,22 @@ class CI_Session {
 			return $data;
 		}
 
-		return str_replace('{{slash}}', '\\', $data);
+		return str_replace('{{slash}}', '\\', $data); */
+        $data = unserialize(strip_slashes($data));
+        if (is_array($data))
+        {
+            array_walk_recursive($data, function(&$item,$key){
+                if (is_string($item))
+                {
+                    $item = str_replace('{{slash}}', '\\', $item);
+                }
+            });
+
+            return $data;
+        }
+
+        return (is_string($data)) ? str_replace('{{slash}}', '\\', $data) : $data;		
+		
 	}
 
 	// --------------------------------------------------------------------
