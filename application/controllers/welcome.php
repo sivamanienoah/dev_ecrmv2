@@ -78,7 +78,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata(array("excel_download" => $filt));
 			echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
 			$sess = $this->session->userdata("excel_download");
-			$this->session->set_userdata("stage",$filt['stage']);
+			$this->session->set_userdata("stage",'test');
 			echo $sess['stage'];
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
@@ -1618,9 +1618,9 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		$stage = $this->session->userdata("stage");
-		echo $stage;
-		echo '<pre>';print_r($exporttoexcel);exit;
+		$stagess = $this->session->userdata("stage");
+		echo $stagess; exit;
+		
 		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
