@@ -163,10 +163,9 @@ class Welcome extends crm_controller {
                    'leadassignee'  => 11,
                    'regionname'  => 11,
                    'countryname'  => 11,
-                   'statename'  => 11,
-                   
+  
                );
-			$this->session->set_userdata(array("testing_array" => $testing_arr)); 			
+			$this->session->set_userdata(array("testing_array" => $newdata)); 			
 			echo '<pre>';print_r($this->session->userdata("testing_array"));exit;
 		} else { 
 			$this->session->unset_userdata(array("testing_array"=>''));
