@@ -1611,7 +1611,8 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		 
+		echo '<pre>';
+		print_r($exporttoexcel);
 		
 		if($this->session->userdata("earch_by_user_default")){
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -1623,10 +1624,10 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$exporttoexcel	  = real_escape_array($get_rec);
+			print_r($exporttoexcel);
 		}
-
-		 
-
+		print_r($exporttoexcel);
+		exit;
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
