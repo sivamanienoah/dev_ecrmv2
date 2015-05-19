@@ -2,6 +2,7 @@
 ob_start();
 require (theme_url().'/tpl/header.php'); 
 ?>
+
 <div id="content">
 	<div class="inner">
 		<div class="page-title-head">
@@ -62,9 +63,10 @@ require (theme_url().'/tpl/header.php');
 				<!--export-->
 				<div class="buttons export-to-excel">
 					<!--a class="export-btn">Export to Excel</a-->
-					<button id="excel" onclick="location.href='#'" class="positive" type="button">
+					<button id="excel_lead" class="positive" type="button" >
 						Export to Excel
 					</button>
+					<input type="hidden" name="search_type" value="" id="search_type" />
 				</div>
 				<!--export-->
 			</div>
@@ -210,6 +212,56 @@ require (theme_url().'/tpl/header.php');
 </div>
 <div id='popupGetSearchName'></div>
 <script type="text/javascript" src="assets/js/leads/quotation_view.js"></script>
+<script>
+
+$('#excel_lead').click(function() {
+
+	var search_type = $('#search_type').val();	
+	var url = site_base_url+"welcome/excelExport/";	
+	if(search_type == 'search'){
+		var stage     = $("#stage").val();
+		var customer 	= $("#customer").val();
+		var worth	= $("#worth").val();
+		var owner 	= $("#owner").val();
+		var leadassignee	= $("#leadassignee").val();
+		var regionname  	= $("#regionname").val();
+		var countryname = $("#countryname").val();
+		var statename   = $("#statename").val();
+		var locname   = $("#locname").val();
+		var lead_status   = $("#lead_status").val();
+		var lead_indi   = $("#lead_indi").val();
+		var keyword   = $("#keyword").val();
+		
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		  '<input id="project" type="hidden" name="stage" value="'+stage+'" />'+
+		  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
+		  '<input id="worth" type="hidden" name="worth" value="'+worth+'" />'+
+		  '<input id="owner" type="hidden" name="owner" value="'+owner+'" />'+
+		  '<input id="leadassignee" type="hidden" name="leadassignee" value="'+leadassignee+'" />'+
+		  '<input id="regionname" type="hidden" name="regionname" value="'+regionname+'" />'+
+		  '<input type="hidden" name="countryname" id="countryname" value="'+countryname+ '" />' +
+		  '<input type="hidden" name="locname" id="locname" value="'+locname+ '" />' +
+		  '<input type="hidden" name="lead_status" id="lead_status" value="'+lead_status+ '" />' +
+		  '<input type="hidden" name="lead_indi" id="lead_indi" value="'+lead_indi+ '" />' +
+		  '<input type="hidden" name="keyword" id="keyword" value="'+keyword+ '" />' +
+		  '<input type="hidden" name="statename" id="statename" value="'+statename+ '" /></form>');
+		$('body').append(form);
+		$(form).submit(); 
+		return false;		
+	}else{
+		var form = $('<form action="' + url + '" method="post">' +
+			  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" /></form>');
+			$('body').append(form);
+			$(form).submit(); 
+			return false;
+	}
+
+
+});
+
+</script>
 <?php
 require (theme_url().'/tpl/footer.php'); 
 ob_end_flush();
