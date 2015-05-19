@@ -461,6 +461,21 @@ class Welcome_model extends crm_model {
 	
 	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
 	{
+		echo '<pre>';
+		print_r($stage);
+		print_r($customer);
+		print_r($worth);
+		print_r($owner);
+		print_r($leadassignee);
+		print_r($regionname);
+		print_r($countryname);
+		print_r($statename);
+		print_r($locname);
+		print_r($lead_status);
+		print_r($lead_indi);
+		print_r($keyword);
+		exit;
+		
 		$userdata 		= $this->session->userdata('logged_in_user');
 		$stage 			= explode(',',$stage);
 		$customer 		= explode(',',$customer);
