@@ -72,31 +72,6 @@ class Welcome extends crm_controller {
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filt = real_escape_array($this->input->post());
-		/* 	$this->session->set_userdata("search_by_user_default",false);
-			$this->session->set_userdata("search_by_user_id",false); */
-			
-		/* 	  echo '<pre>';print_r($filt); echo '</pre>';
-			$newdata = array(
-                   'stage'  => 11,
-                   'customer'  => 11,
-                   'worth'  => 11,
-                   'owner'  => 11,
-                   'leadassignee'  => 11,
-                   'regionname'  => 11,
-                   'countryname'  => 11,
-                   'statename'  => 11,
-                   'locname'  => 11,
-                   'lead_status'  => 11,
-                   'lead_indi'  =>11
-               );
-			$this->session->set_userdata("Lead_excel_download",$newdata);  */
-			
-			
-			//$this->session->set_userdata(array("excel_download" => $filt));
-			//echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
-			//$sess = $this->session->userdata("excel_download");
-			//$this->session->set_userdata("stagesss",$filt['stage']);
-			//echo $sess['stage'];
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -123,8 +98,6 @@ class Welcome extends crm_controller {
 			//$this->session->set_userdata("search_by_user_id",'');
 			//$this->session->set_userdata("search_by_user_default",true);
 		}
-		
-		echo '<pre>';print_r($filt);
 		if (count($filt)>0) { 
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
@@ -146,29 +119,12 @@ class Welcome extends crm_controller {
 			 
 			$excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
-				echo $key.''.$val.'<br>';
-				if($val){
-					$excel_arr[$key] = $val;
-				}else{
-					$excel_arr[$key] = 'test';
-				}
+				$excel_arr[$key] = $val;
+				$this->session->set_userdata($key, $val);
 			} 
-			//$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 			
-			$testing_arr = array(
-                   'stage'  => 11,
-                   'customer'  => 11,
-                   'worth'  => 11,
-                   'owner'  => 11,
-                   'leadassignee'  => 11,
-                   'regionname'  => 11,
- 
-  
-               );
-			$this->session->set_userdata(array("testing_array" => $testing_arr)); 			
-			echo '<pre>';print_r($this->session->userdata("testing_array"));exit;
 		} else { 
-			$this->session->unset_userdata(array("testing_array"=>''));
+			$this->session->unset_userdata(array("stage"=>'',"customer" => '',"worth" => '',"owner" => '',"leadassignee" => '',"regionname" => '',"countryname" => '',"statename" =>'',"locname" => '',"lead_status" => '',"lead_indi" => '' ));
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
