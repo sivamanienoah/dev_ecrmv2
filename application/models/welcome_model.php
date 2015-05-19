@@ -464,11 +464,12 @@ class Welcome_model extends crm_model {
 
 		
 		$userdata 		= $this->session->userdata('logged_in_user');
-		echo count($owner);exit;
-		$stage 			= explode(',',$stage);
+		 
+		$stage 			= (count($stage)>0)?explode(',',$stage):'';
+		$owner 			= (count($owner)>0)?explode(',',$owner):'';
 		$customer 		= explode(',',$customer);
 		$worth 			= explode('-',$worth);		
-		$owner 			= explode(',',$owner);
+		
 		$leadassignee 	= explode(',',$leadassignee);
 		$regionname 	= explode(',',$regionname);
 		$countryname 	= explode(',',$countryname);
