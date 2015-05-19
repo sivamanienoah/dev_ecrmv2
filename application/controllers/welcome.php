@@ -78,16 +78,16 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata(array("excel_download" => $filt));
 			//echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
 			//$sess = $this->session->userdata("excel_download");
-			//$this->session->set_userdata("stage",'test');
+			$this->session->set_userdata("stage",$filt['stage']);
 			//echo $sess['stage'];
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			unset($get_rec['search_id']);
-			unset($get_rec['search_for']);
-			unset($get_rec['search_name']);
-			unset($get_rec['user_id']);
-			unset($get_rec['is_default']);
+			//unset($get_rec['search_id']);
+		//	unset($get_rec['search_for']);
+			//unset($get_rec['search_name']);
+			//unset($get_rec['user_id']);
+			//unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
 		//	echo 'search';
@@ -97,11 +97,11 @@ class Welcome extends crm_controller {
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			unset($get_rec['search_id']);
-			unset($get_rec['search_for']);
-			unset($get_rec['search_name']);
-			unset($get_rec['user_id']);
-			unset($get_rec['is_default']);
+			//unset($get_rec['search_id']);
+			//unset($get_rec['search_for']);
+			//unset($get_rec['search_name']);
+			//unset($get_rec['user_id']);
+			//unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
 		//	echo 'search-else';
@@ -1621,7 +1621,7 @@ class Welcome extends crm_controller {
 		$stagess = $this->session->userdata("stage");
 		echo $this->session->userdata("search_by_user_default");
 		echo $this->session->userdata("search_by_user_id");
-		print_r($exporttoexcel);
+		//print_r($exporttoexcel);
 		echo $stagess; exit;
 		
 		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
