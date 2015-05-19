@@ -48,8 +48,8 @@ button.ui-datepicker-current { display: none; }
 				<div class="buttons export-to-excel">
 					<button id="inv_excel" onclick="location.href='#'" class="positive" type="button">
 						Export to Excel
-						<input type="hidden" id="val_export" name="val_export" value="<?php echo $val_export ?>" />
 					</button>
+					<input type="hidden" id="val_export" name="val_export" value="<?php echo $val_export ?>" />
 				</div>
 			</div>
 			
