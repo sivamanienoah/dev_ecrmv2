@@ -72,6 +72,9 @@ class Welcome extends crm_controller {
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filt = real_escape_array($this->input->post());
+			$this->session->set_userdata("lead_search_by_default",0);
+			$this->session->set_userdata("lead_search_by_id",0);
+			$this->session->set_userdata("lead_search_only",1);
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -82,8 +85,9 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-			//$this->session->set_userdata("search_by_user_id",$search_id);
-			//$this->session->set_userdata("search_by_user_default",false);
+			$this->session->set_userdata("lead_search_by_default",0);
+			$this->session->set_userdata("lead_search_by_id",$search_id);
+			$this->session->set_userdata("lead_search_only",0);
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -94,11 +98,13 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
- 
-			//$this->session->set_userdata("search_by_user_id",'');
-			//$this->session->set_userdata("search_by_user_default",true);
+			$this->session->set_userdata("lead_search_by_default",1);
+			$this->session->set_userdata("lead_search_only",0);
+			$this->session->set_userdata("lead_search_by_id",0);	
 		}
-		if (count($filt)>0) { 
+		//print_r($this->session->userdata);
+		 if (count($filt)>0) { 
+		//echo 'yes';
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$worth   	  = $filt['worth'];
@@ -117,32 +123,13 @@ class Welcome extends crm_controller {
 			
 			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
 			 
-			//$excel_arr 	  = array();
-			/* echo '<pre>';print_r($filt);
+			$excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
-				//$excel_arr[$key] = $val;
-				$this->session->set_userdata($key, $val);
-			}  */
-			$_SESSION['stage'] = $stage;
-			$_SESSION['regionname'] = $regionname;
-			$_SESSION['countryname'] = $countryname;
-			$_SESSION['statename'] = $statename;
-			$this->session->set_userdata("stage", $stage);
-			$this->session->set_userdata("regionname", $regionname);
-			$this->session->set_userdata("countryname", $countryname);
-			$this->session->set_userdata("statename", $statename);
-			$this->session->set_userdata("customer", $customer);
-			$this->session->set_userdata("worth", $worth);
-			$this->session->set_userdata("owner", $owner);
-			$this->session->set_userdata("leadassignee", $leadassignee);
-			
-			$this->session->set_userdata("locname", $locname);
-			$this->session->set_userdata("lead_status", $lead_status);
-			$this->session->set_userdata("lead_indi", $lead_indi);
-			
-		} else { 
-			$this->session->unset_userdata(array("stage"=>'',"customer" => '',"worth" => '',"owner" => '',"leadassignee" => '',"regionname" => '',"countryname" => '',"statename" =>'',"locname" => '',"lead_status" => '',"lead_indi" => '' ));
-		}
+				$excel_arr[$key] = $val;
+			}
+		} else {
+			$this->session->unset_userdata(array("excel_download"=>''));
+		} 
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		//echo $this->db->last_query();
@@ -1622,17 +1609,16 @@ class Welcome extends crm_controller {
 		$lead_indi=null;
 		$keyword=null;
 
-		$exporttoexcel = $this->session->userdata;
-		print_r($_SESSION);
-		exit;
-		echo '<pre>';print_r($exporttoexcel); exit;
-		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
-			if($this->session->userdata("search_by_user_id")){
-				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
+		//$exporttoexcel = $this->session->userdata('excel_download');
+		
+		$exporttoexcel = real_escape_array($this->input->post());
+ 
+		if($this->session->userdata("lead_search_by_default") || $this->session->userdata("lead_search_by_id")){
+			if($this->session->userdata("lead_search_by_id")){
+				$wh_condn = array('search_id'=>$this->session->userdata("lead_search_by_id"), 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			}else{
-				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
+				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);	
 			}
-			
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			unset($get_rec['search_id']);
 			unset($get_rec['search_for']);
@@ -1640,9 +1626,10 @@ class Welcome extends crm_controller {
 			unset($get_rec['user_id']);
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
-			$exporttoexcel	  = real_escape_array($get_rec);
-		} */
-		
+			$exporttoexcel	  = real_escape_array($get_rec);			
+		}
+	 
+	 
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
