@@ -75,7 +75,7 @@ class Welcome extends crm_controller {
 		/* 	$this->session->set_userdata("search_by_user_default",false);
 			$this->session->set_userdata("search_by_user_id",false); */
 			
-			  echo '<pre>';print_r($filt); echo '</pre>';
+		/* 	  echo '<pre>';print_r($filt); echo '</pre>';
 			$newdata = array(
                    'stage'  => 11,
                    'customer'  => 11,
@@ -89,7 +89,7 @@ class Welcome extends crm_controller {
                    'lead_status'  => 11,
                    'lead_indi'  =>11
                );
-			$this->session->set_userdata("Lead_excel_download",$newdata); 
+			$this->session->set_userdata("Lead_excel_download",$newdata);  */
 			
 			
 			//$this->session->set_userdata(array("excel_download" => $filt));
@@ -152,7 +152,7 @@ class Welcome extends crm_controller {
 					$excel_arr[$key] = 'test';
 				}
 			} 
-			//$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
+			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 		} else { 
 			$this->session->unset_userdata(array("Lead_excel_download"=>''));
 		}
@@ -1636,7 +1636,7 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		$exporttoexcel = $this->session->userdata("Lead_excel_download");
-		echo '<pre>';print_r($this->session->userdata); exit;
+		echo '<pre>';print_r($exporttoexcel); exit;
 		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
