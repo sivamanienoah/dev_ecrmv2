@@ -75,14 +75,23 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_by_user_default",false);
 			$this->session->set_userdata("search_by_user_id",false);
 			
+			echo '<pre>';print_r($filt); echo '</pre>';
 			$newdata = array(
-                   'username'  => 'johndoe',
-                   'email'     => 'johndoe@some-site.com',
-                   'logged_in' => TRUE
+                   'stage'  => $filt['stage'],
+                   'customer'  => $filt['customer'],
+                   'worth'  => $filt['worth'],
+                   'owner'  => $filt['owner'],
+                   'leadassignee'  => $filt['leadassignee'],
+                   'regionname'  => $filt['regionname'],
+                   'countryname'  => $filt['countryname'],
+                   'statename'  => $filt['statename'],
+                   'locname'  => $filt['locname'],
+                   'lead_status'  => $filt['lead_status'],
+                   'lead_indi'  => $filt['lead_indi']
                );
-			$this->session->set_userdata("testing_array",$newdata);
+			$this->session->set_userdata("Lead_excel_download",$newdata);
 			
-			//echo '<pre>';print_r($filt); echo '</pre>';
+			
 			//$this->session->set_userdata(array("excel_download" => $filt));
 			//echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
 			//$sess = $this->session->userdata("excel_download");
@@ -112,8 +121,7 @@ class Welcome extends crm_controller {
 			//unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-		//	echo 'search-else';
-		//	echo '<pre>';print_r($filt); echo '</pre>';
+ 
 			$this->session->set_userdata("search_by_user_id",'');
 			$this->session->set_userdata("search_by_user_default",true);
 		}
@@ -142,9 +150,9 @@ class Welcome extends crm_controller {
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
 			}
-			//$this->session->set_userdata(array("excel_download" => $excel_arr));
+			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 		} else { 
-			//$this->session->unset_userdata(array("excel_download"=>''));
+			$this->session->unset_userdata(array("Lead_excel_download"=>''));
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
