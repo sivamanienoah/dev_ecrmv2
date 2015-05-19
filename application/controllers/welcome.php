@@ -1615,7 +1615,8 @@ class Welcome extends crm_controller {
 		$keyword=null; */
 
 		$exporttoexcel = $this->session->userdata('excel_download');
-		
+		echo '<pre>';print_r($exporttoexcel);
+		exit;
 		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
 				$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'search_id'=>$this->session->userdata("search_by_user_id"));	
