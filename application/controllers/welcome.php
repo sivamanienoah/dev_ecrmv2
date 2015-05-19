@@ -97,6 +97,7 @@ class Welcome extends crm_controller {
 		}
 		
 		if (count($filt)>0) {
+			echo 1;exit;
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$worth   	  = $filt['worth'];
@@ -122,6 +123,7 @@ class Welcome extends crm_controller {
 			//echo '<pre>'; print_r($excel_arr); exit;
 			$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else {
+			echo 2;exit;
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 
