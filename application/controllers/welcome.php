@@ -92,10 +92,11 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
-		 
+			echo '<pre>';print_r($filt);
 		}
 		
 		if (count($filt)>0) { 
+		echo 'yes';
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$worth   	  = $filt['worth'];
@@ -121,6 +122,7 @@ class Welcome extends crm_controller {
 			
 			$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else { 
+		echo 'no';
 			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 
