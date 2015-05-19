@@ -529,14 +529,14 @@ class Welcome_model extends crm_model {
 				}
 			}
 			print_r($owner);
-			 echo count($owner);exit;
-			if(!empty($owner) && count($owner)>0){
+			 echo count($owner);
+			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all'){
 					echo 'owner';exit;
 					$this->db->where_in('j.belong_to',$owner); 
 				}
 			}
-			
+			exit;
 			if(!empty($leadassignee) && count($leadassignee)>0){
 				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
 					$this->db->where_in('j.lead_assign', $leadassignee);
