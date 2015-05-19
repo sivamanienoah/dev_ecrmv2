@@ -75,12 +75,21 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_by_user_default",false);
 			$this->session->set_userdata("search_by_user_id",false);
 			
-			echo '<pre>';print_r($filt); echo '</pre>';
+			/* echo '<pre>';print_r($filt); echo '</pre>';
 			$newdata = array(
                    'stage'  => $filt['stage'],
-   
+                   'customer'  => $filt['customer'],
+                   'worth'  => $filt['worth'],
+                   'owner'  => $filt['owner'],
+                   'leadassignee'  => $filt['leadassignee'],
+                   'regionname'  => $filt['regionname'],
+                   'countryname'  => $filt['countryname'],
+                   'statename'  => $filt['statename'],
+                   'locname'  => $filt['locname'],
+                   'lead_status'  => $filt['lead_status'],
+                   'lead_indi'  => $filt['lead_indi']
                );
-			$this->session->set_userdata("Lead_excel_download",$newdata);
+			$this->session->set_userdata("Lead_excel_download",$newdata); */
 			
 			
 			//$this->session->set_userdata(array("excel_download" => $filt));
@@ -139,7 +148,9 @@ class Welcome extends crm_controller {
 			 
 			$excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
-				$excel_arr[$key] = $val;
+				if($val){
+					$excel_arr[$key] = $val;
+				}
 			}
 			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
 		} else { 
