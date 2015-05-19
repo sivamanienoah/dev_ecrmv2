@@ -1614,7 +1614,7 @@ class Welcome extends crm_controller {
 		echo '<pre>';
 		print_r($exporttoexcel);
 		
-		if($this->session->userdata("earch_by_user_default")){
+		if($this->session->userdata("search_by_user_default")){
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			unset($get_rec['search_id']);
