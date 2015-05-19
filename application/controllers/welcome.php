@@ -77,7 +77,8 @@ class Welcome extends crm_controller {
 			echo '<pre>';print_r($filt); echo '</pre>';
 			$this->session->set_userdata(array("excel_download" => $filt));
 			echo '<pre>';print_r($this->session->userdata("excel_download")); echo '</pre>';
-			echo $this->session->userdata("excel_download")['stage'];
+			$sess = $this->session->userdata("excel_download");
+			echo $sess['stage'];
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
