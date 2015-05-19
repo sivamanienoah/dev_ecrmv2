@@ -84,7 +84,7 @@ class Welcome extends crm_controller {
 			$filt	  = real_escape_array($get_rec);
 			echo 'search';
 			echo '<pre>';print_r($filt); echo '</pre>';
-			$this->session->set_userdata("search_by_user_default",false);
+			//$this->session->set_userdata("search_by_user_default",false);
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -97,7 +97,7 @@ class Welcome extends crm_controller {
 			$filt	  = real_escape_array($get_rec);
 			echo 'search-else';
 			echo '<pre>';print_r($filt); echo '</pre>';
-			$this->session->set_userdata("search_by_user_default",true);
+			//$this->session->set_userdata("search_by_user_default",true);
 		}
 		
 		if (count($filt)>0) { 
