@@ -96,11 +96,12 @@ class Welcome extends crm_controller {
 			unset($get_rec['search_name']);
 			unset($get_rec['user_id']);
 			unset($get_rec['is_default']);
-			if(!empty($get_rec))
+			if(!empty($get_rec)){
 			$filt	  = real_escape_array($get_rec);
-			$this->session->set_userdata("lead_search_by_default",1);
-			$this->session->set_userdata("lead_search_only",0);
-			$this->session->set_userdata("lead_search_by_id",0);	
+				$this->session->set_userdata("lead_search_by_default",1);
+				$this->session->set_userdata("lead_search_only",0);
+				$this->session->set_userdata("lead_search_by_id",0);	
+			}
 		}
 		//print_r($this->session->userdata);
 		 if (count($filt)>0) { 
@@ -2165,6 +2166,11 @@ HDOC;
 			$result['search_div'] .= '/>';
 			$result['search_div'] .= '</span>';
 			$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$last_ins_id.')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
+			
+			$this->session->set_userdata("lead_search_by_default",0);
+			$this->session->set_userdata("lead_search_by_id",$last_ins_id);
+			$this->session->set_userdata("lead_search_only",0);			
+			
 
 		} else {
 			$result['res'] = false;
