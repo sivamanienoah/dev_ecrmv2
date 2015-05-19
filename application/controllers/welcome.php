@@ -165,7 +165,7 @@ class Welcome extends crm_controller {
                    'statename'  => 11,
                    'locname'  => 11,
                    'lead_status'  => 11,
-                   'lead_indi'  =>11
+                   'lead_indi'  =>11,
                );
 			$this->session->set_userdata(array("Lead_excel_download" => $newdata)); 			
 			
@@ -1651,7 +1651,7 @@ class Welcome extends crm_controller {
 		$lead_indi=null;
 		$keyword=null;
 
-		$exporttoexcel = $this->session->userdata("Lead_excel_download");
+		$exporttoexcel = $this->session->userdata;
 		echo '<pre>';print_r($exporttoexcel); exit;
 		/* if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
 			if($this->session->userdata("search_by_user_id")){
