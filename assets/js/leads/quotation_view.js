@@ -55,6 +55,7 @@ $("#search_advance").click(function() {
 			$('#load').hide();
 			$('#search_advance').show();
 			$('#save_advance').show();
+			$("#search_type").val("search");
 		}
 	});
 	return false;  //stop the actual form post !important!
@@ -72,6 +73,7 @@ function show_search_results(search_id) {
 			$('#search_advance').show();
 			$('#save_advance').show();
 			$('#load').hide();	
+			$("#search_type").val("");
 		}
 	});
 }
@@ -114,6 +116,7 @@ $("#save_advance").click(function() {
 			// alert(res.html)
 			// return false;
 			$('#popupGetSearchName').html(res);
+			$("#search_type").val("");
 			$.blockUI({
 				message:$('#popupGetSearchName'),
 				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'}
