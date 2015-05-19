@@ -152,7 +152,23 @@ class Welcome extends crm_controller {
 					$excel_arr[$key] = 'test';
 				}
 			} 
-			$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
+			//$this->session->set_userdata(array("Lead_excel_download" => $excel_arr));
+			
+			$newdata = array(
+                   'stage'  => 11,
+                   'customer'  => 11,
+                   'worth'  => 11,
+                   'owner'  => 11,
+                   'leadassignee'  => 11,
+                   'regionname'  => 11,
+                   'countryname'  => 11,
+                   'statename'  => 11,
+                   'locname'  => 11,
+                   'lead_status'  => 11,
+                   'lead_indi'  =>11
+               );
+			$this->session->set_userdata("Lead_excel_download",$newdata); 			
+			
 		} else { 
 			$this->session->unset_userdata(array("Lead_excel_download"=>''));
 		}
