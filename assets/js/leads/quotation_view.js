@@ -196,6 +196,8 @@ function save_search() {
 					$('#search_advance').show();
 					$('#save_advance').show();
 					$('#load').hide();	
+					$('#search_type').val("search");	
+					
 				}
 			});
 		}
