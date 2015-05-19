@@ -1633,7 +1633,7 @@ class Welcome extends crm_controller {
 		$lead_indi=null;
 		$keyword=null;
 
-		$exporttoexcel = $this->session->userdata("testing_array");
+		$exporttoexcel = $this->session->userdata("Lead_excel_download");
 		print_r($exporttoexcel);exit;
 		$stagess = $this->session->userdata("stagesss");
 		echo $this->session->userdata("search_by_user_default");
