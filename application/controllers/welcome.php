@@ -134,9 +134,9 @@ class Welcome extends crm_controller {
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
 			}
-			$this->session->set_userdata(array("excel_download" => $excel_arr));
+			//$this->session->set_userdata(array("excel_download" => $excel_arr));
 		} else { 
-			//$this->session->unset_userdata(array("excel_download"=>''));
+			$this->session->unset_userdata(array("excel_download"=>''));
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
