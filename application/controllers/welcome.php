@@ -78,16 +78,7 @@ class Welcome extends crm_controller {
 			echo '<pre>';print_r($filt); echo '</pre>';
 			$newdata = array(
                    'stage'  => $filt['stage'],
-                   'customer'  => $filt['customer'],
-                   'worth'  => $filt['worth'],
-                   'owner'  => $filt['owner'],
-                   'leadassignee'  => $filt['leadassignee'],
-                   'regionname'  => $filt['regionname'],
-                   'countryname'  => $filt['countryname'],
-                   'statename'  => $filt['statename'],
-                   'locname'  => $filt['locname'],
-                   'lead_status'  => $filt['lead_status'],
-                   'lead_indi'  => $filt['lead_indi']
+   
                );
 			$this->session->set_userdata("Lead_excel_download",$newdata);
 			
