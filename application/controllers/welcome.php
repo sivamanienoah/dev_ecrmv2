@@ -117,9 +117,10 @@ class Welcome extends crm_controller {
 			
 			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
 			 
-			$excel_arr 	  = array();
+			//$excel_arr 	  = array();
+			echo '<pre>';print_r($filt);
 			foreach ($filt as $key => $val) {
-				$excel_arr[$key] = $val;
+				//$excel_arr[$key] = $val;
 				$this->session->set_userdata($key, $val);
 			} 
 			
