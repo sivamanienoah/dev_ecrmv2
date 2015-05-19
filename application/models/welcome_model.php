@@ -530,8 +530,7 @@ class Welcome_model extends crm_model {
 					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
 				}
 			}
-			print_r($owner);
-			 echo count($owner);
+		 
 			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all'){
 					echo 'owner';exit;
