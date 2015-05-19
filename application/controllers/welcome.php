@@ -162,7 +162,8 @@ class Welcome extends crm_controller {
                    'owner'  => 11,
                    'leadassignee'  => 11,
                    'regionname'  => 11,
-                   'countryname'  => 11
+                   'countryname'  => 11,
+                   'statename'  => 11,
                    
                );
 			$this->session->set_userdata(array("testing_array" => $testing_arr)); 			
