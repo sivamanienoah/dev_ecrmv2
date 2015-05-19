@@ -467,16 +467,14 @@ class Welcome_model extends crm_model {
 		 
 		$stage 			= (count($stage)>0)?explode(',',$stage):'';
 		$owner 			= (count($owner)>0)?explode(',',$owner):'';
-		$customer 		= explode(',',$customer);
-		$worth 			= explode('-',$worth);		
-		
-		$leadassignee 	= explode(',',$leadassignee);
-		$regionname 	= explode(',',$regionname);
-		$countryname 	= explode(',',$countryname);
-		$statename 		= explode(',',$statename);
-		$locname 		= explode(',',$locname);
-		$lead_status 	= explode(',',$lead_status);
-		$lead_indi 		= explode(',',$lead_indi);
+		$customer 			= (count($customer)>0)?explode(',',$customer):'';
+		$worth 			= (count($worth)>0)?explode(',',$worth):'';
+		$leadassignee 			= (count($leadassignee)>0)?explode(',',$leadassignee):'';
+		$regionname 			= (count($regionname)>0)?explode(',',$regionname):'';
+		$countryname 			= (count($countryname)>0)?explode(',',$countryname):'';
+		$locname 			= (count($locname)>0)?explode(',',$locname):'';
+		$lead_status 			= (count($lead_status)>0)?explode(',',$lead_status):'';
+		$lead_indi 			= (count($lead_indi)>0)?explode(',',$lead_indi):'';
  
 		/*  echo '<pre>';
 		print_r($stage);
@@ -533,7 +531,6 @@ class Welcome_model extends crm_model {
 		 
 			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all'){
-					echo 'owner';exit;
 					$this->db->where_in('j.belong_to',$owner); 
 				}
 			}
