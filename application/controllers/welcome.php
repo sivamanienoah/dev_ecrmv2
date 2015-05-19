@@ -120,6 +120,7 @@ class Welcome extends crm_controller {
 			if($this->input->post("keyword")){
 				$filt['keyword'] = $this->input->post("keyword");
 				$keyword = $this->input->post("keyword");
+				$this->session->set_userdata("search_keyword",$keyword);
 			}
 			
 			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
@@ -129,6 +130,7 @@ class Welcome extends crm_controller {
 				$excel_arr[$key] = $val;
 			}
 		} else {
+			$this->session->set_userdata("search_keyword",'');
 			$this->session->unset_userdata(array("excel_download"=>''));
 		} 
 
@@ -1630,7 +1632,9 @@ class Welcome extends crm_controller {
 			$exporttoexcel	  = real_escape_array($get_rec);			
 		}
 	 
-	 
+		if($this->session->userdata("search_keyword")){
+			$exporttoexcel['keyword'] = $this->session->userdata("search_keyword");
+		}
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
