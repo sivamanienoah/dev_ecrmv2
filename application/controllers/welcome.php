@@ -93,6 +93,7 @@ class Welcome extends crm_controller {
 			unset($get_rec['is_default']);
 			if(!empty($get_rec))
 			$filt	  = real_escape_array($get_rec);
+		echo '<pre>';print_r($filt);exit;
 		}
 		
 		if (count($filt)>0) {
