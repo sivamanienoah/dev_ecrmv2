@@ -586,7 +586,6 @@ class Welcome_model extends crm_model {
 			$this->db->order_by("j.lead_id", "desc");
 			 
 		}else{
-		 echo 'else';exit;
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
