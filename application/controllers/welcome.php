@@ -168,7 +168,7 @@ class Welcome extends crm_controller {
                    'lead_status'  => 11,
                    'lead_indi'  =>11,
                );
-			$this->session->set_userdata(array("testing_array" => $newdata)); 			
+			$this->session->set_userdata(array("testing_array" => $testing_arr)); 			
 			echo '<pre>';print_r($this->session->userdata("testing_array"));exit;
 		} else { 
 			$this->session->unset_userdata(array("testing_array"=>''));
