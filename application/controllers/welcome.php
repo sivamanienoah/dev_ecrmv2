@@ -1599,7 +1599,7 @@ class Welcome extends crm_controller {
 	 */
 	public function excelExport() {
 		
-		$stage=null;
+/* 		$stage=null;
 		$customer=null;
 		$worth=null;
 		$owner=null;
@@ -1610,7 +1610,7 @@ class Welcome extends crm_controller {
 		$locname=null;
 		$lead_status=null;
 		$lead_indi=null;
-		$keyword=null;
+		$keyword=null; */
 
 		$exporttoexcel = $this->session->userdata('excel_download');
 		
