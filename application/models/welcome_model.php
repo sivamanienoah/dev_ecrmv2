@@ -476,7 +476,7 @@ class Welcome_model extends crm_model {
 		$lead_status 	= explode(',',$lead_status);
 		$lead_indi 		= explode(',',$lead_indi);
  
-		 echo '<pre>';
+		/*  echo '<pre>';
 		print_r($stage);
 		print_r($customer);
 		print_r($worth);
@@ -489,7 +489,7 @@ class Welcome_model extends crm_model {
 		print_r($lead_status);
 		print_r($lead_indi);
 		print_r($keyword);
-		exit; 
+		exit;  */
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
@@ -531,6 +531,7 @@ class Welcome_model extends crm_model {
 			
 			if(!empty($owner) && count($owner)>0){
 				if($owner[0] != 'null' && $owner[0] != 'all'){
+					echo 'owner';exit;
 					$this->db->where_in('j.belong_to',$owner); 
 				}
 			}
