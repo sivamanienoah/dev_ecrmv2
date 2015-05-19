@@ -1621,6 +1621,7 @@ class Welcome extends crm_controller {
 		$stagess = $this->session->userdata("stage");
 		echo $this->session->userdata("search_by_user_default");
 		echo $this->session->userdata("search_by_user_id");
+		print_r($exporttoexcel);
 		echo $stagess; exit;
 		
 		if($this->session->userdata("search_by_user_default") || $this->session->userdata("search_by_user_id")){
