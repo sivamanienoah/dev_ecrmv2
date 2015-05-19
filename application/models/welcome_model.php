@@ -461,20 +461,7 @@ class Welcome_model extends crm_model {
 	
 	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
 	{
-		echo '<pre>';
-		print_r($stage);
-		print_r($customer);
-		print_r($worth);
-		print_r($owner);
-		print_r($leadassignee);
-		print_r($regionname);
-		print_r($countryname);
-		print_r($statename);
-		print_r($locname);
-		print_r($lead_status);
-		print_r($lead_indi);
-		print_r($keyword);
-	
+
 		
 		$userdata 		= $this->session->userdata('logged_in_user');
 		$stage 			= explode(',',$stage);
@@ -488,7 +475,22 @@ class Welcome_model extends crm_model {
 		$locname 		= explode(',',$locname);
 		$lead_status 	= explode(',',$lead_status);
 		$lead_indi 		= explode(',',$lead_indi);
-	exit;
+ 
+		echo '<pre>';
+		print_r($stage);
+		print_r($customer);
+		print_r($worth);
+		print_r($owner);
+		print_r($leadassignee);
+		print_r($regionname);
+		print_r($countryname);
+		print_r($statename);
+		print_r($locname);
+		print_r($lead_status);
+		print_r($lead_indi);
+		print_r($keyword);
+		exit;
+ 
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to,
 			j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date,
