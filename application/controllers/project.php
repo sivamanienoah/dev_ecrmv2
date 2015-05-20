@@ -4374,10 +4374,12 @@ HDOC;
 			$result['res'] = true;
 			$result['msg'] = 'Search Criteria Saved.';
 			
+			$result['search_div'] = '';
+			
 			$result['search_div'] .= '<li id="item_'.$last_ins_id.'" class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$last_ins_id.')">'.$post_data['search_name'].'</a></span>';
 			$result['search_div'] .= '<span class="rd-set-default">';
 			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$last_ins_id.'" ';
-			if($searc['is_default']==1) { 
+			if($post_data['is_default']==1) {
 				$result['search_div'] .= 'checked="checked"';
 			}
 			$result['search_div'] .= '/>';
