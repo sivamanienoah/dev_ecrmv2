@@ -3,10 +3,10 @@
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
 	$default_currency = get_default_currency();
-	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_id   = $default_currency['expect_worth_id'];
 	$default_cur_name = $default_currency['expect_worth_name'];
 } else {
-	$default_cur_id = '1';
+	$default_cur_id   = '1';
 	$default_cur_name = 'USD';
 }
 ?>

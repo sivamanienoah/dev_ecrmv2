@@ -14,7 +14,6 @@ $('#ad_filter').load(sturl,function(){
 });
 
 $(function() {
-
 	saveSearchDropDownScript();
 	
 	dtPjtTable();
@@ -110,7 +109,7 @@ $('#pjt_search_form').submit(function() {
 	
 	$.ajax({
 		type: 'POST',
-		url: site_base_url+'project/advance_filter_search_pjt',
+		url: site_base_url+'project/advance_filter_search_pjt/search',
 		data: params,
 		success: function(data) {
 			$("#ad_filter" ).html(data);
@@ -163,10 +162,10 @@ $("#search_advance").click(function() {
 			$('#excel').hide();
 		},
 		success: function(data) {
+			$('#load').hide();
 			$('#search_advance').show();
 			$('#save_advance').show();
-			$("#ad_filter" ).html(data);
-			$('#load').hide();
+			$("#ad_filter" ).html(data);			
 			$('#ajax_loader').hide();
 			$("#ad_filter" ).show();
 			$('#excel').show();
@@ -311,6 +310,7 @@ function show_search_results(search_id) {
 			$("#ad_filter" ).html(data);
 			$("#ad_filter" ).show();
 			$('#load').hide();
+			$("#val_export").val(search_id);
 		}
 	});
 }

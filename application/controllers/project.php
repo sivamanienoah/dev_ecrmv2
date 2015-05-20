@@ -73,9 +73,13 @@ class Project extends crm_controller {
 	 */
 	public function advance_filter_search_pjt($search_type = false, $search_id = false)
 	{
-	
+		$filter 			=  array();
+		
+		$data['val_export'] = 'no_search';
+
 		if($search_type == 'search' && $search_id == false) {
 			$inputData = real_escape_array($this->input->post());
+			$data['val_export']  = 'search';
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>2, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -96,63 +100,57 @@ class Project extends crm_controller {
 			unset($get_rec['is_default']);
 			unset($get_rec['month_year_from_date']);
 			unset($get_rec['month_year_to_date']);
-			if(!empty($get_rec))
-			$inputData	  = real_escape_array($get_rec);
+			if(!empty($get_rec)) {
+				$data['val_export'] = $search_id;
+				$inputData	  = real_escape_array($get_rec);
+			}
 		} else {
 			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			
-			unset($get_rec['stage']);
-			unset($get_rec['worth']);
-			unset($get_rec['owner']);
-			unset($get_rec['leadassignee']);
-			unset($get_rec['regionname']);
-			unset($get_rec['countryname']);
-			unset($get_rec['statename']);
-			unset($get_rec['locname']);
-			unset($get_rec['lead_status']);
-			unset($get_rec['lead_indi']);
-			unset($get_rec['search_id']);
-			unset($get_rec['search_for']);
-			unset($get_rec['search_name']);
-			unset($get_rec['user_id']);
-			unset($get_rec['is_default']);
-			unset($get_rec['month_year_from_date']);
-			unset($get_rec['month_year_to_date']);
-			
-			if(!empty($get_rec))
-			$inputData	  = real_escape_array($get_rec);
+			if(!empty($get_rec)) {
+				$data['val_export'] = $get_rec['search_id'];
+				unset($get_rec['stage']);
+				unset($get_rec['worth']);
+				unset($get_rec['owner']);
+				unset($get_rec['leadassignee']);
+				unset($get_rec['regionname']);
+				unset($get_rec['countryname']);
+				unset($get_rec['statename']);
+				unset($get_rec['locname']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['lead_indi']);
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['month_year_from_date']);
+				unset($get_rec['month_year_to_date']);
+				$inputData = real_escape_array($get_rec);
+			}
 		}
 		
 		if(!empty($inputData)) {
 			$pjtstage 	= $inputData['pjtstage'];
-			$cust     	= $inputData['customer'];
+			$cust     	= $inputData['cust'];
 			$service 	= $inputData['service'];
 			$practice 	= $inputData['practice'];
 			$keyword  	= $inputData['keyword'];
-			$divisions  = $inputData['divisions'];
 			$datefilter = $inputData['datefilter'];
 			$from_date	= $inputData['from_date'];
 			$to_date  	= $inputData['to_date'];
-			$project_excel_arr = array();
-			foreach ($inputData as $key => $val) {
-				$project_excel_arr[$key] = $val;
-			}
-			$this->session->set_userdata(array("project_excel"=>$project_excel_arr));
+			$divisions  = $inputData['divisions'];
 		} else {
 			$pjtstage 	= '';
 			$cust     	= '';
 			$service 	= '';
 			$practice 	= '';
 			$keyword  	= '';
-			$divisions  = '';
 			$datefilter = '';
 			$from_date	= '';
 			$to_date  	= '';
-			$this->session->unset_userdata(array("project_excel"=>''));
+			$divisions  	= '';
 		}
-		
-		// echo "<pre>"; print_r($this->session->userdata['project_excel']);
 		
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
@@ -161,47 +159,94 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-
+		
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
+		
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
 	/*
 	 *Advanced Search For Projects
 	 */
-	public function advanceFilterMetrics()
+	public function advanceFilterMetrics($searchId = false)
 	{
- 		$inputData = real_escape_array($this->input->post());
+		$keyword = null;
 		
-		if(!empty($inputData)) {
-			$pjtstage 	  = $inputData['pjtstage'];
-			$cust     	  = $inputData['customer1'];
-			$service 	  = $inputData['services'];
-			$practice 	  = $inputData['practices'];
-			$divisions 	  = $inputData['divisions'];
-			$keyword  	  = $inputData['keyword'];
-			$datefilter	  = $inputData['datefilter'];
-			$from_date	  = $inputData['from_date'];
-			$to_date  	  = $inputData['to_date'];
-			$metrics_month = $inputData['metrics_month'];
+		if($searchId != '' & is_numeric($searchId)) {
+			$wh_condn = array('search_id'=>$searchId, 'search_for'=>2, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec))
+			$inputData	= real_escape_array($get_rec);
+			$inputData['keyword']	= $this->input->post('keyword');
+
+			if((!empty($inputData['pjtstage'])) && $inputData['pjtstage']!='null')
+			$pjtstage = explode(",",$inputData['pjtstage']);
+			else 
+			$pjtstage = '';
+			
+			if((!empty($inputData['customer'])) && $inputData['customer']!='null')
+			$cust = explode(",",$inputData['customer']);
+			else
+			$cust = '';
+			
+		} else {
+			$inputData = real_escape_array($this->input->post());
+			$keyword   = $inputData['keyword'];
+			if((!empty($inputData['stages'])) && $inputData['stages']!='null')
+			$pjtstage = explode(",",$inputData['stages']);
+			else 
+			$pjtstage = '';
+			
+			if((!empty($inputData['customers'])) && $inputData['customers']!='null')
+			$cust = explode(",",$inputData['customers']);
+			else
+			$cust = '';
+		}
+
+		if((!empty($inputData['service'])) && $inputData['service']!='null')
+		$service = explode(",",$inputData['service']);
+		else
+		$service = '';
+		
+		if((!empty($inputData['practice'])) && $inputData['practice']!='null')
+		$practice = explode(",",$inputData['practice']);
+		else
+		$practice = '';
+		
+		if((!empty($inputData['divisions'])) && $inputData['divisions']!='null')
+		$divisions = explode(",",$inputData['divisions']);
+		else
+		$divisions = '';
+		
+		if(!empty($inputData['from_date']))
+		$from_date = $inputData['from_date'];
+		else
+		$from_date = '';
+		
+		if(!empty($inputData['to_date']))
+		$to_date = $inputData['to_date'];
+		else
+		$to_date = '';
+		
+		if(!empty($inputData['dateinputData']))
+		$datefilter = $inputData['dateinputData'];
+		else
+		$datefilter = '';
+		
+ 		// $inputData = real_escape_array($this->input->post());
+		if(!empty($inputData['metrics_year'])) {
 			$metrics_year = $inputData['metrics_year'];
 			$metrics_date = date('Y-m-01', strtotime($inputData['metrics_year'].'-'.$inputData['metrics_month']));
 		} else {
-			$pjtstage 	  = '';
-			$cust     	  = '';
-			$service 	  = '';
-			$practice  	  = '';
-			$divisions    = '';
-			$keyword  	  = '';
-			$datefilter   = '';
-			$from_date	  = '';
-			$to_date  	  = '';
 			$metrics_date = '';
 		}
+		
+		// echo "asdf<pre>"; print_r($inputData); exit;
 		
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
+		
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=2, $divisions);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects,$project_type=3,$metrics_date);
 		$this->load->view('projects/projects_view_inprogress_monthly', $data);
@@ -3351,63 +3396,84 @@ HDOC;
 	}
 	
 	/* Export to Excel */
-	public function excelExport() {
-	
-		/* $pjtstage 	= 'null';
-		$cust     	= 'null';
-		$service 	= 'null';
-		$practice 	= 'null';
-		$keyword  	= 'null';
-		$divisions  = 'null';
-		$datefilter = 'null';
-		$from_date	= 'null';
-		$to_date  	= 'null'; */
-		
-		// $project_excel = $this->session->userdata['project_excel'];
-		
-		// echo "<pre>"; print_r($project_excel); exit;
-
-		if (count($exporttoexcel)>0) {
-		
-			$pjtstage 	= $exporttoexcel['pjtstage'];
-			$cust     	= $exporttoexcel['customer'];
-			$service 	= $exporttoexcel['service'];
-			$practice 	= $exporttoexcel['practice'];
-			$divisions  = $exporttoexcel['divisions'];
-			$datefilter = $exporttoexcel['datefilter'];
-			$from_date	= $exporttoexcel['from_date'];
-			$to_date  	= $exporttoexcel['to_date'];
-			$keyword    = $exporttoexcel['keyword'];
-		}
-	
-		$export_type = $this->input->post('export_type');
-		
+	public function excelExport($searchId = false)
+	{
 		$keyword = null;
+		if($searchId != '' & is_numeric($searchId)) {
+			$wh_condn = array('search_id'=>$searchId, 'search_for'=>2, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec))
+			$filter	= real_escape_array($get_rec);
+			$filter['export_type'] = $this->input->post('export_type');
+			
+			if((!empty($filter['pjtstage'])) && $filter['pjtstage']!='null')
+			$pjtstage = explode(",",$filter['pjtstage']);
+			else 
+			$pjtstage = '';
+			
+			if((!empty($filter['customer'])) && $filter['customer']!='null')
+			$cust = explode(",",$filter['customer']);
+			else
+			$cust = '';
+			
+			if((!empty($filter['service'])) && $filter['service']!='null')
+			$service = explode(",",$filter['service']);
+			else
+			$service = '';
+			
+			if((!empty($filter['practice'])) && $filter['practice']!='null')
+			$practice = explode(",",$filter['practice']);
+			else
+			$practice = '';
+			
+		} else {
+			$filter = real_escape_array($this->input->post());
+			
+			if((!empty($filter['stages'])) && $filter['stages']!='null')
+			$pjtstage = explode(",",$filter['stages']);
+			else 
+			$pjtstage = '';
+			
+			if((!empty($filter['customers'])) && $filter['customers']!='null')
+			$cust = explode(",",$filter['customers']);
+			else
+			$cust = '';
+			
+			if((!empty($filter['services'])) && $filter['services']!='null')
+			$service = explode(",",$filter['services']);
+			else
+			$service = '';
+			
+			if((!empty($filter['practices'])) && $filter['practices']!='null')
+			$practice = explode(",",$filter['practices']);
+			else
+			$practice = '';
+		}
 		
-		if((!empty($pjtstage)) && $pjtstage!='null')
-		$pjtstage = explode(",",$pjtstage);
-		else 
-		$pjtstage = '';
-		// if((!empty($pm_acc)) && $pm_acc!='null')
-		// $pm_acc = explode(",",$pm_acc);
-		// else
-		// $pm_acc = '';
-		if((!empty($cust)) && $cust!='null')
-		$cust = explode(",",$cust);
-		else
-		$cust = '';
-		if((!empty($service)) && $service!='null')
-		$service = explode(",",$service);
-		else
-		$service = '';
-		if((!empty($practice)) && $practice!='null')
-		$practice = explode(",",$practice);
-		else
-		$practice = '';
-		if((!empty($divisions)) && $divisions!='null')
-		$divisions = explode(",",$divisions);
+		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
+		$divisions = explode(",",$filter['divisions']);
 		else
 		$divisions = '';
+		
+		if(!empty($filter['from_date']))
+		$from_date = $filter['from_date'];
+		else
+		$from_date = '';
+		
+		if(!empty($filter['to_date']))
+		$to_date = $filter['to_date'];
+		else
+		$to_date = '';
+		
+		if(!empty($filter['datefilter']))
+		$datefilter = $filter['datefilter'];
+		else
+		$datefilter = '';
+		
+		$keyword = $this->input->post('keyword');
+		// echo "asdf<pre>"; print_r($filter); exit;
+		
+		$export_type = $filter['export_type'];
 		
 		if($export_type == 'milestone') {
 			$billing_type = 1;
@@ -3421,10 +3487,10 @@ HDOC;
 			$project_type = 3;
 		}
 		
-
     	$getProjectData = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type,$divisions);
+		// echo $this->db->last_query(); exit;
 		$pjts_data	    = $this->getProjectsDataByDefaultCurrency($getProjectData,$project_type,$metrics_date);
-		
+		// echo "<pre>"; print_r($pjts_data); exit;
     	if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');

@@ -9,7 +9,6 @@ if (get_default_currency()) {
 	$default_cur_name = 'USD';
 }
 ?>
-
 <?php
 	$milestone_content = '';
 	$monthly_content   = '';
@@ -123,6 +122,7 @@ if (get_default_currency()) {
 			<button type="button" id='milestone' class="positive excel" onclick="location.href='#'">
 			Export to Excel
 			</button>
+			<input type="hidden" class="val_export" name="val_export" value="<?php echo $val_export ?>" />
 		</div>
 	</div>
 </div>
@@ -204,6 +204,7 @@ if (get_default_currency()) {
 			<button type="button" id='monthly' class="positive excel" onclick="location.href='#'">
 			Export to Excel
 			</button>
+			<input type="hidden" class="val_export" name="val_export" value="<?php echo $val_export ?>" />
 		</div>
 	</div>
 
