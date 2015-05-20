@@ -63,6 +63,7 @@ $("#search_advance").click(function() {
 
 
 function show_search_results(search_id) {
+	$("#keyword").val("");
 	$.ajax({
 		type: "POST",
 		url: site_base_url+"welcome/advance_filter_search/search/"+search_id,
@@ -269,7 +270,7 @@ $(function(){
    
 function advanced_filter(){
 	$('#advance_search').slideToggle('slow');
-	var  keyword = $("#keyword").val();
+	var  keyword = $("#keyword").val("");
 	var status = document.getElementById('advance_search').style.display;
 	
 	if(status == 'none') {
