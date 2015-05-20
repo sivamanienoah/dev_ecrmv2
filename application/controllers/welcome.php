@@ -133,7 +133,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_keyword",'');
 			$this->session->unset_userdata(array("excel_download"=>''));
 		} 
-
+echo $keyword;
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		//echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
