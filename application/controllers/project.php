@@ -75,18 +75,41 @@ class Project extends crm_controller {
 	{
 		$filter 			=  array();
 		
+		$pjtstage 			= '';
+		$cust     			= '';
+		$service 			= '';
+		$practice 			= '';
+		$keyword  			= '';
+		$datefilter 		= '';
+		$from_date			= '';
+		$to_date  			= '';
+		$divisions  		= '';
 		$data['val_export'] = 'no_search';
 
 		if($search_type == 'search' && $search_id == false) {
-			$inputData = real_escape_array($this->input->post());
+			$inputData = real_escape_array($this->input->post());			
+			
+			$pjtstage 	= $inputData['pjtstage'];
+			$cust     	= $inputData['cust'];
+			$service 	= $inputData['service'];
+			$practice 	= $inputData['practice'];
+			$keyword  	= $inputData['keyword'];
+			$datefilter = $inputData['datefilter'];
+			$from_date	= $inputData['from_date'];
+			$to_date  	= $inputData['to_date'];
+			$divisions  = $inputData['divisions'];
+			
 			$data['val_export']  = 'search';
+			
 		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>2, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			
 			unset($get_rec['stage']);
 			unset($get_rec['worth']);
 			unset($get_rec['owner']);
 			unset($get_rec['leadassignee']);
+			unset($get_rec['project']);
 			unset($get_rec['regionname']);
 			unset($get_rec['countryname']);
 			unset($get_rec['statename']);
@@ -100,9 +123,20 @@ class Project extends crm_controller {
 			unset($get_rec['is_default']);
 			unset($get_rec['month_year_from_date']);
 			unset($get_rec['month_year_to_date']);
+			
 			if(!empty($get_rec)) {
 				$data['val_export'] = $search_id;
 				$inputData	  = real_escape_array($get_rec);
+				
+				$pjtstage 	= $inputData['pjtstage'];
+				$cust     	= $inputData['customer'];
+				$service 	= $inputData['service'];
+				$practice 	= $inputData['practice'];
+				$datefilter = $inputData['datefilter'];
+				$from_date	= $inputData['from_date'];
+				$to_date  	= $inputData['to_date'];
+				$divisions  = $inputData['divisions'];
+				
 			}
 		} else {
 			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -112,6 +146,7 @@ class Project extends crm_controller {
 				unset($get_rec['stage']);
 				unset($get_rec['worth']);
 				unset($get_rec['owner']);
+				unset($get_rec['project']);
 				unset($get_rec['leadassignee']);
 				unset($get_rec['regionname']);
 				unset($get_rec['countryname']);
@@ -127,31 +162,18 @@ class Project extends crm_controller {
 				unset($get_rec['month_year_from_date']);
 				unset($get_rec['month_year_to_date']);
 				$inputData = real_escape_array($get_rec);
+				
+				$pjtstage 	= $inputData['pjtstage'];
+				$cust     	= $inputData['customer'];
+				$service 	= $inputData['service'];
+				$practice 	= $inputData['practice'];
+				$datefilter = $inputData['datefilter'];
+				$from_date	= $inputData['from_date'];
+				$to_date  	= $inputData['to_date'];
+				$divisions  = $inputData['divisions'];
 			}
 		}
-		
-		if(!empty($inputData)) {
-			$pjtstage 	= $inputData['pjtstage'];
-			$cust     	= $inputData['cust'];
-			$service 	= $inputData['service'];
-			$practice 	= $inputData['practice'];
-			$keyword  	= $inputData['keyword'];
-			$datefilter = $inputData['datefilter'];
-			$from_date	= $inputData['from_date'];
-			$to_date  	= $inputData['to_date'];
-			$divisions  = $inputData['divisions'];
-		} else {
-			$pjtstage 	= '';
-			$cust     	= '';
-			$service 	= '';
-			$practice 	= '';
-			$keyword  	= '';
-			$datefilter = '';
-			$from_date	= '';
-			$to_date  	= '';
-			$divisions  	= '';
-		}
-		
+
 	    /*
 		 *$pjtstage - lead_stage. $pm_acc - Project Manager Id. $cust - Customers Id.(custid_fk)
 		 */

@@ -158,25 +158,25 @@ class Project_model extends crm_model
 			//For Regionwise filtering
 			$this->db->where_in('j.lead_id', $result_ids);
 		
-			if(!empty($stage)){	
+			if (!empty($stage) && $stage!='null') {
 				$this->db->where("j.lead_status", '4');
 				$this->db->where_in("j.pjt_status", $stage);
 			} else {
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
-			if(!empty($customer)){		
+			if (!empty($customer) && $customer!='null') {
 				$this->db->where_in('j.custid_fk',$customer); 
 			}
 			/* if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
 			} */
-			if(!empty($services)){		
+			if(!empty($services) && $services!='null'){
 				$this->db->where_in('j.lead_service',$services);
 			}
-			if(!empty($practices)){		
+			if(!empty($practices) && $practices!='null'){	
 				$this->db->where_in('j.practice',$practices);
 			}
-			if(!empty($divisions)){		
+			if(!empty($divisions) && $divisions!='null'){		
 				$this->db->where_in('j.division',$divisions);
 			}
 			if(!empty($billing_type)) {
