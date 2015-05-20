@@ -128,27 +128,7 @@ class Invoice extends CRM_Controller {
 			}
 		}
 		// echo 'val_export '.$data['val_export']; exit;
-		if (count($filter)>0) {
-			
-			$project   = $filter['project'];
-			$customer  = $filter['customer'];
-			$divisions = $filter['divisions'];
-			$practice  = $filter['practice'];
-			$from_date = $filter['from_date'];
-			$to_date   = $filter['to_date'];
-			$month_year_from_date = $filter['month_year_from_date'];
-			$month_year_to_date   = $filter['month_year_to_date'];
-			
-			$inv_excel_arr 	  = array();
-			foreach ($filter as $key => $val) {
-				$inv_excel_arr[$key] = $val;
-			}
-			// print_r($excel_arr); exit;
-			$this->session->set_userdata(array("inv_excel_export"=>$inv_excel_arr));
-		} else {
-			$this->session->unset_userdata(array("inv_excel_export"=>''));
-		}
-		// echo "<pre>"; print_r($this->session->userdata('inv_excel_export')); exit;
+	
 		$invoices = $this->invoice_model->get_invoices($filter);
 		// echo $this->db->last_query();
 		$rates 	  = $this->get_currency_rates();
@@ -335,7 +315,7 @@ class Invoice extends CRM_Controller {
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
 	
-		if((!empty($filter['project'])) && $filter['project']!='null')
+		/* if((!empty($filter['project'])) && $filter['project']!='null')
 		$filter['project'] = explode(",",$filter['project']);
 		else 
 		$filter['project'] = '';
@@ -358,7 +338,7 @@ class Invoice extends CRM_Controller {
 		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
 		$filter['divisions'] = explode(",",$filter['divisions']);
 		else
-		$filter['divisions'] = '';
+		$filter['divisions'] = ''; */
 		
 		if(!empty($filter['from_date']))
 		$filter['from_date'] = $filter['from_date'];
@@ -379,8 +359,9 @@ class Invoice extends CRM_Controller {
 		$filter['month_year_to_date'] = $filter['month_year_to_date'];
 		else
 		$filter['month_year_to_date'] = '';
-
+		
 		$invoices_res = $this->invoice_model->get_invoices($filter);
+		
 		// echo $this->db->last_query(); exit;
 		
 		//load our new PHPExcel library
@@ -402,7 +383,7 @@ class Invoice extends CRM_Controller {
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 		$i=2;		
-		
+		$total_amt = '';
 		if(count($invoices_res)>0) {
 			foreach($invoices_res as $excelarr) {
 				//display only date

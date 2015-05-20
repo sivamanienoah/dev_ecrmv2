@@ -130,7 +130,7 @@ class Invoice_model extends crm_model {
 			$this->db->where_in('l.division', $filter['divisions']);
 		}
 		if (!empty($filter['practice']) && $filter['practice']!='null') {
-			$filter['practice'] = explode(',',$filter['practice']);
+			$filter['practice'] = @explode(',',$filter['practice']);
 			$this->db->where_in('l.practice', $filter['practice']);
 		}
 		if(!empty($filter['from_date']) && empty($filter['to_date'])) {
