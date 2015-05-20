@@ -228,6 +228,7 @@ $(function(){
 			   data: "stage="+stage+"&customer="+customer+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 			   success: function(data){
 				   $('#advance_search_results').html(data);
+				   $("#search_type").val("");
 			   }
 			 });
 			 return false;  //stop the actual form post !important!

@@ -75,7 +75,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("lead_search_by_default",0);
 			$this->session->set_userdata("lead_search_by_id",0);
 			$this->session->set_userdata("lead_search_only",1);
-		} else if ($search_type == 'search' && is_numeric($search_id)) {
+		} else if ($search_type == 'search' && is_numeric($search_id)) {		
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			unset($get_rec['search_id']);
@@ -117,23 +117,23 @@ class Welcome extends crm_controller {
 			$locname 	  = $filt['locname'];
 			$lead_status  = $filt['lead_status'];
 			$lead_indi 	  = $filt['lead_indi'];
-			if($this->input->post("keyword")){
-				$filt['keyword'] = $this->input->post("keyword");
-				$keyword = $this->input->post("keyword");
-				$this->session->set_userdata("search_keyword",$keyword);
-			}
-			
 			//$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
-			 
-			$excel_arr 	  = array();
+			/* $excel_arr 	  = array();
 			foreach ($filt as $key => $val) {
 				$excel_arr[$key] = $val;
-			}
+			} */
 		} else {
-			$this->session->set_userdata("search_keyword",'');
 			$this->session->unset_userdata(array("excel_download"=>''));
 		} 
-echo $keyword;
+		
+		if($this->input->post("keyword")){
+			$filt['keyword'] = $this->input->post("keyword");
+			$keyword = $this->input->post("keyword");
+			$this->session->set_userdata("search_keyword",$keyword);
+		}else{
+			$this->session->set_userdata("search_keyword",'');
+		}
+
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		//echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
@@ -1614,8 +1614,10 @@ echo $keyword;
 
 		//$exporttoexcel = $this->session->userdata('excel_download');
 		
-		$exporttoexcel = real_escape_array($this->input->post());
- 
+		
+				
+		//echo '<pre>';print_r($this->session->userdata);
+		$exporttoexcel = real_escape_array($this->input->post()); 
 		if($this->session->userdata("lead_search_by_default") || $this->session->userdata("lead_search_by_id")){
 			if($this->session->userdata("lead_search_by_id")){
 				$wh_condn = array('search_id'=>$this->session->userdata("lead_search_by_id"), 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
@@ -1631,10 +1633,13 @@ echo $keyword;
 			if(!empty($get_rec))
 			$exporttoexcel	  = real_escape_array($get_rec);			
 		}
-	 
 		if($this->session->userdata("search_keyword")){
 			$exporttoexcel['keyword'] = $this->session->userdata("search_keyword");
+		}else{
+			$exporttoexcel['keyword'] = '';
 		}
+		//echo '<pre>';print_r($this->session->userdata);print_r($exporttoexcel);exit;
+
 		if (count($exporttoexcel)>0) {
 
 			$stage 		  = $exporttoexcel['stage'];
