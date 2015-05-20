@@ -178,7 +178,7 @@ $("#save_advance").click(function() {
 	$.ajax({
 		type: "POST",
 		dataType: 'json',
-		url: site_base_url+"invoice/get_search_name_form",
+		url: site_base_url+"project/get_search_name_form",
 		cache: false,
 		data: csrf_token_name+'='+csrf_hash_token,
 		success: function(res){
@@ -321,7 +321,7 @@ $('.search-root').on('click', '.set_default_search', function() {
 	$.ajax({
 		type: "POST",
 		dataType: 'json',
-		url: site_base_url+"invoice/set_default_search/"+search_id+'/3',
+		url: site_base_url+"project/set_default_search/"+search_id+'/2',
 		cache: false,
 		data: "filter=filter&"+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
@@ -345,7 +345,7 @@ function delete_save_search(search_id) {
 	$.ajax({
 		type: "POST",
 		dataType: 'json',
-		url: site_base_url+"invoice/delete_save_search/"+search_id+'/2',
+		url: site_base_url+"project/delete_save_search/"+search_id+'/2',
 		cache: false,
 		data: csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){

@@ -88,7 +88,7 @@ class Project extends crm_controller {
 
 		if($search_type == 'search' && $search_id == false) {
 			$inputData = real_escape_array($this->input->post());			
-			
+			// echo "<pre>"; print_r($inputData); exit;
 			$pjtstage 	= $inputData['pjtstage'];
 			$cust     	= $inputData['cust'];
 			$service 	= $inputData['service'];
@@ -137,6 +137,28 @@ class Project extends crm_controller {
 				$to_date  	= $inputData['to_date'];
 				$divisions  = $inputData['divisions'];
 				
+				if(!empty($pjtstage) && $pjtstage!='null')
+				$pjtstage = @explode(",",$pjtstage);
+				else
+				$pjtstage = '';
+				if(!empty($cust) && $cust!='null')
+				$cust = @explode(",",$cust);
+				else
+				$cust = '';
+				if(!empty($service) && $service!='null')
+				$service = @explode(",",$service);
+				else
+				$service = '';
+				if(!empty($practice) && $practice!='null')
+				$practice = @explode(",",$practice);
+				else
+				$practice = '';
+				if(!empty($divisions) && $divisions!='null')
+				$divisions = @explode(",",$divisions);
+				else
+				$divisions = '';
+				
+				
 			}
 		} else {
 			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -171,6 +193,27 @@ class Project extends crm_controller {
 				$from_date	= $inputData['from_date'];
 				$to_date  	= $inputData['to_date'];
 				$divisions  = $inputData['divisions'];
+				
+				if(!empty($pjtstage) && $pjtstage!='null')
+				$pjtstage = @explode(",",$pjtstage);
+				else
+				$pjtstage = '';
+				if(!empty($cust) && $cust!='null')
+				$cust = @explode(",",$cust);
+				else
+				$cust = '';
+				if(!empty($service) && $service!='null')
+				$service = @explode(",",$service);
+				else
+				$service = '';
+				if(!empty($practice) && $practice!='null')
+				$practice = @explode(",",$practice);
+				else
+				$practice = '';
+				if(!empty($divisions) && $divisions!='null')
+				$divisions = @explode(",",$divisions);
+				else
+				$divisions = '';
 			}
 		}
 
@@ -181,7 +224,7 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-		
+		echo $this->db->last_query();
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		
 		$this->load->view('projects/projects_view_inprogress', $data);
@@ -4361,12 +4404,13 @@ HDOC;
 		
 		$last_ins_id = $this->welcome_model->insert_row_return_id('saved_search_critriea', $ins);
 		if($last_ins_id) {
-			if($ins['is_default'] == 1) {
+			if($post_data['is_default'] == 1) {
 				$updt['is_default'] = 0;
 				$this->db->where('search_id != ', $last_ins_id);
 				$this->db->where('user_id', $this->userdata['userid']);
 				$this->db->where('search_for', $type);
 				$this->db->update($this->cfg['dbpref'] . 'saved_search_critriea', $updt);
+				// echo $this->db->last_query();
 			}
 			
 			$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=$type);
@@ -4411,7 +4455,7 @@ HDOC;
 		$result = array();
 		
 		$tbl = 'saved_search_critriea';
-		$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid']);
+		$wh_condn = array('search_for'=>$type, 'user_id'=>$this->userdata['userid']);
 		
 		$updt = $this->welcome_model->update_records($tbl,$wh_condn,'',$up_arg=array('is_default'=>0));
 		$updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>1));
