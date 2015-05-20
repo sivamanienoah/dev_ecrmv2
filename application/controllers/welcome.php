@@ -75,7 +75,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("lead_search_by_default",0);
 			$this->session->set_userdata("lead_search_by_id",0);
 			$this->session->set_userdata("lead_search_only",1);
-		} else if ($search_type == 'search' && is_numeric($search_id)) {		
+		} else if ($search_type == 'search' && is_numeric($search_id)) {	
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			unset($get_rec['search_id']);
@@ -101,6 +101,10 @@ class Welcome extends crm_controller {
 				$this->session->set_userdata("lead_search_by_default",1);
 				$this->session->set_userdata("lead_search_only",0);
 				$this->session->set_userdata("lead_search_by_id",0);	
+			}else{
+				$this->session->set_userdata("lead_search_by_default",0);
+				$this->session->set_userdata("lead_search_only",1);
+				$this->session->set_userdata("lead_search_by_id",0);				
 			}
 		}
 		//print_r($this->session->userdata);
@@ -1633,6 +1637,7 @@ class Welcome extends crm_controller {
 			if(!empty($get_rec))
 			$exporttoexcel	  = real_escape_array($get_rec);			
 		}
+		
 		if($this->session->userdata("search_keyword")){
 			$exporttoexcel['keyword'] = $this->session->userdata("search_keyword");
 		}else{
