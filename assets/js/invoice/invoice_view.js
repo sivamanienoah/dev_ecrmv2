@@ -311,7 +311,7 @@ $('#inv_excel').click(function() {
 			  '<input type="hidden" name="month_year_from_date" id="month_year_from_date" value="'+month_year_from_date+ '" />' +
 			  '<input type="hidden" name="month_year_to_date" id="month_year_to_date" value="'+month_year_to_date+ '" /></form>');
 			$('body').append(form);
-			$(form).submit(); 
+			$(form).submit();
 			return false;
 		break;
 		case 'number':

@@ -1004,7 +1004,7 @@ class Welcome_model extends crm_model {
 	{	
 		$this->db->select($filed_name);
 		$this->db->from($this->cfg['dbpref'].$table);
-		$this->db->where($where_filed, $where_field_value);		
+		$this->db->where($where_filed, $where_field_value);
 		$query = $this->db->get();
 		$result =  $query->row_array();
 		return $result[$filed_name];

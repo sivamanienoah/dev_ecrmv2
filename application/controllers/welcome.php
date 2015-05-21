@@ -2166,7 +2166,7 @@ HDOC;
 				$this->db->update($this->cfg['dbpref'] . 'saved_search_critriea', $updt);
 			}
 			
-			$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
+			$saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=$type);
 			
 			$result['res'] = true;
 			$result['msg'] = 'Search Criteria Saved.';
@@ -2211,7 +2211,7 @@ HDOC;
 		$result = array();
 		
 		$tbl = 'saved_search_critriea';
-		$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid']);
+		$wh_condn = array('search_for'=>$type, 'user_id'=>$this->userdata['userid']);
 		
 		$updt = $this->welcome_model->update_records($tbl,$wh_condn,'',$up_arg=array('is_default'=>0));
 		$updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>1));
@@ -2229,7 +2229,7 @@ HDOC;
 		$result = array();
 		
 		$tbl = 'saved_search_critriea';
-		$wh_condn = array('search_for'=>1, 'search_id'=>$search_id);
+		$wh_condn = array('search_for'=>$type, 'search_id'=>$search_id);
 
 		if($this->welcome_model->delete_records($tbl, $wh_condn)) {
 			$result['resu'] = 'deleted';

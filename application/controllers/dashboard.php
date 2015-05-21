@@ -41,13 +41,188 @@ class Dashboard extends crm_controller {
 		
 		$userdata = $this->session->userdata('logged_in_user');
 		$data  	  = array();
-		$filter   = real_escape_array($this->input->post());
+		
+		$data['val_export'] = 'no_search';
+		$filter = real_escape_array($this->input->post());
+
+		if (isset($filter['search_type']) && $filter['search_type'] == 'search') {
+			$data['val_export'] = 'search';
+			// echo "<pre>"; print_r($filter); exit;
+		} else if(isset($filter['search_type']) && is_numeric($filter['search_type'])) {
+			$wh_condn = array('search_id'=>$filter['search_type'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$data['val_export'] = $filter['search_type'];
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['worth']);
+				unset($get_rec['practice']);
+				unset($get_rec['service']);
+				unset($get_rec['divisions']);
+				unset($get_rec['project']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['datefilter']);
+				unset($get_rec['from_date']);
+				unset($get_rec['to_date']);
+				unset($get_rec['month_year_from_date']);
+				unset($get_rec['month_year_to_date']);
+				$filter	  = real_escape_array($get_rec);
+				$filter['filter'] = 'filter';
+				// echo "<pre>"; print_r($get_rec); exit;
+				
+				if(!empty($get_rec['stage']) && $get_rec['stage'] !='null')
+				$filter['stage'] = @explode(',',$get_rec['stage']);
+				else
+				$filter['stage'] = '';
+				
+				if(!empty($get_rec['customer']) && $get_rec['customer'] !='null')
+				$filter['customer'] = @explode(',',$get_rec['customer']);
+				else
+				$filter['customer'] = '';
+				
+				if(!empty($get_rec['owner']) && $get_rec['owner'] !='null')
+				$filter['owner'] = @explode(',',$get_rec['owner']);
+				else
+				$filter['owner'] = '';
+				
+				if(!empty($get_rec['leadassignee']) && $get_rec['leadassignee'] !='null')
+				$filter['leadassignee'] = @explode(',',$get_rec['leadassignee']);
+				else
+				$filter['leadassignee'] = '';
+			
+				if(!empty($get_rec['ser_requ']) && $get_rec['ser_requ'] !='null')
+				$filter['ser_requ'] = @explode(',',$get_rec['ser_requ']);
+				else
+				$filter['ser_requ'] = '';
+				
+				if(!empty($get_rec['lead_src']) && $get_rec['lead_src'] !='null')
+				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				else
+				$filter['lead_src'] = '';
+				
+				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
+				$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				else
+				$filter['regionname'] = '';
+				
+				if(!empty($get_rec['countryname']) && $get_rec['countryname'] !='null')
+				$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				else
+				$filter['countryname'] = '';
+				
+				if(!empty($get_rec['statename']) && $get_rec['statename'] !='null')
+				$filter['statename'] = @explode(',',$get_rec['statename']);
+				else
+				$filter['statename'] = '';
+				
+				if(!empty($get_rec['locname']) && $get_rec['locname'] !='null')
+				$filter['locname'] = @explode(',',$get_rec['locname']);
+				else
+				$filter['locname'] = '';
+				
+				if(!empty($get_rec['lead_indi']) && $get_rec['lead_indi'] !='null')
+				$filter['lead_indi'] = @explode(',',$get_rec['lead_indi']);
+				else
+				$filter['lead_indi'] = '';
+			}
+		} else {
+			$wh_condn = array('search_for'=>4, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			// echo $this->db->last_query(); # exit;
+			if(!empty($get_rec)) {
+				$data['val_export'] = $get_rec['search_id'];
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['worth']);
+				unset($get_rec['practice']);
+				unset($get_rec['service']);
+				unset($get_rec['divisions']);
+				unset($get_rec['project']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['datefilter']);
+				unset($get_rec['from_date']);
+				unset($get_rec['to_date']);
+				unset($get_rec['month_year_from_date']);
+				unset($get_rec['month_year_to_date']);
+				
+				$filter	  = real_escape_array($get_rec);
+				
+				if(!empty($get_rec['stage']) && $get_rec['stage'] !='null')
+				$filter['stage'] = @explode(',',$get_rec['stage']);
+				else
+				$filter['stage'] = '';
+				
+				if(!empty($get_rec['customer']) && $get_rec['customer'] !='null')
+				$filter['customer'] = @explode(',',$get_rec['customer']);
+				else
+				$filter['customer'] = '';
+				
+				if(!empty($get_rec['owner']) && $get_rec['owner'] !='null')
+				$filter['owner'] = @explode(',',$get_rec['owner']);
+				else
+				$filter['owner'] = '';
+				
+				if(!empty($get_rec['leadassignee']) && $get_rec['leadassignee'] !='null')
+				$filter['leadassignee'] = @explode(',',$get_rec['leadassignee']);
+				else
+				$filter['leadassignee'] = '';
+			
+				if(!empty($get_rec['ser_requ']) && $get_rec['ser_requ'] !='null')
+				$filter['ser_requ'] = @explode(',',$get_rec['ser_requ']);
+				else
+				$filter['ser_requ'] = '';
+				
+				if(!empty($get_rec['lead_src']) && $get_rec['lead_src'] !='null')
+				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				else
+				$filter['lead_src'] = '';
+				
+				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
+				$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				else
+				$filter['regionname'] = '';
+				
+				if(!empty($get_rec['countryname']) && $get_rec['countryname'] !='null')
+				$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				else
+				$filter['countryname'] = '';
+				
+				if(!empty($get_rec['statename']) && $get_rec['statename'] !='null')
+				$filter['statename'] = @explode(',',$get_rec['statename']);
+				else
+				$filter['statename'] = '';
+				
+				if(!empty($get_rec['locname']) && $get_rec['locname'] !='null')
+				$filter['locname'] = @explode(',',$get_rec['locname']);
+				else
+				$filter['locname'] = '';
+				
+				if(!empty($get_rec['lead_indi']) && $get_rec['lead_indi'] !='null')
+				$filter['lead_indi'] = @explode(',',$get_rec['lead_indi']);
+				else
+				$filter['lead_indi'] = '';
+			}
+		}
+		
+		
+		// $filter   = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($filter); exit;
 		if (isset($filter['advance'])) {
 			$data['toggle_stat'] = 1;
 			$filter 			 = $filter;
 			$data['filter'] 	 = $filter;
-		} 
+		}
 		$cusId = $this->level_restriction();
+		
+		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=4);
 		
 		//Current Pipeline leads
 		$data['getLeads'] = $this->dashboard_model->getTotLeads($cusId, $filter);
@@ -235,21 +410,42 @@ class Dashboard extends crm_controller {
 	public function showLeadsDetails() {
 	
 		$res  				   = real_escape_array($this->input->post());
-		$filters			   = array();
-		$filters['stge'] 	   = $res['stge'];
-		$filters['cust_id']    = $res['cust_id'];
-		$filters['ownr_id']    = $res['ownr_id'];
-		$filters['assg_id']    = $res['assg_id'];
-		$filters['reg_id']     = $res['reg_id'];
-		$filters['cntry_id']   = $res['cntry_id'];
-		$filters['stet_id']	   = $res['stet_id'];
-		$filters['locn_id']    = $res['locn_id'];
-		$filters['servic_req'] = $res['servic_req'];
-		$filters['lead_sour']  = $res['lead_sour'];
-		$filters['lead_indic'] = $res['lead_indic'];
-		
 		$type 				   = $res['type']; 
 		$data 				   = $res['data'];
+		// echo "<pre>"; print_r($res); exit;
+		
+		$filters			   = array();
+		
+		if(isset($res['search_id']) && is_numeric($res['search_id'])) {
+			$wh_condn = array('search_id'=>$res['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filters['stge'] 	   = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filters['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filters['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filters['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filters['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filters['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filters['stet_id']	   = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filters['stge'] 	   = $res['stge'];
+			$filters['cust_id']    = $res['cust_id'];
+			$filters['ownr_id']    = $res['ownr_id'];
+			$filters['assg_id']    = $res['assg_id'];
+			$filters['reg_id']     = $res['reg_id'];
+			$filters['cntry_id']   = $res['cntry_id'];
+			$filters['stet_id']	   = $res['stet_id'];
+			$filters['locn_id']    = $res['locn_id'];
+			$filters['servic_req'] = $res['servic_req'];
+			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['lead_indic'] = $res['lead_indic'];
+		}
 		
 		$cusId 		= $this->level_restriction();
 		$res 		= array();
@@ -257,7 +453,6 @@ class Dashboard extends crm_controller {
 		$lead_stage = explode("(",$data[0]);
 		// echo $type . " " . $lead_stage[0]; exit;
 		switch($type) {
-		
 			case "funnel":
 				$heading			   = "Current Pipeline Leads";
 				$data['getLeadDetail'] = $this->dashboard_model->getLeadsDetails(trim($lead_stage[0]), $cusId, $filters);
@@ -329,17 +524,37 @@ class Dashboard extends crm_controller {
 		
 		$res  				   = real_escape_array($this->input->post());
 		$filters			   = array();
-		$filters['stge'] 	   = $res['stge'];
-		$filters['cust_id']    = $res['cust_id'];
-		$filters['ownr_id']    = $res['ownr_id'];
-		$filters['assg_id']    = $res['assg_id'];
-		$filters['reg_id']     = $res['reg_id'];
-		$filters['cntry_id']   = $res['cntry_id'];
-		$filters['stet_id']	   = $res['stet_id'];
-		$filters['locn_id']    = $res['locn_id'];
-		$filters['servic_req'] = $res['servic_req'];
-		$filters['lead_sour']  = $res['lead_sour'];
-		$filters['lead_indic'] = $res['lead_indic'];
+	
+		if(isset($res['search_id']) && is_numeric($res['search_id'])) {
+			$wh_condn = array('search_id'=>$res['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filters['stge'] 	   = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filters['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filters['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filters['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filters['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filters['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filters['stet_id']	   = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filters['stge'] 	   = $res['stge'];
+			$filters['cust_id']    = $res['cust_id'];
+			$filters['ownr_id']    = $res['ownr_id'];
+			$filters['assg_id']    = $res['assg_id'];
+			$filters['reg_id']     = $res['reg_id'];
+			$filters['cntry_id']   = $res['cntry_id'];
+			$filters['stet_id']	   = $res['stet_id'];
+			$filters['locn_id']    = $res['locn_id'];
+			$filters['servic_req'] = $res['servic_req'];
+			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['lead_indic'] = $res['lead_indic'];
+		}
 
 		$userid 			   = $res['userid']; 
 		$username 			   = $res['user_name'];
@@ -419,17 +634,37 @@ class Dashboard extends crm_controller {
 	public function getLeadAssigneeDependency() {
 		$res  				   = real_escape_array($this->input->post());
 		$filters			   = array();
-		$filters['stge'] 	   = $res['stge'];
-		$filters['cust_id']    = $res['cust_id'];
-		$filters['ownr_id']    = $res['ownr_id'];
-		$filters['assg_id']    = $res['assg_id'];
-		$filters['reg_id']     = $res['reg_id'];
-		$filters['cntry_id']   = $res['cntry_id'];
-		$filters['stet_id']	   = $res['stet_id'];
-		$filters['locn_id']    = $res['locn_id'];
-		$filters['servic_req'] = $res['servic_req'];
-		$filters['lead_sour']  = $res['lead_sour'];
-		$filters['lead_indic'] = $res['lead_indic'];
+		
+		if(isset($res['search_id']) && is_numeric($res['search_id'])) {
+			$wh_condn = array('search_id'=>$res['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filters['stge'] 	   = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filters['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filters['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filters['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filters['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filters['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filters['stet_id']	   = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filters['stge'] 	   = $res['stge'];
+			$filters['cust_id']    = $res['cust_id'];
+			$filters['ownr_id']    = $res['ownr_id'];
+			$filters['assg_id']    = $res['assg_id'];
+			$filters['reg_id']     = $res['reg_id'];
+			$filters['cntry_id']   = $res['cntry_id'];
+			$filters['stet_id']	   = $res['stet_id'];
+			$filters['locn_id']    = $res['locn_id'];
+			$filters['servic_req'] = $res['servic_req'];
+			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['lead_indic'] = $res['lead_indic'];
+		}
 		
 		$userid 			   = $res['userid']; 
 		$username 			   = $res['user_name'];
@@ -474,7 +709,28 @@ class Dashboard extends crm_controller {
 		$weekly_monthly_repo = '';
 		$lead_det 	= array();
 		$isSelect 	= $res['statusVar'];
-		$filter		= $res;
+		
+		if(isset($res['search_id']) && is_numeric($res['search_id'])) {
+			$wh_condn = array('search_id'=>$res['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filter['stge'] 	  = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filter['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filter['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filter['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filter['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filter['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filter['stet_id']	  = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filter['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filter['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filter['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filter['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filter		= $res;
+		}
+		
 		$cusId 		= $this->level_restriction();
 		$data['getCurrentActivityTable'] = $this->dashboard_model->getCurrentActivityLeadsAjax($isSelect, $cusId, $filter);
 		// echo "<pre>"; print_r($data['getCurrentActivityTable']); exit;
@@ -497,10 +753,30 @@ class Dashboard extends crm_controller {
 	public function excel_export_lead_owner($userid) {
 		
 		$result     = real_escape_array($this->input->post());
-
 		$graph_type = $result['type'];
+		
+		if(isset($result['search_id']) && is_numeric($result['search_id'])) {
+			$wh_condn = array('search_id'=>$result['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$expFilter['stge'] 	     = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$expFilter['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$expFilter['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$expFilter['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$expFilter['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$expFilter['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$expFilter['stet_id']	 = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$expFilter['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$expFilter['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$expFilter['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$expFilter['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$expFilter  = real_escape_array($this->input->post());
+		}
+		
 		$cusId      = $this->level_restriction();
-		$expFilter  = real_escape_array($this->input->post());
 		$lead_owner_opp  = array();
 
 		switch ($graph_type) {
@@ -781,19 +1057,38 @@ class Dashboard extends crm_controller {
 
 	public function showLeadDetails() {
 		$resu = real_escape_array($this->input->post());
+		$filters			   = array();
 		
-		$filters			   = array();	
-		$filters['stge'] 	   = $resu['stge'];
-		$filters['cust_id']    = $resu['cust_id'];
-		$filters['ownr_id']    = $resu['ownr_id'];
-		$filters['assg_id']    = $resu['assg_id'];
-		$filters['reg_id']     = $resu['reg_id'];
-		$filters['cntry_id']   = $resu['cntry_id'];
-		$filters['stet_id']	   = $resu['stet_id'];
-		$filters['locn_id']    = $resu['locn_id'];
-		$filters['servic_req'] = $resu['servic_req'];
-		$filters['lead_sour']  = $resu['lead_sour'];
-		$filters['lead_indic'] = $resu['lead_indic'];
+		if(isset($resu['search_id']) && is_numeric($resu['search_id'])) {
+			$wh_condn = array('search_id'=>$resu['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filters['stge'] 	   = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filters['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filters['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filters['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filters['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filters['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filters['stet_id']	   = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filters['stge'] 	   = $resu['stge'];
+			$filters['cust_id']    = $resu['cust_id'];
+			$filters['ownr_id']    = $resu['ownr_id'];
+			$filters['assg_id']    = $resu['assg_id'];
+			$filters['reg_id']     = $resu['reg_id'];
+			$filters['cntry_id']   = $resu['cntry_id'];
+			$filters['stet_id']	   = $resu['stet_id'];
+			$filters['locn_id']    = $resu['locn_id'];
+			$filters['servic_req'] = $resu['servic_req'];
+			$filters['lead_sour']  = $resu['lead_sour'];
+			$filters['lead_indic'] = $resu['lead_indic'];
+		}
 
 		$gid  = $resu['gid'];
 	    $type = $resu['type'];
@@ -863,19 +1158,38 @@ class Dashboard extends crm_controller {
 	//for closed opportunities
 	public function showLeadDetails_cls() {
 		$resu = real_escape_array($this->input->post());
-		
 		$filters			   = array();
-		$filters['stge'] 	   = $resu['stge'];
-		$filters['cust_id']    = $resu['cust_id'];
-		$filters['ownr_id']    = $resu['ownr_id'];
-		$filters['assg_id']    = $resu['assg_id'];
-		$filters['reg_id']     = $resu['reg_id'];
-		$filters['cntry_id']   = $resu['cntry_id'];
-		$filters['stet_id']	   = $resu['stet_id'];
-		$filters['locn_id']    = $resu['locn_id'];
-		$filters['servic_req'] = $resu['servic_req'];
-		$filters['lead_sour']  = $resu['lead_sour'];
-		$filters['lead_indic'] = $resu['lead_indic'];
+		if(isset($resu['search_id']) && is_numeric($resu['search_id'])) {
+			$wh_condn = array('search_id'=>$resu['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$results = real_escape_array($get_rec);
+				$filters['stge'] 	   = ($get_rec['stage'] != 'null') ? $get_rec['stage'] : '';
+				$filters['cust_id']    = ($get_rec['customer'] != 'null') ? $get_rec['customer'] : '';
+				$filters['ownr_id']    = ($get_rec['owner'] != 'null') ? $get_rec['owner'] : '';
+				$filters['assg_id']    = ($get_rec['leadassignee'] != 'null') ? $get_rec['leadassignee'] : '';
+				$filters['reg_id']     = ($get_rec['regionname'] != 'null') ? $get_rec['regionname'] : '';
+				$filters['cntry_id']   = ($get_rec['countryname'] != 'null') ? $get_rec['countryname'] : '';
+				$filters['stet_id']	   = ($get_rec['statename'] != 'null') ? $get_rec['statename'] : '';
+				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
+				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
+				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
+			}
+		} else {
+			$filters['stge'] 	   = $resu['stge'];
+			$filters['cust_id']    = $resu['cust_id'];
+			$filters['ownr_id']    = $resu['ownr_id'];
+			$filters['assg_id']    = $resu['assg_id'];
+			$filters['reg_id']     = $resu['reg_id'];
+			$filters['cntry_id']   = $resu['cntry_id'];
+			$filters['stet_id']	   = $resu['stet_id'];
+			$filters['locn_id']    = $resu['locn_id'];
+			$filters['servic_req'] = $resu['servic_req'];
+			$filters['lead_sour']  = $resu['lead_sour'];
+			$filters['lead_indic'] = $resu['lead_indic'];
+		}
+
 		
 		$gid   = $resu['gid'];
 	    $type  = $resu['type'];
@@ -1092,4 +1406,60 @@ class Dashboard extends crm_controller {
 		return $fy;
 	}
 	
+	//For Saving the search criteria
+	public function save_search($type)
+	{
+		$post_data = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($post_data); exit;
+		$ins = array();
+		
+		$ins['search_for']   = $type;
+		$ins['search_name']  = $post_data['search_name'];
+		$ins['user_id']	  	 = $this->userdata['userid'];
+		$ins['is_default']	 = $post_data['is_default'];
+		$ins['stage'] 		 = $post_data['stage'];
+		$ins['customer']	 = $post_data['customer'];
+		$ins['owner']	  	 = $post_data['owner'];
+		$ins['leadassignee'] = $post_data['leadassignee'];
+		$ins['ser_requ'] 	 = $post_data['ser_requ'];
+		$ins['lead_src'] 	 = $post_data['lead_src'];
+		$ins['regionname'] 	 = $post_data['regionname'];
+		$ins['countryname']	 = $post_data['countryname'];
+		$ins['statename']	 = $post_data['statename'];
+		$ins['locname']	  	 = $post_data['locname'];
+		$ins['lead_indi']	 = $post_data['lead_indi'];
+		$ins['created_on'] 	 = date('Y-m-d H:i:s');
+		// echo "<pre>"; print_r($ins); exit;
+		$last_ins_id = $this->welcome_model->insert_row_return_id('saved_search_critriea', $ins);
+		if($last_ins_id) {
+			if($ins['is_default'] == 1) {
+				$updt['is_default'] = 0;
+				$this->db->where('search_id != ', $last_ins_id);
+				$this->db->where('user_id', $this->userdata['userid']);
+				$this->db->where('search_for', $type);
+				$this->db->update($this->cfg['dbpref'] . 'saved_search_critriea', $updt);
+			}
+			
+			// $saved_search = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=$type);
+			
+			$result['res'] = true;
+			$result['msg'] = 'Search Criteria Saved.';
+			$result['search_div'] = '';
+			$result['search_div'] .= '<li id="item_'.$last_ins_id.'" class="saved-search-res"><span><a href="javascript:void(0)" onclick="show_search_results('.$last_ins_id.')">'.$post_data['search_name'].'</a></span>';
+			$result['search_div'] .= '<span class="rd-set-default">';
+			$result['search_div'] .= '<input type="radio" name="set_default_search" class="set_default_search" value="'.$last_ins_id.'" ';
+			if($ins['is_default']==1) {
+				$result['search_div'] .= 'checked="checked"';
+			}
+			$result['search_div'] .= '/>';
+			$result['search_div'] .= '</span>';
+			$result['search_div'] .= '<span><a title="Set Default" href="javascript:void(0)" onclick="delete_save_search('.$last_ins_id.')" ><img alt="delete" src="assets/img/trash.png"></a></span></li>';
+		} else {
+			$result['res'] = false;
+			$result['msg'] = 'Search Criteria cant be Saved.';
+		}
+		echo json_encode($result);
+		exit;
+	}
+		
 }

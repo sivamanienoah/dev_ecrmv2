@@ -30,14 +30,30 @@ if(viewlead==1) {
 			});
 			
 			$('#funnel1').bind('jqplotDataClick',function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat == 'toggle') {
+				// alert($('#val_export').val());
+				
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
 					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
 				formdata['data'] 	  = data;
 				formdata['type'] 	  = 'funnel';
 				formdata[csrf_token_name] = csrf_hash_token;
+				
+				/* if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				
 
 				$.ajax({
 					type: "POST",
@@ -154,8 +170,20 @@ if(viewlead==1) {
 			});
 
 			$('#pie1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat == 'toggle') {
+				/* if (filter_toggle_stat == 'toggle') {
 					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
@@ -323,8 +351,20 @@ if(viewlead==1) {
 			});
 
 			$('#bar1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat == 'toggle') {
+				/* if (filter_toggle_stat == 'toggle') {
 					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
@@ -486,8 +526,20 @@ if(viewlead==1) {
 
 			$('#line1').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
 				//alert(pointIndex);
-				if (filter_toggle_stat == 'toggle') {
+				/* if (filter_toggle_stat == 'toggle') {
 					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
@@ -632,8 +684,20 @@ if(viewlead==1) {
 			});
 
 			$('#line2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat == 'toggle') {
+				/* if (filter_toggle_stat == 'toggle') {
 					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
@@ -755,8 +819,20 @@ if(viewlead==1) {
 			});
 			
 			$('#pie2').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-				if (filter_toggle_stat == 'toggle') {
+				/* if (filter_toggle_stat == 'toggle') {
 					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
 				} else {
 					var formdata = {};
 				}
@@ -867,8 +943,20 @@ if(viewlead==1) {
 		});
 		
 		$('#pie3').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
-			if (filter_toggle_stat == 'toggle') {
+			/* if (filter_toggle_stat == 'toggle') {
 				var formdata = advanceFilterParameterForDataClick();
+			} else {
+				var formdata = {};
+			} */
+			var def_search_id = $("#val_export").val();
+	
+			if(!isNaN(def_search_id)) {
+				var formdata = {};
+				formdata['search_id'] = def_search_id;
+			} else if( def_search_id == 'search' ) {
+				var formdata = advanceFilterParameterForDataClick();
+			} else if( def_search_id == 'no_search' ) {
+				var formdata = {};
 			} else {
 				var formdata = {};
 			}
@@ -934,8 +1022,20 @@ if(viewlead==1) {
 
 	
 	function getLeadDashboardTable(userid, user_name) {
-		if (filter_toggle_stat == 'toggle') {
+		/* if (filter_toggle_stat == 'toggle') {
 			var formdata = advanceFilterParameterForDataClick();
+		} else {
+			var formdata = {};
+		} */
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var formdata = {};
+			formdata['search_id'] = def_search_id;
+		} else if( def_search_id == 'search' ) {
+			var formdata = advanceFilterParameterForDataClick();
+		} else if( def_search_id == 'no_search' ) {
+			var formdata = {};
 		} else {
 			var formdata = {};
 		}
@@ -984,11 +1084,25 @@ if(viewlead==1) {
 
 
 	function getLeadAssigneeTable(userid,user_name) {
-		if (filter_toggle_stat == 'toggle') {
+		/* if (filter_toggle_stat == 'toggle') {
 			var formdata = advanceFilterParameterForDataClick();
 		} else {
 			var formdata = {};
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var formdata = {};
+			formdata['search_id'] = def_search_id;
+		} else if( def_search_id == 'search' ) {
+			var formdata = advanceFilterParameterForDataClick();
+		} else if( def_search_id == 'no_search' ) {
+			var formdata = {};
+		} else {
+			var formdata = {};
 		}
+		
 		formdata['userid'] 	  	  = userid;
 		formdata['user_name'] 	  = user_name;
 		formdata[csrf_token_name] = csrf_hash_token;
@@ -1110,8 +1224,20 @@ if(viewlead==1) {
 
 	//currently active leads
 	$('#current-lead-report').change(function() {
-		if (filter_toggle_stat == 'toggle') {
+		/* if (filter_toggle_stat == 'toggle') {
 			var formdata = advanceFilterParameterForDataClick();
+		} else {
+			var formdata = {};
+		} */
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var formdata = {};
+			formdata['search_id'] = def_search_id;
+		} else if( def_search_id == 'search' ) {
+			var formdata = advanceFilterParameterForDataClick();
+		} else if( def_search_id == 'no_search' ) {
+			var formdata = {};
 		} else {
 			var formdata = {};
 		}
@@ -1158,15 +1284,28 @@ if(viewlead==1) {
 		var baseurl			= site_base_url;
 		var url				= baseurl+"dashboard/excel_export_lead_owner";
 		
-		if (filter_toggle_stat == 'toggle') {
+		/* if (filter_toggle_stat == 'toggle') {
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />' +
-			'<input type="hidden" name="lead_stage_name" value="' +lead_stage_name+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />' +
+		'<input type="hidden" name="lead_stage_name" value="' +lead_stage_name+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1179,15 +1318,28 @@ if(viewlead==1) {
 		var baseurl			 = site_base_url;
 		var url				 = baseurl+"dashboard/excel_export_lead_owner";
 
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
-		} 
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="lead_region_name" value="' +lead_region_name+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
+		}
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="lead_region_name" value="' +lead_region_name+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1200,15 +1352,28 @@ if(viewlead==1) {
 		var baseurl	  = site_base_url;
 		var url	  	  = baseurl+"dashboard/excel_export_lead_owner";
 		
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="lead_indi" value="' +lead_indi+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="lead_indi" value="' +lead_indi+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1237,15 +1402,28 @@ if(viewlead==1) {
 		var type 	   = $("#lead-aging-type").val();   
 		var baseurl	   = site_base_url;
 		var url		   = baseurl+"dashboard/excel_export_lead_owner";
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="lead_aging" value="' +lead_aging+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="lead_aging" value="' +lead_aging+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1257,15 +1435,28 @@ if(viewlead==1) {
 		var type	 = $("#cls-oppr-type").val();   
 		var baseurl  = site_base_url;
 		var url		 = baseurl+"dashboard/excel_export_lead_owner";
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="month_id" value="' +month_id+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="month_id" value="' +month_id+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1278,15 +1469,28 @@ if(viewlead==1) {
 		var baseurl		= site_base_url;
 		
 		var url		 = baseurl+"dashboard/excel_export_lead_owner";
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="lead_source" value="' +lead_source+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="lead_source" value="' +lead_source+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1299,15 +1503,28 @@ if(viewlead==1) {
 		var baseurl		   = site_base_url;
 		
 		var url		 = baseurl+"dashboard/excel_export_lead_owner";
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="servic_require" value="' +servic_require+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="servic_require" value="' +servic_require+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1321,16 +1538,28 @@ if(viewlead==1) {
 		var baseurl   = site_base_url;
 		var url	      = baseurl+"dashboard/excel_export_lead_owner";
 		
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="user_id" value="' +user_id+ '" />' +
-			'<input type="hidden" name="user_name" value="' +user_name+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="user_id" value="' +user_id+ '" />' +
+		'<input type="hidden" name="user_name" value="' +user_name+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1344,16 +1573,29 @@ if(viewlead==1) {
 		var baseurl   = site_base_url;
 		var url 	  = baseurl+"dashboard/excel_export_lead_owner";
 		
-		if (filter_toggle_stat == 'toggle') {	
+		/* if (filter_toggle_stat == 'toggle') {	
 			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
 		}
-			var form = $('<form action="' + url + '" method="post">' +
-			'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-			'<input type="hidden" name="user_id" value="' +user_id+ '" />' +
-			'<input type="hidden" name="user_name" value="' +user_name+ '" />' +
-			'<input type="hidden" name="type" value="' +type+ '" />' +
-			'"'+advancedFilters+'"' +
-			'</form>');
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="user_id" value="' +user_id+ '" />' +
+		'<input type="hidden" name="user_name" value="' +user_name+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
 		$('body').append(form);
 		$(form).submit();
 		return false;
@@ -1408,6 +1650,32 @@ if(viewlead==1) {
 	}
 
 	/* dashboard excel report ends here */
+	
+	$(".saved-search-head").click(function(){
+		var X=$(this).attr('id');
+
+		if(X==1) {
+			$(".saved-search-criteria").hide();
+			$(this).attr('id', '0');
+		} else {
+			$(".saved-search-criteria").show();
+			$(this).attr('id', '1');
+		}
+	});
+
+	//Mouseup textarea false
+	$(".saved-search-criteria").mouseup(function() {
+		return false
+	});
+	$(".saved-search-head").mouseup(function() {
+		return false
+	});
+
+	//Textarea without editing.
+	$(document).mouseup(function() {
+		$(".saved-search-criteria").hide();
+		$(".saved-search-head").attr('id', '');
+	});
 }
 
 if(viewPjt==1) {
@@ -1634,15 +1902,15 @@ function loadEditTables(){
 		$.unblockUI();
 	});
 }
-if(viewlead==1 && filter_toggle_stat!='toggle')
+if(viewlead==1 && filter_toggle_stat!='toggle') {
 	// document.getElementById('advance_search').style.display = 'none';
 	$('#advance_search').hide();
-
+}
 
 if(viewlead==1 && filter_toggle_stat=='toggle') {
 	// document.getElementById('advance_search').style.display;	
 	$('#advance_search').show();
-	
+	$('#val_export').val('search');
 	$(function() {
 		var regionname = $("#regionname").val();
 		if (regionname != null) {
@@ -1787,6 +2055,8 @@ $('#statename').change(function() {
 	loadLocations();
 });
 
+
+
 function loadLocations(lids) {
 	var st_id  				= $("#statename").val();
 	var params 				= {'st_id':st_id};
@@ -1809,6 +2079,152 @@ function loadLocations(lids) {
 			}
 		);
 	}
+}
+
+$("#save_advance").click(function() {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/get_search_name_form",
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		success: function(res){
+			// alert(res.html)
+			// return false;
+			$('#popupGetSearchName').html(res);
+			$.blockUI({
+				message:$('#popupGetSearchName'),
+				css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 265) /2+'px',width: '246px', position: 'absolute'}
+				// focusInput: false 
+			});
+			$( "#popupGetSearchName" ).parent().addClass( "no-scroll" );
+		}
+	});
+});
+
+function save_cancel() {
+	$.unblockUI();
+}
+
+function save_search() {
+
+	if($('#search_name').val()=='') {
+		$("#search_name").css("border-color", "red");
+		return false;
+	}
+	
+	$("#search_name").keyup(function(){
+		$("#search_name").css("border-color", "");
+	});
+	
+	$('#search_advance').hide();
+	$('#save_advance').hide();
+	$('#load').show();
+	
+	var is_defalut_val = 0;
+	
+	if($( "#is_default:checked" ).val() == 1) {
+		is_defalut_val = 1;
+	}
+	
+	var search_name = $('#search_name').val();
+	var is_default  = is_defalut_val;
+	
+	var stage		 = $("#stage").val();
+	var customer	 = $("#customer").val();
+	var owner 		 = $("#owner").val();
+	var leadassignee = $("#leadassignee").val();
+	var ser_requ   	 = $("#ser_requ").val();
+	var lead_src     = $("#lead_src").val();
+	var regionname 	 = $("#regionname").val();
+	var countryname  = $("#countryname").val();
+	var statename    = $("#statename").val();
+	var locname		 = $("#locname").val();
+	var lead_indi    = $("#lead_indi").val();
+	//Save the search criteria
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"dashboard/save_search/4",
+		cache: false,
+		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&owner="+owner+"&leadassignee="+leadassignee+"&ser_requ="+ser_requ+"&lead_src="+lead_src+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+'&'+csrf_token_name+'='+csrf_hash_token,
+		// data: "search_name="+search_name+"&"+$("#advancefilterhome").serialize()+'&'+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success: function(response){
+			if(response.res == true) {
+				$('#no_record').remove();
+				$('.search-root').append(response.search_div);
+			}
+			$( "#advance" ).trigger("click");
+		}
+	});
+	return false;  //stop the actual form post !important!
+}
+
+function delete_save_search(search_id) {
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/delete_save_search/"+search_id+'/4',
+		cache: false,
+		data: csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('.search-root').block({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success: function(response){
+			if(response.resu=='deleted') {
+				$('#item_'+search_id).remove();
+				if($(".search-root li").length == 1) {
+					$('.search-root').append('<li id="no_record" style="text-align: center; margin: 5px;">No Save & Search Found</li>');
+				}
+			} else {
+				alert('Not updated');
+			}
+			$('.search-root').unblock();
+		}
+	});
+}
+
+$('.search-root').on('click', '.set_default_search', function() {
+
+	var search_id = $( this ).val();
+	$.ajax({
+		type: "POST",
+		dataType: 'json',
+		url: site_base_url+"welcome/set_default_search/"+search_id+'/4',
+		cache: false,
+		data: "filter=filter&"+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function(){
+			$('.search-root').block({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success: function(response){
+			if(response.resu=='updated') {
+				// show_search_results(search_id);
+				// $('#val_export').val(search_id);
+				location.reload();
+			} else {
+				alert('Not updated');
+			}
+			$('.search-root').unblock();
+		}
+	});
+});
+
+function show_search_results(search_id) {
+	var url = site_base_url+"dashboard";
+	var form = $('<form action="' + url + '" method="post">' +
+	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	  '<input id="customer" type="hidden" name="search_type" value="'+search_id+'" /></form>');
+	$('body').append(form);
+	$(form).submit();
 }
 
 /////////////////

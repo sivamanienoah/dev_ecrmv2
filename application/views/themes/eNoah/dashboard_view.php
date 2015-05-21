@@ -31,6 +31,8 @@ if($this->session->userdata('viewlead')==1) {
 	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
 	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
 	<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
+	
+	<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 	<?php 
 	// For Chart Title
 	switch ($userdata['level']) {
@@ -86,21 +88,52 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	<?php if($this->session->userdata('viewlead')==1) { ?>
 		<div>
 		<!--Advance filters-->
-		<div>
+		<div class="page-title-head">
 			
-
-			<a class="choice-box filter-home" onclick="advanced_filter();" >
+			<h2 class="pull-left borderBtm">Dashboard</h2>
+			
+			<a class="choice-box" onclick="advanced_filter();" >
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
-
 			
-				
+			<div class="search-dropdown">
+				<a class="saved-search-head" >
+					<p>Saved Search</p>
+				</a>
+				<div class="saved-search-criteria" style="display: none; ">
+					<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
+					<ul class="search-root">
+					<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
+					<?php 
+					if(sizeof($saved_search)>0) {
+						foreach($saved_search as $searc) {
+					?>
+							<li class="saved-search-res" id="item_<?php echo $searc['search_id']; ?>">
+								<span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
+								<span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
+								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
+							</li>
+					<?php 
+						}
+					} else {
+					?>
+						<li id="no_record" style="text-align: center; margin: 5px;">No Save & search found</li>
+					<?php
+					}
+					?>
+					</ul>
+				</div>
+			</div>
+
 			<div id="advance_search" style="float:left; margin: 0px 0px 10px;width:100%;">
-				<!--form name="advanceFiltersDash" id="advanceFiltersDash" method="post" style="overflow:auto; height:280px; width:940px;"-->
+				
+				<!--form action="<?php #echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:100%;"-->
 				<form action="<?php echo $this->uri->uri_string() ?>" id="advancefilterhome" name="advancefilterhome" method="post" style="width:100%;">
+				
 					
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<input type="hidden" name="search_type" id="search_type" value="search" />
 					
 					<div style="border: 1px solid #DCDCDC;">
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
@@ -207,7 +240,11 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 							<tr align="right" >
 								<td colspan="6">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
-									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
+									<!--input type="submit" class="positive input-font" name="advance" id="advance" value="Search" /-->
+									
+									<input type="submit" class="positive input-font show-ajax-loader" name="advance" id="advance" value="Search" />
+									<input type="button" class="positive input-font show-ajax-loader" name="save_advance" id="save_advance" value="Save & Search" />
+									
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
 										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
@@ -217,7 +254,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					</div>
 				</form>
 			</div>
-
+			<input type="hidden" id="val_export" name="val_export" value="<?php echo $val_export ?>" />
 			<div id="advance_search_dash_res" style="clear:both" ></div>
 		</div>
 		
@@ -366,6 +403,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			<div id="lead-dependency-list" style="display:none;"></div><!--Opportunities By Lead Owner & Opportunities By Lead Assignee Info display here -->
 
 		</div>
+		<div id='popupGetSearchName'></div>
 	<?php } ?>
 	
 	<!--Task Module for Non Lead Acces users only- Start here-->
