@@ -543,29 +543,19 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 <?php if(($this->session->userdata('viewPjt')==1) && ($this->session->userdata('viewlead') != 1)) { ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm">PROJECTS - LISTS</h2>
-
-	<form name="pjt_search_form" id="pjt_search_form" action="" method="post">
-		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		<table border="0" cellpadding="0" cellspacing="0" class="search-table">
-			<tr>
-				<td>
-					Project Search
-				</td>
-				<td>
-					<input type="text" id="keywordpjt" name="keywordpjt" value="<?php if (isset($_POST['keywordpjt'])) echo $_POST['keywordpjt']; else echo 'Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
-				</td>
-				<td rowspan=2>
-					<div class="buttons">
-						<button type="submit" class="positive">Search</button>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>
 	<a class="choice-box" onclick="advanced_filter_pjt();" >
 		<span>Advanced Filters</span>
 		<img src="assets/img/advanced_filter.png" class="icon leads" />
 	</a>
+	<div class="section-right">
+		<div class="form-cont search-table">
+			<form id="pjt_search_form" name="pjt_search_form" method="post">
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<input type="text" name="keyword" id="keywordpjt" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Project Title, Name or Company' ?>" class="textfield width210px pjt-search" />
+				<button type="submit" id="project_search" class="positive">Project Search</button>			
+			</form>
+		</div>
+	</div>
 </div>
 
 <div id="advance_search_pjt" style="float:left; width:100%;" >

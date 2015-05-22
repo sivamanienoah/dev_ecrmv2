@@ -77,6 +77,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				
 				$('#set-job-task')[0].reset();
 			}
+			$("#taskToAlloc").val('').trigger("liszt:updated");
 			$('#jv-tab-4').unblock();
 			// $.unblockUI();
 		},

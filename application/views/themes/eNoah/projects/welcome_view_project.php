@@ -1257,7 +1257,8 @@ if (get_default_currency()) {
 				<tr>
 					<td>Allocate to</td>
 					<td>
-						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select" style="width:140px;">
+						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select" id="taskToAlloc" style="width:140px;">
+							<option value=""></option>
 							<?php
 							// echo $remind_options, $remind_options_all;
 								foreach($final_restrict_user as $ua){
