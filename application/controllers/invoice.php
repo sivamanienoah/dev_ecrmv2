@@ -131,7 +131,7 @@ class Invoice extends CRM_Controller {
 		// echo 'val_export '.$data['val_export']; exit;
 		$bk_rates = get_book_keeping_rates();
 		
-		$invoices = $this->invoice_model->get_invoices($filter);
+		$invoices = $this->invoice_model->get_invoices($filter,0);
 		// echo $this->db->last_query();
 		$rates 	  = $this->get_currency_rates();
 		$data['default_currency'] = $this->default_cur_name;
@@ -369,7 +369,7 @@ class Invoice extends CRM_Controller {
 		else
 		$filter['month_year_to_date'] = '';
 		
-		$invoices_res = $this->invoice_model->get_invoices($filter);
+		$invoices_res = $this->invoice_model->get_invoices($filter,0);
 		
 		// echo $this->db->last_query(); exit;
 		
@@ -453,6 +453,120 @@ class Invoice extends CRM_Controller {
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');
 	}
+	
+	public function payment_milestones($search_type = false, $search_id = false)
+	{
+        $data['page_heading'] = 'Pending Payment Milestones';
+		
+		$data['projects']  = $this->invoice_model->get_projects();
+		$data['customers'] = $this->invoice_model->get_customers();
+		$data['practices'] = $this->invoice_model->get_practices();
+		$data['sales_divisions'] = $this->invoice_model->get_sales_divisions();
+		$data['saved_search'] = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
+		
+		$project   = 'null';
+		$customer  = 'null';
+		$divisions = 'null';
+		$practice  = 'null';
+		$from_date = 'null';
+		$to_date   = 'null';
+		$month_year_from_date = 'null';
+		$month_year_to_date   = 'null';
+		
+		$filter =  array();
+		$data['val_export'] = 'no_search';
+		if($search_type == 'search' && $search_id == false) {
+			$filter = real_escape_array($this->input->post());
+			// echo "<pre>"; print_r($filter); exit;
+			$data['val_export'] = 'search';
+		} else if ($search_type == 'search' && is_numeric($search_id)) {
+			
+			$wh_condn = array('search_id'=>$search_id, 'search_for'=>3, 'user_id'=>$this->userdata['userid']);
+			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			if(!empty($get_rec)) {
+				$data['val_export'] = $search_id;
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['stage']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['leadassignee']);
+				unset($get_rec['owner']);
+				unset($get_rec['worth']);
+				unset($get_rec['regionname']);
+				unset($get_rec['countryname']);
+				unset($get_rec['statename']);
+				unset($get_rec['locname']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['lead_indi']);
+				unset($get_rec['service']);
+				$filter	  = real_escape_array($get_rec);
+				$filter['filter'] = 'filter';
+			}
+		} else {
+			$wh_condn = array('search_for'=>3, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
+			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
+			// echo $this->db->last_query(); # exit;
+			if(!empty($get_rec)) {
+				$data['val_export'] = $get_rec['search_id'];
+				unset($get_rec['search_id']);
+				unset($get_rec['search_for']);
+				unset($get_rec['search_name']);
+				unset($get_rec['user_id']);
+				unset($get_rec['is_default']);
+				unset($get_rec['stage']);
+				unset($get_rec['pjtstage']);
+				unset($get_rec['leadassignee']);
+				unset($get_rec['owner']);
+				unset($get_rec['worth']);
+				unset($get_rec['regionname']);
+				unset($get_rec['countryname']);
+				unset($get_rec['statename']);
+				unset($get_rec['locname']);
+				unset($get_rec['lead_status']);
+				unset($get_rec['lead_indi']);
+				unset($get_rec['service']);
+				$filter	  = real_escape_array($get_rec);
+			}
+		}
+		// echo 'val_export '.$data['val_export']; exit;
+		$bk_rates = get_book_keeping_rates();
+		
+		$invoices = $this->invoice_model->get_invoices($filter,1);
+		//echo $this->db->last_query(); exit;
+		$rates 	  = $this->get_currency_rates();
+		$data['default_currency'] = $this->default_cur_name;
+		$data['invoices'] = array();
+		$i = 0;
+		$data['total_amt'] = 0;
+		if(count($invoices)>0) {
+			foreach ($invoices as $inv) {
+				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
+				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
+				$data['invoices'][$i]['lead_id'] 				= $inv['lead_id'];
+				$data['invoices'][$i]['customer'] 			    = $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
+				$data['invoices'][$i]['project_milestone_name'] = $inv['project_milestone_name'];
+				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
+				// $data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
+				// $data['invoices'][$i]['new_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][1]);
+				$data['invoices'][$i]['coverted_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$this->default_cur_id]);
+				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
+				$data['invoices'][$i]['month_year'] 			= $inv['month_year'];
+				// $data['invoices'][$i]['financial_year'] 		= $this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31");
+				$data['total_amt'] 	                           += $data['invoices'][$i]['coverted_amt'];
+				$i++;
+			}
+		}
+		
+		// echo "<pre>"; print_r($data['invoices']); exit;
+		
+		if($filter['filter']!="")
+			$this->load->view('invoices/payment_milestones_view_grid', $data);
+		else
+			$this->load->view('invoices/payment_milestones_view', $data);
+    }
 	
 
 	public function send_invoice(){
