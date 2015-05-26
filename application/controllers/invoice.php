@@ -32,6 +32,7 @@ class Invoice extends CRM_Controller {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('invoice_model');
+		$this->load->model('email_template_model');
 		$this->load->helper('custom_helper');
 		$this->load->helper('text_helper');
 		$this->userdata = $this->session->userdata('logged_in_user');
@@ -453,6 +454,104 @@ class Invoice extends CRM_Controller {
 		$objWriter->save('php://output');
 	}
 	
+
+	public function send_invoice(){
+		$data = array();
+		$data['customers'] = $this->invoice_model->get_invoice_customer();
+		$data['payment_options'] = $this->invoice_model->get_payment_options();
+		$data['page_heading'] = "Send Invoice(s)";
+		$this->load->view("invoices/send_invoice",$data);
+	}
+	
+	function get_customer_invoices()
+	{
+		$custid = $this->input->get("custid");
+		$invoices = $this->invoice_model->get_customer_invoices($custid);
+		if(count($invoices)>0 && !empty($invoices)){
+			echo json_encode($invoices);
+		}else{
+			echo 'no_results';
+		}
+		exit;
+	}
+	
+	function submit_invoice(){
+/* 		echo '<pre>';
+		print_r($_REQUEST);
+		print_r($_FILES);
+		exit; */
+		if($this->input->post("customer")){
+			$customer_id = $this->input->post("customer");
+			$customer_name = $this->input->post("customer_name");
+			$payment_options = implode(",",$this->input->post("payment_options"));
+			$invoice_ids = $this->input->post("invoice_id");
+			$cust_email = $this->input->post("email_address");
+			$unique_link = substr(base64_encode($customer_id.$cust_email.rand(11,88)),0,22);
+			$total_amount = $this->input->post("total");
+			$sub_total = $this->input->post("sub_total");
+			$tax = $this->input->post("tax");
+			$tax_amount = $this->input->post("tax_price");
+			$currency_type = $this->input->post("currency_type");
+			$created_date = date("Y-m-d H:i:s");
+			
+			$ins_arr = array("cust_id" => $customer_id,
+							"cust_email" => $cust_email,
+							"unique_link" => $unique_link,
+							"total_amount" => $total_amount,
+							"tax" => $tax,
+							"tax_amount" => $tax_amount,
+							"payment_options" => $payment_options,
+							"status" => 0,
+							"paid_status" => 0,
+							"created_date" => $created_date);
+							
+			$this->db->insert($this->cfg['dbpref'].'invoices',$ins_arr);
+			$insert_id = $this->db->insert_id();
+			
+			if(count($invoice_ids)>0){
+				foreach($invoice_ids as $invoice_id){
+					$sub_ins_arr = array("inv_id" => $insert_id,"exp_id" => $invoice_id,"created_on" => $created_date,"status"=> 0);
+				}
+			}
+			
+			if($insert_id){
+				//email sent by email template
+				$print_fancydate = date('l, jS F y h:iA', strtotime($created_date));
+				$from		  	 = $this->userdata['email'];
+				$arrayEmails   	 = $this->config->item('crm');
+				$to				 = implode(',',$arrayEmails['account_emails']);
+				$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
+				$subject		 = 'Invoice Notification from enoahisolution';
+				$param = array();
+				
+				$cont = '';
+				$project_name = $this->input->post("project_name");
+				$project_milestone_name = $this->input->post("project_milestone_name");
+				$month_year = $this->input->post("month_year");
+				$amount = $this->input->post("amount");
+				$link = base_url().$unique_link;
+				if(count($project_name)>0 && !empty($project_name)){
+					for($i=0;$i<count($project_name);$i++){
+						$cont .= '<tr><td>'.$project_name[$i].'</td><td>'.$project_milestone_name[$i].'</td><td>'.$month_year[$i].'</td><td>'.$amount[$i].'</td></tr>';
+					}
+				}
+				
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'month_year'=>$month_year,'sub_total' => number_format($sub_total,2,'.',',').' '.$currency_type, 'tax' => $tax, 'tax_amount' => number_format($tax_amount,2,'.',',').' '.$currency_type,'total' => number_format($total_amount,2,'.',',').' '.$currency_type,'content' => $cont,"link" => $link);
+
+				$param['to_mail'] 		  = "mthiyagarajan@enoahisolution.com";
+				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
+				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
+				$param['from_email']	  = 'webmaster@enoahisolultion.com';
+				$param['from_email_name'] = 'Webmaster';
+				$param['template_name']	  = "Send Customer Invoice";
+				$param['subject'] 		  = $subject;
+				$param['attach'] 		  = $attached_files;
+				$param['job_id'] 		  = $pjtid;
+				$this->email_template_model->sent_email($param);
+			}
+		}
+	}
+
 	/*
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
@@ -474,4 +573,5 @@ class Invoice extends CRM_Controller {
 		return $fy;
 	}
 	
+
 }
