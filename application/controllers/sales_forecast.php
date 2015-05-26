@@ -1505,7 +1505,7 @@ class Sales_forecast extends crm_controller {
 					$report_data[$fc['forecast_id']][$fc['milestone_name']]['entity']           = $fc['division_name'];
 					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['type']     = ($fc['forecast_category']==1)?'Lead':'Project';
 					// $report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
-					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
+					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
 				}
 			}
 			
@@ -1640,7 +1640,7 @@ class Sales_forecast extends crm_controller {
 						$report_data[$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 						$report_data[$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 						// $report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-						$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+						$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
 					}
 				}
 				
