@@ -2589,7 +2589,8 @@ function open_files(leadid,type) {
 			$.blockUI({
 				message: $('#map_add_file'),
 				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto', 'overflow-x':'hidden'}			
-			});			
+			});
+			$( "#map_add_file" ).parent().addClass( "no-scroll" );		
 		}
 	});
 	return false;

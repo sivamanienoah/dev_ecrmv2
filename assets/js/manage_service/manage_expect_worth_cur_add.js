@@ -31,8 +31,8 @@
 	document.getElementById("is_default").disabled = true;
 	
 	function toggleCheckbox(obj) {
-		if(obj.checked){document.getElementById("is_default").disabled = false;}
-		else{document.getElementById("is_default").disabled = true;} 
+		// if(obj.checked){document.getElementById("is_default").disabled = false;}
+		// else{document.getElementById("is_default").disabled = true;} 
 	}
 	
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

@@ -203,7 +203,6 @@ class Login_model extends crm_model {
 		}
 		
 		return $data;
-						
 	}
 	//LDAP connection end
 	

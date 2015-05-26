@@ -128,7 +128,8 @@ class Invoice extends CRM_Controller {
 			}
 		}
 		// echo 'val_export '.$data['val_export']; exit;
-	
+		$bk_rates = get_book_keeping_rates();
+		
 		$invoices = $this->invoice_model->get_invoices($filter);
 		// echo $this->db->last_query();
 		$rates 	  = $this->get_currency_rates();
@@ -144,13 +145,19 @@ class Invoice extends CRM_Controller {
 				$data['invoices'][$i]['customer'] 			    = $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
 				$data['invoices'][$i]['project_milestone_name'] = $inv['project_milestone_name'];
 				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
-				$data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
+				// $data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
+				// $data['invoices'][$i]['new_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][1]);
+				$data['invoices'][$i]['coverted_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$this->default_cur_id]);
 				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
 				$data['invoices'][$i]['month_year'] 			= $inv['month_year'];
+				// $data['invoices'][$i]['financial_year'] 		= $this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31");
 				$data['total_amt'] 	                           += $data['invoices'][$i]['coverted_amt'];
 				$i++;
 			}
 		}
+		
+		// echo "<pre>"; print_r($data['invoices']); exit;
+		
 		if($filter['filter']!="")
 			$this->load->view('invoices/invoice_view_grid', $data);
 		else
@@ -444,6 +451,27 @@ class Invoice extends CRM_Controller {
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');
+	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*@eg-1 for current-date calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+	*@eg-2 for custom date calculateFiscalYearForDate("12/1/08","7/1","6/30");
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate){
+			$fy = intval($inputyear);
+		}else{
+			$fy = intval(intval($inputyear) + 1);
+		}
+		return $fy;
 	}
 	
 }

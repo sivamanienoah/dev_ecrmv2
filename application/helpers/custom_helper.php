@@ -145,3 +145,23 @@ function formatSizeUnits($bytes)
 
         return $bytes;
 }
+
+if ( ! function_exists('get_book_keeping_rates'))
+{
+	function get_book_keeping_rates()
+	{	
+		$CI = get_instance();
+		$cfg = $CI->config->item('crm'); /// load config
+		
+		$CI->db->select('expect_worth_id_from, expect_worth_id_to, financial_year, currency_value');
+		$query   = $CI->db->get($CI->cfg['dbpref'].'book_keeping_currency_rates');
+		$results = $query->result_array();
+		$book_keeping_rates   = array();
+    	if(!empty($results)) {
+    		foreach ($results as $res) {
+    			$book_keeping_rates[$res['financial_year']][$res['expect_worth_id_from']][$res['expect_worth_id_to']] = $res['currency_value'];
+    		}
+    	}
+		return $book_keeping_rates;
+	}
+}

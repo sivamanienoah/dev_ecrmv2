@@ -143,7 +143,7 @@ class Manage_service extends crm_controller {
 	*@For Add Lead Source
 	*@Method   ls_add
 	*/
-	public function ls_add($update = false, $id = false) {		
+	public function ls_add($update = false, $id = false) {	
 		$this->load->library('validation');
         $data = array();        
 		
