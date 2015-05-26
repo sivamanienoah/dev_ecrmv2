@@ -323,6 +323,8 @@ class Invoice extends CRM_Controller {
 	
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
+		
+		$bk_rates = get_book_keeping_rates();
 	
 		/* if((!empty($filter['project'])) && $filter['project']!='null')
 		$filter['project'] = explode(",",$filter['project']);
@@ -403,7 +405,8 @@ class Invoice extends CRM_Controller {
 				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['pjt_id']);
 				$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['project_milestone_name']);
 				$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['expect_worth_name'].' '.$excelarr['amount']);
-				$this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]));
+				// $this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]));
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$this->default_cur_id]));
 				
 				$amt 	   = $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]);
 				$total_amt += $amt;
