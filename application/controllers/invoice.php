@@ -408,7 +408,8 @@ class Invoice extends CRM_Controller {
 				// $this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]));
 				$this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$this->default_cur_id]));
 				
-				$amt 	   = $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]);
+				// $amt 	   = $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]);
+				$amt 	   = $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$this->default_cur_id]);
 				$total_amt += $amt;
 				$i++;
 			}
