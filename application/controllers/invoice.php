@@ -547,6 +547,7 @@ class Invoice extends CRM_Controller {
 		$data['total_amt'] = 0;
 		if(count($invoices)>0) {
 			foreach ($invoices as $inv) {
+				$data['invoices'][$i]['expectid']			    = $inv['expectid'];
 				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
 				$data['invoices'][$i]['lead_id'] 				= $inv['lead_id'];
@@ -573,8 +574,21 @@ class Invoice extends CRM_Controller {
     }
 	
 
-	public function send_invoice(){
+	public function send_invoice($expid){
 		$data = array();
+		$data['expresults'] = '';
+		$this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.custid,c.first_name,c.last_name,c.company,c.email_1,c.email_2,c.email_3,c.email_4');
+		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');		
+		$this->db->where("expm.expectid", $expid);		
+		$qry = $this->db->get();
+		if($qry->num_rows()>0){
+			$res = $qry->row();
+			$data['expresults'] = $res;
+		}
+		//echo '<pre>';print_r($res);exit;
 		$data['customers'] = $this->invoice_model->get_invoice_customer();
 		$data['payment_options'] = $this->invoice_model->get_payment_options();
 		$data['page_heading'] = "Send Invoice(s)";
@@ -594,17 +608,18 @@ class Invoice extends CRM_Controller {
 	}
 	
 	function submit_invoice(){
-/* 		echo '<pre>';
+ 		 /* echo '<pre>';
 		print_r($_REQUEST);
 		print_r($_FILES);
-		exit; */
+		exit;  */
 		if($this->input->post("customer")){
 			$customer_id = $this->input->post("customer");
 			$customer_name = $this->input->post("customer_name");
 			$payment_options = implode(",",$this->input->post("payment_options"));
 			$invoice_ids = $this->input->post("invoice_id");
 			$cust_email = $this->input->post("email_address");
-			$unique_link = substr(base64_encode($customer_id.$cust_email.rand(11,88)),0,22);
+			$expiry_date = $this->input->post("expiry_date");
+			$unique_link = uniqid();
 			$total_amount = $this->input->post("total");
 			$sub_total = $this->input->post("sub_total");
 			$tax = $this->input->post("tax");
@@ -614,11 +629,14 @@ class Invoice extends CRM_Controller {
 			
 			$ins_arr = array("cust_id" => $customer_id,
 							"cust_email" => $cust_email,
+							"exp_id" => $invoice_ids,
 							"unique_link" => $unique_link,
+							"sub_total" => $sub_total,
 							"total_amount" => $total_amount,
 							"tax" => $tax,
 							"tax_amount" => $tax_amount,
 							"payment_options" => $payment_options,
+							"expiry_date" => date("Y-m-d",strtotime($expiry_date)),
 							"status" => 0,
 							"paid_status" => 0,
 							"created_date" => $created_date);
@@ -626,11 +644,11 @@ class Invoice extends CRM_Controller {
 			$this->db->insert($this->cfg['dbpref'].'invoices',$ins_arr);
 			$insert_id = $this->db->insert_id();
 			
-			if(count($invoice_ids)>0){
+			/* if(count($invoice_ids)>0){
 				foreach($invoice_ids as $invoice_id){
 					$sub_ins_arr = array("inv_id" => $insert_id,"exp_id" => $invoice_id,"created_on" => $created_date,"status"=> 0);
 				}
-			}
+			} */
 			
 			if($insert_id){
 				//email sent by email template
@@ -647,25 +665,28 @@ class Invoice extends CRM_Controller {
 				$project_milestone_name = $this->input->post("project_milestone_name");
 				$month_year = $this->input->post("month_year");
 				$amount = $this->input->post("amount");
-				$link = base_url().$unique_link;
-				if(count($project_name)>0 && !empty($project_name)){
-					for($i=0;$i<count($project_name);$i++){
-						$cont .= '<tr><td>'.$project_name[$i].'</td><td>'.$project_milestone_name[$i].'</td><td>'.$month_year[$i].'</td><td>'.$amount[$i].'</td></tr>';
-					}
-				}
+			 
+				$link = base_url().'payment/dopay/'.$unique_link;
+				//if(count($project_name)>0 && !empty($project_name)){
+				//	for($i=0;$i<count($project_name);$i++){
+						$cont .= '<tr><td>'.$project_name.'</td><td>'.$project_milestone_name.'</td><td>'.date("F Y",strtotime($month_year)).'</td><td>'.$sub_total.' '.$currency_type.'</td></tr>';
+				//	}
+				//}
 				
-				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'month_year'=>$month_year,'sub_total' => number_format($sub_total,2,'.',',').' '.$currency_type, 'tax' => $tax, 'tax_amount' => number_format($tax_amount,2,'.',',').' '.$currency_type,'total' => number_format($total_amount,2,'.',',').' '.$currency_type,'content' => $cont,"link" => $link);
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'month_year'=>date("F Y",strtotime($month_year)),'sub_total' => $sub_total.' '.$currency_type, 'tax' => $tax, 'tax_amount' => $tax_amount.' '.$currency_type,'total' => $total_amount.' '.$currency_type,'content' => $cont,"link" => $link,"expiry_date" => $expiry_date);
 
 				$param['to_mail'] 		  = "mthiyagarajan@enoahisolution.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
-				$param['from_email']	  = 'webmaster@enoahisolultion.com';
+				$param['from_email']	  = 'webmaster@enoahprojects.com';
 				$param['from_email_name'] = 'Webmaster';
 				$param['template_name']	  = "Send Customer Invoice";
 				$param['subject'] 		  = $subject;
 				$param['attach'] 		  = $attached_files;
 				$param['job_id'] 		  = $pjtid;
 				$this->email_template_model->sent_email($param);
+				$this->session->set_userdata("success_message","Invoice generated successfully!");
+				redirect("invoice/payment_milestones");
 			}
 		}
 	}

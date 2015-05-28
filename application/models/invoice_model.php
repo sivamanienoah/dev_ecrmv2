@@ -24,7 +24,7 @@ class Invoice_model extends crm_model {
 	*@Get invoices
 	*@Invoice_model
 	*/
-	public function get_invoices($filter = false) {
+	public function get_invoices($filter = false,$invoice) {
 
 		$job_ids = array();
 	
@@ -90,7 +90,7 @@ class Invoice_model extends crm_model {
 			
 		}
 		//LEVEL BASED RESTIRCTION
-		
+ 
 		if($filter['from_date']=='0000-00-00 00:00:00'){
 			$filter['from_date'] = '';
 		}
@@ -104,13 +104,18 @@ class Invoice_model extends crm_model {
 			$filter['month_year_to_date'] = '';
 		}
 	
-		$this->db->select('expm.expectid,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
+		$this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
-		$this->db->where('expm.invoice_status',1);
-		$this->db->where('expm.received !=',1);
+		
+		if($invoice){
+			$this->db->where('expm.invoice_status',0);
+		}else{
+			$this->db->where('expm.invoice_status',1);
+		}
+		$this->db->where('expm.received !=',1);	
 		
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('expm.jobid_fk', $job_ids);
@@ -133,24 +138,40 @@ class Invoice_model extends crm_model {
 			$filter['practice'] = @explode(',',$filter['practice']);
 			$this->db->where_in('l.practice', $filter['practice']);
 		}
-		if(!empty($filter['from_date']) && empty($filter['to_date'])) {
-			$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));
-		} else if(!empty($filter['from_date']) && !empty($filter['to_date'])) {
-			$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));
-			$this->db->where('DATE(expm.invoice_generate_notify_date) <=', date('Y-m-d', strtotime($filter['to_date'])));
-		} else {
-			if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
-				$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
-			} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
-				$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
-				$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
+		
+		if(!$invoice){
+			if(!empty($filter['from_date']) && empty($filter['to_date'])) {
+				$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));
+			} else if(!empty($filter['from_date']) && !empty($filter['to_date'])) {
+				$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));
+				$this->db->where('DATE(expm.invoice_generate_notify_date) <=', date('Y-m-d', strtotime($filter['to_date'])));
 			} else {
+				if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
+					$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+				} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
+					$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
+					$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
+				} else {
+					$from = date('Y-m-01');
+					$end  = date('Y-m-t');
+					$this->db->where('DATE(expm.invoice_generate_notify_date) >=', $from);
+					$this->db->where('DATE(expm.invoice_generate_notify_date) <=', $end);
+				}
+			}
+		}else{
+			if(!$filter['month_year_to_date']){
 				$from = date('Y-m-01');
 				$end  = date('Y-m-t');
-				$this->db->where('DATE(expm.invoice_generate_notify_date) >=', $from);
-				$this->db->where('DATE(expm.invoice_generate_notify_date) <=', $end);
+			}else{
+				$from = $filter['month_year_from_date'];
+				$end = $filter['month_year_to_date'];
 			}
+			
+			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($from)));
+			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($end)));
 		}
+	
+		
 		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
 			$this->db->where('DATE(expm.month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
 		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
@@ -158,7 +179,7 @@ class Invoice_model extends crm_model {
 			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
 		}
 		$query  = $this->db->get();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query();exit;
 		$res 	= $query->result_array();
 		return $res;
     }
@@ -286,6 +307,24 @@ class Invoice_model extends crm_model {
 		$this->db->where($condn);
         $this->db->delete($this->cfg['dbpref'].$tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+	}
+	
+	function get_invoice_customer(){
+		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 0 and exp.received != '1' group by cus.custid order by cus.first_name ";
+		$res = $this->db->query($qry);
+		return $res->result();
+	}
+	
+	function get_customer_invoices($custid){
+		$qry = "select cus.first_name,cus.last_name,cus.email_1,cus.email_2,cus.email_3,cus.email_4,cus.custid,le.lead_title,DATE_FORMAT(exp.month_year,'%d-%m-%Y') as month_year,DATE_FORMAT(exp.expected_date,'%d-%m-%Y') as milestone_date,exp.expectid,exp.amount,exp.project_milestone_name,exw.expect_worth_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id join ".$this->cfg['dbpref']."expect_worth as exw on exw.expect_worth_id=le.expect_worth_id where exp.invoice_status = 1 and exp.received != '1' and cus.custid=$custid order by exp.month_year desc,le.lead_title ";
+		$res = $this->db->query($qry);
+		//echo $this->db->last_query();exit;
+		return $res->result();		
+	}
+	
+	function get_payment_options(){
+		$qry = $this->db->get_where($this->cfg['dbpref'].'payment_options',array("ptype_status" => 1));
+		return $qry->result();
 	}
 }
 
