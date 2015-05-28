@@ -675,7 +675,7 @@ class Invoice extends CRM_Controller {
 				
 				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'month_year'=>date("F Y",strtotime($month_year)),'sub_total' => $sub_total.' '.$currency_type, 'tax' => $tax, 'tax_amount' => $tax_amount.' '.$currency_type,'total' => $total_amount.' '.$currency_type,'content' => $cont,"link" => $link,"expiry_date" => $expiry_date);
 
-				$param['to_mail'] 		  = "mthiyagarajan@enoahisolution.com";
+				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				$param['from_email']	  = 'webmaster@enoahprojects.com';
