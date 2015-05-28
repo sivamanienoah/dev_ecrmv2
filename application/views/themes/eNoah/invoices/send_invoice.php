@@ -40,7 +40,7 @@ if(count($expresults)>0 && !empty($expresults)){
 				<input type="hidden" name="invoice_id" value="<?php echo $expresults->expectid;?>" class="invoice_id" />
 				<div class="pull-left">
 					<label class="practices">Select Customer</label>
-					<select readonly="readonly" class="js_customer" name="customer">
+					<select disabled="disabled" class="js_customer" name="customer1">
 						<option value="">Select</option>
 						<?php if(count($customers)>0 && !empty($customers)){
 									foreach($customers as $customer){?>
@@ -48,7 +48,7 @@ if(count($expresults)>0 && !empty($expresults)){
 						<?php }}?>
 					</select>
 				</div>
-					<select class="js_customer_name" name="customer1" style="display:none;">
+					<select class="js_customer_name" name="customer" style="display:none;">
 						<option value="">Select</option>
 						<?php if(count($customers)>0 && !empty($customers)){
 									foreach($customers as $customer){?>
