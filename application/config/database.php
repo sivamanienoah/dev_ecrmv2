@@ -44,12 +44,13 @@
 | The $active_record variables lets you determine whether or not to load
 | the active record class
 */
-// Fourth Database
-// $active_group = "mantis bug tracker";
+
+// Fourth Database added
+// $active_group = "support";
 // $active_record = false;
 $db['support']['hostname'] = 'localhost';
-$db['support']['username'] = 'root';
-$db['support']['password'] = '';
+$db['support']['username'] = 'dev_support';
+$db['support']['password'] = 'Su996thj';
 $db['support']['database'] = 'dev_support';
 $db['support']['dbdriver'] = 'mysql';
 $db['support']['dbprefix'] = 'mantis_';
@@ -63,14 +64,13 @@ $db['support']['swap_pre'] = '';
 $db['support']['autoinit'] = TRUE;
 $db['support']['stricton'] = FALSE;
 
-
 // Third Database
 // $active_group = "econnect";
 // $active_record = false;
 $db['econnect']['hostname'] = 'localhost';
-$db['econnect']['username'] = 'root';
-$db['econnect']['password'] = '';
-$db['econnect']['database'] = 'tes_econnect';
+$db['econnect']['username'] = 'dev_econnectv9';
+$db['econnect']['password'] = 'ecoNewv9';
+$db['econnect']['database'] = 'dev_econnectv9';
 $db['econnect']['dbdriver'] = 'mysql';
 $db['econnect']['dbprefix'] = '';
 $db['econnect']['pconnect'] = FALSE;
@@ -84,16 +84,12 @@ $db['econnect']['autoinit'] = TRUE;
 $db['econnect']['stricton'] = FALSE;
 
 // Second Database
-// $active_group = "timesheet";
-// $active_record = false;
+$active_group = "timesheet";
+$active_record = TRUE;
 $db['timesheet']['hostname'] = 'localhost';
-$db['timesheet']['username'] = 'root';
-$db['timesheet']['password'] = '';
-$db['timesheet']['database'] = 'dev_timesheet-1';
-/* $db['timesheet']['username'] = 'dev_timesheetv3';
+$db['timesheet']['username'] = 'dev_timesheetv3';
 $db['timesheet']['password'] = 'T!mesHeetv3';
-$db['timesheet']['database'] = 'dev_timesheetv3'; */
-
+$db['timesheet']['database'] = 'dev_timesheetv3';
 $db['timesheet']['dbdriver'] = 'mysql';
 $db['timesheet']['dbprefix'] = 'enoah_';
 $db['timesheet']['pconnect'] = FALSE;
@@ -111,9 +107,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'dev_ecrmv2-1';
+$db['default']['username'] = 'dev_ecrmv2';
+$db['default']['password'] = 'Ecr@vm2';
+$db['default']['database'] = 'dev_ecrmv2';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
