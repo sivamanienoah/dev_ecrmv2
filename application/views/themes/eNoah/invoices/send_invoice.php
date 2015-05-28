@@ -284,7 +284,7 @@ $(document).ready(function(){
 	});
 	
 	$("#content").on("click",".js_delete",function(){
-		if(!confirm("Are you sure to delete?")){
+		if(confirm("Are you sure to delete?")){
 			$(this).parent().parent().remove();	
 		}
 		
