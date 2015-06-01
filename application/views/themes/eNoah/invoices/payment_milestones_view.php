@@ -46,6 +46,11 @@ button.ui-datepicker-current { display: none; }
 			</div>
 			<div class="section-right">
 				<div class="buttons export-to-excel">
+					<a href="<?php echo site_url('invoice/send_invoice/');?>">Send Payment Request</a>
+				</div>
+			</div>			
+			<div class="section-right">
+				<div class="buttons export-to-excel">
 					<button id="inv_excel" onclick="location.href='#'" class="positive" type="button">
 						Export to Excel
 					</button>

@@ -140,6 +140,7 @@ class Invoice extends CRM_Controller {
 		$data['total_amt'] = 0;
 		if(count($invoices)>0) {
 			foreach ($invoices as $inv) {
+				$data['invoices'][$i]['expectid']			    = $inv['expectid'];
 				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
 				$data['invoices'][$i]['lead_id'] 				= $inv['lead_id'];
@@ -458,9 +459,11 @@ class Invoice extends CRM_Controller {
 		$objWriter->save('php://output');
 	}
 	
-	public function payment_milestones($search_type = false, $search_id = false)
+
+	
+	public function payment($search_type = false, $search_id = false)
 	{
-        $data['page_heading'] = 'Pending Payment Milestones';
+        $data['page_heading'] = 'Payment(s) List';
 		
 		$data['projects']  = $this->invoice_model->get_projects();
 		$data['customers'] = $this->invoice_model->get_customers();
@@ -577,7 +580,29 @@ class Invoice extends CRM_Controller {
 	public function send_invoice($expid){
 		$data = array();
 		$data['expresults'] = '';
-		$this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.custid,c.first_name,c.last_name,c.company,c.email_1,c.email_2,c.email_3,c.email_4');
+		// $this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.custid,c.first_name,c.last_name,c.company,c.email_1,c.email_2,c.email_3,c.email_4');
+		// $this->db->from($this->cfg['dbpref'].'expected_payments as expm');
+		// $this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
+		// $this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		// $this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');		
+		// $this->db->where("expm.expectid", $expid);		
+		// $qry = $this->db->get();
+		// if($qry->num_rows()>0){
+			// $res = $qry->row();
+			// $data['expresults'] = $res;
+		// }
+		//echo '<pre>';print_r($res);exit;
+		$data['customers'] = $this->invoice_model->get_invoice_customer();
+		$data['payment_options'] = $this->invoice_model->get_payment_options();
+		$data['page_heading'] = "Send Invoice(s)";
+		$this->load->view("invoices/send_invoice",$data);
+	}
+	
+	public function edit_invoice($expid){
+		$data = array();
+		$data['expresults'] = '';
+		$data['attachments'] = '';
+		$this->db->select('expm.tax,expm.tax_price,expm.total_amount,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.custid,c.first_name,c.last_name,c.company,c.email_1,c.email_2,c.email_3,c.email_4');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
@@ -586,13 +611,88 @@ class Invoice extends CRM_Controller {
 		$qry = $this->db->get();
 		if($qry->num_rows()>0){
 			$res = $qry->row();
+			$attcs = $this->db->get_where($this->cfg['dbpref']."expected_payments_attachments",array("expectid" => $expid));
+			if($attcs->num_rows > 0){
+				$data['attachments'] = $attcs->result();
+			}
 			$data['expresults'] = $res;
 		}
 		//echo '<pre>';print_r($res);exit;
 		$data['customers'] = $this->invoice_model->get_invoice_customer();
 		$data['payment_options'] = $this->invoice_model->get_payment_options();
-		$data['page_heading'] = "Send Invoice(s)";
-		$this->load->view("invoices/send_invoice",$data);
+		$data['page_heading'] = "Edit Invoice";
+		$this->load->view("invoices/edit_invoice",$data);
+	}
+	
+	function save_invoice()
+	{
+		$errors = false;
+		$invoice_id = $this->input->post("invoice_id");		
+		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments",array("expectid" => $invoice_id));
+		if($qry->num_rows()>0){
+			$project_milestone_name = $this->input->post("project_milestone_name");
+			$tax = $this->input->post("tax");
+			$tax_price = $this->input->post("tax_price");
+			$total = $this->input->post("total");
+			
+			$this->load->library('upload');
+
+			$files = $_FILES;
+			$cpt = count($_FILES['attachment']['name']);
+			
+			if($cpt>0 && !empty($cpt) && $_FILES['attachment']['size'][0]>0){
+				for($i=0; $i<$cpt; $i++)
+				{ 
+					$_FILES['attachment']['name']= $files['attachment']['name'][$i];
+					$_FILES['attachment']['type']= $files['attachment']['type'][$i];
+					$_FILES['attachment']['tmp_name']= $files['attachment']['tmp_name'][$i];
+					$_FILES['attachment']['error']= $files['attachment']['error'][$i];
+					$_FILES['attachment']['size']= $files['attachment']['size'][$i];    
+					
+					$config = array();
+					$config['upload_path'] = FCPATH.'assets/invoices/';
+					$config['allowed_types'] = 'pdf|doc|docx|jpg|png';				
+					
+					$this->upload->initialize($config);
+					if( ! $this->upload->do_upload("attachment"))
+					{                                           
+						$data['upload_message'] = $this->upload->display_errors(); // ERR_OPEN and ERR_CLOSE are error delimiters defined in a config file
+						$this->load->vars($data);
+						$errors = TRUE;
+					}else{
+						$upload_data = $this->upload->data();
+						$arr = array("expectid" => $invoice_id,"file_name" => $upload_data['file_name'],"created_on" => date("Y-m-d"),"created_by" => $this->userdata['userid']);
+						$this->db->insert($this->cfg['dbpref']."expected_payments_attachments",$arr);
+					}
+				}
+				if($errors){
+					$this->session->set_userdata("error_message",$data['upload_message']);
+					redirect("invoice");				
+				}				
+			}
+
+			$this->db->update($this->cfg['dbpref']."expected_payments",array("project_milestone_name" => $project_milestone_name,"tax" => $tax,"tax_price" => $tax_price,"total_amount" => $total),array("expectid" => $invoice_id));
+			
+			$this->session->set_userdata("success_message","Invoice has been updated successfully");
+			redirect("invoice");
+		}else{
+			$this->session->set_userdata("error_message","Invalid process!");
+			redirect("invoice");
+		}
+	}
+	
+	function delete_attachment(){
+		$id = $this->input->get("id");
+		if($id){
+			$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments_attachments",array("id" => $id));
+			if($qry->num_rows()>0){
+				$res = $qry->row();
+				unlink(FCPATH.'assets/invoices/'.$res->file_name);
+				$this->db->delete($this->cfg['dbpref']."expected_payments_attachments",array("id" => $id));	
+				echo 1;
+			}
+		}
+		exit;
 	}
 	
 	function get_customer_invoices()

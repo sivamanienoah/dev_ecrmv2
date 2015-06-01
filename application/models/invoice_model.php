@@ -310,7 +310,7 @@ class Invoice_model extends crm_model {
 	}
 	
 	function get_invoice_customer(){
-		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 0 and exp.received != '1' group by cus.custid order by cus.first_name ";
+		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 1 and exp.received != '1' group by cus.custid order by cus.first_name ";
 		$res = $this->db->query($qry);
 		return $res->result();
 	}

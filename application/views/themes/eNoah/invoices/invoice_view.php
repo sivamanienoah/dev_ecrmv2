@@ -57,6 +57,14 @@ button.ui-datepicker-current { display: none; }
 			
 		</div>
 		
+		<?php if($this->session->userdata("success_message")):
+				echo '<div id="confirm"><p>'.$this->session->userdata("success_message").'</p></div>';
+				$this->session->set_userdata("success_message",'');
+		 endif; ?>		
+		<?php if($this->session->userdata("error_message")):
+				echo '<div id="error"><p>'.$this->session->userdata("error_message").'</p></div>';
+				$this->session->set_userdata("error_message",'');
+		 endif; ?>		
 		<?php 
 		if($this->session->userdata('accesspage')==1)
 		{
@@ -150,10 +158,11 @@ button.ui-datepicker-current { display: none; }
 					</tr>
 				</thead>
 				<tbody>
-				<?php if (is_array($invoices) && count($invoices) > 0) { ?>
+				<?php 
+					if (is_array($invoices) && count($invoices) > 0) { ?>
 					<?php foreach($invoices as $inv) { ?>
 						<tr>
-							<td><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></td>
+							<td><a href="<?php echo base_url().'invoice/edit_invoice/'.$inv['expectid'];?>"><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></a></td>
 							<td><?php echo ($inv['month_year']!='0000-00-00 00:00:00') ? date('M Y', strtotime($inv['month_year'])) : ''; ?></td>
 							<td><?php echo $inv['customer']; ?></td>
 							<td><a title='View' href="project/view_project/<?php echo $inv['lead_id'] ?>"><?php echo character_limiter($inv['lead_title'], 30); ?></a></td>
