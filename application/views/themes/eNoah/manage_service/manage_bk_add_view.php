@@ -9,12 +9,12 @@
 				<td>
 					<select name="financial_year" id="financial_year" class="textfield" onchange="getCurFinanYrExist(this.value)" style="width: 80px;">
 					<option value ="">Select</option>
-					<?php for($i=date("Y")+1;$i>=2010;$i--) { ?>
+					<?php for($i=date("Y")+2;$i>=2010;$i--) { ?>
 						<option value="<?php echo $i ?>"><?php echo $i ?></option>
 					<?php } ?>
 					</select>
 				</td>
-				<td><label>Convert To:</label></td>
+				<td><label>From Currency:</label></td>
 				<td>
 					<select name="expect_worth_id_to" id="expect_worth_id_to" class="textfield" onchange="getCurIdExist(this.value)" style="width: 80px;">
 					<option value ="">Select</option>

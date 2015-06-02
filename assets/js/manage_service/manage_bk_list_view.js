@@ -20,14 +20,12 @@ $(function() {
 		"bAutoWidth": false,	
 	});
 });
-
-function processDelete(id) {
-	window.location.href = 'manage_service/ser_delete/update/'+id;
+function processDelete(curr_year, curr_id) {
+	window.location.href = site_base_url+'manage_service/delete_bk_values/'+curr_year+'/'+curr_id;
 }
 function cancelDel() {
     $.unblockUI();
 }
-
 function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
@@ -66,6 +64,14 @@ function editCurValue(curr_year, curr_id) {
 			$( "#edit_currency_container" ).parent().addClass( "no-scroll" );
 		}
 	});
+}
+
+function deleteCurValue(curr_year, curr_id){
+	$.blockUI({
+		message:'<br /><h5>Are You Sure Want to Delete?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+curr_year+','+curr_id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		css:{width:'440px'}
+	});
+	$( ".blockUI.blockMsg.blockPage" ).addClass( "no-scroll" );
 }
 
 function add_bk_value(){

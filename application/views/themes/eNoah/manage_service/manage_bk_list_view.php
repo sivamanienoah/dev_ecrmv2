@@ -24,10 +24,10 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th rowspan=2>Year</th>
-				<th rowspan=2>From</th>
-				<th colspan="<?php echo count($currencies) ?>">To Currencies</th>
-				<th rowspan=2>Action</th>
+				<th style="text-align: center;" rowspan=2>Year</th>
+				<th style="text-align: center;" rowspan=2>From</th>
+				<th style="text-align: center;" colspan="<?php echo count($currencies) ?>">To</th>
+				<th style="text-align: center;" rowspan=2>Action</th>
 			</tr>
 			<tr>
 				<?php 
@@ -53,6 +53,9 @@ $userdata = $this->session->userdata('logged_in_user');
 					<td>
 						<?php if($this->session->userdata('edit')==1) { ?>
 							<a title='Edit' onclick="return editCurValue('<?php echo $curr_year ?>','<?php echo $from_cur ?>')"><img src="assets/img/edit.png" alt='Edit'></a>
+						<?php } ?>
+						<?php if($this->session->userdata('delete')==1) { ?>
+							<a title='Delete' onclick="return deleteCurValue('<?php echo $curr_year ?>','<?php echo $from_cur ?>')"><img src="assets/img/trash.png" alt='Delete'></a>
 						<?php } ?>
 					</td>
 				</tr>

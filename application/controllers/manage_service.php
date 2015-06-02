@@ -949,4 +949,17 @@ class Manage_service extends crm_controller {
 		echo json_encode($res);
 		exit;
 	}
+	
+	public function delete_bk_values($curr_year, $curr_id){
+		
+		if ($this->session->userdata('delete')==1) {
+			$this->manage_service_model->delete_row('book_keeping_currency_rates',array('financial_year'=>$curr_year,'expect_worth_id_to'=>$curr_id));
+			$this->session->set_flashdata('confirm', array('Book Keeping Currency Values Deleted.'));
+			redirect('manage_service/updt_bk_currency');
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!."));
+			redirect('manage_service/updt_bk_currency');
+		}
+		
+	}
 }
