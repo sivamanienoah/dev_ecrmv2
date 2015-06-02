@@ -193,7 +193,7 @@ class email_template_model extends crm_model {
 		}
 		
 		if(!empty($data['external_attach'])) {
-			$file_path = FCPATH.'assets/invoices/';
+			$file_path = FCPATH.'crm_data/invoices/';
 			foreach ($data['external_attach'] as $attach){
 				$this->email->attach($file_path.$attach['file_name']);
 			}

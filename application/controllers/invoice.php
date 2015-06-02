@@ -681,6 +681,7 @@ class Invoice extends CRM_Controller {
 				$param['subject'] 		  = $subject;
 				$param['external_attach'] 		  = $attached_files;
 				$param['job_id'] 		  = $pjtid;
+				//echo '<pre>';print_r($param);exit;
 				$this->email_template_model->sent_email($param);
 				$this->session->set_userdata("success_message","Invoice sent successfully!");
 				redirect("invoice/payment");
