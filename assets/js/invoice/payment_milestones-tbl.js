@@ -18,12 +18,15 @@ $(function() {
 		"bAutoWidth": false,
 		"aoColumns": [
             { sWidth: '5%' },
+            { sWidth: '10%' },
             { sWidth: '5%' },
-            { sWidth: '10%' },
-            { sWidth: '10%' },
+            { sWidth: '5%' },
+            { sWidth: '5%' },
             { sWidth: '7%' },
-            { sWidth: '10%' },
             { sWidth: '7%' },
-            { sWidth: '7%' }]
+            { sWidth: '7%' },
+            { sWidth: '7%' },
+            { sWidth: '7%' },
+            { sWidth: '10%' }]
 	});
 });
