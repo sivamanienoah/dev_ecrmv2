@@ -1,5 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); 
-//echo '<pre>';print_r($invoice); echo '</pre>';
+echo '<pre>';print_r($invoice); echo '</pre>';
+echo '<pre>';print_r($exp); echo '</pre>';
 ?>
 <div id="content">
 	<div class="inner login-inner">
@@ -9,29 +10,51 @@
 					<h2><?php echo $this->session->userdata('error_message');  $this->session->set_userdata('error_message','');?></h2>
 				<?php } else { ?>
 				<h2>Payment</h2>
-				<form action="userlogin/process_login/" method="post">
+				<form action="<?php echo site_url('payment/process_payment');?>" method="post">
 					<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<label>Project Name:</label>
-						<?php echo $invoice->lead_title;?> 
-						<br><br>
-						<label>Milestone Name:</label>
-						<?php echo $invoice->project_milestone_name;?> 
-						<br><br>
-						<label>For the Month & Year:</label>
-						<?php echo date("F Y",strtotime($invoice->month_year));?> 
-						<br><br>
- 					
-						<label>Sub Total:</label>
-						<?php echo $invoice->sub_total;?> 
-						<br><br>
-						<label>Tax (%):</label>
-						<?php echo $invoice->tax;?> 
-						<br><br>						
-						<label>Tax Amount:</label>
-						<?php echo $invoice->tax_amount;?> 
-						<br><br>
+						 <?php if(count($exp_details)>0 && !empty($exp_details)){
+								$total = 0;?>
+								<table cellspacing="0" cellpadding="0" border="0" class="data-table">
+									<tr>
+										<th>Project Name</th>
+										<th>Milestone Name</th>
+										<th>Price</th>
+										<th>Tax(%)</th>
+										<th>Tax Price</th>
+										<th>Total</th>
+										<th>Attachment</th>
+									</tr>
+									<?php foreach($exp_details as $exp){ 
+									//echo '<pre>';print_r($exp);
+									$total += $exp->total_amount;?>
+									<tr>
+										<td><?php echo $exp->lead_title; ?></td>
+										<td><?php echo $exp->project_milestone_name; ?></td>
+										<td><?php echo $exp->expect_worth_name.' '.number_format($exp->amount,2); ?></td>
+										<td><?php echo $exp->tax; ?></td>
+										<td><?php echo $exp->expect_worth_name.' '.number_format($exp->tax_price,2); ?></td>
+										<td><?php echo $exp->expect_worth_name.' '.number_format($exp->total_amount,2); ?></td>
+										<td>
+										<?php $qry = $this->db->get_where($this->cfg['dbpref']."expected_payments_attachments",array("expectid" => $exp->expectid));
+											$res = $qry->result();
+											if($qry->num_rows()>0){
+												foreach($res as $rs){
+													echo anchor(site_url("assets/invoices/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
+												}
+											}
+										?>
+										</td>
+									</tr>
+								<?php }?>
+								</table>
+							<?php  }?>
 						<label>Total Amount:</label>
-						<?php echo $invoice->total_amount;?> 
+						<?php echo $exp->expect_worth_name.' '.number_format($total,2);?> 
+						<input type="hidden" name="total_amount" value="<?php echo $total;?>" />
+						<input type="hidden" name="currency_type" value="<?php echo $exp->expect_worth_name;?>" />
+						<input type="hidden" name="custid_fk" value="<?php echo $invoice->cust_id;?>" />
+						<input type="hidden" name="inv_id" value="<?php echo $invoice->inv_id;?>" />
+						<input type="hidden" name="unique_link" value="<?php echo $invoice->unique_link;?>" />
 						<br><br>
 						<label>Payment By:</label>
 						<input type="radio" name="payment_method" value="1"/>&nbsp;Paypal
@@ -73,7 +96,7 @@
 							{
 								$newEndingDate = date("Y", strtotime(date("Y-m-d") . " + ".$yr." year"));
 							?>
-							<option value="<?php echo $newEndingDate; ?>" <?php if(isset($_POST['expiry_year']) && $_POST['expiry_year']==$mnth) echo 'selected="selected"'; ?>><?php echo $newEndingDate; ?> </option>
+							<option value="<?php echo substr($newEndingDate,2,2); ?>" <?php if(isset($_POST['expiry_year']) && $_POST['expiry_year']==$mnth) echo 'selected="selected"'; ?>><?php echo $newEndingDate; ?> </option>
 							<?php } ?>
 						</select>
 						<br><br>	
@@ -85,7 +108,6 @@
 				<?php } ?>
 			</div>
 		</div>
-		
 	</div>
 </div>
 <script type="text/javascript">

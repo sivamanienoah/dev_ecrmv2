@@ -5,6 +5,7 @@ $userdata = $this->session->userdata('logged_in_user');
 //echo count($customers);exit;
 //echo '<pre>';print_r($customers);exit;
 ?>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <div id="content">
 	<div class="inner">	
 		 <div class="pull-left side1 test-block full-div"> 
@@ -13,9 +14,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<div >
 			<form action="<?php echo base_url().'invoice/submit_invoice'?>" method="post" enctype="multipart/form-data">
 				<input type="hidden" id="csrf_hash_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				<input type="hidden" name="customer_name" value="<?php echo $expresults->amount;?>" class="js_sub_total" />
 				<input type="hidden" name="customer_name" value="" class="customer_name" />
-				<input type="hidden" name="currency_type" value="" class="currency_type" />
 				<div class="pull-left">
 					<label class="practices">Select Customer</label>
 					<select class="js_customer" name="customer">
@@ -32,15 +31,15 @@ $userdata = $this->session->userdata('logged_in_user');
 				<div class="pull-left">
 					<label class="practices">Payment Options</label>
 					 <?php if(count($payment_options)>0){ foreach($payment_options as $payment) { ?>
-						 <input checked="checked" type="checkbox" name="payment_options[]" value="<?php echo $payment->ptype_id;?>" />&nbsp;&nbsp;<?php echo $payment->ptype_name;?>&nbsp;&nbsp;
+						 <input class="js_payment_options" checked="checked" type="checkbox" name="payment_options[]" value="<?php echo $payment->ptype_id;?>" />&nbsp;&nbsp;<?php echo $payment->ptype_name;?>&nbsp;&nbsp;
 					 <?php }}?>
 				</div>
- 
-				<div class="clear"></div>				
+				<div class="clear"></div>
 				<div class="pull-left">
-					<label class="practices">Total</label>
-					<span class="js_expect_worth"></span><input type="text" name="total" class="total" readonly="readonly" value="<?php echo number_format($expresults->amount,2,'.',',');?>" />
-				</div>
+					<label class="practices">Expiry Date</label>
+					<input type="text" class="textfield width300px" name="expiry_date" id="expiry_date" value="<?php echo date("d-m-Y",strtotime(EXPIRYDAYS." days"))?>" />
+				</div>	 
+				 
 				<div class="clear"></div>
 				<div class="pull-left">
 					<label class="practices">Email Address</label>
@@ -50,7 +49,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices"></label>
-					<input type="submit" name="submit" class="js_submit" value="Submit" />
+					<input onClick="return startQuote();" type="submit" name="submit" class="js_submit" value="Submit" />
 				</div>					
 			</form>	
 			</div>
@@ -58,7 +57,76 @@ $userdata = $this->session->userdata('logged_in_user');
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
 <script type="text/javascript">
+
+function startQuote() {
+    var err = [];
+	
+    if ($('.js_customer').val() == '') {
+        err.push('A valid customer needs to be selected');
+    }
+	if(!$('.js_invoice_checkbox').length){
+		err.push('A valid customer with invoice needs to be selected');
+	}
+	
+	if(!$('.js_invoice_checkbox').is(":checked")){
+		err.push('Please select Invoice to send');
+	}
+	 
+	if ($.trim($('#expiry_date').val()) == '') {
+        err.push('Expiry Date is required');
+    }
+	if(!$('.js_payment_options').is(':checked')){
+		err.push('Select any Payment Option');
+	}
+ 
+ 
+	if ($.trim($('.email_address').val()) == '') {
+        err.push('Email Address is required');
+    }else if($.trim($('.email_address').val())){
+		var ems = $('.email_address').val();
+		var emails = ems.split(",");
+		var userinput = '';
+		for(var c=0; c<emails.length; c++){
+			userinput = emails[c];
+			if(!validateEmail(userinput)){
+				err.push('Invalid Email Address');
+			}
+		}
+	}
+	
+    if (err.length > 0) {
+        // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+		$.blockUI({
+			message:'<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">'+err.join('<br />')+'</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
+			css:{width:'440px'}
+		});
+        return false;
+    } else {
+		return true;		
+    } 
+}
+
+function validateEmail(email) {
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return re.test(email);
+}
+
+function cancelDel() {
+    $.unblockUI();
+}
+
 $(document).ready(function(){
+	
+	/* resetting selected values */
+	$(".js_customer").val("");
+	$(".email_address").val("");
+	
+	$('#expiry_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true
+	});		
+	
 	$(".js_customer").change(function(){
 		var custid = $(this).val()
 		var csrf_hash_token = $("#csrf_hash_token").val();
@@ -70,87 +138,14 @@ $(document).ready(function(){
 				if(data=='no_results'){
 					alert("Invoice(s) not found for the selected customer!");
 				}else{
-					$(".js_leads_list").css("display","block");
-					var inv = $.parseJSON(data);
-					var html = '<table cellspacing="0" cellpadding="0" border="0" class="data-table"><thead><tr><th>Select Invoice</th><th>Project Name</th><th>Payment Milestone</th><th>Milestone Date</th><th>For the Month & Year</th><th>Amount</th></tr></thead><tbody>';
-					
-					for(var i=0;i<inv.length;i++){
-						html += '<tr><td><input class="js_invoice_checkbox" type="checkbox" name="invoice_id[]" value="'+inv[i].expectid+'" /><input type="hidden" name="" value="'+inv[i].amount+'" /></td>';
-						html += '<td>'+inv[i].lead_title+'<input type="hidden" name="project_name[]" value="'+inv[i].lead_title+'" /></td>';
-						html += '<td>'+inv[i].project_milestone_name+'<input type="hidden" name="project_milestone_name[]" value="'+inv[i].project_milestone_name+'" /></td>';
-						html += '<td>'+inv[i].milestone_date+'</td>';
-						html += '<td>'+inv[i].month_year+'<input type="hidden" name="month_year[]" value="'+inv[i].month_year+'" /></td>';
-						html += '<td>'+inv[i].expect_worth_name+' '+inv[i].amount+'<input type="hidden" name="amount[]" value="'+inv[i].amount+'" /></td>';
-						html += '</tr>';
-					}
-					var email_address = '';
-					if(inv[0].email_1){
-						email_address += inv[0].email_1;
-					}
-					if(inv[0].email_2){
-						email_address += ','+inv[0].email_2;
-					}
-					if(inv[0].email_3){
-						email_address += ','+inv[0].email_3;
-					}
-					if(inv[0].email_4){
-						email_address += ','+inv[0].email_4;
-					}
-					html += '</tbody></table>';
-					$(".js_leads_list").html(html);
-					$(".email_address").val(email_address);
-					$(".customer_name").val(inv[0].first_name+' '+inv[0].last_name);
-					$('.js_expect_worth').html(inv[0].expect_worth_name)
-					$('.js_expect_worth').html(inv[0].expect_worth_name)
-					$('.currency_type').val(inv[0].expect_worth_name)
+					  $(".js_leads_list").css("display","block");
+					  $(".js_leads_list").append(data);
 				}
 			  }
 			});
 			return false;
 		}
 	});
-	
-	$("#content").on("click",".js_invoice_checkbox",function(){
-		var sub = $(".js_sub_total").val();
-		var thisvalue = $(this).next().val();
-		if($(this).prop("checked")){			
-			var sub_total = parseFloat(sub) + parseFloat(thisvalue);
-		}else{
-			var sub_total = parseFloat(sub) - parseFloat(thisvalue);
-		}
-		var sum = sub_total.toFixed(2);
-		$(".js_sub_total").val(sum);
-		
-		if($(".js_tax").val()){
-			var tax_value = $(".js_tax").val();
-			var tax_addition = (parseFloat(sum)*parseFloat(tax_value))/100;
-			var tax_total = parseFloat(sum)+parseFloat(tax_addition);
-			tax_total = tax_total.toFixed(2);
-			tax_addition = tax_addition.toFixed(2);
-			$(".tax_price").val(tax_addition);
-			$(".total").val(tax_total);
-		}else{
-			$(".total").val(sum);
-		}
-		
-		
-	});
-	
-	$(".js_tax").blur(function(){
-		var tax_value = $(this).val();
-		var sub_total = $(".js_sub_total").val();
-		
-		if(tax_value){
-			var tax_addition = (parseFloat(sub_total)*parseFloat(tax_value))/100;
-			tax_addition = tax_addition.toFixed(2);
-			var total = parseFloat(sub_total)+parseFloat(tax_addition);
-			total = total.toFixed(2);
-			$(".total").val(total);
-			$(".tax_price").val(tax_addition);
-		}
-		
-		
-	})
 });
 </script>
 <?php

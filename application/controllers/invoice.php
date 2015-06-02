@@ -459,139 +459,22 @@ class Invoice extends CRM_Controller {
 		$objWriter->save('php://output');
 	}
 	
-
+	/*
+	method to get the list of payment invoice has been sent.
+	*/
 	
 	public function payment($search_type = false, $search_id = false)
 	{
-        $data['page_heading'] = 'Payment(s) List';
-		
-		$data['projects']  = $this->invoice_model->get_projects();
-		$data['customers'] = $this->invoice_model->get_customers();
-		$data['practices'] = $this->invoice_model->get_practices();
-		$data['sales_divisions'] = $this->invoice_model->get_sales_divisions();
-		$data['saved_search'] = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
-		
-		$project   = 'null';
-		$customer  = 'null';
-		$divisions = 'null';
-		$practice  = 'null';
-		$from_date = 'null';
-		$to_date   = 'null';
-		$month_year_from_date = 'null';
-		$month_year_to_date   = 'null';
-		
-		$filter =  array();
-		$data['val_export'] = 'no_search';
-		if($search_type == 'search' && $search_id == false) {
-			$filter = real_escape_array($this->input->post());
-			// echo "<pre>"; print_r($filter); exit;
-			$data['val_export'] = 'search';
-		} else if ($search_type == 'search' && is_numeric($search_id)) {
-			
-			$wh_condn = array('search_id'=>$search_id, 'search_for'=>3, 'user_id'=>$this->userdata['userid']);
-			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			if(!empty($get_rec)) {
-				$data['val_export'] = $search_id;
-				unset($get_rec['search_id']);
-				unset($get_rec['search_for']);
-				unset($get_rec['search_name']);
-				unset($get_rec['user_id']);
-				unset($get_rec['is_default']);
-				unset($get_rec['stage']);
-				unset($get_rec['pjtstage']);
-				unset($get_rec['leadassignee']);
-				unset($get_rec['owner']);
-				unset($get_rec['worth']);
-				unset($get_rec['regionname']);
-				unset($get_rec['countryname']);
-				unset($get_rec['statename']);
-				unset($get_rec['locname']);
-				unset($get_rec['lead_status']);
-				unset($get_rec['lead_indi']);
-				unset($get_rec['service']);
-				$filter	  = real_escape_array($get_rec);
-				$filter['filter'] = 'filter';
-			}
-		} else {
-			$wh_condn = array('search_for'=>3, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
-			$get_rec  = $this->invoice_model->get_data_by_id('saved_search_critriea', $wh_condn);
-			// echo $this->db->last_query(); # exit;
-			if(!empty($get_rec)) {
-				$data['val_export'] = $get_rec['search_id'];
-				unset($get_rec['search_id']);
-				unset($get_rec['search_for']);
-				unset($get_rec['search_name']);
-				unset($get_rec['user_id']);
-				unset($get_rec['is_default']);
-				unset($get_rec['stage']);
-				unset($get_rec['pjtstage']);
-				unset($get_rec['leadassignee']);
-				unset($get_rec['owner']);
-				unset($get_rec['worth']);
-				unset($get_rec['regionname']);
-				unset($get_rec['countryname']);
-				unset($get_rec['statename']);
-				unset($get_rec['locname']);
-				unset($get_rec['lead_status']);
-				unset($get_rec['lead_indi']);
-				unset($get_rec['service']);
-				$filter	  = real_escape_array($get_rec);
-			}
-		}
-		// echo 'val_export '.$data['val_export']; exit;
-		$bk_rates = get_book_keeping_rates();
-		
-		$invoices = $this->invoice_model->get_invoices($filter,1);
-		//echo $this->db->last_query(); exit;
-		$rates 	  = $this->get_currency_rates();
-		$data['default_currency'] = $this->default_cur_name;
-		$data['invoices'] = array();
-		$i = 0;
-		$data['total_amt'] = 0;
-		if(count($invoices)>0) {
-			foreach ($invoices as $inv) {
-				$data['invoices'][$i]['expectid']			    = $inv['expectid'];
-				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
-				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
-				$data['invoices'][$i]['lead_id'] 				= $inv['lead_id'];
-				$data['invoices'][$i]['customer'] 			    = $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
-				$data['invoices'][$i]['project_milestone_name'] = $inv['project_milestone_name'];
-				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
-				// $data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
-				// $data['invoices'][$i]['new_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][1]);
-				$data['invoices'][$i]['coverted_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$this->default_cur_id]);
-				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
-				$data['invoices'][$i]['month_year'] 			= $inv['month_year'];
-				// $data['invoices'][$i]['financial_year'] 		= $this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31");
-				$data['total_amt'] 	                           += $data['invoices'][$i]['coverted_amt'];
-				$i++;
-			}
-		}
-		
-		// echo "<pre>"; print_r($data['invoices']); exit;
-		
-		if($filter['filter']!="")
-			$this->load->view('invoices/payment_milestones_view_grid', $data);
-		else
-			$this->load->view('invoices/payment_milestones_view', $data);
+		$data = array();
+		$data['page_heading'] = "Payment(s) List";
+		$data['results'] = $this->invoice_model->get_payment_invoice_list();
+		$this->load->view('invoices/payment_milestones_view', $data);			
     }
 	
 
 	public function send_invoice($expid){
 		$data = array();
 		$data['expresults'] = '';
-		// $this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.custid,c.first_name,c.last_name,c.company,c.email_1,c.email_2,c.email_3,c.email_4');
-		// $this->db->from($this->cfg['dbpref'].'expected_payments as expm');
-		// $this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
-		// $this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
-		// $this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');		
-		// $this->db->where("expm.expectid", $expid);		
-		// $qry = $this->db->get();
-		// if($qry->num_rows()>0){
-			// $res = $qry->row();
-			// $data['expresults'] = $res;
-		// }
-		//echo '<pre>';print_r($res);exit;
 		$data['customers'] = $this->invoice_model->get_invoice_customer();
 		$data['payment_options'] = $this->invoice_model->get_payment_options();
 		$data['page_heading'] = "Send Invoice(s)";
@@ -697,58 +580,60 @@ class Invoice extends CRM_Controller {
 	
 	function get_customer_invoices()
 	{
+		$data = array();
 		$custid = $this->input->get("custid");
-		$invoices = $this->invoice_model->get_customer_invoices($custid);
-		if(count($invoices)>0 && !empty($invoices)){
-			echo json_encode($invoices);
+		$data['invoices'] = $this->invoice_model->get_customer_invoices($custid);
+		 
+		if(count($data['invoices'])>0 && !empty($data['invoices'])){
+			//echo json_encode($invoices);
+			$this->load->view("invoices/invoices_to_send",$data);
 		}else{
 			echo 'no_results';
+			exit;
 		}
-		exit;
 	}
 	
 	function submit_invoice(){
- 		 /* echo '<pre>';
-		print_r($_REQUEST);
-		print_r($_FILES);
-		exit;  */
+
 		if($this->input->post("customer")){
-			$customer_id = $this->input->post("customer");
-			$customer_name = $this->input->post("customer_name");
+			$customer_id = $this->input->post("customer");			
 			$payment_options = implode(",",$this->input->post("payment_options"));
-			$invoice_ids = $this->input->post("invoice_id");
-			$cust_email = $this->input->post("email_address");
+			$invoice_ids = $this->input->post("invoice_id");			
 			$expiry_date = $this->input->post("expiry_date");
 			$unique_link = uniqid();
-			$total_amount = $this->input->post("total");
-			$sub_total = $this->input->post("sub_total");
-			$tax = $this->input->post("tax");
-			$tax_amount = $this->input->post("tax_price");
+			
 			$currency_type = $this->input->post("currency_type");
 			$created_date = date("Y-m-d H:i:s");
 			
+			$this->db->select("first_name,last_name");
+			$cust = $this->db->get_where($this->cfg['dbpref']."customers",array("custid" => $customer_id));
+			if($cust->num_rows()>0){
+				
+				$customer = $cust->row();
+				$customer_name = $customer->first_name.' '.$customer->last_name;
+			}
+			
+			$cust_email = $this->input->post("email_address");
+			
 			$ins_arr = array("cust_id" => $customer_id,
 							"cust_email" => $cust_email,
-							"exp_id" => $invoice_ids,
+							// "exp_id" => $invoice_ids, removed to allow multiple entries
 							"unique_link" => $unique_link,
-							"sub_total" => $sub_total,
-							"total_amount" => $total_amount,
-							"tax" => $tax,
-							"tax_amount" => $tax_amount,
 							"payment_options" => $payment_options,
 							"expiry_date" => date("Y-m-d",strtotime($expiry_date)),
 							"status" => 0,
-							"paid_status" => 0,
 							"created_date" => $created_date);
-							
+			 
+			
 			$this->db->insert($this->cfg['dbpref'].'invoices',$ins_arr);
 			$insert_id = $this->db->insert_id();
 			
-			/* if(count($invoice_ids)>0){
+			 if(count($invoice_ids)>0){
 				foreach($invoice_ids as $invoice_id){
 					$sub_ins_arr = array("inv_id" => $insert_id,"exp_id" => $invoice_id,"created_on" => $created_date,"status"=> 0);
+					$this->db->insert($this->cfg['dbpref'].'invoices_child',$sub_ins_arr);
 				}
-			} */
+			} 
 			
 			if($insert_id){
 				//email sent by email template
@@ -769,24 +654,36 @@ class Invoice extends CRM_Controller {
 				$link = base_url().'payment/dopay/'.$unique_link;
 				//if(count($project_name)>0 && !empty($project_name)){
 				//	for($i=0;$i<count($project_name);$i++){
-						$cont .= '<tr><td>'.$project_name.'</td><td>'.$project_milestone_name.'</td><td>'.date("F Y",strtotime($month_year)).'</td><td>'.$sub_total.' '.$currency_type.'</td></tr>';
+				//		$cont .= '<tr><td>'.$project_name.'</td><td>'.$project_milestone_name.'</td><td>'.date("F Y",strtotime($month_year)).'</td><td>'.$sub_total.' '.$currency_type.'</td></tr>';
 				//	}
 				//}
 				
-				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'month_year'=>date("F Y",strtotime($month_year)),'sub_total' => $sub_total.' '.$currency_type, 'tax' => $tax, 'tax_amount' => $tax_amount.' '.$currency_type,'total' => $total_amount.' '.$currency_type,'content' => $cont,"link" => $link,"expiry_date" => $expiry_date);
-
-				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com";
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'content' => $cont,"link" => $link,"expiry_date" => $expiry_date);
+				
+				$attached_files = array();
+			 
+				
+				$this->db->where_in("expectid",$invoice_ids);
+				$f = $this->db->get($this->cfg['dbpref']."expected_payments_attachments");
+				$files = $f->result();
+				if(count($files)>0 && !empty($files)){
+					foreach($files as $key => $f){
+						$attached_files[$key]['file_name'] = $f->file_name;	
+					}
+				}
+				
+				$param['to_mail'] 		  = "mthiyagarajan@enoahisolution.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				$param['from_email']	  = 'webmaster@enoahprojects.com';
 				$param['from_email_name'] = 'Webmaster';
 				$param['template_name']	  = "Send Customer Invoice";
 				$param['subject'] 		  = $subject;
-				$param['attach'] 		  = $attached_files;
+				$param['external_attach'] 		  = $attached_files;
 				$param['job_id'] 		  = $pjtid;
 				$this->email_template_model->sent_email($param);
-				$this->session->set_userdata("success_message","Invoice generated successfully!");
-				redirect("invoice/payment_milestones");
+				$this->session->set_userdata("success_message","Invoice sent successfully!");
+				redirect("invoice/payment");
 			}
 		}
 	}
