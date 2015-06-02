@@ -187,6 +187,15 @@ class manage_service_model extends crm_model {
     	$this->db->where($cond);
 		return $this->db->update($this->cfg['dbpref'].$table, $data);
     }
+	
+ 	/*
+	*@Update Row for dynamic table
+	*@Method  update_row
+	*/
+    /*public function update_row($table, $cond, $data) {
+		$sql = $this->db->insert_string($this->cfg['dbpref'].$table, $data) . ' ON DUPLICATE KEY UPDATE column_name1=value1, column_name2=value2';
+		return $this->db->query($sql);
+    } */
 
 	/*
 	*@Insert Row for dynamic table
@@ -195,10 +204,18 @@ class manage_service_model extends crm_model {
 	public function insert_row($table, $param) {
     	$this->db->insert($this->cfg['dbpref'].$table, $param);
     }
+	
+	/*
+	*@Insert Row for dynamic table
+	*@Method  insert_row
+	*/
+	public function insert_return_row($table, $param) {
+    	return $this->db->insert($this->cfg['dbpref'].$table, $param);
+    }
 
 	/*
 	*@Delete Row for dynamic table
-	*@Method  insert_row
+	*@Method  delete_row
 	*/
 	public function delete_row($table, $cond) {
         $this->db->where($cond);
@@ -217,6 +234,56 @@ class manage_service_model extends crm_model {
 		$res = $this->db->get($this->cfg['dbpref'].$tbl_name);
         return $res->num_rows();
 	}
+	
+	####### get single row ########
+	function get_record($select,$table,$where='')
+	{
+		$this->db->select($select);
+		if($where){
+			$this->db->where($where);
+		}
+		$query = $this->db->get($this->cfg['dbpref'].$table,1);
+ 		return $query->row_array();
+	}
+	
+	/*
+	*@Get records for Search
+	*@Sales Forecast Model
+	*/
+	public function get_records($tbl, $wh_condn='', $order='') {
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
+
+	/*
+	*@Get records for Search
+	*@Sales Forecast Model
+	*/
+	public function get_bk_curr_records($wh_condn='', $order='') {
+		$this->db->select('bk.expect_worth_id_from,bk.expect_worth_id_to,bk.financial_year,bk.currency_value,ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'book_keeping_currency_rates bk');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id=bk.expect_worth_id_from', 'LEFT');
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		return $query->result_array();
+    }
     
 }
 

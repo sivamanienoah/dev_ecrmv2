@@ -18,9 +18,15 @@ $userdata = $this->session->userdata('logged_in_user');
 						</button>
 					</div>
 				
-					<div class="buttons update-currency-value">
+					<!--div class="buttons update-currency-value">
 						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/updt_cur_from_live'">
 							Update Currency Values
+						</button>
+					</div-->
+					
+					<div class="buttons update-currency-value">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_service/updt_bk_currency'">
+							Update Book Keeping Currency
 						</button>
 					</div>
 			</div>

@@ -780,4 +780,173 @@ class Manage_service extends crm_controller {
 			echo json_encode('fail');
 		exit;
 	}
+	
+	/*
+	*@For updating book keeping currency value
+	*@Method   updt_bk_currency
+	*/
+	public function updt_bk_currency()
+	{
+		$this->load->helper('custom_helper');
+		
+		if (get_default_currency()) {
+			$get_currency = get_default_currency();
+			$default_cur_id   = $get_currency['expect_worth_id'];
+			$default_cur_name = $get_currency['expect_worth_name'];
+		} else {
+			$default_cur_id   = '1';
+			$default_cur_name = 'USD';
+		}
+		
+		$data = array();
+		$data['currency_rec']     = '';
+		$data['page_heading'] 	  = 'Manage Book Keeping Currency Values';
+		$data['default_cur_id']   = $default_cur_id;
+		$data['default_cur_name'] = $default_cur_name;
+		$data['currencies'] 	  = $this->manage_service_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		// $records	     		  = $this->manage_service_model->get_records('book_keeping_currency_rates', '', $order=array('financial_year'=>'asc'));
+		$records	     		  = $this->manage_service_model->get_records('book_keeping_currency_rates', '', '');
+		// echo "<pre>"; print_r($records); exit;
+		if(!empty($records) && count($records)>0) {
+			foreach($records as $rec)
+			$data['currency_rec'][$rec['financial_year']][$rec['expect_worth_id_to']][$rec['expect_worth_id_from']] = $rec['currency_value'];
+		}
+		// echo "<pre>"; print_r($data['currency_val']); exit;
+		$this->load->view('manage_service/manage_bk_list_view', $data);
+	}
+	
+	/*
+	*@For Editing Sales forecast
+	*@Method edit_sale_forecast
+	*/
+	public function get_edit_currency_container($curr_year, $curr_id)
+	{
+		$error = false;
+		if ($this->session->userdata('edit')==1)
+		{
+			if (preg_match('/^[0-9]+$/', $curr_id))
+			{
+				$data['curr_data'] = $this->manage_service_model->get_bk_curr_records($wh=array('bk.financial_year' => $curr_year, 'bk.expect_worth_id_to'=>$curr_id, 'ew.status'=>1), $sor=array('bk.expect_worth_id_from'=>'asc'));
+				$data['financial_year'] = $curr_year;
+				$data['convert_to']     = $this->manage_service_model->get_record('expect_worth_id,expect_worth_name,cur_name','expect_worth',array('expect_worth_id'=>$curr_id));
+				$data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			} else {
+				$error = true;
+			}
+		}
+		if($error==true){
+			return false;
+		} else {
+			$this->load->view('manage_service/manage_bk_edit_view', $data);
+		}
+	}
+	
+	/*
+	*@For Editing book keeping currency values
+	*@Method save_bk_value
+	*/
+	public function save_bk_value()
+	{
+		$res = array();
+		$res['result'] = '';
+		$res['msg'] = '';
+		
+		$post_data = real_escape_array($this->input->post());
+		
+		// echo "<pre>"; print_r($post_data); exit;
+		// echo "<pre>"; print_r($post_data['expect_worth_id_from']); exit;
+		
+		$res['result'] = 'ok';
+		
+		foreach($post_data['expect_worth_id_from'] as $from_id=>$curr_value){
+			/* $updt = $this->manage_service_model->update_row("book_keeping_currency_rates", 
+			$cond = array('financial_year'=>$post_data['financial_year'], 'expect_worth_id_from'=>$from_id,'expect_worth_id_to'=>$post_data['expect_worth_id_to']),
+			$up_dt= array('currency_value'=>$curr_value, 'modified_by'=>$this->userdata['userid'], 'modified_on'=>date("Y-m-d H:i:s"))
+			); */
+			$data = array('currency_value'=>$curr_value, 'created_by'=>$this->userdata['userid'], 'created_on'=>date("Y-m-d H:i:s"), 'financial_year'=>$post_data['financial_year'], 'expect_worth_id_from'=>$from_id, 'expect_worth_id_to'=>$post_data['expect_worth_id_to']);
+			
+			$sql = $this->db->insert_string($this->cfg['dbpref'].'book_keeping_currency_rates', $data) . ' ON DUPLICATE KEY UPDATE financial_year='.$post_data['financial_year'].', expect_worth_id_from='.$from_id.', expect_worth_id_to='.$post_data['expect_worth_id_to'].', currency_value='.$curr_value.', modified_by='.$this->userdata['userid'];
+			$updt = $this->db->query($sql);
+			// echo $this->db->last_query();
+			if(!$updt) {
+				$res['result'] = 'fail';
+				$res['msg'] = 'Some of the book keeping values could not be updated.';
+				break;
+			}
+		}
+		
+		echo json_encode($res);
+		exit;
+	}
+	
+	/*
+	*@Get Form for Adding book keeping currency values
+	*@Method add_form_bk_values
+	*/
+	public function add_form_bk_values()
+	{
+		$data = array();
+		$data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		$this->load->view('manage_service/manage_bk_add_view', $data);
+	}
+
+	/*
+	*@For checking existing currency values
+	*@Method check_exist_currency_value
+	*/
+	public function check_exist_currency_value()
+	{
+		$post_data = real_escape_array($this->input->post());
+	
+		$res = array();
+		$res['result']  = 'success';
+		$res['message'] = '';
+		$bk_data = $this->manage_service_model->get_records('book_keeping_currency_rates', $wh_condn=array('financial_year'=>$post_data['financial_year'],'expect_worth_id_to'=>$post_data['expect_worth_id_to']), $order='');
+		if(count($bk_data)>0) {
+			$res['result']  = 'failure';
+			$res['message'] = 'Value Already Exists for this Currency & Year.';
+		} else {
+			$currencies = $this->manage_service_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			foreach($currencies as $cr) {
+				$res['message'] .= '<tr><td style="padding:0 10px 0"><label>'.$cr["expect_worth_name"].'</label>:</td>';
+				if($post_data['expect_worth_id_to']!=$cr['expect_worth_id']) {
+					$res['message'] .= '<td><input type="text" name="expect_worth_id_from['.$cr['expect_worth_id'].']" onkeypress="return isNumberKey(event)" value="" class="textfield width100px ip_curr" /></td>';
+				} else {
+					$res['message'] .= '<td><input type="text" readonly name="expect_worth_id_from['.$cr['expect_worth_id'].']" onkeypress="return isNumberKey(event)" value="1" class="textfield width100px ip_curr" /></td>';
+				}
+				$res['message'] .= '</tr>';
+			}
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	/*
+	*@For Adding book keeping currency values
+	*@Method add_bk_values
+	*/
+	public function add_bk_values()
+	{
+		$res = array();
+		$res['result'] = '';
+		$res['msg'] = '';
+		
+		$post_data = real_escape_array($this->input->post());
+		
+		// echo "<pre>"; print_r($post_data); exit;
+		
+		$res['result'] = 'ok';
+		
+		foreach($post_data['expect_worth_id_from'] as $from_id=>$curr_value){
+			$updt = $this->manage_service_model->insert_return_row("book_keeping_currency_rates", $cond=array('expect_worth_id_from'=>$from_id,'expect_worth_id_to'=>$post_data['expect_worth_id_to'],'financial_year'=>$post_data['financial_year'],'currency_value'=>$curr_value,'created_by'=>$this->userdata['userid'],'created_on'=>date("Y-m-d H:i:s"),'modified_by'=>$this->userdata['userid']));
+			if(!$updt) {
+				$res['result'] = 'fail';
+				$res['msg'] = 'Some of the book keeping values could not be added.';
+				break;
+			}
+		}
+		
+		echo json_encode($res);
+		exit;
+	}
 }
