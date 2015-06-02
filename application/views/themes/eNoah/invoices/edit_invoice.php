@@ -98,7 +98,7 @@ if(count($expresults)>0 && !empty($expresults)){
 				if(count($attachments)>0 && !empty($attachments)){
 					foreach($attachments as $attach){?>
 						<a href="javascript:void(0)" class="js_del_attach" rel="<?php echo $attach->id;?>">X</a>
-						<?php echo anchor(base_url()."assets/invoices/".$attach->file_name,$attach->file_name,'target="_blank"').'<br>';
+						<?php echo anchor(base_url()."crm_data/invoices/".$attach->file_name,$attach->file_name,'target="_blank"').'<br>';
 					}
 				}?>	
 				<div class="pull-left">

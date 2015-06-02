@@ -533,7 +533,7 @@ class Invoice extends CRM_Controller {
 					$_FILES['attachment']['size']= $files['attachment']['size'][$i];    
 					
 					$config = array();
-					$config['upload_path'] = FCPATH.'assets/invoices/';
+					$config['upload_path'] = FCPATH.'crm_data/invoices/';
 					$config['allowed_types'] = 'pdf|doc|docx|jpg|png';				
 					
 					$this->upload->initialize($config);
@@ -570,7 +570,7 @@ class Invoice extends CRM_Controller {
 			$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments_attachments",array("id" => $id));
 			if($qry->num_rows()>0){
 				$res = $qry->row();
-				unlink(FCPATH.'assets/invoices/'.$res->file_name);
+				unlink(FCPATH.'crm_data/invoices/'.$res->file_name);
 				$this->db->delete($this->cfg['dbpref']."expected_payments_attachments",array("id" => $id));	
 				echo 1;
 			}

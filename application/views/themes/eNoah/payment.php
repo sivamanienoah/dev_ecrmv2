@@ -39,7 +39,7 @@ echo '<pre>';print_r($exp); echo '</pre>';
 											$res = $qry->result();
 											if($qry->num_rows()>0){
 												foreach($res as $rs){
-													echo anchor(site_url("assets/invoices/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
+													echo anchor(site_url("crm_data/invoices/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
 												}
 											}
 										?>
