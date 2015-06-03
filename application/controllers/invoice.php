@@ -513,9 +513,9 @@ class Invoice extends CRM_Controller {
 		$invoice_id = $this->input->post("invoice_id");		
 		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments",array("expectid" => $invoice_id));
 		if($qry->num_rows()>0){
-			echo "<pre>";
+			/* echo "<pre>";
 			print_r($_REQUEST);
-			exit;
+			exit; */
 			$project_milestone_name = $this->input->post("project_milestone_name");
 			$tax = $this->input->post("tax");
 			$tax_price = $this->input->post("tax_price");
@@ -558,6 +558,7 @@ class Invoice extends CRM_Controller {
 			}
 
 			$this->db->update($this->cfg['dbpref']."expected_payments",array("project_milestone_name" => $project_milestone_name,"tax" => $tax,"tax_price" => $tax_price,"total_amount" => $total),array("expectid" => $invoice_id));
+			echo $this->db->last_query();exit;
 			
 			$this->session->set_userdata("success_message","Invoice has been updated successfully");
 			redirect("invoice");
