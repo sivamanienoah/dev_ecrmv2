@@ -6,8 +6,8 @@
 		<table class="layout">
 			<tr>
 				<td>Financial Year:</td>
-				<td><input type="text" name="financial_year" readonly value="<?php echo $financial_year; ?>" class="textfield" style="width: 70px;" /></td>
-				<td>From Currency:</td>
+				<td><input type="text" name="financial_year" readonly value="<?php echo $financial_year.' - '.($financial_year-1) ?>" class="textfield" style="width: 70px;" /></td>
+				<td>Currency Type:</td>
 				<td>
 					<input type="text" name="to_currency" id="to_currency" readonly value="<?php echo $convert_to['expect_worth_name']; ?>" class="textfield" style="width: 70px;" />
 					<input type="hidden" name="expect_worth_id_to" id="expect_worth_id_to" value="<?php echo $convert_to['expect_worth_id']; ?>" />

@@ -17,7 +17,17 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"aoColumns": [{ sWidth: '8%' },
+					{ sWidth: '8%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '7%' },
+					{ sWidth: '10%' }]		
 	});
 });
 function processDelete(curr_year, curr_id) {
