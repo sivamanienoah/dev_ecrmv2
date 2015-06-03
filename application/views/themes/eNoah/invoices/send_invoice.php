@@ -75,9 +75,9 @@ function startQuote() {
 	if ($.trim($('#expiry_date').val()) == '') {
         err.push('Expiry Date is required');
     }
-	if(!$('.js_payment_options').is(':checked')){
+/* 	if(!$('.js_payment_options').is(':checked')){
 		err.push('Select any Payment Option');
-	}
+	} */
  
  
 	if ($.trim($('.email_address').val()) == '') {
