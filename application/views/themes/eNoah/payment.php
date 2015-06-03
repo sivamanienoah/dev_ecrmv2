@@ -48,8 +48,11 @@
 								<?php }?>
 								</table>
 							<?php  }?>
-						<label>Total Amount:</label>
-						<?php echo $exp->expect_worth_name.' '.number_format($total,2);?> 
+						<div style="float:right;font-weight:bold;">
+						<span style="  float: right; margin-right: 81px; padding: 10px;"><?php echo $exp->expect_worth_name.' '.number_format($total,2);?> </span>
+						<span style="float:right; padding: 10px;">Total Price:</span>
+						</div>
+						<div class="clear"></div>
 						<input type="hidden" name="total_amount" value="<?php echo $total;?>" />
 						<input type="hidden" name="currency_type" value="<?php echo $exp->expect_worth_name;?>" />
 						<input type="hidden" name="custid_fk" value="<?php echo $invoice->cust_id;?>" />
