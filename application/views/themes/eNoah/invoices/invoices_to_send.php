@@ -28,7 +28,7 @@
 				<td><?php echo $inv->project_milestone_name;?></td>
 				<td><?php echo $inv->milestone_date;?></td>
 				<td><?php echo $inv->month_year;?></td>
-				<td><?php echo $inv->expect_worth_name.' '.$inv->amount;?></td>
+				<td><?php echo $inv->expect_worth_name.' '.$inv->total_amount;?></td>
 				<td>
 					<?php $qry = $this->db->get_where($this->cfg['dbpref']."expected_payments_attachments",array("expectid" => $inv->expectid));
 						  $res = $qry->result();
