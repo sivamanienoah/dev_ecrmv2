@@ -461,8 +461,7 @@ class Welcome_model extends crm_model {
 	
 	public function get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
 	{
-
-		
+	
 		$userdata 		= $this->session->userdata('logged_in_user');
 		 
 		$stage 			= (count($stage)>0)?explode(',',$stage):'';
@@ -592,33 +591,43 @@ class Welcome_model extends crm_model {
 			// $this->db->where('j.lead_id != "null" AND j.lead_stage IN (1,2,3,4,5,6,7,8,9,10,11,12)');
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			
-			
-			if($stage[0] != 'null' && $stage[0] != 'all') {
-				$this->db->where_in('j.lead_stage',$stage); 
-				// $this->db->where('j.belong_to', $curusid);
-			}
-			
-			if($customer[0] != 'null' && $customer[0] != 'all') {		
-				$this->db->where_in('j.custid_fk',$customer);				
-			}
-			
-			if($worth[0] != 'null' && $worth[0] != 'all') {	
-				if($worth[1] == 'above') {
-				$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
-				} else {
-				$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);			
+			if(!empty($stage) && count($stage)>0){
+				if($stage[0] != 'null' && $stage[0] != 'all') {
+					$this->db->where_in('j.lead_stage',$stage); 
+					// $this->db->where('j.belong_to', $curusid);
 				}
 			}
-			if($owner[0] != 'null' && $owner[0] != 'all') {		
-				$this->db->where_in('j.belong_to',$owner); 
+			if(!empty($customer) && count($customer)>0){
+				if($customer[0] != 'null' && $customer[0] != 'all') {		
+					$this->db->where_in('j.custid_fk',$customer);				
+				}
 			}
-			if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
-				$this->db->where_in('j.lead_assign', $leadassignee);
+			if(!empty($worth) && count($worth)>0){
+				if($worth[0] != 'null' && $worth[0] != 'all') {	
+					if($worth[1] == 'above') {
+					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
+					} else {
+					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);			
+					}
+				}
 			}
-			if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-				$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
-				$this->db->where($invwhere);
+			if(!empty($owner) ){
+				if($owner[0] != 'null' && $owner[0] != 'all') {		
+					$this->db->where_in('j.belong_to',$owner); 
+				}
 			}
+			if(!empty($leadassignee) && count($leadassignee)>0){
+				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
+					$this->db->where_in('j.lead_assign', $leadassignee);
+				}
+			}
+			if(!empty($keyword) && count($keyword)>0){
+				if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
+					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+					$this->db->where($invwhere);
+				}
+			}
+			
 			if (isset($this->session->userdata['region_id']))
 			$region = explode(',',$this->session->userdata['region_id']);
 			if (isset($this->session->userdata['countryid']))
@@ -657,30 +666,33 @@ class Welcome_model extends crm_model {
 			}
 			
 			//Advanced filter
-				if($regionname[0] != 'null' && $regionname[0] != 'all'){		
+				if(!empty($regionname) && $regionname[0] != 'null'){
 					$this->db->where_in('c.add1_region',$regionname);
 				} else {
 					$this->db->where_in('c.add1_region',$region);
 				}
-				if($countryname[0] != 'null' && $countryname[0] != 'all') {
+				// if($countryname[0] != 'null' && $countryname[0] != 'all') {
+				if(!empty($countryname) && $countryname[0] != 'null') {
 					$this->db->where_in('c.add1_country', $countryname);
 				} else if ((($this->userdata['level'])==3) || (($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
 					$this->db->where_in('c.add1_country',$countryid);
 				}
-				if($statename[0] != 'null' && $statename[0] != 'all') {	
+				// if($statename[0] != 'null' && $statename[0] != 'all') {	
+				if(!empty($statename) && $statename[0] != 'null') {	
 					$this->db->where_in('c.add1_state', $statename);
 				} else if ((($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
 					$this->db->where_in('c.add1_state',$stateid);
 				}
-				if($locname[0] != 'null' && $locname[0] != 'all') {	
+				// if($locname[0] != 'null' && $locname[0] != 'all') {	
+				if(!empty($locname) && $locname[0] != 'null') {	
 					$this->db->where_in('c.add1_location', $locname);
 				} else if (($this->userdata['level'])==5) {
 					$this->db->where_in('c.add1_location',$locationid);
 				}
-				if($lead_status[0] != 'null' && $lead_status[0] != ''){	
+				if(!empty($lead_status)  && $lead_status[0] != 'null'){	
 					$this->db->where_in('j.lead_status', $lead_status);
 				}
-				if($lead_indi[0] != 'null' && $lead_indi[0] !='') {	
+				if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
 					$this->db->where_in('j.lead_indicator', $lead_indi);
 				}
 			//Advanced filter

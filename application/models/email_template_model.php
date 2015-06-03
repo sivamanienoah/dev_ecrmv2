@@ -156,8 +156,11 @@ class email_template_model extends crm_model {
 		$email_footer =  $email_hf[0]['email_template_footer'];
 		
 		$body_content = $this->get_row('email_template', array('email_templatename'=>$data['template_name']));
-		$email_title = $body_content[0]['email_templatesubject'];
-		$email_content = $body_content[0]['email_templatecontent'];
+
+		$email_title 	 = $body_content[0]['email_templatesubject'];
+		$email_content	 = $body_content[0]['email_templatecontent'];
+		$email_from 	 = $body_content[0]['email_templatefrom'];
+		$email_from_name = 'Webmaster';
 		
 		$email_subject = $data['subject'];
 		
@@ -173,7 +176,8 @@ class email_template_model extends crm_model {
 		$email_outer_content = $this->email_outer_content();
 		$email_template = str_replace('{{main_body_content}}', $email_template, $email_outer_content);
 
-		$this->email->from($data['from_email'],$data['from_email_name']);
+		// $this->email->from($data['from_email'],$data['from_email_name']);
+		$this->email->from($email_from,$email_from_name);
 		$this->email->to($data['to_mail']);
 		if (!empty($data['cc_mail'])) {
 			$this->email->cc($data['cc_mail']);

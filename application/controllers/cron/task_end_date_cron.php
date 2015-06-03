@@ -41,7 +41,7 @@ class task_end_date_cron extends crm_controller
 				// echo "<pre>"; print_r($data['members']); exit;
 				$user_name = "Webmaster";
 
-				$from='webmaster@enoahisolution.com';
+				$from='webmaster@enoahprojects.com';
 				$subject='Task End Date - Reminder';
 				$this->email->set_newline("\r\n");
 				$this->email->from($from,$user_name);

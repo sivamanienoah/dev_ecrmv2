@@ -27,9 +27,9 @@ $userdata = $this->session->userdata('logged_in_user');
 				<?php if (($cron['cron_id'] == 2) && ($viewTasks['view'] == 0)) { continue; } ?>
 				<tr>
 					<td class="actions">
-						<?php if($this->session->userdata('edit')==1) { ?>
+						<?php //if($this->session->userdata('edit')==1) { ?>
 							<a href="notifications/crons_edit/update/<?php echo $cron['cron_id'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'> </a> 
-						<?php } else { echo "-"; } ?>
+						<?php //} else { echo "-"; } ?>
 					</td>
 					<td><?php echo $cron['cron_name']; ?></td>
 					<td><?php if ($cron['onscreen_notify_status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>

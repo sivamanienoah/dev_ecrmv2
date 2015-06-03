@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 3;
+		$totalMonths  = 2;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -180,9 +180,9 @@ class Timesheet_data extends crm_controller
 
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
 
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com, raamsri14@gmail.com';
-			$param['from_email'] 	  = 'webmaster@enoahisolution.com';
-			$param['from_email_name'] = 'Webmaster';
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
+			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
+			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
 			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
 			
@@ -201,14 +201,13 @@ class Timesheet_data extends crm_controller
 
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
 
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com, raamsri14@gmail.com';
-			$param['from_email'] 	  = 'webmaster@enoahisolution.com';
-			$param['from_email_name'] = 'Webmaster';
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
+			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
+			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
 			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
 			
 			$this->email_template_model->sent_email($param);
-			
 			
 		}
 

@@ -103,7 +103,7 @@ class Create_new_user extends crm_controller
 		
 		//Sending email to CRM Admin
 		if(!empty($user_success)){
-			$from		  	 = 'webmaster@enoahisolution.com';
+			$from		  	 = 'webmaster@enoahprojects.com';
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['crm_admin']);
 			$print_fancydate = date('l, jS F y h:iA');
@@ -124,8 +124,8 @@ class Create_new_user extends crm_controller
 
 			$param['to_mail'] 		  = $to;
 			$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			$param['from_email']	  = 'webmaster@enoahisolultion.com';
-			$param['from_email_name'] = 'Webmaster';
+			// $param['from_email']	  = 'webmaster@enoahisolultion.com';
+			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'New User List from eConnect';
 			$param['subject'] 		  = $subject;
 
@@ -133,7 +133,7 @@ class Create_new_user extends crm_controller
 			$this->email_template_model->sent_email($param);
 		}
 		if(!empty($user_failed)){
-			$from		  	 = 'webmaster@enoahisolution.com';
+			$from		  	 = 'webmaster@enoahprojects.com';
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['crm_admin']);
 			$print_fancydate = date('l, jS F y h:iA');
@@ -153,8 +153,8 @@ class Create_new_user extends crm_controller
 
 			$param['to_mail'] 		  = $to;
 			$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			$param['from_email']	  = 'webmaster@enoahisolultion.com';
-			$param['from_email_name'] = 'Webmaster';
+			// $param['from_email']	  = 'webmaster@enoahisolultion.com';
+			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'Failed User List from eConnect';
 			$param['subject'] 		  = $subject;
 

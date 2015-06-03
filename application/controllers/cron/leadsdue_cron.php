@@ -92,7 +92,7 @@ class leadsdue_cron extends crm_controller {
 	public function send_mail($content,$to_user,$subject)
     {
     	$config['mailtype'] = 'html';
-		$from = 'webmaster@enoahisolution.com';
+		$from = 'webmaster@enoahprojects.com';
 		// $to_user = 'ssriram@enoahisolution.com';
 	
 		$this->email->initialize($config);
