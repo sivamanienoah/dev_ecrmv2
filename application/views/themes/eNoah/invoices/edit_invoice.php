@@ -79,7 +79,7 @@ if(count($expresults)>0 && !empty($expresults)){
 				<div class="clear"></div>
 				<div class="pull-left">
 					<label class="practices">Sub Total</label>
-					<input readonly="readonly" type="text" name="sub_total" class="textfield width300px js_sub_total1" value="<?php echo number_format($expresults->amount,2,'.',',');?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
+					<input readonly="readonly" type="text" name="sub_total" class="textfield width300px js_sub_total1" value="<?php echo $expresults->amount;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
 				</div>
 				<div class="clear"></div>
 				<div class="pull-left">
@@ -89,7 +89,7 @@ if(count($expresults)>0 && !empty($expresults)){
 				<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices">Total</label>
-					<input type="text" name="total" class="total textfield width300px" readonly="readonly" value="<?php echo number_format($expresults->amount,2,'.',',');?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
+					<input type="text" name="total" class="total textfield width300px" readonly="readonly" value="<?php echo $expresults->amount;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
 				</div>
  
 				<div class="clear"></div>
