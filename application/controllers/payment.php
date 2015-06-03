@@ -135,7 +135,8 @@ class Payment extends CRM_Controller {
 						"approval_code" => $approval_code,
 						"transaction_ip" => $_SERVER['REMOTE_ADDR'],
 						"transaction_date" => date("Y-m-d H:i:s"),
-						"transaction_method" => $this->input->post("payment_method"),
+						// "transaction_method" => $this->input->post("payment_method"),
+						"transaction_method" => 2,
 						"transaction_message" => $message
 						);
 			
