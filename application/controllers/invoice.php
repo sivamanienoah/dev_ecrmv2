@@ -558,7 +558,7 @@ class Invoice extends CRM_Controller {
 			}
 
 			$this->db->update($this->cfg['dbpref']."expected_payments",array("project_milestone_name" => $project_milestone_name,"tax" => $tax,"tax_price" => $tax_price,"total_amount" => $total),array("expectid" => $invoice_id));
-			echo $this->db->last_query();exit;
+			//echo $this->db->last_query();exit;
 			
 			$this->session->set_userdata("success_message","Invoice has been updated successfully");
 			redirect("invoice");
