@@ -49,7 +49,7 @@
 								</table>
 							<?php  }?>
 						<div style="float:right;font-weight:bold;">
-						<span style="  float: right; margin-right: 81px; padding: 10px;"><?php echo $exp->expect_worth_name.' '.number_format($total,2);?> </span>
+						<span style="  float: right; margin-right: 106px; padding: 10px;"><?php echo $exp->expect_worth_name.' '.number_format($total,2);?> </span>
 						<span style="float:right; padding: 10px;">Total Price:</span>
 						</div>
 						<div class="clear"></div>
