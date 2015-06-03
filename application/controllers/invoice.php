@@ -513,6 +513,9 @@ class Invoice extends CRM_Controller {
 		$invoice_id = $this->input->post("invoice_id");		
 		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments",array("expectid" => $invoice_id));
 		if($qry->num_rows()>0){
+			echo "<pre>";
+			print_r($_REQUEST);
+			exit;
 			$project_milestone_name = $this->input->post("project_milestone_name");
 			$tax = $this->input->post("tax");
 			$tax_price = $this->input->post("tax_price");
