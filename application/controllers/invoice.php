@@ -623,7 +623,7 @@ class Invoice extends CRM_Controller {
 							"cust_email" => $cust_email,
 							// "exp_id" => $invoice_ids, removed to allow multiple entries
 							"unique_link" => $unique_link,
-							"payment_options" => $payment_options,
+							"payment_options" => 2,
 							"expiry_date" => date("Y-m-d",strtotime($expiry_date)),
 							"status" => 0,
 							"created_date" => $created_date);
