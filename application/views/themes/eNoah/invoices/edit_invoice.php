@@ -89,7 +89,7 @@ if(count($expresults)>0 && !empty($expresults)){
 				<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices">Total</label>
-					<input type="text" name="total" class="total textfield width300px" readonly="readonly" value="<?php echo $expresults->total_amount;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
+					<input type="text" name="total" class="total textfield width300px" readonly="readonly" value="<?php echo $expresults->amount+$expresults->tax_price;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
 				</div>
  
 				<div class="clear"></div>
