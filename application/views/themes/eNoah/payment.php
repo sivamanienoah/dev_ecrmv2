@@ -1,6 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); 
-echo '<pre>';print_r($invoice); echo '</pre>';
-echo '<pre>';print_r($exp); echo '</pre>';
+//echo '<pre>';print_r($invoice); echo '</pre>';
+//echo '<pre>';print_r($exp); echo '</pre>';
 ?>
 <div id="content">
 	<div class="inner login-inner">

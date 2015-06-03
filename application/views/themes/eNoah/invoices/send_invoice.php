@@ -49,7 +49,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices"></label>
-					<input onClick="return startQuote();" type="submit" name="submit" class="js_submit" value="Submit" />
+					<input onClick="return startQuote();" type="submit" name="submit" class="positive js_submit" value="Submit" />
 				</div>					
 			</form>	
 			</div>
