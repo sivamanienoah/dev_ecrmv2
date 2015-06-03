@@ -27,13 +27,13 @@ $userdata = $this->session->userdata('logged_in_user');
 				</div>
 				<div class="clear"></div>
 				<div class="pull-left js_leads_list" style="display:none;"></div>
-				<div class="clear"></div>				
+				<!--<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices">Payment Options</label>
 					 <?php if(count($payment_options)>0){ foreach($payment_options as $payment) { ?>
 						 <input class="js_payment_options" checked="checked" type="checkbox" name="payment_options[]" value="<?php echo $payment->ptype_id;?>" />&nbsp;&nbsp;<?php echo $payment->ptype_name;?>&nbsp;&nbsp;
 					 <?php }}?>
-				</div>
+				</div> -->
 				<div class="clear"></div>
 				<div class="pull-left">
 					<label class="practices">Expiry Date</label>

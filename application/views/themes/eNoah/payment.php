@@ -56,10 +56,10 @@
 						<input type="hidden" name="inv_id" value="<?php echo $invoice->inv_id;?>" />
 						<input type="hidden" name="unique_link" value="<?php echo $invoice->unique_link;?>" />
 						<br><br>
-						<label>Payment By:</label>
+						<!--<label>Payment By:</label>
 						<input type="radio" name="payment_method" value="1"/>&nbsp;Paypal
 						<input type="radio" name="payment_method" value="2"/>&nbsp;Authorize.net
-						<br><br>
+						<br><br>-->
 
 						<label>Card Type:</label>
 						<select name="card_type" class="form-control input-md selectpicker show-tick cc_input" for="Card Type" id="card_type" placeholder="Card Type">
