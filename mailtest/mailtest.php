@@ -4,7 +4,7 @@ require("class.phpmailer.php");
 
 /*mail settings*/
 $mail = new PHPMailer();
-$mail->Host = "localhost";
+//$mail->Host = "localhost";
 //$mail->Port = 587;
 $mail->From = "webmaster@enoahprojects.com";
 $mail->FromName = "Timesheet Admin";
