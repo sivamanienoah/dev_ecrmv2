@@ -165,3 +165,22 @@ if ( ! function_exists('get_book_keeping_rates'))
 		return $book_keeping_rates;
 	}
 }
+
+if ( ! function_exists('get_attachments_show'))
+{
+	function get_attachments_show($expectid)
+	{	
+		$CI = get_instance();
+		$cfg = $CI->config->item('crm'); /// load config
+		
+		$qry = $CI->db->get_where($CI->cfg['dbpref']."expected_payments_attachments",array("expectid" => $expectid));
+		$res = $qry->result();
+		if($qry->num_rows()>0){
+		$list = '';
+		  foreach($res as $rs){
+			  $list .= anchor(site_url("crm_data/invoices/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
+		  }
+		}
+		return $list;
+	}
+}
