@@ -7,14 +7,14 @@
 			<tr>
 				<td><label>Financial Year:</label></td>
 				<td>
-					<select name="financial_year" id="financial_year" class="textfield" onchange="getCurFinanYrExist(this.value)" style="width: 80px;">
+					<select name="financial_year" id="financial_year" class="textfield" onchange="getCurFinanYrExist(this.value)" style="width: 90px;">
 					<option value ="">Select</option>
 					<?php for($i=date("Y")+2;$i>=2010;$i--) { ?>
-						<option value="<?php echo $i ?>"><?php echo $i.' - '.($i-1) ?></option>
+						<option value="<?php echo $i ?>"><?php echo ($i-1).' - '.$i ?></option>
 					<?php } ?>
 					</select>
 				</td>
-				<td><label>Currency Type:</label></td>
+				<td><label>Base Currency:</label></td>
 				<td>
 					<select name="expect_worth_id_to" id="expect_worth_id_to" class="textfield" onchange="getCurIdExist(this.value)" style="width: 80px;">
 					<option value ="">Select</option>

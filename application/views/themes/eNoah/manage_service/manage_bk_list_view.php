@@ -25,7 +25,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<thead>
 			<tr>
 				<th style="text-align: center;" rowspan=2>Financial<br> Year</th>
-				<th style="text-align: center;" rowspan=2>Currency <br>Type</th>
+				<th style="text-align: center;" rowspan=2>Base <br>Currency</th>
 				<th style="text-align: center;" colspan="<?php echo count($currencies) ?>">Book Keeping Currency Values</th>
 				<th style="text-align: center;" rowspan=2>Action</th>
 			</tr>
@@ -45,7 +45,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php foreach($currency_rec as $curr_year=>$to_cur) { ?>
 				<?php foreach($to_cur as $from_cur=>$cur_value) { ?>
 				<tr>
-					<td><?php echo $curr_year. ' - ' .($curr_year-1);  ?></td>
+					<td><?php echo ($curr_year-1). ' - ' .$curr_year;  ?></td>
 					<td><?php echo $curr_id[$from_cur] ?> </td>
 					<?php foreach($currencies as $cur_id) { ?>
 					<td><?php echo $to_cur[$from_cur][$cur_id['expect_worth_id']] ?></td>
