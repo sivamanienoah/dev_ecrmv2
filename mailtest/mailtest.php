@@ -8,7 +8,7 @@ $mail = new PHPMailer();
 //$mail->Port = 587;
 $mail->From = "webmaster@enoahprojects.com";
 $mail->FromName = "Timesheet Admin";
-$email="mthiyagarajan@enoahisolution.com";
+$email="bgopinath@enoahisolution.com";
 $content='<strong>1</strong>This is for testing the timesheet cron';
 $mail->AddAddress($email);
 $mail->IsHTML(true);
