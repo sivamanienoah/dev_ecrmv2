@@ -159,7 +159,7 @@ if ( ! function_exists('get_book_keeping_rates'))
 		$book_keeping_rates   = array();
     	if(!empty($results)) {
     		foreach ($results as $res) {
-    			$book_keeping_rates[$res['financial_year']][$res['expect_worth_id_from']][$res['expect_worth_id_to']] = $res['currency_value'];
+    			$book_keeping_rates[$res['financial_year']][$res['expect_worth_id_to']][$res['expect_worth_id_from']] = $res['currency_value'];
     		}
     	}
 		return $book_keeping_rates;

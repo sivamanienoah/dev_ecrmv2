@@ -43,11 +43,12 @@ class manage_service_model extends crm_model {
 	*/
 	public function get_salesDivisions($search = FALSE) {
 	
-		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].'sales_divisions');
+		$this->db->select('sd.div_id,sd.division_name,sd.base_currency,sd.status,ew.expect_worth_id,ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'sales_divisions sd');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id=sd.base_currency','LEFT');
 		if ($search != false) {
 			$search = urldecode($search);
-			$this->db->like('division_name', $search); 
+			$this->db->like('sd.division_name', $search);
 		}
 		$query = $this->db->get();
 		$divs =  $query->result_array();

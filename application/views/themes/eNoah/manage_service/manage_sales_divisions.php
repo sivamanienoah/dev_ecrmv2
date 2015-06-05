@@ -27,6 +27,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<thead>
 			<tr>
 				<th width="30%">Entity</th>
+				<th width="10%">Base Currency</th>
 				<th width="10%">Status</th>
 				<th>Action</th>
 			</tr>
@@ -36,6 +37,9 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php foreach($sales_divisions as $sales) { ?>
 				<tr>
 					<td><?php echo $sales['division_name']; ?></td>
+					<td>
+						<?php echo ($sales['base_currency'] == 0) ? " " : $sales['expect_worth_name']; ?>
+					</td>
 					<td>
 						<?php if ($sales['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					</td>

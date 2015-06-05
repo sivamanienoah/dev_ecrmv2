@@ -1,5 +1,4 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script type="text/javascript" src="assets/js/manage_service/manage_sales_divisions_add.js"></script>
 <div id="content">
     <div class="inner">
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post" name="sale_div" onsubmit="return chk_sale_dup();">
@@ -23,6 +22,23 @@
 						<?php } ?>
 					</td>
 					<td><div id="sales_div_msg"></div></td>
+				</tr>
+				<tr>
+					<td>Base Currency: *</td>
+					<td>
+						<select name='base_currency' class="textfield">
+						<option value=''>Select</option>
+						<?php foreach($currencies as $curr){ ?>
+							<?php 
+								$selected = '';
+								if ($this->validation->base_currency == $curr['expect_worth_id']) {
+									$selected = 'selected="selected"';
+								}
+							?>
+							<option value="<?php echo $curr['expect_worth_id'] ?>" <?php echo $selected ?>><?php echo $curr['expect_worth_name'] ?></option>
+						<?php } ?>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td>Status</td>
@@ -51,4 +67,5 @@
 		</form>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
+<script type="text/javascript" src="assets/js/manage_service/manage_sales_divisions_add.js"></script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>

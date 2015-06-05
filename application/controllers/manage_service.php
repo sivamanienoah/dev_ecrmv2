@@ -100,16 +100,6 @@ class Manage_service extends crm_controller {
     }
 
 	/*
-	*@For sales divisions listing page
-	*@Method  manage_sales
-	*/
-	public function manage_sales($search = FALSE) {
-		$data['page_heading'] = 'Manage Entity';
-		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
-		$this->load->view('manage_service/manage_sales_divisions', $data);
-	}
-
-	/*
 	*@For lead source listing page
 	*@Method   manage_leadSource
 	*/
@@ -347,6 +337,16 @@ class Manage_service extends crm_controller {
 			redirect('manage_service/');
 		}
 	}
+	
+	/*
+	*@For sales divisions listing page
+	*@Method  manage_sales
+	*/
+	public function manage_sales($search = FALSE) {
+		$data['page_heading'] = 'Manage Entity';
+		$data['sales_divisions'] = $this->manage_service_model->get_salesDivisions($search);
+		$this->load->view('manage_service/manage_sales_divisions', $data);
+	}
 
 	/*
 	*@For add sales divisions
@@ -359,9 +359,11 @@ class Manage_service extends crm_controller {
         $data         = array();
         $post_data    = real_escape_array($this->input->post());
 		$rules['division_name'] = "trim|required";
+		$rules['base_currency'] = "trim|required";
 		
 		$this->validation->set_rules($rules);
 		$fields['division_name'] = 'Entity Name';
+		$fields['base_currency'] = 'Base Currency';
 		$fields['status'] = 'Status';
 		
 		$this->validation->set_fields($fields);
@@ -369,8 +371,8 @@ class Manage_service extends crm_controller {
 		
 		//for status
 		$this->db->where('division', $id);
-		$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
-		
+		$data['cb_status']  = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		$data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_dvsn']))
         {
 			$item_data = $this->db->get_where($this->cfg['dbpref']."sales_divisions", array('div_id' => $id));
