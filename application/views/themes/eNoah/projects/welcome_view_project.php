@@ -332,6 +332,16 @@ if (get_default_currency()) {
 				<span id="errmsg_bill_type" style="color:red"></span>
 			</div>
 			<div class="clear"></div>
+			<div class="pull-left">
+				<label class="project-id">Entity</label>
+				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $quote_data['division_name'] ?>" readonly style="width: 125px;" />
+			</div>
+			<div class="clear"></div>
+			<div class="pull-left">
+				<label class="project-id">Base Currency</label>
+				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['base_currency']] ?>" readonly style="width: 125px;" />
+			</div>
+			<div class="clear"></div>
 			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">

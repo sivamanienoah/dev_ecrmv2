@@ -337,7 +337,7 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
-		//echo '<pre>';print_r($result[0]);exit;
+		// echo '<pre>';print_r($result[0]);exit;
 		// $arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($result)) {
@@ -626,7 +626,12 @@ class Project extends crm_controller {
 			$data['arr_profit_center'] = $this->profit_center_model->get_profit_center_list(array('status'=>1));
 			
 			$data['all_users'] = $this->project_model->get_all_users();
-			
+			$currencies= $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$data['base_currency'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
 			
 			/**
 			get the bug summary from the mantis bug table

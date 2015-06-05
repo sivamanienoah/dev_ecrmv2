@@ -257,6 +257,7 @@ class Project_model extends crm_model
     	$this->db->join($this->cfg['dbpref'].'expect_worth as exw', 'exw.expect_worth_id = jb.expect_worth_id', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = jb.lead_stage', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_services as jbcat', 'jbcat.sid = jb.lead_service', 'left');
+    	$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = jb.division', 'left');
     	$this->db->where('jb.lead_id', $id);
     	$this->db->where('jb.pjt_status !=', 0);
 		$this->db->limit(1);
@@ -830,6 +831,21 @@ class Project_model extends crm_model
 		$query = $this->db->get($this->cfg['dbpref'] . 'project_billing_type');
 		return $query->result_array();
 	}
+	
+	public function get_records($tbl, $wh_condn='', $order='') {
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
 	
 
 }
