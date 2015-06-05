@@ -34,6 +34,10 @@
 				<td><?php echo $his->transaction_message;?></td>
 				</tr>
 		<?php }   ?>
+	<?php } else{?>
+<tr>
+	<td colspan="6" align="left">History not available!</td></tr>
+	</tr>		
 	<?php } ?>
 <tr>
 	<td colspan="6" align="left"><button type="button" class="js_close positive">Close</button></td></tr>
