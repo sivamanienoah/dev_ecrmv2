@@ -130,10 +130,7 @@ class Invoice extends CRM_Controller {
 		}
 		// echo 'val_export '.$data['val_export']; exit;
 		$bk_rates = get_book_keeping_rates();
-		// echo "<pre>"; print_r($bk_rates);
 		$invoices = $this->invoice_model->get_invoices($filter,0);
-		// echo "<pre>"; print_r($invoices); exit;
-		// echo $this->db->last_query();
 		$rates 	  = $this->get_currency_rates();
 		$data['default_currency'] = $this->default_cur_name;
 		$data['invoices'] = array();
@@ -516,6 +513,27 @@ class Invoice extends CRM_Controller {
 		}
 	}
 	
+	public function show_payment_history(){
+		$expect_id = $this->input->get("expect_id");
+		if($expect_id){
+			$this->db->select("inv.*,paym.*");
+			$this->db->from($this->cfg['dbpref']."invoices_child as invc");
+			$this->db->join($this->cfg['dbpref']."invoices as inv","inv.inv_id = invc.inv_id");
+			$this->db->join($this->cfg['dbpref']."payment_history as paym","paym.inv_id = inv.inv_id","Right");
+			//$this->db->join($this->cfg['dbpref']."expected_payments as exp","exp.expectid = invc.exp_id");
+			//$this->db->join($this->cfg['dbpref']."leads as le","le.lead_id = exp.jobid_fk");
+			//$this->db->join($this->cfg['dbpref']."expect_worth as expw","expw.expect_worth_id = le.expect_worth_id");
+			$this->db->where("invc.exp_id",$expect_id);
+			$qry = $this->db->get();
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				$data['payments'] = $res;
+			}
+			//echo '<pre>';print_r($data['payments']);exit;
+			$this->load->view("invoices/show_payment_history",$data);
+		}		
+	}
+	
 	public function send_invoice($expid){
 		$data = array();
 		$data['expresults'] = '';
@@ -720,7 +738,7 @@ class Invoice extends CRM_Controller {
 					}
 				}
 				
-				$param['to_mail'] 		  = "mthiyagarajan@enoahisolution.com";
+				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com";
 				//$param['to_mail'] 		  = "paulwills2015@gmail.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;

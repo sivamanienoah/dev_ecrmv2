@@ -156,6 +156,7 @@ button.ui-datepicker-current { display: none; }
 						<th>Actual Value</th>
 						<th>Status</th>
 						<th>Value(<?php echo $default_currency; ?>)</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -173,6 +174,7 @@ button.ui-datepicker-current { display: none; }
 							<td><?php echo $inv['actual_amt']; ?></td>
 							<td><?php echo $st_array[$inv['received']]; ?></td>
 							<td><?php echo sprintf('%0.2f', $inv['coverted_amt']); ?></td>
+							<td><a class="js_view_payment" rel="<?php echo $inv['expectid'];?>" href="javascript:void(0);">View</a></td>
 						</tr>
 					<?php } ?>
 				<?php } ?>
