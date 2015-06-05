@@ -53,8 +53,7 @@ class Payment extends CRM_Controller {
 	*/
 	
 	function process_payment(){
- 
-	
+		
 		if($this->input->post("custid_fk")){
 			
 			//get customer details
@@ -120,7 +119,22 @@ class Payment extends CRM_Controller {
 			if($response_array[0]==1){
 				$paid_status = 1;
 				$this->db->update($this->cfg['dbpref']."invoices",array("status" => 1),array("inv_id" => $inv_id));
-				$message1 = "Thank you! your payment was success.";			
+				$message1 = "Thank you! your payment was success.";
+				
+				$this->db->select("invc.exp_id");
+				$this->db->from($this->cfg['dbpref']."invoices_child as invc");
+				$this->db->join($this->cfg['dbpref']."invoices as inv","inv.inv_id=invc.inv_id");
+				$this->db->where("inv.inv_id",$inv_id);		
+				$qry = $this->db->get();
+				if($qry->num_rows()>0){
+					$res = $qry->result();	
+					foreach($res as $rs){
+						$this->db->update($this->cfg['dbpref']."expected_payments",array("received" => 1,"payment_remark" => "Authorize.net payment $transaction_id"),array("expectid" => $rs->exp_id));
+					}
+				}
+				
+				//$this->db->update($this->cfg['dbpref']."invoices",array("status" => 1),array("inv_id" => $inv_id));
+					
 			}else{
 				$paid_status = 0;
 				$message1 = $message;
