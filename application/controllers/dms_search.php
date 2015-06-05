@@ -76,6 +76,27 @@ class Dms_search extends crm_controller {
 		if(count($data['files']>0))		$this->load->view('dms_view_search', $data);		
 	}
 	
+    public function send_email() {
+        $config['protocol'] = 'mail';
+       
+        $config['charset'] = 'iso-8859-1';
+        $config['wordwrap'] = TRUE;
+        $config['mailtype'] = 'html';
+
+        $this->email->initialize($config);
+
+        $this->email->from('webmaster@enoahprojects.com', 'Webmaster');
+        $this->email->to('mthiyagarajan@enoahisolution.com,bgopinath@enoahisolution.com');
+
+        $this->email->subject('This is a html email');
+        $html = 'This is an <b>HTML</b> email';
+        $this->email->message($html);
+
+        $this->email->send();
+
+        echo $this->email->print_debugger();
+    }	
+	
 /* 	function search($keyword=null)
 	{
 		$data = array();
