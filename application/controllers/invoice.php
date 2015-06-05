@@ -130,6 +130,7 @@ class Invoice extends CRM_Controller {
 		}
 		// echo 'val_export '.$data['val_export']; exit;
 		$bk_rates = get_book_keeping_rates();
+
 		$invoices = $this->invoice_model->get_invoices($filter,0);
 		$rates 	  = $this->get_currency_rates();
 		$data['default_currency'] = $this->default_cur_name;

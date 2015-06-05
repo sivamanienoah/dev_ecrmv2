@@ -605,7 +605,10 @@ class Sales_forecast extends crm_controller {
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['type']      = ($sf['forecast_category']==1)?'Lead':'Project';
 			// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+			// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+			//Based on Base Currency conversion
+			$base_conversion_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 
 		}
 		/*Month|Milestone Name|Milestone Value(Individual Milestone)*/
@@ -677,7 +680,10 @@ class Sales_forecast extends crm_controller {
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
 			$data['report_data'][$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
 			// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+			// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+			// Based on Base Currency conversion
+			$base_conversion_amt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+			$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($base_conversion_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 		}
 		
 		//Set the Highest_month
@@ -778,7 +784,10 @@ class Sales_forecast extends crm_controller {
 			$report_data[$fc['forecast_id']][$fc['milestone_name']]['entity']           = $fc['division_name'];
 			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['type']     = ($fc['forecast_category']==1)?'Lead':'Project';
 			// $report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
-			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
+			// $report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
+			//Based on Base Currency Conversion Amt
+			$base_conversion_amt = $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$fc['base_currency']]);
+			$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conversion_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['base_currency']][$this->default_cur_id]);
 		}
 		
 		//Set the Current month
@@ -957,7 +966,10 @@ class Sales_forecast extends crm_controller {
 			$report_data[$vr['job_id']][$vr['milestone_name']]['lead_name']  = $vr['lead_title'];
 			$report_data[$vr['job_id']][$vr['milestone_name']]['entity']     = $vr['division_name'];
 			// $report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-			$report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+			// $report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+			//Based on Base Currency conversion amt
+			$base_conversion_amt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+			$report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] += $this->conver_currency($base_conversion_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 		}
 		
 		//Set the Current month
@@ -1167,20 +1179,29 @@ class Sales_forecast extends crm_controller {
 			// if($month <= $current_month) {
 				$compare_from_month = ($compare_from_month < date('Y-m', strtotime($vr['for_month_year']))) ? $compare_from_month : date('Y-m', strtotime($vr['for_month_year']));
 				// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-				$data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				//Based on Base currency conversion
+				$base_conversion_camt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+				$data['compare_data'][$month][$vr['type']] += $this->conver_currency($base_conversion_camt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 				$data['compare_from_month'] = $compare_from_month;
 				$data['compare_to_month']   = $highest_month;
 			// }
 			if(($vr['type']=='F') && ($month >= $current_month)) {
 				// $data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-				$data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				// $data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				//Based on Base currency conversion
+				$base_conversion_famt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+				$data['forecast_entity'][$vr['division_name']] += $this->conver_currency($base_conversion_famt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 				$data['forecast_from_month']  = $current_month;
 				$data['forecast_to_month']    = $highest_month;
 			}
 			if(($vr['type']=='A') && ($month <= $current_month)) {
 				$actual_from_month = ($actual_from_month < date('Y-m', strtotime($vr['for_month_year']))) ? $actual_from_month : date('Y-m', strtotime($vr['for_month_year']));
 				// $data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-				$data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				//Based on Base currency conversion
+				$base_conversion_aamt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+				// $data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+				$data['actual_entity'][$vr['division_name']] += $this->conver_currency($base_conversion_aamt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 				$data['actual_from_month'] = $actual_from_month;
 				$data['actual_to_month']   = $current_month;
 			}
@@ -1243,7 +1264,9 @@ class Sales_forecast extends crm_controller {
 				$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 				$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 				// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-				$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+				//Based on base currency conversion
+				$base_conversion_amount = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+				$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conversion_amount,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 			}
 		}
 		
@@ -1310,7 +1333,7 @@ class Sales_forecast extends crm_controller {
 		else
 		$to_month = $highest_month;
 		
-		// echo "Type: ".$filter['clicked_type']. " From: " .$from_month." To: ".$to_month;if() {
+		// echo "Type: ".$filter['clicked_type']. " From: " .$from_month." To: ".$to_month; exit;
 		
 		foreach($variance_data as $sf) {
 			$month = date('Y-m', strtotime($sf['for_month_year']));
@@ -1322,7 +1345,10 @@ class Sales_forecast extends crm_controller {
 				$data['report_data'][$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 				// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 				// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-				$data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+				// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+				//Based on Currency conversion
+				$base_conver_sfamt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+				$data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conver_sfamt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 			}
 		}
 		
@@ -1368,7 +1394,7 @@ class Sales_forecast extends crm_controller {
 		
 		$bk_rates = get_book_keeping_rates();
 		
-		$filter   			 = real_escape_array($this->input->post());
+		$filter   = real_escape_array($this->input->post());
 		
 		// echo "<pre>"; print_r($filter); exit;
 		
@@ -1407,7 +1433,10 @@ class Sales_forecast extends crm_controller {
 					$data['report_data'][$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-					$data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					//based on base currency conversion
+					$base_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+					$data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -1426,7 +1455,10 @@ class Sales_forecast extends crm_controller {
 					$data['report_data'][$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
 					$data['report_data'][$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
 					// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-					$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					//based on base currency conversion
+					$base_convert_amt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+					$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($base_convert_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -1505,7 +1537,10 @@ class Sales_forecast extends crm_controller {
 					$report_data[$fc['forecast_id']][$fc['milestone_name']]['entity']           = $fc['division_name'];
 					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['type']     = ($fc['forecast_category']==1)?'Lead':'Project';
 					// $report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
-					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
+					// $report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$this->default_cur_id]);
+					//base currency - changes
+					$base_conver_amt = $this->conver_currency($fc['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['expect_worth_id']][$fc['base_currency']]);
+					$report_data[$fc['forecast_id']][$fc['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($fc['for_month_year'])),"4/1","3/31")][$fc['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -1997,7 +2032,10 @@ class Sales_forecast extends crm_controller {
 					$report_data[$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 					// $report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					// $report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					//Based on Base Currency Conversion
+					$base_conversion_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conversion_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -2210,7 +2248,10 @@ class Sales_forecast extends crm_controller {
 					$report_data[$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
 					// $report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					// $report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+					//Based on Base Currency Conversion
+					$base_conver_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
+					$report_data[$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -2336,7 +2377,10 @@ class Sales_forecast extends crm_controller {
 					$report_data[$vr['job_id']][$vr['milestone_name']]['customer']  = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
 					$report_data[$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
 					$report_data[$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
-					$report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					// $report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					//Based on base currency conversion
+					$base_amt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+					$report_data[$vr['job_id']][$vr['milestone_name']][$month][$vr['type']] += $this->conver_currency($base_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 				}
 			}
 			
@@ -2581,9 +2625,13 @@ class Sales_forecast extends crm_controller {
 				foreach($variance_data as $vr) {
 					$month = date('Y-m', strtotime($vr['for_month_year']));
 					$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
-					if($vr['type']=='F')
-					// $data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-					$data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					if($vr['type']=='F') {
+						// $data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
+						// $data['forecast_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+						//Based on base currency conversion
+						$base_conver_famt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+						$data['forecast_entity'][$vr['division_name']] += $this->conver_currency($base_conver_famt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
+					}
 				}
 			break;
 			case 'A':
@@ -2592,9 +2640,13 @@ class Sales_forecast extends crm_controller {
 				foreach($variance_data as $vr) {
 					$month = date('Y-m', strtotime($vr['for_month_year']));
 					$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
-					if($vr['type']=='A')
-					// $data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-					$data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					if($vr['type']=='A') {
+						// $data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
+						// $data['actual_entity'][$vr['division_name']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+						//based on base_currency amt
+						$base_conver_actamt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+						$data['actual_entity'][$vr['division_name']] += $this->conver_currency($base_conver_actamt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
+					}
 				}
 			break;
 			case 'FA':
@@ -2605,7 +2657,10 @@ class Sales_forecast extends crm_controller {
 					$compare_from_month = ($compare_from_month < date('Y-m', strtotime($vr['for_month_year']))) ? $compare_from_month : date('Y-m', strtotime($vr['for_month_year']));
 					$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
 					// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-					$data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
+					// based on base currency conversion
+					$base_conver_faamt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
+					$data['compare_data'][$month][$vr['type']] += $this->conver_currency($base_conver_faamt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
 					$data['compare_from_month'] = $compare_from_month;
 					$data['compare_to_month']   = $highest_month;
 				}

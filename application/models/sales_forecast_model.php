@@ -91,7 +91,7 @@ class Sales_forecast_model extends crm_model {
 		}
 		//LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_id, l.lead_title, l.expect_worth_id, l.expect_worth_amount, l.lead_status, l.pjt_status, enti.division_name, ew.expect_worth_name');
+		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_id, l.lead_title, l.expect_worth_id, l.expect_worth_amount, l.lead_status, l.pjt_status, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfc.job_id');
@@ -569,7 +569,7 @@ class Sales_forecast_model extends crm_model {
 		}
 		//LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
@@ -681,7 +681,7 @@ class Sales_forecast_model extends crm_model {
 		}
 		//LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
