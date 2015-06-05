@@ -25,6 +25,7 @@ $(function() {
             { sWidth: '7%' },
             { sWidth: '10%' },
             { sWidth: '7%' },
+            { sWidth: '7%' },
             { sWidth: '7%' }]
 	});
 });

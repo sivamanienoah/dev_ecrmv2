@@ -2,6 +2,36 @@ function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
 
+$(document).ready(function(){
+	$(".js_view_payment").click(function(){
+		var exp_id = $(this).prop("rel");
+		if(exp_id){
+			$.ajax({
+			  url: site_base_url+'invoice/show_payment_history/',
+			  data: { expect_id: exp_id,csrf_token_name : csrf_hash_token},
+			  success: function(data){
+				if(data=='no_results'){
+					alert("Invoice(s) not found for the selected customer!");
+				}else{
+						$.blockUI({
+							message:data,
+							css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 775) /2+'px',width: '750px', position: 'absolute'},
+							onOverlayClick: $.unblockUI 
+							// focusInput: false 
+						});	
+				}
+			  }
+			});
+			return false;			
+		}
+	})
+
+	$("body").on("click",'.js_close',function(){
+		$.unblockUI();
+	})
+})
+
+
 
 // $('#advance_search').hide();
 
