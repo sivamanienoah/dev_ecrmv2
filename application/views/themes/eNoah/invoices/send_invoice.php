@@ -130,6 +130,7 @@ $(document).ready(function(){
 	$(".js_customer").change(function(){
 		var custid = $(this).val()
 		var csrf_hash_token = $("#csrf_hash_token").val();
+		$(".js_leads_list").html("");
 		if(custid){
 			$.ajax({
 			  url: '<?php echo base_url()?>invoice/get_customer_invoices/',
