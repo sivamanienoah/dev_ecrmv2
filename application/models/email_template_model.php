@@ -159,7 +159,7 @@ class email_template_model extends crm_model {
 
 		$email_title 	 = $body_content[0]['email_templatesubject'];
 		$email_content	 = $body_content[0]['email_templatecontent'];
-		$email_from 	 = $body_content[0]['email_templatefrom'];
+		$email_from 	 = "webmaster@enoahprojects.com";
 		$email_from_name = 'Webmaster';
 		
 		$email_subject = $data['subject'];
@@ -203,9 +203,10 @@ class email_template_model extends crm_model {
 			}
 			
 		}		
-		
+		 $this->email->send();
+		 echo $this->email->print_debugger();exit;
 		if($this->email->send())
-		{
+		{ 
 			return true;
 		}
 		else

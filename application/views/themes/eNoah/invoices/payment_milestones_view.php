@@ -55,6 +55,7 @@ button.ui-datepicker-current { display: none; }
 						<th>Transaction Date</th>
 						<th>Transaction Method</th>
 						<th>Transaction Message</th>
+						<th>View Invoice(s)</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -76,6 +77,7 @@ button.ui-datepicker-current { display: none; }
 							<td><?php echo ($res->transaction_date!='')?date("d-m-Y",strtotime($res->transaction_date)):''; ?></td>
 							<td><?php echo $transaction_method[$res->transaction_method];?></td>
 							<td><?php echo $res->transaction_message;?></td>
+							<td><a class="js_view_invoices" rel="<?php echo $res->invoice_id;?>" href="javascript:void(0);">View</a></td>
 						</tr>
 					<?php } ?>
 				<?php } ?>
@@ -88,13 +90,42 @@ button.ui-datepicker-current { display: none; }
 			echo "You have no rights to access this page"; 
 		}
 		?>
-		
 	</div><!--Inner div-close here-->
 </div><!--Content div-close here-->
 <div id='popupGetSearchName'></div>
 <script type="text/javascript" src="assets/js/invoice/payment_milestones-tbl.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/invoice/payment_milestones.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".js_view_invoices").click(function(){
+		var inv_id = $(this).prop("rel");
+		if(inv_id){
+			$.ajax({
+			  url: '<?php echo base_url()?>invoice/show_invoice_history/',
+			  data: { invoice_id: inv_id,csrf_token_name : csrf_hash_token},
+			  success: function(data){
+				if(data=='no_results'){
+					alert("Invoice(s) not found for the selected customer!");
+				}else{
+						$.blockUI({
+							message:data,
+							css:{border: '2px solid #999', color:'#333',padding:'6px',top:'280px',left:($(window).width() - 665) /2+'px',width: '646px', position: 'absolute'},
+							onOverlayClick: $.unblockUI 
+							// focusInput: false 
+						});	
+				}
+			  }
+			});
+			return false;			
+		}
+	})
+
+	$("body").on("click",'.js_close',function(){
+		$.unblockUI();
+	})
+})
+</script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

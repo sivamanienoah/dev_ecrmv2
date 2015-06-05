@@ -154,11 +154,13 @@ button.ui-datepicker-current { display: none; }
 						<th>Project Code</th>
 						<th>Milestone Name</th>
 						<th>Actual Value</th>
+						<th>Status</th>
 						<th>Value(<?php echo $default_currency; ?>)</th>
 					</tr>
 				</thead>
 				<tbody>
 				<?php 
+					$st_array = array(0=>"Pending",1=>"Payment Completed",2=>"Payment Partially Completed");
 					if (is_array($invoices) && count($invoices) > 0) { ?>
 					<?php foreach($invoices as $inv) { ?>
 						<tr>
@@ -169,6 +171,7 @@ button.ui-datepicker-current { display: none; }
 							<td><?php echo isset($inv['pjt_id']) ? $inv['pjt_id'] : '-'; ?></td>
 							<td><?php echo $inv['project_milestone_name']; ?></td>
 							<td><?php echo $inv['actual_amt']; ?></td>
+							<td><?php echo $st_array[$inv['received']]; ?></td>
 							<td><?php echo sprintf('%0.2f', $inv['coverted_amt']); ?></td>
 						</tr>
 					<?php } ?>
@@ -176,7 +179,7 @@ button.ui-datepicker-current { display: none; }
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan='7' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
+						<td colspan='8' align='right'><strong>Total Value</strong></td><td><?php echo sprintf('%0.2f', $total_amt); ?></td>
 					</tr>
 				</tfoot>
 			</table>

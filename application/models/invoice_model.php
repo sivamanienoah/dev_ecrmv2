@@ -104,7 +104,7 @@ class Invoice_model extends crm_model {
 			$filter['month_year_to_date'] = '';
 		}
 	
-		$this->db->select('expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
+		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
@@ -115,7 +115,8 @@ class Invoice_model extends crm_model {
 		}else{
 			$this->db->where('expm.invoice_status',1);
 		}
-		$this->db->where('expm.received !=',1);	
+		
+		//$this->db->where('expm.received !=',1);	
 		
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('expm.jobid_fk', $job_ids);
@@ -325,7 +326,7 @@ class Invoice_model extends crm_model {
 	
 	function get_payment_invoice_list()
 	{
-		$this->db->select("cus.first_name,cus.last_name,cus.company,inv.*,payhis.*");
+		$this->db->select("cus.first_name,cus.last_name,cus.company,inv.inv_id as invoice_id,inv.*,payhis.*");
 		$this->db->from($this->cfg['dbpref']."invoices as inv");
 		$this->db->join($this->cfg['dbpref']."customers as cus","cus.custid=inv.cust_id");
 		$this->db->join($this->cfg['dbpref']."payment_history as payhis","payhis.inv_id=inv.inv_id","left");
