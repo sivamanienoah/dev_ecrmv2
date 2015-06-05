@@ -86,7 +86,7 @@ class Dms_search extends crm_controller {
         $this->email->initialize($config);
 
         $this->email->from('webmaster@enoahprojects.com', 'Webmaster');
-        $this->email->to('mthiyagarajan@enoahisolution.com,bgopinath@enoahisolution.com');
+        $this->email->to('mthiyagarajan@enoahisolution.com,bgopinath@enoahisolution.com,ssubbiah@enoahisolution.com');
 
         $this->email->subject('This is a html email');
         $html = 'This is an <b>HTML</b> email';
