@@ -133,6 +133,7 @@ class Payment extends CRM_Controller {
 					}
 				}
 				
+				$this->db->update($this->cfg['dbpref']."invoices_child",array("status" => 1),array("inv_id" => $inv_id));
 				$this->db->update($this->cfg['dbpref']."invoices",array("status" => 1),array("inv_id" => $inv_id));
 					
 			}else{
