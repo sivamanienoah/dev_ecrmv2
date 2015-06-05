@@ -104,11 +104,13 @@ class Invoice_model extends crm_model {
 			$filter['month_year_to_date'] = '';
 		}
 	
-		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date,expm.month_year, l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name,c.first_name,c.last_name,c.company');
+		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.first_name,c.last_name,c.company, sd.base_currency');
+
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
 		
 		if($invoice){
 			$this->db->where('expm.invoice_status',0);
