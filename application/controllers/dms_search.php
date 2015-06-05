@@ -77,12 +77,7 @@ class Dms_search extends crm_controller {
 	}
 	
     public function send_email() {
-        $config['protocol'] = 'sendmail';
-       
-        $config['charset'] = 'iso-8859-1';
-        $config['wordwrap'] = TRUE;
-        $config['mailtype'] = 'html';
-
+		
         $this->email->initialize($config);
 
         $this->email->from('webmaster@enoahprojects.com', 'Webmaster');
