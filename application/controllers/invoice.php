@@ -140,6 +140,7 @@ class Invoice extends CRM_Controller {
 		$data['total_amt'] = 0;
 		if(count($invoices)>0) {
 			foreach ($invoices as $inv) {
+				$data['invoices'][$i]['received']			    = $inv['received'];
 				$data['invoices'][$i]['expectid']			    = $inv['expectid'];
 				$data['invoices'][$i]['lead_title']			    = $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 				= $inv['pjt_id'];
@@ -471,7 +472,29 @@ class Invoice extends CRM_Controller {
 		$this->load->view('invoices/payment_milestones_view', $data);			
     }
 	
+	/*
+	method to show the invoices for the payment list history
+	*/
 
+	public function show_invoice_history(){
+		$invoice_id = $this->input->get("invoice_id");
+		if($invoice_id){
+			$this->db->select("invc.exp_id,exp.*,expw.expect_worth_name,le.lead_title");
+			$this->db->from($this->cfg['dbpref']."invoices_child as invc");
+			$this->db->join($this->cfg['dbpref']."expected_payments as exp","exp.expectid = invc.exp_id");
+			//$this->db->join($this->cfg['dbpref']."expected_payments as exp","exp.expectid = invc.exp_id");
+			$this->db->join($this->cfg['dbpref']."leads as le","le.lead_id = exp.jobid_fk");
+			$this->db->join($this->cfg['dbpref']."expect_worth as expw","expw.expect_worth_id = le.expect_worth_id");
+			$this->db->where("invc.inv_id",$invoice_id);
+			$qry = $this->db->get();
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				$data['invoices'] = $res;
+			}
+			$this->load->view("invoices/show_invoice_history",$data);
+		}
+	}
+	
 	public function send_invoice($expid){
 		$data = array();
 		$data['expresults'] = '';
@@ -676,7 +699,8 @@ class Invoice extends CRM_Controller {
 					}
 				}
 				
-				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com";
+				$param['to_mail'] 		  = "bgopinath@enoahisolution.com";
+				//$param['to_mail'] 		  = "paulwills2015@gmail.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				$param['from_email']	  = 'webmaster@enoahprojects.com';
@@ -692,7 +716,23 @@ class Invoice extends CRM_Controller {
 			}
 		}
 	}
+	
+	function mailtest(){
+		//$to      = 'bgopinath@enoahisolution.com';
+		$to      = 'paulwills2015@gmail.com';
+		$subject = 'the subject';
+		$message = 'hello';
+		$headers = 'From: webmaster@enoahprojects.com' . "\r\n" .
+			'Reply-To: webmaster@enoahprojects.com' . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
 
+		if(mail($to, $subject, $message, $headers)){
+			echo 'yes';
+		}else{
+			echo 'no';
+		}
+	}
+	
 	/*
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
