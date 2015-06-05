@@ -7,7 +7,7 @@
 		<th>Milestone Date</th>
 		<th>For the Month & Year</th>
 		<th>Amount</th>
-		<th>Attachment(s)</th>
+		<th>Invoice Attachment(s)</th>
 		</tr>
 	</thead>
 	<tbody>

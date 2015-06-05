@@ -72,16 +72,17 @@ if(count($expresults)>0 && !empty($expresults)){
 					<input type="text" class="textfield width300px" name="project_milestone_name" id="project_milestone_name" value="<?php echo $expresults->project_milestone_name;?>" />
 				</div>						
  	
+
+				<div class="pull-left">
+					<label class="practices">Milestone Value</label>
+					<input readonly="readonly" type="text" name="sub_total" class="textfield width300px js_sub_total1" value="<?php echo $expresults->amount;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
+				</div>
+				<div class="clear"></div>
 				<div class="pull-left">
 					<label class="practices">Tax</label>
 					<input class="js_tax textfield width300px" type="text" name="tax" value="<?php echo $expresults->tax;?>" />%
 				</div>
-				<div class="clear"></div>
-				<div class="pull-left">
-					<label class="practices">Sub Total</label>
-					<input readonly="readonly" type="text" name="sub_total" class="textfield width300px js_sub_total1" value="<?php echo $expresults->amount;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
-				</div>
-				<div class="clear"></div>
+				<div class="clear"></div>				
 				<div class="pull-left">
 					<label class="practices">Tax Price</label>
 					<input readonly="readonly" type="text" name="tax_price" class="tax_price width300px textfield" value="<?php echo $expresults->tax_price;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
@@ -108,7 +109,7 @@ if(count($expresults)>0 && !empty($expresults)){
 					}
 				}?>	
 				<div class="pull-left">
-					<label class="practices">Attachment(s)</label>
+					<label class="practices">Invoice Attachment(s)</label>
 					<input type="file" name="attachment[]" value="" />
 					<a href="javascript:void(0);" class="js_add">Add</a>
 				</div>
