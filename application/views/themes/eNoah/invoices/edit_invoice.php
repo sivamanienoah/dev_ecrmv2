@@ -86,7 +86,7 @@ if(count($expresults)>0 && !empty($expresults)){
 					<label class="practices">Tax Price</label>
 					<input readonly="readonly" type="text" name="tax_price" class="tax_price width300px textfield" value="<?php echo $expresults->tax_price;?>" /><span class="js_expect_worth"><?php echo $expresults->expect_worth_name;?></span>
 				</div>
-				<?php if($expresults->total_amount){
+				<?php if($expresults->total_amount != '0.00'){
 						$total_ = $expresults->total_amount;
 				}else{
 					$total_ = $expresults->amount+$expresults->tax_price;
