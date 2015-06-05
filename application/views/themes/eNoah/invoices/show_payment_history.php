@@ -36,11 +36,11 @@
 		<?php }   ?>
 	<?php } else{?>
 <tr>
-	<td colspan="6" align="left">History not available!</td></tr>
+	<td colspan="9" align="left">History not available!</td></tr>
 	</tr>		
 	<?php } ?>
 <tr>
-	<td colspan="6" align="left"><button type="button" class="js_close positive">Close</button></td></tr>
+	<td colspan="9" align="left"><button type="button" class="js_close positive">Close</button></td></tr>
 	</tr>	
 	</tbody>
 </table>
