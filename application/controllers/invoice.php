@@ -757,22 +757,6 @@ class Invoice extends CRM_Controller {
 		}
 	}
 	
-	function mailtest(){
-		//$to      = 'bgopinath@enoahisolution.com';
-		$to      = 'paulwills2015@gmail.com';
-		$subject = 'the subject';
-		$message = 'hello';
-		$headers = 'From: webmaster@enoahprojects.com' . "\r\n" .
-			'Reply-To: webmaster@enoahprojects.com' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
-
-		if(mail($to, $subject, $message, $headers)){
-			echo 'yes';
-		}else{
-			echo 'no';
-		}
-	}
-	
 	/*
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
