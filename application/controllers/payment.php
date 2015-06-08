@@ -7,6 +7,7 @@ class Payment extends CRM_Controller {
         parent::__construct();
 		$testmode = true;
 		$this->login_id = ($testmode==true)?"27VqPfy3K":"";
+		$this->load->model('email_template_model');
 		$this->transaction_key = ($testmode==true)?"4G73492ZSp6wzA9g":"";
 		$this->post_url = ($testmode==true)?"https://test.authorize.net/gateway/transact.dll":"https://secure.authorize.net/gateway/transact.dll";
     }
