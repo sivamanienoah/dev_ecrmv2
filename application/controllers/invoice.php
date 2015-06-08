@@ -793,6 +793,4 @@ class Invoice extends CRM_Controller {
 		}
 		return $fy;
 	}
-	
-
 }

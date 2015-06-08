@@ -107,16 +107,26 @@ class Payment extends CRM_Controller {
 
 			// This line takes the response and breaks it into an array using the specified delimiting character
 			$response_array = explode($post_values["x_delim_char"],$post_response);
-			
-			$transaction_id = $response_array[6];
-			$approval_code = $response_array[5];
-			$card_number = $response_array[50];
-			$card_type = $response_array[51];
-			$message = $response_array[3];
-			$paid_amount = $response_array[9];
 			$inv_id = $this->input->post("inv_id");	
+			
+			// mail default codes used.
+			$print_fancydate = date('l, jS F y h:iA', strtotime($created_date));			
+			$arrayEmails   	 = $this->config->item('crm');
+			$to				 = implode(',',$arrayEmails['account_emails']);
+			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);			
+			$param = array();
+			
+			$customer_name = $res->first_name.' '.$res->last_name;
+			$customer_email = $res->email_1;
+			
+			if(is_array($response_array) && $response_array[0]==1){
+				$transaction_id = $response_array[6];
+				$approval_code = $response_array[5];
+				$card_number = $response_array[50];
+				$card_type = $response_array[51];
+				$message = $response_array[3];
+				$paid_amount = $response_array[9];				
 				
-			if($response_array[0]==1){
 				$paid_status = 1;
 				$this->db->update($this->cfg['dbpref']."invoices",array("status" => 1),array("inv_id" => $inv_id));
 				$message1 = "Thank you! your payment was success.";
@@ -127,19 +137,35 @@ class Payment extends CRM_Controller {
 				$this->db->where("inv.inv_id",$inv_id);		
 				$qry = $this->db->get();
 				if($qry->num_rows()>0){
-					$res = $qry->result();	
-					foreach($res as $rs){
+					$get_inv_res = $qry->result();	
+					foreach($get_inv_res as $rs){
 						$this->db->update($this->cfg['dbpref']."expected_payments",array("received" => 1,"payment_remark" => "Authorize.net payment $transaction_id"),array("expectid" => $rs->exp_id));
 					}
 				}
 				
 				$this->db->update($this->cfg['dbpref']."invoices_child",array("status" => 1),array("inv_id" => $inv_id));
 				$this->db->update($this->cfg['dbpref']."invoices",array("status" => 1),array("inv_id" => $inv_id));
-					
+				
+				$subject		 = 'Payment Success Notification from enoahisolution';
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'transaction_id' => $transaction_id,'card_number' => $card_number,'amount' => "USD ".$paid_amount);
+				$param['template_name']	  = " 	Payment Success";
+				$param['subject'] 		  = $subject;
 			}else{
 				$paid_status = 0;
+				$message = $response_array[3];
 				$message1 = $message;
+				$subject		 = 'Payment Failure Notification from enoahisolution';
+				
+				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'message' => $message,'card_number' => $card_number,'amount' => "USD ".$paid_amount);
+				
+				$param['template_name']	  = " 	Payment Failure";
+				$param['subject'] 		  = $subject;
 			}
+			
+			$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com"; //$customer_email
+			//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
+			//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;			
+			$this->email_template_model->sent_email($param);	
 			
 			$ins_arr = array("inv_id" => $inv_id,
 						"paid_amount" => $paid_amount,
@@ -159,6 +185,9 @@ class Payment extends CRM_Controller {
 			$this->db->insert($this->cfg['dbpref']."payment_history",$ins_arr);
 			$this->session->set_userdata("error_message",$message1);
 			redirect("payment/success");
+		}else{
+			$this->session->set_userdata("error_message","Invalid Process");
+			redirect("payment");
 		}
 	}
 	
