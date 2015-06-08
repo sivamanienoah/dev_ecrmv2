@@ -111,7 +111,7 @@ class Payment extends CRM_Controller {
 			$inv_id = $this->input->post("inv_id");	
 			
 			// mail default codes used.
-			$print_fancydate = date('l, jS F y h:iA', strtotime($created_date));			
+			$print_fancydate = date('l, jS F y h:iA');			
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
 			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);			
