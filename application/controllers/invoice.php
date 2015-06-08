@@ -538,7 +538,7 @@ class Invoice extends CRM_Controller {
 	public function send_invoice($expid){
 		$data = array();
 		$data['expresults'] = '';
-		$data['customers'] = $this->invoice_model->get_invoice_customer();
+		$data['customers'] = $this->invoice_model->get_invoice_customer_usentity();
 		$data['payment_options'] = $this->invoice_model->get_payment_options();
 		$data['page_heading'] = "Send Invoice(s)";
 		$this->load->view("invoices/send_invoice",$data);
@@ -793,4 +793,13 @@ class Invoice extends CRM_Controller {
 		}
 		return $fy;
 	}
+	
+	function download_file($file_name)
+	{
+		$this->load->helper('download');
+		$file_dir = FCPATH.'crm_data/invoices/'.$file_name;
+		$data = file_get_contents($file_dir); // Read the file's contents
+		$name = $file_name;
+		force_download($name, $data); 
+	}	
 }

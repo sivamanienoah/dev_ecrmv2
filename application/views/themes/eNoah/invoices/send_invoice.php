@@ -11,7 +11,8 @@ $userdata = $this->session->userdata('logged_in_user');
 		 <div class="pull-left side1 test-block full-div"> 
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 			<div class="clear"></div>
-			<div >
+			<div>
+			<p>Note: This feature is available only for "eNoah iSolution US" entity.</p>
 			<form action="<?php echo base_url().'invoice/submit_invoice'?>" method="post" enctype="multipart/form-data">
 				<input type="hidden" id="csrf_hash_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<input type="hidden" name="customer_name" value="" class="customer_name" />

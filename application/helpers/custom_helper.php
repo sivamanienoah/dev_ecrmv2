@@ -178,7 +178,7 @@ if ( ! function_exists('get_attachments_show'))
 		if($qry->num_rows()>0){
 		$list = '';
 		  foreach($res as $rs){
-			  $list .= anchor(site_url("crm_data/invoices/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
+			  $list .= anchor(site_url("download_file/".$rs->file_name),$rs->file_name,'target="_blank"').'<br>';
 		  }
 		}
 		return $list;

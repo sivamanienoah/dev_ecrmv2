@@ -154,7 +154,7 @@ class Payment extends CRM_Controller {
 				
 				$subject		 = 'Payment Success Notification from enoahisolution';
 				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'transaction_id' => $transaction_id,'card_number' => $card_number,'amount' => "USD ".$paid_amount);
-				$param['template_name']	  = " 	Payment Success";
+				$param['template_name']	  = "Payment Success";
 				$param['subject'] 		  = $subject;
 			}else{
 				$paid_status = 0;
@@ -164,7 +164,7 @@ class Payment extends CRM_Controller {
 				
 				$param['email_data'] = array('print_fancydate'=>$print_fancydate,'customer_name'=>$customer_name,'message' => $message,'card_number' => $card_number,'amount' => "USD ".$paid_amount);
 				
-				$param['template_name']	  = " 	Payment Failure";
+				$param['template_name']	  = "Payment Failure";
 				$param['subject'] 		  = $subject;
 			}
 			

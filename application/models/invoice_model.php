@@ -313,10 +313,16 @@ class Invoice_model extends crm_model {
 	}
 	
 	function get_invoice_customer(){
-		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 1 and le.division=3 group by cus.custid order by cus.first_name ";
+		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 1 group by cus.custid order by cus.first_name ";
 		$res = $this->db->query($qry);
 		return $res->result();
 	}
+	
+	function get_invoice_customer_usentity(){
+		$qry = "select cus.company,cus.custid,cus.first_name,cus.last_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id where exp.invoice_status = 1 and le.division=3 group by cus.custid order by cus.first_name ";
+		$res = $this->db->query($qry);
+		return $res->result();
+	}	
 	
 	function get_customer_invoices($custid){
 		$qry = "select exp.total_amount,expatt.file_name,cus.first_name,cus.last_name,cus.email_1,cus.email_2,cus.email_3,cus.email_4,cus.custid,le.lead_title,DATE_FORMAT(exp.month_year,'%d-%m-%Y') as month_year,DATE_FORMAT(exp.expected_date,'%d-%m-%Y') as milestone_date,exp.expectid,exp.amount,exp.project_milestone_name,exw.expect_worth_name from ".$this->cfg['dbpref']."customers as cus join ".$this->cfg['dbpref']."leads as le on cus.custid=le.custid_fk join ".$this->cfg['dbpref']."expected_payments as exp on exp.jobid_fk = le.lead_id join ".$this->cfg['dbpref']."expect_worth as exw on exw.expect_worth_id=le.expect_worth_id join ".$this->cfg['dbpref']."expected_payments_attachments as expatt on exp.expectid = expatt.expectid where exp.invoice_status = 1 and exp.received != '1' and cus.custid=$custid group by exp.expectid order by exp.month_year desc,le.lead_title ";
