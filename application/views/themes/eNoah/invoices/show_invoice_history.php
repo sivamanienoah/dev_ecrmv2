@@ -20,8 +20,8 @@
 				<tr>
 				<td><?php echo $inv->lead_title;?></td>
 				<td><?php echo $inv->project_milestone_name;?></td>
-				<td><?php echo $inv->milestone_date;?></td>
-				<td><?php echo $inv->month_year;?></td>
+				<td><?php echo date("d-m-Y",strtotime($inv->expected_date));?></td>
+				<td><?php echo date("F Y",strtotime($inv->month_year));?></td>
 				<td><?php echo $inv->expect_worth_name.' '.$inv->total_amount;?></td>
 				<td>
 					<?php
