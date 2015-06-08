@@ -119,6 +119,11 @@ class Payment extends CRM_Controller {
 			
 			$customer_name = $res->first_name.' '.$res->last_name;
 			$customer_email = $res->email_1;
+			$paid_amount = '';
+			$card_type = '';
+			$card_number = '';
+			$transaction_id = '';
+			$approval_code = '';
 			
 			if(is_array($response_array) && $response_array[0]==1){
 				$transaction_id = $response_array[6];
