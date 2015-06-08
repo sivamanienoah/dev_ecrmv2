@@ -86,7 +86,7 @@ class Payment extends CRM_Controller {
 				"x_address"			=> $res->add1_line1,
 				"x_state"			=> $res->add1_line2,
 				"x_zip"				=> $res->add1_postcode,			
-				"x_email"			=> "ssubbiah@enoahisolution.com", //$res->email_1
+				"x_email"			=> "mthiyagarajan@enoahisolution.com", //$res->email_1
 				// Additional fields can be added here as outlined in the AIM integration
 				// guide at: http://developer.authorize.net
 			);
