@@ -847,6 +847,15 @@ class Project_model extends crm_model
 		return $query->result_array();
     }
 	
-
+	public function get_invoice_total($lead_id){
+		$this->db->select("SUM(amount) as invoice_amount,SUM(tax_price) as tax_amount");
+		$this->db->group_by("jobid_fk");
+		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments",array("jobid_fk" => $lead_id,"invoice_status" => 1));
+		if($qry->num_rows()>0){
+			$res = $qry->row();
+			return $res;
+		}
+		return false;
+	}
 }
 ?>

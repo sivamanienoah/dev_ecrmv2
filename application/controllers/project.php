@@ -3318,19 +3318,20 @@ HDOC;
 	}
 	
 	public function conver_currency($amount, $val) {
-		return round($amount*$val, 2);
+			return round($amount*$val, 2);
 	}
 	
 	/* Change the actual worth amount to Default currency */
 	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
 	{
 		$rates = $this->get_currency_rates();
-		
+		 
 		$data['project_record'] = array();
 		$i = 0;
 		if (isset($records) && count($records)) :
 			foreach($records as $rec) {
-				$amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				 $amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				$data['timesheet_data'] = array();
 				$timesheet				= array();
@@ -3347,9 +3348,16 @@ HDOC;
 					$bill_type = $rec['billing_type'];
 				}
 				
-				if(!empty($rec['pjt_id']))
-				$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=1);
+				if(!empty($rec['pjt_id'])){
+					$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=1);
+				}
 				
+				$total_amount_inv_raised = 0;
+				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
+				if(count($invoice_amount)>0 && !empty($invoice_amount)){
+					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
+				}
+				//echo $rec['lead_id'].'---'.$total_amount_inv_raised.'<br>';
 				/* if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
 						$costdata = array();
@@ -3403,8 +3411,9 @@ HDOC;
 					}
 				}
 				
-				$total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
-
+				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				//echo $rec['lead_id'].'---'.$total_amount_inv_raised.'<br>';
 				// if(!empty($data['timesheet_data'])) {
 				
 					// $res = $this->calcActualProjectCost($data['timesheet_data']);
@@ -3458,6 +3467,7 @@ HDOC;
 				$data['project_record'][$i]['int_hr'] 			= $total_internal_hrs;
 				$data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
 				$data['project_record'][$i]['total_hours'] 		= $total_hours;
+				$data['project_record'][$i]['total_amount_inv_raised'] 		= $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
 			}

@@ -739,7 +739,7 @@ class Invoice extends CRM_Controller {
 					}
 				}
 				
-				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com";
+				$param['to_mail'] 		  = "ssubbiah@enoahisolution.com,mthiyagarajan@enoahisolution.com"; //$cust_email
 				//$param['to_mail'] 		  = "paulwills2015@gmail.com";
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;
 				//$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$to;

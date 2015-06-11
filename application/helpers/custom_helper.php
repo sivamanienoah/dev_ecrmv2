@@ -71,7 +71,7 @@ function currency_convert()
 					$get = explode("<span class=bld>",$get);
 					$get = explode("</span>",$get[1]);  
 					$converted_amount = preg_replace("/[^0-9\.]/", null, $get[0]);
-					$conversion_value = round($converted_amount, 2);
+					$conversion_value = round($converted_amount, 3);
 					updt_currency($from_Currency_id, $to_Currency_id, $conversion_value);
 				} else {
 					updt_currency($from_Currency_id, $to_Currency_id, 1);
