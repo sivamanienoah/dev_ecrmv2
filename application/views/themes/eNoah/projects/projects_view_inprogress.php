@@ -85,7 +85,7 @@ if (get_default_currency()) {
 				$milestone_content .= "<td>".$profitloss."</td>";
 				$milestone_content .= "<td>".$profitlossPercent." %</td>";
 				$milestone_content .= "</tr>";
-				$full_total_amount_inv_raised += $total_amount_inv_raised;
+				$full_total_mile_amount_inv_raised += $total_amount_inv_raised;
 				$total_mile_pv_amt += $actual_amt;
 				$total_mile_uc_amt += $total_cost;
 				$total_mile_pl_amt += $profitloss;	
@@ -166,6 +166,7 @@ if (get_default_currency()) {
 					<tr>
 						<td colspan='11' align='right'><strong>Total: </strong></td>
 						
+						<td><?php echo sprintf('%0.2f', $full_total_mile_amount_inv_raised); ?></td>
 						<td><?php echo sprintf('%0.2f', $total_mile_pv_amt); ?></td>
 						<td><?php echo sprintf('%0.2f', $total_mile_uc_amt); ?></td>
 						<td><?php echo sprintf('%0.2f', $total_mile_pl_amt); ?></td>
