@@ -3896,7 +3896,7 @@ HDOC;
 			$param['attach'] 		  = $attached_files;
 			$param['job_id'] 		  = $pjtid;
 
-			//$this->email_template_model->sent_email($param);
+			$this->email_template_model->sent_email($param);
 		} else {
 			$output['error'] = true;
 			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';

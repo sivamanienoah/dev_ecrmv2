@@ -1880,7 +1880,7 @@ if (get_default_currency()) {
 				$checkValue = true;
 				 if(count($bug_project)>0 && !empty($bug_project)):?>
 					<div class="buttons task-init  toggler">
-						<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="<?php echo "http://".$_SERVER['HTTP_HOST']."/sso-mantis/set_project.php";?>"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
+						<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="http://support.enoahisolution.com/set_project.php"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
 						<div class="clear"></div>
 					</div>
 					<div style="margin-bottom:10px;" class="pull-left">
