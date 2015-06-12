@@ -35,8 +35,12 @@ if (get_default_currency()) {
 			$eff_variance  = round($total_hours-$estimate_hour);
 			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
 			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
-			$profitloss    = round($record['actual_worth_amt']-$total_cost);
-			$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
+			
+			$profitloss    = round($total_amount_inv_raised-$total_cost);
+			$profitlossPercent = round(($profitloss/$total_cost)*100);
+			// $profitloss    = round($record['actual_worth_amt']-$total_cost);
+			// $profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
+			
 			switch ($record['rag_status']) {
 				case 1:
 					$ragStatus = '<span class=label-red></span>';
@@ -75,9 +79,9 @@ if (get_default_currency()) {
 				$milestone_content .= "<td>".$nbil_hr."</td>";
 				$milestone_content .= "<td>".$total_hours."</td>";
 				$milestone_content .= "<td>".$eff_variance."</td>";
-				$milestone_content .= "<td>".$total_amount_inv_raised."</td>";
 				$milestone_content .= "<td>".$actual_amt."</td>";
 				$milestone_content .= "<td>".$total_cost."</td>";
+				$milestone_content .= "<td>".$total_amount_inv_raised."</td>";
 				$milestone_content .= "<td>".$profitloss."</td>";
 				$milestone_content .= "<td>".$profitlossPercent." %</td>";
 				$milestone_content .= "</tr>";
@@ -104,9 +108,9 @@ if (get_default_currency()) {
 				$monthly_content .= "<td>".$int_hr."</td>";
 				$monthly_content .= "<td>".$nbil_hr."</td>";
 				$monthly_content .= "<td>".$total_hours."</td>";
-				$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
 				$monthly_content .= "<td>".$actual_amt."</td>";
 				$monthly_content .= "<td>".$total_cost."</td>";
+				$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
 				$monthly_content .= "<td>".$profitloss."</td>";
 				$monthly_content .= "<td>".$profitlossPercent." %</td>";
 				$monthly_content .= "</tr>";
@@ -147,9 +151,9 @@ if (get_default_currency()) {
 			<th title="Non-Billable Hour">NBH</th>
 			<th title="Total Utilized Hours">TUH</th>
 			<th title="Effort Variance">EV</th>
-			<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 			<th title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
 			<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+			<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 			<th title="P&L">P&L </th>
 			<th title="P&L %">P&L % </th>
 		</tr>
@@ -231,9 +235,9 @@ if (get_default_currency()) {
 				<th title="Internal Hour">IH</th>
 				<th title="Non-Billable Hour">NBH</th>
 				<th title="Total Utilized Hours">TUH</th>
-				<th title="Invoice Raised">IR</th>
 				<th title="Project Value">PV</th>
 				<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+				<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 				<th title="P&L">P&L </th>
 				<th title="P&L %">P&L %</th>
 			</tr>
@@ -248,6 +252,7 @@ if (get_default_currency()) {
 						
 						<td><?php echo $total_pv_amt; ?></td>
 						<td><?php echo $total_uc_amt; ?></td>
+						<td><?php echo $full_total_amount_inv_raised; ?></td>
 						<td><?php echo $total_pl_amt; ?></td>
 						<td></td>
 						
@@ -270,8 +275,8 @@ if (get_default_currency()) {
 			<div class="pull-left"><strong>NBH</strong> - Non Billable Hours</div>
 			<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
 			<div class="pull-left"><strong>PV</strong> - Project Value </div>
-			<div class="pull-left"><strong>IR</strong> - Invoice Raised </div>
 			<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
+			<div class="pull-left"><strong>IR</strong> - Invoice Raised </div>
 			<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
 		</div>
 	</div>

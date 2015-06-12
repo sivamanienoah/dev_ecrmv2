@@ -634,6 +634,22 @@ class Project extends crm_controller {
 			}
 			
 			/**
+			get the project variance report from timesheet
+			**/
+			$data['timesheet_variance'] = '';
+			$timesheet_db = $this->load->database('timesheet', TRUE); 			
+			$project_code_ts = $data['quote_data']['pjt_id'];
+			$qry_pv = $timesheet_db->query("SELECT pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,sum(pte.prj_task_hours) As EstimatedHours, (select sum(tim.duration)/60 from enoah_times As tim where tim.proj_id = pte.proj_id and tim.task_id = pte.task_id) As actualHours ,tt.task_id,tt.name as taskName FROM ".$timesheet_db->dbprefix('project_estimation')." AS pe INNER JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.prj_est_id = pe.prj_est_id INNER JOIN ".$timesheet_db->dbprefix('task')." AS tt ON tt.task_id = pte.task_id  join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = pte.proj_id  WHERE prj.project_code='".$project_code_ts."' group by pte.task_id");
+			//echo $timesheet_db->last_query();exit;
+			if($qry_pv->num_rows()>0){
+				$res_pv = $qry_pv->result();
+				$data['timesheet_variance'] = $res_pv;
+			}
+			$timesheet_db->close();
+			
+			
+			
+			/**
 			get the bug summary from the mantis bug table
 			**/
 			
@@ -715,7 +731,7 @@ class Project extends crm_controller {
 					}
 				}
 				$support_db->close();	
-			}			
+			}
 		
             $this->load->view('projects/welcome_view_project', $data);
         }
@@ -3592,8 +3608,9 @@ HDOC;
 			$this->excel->getActiveSheet()->setCellValue('J1', 'Effort Variance');
 			$this->excel->getActiveSheet()->setCellValue('K1', 'Project Value ('.$this->default_cur_name.')');
 			$this->excel->getActiveSheet()->setCellValue('L1', 'Utilization Cost ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('M1', 'P&L');
-			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L %');
+			$this->excel->getActiveSheet()->setCellValue('M1', 'Invoice Raised ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L');
+			$this->excel->getActiveSheet()->setCellValue('O1', 'P&L %');
 
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
@@ -3624,8 +3641,13 @@ HDOC;
 				$total_hr = ($rec['bill_hr']+$rec['int_hr']+$rec['nbil_hr']);
 				$pjt_val = (isset($rec['actual_worth_amt'])) ? $rec['actual_worth_amt'] : "-";
 				$util_cost = (isset($rec['total_cost'])) ? round($rec['total_cost']) : "-";
-				$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
-				$percent = ($plPercent == FALSE)?'-':round($plPercent)*100;
+				$total_amount_inv_raised = (isset($rec['total_amount_inv_raised'])) ? round($rec['total_amount_inv_raised']) : "-";
+				
+				$profitloss    = round($total_amount_inv_raised-$util_cost);
+				//$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
+				$plPercent = round(($profitloss/$util_cost)*100);
+				
+				//$percent = ($plPercent == FALSE)?'-':round($plPercent)*100;
 				
 				$bill_type = $rec['billing_type'];
 				
@@ -3642,8 +3664,9 @@ HDOC;
 				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
 				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
 				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
-				$this->excel->getActiveSheet()->setCellValue('M'.$i, round($rec['actual_worth_amt']-$rec['total_cost']));
-				$this->excel->getActiveSheet()->setCellValue('N'.$i, $percent);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_amount_inv_raised);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $profitloss);
+				$this->excel->getActiveSheet()->setCellValue('O'.$i, $plPercent);
 				$i++;
     		}
 			
@@ -3664,6 +3687,7 @@ HDOC;
 			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('D2:D'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');

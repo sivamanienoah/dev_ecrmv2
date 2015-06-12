@@ -26,11 +26,15 @@ if (get_default_currency()) {
 			$int_hr 	   = (isset($record['int_hr'])) ? (round($record['int_hr'])) : '-';
 			$nbil_hr 	   = (isset($record['nbil_hr'])) ? (round($record['nbil_hr'])) : '-';
 			$total_hours   = (isset($record['total_hours'])) ? (round($record['total_hours'])) : '-';
+			$total_amount_inv_raised   = (isset($record['total_amount_inv_raised'])) ? ($record['total_amount_inv_raised']) : '-';
 			$eff_variance  = round($total_hours-$estimate_hour);
 			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
 			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
-			$profitloss    = round($record['actual_worth_amt']-$total_cost);
-			$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
+			//$profitloss    = round($record['actual_worth_amt']-$total_cost);
+			//$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
+			$profitloss    = round($total_amount_inv_raised-$total_cost);
+			$profitlossPercent = round(($profitloss/$total_cost)*100);			
+			
 			switch ($record['rag_status']) {
 				case 1:
 					$ragStatus = '<span class=label-red></span>';
@@ -69,9 +73,11 @@ if (get_default_currency()) {
 			$monthly_content .= "<td>".$total_hours."</td>";
 			$monthly_content .= "<td>".$actual_amt."</td>";
 			$monthly_content .= "<td>".$total_cost."</td>";
+			$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
 			$monthly_content .= "<td>".$profitloss."</td>";
 			$monthly_content .= "<td>".$profitlossPercent." %</td>";
 			$monthly_content .= "</tr>";
+				$full_total_amount_inv_raised += $total_amount_inv_raised;
 				$total_pv_amt += $actual_amt;
 				$total_uc_amt += $total_cost;
 				$total_pl_amt += $profitloss;
@@ -95,6 +101,7 @@ if (get_default_currency()) {
 			<th title="Total Utilized Hours">TUH</th>
 			<th title="Project Value">PV</th>
 			<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
+			<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 			<th title="P&L">P&L </th>
 			<th title="P&L %">P&L %</th>
 		</tr>
@@ -109,6 +116,7 @@ if (get_default_currency()) {
 						
 						<td><?php echo $total_pv_amt; ?></td>
 						<td><?php echo $total_uc_amt; ?></td>
+						<td><?php echo $full_total_amount_inv_raised; ?></td>
 						<td><?php echo $total_pl_amt; ?></td>
 						<td></td>
 						

@@ -673,6 +673,43 @@ if (get_default_currency()) {
 			</table>
 			<div id="msg_project_efforts" style="margin:5px;"></div>
 		</div>
+		<!-- project variance report starts -->
+		<?php if(count($timesheet_variance)>0 && !empty($timesheet_variance)){
+				$tot_est_hours = 0;
+				$tot_act_hours = 0;
+				$tot_variant_hours = 0;
+			?>
+		<div class="pull-left" style="width:360px;">
+			<table id="project-efforts" class="data-table1" cellpadding="0" cellspacing="0">
+				<tr>
+					<th>Task Name</th>
+					<th>Estimated Hours</th>
+					<th>Actual Hours</th>
+					<th>Variant Hours</th>
+				</tr>
+				<?php foreach($timesheet_variance as $tv ){
+						$variant=round($tv->actualHours)-$tv->EstimatedHours;
+						$tot_est_hours+=$tv->EstimatedHours;
+						$tot_act_hours+=round($tv->actualHours);
+						$tot_variant_hours+=$variant;?>
+				<tr>
+					<td><?php echo $tv->taskName;?></td>
+					<td><?php echo $tv->EstimatedHours;?></td>
+					<td><?php echo round($tv->actualHours);?></td>
+					<td><?php echo $variant;?></td>
+				</tr>
+				<?php } ?>
+				<tr>
+					<td style="font-weight:bold;" align="right">Total</td>
+					<td style="font-weight:bold;"  align="right"><?php echo $tot_est_hours; ?></td>
+					<td style="font-weight:bold;"  align="right"><?php echo $tot_act_hours; ?></td>
+					<td style="font-weight:bold;"  align="right"><?php echo $tot_variant_hours; ?></td>						
+				</tr>				
+			</table>
+			<div id="msg_project_variance" style="margin:5px;"></div>
+		</div>
+		<?php } ?>
+		<!-- project variance report ends -->
 		</div>
 	</div><!--end of jv-tab-0 -->
 	
