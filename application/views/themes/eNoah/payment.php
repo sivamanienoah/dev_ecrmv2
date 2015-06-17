@@ -9,8 +9,8 @@
 				<?php if ($this->session->userdata('error_message')) { ?>
 					<h2><?php echo $this->session->userdata('error_message');  $this->session->set_userdata('error_message','');?></h2>
 				<?php } else { ?>
-				<h2>Payment</h2>
-				<form action="<?php echo site_url('payment/process_payment');?>" method="post">
+				<h2>Invoice Information</h2>
+				<form autocomplete="off" onsubmit="return checkValidation();" action="<?php echo site_url('payment/process_payment');?>" method="post">
 					<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						 <?php if(count($exp_details)>0 && !empty($exp_details)){
 								$total = 0;?>
@@ -63,50 +63,67 @@
 						<input type="radio" name="payment_method" value="1"/>&nbsp;Paypal
 						<input type="radio" name="payment_method" value="2"/>&nbsp;Authorize.net
 						<br><br>-->
-
-						<label>Card Type:</label>
-						<select name="card_type" class="form-control input-md selectpicker show-tick cc_input" for="Card Type" id="card_type" placeholder="Card Type">
-								<option value="">Select One</option>
-								<?php
-								$card_type = array("Visa"=>"Visa","MasterCard"=>"MasterCard");
-								//,"Discover"=>"Discover", "Amex"=>"Amex"
-								foreach($card_type as $key=>$val)
-								{
-								?>
-								<option value="<?php echo $key; ?>" <?php if(isset($_POST['card_type']) && $_POST['card_type']==$key) echo 'selected="selected"'; ?>><?php echo $val; ?> </option>
-								<?php } ?>
-						</select>
-						<br><br>						
-						<label>Card Number:</label>
-						<input type="text" placeholder="Card Number" id="card_number" class="form-control number cc_input length_check" name="card_number" value="" maxlength="16" />
-						<br><br>						
-						<label>Expiry Month & Year:</label>
-						<select name="expiry_month" class="form-control input-md selectpicker show-tick cc_input" placeholder="Expiry Month" id="expiry_month">
-							<option value="">Month</option>
-							<?php
-							for ($m=1; $m <= 12; $m++)
-							{
-								$mnth = ($m>=10) ? $m : '0'.$m;
-							?>
-							<option value="<?php echo $mnth; ?>" <?php if(isset($_POST['expiry_month']) && $_POST['expiry_month']==$mnth) echo 'selected="selected"'; ?>><?php echo $mnth; ?> </option>
-							<?php } ?>
-						</select>
-						<select name="expiry_year" class="form-control input-md selectpicker show-tick cc_input" placeholder="Expiry Year" id="expiry_year">
-							<option value="">Year</option>
-							<?php
-							$curYear = date('Y');
-							for ($yr=0; $yr < 20; $yr++)
-							{
-								$newEndingDate = date("Y", strtotime(date("Y-m-d") . " + ".$yr." year"));
-							?>
-							<option value="<?php echo substr($newEndingDate,2,2); ?>" <?php if(isset($_POST['expiry_year']) && $_POST['expiry_year']==$mnth) echo 'selected="selected"'; ?>><?php echo $newEndingDate; ?> </option>
-							<?php } ?>
-						</select>
-						<br><br>	
-						<label>CVV:</label>
-						<input type="password" placeholder="CVV" id="cvv" class="form-control number cc_input length_check" name="cvv" value="" maxlength="3" /> 
-						<br><br>
-						<button type="submit" class="positive">Submit</button>
+						<div class="payment-container">
+							<div class="payment-row-area">
+								<h2>PAYMENT INFORMATION</h2>
+								<div class="payment-row-area-left">
+										<label>Card Type:</label>
+										<select name="card_type" class="form-control input-md selectpicker show-tick cc_input" for="Card Type" id="card_type" placeholder="Card Type">
+												<option value="">Select One</option>
+												<?php
+												$card_type = array("Visa"=>"Visa","MasterCard"=>"MasterCard");
+												//,"Discover"=>"Discover", "Amex"=>"Amex"
+												foreach($card_type as $key=>$val)
+												{
+												?>
+												<option value="<?php echo $key; ?>" <?php if(isset($_POST['card_type']) && $_POST['card_type']==$key) echo 'selected="selected"'; ?>><?php echo $val; ?> </option>
+												<?php } ?>
+										</select>								
+									
+								</div>
+								
+								<div class="payment-row-area-right">
+										<label>Card Number:</label>
+										<input type="text" placeholder="Card Number" id="card_number" class="form-control number cc_input length_check" name="card_number" value="" maxlength="16" />
+								</div>	
+							</div>
+							
+							<div class="payment-row-area">
+								<div class="payment-row-area-left-se">
+									<label>Expiry Month & Year:</label>
+									<select name="expiry_month" class="form-control input-md selectpicker show-tick cc_input" placeholder="Expiry Month" id="expiry_month">
+										<option value="">Month</option>
+										<?php
+										for ($m=1; $m <= 12; $m++)
+										{
+											$mnth = ($m>=10) ? $m : '0'.$m;
+										?>
+										<option value="<?php echo $mnth; ?>" <?php if(isset($_POST['expiry_month']) && $_POST['expiry_month']==$mnth) echo 'selected="selected"'; ?>><?php echo $mnth; ?> </option>
+										<?php } ?>
+									</select>
+									<select name="expiry_year" class="form-control input-md selectpicker show-tick cc_input" placeholder="Expiry Year" id="expiry_year">
+										<option value="">Year</option>
+										<?php
+										$curYear = date('Y');
+										for ($yr=0; $yr < 20; $yr++)
+										{
+											$newEndingDate = date("Y", strtotime(date("Y-m-d") . " + ".$yr." year"));
+										?>
+										<option value="<?php echo substr($newEndingDate,2,2); ?>" <?php if(isset($_POST['expiry_year']) && $_POST['expiry_year']==$mnth) echo 'selected="selected"'; ?>><?php echo $newEndingDate; ?> </option>
+										<?php } ?>
+									</select>
+									
+									
+								</div>
+								<div class="payment-row-area-right-se">
+									<label>CVV Number:</label>
+									<input type="password" placeholder="CVV" id="cvv" class="form-control number cc_input length_check" name="cvv" value="" maxlength="3" /> 
+											</div>	
+							</div>
+						</div>
+						<div class="payment-btn-area">
+							<button type="submit" class="positive">Submit</button>
+						</div>
 				</form>
 				<?php } ?>
 			</div>
@@ -116,6 +133,38 @@
 <script type="text/javascript">
 window.onload = function() {
 	document.forms[0].email.focus();
+}
+
+function checkValidation(){
+	var card_type = $("#card_type").val();
+	var card_number = $("#card_number").val();
+	var expiry_month = $("#expiry_month").val();
+	var expiry_year = $("#expiry_year").val();
+	var cvv = $("#cvv").val();
+	
+	if(!card_type){
+		alert("Please select card type!");
+		return false;
+	}
+	if(!card_number){
+		alert("Please enter credit card number!");
+		return false;
+	}else if(card_number.length<16){
+		alert("Please enter valid credit card number!");
+		return false;
+	}
+	if(!expiry_month){
+		alert("Please select expiry month!");
+		return false;
+	}
+	if(!expiry_year){
+		alert("Please select expiry year!");
+		return false;
+	}
+	if(!cvv){
+		alert("Please enter cvv number!");
+		return false;
+	}	
 }
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
