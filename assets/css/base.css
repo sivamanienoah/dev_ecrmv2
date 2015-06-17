@@ -2339,5 +2339,78 @@ li.saved-search-res span:first-child {width: 135px !important;}
 .sec-right{width: 50%;}
 .team-mem-btn{margin:25px 0 0 5px;}
 }
+/*--17-06-2015-- payment-cateway----*/
 
+.payment-container{
+	   border: 1px solid #ddd;
+  
+    height: 267px;
+    margin: 0 auto;
+    padding: 18px 25px;
+    width: 67%;
+}
 
+.payment-row-area{
+	clear: both;    
+    margin: 0 auto;
+    padding: 0;    
+    width: 82%;
+}
+.payment-row-area-left{
+	width:100%;
+	float:left;
+	margin:1px 0;
+}
+.payment-row-area-right{
+	width:100%;
+	float:left;
+	 margin: 1px 0 8px;
+}
+
+.payment-row-area-left-se{
+	width:50%;
+	float:left;
+	margin:1px 35px 0 0px;
+}
+.payment-row-area-right-se{
+	width:40%;
+	float:left;
+	margin:1px 0;
+}
+.payment-row-area-right input{
+	border: 1px solid #ddd;
+    color: #000000;
+    height: 40px;
+    line-height: 30px;
+    padding: 0 7px !important;
+    width: 100% !important;
+}
+#card_type{
+	width:100%;
+	height:37px;
+}
+#expiry_month{
+	width:41%;
+	height:37px;
+}
+#expiry_year{
+	margin-left:10px;
+	width:47%;
+	height:37px;
+}
+.payment-btn-area{
+	clear:both;
+	margin:10px auto 0;
+	text-align:center;
+	width:100%;	
+}
+.payment-btn-area button{
+	float:none !important;
+	margin:10px auto 0;
+
+}
+
+#cvv {
+    width: 45% !important;
+	border:1px solid #ddd;
+}
