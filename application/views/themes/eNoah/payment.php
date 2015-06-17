@@ -7,12 +7,16 @@
 		<div class="login-container" style="width:800px;">
 			<div class="login-box">
 				<?php if ($this->session->userdata('error_message')) { ?>
-					<h2><?php echo $this->session->userdata('error_message');  $this->session->set_userdata('error_message','');?></h2>
-				<?php } else { ?>
+					<h2 style="color:red;"><?php echo $this->session->userdata('error_message');  $this->session->set_userdata('error_message','');?></h2>
+				<?php }  ?>
+				<?php if ($this->session->userdata('success_message')) { ?>
+					<h2 style="color:green;"><?php echo $this->session->userdata('success_message');  $this->session->set_userdata('success_message','');?></h2>
+				<?php }  ?>		
+				<?php if(count($exp_details)>0 && !empty($exp_details)){				?>
 				<h2>Invoice Information</h2>
 				<form autocomplete="off" onsubmit="return checkValidation();" action="<?php echo site_url('payment/process_payment');?>" method="post">
 					<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						 <?php if(count($exp_details)>0 && !empty($exp_details)){
+						 <?php 
 								$total = 0;?>
 								<table cellspacing="0" cellpadding="0" border="0" class="data-table">
 									<tr>
@@ -47,7 +51,7 @@
 									</tr>
 								<?php }?>
 								</table>
-							<?php  }?>
+							
 						<div style="float:right;font-weight:bold;">
 						<span style="  float: right; margin-right: 106px; padding: 10px;"><?php echo $exp->expect_worth_name.' '.number_format($total,2);?> </span>
 						<span style="float:right; padding: 10px;">Total Price:</span>
@@ -125,7 +129,7 @@
 							<button type="submit" class="positive">Submit</button>
 						</div>
 				</form>
-				<?php } ?>
+				<?php  }?>
 			</div>
 		</div>
 	</div>
@@ -164,7 +168,8 @@ function checkValidation(){
 	if(!cvv){
 		alert("Please enter cvv number!");
 		return false;
-	}	
+	}
+	return true;
 }
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

@@ -124,7 +124,7 @@ class Payment extends CRM_Controller {
 			$card_number = '';
 			$transaction_id = '';
 			$approval_code = '';
-			
+			$unique_link = $this->input->post("unique_link");
 			if(is_array($response_array) && $response_array[0]==1){
 				$transaction_id = $response_array[6];
 				$approval_code = $response_array[5];
@@ -189,8 +189,14 @@ class Payment extends CRM_Controller {
 			
 			
 			$this->db->insert($this->cfg['dbpref']."payment_history",$ins_arr);
-			$this->session->set_userdata("error_message",$message1);
-			redirect("payment/success");
+			if($paid_status){
+				$this->session->set_userdata("success_message",$message1);
+				redirect("payment/success");	
+			}else{
+				$this->session->set_userdata("error_message","Payment Failed: ".$message1);
+				redirect("payment/dopay/".$unique_link);
+			}
+			
 		}else{
 			$this->session->set_userdata("error_message","Invalid Process");
 			redirect("payment");
