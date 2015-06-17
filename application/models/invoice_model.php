@@ -347,6 +347,13 @@ class Invoice_model extends crm_model {
 		$qry = $this->db->get_where($this->cfg['dbpref'].'payment_options',array("ptype_status" => 1));
 		return $qry->result();
 	}
+
+	function get_currencies() {
+	    $this->db->select('expect_worth_id, expect_worth_name');
+	    $this->db->from($this->cfg['dbpref'] . 'expect_worth');
+	    $query = $this->db->get();
+	    return $query->result_array();
+	}
 }
 
 ?>

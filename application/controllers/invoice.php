@@ -160,6 +160,8 @@ class Invoice extends CRM_Controller {
 				echo "<br>Milestone's base convertsion rate = ".$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$inv['base_currency']];
 				echo "<br>Milestone's usd convertsion rate = ".$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['base_currency']][$this->default_cur_id]; */
 				$base_conversion_amt = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$inv['base_currency']]);
+				$data['invoices'][$i]['entity_conversion_name']  = $inv['base_currency'];
+				$data['invoices'][$i]['entity_conversion_value'] = $base_conversion_amt;
 				$data['invoices'][$i]['coverted_amt'] = $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['base_currency']][$this->default_cur_id]);
 				// converting based on base currency
 				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
@@ -171,6 +173,12 @@ class Invoice extends CRM_Controller {
 		}
 		
 		// echo "<pre>"; print_r($data['invoices']); exit;
+		$currencies = $this->invoice_model->get_currencies();
+		if(!empty($currencies)){
+			foreach($currencies as $cure){
+				$data['currency_names'][$cure['expect_worth_id']] = $cure['expect_worth_name'];
+			}
+		}
 		
 		if($filter['filter']!="")
 			$this->load->view('invoices/invoice_view_grid', $data);
