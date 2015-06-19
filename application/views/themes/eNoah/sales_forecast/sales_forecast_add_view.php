@@ -25,8 +25,8 @@
 				<tr>
 					<td>Category: *</td>
 					<td>
-						<input type="radio" name="category" id="category_for_lead" <?php echo ($this->validation->category==1) ?" checked='checked'" : ""; ?> value="1" /> Lead
-						<input type="radio" name="category" id="category_for_project" <?php echo ($this->validation->category==2) ?" checked='checked'" : ""; ?> value="2" /> Project
+						<input type="radio" class="cate" name="category" id="category_for_lead" <?php echo ($this->validation->category==1) ?" checked='checked'" : ""; ?> value="1" /> Lead
+						<input type="radio" class="cate" name="category" id="category_for_project" <?php echo ($this->validation->category==2) ?" checked='checked'" : ""; ?> value="2" /> Project
 						<?php 
 							if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) {
 						?>
@@ -34,6 +34,7 @@
 						<?php
 							}
 						?>
+						<span class="err_msg"></span>
 					</td>
 				</tr>
 				<tr>
@@ -53,7 +54,9 @@
 				<tr>
 					<td>Lead/Project: *</td>
 					<td>
-						<select name="job_id" id="job_id" class="textfield" style="width: 250px;" onchange="check_existing_add_saleforecast(this.value)"></select>
+						<select name="job_id" id="job_id" class="textfield" style="width: 250px;" onchange="check_existing_add_saleforecast(this.value)">
+						<option value="">Select</option>
+						</select>
 					</td>
 				</tr>
 				<!--tr id="lead-data">
@@ -146,7 +149,7 @@
 	
 	<!--table-->
 	<div class="content-split-right">
-		<div class="table-design">
+		<div class="table-design ms-section">
 		<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
 			<h5>Milestone Added to Sales Forecast</h5>
 			<table id="ms_list" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable">
@@ -231,6 +234,11 @@ var forecast_id = 'no_id';
 	var customer_id = "<?php echo $salesforecast_data['customer_id'] ?>";
 	var sf_categ    = "<?php echo $salesforecast_category ?>";
 	forecast_id = "<?php echo $this->uri->segment(4) ?>";
+<?php } ?>
+<?php if($this->uri->segment(3) == 'add') { ?>
+	var sf_categ    = "<?php echo $post_category ?>";
+	var customer_id = "<?php echo $post_customer ?>";
+	var job_id      = "<?php echo $post_jobid ?>";
 <?php } ?>
 </script>
 <script type="text/javascript" src="assets/js/sale_forecast/sale_forecast_add_view.js"></script>

@@ -72,7 +72,7 @@ class Sales_forecast extends crm_controller {
 	*@For Add SalesForecast
 	*@Method add_sale_forecast
 	*/
-	public function add_sale_forecast($update = false, $id = false)
+	public function add_sale_forecast($update = false, $id = false, $custome = false, $jobi = false)
 	{
 		$data['customers'] = $this->sales_forecast_model->get_customers($wh_condn, $order = array('company'=>'asc'));
 		
@@ -91,6 +91,11 @@ class Sales_forecast extends crm_controller {
 				$data['salesforecast_currency'] = $sf_category['expect_worth_name'];
 			}
         }
+		if( $update == 'add' && $id == '') {
+			$data['post_category'] = $this->input->post('post_category');
+			$data['post_customer'] = $this->input->post('post_customer');
+			$data['post_jobid']	= $this->input->post('post_jobid');
+		}
 		$this->load->view('sales_forecast/sales_forecast_add_view', $data);
 		
 	}

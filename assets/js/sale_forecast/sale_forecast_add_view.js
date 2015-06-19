@@ -17,10 +17,70 @@ $(function() {
 	if(url_segment[3] == 'update' && $.isNumeric(url_segment[4])) {
 		// alert(url_segment[4] + ' ' +job_id+ ' ' +customer_id); return false; 
 		$(':radio[value="' + sf_categ + '"]').attr('checked', 'checked');
-		$(':radio[name="category"]').attr('disabled', 'disabled');
+		// $(':radio[name="category"]').attr('disabled', 'disabled');
 		get_customers(sf_categ, customer_id);
 		get_records(customer_id, job_id);
 		get_lead_detail(job_id, url_segment[4]);
+		
+		$( "#category_for_lead, #category_for_project" ).on( "click", function() {
+			$('.ms-section').hide();
+		});
+		$( "#customer_id" ).on( "change", function() {
+			$('.ms-section').hide();
+		});
+		$( "#job_id" ).on( "change", function() {
+			var categ  = $('input[name=category]:checked').val();
+			var cutome = $('#customer_id').val();
+			var jobid  = $( "#job_id" ).val();
+			if(categ != '' && cutome != '' && jobid != '') {
+				setTimeout(function(){
+					$('.layout').block({
+						message:'<h4>Please Wait...</h4>'
+					});
+					var url = site_base_url+'sales_forecast/add_sale_forecast/add';
+					var form = $('<form action="' + url + '" method="post">' +
+					  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+					  '<input id="post_category" type="hidden" name="post_category" value="'+categ+'" />'+
+					  '<input id="post_customer" type="hidden" name="post_customer" value="'+cutome+'" />'+
+					  '<input id="post_jobid" type="hidden" name="post_jobid" value="'+jobid+'" />'+
+					  '</form>');
+					$('body').append(form);
+					$(form).submit();
+				},100);
+			}
+		});
+	}
+	
+	if(url_segment[3] == 'add') {
+		$(':radio[value="' + sf_categ + '"]').attr('checked', 'checked');
+		get_customers(sf_categ, customer_id);
+		get_records(customer_id, job_id);
+		// check_existing_add_saleforecast(job_id);
+		params['id'] = job_id;
+		$.ajax({
+			url: site_base_url+"sales_forecast/check_exist_sf_info/",
+			data: params,
+			type: "POST",
+			dataType: 'json',
+			async: false,
+			beforeSend: function() {
+				$('.layout').block({
+					message:'<h4>Please Wait...</h4>'
+				});
+			},
+			success: function(response) {
+				if(response.redirect == true) {
+					document.location.href = site_base_url+'sales_forecast/add_sale_forecast/update/'+response.forecast_id;
+					return false;
+				} else {
+					$('.layout').unblock();
+					get_lead_detail(job_id);
+					$('#ms_list').hide();
+					$('.ms-section').hide();
+				}
+			}
+		});
+		
 	}
 	
 	$( "#category_for_lead" ).on( "click", function() {
@@ -101,17 +161,17 @@ $(function() {
 	
 	//data-table
 	$('#ms_list').dataTable({
-		"aaSorting": [[ 0, "asc" ]],
-		"iDisplayLength": 20,
+		/* "aaSorting": [[ 0, "asc" ]], */
+		"iDisplayLength": 3,
 		"sPaginationType": "full_numbers",
 		"bInfo": false,
 		"bPaginate": false,
-		"bProcessing": true,
+		"bProcessing": false,
 		"bServerSide": false,
-		"bLengthChange": true,
+		"bLengthChange": false,
 		"bSort": false,
 		"bFilter": false,
-		"bAutoWidth": false,	
+		"bAutoWidth": false
 	});
 	
 });
@@ -130,7 +190,7 @@ function get_customers(data_type, cust_id) {
 			$('#customer_id').html(data.customers);
 			
 			if(!isNaN(cust_id) && (cust_id!='undefined')) {
-				$('#customer_id').attr('disabled', 'disabled');
+				// $('#customer_id').attr('disabled', 'disabled');
 			}
 		}
 	});
@@ -162,7 +222,8 @@ function get_records(custid, job_id) {
 		success: function(data) {
 			$('#job_id').html(data.records);
 			if(!isNaN(job_id) && (job_id!='undefined')) {
-				$('#job_id').attr('disabled', 'disabled');
+				// $('#job_id').attr('disabled', 'disabled');
+				// $('.ms-section').hide();
 			}
 			/* if(category == 1) {
 				$('#lead_job_id').html(data.records);
@@ -205,6 +266,7 @@ function check_existing_add_saleforecast(id) {
 				$('.layout').unblock();
 				get_lead_detail(id);
 				$('#ms_list').hide();
+				$('.ms-section').hide();
 			}
 		}
 	});
@@ -296,9 +358,49 @@ function isNumberKey(evt) {
 }
 
 function add_sales_forecast(sf_id) {
+	var form_error = false;
+	if($('input[name=category]:checked').length<=0) {
+		// $('.cate').parent.css('border-color', 'red');
+		form_error = true;
+	} else {
+		form_error = false;
+	}
+	if($("#customer_id").val()==''){
+		$('#customer_id').css('border-color', 'red');
+		form_error = true;
+	} else {
+		$('#customer_id').css('border-color', '');
+	}
+	if($("#job_id").val()==''){
+		$('#job_id').css('border-color', 'red');
+		form_error = true;
+	} else {
+		$('#job_id').css('border-color', '');
+	}
+	if($("input[name=milestone_name]").val()==''){
+		$("input[name=milestone_name]").css('border-color', 'red');
+		form_error = true;
+	} else {
+		$("input[name=milestone_name]").css('border-color', '');
+	}
+	if($("input[name=milestone_value]").val()==''){
+		$("input[name=milestone_value]").css('border-color', 'red');
+		form_error = true;
+	} else {
+		$("input[name=milestone_value]").css('border-color', '');
+	}
+	if($("input[name=for_month_year]").val()==''){
+		$("input[name=for_month_year]").css('border-color', 'red');
+		form_error = true;
+	} else {
+		$("input[name=for_month_year]").css('border-color', '');
+	}
+	if(form_error == true){
+		return false;
+	}
 	var form_data = $('#add_sales_forecast_form').serialize();
 	$('.layout').block({
-		message:'<h3>Processing</h3>',
+		message:'<h4>Please Wait...</h4>',
 		css: {background:'#666', border: '2px solid #999', padding:'8px', color:'#333'}
 	});
 	$.ajax({
