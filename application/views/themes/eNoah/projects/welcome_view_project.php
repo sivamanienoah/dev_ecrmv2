@@ -688,22 +688,22 @@ if (get_default_currency()) {
 					<th>Variant Hours</th>
 				</tr>
 				<?php foreach($timesheet_variance as $tv ){
-						$variant=round($tv->actualHours)-$tv->EstimatedHours;
+						$variant=($tv->actualHours)-$tv->EstimatedHours;
 						$tot_est_hours+=$tv->EstimatedHours;
-						$tot_act_hours+=round($tv->actualHours);
+						$tot_act_hours+=$tv->actualHours;
 						$tot_variant_hours+=$variant;?>
 				<tr>
 					<td><?php echo $tv->taskName;?></td>
-					<td><?php echo $tv->EstimatedHours;?></td>
-					<td><?php echo round($tv->actualHours);?></td>
-					<td><?php echo $variant;?></td>
+					<td><?php echo number_format($tv->EstimatedHours,2);?></td>
+					<td><?php echo number_format($tv->actualHours,2);?></td>
+					<td><?php echo number_format($variant,2);?></td>
 				</tr>
 				<?php } ?>
 				<tr>
 					<td style="font-weight:bold;" align="right">Total</td>
-					<td style="font-weight:bold;"  align="right"><?php echo $tot_est_hours; ?></td>
-					<td style="font-weight:bold;"  align="right"><?php echo $tot_act_hours; ?></td>
-					<td style="font-weight:bold;"  align="right"><?php echo $tot_variant_hours; ?></td>						
+					<td style="font-weight:bold;"  align="right"><?php echo number_format($tot_est_hours,2); ?></td>
+					<td style="font-weight:bold;"  align="right"><?php echo number_format($tot_act_hours,2); ?></td>
+					<td style="font-weight:bold;"  align="right"><?php echo number_format($tot_variant_hours,2); ?></td>						
 				</tr>				
 			</table>
 			<div id="msg_project_variance" style="margin:5px;"></div>
