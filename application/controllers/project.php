@@ -583,6 +583,7 @@ class Project extends crm_controller {
 			$data['project_costs'] = array();
 			
 			if(!empty($data['timesheet_data'])) {
+				//echo '<pre>';print_r($data['timesheet_data']);
 				$res = $this->calcActualProjectCost($data['timesheet_data']);
 				if($res['total_cost']>0) {
 					$data['project_costs'] = $res['total_cost'];
@@ -806,6 +807,7 @@ class Project extends crm_controller {
 		$data['total_internal_hrs']	    = $total_internal_hrs;
 		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
 		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
+		//echo '<pre>';print_r($data);
 		return $data;
 	}
 	
