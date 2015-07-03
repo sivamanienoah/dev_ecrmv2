@@ -37,7 +37,7 @@ if (get_default_currency()) {
 			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
 			
 			$profitloss    = round($total_amount_inv_raised-$total_cost);
-			$profitlossPercent = round(($profitloss/$total_cost)*100);
+			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
 			// $profitloss    = round($record['actual_worth_amt']-$total_cost);
 			// $profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
 			
