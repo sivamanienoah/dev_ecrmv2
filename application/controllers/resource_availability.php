@@ -35,18 +35,18 @@ class Resource_availability extends crm_controller {
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
 		$qry = $timesheet_db->get($timesheet_db->dbprefix('department'));
-	 
-	 
-		$qry_d = $timesheet_db->query("SELECT v.department_id, v.department_name,v.skill_id, v.name, v.username,t.uid,
+		$sql_data_qry = "SELECT v.department_name, v.name, v.username,
 		ah.available_hours_month,ah.available_hours_day, 
-		concat(v.first_name,' ', v.last_name) as emp_name, v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id,ep.title
+		v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id,ep.title
 
 		FROM enoah_times t 
-		left join v_emp_details v on v.username=t.uid
+		left join v_emp_details v on v.username=t.uid  
 		left join enoah_available_hours ah on ah.dept_id=v.department_id
 		left join enoah_project ep on ep.proj_id=t.proj_id
-		WHERE t.start_time between '$start_date ' and '$end_date ' 
-		order by v.department_name, v.name,v.username ");
+		WHERE t.start_time between '$start_date ' and '$end_date'
+		order by v.department_name, v.name,v.username";
+		//echo"<br>".$sql_data_qry; exit;
+		$qry_d = $timesheet_db->query($sql_data_qry);
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
 		$arr_user_avail_set= array();
@@ -94,7 +94,8 @@ class Resource_availability extends crm_controller {
 			$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
 			$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
 			
-			$arr_depts[$v->department_name]["projectwise"][$v->username][] = $v->title;
+			$arr_depts[$v->department_name]["projectwise"][$v->username][$v->title] = $v->title;
+			$arr_depts[$v->department_name]["projuser"][$v->username][$v->title][$v->resoursetype] += ($v->duration/60);
 		}
 
 		foreach($arr_depts as $dep_name=>$dept_arr){
@@ -112,8 +113,8 @@ class Resource_availability extends crm_controller {
 		//unset($arr_depts[$dep_name]["skill_based_available_hours"]);
 
 		}
-		/* echo"<pre>";print_r($arr_depts);echo"</pre>";
-		exit; */ 
+		//echo"<pre>";print_r($arr_depts);echo"</pre>";
+		//exit;  
 		$data['departments']= $arr_depts;
 		$this->load->view("resource_availability",$data);
 	}
