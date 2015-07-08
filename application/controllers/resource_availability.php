@@ -39,16 +39,18 @@ class Resource_availability extends crm_controller {
 	 
 		$qry_d = $timesheet_db->query("SELECT v.department_id, v.department_name,v.skill_id, v.name, v.username,t.uid,
 		ah.available_hours_month,ah.available_hours_day, 
-		concat(v.first_name,' ', v.last_name) as emp_name, v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id
+		concat(v.first_name,' ', v.last_name) as emp_name, v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id,ep.title
 
 		FROM enoah_times t 
 		left join v_emp_details v on v.username=t.uid
 		left join enoah_available_hours ah on ah.dept_id=v.department_id
-		WHERE t.start_time between '$start_date ' and '$end_date ' 
+		left join enoah_project ep on ep.proj_id=t.proj_id
+		WHERE t.start_time between '$start_date ' and '$end_date ' and v.department_id=10
 		order by v.department_name, v.name,v.username ");
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
 		$arr_user_avail_set= array();
+		
 		
 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
@@ -91,6 +93,8 @@ class Resource_availability extends crm_controller {
 			$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
 			$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
 			$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
+			
+			$arr_depts[$v->department_name]["projectwise"][$v->username][] = $v->title;
 		}
 
 		foreach($arr_depts as $dep_name=>$dept_arr){
@@ -109,7 +113,7 @@ class Resource_availability extends crm_controller {
 
 		}
 		/* echo"<pre>";print_r($arr_depts);echo"</pre>";
-		exit; */
+		exit; */ 
 		$data['departments']= $arr_depts;
 		$this->load->view("resource_availability",$data);
 	}
