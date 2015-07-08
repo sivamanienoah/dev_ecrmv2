@@ -57,6 +57,8 @@ button.ui-datepicker-current { display: none; }
 					$master = array();
 					$skill_arr = array();
 					$user_arr = array();
+					$project_arr = array();
+					$json ='';
 					//echo '<pre>';print_r($departments);exit;
 					 foreach($departments as $department_name => $depts){
 						$total_availability = $depts['summation_department_based_available_hours'];
@@ -119,7 +121,7 @@ button.ui-datepicker-current { display: none; }
 								$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 								$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 								
-								$user_arr[$un]['department_id'] = 'un'.$dept_slug.$skill_slug.$un;
+								$user_arr[$un]['department_id'] = 'un'.$un;
 								$user_arr[$un]['name'] = $un;
 								$user_arr[$un]['availability'] = number_format($total_availability,2);
 								$user_arr[$un]['billable'] = number_format($total_billable_hrs,2);
@@ -131,9 +133,26 @@ button.ui-datepicker-current { display: none; }
 								$json .= json_encode($user_arr[$un]).',';
 							}
 						}
+						foreach($depts['projectwise'] as $un => $project){
+							$unique[$un] = array_unique($project);
+						}
+						$i=0;
+						foreach($unique as $un => $project){
+							foreach($project as $key => $proj){
+								$project_arr[$un]['department_id'] = 'project'.$un.$proj;
+								$project_arr[$un]['name'] = $proj;
+								$project_arr[$un]['availability'] = 'NA';
+								$project_arr[$un]['billable'] = 'NA';
+								$project_arr[$un]['non_billable'] = 'NA';
+								$project_arr[$un]['billable_percentage'] = 'NA';
+								$project_arr[$un]['non_billable_percentage'] = 'NA';
+								$project_arr[$un]['ReportsTo'] =  'un'.$un;
+								$project_arr[$un]['expandRow'] = 'true';
+								$json .= json_encode($project_arr[$un]).',';							
+							}
+						}
 					}
-					 
-				 ?>
+					?>
 				 
 					 <script type="text/javascript">
 						$(document).ready(function () {
