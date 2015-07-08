@@ -45,7 +45,7 @@ class Resource_availability extends crm_controller {
 		left join v_emp_details v on v.username=t.uid
 		left join enoah_available_hours ah on ah.dept_id=v.department_id
 		left join enoah_project ep on ep.proj_id=t.proj_id
-		WHERE t.start_time between '$start_date ' and '$end_date ' and v.department_id=10
+		WHERE t.start_time between '$start_date ' and '$end_date ' 
 		order by v.department_name, v.name,v.username ");
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
