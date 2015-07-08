@@ -195,12 +195,12 @@ button.ui-datepicker-current { display: none; }
                     $("#treeGrid").jqxTreeGrid('expandRow', '2');
                 },
 				columns: [
-				  { text: 'Department/Skill/Members',dataField: 'name', width: 350 },
-				  { text: 'Available Hours',  dataField: 'availability', width: 150 },
-				  { text: 'Billable Hours', dataField: 'billable', width: 155 },
-				  { text: 'Non Billable Hours', dataField: 'non_billable',width:150 },
-				  { text: 'Billable Hours (%)', dataField: 'billable_percentage', width: 155 },
-				  { text: 'Non Billable Hours (%)', dataField: 'non_billable_percentage', width: 163 }
+				  { text: 'Department/Skill/Members',dataField: 'name', width: 450 },
+				  { text: 'Available Hours',  dataField: 'availability', width: 125 },
+				  { text: 'Billable Hours', dataField: 'billable', width: 125 },
+				  { text: 'Non Billable Hours', dataField: 'non_billable',width:135 },
+				  { text: 'Billable Hours (%)', dataField: 'billable_percentage', width: 135 },
+				  { text: 'Non Billable Hours (%)', dataField: 'non_billable_percentage', width: 155 }
 				],
                 columnGroups: [
                   { text: 'Name', name: 'Name' }
