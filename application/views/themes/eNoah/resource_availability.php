@@ -28,7 +28,7 @@ button.ui-datepicker-current { display: none; }
 					<table cellspacing="0" cellpadding="0" border="0" class="search-table">
 						<tbody><tr>
 							<td>
-								Search by Month/Year:
+								<strong>Search by Month/Year:</strong>
 							</td>
 							<td>
 								<input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" style="width:78px;" />
@@ -133,25 +133,32 @@ button.ui-datepicker-current { display: none; }
 								$json .= json_encode($user_arr[$un]).',';
 							}
 						}
-						foreach($depts['projectwise'] as $un => $project){
+						/* foreach($depts['projectwise'] as $un => $project){
 							$unique[$un] = array_unique($project);
-						}
+						} */
 						$i=0;
-						foreach($unique as $un => $project){
+						foreach($depts['projectwise'] as $un => $project){
 							foreach($project as $key => $proj){
+								
+								$billable = $depts['projuser'][$un][$proj]['Billable'];
+								$nonbillable = $depts['projuser'][$un][$proj]['Non-Billable'];
+								
+								$billable = ($billable!='')?number_format($billable,2):'0.00';
+								$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+								
 								$project_arr[$un]['department_id'] = 'project'.$un.$proj;
 								$project_arr[$un]['name'] = $proj;
 								$project_arr[$un]['availability'] = 'NA';
-								$project_arr[$un]['billable'] = 'NA';
-								$project_arr[$un]['non_billable'] = 'NA';
-								$project_arr[$un]['billable_percentage'] = 'NA';
-								$project_arr[$un]['non_billable_percentage'] = 'NA';
+								$project_arr[$un]['billable'] = $billable;
+								$project_arr[$un]['non_billable'] = $nonbillable;
+								$project_arr[$un]['billable_percentage'] = '-';
+								$project_arr[$un]['non_billable_percentage'] = '-';
 								$project_arr[$un]['ReportsTo'] =  'un'.$un;
 								$project_arr[$un]['expandRow'] = 'true';
 								$json .= json_encode($project_arr[$un]).',';							
 							}
 						}
-					}
+					} 
 					?>
 				 
 					 <script type="text/javascript">
