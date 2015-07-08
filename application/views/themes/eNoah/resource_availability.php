@@ -22,7 +22,7 @@ button.ui-datepicker-current { display: none; }
  
 		<div id="advance_filters" style="float:left;width:100%;" >
 		
-				<form action="<?php echo site_url('resource_availability')?>" name="resource_availability" id="resource_availability"  method="post">
+				<form action="<?php echo site_url('report/resource_availability')?>" name="resource_availability" id="resource_availability"  method="post">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<table cellspacing="0" cellpadding="0" border="0" class="search-table">
