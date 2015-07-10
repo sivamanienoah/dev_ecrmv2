@@ -2453,7 +2453,7 @@ float:left;
 	float:left;
 }
 .filterrow-area-btn{
-	width:10%;
+	
 	float:left;
 }
 .filterrow-area-btn div{
@@ -2494,8 +2494,9 @@ float:left;
 	 margin-top: 13px;
 	 width:13%;
 }
-#skill_ids_chzn{width:215px !important;}
-#member_ids_chzn{width:215px !important;}
+#skill_ids_chzn{width:264px !important;}
+#member_ids_chzn{width:264px !important;}
+#department_ids_chzn{width:264px !important;}
 .bttons{
 	margin-top:20px;	
 }
