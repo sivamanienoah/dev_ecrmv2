@@ -255,36 +255,7 @@ class Resource_availability extends crm_controller {
 			$start_date = date("Y-m-01");
 			$end_date = date("Y-m-t");
 		}
-		$where='';
-		$department_ids = $this->input->post("department_ids");
-		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
-			$dids = implode(",",$department_ids);
-			$where .= " and v.department_id in ($dids)";
-		}
 		
-		$skill_ids = $this->input->post("skill_ids");
-		//echo count($skill_ids);
-		if(count($department_ids)>0 && !empty($department_ids && array_filter($department_ids) )){
-			$sids = implode(",",$skill_ids);
-			if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids)){
-				$where .= " and v.skill_id in ($sids)";
-			}
-			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids)  and t.start_time between '$start_date' and '$end_date' group by
-			v.skill_id order by v.name asc");			
-			$data['skill_ids_selected'] = $qry->result();			
-		}
-
-		$member_ids = $this->input->post("member_ids");
-		if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids) && array_filter($department_ids) && count($department_ids)>0 && !empty($department_ids)){
-			$mids = "'".implode("','",$member_ids)."'";
-			if(count($member_ids)>0 && !empty($member_ids) && array_filter($member_ids)){
-				$where .= " and v.username in ($mids)";
-			}
-			if(count($skill_ids)>0){
-				$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
-			
-			}
-		}
 		
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
