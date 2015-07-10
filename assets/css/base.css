@@ -2440,7 +2440,7 @@ float:left;
 .filterrow-area div.filtemonYear{
 	  clear: both;
     float: left;
-    width: 87%;
+    width: 89%;
 }
 .filterrow-area div input[type="text"]
 {
@@ -2455,6 +2455,11 @@ float:left;
 .filterrow-area div.selectOPtshow{
 	position:absolute;
 	 margin-top: 14px;
+	 width:13%;
+}
+.filterrow-area div.selectOPtshow1{
+	position:absolute;
+	 margin-top: 13px;
 	 width:13%;
 }
 #skill_ids_chzn{width:99% !important;}
