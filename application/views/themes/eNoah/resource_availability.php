@@ -61,7 +61,7 @@ $(function(){
 						</div>
 						<div class="filterrow-area" id="skill_show_id">
 							<span>Select Skill(s): </span>
-							<div>
+							<div class="selectOPt">
 								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
 								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
 								<?php foreach($skill_ids_selected as $skills){?>
@@ -72,7 +72,7 @@ $(function(){
 						</div>
 						<div class="filterrow-area" id="member_show_id">
 							<span>Select Member(s): </span>
-							<div>
+							<div class="selectOPt">
 								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
 								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 								<?php foreach($member_ids_selected as $members){?>
