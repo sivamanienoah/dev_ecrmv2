@@ -2436,7 +2436,7 @@ float:left;
     float: left;
     width: 87%;;
 }
-.filterrow-area div.input{
+.filterrow-area div input{
 	height: 20px;
     width: 100%;
 }
