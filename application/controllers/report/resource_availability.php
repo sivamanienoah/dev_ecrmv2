@@ -271,8 +271,10 @@ class Resource_availability extends crm_controller {
 		}
 
 		$member_ids = $this->input->post("member_ids");
+		//echo '<pre>';print_r($member_ids);exit;
 		if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids) && array_filter($department_ids) && count($department_ids)>0 && !empty($department_ids)){
-			$mids = "'".implode("','",$member_ids)."'";
+			$ex = explode(",",$member_ids[0]);
+			$mids = "'".implode("','",$ex)."'";
 			if(count($member_ids)>0 && !empty($member_ids) && array_filter($member_ids)){
 				$where .= " and v.username in ($mids)";
 			}
