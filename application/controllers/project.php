@@ -993,15 +993,19 @@ class Project extends crm_controller {
 				$res_t = $qry->row();
 				$timesheet_proj_id =  $res_t->proj_id;
 				$time_ins = array();
-				
+				$time_ins_task=array();
 				//delete the existing assigned users in the timesheet assignment table, before inserting.
 				$timesheet_db->delete($timesheet_db->dbprefix("assignments"),array("proj_id" => $timesheet_proj_id));
+				$timesheet_db->delete($timesheet_db->dbprefix("task_assignments"),array("proj_id" => $timesheet_proj_id));
 				$time_ins['proj_id'] = $timesheet_proj_id;
 				if(count($rs_cm_users) > 0){
 					foreach($rs_cm_users as $muser){
+						$username= strtolower($muser->username);
 						$time_ins['username'] = strtolower($muser->username);
 						$time_ins['rate_id'] = 1;
-						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);
+						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);	
+						// Added all the task for assigned users in timesheet 10/7/2015
+							$this->project_model->task_timesheet_entry($timesheet_proj_id,$username);
 					}
 				}
 			}else{
