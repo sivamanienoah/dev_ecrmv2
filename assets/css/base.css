@@ -2432,8 +2432,9 @@ float:left;
 	float:left;
 }
 .filterrow-area div{
-	clear:both;
-	float:left;
+	  clear: both;
+    float: left;
+    width: 87%;;
 }
 .filterrow-area div.input{
 	height: 20px;
