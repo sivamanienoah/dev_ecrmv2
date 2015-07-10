@@ -2432,6 +2432,7 @@ float:left;
 	float:left;
 }
 .filterrow-area div{
+	clear:both;
 	float:left;
 }
 .filterrow-area div.selectOPt{
