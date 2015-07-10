@@ -18,7 +18,7 @@ class Resource_availability extends crm_controller {
 		// get departments from master table
 		//echo '<pre>';print_r($_REQUEST);exit;
 		$master = array();
-		
+		$timesheet_db = $this->load->database("timesheet",true);
 		if($this->input->post("month_year_from_date")){
 			$date = $this->input->post("month_year_from_date");
 			$start_date = date("Y-m-01",strtotime($date));
@@ -27,9 +27,40 @@ class Resource_availability extends crm_controller {
 			$start_date = date("Y-m-01");
 			$end_date = date("Y-m-t");
 		}
+		$where='';
+		$department_ids = $this->input->post("department_ids");
+		if(count($department_ids)>0 && !empty($department_ids)){
+			$dids = implode(",",$department_ids);
+			$data['department_ids'] = $department_ids;
+			$where .= " and v.department_id in ($dids)";
+		}
+		
+		$skill_ids = $this->input->post("skill_ids");
+		if(count($department_ids)>0 && !empty($department_ids)){
+			$sids = implode(",",$skill_ids);
+			if(count($skill_ids)>0 && !empty($skill_ids)){
+				$data['skill_ids'] = $skill_ids;
+				$where .= " and v.skill_id in ($sids)";
+			}
+			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids)  and t.start_time between '$start_date' and '$end_date' group by
+			v.skill_id order by v.name asc");			
+			$data['skill_ids_selected'] = $qry->result();			
+		}
+
+		$member_ids = $this->input->post("member_ids");
+		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)){
+			$mids = "'".implode("','",$member_ids)."'";
+			if(count($member_ids)>0 && !empty($member_ids)){
+				$data['member_ids'] = $member_ids;
+				$where .= " and v.username in ($mids)";
+			}
+			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");			
+			$data['member_ids_selected'] = $qry1->result();			
+		}		
+		
 		$data['date_filter'] = $start_date;
 		$json = '';
-		$timesheet_db = $this->load->database("timesheet",true);
+		
 		$callback = $_REQUEST['callback'];
 		$timestamp = $_REQUEST['_'];		
 		//fetch departments master from timesheet db
@@ -43,7 +74,7 @@ class Resource_availability extends crm_controller {
 		left join v_emp_details v on v.username=t.uid  
 		left join enoah_available_hours ah on ah.dept_id=v.department_id
 		left join enoah_project ep on ep.proj_id=t.proj_id
-		WHERE t.start_time between '$start_date ' and '$end_date'
+		WHERE t.start_time between '$start_date ' and '$end_date' $where and v.department_id=10
 		order by v.department_name, v.name,v.username";
 		//echo"<br>".$sql_data_qry; exit;
 		$qry_d = $timesheet_db->query($sql_data_qry);
@@ -51,6 +82,13 @@ class Resource_availability extends crm_controller {
 		$arr_depts = array();
 		$arr_user_avail_set= array();
 		
+		// get all departments  from timesheet
+		$qry = $timesheet_db->get("enoah_department");
+		if($qry->num_rows()>0){
+			$depts_res = $qry->result();
+		}
+		$data['departments'] = $depts_res;
+		$timesheet_db->close();
 		
 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
@@ -118,7 +156,9 @@ class Resource_availability extends crm_controller {
 		}
 		//echo"<pre>";print_r($arr_depts);echo"</pre>";
 		//exit;  
-		$data['departments']= $arr_depts;
+		$data['start_date'] = $start_date;
+		$data['end_date'] = $end_date;
+		$data['results']= $arr_depts;
 		$this->load->view("resource_availability",$data);
 	}
 	
@@ -144,6 +184,62 @@ class Resource_availability extends crm_controller {
 			$working_days = $no_days - $weekends;
 
 			return $working_days;
+		}
+	}
+	
+	function get_skills(){
+		if($this->input->post("dept_ids")){
+			$ids = $this->input->post("dept_ids");
+			$start_date = $this->input->post("start_date");
+			$end_date = $this->input->post("end_date");
+			$dids = implode(',',$ids);
+			$timesheet_db = $this->load->database("timesheet",true);
+			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by
+			v.skill_id order by v.name asc");
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				echo json_encode($res); exit;
+			}else{
+				echo 0;exit;
+			}
+		}
+	}
+	
+	function get_members(){
+		if($this->input->post("dept_ids")){
+			$ids = $this->input->post("dept_ids");
+			$start_date = $this->input->post("start_date");
+			$end_date = $this->input->post("end_date");
+			$dids = implode(',',$ids);
+			$timesheet_db = $this->load->database("timesheet",true);
+			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				echo json_encode($res); exit;
+			}else{
+				echo 0;exit;
+			}
+		}		
+	}
+	
+	function get_skill_members(){
+		if($this->input->post("dept_ids")){
+			$ids = $this->input->post("dept_ids");
+			$skill_ids = $this->input->post("skill_ids");
+			$start_date = $this->input->post("start_date");
+			$end_date = $this->input->post("end_date");
+			
+			$dids = implode(',',$ids);
+			$sids = implode(',',$skill_ids);
+			
+			$timesheet_db = $this->load->database("timesheet",true);
+			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				echo json_encode($res); exit;
+			}else{
+				echo 0;exit;
+			}
 		}
 	}	
 }
