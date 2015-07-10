@@ -245,14 +245,15 @@ class Resource_availability extends crm_controller {
 		}
 	}
 	
-	function excelExport(){
+	public function excelExport(){
 
 		$data = array();
 		$dept = array();
 		$master = array();
 		$data['page_heading'] = "Resource Availability";		
 		// get departments from master table
-		//echo '<pre>';print_r($_REQUEST);exit;
+		//echo count($skill_ids);
+		//echo '<pre>';print_r($_REQUEST);
 		$master = array();
 		$timesheet_db = $this->load->database("timesheet",true);
 		if($this->input->post("month_year_from_date")){
@@ -265,16 +266,17 @@ class Resource_availability extends crm_controller {
 		}
 		$where='';
 		$department_ids = $this->input->post("department_ids");
-		if(count($department_ids)>0 && !empty($department_ids)){
+		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
 			$dids = implode(",",$department_ids);
 			$data['department_ids'] = $department_ids;
 			$where .= " and v.department_id in ($dids)";
 		}
 		
 		$skill_ids = $this->input->post("skill_ids");
-		if(count($department_ids)>0 && !empty($department_ids)){
+		//echo count($skill_ids);
+		if(count($department_ids)>0 && !empty($department_ids && array_filter($department_ids) )){
 			$sids = implode(",",$skill_ids);
-			if(count($skill_ids)>0 && !empty($skill_ids)){
+			if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids)){
 				$data['skill_ids'] = $skill_ids;
 				$where .= " and v.skill_id in ($sids)";
 			}
@@ -284,21 +286,22 @@ class Resource_availability extends crm_controller {
 		}
 
 		$member_ids = $this->input->post("member_ids");
-		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)){
+		if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids) && array_filter($department_ids) && count($department_ids)>0 && !empty($department_ids)){
 			$mids = "'".implode("','",$member_ids)."'";
-			if(count($member_ids)>0 && !empty($member_ids)){
+			if(count($member_ids)>0 && !empty($member_ids) && array_filter($member_ids)){
 				$data['member_ids'] = $member_ids;
 				$where .= " and v.username in ($mids)";
 			}
-			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");			
-			$data['member_ids_selected'] = $qry1->result();			
+			if(count($skill_ids)>0){
+				$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+			
+				$data['member_ids_selected'] = $qry1->result();			
+			}
 		}		
 		
 		$data['date_filter'] = $start_date;
 		$json = '';
-		
-		$callback = $_REQUEST['callback'];
-		$timestamp = $_REQUEST['_'];		
+ 	
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
 		$qry = $timesheet_db->get($timesheet_db->dbprefix('department'));
@@ -516,7 +519,7 @@ class Resource_availability extends crm_controller {
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');		
-		redirect('/report/resource_availability/');
+		redirect('report/resource_availability/');
 	}
 }
 /* End of dms resource_availability file */
