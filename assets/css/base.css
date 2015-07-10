@@ -2475,3 +2475,13 @@ float:left;
 .selectOPt div div ul li.active-result {
     font-size: 10px;
 }
+.selectOPtshow div ul li.search-choice {
+    font-size: 10px;
+}
+.selectOPtshow div div ul li.active-result {
+    font-size: 10px;
+}
+
+#default_view {
+    margin-top: 10px;
+}
