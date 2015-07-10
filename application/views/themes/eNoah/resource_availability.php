@@ -82,7 +82,7 @@ $(function(){
 							</div>						
 						</div>
 						
-						<div class="filterrow-area bttn-area">
+						<div class="filterrow-area-btn bttn-area">
 							<div class="bttons">
 								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
 								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
