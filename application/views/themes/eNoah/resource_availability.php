@@ -59,7 +59,7 @@ $(function(){
 									<?php } }?>
 								</select></div>						
 						</div>
-						<div class="filterrow-area" id="skill_show_id">
+						<div class="filterrow-area1" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
 								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
@@ -70,7 +70,7 @@ $(function(){
 								</select>
 							</div>						
 						</div>
-						<div class="filterrow-area" id="member_show_id">
+						<div class="filterrow-area1" id="member_show_id">
 							<span>Select Member(s): </span>
 							<div class="selectOPtshow1">
 								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
@@ -82,7 +82,7 @@ $(function(){
 							</div>						
 						</div>
 						
-						<div class="filterrow-area bttn-area">
+						<div class="filterrow-area-btn bttn-area">
 							<div class="bttons">
 								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
 								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
