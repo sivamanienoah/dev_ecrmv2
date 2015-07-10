@@ -2446,6 +2446,7 @@ float:left;
 	  clear: both;
     float: left;
     width: 89%;
+	   margin-right: 3px;
 }
 .filterrow-area{
 	width:20%;
