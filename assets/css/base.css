@@ -2417,6 +2417,7 @@ li.saved-search-res span:first-child {width: 135px !important;}
 }
 
 /*----10-07-2015--- Filter-Area-*/
+
 .filterGrid-area{
 width:100%;
 margin:0;
@@ -2451,8 +2452,16 @@ float:left;
 	position:absolute;
 	 margin-top: 14px;
 }
+.filterrow-area div.selectOPtshow{
+	position:absolute;
+	 margin-top: 14px;
+	 width:13%;
+}
 #skill_ids_chzn{width:99% !important;}
 #member_ids_chzn{width:99% !important;}
 .bttons{
 	margin-top:20px;	
+}
+.default {
+    width: auto !important;
 }
