@@ -2432,7 +2432,7 @@ float:left;
 	float:left;
 }
 .filterrow-area div{
-	float:left;
+	position:absolute;
 }
 .bttn-area .bttons{
 position:absolute;
