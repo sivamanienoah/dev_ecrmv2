@@ -83,6 +83,8 @@ class Resource_availability extends crm_controller {
 		$arr_user_avail_set= array();
 		
 		// get all departments  from timesheet
+		$timesheet_db->order_by("department_name","asc");
+		$timesheet_db->group_by("department_name");
 		$qry = $timesheet_db->get("enoah_department");
 		if($qry->num_rows()>0){
 			$depts_res = $qry->result();
