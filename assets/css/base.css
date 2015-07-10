@@ -2426,9 +2426,8 @@ float:left;
 
 }
 .filterrow-area{
-	 float: left;
-    margin-right: 2px;
-    width: 18%;
+	width:20%;
+	float:left;
 }
 .filterrow-area1{
 	width:20%;
@@ -2466,16 +2465,16 @@ float:left;
     width: 100%;
 }
 
-.filterrow-area1 div.selectOPt{
+.filterrow-area div.selectOPt{
 	position:absolute;
 	 margin-top: 14px;
 }
-.filterrow-area2 div.selectOPtshow{
+.filterrow-area div.selectOPtshow{
 	position:absolute;
 	 margin-top: 14px;
 	     width: 14.3%;
 }
-.filterrow-area3 div.selectOPtshow1{
+.filterrow-area div.selectOPtshow1{
 	position:absolute;
 	 margin-top: 13px;
 	 width:13%;
