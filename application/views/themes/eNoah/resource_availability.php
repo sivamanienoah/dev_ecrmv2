@@ -72,7 +72,7 @@ $(function(){
 						</div>
 						<div class="filterrow-area" id="member_show_id">
 							<span>Select Member(s): </span>
-							<div class="selectOPtshow">
+							<div class="selectOPtshow1">
 								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
 								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 								<?php foreach($member_ids_selected as $members){?>
