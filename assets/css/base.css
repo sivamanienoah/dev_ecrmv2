@@ -2468,3 +2468,10 @@ float:left;
 .chzn-container-multi .chzn-choices{
  z-index: 999;	
 }
+
+.selectOPt div ul li.search-choice {
+    font-size: 10px;
+}
+.selectOPt div div ul li.active-result {
+    font-size: 10px;
+}
