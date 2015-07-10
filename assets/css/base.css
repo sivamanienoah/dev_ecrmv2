@@ -2519,7 +2519,12 @@ float:left;
 .selectOPtshow div div ul li.active-result {
     font-size: 12px;
 }
-
+.selectOPtshow1 div > div ul li.search-choice {
+    font-size: 12px;
+}
+.selectOPtshow1 div > div ul li.active-result {
+    font-size: 12px;
+}
 #default_view {
     margin-top: 10px;
 }
