@@ -2466,16 +2466,16 @@ float:left;
     width: 100%;
 }
 
-div.selectOPt{
+.filterrow-area1 div.selectOPt{
 	position:absolute;
 	 margin-top: 14px;
 }
-div.selectOPtshow{
+.filterrow-area2 div.selectOPtshow{
 	position:absolute;
 	 margin-top: 14px;
 	     width: 14.3%;
 }
-div.selectOPtshow1{
+.filterrow-area3 div.selectOPtshow1{
 	position:absolute;
 	 margin-top: 13px;
 	 width:13%;
