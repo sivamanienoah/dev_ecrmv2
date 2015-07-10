@@ -2465,3 +2465,6 @@ float:left;
 .default {
     width: auto !important;
 }
+.chzn-container-multi .chzn-choices{
+ z-index: 999;	
+}
