@@ -1,5 +1,6 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
+error_reporting(E_ALL);
 class Resource_availability extends crm_controller {
 	function Resource_availability()
 	{
@@ -366,15 +367,7 @@ class Resource_availability extends crm_controller {
 					$arr_depts[$dep_name][$skill_name]["summation_skill_based_available_hours"]+= $skill_user_based_arr2;
 				}
 			}
-
-		//unset($arr_depts[$dep_name]["department_based_available_hours"]);
-		//unset($arr_depts[$dep_name]["skill_based_available_hours"]);
-
 		}
-		
-		//echo '<pre>';print_r($arr_depts);exit;
-		
-		
 	}
 }
 /* End of dms resource_availability file */
