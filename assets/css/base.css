@@ -2429,6 +2429,19 @@ float:left;
 	width:18%;
 	float:left;
 }
+.filterrow-areaYear div{
+	  clear: both;
+    float: left;
+    
+}
+.filterrow-areaYear span{
+	float:left;
+}
+.filterrow-areaYear div input[type="text"]
+{
+	height: 20px;
+    width: 100%;
+}
 .filterrow-area{
 	width:20%;
 	float:left;
