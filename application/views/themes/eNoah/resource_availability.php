@@ -52,7 +52,7 @@ $(function(){
 						
 						<div class="filterrow-area">
 							<span> Department: </span>
-							<div ><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
+							<div class="selectOPt"><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
 											<?php foreach($departments as $depts){?>
 												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
