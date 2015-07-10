@@ -652,6 +652,21 @@ class Project_model extends crm_model
 		}
 		return $users;
 	}
+	// Add all the project task to new assigning members 10/7/2015	
+	public function task_timesheet_entry($pjt_id,$username)
+	{
+		$timesheet_db = $this->load->database('timesheet',TRUE);
+		$sql = "SELECT task_id FROM ".$timesheet_db->dbprefix('task')."  WHERE proj_id = '".$pjt_id."'";	
+		$query = $timesheet_db->query($sql);
+		$res = $query->result_array();		
+		if(count($res) > 0) {
+		foreach($res as $row){				
+				$taskid = $row['task_id'];
+				$timesheet_db->insert($timesheet_db->dbprefix("task_assignments"), array("task_id"=>$taskid,"proj_id"=>$pjt_id,"username"=>$username));
+			}
+		}		
+	}
+	//Ends here
 	
 	/* public function get_actual_project_hour($pjt_code, $lead_id)
 	{
