@@ -2435,6 +2435,11 @@ float:left;
 	clear:both;
 	float:left;
 }
+.filterrow-area div.input{
+	height: 20px;
+    width: 100%;
+}
+
 .filterrow-area div.selectOPt{
 	position:absolute;
 	 margin-top: 14px;
