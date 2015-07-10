@@ -7,6 +7,25 @@ button.ui-datepicker-current { display: none; }
     }
 
 </style>
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
+<script type="text/javascript">var this_is_home = true;</script>
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
+<script>
+$(function(){
+	var config = {
+		'.chzn-select'           : {},
+		'.chzn-select-deselect'  : {allow_single_deselect:true},
+		'.chzn-select-no-single' : {disable_search_threshold:10},
+		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+		'.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+	
+	
+});  
+</script>
 <div id="content">
     <div class="inner">
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
@@ -25,25 +44,96 @@ button.ui-datepicker-current { display: none; }
 				<form action="<?php echo site_url('report/resource_availability')?>" name="resource_availability" id="resource_availability"  method="post">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<table cellspacing="0" cellpadding="0" border="0" class="search-table">
+					<div class="filterGrid-area">
+						<div class="filterrow-area">
+							<span> Filter by Month/Year: </span>
+							<div><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
+						</div>
+						
+						<div class="filterrow-area">
+							<span> Department: </span>
+							<div ><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
+									<?php if(count($departments)>0 && !empty($departments)){?>
+											<?php foreach($departments as $depts){?>
+												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
+									<?php } }?>
+								</select></div>						
+						</div>
+						<div class="filterrow-area" id="skill_show_id">
+							<span>Select Skill(s): </span>
+							<div>
+								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
+								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
+								<?php foreach($skill_ids_selected as $skills){?>
+										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
+								<?php } }?>
+								</select>
+							</div>						
+						</div>
+						<div class="filterrow-area" id="member_show_id">
+							<span>Select Member(s): </span>
+							<div>
+								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
+								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
+								<?php foreach($member_ids_selected as $members){?>
+										<option <?php echo in_array($members->username,$member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
+								<?php } }?>								
+								</select>	
+							</div>						
+						</div>
+						
+						<div class="filterrow-area bttn-area">
+							<div class="bttons">
+								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
+								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
+							</div>								
+						</div>
+					</div>
+					
+					<!--<table cellspacing="0" cellpadding="0" border="0" class="search-table">
 						<tbody><tr>
 							<td>
-								<strong>Search by Month/Year:</strong>
-							</td>
-							<td>
+								<strong>Filter by Month/Year:</strong><br/>
 								<input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" style="width:78px;" />
 							</td>
 							<td>
+								<strong>Department:</strong><br/>
+								<select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
+									<?php if(count($departments)>0 && !empty($departments)){?>
+											<?php foreach($departments as $depts){?>
+												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
+									<?php } }?>
+								</select>
+							</td>
+							<td id="skill_show_id" <?php //if(count($department_ids)<=0){echo 'style="display:none;"'; } ?>>
+								<strong>Skill:</strong><br/>
+								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
+								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
+								<?php foreach($skill_ids_selected as $skills){?>
+										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
+								<?php } }?>
+								</select>								
+							</td>
+							<td id="member_show_id" <?php //if(count($skill_ids)<=0){echo 'style="display:none;"'; } ?>>
+								<strong>Members:</strong><br/>
+								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
+								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
+								<?php foreach($member_ids_selected as $members){?>
+										<option <?php echo in_array($members->username,$member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
+								<?php } }?>								
+								</select>							
+							</td>							
+							<td>
 								<div class="buttons">
-									<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Search" />
-									 
+									<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
+									<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
 								</div>
 							</td>
 							</tr>
 					</tbody>
-					</table>				
-					 				
-				 
+					</table> -->
+					<input type="hidden" id="start_date" name="start_date" value="<?php echo $start_date;?>" />
+					<input type="hidden" id="end_date" name="end_date" value="<?php echo $end_date;?>" />
 				</form>
 				<br />
 			</div>	
@@ -54,111 +144,118 @@ button.ui-datepicker-current { display: none; }
 			<div id="default_view">
 				    <div id="treeGrid"></div>
 				 <?php 
+					//echo '<pre>';print_r($departments);
 					$master = array();
 					$skill_arr = array();
 					$user_arr = array();
 					$project_arr = array();
 					$json ='';
-					//echo '<pre>';print_r($departments);exit;
-					 foreach($departments as $department_name => $depts){
-						$total_availability = $depts['summation_department_based_available_hours'];
-						$total_billable_hrs = $depts['departmentwise']['Billable'];
-						$total_non_billable_hrs = $depts['departmentwise']['Non-Billable'];
-						$dept_skill_count = count($depts['skillwise']);
-						$dept_member_count = count($depts['department_based_available_hours']);
-						 
-						$billable_percentage = (($total_billable_hrs/$total_availability)*100);
-						$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
-						
-						$dept_slug = str_replace(" ","",$department_name);
-						
-						$master[$department_name]['department_id'] = 'dept'.$dept_slug;
-						$master[$department_name]['name'] = $department_name." ($dept_skill_count) ($dept_member_count)";
-						$master[$department_name]['availability'] = number_format($total_availability,2);
-						$master[$department_name]['billable'] = number_format($total_billable_hrs,2);
-						$master[$department_name]['non_billable'] = number_format($total_non_billable_hrs,2);
-						$master[$department_name]['billable_percentage'] = number_format($billable_percentage,2).'%';
-						$master[$department_name]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
-						$master[$department_name]['ReportsTo'] = 'null';
-						$master[$department_name]['expandRow'] = 'true';
-						$json .= json_encode($master[$department_name]).',';
-						//echo $department_name.'--'.count($depts['skillwise']);
-						
-						foreach($depts['skillwise'] as $skill_name => $skill){
-							//echo "<pre>";print_r($skill);
-							$skill_slug = str_replace(" ","",$skill_name);
-							
-							$total_availability = $depts[$skill_name]['summation_skill_based_available_hours'];
-							$total_billable_hrs = $skill['Billable'];
-							$total_non_billable_hrs = $skill['Non-Billable'];
-							
-							$dept_member_count = count($depts['skill_based_available_hours'][$skill_name]);
-							
+					 if(count($results)>0 && !empty($results)){
+						 foreach($results as $department_name => $depts){
+							$total_availability = $depts['summation_department_based_available_hours'];
+							$total_billable_hrs = $depts['departmentwise']['Billable'];
+							$total_non_billable_hrs = $depts['departmentwise']['Non-Billable'];
+							$dept_skill_count = count($depts['skillwise']);
+							$dept_member_count = count($depts['department_based_available_hours']);
+							 
 							$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 							$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 							
-							$skill_arr[$skill_name]['department_id'] = 'skill'.$dept_slug.$skill_slug;
-							$skill_arr[$skill_name]['name'] = $skill_name." ($dept_member_count)";
-							$skill_arr[$skill_name]['availability'] = number_format($total_availability,2);
-							$skill_arr[$skill_name]['billable'] = number_format($total_billable_hrs,2);
-							$skill_arr[$skill_name]['non_billable'] = number_format($total_non_billable_hrs,2);
-							$skill_arr[$skill_name]['billable_percentage'] = number_format($billable_percentage,2).'%';
-							$skill_arr[$skill_name]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
-							$skill_arr[$skill_name]['ReportsTo'] = 'dept'.$dept_slug;
-							$skill_arr[$skill_name]['expandRow'] = 'true';
-							$json .= json_encode($skill_arr[$skill_name]).',';
-						}
-						
-						
-						foreach($depts['userwise'] as $skill_name => $user){
-							$skill_slug = str_replace(" ","",$skill_name);
-							foreach($user as $un => $u){
-								$total_availability = $depts['department_based_available_hours'][$un];
-								 
-								$total_billable_hrs = $u['Billable'];
-								$total_non_billable_hrs = $u['Non-Billable'];
-								
-								$billable_percentage = (($total_billable_hrs/$total_availability)*100);
-								$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
-								
-								$user_arr[$un]['department_id'] = 'un'.$un;
-								$user_arr[$un]['name'] = $un;
-								$user_arr[$un]['availability'] = number_format($total_availability,2);
-								$user_arr[$un]['billable'] = number_format($total_billable_hrs,2);
-								$user_arr[$un]['non_billable'] = number_format($total_non_billable_hrs,2);
-								$user_arr[$un]['billable_percentage'] = number_format($billable_percentage,2).'%';
-								$user_arr[$un]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
-								$user_arr[$un]['ReportsTo'] = 'skill'.$dept_slug.$skill_slug;
-								$user_arr[$un]['expandRow'] = 'true';
-								$json .= json_encode($user_arr[$un]).',';
+							$dept_slug = str_replace(" ","",$department_name);
+							
+							$master[$department_name]['department_id'] = 'dept'.$dept_slug;
+							$master[$department_name]['name'] = $department_name." ($dept_skill_count) ($dept_member_count)";
+							$master[$department_name]['availability'] = number_format($total_availability,2);
+							$master[$department_name]['billable'] = number_format($total_billable_hrs,2);
+							$master[$department_name]['non_billable'] = number_format($total_non_billable_hrs,2);
+							$master[$department_name]['billable_percentage'] = number_format($billable_percentage,2).'%';
+							$master[$department_name]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
+							$master[$department_name]['ReportsTo'] = 'null';
+							$master[$department_name]['expandRow'] = 'true';
+							$json .= json_encode($master[$department_name]).',';
+							//echo $department_name.'--'.count($depts['skillwise']);
+							
+							if(!empty($depts['skillwise']) && count($depts['skillwise'])>0)
+							{
+								foreach($depts['skillwise'] as $skill_name => $skill){
+									//echo "<pre>";print_r($skill);
+									$skill_slug = str_replace(" ","",$skill_name);
+									
+									$total_availability = $depts[$skill_name]['summation_skill_based_available_hours'];
+									$total_billable_hrs = $skill['Billable'];
+									$total_non_billable_hrs = $skill['Non-Billable'];
+									
+									$dept_member_count = count($depts['skill_based_available_hours'][$skill_name]);
+									
+									$billable_percentage = (($total_billable_hrs/$total_availability)*100);
+									$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
+									
+									$skill_arr[$skill_name]['department_id'] = 'skill'.$dept_slug.$skill_slug;
+									$skill_arr[$skill_name]['name'] = $skill_name." ($dept_member_count)";
+									$skill_arr[$skill_name]['availability'] = number_format($total_availability,2);
+									$skill_arr[$skill_name]['billable'] = number_format($total_billable_hrs,2);
+									$skill_arr[$skill_name]['non_billable'] = number_format($total_non_billable_hrs,2);
+									$skill_arr[$skill_name]['billable_percentage'] = number_format($billable_percentage,2).'%';
+									$skill_arr[$skill_name]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
+									$skill_arr[$skill_name]['ReportsTo'] = 'dept'.$dept_slug;
+									$skill_arr[$skill_name]['expandRow'] = 'true';
+									$json .= json_encode($skill_arr[$skill_name]).',';
+								}
 							}
-						}
-						/* foreach($depts['projectwise'] as $un => $project){
-							$unique[$un] = array_unique($project);
-						} */
-						$i=0;
-						foreach($depts['projectwise'] as $un => $project){
-							foreach($project as $key => $proj){
-								
-								$billable = $depts['projuser'][$un][$proj]['Billable'];
-								$nonbillable = $depts['projuser'][$un][$proj]['Non-Billable'];
-								
-								$billable = ($billable!='')?number_format($billable,2):'0.00';
-								$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
-								
-								$project_arr[$un]['department_id'] = 'project'.$un.$proj;
-								$project_arr[$un]['name'] = $proj;
-								$project_arr[$un]['availability'] = 'NA';
-								$project_arr[$un]['billable'] = $billable;
-								$project_arr[$un]['non_billable'] = $nonbillable;
-								$project_arr[$un]['billable_percentage'] = '-';
-								$project_arr[$un]['non_billable_percentage'] = '-';
-								$project_arr[$un]['ReportsTo'] =  'un'.$un;
-								$project_arr[$un]['expandRow'] = 'true';
-								$json .= json_encode($project_arr[$un]).',';							
+							
+							if(count($depts['userwise'])>0 && !empty($depts['userwise']))
+							{
+								foreach($depts['userwise'] as $skill_name => $user){
+									$skill_slug = str_replace(" ","",$skill_name);
+									foreach($user as $un => $u){
+										$total_availability = $depts['department_based_available_hours'][$un];
+										 
+										$total_billable_hrs = $u['Billable'];
+										$total_non_billable_hrs = $u['Non-Billable'];
+										
+										$billable_percentage = (($total_billable_hrs/$total_availability)*100);
+										$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
+										
+										$user_arr[$un]['department_id'] = 'un'.$un;
+										$user_arr[$un]['name'] = $un;
+										$user_arr[$un]['availability'] = number_format($total_availability,2);
+										$user_arr[$un]['billable'] = number_format($total_billable_hrs,2);
+										$user_arr[$un]['non_billable'] = number_format($total_non_billable_hrs,2);
+										$user_arr[$un]['billable_percentage'] = number_format($billable_percentage,2).'%';
+										$user_arr[$un]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
+										$user_arr[$un]['ReportsTo'] = 'skill'.$dept_slug.$skill_slug;
+										$user_arr[$un]['expandRow'] = 'true';
+										$json .= json_encode($user_arr[$un]).',';
+									}
+								}
 							}
-						}
-					} 
+							/* foreach($depts['projectwise'] as $un => $project){
+								$unique[$un] = array_unique($project);
+							} */
+							$i=0;
+							foreach($depts['projectwise'] as $un => $project){
+								foreach($project as $key => $proj){
+									
+									$billable = $depts['projuser'][$un][$proj]['Billable'];
+									$nonbillable = $depts['projuser'][$un][$proj]['Non-Billable'];
+									
+									$billable = ($billable!='')?number_format($billable,2):'0.00';
+									$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+									
+									$project_arr[$un]['department_id'] = 'project'.$un.$proj;
+									$project_arr[$un]['name'] = $proj;
+									$project_arr[$un]['availability'] = 'NA';
+									$project_arr[$un]['billable'] = $billable;
+									$project_arr[$un]['non_billable'] = $nonbillable;
+									$project_arr[$un]['billable_percentage'] = '-';
+									$project_arr[$un]['non_billable_percentage'] = '-';
+									$project_arr[$un]['ReportsTo'] =  'un'.$un;
+									$project_arr[$un]['expandRow'] = 'true';
+									$json .= json_encode($project_arr[$un]).',';							
+								}
+							}
+						} 
+					}
 					?>
 				 
 					 <script type="text/javascript">
@@ -242,9 +339,93 @@ $(function() {
 <script type="text/javascript" src="assets/js/jqwidgets/jqxscrollbar.js"></script>
 <script type="text/javascript" src="assets/js/jqwidgets/jqxdatatable.js"></script> 
 <script type="text/javascript" src="assets/js/jqwidgets/jqxtreegrid.js"></script> 
-<!--
-<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/jquery.jqGrid.min.js"></script>
-<script type="text/javascript" src="assets/js/grid.locale-en.js"></script>
--->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#department_ids").change(function(){
+		var ids = $(this).val();
+		var params = {'dept_ids':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		params[csrf_token_name] = csrf_hash_token;			
+		$('#skill_show_id').css('display','none');		
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'report/resource_availability/get_skills',
+			data: params,
+			success: function(data) {
+				if(data){
+					var skills = $.parseJSON(data);
+					if(skills.length){
+						var html='';
+						for(var i=0;i<skills.length;i++){
+							if(skills[i].name=='null' || skills[i].skill_id==0) skills[i].name = 'N/A';
+								html +='<option value="'+skills[i].skill_id+'">'+skills[i].name+'</option>';
+						}
+						$('#skill_show_id').css('display','block');
+						$('#skill_ids').html('');
+						$('#skill_ids').append(html)
+						$("#skill_ids").trigger("liszt:updated");
+						$.ajax({
+							type: 'POST',
+							url: site_base_url+'report/resource_availability/get_members',
+							data: params,
+							success: function(members) {
+								if(members){
+									var mem_html='';
+									var users = $.parseJSON(members);
+									if(users.length){
+										for(var i=0;i<users.length;i++){
+											mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+										}	
+									}
+									$('#member_show_id').css('display','block');
+									$('#member_ids').html('');
+									$('#member_ids').append(mem_html)
+									$("#member_ids").trigger("liszt:updated");									
+								}
+							}
+						});
+					}
+				}
+			}
+		});
+		return false;		
+	})
+	
+	$('body').on('change','#skill_ids',function(){
+		var dids = $('#department_ids').val();
+		var sids = $(this).val();
+		
+		var params = {'dept_ids':dids,'skill_ids':sids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		params[csrf_token_name] = csrf_hash_token;
+		
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'report/resource_availability/get_skill_members',
+			data: params,
+			success: function(members) {
+				if(members){
+					var mem_html;
+					var users = $.parseJSON(members);
+					if(users.length){
+						for(var i=0;i<users.length;i++){
+							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+						}	
+					}
+					$('#member_show_id').css('display','block');
+					$('#member_ids').html('');
+					$('#member_ids').append(mem_html);
+					$("#member_ids").trigger("liszt:updated");
+				}
+			}
+		});
+	});
+	 $("#skill_ids").chosen({no_results_text: "Please select Department"}); 
+	 $("#member_ids").chosen({no_results_text: "Please select Skill"}); 
+	 <?php if(count($department_ids)<=0){?>
+		$("#skill_show_id").css("display","none")
+	 <?php } ?>
+	 <?php if(count($skill_ids)<=0){?>
+		$("#member_show_id").css("display","none")
+	 <?php } ?>	 
+});
+</script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
