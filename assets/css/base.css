@@ -2415,3 +2415,26 @@ li.saved-search-res span:first-child {width: 135px !important;}
     width: 45% !important;
 	border:1px solid #ddd;
 }
+
+/*----10-07-2015--- Filter-Area-*/
+.filterGrid-area{
+width:100%;
+margin:0;
+padding:0;
+float:left;
+position:relative;
+}
+.filterrow-area{
+	width:20%;
+	float:left;
+}
+.filterrow-area span{
+	float:left;
+}
+.filterrow-area div{
+	float:left;
+}
+.bttn-area .bttons{
+position:absolute;
+bottom:0;
+}
