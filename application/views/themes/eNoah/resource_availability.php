@@ -50,7 +50,7 @@ $(function(){
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
 						
-						<div class="filterrow-area">
+						<div class="filterrow-area1">
 							<span> Department: </span>
 							<div class="selectOPt"><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
@@ -59,7 +59,7 @@ $(function(){
 									<?php } }?>
 								</select></div>						
 						</div>
-						<div class="filterrow-area1" id="skill_show_id">
+						<div class="filterrow-area2" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
 								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
@@ -70,7 +70,7 @@ $(function(){
 								</select>
 							</div>						
 						</div>
-						<div class="filterrow-area1" id="member_show_id">
+						<div class="filterrow-area3" id="member_show_id">
 							<span>Select Member(s): </span>
 							<div class="selectOPtshow1">
 								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
