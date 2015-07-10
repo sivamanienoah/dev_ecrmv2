@@ -45,7 +45,7 @@ $(function(){
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
-						<div class="filterrow-area">
+						<div class="filterrow-areaYear">
 							<span> Filter by Month/Year: </span>
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
