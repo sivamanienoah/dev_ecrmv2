@@ -255,7 +255,28 @@ class Resource_availability extends crm_controller {
 			$start_date = date("Y-m-01");
 			$end_date = date("Y-m-t");
 		}
+		$where='';
+		$department_ids = $this->input->post("department_ids");
+		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
+			$dids = implode(",",$department_ids);
+			$where .= " and v.department_id in ($dids)";
+		}
 		
+		$skill_ids = $this->input->post("skill_ids");
+		if(count($department_ids)>0 && !empty($department_ids && array_filter($department_ids) )){
+			$sids = implode(",",$skill_ids);
+			if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids)){
+				$where .= " and v.skill_id in ($sids)";
+			}
+		}
+
+		$member_ids = $this->input->post("member_ids");
+		if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids) && array_filter($department_ids) && count($department_ids)>0 && !empty($department_ids)){
+			$mids = "'".implode("','",$member_ids)."'";
+			if(count($member_ids)>0 && !empty($member_ids) && array_filter($member_ids)){
+				$where .= " and v.username in ($mids)";
+			}
+		}
 		
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
