@@ -2442,6 +2442,11 @@ float:left;
 	height: 20px;
     width: 100%;
 }
+.filterrow-areaYear div.filtemonYear{
+	  clear: both;
+    float: left;
+    width: 80%;
+}
 .filterrow-area{
 	width:20%;
 	float:left;
