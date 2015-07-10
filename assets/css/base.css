@@ -2452,7 +2452,15 @@ float:left;
 	width:20%;
 	float:left;
 }
-
+.filterrow-area-btn{
+	width:10%;
+	float:left;
+}
+.filterrow-area-btn div{
+	  clear: both;
+    float: left;
+    
+}
 .filterrow-area span{
 	float:left;
 }
