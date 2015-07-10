@@ -31,9 +31,18 @@ $(function(){
         <?php  	if($this->session->userdata('accesspage')==1) {   ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
-			<!--<a class="choice-box js_advanced_filter">
-				<span>Advanced Filters</span><img src="assets/img/advanced_filter.png" class="icon leads" />
-			</a>-->
+			<div class="buttons export-to-excel">
+				<form onsubmit="return updateFields()" action="<?php echo base_url().'report/resource_availability/excelExport/'?>" name="resource_availability_excel" id="resource_availability_excel"  method="post">
+				<button  type="submit" id="excel-1" class="positive">
+					Export to Excel
+				</button>
+				<input type="hidden" name="month_year_from_date" value="" id="excel_date" />
+				<input type="hidden" name="department_ids[]" value="" id="excel_departments" />
+				<input type="hidden" name="skill_ids[]" value="" id="excel_skills" />
+				<input type="hidden" name="member_ids[]" value="" id="excel_members" />
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				</form>
+			</div>
 			<div class="clearfix"></div>
 		</div>
 
@@ -89,49 +98,6 @@ $(function(){
 							</div>								
 						</div>
 					</div>
-					
-					<!--<table cellspacing="0" cellpadding="0" border="0" class="search-table">
-						<tbody><tr>
-							<td>
-								<strong>Filter by Month/Year:</strong><br/>
-								<input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" style="width:78px;" />
-							</td>
-							<td>
-								<strong>Department:</strong><br/>
-								<select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
-									<?php if(count($departments)>0 && !empty($departments)){?>
-											<?php foreach($departments as $depts){?>
-												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
-									<?php } }?>
-								</select>
-							</td>
-							<td id="skill_show_id" <?php //if(count($department_ids)<=0){echo 'style="display:none;"'; } ?>>
-								<strong>Skill:</strong><br/>
-								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
-								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
-								<?php foreach($skill_ids_selected as $skills){?>
-										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
-								<?php } }?>
-								</select>								
-							</td>
-							<td id="member_show_id" <?php //if(count($skill_ids)<=0){echo 'style="display:none;"'; } ?>>
-								<strong>Members:</strong><br/>
-								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
-								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
-								<?php foreach($member_ids_selected as $members){?>
-										<option <?php echo in_array($members->username,$member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
-								<?php } }?>								
-								</select>							
-							</td>							
-							<td>
-								<div class="buttons">
-									<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
-									<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
-								</div>
-							</td>
-							</tr>
-					</tbody>
-					</table> -->
 					<input type="hidden" id="start_date" name="start_date" value="<?php echo $start_date;?>" />
 					<input type="hidden" id="end_date" name="end_date" value="<?php echo $end_date;?>" />
 				</form>
@@ -425,7 +391,16 @@ $(document).ready(function(){
 	 <?php } ?>
 	 <?php if(count($skill_ids)<=0){?>
 		$("#member_show_id").css("display","none")
-	 <?php } ?>	 
+	 <?php } ?>
 });
+
+function updateFields(){
+	$('#excel_date').val($('#month_year_from_date').val())
+	$('#excel_departments').val($('#department_ids').val())
+	$('#excel_skills').val($('#skill_ids').val())
+	$('#excel_members').val($('#member_ids').val())
+	$("#resource_availability_excel").submit();
+	return true;
+}
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
