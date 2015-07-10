@@ -2470,16 +2470,16 @@ float:left;
 }
 
 .selectOPt div ul li.search-choice {
-    font-size: 10px;
+    font-size: 12px;
 }
 .selectOPt div div ul li.active-result {
-    font-size: 10px;
+    font-size: 12px;
 }
 .selectOPtshow div ul li.search-choice {
-    font-size: 10px;
+    font-size: 12px;
 }
 .selectOPtshow div div ul li.active-result {
-    font-size: 10px;
+    font-size: 12px;
 }
 
 #default_view {
