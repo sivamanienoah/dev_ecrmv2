@@ -283,7 +283,7 @@ class Resource_availability extends crm_controller {
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
 		$qry = $timesheet_db->get($timesheet_db->dbprefix('department'));
-		$sql_data_qry = "SELECT v.department_name, v.name, v.username,
+		$sql_data_qry = "SELECT v.department_name, v.name, v.username, concat(v.first_name,' ',v.last_name) as emp_name,
 		ah.available_hours_month,ah.available_hours_day, 
 		v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id,ep.title
 
@@ -342,6 +342,7 @@ class Resource_availability extends crm_controller {
 			
 			$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
 			$arr_depts[$v->department_name]["skillwise"][$v->name][$v->resoursetype] += ($v->duration/60);
+			$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->username] = $v->emp_name;
 			$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
 			$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
 			$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
@@ -369,12 +370,14 @@ class Resource_availability extends crm_controller {
 		//name the worksheet
 		$this->excel->getActiveSheet()->setTitle('Resource_Availability');											
 		//set cell A1 content with some text			
-		$this->excel->getActiveSheet()->setCellValue('A1', 'Department/Skill/Members/Projects');
-		$this->excel->getActiveSheet()->setCellValue('B1', 'Available Hours');
-		$this->excel->getActiveSheet()->setCellValue('C1', 'Billable Hours');
-		$this->excel->getActiveSheet()->setCellValue('D1', 'Non Billable Hours');
-		$this->excel->getActiveSheet()->setCellValue('E1', 'Billable Hours (%)');
-		$this->excel->getActiveSheet()->setCellValue('F1', 'Non Billable Hours (%)');
+		$this->excel->getActiveSheet()->setCellValue('A1', 'Members/Projects');
+		$this->excel->getActiveSheet()->setCellValue('B1', 'Department Name');
+		$this->excel->getActiveSheet()->setCellValue('C1', 'Skill Name');
+		$this->excel->getActiveSheet()->setCellValue('D1', 'Available Hours');
+		$this->excel->getActiveSheet()->setCellValue('E1', 'Billable Hours');
+		$this->excel->getActiveSheet()->setCellValue('F1', 'Non Billable Hours');
+		$this->excel->getActiveSheet()->setCellValue('G1', 'Billable Hours (%)');
+		$this->excel->getActiveSheet()->setCellValue('H1', 'Non Billable Hours (%)');
 		
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -394,17 +397,16 @@ class Resource_availability extends crm_controller {
 			$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 			$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 
-			$this->excel->getActiveSheet()->setCellValue('A'.$i,  $department_name." ($dept_skill_count) ($dept_member_count)");
+/* 			$this->excel->getActiveSheet()->setCellValue('A'.$i,  $department_name." ($dept_skill_count) ($dept_member_count)");
 			$this->excel->getActiveSheet()->setCellValue('B'.$i, number_format($total_availability,2));
 			$this->excel->getActiveSheet()->setCellValue('C'.$i, number_format($total_billable_hrs,2));
 			$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_non_billable_hrs,2));
 			$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($billable_percentage,2).'%');
-			$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%');	
+			$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%'); */	
 			
 			
 			if(!empty($depts['skillwise']) && count($depts['skillwise'])>0)
 			{
-				++$i;
 				foreach($depts['skillwise'] as $skill_name => $skill){
 					$skill_slug = str_replace(" ","",$skill_name);
 					
@@ -417,17 +419,19 @@ class Resource_availability extends crm_controller {
 					$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 					$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 			
-					$this->excel->getActiveSheet()->setCellValue('A'.$i,  "----".$skill_name." ($dept_member_count)");
+/* 					$this->excel->getActiveSheet()->setCellValue('A'.$i,  "----".$skill_name." ($dept_member_count)");
 					$this->excel->getActiveSheet()->setCellValue('B'.$i, number_format($total_availability,2));
 					$this->excel->getActiveSheet()->setCellValue('C'.$i, number_format($total_billable_hrs,2));
 					$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_non_billable_hrs,2));
 					$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($billable_percentage,2).'%');
-					$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%');
+					$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%'); */
 					
-					//echo '<pre>';print_r($depts['userwise'][$skill_name]);
-					++$i;
+					//echo '<pre>';print_r($depts['userwise'][$skill_name]);exit;
+				
 					foreach($depts['userwise'][$skill_name] as $username => $user)
 					{
+						//echo '<pre>';print_r($user);
+						++$i;
 						$total_availability = $depts['department_based_available_hours'][$un];
 						 
 						$total_billable_hrs = $user['Billable'];
@@ -436,12 +440,14 @@ class Resource_availability extends crm_controller {
 						$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 						$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 						
-						$this->excel->getActiveSheet()->setCellValue('A'.$i,  "------".$username);
-						$this->excel->getActiveSheet()->setCellValue('B'.$i, number_format($total_availability,2));
-						$this->excel->getActiveSheet()->setCellValue('C'.$i, number_format($total_billable_hrs,2));
-						$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_non_billable_hrs,2));
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($billable_percentage,2).'%');
-						$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%');
+						$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
+						$this->excel->getActiveSheet()->setCellValue('B'.$i, $department_name);
+						$this->excel->getActiveSheet()->setCellValue('C'.$i, $skill_name);
+						$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_availability,2));
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($total_billable_hrs,2));
+						$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
+						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
+						$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
 						
 						++$i;
 						foreach($depts['projectwise'][$username] as $project)
@@ -452,21 +458,22 @@ class Resource_availability extends crm_controller {
 							$billable = ($billable!='')?number_format($billable,2):'0.00';
 							$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
 
-							$this->excel->getActiveSheet()->setCellValue('A'.$i,  "-----------".$project);
-							$this->excel->getActiveSheet()->setCellValue('B'.$i, 'NA');
-							$this->excel->getActiveSheet()->setCellValue('C'.$i, $billable);
-							$this->excel->getActiveSheet()->setCellValue('D'.$i, $nonbillable);
-							$this->excel->getActiveSheet()->setCellValue('E'.$i, '-');
-							$this->excel->getActiveSheet()->setCellValue('F'.$i, '-');	
+							$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
+							$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
+							$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
+							$this->excel->getActiveSheet()->setCellValue('D'.$i, 'NA');
+							$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
+							$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
+							$this->excel->getActiveSheet()->setCellValue('G'.$i, '-');
+							$this->excel->getActiveSheet()->setCellValue('H'.$i, '-');	
 							$i++;
 						}
 					}
-					$i++;
 				}
 			}
 			$i++;
 			$cnt++;	
-		}
+		} 
 		/*To build columns ends*/
 		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
  
