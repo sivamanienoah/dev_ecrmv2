@@ -68,12 +68,16 @@ $(function(){
 									<?php } }?>
 								</select></div>						
 						</div>
+						 
 						<div class="filterrow-area" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
 								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
 								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
-								<?php foreach($skill_ids_selected as $skills){?>
+								<?php 
+									foreach($skill_ids_selected as $skills){
+										$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
+										?>
 										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
 								<?php } }?>
 								</select>
