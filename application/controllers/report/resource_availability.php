@@ -408,7 +408,7 @@ class Resource_availability extends crm_controller {
 			
 			
 			//if(!empty($depts['skillwise']) && count($depts['skillwise'])>0)
-			{
+			//{
 				foreach($depts['skillwise'] as $skill_name => $skill){
 					$skill_slug = str_replace(" ","",$skill_name);
 					
