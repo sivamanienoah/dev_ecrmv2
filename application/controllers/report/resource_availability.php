@@ -264,10 +264,10 @@ class Resource_availability extends crm_controller {
 		}
 		
 		$skill_ids = $this->input->post("skill_ids");
-		print_r($skill_ids);
+	 
 		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
 			$sids = implode(",",$skill_ids);
-			if(count($skill_ids)>0 && !empty($skill_ids)){
+			if(count($skill_ids)>0 && !empty($skill_ids) && && array_filter($skill_ids)){
 				$where .= " and v.skill_id in ($sids)";
 			}
 		}
