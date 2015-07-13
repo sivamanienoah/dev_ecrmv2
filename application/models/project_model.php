@@ -652,7 +652,11 @@ class Project_model extends crm_model
 		}
 		return $users;
 	}
-	// Add all the project task to new assigning members 10/7/2015	
+	/*
+	 *@method task_timesheet_entry
+	 *@param project_id,username
+	 * Add all the project task to new assigning members 10/7/2015	
+	 */
 	public function task_timesheet_entry($pjt_id,$username)
 	{
 		$timesheet_db = $this->load->database('timesheet',TRUE);
@@ -666,7 +670,9 @@ class Project_model extends crm_model
 			}
 		}		
 	}
-	//Ends here
+	/*
+	* @method task_timesheet_entry Ends here
+	*/
 	
 	/* public function get_actual_project_hour($pjt_code, $lead_id)
 	{

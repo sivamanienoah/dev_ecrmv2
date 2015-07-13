@@ -654,6 +654,10 @@ class Customer_model extends crm_model {
 				
 				
 				if($res_tm->num_rows()>0 && $timesheet_proj_id){
+				$defaulttask='Default task';
+				$assigneddate=date('Y-m-d H:i:s');
+				// creating default task for new project 13/7/2015
+				$timesheet_db->insert($timesheet_db->dbprefix('TASK'),array("proj_id" =>$timesheet_proj_id,"name" => $defaulttask,"assigned" => $assigneddate));
 					$rs_tm = $res_tm->result_array();
 					$crm_username = array();
 					foreach($rs_tm as $tm){
@@ -664,9 +668,20 @@ class Customer_model extends crm_model {
 							$crm_user_details = $get_crm_user->row();
 							$crm_username  = strtolower($crm_user_details->username);
 							
-							$tm_nos = $timesheet_db->get_where($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));
+							$tm_nos = $timesheet_db->get_where($timesheet_db->dbprefix('assignments'),array("proj_id" => $timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));
 							if(!$tm_nos->num_rows()){
 								$timesheet_db->insert($timesheet_db->dbprefix('assignments'),array("proj_id" =>	$timesheet_proj_id,"username" => $crm_username,"rate_id" => 1));	
+									//Tasks assigned for project assigned members 13/7/2015
+									$sql = "SELECT task_id FROM ".$timesheet_db->dbprefix('task')."  WHERE proj_id = '".$timesheet_proj_id."'";	
+									$query = $timesheet_db->query($sql);
+									$res = $query->result_array();		
+									if(count($res) > 0) {
+									foreach($res as $row){				
+											$taskid = $row['task_id'];
+											$timesheet_db->insert($timesheet_db->dbprefix("task_assignments"), array("task_id"=>$taskid,"proj_id"=>$timesheet_proj_id,"username"=>$crm_username));
+										}
+									}	
+									// Ends here
 							}
 						}
 					}
