@@ -45,6 +45,7 @@ class Resource_availability extends crm_controller {
 			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids)  and t.start_time between '$start_date' and '$end_date' group by
 			v.skill_id order by v.name asc");			
 			$data['skill_ids_selected'] = $qry->result();			
+			
 		}
 
 		$member_ids = $this->input->post("member_ids");
