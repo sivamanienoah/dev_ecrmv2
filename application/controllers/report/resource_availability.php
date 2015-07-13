@@ -379,6 +379,7 @@ class Resource_availability extends crm_controller {
 		$this->excel->getActiveSheet()->setCellValue('F1', 'Non Billable Hours');
 		$this->excel->getActiveSheet()->setCellValue('G1', 'Billable Hours (%)');
 		$this->excel->getActiveSheet()->setCellValue('H1', 'Non Billable Hours (%)');
+		$this->excel->getActiveSheet()->setCellValue('I1', 'Is Member/Project');
 		
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -433,7 +434,7 @@ class Resource_availability extends crm_controller {
 					{
 						//echo '<pre>';print_r($user);
 						++$i;
-						$total_availability = $depts['department_based_available_hours'][$un];
+						$total_availability = $depts['department_based_available_hours'][$username];
 						 
 						$total_billable_hrs = $user['Billable'];
 						$total_non_billable_hrs = $user['Non-Billable'];
@@ -449,6 +450,7 @@ class Resource_availability extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
 						$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
+						$this->excel->getActiveSheet()->setCellValue('I'.$i, '1');
 						
 						++$i;
 						foreach($depts['projectwise'][$username] as $project)
@@ -462,11 +464,12 @@ class Resource_availability extends crm_controller {
 							$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
 							$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
 							$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
-							$this->excel->getActiveSheet()->setCellValue('D'.$i, 'NA');
+							$this->excel->getActiveSheet()->setCellValue('D'.$i, '0');
 							$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
 							$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
-							$this->excel->getActiveSheet()->setCellValue('G'.$i, '-');
-							$this->excel->getActiveSheet()->setCellValue('H'.$i, '-');	
+							$this->excel->getActiveSheet()->setCellValue('G'.$i, 'N/A');
+							$this->excel->getActiveSheet()->setCellValue('H'.$i, 'N/A');	
+							$this->excel->getActiveSheet()->setCellValue('I'.$i, '2');	
 							$i++;
 						}
 					}
