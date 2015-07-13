@@ -268,7 +268,7 @@ class Resource_availability extends crm_controller {
 		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
 			$sids = implode(",",$skill_ids);
 			if(count($skill_ids)>0 && !empty($skill_ids)){
-				if(($skill_ids[0] =='')) $sids=0;
+				if(($skill_ids[0] =='' && $skill_ids[1] != '')) $sids=0;
 				$where .= " and v.skill_id in ($sids)";
 			}
 		}
