@@ -265,7 +265,7 @@ class Resource_availability extends crm_controller {
 		
 		$skill_ids = $this->input->post("skill_ids");
 	 
-		print_r($skill_ids);
+		//print_r($skill_ids);
 		if(count($department_ids)>0 && !empty($department_ids) && array_filter($department_ids)){
 			$sids = implode(",",$skill_ids);
 			if(count($skill_ids)>0 && !empty($skill_ids) && array_filter($skill_ids)){
@@ -297,7 +297,7 @@ class Resource_availability extends crm_controller {
 		left join enoah_project ep on ep.proj_id=t.proj_id
 		WHERE t.start_time between '$start_date ' and '$end_date' $where
 		order by v.department_name, v.name,v.username";
-		//echo"<br>".$sql_data_qry; exit;
+		echo"<br>".$sql_data_qry; exit;
 		$qry_d = $timesheet_db->query($sql_data_qry);
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
