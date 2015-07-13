@@ -77,7 +77,7 @@ $(function(){
 								<?php 
 									foreach($skill_ids_selected as $skills){
 										$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
-										$skills->skill_id = ($skills->skill_id==0)?'N/A':$skills->skill_id;
+										//$skills->skill_id = ($skills->skill_id==0)?'N/A':$skills->skill_id;
 										?>
 										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
 								<?php } }?>
