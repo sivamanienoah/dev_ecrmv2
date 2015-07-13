@@ -296,7 +296,7 @@ class Resource_availability extends crm_controller {
 		left join enoah_project ep on ep.proj_id=t.proj_id
 		WHERE t.start_time between '$start_date ' and '$end_date' $where
 		order by v.department_name, v.name,v.username";
-		echo"<br>".$sql_data_qry; exit;
+		//echo"<br>".$sql_data_qry; exit;
 		$qry_d = $timesheet_db->query($sql_data_qry);
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
