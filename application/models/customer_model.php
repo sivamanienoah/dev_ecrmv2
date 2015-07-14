@@ -654,9 +654,9 @@ class Customer_model extends crm_model {
 				
 				
 				if($res_tm->num_rows()>0 && $timesheet_proj_id){
-				$defaulttask='Default task';
-				$assigneddate=date('Y-m-d H:i:s');
 				// creating default task for new project 13/7/2015
+				$defaulttask='Default task';
+				$assigneddate=date('Y-m-d H:i:s');				
 				$timesheet_db->insert($timesheet_db->dbprefix('TASK'),array("proj_id" =>$timesheet_proj_id,"name" => $defaulttask,"assigned" => $assigneddate));
 					$rs_tm = $res_tm->result_array();
 					$crm_username = array();
