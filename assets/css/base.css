@@ -2570,19 +2570,19 @@ float:left;
 .selectOPtshowFilter{
 width:8%;
 float:left;
-  margin-top: 13px;
+  margin-top: 14px;
 }
 .selectOPtshowFilter1{
 width:10%;
 float:left;	
 margin-left: 6px;
-  margin-top: 13px;
+  margin-top: 14px;
 }
 .selectOPtshowFilter2{
 width:4%;
 float:left;	
  margin-right: 14px;
-   margin-top: 13px;
+   margin-top: 14px;
 }
 
 .selectOPtshowFilter-width{
@@ -2591,7 +2591,7 @@ float:left;
 }
 .selefilterText{ background-color: #ffffff;
     background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
-    border: 1px solid #d7d7d7;
+    border: 1px solid #aaaaaa;
     box-sizing: border-box;
     cursor: text;
     height:28px;
@@ -2605,9 +2605,11 @@ float:left;
 	.selectOPtshowFilter select{
 		width:94%;
 		  height: 28px;	
+		  border:1px solid #aaaaaa !important;
 	}
 	.selectOPtshowFilter1 select{
 width:90%;
   height: 28px;
+  border:1px solid #aaaaaa !important;
 
 }
