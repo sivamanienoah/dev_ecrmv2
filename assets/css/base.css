@@ -2531,15 +2531,20 @@ float:left;
 /*----16-07-2015---*/
 .selectOPtshowFilter{
 width:8%;
-float:left;	
+float:left;
+  margin-top: 15px;
 }
 .selectOPtshowFilter1{
 width:10%;
 float:left;	
+margin-left: 8px;
+  margin-top: 15px;
 }
 .selectOPtshowFilter2{
 width:4%;
 float:left;	
+ margin-right: 14px;
+   margin-top: 15px;
 }
 
 .selectOPtshowFilter-width{
