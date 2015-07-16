@@ -70,16 +70,18 @@ $(function(){
 							<div class="selectOPtshowFilter1">
 								<select id="check_condition" name="check_condition"	>
 									<option value="">All</option>
-									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">Greater than(>=)</option>
-									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">Less than(<=)</option>
+									<option <?php if($check_condition=='greater_than_equal'){ echo 'selected="selected"';}?> value="greater_than_equal">(>=)</option>
+									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">(>)</option>
+									<option <?php if($check_condition=='less_than_equal'){ echo 'selected="selected"';}?> value="less_than">(<=)</option>
+									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">(<)</option>
+									<option <?php if($check_condition=='equal'){ echo 'selected="selected"';}?> value="less_than">(=)</option>
 								</select>	
 							</div>
+
 							<div class="selectOPtshowFilter2">
-                            <span>%</span>
-								<input type="text" id="percentage" min="1" max="3" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
+                            <span>(%)</span>
+								<input type="text" id="percentage" maxlength="3" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
-														
-										
 					
 						<div class="filterrow-areaYear">
 							<span>Month/Year: </span>
