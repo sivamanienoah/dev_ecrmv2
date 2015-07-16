@@ -57,8 +57,9 @@ $(function(){
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
-						<div class="">
+						
 							<span>Filter By: </span>
+                            <div class="selectOPtshowFilter-width">
 							<div class="selectOPtshowFilter">
 								<select id="resource_type_selection" name="resource_type_selection"	>
 									<option  value="">All</option>
@@ -75,8 +76,9 @@ $(function(){
 							</div>
 							<div class="selectOPtshowFilter">
 								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" />
+                                </div>	
 							</div>								
-						</div>					
+										
 					
 						<div class="filterrow-areaYear">
 							<span> Filter by Month/Year: </span>
