@@ -60,6 +60,7 @@ $(function(){
 						
                             
 							<div class="selectOPtshowFilter">
+                            	<span> Filter by Type: </span>
 								<select id="resource_type_selection" name="resource_type_selection"	>
 									<option  value="">All</option>
 									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
@@ -74,13 +75,14 @@ $(function(){
 								</select>	
 							</div>
 							<div class="selectOPtshowFilter2">
+                            <span>%</span>
 								<input type="text" id="percentage" min="1" max="3" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
 														
 										
 					
 						<div class="filterrow-areaYear">
-							<span> Filter by Month/Year: </span>
+							<span>Month/Year: </span>
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
 						
