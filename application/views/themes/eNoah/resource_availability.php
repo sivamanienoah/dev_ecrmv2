@@ -80,7 +80,7 @@ $(function(){
 
 							<div class="selectOPtshowFilter2">
                             <span>(%)</span>
-								<input type="text" id="percentage" maxlength="3" name="percentage" value="<?php echo (!empty($percentage))?(float)$percentage:'';;?>" class="selefilterText" />
+								<input type="text" id="percentage" maxlength="5" name="percentage" value="<?php echo (!empty($percentage))?(float)$percentage:'';;?>" class="selefilterText" />
                                 </div>	
 					
 						<div class="filterrow-areaYear">
