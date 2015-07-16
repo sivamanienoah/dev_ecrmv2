@@ -300,11 +300,15 @@ class Resource_availability extends crm_controller {
 			$dids = implode(',',$ids);
 			$sids = implode(',',$skill_ids);
 			
-			$timesheet_db = $this->load->database("timesheet",true);
-			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
-			if($qry->num_rows()>0){
-				$res = $qry->result();
-				echo json_encode($res); exit;
+			if(!empty($dids) && !empty($sids)){
+				$timesheet_db = $this->load->database("timesheet",true);
+				$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+				if($qry->num_rows()>0){
+					$res = $qry->result();
+					echo json_encode($res); exit;
+				}else{
+					echo 0;exit;
+				}
 			}else{
 				echo 0;exit;
 			}
