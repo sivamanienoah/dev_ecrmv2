@@ -41,7 +41,7 @@ class Resource_availability extends crm_controller {
 			
 			$start_date = date("Y-m-01",strtotime($date));
 			if($cur_month==$post_month){
-				$end_date = date("Y-m-d",strtotime($date));	
+				$end_date = date("Y-m-d");	
 			}else{
 				$end_date = date("Y-m-t",strtotime($date));	
 			}
@@ -321,7 +321,7 @@ class Resource_availability extends crm_controller {
 			
 			$start_date = date("Y-m-01",strtotime($date));
 			if($cur_month==$post_month){
-				$end_date = date("Y-m-d",strtotime($date));	
+				$end_date = date("Y-m-d");	
 			}else{
 				$end_date = date("Y-m-t",strtotime($date));	
 			}			
