@@ -175,11 +175,17 @@ class Resource_availability extends crm_controller {
 					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
 					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
 					
-					if($check_condition=='greater_than')
+					if($check_condition=='greater_than_equal')
 					{
 						$condition = $value >= $percentage;
-					}else{
+					}else if($check_condition=='greater_than'){
+						$condition = $value > $percentage;
+					}else if($check_condition=='less_than_equal'){
 						$condition = $value <= $percentage;
+					}else if($check_condition=='less_than'){
+						$condition = $value < $percentage;
+					}else if($check_condition=='equal'){
+						$condition = $value == $percentage;
 					}
 
 					if($condition)
@@ -515,11 +521,17 @@ class Resource_availability extends crm_controller {
 						if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage;}
 						else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage;} 
 						
-						if($check_condition=='greater_than')
+						if($check_condition=='greater_than_equal')
 						{
 							$condition = $value >= $percentage;
-						}else{
+						}else if($check_condition=='greater_than'){
+							$condition = $value > $percentage;
+						}else if($check_condition=='less_than_equal'){
 							$condition = $value <= $percentage;
+						}else if($check_condition=='less_than'){
+							$condition = $value < $percentage;
+						}else if($check_condition=='equal'){
+							$condition = $value == $percentage;
 						}
 
 						if($condition)
