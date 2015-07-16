@@ -67,7 +67,7 @@ $(function(){
 									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
 								</select>	
 							</div>
-							<div class="selectOPtshowFilter">
+							<div class="selectOPtshowFilter1">
 								<select id="check_condition" name="check_condition"	>
 									<option value="">All</option>
 									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">Greater than(>=)</option>
@@ -75,7 +75,7 @@ $(function(){
 								</select>	
 							</div>
 							<div class="selectOPtshowFilter">
-								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" />
+								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
 							</div>								
 										
