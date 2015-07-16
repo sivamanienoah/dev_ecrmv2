@@ -2450,7 +2450,7 @@ float:left;
 	   margin-right: 3px;
 }
 .filterrow-area{
-	width:210px;
+	width:177px;
 	float:left;
 }
 .filterrow-areaD{
@@ -2532,8 +2532,8 @@ float:left;
 	 margin-top: 13px;
 	 width:13%;
 }
-#skill_ids_chzn{width:180px !important;}
-#member_ids_chzn{width:180px !important;}
+#skill_ids_chzn{width:158px !important;}
+#member_ids_chzn{width:164px !important;}
 #department_ids_chzn{width:264px !important;}
 .bttons{
 	margin-top:20px;	
