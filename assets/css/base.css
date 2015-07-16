@@ -2534,7 +2534,11 @@ width:18%;
 float:left;	
 }
 .selectOPtshowFilter1{
-width:11%;
+width:14%;
+float:left;	
+}
+.selectOPtshowFilter2{
+width:6%;
 float:left;	
 }
 
@@ -2554,3 +2558,10 @@ float:left;
     position: relative;
     width: 100%
 	}
+	.selectOPtshowFilter select{
+		width:94%;	
+	}
+	.selectOPtshowFilter1 select{
+width:90%;
+
+}
