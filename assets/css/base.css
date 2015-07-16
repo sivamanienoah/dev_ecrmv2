@@ -2426,8 +2426,9 @@ float:left;
 
 }
 .filterrow-areaYear{
-	width:18%;
-	float:left;
+	  float: left;
+    margin-right: 11px;
+    width: 10%;
 }
 .filterrow-areaYear div{
 	  clear: both;
