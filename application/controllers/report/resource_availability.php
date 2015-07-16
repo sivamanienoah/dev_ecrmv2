@@ -35,8 +35,17 @@ class Resource_availability extends crm_controller {
 		$timesheet_db = $this->load->database("timesheet",true);
 		if($this->input->post("month_year_from_date")){
 			$date = $this->input->post("month_year_from_date");
+			
+			$cur_month = date("m");
+			$post_month = date('m',strtotime($date));
+			
 			$start_date = date("Y-m-01",strtotime($date));
-			$end_date = date("Y-m-t",strtotime($date));
+			if($cur_month==$post_month){
+				$end_date = date("Y-m-d",strtotime($date));	
+			}else{
+				$end_date = date("Y-m-t",strtotime($date));	
+			}
+			
 		}else{
 			$start_date = date("Y-m-01");
 			$end_date = date("Y-m-d");
@@ -306,8 +315,17 @@ class Resource_availability extends crm_controller {
 		$timesheet_db = $this->load->database("timesheet",true);
 		if($this->input->post("month_year_from_date")){
 			$date = $this->input->post("month_year_from_date");
+			
+			$cur_month = date("m");
+			$post_month = date('m',strtotime($date));
+			
 			$start_date = date("Y-m-01",strtotime($date));
-			$end_date = date("Y-m-t",strtotime($date));
+			if($cur_month==$post_month){
+				$end_date = date("Y-m-d",strtotime($date));	
+			}else{
+				$end_date = date("Y-m-t",strtotime($date));	
+			}			
+			
 		}else{
 			$start_date = date("Y-m-01");
 			$end_date = date("Y-m-d");
