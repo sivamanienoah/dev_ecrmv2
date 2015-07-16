@@ -2556,7 +2556,7 @@ float:left;
     border: 1px solid #aaaaaa;
     box-sizing: border-box;
     cursor: text;
-    height:25px;
+    height:28px;
     margin: 0;
     overflow: hidden;
     padding: 0;
@@ -2565,9 +2565,11 @@ float:left;
 	
 	}
 	.selectOPtshowFilter select{
-		width:94%;	
+		width:94%;
+		  height: 28px;	
 	}
 	.selectOPtshowFilter1 select{
 width:90%;
+  height: 28px;
 
 }
