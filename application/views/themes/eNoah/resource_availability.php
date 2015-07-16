@@ -58,7 +58,6 @@ $(function(){
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
 						
-							<span>Filter By: </span>
                             
 							<div class="selectOPtshowFilter">
 								<select id="resource_type_selection" name="resource_type_selection"	>
