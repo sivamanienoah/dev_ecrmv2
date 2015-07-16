@@ -84,7 +84,7 @@ $(function(){
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
 						
-						<div class="filterrow-area">
+						<div class="filterrow-areaD">
 							<span> Department: </span>
 							<div class="selectOPt"><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
