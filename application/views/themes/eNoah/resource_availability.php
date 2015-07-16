@@ -59,7 +59,7 @@ $(function(){
 					<div class="filterGrid-area">
 						
 							<span>Filter By: </span>
-                            <div class="selectOPtshowFilter-width">
+                            
 							<div class="selectOPtshowFilter">
 								<select id="resource_type_selection" name="resource_type_selection"	>
 									<option  value="">All</option>
@@ -77,7 +77,7 @@ $(function(){
 							<div class="selectOPtshowFilter2">
 								<input type="text" id="percentage" min="1" max="3" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
-							</div>								
+														
 										
 					
 						<div class="filterrow-areaYear">
