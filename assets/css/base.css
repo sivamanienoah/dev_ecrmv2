@@ -2538,7 +2538,7 @@ width:14%;
 float:left;	
 }
 .selectOPtshowFilter2{
-width:6%;
+width:9%;
 float:left;	
 }
 
@@ -2556,7 +2556,8 @@ float:left;
     overflow: hidden;
     padding: 0;
     position: relative;
-    width: 100%
+    width: 100%;
+	height:26px;
 	}
 	.selectOPtshowFilter select{
 		width:94%;	
