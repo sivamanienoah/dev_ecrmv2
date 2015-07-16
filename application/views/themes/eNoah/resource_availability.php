@@ -74,7 +74,7 @@ $(function(){
 									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">Less than(<=)</option>
 								</select>	
 							</div>
-							<div class="selectOPtshowFilter">
+							<div class="selectOPtshowFilter2">
 								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
 							</div>								
