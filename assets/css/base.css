@@ -2453,6 +2453,10 @@ float:left;
 	width:210px;
 	float:left;
 }
+.filterrow-areaD{
+	width:276px;
+	float:left;
+}
 .filterrow-area-btn{
 	
 	float:left;
@@ -2466,6 +2470,14 @@ float:left;
 	float:left;
 }
 .filterrow-area div{
+	  clear: both;
+    float: left;
+    
+}
+.filterrow-areaD span{
+	float:left;
+}
+.filterrow-areaD div{
 	  clear: both;
     float: left;
     
