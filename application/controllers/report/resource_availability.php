@@ -20,7 +20,7 @@ class Resource_availability extends crm_controller {
 		
 		$resource_type_selection = $this->input->post("resource_type_selection");
 		$check_condition = $this->input->post("check_condition");
-		$percentage = $this->input->post("percentage");
+		$percentage = (float)$this->input->post("percentage");
 /* 		
 		if(!$resource_type_selection)  $resource_type_selection = '';
 		if(!$check_condition)  $check_condition = '';
@@ -161,16 +161,16 @@ class Resource_availability extends crm_controller {
 			$non_billable_percentage[$v->username] = ($check_array[$v->department_name][$v->name][$v->username]['Non-Billable']/$users_available_hours)*100;
 
 			
-				if(!empty($resource_type_selection) && !empty($check_condition) && !empty((float)$percentage))
+				if(!empty($resource_type_selection) && !empty($check_condition) && !empty($percentage))
 				{
 					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
 					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
 					
 					if($check_condition=='greater_than')
 					{
-						$condition = $value >= (float)$percentage;
+						$condition = $value >= $percentage;
 					}else{
-						$condition = $value <= (float $percentage;
+						$condition = $value <= $percentage;
 					}
 
 					if($condition)
