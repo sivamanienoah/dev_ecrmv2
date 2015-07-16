@@ -59,21 +59,21 @@ $(function(){
 					<div class="filterGrid-area">
 						<div class="">
 							<span>Filter By: </span>
-							<div class="selectOPtshow1">
+							<div class="selectOPtshowFilter">
 								<select id="resource_type_selection" name="resource_type_selection"	>
 									<option  value="">All</option>
 									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
 									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
 								</select>	
 							</div>
-							<div class="selectOPtshow1">
+							<div class="selectOPtshowFilter">
 								<select id="check_condition" name="check_condition"	>
 									<option value="">All</option>
 									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">Greater than(>=)</option>
 									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">Less than(<=)</option>
 								</select>	
 							</div>
-							<div class="selectOPtshow1">
+							<div class="selectOPtshowFilter">
 								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" />
 							</div>								
 						</div>					
