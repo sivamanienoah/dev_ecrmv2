@@ -1,7 +1,7 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
-class Resource_availability extends crm_controller {
-	function Resource_availability()
+class Resource_availability_grid extends crm_controller {
+	function Resource_availability_grid()
 	{
 		parent::__construct();
 		$this->login_model->check_login();
@@ -17,20 +17,6 @@ class Resource_availability extends crm_controller {
 		$data['page_heading'] = "Resource Availability";		
 		// get departments from master table
 		//echo '<pre>';print_r($_REQUEST);exit;
-		
-		$resource_type_selection = $this->input->post("resource_type_selection");
-		$check_condition = $this->input->post("check_condition");
-		$percentage = $this->input->post("percentage");
-/* 		
-		if(!$resource_type_selection)  $resource_type_selection = '';
-		if(!$check_condition)  $check_condition = '';
-		if(!$percentage)  $percentage = ''; */
-		
-		$data['resource_type_selection'] = $resource_type_selection;
-		$data['check_condition'] = $check_condition;
-		$data['percentage'] = $percentage;
-		
-		
 		$master = array();
 		$timesheet_db = $this->load->database("timesheet",true);
 		if($this->input->post("month_year_from_date")){
@@ -39,7 +25,7 @@ class Resource_availability extends crm_controller {
 			$end_date = date("Y-m-t",strtotime($date));
 		}else{
 			$start_date = date("Y-m-01");
-			$end_date = date("Y-m-d");
+			$end_date = date("Y-m-t");
 		}
 		$where='';
 		$department_ids = $this->input->post("department_ids");
@@ -81,7 +67,7 @@ class Resource_availability extends crm_controller {
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
 		$qry = $timesheet_db->get($timesheet_db->dbprefix('department'));
-		$sql_data_qry = "SELECT v.department_name, v.name, v.username,concat(v.first_name,' ',v.last_name) as emp_name,
+		$sql_data_qry = "SELECT v.department_name, v.name, v.username,
 		ah.available_hours_month,ah.available_hours_day, 
 		v.status as emp_active_status , v.join_date,v.exit_date,  t.start_time, t.end_time, t.duration, if(t.resoursetype='Internal', 'Non-Billable',t.resoursetype) as resoursetype , t.proj_id,ep.title
 
@@ -89,15 +75,12 @@ class Resource_availability extends crm_controller {
 		left join v_emp_details v on v.username=t.uid  
 		left join enoah_available_hours ah on ah.dept_id=v.department_id
 		left join enoah_project ep on ep.proj_id=t.proj_id
-		WHERE t.start_time between '$start_date ' and '$end_date' $where 
+		WHERE t.start_time between '$start_date ' and '$end_date' $where
 		order by v.department_name, v.name,v.username";
 		//echo"<br>".$sql_data_qry; exit;
 		$qry_d = $timesheet_db->query($sql_data_qry);
 		$res_d = $qry_d->result();	
 		$arr_depts = array();
-		$check_array = array();
-		$check_user_array = array();
-		$arr_depts1 = array();
 		$arr_user_avail_set= array();
 		
 		// get all departments  from timesheet
@@ -110,13 +93,6 @@ class Resource_availability extends crm_controller {
 		$data['departments'] = $depts_res;
 		$timesheet_db->close();
 		
-		//echo '<pre>';print_r($res_d);exit;
-
-		foreach($res_d as $k => $v){
-			if($v->name == NULL) {$v->name="NA";}
-			$check_array[$v->department_name][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
-		}
-		//echo '<pre>';print_r($check_user_array);exit;
 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
 			
@@ -135,7 +111,7 @@ class Resource_availability extends crm_controller {
 					// count the no. of working hours and multiply by available_hours for that department
 					// this gives the summation of available hours
 					$month_join_date = $v->join_date;
-					$month_last_date = date("Y-m-d");					
+					$month_last_date = date("Y-m-t",strtotime($v->join_date));					
 					$no_of_working_days = $this->getWorkingDays($month_join_date,$month_last_date);
 					$users_available_hours = ($no_of_working_days*$v->available_hours_day);
 					//echo $v->username.$no_of_working_days;exit;
@@ -154,50 +130,18 @@ class Resource_availability extends crm_controller {
 				$arr_user_avail_set["user_avail_hours"][$v->username]["users_available_hours"]=$users_available_hours;
 			}else{
 				 $users_available_hours=$arr_user_avail_set["user_avail_hours"][$v->username]["users_available_hours"];
-			}	
+			}
 			
-			$billable_percentage[$v->username] = ($check_array[$v->department_name][$v->name][$v->username]['Billable']/$users_available_hours)*100;
+			$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
+			$arr_depts[$v->department_name]["skillwise"][$v->name][$v->resoursetype] += ($v->duration/60);
+			$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
+			$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
+			$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
 			
-			$non_billable_percentage[$v->username] = ($check_array[$v->department_name][$v->name][$v->username]['Non-Billable']/$users_available_hours)*100;
-
-			
-				if(!empty($resource_type_selection) && !empty($check_condition) && !empty($percentage))
-				{
-					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
-					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
-					
-					if($check_condition=='greater_than')
-					{
-						$condition = $value >= $percentage;
-					}else{
-						$condition = $value <= $percentage;
-					}
-
-					if($condition)
-					{
-						$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
-						$arr_depts[$v->department_name]["skillwise"][$v->name][$v->resoursetype] += ($v->duration/60);			
-						$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->username] = $v->emp_name;
-						$arr_depts[$v->department_name]["userwise"][$v->name][$v->username]['billable_percentage'] = number_format($billable_percentage,2);
-						$arr_depts[$v->department_name]["userwise"][$v->name][$v->username]['non_billable_percentage'] = number_format($non_billable_percentage,2);
-						$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
-						$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
-						$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
-					}
-				}else{
-					$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
-					$arr_depts[$v->department_name]["skillwise"][$v->name][$v->resoursetype] += ($v->duration/60);			
-					$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->username] = $v->emp_name;
-					$arr_depts[$v->department_name]["userwise"][$v->name][$v->username]['billable_percentage'] = number_format($billable_percentage,2);
-					$arr_depts[$v->department_name]["userwise"][$v->name][$v->username]['non_billable_percentage'] = number_format($non_billable_percentage,2);
-					$arr_depts[$v->department_name]["userwise"][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
-					$arr_depts[$v->department_name]["skill_based_available_hours"][$v->name][$v->username] = $users_available_hours;
-					$arr_depts[$v->department_name]["department_based_available_hours"][$v->username] = $users_available_hours;
-				}
+			$arr_depts[$v->department_name]["projectwise"][$v->username][$v->title] = $v->title;
+			$arr_depts[$v->department_name]["projuser"][$v->username][$v->title][$v->resoursetype] += ($v->duration/60);
 		}
-		
-		
-		
+
 		foreach($arr_depts as $dep_name=>$dept_arr){
 			foreach($dept_arr["department_based_available_hours"] as $dep_user_based){
 				$arr_depts[$dep_name]["summation_department_based_available_hours"]+= $dep_user_based;
@@ -218,7 +162,7 @@ class Resource_availability extends crm_controller {
 		$data['start_date'] = $start_date;
 		$data['end_date'] = $end_date;
 		$data['results']= $arr_depts;
-		$this->load->view("resource_availability",$data);
+		$this->load->view("resource_availability_grid",$data);
 	}
 	
 	function getWorkingDays($startDate, $endDate)
@@ -310,7 +254,7 @@ class Resource_availability extends crm_controller {
 			$end_date = date("Y-m-t",strtotime($date));
 		}else{
 			$start_date = date("Y-m-01");
-			$end_date = date("Y-m-d");
+			$end_date = date("Y-m-t");
 		}
 		$where='';
 		$department_ids = $this->input->post("department_ids");
@@ -339,10 +283,6 @@ class Resource_availability extends crm_controller {
 			}
 		}
 		
-		$resource_type_selection = $this->input->post("resource_type_selection");
-		$check_condition = $this->input->post("check_condition");
-		$percentage = $this->input->post("percentage");		
-		
 		//fetch departments master from timesheet db
 		$timesheet_db->order_by("department_name","asc");
 		$qry = $timesheet_db->get($timesheet_db->dbprefix('department'));
@@ -363,10 +303,6 @@ class Resource_availability extends crm_controller {
 		$arr_user_avail_set= array();
 		$timesheet_db->close();		
 
-		foreach($res_d as $k => $v){
-			if($v->name == NULL) {$v->name="NA";}
-			$check_array[$v->department_name][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
-		}		
 		
 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
@@ -386,7 +322,7 @@ class Resource_availability extends crm_controller {
 					// count the no. of working hours and multiply by available_hours for that department
 					// this gives the summation of available hours
 					$month_join_date = $v->join_date;
-					$month_last_date = date("Y-m-d");					
+					$month_last_date = date("Y-m-t",strtotime($v->join_date));					
 					$no_of_working_days = $this->getWorkingDays($month_join_date,$month_last_date);
 					$users_available_hours = ($no_of_working_days*$v->available_hours_day);
 					//echo $v->username.$no_of_working_days;exit;
@@ -445,7 +381,7 @@ class Resource_availability extends crm_controller {
 		$this->excel->getActiveSheet()->setCellValue('F1', 'Non Billable Hours');
 		$this->excel->getActiveSheet()->setCellValue('G1', 'Billable Hours (%)');
 		$this->excel->getActiveSheet()->setCellValue('H1', 'Non Billable Hours (%)');
-		//$this->excel->getActiveSheet()->setCellValue('I1', 'Is Member/Project');
+		$this->excel->getActiveSheet()->setCellValue('I1', 'Is Member/Project');
 		
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -456,7 +392,7 @@ class Resource_availability extends crm_controller {
 		$amt = 0;
 		foreach($arr_depts as $department_name => $depts)
 		{
-/* 			$total_availability = $depts['summation_department_based_available_hours'];
+			$total_availability = $depts['summation_department_based_available_hours'];
 			$total_billable_hrs = $depts['departmentwise']['Billable'];
 			$total_non_billable_hrs = $depts['departmentwise']['Non-Billable'];
 			$dept_skill_count = count($depts['skillwise']);
@@ -464,55 +400,50 @@ class Resource_availability extends crm_controller {
 			 
 			$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 			$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
- */
-			foreach($depts['skillwise'] as $skill_name => $skill){
-/* 				$skill_slug = str_replace(" ","",$skill_name);
-				
-				$total_availability = $depts[$skill_name]['summation_skill_based_available_hours'];
-				$total_billable_hrs = $skill['Billable'];
-				$total_non_billable_hrs = $skill['Non-Billable'];
-				
-				$dept_member_count = count($depts['skill_based_available_hours'][$skill_name]);
-				
-				$billable_percentage = (($total_billable_hrs/$total_availability)*100);
-				$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
- */
+
+/* 			$this->excel->getActiveSheet()->setCellValue('A'.$i,  $department_name." ($dept_skill_count) ($dept_member_count)");
+			$this->excel->getActiveSheet()->setCellValue('B'.$i, number_format($total_availability,2));
+			$this->excel->getActiveSheet()->setCellValue('C'.$i, number_format($total_billable_hrs,2));
+			$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_non_billable_hrs,2));
+			$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($billable_percentage,2).'%');
+			$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%'); */	
 			
-				foreach($depts['userwise'][$skill_name] as $username => $user)
-				{
-					$total_availability = $depts['department_based_available_hours'][$username];
-					 
-					$total_billable_hrs = $user['Billable'];
-					$total_non_billable_hrs = $user['Non-Billable'];
+			
+			//if(!empty($depts['skillwise']) && count($depts['skillwise'])>0)
+			//{
+				foreach($depts['skillwise'] as $skill_name => $skill){
+					$skill_slug = str_replace(" ","",$skill_name);
+					
+					$total_availability = $depts[$skill_name]['summation_skill_based_available_hours'];
+					$total_billable_hrs = $skill['Billable'];
+					$total_non_billable_hrs = $skill['Non-Billable'];
+					
+					$dept_member_count = count($depts['skill_based_available_hours'][$skill_name]);
 					
 					$billable_percentage = (($total_billable_hrs/$total_availability)*100);
 					$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
+			
+/* 					$this->excel->getActiveSheet()->setCellValue('A'.$i,  "----".$skill_name." ($dept_member_count)");
+					$this->excel->getActiveSheet()->setCellValue('B'.$i, number_format($total_availability,2));
+					$this->excel->getActiveSheet()->setCellValue('C'.$i, number_format($total_billable_hrs,2));
+					$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_non_billable_hrs,2));
+					$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($billable_percentage,2).'%');
+					$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($non_billable_percentage,2).'%'); */
 					
-					if(!empty($resource_type_selection) && !empty($check_condition) && !empty($percentage))
+					//echo '<pre>';print_r($depts['userwise'][$skill_name]);exit;
+				
+					foreach($depts['userwise'][$skill_name] as $username => $user)
 					{
-						if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage;}
-						else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage;} 
+						//echo '<pre>';print_r($user);
+						++$i;
+						$total_availability = $depts['department_based_available_hours'][$username];
+						 
+						$total_billable_hrs = $user['Billable'];
+						$total_non_billable_hrs = $user['Non-Billable'];
 						
-						if($check_condition=='greater_than')
-						{
-							$condition = $value >= $percentage;
-						}else{
-							$condition = $value <= $percentage;
-						}
-
-						if($condition)
-						{
-							$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
-							$this->excel->getActiveSheet()->setCellValue('B'.$i, $department_name);
-							$this->excel->getActiveSheet()->setCellValue('C'.$i, $skill_name);
-							$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_availability,2));
-							$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($total_billable_hrs,2));
-							$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
-							$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
-							$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
-							$i++;
-						}
-					}else{
+						$billable_percentage = (($total_billable_hrs/$total_availability)*100);
+						$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
+						
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $department_name);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $skill_name);
@@ -521,11 +452,32 @@ class Resource_availability extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
 						$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
-						$i++;
+						$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');
+						
+						++$i;
+						foreach($depts['projectwise'][$username] as $project)
+						{
+							$billable = $depts['projuser'][$username][$project]['Billable'];
+							$nonbillable = $depts['projuser'][$username][$project]['Non-Billable'];
+							
+							$billable = ($billable!='')?number_format($billable,2):'0.00';
+							$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+
+							$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
+							$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
+							$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
+							$this->excel->getActiveSheet()->setCellValue('D'.$i, '0');
+							$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
+							$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
+							$this->excel->getActiveSheet()->setCellValue('G'.$i, 'N/A');
+							$this->excel->getActiveSheet()->setCellValue('H'.$i, 'N/A');	
+							$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Project');	
+							$i++;
+						}
 					}
-					
 				}
-			}
+			//}
+			$i++;
 			$cnt++;	
 		} 
 		/*To build columns ends*/
