@@ -40,9 +40,6 @@ $(function(){
 				<input type="hidden" name="department_ids[]" value="" id="excel_departments" />
 				<input type="hidden" name="skill_ids[]" value="" id="excel_skills" />
 				<input type="hidden" name="member_ids[]" value="" id="excel_members" />
-				<input type="hidden" name="resource_type_selection" value="" id="excel_resource_type_selection" />
-				<input type="hidden" name="check_condition" value="" id="excel_check_condition" />
-				<input type="hidden" name="percentage" value="" id="excel_percentage" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				</form>
 			</div>
@@ -57,27 +54,6 @@ $(function(){
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
-						<div class="">
-							<span>Filter By: </span>
-							<div class="selectOPtshow1">
-								<select id="resource_type_selection" name="resource_type_selection"	>
-									<option  value="">All</option>
-									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
-									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
-								</select>	
-							</div>
-							<div class="selectOPtshow1">
-								<select id="check_condition" name="check_condition"	>
-									<option value="">All</option>
-									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">Greater than(>=)</option>
-									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">Less than(<=)</option>
-								</select>	
-							</div>
-							<div class="selectOPtshow1">
-								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" />
-							</div>								
-						</div>					
-					
 						<div class="filterrow-areaYear">
 							<span> Filter by Month/Year: </span>
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
@@ -167,9 +143,7 @@ $(function(){
 							$master[$department_name]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
 							$master[$department_name]['ReportsTo'] = 'null';
 							$master[$department_name]['expandRow'] = 'true';
-							$json .= json_encode($master[$department_name]).',';								
-						
-
+							$json .= json_encode($master[$department_name]).',';
 							//echo $department_name.'--'.count($depts['skillwise']);
 							
 							if(!empty($depts['skillwise']) && count($depts['skillwise'])>0)
@@ -199,10 +173,9 @@ $(function(){
 									$json .= json_encode($skill_arr[$skill_name]).',';
 								}
 							}
-							 
+							
 							if(count($depts['userwise'])>0 && !empty($depts['userwise']))
 							{
-								//sort($depts['userwise']);
 								foreach($depts['userwise'] as $skill_name => $user){
 									$skill_slug = str_replace(" ","",$skill_name);
 									foreach($user as $un => $u){
@@ -215,22 +188,22 @@ $(function(){
 										$non_billable_percentage = (($total_non_billable_hrs/$total_availability)*100);
 										
 										$user_arr[$un]['department_id'] = 'un'.$un;
-										$user_arr[$un]['name'] = $u[$un];
+										$user_arr[$un]['name'] = $un;
 										$user_arr[$un]['availability'] = number_format($total_availability,2);
 										$user_arr[$un]['billable'] = number_format($total_billable_hrs,2);
 										$user_arr[$un]['non_billable'] = number_format($total_non_billable_hrs,2);
 										$user_arr[$un]['billable_percentage'] = number_format($billable_percentage,2).'%';
 										$user_arr[$un]['non_billable_percentage'] = number_format($non_billable_percentage,2).'%';
-										//$user_arr[$un]['ReportsTo'] = 'skill'.$dept_slug.$skill_slug;
 										$user_arr[$un]['ReportsTo'] = 'skill'.$dept_slug.$skill_slug;
 										$user_arr[$un]['expandRow'] = 'true';
 										$json .= json_encode($user_arr[$un]).',';
 									}
 								}
 							}
-							
-							/*
-							 $i=0;
+							/* foreach($depts['projectwise'] as $un => $project){
+								$unique[$un] = array_unique($project);
+							} */
+							$i=0;
 							foreach($depts['projectwise'] as $un => $project){
 								foreach($project as $key => $proj){
 									
@@ -251,7 +224,7 @@ $(function(){
 									$project_arr[$un]['expandRow'] = 'true';
 									$json .= json_encode($project_arr[$un]).',';							
 								}
-							} */
+							}
 						} 
 					}
 					?>
@@ -431,11 +404,6 @@ function updateFields(){
 	$('#excel_departments').val($('#department_ids').val())
 	$('#excel_skills').val($('#skill_ids').val())
 	$('#excel_members').val($('#member_ids').val())
-	
-	$('#excel_percentage').val($('#percentage').val())
-	$('#excel_resource_type_selection').val($('#resource_type_selection').val())
-	$('#excel_check_condition').val($('#check_condition').val())
-	
 	$("#resource_availability_excel").submit();
 	return true;
 }
