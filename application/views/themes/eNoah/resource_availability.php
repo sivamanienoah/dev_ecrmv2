@@ -349,6 +349,7 @@ $(document).ready(function(){
 		var params = {'dept_ids':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
 		params[csrf_token_name] = csrf_hash_token;			
 		$('#skill_show_id').css('display','none');		
+		$('#member_show_id').css('display','none');		
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'report/resource_availability/get_skills',
