@@ -75,7 +75,7 @@ $(function(){
 								</select>	
 							</div>
 							<div class="selectOPtshowFilter2">
-								<input type="text" id="percentage" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
+								<input type="text" id="percentage" min="1" max="3" name="percentage" value="<?php echo (float)$percentage;?>" class="selefilterText" />
                                 </div>	
 							</div>								
 										
