@@ -74,7 +74,7 @@ $(function(){
 									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">(>)</option>
 									<option <?php if($check_condition=='less_than_equal'){ echo 'selected="selected"';}?> value="less_than">(<=)</option>
 									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">(<)</option>
-									<option <?php if($check_condition=='equal'){ echo 'selected="selected"';}?> value="less_than">(=)</option>
+									<option <?php if($check_condition=='equal'){ echo 'selected="selected"';}?> value="equal">(=)</option>
 								</select>	
 							</div>
 
