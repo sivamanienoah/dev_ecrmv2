@@ -542,7 +542,7 @@ class Resource_availability_detail extends crm_controller {
 								$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');
 								//$i++;
 								
-								++$i;
+								
 								foreach($depts['projectwise'][$username] as $project)
 								{
 									$billable = $depts['projuser'][$username][$project]['Billable'];
@@ -573,7 +573,7 @@ class Resource_availability_detail extends crm_controller {
 								$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
 								$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
 								$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');
-								++$i;
+								
 								foreach($depts['projectwise'][$username] as $project)
 								{
 									$billable = $depts['projuser'][$username][$project]['Billable'];
