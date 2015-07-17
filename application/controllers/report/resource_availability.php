@@ -174,8 +174,8 @@ class Resource_availability extends crm_controller {
 			
 				if(!empty($resource_type_selection) && !empty($check_condition) )
 				{
-					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
-					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
+					if($resource_type_selection == 'billable_percentage'){$value = number_format($billable_percentage[$v->username],2);}
+					else if($resource_type_selection == 'non_billable_percentage'){$value = number_format($non_billable_percentage[$v->username],2);}
 					else if($resource_type_selection == 'all'){ $value = ($non_billable_percentage[$v->username] || $billable_percentage[$v->username]);}
 					
 					if($check_condition=='greater_than_equal' && !empty($percentage))
@@ -548,8 +548,8 @@ class Resource_availability extends crm_controller {
 					
 					if(!empty($resource_type_selection) && !empty($check_condition))
 					{
-						if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage;}
-						else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage;} 
+						if($resource_type_selection == 'billable_percentage'){$value = number_format($billable_percentage,2);}
+						else if($resource_type_selection == 'non_billable_percentage'){$value = number_format($non_billable_percentage,2);} 
 						else if($resource_type_selection == 'all'){$value = ($billable_percentage || $non_billable_percentage);} 
 						
 						if($check_condition=='greater_than_equal'  && !empty($percentage))
@@ -566,6 +566,21 @@ class Resource_availability extends crm_controller {
 						}else if($check_condition=='all'){
 							$condition = $value > 0;
 						}
+						
+						if($resource_type_selection == 'all' && $check_condition != 'all' && !empty($percentage)){
+							if($check_condition=='greater_than_equal' && !empty($percentage))
+							{
+								$condition = (($billable_percentage >= $percentage) && ($non_billable_percentage >= $percentage));
+							}else if($check_condition=='greater_than' && !empty($percentage)){
+								$condition = (($billable_percentage > $percentage) && ($non_billable_percentage > $percentage));
+							}else if($check_condition=='less_than_equal' && !empty($percentage)){
+								$condition = (($billable_percentage <= $percentage) && ($non_billable_percentage <= $percentage));
+							}else if($check_condition=='less_than' && !empty($percentage)){
+								$condition = (($billable_percentage < $percentage) && ($non_billable_percentage < $percentage));
+							}else if($check_condition=='equal' && !empty($percentage)){
+								$condition = (($billable_percentage == $percentage) && ($non_billable_percentage == $percentage));
+							}
+						}						
 			
 						if($condition)
 						{
