@@ -576,6 +576,8 @@ class Resource_availability extends crm_controller {
 									$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Project');	
 									$i++;
 								}
+							}else{
+								$i++;
 							}
 						}
 					}else{
