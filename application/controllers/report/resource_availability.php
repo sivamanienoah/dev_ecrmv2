@@ -588,7 +588,7 @@ class Resource_availability extends crm_controller {
 						$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
 						$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
 						
-						if($project_wise_breakup){
+						if(!empty($project_wise_breakup)){
 							$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');	
 							++$i;
 							foreach($depts['projectwise'][$username] as $project)
