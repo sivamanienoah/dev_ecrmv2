@@ -65,7 +65,7 @@ $(function(){
 							<div class="selectOPtshowFilter">
                             	<span> Filter by Type: </span>
 								<select id="resource_type_selection" name="resource_type_selection"	>
-									<option  value="">All</option>
+									<option <?php if($check_condition=='all'){ echo 'selected="selected"';}?> value="all">All</option>
 									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
 									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
 								</select>	
