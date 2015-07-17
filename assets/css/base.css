@@ -2598,6 +2598,7 @@ margin-left: 6px;
     margin-left: 5px;
     margin-right: 14px; 
     width: 6%;
+	margin-top: 1px;
 
 }
 
@@ -2635,7 +2636,7 @@ width:90%;
 }
 
 .selectOPtshowFilter3 span{
-	padding-bottom:9px;	
+	padding-bottom:6px;	
 	float:left;
 	
 }
