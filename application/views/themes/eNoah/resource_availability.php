@@ -443,7 +443,12 @@ function updateFields(){
 	$('#excel_percentage').val($('#percentage').val())
 	$('#excel_resource_type_selection').val($('#resource_type_selection').val())
 	$('#excel_check_condition').val($('#check_condition').val())
-	$('#excel_project_wise_breakup').val($('#project_wise_breakup').val())
+	if($('#project_wise_breakup').attr("checked",'true')){
+		$('#excel_project_wise_breakup').val(1)	
+	}else{
+		$('#excel_project_wise_breakup').val(0)
+	}
+	
 	
 	$("#resource_availability_excel").submit();
 	return true;
