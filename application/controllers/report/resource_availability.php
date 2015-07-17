@@ -192,8 +192,7 @@ class Resource_availability extends crm_controller {
 					}else if($check_condition=='all'){
 						$condition = $value > 0;
 					}
-					echo $value.'<br>';
-
+					
 					if($condition)
 					{
 						$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
