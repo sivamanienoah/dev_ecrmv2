@@ -172,21 +172,21 @@ class Resource_availability extends crm_controller {
 			$non_billable_percentage[$v->username] = ($check_array[$v->department_name][$v->name][$v->username]['Non-Billable']/$users_available_hours)*100;
 
 			
-				if(!empty($resource_type_selection) && !empty($check_condition) && !empty($percentage))
+				if(!empty($resource_type_selection) && !empty($check_condition) )
 				{
 					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
 					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
 					
-					if($check_condition=='greater_than_equal')
+					if($check_condition=='greater_than_equal' && !empty($percentage))
 					{
 						$condition = $value >= $percentage;
-					}else if($check_condition=='greater_than'){
+					}else if($check_condition=='greater_than' && !empty($percentage)){
 						$condition = $value > $percentage;
-					}else if($check_condition=='less_than_equal'){
+					}else if($check_condition=='less_than_equal' && !empty($percentage)){
 						$condition = $value <= $percentage;
-					}else if($check_condition=='less_than'){
+					}else if($check_condition=='less_than' && !empty($percentage)){
 						$condition = $value < $percentage;
-					}else if($check_condition=='equal'){
+					}else if($check_condition=='equal' && !empty($percentage)){
 						$condition = $value == $percentage;
 					}else if($check_condition=='all'){
 						$condition = $value > 0;
