@@ -2644,3 +2644,6 @@ width:90%;
 	margin-left:3px;
 	
 }
+#department_ids_chzn input{
+	font-size:10px !important;
+}
