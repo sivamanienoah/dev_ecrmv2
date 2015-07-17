@@ -2446,7 +2446,7 @@ float:left;
 }
 .filterrow-areaYear div input[type="text"]
 {
-	height: 18px;
+	height: 19.5px;
     width: 100%;
 }
 .filterrow-areaYear div.filtemonYear{
@@ -2613,7 +2613,7 @@ float:left;
     border: 1px solid #aaaaaa;
     box-sizing: border-box;
     cursor: text;
-    height:28px;
+    height:29px;
     margin: 0;
     overflow: hidden;
     padding: 0;
@@ -2625,12 +2625,12 @@ float:left;
 	}
 	.selectOPtshowFilter select{
 		width:94%;
-		  height: 28px;	
+		  height: 29px;	
 		  border:1px solid #aaaaaa !important;
 	}
 	.selectOPtshowFilter1 select{
 width:90%;
-  height: 28px;
+  height: 29px;
   border:1px solid #aaaaaa !important;
 
 }
