@@ -443,7 +443,7 @@ function updateFields(){
 	$('#excel_percentage').val($('#percentage').val())
 	$('#excel_resource_type_selection').val($('#resource_type_selection').val())
 	$('#excel_check_condition').val($('#check_condition').val())
-	if($('#project_wise_breakup').attr("checked",'true')){
+	if($('#project_wise_breakup').prop('checked')==true){
 		$('#excel_project_wise_breakup').val(1)	
 	}else{
 		$('#excel_project_wise_breakup').val(0)
