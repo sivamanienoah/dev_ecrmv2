@@ -2466,6 +2466,7 @@ float:left;
 .filterrow-area-btn{
 	margin-left:4px;
 	float:left;
+	margin-top:2px;
 }
 .filterrow-area-btn div{
 	  clear: both;
