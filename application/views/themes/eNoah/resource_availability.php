@@ -60,7 +60,7 @@ $(function(){
 					<div class="filterGrid-area">
 						
                             <div class="selectOPtshowFilter3">                            
-								<input type="checkbox" id="project_wise_breakup" name="project_wise_breakup" value="1"  /><span>Show Project wise Breakup</span>
+								<input type="checkbox" <?php if($project_wise_breakup) { echo 'checked="checked"';} ?>id="project_wise_breakup" name="project_wise_breakup" value="1"  /><span>Show Project wise Breakup</span>
                             </div>	
 							<div class="selectOPtshowFilter">
                             	<span> Filter by Type: </span>
