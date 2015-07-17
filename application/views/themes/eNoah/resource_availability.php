@@ -71,6 +71,7 @@ $(function(){
 								</select>	
 							</div>
 							<div class="selectOPtshowFilter1">
+							<span></span>
 								<select id="check_condition" name="check_condition"	>
 									<option value="">All</option>
 									<option <?php if($check_condition=='greater_than_equal'){ echo 'selected="selected"';}?> value="greater_than_equal">(>=)</option>
