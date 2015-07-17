@@ -2617,7 +2617,7 @@ width:90%;
   border:1px solid #aaaaaa !important;
 
 }
-.selectOPtshowFilter span, .selectOPtshowFilter2 span{
+.selectOPtshowFilter span, .selectOPtshowFilter2 span, .filterrow-areaYear span{
 	padding-bottom:2px;	
 	float:left;
 }
