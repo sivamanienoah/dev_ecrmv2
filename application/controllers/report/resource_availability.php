@@ -14,7 +14,7 @@ class Resource_availability extends crm_controller {
 		$data = array();
 		$dept = array();
 		$master = array();
-		$data['page_heading'] = "Resource Availability - Summary";		
+		$data['page_heading'] = "Resource Availability";		
 		// get departments from master table
 		//echo '<pre>';print_r($_REQUEST);exit;
 		
