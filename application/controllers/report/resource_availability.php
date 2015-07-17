@@ -391,10 +391,10 @@ class Resource_availability extends crm_controller {
 		$arr_user_avail_set= array();
 		$timesheet_db->close();		
 
-		foreach($res_d as $k => $v){
+/* 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
 			$check_array[$v->department_name][$v->name][$v->username][$v->resoursetype] += ($v->duration/60);
-		}		
+		}	 */	
 		
 		foreach($res_d as $k => $v){
 			if($v->name == NULL) {$v->name="NA";}
