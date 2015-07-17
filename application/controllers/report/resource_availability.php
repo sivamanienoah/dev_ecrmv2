@@ -188,6 +188,8 @@ class Resource_availability extends crm_controller {
 						$condition = $value < $percentage;
 					}else if($check_condition=='equal'){
 						$condition = $value == $percentage;
+					}else if($check_condition=='all'){
+						$condition = $value > 0;
 					}
 
 					if($condition)
