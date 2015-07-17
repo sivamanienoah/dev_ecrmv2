@@ -176,6 +176,7 @@ class Resource_availability extends crm_controller {
 				{
 					if($resource_type_selection == 'billable_percentage'){$value = $billable_percentage[$v->username];}
 					else if($resource_type_selection == 'non_billable_percentage'){$value = $non_billable_percentage[$v->username];}
+					else if($resource_type_selection == 'all'){ $value = ($non_billable_percentage[$v->username] || $billable_percentage[$v->username]);}
 					
 					if($check_condition=='greater_than_equal' && !empty($percentage))
 					{
