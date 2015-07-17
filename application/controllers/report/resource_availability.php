@@ -193,6 +193,24 @@ class Resource_availability extends crm_controller {
 						$condition = $value > 0;
 					}
 					
+					$user_billable_percentage = $billable_percentage[$v->username];
+					$user_non_billable_percentage = $non_billable_percentage[$v->username];
+					
+					if($resource_type_selection == 'all' && $check_condition != 'all' && !empty($percentage)){
+						if($check_condition=='greater_than_equal' && !empty($percentage))
+						{
+							$condition = (($user_billable_percentage >= $percentage) && ($user_non_billable_percentage >= $percentage));
+						}else if($check_condition=='greater_than' && !empty($percentage)){
+							$condition = (($user_billable_percentage > $percentage) && ($user_non_billable_percentage > $percentage));
+						}else if($check_condition=='less_than_equal' && !empty($percentage)){
+							$condition = (($user_billable_percentage <= $percentage) && ($user_non_billable_percentage <= $percentage));
+						}else if($check_condition=='less_than' && !empty($percentage)){
+							$condition = (($user_billable_percentage < $percentage) && ($user_non_billable_percentage < $percentage));
+						}else if($check_condition=='equal' && !empty($percentage)){
+							$condition = (($user_billable_percentage == $percentage) && ($user_non_billable_percentage == $percentage));
+						}
+					}
+					
 					if($condition)
 					{
 						$arr_depts[$v->department_name]["departmentwise"][$v->resoursetype]  += ($v->duration/60);
@@ -548,7 +566,7 @@ class Resource_availability extends crm_controller {
 						}else if($check_condition=='all'){
 							$condition = $value > 0;
 						}
-
+			
 						if($condition)
 						{
 							$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
