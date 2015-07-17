@@ -43,6 +43,7 @@ $(function(){
 				<input type="hidden" name="resource_type_selection" value="" id="excel_resource_type_selection" />
 				<input type="hidden" name="check_condition" value="" id="excel_check_condition" />
 				<input type="hidden" name="percentage" value="" id="excel_percentage" />
+				<input type="hidden" name="project_wise_breakup" value="" id="excel_project_wise_breakup" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				</form>
 			</div>
@@ -59,7 +60,7 @@ $(function(){
 					<div class="filterGrid-area">
 						
                             <div class="selectOPtshowFilter3">                            
-								<input type="checkbox"  /><span>Show Project wise Breakup</span>
+								<input type="checkbox" id="project_wise_breakup" name="project_wise_breakup" value="1"  /><span>Show Project wise Breakup</span>
                             </div>	
 							<div class="selectOPtshowFilter">
                             	<span> Filter by Type: </span>
@@ -235,30 +236,29 @@ $(function(){
 									}
 								}
 							}
-							
-							/*
-							 $i=0;
-							foreach($depts['projectwise'] as $un => $project){
-								foreach($project as $key => $proj){
-									
-									$billable = $depts['projuser'][$un][$proj]['Billable'];
-									$nonbillable = $depts['projuser'][$un][$proj]['Non-Billable'];
-									
-									$billable = ($billable!='')?number_format($billable,2):'0.00';
-									$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
-									
-									$project_arr[$un]['department_id'] = 'project'.$un.$proj;
-									$project_arr[$un]['name'] = $proj;
-									$project_arr[$un]['availability'] = 'NA';
-									$project_arr[$un]['billable'] = $billable;
-									$project_arr[$un]['non_billable'] = $nonbillable;
-									$project_arr[$un]['billable_percentage'] = '-';
-									$project_arr[$un]['non_billable_percentage'] = '-';
-									$project_arr[$un]['ReportsTo'] =  'un'.$un;
-									$project_arr[$un]['expandRow'] = 'true';
-									$json .= json_encode($project_arr[$un]).',';							
+							if($project_wise_breakup){
+								foreach($depts['projectwise'] as $un => $project){
+									foreach($project as $key => $proj){
+										
+										$billable = $depts['projuser'][$un][$proj]['Billable'];
+										$nonbillable = $depts['projuser'][$un][$proj]['Non-Billable'];
+										
+										$billable = ($billable!='')?number_format($billable,2):'0.00';
+										$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+										
+										$project_arr[$un]['department_id'] = 'project'.$un.$proj;
+										$project_arr[$un]['name'] = $proj;
+										$project_arr[$un]['availability'] = 'NA';
+										$project_arr[$un]['billable'] = $billable;
+										$project_arr[$un]['non_billable'] = $nonbillable;
+										$project_arr[$un]['billable_percentage'] = '-';
+										$project_arr[$un]['non_billable_percentage'] = '-';
+										$project_arr[$un]['ReportsTo'] =  'un'.$un;
+										$project_arr[$un]['expandRow'] = 'true';
+										$json .= json_encode($project_arr[$un]).',';							
+									}
 								}
-							} */
+							}
 						} 
 					}
 					?>
@@ -443,6 +443,7 @@ function updateFields(){
 	$('#excel_percentage').val($('#percentage').val())
 	$('#excel_resource_type_selection').val($('#resource_type_selection').val())
 	$('#excel_check_condition').val($('#check_condition').val())
+	$('#excel_project_wise_breakup').val($('#project_wise_breakup').val())
 	
 	$("#resource_availability_excel").submit();
 	return true;
