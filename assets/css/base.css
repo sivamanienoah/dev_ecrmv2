@@ -2473,7 +2473,9 @@ float:left;
     
 }
 .filterrow-area span{
-	float:left;
+	float: left;
+    padding-bottom: 0;
+    padding-top: 2px;
 }
 .filterrow-area div{
 	  clear: both;
