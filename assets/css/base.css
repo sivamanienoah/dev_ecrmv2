@@ -2585,7 +2585,7 @@ float:left;
 width:5%;
 float:left;	
 margin-left: 6px;
-  padding-top: 14px;
+ 
 }
 .selectOPtshowFilter2{
  float: left;
@@ -2652,4 +2652,8 @@ width:90%;
 	color:#333333;
 	letter-spacing: 0.01em;
 	 font-family: Arial,Helvetica,sans-serif;
+}
+
+.selectOPtshowFilter1 > span {
+    margin: 15px;
 }
