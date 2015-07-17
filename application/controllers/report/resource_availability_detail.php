@@ -501,7 +501,7 @@ class Resource_availability_detail extends crm_controller {
 					foreach($depts['userwise'][$skill_name] as $username => $user)
 					{
 						//echo '<pre>';print_r($user);
-						++$i;
+						
 						$total_availability = $depts['department_based_available_hours'][$username];
 						 
 						$total_billable_hrs = $user['Billable'];
@@ -562,36 +562,35 @@ class Resource_availability_detail extends crm_controller {
 								}
 							}
 						}else{
-								$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
-								$this->excel->getActiveSheet()->setCellValue('B'.$i, $department_name);
-								$this->excel->getActiveSheet()->setCellValue('C'.$i, $skill_name);
-								$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_availability,2));
-								$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($total_billable_hrs,2));
-								$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
-								$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
-								$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
-								$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');
-								
-								
-								foreach($depts['projectwise'][$username] as $project)
-								{
-									$billable = $depts['projuser'][$username][$project]['Billable'];
-									$nonbillable = $depts['projuser'][$username][$project]['Non-Billable'];
-									
-									$billable = ($billable!='')?number_format($billable,2):'0.00';
-									$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+							$this->excel->getActiveSheet()->setCellValue('A'.$i, $user[$username]);
+							$this->excel->getActiveSheet()->setCellValue('B'.$i, $department_name);
+							$this->excel->getActiveSheet()->setCellValue('C'.$i, $skill_name);
+							$this->excel->getActiveSheet()->setCellValue('D'.$i, number_format($total_availability,2));
+							$this->excel->getActiveSheet()->setCellValue('E'.$i, number_format($total_billable_hrs,2));
+							$this->excel->getActiveSheet()->setCellValue('F'.$i, number_format($total_non_billable_hrs,2));
+							$this->excel->getActiveSheet()->setCellValue('G'.$i, number_format($billable_percentage,2).'%');
+							$this->excel->getActiveSheet()->setCellValue('H'.$i, number_format($non_billable_percentage,2).'%');
+							$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Member');
 
-									$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
-									$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
-									$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
-									$this->excel->getActiveSheet()->setCellValue('D'.$i, '0');
-									$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
-									$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
-									$this->excel->getActiveSheet()->setCellValue('G'.$i, 'N/A');
-									$this->excel->getActiveSheet()->setCellValue('H'.$i, 'N/A');	
-									$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Project');	
-									$i++;
-								}
+							foreach($depts['projectwise'][$username] as $project)
+							{
+								$billable = $depts['projuser'][$username][$project]['Billable'];
+								$nonbillable = $depts['projuser'][$username][$project]['Non-Billable'];
+								
+								$billable = ($billable!='')?number_format($billable,2):'0.00';
+								$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
+
+								$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
+								$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
+								$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
+								$this->excel->getActiveSheet()->setCellValue('D'.$i, '0');
+								$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
+								$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
+								$this->excel->getActiveSheet()->setCellValue('G'.$i, 'N/A');
+								$this->excel->getActiveSheet()->setCellValue('H'.$i, 'N/A');	
+								$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Project');	
+								$i++;
+							}
 						}
 					}
 				}
