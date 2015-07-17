@@ -2595,11 +2595,12 @@ margin-left: 6px;
 
 }
 .selectOPtshowFilter3{
-  float: left;
+    float: left;
     margin-left: 5px;
-    margin-right: 14px; 
-    width: 7%;
-	margin-top: 23px;
+    margin-right: 9px;
+    margin-top: 23px;
+    position: relative;
+    width: 8%;
 
 }
 
