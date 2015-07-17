@@ -59,7 +59,7 @@ $(function(){
 					<div class="filterGrid-area">
 						
                             <div class="selectOPtshowFilter3">                            
-								<input type="checkbox"  /><span>With Project</span>
+								<input type="checkbox"  /><span>Show Project wise Breakup</span>
                             </div>	
 							<div class="selectOPtshowFilter">
                             	<span> Filter by Type: </span>
