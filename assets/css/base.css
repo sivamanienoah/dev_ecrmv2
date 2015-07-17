@@ -2440,7 +2440,9 @@ float:left;
     
 }
 .filterrow-areaYear span{
-	float:left;
+	 float: left;
+    padding-bottom: 0;
+    padding-top: 2px;
 }
 .filterrow-areaYear div input[type="text"]
 {
@@ -2617,7 +2619,7 @@ width:90%;
   border:1px solid #aaaaaa !important;
 
 }
-.selectOPtshowFilter span, .selectOPtshowFilter2 span, .filterrow-areaYear span{
+.selectOPtshowFilter span, .selectOPtshowFilter2 span{
 	padding-bottom:2px;	
 	float:left;
 }
