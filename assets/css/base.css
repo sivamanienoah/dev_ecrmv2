@@ -2650,4 +2650,5 @@ width:90%;
 #department_ids_chzn input, #skill_ids_chzn input, #member_ids_chzn input{
 	font-size:10px !important;
 	color:#333333;
+	 font-family: Arial,Helvetica,sans-serif;
 }
