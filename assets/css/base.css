@@ -2470,7 +2470,7 @@ float:left;
 }
 .filterrow-area-btn .bttons{
 	 position: inherit;
-    top: 25px;
+    bottom: -23px;
 }
 .filterrow-area-btn div{
 	  clear: both;
