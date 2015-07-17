@@ -2532,12 +2532,12 @@ float:left;
 }
 .filterrow-area div.selectOPtshow{
 	position:absolute;
-	 margin-top: 14px;
+	 margin-top: 15px;
 	     width: 14.3%;
 }
 .filterrow-area div.selectOPtshow1{
 	position:absolute;
-	 margin-top: 13px;
+	 margin-top: 15px;
 	 width:13%;
 }
 #skill_ids_chzn{width:158px !important;}
