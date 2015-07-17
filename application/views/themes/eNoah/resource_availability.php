@@ -350,7 +350,8 @@ $(document).ready(function(){
 	
 	$("#check_condition").change(function(){
 		var val = $(this).val();
-		if(!val){
+		
+		if(val=='all'){
 			$("#percentage").val("");
 		}
 	})
