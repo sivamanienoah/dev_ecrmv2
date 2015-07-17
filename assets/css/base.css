@@ -2617,6 +2617,7 @@ width:90%;
   border:1px solid #aaaaaa !important;
 
 }
-.selectOPtshowFilter span{
-	margin-bottom:2px;	
+.selectOPtshowFilter span, selectOPtshowFilter2 span{
+	padding-bottom:2px;	
+	float:left;
 }
