@@ -2592,6 +2592,12 @@ float:left;
  margin-right: 14px;
 
 }
+.selectOPtshowFilter3{
+width:6%;
+float:left;	
+ margin-right: 14px;
+
+}
 
 .selectOPtshowFilter-width{
 width:100%;
@@ -2621,7 +2627,7 @@ width:90%;
   border:1px solid #aaaaaa !important;
 
 }
-.selectOPtshowFilter span, .selectOPtshowFilter2 span{
+.selectOPtshowFilter span, .selectOPtshowFilter2 span, .selectOPtshowFilter3 span{
 	padding-bottom:2px;	
 	float:left;
 }
