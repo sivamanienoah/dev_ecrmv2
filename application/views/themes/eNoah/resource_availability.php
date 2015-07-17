@@ -87,7 +87,7 @@ $(function(){
 							<span>Month/Year: </span>
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
-						<div class="selectOPtshowFilter2">
+						<div class="selectOPtshowFilter3">
                             <span>Width Project</span>
 								<input type="checkbox"  />
                             </div>	
