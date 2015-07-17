@@ -191,7 +191,7 @@ class Resource_availability extends crm_controller {
 					}else if($check_condition=='all'){
 						$condition = $value > 0;
 					}
-					echo $condition.'<br>';
+					
 
 					if($condition)
 					{
