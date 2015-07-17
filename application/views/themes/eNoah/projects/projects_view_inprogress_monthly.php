@@ -33,7 +33,7 @@ if (get_default_currency()) {
 			//$profitloss    = round($record['actual_worth_amt']-$total_cost);
 			//$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
 			$profitloss    = round($total_amount_inv_raised-$total_cost);
-			$profitlossPercent = round(($profitloss/$total_cost)*100);			
+			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);			
 			
 			switch ($record['rag_status']) {
 				case 1:
