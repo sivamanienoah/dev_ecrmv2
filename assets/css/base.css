@@ -2587,9 +2587,10 @@ margin-left: 6px;
   margin-top: 16px;
 }
 .selectOPtshowFilter2{
-width:4%;
-float:left;	
- margin-right: 14px;
+ float: left;
+    margin-left: 6px;
+    margin-right: 13px;
+    width: 4%
 
 }
 .selectOPtshowFilter3{
