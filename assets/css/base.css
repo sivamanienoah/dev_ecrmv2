@@ -2463,10 +2463,9 @@ float:left;
 	width:278px;
 	float:left;
 }
-.filterrow-area-btn{
-	margin-left:4px;
+.filterrow-area-btn{	
 	float:left;
-	margin-top:2px;
+	margin-top:23px;
 }
 .filterrow-area-btn div{
 	  clear: both;
@@ -2544,9 +2543,7 @@ float:left;
 #skill_ids_chzn{width:158px !important;}
 #member_ids_chzn{width:164px !important;}
 #department_ids_chzn{width:264px !important;}
-.bttons{
-	padding-top:20px;	
-}
+
 .default {
     width: auto !important;
 }
