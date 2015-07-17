@@ -2593,9 +2593,10 @@ float:left;
 
 }
 .selectOPtshowFilter3{
-width:6%;
-float:left;	
- margin-right: 14px;
+  float: left;
+    margin-left: 5px;
+    margin-right: 14px; 
+    width: 6%;
 
 }
 
