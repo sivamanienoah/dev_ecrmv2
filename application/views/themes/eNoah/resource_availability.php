@@ -65,7 +65,7 @@ $(function(){
 							<div class="selectOPtshowFilter">
                             	<span> Filter by Type: </span>
 								<select id="resource_type_selection" name="resource_type_selection"	>
-									<option <?php if($check_condition=='all'){ echo 'selected="selected"';}?> value="">Please Select</option>
+									<option <?php if($check_condition=='all'){ echo 'selected="selected"';}?> value="">Select</option>
 									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
 									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
 								</select>	
@@ -73,7 +73,7 @@ $(function(){
 							<div class="selectOPtshowFilter1">
 							<span></span>
 								<select id="check_condition" name="check_condition"	>
-									<option <?php if($check_condition=='all'){ echo 'selected="selected"';}?> value="">Please Select</option>
+									<option <?php if($check_condition=='all'){ echo 'selected="selected"';}?> value="">Select</option>
 									<option <?php if($check_condition=='greater_than_equal'){ echo 'selected="selected"';}?> value="greater_than_equal">(>=)</option>
 									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">(>)</option>
 									<option <?php if($check_condition=='less_than_equal'){ echo 'selected="selected"';}?> value="less_than">(<=)</option>
