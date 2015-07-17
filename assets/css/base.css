@@ -2473,9 +2473,7 @@ float:left;
     
 }
 .filterrow-area span{
-	float: left;
-    padding-bottom: 0;
-    padding-top: 2px;
+	float:left;
 }
 .filterrow-area div{
 	  clear: both;
@@ -2483,7 +2481,9 @@ float:left;
     
 }
 .filterrow-areaD span{
-	float:left;
+	float: left;
+    padding-bottom: 0;
+    padding-top: 2px;
 }
 .filterrow-areaD div{
 	  clear: both;
