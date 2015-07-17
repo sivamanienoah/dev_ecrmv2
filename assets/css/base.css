@@ -2628,7 +2628,12 @@ width:90%;
   border:1px solid #aaaaaa !important;
 
 }
-.selectOPtshowFilter span, .selectOPtshowFilter2 span, .selectOPtshowFilter3 span{
+.selectOPtshowFilter span, .selectOPtshowFilter2 span{
+	padding-bottom:2px;	
+	float:left;
+}
+
+.selectOPtshowFilter3 span{
 	padding-bottom:2px;	
 	float:left;
 }
