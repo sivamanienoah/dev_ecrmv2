@@ -599,24 +599,23 @@ class Resource_availability extends crm_controller {
 								$billable = ($billable!='')?number_format($billable,2):'0.00';
 								$nonbillable = ($nonbillable!='')?number_format($nonbillable,2):'0.00';
 
-								$this->excel->getActiveSheet()->setCellValue('A'.$i,  $project);
-								$this->excel->getActiveSheet()->setCellValue('B'.$i,  $department_name);
-								$this->excel->getActiveSheet()->setCellValue('C'.$i,  $skill_name);
-								$this->excel->getActiveSheet()->setCellValue('D'.$i, '0');
-								$this->excel->getActiveSheet()->setCellValue('E'.$i, $billable);
-								$this->excel->getActiveSheet()->setCellValue('F'.$i, $nonbillable);
-								$this->excel->getActiveSheet()->setCellValue('G'.$i, 'N/A');
-								$this->excel->getActiveSheet()->setCellValue('H'.$i, 'N/A');	
-								$this->excel->getActiveSheet()->setCellValue('I'.$i, 'Project');	
+								$this->excel->getActiveSheet()->setCellValue('A'.$i,$project);
+								$this->excel->getActiveSheet()->setCellValue('B'.$i,$department_name);
+								$this->excel->getActiveSheet()->setCellValue('C'.$i,$skill_name);
+								$this->excel->getActiveSheet()->setCellValue('D'.$i,'0');
+								$this->excel->getActiveSheet()->setCellValue('E'.$i,$billable);
+								$this->excel->getActiveSheet()->setCellValue('F'.$i,$nonbillable);
+								$this->excel->getActiveSheet()->setCellValue('G'.$i,'N/A');
+								$this->excel->getActiveSheet()->setCellValue('H'.$i,'N/A');	
+								$this->excel->getActiveSheet()->setCellValue('I'.$i,'Project');	
 								$i++;
 							}
-						}						
+						}
 					}
-					
 				}
 			}
 			$cnt++;	
-		} 
+		}
 		/*To build columns ends*/
 		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
  
