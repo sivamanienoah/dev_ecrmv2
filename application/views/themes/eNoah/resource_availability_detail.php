@@ -32,7 +32,7 @@ $(function(){
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
 			<div class="buttons export-to-excel">
-				<form onsubmit="return updateFields()" action="<?php echo base_url().'report/resource_availability/excelExport/'?>" name="resource_availability_excel" id="resource_availability_excel"  method="post">
+				<form onsubmit="return updateFields()" action="<?php echo base_url().'report/resource_availability_detail/excelExport/'?>" name="resource_availability_excel" id="resource_availability_excel"  method="post">
 				<button  type="submit" id="excel-1" class="positive">
 					Export to Excel
 				</button>
@@ -40,6 +40,9 @@ $(function(){
 				<input type="hidden" name="department_ids[]" value="" id="excel_departments" />
 				<input type="hidden" name="skill_ids[]" value="" id="excel_skills" />
 				<input type="hidden" name="member_ids[]" value="" id="excel_members" />
+				<input type="hidden" name="resource_type_selection" value="" id="excel_resource_type_selection" />
+				<input type="hidden" name="check_condition" value="" id="excel_check_condition" />
+				<input type="hidden" name="percentage" value="" id="excel_percentage" />				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				</form>
 			</div>
@@ -50,16 +53,42 @@ $(function(){
  
 		<div id="advance_filters" style="float:left;width:100%;" >
 		
-				<form action="<?php echo site_url('report/resource_availability')?>" name="resource_availability" id="resource_availability"  method="post">
+				<form action="<?php echo site_url('report/resource_availability_detail')?>" name="resource_availability" id="resource_availability"  method="post">
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
+						
+                            
+							<div class="selectOPtshowFilter">
+                            	<span> Filter by Type: </span>
+								<select id="resource_type_selection" name="resource_type_selection"	>
+									<option  value="">All</option>
+									<option <?php if($resource_type_selection=='billable_percentage'){ echo 'selected="selected"';}?> value="billable_percentage">Billable</option>
+									<option <?php if($resource_type_selection=='non_billable_percentage'){ echo 'selected="selected"';}?>  value="non_billable_percentage">Non Billable</option>
+								</select>	
+							</div>
+							<div class="selectOPtshowFilter1">
+								<select id="check_condition" name="check_condition"	>
+									<option value="">All</option>
+									<option <?php if($check_condition=='greater_than_equal'){ echo 'selected="selected"';}?> value="greater_than_equal">(>=)</option>
+									<option <?php if($check_condition=='greater_than'){ echo 'selected="selected"';}?> value="greater_than">(>)</option>
+									<option <?php if($check_condition=='less_than_equal'){ echo 'selected="selected"';}?> value="less_than">(<=)</option>
+									<option <?php if($check_condition=='less_than'){ echo 'selected="selected"';}?> value="less_than">(<)</option>
+									<option <?php if($check_condition=='equal'){ echo 'selected="selected"';}?> value="equal">(=)</option>
+								</select>	
+							</div>
+
+							<div class="selectOPtshowFilter2">
+                            <span>(%)</span>
+								<input type="text" id="percentage" maxlength="5" name="percentage" value="<?php echo (!empty($percentage))?(float)$percentage:'';;?>" class="selefilterText" />
+                                </div>	
+					
 						<div class="filterrow-areaYear">
-							<span> Filter by Month/Year: </span>
+							<span>Month/Year: </span>
 							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>						
 						</div>
 						
-						<div class="filterrow-area">
+						<div class="filterrow-areaD">
 							<span> Department: </span>
 							<div class="selectOPt"><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
@@ -99,7 +128,7 @@ $(function(){
 						<div class="filterrow-area-btn bttn-area">
 							<div class="bttons">
 								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
-								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
+								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability_detail'?>'" />
 							</div>								
 						</div>
 					</div>
@@ -316,10 +345,11 @@ $(document).ready(function(){
 		var ids = $(this).val();
 		var params = {'dept_ids':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
 		params[csrf_token_name] = csrf_hash_token;			
-		$('#skill_show_id').css('display','none');		
+		$('#skill_show_id').css('display','none');	
+		$('#member_show_id').css('display','none');				
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'report/resource_availability/get_skills',
+			url: site_base_url+'report/resource_availability_detail/get_skills',
 			data: params,
 			success: function(data) {
 				if(data){
@@ -336,7 +366,7 @@ $(document).ready(function(){
 						$("#skill_ids").trigger("liszt:updated");
 						$.ajax({
 							type: 'POST',
-							url: site_base_url+'report/resource_availability/get_members',
+							url: site_base_url+'report/resource_availability_detail/get_members',
 							data: params,
 							success: function(members) {
 								if(members){
@@ -404,6 +434,9 @@ function updateFields(){
 	$('#excel_departments').val($('#department_ids').val())
 	$('#excel_skills').val($('#skill_ids').val())
 	$('#excel_members').val($('#member_ids').val())
+	$('#excel_percentage').val($('#percentage').val())
+	$('#excel_resource_type_selection').val($('#resource_type_selection').val())
+	$('#excel_check_condition').val($('#check_condition').val())	
 	$("#resource_availability_excel").submit();
 	return true;
 }
