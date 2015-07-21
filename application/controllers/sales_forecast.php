@@ -274,11 +274,12 @@ class Sales_forecast extends crm_controller {
 		$order = array('lead_title'=>'asc');
 		
 		if($post_data['category'] == 1) {
-			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'1', 'pjt_status'=>'0');
+			$wh_condn = array('custid_fk'=>$post_data['custid'], 'pjt_status'=>'0');
+			$or_where = '(lead_status=1 or lead_status=4)';
 		} else if ($post_data['category'] == 2) {
-			// $wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
-			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4');
-			$or_where = '(pjt_status=0 or pjt_status=1)';
+			$wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4', 'pjt_status'=>'1');
+			/* $wh_condn = array('custid_fk'=>$post_data['custid'], 'lead_status'=>'4');
+			$or_where = '(pjt_status=0 or pjt_status=1)'; */
 		} else {
 			$wh_condn = array('custid_fk'=>$post_data['custid']);
 		}
