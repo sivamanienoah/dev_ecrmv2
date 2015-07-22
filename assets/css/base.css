@@ -2193,8 +2193,11 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .search-table button {height: 21px;}
 .search-table input {height: 13.8px;}
 
-.folder-scroll {overflow: scroll !important; max-height:80% !important;
-	top:10px !important;}
+.folder-scroll {  height: auto !important;
+    max-height: 80% !important;
+    overflow-x: hidden;
+    overflow-y: scroll !important;
+    top: 10px !important;}
 .blockUI.blockMsg.blockPage.assign-user, .blockUI.blockMsg.blockPage.no-scroll {overflow: visible !important;}
 /*sales forecast dashboard*/
 #forecast_entity_chart .jqplot-title, #actual_entity_chart .jqplot-title, #forecast_compare_chart .jqplot-title {display:none;}
