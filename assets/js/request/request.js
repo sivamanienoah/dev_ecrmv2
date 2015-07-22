@@ -97,6 +97,7 @@ function create_folder(leadid, fparent_id) {
 				message: $('#create-folder'), 
 				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
 			});
+			$( "#create-folder" ).parent().addClass( "folder-scroll" );
 		}
 	});
 	return false;
