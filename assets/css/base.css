@@ -2193,7 +2193,7 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .search-table button {height: 21px;}
 .search-table input {height: 13.8px;}
 
-.blockUI.blockMsg.blockPage {overflow: scroll !important; height:80% !important;
+.folder-scroll {overflow: scroll !important; max-height:80% !important;
 	top:10px !important;}
 .blockUI.blockMsg.blockPage.assign-user, .blockUI.blockMsg.blockPage.no-scroll {overflow: visible !important;}
 /*sales forecast dashboard*/
