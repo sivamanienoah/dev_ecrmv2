@@ -112,7 +112,7 @@ class Userlogin extends crm_controller {
 	
 	function process_login()
 	{
-		$SSO_Status = $this->config->item('IS_SSO'); 
+		$SSO_Status = $this->config->item('IS_SSO');
 		$userdata = $this->login_model->process_login($this->input->post('email'), $this->input->post('password'));
 
 		if($userdata['login_error_code'] > 0) {
