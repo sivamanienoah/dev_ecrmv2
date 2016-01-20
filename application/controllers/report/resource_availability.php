@@ -68,10 +68,10 @@ class Resource_availability extends crm_controller {
 				$where .= " and v.skill_id in ($sids)";
 			}
 			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids)  and t.start_time between '$start_date' and '$end_date' group by
-			v.skill_id order by v.name asc");			
-			$data['skill_ids_selected'] = $qry->result();			
-			
+			v.skill_id order by v.name asc");
+			$data['skill_ids_selected'] = $qry->result();
 		}
+		
 
 		$member_ids = $this->input->post("member_ids");
 		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)){
