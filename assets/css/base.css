@@ -2432,18 +2432,21 @@ float:left;
 	border:1px solid #aaaaaa;
 }
 .filterrow-areaYear{
-	  float: left;
+	float: left;
     margin-right: 14px;
     width: 6%;
-	
+}
+.filterrow-areaYear{
+	float: left;
+    margin-right: 14px;
+    width: 6%;
 }
 .filterrow-areaYear div{
-	  clear: both;
+	clear: both;
     float: left;
-    
 }
 .filterrow-areaYear span{
-	 float: left;
+	float: left;
     padding-bottom: 0;
     padding-top: 2px;
 }
@@ -2458,6 +2461,37 @@ float:left;
     width: 89%;
 	   margin-right: 3px;
 }
+/**/
+.profilterrow-areaYear{
+	float: left;
+    margin-right: 14px;
+    width: 6%;
+}
+.profilterrow-areaYear{
+	float: left;
+    margin-right: 30px;
+    width: 6%;
+}
+.profilterrow-areaYear div{
+	clear: both;
+    float: left;
+}
+.profilterrow-areaYear span{
+	float: left;
+    padding-bottom: 0;
+    padding-top: 2px;
+}
+.profilterrow-areaYear div input[type="text"]
+{
+	height: 18.5px;
+    width: 100%;
+}
+.profilterrow-areaYear div.filtemonYear{
+	clear: both;
+    float: left;
+    width: 80px;
+	margin-right: 3px;
+}
 .filterrow-area{
 	width:170px;
 	float:left;
@@ -2469,24 +2503,21 @@ float:left;
 .filterrow-area-btn{	
 	float:left;
 	position:relative;
-	
 }
 .filterrow-area-btn .bttons{
-	 position: inherit;
-    bottom: -23px;
+	position: inherit;
+	bottom: -23px;
 }
 .filterrow-area-btn div{
-	  clear: both;
+	clear: both;
     float: left;
-    
 }
 .filterrow-area span{
 	float:left;
 }
 .filterrow-area div{
-	  clear: both;
+	clear: both;
     float: left;
-    
 }
 .filterrow-areaD span{
 	float: left;

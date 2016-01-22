@@ -3382,36 +3382,7 @@ HDOC;
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
 					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
 				}
-				//echo $rec['lead_id'].'---'.$total_amount_inv_raised.'<br>';
-				/* if(count($timesheet)>0) {
-					foreach($timesheet as $ts) {
-						$costdata = array();
-						if(isset($ts['cost'])) {
-							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-							$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-						} else {
-							$costdata = $this->project_model->get_latest_cost($ts['username']);
-							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
-							$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$this->default_cur_id]);
-							$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-						}
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
-					}
-				} */
 				
-				// if(count($timesheet)>0) {
-					// foreach($timesheet as $ts) {
-						// if(isset($ts['cost'])) {
-							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-							// $rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
-							// $data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
-						// }
-					// }
-				// }
 				$total_billable_hrs = 0;
 				$total_internal_hrs = 0;
 				$total_non_billable_hrs = 0;
@@ -3438,33 +3409,6 @@ HDOC;
 				
 				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
-				//echo $rec['lead_id'].'---'.$total_amount_inv_raised.'<br>';
-				// if(!empty($data['timesheet_data'])) {
-				
-					// $res = $this->calcActualProjectCost($data['timesheet_data']);
-					// echo "<pre>"; print_r($res); exit;
-					// if($res['total_cost']>0) {
-						// $total_cost = $res['total_cost'];
-					// }
-					// if($res['total_hours']>0) {
-						// $total_hours = $res['total_hours'];
-					// }
-					// if($res['total_billable_hrs']>0) {
-						// $total_billable_hrs = $res['total_billable_hrs'];
-					// }
-					// if($res['total_internal_hrs']>0) {
-						// $total_internal_hrs = $res['total_internal_hrs'];
-					// }
-					// if($res['total_non_billable_hrs']>0) {
-						// $total_non_billable_hrs = $res['total_non_billable_hrs'];
-					// }
-				// }
-
-				/* if(!empty($rec['pjt_id'])) {
-					$timesheet_project_type = $this->project_model->get_timesheet_project_type($rec['pjt_id']);
-					if(!empty($timesheet_project_type))
-					$project_type = $timesheet_project_type['project_type_name'];
-				} */
 				
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
@@ -3495,7 +3439,9 @@ HDOC;
 				$data['project_record'][$i]['total_amount_inv_raised'] 		= $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
+				
 			}
+			// echo "<pre>"; print_r($data['project_record']); exit;
 		endif;
 		return $data['project_record'];
 	}
