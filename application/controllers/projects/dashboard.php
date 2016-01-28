@@ -154,7 +154,9 @@ class Dashboard extends crm_controller
 		if(!empty($resource_type))
 		$this->db->where('t.resoursetype', $resource_type);
 		if(!empty($department_ids))
-		$this->db->where_in("t.skill_id", $department_ids);
+		$this->db->where_in("t.dept_id", $department_ids);
+		if(!empty($skill_ids))
+		$this->db->where_in("t.skill_id", $skill_ids);
 		if(empty($department_ids) && !empty($dept_type)) {
 			switch($dept_type) {
 				case 1:
@@ -182,7 +184,7 @@ class Dashboard extends crm_controller
 			$heading = 'eQAD - '.$resource_type;
 			break;
 		}
-		if(!empty($skill_ids) && !empty($department_ids)) {
+		if(!empty($skill_ids) && !empty($department_ids) && !empty($member_ids)) {
 			/* $pre_mids = implode(",",$member_ids);
 			if(!empty($pre_mids)) {
 				$mids = "'".implode("','",$member_ids)."'";
@@ -194,7 +196,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$data['resdata'] =  $query->result();
 		$data['heading'] =  $heading;
 		
