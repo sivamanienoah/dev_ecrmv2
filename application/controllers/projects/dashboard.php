@@ -214,7 +214,7 @@ class Dashboard extends crm_controller
 		$data['project_master'] = $project_master;
 		$timesheet_db->close();
 
-		$this->load->view('projects/project_dashboard_drilldata', $data);
+		$this->load->view('projects/dashboard_drilldata', $data);
 	}
 	
 	public function updt_crm_timesheet_data()
