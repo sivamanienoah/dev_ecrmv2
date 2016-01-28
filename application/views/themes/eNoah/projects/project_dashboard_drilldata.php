@@ -1,5 +1,6 @@
 <div class="clear"></div>
-<?php
+test<?php
+exit;
 $tbl_data  = array();
 $prac = array();
 $dept = array();
