@@ -119,7 +119,7 @@ class Dashboard extends crm_controller
 	*/
 	public function get_data()
 	{
-		echo "<pre>"; print_r($this->input->post()); exit;
+		// echo "<pre>"; print_r($this->input->post()); exit;
 		if($this->input->post("month_year_from_date")) {
 			$date = $this->input->post("month_year_from_date");
 			
@@ -196,7 +196,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$data['resdata'] =  $query->result();
 		$data['heading'] =  $heading;
 		
