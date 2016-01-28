@@ -51,19 +51,18 @@ $(function(){
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
-			<!--div class="buttons export-to-excel">
-				<form onsubmit="return updateFields()" action="<?php echo base_url().'report/resource_availability/excelExport/'?>" name="resource_availability_excel" id="resource_availability_excel"  method="post">
-				<button  type="submit" id="excel-1" class="positive">
+			<div class="buttons">
+				<form name="fliter_data" id="fliter_data" method="post">
+				<!--button  type="submit" id="excel-1" class="positive">
 					Export to Excel
-				</button>
-				<input type="hidden" name="month_year_from_date" value="" id="excel_date" />
-				<input type="hidden" name="department_ids[]" value="" id="excel_departments" />
-				<input type="hidden" name="skill_ids[]" value="" id="excel_skills" />
-				<input type="hidden" name="member_ids[]" value="" id="excel_members" />
-				<input type="hidden" name="check_condition" value="" id="excel_check_condition" />
+				</button-->
+				<input type="hidden" name="month_year_from_date" value="" id="hmonth_year" />
+				<input type="hidden" name="department_ids" value="" id="hdept_ids" />
+				<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
+				<input type="hidden" name="member_ids" value="" id="hmember_ids" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				</form>
-			</div-->
+			</div>
 			<div class="clearfix"></div>
 		</div>
 
@@ -137,7 +136,6 @@ $(function(){
 					$master      = array();
 					$user_arr    = array();
 					$project_arr = array();
-					
 					$bu_arr      = array();
 					$dept_arr    = array();
 					$prac_arr    = array();
@@ -210,10 +208,11 @@ $(function(){
 						$percent_hour = 0;
 						$percent_cost = 0;
 						foreach($bu_arr as $bkey=>$bval) {
+							ksort($bval);
 							foreach($bval as $rt=>$rtval){
 					?>
 								<tr>
-									<td><?= $rt; ?></td>
+									<td><a onclick="getData(<?php echo "'".$rt."'"; ?>,'1');return false;"><?= $rt; ?></a></td>
 									<td align="right"><?= round($rtval['hour'],2); ?></td>
 									<td align="right"><?= round($rtval['headcount'],2); ?></td>
 									<td align="right"><?= round($rtval['cost'],2); ?></td>
@@ -251,10 +250,11 @@ $(function(){
 						</thead>
 					</tr>
 					<?php
+						ksort($dept_arr['dept']['eADS']);
 						foreach($dept_arr['dept']['eADS'] as $adskey=>$adsval) {
 					?>
 								<tr>
-									<td><?= $adskey; ?></td>
+									<td><a onclick="getData(<?php echo "'".$adskey."'"; ?>,'2');return false;"><?= $adskey; ?></a></td>
 									<td align="right"><?= round($adsval['hour'],2); ?></td>
 									<td align="right"><?= round($adsval['headcount'],2); ?></td>
 									<td align="right"><?= round($adsval['cost'],2); ?></td>
@@ -291,10 +291,11 @@ $(function(){
 						</thead>
 					</tr>
 					<?php
+						ksort($dept_arr['dept']['eQAD']);
 						foreach($dept_arr['dept']['eQAD'] as $qadkey=>$qadval) {
 					?>
 								<tr>
-									<td><?= $qadkey; ?></td>
+									<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'3');return false;"><?= $qadkey; ?></a></td>
 									<td align="right"><?= round($qadval['hour'],2); ?></td>
 									<td align="right"><?= round($qadval['headcount'],2); ?></td>
 									<td align="right"><?= round($qadval['cost'],2); ?></td>
@@ -317,6 +318,10 @@ $(function(){
 				</table>
 				</div>
 				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
+				
 			</div>
         <?php 
 		} else {
@@ -341,14 +346,6 @@ $(function() {
     });
 });	
 $(document).ready(function(){
-	
-	$("#check_condition").change(function(){
-		var val = $(this).val();
-		
-		if(val==''){
-			$("#percentage").val("");
-		}
-	})
 	
 	$("#department_ids").change(function(){
 		var ids = $(this).val();
@@ -436,25 +433,40 @@ $(document).ready(function(){
 	 <?php if(count($skill_ids)<=0){?>
 		$("#member_show_id").css("display","none")
 	 <?php } ?>
+	 
+	 
 });
 
-function updateFields(){
-	$('#excel_date').val($('#month_year_from_date').val())
-	$('#excel_departments').val($('#department_ids').val())
-	$('#excel_skills').val($('#skill_ids').val())
-	$('#excel_members').val($('#member_ids').val())
-	
-	$('#excel_percentage').val($('#percentage').val())
-	$('#excel_check_condition').val($('#check_condition').val())
-	if($('#project_wise_breakup').prop('checked')==true){
-		$('#excel_project_wise_breakup').val(1)	
-	}else{
-		$('#excel_project_wise_breakup').val(0)
+function getData(resource_type, dept_type) 
+{
+	if($('#department_ids').val() == null) {
+		$('#hdept_ids').val('');
+	} else {
+		$('#hdept_ids').val($('#department_ids').val())
 	}
+	$('#hmonth_year').val($('#month_year_from_date').val())
 	
+	$('#hskill_ids').val($('#skill_ids').val())
+	$('#hmember_ids').val($('#member_ids').val())
 	
-	$("#resource_availability_excel").submit();
-	return true;
+	var formdata = $('#fliter_data').serialize();
+	
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'projects/dashboard/get_data/',                                                              
+		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type,
+		cache: false,
+		beforeSend:function() {
+			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		},
+		success: function(data) {
+			$('#drilldown_data').html(data);
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		}                                                                                   
+	});
 }
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
