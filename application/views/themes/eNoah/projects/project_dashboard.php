@@ -41,11 +41,8 @@ $(function(){
 	for (var selector in config) {
 		$(selector).chosen(config[selector]);
 	}
-	
-	
 });  
 </script>
-
 <div id="content">
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
@@ -58,6 +55,7 @@ $(function(){
 				</button-->
 				<input type="hidden" name="month_year_from_date" value="" id="hmonth_year" />
 				<input type="hidden" name="department_ids" value="" id="hdept_ids" />
+				<input type="hidden" name="practice_ids" value="" id="hprac_ids" />
 				<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
 				<input type="hidden" name="member_ids" value="" id="hmember_ids" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -88,7 +86,15 @@ $(function(){
 									<?php } }?>
 								</select></div>						
 						</div>
-						 
+						<div class="filterrow-areaP" id="practice_show_id">
+							<span> Practice: </span>
+							<div class="selectOPt"><select class="chzn-select" id="practice_ids" name="practice_ids[]" multiple="multiple">
+									<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)){?>
+											<?php foreach($practice_ids_selected as $prac){?>
+												<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
+									<?php } }?>
+								</select></div>						
+						</div>
 						<div class="filterrow-area" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
@@ -191,6 +197,13 @@ $(function(){
 					}
 				?>	
 			<div id="default_view">
+				<label>Group By</label>
+				<select name="filter_group_by" id="filter_group_by">
+					<option value='0'>Practice</option>
+					<option value='1'>Skill</option>
+					<option value='2'>Project</option>
+					<option value='3'>Resource</option>
+				</select>
 				<h4>IT</h4>
 				<table cellspacing="0" cellpadding="0" border="0" class="data-table bu-tbl">
 					<tr>
@@ -200,7 +213,7 @@ $(function(){
 							<th># Head Count</th>
 							<th>Total Cost</th>
 							<th>% of Hours</th>
-							<th>Total Cost</th>
+							<th>% of Cost</th>
 						</thead>
 					</tr>
 					<?php
@@ -212,7 +225,8 @@ $(function(){
 							foreach($bval as $rt=>$rtval){
 					?>
 								<tr>
-									<td><a onclick="getData(<?php echo "'".$rt."'"; ?>,'1');return false;"><?= $rt; ?></a></td>
+									<!--td><a onclick="getData(<?php #echo "'".$rt."'"; ?>,'1');return false;"><?php #echo $rt; ?></a></td-->
+									<td><?= $rt; ?></td>
 									<td align="right"><?= round($rtval['hour'],2); ?></td>
 									<td align="right"><?= round($rtval['headcount'],2); ?></td>
 									<td align="right"><?= round($rtval['cost'],2); ?></td>
@@ -246,7 +260,7 @@ $(function(){
 							<th># Head Count</th>
 							<th>Total Cost</th>
 							<th>% of Hours</th>
-							<th>Total Cost</th>
+							<th>% of Cost</th>
 						</thead>
 					</tr>
 					<?php
@@ -287,7 +301,7 @@ $(function(){
 							<th># Head Count</th>
 							<th>Total Cost</th>
 							<th>% of Hours</th>
-							<th>Total Cost</th>
+							<th>% of Cost</th>
 						</thead>
 					</tr>
 					<?php
@@ -350,16 +364,91 @@ $(document).ready(function(){
 	$("#department_ids").change(function(){
 		var ids = $(this).val();
 		var params = {'dept_ids':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
-		params[csrf_token_name] = csrf_hash_token;			
-		$('#skill_show_id').css('display','none');		
-		$('#member_show_id').css('display','none');		
+		params[csrf_token_name] = csrf_hash_token;
+		$('#skill_show_id').css('display','none');
+		$('#member_show_id').css('display','none');
+		$('#practice_show_id').css('display','none');
+		
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'report/resource_availability/get_skills',
+			url: site_base_url+'projects/dashboard/get_practices',
 			data: params,
-			success: function(data) {
-				if(data){
-					var skills = $.parseJSON(data);
+			success: function(practices) {
+				if(practices){
+					var prac_html='';
+					var prac = $.parseJSON(practices);
+					if(prac.length){
+						for(var i=0;i<prac.length;i++){
+							prac_html +='<option value="'+prac[i].practice_id+'">'+prac[i].practice_name+'</option>';
+						}	
+					}
+					$('#practice_show_id').css('display','block');
+					$('#practice_ids').html('');
+					$('#practice_ids').append(prac_html);
+					$("#practice_ids").trigger("liszt:updated");									
+				}
+				//skill
+				$.ajax({
+					type: 'POST',
+					url: site_base_url+'projects/dashboard/get_skills',
+					data: params,
+					success: function(data) {
+						if(data){
+							var skills = $.parseJSON(data);
+							if(skills.length){
+								var html='';
+								for(var i=0;i<skills.length;i++){
+									if(skills[i].name=='null' || skills[i].skill_id==0) skills[i].name = 'N/A';
+										html +='<option value="'+skills[i].skill_id+'">'+skills[i].name+'</option>';
+								}
+								$('#skill_show_id').css('display','block');
+								$('#skill_ids').html('');
+								$('#skill_ids').append(html)
+								$("#skill_ids").trigger("liszt:updated");
+								$.ajax({
+									type: 'POST',
+									url: site_base_url+'projects/dashboard/get_members',
+									data: params,
+									success: function(members) {
+										if(members){
+											var mem_html='';
+											var users = $.parseJSON(members);
+											if(users.length){
+												for(var i=0;i<users.length;i++){
+													mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+												}	
+											}
+											$('#member_show_id').css('display','block');
+											$('#member_ids').html('');
+											$('#member_ids').append(mem_html)
+											$("#member_ids").trigger("liszt:updated");									
+										}
+									}
+								});
+							}
+						}
+					}
+				});
+			}
+		});
+		return false;		
+	});
+	
+	//on change for practice id
+	$("#practice_ids").change(function(){
+		var ids  = $(this).val();
+		var d_ids = $('#department_ids').val();
+		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		params[csrf_token_name] = csrf_hash_token;
+		$('#skill_show_id').css('display','none');
+		$('#member_show_id').css('display','none');	
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'projects/dashboard/get_skills_by_practice',
+			data: params,
+			success: function(pdata) {
+				if(pdata){
+					var skills = $.parseJSON(pdata);
 					if(skills.length){
 						var html='';
 						for(var i=0;i<skills.length;i++){
@@ -372,7 +461,7 @@ $(document).ready(function(){
 						$("#skill_ids").trigger("liszt:updated");
 						$.ajax({
 							type: 'POST',
-							url: site_base_url+'report/resource_availability/get_members',
+							url: site_base_url+'projects/dashboard/get_members',
 							data: params,
 							success: function(members) {
 								if(members){
@@ -395,7 +484,8 @@ $(document).ready(function(){
 			}
 		});
 		return false;		
-	})
+	});
+	
 	
 	$('body').on('change','#skill_ids',function(){
 		var dids = $('#department_ids').val();
@@ -406,7 +496,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'report/resource_availability/get_skill_members',
+			url: site_base_url+'projects/dashboard/get_skill_members',
 			data: params,
 			success: function(members) {
 				if(members){
@@ -430,22 +520,27 @@ $(document).ready(function(){
 	 <?php if(count($department_ids)<=0){?>
 		$("#skill_show_id").css("display","none")
 	 <?php } ?>
+	 <?php if(count($practice_ids_selected)<=0){?>
+		$("#practice_show_id").css("display","none");
+	 <?php } ?>
 	 <?php if(count($skill_ids)<=0){?>
 		$("#member_show_id").css("display","none")
 	 <?php } ?>
-	 
-	 
 });
 
-function getData(resource_type, dept_type) 
+function getData(resource_type, dept_type)
 {
 	if($('#department_ids').val() == null) {
 		$('#hdept_ids').val('');
 	} else {
-		$('#hdept_ids').val($('#department_ids').val())
+		$('#hdept_ids').val($('#department_ids').val());
 	}
-	$('#hmonth_year').val($('#month_year_from_date').val())
-	
+	if($('#practice_ids').val() == null) {
+		$('#hprac_ids').val('');
+	} else {
+		$('#hprac_ids').val($('#practice_ids').val());
+	}
+	$('#hmonth_year').val($('#month_year_from_date').val());
 	$('#hskill_ids').val($('#skill_ids').val())
 	$('#hmember_ids').val($('#member_ids').val())
 	
@@ -454,7 +549,7 @@ function getData(resource_type, dept_type)
 	$.ajax({
 		type: "POST",
 		url: site_base_url+'projects/dashboard/get_data/',                                                              
-		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type,
+		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type+'&filter_group_by='+$('#filter_group_by').val(),
 		cache: false,
 		beforeSend:function() {
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');

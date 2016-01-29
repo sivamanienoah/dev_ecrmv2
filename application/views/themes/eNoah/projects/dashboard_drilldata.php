@@ -50,7 +50,7 @@ if(!empty($resdata)) {
 <table class="data-table">
 	<tr>
 		<thead>
-			<th>Practice</th><th>Departments</th><th>Skills</th><th>Project Code</th><th>User</th><th>Hour</th><th>Cost</th>
+			<th>Departments</th><th>Practice</th><th>Skills</th><th>Project Code</th><th>User</th><th>Hour</th><th>Cost</th>
 		</thead>
 	</tr>
 <?php
