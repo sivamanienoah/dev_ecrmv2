@@ -43,8 +43,8 @@ if(!empty($resdata)) {
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 		
 		//head count
-		if (!in_array($rec->username, $usercnt[$rec->dept_name][$rec->project_code]))
-		$usercnt[$rec->dept_name][$rec->project_code][] = $rec->username;
+		if (!in_array($rec->empname, $usercnt[$rec->dept_name][$rec->project_code]))
+		$usercnt[$rec->dept_name][$rec->project_code][] = $rec->empname;
 	}
 }
 ?>
@@ -66,16 +66,21 @@ if(!empty($tbl_data)) {
 		foreach($proj_ar as $p_name=>$user_ar) {
 			$i       = 0;
 			$res_cnt = 0;
+			$pj_tot_cost = 0;
 			$name    = isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
 			$res_cnt = count($usercnt[$dept][$p_name]);
 			$per_sub_hr = ($sub_tot[$dept][$p_name]['sub_tot_hour']/(160*$res_cnt))*100;
+			foreach($usercnt[$dept][$p_name] as $usr){
+				$pj_tot_cost += $cost_arr[$usr]*160;
+			}
+			$sub_tot_pj_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/$pj_tot_cost)*100;
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='15%' class='collapse'><span class='toggle'></span> ".strtoupper($name)."</th>
-				<th width='15%' class='rt-ali'>SUB TOTAL:</th>
+				<th width='15%' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
 				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 2)."</th>
 				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
 				<th width='5%' class='rt-ali'>".round($per_sub_hr, 2)."</th>
-				<th width='5%'></th>
+				<th width='5%' class='rt-ali'>".round($sub_tot_pj_cost, 2)."</th>
 			</tr>";
 			foreach($user_ar as $ukey=>$pval) {
 				$i=1;
@@ -96,12 +101,18 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
+	$perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
+	$overall_cost = 0;
+	foreach($cost_arr as $cs){
+		$overall_cost += $cs * 160;
+	}
+	$perc_tot_cost = ($tot_cost/$overall_cost)*100;
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' class='rt-ali'><b>TOTAL:</b></td>
-		<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
-		<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
-		<th width='5%'></th>
-		<th width='5%'></th>
+		<th width='5%' class='rt-ali'><b>".round($tot_hour, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($tot_cost, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 2)."</b></th>
 		</tr>";
 	echo "</table>";
 }

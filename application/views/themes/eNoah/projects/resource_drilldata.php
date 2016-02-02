@@ -59,21 +59,25 @@ if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='data-table'>";
 	foreach($tbl_data as $dept=>$us_ar) {
 		foreach($us_ar as $p_name=>$proj_ar) {
-			$i=0;
+			$i = 0;
+			$rs_sub_tot_hr   = 0;
+			$rs_sub_tot_cost = 0;
+			$rs_sub_tot_hr   = ($sub_tot[$dept][$p_name]['sub_tot_hour']/160)*100;
+			$rs_sub_tot_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/($cost_arr[$p_name]*160))*100;
 			echo "<tr data-depth='".$i."' class='collapse'>
 					<th class='collapse'><span class='toggle'></span> ".strtoupper($p_name)."</th>
 					<th width='15%' class='rt-ali'>SUB TOTAL:</th>
 					<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 2)."</th>
 					<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
-					<th width='5%'></th>
-					<th width='5%'></th>
+					<th width='5%' class='rt-ali'>".round($rs_sub_tot_hr, 2)."</th>
+					<th width='5%' class='rt-ali'>".round($rs_sub_tot_cost, 2)."</th>
 				</tr>";
 			foreach($proj_ar as $pkey=>$pval) {
 				$i=1;
 				$rate_pr_hr = isset($cost_arr[$p_name])?$cost_arr[$p_name]:0;
 				$name       = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
 				$per_hr   	= ($pval['hour']/160) * 100;
-				$per_cost 	= (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
+				$per_cost 	= (($pval['hour']*$rate_pr_hr)/160) * 100;
 				
 				echo "<tr data-depth='".$i."' class='collapse'>
 					<td width='15%'></td>
@@ -88,12 +92,18 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
+	$perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
+	$overall_cost = 0;
+	foreach($cost_arr as $cs){
+		$overall_cost += $cs * 160;
+	}
+	$perc_tot_cost = ($tot_cost/$overall_cost)*100;
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' class='rt-ali'><b>TOTAL:</b></td>
-		<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
-		<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
-		<th width='5%'></th>
-		<th width='5%'></th>
+		<th width='5%' class='rt-ali'><b>".round($tot_hour, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($tot_cost, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 2)."</b></th>
+		<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 2)."</b></th>
 		</tr>";
 	echo "</table>";
 }

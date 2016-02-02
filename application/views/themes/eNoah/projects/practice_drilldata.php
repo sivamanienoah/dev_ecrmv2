@@ -7,6 +7,8 @@ table.prac-dt th { text-align:center; }
 $tbl_data = array();
 $sub_tot  = array();
 $cost_arr = array();
+$pr_usercnt   = array();
+$sk_usercnt   = array();
 $skil_sub_tot = array();
 $prac = array();
 $dept = array();
@@ -50,12 +52,19 @@ if(!empty($resdata)) {
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
 		
+		//cost
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
+		
+		//usercount
+		if (!in_array($rec->empname, $pr_usercnt[$rec->dept_name][$rec->practice_name]))
+		$pr_usercnt[$rec->dept_name][$rec->practice_name][] = $rec->empname;
+	
+		if (!in_array($rec->empname, $sk_usercnt[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
+		$sk_usercnt[$rec->dept_name][$rec->practice_name][$rec->skill_name][] = $rec->empname;
 	}
 }
-// $json_data = json_encode($tbl_data); 
-// echo $json_data;
-// echo "<pre>"; print_r($skil_sub_tot); echo "</pre>";
+// echo "<pre>"; print_r($pr_usercnt); echo "</pre>";
+// echo "<pre>"; print_r($cost_arr); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Practice</h2>
 <?php
@@ -74,25 +83,43 @@ if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='data-table'>";
 	foreach($tbl_data as $dept=>$prac_ar) {
 		foreach($prac_ar as $pkey=>$skil_ar) {
-			$i=0;
+			$i = 0;
+			$pr_cnt = 0;
+			$pr_tot_cost = 0;
+			$sub_tot_pr_cost = 0;
+			$pr_cnt = count($pr_usercnt[$dept][$pkey]);
+			$sub_tot_pr_hr   = ($sub_tot[$dept][$pkey]['sub_tot_hour']/(160*$pr_cnt)) * 100;
+			foreach($pr_usercnt[$dept][$pkey] as $mem){
+				$pr_tot_cost += $cost_arr[$mem]*160;
+			}
+			$sub_tot_pr_cost = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$pr_tot_cost)*100;
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='43%' class='collapse' colspan='3'><span class='toggle'></span> <b>".strtoupper($pkey)."</b></th>
 				<th width='15%' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
-				<th class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 2)."</th>
-				<th class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 2)."</th>
-				<th class='rt-ali'></th>
-				<th class='rt-ali'></th>
+				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 2)."</th>
+				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 2)."</th>
+				<th width='5%' class='rt-ali'>".round($sub_tot_pr_hr, 2)."</th>
+				<th width='5%' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 			</tr>";
 			foreach($skil_ar as $skey=>$user_ar) {
-				$i=1;
+				$i = 1;
+				$sk_cnt = 0;
+				$sk_tot_cost = 0;
+				$sub_tot_sk_cost = 0;
+				$sk_cnt = count($sk_usercnt[$dept][$pkey][$skey]);
+				$sub_tot_sk_hr   = ($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_hour']/(160*$sk_cnt)) * 100;
+				foreach($sk_usercnt[$dept][$pkey][$skey] as $usr){
+					$sk_tot_cost += $cost_arr[$usr]*160;
+				}
+				$sub_tot_sk_cost = ($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_cost']/$sk_tot_cost)*100;
 				echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='16%'></td>
-						<td colspan='2'><span class='toggle'></span> ".$skey."</td>
-						<td class='rt-ali'>SUB TOTAL(SKILL WISE):</td>
-						<td class='rt-ali'>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_hour'], 2)."</td>
-						<td class='rt-ali'>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_cost'], 2)."</td>
-						<td class='rt-ali'></td>
-						<td class='rt-ali'></td>
+						<td colspan='2'><b><span class='toggle'></span> ".$skey."</b></td>
+						<td class='rt-ali'><b>SUB TOTAL(SKILL WISE):</b></td>
+						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_hour'], 2)."</b></td>
+						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_cost'], 2)."</b></td>
+						<td class='rt-ali'><b>".round($sub_tot_sk_hr, 2)."</b></td>
+						<td class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></td>
 					</tr>";
 				$i++;
 				foreach($user_ar as $ukey=>$proj_ar) {
@@ -124,12 +151,18 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
+	$perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
+	$overall_cost = 0;
+	foreach($cost_arr as $cs){
+		$overall_cost += $cs * 160;
+	}
+	$perc_tot_cost = ($tot_cost/$overall_cost)*100;
 	echo "<tr data-depth='0'>
 			<td width='80%' colspan='4' class='rt-ali'><b>TOTAL:</b></td>
-			<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
-			<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
-			<th width='5%'></th>
-			<th width='5%'></th>
+			<th width='5%' class='rt-ali'><b>".round($tot_hour, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($tot_cost, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 2)."</b></th>
 			</tr>";
 	echo "</table>";
 }

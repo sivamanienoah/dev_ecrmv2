@@ -6,6 +6,9 @@ table.prac-dt th{ text-align:center; }
 $tbl_data = array();
 $sub_tot  = array();
 $cost_arr = array();
+$pj_sub_tot   = array();
+$pj_usercnt   = array();
+$sk_usercnt   = array();
 $prac = array();
 $dept = array();
 $skil = array();
@@ -24,6 +27,7 @@ if(!empty($resdata)) {
 		else
 		$tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['cost'] = $rec->resource_duration_cost;
 	
+		//sub total by skillwise
 		if(isset($sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_hour']))
 		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_hour'] +=  $rec->duration_hours;
 		else
@@ -38,8 +42,27 @@ if(!empty($resdata)) {
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
 		
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
+	
+		//sub total by projectwise
+		if(isset($pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour']))
+		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] += $rec->duration_hours;
+		else 
+		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] = $rec->duration_hours;
+	
+		if(isset($pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost']))
+		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] += $rec->resource_duration_cost;
+		else 
+		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] = $rec->resource_duration_cost;
+		
+		//usercount
+		if (!in_array($rec->empname, $sk_usercnt[$rec->dept_name][$rec->skill_name]))
+		$sk_usercnt[$rec->dept_name][$rec->skill_name][] = $rec->empname;
+	
+		if (!in_array($rec->empname, $pj_usercnt[$rec->dept_name][$rec->skill_name][$rec->project_code]))
+		$pj_usercnt[$rec->dept_name][$rec->skill_name][$rec->project_code][] = $rec->empname;
 	}
 }
+// echo "<pre>"; print_r($pj_usercnt); echo "</pre>";
 // echo "<pre>"; print_r($cost_arr); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Skill</h2>
@@ -58,19 +81,45 @@ if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='data-table'>";
 	foreach($tbl_data as $dept=>$skil_ar) {
 		foreach($skil_ar as $skil_key=>$proj_ar) {
-			$i=0;
+			$i = 0;
+			$sk_cnt = 0;
+			$sk_tot_cost = 0;
+			$sub_tot_sk_cost = 0;
+			$sk_cnt = count($sk_usercnt[$dept][$skil_key]);
+			$sub_tot_sk_hr = ($sub_tot[$dept][$skil_key]['sub_tot_hour']/(160*$sk_cnt)) * 100;
+			foreach($sk_usercnt[$dept][$skil_key] as $usr){
+				$sk_tot_cost += $cost_arr[$usr]*160;
+			}
+			$sub_tot_sk_cost = ($sub_tot[$dept][$skil_key]['sub_tot_cost']/$sk_tot_cost)*100;
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='30%' class='collapse' colspan='2'><span class='toggle'></span> ".strtoupper($skil_key)."</th>
-				<th width='15%' class='rt-ali'>SUB TOTAL:</th>
-				<th class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 2)."</th>
-				<th class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 2)."</th>
-				<th></th>
-				<th></th>
+				<th width='15%' class='rt-ali'>SUB TOTAL(SKILL WISE):</th>
+				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 2)."</th>
+				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 2)."</th>
+				<th width='5%' class='rt-ali'><b>".round($sub_tot_sk_hr, 2)."</b></th>
+				<th width='5%' class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></th>
 			</tr>";
 			foreach($proj_ar as $pkey=>$user_ar) {
-				$i=1;
+				$i = 1;
+				$pj_cnt = 0;
+				$pj_tot_cost = 0;
+				$sub_tot_pj_cost = 0;
+				$pj_cnt = count($pj_usercnt[$dept][$skil_key][$pkey]);
+				$sub_tot_pj_hr   = ($skil_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_hour']/(160*$pj_cnt)) * 100;
+				foreach($pj_usercnt[$dept][$skil_key][$pkey] as $mem){
+					$pj_tot_cost += $cost_arr[$mem]*160;
+				}
+				$sub_tot_pj_cost = ($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_cost']/$pj_tot_cost)*100;
 				$name = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
-				echo "<tr data-depth='".$i."' class='collapse'><td width='15%'></td><td colspan='6'><span class='toggle'></span> ".$name."</td></tr>";
+				echo "<tr data-depth='".$i."' class='collapse'>
+						<td width='15%'></td>
+						<td><b><span class='toggle'></span> ".$name."</b></td>
+						<td class='rt-ali'><b>SUB TOTAL(PROJECT WISE):</b></td>
+						<td class='rt-ali'><b>".round($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_hour'], 2)."</b></td>
+						<td class='rt-ali'><b>".round($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_cost'], 2)."</b></td>
+						<td class='rt-ali'><b>".round($sub_tot_pj_hr, 2)."</b></td>
+						<td class='rt-ali'><b>".round($sub_tot_pj_cost, 2)."</b></td>
+					</tr>";
 				$i++;
 				foreach($user_ar as $ukey=>$uval){
 					$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
@@ -92,12 +141,18 @@ if(!empty($tbl_data)) {
 			}
 		}		
 	}
+	$perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
+	$overall_cost = 0;
+	foreach($cost_arr as $cs){
+		$overall_cost += $cs * 160;
+	}
+	$perc_tot_cost = ($tot_cost/$overall_cost)*100;
 	echo "<tr data-depth='0'>
 			<td width='80%' colspan='3' class='rt-ali'><b>TOTAL:</b></td>
-			<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
-			<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
-			<th width='5%'></th>
-			<th width='5%'></th>
+			<th width='5%' class='rt-ali'><b>".round($tot_hour, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($tot_cost, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 2)."</b></th>
 			</tr>";
 	echo "</table>";
 }
