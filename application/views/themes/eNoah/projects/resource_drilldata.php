@@ -5,11 +5,14 @@ table.prac-dt th{
 </style>
 <div class="clear"></div>
 <?php
-$tbl_data  = array();
+$tbl_data = array();
+$sub_tot = array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
+$tot_hour = 0;
+$tot_cost = 0;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
 		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'])) {
@@ -22,12 +25,22 @@ if(!empty($resdata)) {
 		else
 		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['cost'] = $rec->resource_duration_cost;
 	
+		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour']))
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour'] +=  $rec->duration_hours;
+		else
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour'] =  $rec->duration_hours;
+		
+		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost']))
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] +=  $rec->resource_duration_cost;
+		else
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] =  $rec->resource_duration_cost;
+	
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
 		
 	}
 }
-// echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($sub_tot); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Resource</h2>
 <?php
@@ -41,15 +54,24 @@ if(!empty($tbl_data)) {
 			<th width='5%'><b>% of HOUR</b></th>
 			<th width='5%'><b>% of COST</b></th>
 		</table>";
+	echo "<table id='project_dash' class='data-table'>";
 	foreach($tbl_data as $dept=>$us_ar) {
 		foreach($us_ar as $p_name=>$proj_ar) {
-			echo "<table class='data-table'>";
-			echo "<tr><th colspan='6'>".strtoupper($p_name)."</th></tr>";
+			$i=0;
+			echo "<tr data-depth='".$i."' class='collapse'>
+					<th class='collapse'><span class='toggle'></span> ".strtoupper($p_name)."</th>
+					<th width='15%' class='rt-ali'>SUB TOTAL:</th>
+					<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 2)."</th>
+					<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
+					<th width='5%'></th>
+					<th width='5%'></th>
+				</tr>";
 			foreach($proj_ar as $pkey=>$pval) {
+				$i=1;
 				$name = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
 				$per_hr = ($pval['hour']/160) * 100;
 				$per_cost = ($pval['cost']/160) * 100;
-				echo "<tr>
+				echo "<tr data-depth='".$i."' class='collapse'>
 					<td width='15%'></td>
 					<td width='15%'>".$name."</td>
 					<td width='5%' align='right'>".round($pval['hour'], 2)."</td>
@@ -58,9 +80,18 @@ if(!empty($tbl_data)) {
 					<td width='5%' align='right'>".round($per_cost, 2)."</td>
 				</tr>";
 				$per_hr = '';
+				$i++;
 			}
 		}
-		echo "</table>";
 	}
+	echo "<tr data-depth='0'>
+		<th width='80%' colspan='2' class='rt-ali'>TOTAL:</th>
+		<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
+		<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
+		<th width='5%'></th>
+		<th width='5%'></th>
+		</tr>";
+	echo "</table>";
 }
 ?>
+<script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
