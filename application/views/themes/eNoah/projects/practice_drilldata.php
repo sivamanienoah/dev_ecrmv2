@@ -100,7 +100,7 @@ if(!empty($tbl_data)) {
 		}
 	}
 	echo "<tr data-depth='0'>
-			<th width='80%' colspan='4' class='rt-ali'>TOTAL:</th>
+			<td width='80%' colspan='4' class='rt-ali'><b>TOTAL:</b></td>
 			<th width='5%' class='rt-ali'>".round($tot_hour, 2)."</th>
 			<th width='5%' class='rt-ali'>".round($tot_cost, 2)."</th>
 			<th width='5%'></th>
