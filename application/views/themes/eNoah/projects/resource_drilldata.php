@@ -6,7 +6,8 @@ table.prac-dt th{
 <div class="clear"></div>
 <?php
 $tbl_data = array();
-$sub_tot = array();
+$sub_tot  = array();
+$cost_arr = array();
 $prac = array();
 $dept = array();
 $skil = array();
@@ -38,9 +39,10 @@ if(!empty($resdata)) {
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
 		
+		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 	}
 }
-// echo "<pre>"; print_r($sub_tot); echo "</pre>";
+// echo "<pre>"; print_r($cost_arr); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Resource</h2>
 <?php
@@ -68,9 +70,11 @@ if(!empty($tbl_data)) {
 				</tr>";
 			foreach($proj_ar as $pkey=>$pval) {
 				$i=1;
-				$name = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
-				$per_hr = ($pval['hour']/160) * 100;
-				$per_cost = ($pval['cost']/160) * 100;
+				$rate_pr_hr = isset($cost_arr[$p_name])?$cost_arr[$p_name]:0;
+				$name       = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
+				$per_hr   	= ($pval['hour']/160) * 100;
+				$per_cost 	= (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
+				
 				echo "<tr data-depth='".$i."' class='collapse'>
 					<td width='15%'></td>
 					<td width='15%'>".$name."</td>

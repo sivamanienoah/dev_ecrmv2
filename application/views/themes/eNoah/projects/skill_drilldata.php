@@ -4,7 +4,8 @@ table.prac-dt th{ text-align:center; }
 <div class="clear"></div>
 <?php
 $tbl_data = array();
-$sub_tot = array();
+$sub_tot  = array();
+$cost_arr = array();
 $prac = array();
 $dept = array();
 $skil = array();
@@ -33,12 +34,13 @@ if(!empty($resdata)) {
 		else
 		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_cost'] =  $rec->resource_duration_cost;
 		
-	
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
+		
+		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 	}
 }
-// echo "<pre>"; print_r($sub_tot); echo "</pre>";
+// echo "<pre>"; print_r($cost_arr); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Skill</h2>
 <?php
@@ -71,8 +73,9 @@ if(!empty($tbl_data)) {
 				echo "<tr data-depth='".$i."' class='collapse'><td width='15%'></td><td colspan='6'><span class='toggle'></span> ".$name."</td></tr>";
 				$i++;
 				foreach($user_ar as $ukey=>$uval){
-					$per_hr = ($uval['hour']/160) * 100;
-					$per_cost = ($uval['cost']/160) * 100;
+					$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
+					$per_hr 	= ($uval['hour']/160) * 100;
+					$per_cost   = (($uval['hour']*$rate_pr_hr)/(160*$uval['hour'])) * 100;
 					echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='15%'></td>
 						<td width='15%'></td>
@@ -82,7 +85,8 @@ if(!empty($tbl_data)) {
 						<td width='5%' align='right'>".round($per_hr, 2)."</td>
 						<td width='5%' align='right'>".round($per_cost, 2)."</td>
 					</tr>";
-					$per_hr = '';
+					$per_hr 	= '';
+					$rate_pr_hr = 0;
 					$i++;
 				}
 			}

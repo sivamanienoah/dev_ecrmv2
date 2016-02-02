@@ -3,8 +3,11 @@ table.prac-dt th { text-align:center; }
 </style>
 <div class="clear"></div>
 <?php
+// echo "<pre>"; print_r($resdata); echo "</pre>"; exit;
 $tbl_data = array();
-$sub_tot = array();
+$sub_tot  = array();
+$cost_arr = array();
+$skil_sub_tot = array();
 $prac = array();
 $dept = array();
 $skil = array();
@@ -33,14 +36,26 @@ if(!empty($resdata)) {
 		} else {
 			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_cost'] =  $rec->resource_duration_cost;
 		}
+		
+		if(isset($skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour']))
+		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour'] += $rec->duration_hours;
+		else 
+		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour'] = $rec->duration_hours;
+	
+		if(isset($skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost']))
+		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost'] += $rec->resource_duration_cost;
+		else 
+		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost'] = $rec->resource_duration_cost;
 	
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
+		
+		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 	}
 }
 // $json_data = json_encode($tbl_data); 
 // echo $json_data;
-// echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
+// echo "<pre>"; print_r($skil_sub_tot); echo "</pre>";
 ?>
 <h2><?php echo $heading; ?> :: Group By - Practice</h2>
 <?php
@@ -62,15 +77,23 @@ if(!empty($tbl_data)) {
 			$i=0;
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='43%' class='collapse' colspan='3'><span class='toggle'></span> <b>".strtoupper($pkey)."</b></th>
-				<th width='15%' class='rt-ali'>SUB TOTAL:</th>
+				<th width='15%' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
 				<th class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 2)."</th>
 				<th class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 2)."</th>
-				<th></th>
-				<th></th>
+				<th class='rt-ali'></th>
+				<th class='rt-ali'></th>
 			</tr>";
 			foreach($skil_ar as $skey=>$user_ar) {
 				$i=1;
-				echo "<tr data-depth='".$i."' class='collapse'><td width='16%'></td><td colspan='7'><span class='toggle'></span> ".$skey."</td></tr>";
+				echo "<tr data-depth='".$i."' class='collapse'>
+						<td width='16%'></td>
+						<td colspan='2'><span class='toggle'></span> ".$skey."</td>
+						<td class='rt-ali'>SUB TOTAL(SKILL WISE):</td>
+						<td class='rt-ali'>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_hour'], 2)."</td>
+						<td class='rt-ali'>".round($skil_sub_tot[$dept][$pkey][$skey]['skil_sub_tot_cost'], 2)."</td>
+						<td class='rt-ali'></td>
+						<td class='rt-ali'></td>
+					</tr>";
 				$i++;
 				foreach($user_ar as $ukey=>$proj_ar) {
 					echo "<tr data-depth='".$i."' class='collapse'>
@@ -80,8 +103,9 @@ if(!empty($tbl_data)) {
 					</tr>";
 					$i++;
 					foreach($proj_ar as $p_name=>$pval) {
-						$per_hr = ($pval['hour']/160) * 100;
-						$per_cost = ($pval['cost']/160) * 100;
+						$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
+						$per_hr     = ($pval['hour']/160) * 100;
+						$per_cost   = (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
 						echo "<tr data-depth='".$i."' class='collapse'>
 							<td width='16%'></td>
 							<td width='12%'></td>
@@ -92,7 +116,8 @@ if(!empty($tbl_data)) {
 							<td width='5%' align='right' width='5%'>".round($per_hr, 2)."</td>
 							<td width='5%' align='right' width='5%'>".round($per_cost, 2)."</td>
 						</tr>";
-						$per_hr = '';
+						$per_hr     = '';
+						$rate_pr_hr = 0;
 						$i++;
 					}
 				}
