@@ -2500,6 +2500,10 @@ float:left;
 	width:277px;
 	float:left;
 }
+.filterrow-areaP {
+    float: left;
+    width: 190px;
+}
 .filterrow-area-btn{	
 	float:left;
 	position:relative;
@@ -2691,7 +2695,22 @@ width:90%;
 	letter-spacing: 0.01em;
 	 font-family: Arial,Helvetica,sans-serif;
 }
-
 .selectOPtshowFilter1 > span {
     margin: 15px;
 }
+#practice_ids_chzn{
+	width:180px !important;
+}
+#practice_ids_chzn input[type="text"]{
+	color:#333;
+	font-size:11px;
+}
+.selectOPt{
+	position:absolute;
+}
+/*project dashboard - drill down data*/
+#project_dash .collapse .toggle { background: url("../img/collapse.gif"); }
+#project_dash .expand .toggle { background: url("../img/expand.gif"); }
+#project_dash .toggle { height: 9px; width: 9px; display: inline-block; }
+#project_dash .rt-ali { text-align:right !important; }
+/*project dashboard - drill down data*/
