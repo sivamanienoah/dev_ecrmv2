@@ -221,12 +221,14 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
-		$data['resdata'] =  $query->result();
-		$data['heading'] =  $heading;
+		
+		$data['resdata'] 	   = $query->result();
+		$data['heading'] 	   = $heading;
+		$data['dept_type']     = $dept_type;
+		$data['resource_type'] = $resource_type;
 		
 		// get all projects from timesheet
-		$timesheet_db = $this->load->database("timesheet",true);
+		$timesheet_db = $this->load->database("timesheet", true);
 		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
 		if($proj_mas_qry->num_rows()>0){
 			$project_res = $proj_mas_qry->result();
@@ -237,9 +239,23 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
-		$filter_group_by = $this->input->post("filter_group_by");
 		$timesheet_db->close();
 		
+		$filter_group_by = $this->input->post("filter_group_by");
+		$filter_sort_by  = $this->input->post("filter_sort_by");
+		$filter_sort_val = $this->input->post("filter_sort_val");
+		
+		$data['filter_group_by'] = $this->input->post("filter_group_by");
+		if(isset($filter_sort_by) && !empty($filter_sort_by))
+		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
+		else
+		$data['filter_sort_by'] = 'asc';
+	
+		if(isset($filter_sort_val) && !empty($filter_sort_val))
+		$data['filter_sort_val'] = $this->input->post("filter_sort_val");
+		else
+		$data['filter_sort_val'] = 'hour';
+	
 		switch($this->input->post("filter_group_by")){
 			case 0:
 				$this->load->view('projects/practice_drilldata', $data);

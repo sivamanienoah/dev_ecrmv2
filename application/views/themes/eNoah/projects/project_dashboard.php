@@ -2,29 +2,13 @@
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
-.ui-datepicker-calendar {
-    display: none;
-    }
-.dept_section{
-	width:100%;
-	float:left;
-	margin:20px 0 0 0;
-	}
-.dept_section div{
-		width:49%;
-}
-.dept_section div:first-child{
-	margin-right:2%
-}
-table.bu-tbl th{
-	text-align:center;
-}
-table.bu-tbl{
-	width:70%;
-}
-table.bu-tbl-inr th{
-	text-align:center;
-}
+.ui-datepicker-calendar { display: none; }
+.dept_section{ width:100%; float:left; margin:20px 0 0 0; }
+.dept_section div{ width:49%; }
+.dept_section div:first-child{ margin-right:2% }
+table.bu-tbl th{ text-align:center; }
+table.bu-tbl{ width:70%; }
+table.bu-tbl-inr th{ text-align:center; }
 </style>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript">var this_is_home = true;</script>
@@ -197,13 +181,6 @@ $(function(){
 					}
 				?>	
 			<div id="default_view">
-				<label>Group By</label>
-				<select name="filter_group_by" id="filter_group_by">
-					<option value='0'>Practice</option>
-					<option value='1'>Skill</option>
-					<option value='2'>Project</option>
-					<option value='3'>Resource</option>
-				</select>
 				<h4>IT</h4>
 				<table cellspacing="0" cellpadding="0" border="0" class="data-table bu-tbl">
 					<tr>
@@ -335,7 +312,7 @@ $(function(){
 			</div>
 			<div class="clearfix"></div>
 			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
-				
+			
 			</div>
         <?php 
 		} else {
@@ -344,7 +321,6 @@ $(function(){
 		?>
 	</div>
 </div>
-<link rel="stylesheet" href="assets/js/jqwidgets/styles/jqx.base.css" type="text/css" />
 <script type="text/javascript">
 $(function() {
     $('#month_year_from_date').datepicker( {
@@ -515,21 +491,22 @@ $(document).ready(function(){
 			}
 		});
 	});
-	 $("#skill_ids").chosen({no_results_text: "Please select Department"}); 
-	 $("#member_ids").chosen({no_results_text: "Please select Skill"}); 
-	 <?php if(count($department_ids)<=0){?>
+	$("#skill_ids").chosen({no_results_text: "Please select Department"}); 
+	$("#member_ids").chosen({no_results_text: "Please select Skill"}); 
+	<?php if(count($department_ids)<=0){?>
 		$("#skill_show_id").css("display","none")
-	 <?php } ?>
-	 <?php if(count($practice_ids_selected)<=0){?>
+	<?php } ?>
+	<?php if(count($practice_ids_selected)<=0){?>
 		$("#practice_show_id").css("display","none");
-	 <?php } ?>
-	 <?php if(count($skill_ids)<=0){?>
+	<?php } ?>
+	<?php if(count($skill_ids)<=0){?>
 		$("#member_show_id").css("display","none")
-	 <?php } ?>
+	<?php } ?>
 });
 
 function getData(resource_type, dept_type)
 {
+	$('#filter_group_by').prop('selectedIndex',0);
 	if($('#department_ids').val() == null) {
 		$('#hdept_ids').val('');
 	} else {
@@ -549,9 +526,11 @@ function getData(resource_type, dept_type)
 	$.ajax({
 		type: "POST",
 		url: site_base_url+'projects/dashboard/get_data/',                                                              
-		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type+'&filter_group_by='+$('#filter_group_by').val(),
+		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type+'&filter_group_by=0',
 		cache: false,
 		beforeSend:function() {
+			$('#filter_group_by').prop('selectedIndex',0);
+			$('#drildown_filter_area').hide();
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 			$('#drilldown_data').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
@@ -559,6 +538,7 @@ function getData(resource_type, dept_type)
 		success: function(data) {
 			$('#drilldown_data').html(data);
 			$('#drilldown_data').show();
+			$('#drildown_filter_area').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		}                                                                                   
 	});
