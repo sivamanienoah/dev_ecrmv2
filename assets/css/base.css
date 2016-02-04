@@ -2713,4 +2713,5 @@ width:90%;
 #project_dash .expand .toggle { background: url("../img/expand.gif"); }
 #project_dash .toggle { height: 9px; width: 9px; display: inline-block; }
 #project_dash .rt-ali { text-align:right !important; }
+#project_dash { border-collapse: collapse; }
 /*project dashboard - drill down data*/
