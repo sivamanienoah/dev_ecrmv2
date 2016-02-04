@@ -1,5 +1,6 @@
 <style>
 table.prac-dt th { text-align:center; }
+.toggle { display: inline-block; }
 </style>
 <div id="drildown_filter_area">
 	<div class="pull-left">
@@ -31,7 +32,7 @@ table.prac-dt th { text-align:center; }
 	</div>
 	<div class="bttn-area" style="margin:0 15px;">
 		<div class="bttons">
-			<input style="height:auto;" type="button" class="positive input-font" name="practice_data" id="practice_data" value="Go" />
+			<input style="height:auto;" type="button" class="positive input-font" name="refine_drilldown_data" id="refine_drilldown_data" value="Go" />
 			<input style="height:auto;" type="button" class="positive input-font" name="reset_practice" id="reset_practice" value="Reset" />
 		</div>								
 	</div>
@@ -81,11 +82,11 @@ $skil_sort_hr  = array();
 $skil_sort_cst = array();
 $user_hr 	   = array();
 $user_cst 	   = array();
+$cost_arr 	   = array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
-$cost_arr = array();
 $tot_hour = 0;
 $tot_cost = 0;
 if(!empty($resdata)) {
@@ -170,7 +171,7 @@ if(!empty($resdata)) {
 ?>
 <h2><?php echo $heading; ?> :: Group By - Practice</h2>
 <?php
-$perc_tot_hr = $perc_tot_cost = 0;
+$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table class='data-table prac-dt'>
 			<tr>
@@ -213,8 +214,10 @@ if(!empty($tbl_data)) {
 				// $pr_tot_cost += $cost_arr[$mem]*160;
 			// }
 			// $sub_tot_pr_cost = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$pr_tot_cost)*100;
-			$sub_tot_pr_hr   = ($sub_tot[$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
-			$sub_tot_pr_cost = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
+			$sub_tot_pr_hr    = ($sub_tot[$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
+			$sub_tot_pr_cost  = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
+			$calc_tot_hour   += $sub_tot[$dept][$pkey]['sub_tot_hour'];
+			$calc_tot_cost   += $sub_tot[$dept][$pkey]['sub_tot_cost'];
 			$perc_tot_hr	 += $sub_tot_pr_hr;
 			$perc_tot_cost   += $sub_tot_pr_cost;
 			echo "<tr data-depth='".$i."' class='collapse'>
@@ -341,51 +344,13 @@ if(!empty($tbl_data)) {
 	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
 	echo "<tr data-depth='0'>
 			<td width='80%' colspan='4' class='rt-ali'><b>TOTAL:</b></td>
-			<th width='5%' class='rt-ali'><b>".round($tot_hour, 0)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($tot_cost, 0)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 2)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 2)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($calc_tot_hour, 0)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></th>
+			<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></th>
 			</tr>";
 	echo "</table>";
 }
 ?>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
-<script>
-$(document).ready(function(){
-	$("#practice_data").click(function(){
-		if($('#department_ids').val() == null) {
-			$('#hdept_ids').val('');
-		} else {
-			$('#hdept_ids').val($('#department_ids').val());
-		}
-		if($('#practice_ids').val() == null) {
-			$('#hprac_ids').val('');
-		} else {
-			$('#hprac_ids').val($('#practice_ids').val());
-		}
-		$('#hmonth_year').val($('#month_year_from_date').val());
-		$('#hskill_ids').val($('#skill_ids').val())
-		$('#hmember_ids').val($('#member_ids').val())
-		
-		var formdata = $('#fliter_data').serialize();
-		
-		$.ajax({
-			type: "POST",
-			url: site_base_url+'projects/dashboard/get_data/',                                                              
-			data: formdata+'&resource_type='+$('#resource_type').val()+'&dept_type='+$('#dept_type').val()+'&filter_group_by='+$('#filter_group_by').val()+'&filter_sort_by='+$('#filter_sort_by').val()+'&filter_sort_val='+$('#filter_sort_val').val(),
-			cache: false,
-			beforeSend:function() {
-				$('#filter_group_by').prop('selectedIndex',0);
-				$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
-				$('#drilldown_data').show();
-				$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
-			},
-			success: function(data) {
-				$('#drilldown_data').html(data);
-				$('#drilldown_data').show();
-				$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
-			}                                                                                   
-		});
-	});
-});
-</script>
+<script type="text/javascript" src="assets/js/projects/project_drilldown_data.js"></script>
