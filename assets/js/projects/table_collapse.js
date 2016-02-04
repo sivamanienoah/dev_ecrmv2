@@ -34,5 +34,5 @@ $(function() {
         }
         return children;
     });
-	
+	$('.toggle').trigger('click');
 });
