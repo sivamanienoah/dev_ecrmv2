@@ -1,5 +1,5 @@
 <style>
-table.prac-dt th{ text-align:center; }
+.prac-dt{ text-align:center !important; }
 </style>
 <div id="drildown_filter_area">
 	<div class="pull-left">
@@ -14,8 +14,8 @@ table.prac-dt th{ text-align:center; }
 	<div class="pull-left" style="margin:0 15px;;">
 		<label>Sort By</label>
 		<select name="filter_sort_by" id="filter_sort_by">
-			<option value='asc' <?php if($filter_sort_by == 'asc') echo "selected='selected'"; ?>>ASC</option>
 			<option value='desc' <?php if($filter_sort_by == 'desc') echo "selected='selected'"; ?>>DESC</option>
+			<option value='asc' <?php if($filter_sort_by == 'asc') echo "selected='selected'"; ?>>ASC</option>
 		</select>
 	</div>
 	<div class="pull-left" style="margin:0 15px;;">
@@ -32,7 +32,7 @@ table.prac-dt th{ text-align:center; }
 	<div class="bttn-area" style="margin:0 15px;">
 		<div class="bttons">
 			<input style="height:auto;" type="button" class="positive input-font" name="refine_drilldown_data" id="refine_drilldown_data" value="Go" />
-			<input style="height:auto;" type="button" class="positive input-font" name="reset_practice" id="reset_practice" value="Reset" />
+			<input style="height:auto;" type="button" class="positive input-font" name="reset_drilldown" id="reset_drilldown" value="Reset" />
 		</div>								
 	</div>
 </div>
@@ -125,16 +125,14 @@ if(!empty($resdata)) {
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
-	echo "<table class='data-table prac-dt'>
-			<tr>
-			<th width='15%'><b>USER NAME</b></th>
-			<th width='15%'><b>PROJECT NAME</b></th>
-			<th width='5%'><b>HOUR</b></th>
-			<th width='5%'><b>COST</b></th>
-			<th width='5%'><b>% of HOUR</b></th>
-			<th width='5%'><b>% of COST</b></th>
-		</table>";
 	echo "<table id='project_dash' class='data-table'>";
+	echo "<tr>
+			<th class='prac-dt' width='15%'><b>USER NAME</b></th>
+			<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
+			<th class='prac-dt' width='5%'><b>HOUR</b></th>
+			<th class='prac-dt' width='5%'><b>COST</b></th>
+			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
+			<th class='prac-dt' width='5%'><b>% of COST</b></th>";
 	foreach($tbl_data as $dept=>$us_ar) {
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {

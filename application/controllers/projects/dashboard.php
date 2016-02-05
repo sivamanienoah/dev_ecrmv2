@@ -249,7 +249,7 @@ class Dashboard extends crm_controller
 		if(isset($filter_sort_by) && !empty($filter_sort_by))
 		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
 		else
-		$data['filter_sort_by'] = 'asc';
+		$data['filter_sort_by'] = 'desc';
 	
 		if(isset($filter_sort_val) && !empty($filter_sort_val))
 		$data['filter_sort_val'] = $this->input->post("filter_sort_val");
