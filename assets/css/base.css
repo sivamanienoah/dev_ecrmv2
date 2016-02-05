@@ -2715,3 +2715,36 @@ width:90%;
 #project_dash .rt-ali { text-align:right !important; }
 #project_dash { border-collapse: collapse; }
 /*project dashboard - drill down data*/
+
+
+/*** 5-2-2016 ***/
+.data-table th,tr.row-header td{background:#4b6fb9;border: 1px solid #2F497E;color: #FFFFFF;}
+.data-table th {text-align:left;padding:10px 0 !important;}
+#default_view h4 {
+    border-bottom: 1px solid #ccc;
+    display: inline-block;
+    margin: 0 0 20px;
+    padding: 0 0 15px;
+    width: 100%;
+}
+.data-table tbody tr.expand th.collapse {color: red;}
+/*** 5-2-2016 ***/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
