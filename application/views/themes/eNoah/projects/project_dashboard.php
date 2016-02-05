@@ -413,7 +413,6 @@ $(document).ready(function(){
 	//on change for practice id
 	$("#practice_ids").change(function(){
 		alert($(this).val());
-		return false;
 		var ids  = $(this).val();
 		var d_ids = $('#department_ids').val();
 		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
