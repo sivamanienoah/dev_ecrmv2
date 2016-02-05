@@ -2709,25 +2709,36 @@ width:90%;
 	position:absolute;
 }
 /*project dashboard - drill down data*/
-#project_dash .collapse .toggle { background: url("../img/collapse.gif"); }
-#project_dash .expand .toggle { background: url("../img/expand.gif"); }
-#project_dash .toggle { height: 9px; width: 9px; display: inline-block; }
+/* #project_dash .toggle { height: 9px; width: 9px; display: inline-block; } */
 #project_dash .rt-ali { text-align:right !important; }
 #project_dash { border-collapse: collapse; }
 /*project dashboard - drill down data*/
 
 
 /*** 5-2-2016 ***/
-.data-table th,tr.row-header td{background:#4b6fb9;border: 1px solid #2F497E;color: #FFFFFF;}
-.data-table th {text-align:left;padding:10px 0 !important;}
-#default_view h4 {
-    border-bottom: 1px solid #ccc;
-    display: inline-block;
-    margin: 0 0 20px;
-    padding: 0 0 15px;
-    width: 100%;
-}
-.data-table tbody tr.expand th.collapse {color: red;}
+.proj-dash-table th,tr.row-header td{background:#4b6fb9;border: 1px solid #2F497E;color: #FFFFFF;}
+.proj-dash-table th {text-align:left;padding:10px !important;}
+#default_view h4 {border-bottom: 1px solid #ccc;display: inline-block;margin: 0 0 20px;padding: 0 0 15px; width: 100%;}
+
+
+#project_dash tbody tr.expand th.collapse{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+#project_dash tbody tr.collapse th.collapse{color:#333;background:#f3f5f6;border:1px solid #d4d4d4;}
+#project_dash tbody tr.expand th{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+#project_dash tbody tr.collapse th{color:#333;background:#f3f5f6;border:1px solid #d4d4d4;}
+/* #project_dash tbody tr th {font-weight: normal;} */
+tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;}
+.group-section{float: left;width: 100%;margin:10px 0 15px;}
+
+
+/* .data-table tbody tr.expand th.collapse {color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+.data-table tbody tr.collapse th.collapse {color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+.data-table tbody tr.collapse th{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+.data-table tbody tr.expand td{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+.data-table tbody tr.collapse{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;}
+.data-table tbody tr.expand th{color:#7c7c7c;background:#f3f5f6;border:1px solid #d4d4d4;} */
+
+#project_dash .collapse .toggle { background: url("../img/collapse.gif") no-repeat 5px 2px;padding:0 0 0 20px;width:100%;box-sizing:border-box;}
+#project_dash .expand .toggle { background: url("../img/expand.gif") no-repeat 5px 2px;padding:0 0 0 20px;width:100%;box-sizing:border-box;}
 /*** 5-2-2016 ***/
 
 

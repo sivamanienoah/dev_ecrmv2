@@ -2,7 +2,7 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 </style>
-<div id="drildown_filter_area">
+<div id="drildown_filter_area" class="group-section">
 	<div class="pull-left">
 		<label>Group By</label>
 		<select name="filter_group_by" id="filter_group_by">
@@ -173,16 +173,16 @@ if(!empty($resdata)) {
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
-	echo "<table id='project_dash' class='data-table'>
+	echo "<table id='project_dash' class='proj-dash-table'>
 			<tr>
-			<th class='prac-dt' width='16%'><b>PRACTICE NAME</b></th>
-			<th class='prac-dt' width='12%'><b>SKILL NAME</b></th>
-			<th class='prac-dt' width='15%'><b>USER NAME</b></th>
-			<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
-			<th class='prac-dt' width='5%'><b>HOUR</b></th>
-			<th class='prac-dt' width='5%'><b>COST</b></th>
-			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
-			<th class='prac-dt' width='5%'><b>% of COST</b></th>
+			<th class='prac-dt' width='16%'>PRACTICE NAME</th>
+			<th class='prac-dt' width='12%'>SKILL NAME</th>
+			<th class='prac-dt' width='15%'>USER NAME</th>
+			<th class='prac-dt' width='15%'>PROJECT NAME</th>
+			<th class='prac-dt' width='5%'>HOUR</th>
+			<th class='prac-dt' width='5%'>COST</th>
+			<th class='prac-dt' width='5%'>% of HOUR</th>
+			<th class='prac-dt' width='5%'>% of COST</th>
 			</tr>";
 	foreach($tbl_data as $dept=>$prac_ar) {
 		if($filter_sort_by=='asc') {
@@ -220,7 +220,7 @@ if(!empty($tbl_data)) {
 			$perc_tot_hr	 += $sub_tot_pr_hr;
 			$perc_tot_cost   += $sub_tot_pr_cost;
 			echo "<tr data-depth='".$i."' class='collapse'>
-				<th width='43%' class='collapse' colspan='3'><span class='toggle'></span> <b>".strtoupper($pkey)."</b></th>
+				<th width='43%' class='collapse' colspan='3'><span class='toggle'> <b>".strtoupper($pkey)."</b></span></th>
 				<th width='15%' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
 				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 0)."</th>
 				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 0)."</th>
@@ -263,7 +263,7 @@ if(!empty($tbl_data)) {
 				$sub_tot_sk_cost = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
 				echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='16%'></td>
-						<td colspan='2'><b><span class='toggle'></span> ".$skkey."</b></td>
+						<td colspan='2'><b><span class='toggle'> ".$skkey."</b></span></td>
 						<td class='rt-ali'><b>SUB TOTAL(SKILL WISE):</b></td>
 						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_hour'], 0)."</b></td>
 						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost'], 0)."</b></td>
@@ -341,7 +341,7 @@ if(!empty($tbl_data)) {
 		$overall_cost += $cs * 160;
 	}
 	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
-	echo "<tr data-depth='0'>
+	echo "<tr data-depth='0' class='project-dash-total'>
 			<td width='80%' colspan='4' class='rt-ali'><b>TOTAL:</b></td>
 			<th width='5%' class='rt-ali'><b>".round($calc_tot_hour, 0)."</b></th>
 			<th width='5%' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></th>

@@ -182,7 +182,7 @@ $(function(){
 				?>	
 			<div id="default_view">
 				<h4>IT</h4>
-				<table cellspacing="0" cellpadding="0" border="0" class="data-table bu-tbl">
+				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 					<tr>
 						<thead>
 							<th>Billablity</th>
@@ -229,7 +229,7 @@ $(function(){
 				<div class="dept_sec_inner pull-left">
 				<h4>EADS</h4>
 				<?php #echo '<pre>'; print_r($bu_arr); ?>
-				<table cellspacing="0" cellpadding="0" border="0" class="data-table bu-tbl-inr">
+				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
 					<tr>
 						<thead>
 							<th>Billablity</th>
@@ -270,7 +270,7 @@ $(function(){
 				<div class="dept_sec_inner pull-left">
 				<h4>EQAD</h4>
 				<?php #echo '<pre>'; print_r($bu_arr); ?>
-				<table cellspacing="0" cellpadding="0" border="0" class="data-table bu-tbl-inr">
+				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
 					<tr>
 						<thead>
 							<th>Billablity</th>
