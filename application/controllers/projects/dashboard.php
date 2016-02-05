@@ -450,7 +450,7 @@ class Dashboard extends crm_controller
 			$this->db->group_by('t.username');
 			$this->db->order_by('t.username');
 			$query = $this->db->get();
-			echo $this->db->last_query(); exit;
+			// echo $this->db->last_query(); exit;
 			if($query->num_rows()>0) {
 				$res = $query->result();
 				echo json_encode($res); 
