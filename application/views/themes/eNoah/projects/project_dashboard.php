@@ -438,7 +438,7 @@ $(document).ready(function(){
 						$("#skill_ids").trigger("liszt:updated");
 						$.ajax({
 							type: 'POST',
-							url: site_base_url+'projects/dashboard/get_members',
+							url: site_base_url+'projects/dashboard/get_practice_members',
 							data: params,
 							success: function(members) {
 								if(members){

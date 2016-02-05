@@ -428,6 +428,40 @@ class Dashboard extends crm_controller
 		}		
 	}
 	
+	function get_practice_members() {
+		if($this->input->post("dept_ids")){
+			$ids = $this->input->post("dept_ids");
+			if($this->input->post("prac_id")) {
+				$p_ids = $this->input->post("prac_id");
+				$pids  = implode(',',$p_ids);
+			}
+			$start_date = $this->input->post("start_date");
+			$end_date   = $this->input->post("end_date");
+
+			$this->db->select('t.username, t.empname as emp_name');
+			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($ids))
+			$this->db->where_in("t.dept_id", $ids);
+			if(!empty($p_ids))
+			$this->db->where_in("t.practice_id", $p_ids);
+			$this->db->group_by('t.username');
+			$this->db->order_by('t.username');
+			$query = $this->db->get();
+			echo $this->db->last_query(); exit;
+			if($query->num_rows()>0) {
+				$res = $query->result();
+				echo json_encode($res); 
+				exit;
+			} else {
+				echo 0;
+				exit;
+			}
+		}		
+	}
+	
 	function get_skill_members(){
 		if($this->input->post("dept_ids")){
 			$ids = $this->input->post("dept_ids");
