@@ -44,7 +44,7 @@ class Dashboard extends crm_controller
 		}
 		$where = '';
 		$department_ids = $this->input->post("department_ids");
-		if(count($department_ids)>0 && !empty($department_ids)){
+		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
 			$data['department_ids'] = $department_ids;
 			$where .= " and dept_id in ($dids)";
@@ -53,31 +53,31 @@ class Dashboard extends crm_controller
 		}
 		
 		$practice_ids = $this->input->post("practice_ids");
-		if(count($practice_ids)>0 && !empty($practice_ids)){
+		
+		//for practices
+		$this->db->select('t.practice_id, t.practice_name');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->where("t.practice_id !=", 0);
+		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		}
+		if(count($practice_ids)>0 && !empty($practice_ids)) {
 			$pids = implode(",",$practice_ids);
 			$data['practice_ids'] = $practice_ids;
-
 			$where .= " and practice_id in ($pids)";
-			
-			$this->db->select('t.practice_id, t.practice_name');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-			$this->db->where("t.practice_id !=", 0);
-			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-			if(count($department_ids)>0 && !empty($department_ids)){
-				$dids = implode(",",$department_ids);
-				if(!empty($dids)) {
-					$this->db->where_in("t.dept_id", $department_ids);
-				}
-			}
-			$this->db->group_by('t.practice_id');
-			$this->db->order_by('t.practice_name');
-			$query = $this->db->get();
-			// echo $this->db->last_query(); exit;
-			if($query->num_rows()>0){
-				// $res = $query->result();
-				$data['practice_ids_selected'] = $query->result();
-			}
+		}
+		
+		$this->db->group_by('t.practice_id');
+		$this->db->order_by('t.practice_name');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		if($query->num_rows()>0) {
+			$data['practice_ids_selected'] = $query->result();
 		}
 		
 		$skill_ids = $this->input->post("skill_ids");
@@ -93,9 +93,9 @@ class Dashboard extends crm_controller
 		}
 
 		$member_ids = $this->input->post("member_ids");
-		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)){
+		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)) {
 			$mids = "'".implode("','",$member_ids)."'";
-			if(count($member_ids)>0 && !empty($member_ids)){
+			if(count($member_ids)>0 && !empty($member_ids)) {
 				$data['member_ids'] = $member_ids;
 				$where .= " and username in ($mids)";
 			}
@@ -130,6 +130,7 @@ class Dashboard extends crm_controller
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 		$data['results']    = $arr_depts;
+		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/project_dashboard", $data);
 	}
 	

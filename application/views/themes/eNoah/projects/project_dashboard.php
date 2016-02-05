@@ -82,7 +82,7 @@ $(function(){
 						<div class="filterrow-area" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
-								<select  class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
+								<select class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
 								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
 								<?php 
 									foreach($skill_ids_selected as $skills){
@@ -491,13 +491,14 @@ $(document).ready(function(){
 			}
 		});
 	});
+	$("#practice_ids").chosen({no_results_text: "Please select Practice"});
 	$("#skill_ids").chosen({no_results_text: "Please select Department"}); 
 	$("#member_ids").chosen({no_results_text: "Please select Skill"}); 
 	<?php if(count($department_ids)<=0){?>
-		$("#skill_show_id").css("display","none")
-	<?php } ?>
-	<?php if(count($practice_ids_selected)<=0){?>
 		$("#practice_show_id").css("display","none");
+	<?php } ?>
+	<?php if(count($practice_ids)<=0){?>
+		$("#skill_show_id").css("display","none");
 	<?php } ?>
 	<?php if(count($skill_ids)<=0){?>
 		$("#member_show_id").css("display","none")
