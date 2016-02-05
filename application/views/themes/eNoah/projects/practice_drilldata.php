@@ -19,7 +19,7 @@
 			<option value='asc' <?php if($filter_sort_by == 'asc') echo "selected='selected'"; ?>>ASC</option>
 		</select>
 	</div>
-	<div class="pull-left" style="margin:0 15px;;">
+	<div class="pull-left" style="margin:0 15px 0 0;">
 		<label>Sort Value</label>
 		<select name="filter_sort_val" id="filter_sort_val">
 			<option value='hour' <?php if($filter_sort_val == 'hour') echo "selected='selected'"; ?>>Hour</option>
