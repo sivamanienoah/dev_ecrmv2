@@ -34,5 +34,6 @@ $(function() {
         }
         return children;
     });
+	//by default - childs are hide
 	$('.toggle').trigger('click');
 });
