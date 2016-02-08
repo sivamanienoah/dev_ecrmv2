@@ -162,8 +162,13 @@ if(!empty($resdata)) {
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Skill</h2>
 	<div class="section-right">
 		<div class="buttons add-new-button">
-			<button id='expand_collapse_tr' class="positive" type="button">
-				Expand / Collapse
+			<button id='expand_tr' class="positive" type="button">
+				Expand
+			</button>
+		</div>
+		<div class="buttons collapse-button">
+			<button id='collapse_tr' class="positive" type="button">
+				Collapse
 			</button>
 		</div>
 		<div class="buttons export-to-excel">
@@ -220,17 +225,17 @@ if(!empty($tbl_data)) {
 			$sub_tot_sk_cost = ($sub_tot[$dept][$skil_key]['sub_tot_cost']/$sk_tot_cost)*100; */
 			$sub_tot_sk_hr   = ($sub_tot[$dept][$skil_key]['sub_tot_hour']/$tot_hour)*100;
 			$sub_tot_sk_cost = ($sub_tot[$dept][$skil_key]['sub_tot_cost']/$tot_cost)*100;
-			$perc_tot_hr   += round($sub_tot_sk_hr, 2);
-			$perc_tot_cost += round($sub_tot_sk_cost, 2);
-			$calc_tot_hour += round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 0);
-			$calc_tot_cost += round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 0);
+			$perc_tot_hr   += $sub_tot_sk_hr;
+			$perc_tot_cost += $sub_tot_sk_cost;
+			$calc_tot_hour += $sub_tot[$dept][$skil_key]['sub_tot_hour'];
+			$calc_tot_cost += $sub_tot[$dept][$skil_key]['sub_tot_cost'];
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($skil_key)."</span></th>
 				<th width='15%'></th>
 				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(SKILL WISE):</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 0)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 0)."</th>
-				<th width='5%' align='right' class='rt-ali'><b>".round($sub_tot_sk_hr, 2)."</b></th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 1)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 2)."</th>
+				<th width='5%' align='right' class='rt-ali'><b>".round($sub_tot_sk_hr, 1)."</b></th>
 				<th width='5%' align='right' class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></th>
 			</tr>";
 			if($filter_sort_by=='asc') {
@@ -300,9 +305,9 @@ if(!empty($tbl_data)) {
 						<td width='15%'></td>
 						<td width='15%'></td>
 						<td width='15%'>".$ukey."</td>
-						<td width='5%' align='right'>".round($uval['hour'], 2)."</td>
+						<td width='5%' align='right'>".round($uval['hour'], 1)."</td>
 						<td width='5%' align='right'>".round($uval['cost'], 2)."</td>
-						<td width='5%' align='right'>".round($per_hr, 2)."</td>
+						<td width='5%' align='right'>".round($per_hr, 1)."</td>
 						<td width='5%' align='right'>".round($per_cost, 2)."</td>
 					</tr>";
 					$per_hr 	= '';
@@ -321,8 +326,8 @@ if(!empty($tbl_data)) {
 	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
 	echo "<tr data-depth='0'>
 			<td width='80%' colspan='3' align='right' class='rt-ali'><b>TOTAL:</b></td>
-			<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 0)."</b></td>
-			<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
+			<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
+			<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 2)."</b></td>
 			<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></td>
 			<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></td>
 			</tr>";

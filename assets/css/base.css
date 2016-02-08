@@ -2750,10 +2750,8 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 /*** 5-2-2016 ***/
 
 /**08-02-2016**/
-.proj-table-odd-even tbody tr:nth-child(2n) {background:none;}
-.proj-table-odd-even tbody tr:nth-child(2n+1){background:none}
-/* .data-table.proj-table-odd-even tr:nth-child(2n+1){background:#000;} */
-
+#project_dash tbody tr:nth-child(2n) {background:none;}
+#project_dash tbody tr:nth-child(2n+1){background:none;}
 /**08-02-2016**/
 
 
