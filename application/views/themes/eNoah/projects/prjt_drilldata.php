@@ -143,6 +143,7 @@ if(!empty($resdata)) {
 	</div>
 	<div class="clearfix"></div>
 </div>
+<div class="clearfix"></div>
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
