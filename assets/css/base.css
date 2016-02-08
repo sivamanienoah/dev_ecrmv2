@@ -2742,7 +2742,10 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 #project_dash .expand .toggle { background: url("../img/expand.gif") no-repeat 5px 2px;padding:0 0 0 20px;width:100%;box-sizing:border-box;}
 /*** 5-2-2016 ***/
 
-
+/**08-02-2016**/
+.proj-table-odd-even tbody tr:nth-child(2n) {background:none;}
+.proj-table-odd-even tbody tr:nth-child(2n+1){background:none;}
+/**08-02-2016**/
 
 
 

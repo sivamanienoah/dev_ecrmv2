@@ -190,7 +190,7 @@ if(!empty($resdata)) {
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
-	echo "<table id='project_dash' class='proj-dash-table data-table'>
+	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
 			<th class='prac-dt' width='16%'>PRACTICE NAME</th>
 			<th class='prac-dt' width='12%'>SKILL NAME</th>
