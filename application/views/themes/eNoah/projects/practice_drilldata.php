@@ -173,8 +173,13 @@ if(!empty($resdata)) {
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Practice</h2>
 	<div class="section-right">
 		<div class="buttons add-new-button">
-			<button id='expand_collapse_tr' class="positive" type="button">
-				Expand / Collapse
+			<button id='expand_tr' class="positive" type="button">
+				Expand
+			</button>
+		</div>
+		<div class="buttons add-new-button">
+			<button id='collapse_tr' class="positive" type="button">
+				Collapse
 			</button>
 		</div>
 		<div class="buttons export-to-excel">

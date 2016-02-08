@@ -38,7 +38,39 @@ $(function() {
 	$('.toggle').trigger('click');
 	
 	//for expand or collapse
-	$("#expand_collapse_tr").click(function () {
-		$('.toggle').trigger('click');
+	$("#expand_tr").click(function () {
+		
+		var findChildren = function (tr) {
+            var depth = tr.data('depth');
+            return tr.nextUntil($('tr').filter(function () {
+                return $(this).data('depth') <= depth;
+            }));
+        };
+			
+		var el = $('#project_dash .toggle');
+        var tr = el.closest('tr'); //Get <tr> parent of toggle button
+        var children = findChildren(tr);
+		
+		tr.removeClass('expand').addClass('collapse');
+		children.show();
+		
+	});
+	
+	$("#collapse_tr").click(function () {
+		
+		var findChildren = function (tr) {
+            var depth = tr.data('depth');
+            return tr.nextUntil($('tr').filter(function () {
+                return $(this).data('depth') <= depth;
+            }));
+        };
+			
+		var el = $('#project_dash .toggle');
+        var tr = el.closest('tr'); //Get <tr> parent of toggle button
+        var children = findChildren(tr);
+		
+		tr.removeClass('collapse').addClass('expand');
+		children.hide();
+		
 	});
 });
