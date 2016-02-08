@@ -2132,6 +2132,13 @@ p.footer-text a{color:#f57025;}
 .add-new-button{margin:5px 0 0 30px;}
 .add-new-button button {background:url("../img/add-new-user.png") no-repeat left !important;border:none !important;font-size: 12px !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;font-weight:bold  !important;}
 .add-new-button button:hover{background:url("../img/add-new-user.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+
+
+.collapse-button{margin:5px 0 0 30px;}
+.collapse-button button {background:url("../img/collapse.png") no-repeat left !important;border:none !important;font-size: 12px !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold;font-weight:bold  !important;}
+.collapse-button button:hover{background:url("../img/collapse.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
+
+
 /* .page-title-head .choice-box{margin:0;} */
 #content .inner .page-title-head h2{margin:6px 0 0;} 
 
@@ -2145,7 +2152,7 @@ p.footer-text a{color:#f57025;}
 th.header{float:none;width:auto;}
 
 #pie2, #pie3 {height: 460px;}
-.export-to-excel, .add-new-button, .import-cus-list, .update-currency-value{float:left;}
+.export-to-excel, .add-new-button, .import-cus-list, .collapse-button, .update-currency-value{float:left;}
 .export-to-excel{margin:5px 0 0 30px;}
 .export-to-excel button {background:url("../img/export-to-excel.png") no-repeat left !important;border:none !important;font-size: 12px !important;padding:3px 0 4px 22px !important;float:left;color:#375695;font-weight:bold !important;}
 .export-to-excel button:hover{background:url("../img/export-to-excel.png") no-repeat left;border:none;color: #375695;opacity:0.7;}
@@ -2743,8 +2750,10 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 /*** 5-2-2016 ***/
 
 /**08-02-2016**/
-.proj-table-odd-even tbody tr:nth-child(2n) {background:none;}
-.proj-table-odd-even tbody tr:nth-child(2n+1){background:none;}
+/* .proj-table-odd-even tbody tr:nth-child(2n) {background:none;} */
+
+/* .data-table.proj-table-odd-even tr:nth-child(2n+1){background:#000;} */
+
 /**08-02-2016**/
 
 

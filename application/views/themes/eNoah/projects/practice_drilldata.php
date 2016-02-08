@@ -177,7 +177,7 @@ if(!empty($resdata)) {
 				Expand
 			</button>
 		</div>
-		<div class="buttons add-new-button">
+		<div class="buttons collapse-button">
 			<button id='collapse_tr' class="positive" type="button">
 				Collapse
 			</button>
