@@ -63,7 +63,7 @@ $(function(){
 						
 						<div class="filterrow-areaD">
 							<span> Department: </span>
-							<div class="selectOPt"><select class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
+							<div class="selectOPt"><select title="Select Department" class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
 											<?php foreach($departments as $depts){?>
 												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
@@ -72,7 +72,7 @@ $(function(){
 						</div>
 						<div class="filterrow-areaP" id="practice_show_id">
 							<span> Practice: </span>
-							<div class="selectOPt"><select class="chzn-select" id="practice_ids" name="practice_ids[]" multiple="multiple">
+							<div class="selectOPt"><select title="Select Practice" class="chzn-select" id="practice_ids" name="practice_ids[]" multiple="multiple">
 									<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)){?>
 											<?php foreach($practice_ids_selected as $prac){?>
 												<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
@@ -82,7 +82,7 @@ $(function(){
 						<div class="filterrow-area" id="skill_show_id">
 							<span>Select Skill(s): </span>
 							<div class="selectOPtshow">
-								<select class="chzn-select" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
+								<select class="chzn-select" title="Select Skill" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
 								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
 								<?php 
 									foreach($skill_ids_selected as $skills){
@@ -97,7 +97,7 @@ $(function(){
 						<div class="filterrow-area" id="member_show_id">
 							<span>Select Member(s): </span>
 							<div class="selectOPtshow1">
-								<select class="chzn-select" id="member_ids" name="member_ids[]"	multiple="multiple">
+								<select class="chzn-select" title="Select Members" id="member_ids" name="member_ids[]"	multiple="multiple">
 								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 								<?php foreach($member_ids_selected as $members){?>
 										<option <?php echo in_array($members->username,$member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
@@ -228,7 +228,6 @@ $(function(){
 				<div class="dept_section">
 				<div class="dept_sec_inner pull-left">
 				<h4>EADS</h4>
-				<?php #echo '<pre>'; print_r($bu_arr); ?>
 				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
 					<tr>
 						<thead>
@@ -267,6 +266,7 @@ $(function(){
 							</tr>
 				</table>
 				</div>
+				
 				<div class="dept_sec_inner pull-left">
 				<h4>EQAD</h4>
 				<?php #echo '<pre>'; print_r($bu_arr); ?>

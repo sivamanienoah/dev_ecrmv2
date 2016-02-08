@@ -36,4 +36,9 @@ $(function() {
     });
 	//by default - childs are hide
 	$('.toggle').trigger('click');
+	
+	//for expand or collapse
+	$("#expand_collapse_tr").click(function () {
+		$('.toggle').trigger('click');
+	});
 });

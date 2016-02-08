@@ -2711,6 +2711,7 @@ width:90%;
 /*project dashboard - drill down data*/
 /* #project_dash .toggle { height: 9px; width: 9px; display: inline-block; } */
 #project_dash .rt-ali { text-align:right !important; }
+#project_dash .lft-ali { text-align:left !important; }
 #project_dash { border-collapse: collapse; }
 /*project dashboard - drill down data*/
 

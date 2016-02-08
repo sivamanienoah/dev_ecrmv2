@@ -169,7 +169,23 @@ if(!empty($resdata)) {
 	}
 }
 ?>
-<h2><?php echo $heading; ?> :: Group By - Practice</h2>
+<div class="page-title-head">
+	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Practice</h2>
+	<div class="section-right">
+		<div class="buttons add-new-button">
+			<button id='expand_collapse_tr' class="positive" type="button">
+				Expand / Collapse
+			</button>
+		</div>
+		<div class="buttons export-to-excel">
+			<button type="button" class="positive" id="btnExport">
+				Export to Excel
+			</button>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
@@ -215,17 +231,21 @@ if(!empty($tbl_data)) {
 			// $sub_tot_pr_cost = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$pr_tot_cost)*100;
 			$sub_tot_pr_hr    = ($sub_tot[$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
 			$sub_tot_pr_cost  = ($sub_tot[$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
-			$calc_tot_hour   += $sub_tot[$dept][$pkey]['sub_tot_hour'];
-			$calc_tot_cost   += $sub_tot[$dept][$pkey]['sub_tot_cost'];
+			$calc_tot_hour   += round($sub_tot[$dept][$pkey]['sub_tot_hour'], 0);
+			$calc_tot_cost   += round($sub_tot[$dept][$pkey]['sub_tot_cost'], 0);
+			$sub_tot_pr_hr    = round($sub_tot_pr_hr, 2) . "<br>";
+			$sub_tot_pr_cost  = round($sub_tot_pr_cost, 2);
 			$perc_tot_hr	 += $sub_tot_pr_hr;
 			$perc_tot_cost   += $sub_tot_pr_cost;
 			echo "<tr data-depth='".$i."' class='collapse'>
-				<th width='43%' class='collapse' colspan='3'><span class='toggle'> <b>".strtoupper($pkey)."</b></span></th>
-				<th width='15%' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
-				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 0)."</th>
-				<th width='5%' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 0)."</th>
-				<th width='5%' class='rt-ali'>".round($sub_tot_pr_hr, 2)."</th>
-				<th width='5%' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
+				<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($pkey)."</b></span></th>
+				<th width='12%'></th>
+				<th width='15%'></th>
+				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_hour'], 0)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$pkey]['sub_tot_cost'], 0)."</th>
+				<th width='5%' align='right' class='rt-ali'>".$sub_tot_pr_hr."</th>
+				<th width='5%' align='right' class='rt-ali'>".$sub_tot_pr_cost."</th>
 			</tr>";
 			
 			if($filter_sort_by=='asc') {
@@ -263,8 +283,9 @@ if(!empty($tbl_data)) {
 				$sub_tot_sk_cost = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
 				echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='16%'></td>
-						<td colspan='2'><b><span class='toggle'> ".$skkey."</b></span></td>
-						<td class='rt-ali'><b>SUB TOTAL(SKILL WISE):</b></td>
+						<td align='left' width='12%'><b><span class='toggle'> ".$skkey."</b></span></td>
+						<td width='15%'></td>
+						<td align='right'><b>SUB TOTAL(SKILL WISE):</b></td>
 						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_hour'], 0)."</b></td>
 						<td class='rt-ali'><b>".round($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost'], 0)."</b></td>
 						<td class='rt-ali'><b>".round($sub_tot_sk_hr, 2)."</b></td>
@@ -296,7 +317,12 @@ if(!empty($tbl_data)) {
 					echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='16%'></td>
 						<td width='12%'></td>
-						<td colspan='6'>".$ukey."</td>
+						<td align='left' width='15%'>".$ukey."</td>
+						<td width='15%'></td>
+						<td width='5%'></td>
+						<td width='5%'></td>
+						<td width='5%'></td>
+						<td width='5%'></td>
 					</tr>";
 					$i++;
 					if($filter_sort_by=='asc') {
@@ -341,15 +367,30 @@ if(!empty($tbl_data)) {
 		$overall_cost += $cs * 160;
 	}
 	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
-	echo "<tr data-depth='0' class='project-dash-total'>
-			<td width='80%' colspan='4' class='rt-ali'><b>TOTAL:</b></td>
-			<th width='5%' class='rt-ali'><b>".round($calc_tot_hour, 0)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></th>
-			<th width='5%' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></th>
+	echo "<tr data-depth='0' class='project-dash-total' style='text-align:right'>
+			<td width='80%' colspan='4' align='right'><b>TOTAL:</b></td>
+			<td width='5%' align='right'><b>".$calc_tot_hour."</b></td>
+			<td width='5%' align='right'><b>".$calc_tot_cost."</b></td>
+			<td width='5%' align='right'><b>".round($perc_tot_hr, 0)."</b></td>
+			<td width='5%' align='right'><b>".round($perc_tot_cost, 0)."</b></td>
 			</tr>";
 	echo "</table>";
 }
 ?>
+</div>
+<script>
+//export
+$(document).ready(function () {
+	$("#btnExport").click(function () {
+		$("#project_dash").btechco_excelexport({
+			containerid: "project_dash"
+		   , datatype: $datatype.Table
+		   , filename: 'practicewisedata'
+		});
+	});
+});
+</script>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
 <script type="text/javascript" src="assets/js/projects/project_drilldown_data.js"></script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
