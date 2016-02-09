@@ -2753,7 +2753,8 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 #project_dash tbody tr:nth-child(2n) {background:none;}
 #project_dash tbody tr:nth-child(2n+1){background:none;}
 /**08-02-2016**/
-
+.dashboardLegend div { padding:5px; }
+.dashboardLegend { height:25px; color:#fff; width:85% }
 
 
 

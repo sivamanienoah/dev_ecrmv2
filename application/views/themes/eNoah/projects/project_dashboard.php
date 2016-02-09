@@ -187,7 +187,7 @@ $(function(){
 						<thead>
 							<th>Billablity</th>
 							<th>Hours</th>
-							<th># Head Count</th>
+							<th># Head Count *</th>
 							<th>Total Cost</th>
 							<th>% of Hours</th>
 							<th>% of Cost</th>
@@ -226,88 +226,99 @@ $(function(){
 							</tr>
 				</table>
 				<div class="dept_section">
-				<div class="dept_sec_inner pull-left">
-				<h4>EADS</h4>
-				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
-					<tr>
-						<thead>
-							<th>Billablity</th>
-							<th>Hours</th>
-							<th># Head Count</th>
-							<th>Total Cost</th>
-							<th>% of Hours</th>
-							<th>% of Cost</th>
-						</thead>
-					</tr>
-					<?php
-						ksort($dept_arr['dept']['eADS']);
-						foreach($dept_arr['dept']['eADS'] as $adskey=>$adsval) {
-					?>
-								<tr>
-									<td><a onclick="getData(<?php echo "'".$adskey."'"; ?>,'2');return false;"><?= $adskey; ?></a></td>
-									<td align="right"><?= round($adsval['hour'],1); ?></td>
-									<td align="right"><?= round($adsval['headcount'],2); ?></td>
-									<td align="right"><?= round($adsval['cost'],0); ?></td>
-									<td align="right"><?php echo round(($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 0) . ' %'; ?></td>
-								</tr>
-					<?php
-							$percent_adshour += ($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100;
-							$percent_adscost += ($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100;
-							}
-					?>
+					<div class="dept_sec_inner pull-left">
+						<h4>EADS</h4>
+						<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
 							<tr>
-							<td align="right"><b>Total:</b></td>
-							<td align="right"><?= round($dept_arr['eADS']['totalhour'],1); ?></td>
-							<td align="right"></td>
-							<td align="right"><?= round($dept_arr['eADS']['totalcost'],0); ?></td>
-							<td align="right"><?= round($percent_adshour, 1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_adscost, 0) . ' %'; ?></td>
+								<thead>
+									<th>Billablity</th>
+									<th>Hours</th>
+									<th># Head Count *</th>
+									<th>Total Cost</th>
+									<th>% of Hours</th>
+									<th>% of Cost</th>
+								</thead>
 							</tr>
-				</table>
-				</div>
-				
-				<div class="dept_sec_inner pull-left">
-				<h4>EQAD</h4>
-				<?php #echo '<pre>'; print_r($bu_arr); ?>
-				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
-					<tr>
-						<thead>
-							<th>Billablity</th>
-							<th>Hours</th>
-							<th># Head Count</th>
-							<th>Total Cost</th>
-							<th>% of Hours</th>
-							<th>% of Cost</th>
-						</thead>
-					</tr>
-					<?php
-						ksort($dept_arr['dept']['eQAD']);
-						foreach($dept_arr['dept']['eQAD'] as $qadkey=>$qadval) {
-					?>
-								<tr>
-									<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'3');return false;"><?= $qadkey; ?></a></td>
-									<td align="right"><?= round($qadval['hour'],1); ?></td>
-									<td align="right"><?= round($qadval['headcount'],2); ?></td>
-									<td align="right"><?= round($qadval['cost'],0); ?></td>
-									<td align="right"><?php echo round(($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 0) . ' %'; ?></td>
-								</tr>
-					<?php
-							$percent_qadhour += ($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100;
-							$percent_qadcost += ($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100;
-							}
-					?>
+							<?php
+								ksort($dept_arr['dept']['eADS']);
+								foreach($dept_arr['dept']['eADS'] as $adskey=>$adsval) {
+							?>
+										<tr>
+											<td><a onclick="getData(<?php echo "'".$adskey."'"; ?>,'2');return false;"><?= $adskey; ?></a></td>
+											<td align="right"><?= round($adsval['hour'],1); ?></td>
+											<td align="right"><?= round($adsval['headcount'],2); ?></td>
+											<td align="right"><?= round($adsval['cost'],0); ?></td>
+											<td align="right"><?php echo round(($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 0) . ' %'; ?></td>
+										</tr>
+							<?php
+									$percent_adshour += ($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100;
+									$percent_adscost += ($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100;
+									}
+							?>
+									<tr>
+									<td align="right"><b>Total:</b></td>
+									<td align="right"><?= round($dept_arr['eADS']['totalhour'],1); ?></td>
+									<td align="right"></td>
+									<td align="right"><?= round($dept_arr['eADS']['totalcost'],0); ?></td>
+									<td align="right"><?= round($percent_adshour, 1) . ' %'; ?></td>
+									<td align="right"><?= round($percent_adscost, 0) . ' %'; ?></td>
+									</tr>
+						</table>
+					</div>
+					<div class="dept_sec_inner pull-left">
+						<h4>EQAD</h4>
+						<?php #echo '<pre>'; print_r($bu_arr); ?>
+						<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
 							<tr>
-							<td align="right"><b>Total:</b></td>
-							<td align="right"><?= round($dept_arr['eQAD']['totalhour'],1); ?></td>
-							<td align="right"></td>
-							<td align="right"><?= round($dept_arr['eQAD']['totalcost'],0); ?></td>
-							<td align="right"><?= round($percent_qadhour, 1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_qadcost, 0) . ' %'; ?></td>
+								<thead>
+									<th>Billablity</th>
+									<th>Hours</th>
+									<th># Head Count *</th>
+									<th>Total Cost</th>
+									<th>% of Hours</th>
+									<th>% of Cost</th>
+								</thead>
 							</tr>
-				</table>
+							<?php
+								ksort($dept_arr['dept']['eQAD']);
+								foreach($dept_arr['dept']['eQAD'] as $qadkey=>$qadval) {
+							?>
+										<tr>
+											<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'3');return false;"><?= $qadkey; ?></a></td>
+											<td align="right"><?= round($qadval['hour'],1); ?></td>
+											<td align="right"><?= round($qadval['headcount'],2); ?></td>
+											<td align="right"><?= round($qadval['cost'],0); ?></td>
+											<td align="right"><?php echo round(($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 0) . ' %'; ?></td>
+										</tr>
+							<?php
+									$percent_qadhour += ($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100;
+									$percent_qadcost += ($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100;
+									}
+							?>
+									<tr>
+									<td align="right"><b>Total:</b></td>
+									<td align="right"><?= round($dept_arr['eQAD']['totalhour'],1); ?></td>
+									<td align="right"></td>
+									<td align="right"><?= round($dept_arr['eQAD']['totalcost'],0); ?></td>
+									<td align="right"><?= round($percent_qadhour, 1) . ' %'; ?></td>
+									<td align="right"><?= round($percent_qadcost, 0) . ' %'; ?></td>
+									</tr>
+						</table>
+					</div>
 				</div>
+				<div class="clearfix"></div>
+				<div style="margin:20px 0">
+					<fieldset>
+						<legend>Legend</legend>
+						<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
+							<!--Legends-->
+							<div class="dashboardLegend">
+								<div class="pull-left"><strong>#Head Count</strong> - Number of resources booked timesheet in these heads</div>
+							</div>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 			<div class="clearfix"></div>
