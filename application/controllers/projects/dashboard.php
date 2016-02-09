@@ -24,25 +24,29 @@ class Dashboard extends crm_controller
 		
 		$master = array();
 		$timesheet_db = $this->load->database("timesheet",true);
+				
+		$start_date = date("Y-m-1");
+		$end_date   = date("Y-m-d");
+		
 		if($this->input->post("month_year_from_date")) {
-			$date = $this->input->post("month_year_from_date");
-			
-			$cur_month    = date("m");
-			$post_month   = date('m',strtotime($date));
-			
-			$start_date   = date("Y-m-01",strtotime($date));
-			if($cur_month == $post_month) {
-				$end_date = date("Y-m-d");	
-			} else {
-				$end_date = date("Y-m-t",strtotime($date));	
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
 			}
-		} else {
-			$start_date = date("Y-m-1");
-			$end_date   = date("Y-m-d");
-			// $start_date = date("2015-10-1");
-			// $end_date   = date("2015-10-31");
 		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		}
+		
 		$where = '';
+		// echo $start_date.' '.$end_date; exit;
+		if($this->input->post("exclude_leave")==1){
+			$where .= " and project_code NOT IN ('HOL', 'Leave')";
+			$data['exclude_leave'] = 1;
+		}
+		
 		$department_ids = $this->input->post("department_ids");
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
@@ -103,7 +107,8 @@ class Dashboard extends crm_controller
 			$data['member_ids_selected'] = $qry1->result();			
 		}		
 		
-		$data['date_filter'] = $start_date;
+		$data['start_date'] = $start_date;
+		$data['end_date']   = $end_date;
 		$json = '';
 		
 		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
@@ -120,7 +125,7 @@ class Dashboard extends crm_controller
 		$arr_user_avail_set = array();
 		
 		// get all departments from timesheet
-		$dept = $timesheet_db->query("SELECT department_id,department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
+		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
 		if($dept->num_rows()>0){
 			$depts_res = $dept->result();
 		}

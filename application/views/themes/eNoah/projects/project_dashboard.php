@@ -56,11 +56,23 @@ $(function(){
 				
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					<div class="filterGrid-area">
-						<div class="profilterrow-areaYear">
-							<span>Month/Year: </span>
-							<div class="filtemonYear"><input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($date_filter));?>" /> </div>
+						<div class="filterrow-area">
+							<span>Exclude Leave & Holiday: </span>
+							<div class="selectOPtshow1">
+								<?php $checked=''; if($exclude_leave==1) { $checked ='checked="checked"'; } ?>
+								<input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $checked; ?> value="1" />
+							</div>						
 						</div>
-						
+						<div class="profilterrow-areaYear">
+							<span>From Month/Year: </span>
+							<div class="filtemonYear">
+								<input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
+							</div>
+							<span>To Month/Year: </span>
+							<div class="filtemonYear">
+								<input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
+							</div>
+						</div>
 						<div class="filterrow-areaD">
 							<span> Department: </span>
 							<div class="selectOPt"><select title="Select Department" class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
@@ -105,13 +117,13 @@ $(function(){
 								</select>	
 							</div>						
 						</div>
-						
 						<div class="filterrow-area-btn bttn-area">
 							<div class="bttons">
 								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
 								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'projects/dashboard'?>'" />
 							</div>
 						</div>
+						
 					</div>
 					<input type="hidden" id="start_date" name="start_date" value="<?php echo $start_date;?>" />
 					<input type="hidden" id="end_date" name="end_date" value="<?php echo $end_date;?>" />
@@ -334,7 +346,7 @@ $(function(){
 </div>
 <script type="text/javascript">
 $(function() {
-    $('#month_year_from_date').datepicker( {
+    /* $('#month_year_from_date').datepicker( {
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
@@ -344,7 +356,35 @@ $(function() {
             var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
             $(this).datepicker('setDate', new Date(year, month, 1));
         }
-    });
+    }); */
+	/*Date Picker*/
+	$( "#month_year_from_date, #month_year_to_date" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'MM yy',
+		showButtonPanel: true,	
+		onClose: function(dateText, inst) {
+			var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+			var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
+			$(this).datepicker('setDate', new Date(year, month, 1));
+		},
+		beforeShow : function(input, inst) {
+			if ((datestr = $(this).val()).length > 0) {
+				year = datestr.substring(datestr.length-4, datestr.length);
+				month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
+				$(this).datepicker('setDate', new Date(year, month, 1));    
+			}
+				var other  = this.id  == "month_year_from_date" ? "#month_year_to_date" : "#month_year_from_date";
+				var option = this.id == "month_year_from_date" ? "maxDate" : "minDate";        
+			if ((selectedDate = $(other).val()).length > 0) {
+				year = selectedDate.substring(selectedDate.length-4, selectedDate.length);
+				month = jQuery.inArray(selectedDate.substring(0, selectedDate.length-5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker( "option", option, new Date(year, month, 1));
+			}
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
 });	
 $(document).ready(function(){
 	
