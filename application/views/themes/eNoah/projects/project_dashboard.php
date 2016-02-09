@@ -109,7 +109,7 @@ $(function(){
 						<div class="filterrow-area-btn bttn-area">
 							<div class="bttons">
 								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
-								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'report/resource_availability'?>'" />
+								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'projects/dashboard'?>'" />
 							</div>								
 						</div>
 					</div>
@@ -206,9 +206,9 @@ $(function(){
 									<td><?= $rt; ?></td>
 									<td align="right"><?= round($rtval['hour'],1); ?></td>
 									<td align="right"><?= round($rtval['headcount'],2); ?></td>
-									<td align="right"><?= round($rtval['cost'],2); ?></td>
+									<td align="right"><?= round($rtval['cost'],0); ?></td>
 									<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 2) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
 								</tr>
 					<?php
 							$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
@@ -220,9 +220,9 @@ $(function(){
 							<td align="right"><b>Total:</b></td>
 							<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
 							<td align="right"></td>
-							<td align="right"><?= round($bu_arr['totalcost'],2); ?></td>
+							<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
 							<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_cost,2) . ' %'; ?></td>
+							<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
 							</tr>
 				</table>
 				<div class="dept_section">
@@ -247,9 +247,9 @@ $(function(){
 									<td><a onclick="getData(<?php echo "'".$adskey."'"; ?>,'2');return false;"><?= $adskey; ?></a></td>
 									<td align="right"><?= round($adsval['hour'],1); ?></td>
 									<td align="right"><?= round($adsval['headcount'],2); ?></td>
-									<td align="right"><?= round($adsval['cost'],2); ?></td>
+									<td align="right"><?= round($adsval['cost'],0); ?></td>
 									<td align="right"><?php echo round(($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 2) . ' %'; ?></td>
+									<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 0) . ' %'; ?></td>
 								</tr>
 					<?php
 							$percent_adshour += ($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100;
@@ -260,9 +260,9 @@ $(function(){
 							<td align="right"><b>Total:</b></td>
 							<td align="right"><?= round($dept_arr['eADS']['totalhour'],1); ?></td>
 							<td align="right"></td>
-							<td align="right"><?= round($dept_arr['eADS']['totalcost'],2); ?></td>
+							<td align="right"><?= round($dept_arr['eADS']['totalcost'],0); ?></td>
 							<td align="right"><?= round($percent_adshour, 1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_adscost, 2) . ' %'; ?></td>
+							<td align="right"><?= round($percent_adscost, 0) . ' %'; ?></td>
 							</tr>
 				</table>
 				</div>
@@ -289,9 +289,9 @@ $(function(){
 									<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'3');return false;"><?= $qadkey; ?></a></td>
 									<td align="right"><?= round($qadval['hour'],1); ?></td>
 									<td align="right"><?= round($qadval['headcount'],2); ?></td>
-									<td align="right"><?= round($qadval['cost'],2); ?></td>
+									<td align="right"><?= round($qadval['cost'],0); ?></td>
 									<td align="right"><?php echo round(($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 2) . ' %'; ?></td>
+									<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 0) . ' %'; ?></td>
 								</tr>
 					<?php
 							$percent_qadhour += ($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100;
@@ -302,9 +302,9 @@ $(function(){
 							<td align="right"><b>Total:</b></td>
 							<td align="right"><?= round($dept_arr['eQAD']['totalhour'],1); ?></td>
 							<td align="right"></td>
-							<td align="right"><?= round($dept_arr['eQAD']['totalcost'],2); ?></td>
+							<td align="right"><?= round($dept_arr['eQAD']['totalcost'],0); ?></td>
 							<td align="right"><?= round($percent_qadhour, 1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_qadcost, 2) . ' %'; ?></td>
+							<td align="right"><?= round($percent_qadcost, 0) . ' %'; ?></td>
 							</tr>
 				</table>
 				</div>
