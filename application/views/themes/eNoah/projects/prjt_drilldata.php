@@ -255,7 +255,7 @@ if(!empty($tbl_data)) {
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 2)."</b></th>
+		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></th>
 		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></th>
 		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></th>
 		</tr>";
