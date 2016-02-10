@@ -32,6 +32,11 @@ $(function(){
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
+			
+			<a class="choice-box" onclick="advanced_filter();" >
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
+				<span>Advanced Filters</span>
+			</a>
 			<div class="buttons">
 				<form name="fliter_data" id="fliter_data" method="post">
 				<!--button  type="submit" id="excel-1" class="positive">
@@ -47,89 +52,92 @@ $(function(){
 			</div>
 			<div class="clearfix"></div>
 		</div>
-
-        <div class="dialog-err" id="dialog-err-msg" style="font-size:13px; font-weight:bold; padding: 0 0 10px; text-align:center;"></div>
- 
-		<div id="advance_filters" style="float:left;width:100%;" >
 		
+		<div id="filter_section">
+			<div class="clear"></div>
+			
+			<div id="advance_search" style="padding-bottom:15px; display:none;">
 				<form action="<?php echo site_url('projects/dashboard')?>" name="project_dashboard" id="project_dashboard" method="post">
-				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<div class="filterGrid-area">
-						<div class="filterrow-area">
-							<span>Exclude Leave & Holiday: </span>
-							<div class="selectOPtshow1">
-								<?php $checked=''; if($exclude_leave==1) { $checked ='checked="checked"'; } ?>
-								<input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $checked; ?> value="1" />
-							</div>						
-						</div>
-						<div class="profilterrow-areaYear">
-							<span>From Month/Year: </span>
-							<div class="filtemonYear">
-								<input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
-							</div>
-							<span>To Month/Year: </span>
-							<div class="filtemonYear">
-								<input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
-							</div>
-						</div>
-						<div class="filterrow-areaD">
-							<span> Department: </span>
-							<div class="selectOPt"><select title="Select Department" class="chzn-select" id="department_ids" name="department_ids[]"	multiple="multiple">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<div style="border: 1px solid #DCDCDC;">
+						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+							<tr>
+								<td class="tblheadbg">MONTH & YEAR</td>
+								<td class="tblheadbg">By EXCLUSION</td>
+								<td class="tblheadbg">By DEPT</td>
+								<td class="tblheadbg">By PRACTICE</td>
+								<td class="tblheadbg">By SKILL</td>
+								<td class="tblheadbg">By MEMBER</td>
+								
+							</tr>
+							<tr>	
+								<td>
+									From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
+									<br />
+									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
+								</td>
+								<td>
+									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
+									Leave
+									<input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" />
+									<br />
+									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
+									Holiday
+									<input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" />
+								</td>
+								<td>
+									<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
 											<?php foreach($departments as $depts){?>
 												<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
 									<?php } }?>
-								</select></div>						
-						</div>
-						<div class="filterrow-areaP" id="practice_show_id">
-							<span> Practice: </span>
-							<div class="selectOPt"><select title="Select Practice" class="chzn-select" id="practice_ids" name="practice_ids[]" multiple="multiple">
-									<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)){?>
-											<?php foreach($practice_ids_selected as $prac){?>
-												<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
-									<?php } }?>
-								</select></div>						
-						</div>
-						<div class="filterrow-area" id="skill_show_id">
-							<span>Select Skill(s): </span>
-							<div class="selectOPtshow">
-								<select class="chzn-select" title="Select Skill" id="skill_ids"  name="skill_ids[]"	multiple="multiple">
-								<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)){?>
-								<?php 
-									foreach($skill_ids_selected as $skills){
-										$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
-										//$skills->skill_id = ($skills->skill_id==0)?'N/A':$skills->skill_id;
-										?>
-										<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
-								<?php } }?>
-								</select>
-							</div>						
-						</div>
-						<div class="filterrow-area" id="member_show_id">
-							<span>Select Member(s): </span>
-							<div class="selectOPtshow1">
-								<select class="chzn-select" title="Select Members" id="member_ids" name="member_ids[]"	multiple="multiple">
-								<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
-								<?php foreach($member_ids_selected as $members){?>
-										<option <?php echo in_array($members->username,$member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
-								<?php } }?>								
-								</select>	
-							</div>						
-						</div>
-						<div class="filterrow-area-btn bttn-area">
-							<div class="bttons">
-								<input style="height:auto;" type="submit" class="positive input-font" name="advance_pjt" id="advance" value="Go" />
-								<input style="height:auto;" type="button" class="positive input-font" name="advance_pjt" id="reset" value="Reset" onclick="window.location.href='<?php echo base_url().'projects/dashboard'?>'" />
-							</div>
-						</div>
-						
+									</select>
+								</td>
+								<td>
+									<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
+										<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)) { ?>
+												<?php foreach($practice_ids_selected as $prac) {?>
+													<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
+										<?php } } ?>
+									</select>
+								</td>
+								<td>
+									<select title="Select Skill" id="skill_ids" name="skill_ids[]"	multiple="multiple">
+										<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)) { ?>
+										<?php foreach($skill_ids_selected as $skills) {
+												$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
+												?>
+												<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
+										<?php } }?>
+									</select>
+								</td>
+								<td>
+									<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
+										<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
+										<?php foreach($member_ids_selected as $members){?>
+												<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
+										<?php } }?>								
+									</select>
+								</td>
+							</tr>
+							<tr align="right" >
+								<td colspan="6">
+									<input type="hidden" id="start_date" name="start_date" value="" />
+									<input type="hidden" id="end_date" name="end_date" value="" />
+									<input type="hidden" id="filter_area_status" name="filter_area_status" value="" />
+									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
+									<div id = 'load' style = 'float:right;display:none;height:1px;'>
+										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+									</div>
+								</td>
+							</tr>
+						</table>
 					</div>
-					<input type="hidden" id="start_date" name="start_date" value="<?php echo $start_date;?>" />
-					<input type="hidden" id="end_date" name="end_date" value="<?php echo $end_date;?>" />
 				</form>
-				<br />
-			</div>	
+			</div>
+		</div>
+ 
 			<div class="clearfix"></div>
 			<div id="ajax_loader" style="margin:20px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
@@ -345,6 +353,10 @@ $(function(){
 	</div>
 </div>
 <script type="text/javascript">
+var filter_area_status = '<?php echo $filter_area_status; ?>';
+if(filter_area_status==1){
+	$('#advance_search').show();
+}
 $(function() {
     /* $('#month_year_from_date').datepicker( {
         changeMonth: true,
@@ -369,6 +381,7 @@ $(function() {
 			$(this).datepicker('setDate', new Date(year, month, 1));
 		},
 		beforeShow : function(input, inst) {
+			$("#filter_area_status").val('1');
 			if ((datestr = $(this).val()).length > 0) {
 				year = datestr.substring(datestr.length-4, datestr.length);
 				month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNames'));
@@ -385,17 +398,20 @@ $(function() {
 			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 		}
 	});
+	
+	$('#exclude_leave, #exclude_holiday').click(function() {
+        $("#filter_area_status").val('1');
+    });
 });	
 $(document).ready(function(){
 	
 	$("#department_ids").change(function(){
 		var ids = $(this).val();
-		var params = {'dept_ids':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
+		var params = {'dept_ids':ids,'start_date':start_date,'end_date':end_date};
 		params[csrf_token_name] = csrf_hash_token;
-		$('#skill_show_id').css('display','none');
-		$('#member_show_id').css('display','none');
-		$('#practice_show_id').css('display','none');
-		
+		$("#filter_area_status").val('1');
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_practices',
@@ -409,12 +425,12 @@ $(document).ready(function(){
 							prac_html +='<option value="'+prac[i].practice_id+'">'+prac[i].practice_name+'</option>';
 						}	
 					}
-					$('#practice_show_id').css('display','block');
 					$('#practice_ids').html('');
 					$('#practice_ids').append(prac_html);
-					$("#practice_ids").trigger("liszt:updated");									
 				}
 				//skill
+				$('#skill_ids').html('');
+				$('#member_ids').html('');
 				$.ajax({
 					type: 'POST',
 					url: site_base_url+'projects/dashboard/get_skills',
@@ -428,10 +444,8 @@ $(document).ready(function(){
 									if(skills[i].name=='null' || skills[i].skill_id==0) skills[i].name = 'N/A';
 										html +='<option value="'+skills[i].skill_id+'">'+skills[i].name+'</option>';
 								}
-								$('#skill_show_id').css('display','block');
 								$('#skill_ids').html('');
 								$('#skill_ids').append(html)
-								$("#skill_ids").trigger("liszt:updated");
 								$.ajax({
 									type: 'POST',
 									url: site_base_url+'projects/dashboard/get_members',
@@ -445,10 +459,8 @@ $(document).ready(function(){
 													mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
 												}	
 											}
-											$('#member_show_id').css('display','block');
 											$('#member_ids').html('');
-											$('#member_ids').append(mem_html)
-											$("#member_ids").trigger("liszt:updated");									
+											$('#member_ids').append(mem_html)								
 										}
 									}
 								});
@@ -465,10 +477,11 @@ $(document).ready(function(){
 	$("#practice_ids").change(function(){
 		var ids  = $(this).val();
 		var d_ids = $('#department_ids').val();
-		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
+		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date};
+		$("#filter_area_status").val('1');
 		params[csrf_token_name] = csrf_hash_token;
-		$('#skill_show_id').css('display','none');
-		$('#member_show_id').css('display','none');	
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_skills_by_practice',
@@ -482,10 +495,8 @@ $(document).ready(function(){
 							if(skills[i].name=='null' || skills[i].skill_id==0) skills[i].name = 'N/A';
 								html +='<option value="'+skills[i].skill_id+'">'+skills[i].name+'</option>';
 						}
-						$('#skill_show_id').css('display','block');
 						$('#skill_ids').html('');
 						$('#skill_ids').append(html)
-						$("#skill_ids").trigger("liszt:updated");
 						$.ajax({
 							type: 'POST',
 							url: site_base_url+'projects/dashboard/get_practice_members',
@@ -499,10 +510,8 @@ $(document).ready(function(){
 											mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
 										}	
 									}
-									$('#member_show_id').css('display','block');
 									$('#member_ids').html('');
-									$('#member_ids').append(mem_html)
-									$("#member_ids").trigger("liszt:updated");									
+									$('#member_ids').append(mem_html)								
 								}
 							}
 						});
@@ -515,10 +524,13 @@ $(document).ready(function(){
 	
 	
 	$('body').on('change','#skill_ids',function(){
-		var dids = $('#department_ids').val();
+		var dids       = $('#department_ids').val();
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
 		var sids = $(this).val();
+		$("#filter_area_status").val('1');
 		
-		var params = {'dept_ids':dids,'skill_ids':sids,'start_date':$('#start_date').val(),'end_date':$('#end_date').val()};
+		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.ajax({
@@ -534,26 +546,12 @@ $(document).ready(function(){
 							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
 						}	
 					}
-					$('#member_show_id').css('display','block');
 					$('#member_ids').html('');
 					$('#member_ids').append(mem_html);
-					$("#member_ids").trigger("liszt:updated");
 				}
 			}
 		});
 	});
-	$("#practice_ids").chosen({no_results_text: "Please select Practice"});
-	$("#skill_ids").chosen({no_results_text: "Please select Department"}); 
-	$("#member_ids").chosen({no_results_text: "Please select Skill"}); 
-	<?php if(count($department_ids)<=0){?>
-		$("#practice_show_id").css("display","none");
-	<?php } ?>
-	<?php if(count($practice_ids)<=0){?>
-		$("#skill_show_id").css("display","none");
-	<?php } ?>
-	<?php if(count($skill_ids)<=0){?>
-		$("#member_show_id").css("display","none")
-	<?php } ?>
 });
 
 function getData(resource_type, dept_type)
@@ -594,6 +592,9 @@ function getData(resource_type, dept_type)
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		}                                                                                   
 	});
+}
+function advanced_filter() {
+	$('#advance_search').slideToggle('slow');
 }
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

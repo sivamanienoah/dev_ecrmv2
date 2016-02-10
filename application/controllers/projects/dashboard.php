@@ -16,13 +16,11 @@ class Dashboard extends crm_controller
 	{
 		$data  				  = array();
 		$dept   			  = array();
-		$master 			  = array();
 		$data['page_heading'] = "Project Dashboard";
 		
 		// $practices = $this->dashboard_model->get_practices();
 		// echo "<pre>"; print_r($this->input->post()); exit;
 		
-		$master = array();
 		$timesheet_db = $this->load->database("timesheet",true);
 				
 		$start_date = date("Y-m-1");
@@ -42,9 +40,18 @@ class Dashboard extends crm_controller
 		
 		$where = '';
 		// echo $start_date.' '.$end_date; exit;
-		if($this->input->post("exclude_leave")==1){
-			$where .= " and project_code NOT IN ('HOL', 'Leave')";
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			$where .= " and project_code NOT IN ('Leave')";
 			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			$where .= " and project_code NOT IN ('HOL')";
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			$where .= " and project_code NOT IN ('HOL','Leave')";
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
 		}
 		
 		$department_ids = $this->input->post("department_ids");
@@ -132,9 +139,10 @@ class Dashboard extends crm_controller
 		$data['departments'] = $depts_res;
 		$timesheet_db->close();
 
-		$data['start_date'] = $start_date;
-		$data['end_date']   = $end_date;
-		$data['results']    = $arr_depts;
+		$data['start_date'] 	  = $start_date;
+		$data['end_date']   	  = $end_date;
+		$data['results']    	  = $arr_depts;
+		$data['filter_area_status'] = $this->input->post("filter_area_status");
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/project_dashboard", $data);
 	}
@@ -343,8 +351,8 @@ class Dashboard extends crm_controller
 			$this->db->select('t.practice_id, t.practice_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 			$this->db->where("t.practice_id !=", 0);
-			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 			if(!empty($ids))
 			$this->db->where_in("t.dept_id", $ids);
 			$this->db->group_by('t.practice_id');
@@ -364,16 +372,17 @@ class Dashboard extends crm_controller
 	function get_skills(){
 		// echo "projects"; exit;
 		if($this->input->post("dept_ids")){
-			$ids = $this->input->post("dept_ids");
+			$ids 		= $this->input->post("dept_ids");
 			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");
+			$end_date 	= $this->input->post("end_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			$end_date   = date("Y-m-t",strtotime($end_date));
 			$dids = implode(',',$ids);
-			/* $dids 		= 10;
-			$start_date = date("Y-m-01");
-			$end_date   = date("Y-m-d"); */
+
 			$timesheet_db = $this->load->database("timesheet",true);
 			$qry = $timesheet_db->query("SELECT v.skill_id,v.name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by
 			v.skill_id order by v.name asc");
+			
 			if($qry->num_rows()>0){
 				$res = $qry->result();
 				echo json_encode($res); exit;
@@ -396,8 +405,8 @@ class Dashboard extends crm_controller
 			$this->db->select('t.skill_id, t.skill_name as name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 			$this->db->where("t.practice_id !=", 0);
-			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 			if(!empty($ids))
 			$this->db->where_in("t.dept_id", $ids);
 			if(!empty($p_ids))
@@ -420,7 +429,10 @@ class Dashboard extends crm_controller
 		if($this->input->post("dept_ids")){
 			$ids = $this->input->post("dept_ids");
 			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");
+			$end_date   = $this->input->post("end_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			$end_date   = date("Y-m-t",strtotime($end_date));
+			
 			$dids = implode(',',$ids);
 			$timesheet_db = $this->load->database("timesheet",true);
 			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
@@ -469,10 +481,13 @@ class Dashboard extends crm_controller
 	
 	function get_skill_members(){
 		if($this->input->post("dept_ids")){
-			$ids = $this->input->post("dept_ids");
-			$skill_ids = $this->input->post("skill_ids");
+			$ids 		= $this->input->post("dept_ids");
+			$skill_ids  = $this->input->post("skill_ids");
 			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");
+			$end_date   = $this->input->post("end_date");
+			
+			$start_date = date("Y-m-01",strtotime($start_date));
+			$end_date   = date("Y-m-t",strtotime($end_date));
 			
 			$dids = implode(',',$ids);
 			$sids = implode(',',$skill_ids);
@@ -480,6 +495,8 @@ class Dashboard extends crm_controller
 			if(!empty($dids) && !empty($sids)){
 				$timesheet_db = $this->load->database("timesheet",true);
 				$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+				/* $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) group by v.username order by v.username asc"); */
+				$timesheet_db->close();
 				if($qry->num_rows()>0){
 					$res = $qry->result();
 					echo json_encode($res); exit;
