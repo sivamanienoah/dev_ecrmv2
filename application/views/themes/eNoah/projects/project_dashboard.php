@@ -63,11 +63,11 @@ $(function(){
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
-								<td class="tblheadbg">By EXCLUSION</td>
-								<td class="tblheadbg">By DEPT</td>
-								<td class="tblheadbg">By PRACTICE</td>
-								<td class="tblheadbg">By SKILL</td>
-								<td class="tblheadbg">By MEMBER</td>
+								<td class="tblheadbg">EXCLUDE</td>
+								<td class="tblheadbg">DEPARTMENT</td>
+								<td class="tblheadbg">PRACTICE</td>
+								<td class="tblheadbg">SKILL</td>
+								<td class="tblheadbg">MEMBER</td>
 								
 							</tr>
 							<tr>	
