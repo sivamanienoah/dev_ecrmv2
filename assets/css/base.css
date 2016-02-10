@@ -2435,7 +2435,7 @@ padding:0;
 float:left;
 
 }
-#month_year_from_date{
+#month_year_from_date, #month_year_to_date
 	border:1px solid #aaaaaa;
 }
 .filterrow-areaYear{
@@ -2756,7 +2756,16 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 .dashboardLegend div { padding:5px; }
 .dashboardLegend { height:25px; color:#fff; width:85% }
 
-
+/***10-02-2016***/
+.month-year span {display:inline-block;width:35px;}
+/* .by-exclusion label span{margin:0 0 0 5px;} */
+.by-exclusion label input{ position: relative;top: 2px;margin:0 5px 0 0;}
+.proj-dash-select select {width: 100%;}
+.month-year input {width: 100px;}
+.by-exclusion label span {font-weight:normal;}
+.month-year {width: 200px;}
+.by-exclusion {width: 120px;}
+/***10-02-2016***/
 
 
 
