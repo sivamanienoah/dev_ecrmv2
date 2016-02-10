@@ -71,21 +71,20 @@ $(function(){
 								
 							</tr>
 							<tr>	
-								<td>
-									From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
+								<td class="month-year">
+									<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
 									<br />
-									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
+									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
 								</td>
-								<td>
-									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
-									Leave
-									<input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" />
+								<td class="by-exclusion">
+									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
+									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>									
 									<br />
+									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
 									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
-									Holiday
-									<input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" />
+									
 								</td>
-								<td>
+								<td class="proj-dash-select">
 									<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
 									<?php if(count($departments)>0 && !empty($departments)){?>
 											<?php foreach($departments as $depts){?>
@@ -93,7 +92,7 @@ $(function(){
 									<?php } }?>
 									</select>
 								</td>
-								<td>
+								<td class="proj-dash-select">
 									<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
 										<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)) { ?>
 												<?php foreach($practice_ids_selected as $prac) {?>
@@ -101,7 +100,7 @@ $(function(){
 										<?php } } ?>
 									</select>
 								</td>
-								<td>
+								<td class="proj-dash-select">
 									<select title="Select Skill" id="skill_ids" name="skill_ids[]"	multiple="multiple">
 										<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)) { ?>
 										<?php foreach($skill_ids_selected as $skills) {
@@ -111,7 +110,7 @@ $(function(){
 										<?php } }?>
 									</select>
 								</td>
-								<td>
+								<td class="proj-dash-select">
 									<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
 										<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 										<?php foreach($member_ids_selected as $members){?>
