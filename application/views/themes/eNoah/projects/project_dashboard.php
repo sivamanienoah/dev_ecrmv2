@@ -10,9 +10,7 @@ table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
 </style>
-<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript">var this_is_home = true;</script>
-<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <script>
 $(function(){
 	var config = {
