@@ -67,14 +67,14 @@ $(function(){
 								<td class="tblheadbg">DEPARTMENT</td>
 								<td class="tblheadbg">PRACTICE</td>
 								<td class="tblheadbg">SKILL</td>
-								<td class="tblheadbg">MEMBER</td>
+								<td class="tblheadbg">RESOURCE</td>
 								
 							</tr>
 							<tr>	
 								<td class="month-year">
-									<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date));?>" />
+									<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date)); ?>" />
 									<br />
-									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date));?>" />
+									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
 								</td>
 								<td class="by-exclusion">
 									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
