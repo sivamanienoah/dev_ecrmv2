@@ -589,5 +589,12 @@ function getData(resource_type, dept_type)
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
+$('#filter_reset').click(function() {
+	 $("#project_dashboard").find('input:checkbox').removeAttr('checked').removeAttr('selected');
+	 $("#practice_ids").html('');
+	 $("#skill_ids").html('');
+	 $("#member_ids").html('');
+	 $("#department_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
+});
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
