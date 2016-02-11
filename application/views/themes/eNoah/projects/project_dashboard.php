@@ -26,7 +26,10 @@ table.bu-tbl-inr th{ text-align:center; }
 				<!--button  type="submit" id="excel-1" class="positive">
 					Export to Excel
 				</button-->
+				<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
+				<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
 				<input type="hidden" name="month_year_from_date" value="" id="hmonth_year" />
+				<input type="hidden" name="month_year_to_date" value="" id="hmonth_to_year" />
 				<input type="hidden" name="department_ids" value="" id="hdept_ids" />
 				<input type="hidden" name="practice_ids" value="" id="hprac_ids" />
 				<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
@@ -397,6 +400,7 @@ $(document).ready(function(){
 		var params = {'dept_ids':ids,'start_date':start_date,'end_date':end_date};
 		params[csrf_token_name] = csrf_hash_token;
 		$("#filter_area_status").val('1');
+		$('#practice_ids').html('');
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_practices',
@@ -466,6 +470,7 @@ $(document).ready(function(){
 		var end_date   = $('#month_year_to_date').val();
 		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date};
 		$("#filter_area_status").val('1');
+		$('#skill_ids').html('');
 		params[csrf_token_name] = csrf_hash_token;
 		$.ajax({
 			type: 'POST',
@@ -514,7 +519,7 @@ $(document).ready(function(){
 		var end_date   = $('#month_year_to_date').val();
 		var sids = $(this).val();
 		$("#filter_area_status").val('1');
-		
+		$('#member_ids').html('');
 		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
 		params[csrf_token_name] = csrf_hash_token;
 		
@@ -553,8 +558,13 @@ function getData(resource_type, dept_type)
 		$('#hprac_ids').val($('#practice_ids').val());
 	}
 	$('#hmonth_year').val($('#month_year_from_date').val());
+	$('#hmonth_to_year').val($('#month_year_to_date').val());
 	$('#hskill_ids').val($('#skill_ids').val())
 	$('#hmember_ids').val($('#member_ids').val())
+	if($('#exclude_leave').attr('checked'))
+	$('#hexclude_leave').val(1);
+	if($('#exclude_holiday').attr('checked'))
+	$('#hexclude_holiday').val(1)
 	
 	var formdata = $('#fliter_data').serialize();
 	
@@ -565,7 +575,6 @@ function getData(resource_type, dept_type)
 		cache: false,
 		beforeSend:function() {
 			$('#filter_group_by').prop('selectedIndex',0);
-			$('#drildown_filter_area').hide();
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 			$('#drilldown_data').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
@@ -573,7 +582,6 @@ function getData(resource_type, dept_type)
 		success: function(data) {
 			$('#drilldown_data').html(data);
 			$('#drilldown_data').show();
-			$('#drildown_filter_area').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		}                                                                                   
 	});
