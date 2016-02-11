@@ -340,7 +340,9 @@ table.bu-tbl-inr th{ text-align:center; }
 		?>
 	</div>
 </div>
+
 <script type="text/javascript">
+var cur_mon = '<?php echo date('F Y') ?>';
 var filter_area_status = '<?php echo $filter_area_status; ?>';
 if(filter_area_status==1){
 	$('#advance_search').show();
@@ -594,6 +596,7 @@ $('#filter_reset').click(function() {
 	 $("#practice_ids").html('');
 	 $("#skill_ids").html('');
 	 $("#member_ids").html('');
+	 // $("#month_year_from_date, #month_year_to_date").val(cur_mon);
 	 $("#department_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
 });
 </script>
