@@ -11,20 +11,6 @@ table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
 </style>
 <script type="text/javascript">var this_is_home = true;</script>
-<script>
-$(function(){
-	var config = {
-		'.chzn-select'           : {},
-		'.chzn-select-deselect'  : {allow_single_deselect:true},
-		'.chzn-select-no-single' : {disable_search_threshold:10},
-		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
-		'.chzn-select-width'     : {width:"95%"}
-	}
-	for (var selector in config) {
-		$(selector).chosen(config[selector]);
-	}
-});  
-</script>
 <div id="content">
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
