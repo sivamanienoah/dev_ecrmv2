@@ -44,6 +44,17 @@ table.bu-tbl-inr th{ text-align:center; }
 				<label>Hour<input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /></label>
 				<label>Cost<input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /></label>
 			</span>
+			<span style="margin: 5px 0px 0px 30px; padding: 3px 0px 4px ! important;">
+				<?php 
+					$checked_hr_percent = $checked_cost_percent = '';
+					if($value_based == 'value') 
+					$checked_hr_percent = 'checked="checked"';
+					else if($value_based == 'percent') 
+					$checked_cost_percent = 'checked="checked"';
+				?>
+				<label>Value<input type='radio' name='value_based' value='value' id='rd_value' <?php echo $checked_hr_percent; ?> /></label>
+				<label>Percentage<input type='radio' name='value_based' value='percent' id='rd_percent' <?php echo $checked_cost_percent; ?> /></label>
+			</span>
 			<div class="buttons">
 				<form name="fliter_data_trend" id="fliter_data_trend" method="post">
 					<!--button  type="submit" id="excel-1" class="positive">
@@ -58,6 +69,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
 					<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
 					<input type="hidden" name="graph_based" value="" id="hgraph_based" />
+					<input type="hidden" name="value_based" value="" id="hvalue_based" />
 				</form>
 			</div>
 			<div class="clearfix"></div>
@@ -138,6 +150,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
 									<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
 									<input type="hidden" name="graph_based" value="<?php echo $graph_based; ?>" id="hidgraph_based" />
+									<input type="hidden" name="value_based" value="<?php echo $value_based; ?>" id="hidvalue_based" />
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
@@ -185,6 +198,14 @@ table.bu-tbl-inr th{ text-align:center; }
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['hour'] = $row->duration_hours;
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] = $row->resource_duration_cost;
 						}
+						//total calculation by month
+						if (isset($bu_arr['it'][$mont_yr]['totalhour'])) {
+							$bu_arr['it'][$mont_yr]['totalhour'] += $row->duration_hours;
+							$bu_arr['it'][$mont_yr]['totalcost'] += $row->resource_duration_cost;
+						} else {
+							$bu_arr['it'][$mont_yr]['totalhour'] = $row->duration_hours;
+							$bu_arr['it'][$mont_yr]['totalcost'] = $row->resource_duration_cost;
+						}
 					}
 				}
 				$business_unit = $bu_arr['it'];
@@ -194,7 +215,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				$i = date("Y-m", strtotime($start_date)); 
 				while($i <= date("Y-m", strtotime($end_date))) {
 					
-					// echo $business_unit['Billable'][date('Y-m', strtotime($i))]['hour']; exit;
+					// echo $business_unit[date('Y-m', strtotime($i))]['totalhour']; exit;
 					
 					$month_no_arr[] = '"'.date('Y-m', strtotime($i)).'"'; // using for graph dataClick
 					$month_name_arr[] = '"'.date('M Y', strtotime($i)).'"'; // for display
@@ -207,6 +228,14 @@ table.bu-tbl-inr th{ text-align:center; }
 					$billable_value_cost[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) : 0;
 					$internal_value_cost[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) : 0;
 					$non_billable_value_cost[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) : 0;
+					//for hour percentage
+					$billable_value_hr_percent[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['hour']) ? round(($business_unit['Billable'][date('Y-m', strtotime($i))]['hour']/$business_unit[date('Y-m', strtotime($i))]['totalhour'])*100) : 0;			
+					$internal_value_hr_percent[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['hour']) ? round(($business_unit['Internal'][date('Y-m', strtotime($i))]['hour']/$business_unit[date('Y-m', strtotime($i))]['totalhour'])*100) : 0;
+					$non_billable_value_hr_percent[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['hour']) ? round(($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['hour']/$business_unit[date('Y-m', strtotime($i))]['totalhour'])*100) : 0;
+					//for cost percentage
+					$billable_value_cost_percent[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
+					$internal_value_cost_percent[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
+					$non_billable_value_cost_percent[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
 					
 					if(substr($i, 5, 2) == "12")
 					$i = (date("Y", strtotime($i."-01")) + 1)."-01";
@@ -217,15 +246,25 @@ table.bu-tbl-inr th{ text-align:center; }
 				// echo "<pre>"; print_r($month_name_arr); echo "</pre>"; exit;
 				
 				$x_axis_values     = implode(',', $x_axis_values);
-				if($graph_based == 'hour'){
+				if(($graph_based == 'hour') && ($value_based == 'value')){
 					$billable_value 	= implode(',', $billable_value_hr); //billable
 					$internal_value 	= implode(',', $internal_value_hr); //internal
 					$non_billable_value = implode(',', $non_billable_value_hr); //non-billable
 				}
-				if($graph_based == 'cost'){
+				if(($graph_based == 'cost') && ($value_based == 'value')){
 					$billable_value 	= implode(',', $billable_value_cost); //billable
 					$internal_value 	= implode(',', $internal_value_cost); //internal
 					$non_billable_value = implode(',', $non_billable_value_cost); //non-billable
+				}
+				if(($graph_based == 'hour') && ($value_based == 'percent')){
+					$billable_value 	= implode(',', $billable_value_hr_percent); //billable
+					$internal_value 	= implode(',', $internal_value_hr_percent); //internal
+					$non_billable_value = implode(',', $non_billable_value_hr_percent); //non-billable
+				}
+				if(($graph_based == 'cost') && ($value_based == 'percent')){
+					$billable_value 	= implode(',', $billable_value_cost_percent); //billable
+					$internal_value 	= implode(',', $internal_value_cost_percent); //internal
+					$non_billable_value = implode(',', $non_billable_value_cost_percent); //non-billable
 				}
 				$month_no_arr      = implode(',', $month_no_arr);
 				$month_name_arr    = implode(',', $month_name_arr);
@@ -269,6 +308,7 @@ $(function() {
 		changeMonth: true,
 		changeYear: true,
 		dateFormat: 'MM yy',
+		maxDate: 0,
 		showButtonPanel: true,	
 		onClose: function(dateText, inst) {
 			var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();

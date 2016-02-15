@@ -270,6 +270,17 @@ $('#rd_grph_cost').click(function() {
 	$( "#project_dashboard" ).submit();
 })
 
+$('#rd_value').click(function() {
+	$('#hvalue_based').val('value');
+	$('#hidvalue_based').val('value');
+	$( "#project_dashboard" ).submit();
+});
+$('#rd_percent').click(function() {
+	$('#hvalue_based').val('percent');
+	$('#hidvalue_based').val('percent');
+	$( "#project_dashboard" ).submit();
+});
+
 
 
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

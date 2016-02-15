@@ -204,6 +204,11 @@ class Dashboard extends crm_controller
 		} else {
 			$data['graph_based'] = $this->input->post("graph_based");
 		}
+		if($this->input->post("value_based")==''){
+			$data['value_based'] = 'value';
+		} else {
+			$data['value_based'] = $this->input->post("value_based");
+		}
 		$where = '';
 		// echo $start_date.' '.$end_date; exit;
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
