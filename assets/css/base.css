@@ -2119,7 +2119,7 @@ div.submenu{background: #fff;position: absolute;/* top: -12px;left: -20px; */rig
 a.account {font-size: 11px;line-height: 16px;color:#59585d;/* position: absolute; */position:relative;/* z-index: 110; */z-index:1;display: block;/* padding: 11px 0 0 20px;height: 28px; width: 121px;*/margin:0px;padding:9px 0 9px 44px;text-decoration: none;cursor:pointer;background:url("../img/user-icon.png") no-repeat left;float:left;}
 a.account p{color:#363636;font-size:13px;background:url("../img/user-drop-icon.png") no-repeat  100% 8px;padding:0 25px 0 0;}
 .root{list-style:none;margin:0px;padding:0px;font-size: 11px;padding:0px;border:1px solid #dedede;}
-#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2, #forecast_entity_chart, #actual_entity_chart, #forecast_compare_chart {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
+#pie1, #pie2, #pie3, #funnel1, #bar1, #line1, #line2, #forecast_entity_chart, #actual_entity_chart, #forecast_compare_chart , #trend_analysis_chart {border:1px solid #cecece;border-width:0 1px 1px 1px;background:#fff;/* width:451px !important; */width:546px !important;min-height: 345px !important;box-shadow: 0 1px 3px #C2C2C2;-moz-box-shadow: 0 1px 3px #C2C2C2;-o-box-shadow: 0 1px 3px #C2C2C2;-webkit-box-shadow: 0 1px 3px #C2C2C2;}
 .header {float: left;padding:5px 0;width: 100%;}
 .date-time{background:url("../img/calender-icon.png") no-repeat left;float: left;margin:0;padding: 10px 0px 10px 25px;}
 div.dropdown {color: #555;position: relative;float:right;border-left: 1px solid #dadada;margin:0 0 0 20px;padding:0 0 0 20px;}
@@ -2208,7 +2208,9 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .blockUI.blockMsg.blockPage.assign-user, .blockUI.blockMsg.blockPage.no-scroll {overflow: visible !important;}
 /*sales forecast dashboard*/
 #forecast_entity_chart .jqplot-title, #actual_entity_chart .jqplot-title, #forecast_compare_chart .jqplot-title {display:none;}
+#trend_analysis_chart .jqplot-title {display:none;}
 #forecast_compare_chart .jqplot-grid-canvas { top: 0 !important; }
+#trend_analysis_chart .jqplot-grid-canvas { top: 0 !important; }
 /*sales forecast dashboard*/
 
 .link-btn {background: none repeat scroll 0 0 #4b6fb9;border: 1px solid #274686;color: #fff;cursor: pointer;font-size: 11px;font-weight: normal;margin: 0;padding: 3px 7px;text-decoration:none !important;}
@@ -2217,18 +2219,18 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 .sub-table td{ border:none; text-align:center; padding:0;}
 /**7-5-2015**/
 /**8-5-2015**/
-.forecast_chartbar{
+.forecast_chartbar, .trend_analysis_bar{
 	text-align:center;
 	line-height:22px;
 	padding:10px 0;
 	background: #606c88; /* Old browsers */
-background: -moz-linear-gradient(top,  #606c88 0%, #44506f 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#44506f)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #606c88 0%,#44506f 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #606c88 0%,#44506f 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#44506f',GradientType=0 ); /* IE6-9 */
+	background: -moz-linear-gradient(top,  #606c88 0%, #44506f 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#44506f)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #606c88 0%,#44506f 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #606c88 0%,#44506f 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #606c88 0%,#44506f 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#44506f',GradientType=0 ); /* IE6-9 */
 	border:1px solid #cecece;
 	border-width:1px 1px 0;
 	color: #fff !important;
@@ -2245,6 +2247,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 /* .forcast-new .forecast-details span.from {margin: 0 10px 0 0;} */
 .dash-section-full{width: 100%;}
 .dash-section-full #forecast_compare_chart {width: 99.8% !important;}
+.dash-section-full #trend_analysis_chart {width: 99.8% !important;}
 
 .entity-chart-heading-new{position:relative;}
 .entity-chart-heading-new .export-to-excel {margin:0 30px 0 0;position: absolute;right: 22px;top: 12px;}
@@ -2253,6 +2256,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 
 #forecast_compare_chart .jqplot-xaxis-tick { margin: 6px 0; }
 #forecast_compare_chart .jqplot-grid-canvas { margin: 0 6px; }
+#trend_analysis_chart .jqplot-xaxis-tick { margin: 6px 0; }
+#trend_analysis_chart .jqplot-grid-canvas { margin: 0 6px; }
 .popup-forecast-head { font-size: 12px; text-align: left; font-weight: bold;}
 
 #popupGetSearchName { display:none; }
