@@ -20,7 +20,7 @@ $(function() {
 	var ticks            = x_axis_values;
 	var cur_name         = currency_name;
 	
-	plot2 = $.jqplot('trend_analysis_chart', [bill_value_hr, inter_value_hr], {
+	plot2 = $.jqplot('trend_analysis_chart', [bill_value_hr, inter_value_hr, nonbill_value_hr], {
 		// title: ' ',
 		animate: !$.jqplot.use_excanvas,
 		seriesDefaults:{
