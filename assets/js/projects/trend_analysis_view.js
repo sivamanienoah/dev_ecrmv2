@@ -26,7 +26,7 @@ $(function() {
 		seriesDefaults:{
 			// renderer:$.jqplot.BarRenderer,
 			shadow: false,
-			pointLabels: { show: true, ypadding:3 },
+			// pointLabels: { show: true, ypadding:3 },
 			// pointLabels: { show: true },
 			rendererOptions: {
 				barWidth: 34,
