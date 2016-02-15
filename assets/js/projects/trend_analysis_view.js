@@ -10,9 +10,9 @@ params[csrf_token_name] = csrf_hash_token;
 $(function() {
 	$.jqplot.config.enablePlugins = true;
 	
-	// var billable_value_hr = [2, 6, 7, 10];
-	// var internal_value_hr   = [10, 5, 3, 2];
-	// var ticks           = ['May', 'June', 'July', 'August'];
+	// var bill_value_hr  = [2, 6, 7, 10];
+	// var inter_value_hr = [10, 5, 3, 2];
+	// var ticks          = ['May', 'June', 'July', 'August'];
 	
 	var bill_value_hr    = billable_value_hr;
 	var inter_value_hr   = internal_value_hr;
@@ -20,7 +20,7 @@ $(function() {
 	var ticks            = x_axis_values;
 	var cur_name         = currency_name;
 	
-	plot2 = $.jqplot('trend_analysis_chart', [bill_value_hr, inter_value_hr, nonbill_value_hr], {
+	plot2 = $.jqplot('trend_analysis_chart', [bill_value_hr, inter_value_hr], {
 		// title: ' ',
 		animate: !$.jqplot.use_excanvas,
 		seriesDefaults:{
