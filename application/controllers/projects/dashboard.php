@@ -552,7 +552,24 @@ class Dashboard extends crm_controller
 			$mids = explode(',', $member_ids);
 			$this->db->where_in("t.username", $mids);
 		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			// $where .= " and project_code NOT IN ('Leave')";
+			$this->db->where_not_in("t.project_code", 'Leave');
+			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			// $where .= " and project_code NOT IN ('HOL')";
+			$this->db->where_not_in("t.project_code", 'HOL');
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			// $where .= " and project_code NOT IN ('HOL','Leave')";
+			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		$data['heading'] 	   = $heading;
@@ -588,18 +605,20 @@ class Dashboard extends crm_controller
 		else
 		$data['filter_sort_val'] = 'hour';
 	
+		$data['month_year_from_date'] = $this->input->post("month_year_from_date");
+	
 		switch($this->input->post("filter_group_by")){
 			case 0:
-				$this->load->view('projects/practice_drilldata', $data);
+				$this->load->view('projects/practice_trend_drilldata', $data);
 			break;
 			case 1:
-				$this->load->view('projects/skill_drilldata', $data);
+				$this->load->view('projects/skill_trend_drilldata', $data);
 			break;
 			case 2:
-				$this->load->view('projects/prjt_drilldata', $data);
+				$this->load->view('projects/prjt_trend_drilldata', $data);
 			break;
 			case 3:
-				$this->load->view('projects/resource_drilldata', $data);
+				$this->load->view('projects/resource_trend_drilldata', $data);
 			break;
 		}
 	}
