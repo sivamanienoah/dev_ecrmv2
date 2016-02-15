@@ -33,6 +33,17 @@ table.bu-tbl-inr th{ text-align:center; }
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
+			<span style="margin: 5px 0px 0px 30px; padding: 3px 0px 4px ! important;">
+				<?php 
+					$checked_hr = $checked_cost = '';
+					if($graph_based == 'hour') 
+					$checked_hr = 'checked="checked"';
+					else if($graph_based == 'cost') 
+					$checked_cost = 'checked="checked"';
+				?>
+				<label>Hour<input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /></label>
+				<label>Cost<input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /></label>
+			</span>
 			<div class="buttons">
 				<form name="fliter_data_trend" id="fliter_data_trend" method="post">
 					<!--button  type="submit" id="excel-1" class="positive">
@@ -46,6 +57,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<input type="hidden" name="member_ids" value="" id="hmember_ids" />
 					<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
 					<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
+					<input type="hidden" name="graph_based" value="" id="hgraph_based" />
 				</form>
 			</div>
 			<div class="clearfix"></div>
@@ -122,9 +134,10 @@ table.bu-tbl-inr th{ text-align:center; }
 								<td colspan="6">
 									<input type="hidden" id="start_date" name="start_date" value="" />
 									<input type="hidden" id="end_date" name="end_date" value="" />
-									<input type="hidden" id="filter_area_status" name="filter_area_status" value="" />
+									<input type="hidden" id="filter_area_status" name="filter_area_status" value="<?php echo $filter_area_status; ?>" />
 									<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
 									<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
+									<input type="hidden" name="graph_based" value="<?php echo $graph_based; ?>" id="hidgraph_based" />
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
@@ -185,12 +198,15 @@ table.bu-tbl-inr th{ text-align:center; }
 					
 					$month_no_arr[] = '"'.date('Y-m', strtotime($i)).'"'; // using for graph dataClick
 					$month_name_arr[] = '"'.date('M Y', strtotime($i)).'"'; // for display
-					
-					// $x_axis_values[] = "['".date('M', strtotime($i))."']";
 					$x_axis_values[]   = '"'.date('M', strtotime($i)).'"';
+					//for hour
 					$billable_value_hr[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['hour']) ? round($business_unit['Billable'][date('Y-m', strtotime($i))]['hour']) : 0;
 					$internal_value_hr[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['hour']) ? round($business_unit['Internal'][date('Y-m', strtotime($i))]['hour']) : 0;
 					$non_billable_value_hr[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['hour']) ? round($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['hour']) : 0;
+					//for cost
+					$billable_value_cost[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) : 0;
+					$internal_value_cost[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) : 0;
+					$non_billable_value_cost[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) ? round($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) : 0;
 					
 					if(substr($i, 5, 2) == "12")
 					$i = (date("Y", strtotime($i."-01")) + 1)."-01";
@@ -201,9 +217,16 @@ table.bu-tbl-inr th{ text-align:center; }
 				// echo "<pre>"; print_r($month_name_arr); echo "</pre>"; exit;
 				
 				$x_axis_values     = implode(',', $x_axis_values);
-				$billable_value_hr = implode(',', $billable_value_hr); //billable
-				$internal_value_hr = implode(',', $internal_value_hr); //internal
-				$non_billable_value_hr = implode(',', $non_billable_value_hr); //non-billable
+				if($graph_based == 'hour'){
+					$billable_value 	= implode(',', $billable_value_hr); //billable
+					$internal_value 	= implode(',', $internal_value_hr); //internal
+					$non_billable_value = implode(',', $non_billable_value_hr); //non-billable
+				}
+				if($graph_based == 'cost'){
+					$billable_value 	= implode(',', $billable_value_cost); //billable
+					$internal_value 	= implode(',', $internal_value_cost); //internal
+					$non_billable_value = implode(',', $non_billable_value_cost); //non-billable
+				}
 				$month_no_arr      = implode(',', $month_no_arr);
 				$month_name_arr    = implode(',', $month_name_arr);
 			?>
@@ -226,18 +249,16 @@ table.bu-tbl-inr th{ text-align:center; }
 	</div>
 </div>
 <script type="text/javascript">
-	var x_axis_values  		   		 = [<?php echo $x_axis_values ?>];
-	var billable_value_hr 	   		 = [<?php echo $billable_value_hr ?>];
-	var internal_value_hr  		 	 = [<?php echo $internal_value_hr ?>];
-	var non_billable_value_hr  		 = [<?php echo $non_billable_value_hr ?>];
-	// var compare_entity 			 	 = "<?php echo $filter['entity'] ?>";
-	// var compare_customer 			 = "<?php echo $filter['customer'] ?>";
-	// var compare_lead_ids 			 = "<?php echo $filter['lead_ids'] ?>";
-	var start_date = "<?php echo $start_date ?>";
-	var end_date   = "<?php echo $end_date ?>";
-	var month_no_arr  		  		 = [<?php echo $month_no_arr ?>];
-	var month_name_arr  		  	 = [<?php echo $month_name_arr ?>];
-	var currency_name  		  		 = ['<?php echo $default_currency ?>'];
+	var x_axis_values  	   = [<?php echo $x_axis_values ?>];
+	var billable_value 	   = [<?php echo $billable_value ?>];
+	var internal_value     = [<?php echo $internal_value ?>];
+	var non_billable_value = [<?php echo $non_billable_value ?>];
+	var start_date		   = "<?php echo $start_date ?>";
+	var end_date	       = "<?php echo $end_date ?>";
+	var month_no_arr  	   = [<?php echo $month_no_arr ?>];
+	var month_name_arr     = [<?php echo $month_name_arr ?>];
+	var currency_name  	   = ['<?php echo $default_currency ?>'];
+	var graph_based		   = ['<?php echo $graph_based ?>'];			
 </script>
 <script type="text/javascript">
 var filter_area_status = '<?php echo $filter_area_status; ?>';

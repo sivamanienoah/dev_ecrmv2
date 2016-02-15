@@ -177,6 +177,7 @@ class Dashboard extends crm_controller
 	
 	function trend_analysis()
 	{
+		// echo "<pre>"; print_r($this->input->post()); exit;
 		$data  				  = array();
 		$dept   			  = array();
 		$data['page_heading'] = "Trend Analysis";
@@ -198,7 +199,11 @@ class Dashboard extends crm_controller
 			$end_date = $this->input->post("month_year_to_date");
 			$end_date = date("Y-m-t",strtotime($end_date));	
 		}
-		
+		if($this->input->post("graph_based")==''){
+			$data['graph_based'] = 'hour';
+		} else {
+			$data['graph_based'] = $this->input->post("graph_based");
+		}
 		$where = '';
 		// echo $start_date.' '.$end_date; exit;
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {

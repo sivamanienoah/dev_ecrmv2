@@ -14,13 +14,18 @@ $(function() {
 	// var inter_value_hr = [10, 5, 3, 2];
 	// var ticks          = ['May', 'June', 'July', 'August'];
 	
-	var bill_value_hr    = billable_value_hr;
-	var inter_value_hr   = internal_value_hr;
-	var nonbill_value_hr = non_billable_value_hr;
-	var ticks            = x_axis_values;
-	var cur_name         = currency_name;
+	var bill_value    = billable_value;
+	var inter_value   = internal_value;
+	var nonbill_value = non_billable_value;
+	var ticks         = x_axis_values;
+	var cur_name      = currency_name;
+	var yaxis_label   = '';
+	if(graph_based == 'hour')
+	yaxis_label = 'hour';
+	else if(graph_based == 'cost')
+	yaxis_label = 'cost';
 	
-	plot2 = $.jqplot('trend_analysis_chart', [bill_value_hr, inter_value_hr, nonbill_value_hr], {
+	plot2 = $.jqplot('trend_analysis_chart', [bill_value, inter_value, nonbill_value], {
 		// title: ' ',
 		animate: !$.jqplot.use_excanvas,
 		seriesDefaults:{
@@ -66,7 +71,7 @@ $(function() {
 			},
 			yaxis: {
 				min:0,
-				label:'Values(hour) --->',
+				label:'Values('+yaxis_label+') --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
@@ -253,6 +258,17 @@ function getTrendDrillData(resource_type, dept_type, drill_month)
 		$('#trend_analysis_info_export, #trend_analysis_info').css('display','none');
 	});
 }) */
+
+$('#rd_grph_hr').click(function() {
+	$('#hgraph_based').val('hour');
+	$('#hidgraph_based').val('hour');
+	$( "#project_dashboard" ).submit();
+});
+$('#rd_grph_cost').click(function() {
+	$('#hgraph_based').val('cost');
+	$('#hidgraph_based').val('cost');
+	$( "#project_dashboard" ).submit();
+})
 
 
 
