@@ -353,6 +353,8 @@ $(document).ready(function(){
 		params[csrf_token_name] = csrf_hash_token;
 		$("#filter_area_status").val('1');
 		$('#practice_ids').html('');
+		$('#skill_ids').html('');
+		$('#member_ids').html('');
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_practices',
@@ -423,6 +425,7 @@ $(document).ready(function(){
 		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date};
 		$("#filter_area_status").val('1');
 		$('#skill_ids').html('');
+		$('#member_ids').html('');
 		params[csrf_token_name] = csrf_hash_token;
 		$.ajax({
 			type: 'POST',
@@ -494,7 +497,12 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
 });
+	$('body').on('click','#filter_reset',function(){
+		$('#exclude_leave,#exclude_holiday').removeAttr('checked'); // Unchecks it
+		$("#department_ids,#practice_ids,#skill_ids,#member_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
+	});
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
