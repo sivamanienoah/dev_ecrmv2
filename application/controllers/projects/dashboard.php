@@ -182,9 +182,13 @@ class Dashboard extends crm_controller
 		$dept   			  = array();
 		$data['page_heading'] = "Trend Analysis";
 		
-		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		/* $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date   = $curFiscalYear."-03-31"; //eg.2014-03-01
+		$end_date   = $curFiscalYear."-03-31"; //eg.2014-03-01 */
+		
+		$end_date   = date('Y-m-01');
+		$temp_date 	= strtotime($end_date.' -1 year');
+		$start_date = date('Y-m-t', $temp_date);
 		
 		$timesheet_db = $this->load->database("timesheet",true);
 
@@ -688,7 +692,8 @@ class Dashboard extends crm_controller
 		
 	}
 	
-	function get_practices(){
+	function get_practices()
+	{
 		// echo "projects"; exit;
 		if($this->input->post("dept_ids")){
 			$ids 		= $this->input->post("dept_ids");
@@ -716,7 +721,8 @@ class Dashboard extends crm_controller
 		}
 	}
 	
-	function get_skills(){
+	function get_skills()
+	{
 		// echo "projects"; exit;
 		if($this->input->post("dept_ids")){
 			$ids 		= $this->input->post("dept_ids");
@@ -739,7 +745,8 @@ class Dashboard extends crm_controller
 		}
 	}
 	
-	function get_skills_by_practice(){
+	function get_skills_by_practice()
+	{
 		// echo "<pre>"; print_R($this->input->post()); exit;
 		if($this->input->post("dept_ids")){
 			$ids = $this->input->post("dept_ids");
@@ -772,7 +779,8 @@ class Dashboard extends crm_controller
 		}
 	}
 	
-	function get_members(){
+	function get_members()
+	{
 		if($this->input->post("dept_ids")){
 			$ids = $this->input->post("dept_ids");
 			$start_date = $this->input->post("start_date");
@@ -792,7 +800,8 @@ class Dashboard extends crm_controller
 		}		
 	}
 	
-	function get_practice_members() {
+	function get_practice_members() 
+	{
 		if($this->input->post("dept_ids")){
 			$ids = $this->input->post("dept_ids");
 			if($this->input->post("prac_id")) {
@@ -826,7 +835,8 @@ class Dashboard extends crm_controller
 		}		
 	}
 	
-	function get_skill_members(){
+	function get_skill_members()
+	{
 		if($this->input->post("dept_ids")){
 			$ids 		= $this->input->post("dept_ids");
 			$skill_ids  = $this->input->post("skill_ids");
@@ -860,7 +870,7 @@ class Dashboard extends crm_controller
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
 	*/
-	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
+	/* function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
 	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%Y',$date);
@@ -875,109 +885,9 @@ class Dashboard extends crm_controller
 		}
 	
 		return $fy;
-	}
+	} */
 	
-		/*
-	 *showCompareChartDetails
-	 */
-	public function showCompareChartDetails()
-	{
-		$this->load->helper('custom_helper');
-		
-		if (get_default_currency()) {
-			$this->default_currency = get_default_currency();
-			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
-			$this->default_cur_name = $this->default_currency['expect_worth_name'];
-		} else {
-			$this->default_cur_id   = '1';
-			$this->default_cur_name = 'USD';
-		}
-		$rates = $this->get_currency_rates();
-		
-		$data  = array();
-		
-		$data['default_currency'] = $this->default_cur_name;
-		
-		$bk_rates = get_book_keeping_rates();
-		
-		$filter   = real_escape_array($this->input->post());
-		
-		// echo "<pre>"; print_r($filter); exit;
-		
-		// $filter['clicked_type']==0  -> Forecast
-		// $filter['clicked_type']==1  -> Actual
-		// $filter['clicked_month'] -> Month (format(Y-m))
-
-		// $variance_data = $this->sales_forecast_model->get_variance_records($filter);
-		$variance_data = $this->sales_forecast_model->get_variance_records_for_dashboard($filter);
-		
-		// echo "<pre>"; print_r($variance_data); exit;
-		
-		// $current_month = date('Y-m');
-		// $highest_month = date('Y-m-d');
-		
-		switch($filter['clicked_type']) {
-			case 0:
-				$clicked_type = 'F';
-			break;
-			case 1:
-				$clicked_type = 'A';
-			break;
-			case 2:
-				$clicked_type = 'FA';
-			break;
-		}
-		
-		if($clicked_type != 'FA') {
-		
-			foreach($variance_data as $sf) {
-				$month = date('Y-m', strtotime($sf['for_month_year']));
-				if(($month == $filter['clicked_month']) && $sf['type'] == $clicked_type) {
-					$highest_month = ($highest_month > date('Y-m-d', strtotime($sf['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($sf['for_month_year']));
-					$data['report_data'][$sf['job_id']][$sf['milestone_name']]['customer']  = $sf['company'].' - '.$sf['first_name'].' '.$sf['last_name'];
-					$data['report_data'][$sf['job_id']][$sf['milestone_name']]['lead_name'] = $sf['lead_title'];
-					$data['report_data'][$sf['job_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
-					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['type'] = ($sf['forecast_category']==1)?'Lead':'Project';
-					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-					// $data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
-					//based on base currency conversion
-					$base_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
-					$data['report_data'][$sf['job_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($base_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['base_currency']][$this->default_cur_id]);
-				}
-			}
-			
-			$data['highest_month'] = $filter['clicked_month'];
-			$data['current_month'] = $filter['clicked_month'];
-			
-			// echo "<pre>"; print_r($data); exit;
-
-			$this->load->view('sales_forecast/sale_forecast_report_view_grid', $data);
-		} else {
-			foreach($variance_data as $vr) {
-				$month = date('Y-m', strtotime($vr['for_month_year']));
-				if($month == $filter['clicked_month']) {
-					$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
-					$data['report_data'][$vr['job_id']][$vr['milestone_name']]['customer']  = $vr['company'].' - '.$vr['first_name'].' '.$vr['last_name'];
-					$data['report_data'][$vr['job_id']][$vr['milestone_name']]['lead_name'] = $vr['lead_title'];
-					$data['report_data'][$vr['job_id']][$vr['milestone_name']]['entity']    = $vr['division_name'];
-					// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-					// $data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
-					//based on base currency conversion
-					$base_convert_amt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
-					$data['report_data'][$vr['job_id']][$vr['milestone_name']][$month][$vr['type']]  += $this->conver_currency($base_convert_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
-				}
-			}
-			
-			//Set the Highest_month
-			$data['highest_month'] = $filter['clicked_month'];
-			
-			//Set the Current month
-			$data['current_month'] = $filter['clicked_month'];
-			
-			$this->load->view('sales_forecast/sale_forecast_var_report_view_grid', $data);
-
-		}
-	}
+	
 	
 
 }

@@ -212,7 +212,8 @@ $checked_cost_percent = 'checked="checked"';
 					}
 				}
 				$business_unit = $bu_arr['it'];
-				// echo "<pre>"; print_r($business_unit); echo "</pre>";
+				// echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
+				// echo $end_date; exit;
 				
 				//creating values
 				$i = date("Y-m", strtotime($start_date)); 
