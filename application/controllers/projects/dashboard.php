@@ -177,7 +177,7 @@ class Dashboard extends crm_controller
 	
 	function trend_analysis()
 	{
-		// echo "<pre>"; print_r($this->input->post()); exit;
+		// echo "<pre>"; print_r($_POST); exit;
 		$data  				  = array();
 		$dept   			  = array();
 		$data['page_heading'] = "Trend Analysis";
@@ -210,7 +210,7 @@ class Dashboard extends crm_controller
 			$data['value_based'] = $this->input->post("value_based");
 		}
 		$where = '';
-		// echo $start_date.' '.$end_date; exit;
+		// echo $this->input->post("exclude_leave"); exit;
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
 			$where .= " and project_code NOT IN ('Leave')";
 			$data['exclude_leave'] = 1;

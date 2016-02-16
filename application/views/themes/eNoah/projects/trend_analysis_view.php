@@ -300,6 +300,7 @@ $checked_cost_percent = 'checked="checked"';
 	var month_no_arr  	   = [<?php echo $month_no_arr ?>];
 	var month_name_arr     = [<?php echo $month_name_arr ?>];
 	var currency_name  	   = ['<?php echo $default_currency ?>'];
+	var value_based		   = ['<?php echo $value_based ?>'];			
 	var graph_based		   = ['<?php echo $graph_based ?>'];			
 </script>
 <script type="text/javascript">

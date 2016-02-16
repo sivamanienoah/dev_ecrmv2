@@ -10,9 +10,9 @@ params[csrf_token_name] = csrf_hash_token;
 $(function() {
 	$.jqplot.config.enablePlugins = true;
 	
-	// var bill_value_hr  = [2, 6, 7, 10];
-	// var inter_value_hr = [10, 5, 3, 2];
-	// var ticks          = ['May', 'June', 'July', 'August'];
+	// var bill_value  = [2, 6, 7, 10];
+	// var inter_value = [10, 5, 3];
+	// var ticks       = ['May', 'June', 'July'];
 	
 	var bill_value    = billable_value;
 	var inter_value   = internal_value;
@@ -20,6 +20,15 @@ $(function() {
 	var ticks         = x_axis_values;
 	var cur_name      = currency_name;
 	var yaxis_label   = '';
+	var yaxis_lbl     = '';
+	var lbl_symbol    = '';
+	if(value_based == 'value') {
+		yaxis_lbl = 'Value';
+	} else if(value_based == 'percent') {
+		lbl_symbol = ' %';
+		yaxis_lbl = 'Percentage';
+	}
+
 	if(graph_based == 'hour')
 	yaxis_label = 'hour';
 	else if(graph_based == 'cost')
@@ -32,7 +41,7 @@ $(function() {
 			// renderer:$.jqplot.BarRenderer,
 			shadow: false,
 			// pointLabels: { show: true, ypadding:3 },
-			// pointLabels: { show: true },
+			pointLabels: { show: true, formatString: '%s'+lbl_symbol },
 			rendererOptions: {
 				barWidth: 34,
 				animation: {
@@ -71,7 +80,7 @@ $(function() {
 			},
 			yaxis: {
 				min:0,
-				label:'Values('+yaxis_label+') --->',
+				label:yaxis_lbl+'('+yaxis_label+') --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
@@ -93,7 +102,7 @@ $(function() {
 			gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
 			background: '#ffffff',      // CSS color spec for background color of grid.
 			borderColor: '#ffffff',     // CSS color spec for border around grid.
-			//borderWidth: 2.0,           // pixel width of border around grid.
+			//borderWidth: 2.0,         // pixel width of border around grid.
 			//backgroundColor: 'transparent', 
 			drawBorder: false,
 			shadow: false
