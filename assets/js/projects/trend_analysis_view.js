@@ -44,19 +44,17 @@ $(function() {
 			pointLabels: { show: true, formatString: '%s'+lbl_symbol },
 			rendererOptions: {
 				barWidth: 34,
-				animation: {
-					speed: 1000
-				},
+				animation: { speed: 1000 },
 				fillToZero: true
 			}
 		},
 		legend: {
 			renderer: jQuery.jqplot.EnhancedLegendRenderer,
 			show: true,
+			location: 'se',
 			placement: 'insideGrid',
-			rendererOptions: {
-				numberRows: '1',
-			}
+			marginBottom: "-50px",
+			rendererOptions: { numberRows: '1', }
 			// placement: 'outsideGrid',
 			// labels: ticks
 		},
@@ -82,6 +80,7 @@ $(function() {
 				min:0,
 				label:yaxis_lbl+'('+yaxis_label+') --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+				// tickOptions:{ formatString:'$%.2f' }
 			}
 		},
 		/* series: [{
@@ -107,9 +106,7 @@ $(function() {
 			drawBorder: false,
 			shadow: false
 		},
-		highlighter: {
-			show: false
-		},
+		highlighter: { show: true, tooltipAxes: 'y', formatString: '%s', lineWidthAdjust:5.5, tooltipOffset:8 },
 		seriesColors: ["#00e143", "#00a7e5", "#ff0000"]
 	});
 	
