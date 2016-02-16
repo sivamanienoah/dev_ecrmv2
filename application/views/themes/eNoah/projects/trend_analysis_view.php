@@ -1,4 +1,6 @@
-<?php require (theme_url().'/tpl/header.php'); ?>
+<?php 
+// echo $exclude_leave; exit;
+require (theme_url().'/tpl/header.php'); ?>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
@@ -104,13 +106,11 @@ $checked_cost_percent = 'checked="checked"';
 								</td>
 								<td class="by-exclusion">
 									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
-									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
+									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value=1 /><span>Leave</span></label>
 																		
 									<br />
 									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
-									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
-									
-									
+									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value=1 /><span>Holiday</span></label>
 								</td>
 								<td class="proj-dash-select">
 									<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
@@ -152,8 +152,6 @@ $checked_cost_percent = 'checked="checked"';
 									<input type="hidden" id="start_date" name="start_date" value="" />
 									<input type="hidden" id="end_date" name="end_date" value="" />
 									<input type="hidden" id="filter_area_status" name="filter_area_status" value="<?php echo $filter_area_status; ?>" />
-									<input type="hidden" name="exclude_leave" value="" id="hexclude_leave" />
-									<input type="hidden" name="exclude_holiday" value="" id="hexclude_holiday" />
 									<input type="hidden" name="graph_based" value="<?php echo $graph_based; ?>" id="hidgraph_based" />
 									<input type="hidden" name="value_based" value="<?php echo $value_based; ?>" id="hidvalue_based" />
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
