@@ -33,28 +33,33 @@ table.bu-tbl-inr th{ text-align:center; }
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
-			<span style="margin: 5px 0px 0px 30px; padding: 3px 0px 4px ! important;">
-				<?php 
-					$checked_hr = $checked_cost = '';
-					if($graph_based == 'hour') 
-					$checked_hr = 'checked="checked"';
-					else if($graph_based == 'cost') 
-					$checked_cost = 'checked="checked"';
-				?>
-				<label>Hour<input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /></label>
-				<label>Cost<input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /></label>
-			</span>
-			<span style="margin: 5px 0px 0px 30px; padding: 3px 0px 4px ! important;">
-				<?php 
-					$checked_hr_percent = $checked_cost_percent = '';
-					if($value_based == 'value') 
-					$checked_hr_percent = 'checked="checked"';
-					else if($value_based == 'percent') 
-					$checked_cost_percent = 'checked="checked"';
-				?>
-				<label>Value<input type='radio' name='value_based' value='value' id='rd_value' <?php echo $checked_hr_percent; ?> /></label>
-				<label>Percentage<input type='radio' name='value_based' value='percent' id='rd_percent' <?php echo $checked_cost_percent; ?> /></label>
-			</span>
+			
+			
+<div class="chk-radio-box">	
+<?php 
+$checked_hr = $checked_cost = '';
+if($graph_based == 'hour') 
+$checked_hr = 'checked="checked"';
+else if($graph_based == 'cost') 
+$checked_cost = 'checked="checked"';
+?>
+<label><input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /><span>Hour</span></label>
+<label><input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /><span>Cost</span></label>
+</div>
+
+<div class="chk-radio-box">	
+<?php 
+$checked_hr_percent = $checked_cost_percent = '';
+if($value_based == 'value') 
+$checked_hr_percent = 'checked="checked"';
+else if($value_based == 'percent') 
+$checked_cost_percent = 'checked="checked"';
+?>
+<label><input type='radio' name='value_based' value='value' id='rd_value' <?php echo $checked_hr_percent; ?> /><span>Value</span></label>
+<label><input type='radio' name='value_based' value='percent' id='rd_percent' <?php echo $checked_cost_percent; ?> /><span>Percentage</span></label>
+</div>
+
+			
 			<div class="buttons">
 				<form name="fliter_data_trend" id="fliter_data_trend" method="post">
 					<!--button  type="submit" id="excel-1" class="positive">

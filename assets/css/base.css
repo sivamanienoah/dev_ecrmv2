@@ -2772,16 +2772,9 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 .by-exclusion {width: 120px;}
 /***10-02-2016***/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/***16-2-2016***/
+.chk-radio-box { display: inline-block; margin: 3px 0 0 30px; }
+.chk-radio-box label input { margin: 0 2px 0 0; position: relative; top: 1px; }
+.chk-radio-box label { margin: 0 5px 0 0; }
+.chk-radio-box label span { font-weight: normal; }
+/***16-2-2016***/
