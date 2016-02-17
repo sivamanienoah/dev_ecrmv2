@@ -89,6 +89,7 @@ $skil = array();
 $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
+// echo "<pre>"; print_r($resdata); exit;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
 		if(isset($tbl_data[$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
@@ -195,7 +196,7 @@ if(!empty($resdata)) {
 <div class="clearfix"></div>
 <div>
 <?php
-// echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
@@ -209,7 +210,8 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of HOUR</th>
 			<th class='prac-dt' width='5%'>% of COST</th>
 			</tr>";
-	
+	// foreach()
+	// echo "<pre>"; print_R($sort_ar); exit;
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
 				asort($sub_tot_hr);

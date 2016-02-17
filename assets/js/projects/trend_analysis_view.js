@@ -53,7 +53,7 @@ $(function() {
 			show: true,
 			location: 'se',
 			placement: 'insideGrid',
-			marginBottom: "-50px",
+			marginBottom: "288px",
 			rendererOptions: { numberRows: '1', }
 			// placement: 'outsideGrid',
 			// labels: ticks

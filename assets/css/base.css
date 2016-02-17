@@ -2778,3 +2778,4 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 .chk-radio-box label { margin: 0 5px 0 0; }
 .chk-radio-box label span { font-weight: normal; }
 /***16-2-2016***/
+#trend_analysis_chart table.jqplot-table-legend, table.jqplot-cursor-legend{background-color: rgba(255, 255, 255, 1) !important; }

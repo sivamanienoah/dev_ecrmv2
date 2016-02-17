@@ -549,10 +549,18 @@ class Dashboard extends crm_controller
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		if(!empty($resource_type))
 		$this->db->where('t.resoursetype', $resource_type);
-		if(!empty($department_ids))
-		$this->db->where_in("t.dept_id", $department_ids);
-		if(!empty($skill_ids))
-		$this->db->where_in("t.skill_id", $skill_ids);
+		if(!empty($department_ids)) {
+			$dids = @explode(",",$department_ids);
+			$this->db->where_in("t.dept_id", $dids);
+		}
+		if(!empty($practice_ids)) {
+			$pids = explode(',', $practice_ids);
+			$this->db->where_in("t.practice_id", $pids);
+		}
+		if(!empty($skill_ids)) {
+			$sids = @explode(",",$skill_ids);
+			$this->db->where_in("t.skill_id", $sids);
+		}
 		if(empty($department_ids) && !empty($dept_type)) {
 			switch($dept_type) {
 				case 1:
@@ -569,25 +577,8 @@ class Dashboard extends crm_controller
 				break;
 			}
 		}
-		// if(!empty($practice_ids) && !empty($department_ids)) {
-		if(!empty($practice_ids)) {
-			$pids = explode(',', $practice_ids);
-			$this->db->where_in("t.practice_id", $pids);
-		}
-		switch($dept_type) {
-			case 1:
-			$heading = 'IT - '.$resource_type;
-			break;
-			case 2:
-			$heading = 'eADS - '.$resource_type;
-			break;
-			case 3:
-			$heading = 'eQAD - '.$resource_type;
-			break;
-		}
-		// if(!empty($skill_ids) && !empty($department_ids) && !empty($member_ids)) {
 		if(!empty($member_ids)) {
-			$mids = explode(',', $member_ids);
+			$mids = @explode(',', $member_ids);
 			$this->db->where_in("t.username", $mids);
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
@@ -608,6 +599,18 @@ class Dashboard extends crm_controller
 		}
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
+		
+		switch($dept_type) {
+			case 1:
+			$heading = 'IT - '.$resource_type;
+			break;
+			case 2:
+			$heading = 'eADS - '.$resource_type;
+			break;
+			case 3:
+			$heading = 'eQAD - '.$resource_type;
+			break;
+		}
 		
 		$data['resdata'] 	   = $query->result();
 		$data['heading'] 	   = $heading;
