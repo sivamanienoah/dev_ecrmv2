@@ -176,7 +176,8 @@ if(!empty($tbl_data)) {
 		// foreach($us_ar as $p_name=>$proj_ar) {
 		$user_arr = array();
 		foreach($us_sort_ar as $p_name=>$proj_ar) {
-			$user_arr = $us_ar[$p_name];
+			// $user_arr = $us_ar[$p_name];
+			$user_arr = $tbl_data[$p_name];
 			$i = 0;
 			$rs_sub_tot_hr   = 0;
 			$rs_sub_tot_cost = 0;

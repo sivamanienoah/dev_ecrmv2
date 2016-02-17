@@ -248,7 +248,6 @@ if(!empty($tbl_data)) {
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 			</tr>";
-			
 			if($filter_sort_by=='asc') {
 				if($filter_sort_val=='hour') {
 					asort($skil_sort_hr[$pkey]);
@@ -266,10 +265,10 @@ if(!empty($tbl_data)) {
 					$skill_sort_arr = $skil_sort_cst[$pkey];
 				}
 			}
-			
 			$sk_arr = array();
 			foreach($skill_sort_arr as $skkey=>$skval) {
-				$sk_arr = $prac_ar[$pkey][$skkey];
+				// $sk_arr = $prac_ar[$pkey][$skkey];
+				$sk_arr = $tbl_data[$pkey][$skkey];
 				$i = 1;
 
 				$sub_tot_sk_hr   = ($skil_sub_tot[$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;

@@ -251,7 +251,8 @@ if(!empty($tbl_data)) {
 			}
 			$proj_arr = array();
 			foreach($proj_sort_arr as $pkey=>$user_ar) {
-				$proj_arr = $skil_ar[$skil_key][$pkey];
+				// $proj_arr = $skil_ar[$skil_key][$pkey];
+				$proj_arr = $tbl_data[$skil_key][$pkey];
 				$i = 1;
 				$sub_tot_pj_hr   = 0;
 				$sub_tot_pj_cost = 0;

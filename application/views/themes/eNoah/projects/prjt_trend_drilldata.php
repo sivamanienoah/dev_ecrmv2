@@ -184,7 +184,8 @@ if(!empty($tbl_data)) {
 		// foreach($proj_ar as $p_name=>$user_ar) {
 		$proj_arr = array();
 		foreach($sort_ar as $p_name=>$user_ar) {
-			$proj_arr = $proj_ar[$p_name];
+			// $proj_arr = $proj_ar[$p_name];
+			$proj_arr = $tbl_data[$p_name];
 			$i       = 0;
 			// $res_cnt = 0;
 			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
