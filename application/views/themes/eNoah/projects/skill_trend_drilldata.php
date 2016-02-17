@@ -90,26 +90,26 @@ $tot_cost = 0;
 
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
-		if(isset($tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['hour'])) {
-			$tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['hour'] += $rec->duration_hours;
+		if(isset($tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['hour'])) {
+			$tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['hour'] += $rec->duration_hours;
 		} else {
-			$tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['hour'] = $rec->duration_hours;
+			$tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['hour'] = $rec->duration_hours;
 		}
-		if(isset($tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['cost']))
-		$tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['cost'] += $rec->resource_duration_cost;
+		if(isset($tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['cost']))
+		$tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['cost'] += $rec->resource_duration_cost;
 		else
-		$tbl_data[$rec->dept_name][$rec->skill_name][$rec->project_code][$rec->empname]['cost'] = $rec->resource_duration_cost;
+		$tbl_data[$rec->skill_name][$rec->project_code][$rec->empname]['cost'] = $rec->resource_duration_cost;
 	
 		//sub total by skillwise
-		if(isset($sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_hour']))
-		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_hour'] +=  $rec->duration_hours;
+		if(isset($sub_tot[$rec->skill_name]['sub_tot_hour']))
+		$sub_tot[$rec->skill_name]['sub_tot_hour'] +=  $rec->duration_hours;
 		else
-		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_hour'] =  $rec->duration_hours;
+		$sub_tot[$rec->skill_name]['sub_tot_hour'] =  $rec->duration_hours;
 		
-		if(isset($sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_cost']))
-		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_cost'] +=  $rec->resource_duration_cost;
+		if(isset($sub_tot[$rec->skill_name]['sub_tot_cost']))
+		$sub_tot[$rec->skill_name]['sub_tot_cost'] +=  $rec->resource_duration_cost;
 		else
-		$sub_tot[$rec->dept_name][$rec->skill_name]['sub_tot_cost'] =  $rec->resource_duration_cost;
+		$sub_tot[$rec->skill_name]['sub_tot_cost'] =  $rec->resource_duration_cost;
 		
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
@@ -117,45 +117,45 @@ if(!empty($resdata)) {
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 	
 		//sub total by projectwise
-		if(isset($pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour']))
-		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] += $rec->duration_hours;
+		if(isset($pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_hour']))
+		$pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] += $rec->duration_hours;
 		else 
-		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] = $rec->duration_hours;
+		$pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_hour'] = $rec->duration_hours;
 	
-		if(isset($pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost']))
-		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] += $rec->resource_duration_cost;
+		if(isset($pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_cost']))
+		$pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] += $rec->resource_duration_cost;
 		else 
-		$pj_sub_tot[$rec->dept_name][$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] = $rec->resource_duration_cost;
+		$pj_sub_tot[$rec->skill_name][$rec->project_code]['pj_sub_tot_cost'] = $rec->resource_duration_cost;
 		
 		//usercount
-		if (!in_array($rec->empname, $sk_usercnt[$rec->dept_name][$rec->skill_name]))
-		$sk_usercnt[$rec->dept_name][$rec->skill_name][] = $rec->empname;
-		if (!in_array($rec->empname, $pj_usercnt[$rec->dept_name][$rec->skill_name][$rec->project_code]))
-		$pj_usercnt[$rec->dept_name][$rec->skill_name][$rec->project_code][] = $rec->empname;
+		if (!in_array($rec->empname, $sk_usercnt[$rec->skill_name]))
+		$sk_usercnt[$rec->skill_name][] = $rec->empname;
+		if (!in_array($rec->empname, $pj_usercnt[$rec->skill_name][$rec->project_code]))
+		$pj_usercnt[$rec->skill_name][$rec->project_code][] = $rec->empname;
 	
 		//for skillwise - sorting-hour
-		if(isset($skil_hr[$rec->dept_name][$rec->skill_name]))
-		$skil_hr[$rec->dept_name][$rec->skill_name] += $rec->duration_hours;
+		if(isset($skil_hr[$rec->skill_name]))
+		$skil_hr[$rec->skill_name] += $rec->duration_hours;
 		else 
-		$skil_hr[$rec->dept_name][$rec->skill_name] = $rec->duration_hours;
+		$skil_hr[$rec->skill_name] = $rec->duration_hours;
 		//for skillwise - sorting-cost
-		if(isset($skil_cst[$rec->dept_name][$rec->skill_name]))
-		$skil_cst[$rec->dept_name][$rec->skill_name] += $rec->resource_duration_cost;
+		if(isset($skil_cst[$rec->skill_name]))
+		$skil_cst[$rec->skill_name] += $rec->resource_duration_cost;
 		else 
-		$skil_cst[$rec->dept_name][$rec->skill_name] = $rec->resource_duration_cost;
+		$skil_cst[$rec->skill_name] = $rec->resource_duration_cost;
 		//for project_code - sorting-hour
-		if(isset($prjt_hr[$rec->dept_name][$rec->skill_name][$rec->project_code]))
-		$prjt_hr[$rec->dept_name][$rec->skill_name][$rec->project_code] += $rec->duration_hours;
+		if(isset($prjt_hr[$rec->skill_name][$rec->project_code]))
+		$prjt_hr[$rec->skill_name][$rec->project_code] += $rec->duration_hours;
 		else 
-		$prjt_hr[$rec->dept_name][$rec->skill_name][$rec->project_code] = $rec->duration_hours;
+		$prjt_hr[$rec->skill_name][$rec->project_code] = $rec->duration_hours;
 		//for project_code - sorting-hour
-		if(isset($prjt_cst[$rec->dept_name][$rec->skill_name][$rec->project_code]))
-		$prjt_cst[$rec->dept_name][$rec->skill_name][$rec->project_code] += $rec->resource_duration_cost;
+		if(isset($prjt_cst[$rec->skill_name][$rec->project_code]))
+		$prjt_cst[$rec->skill_name][$rec->project_code] += $rec->resource_duration_cost;
 		else 
-		$prjt_cst[$rec->dept_name][$rec->skill_name][$rec->project_code] = $rec->resource_duration_cost;
+		$prjt_cst[$rec->skill_name][$rec->project_code] = $rec->resource_duration_cost;
 	}
 }
-// echo "<pre>"; print_r($prjt_cst); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
 // echo "<pre>"; print_r($cost_arr); echo "</pre>";
 ?>
 <div class="page-title-head">
@@ -194,22 +194,22 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
 			<th class='prac-dt' width='5%'><b>% of COST</b></th>
 		</tr>";
-	foreach($tbl_data as $dept=>$skil_ar) {
+	// foreach($tbl_data as $dept=>$skil_ar) {
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
-				asort($skil_hr[$dept]);
-				$sort_ar = $skil_hr[$dept];
+				asort($skil_hr);
+				$sort_ar = $skil_hr;
 			} else if($filter_sort_val=='cost') {
-				asort($skil_cst[$dept]);
-				$sort_ar = $skil_cst[$dept];
+				asort($skil_cst);
+				$sort_ar = $skil_cst;
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
-				arsort($skil_hr[$dept]);
-				$sort_ar = $skil_hr[$dept];
+				arsort($skil_hr);
+				$sort_ar = $skil_hr;
 			} else if($filter_sort_val=='cost') {
-				arsort($skil_cst[$dept]);
-				$sort_ar = $skil_cst[$dept];
+				arsort($skil_cst);
+				$sort_ar = $skil_cst;
 			}
 		}
 		foreach($sort_ar as $skil_key=>$proj_ar) {
@@ -217,67 +217,54 @@ if(!empty($tbl_data)) {
 			$sk_cnt = 0;
 			$sk_tot_cost = 0;
 			$sub_tot_sk_cost = 0;
-			/* $sk_cnt = count($sk_usercnt[$dept][$skil_key]);
-			$sub_tot_sk_hr = ($sub_tot[$dept][$skil_key]['sub_tot_hour']/(160*$sk_cnt)) * 100;
-			foreach($sk_usercnt[$dept][$skil_key] as $usr){
-				$sk_tot_cost += $cost_arr[$usr]*160;
-			}
-			$sub_tot_sk_cost = ($sub_tot[$dept][$skil_key]['sub_tot_cost']/$sk_tot_cost)*100; */
-			$sub_tot_sk_hr   = ($sub_tot[$dept][$skil_key]['sub_tot_hour']/$tot_hour)*100;
-			$sub_tot_sk_cost = ($sub_tot[$dept][$skil_key]['sub_tot_cost']/$tot_cost)*100;
+			$sub_tot_sk_hr   = ($sub_tot[$skil_key]['sub_tot_hour']/$tot_hour)*100;
+			$sub_tot_sk_cost = ($sub_tot[$skil_key]['sub_tot_cost']/$tot_cost)*100;
 			$perc_tot_hr   += $sub_tot_sk_hr;
 			$perc_tot_cost += $sub_tot_sk_cost;
-			$calc_tot_hour += $sub_tot[$dept][$skil_key]['sub_tot_hour'];
-			$calc_tot_cost += $sub_tot[$dept][$skil_key]['sub_tot_cost'];
+			$calc_tot_hour += $sub_tot[$skil_key]['sub_tot_hour'];
+			$calc_tot_cost += $sub_tot[$skil_key]['sub_tot_cost'];
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($skil_key)."</span></th>
 				<th width='15%'></th>
 				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(SKILL WISE):</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_hour'], 1)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$skil_key]['sub_tot_cost'], 2)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$skil_key]['sub_tot_hour'], 1)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$skil_key]['sub_tot_cost'], 2)."</th>
 				<th width='5%' align='right' class='rt-ali'><b>".round($sub_tot_sk_hr, 1)."</b></th>
 				<th width='5%' align='right' class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></th>
 			</tr>";
 			if($filter_sort_by=='asc') {
 				if($filter_sort_val=='hour') {
-					asort($prjt_hr[$dept][$skil_key]);
-					$proj_sort_arr = $prjt_hr[$dept][$skil_key];
+					asort($prjt_hr[$skil_key]);
+					$proj_sort_arr = $prjt_hr[$skil_key];
 				} else if($filter_sort_val=='cost') {
-					asort($prjt_cst[$dept][$skil_key]);
-					$proj_sort_arr = $prjt_cst[$dept][$skil_key];
+					asort($prjt_cst[$skil_key]);
+					$proj_sort_arr = $prjt_cst[$skil_key];
 				}
 			} else if($filter_sort_by=='desc') {
 				if($filter_sort_val=='hour') {
-					arsort($prjt_hr[$dept][$skil_key]);
-					$proj_sort_arr = $prjt_hr[$dept][$skil_key];
+					arsort($prjt_hr[$skil_key]);
+					$proj_sort_arr = $prjt_hr[$skil_key];
 				} else if($filter_sort_val=='cost') {
-					arsort($prjt_cst[$dept][$skil_key]);
-					$proj_sort_arr = $prjt_cst[$dept][$skil_key];
+					arsort($prjt_cst[$skil_key]);
+					$proj_sort_arr = $prjt_cst[$skil_key];
 				}
 			}
 			$proj_arr = array();
 			foreach($proj_sort_arr as $pkey=>$user_ar) {
 				$proj_arr = $skil_ar[$skil_key][$pkey];
 				$i = 1;
-				// $pj_cnt = 0;
 				$sub_tot_pj_hr   = 0;
 				$sub_tot_pj_cost = 0;
-				/* $pj_cnt = count($pj_usercnt[$dept][$skil_key][$pkey]);
-				$sub_tot_pj_hr   = ($skil_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_hour']/(160*$pj_cnt)) * 100;
-				foreach($pj_usercnt[$dept][$skil_key][$pkey] as $mem){
-					$pj_tot_cost += $cost_arr[$mem]*160;
-				}
-				$sub_tot_pj_cost = ($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_cost']/$pj_tot_cost)*100; */
-				$sub_tot_pj_hr 	 = ($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_hour']/$tot_hour)*100;
-				$sub_tot_pj_cost = ($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_cost']/$tot_cost)*100;
+				$sub_tot_pj_hr 	 = ($pj_sub_tot[$skil_key][$pkey]['pj_sub_tot_hour']/$tot_hour)*100;
+				$sub_tot_pj_cost = ($pj_sub_tot[$skil_key][$pkey]['pj_sub_tot_cost']/$tot_cost)*100;
 				
 				$name = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
 				echo "<tr data-depth='".$i."' class='collapse'>
 						<td width='15%'></td>
 						<td align='left'><b><span class='toggle'> ".$name."</span></b></td>
 						<td align='right' class='rt-ali'><b>SUB TOTAL(PROJECT WISE):</b></td>
-						<td align='right' class='rt-ali'><b>".round($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_hour'], 0)."</b></td>
-						<td align='right' class='rt-ali'><b>".round($pj_sub_tot[$dept][$skil_key][$pkey]['pj_sub_tot_cost'], 0)."</b></td>
+						<td align='right' class='rt-ali'><b>".round($pj_sub_tot[$skil_key][$pkey]['pj_sub_tot_hour'], 0)."</b></td>
+						<td align='right' class='rt-ali'><b>".round($pj_sub_tot[$skil_key][$pkey]['pj_sub_tot_cost'], 0)."</b></td>
 						<td align='right' class='rt-ali'><b>".round($sub_tot_pj_hr, 2)."</b></td>
 						<td align='right' class='rt-ali'><b>".round($sub_tot_pj_cost, 2)."</b></td>
 					</tr>";
@@ -317,13 +304,7 @@ if(!empty($tbl_data)) {
 				}
 			}
 		}		
-	}
-	/* $perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
-	$overall_cost = 0;
-	foreach($cost_arr as $cs){
-		$overall_cost += $cs * 160;
-	}
-	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
+	// }
 	echo "<tr data-depth='0'>
 			<td width='80%' colspan='3' align='right' class='rt-ali'><b>TOTAL:</b></td>
 			<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
@@ -345,8 +326,8 @@ $(document).ready(function () {
 		   , filename: 'skillwisedata'
 		});
 	});
-	var start_date = '<?php echo $month_year_from_date ?>';
-	$('#month_year_from_date').val(start_date);
+	var start_date = '<?php echo $start_date ?>';
+	$('#start_date').val(start_date);
 });
 </script>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>

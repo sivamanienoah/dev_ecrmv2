@@ -526,8 +526,8 @@ class Dashboard extends crm_controller
 	public function get_trend_drill_data()
 	{
 		// echo "<pre>"; print_r($this->input->post()); exit;
-		if($this->input->post("month_year_from_date")) {
-			$date = $this->input->post("month_year_from_date");
+		if($this->input->post("start_date")) {
+			$date = $this->input->post("start_date");
 			$start_date = date("Y-m-01",strtotime($date));
 			$end_date   = date("Y-m-t",strtotime($date));
 		} else {
@@ -633,6 +633,7 @@ class Dashboard extends crm_controller
 		$filter_sort_val = $this->input->post("filter_sort_val");
 		
 		$data['filter_group_by'] = $this->input->post("filter_group_by");
+		
 		if(isset($filter_sort_by) && !empty($filter_sort_by))
 		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
 		else
@@ -643,7 +644,7 @@ class Dashboard extends crm_controller
 		else
 		$data['filter_sort_val'] = 'hour';
 	
-		$data['month_year_from_date'] = $this->input->post("month_year_from_date");
+		$data['start_date'] = $this->input->post("start_date");
 	
 		switch($this->input->post("filter_group_by")){
 			case 0:

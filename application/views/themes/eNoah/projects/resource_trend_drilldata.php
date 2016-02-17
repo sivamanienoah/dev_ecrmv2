@@ -83,40 +83,40 @@ $tot_hour = 0;
 $tot_cost = 0;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
-		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'])) {
-			$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
+		if(isset($tbl_data[$rec->empname][$rec->project_code]['hour'])) {
+			$tbl_data[$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
 		} else {
-			$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
+			$tbl_data[$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
 		}
-		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['cost']))
-		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['cost'] += $rec->resource_duration_cost;
+		if(isset($tbl_data[$rec->empname][$rec->project_code]['cost']))
+		$tbl_data[$rec->empname][$rec->project_code]['cost'] += $rec->resource_duration_cost;
 		else
-		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['cost'] = $rec->resource_duration_cost;
+		$tbl_data[$rec->empname][$rec->project_code]['cost'] = $rec->resource_duration_cost;
 	
-		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour']))
-		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour'] +=  $rec->duration_hours;
+		if(isset($sub_tot[$rec->empname]['sub_tot_hour']))
+		$sub_tot[$rec->empname]['sub_tot_hour'] +=  $rec->duration_hours;
 		else
-		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour'] =  $rec->duration_hours;
+		$sub_tot[$rec->empname]['sub_tot_hour'] =  $rec->duration_hours;
 		
-		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost']))
-		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] +=  $rec->resource_duration_cost;
+		if(isset($sub_tot[$rec->empname]['sub_tot_cost']))
+		$sub_tot[$rec->empname]['sub_tot_cost'] +=  $rec->resource_duration_cost;
 		else
-		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] =  $rec->resource_duration_cost;
+		$sub_tot[$rec->empname]['sub_tot_cost'] =  $rec->resource_duration_cost;
 		//total
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
 		//user
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
 		//for empname - sorting-hour
-		if(isset($emp_hr[$rec->dept_name][$rec->empname]))
-		$emp_hr[$rec->dept_name][$rec->empname] += $rec->duration_hours;
+		if(isset($emp_hr[$rec->empname]))
+		$emp_hr[$rec->empname] += $rec->duration_hours;
 		else 
-		$emp_hr[$rec->dept_name][$rec->empname] = $rec->duration_hours;
+		$emp_hr[$rec->empname] = $rec->duration_hours;
 		//for empname - sorting-cost
-		if(isset($emp_cst[$rec->dept_name][$rec->empname]))
-		$emp_cst[$rec->dept_name][$rec->empname] += $rec->resource_duration_cost;
+		if(isset($emp_cst[$rec->empname]))
+		$emp_cst[$rec->empname] += $rec->resource_duration_cost;
 		else 
-		$emp_cst[$rec->dept_name][$rec->empname] = $rec->resource_duration_cost;
+		$emp_cst[$rec->empname] = $rec->resource_duration_cost;
 	}
 }
 // echo "<pre>"; print_r($emp_hr); echo "</pre>";
@@ -155,22 +155,22 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>COST</b></th>
 			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
 			<th class='prac-dt' width='5%'><b>% of COST</b></th>";
-	foreach($tbl_data as $dept=>$us_ar) {
+	// foreach($tbl_data as $dept=>$us_ar) {
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
-				asort($emp_hr[$dept]);
-				$us_sort_ar = $emp_hr[$dept];
+				asort($emp_hr);
+				$us_sort_ar = $emp_hr;
 			} else if($filter_sort_val=='cost') {
-				asort($emp_cst[$dept]);
-				$us_sort_ar = $emp_cst[$dept];
+				asort($emp_cst);
+				$us_sort_ar = $emp_cst;
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
-				arsort($emp_hr[$dept]);
-				$us_sort_ar = $emp_hr[$dept];
+				arsort($emp_hr);
+				$us_sort_ar = $emp_hr;
 			} else if($filter_sort_val=='cost') {
-				arsort($emp_cst[$dept]);
-				$us_sort_ar = $emp_cst[$dept];
+				arsort($emp_cst);
+				$us_sort_ar = $emp_cst;
 			}
 		}
 		// foreach($us_ar as $p_name=>$proj_ar) {
@@ -180,17 +180,17 @@ if(!empty($tbl_data)) {
 			$i = 0;
 			$rs_sub_tot_hr   = 0;
 			$rs_sub_tot_cost = 0;
-			$rs_sub_tot_hr   = ($sub_tot[$dept][$p_name]['sub_tot_hour']/$tot_hour)*100;
-			$rs_sub_tot_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/$tot_cost)*100;
+			$rs_sub_tot_hr   = ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
+			$rs_sub_tot_cost = ($sub_tot[$p_name]['sub_tot_cost']/$tot_cost)*100;
 			$perc_tot_hr   += $rs_sub_tot_hr;
 			$perc_tot_cost += $rs_sub_tot_cost;
-			$calc_tot_hour += $sub_tot[$dept][$p_name]['sub_tot_hour'];
-			$calc_tot_cost += $sub_tot[$dept][$p_name]['sub_tot_cost'];
+			$calc_tot_hour += $sub_tot[$p_name]['sub_tot_hour'];
+			$calc_tot_cost += $sub_tot[$p_name]['sub_tot_cost'];
 			echo "<tr data-depth='".$i."' class='collapse'>
 					<th align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($p_name)."</span></th>
 					<th width='15%' align='right' class='rt-ali'>SUB TOTAL:</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_cost'], 2)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_hr, 1)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_cost, 2)."</th>
 				</tr>";
@@ -228,13 +228,7 @@ if(!empty($tbl_data)) {
 				$i++;
 			}
 		}
-	}
-	/* $perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
-	$overall_cost = 0;
-	foreach($cost_arr as $cs){
-		$overall_cost += $cs * 160;
-	}
-	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
+	// }
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
@@ -256,8 +250,8 @@ $(document).ready(function () {
 		   , filename: 'resourcewisedata'
 		});
 	});
-	var start_date = '<?php echo $month_year_from_date ?>';
-	$('#month_year_from_date').val(start_date);
+	var start_date = '<?php echo $start_date ?>';
+	$('#start_date').val(start_date);
 });
 </script>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>

@@ -68,7 +68,7 @@ $checked_cost_percent = 'checked="checked"';
 						Export to Excel
 					</button-->
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<input type="hidden" name="month_year_from_date" value="" id="hmonth_year" />
+					<input type="hidden" name="start_date" value="" id="hmonth_year" />
 					<input type="hidden" name="department_ids" value="" id="hdept_ids" />
 					<input type="hidden" name="practice_ids" value="" id="hprac_ids" />
 					<input type="hidden" name="skill_ids" value="" id="hskill_ids" />

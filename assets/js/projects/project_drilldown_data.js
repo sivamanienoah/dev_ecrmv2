@@ -52,7 +52,7 @@ $(function() {
 		} else {
 			$('#hprac_ids').val($('#practice_ids').val());
 		}
-		$('#hmonth_year').val($('#month_year_from_date').val());
+		$('#hmonth_year').val($('#start_date').val());
 		$('#hskill_ids').val($('#skill_ids').val())
 		$('#hmember_ids').val($('#member_ids').val())
 		if($('#exclude_leave').attr('checked'))
