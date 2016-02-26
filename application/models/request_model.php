@@ -86,7 +86,7 @@ class Request_model extends crm_model {
 		$this->db->where("f.lead_id", $job_id);
 		$this->db->where("f.parent", $fparent_id);
 		$this->db->or_where("f.folder_id", $fparent_id);
-		$this->db->order_by("f.folder_name");
+		$this->db->order_by("f.folder_id");
 	    $sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
 	    return $sql->result_array();

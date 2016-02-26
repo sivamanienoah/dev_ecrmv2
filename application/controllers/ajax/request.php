@@ -256,7 +256,7 @@ class Request extends crm_controller {
 				$this->upload_error = 'You have no permissions to upload file';
 				$json['error'] = TRUE;
 				$json['msg']   = $this->upload_error;
-				echo json_encode($json); exit;			
+				echo json_encode($json); exit;
 			} */
 				
 		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/

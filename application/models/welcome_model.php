@@ -1051,6 +1051,58 @@ class Welcome_model extends crm_model {
         $this->db->delete($this->cfg['dbpref'].$tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
+
+	//Folder creation code start
+	function insert_folder_name($project_id) {
+		
+		$this->db->where('parent',0);
+		$this->db->where('folder_name',$project_id);
+		$check=$this->db->get('crm_file_management')->row();
+		if(empty($check))
+		{
+			//root entry
+			$root_data	=	new stdClass();
+			$root_data->lead_id	=	$project_id;
+			$root_data->folder_name	=	$project_id;
+			$root_data->parent	=	0;
+			$root_data->created_by	=	$this->session->userdata('user_id');
+			$this->db->insert('crm_file_management', $root_data);
+			$root_id=$this->db->insert_id();
+		}else{
+			$root_id=$check->folder_id;
+		}
+		//parent entry
+		$this->db->where('parent_id',0);
+		$result=$this->db->get('crm_default_folder_new')->result_array();
+		$i=0;
+		foreach($result as $value)
+		{
+			$data	=	new stdClass();
+			$data->lead_id	=	$project_id;
+			$data->folder_name	=	$value['folder_name'];
+			$data->parent	=	$root_id;
+			$data->created_by	=	$this->session->userdata('user_id');
+			$this->db->insert('crm_file_management', $data);
+			$parent_id=$this->db->insert_id();
+			
+			$this->db->where('parent_id',$value['id']);
+			$sub_result=$this->db->get('crm_default_folder_new')->result_array();
+			
+			if(count($sub_result))
+			{
+				foreach($sub_result as $sub_value)
+				{
+					$sub_data	=	new stdClass();
+					$sub_data->lead_id	=	$project_id;
+					$sub_data->folder_name	=	$sub_value['folder_name'];
+					$sub_data->parent	=	$parent_id;
+					$sub_data->created_by	=	$this->session->userdata('user_id');
+					$this->db->insert('crm_file_management', $sub_data);
+				}
+			}
+		}
+		
+    }
 }
 
 ?>
