@@ -20,13 +20,9 @@ $(function() {
 		"bAutoWidth": false,
 		"aoColumns": [{ sWidth: '8%' },
 					{ sWidth: '8%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
-					{ sWidth: '7%' },
+					for (i = 0; i < no_cur; i++) {
+						{ sWidth: '7%' },
+					}
 					{ sWidth: '10%' }]		
 	});
 });
