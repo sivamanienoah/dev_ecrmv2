@@ -73,6 +73,10 @@ $userdata = $this->session->userdata('logged_in_user');
 <div id="edit_currency_container"></div>
 <div id="add_currency_container"></div>
 <!--script type="text/javascript" src="assets/js/data-tbl.js"></script-->
+<?php $no_cur = (!empty($currencies) ? count($currencies) : '1'; ?>
+<script>
+var no_cur = '<?php echo $no_cur ?>';
+</script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_service/manage_bk_list_view.js"></script>
 <?php
