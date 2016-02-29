@@ -35,6 +35,30 @@
 			return false;
 		});
 		
+		$('#edit-folder-permissions').on('click', '#save_folder_permissions', function(){
+			$.ajax({
+				url    : site_base_url+'project/save_folder_permissions',
+				method : 'POST',
+				data   : $("form").serialize(),
+				beforeSend: function(){
+					$('#save_folder_permissions').text('Saving..');
+					$('#save_folder_permissions').prop('disabled', true);
+				}
+			}).done(function(response){
+				$('#save_folder_permissions').text('Save');
+				$('#save_folder_permissions').prop('disabled', false);
+				
+				if(response==1)
+				{
+					$.unblockUI();
+				}
+				else
+				{
+					console.log(response);
+				}
+			});
+		});
+		
 	});
 
 	$().ready(function() {
@@ -2703,3 +2727,23 @@ function loadLogs(id)
 		}
 	);
 }
+
+// Edit folder permissions start.
+function editFolderPermissions(lead_id)
+{
+	var ht = $('#edit-folder-permissions').height();
+	$('#edit-folder-permissions').text('Loading, please wait..');
+	$.blockUI({
+			message: $('#edit-folder-permissions')
+	});
+	
+	$.get(site_base_url+'project/get_folder_permissions_ui_for_a_project', {'lead_id':lead_id}, function(data)
+	{
+		$("#edit-folder-permissions").html(data);
+		$.blockUI({
+			message: $('#edit-folder-permissions'), 
+			css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 900) /2 + 'px',width: '900px',height: ht+'px'} 
+		});
+	});	
+}
+// Edit folder permission end.
