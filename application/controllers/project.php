@@ -4477,6 +4477,68 @@ HDOC;
 		exit;
 	}
 	
+	public function get_folder_permissions_ui_for_a_project()
+	{
+		$lead_id = $this->input->get('lead_id');
+		$data = array('lead_id'=>$lead_id);
+		
+		// $lead_folders = $this->welcome_model->getLeadFolders($lead_id);
+		$team_members = $this->welcome_model->getLeadTeamMembers($lead_id);
+		$lead_folders = $this->welcome_model->get_tree_file_list_except_root($lead_id);
+		
+		$data['team_members'] = $team_members;
+		$data['lead_folders'] = $lead_folders;
+		echo $this->load->view('projects/lead_folder_permissions', $data);
+	}
 	
+	public function save_folder_permissions()
+	{
+		$result = 1;
+		$lead_id = $this->input->post('lead_id');
+		
+		$team_members = $this->welcome_model->getLeadTeamMembers($lead_id);
+		$lead_folders = $this->welcome_model->get_tree_file_list_except_root($lead_id);
+		
+		foreach($lead_folders as $folder_id => $folder_name) 
+		{
+			if($folder_name!=$lead_id)
+			{
+				foreach($team_members as $member)
+				{
+					$user_id = $member['userid_fk'];
+					$permission = $this->input->post('permission_for_'.$folder_id.'_'.$user_id);
+					// echo $folder_id.'->'.$user_id.'->'.$permission.'<br />';
+					
+					$record_array = array();
+					$record_array['updated_by'] = $this->userdata['userid'];
+					$record_array['updated_on'] = date('Y-m-d H:i:s');
+					if($permission == 2)
+						$record_array['access_write'] = 1;
+					else if($permission == 1)
+						$record_array['access_read'] = 1;
+					else
+						$record_array['access_none'] = 1;
+					
+					$exist_record_id = $this->welcome_model->checkIsFolderAccessRecordExist($lead_id, $folder_id, $user_id);
+					if($exist_record_id)
+					{
+						$this->welcome_model->updateFolderAccessRecord($exist_record_id, $record_array);
+					}
+					else
+					{
+						$record_array['lead_id'] = $lead_id;
+						$record_array['folder_id'] = $folder_id;
+						$record_array['user_id'] = $user_id;
+						
+						$record_array['created_by'] = $this->userdata['userid'];
+						$record_array['created_on'] = date('Y-m-d H:i:s');
+						$this->welcome_model->createFolderAccessRecord($record_array);
+					}
+				}
+			}
+		}
+		
+		return $result;
+	}
 }
 ?>

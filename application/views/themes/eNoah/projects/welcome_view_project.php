@@ -1057,6 +1057,9 @@ if (get_default_currency()) {
 			<div class="pull-left pad-right">
 				<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
 			</div>
+			<div class="pull-left pad-right">
+				<a title="Edit Folder Permissions" onclick="editFolderPermissions(<?php echo $quote_data['lead_id']; ?>); return false;"  ><img src="assets/img/edit.png" class="icon-width" alt="Edit Folder Permissions"></a>
+			</div>
 			
 			<?php /*if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
 			<div class="pull-left pad-right">
@@ -1107,6 +1110,11 @@ if (get_default_currency()) {
 			</table>
 		<!-- edit end -->
 		</form>
+		
+		<!-- Edit folder permissions start. -->
+		<form id="edit-folder-permissions" onsubmit="return false;" style="display: none; width: 900px; height: 600px; overflow: scroll; top: 4%; left: 4%;"></form>
+		<!-- Edit folder permissions end. -->
+		
 		<form id="create-folder" onsubmit="return false;">
 			<!-- edit file -->
 			<div id='af_successerrmsg' class='succ_err_msg'></div>

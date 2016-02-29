@@ -1103,6 +1103,74 @@ class Welcome_model extends crm_model {
 		}
 		
     }
+	
+	public function getLeadFolders($lead_id)
+	{
+		$this->db->select('folder_id, folder_name, parent');
+		$this->db->where(array('lead_id'=>$lead_id));
+		$this->db->from('crm_file_management');
+		$result = $this->db->get()->result_array();
+		return $result;
+	}
+	
+	public function get_tree_file_list_except_root($lead_id, $parentId=0 , $counter=-1) {
+		$arrayVal = array();
+		
+		$this->db->select('folder_id, folder_name, parent');
+		$this->db->from($this->cfg['dbpref'] . 'file_management');
+		$this->db->where('lead_id', $lead_id);
+		$this->db->where('parent = '. (int) $parentId);
+		// $this->db->where_not_in('folder_name', array($lead_id));
+		$results = $this->db->get()->result();
+		
+		foreach($results as $result) {
+			$arrayVal[$result->folder_id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $counter)."{$result->folder_name}";
+			$arrayVal = $arrayVal + $this->get_tree_file_list_except_root($lead_id, $result->folder_id, $counter+1);
+		}
+        return $arrayVal;
+	}
+	
+	public function getLeadTeamMembers($lead_id)
+	{
+		$this->db->select('cj.userid_fk, u.first_name, u.last_name');
+		$this->db->where(array('cj.jobid_fk'=>$lead_id));
+		$this->db->from('crm_contract_jobs cj');
+		$this->db->join('crm_users u', 'u.userid=cj.userid_fk','left');
+		$this->db->order_by('first_name','asc');
+		$result = $this->db->get()->result_array();
+		return $result;
+	}
+	
+	public function checkIsFolderAccessRecordExist($lead_id, $folder_id, $folder_id)
+	{
+		$this->db->where(array(
+            'lead_id' => $lead_id,
+			'folder_id' => $folder_id,
+			'user_id' => $user_id
+        ));
+		$this->db->from('crm_lead_folder_access');
+        $result = $this->db->get()->result_array();
+		if($result)
+		{
+			$result[0]['lead_folder_access_id'];
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function updateFolderAccessRecord($exist_record_id, $record_array)
+	{
+		$this->db->where('lead_folder_access_id', $exist_record_id);
+		$this->db->update('crm_lead_folder_access', $record_array); 
+
+	}
+	
+	public function createFolderAccessRecord($record_array)
+	{
+		$this->db->insert('crm_lead_folder_access', $record_array);
+	}
 }
 
 ?>
