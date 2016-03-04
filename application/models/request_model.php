@@ -299,10 +299,23 @@ class Request_model extends crm_model {
 		$this->db->where('parent = '. (int) $parentId);
 		$results = $this->db->get()->result();
 		
-		$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
+		$this->load->helper('lead_helper');
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+			$chge_access = 1;
+		} else {
+			$chge_access = get_del_access($lead_id, $this->userdata['userid']);
+		}
 		
 		foreach($results as $result) {
-			if(!in_array($result->folder_id,$omit_ids)) {
+			
+			$is_root = check_is_root($lead_id, $result->folder_id);
+			if($is_root == 'root'){
+				$folder_rt = 2;
+			} else {
+				$folder_rt = get_folder_access($lead_id, $result->folder_id, $this->userdata['userid']);
+			}
+			
+			if((!in_array($result->folder_id,$omit_ids)) && ($folder_rt == 2)) {
 				$arrayVal[$result->folder_id] = str_repeat('&nbsp;-&nbsp;', $counter)."{$result->folder_name}";
 				$arrayVal = $arrayVal + $this->get_tree_file_list_omit($lead_id, $result->folder_id, $counter+1, $omit_ids);
 			}

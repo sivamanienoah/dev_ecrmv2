@@ -887,8 +887,11 @@ class Request extends crm_controller {
 			// $check_permissions =  $this->check_access_permissions($data['curr_job_id'], 'folder_id', $fid, 'write');
 	
 			// if($check_permissions == 1 || $user_data['role_id'] == 1 || $arrLeadInfo['belong_to'] == $user_data['userid'] || $arrLeadInfo['assigned_to'] == $user_data['userid'] || $arrLeadInfo['lead_assign'] == $user_data['userid']) {
-			
-				$res['tree_struture'] .= "<option value='".$fid."'>".$fname."</option>";
+				$disabled='';
+				if($fname == 'Root'){
+					$disabled='disabled';
+				}
+				$res['tree_struture'] .= "<option value='".$fid."' ".$disabled.">".$fname."</option>";
 
 			// }
 			// CHECK ACCESS PERMISSIONS END HERE //	
