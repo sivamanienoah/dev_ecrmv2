@@ -2779,3 +2779,26 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 .chk-radio-box label span { font-weight: normal; }
 /***16-2-2016***/
 #trend_analysis_chart table.jqplot-table-legend, table.jqplot-cursor-legend{background-color: rgba(255, 255, 255, 1) !important; }
+.folder-permission-content > tbody > tr > td, .folder-permission-content > thead > tr > th {
+	width:94px!important;
+	min-width:94px !important;
+	padding:6px;
+	text-align:left;
+}
+.folder-permission-content > tbody > tr > td:first-child{
+	width:150px !important;	
+	min-width:150px !important;	
+}
+form#edit-folder-permissions {
+	overflow:scroll !important;
+}
+form#form_lead_folder_permissions {
+	overflow:initial !important;
+}
+#form_lead_folder_permissions .buttons {
+	padding:10px 2px 20px;
+	float:left;
+}
+#form_lead_folder_permissions .buttons .positive{
+	margin-left:20px;
+}
