@@ -376,6 +376,8 @@ class Request extends crm_controller {
 	 * @param $job_id
 	 */
 	public function get_project_files($job_id, $fparent_id=0) {
+		
+		$this->load->helper('lead_helper'); 
 
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$chge_access = 1;
@@ -385,8 +387,8 @@ class Request extends crm_controller {
 	
 		$file_upload_access = get_file_access($job_id, $this->userdata['userid']);
 	
-		$userdata = $this->session->userdata('logged_in_user');
-		 $arrLeadInfo = $this->request_model->get_lead_info($job_id);
+		$userdata    = $this->session->userdata('logged_in_user');
+		$arrLeadInfo = $this->request_model->get_lead_info($job_id);
 		$this->load->helper('file');
 
 		//intial step - Showing 1st child folders and root files
@@ -397,21 +399,20 @@ class Request extends crm_controller {
 		
 		$file_array = array();
 		
+		// echo "<pre>"; print_r($get_parent_data); exit;
+		
 		if(!empty($get_parent_data)) {			
-			foreach($get_parent_data as $res) {				
-				// CHECK ACCESS PERMISSIONS START HERE //	
-				
-				// $check_permissions = $this->check_access_permissions($job_id, 'folder_id', $res['folder_id'], 'read');//check_permission
-
-				// if($check_permissions == 1 || $userdata['role_id'] == 1) { //check_permission
-					//echo '<pre>';print_r($res);
-					if($res['folder_id'] == $fparent_id) {				
+			foreach($get_parent_data as $res) {
+				// CHECK ACCESS PERMISSIONS START HERE //
+				$get_permissions   = $this->check_access_permissions($job_id, $res['folder_id'], $this->userdata['userid']);
+				$check_permissions = $get_permissions['access_type'];
+				if($check_permissions != 0 || $userdata['role_id'] == 1|| $chge_access == 1) { //check_permission
+					if($res['folder_id'] == $fparent_id) {
 						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);
 					} else {
-					
 						$file_array[] = $res['folder_name']."<=>".$res['created_on']."<=>File folder<=>".$res['first_name']." ".$res['last_name'].'<=>'.$res['folder_id'];
 					}
-				// } //check_permission
+				} //check_permission
 			}
 		}	
 
@@ -1080,9 +1081,30 @@ class Request extends crm_controller {
 	}
 	
 	/*
+	*@method getFolderActions
+	*/
+	function getFolderActions($leadid, $folder_id) 
+	{
+		$data['lead_id']    = $leadid;
+		$data['folder_id']  = $folder_id;
+		$data['user_id']    = $this->userdata['userid'];
+		$lead_detail        = $this->project_model->get_lead_det($leadid);
+		$data['pjt_status'] = $lead_detail['pjt_status'];
+		
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2)
+		$data['chge_access'] = 1;
+		else
+		$data['chge_access'] = $this->project_model->get_access($leadid, $this->userdata['userid']);
+		
+		echo $this->load->view("projects/folder_write_actions.php", $data, true);
+		exit;
+	}
+	
+	/*
 	*
 	*/
-	public function get_files_tree_structure() {
+	public function get_files_tree_structure() 
+	{
 		$data    = real_escape_array($this->input->post());
 		$result  = $this->request_model->get_tree_file_list_number($data['leadid'],$parentId=0,$counter=0);
 		$res     = array();
@@ -3268,36 +3290,24 @@ EOD;
 	*
 	*@ Author Mani.S
 	*@ Function check_access_permissions.
-	*@ Param $lead_id, $filed_column, $filed_id, $checking_column.
+	*@ Param $lead_id, $folder_id, $userid.
 	*@ Access Public.			
 	*
 	*/	
-	public function check_access_permissions($lead_id, $filed_column, $filed_id, $checking_column)
+	public function check_access_permissions($lead_id, $folder_id, $user_id)
 	{
-	
-			$user_data = $this->session->userdata('logged_in_user');	
-			$sql =  '  SELECT lead_file_access_'.$checking_column.' FROM '.$this->cfg['dbpref'].'lead_file_access  WHERE
-															lead_id = '.(int)$lead_id.'  AND 
-															'.$filed_column.' = '.(int)$filed_id.'  AND 
-															userid = '.(int)$user_data['userid'].'';								
-															
-			$query = mysql_query($sql);
-
-			if(mysql_num_rows($query)) {
-			
-				$row = mysql_fetch_assoc($query);
-				return  $row['lead_file_access_'.$checking_column];
-			
-			}else {
-			
-				return '0';
-		}
+		$user_data = $this->session->userdata('logged_in_user');
+		
+		//lead_folder_access
+		$this->db->select('access_type');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_folder_access');
+	    $this->db->where(array('lead_id'=>$lead_id, 'folder_id'=>$folder_id, 'user_id'=>$user_id));
+	    $sql = $this->db->get();
+	    return $sql->row_array();		
 	}
 	
 	public function check_root_folder_read_access($root_folder_id)
 	{
-	
-		
 		$user_data = $this->session->userdata('logged_in_user');	
 		
 		if($user_data['role_id'] == 1) {

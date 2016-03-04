@@ -1026,50 +1026,39 @@ if (get_default_currency()) {
 		
 		<div id="file_breadcrumb"></div>
 		<div>
-		<div class="pull-left pad-right">
-			<form id="file_search">
-				<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
-				<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
-			</form>
-		</div>
-		
-		<div class="pull-left pad-right" id="files_actions">
-			<form name="ajax_file_upload" class="pull-left pad-right">
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				<div id="upload-container">
-					<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>">
-					<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
-						<img src="assets/img/uploads.png" alt="Browse" title="Browse" class="icon-width" id="upload-decoy" />
-						<input type="file" title='Upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
-					<?php } ?>
-				</div>
-			</form>
-			<?php 
-			
-			//($file_upload_access == 1 && $quote_data['pjt_status'] != 2) ||
-			if ( ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
 			<div class="pull-left pad-right">
-				<a title="Add Folder" href='javascript:void(0)'  onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
-			</div>
-			<div class="pull-left pad-right">
-				<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
-			</div>
-			<div class="pull-left pad-right">
-				<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
-			</div>
-			<div class="pull-left pad-right">
-				<a title="Edit Folder Permissions" onclick="editFolderPermissions(<?php echo $quote_data['lead_id']; ?>); return false;"  ><img src="assets/img/edit.png" class="icon-width" alt="Edit Folder Permissions"></a>
+				<form id="file_search">
+					<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
+					<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
+				</form>
 			</div>
 			
-			<?php /*if($user_roles == 1 || $login_userid == $project_belong_to || $login_userid == $project_assigned_to || $login_userid == $project_lead_assign ) { ?>
-			<div class="pull-left pad-right">
-				<a onclick="folderAccess(); return false;" title="Folder & File Access" ><img src="assets/img/permissions.png" class="icon-width" alt="Folder & File Access"></a>
+			<input type="hidden" id="filefolder_id" value="<?php echo $ff_id; ?>"/>
+			
+			<div class="pull-left pad-right" id="files_actions">
+				<?php if (($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
+					<form name="ajax_file_upload" class="pull-left pad-right">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<div id="upload-container">
+							<img src="assets/img/uploads.png" alt="Browse" title="Browse" class="icon-width" id="upload-decoy" />
+							<input type="file" title='Upload' class="textfield" multiple id="ajax_file_uploader" name="ajax_file_uploader[]" onchange="return runAjaxFileUpload();" />
+						</div>
+					</form>
+					<div class="pull-left pad-right">
+						<a title="Add Folder" href='javascript:void(0)'  onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
+					</div>
+					<div class="pull-left pad-right">
+						<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
+					</div>
+					<div class="pull-left pad-right">
+						<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
+					</div>
+					<div class="pull-left pad-right">
+						<a title="Edit Folder Permissions" onclick="editFolderPermissions(<?php echo $quote_data['lead_id']; ?>); return false;"  ><img src="assets/img/permissions.png" class="icon-width" alt="Edit Folder Permissions"></a>
+					</div>
+				<?php } ?>
 			</div>
-			<?php } */
-			}?>
-		</div>
-		
-		<div class='clrboth'></div>
+			<div class='clrboth'></div>
 		</div>	
 
 		<div id='fileupload_msg' class='succ_err_msg'></div>
@@ -2214,7 +2203,7 @@ if($this->userdata['role_id'] == 8): ?>
 <script>
 loadExistingFiles($('#filefolder_id').val());
 showBreadCrumbs($('#filefolder_id').val());
-$('#files_actions').hide();
+// $('#files_actions').hide();
 </script>
 <?php endif; ?>
 

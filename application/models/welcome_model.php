@@ -1132,44 +1132,64 @@ class Welcome_model extends crm_model {
 	
 	public function getLeadTeamMembers($lead_id)
 	{
+		$stake_holders = array();
+		$team_members  = array();
 		$this->db->select('cj.userid_fk, u.first_name, u.last_name');
-		$this->db->where(array('cj.jobid_fk'=>$lead_id));
-		$this->db->from('crm_contract_jobs cj');
-		$this->db->join('crm_users u', 'u.userid=cj.userid_fk','left');
+		$this->db->where('cj.jobid_fk',$lead_id);
+		$this->db->from($this->cfg['dbpref'] . 'contract_jobs cj');
+		$this->db->join($this->cfg['dbpref'] . 'users u', 'u.userid=cj.userid_fk');
 		$this->db->order_by('first_name','asc');
-		$result = $this->db->get()->result_array();
-		return $result;
+		$team_members = $this->db->get()->result_array();
+		
+		$this->db->select('sh.user_id as userid_fk, u.first_name, u.last_name', false);
+		$this->db->where('sh.lead_id',$lead_id);
+		$this->db->from($this->cfg['dbpref'] . 'stake_holders sh');
+		$this->db->join($this->cfg['dbpref'] . 'users u', 'u.userid=sh.user_id');
+		$this->db->order_by('first_name','asc');
+		$stake_holders = $this->db->get()->result_array();
+		
+		$team = array_merge_recursive($team_members, $stake_holders);
+		// echo "<pre>"; print_r($team); exit;
+		
+		return $team;
 	}
 	
-	public function checkIsFolderAccessRecordExist($lead_id, $folder_id, $folder_id)
+	public function checkIsFolderAccessRecordExist($lead_id, $folder_id, $user_id)
 	{
 		$this->db->where(array(
             'lead_id' => $lead_id,
 			'folder_id' => $folder_id,
 			'user_id' => $user_id
         ));
-		$this->db->from('crm_lead_folder_access');
-        $result = $this->db->get()->result_array();
-		if($result)
-		{
-			$result[0]['lead_folder_access_id'];
-		}
-		else
-		{
+		$this->db->from($this->cfg['dbpref'].'lead_folder_access');
+        $result = $this->db->get()->row_array();
+		
+		if(!empty($result))	{
+			return $result;
+		} else {
 			return FALSE;
 		}
+	}
+
+	public function get_folders_access($lead_id)
+	{
+		$this->db->where(array('lead_id' => $lead_id));
+		$this->db->from($this->cfg['dbpref'].'lead_folder_access');
+        return $this->db->get()->result_array();
 	}
 	
 	public function updateFolderAccessRecord($exist_record_id, $record_array)
 	{
 		$this->db->where('lead_folder_access_id', $exist_record_id);
-		$this->db->update('crm_lead_folder_access', $record_array); 
+		return $this->db->update($this->cfg['dbpref'].'lead_folder_access', $record_array); 
 
 	}
 	
 	public function createFolderAccessRecord($record_array)
 	{
-		$this->db->insert('crm_lead_folder_access', $record_array);
+		// echo "<pre>"; print_r($record_array); exit;
+		$this->db->insert($this->cfg['dbpref'].'lead_folder_access', $record_array);
+		// echo $this->db->last_query() . "<br/>";
 	}
 }
 

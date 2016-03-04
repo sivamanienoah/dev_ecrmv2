@@ -169,6 +169,40 @@ if ( ! function_exists('get_file_access'))
 	}
 }
 
+if ( ! function_exists('get_folder_access'))
+{
+	function get_folder_access($lead_id, $folder_id, $user_id)
+	{
+		$CI  = get_instance();
+		$cfg = $CI->config->item('crm'); // load config		
+		$CI->db->select('access_type');
+		$CI->db->where(array('lead_id' => $lead_id,'folder_id' => $folder_id,'user_id' => $user_id));
+		$sql = $CI->db->get($cfg['dbpref'].'lead_folder_access');
+		$res = $sql->row_array();
+		// echo $CI->db->last_query(); exit;
+		return $res['access_type'];
+	}
+}
+
+if ( ! function_exists('check_is_root'))
+{
+	function check_is_root($lead_id, $folder_id)
+	{
+		$CI  = get_instance();
+		$cfg = $CI->config->item('crm'); // load config		
+		$CI->db->select('*');
+		$CI->db->where(array('lead_id' => $lead_id,'folder_id' => $folder_id));
+		$sql = $CI->db->get($cfg['dbpref'].'file_management');
+		$res = $sql->row_array();
+		// echo $CI->db->last_query(); exit;
+		if($res['parent']==0){
+			return 'root';
+		} else {
+			return $res['parent'];
+		}
+	}
+}
+
 
 /* End of file number_helper.php */
 /* Location: ./system/helpers/number_helper.php */
