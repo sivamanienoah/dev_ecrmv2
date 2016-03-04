@@ -563,20 +563,24 @@ class Request extends crm_controller {
 		$data    = real_escape_array($this->input->post());
 		$result  = $this->request_model->get_tree_file_list($data['leadid'],$parentId=0,$counter=0);
 		$res     = array();
-		$res['lead_id'] = $data['leadid'];
+		$res['lead_id']          = $data['leadid'];
 		$res['parent_folder_id'] = $data['parent_folder_id'];
-		$res['fparent_id'] = $data['fparent_id'];
+		$res['fparent_id']       = $data['fparent_id'];
 		$res['project_members_list'] = '';
 		foreach($result as $fid=>$fname){
 			if($fname == $data['leadid']) {
-				$fname = 'root';
+				$fname = 'Root';
 			}
 			if(($fid == $data['fparent_id']) || ($fid == $data['parent_folder_id'])) {
 				$selected = 'selected=selected';
 			} else {
 				$selected = '';
 			}
-			$res['tree_struture'] .= "<option value='".$fid."' ".$selected.">".$fname."</option>"; 
+			$disabled = '';
+			if($fname == 'Root'){
+				$disabled = 'disabled';
+			}
+			$res['tree_struture'] .= "<option value='".$fid."' ".$selected." ".$disabled.">".$fname."</option>"; 
 		}
 		
 		/*$project_members = $this->request_model->get_project_members($data['leadid']);
@@ -631,7 +635,8 @@ class Request extends crm_controller {
 	 * @mapping files to another folder
 	 */
 	public function addFolders() {
-		$af_data = real_escape_array($this->input->post());
+		$af_data   = real_escape_array($this->input->post());
+		$user_data = $this->session->userdata('logged_in_user');
 		
 		// CHECK ACCESS PERMISSIONS END HERE //	
 		
@@ -663,28 +668,7 @@ class Request extends crm_controller {
 			
 			if(!$res_insert) {
 				$err_msg = 'Folder cannot be added.';
-			}else{
-				
-				$folder_id = $res_insert;				
-				
-				$pjt_users_id = $this->input->post('pjt_users_id');
-				$is_recursive = $this->input->post('is_recursive');
-				$add_access = $this->input->post('add_access');
-				$download_access = $this->input->post('download_access');
-				$users_count = count(array_unique($pjt_users_id));
-			
-				if($users_count>0){					
-					for($i=0;$i<$users_count;$i++){
-						$user_id = (isset($pjt_users_id[$i])?$pjt_users_id[$i]:'');
-						$is_recursive1 = (isset($is_recursive[$user_id])?$is_recursive[$user_id]:0);
-						$add_access1 = (isset($add_access[$user_id])?$add_access[$user_id]:0);
-						$download_access1 = (isset($download_access[$user_id])?$download_access[$user_id]:0);
-						
-
-						$this->db->insert($this->cfg['dbpref']."project_folder_access",array("folder_id" => $folder_id,"user_id" => $user_id,"is_recursive" => $is_recursive1, "add_access" => $add_access1, "download_access" => $download_access1,"created_on" => date("Y-m-d H:i:s"),"created_by" => $this->userdata['userid']));
-					}
-				}
-			}
+			} 
 		} else {
 			$res_insert = FALSE;
 			$err_msg = "Folder Name already exists.";
@@ -695,39 +679,18 @@ class Request extends crm_controller {
 			$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
 			
 		    /* #################  Permission add folder owner start here  ################## */
-			/* if($user_data['role_id'] != 1) {
-			$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$af_data['aflead_id'],'folder_id'=>$res_insert,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-			$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
-			} */
-			/* #################  Permission add folder owner end here  ################## */
 			
-			/* #################  Assing permission to all users by lead id start here  ################## */
-				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-	
-						foreach($arrProjectMembers as $members){
-							if($user_data['userid'] != $members['userid']) {
-							
-							$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
-								if(empty($arrLeadExistFolderAccess)) {	
-								
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}
-
-								$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$af_data['aflead_id'],'folder_id'=>$res_insert,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-								$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
-									
-							}
-							}
-						}
-				} */
-			/* #################  Assing permission to all users by lead id end here  ################## */
+			if ($user_data['role_id'] == 1 || $user_data['role_id'] == 2) {
+				$chge_access = 1;
+			} else {
+				$chge_access = get_del_access($job_id, $this->userdata['userid']);
+			}
+			
+			if($user_data['role_id'] != 1 || $user_data['role_id'] != 2 || $chge_access != 1) {
+				$permissions_contents  = array('lead_id'=>$af_data['aflead_id'],'folder_id'=>$res_insert,'user_id'=>$user_data['userid'],'access_type'=>2,'updated_by'=>$user_data['userid'],'updated_on'=>date('Y-m-d H:i:s'),'created_by'=>$user_data['userid'],'created_on'=>date('Y-m-d H:i:s'));
+				$insert_permissions   = $this->request_model->insert_new_row('lead_folder_access', $permissions_contents); //Mani
+			}
+			/* #################  Permission add folder owner end here  ################## */
 			 
 			$htm['af_msg'] = '<span class="ajx_success_msg"><h5>'.$af_data['new_folder'].' has been Added</h5></span>';
 		} else {

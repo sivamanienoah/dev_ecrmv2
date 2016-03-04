@@ -1130,31 +1130,6 @@ if (get_default_currency()) {
 					<td valign="top" width="80"><label>New Folder</label></td>
 					<td><input type="text" name="new_folder" id="new_folder" value="" class="textfield"></td>
 				</tr>
-				<?php if(!empty($project_members) && count($project_members)>0):?>
-				<tr>
-					<td colspan="2">
-					<table class="dashboard-heads create_permissions" cellpadding="0" cellspacing="0">
-				
-							<tr>
-								<th>Users</th>
-								<th>Is Recursive?</th>
-								<th>Add Access</th>
-								<th>View Access</th>
-							</tr>
-							<?php foreach($project_members as $pusers):?>							 
-								<tr>
-									<td><input type="hidden" name="pjt_users_id[]" value="<?php echo $pusers['userid'];?>" /><?php echo $pusers['first_name'].' '.$pusers['last_name'];?></td>
-									<td><input class="js_recursive js_active_recur_<?php echo $pusers['userid'];?>" type="checkbox" name="is_recursive[<?php echo $pusers['userid'];?>]"   value="1" /></td>
-									<td><input class="js_add_access js_active_add_<?php echo $pusers['userid'];?>" type="checkbox" name="add_access[<?php echo $pusers['userid'];?>]"   value="1" /></td>
-									<td><input class="js_view_access js_active_view_<?php echo $pusers['userid'];?>" type="checkbox" name="download_access[<?php echo $pusers['userid'];?>]"  value="1" /></td>
-								</tr>							
-						<?php endforeach;?>
-						
-					</table>	
-					</td>
-				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr>
-				<?php endif;?>
 				<tr>
 					<td colspan="2">
 						<div class="buttons"><button type="submit" class="positive" onclick="add_folder();">Add</button></div>

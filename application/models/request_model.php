@@ -14,6 +14,7 @@ class Request_model extends crm_model {
     function __construct() {
 		$this->increment_num = 1;
         parent::__construct();
+		$this->userdata = $this->session->userdata('logged_in_user');
     }
 	
 	/*
@@ -140,16 +141,35 @@ class Request_model extends crm_model {
 	public function get_tree_file_list($lead_id, $parentId=0 , $counter=0) {
 		$arrayVal = array();
 		
+		$this->load->helper('lead_helper');
+		
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+			$chge_access = 1;
+		} else {
+			$chge_access = get_del_access($lead_id, $this->userdata['userid']);
+		}
+		
 		$this->db->select('folder_id, folder_name, parent');
 		$this->db->from($this->cfg['dbpref'] . 'file_management');
 		$this->db->where('lead_id', $lead_id);
 		$this->db->where('parent = '. (int) $parentId);
 		$results = $this->db->get()->result();
 		
-		foreach($results as $result) {
-			$arrayVal[$result->folder_id] = str_repeat('&nbsp;-&nbsp;', $counter)."{$result->folder_name}";
-			$arrayVal = $arrayVal + $this->get_tree_file_list($lead_id, $result->folder_id, $counter+1);
+		if(!empty($results)) {
+			foreach($results as $result) {
+				$is_root = check_is_root($lead_id, $result->folder_id);
+				if($is_root == 'root'){
+					$folder_rt = 2;
+				} else {
+					$folder_rt = get_folder_access($lead_id, $result->folder_id, $this->userdata['userid']);
+				}
+				if(($chge_access == 1) || ($folder_rt == 2)) {
+					$arrayVal[$result->folder_id] = str_repeat('&nbsp;-&nbsp;', $counter)."{$result->folder_name}";
+					$arrayVal = $arrayVal + $this->get_tree_file_list($lead_id, $result->folder_id, $counter+1);
+				}
+			}
 		}
+		
         return $arrayVal;
 	}
 	
@@ -225,7 +245,7 @@ class Request_model extends crm_model {
 	    $sql = $this->db->get();
 	    return $sql->row_array();
     }
-	
+		
 	public function search_file($lead_id, $folder_id = null, $search_name){
 		 
 		$this->db->select('lf.file_id,lf.lead_files_name,lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
@@ -278,6 +298,8 @@ class Request_model extends crm_model {
 		$this->db->where('lead_id', $lead_id);
 		$this->db->where('parent = '. (int) $parentId);
 		$results = $this->db->get()->result();
+		
+		$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 		
 		foreach($results as $result) {
 			if(!in_array($result->folder_id,$omit_ids)) {

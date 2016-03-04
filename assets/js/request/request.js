@@ -9,6 +9,7 @@ function getFolderdata(ffolder_id) {
 	// else var ffolder_id  = ffolder_id;
 
 	showBreadCrumbs(ffolder_id);
+	showFolderOptions(ffolder_id);
 	$('#jv-tab-3').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
@@ -432,6 +433,19 @@ function showBreadCrumbs(parent_id) {
 		{},
 		function(data) {
 			$('#file_breadcrumb').html(data);
+		}
+	);
+	return false;
+}
+
+function showFolderOptions(parent_id) {
+	$('#files_actions').empty();
+	$.get(
+		site_base_url+'ajax/request/getFolderActions/'+curr_job_id+'/'+parent_id,
+		{},
+		function(data) {
+			$('#files_actions').show();
+			$('#files_actions').html(data);
 		}
 	);
 	return false;

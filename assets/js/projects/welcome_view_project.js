@@ -43,22 +43,29 @@
 				beforeSend: function(){
 					$('#save_folder_permissions').text('Saving..');
 					$('#save_folder_permissions').prop('disabled', true);
-				}
-			}).done(function(response){
-				$('#save_folder_permissions').text('Save');
-				$('#save_folder_permissions').prop('disabled', false);
-				
-				if(response==1)
-				{
+				},
+				success: function(response) {
+					$('#save_folder_permissions').text('Save');
+					$('#save_folder_permissions').prop('disabled', false);
+					if(response=='true')
 					$.unblockUI();
+					else
+					alert(response);
 				}
-				else
-				{
-					console.log(response);
-				}
-			});
+			})
 		});
 		
+	
+		$(document).on('change', '.all-chk', function(event){
+			var type = $(this).attr('id');
+			var uid = $(this).val();
+			if($(this).is(':checked')) {
+				$('.'+type+'-'+uid).prop('checked',true);
+			} else {
+				$('.rd-none-'+uid).prop('checked',true);
+			}
+		});
+
 	});
 
 	$().ready(function() {
@@ -477,15 +484,12 @@
 		var params 				 = {};
 		params[csrf_token_name]  = csrf_hash_token;
 		var ffid = $('#filefolder_id').val();
-		
-		
+
 		if(ffid == 'Files') 
 		{ 
 		alert('You have no permissions to upload files to current locations. Please contact to administrators!.'); 
 		return false;
 		}
-		
-		
 
 		$.ajaxFileUpload({
 			url: 'ajax/request/file_upload/'+project_jobid+'/'+ffid,
