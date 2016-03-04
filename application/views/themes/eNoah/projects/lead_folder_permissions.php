@@ -7,10 +7,10 @@
 		$access_rt[$rec['folder_id']][$rec['user_id']] = $rec['access_type'];
 	}
 ?>
-<table>
+<table class="folder-permission-content">
 	<thead>
 		<tr>
-			<th></th>
+			<th style=""></th>
 			<?php
 			foreach($team_members as $member)
 			{
@@ -85,5 +85,17 @@
 </table>
 
 <div class="buttons"><button type="submit" class="positive" id="save_folder_permissions">Save</button></div>
-<div class="buttons"><button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button></div>
+<div class="buttons"><button class="negative" onclick="$.unblockUI();">Cancel</button></div>
 </form>
+<script>
+/* $( ".folder-permission-content" ).scroll(function() {  
+		$(t).find('thead').addClass('.pos-fixed');
+	if($(".folder-permission-content").scroll > 20) {
+		console.log('true');
+			$(this).find('thead').css({"position":"fixed", "padding-left":"150px" });
+	}
+	else {
+		console.log('false');
+	}
+}); */
+</script>

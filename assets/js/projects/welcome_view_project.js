@@ -2738,7 +2738,8 @@ function editFolderPermissions(lead_id)
 	var ht = $('#edit-folder-permissions').height();
 	$('#edit-folder-permissions').text('Loading, please wait..');
 	$.blockUI({
-			message: $('#edit-folder-permissions')
+		message: $('#edit-folder-permissions'),
+		css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 900) /2 + 'px',width: '900px',height: ht+'px'}
 	});
 	
 	$.get(site_base_url+'project/get_folder_permissions_ui_for_a_project', {'lead_id':lead_id}, function(data)
