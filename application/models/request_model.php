@@ -308,12 +308,17 @@ class Request_model extends crm_model {
 		
 		foreach($results as $result) {
 			
-			$is_root = check_is_root($lead_id, $result->folder_id);
-			if($is_root == 'root'){
-				$folder_rt = 2;
+			if($chge_access != 1) {
+				$is_root = check_is_root($lead_id, $result->folder_id);
+				if($is_root == 'root'){
+					$folder_rt = 2;
+				} else {
+					$folder_rt = get_folder_access($lead_id, $result->folder_id, $this->userdata['userid']);
+				}
 			} else {
-				$folder_rt = get_folder_access($lead_id, $result->folder_id, $this->userdata['userid']);
+				$folder_rt = 2;
 			}
+			
 			
 			if((!in_array($result->folder_id,$omit_ids)) && ($folder_rt == 2)) {
 				$arrayVal[$result->folder_id] = str_repeat('&nbsp;-&nbsp;', $counter)."{$result->folder_name}";
