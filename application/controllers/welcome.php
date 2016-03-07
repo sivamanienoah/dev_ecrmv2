@@ -584,6 +584,24 @@ class Welcome extends crm_controller {
 				$inv_no['invoice_no'] = $invoice_no;
 				$updt_job = $this->welcome_model->update_row('leads', $inv_no, $insert_id);
 				
+				//folder name entry start
+				//creating files folder name
+				$f_dir = UPLOAD_PATH.'files/';
+				if (!is_dir($f_dir)) {
+					mkdir($f_dir);
+					chmod($f_dir, 0777);
+				}
+				
+				//creating lead_id folder name
+				$f_dir = $f_dir.$insert_id;
+				if (!is_dir($f_dir)) {
+					mkdir($f_dir);
+					chmod($f_dir, 0777);
+				}
+				
+				$this->welcome_model->insert_default_folder($insert_id);
+				//folder name entry end
+				
 				// $this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
 
 				$json['error'] = false;
@@ -1587,23 +1605,7 @@ class Welcome extends crm_controller {
 			$param['subject']         = "Lead to Project Change Notification";
 
 			$this->email_template_model->sent_email($param);
-			//folder name entry start
-			//creating files folder name
-			$f_dir = UPLOAD_PATH.'files/';
-			if (!is_dir($f_dir)) {
-				mkdir($f_dir);
-				chmod($f_dir, 0777);
-			}
 			
-			//creating lead_id folder name
-			$f_dir = $f_dir.$project_id;
-			if (!is_dir($f_dir)) {
-				mkdir($f_dir);
-				chmod($f_dir, 0777);
-			}
-			
-			$this->welcome_model->insert_folder_name($project_id);
-			//folder name entry end
 			$res['error'] = false;
 		} else {
 			$res['error'] = true;

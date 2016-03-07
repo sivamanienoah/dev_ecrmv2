@@ -85,7 +85,7 @@
 </table>
 
 <div class="buttons"><button type="submit" class="positive" id="save_folder_permissions">Save</button></div>
-<div class="buttons"><button class="negative" onclick="$.unblockUI();">Cancel</button></div>
+<div class="buttons"><button type='submit' class="negative" onclick="$.unblockUI(); return false;">Cancel</button></div>
 </form>
 <script>
 /* $( ".folder-permission-content" ).scroll(function() {  

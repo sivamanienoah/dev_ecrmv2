@@ -578,7 +578,7 @@ class Request extends crm_controller {
 			}
 			$disabled = '';
 			if($fname == 'Root'){
-				$disabled = 'disabled';
+				// $disabled = 'disabled';
 			}
 			$res['tree_struture'] .= "<option value='".$fid."' ".$selected." ".$disabled.">".$fname."</option>"; 
 		}
@@ -889,7 +889,7 @@ class Request extends crm_controller {
 			// if($check_permissions == 1 || $user_data['role_id'] == 1 || $arrLeadInfo['belong_to'] == $user_data['userid'] || $arrLeadInfo['assigned_to'] == $user_data['userid'] || $arrLeadInfo['lead_assign'] == $user_data['userid']) {
 				$disabled='';
 				if($fname == 'Root'){
-					$disabled='disabled';
+					// $disabled='disabled';
 				}
 				$res['tree_struture'] .= "<option value='".$fid."' ".$disabled.">".$fname."</option>";
 
