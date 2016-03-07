@@ -651,12 +651,12 @@ class Request extends crm_controller {
 		} else {
 			$is_root = 'no_root';
 		}
-		
+		echo $is_root; exit;
 		$af_condn            = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
 		$folder_check_status = $this->request_model->createFolderStatus('file_management', $af_condn);
 		if(($folder_check_status==0) && ($is_root != 'root')){
 			$add_data = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny'],'created_by'=>$this->userdata['userid'],'created_on'=>date('Y-m-d H:i:s'));
-			$res_insert = $this->request_model->insert_new_row('file_management', $add_data);			 
+			$res_insert = $this->request_model->insert_new_row('file_management', $add_data);		 
 			
 			if(!$res_insert) {
 				$err_msg = 'Folder cannot be added.';
