@@ -777,7 +777,7 @@ if (get_default_currency()) {
 							</table>
 						<?php echo form_close(); ?>
 					</div>
-					<div id="map_add_file">
+					<div id="map_add_file" >
 						<div class="file-tabs-close-project" id="file-tabs-close"></div>
 						<div>
 							<ul id="map_add_file-tabs">
@@ -785,13 +785,13 @@ if (get_default_currency()) {
 								<li><a href="<?php echo current_url() ?>#map-tab-4">Add New File</a></li>
 							</ul>
 						</div>
-						<div id="map-tab-2">
+						<div id="map-tab-2" style="height:260px; overflow:scroll;">
 							<div name='all_file_list' id="all_file_list" style="text-align: left;"></div>
 							<div style="padding: 10px 0px 0px;">
 								<button type="submit" class="positive" onclick="select_files()">Submit</button>
 							</div>
 						</div>
-						<div id="map-tab-4">
+						<div id="map-tab-4" style="height:260px; overflow:scroll;">
 							<form name="payment_ajax_file_upload" style="height: 35px;">
 								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 								<div id="upload-container">
