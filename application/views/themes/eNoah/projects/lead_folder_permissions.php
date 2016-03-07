@@ -1,13 +1,19 @@
+<style>
+#parent {height: 300px;}
+#fixTable {	width: 1800px !important;}
+</style>
 <form name="form_lead_folder_permissions" id="form_lead_folder_permissions">
 <input type="hidden" id="lead_id" name="lead_id" value="<?php echo $lead_id; ?>" />
-<?php //echo "<pre>"; print_r($lead_folders); exit; 
+<?php
 	$access_rt = array();
 	if(!empty($folders_access) && (count($folders_access)>0)){
 		foreach($folders_access as $rec)
 		$access_rt[$rec['folder_id']][$rec['user_id']] = $rec['access_type'];
 	}
 ?>
-<table class="folder-permission-content">
+<!--table class="folder-permission-content"-->
+<div id="parent">
+<table cellpadding="0" cellspacing="0" id="fixTable" class="table" >
 	<thead>
 		<tr>
 			<th style=""></th>
@@ -22,13 +28,11 @@
 			?>
 			<th>
 				<?php echo $member['first_name'].' '.$initial; ?>
-				<table>
-					<tr><td>
+				<br>
 						<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" />R&nbsp;&nbsp;</label>
 						<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" />W&nbsp;&nbsp;</label>
 						<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" />N&nbsp;&nbsp;</label>
-					</td></tr>
-				</table>
+					
 			</th>
 			<?php 
 			}
@@ -83,11 +87,11 @@
 		} ?>
 	</tbody>
 </table>
-
+</div>
 <div class="buttons"><button class="positive save_btn" onclick="save_permissions(); return false;">Save</button></div>
 <div class="buttons"><button class="negative" onclick="$.unblockUI(); return false;">Cancel</button></div>
 </form>
-<script>
+<script type="text/javascript">
 function save_permissions(){
 	$.ajax({
 		url    : site_base_url+'project/save_folder_permissions',
@@ -107,4 +111,41 @@ function save_permissions(){
 		}
 	})
 }
+
+
+$(document).ready(function() {
+	/* $('#example').dataTable( {
+		"bSort": false,
+		"bProcessing": true,
+		"bPaginate": false,
+		"bFilter": false,
+		"bInfo": false,
+        "sScrollY":  "500px",
+        "sScrollX":  "150px",
+		"sScrollXInner": "400%", 
+        "bScrollCollapse": true,
+        "fixedColumns":   {
+            "leftColumns": 1          
+        },
+		"bDestroy": true
+    } ); */
+	
+
+    /* var oTable = $('#example').dataTable( {
+		"bSort": false,
+		"bProcessing": true,
+		"bPaginate": false,
+		"bFilter": false,
+		"bInfo": false,
+        "sScrollY": "300px",
+        "sScrollX": "100%",
+        "sScrollXInner": "150%",
+        "bScrollCollapse": true,
+        "bPaginate": false,
+		"bDestroy": true
+    } );
+   new $.fn.dataTable.FixedColumns( oTable ); */
+$("#fixTable").tableHeadFixer({"left" : 1}); 
+	
+} );
 </script>
