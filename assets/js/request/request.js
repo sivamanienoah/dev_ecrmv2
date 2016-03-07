@@ -119,7 +119,7 @@ function add_folder() {
 		dataType: 'json',
 		data: form_data,
 		success: function(data) {
-			if(data.err_msg == 'true'){
+			if(data.err == 'true'){
 				alert('Folder Name already exists (Or) you dont have access to write.');
 			}else {
 				$('#af_successerrmsg').html(data.af_msg);
