@@ -637,6 +637,7 @@ class Request extends crm_controller {
 	public function addFolders() {
 		$af_data   = real_escape_array($this->input->post());
 		$user_data = $this->session->userdata('logged_in_user');
+		$htm = array();
 		
 		$this->load->helper('lead_helper'); 
 
@@ -664,6 +665,7 @@ class Request extends crm_controller {
 		} else {
 			$res_insert = FALSE;
 			$err_msg = "Folder Name already exists (Or) you dont have access to write.";
+			$htm['err_msg'] = "true";
 		}
 		
 		if($res_insert){
