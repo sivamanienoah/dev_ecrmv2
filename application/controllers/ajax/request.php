@@ -651,7 +651,7 @@ class Request extends crm_controller {
 		} else {
 			$is_root = 'no_root';
 		}
-		echo $is_root; exit;
+
 		$af_condn            = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
 		$folder_check_status = $this->request_model->createFolderStatus('file_management', $af_condn);
 		if(($folder_check_status==0) && ($is_root != 'root')){
@@ -663,7 +663,7 @@ class Request extends crm_controller {
 			} 
 		} else {
 			$res_insert = FALSE;
-			$err_msg = "Folder Name already exists.";
+			$err_msg = "Folder Name already exists (Or) you dont have access to write.";
 		}
 		
 		if($res_insert){
