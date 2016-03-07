@@ -638,31 +638,23 @@ class Request extends crm_controller {
 		$af_data   = real_escape_array($this->input->post());
 		$user_data = $this->session->userdata('logged_in_user');
 		
-		// CHECK ACCESS PERMISSIONS END HERE //	
-		
-		// $check_permissions =  $this->check_access_permissions($af_data['aflead_id'], 'folder_id', $af_data['add_destiny'], 'write');	
-		// $user_data = $this->session->userdata('logged_in_user');
+		$this->load->helper('lead_helper'); 
 
-		// $project_members = $this->request_model->get_project_members($af_data['aflead_id']); // This array to get a project normal members(Developers) details.
-		// $project_leaders = $this->request_model->get_project_leads($af_data['aflead_id']); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-		// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.
-		// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.
-		// $arrLeadInfo = $this->request_model->get_lead_info($af_data['aflead_id']); // This function to get a current lead informations.
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+			$chge_access = 1;
+		} else {
+			$chge_access = get_del_access($job_id, $this->userdata['userid']);
+		}
 		
-		/* if($check_permissions == 0 && $user_data['role_id'] != 1) {
-		
-			$this->upload_error = 'You have no permissions to create folder here';
-			$htm['af_reload'] = $af_data['add_destiny'];
-			$htm['error'] = TRUE;
-			$htm['af_msg']   = $this->upload_error;
-			echo json_encode($htm); exit;
-		
-		} */
-		// CHECK ACCESS PERMISSIONS START HERE //	
+		if($chge_access != 1){
+			$is_root = check_is_root($af_data['aflead_id'], $af_data['add_destiny']);
+		} else {
+			$is_root = 'no_root';
+		}
 		
 		$af_condn            = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny']);
 		$folder_check_status = $this->request_model->createFolderStatus('file_management', $af_condn);
-		if($folder_check_status==0){
+		if(($folder_check_status==0) && ($is_root != 'root')){
 			$add_data = array('lead_id'=>$af_data['aflead_id'],'folder_name'=>$af_data['new_folder'],'parent'=>$af_data['add_destiny'],'created_by'=>$this->userdata['userid'],'created_on'=>date('Y-m-d H:i:s'));
 			$res_insert = $this->request_model->insert_new_row('file_management', $add_data);			 
 			
