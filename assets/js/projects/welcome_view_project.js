@@ -35,7 +35,7 @@
 			return false;
 		});
 		
-		$('#edit-folder-permissions').on('click', '#save_folder_permissions', function(){
+		/* $('#edit-folder-permissions').on('click', '#save_folder_permissions', function(){
 			$.ajax({
 				url    : site_base_url+'project/save_folder_permissions',
 				method : 'POST',
@@ -53,14 +53,24 @@
 					alert(response);
 				}
 			})
-		});
-		
-	
+		}); */
+
 		$(document).on('change', '.all-chk', function(event){
 			var type = $(this).attr('id');
 			var uid = $(this).val();
 			if($(this).is(':checked')) {
 				$('.'+type+'-'+uid).prop('checked',true);
+				switch(type){
+					case 'rd-read':
+						$('#rd-write, #rd-none').prop('checked',false);
+					break;
+					case 'rd-write':
+						$('#rd-read, #rd-none').prop('checked',false);
+					break;
+					case 'rd-none':
+						$('#rd-write, #rd-read').prop('checked',false);
+					break;
+				}
 			} else {
 				$('.rd-none-'+uid).prop('checked',true);
 			}
