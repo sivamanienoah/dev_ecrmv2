@@ -119,8 +119,11 @@ function add_folder() {
 		dataType: 'json',
 		data: form_data,
 		success: function(data) {
-			alert(data.err_msg);			
-			$('#af_successerrmsg').html(data.af_msg);
+			if(data.err_msg == 'true'){
+				alert('Folder Name already exists (Or) you dont have access to write.');
+			}else {
+				$('#af_successerrmsg').html(data.af_msg);
+			}
 			setTimeout(function() { 
 				$.unblockUI({ 
 					onUnblock: function(){ getFolderdata(data.af_reload),$('.succ_err_msg').empty(),$('#new_folder').val(''); }
