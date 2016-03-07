@@ -119,7 +119,7 @@ function add_folder() {
 		dataType: 'json',
 		data: form_data,
 		success: function(data) {
-			// console.info(data);			
+			console.info(data);			
 			$('#af_successerrmsg').html(data.af_msg);
 			setTimeout(function() { 
 				$.unblockUI({ 
