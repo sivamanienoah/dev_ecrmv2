@@ -84,18 +84,27 @@
 	</tbody>
 </table>
 
-<div class="buttons"><button  class="positive" id="save_folder_permissions">Save</button></div>
+<div class="buttons"><button class="positive save_btn" onclick="save_permissions(); return false;">Save</button></div>
 <div class="buttons"><button class="negative" onclick="$.unblockUI(); return false;">Cancel</button></div>
 </form>
 <script>
-/* $( ".folder-permission-content" ).scroll(function() {  
-		$(t).find('thead').addClass('.pos-fixed');
-	if($(".folder-permission-content").scroll > 20) {
-		console.log('true');
-			$(this).find('thead').css({"position":"fixed", "padding-left":"150px" });
-	}
-	else {
-		console.log('false');
-	}
-}); */
+function save_permissions(){
+	$.ajax({
+		url    : site_base_url+'project/save_folder_permissions',
+		method : 'POST',
+		data   : $("form").serialize(),
+		beforeSend: function(){
+			$('.save_btn').text('Saving..');
+			$('.save_btn').prop('disabled', true);
+		},
+		success: function(response) {
+			$('.save_btn').text('Save');
+			$('.save_btn').prop('disabled', false);
+			if(response=='true')
+			$.unblockUI();
+			else
+			alert(response);
+		}
+	})
+}
 </script>
