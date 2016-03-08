@@ -1,6 +1,10 @@
+<?php $tbl_width = count($team_members) *200; ?>
+<script>
+var tbl_width = '<?php echo $tbl_width ?>';
+$("#fixTable").css("width", tbl_width);
+</script>
 <style>
 #parent {height: 500px;}
-#fixTable {	width: 1800px !important;}
 </style>
 <form name="form_lead_folder_permissions" id="form_lead_folder_permissions">
 <input type="hidden" id="lead_id" name="lead_id" value="<?php echo $lead_id; ?>" />
@@ -27,12 +31,14 @@
 				}
 			?>
 			<th class="table_header">
-				<?php echo $member['first_name'].' '.$initial; ?>
+				<div class="user_name">
+					<p><?php echo $member['first_name'].' '.$initial; ?></p>
+				
 					<br>
 					<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" />R</label>
 					<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" />W</label>
 					<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" />N</label>
-					
+					</div>
 			</th>
 			<?php 
 			}

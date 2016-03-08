@@ -2812,22 +2812,46 @@ form#edit-folder-permissions {
 	
 }
 .custom_table_sort .table_header, .custom_table_sort .user_permision, .custom_table_sort .folder_name{
-	padding: 10px;
+	padding: 7px;
 	border: solid 1px #ccc;
 	border-bottom: none;
 	border-left: none;
 }
+.custom_table_sort table{
+	/*display: table;*/
+}
+.custom_table_sort table thead tr{
+	/*display: table-row;*/
+}
 .custom_table_sort .table_header{
 	text-align: left;	
+	padding: 9px;
+	/*display: table-cell;	*/
 }
-
+.custom_table_sort .table_header:first-child{
+	border-left: solid 1px #ccc;
+}
 .custom_table_sort .table_header label{
 display: inline-block;
 margin:5px 10px 5px 0px;
 	
 }
+.custom_table_sort .folder_name{
+	width: 220px;
+	border-left: solid 1px #ccc;
+	
+}
+.custom_table_sort .folder_name .fa{
+	margin-right: 10px;
+	color:#4b6fb9;
+	font-size: 16px;
+}
+.custom_table_sort .folder_name .fa-folder{
+	
+}
+
 .custom_table_sort .user_permision{
-	width: 70px;	
+	width:auto;	
 	
 }
 .custom_table_sort .user_permision div{
@@ -2835,8 +2859,7 @@ display: inline-block;
 margin:5px 10px 5px 0px;
 	
 }
-.custom_table_sort .folder_name{
-	width: 150px;
-	border-left: solid 1px #ccc;
-	
+.custom_table_sort .table_header .user_name{
+	display: block;
+	width: 100%;
 }
