@@ -45,8 +45,6 @@
 		<?php
 		foreach($lead_folders as $folder_id => $folder_name) 
 		{
-			if($folder_name!=$lead_id)
-			{
 			?>
 			<tr>
 				<td class="folder_name">
@@ -89,7 +87,6 @@
 				<?php } ?>
 			</tr>
 			<?php
-			}
 		} ?>
 	</tbody>
 </table>
