@@ -1,11 +1,11 @@
 <?php
 if(count($team_members)>0){ 
-	$tbl_width = count($team_members)*210;
+	$tbl_width = count($team_members)*200;
 } else {
-	$tbl_width = '400';
+	$tbl_width = '800';
 }
-if(count($team_members)==1){
-	$tbl_width = '400';
+if(count($team_members)<=3){
+	$tbl_width = '850';
 }
 ?>
 <script>
