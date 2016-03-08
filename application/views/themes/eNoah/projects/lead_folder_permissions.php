@@ -10,7 +10,8 @@ var tbl_width = '<?php echo $tbl_width ?>';
 $("#fixTable").css("width", tbl_width);
 </script>
 <style>
-#parent {height: 500px;}
+#parent {height: 460px;}
+.buttons button { margin: 0 0 0 10px; overflow: visible; padding: 1px 10px 3px 7px; width: auto; }
 </style>
 <form name="form_lead_folder_permissions" id="form_lead_folder_permissions">
 <input type="hidden" id="lead_id" name="lead_id" value="<?php echo $lead_id; ?>" />
@@ -41,9 +42,9 @@ $("#fixTable").css("width", tbl_width);
 					<p><?php echo $member['first_name'].' '.$initial; ?></p>
 				
 					<br>
-					<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" />R</label>
-					<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" />W</label>
-					<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" />N</label>
+					<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" /> R</label>
+					<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" /> W</label>
+					<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" /> N</label>
 					</div>
 			</th>
 			<?php 
@@ -103,6 +104,17 @@ $("#fixTable").css("width", tbl_width);
 	</tbody>
 </table>
 </div>
+<fieldset class="folder-rt">
+	<legend>Legend</legend>
+	<div align="left" style="background: none repeat scroll 0 0 #3b5998;">
+		<!--Legends-->
+		<div class="legend legend-folder-rt">
+			<div class="pull-left"><strong>R</strong> - Read</div>
+			<div class="pull-left"><strong>W</strong> - Write</div>
+			<div class="pull-left"><strong>N</strong> - Not Applicable</div>
+		</div>
+	</div>
+</fieldset>
 <div class="buttons"><button class="positive save_btn" onclick="save_permissions(); return false;">Save</button></div>
 <div class="buttons"><button class="negative" onclick="$.unblockUI(); return false;">Cancel</button></div>
 </form>

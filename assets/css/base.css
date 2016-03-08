@@ -2003,6 +2003,11 @@ button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
 	color:#fff;
 	width:85%
 }
+.legend-folder-rt {
+	height:24px !important;
+	color:#fff;
+	width:85%
+}
 .payment_legend {
 	height: 25px;
     margin-top: 10px;
