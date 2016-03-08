@@ -1,4 +1,10 @@
-<?php $tbl_width = count($team_members) *200; ?>
+<?php
+if(count($team_members)>0){ 
+	$tbl_width = count($team_members)*200;
+} else {
+	$tbl_width = '200';
+}
+?>
 <script>
 var tbl_width = '<?php echo $tbl_width ?>';
 $("#fixTable").css("width", tbl_width);
@@ -123,38 +129,6 @@ function save_permissions(){
 
 
 $(document).ready(function() {
-	/* $('#example').dataTable( {
-		"bSort": false,
-		"bProcessing": true,
-		"bPaginate": false,
-		"bFilter": false,
-		"bInfo": false,
-        "sScrollY":  "500px",
-        "sScrollX":  "150px",
-		"sScrollXInner": "400%", 
-        "bScrollCollapse": true,
-        "fixedColumns":   {
-            "leftColumns": 1          
-        },
-		"bDestroy": true
-    } ); */
-	
-
-    /* var oTable = $('#example').dataTable( {
-		"bSort": false,
-		"bProcessing": true,
-		"bPaginate": false,
-		"bFilter": false,
-		"bInfo": false,
-        "sScrollY": "300px",
-        "sScrollX": "100%",
-        "sScrollXInner": "150%",
-        "bScrollCollapse": true,
-        "bPaginate": false,
-		"bDestroy": true
-    } );
-   new $.fn.dataTable.FixedColumns( oTable ); */
-$("#fixTable").tableHeadFixer({"left" : 1}); 
-	
+	$("#fixTable").tableHeadFixer({"left" : 1}); 
 } );
 </script>
