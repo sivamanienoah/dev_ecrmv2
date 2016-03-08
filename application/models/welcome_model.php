@@ -1119,18 +1119,33 @@ class Welcome_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'] . 'file_management');
 		$this->db->where('lead_id', $lead_id);
 		$this->db->where('parent = '. (int) $parentId);
-		// $this->db->where_not_in('folder_name', array($lead_id));
 		$results = $this->db->get()->result();
-		// echo $counter; exit;
+		
 		foreach($results as $result) {
-			if($counter==0)
-			$folder_options = '<i class="fa fa-folder"></i>';
-			else
-			$folder_options = '<i class="fa fa-folder"></i>';
-			$arrayVal[$result->folder_id] = str_repeat('<i class="fa fa-folder"></i>', $counter)."{$result->folder_name}";
+			if($result->folder_name!=$lead_id){
+				$isparent = $this->checkisparent($result->folder_id, $lead_id);
+				if($isparent=='parent')
+				$folder_options = '<i class="fa fa-folder-open"></i>'.$result->folder_name;
+				else
+				$folder_options = '<i class="fa fa-folder"></i>'.$result->folder_name;
+				$arrayVal[$result->folder_id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $counter)."{$folder_options}";
+			}
 			$arrayVal = $arrayVal + $this->get_tree_file_list_except_root($lead_id, $result->folder_id, $counter+1);
 		}
         return $arrayVal;
+	}
+	
+	public function checkisparent($folderid, $leadid){
+		$this->db->select('folder_id, folder_name, parent');
+		$this->db->from($this->cfg['dbpref'] . 'file_management');
+		$this->db->where('lead_id', $leadid);
+		$this->db->where('parent = '. (int) $folderid);
+		$results = $this->db->get()->num_rows();
+		if($results>0){
+			return 'parent';
+		}else{
+			return 'noparent';
+		}
 	}
 	
 	public function getLeadTeamMembers($lead_id)
