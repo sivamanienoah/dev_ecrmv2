@@ -114,7 +114,7 @@ $("#fixTable").css("width", tbl_width);
 		<div class="legend legend-folder-rt">
 			<div class="pull-left"><strong>R</strong> - Read</div>
 			<div class="pull-left"><strong>W</strong> - Write</div>
-			<div class="pull-left"><strong>N</strong> - Not Applicable</div>
+			<div class="pull-left"><strong>N</strong> - No Access</div>
 		</div>
 	</div>
 </fieldset>
