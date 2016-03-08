@@ -1121,9 +1121,13 @@ class Welcome_model extends crm_model {
 		$this->db->where('parent = '. (int) $parentId);
 		// $this->db->where_not_in('folder_name', array($lead_id));
 		$results = $this->db->get()->result();
-		
+		// echo $counter; exit;
 		foreach($results as $result) {
-			$arrayVal[$result->folder_id] = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $counter)."{$result->folder_name}";
+			if($counter==0)
+			$folder_options = '<i class="fa fa-folder"></i>';
+			else
+			$folder_options = '<i class="fa fa-folder"></i>';
+			$arrayVal[$result->folder_id] = str_repeat('<i class="fa fa-folder"></i>', $counter)."{$result->folder_name}";
 			$arrayVal = $arrayVal + $this->get_tree_file_list_except_root($lead_id, $result->folder_id, $counter+1);
 		}
         return $arrayVal;

@@ -2790,15 +2790,53 @@ tr.project-dash-total th{color:#333;background:#e7eaf1;border:1px solid #d4d4d4;
 	min-width:150px !important;	
 }
 form#edit-folder-permissions {
-	overflow:scroll !important;
+	overflow:visible !important;
 }
-form#form_lead_folder_permissions {
+/*form#form_lead_folder_permissions {
 	overflow:initial !important;
-}
+}*/
 #form_lead_folder_permissions .buttons {
 	padding:10px 2px 20px;
 	float:left;
 }
 #form_lead_folder_permissions .buttons .positive{
 	margin-left:20px;
+}
+.folder-permission-content ul li{
+	display: inline-block;
+}
+.folder-permission-content ul li.left_title{
+	width: 150px;
+	position: fixed;
+	background: red;
+	
+}
+.custom_table_sort .table_header, .custom_table_sort .user_permision, .custom_table_sort .folder_name{
+	padding: 10px;
+	border: solid 1px #ccc;
+	border-bottom: none;
+	border-left: none;
+}
+.custom_table_sort .table_header{
+	text-align: left;	
+}
+
+.custom_table_sort .table_header label{
+display: inline-block;
+margin:5px 10px 5px 0px;
+	
+}
+.custom_table_sort .user_permision{
+	width: 70px;	
+	
+}
+.custom_table_sort .user_permision div{
+display: inline-block;
+margin:5px 10px 5px 0px;
+	
+}
+.custom_table_sort .folder_name{
+	width: 150px;
+	border-left: solid 1px #ccc;
+	
 }

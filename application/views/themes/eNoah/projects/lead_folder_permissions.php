@@ -1,5 +1,5 @@
 <style>
-#parent {height: 300px;}
+#parent {height: 500px;}
 #fixTable {	width: 1800px !important;}
 </style>
 <form name="form_lead_folder_permissions" id="form_lead_folder_permissions">
@@ -12,11 +12,11 @@
 	}
 ?>
 <!--table class="folder-permission-content"-->
-<div id="parent">
+<div id="parent" class="custom_table_sort">
 <table cellpadding="0" cellspacing="0" id="fixTable" class="table" >
 	<thead>
 		<tr>
-			<th style=""></th>
+			<th class="table_header">Folders</th>
 			<?php
 			foreach($team_members as $member)
 			{
@@ -26,12 +26,12 @@
 					$initial = substr($member['last_name'], 0, 1);
 				}
 			?>
-			<th>
+			<th class="table_header">
 				<?php echo $member['first_name'].' '.$initial; ?>
-				<br>
-						<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" />R&nbsp;&nbsp;</label>
-						<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" />W&nbsp;&nbsp;</label>
-						<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" />N&nbsp;&nbsp;</label>
+					<br>
+					<label><input type="checkbox" id="rd-read" class='all-chk' name="all_read" value="<?=$member['userid_fk']?>" />R</label>
+					<label><input type="checkbox" id="rd-write" class='all-chk' name="all_write" value="<?=$member['userid_fk']?>" />W</label>
+					<label><input type="checkbox" id="rd-none" class='all-chk' name="all_none" value="<?=$member['userid_fk']?>" />N</label>
 					
 			</th>
 			<?php 
@@ -49,7 +49,7 @@
 			{
 			?>
 			<tr>
-				<td>
+				<td class="folder_name">
 					<?php echo $folder_name; ?>
 				</td>
 				<?php foreach($team_members as $member) { ?>
@@ -75,10 +75,16 @@
 							$none_checked  = 'checked="checked"';
 						}
 					?>
-				<td>
-					<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-read-'.$member['userid_fk']?>" value="1" <?=$read_checked?> />R&nbsp;&nbsp;
-					<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-write-'.$member['userid_fk']?>" value="2" <?=$write_checked?> />W&nbsp;&nbsp;
-					<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-none-'.$member['userid_fk']?>" value="0" <?=$none_checked?> />N&nbsp;&nbsp;
+				<td class="user_permision">
+					<div>
+						<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-read-'.$member['userid_fk']?>" value="1" <?=$read_checked?> />R
+					</div>
+					<div>
+						<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-write-'.$member['userid_fk']?>" value="2" <?=$write_checked?> />W
+					</div>
+					<div>
+						<input type="radio" id="<?=$rd_name?>" name="<?=$rd_name?>" class="<?php echo 'rd-none-'.$member['userid_fk']?>" value="0" <?=$none_checked?> />N
+					</div>
 				</td>
 				<?php } ?>
 			</tr>
