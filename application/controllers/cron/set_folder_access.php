@@ -52,7 +52,7 @@ class Set_folder_access extends crm_controller
 				if(!empty($members)){
 					for($i=0; $i<count($folders); $i++) {
 						for($j=0;$j<count($members);$j++) {
-							if((trim($folders[$i]['folder_name'])!='SOW') && (trim($folders[$i]['folder_name'])!='Statement Of Work')) {
+							if((trim($folders[$i]['folder_name'])!='SOW') && (trim($folders[$i]['folder_name'])!='Statement Of Work') && (trim($folders[$i]['folder_name'])!='02 Statement of Work')) {
 								$ins_arr = array('lead_id'=>$rec->lead_id, 'folder_id'=>$folders[$i]['folder_id'], 'user_id'=>$members[$j]['userid_fk'], 'access_type'=>1, 'updated_by'=>59, 'updated_on'=>date('Y-m-d H:i:s'), 'created_by'=>59, 'created_on'=>date('Y-m-d H:i:s'));
 							} else {
 								$ins_arr = array('lead_id'=>$rec->lead_id, 'folder_id'=>$folders[$i]['folder_id'], 'user_id'=>$members[$j]['userid_fk'], 'access_type'=>0, 'updated_by'=>59, 'updated_on'=>date('Y-m-d H:i:s'), 'created_by'=>59, 'created_on'=>date('Y-m-d H:i:s'));
