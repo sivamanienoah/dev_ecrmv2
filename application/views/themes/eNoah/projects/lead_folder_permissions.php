@@ -1,6 +1,6 @@
 <?php
 if(count($team_members)>0){ 
-	$tbl_width = count($team_members)*180;
+	$tbl_width = count($team_members)*190;
 } else {
 	$tbl_width = '800';
 }
