@@ -2822,6 +2822,9 @@ form#edit-folder-permissions {
 	border-bottom: none;
 	border-left: none;
 }
+.custom_table_sort .table{
+	border-bottom: solid 1px #ccc;
+}
 .custom_table_sort table{
 	/*display: table;*/
 }
