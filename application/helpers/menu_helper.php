@@ -45,10 +45,11 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 			$vertices[$i] =array_merge($vertices[$i],$sample);
 			$i++;
 		}
-	
+		// echo "<pre>"; print_r($vertices); exit;
 		$allpages=array(0=>'');
 		$subtrees = $trees = array();
 		foreach ($vertices as $vertex) {
+			
 			$allpages[$vertex['masterid']]=$vertex['master_name'];
 			$v = array(
 				'id' => $vertex['masterid'],
@@ -64,7 +65,9 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 				'masreroleid' => array(),
 				'role_id' => array(),
 			);
-		
+			/* if($vertex['masterid']==92){
+				echo $vertex['master_name'];
+			} */
 					
 			if (isset($subtrees[$vertex['masterid']])) {
 				$v['children'] = $subtrees[$vertex['masterid']];
@@ -147,10 +150,25 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 				$ul.= '</li>';
 			 }
 		}
-		 if($searchSubMenu==NULL){
-			$ul.= '</ul>';
+		$ci  = &get_instance();
+		$cfg = $ci->config->item('crm');
+		$huserdata = $ci->session->userdata('logged_in_user');
+		
+		$ci->db->where(array('user_id'=>$huserdata['userid'],'dms_type'=>'1'));
+		$ci->db->from($cfg['dbpref'].'dms_users');
+        $dms_res = $ci->db->get()->num_rows();
+		// echo $dms_res; exit;
+		$dms_access = 0;
+		if($dms_res>0){
+			$dms_access = 1;
 		}
-			 
+		if($huserdata['userid']==59 || $dms_access==1) {
+			$ul.= '<li style="list-style:none"><a href="dms">Collateral</a></li>';
+		}
+		// echo "<pre>"; print_r($huserdata); exit;
+		if($searchSubMenu==NULL){
+			$ul.= '</ul>';
+		}	
 		return $ul;
 	}
 }
@@ -221,6 +239,7 @@ if ( ! function_exists('getSubtreeSubULMenu'))
 				$html .= '</ul>';
 			}
 		}
+		
 		return $html; 
 	}
 }
@@ -228,11 +247,20 @@ if ( ! function_exists('getSubtreeSubULMenu'))
 if ( ! function_exists('formSubMenuList'))
 {
 		function formSubMenuList($masterId = NULL, $access) {
-
 			if($masterId!=NULL && $masterId !='') {
 				$ci  = &get_instance(); 
 				$cfg = $ci->config->item('crm');
 				
+				$huserdata = $ci->session->userdata('logged_in_user');
+				$ci->db->where(array('user_id'=>$huserdata['userid'],'dms_type'=>'0'));
+				$ci->db->from($cfg['dbpref'].'dms_users');
+				$dms_res = $ci->db->get()->num_rows();
+				// echo $dms_res; exit;
+				$dms_access = 0;
+				if($dms_res>0){
+					$dms_access = 1;
+				}
+
 				$ci->load->database(); 
 				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.masterid asc');
 				$SubMenuitms = $ci->db->get();
@@ -242,7 +270,15 @@ if ( ! function_exists('formSubMenuList'))
 					if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
 						continue;
 					}
-					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";
+					if($submenu['masterid']==149){
+						continue;
+					}
+					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";	
+				}
+				if($masterId==92){
+					if($huserdata['userid']==59 || $dms_access==1){
+						$str.= '<li style="list-style:none"><a href="manage_dms">Manage Collateral</a></li>';
+					}
 				}
 				$str .="</ul>";
 				return $str;

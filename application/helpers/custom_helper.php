@@ -184,3 +184,39 @@ if ( ! function_exists('get_attachments_show'))
 		return $list;
 	}
 }
+
+if ( ! function_exists('get_dms_access'))
+{
+	function get_dms_access($dms_type)
+	{
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+		$huserdata  = $CI->session->userdata('logged_in_user');
+		
+		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."dms_users", array('user_id'=>$huserdata['userid'],'dms_type'=>$dms_type));
+		$res 	    = $qry->num_rows();
+		$dms_access = 0;
+		if($qry->num_rows()>0){
+			$dms_access = 1;
+		}
+		return $dms_access;
+	}
+}
+
+if ( ! function_exists('get_dms_folder_access'))
+{
+	function get_dms_folder_access($folder_id)
+	{
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+		$huserdata  = $CI->session->userdata('logged_in_user');
+		
+		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."dms_users", array('user_id'=>$huserdata['userid'],'dms_type'=>$dms_type));
+		$res 	    = $qry->num_rows();
+		$dms_access = 0;
+		if($qry->num_rows()>0){
+			$dms_access = 1;
+		}
+		return $dms_access;
+	}
+}
