@@ -447,7 +447,7 @@ class Dms extends crm_controller {
 		$dmsAccess = 0;
 		if ($userdata['userid'] == 59 || $dmsAdminAccess == 1)
 		$dmsAccess = 1;
-		if($current_folder_id!=0)
+		// if($current_folder_id!=0)
 		$res['tree_struture'] .= "<option value='0'>Root</option>";
 		foreach($result as $fid=>$fname) {
 			// CHECK ACCESS PERMISSIONS START HERE //
