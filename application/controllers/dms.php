@@ -359,6 +359,7 @@ class Dms extends crm_controller {
 		$res     = array();
 		$res['fparent_id']           = $data['fparent_id'];
 		$res['project_members_list'] = '';
+		$res['tree_struture'] .= "<option value='0'>Root</option>";
 		foreach($result as $fid=>$fname){
 			if(($fid == $data['fparent_id']) || ($fid == $data['parent_folder_id'])) {
 				$selected = 'selected=selected';
