@@ -372,6 +372,7 @@ function move_all_files()
 					}); 
 				}, 2000);
 			} else {
+				getDmsData(ff_id);
 				$('#all_mf_successerrmsg').html(data.mf_msg);
 				setTimeout('timerfadeout()', 3000);
 			}
