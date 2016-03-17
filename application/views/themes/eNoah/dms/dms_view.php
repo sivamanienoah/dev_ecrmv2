@@ -18,9 +18,13 @@ $dmsAdminAccess = get_dms_access($type=0);
 			<div id="file_breadcrumb"></div>
 			<div class="pull-left pad-right">
 				<form id="file_search">
-					<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
-					<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
-					<button class="negative" onclick="load_root(); return false;" style="margin:0 0 0 5px;" type="reset">Reset</button>
+					<span class="pull-left">
+						<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
+						<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
+					</span>
+					<span class="pull-left">
+						<button class="resetBtn" onclick="load_root(); return false;" style="margin:0 0 0 5px;" type="reset">Reset</button>
+					</span>
 				</form>
 			</div>
 			<div class="pull-left pad-right" id="files_actions"></div>
