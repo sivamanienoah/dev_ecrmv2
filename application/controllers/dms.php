@@ -62,12 +62,14 @@ class Dms extends crm_controller {
 		$delData            = real_escape_array($this->input->post());
 		$json	            = array();
 		
+		$json['folder_parent_id'] = 0;
+		
 		if(!empty($delData['ff_id'])) {
 			$json['folder_parent_id'] = $delData['ff_id'];
-		} else {
-			$get_parent_folder_id = $this->dms_model->getParentFfolderId($parent=0);
+		}/*  else {
+			$get_parent_folder_id = $this->dms_model->getParentFfolderId($delData['ff_id']);
 			$json['folder_parent_id'] = $get_parent_folder_id['folder_id'];
-		}
+		} */
 		if(!empty($delData['del_folder'])) {
 			$del_folder = rtrim($delData['del_folder'], ",");
 			$del_folder = explode(',', $del_folder);
@@ -424,8 +426,9 @@ class Dms extends crm_controller {
 	 */
 	public function get_moveall_file_tree_struct() 
 	{
-		$data     = real_escape_array($this->input->post());
-		$userdata = $this->session->userdata('logged_in_user');
+		$data    		   = real_escape_array($this->input->post());
+		$current_folder_id = $data['current_folder_id'];
+		$userdata 		   = $this->session->userdata('logged_in_user');
 		$this->load->helper('custom_helper');
 		// echo "<pre>"; print_r($data); die;
 
@@ -444,7 +447,8 @@ class Dms extends crm_controller {
 		$dmsAccess = 0;
 		if ($userdata['userid'] == 59 || $dmsAdminAccess == 1)
 		$dmsAccess = 1;
-		
+		if($current_folder_id!=0)
+		$res['tree_struture'] .= "<option value='0'>Root</option>";
 		foreach($result as $fid=>$fname) {
 			// CHECK ACCESS PERMISSIONS START HERE //
 			if($dmsAccess != 1) {
