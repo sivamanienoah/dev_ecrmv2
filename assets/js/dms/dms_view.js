@@ -314,13 +314,14 @@ function moveAllFiles() {
 		}
 	});
 	// alert(mv_folder+'+++'+mv_files); return false;
+	var current_folder_id = $('#hfolder_id').val();
 	
 	if((mv_folder=='') && (mv_files=='')) {
 		alert('No files or folders selected');
 		return false;
 	}
 	
-	var params				= {'mv_folder':mv_folder, 'mv_files':mv_files};
+	var params				= {'mv_folder':mv_folder, 'mv_files':mv_files, 'current_folder_id':current_folder_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.ajax({
