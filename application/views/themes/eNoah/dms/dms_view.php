@@ -8,7 +8,7 @@ $dmsAdminAccess = get_dms_access($type=0);
 ?>
 <div id="content">
 	<div class="inner">
-	<?php if(($dmsAccess==1) || ($dmsAdminAccess==1) || ($userdata['userid']==59)) { ?>
+	<?php if(($dmsAccess==1) || ($dmsAdminAccess==1) || ($userdata['role_id']==1)) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 		</div>
@@ -32,8 +32,8 @@ $dmsAdminAccess = get_dms_access($type=0);
 		</div>
 	<?php 
 	} else { 
-		echo "You have no rights to access this page"; 
-	} 
+		echo "You have not mapped to collateral folders.";
+	}
 	?>
 	</div><!--Inner div-close here -->
 </div><!--Content div-close here -->

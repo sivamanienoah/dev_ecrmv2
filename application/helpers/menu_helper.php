@@ -150,7 +150,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 				$ul.= '</li>';
 			 }
 		}
-		$ci  = &get_instance();
+		/* $ci  = &get_instance();
 		$cfg = $ci->config->item('crm');
 		$huserdata = $ci->session->userdata('logged_in_user');
 		
@@ -164,7 +164,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 		}
 		if($huserdata['userid']==59 || $dms_access==1) {
 			$ul.= '<li style="list-style:none"><a href="dms">Collateral</a></li>';
-		}
+		} */
 		// echo "<pre>"; print_r($huserdata); exit;
 		if($searchSubMenu==NULL){
 			$ul.= '</ul>';
@@ -270,16 +270,16 @@ if ( ! function_exists('formSubMenuList'))
 					if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
 						continue;
 					}
-					if($submenu['masterid']==149){
+					/* if($submenu['masterid']==149){
 						continue;
-					}
+					} */
 					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";	
 				}
-				if($masterId==92){
+				/* if($masterId==92){
 					if($huserdata['userid']==59 || $dms_access==1){
 						$str.= '<li style="list-style:none"><a href="manage_dms">Manage Collateral</a></li>';
 					}
-				}
+				} */
 				$str .="</ul>";
 				return $str;
 			}

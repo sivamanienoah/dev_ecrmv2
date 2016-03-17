@@ -505,6 +505,12 @@ class Dms extends crm_controller {
 		}
 		if(!empty($mov_file)) {
 			$html['res_file'] = FALSE;
+			if($madata['move_destiny'] == 0){
+				$html['res_file'] = FALSE;
+				$htm['mf_msg'] = '<span class="ajx_failure_msg"><h5>File cannot be moved to Root.</h5></span>';
+				echo json_encode($htm);
+				exit;
+			}
 			foreach($mov_file as $mv_fi) {
 				$condn = array('file_id' => $mv_fi);
 				$updt  = array('folder_id' => $madata['move_destiny']);
