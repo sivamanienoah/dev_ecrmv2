@@ -469,7 +469,7 @@ class Dms extends crm_controller {
 	 * @method mapallfiles()
 	 * @mapping multiple files to another folder
 	 */
-	public function mapallfiles() 
+	public function mapallfiles()
 	{
 		$madata = real_escape_array($this->input->post());
 		// echo "<pre>"; print_r($madata); exit;
@@ -506,7 +506,6 @@ class Dms extends crm_controller {
 		if(!empty($mov_file)) {
 			$html['res_file'] = FALSE;
 			foreach($mov_file as $mv_fi) {
-			
 				$condn = array('file_id' => $mv_fi);
 				$updt  = array('folder_id' => $madata['move_destiny']);
 				$res_file   = $this->dms_model->update_row('dms_files', $condn, $updt);
