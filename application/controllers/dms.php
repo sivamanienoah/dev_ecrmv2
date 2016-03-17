@@ -35,7 +35,7 @@ class Dms extends crm_controller {
     public function index()
 	{
 		$filter = array();
-        $data['page_heading'] = 'DMS';
+        $data['page_heading'] = 'Collateral';
         $data['hfolder_id']   = 0;
 		$this->load->view('dms/dms_view', $data);
     }
