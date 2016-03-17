@@ -489,8 +489,8 @@ class Dms extends crm_controller {
 				$res_folder = $this->dms_model->update_row('dms_file_management', $condn, $updt);
 				//insert_log
 				if($res_folder){
-					$get_info = $this->dms_model->get_row('dms_file_management', $wh=array('folder_id'=>$mv_fo));
-					$get_info1 = $this->dms_model->get_row('dms_file_management', $wh=array('folder_id'=>$madata['move_destiny']));
+					$get_info  = $this->dms_model->get_record('*', 'dms_file_management', $wh=array('folder_id'=>$mv_fo));
+					$get_info1 = $this->dms_model->get_record('*', 'dms_file_management', $wh=array('folder_id'=>$madata['move_destiny']));
 					$log_contents  = array('jobid_fk'=>0,'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['folder_name'].' folder has been moved to '.$get_info1['folder_name'],'attached_docs'=>$af_data['new_folder']);
 					$insert_logs   = $this->dms_model->insert_row('logs', $log_contents);
 				}
@@ -508,9 +508,9 @@ class Dms extends crm_controller {
 				$res_file   = $this->dms_model->update_row('dms_files', $condn, $updt);
 				//insert_log
 				if($res_file){
-					$get_info = get_row('dms_files', $wh=array('file_id'=>$mv_fi));
-					$get_info1 = get_row('dms_files', $wh=array('file_id'=>$madata['move_destiny']));
-					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['files_name'].' file has been moved to '.$get_info1['files_name'],'attached_docs'=>$af_data['new_folder']);
+					$get_info  = $this->dms_model->get_record('*', 'dms_files', $wh=array('file_id'=>$mv_fi));
+					$get_info1 = $this->dms_model->get_record('*', 'dms_file_management', $wh=array('folder_id'=>$madata['move_destiny']));
+					$log_contents  = array('jobid_fk'=>0,'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['files_name'].' file has been moved to '.$get_info1['folder_name'],'attached_docs'=>$af_data['new_folder']);
 					$insert_logs   = $this->dms_model->insert_row('logs', $log_contents);
 				}
 			}
