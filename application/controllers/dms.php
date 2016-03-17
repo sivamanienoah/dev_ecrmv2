@@ -114,12 +114,12 @@ class Dms extends crm_controller {
 					$wh_condn = array('file_id' => $file_id);
 					$del_file = $this->dms_model->delete_row('dms_files', $wh_condn);
 										
-					/* $logs['jobid_fk']	   = $jobid;
+					$logs['jobid_fk']	   = 0;
 					$logs['userid_fk']	   = $this->userdata['userid'];
 					$logs['date_created']  = date('Y-m-d H:i:s');
-					$logs['log_content']   = $get_file_data['files_name'].' is deleted.';
+					$logs['log_content']   = $get_file_data['files_name'].' file(collateral) is deleted.';
 					$logs['attached_docs'] = $get_file_data['files_name'];
-					$insert_logs 		   = $this->request_model->insert_row('logs', $logs); */
+					$insert_logs 		   = $this->dms_model->insert_row('logs', $logs);
 					
 					$res[] 		  		   = $get_file_data['files_name'].' is deleted.';
 				} else {
@@ -155,12 +155,12 @@ class Dms extends crm_controller {
 					$del_file  = $this->dms_model->delete_row('dms_file_management', $del_condn);
 					if($del_file) {
 						
-						/* $logs['jobid_fk']	   = $jobid;
+						$logs['jobid_fk']	   = 0;
 						$logs['userid_fk']	   = $this->userdata['userid'];
 						$logs['date_created']  = date('Y-m-d H:i:s');
-						$logs['log_content']   = $get_file_data['folder_name'].' folder is deleted.';
+						$logs['log_content']   = $get_file_data['folder_name'].' folder(collateral) is deleted.';
 						$logs['attached_docs'] = $get_file_data['folder_name'];
-						$insert_logs 		   = $this->dms_model->insert_row('logs', $logs); */
+						$insert_logs 		   = $this->dms_model->insert_row('logs', $logs);
 					
 						$res[] = $get_file_data['folder_name'].' folder is deleted.';
 					} else {
@@ -328,12 +328,12 @@ class Dms extends crm_controller {
 					$dms_files['folder_id'] 	   = $filefolder_id; //get here folder id from file_management table.
 					$insert_file				   = $this->dms_model->insert_row('dms_files', $dms_files);
 					
-					/* $logs['jobid_fk']	   = $lead_id;
+					$logs['jobid_fk']	   = 0;
 					$logs['userid_fk']	   = $this->userdata['userid'];
 					$logs['date_created']  = date('Y-m-d H:i:s');
-					$logs['log_content']   = $file_up['file_name'].' is added.';
+					$logs['log_content']   = $file_up['file_name'].' file(collateral) is added.';
 					$logs['attached_docs'] = $file_up['file_name'];
-					$insert_logs 		   = $this->request_model->insert_row('logs', $logs); */
+					$insert_logs 		   = $this->dms_model->insert_row('logs', $logs);
 					$i++;
 				  }
 			   }
@@ -369,14 +369,6 @@ class Dms extends crm_controller {
 
 			$res['tree_struture'] .= "<option value='".$fid."' ".$selected." >".$fname."</option>"; 
 		}
-		
-		/*$project_members = $this->request_model->get_project_members($data['leadid']);
-		if(count($project_members)>0){
-			
-			foreach($project_members as $project_member){
-				$res['project_members_list'] .= "<option value='".$project_member['userid']."'>".$project_member['first_name']." ".$project_member['last_name']."</option>"; 
-			}
-		}*/
 		 
 		echo json_encode($res);
 		exit;
@@ -394,18 +386,6 @@ class Dms extends crm_controller {
 		$htm['err'] = "false";
 		
 		$this->load->helper('lead_helper'); 
-
-		/* if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
-			$chge_access = 1;
-		} else {
-			$chge_access = get_del_access($job_id, $this->userdata['userid']);
-		}
-		
-		if($chge_access != 1){
-			$is_root = check_is_root($af_data['aflead_id'], $af_data['add_destiny']);
-		} else {
-			$is_root = 'no_root';
-		} */
 
 		$af_condn            = array('folder_name'=>$af_data['new_folder'],'parent_id'=>$af_data['add_destiny']);
 		$folder_check_status = $this->dms_model->createFolderStatus('dms_file_management', $af_condn);
@@ -425,23 +405,9 @@ class Dms extends crm_controller {
 		}
 		
 		if($res_insert){
-			/* $log_contents  = array('jobid_fk'=>$af_data['aflead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$af_data['new_folder'].' folder is Added.','attached_docs'=>$af_data['new_folder']);	
-			$insert_logs   = $this->request_model->insert_row('logs', $log_contents); */
-			
-		    /* #################  Permission add folder owner start here  ################## */
-			
-			/* if ($user_data['role_id'] == 1 || $user_data['role_id'] == 2) {
-				$chge_access = 1;
-			} else {
-				$chge_access = get_del_access($job_id, $this->userdata['userid']);
-			}
-			
-			if($user_data['role_id'] != 1 || $user_data['role_id'] != 2 || $chge_access != 1) {
-				$permissions_contents  = array('lead_id'=>$af_data['aflead_id'],'folder_id'=>$res_insert,'user_id'=>$user_data['userid'],'access_type'=>2,'updated_by'=>$user_data['userid'],'updated_on'=>date('Y-m-d H:i:s'),'created_by'=>$user_data['userid'],'created_on'=>date('Y-m-d H:i:s'));
-				$insert_permissions   = $this->request_model->insert_new_row('lead_folder_access', $permissions_contents);
-			} */
-			/* #################  Permission add folder owner end here  ################## */
-			 
+			$log_contents  = array('jobid_fk'=>0,'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$af_data['new_folder'].' folder(collateral) is Added.','attached_docs'=>$af_data['new_folder']);	
+			$insert_logs   = $this->dms_model->insert_row('logs', $log_contents);
+						 
 			$htm['af_msg'] = '<span class="ajx_success_msg"><h5>'.$af_data['new_folder'].' has been Added</h5></span>';
 		} else {
 			$htm['af_msg'] = '<span class="ajx_failure_msg"><h5>'.$err_msg.'</h5></span>';
@@ -522,11 +488,12 @@ class Dms extends crm_controller {
 				$updt  		= array('parent_id' => $madata['move_destiny']);
 				$res_folder = $this->dms_model->update_row('dms_file_management', $condn, $updt);
 				//insert_log
-				/* if($res_folder){
-					$get_info = $this->request_model->getInfo($madata['mall_lead_id'], $mv_fo);
-					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['folder_name'].' folder has been moved.','attached_docs'=>$af_data['new_folder']);
-					$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
-				} */
+				if($res_folder){
+					$get_info = $this->dms_model->get_row('dms_file_management', $wh=array('folder_id'=>$mv_fo));
+					$get_info1 = $this->dms_model->get_row('dms_file_management', $wh=array('folder_id'=>$madata['move_destiny']));
+					$log_contents  = array('jobid_fk'=>0,'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['folder_name'].' folder has been moved to '.$get_info1['folder_name'],'attached_docs'=>$af_data['new_folder']);
+					$insert_logs   = $this->dms_model->insert_row('logs', $log_contents);
+				}
 			}
 			$html['res_folder'] = TRUE;
 		} else {
@@ -540,11 +507,12 @@ class Dms extends crm_controller {
 				$updt  = array('folder_id' => $madata['move_destiny']);
 				$res_file   = $this->dms_model->update_row('dms_files', $condn, $updt);
 				//insert_log
-				/* if($res_file){
-					$get_info = $this->request_model->getFilesInfo($madata['mall_lead_id'], $mv_fi);
-					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['lead_files_name'].' file has been moved.','attached_docs'=>$af_data['new_folder']);
-					$insert_logs   = $this->request_model->insert_row('logs', $log_contents);
-				} */
+				if($res_file){
+					$get_info = get_row('dms_files', $wh=array('file_id'=>$mv_fi));
+					$get_info1 = get_row('dms_files', $wh=array('file_id'=>$madata['move_destiny']));
+					$log_contents  = array('jobid_fk'=>$madata['mall_lead_id'],'userid_fk'=>$this->userdata['userid'],'date_created'=>date('Y-m-d H:i:s'),'log_content'=>$get_info['files_name'].' file has been moved to '.$get_info1['files_name'],'attached_docs'=>$af_data['new_folder']);
+					$insert_logs   = $this->dms_model->insert_row('logs', $log_contents);
+				}
 			}
 			$html['res_file'] = TRUE;
 		} else {

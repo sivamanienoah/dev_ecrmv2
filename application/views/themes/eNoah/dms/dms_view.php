@@ -20,6 +20,7 @@ $dmsAdminAccess = get_dms_access($type=0);
 				<form id="file_search">
 					<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
 					<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
+					<button class="negative" onclick="load_root(); return false;" style="margin:0 0 0 5px;" type="reset">Reset</button>
 				</form>
 			</div>
 			<div class="pull-left pad-right" id="files_actions"></div>

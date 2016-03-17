@@ -296,10 +296,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['viewlead'] 		= $viewLead;
 	$array['addlead'] 		= $addLead;
 	$array['editlead'] 		= $editLead;
-	$array['viewenquiry'] 		= $viewEnquiry;
-	$array['addenquiry'] 		= $addEnquiry;
-	$array['editenquiry'] 		= $editEnquiry;
-	$array['deleteenquiry'] 	= $deleteEnquiry;
+	$array['viewenquiry'] 	= $viewEnquiry;
+	$array['addenquiry'] 	= $addEnquiry;
+	$array['editenquiry'] 	= $editEnquiry;
+	$array['deleteenquiry'] = $deleteEnquiry;
 	$array['deletelead'] 	= $deleteLead;
 	$array['viewtask'] 		= $viewTask;
 	$array['addtask'] 		= $addTask;

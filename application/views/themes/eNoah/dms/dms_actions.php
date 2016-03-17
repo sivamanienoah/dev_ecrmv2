@@ -22,11 +22,11 @@ $write_access = $dmsFolderAccess;
 	<div class="pull-left pad-right">
 		<a title="Add Folder" href='javascript:void(0)'  onclick="create_dms_folder(<?php echo $folder_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
 	</div>
-<?php } ?>
-<?php if($write_access==2) { ?>	
 	<div class="pull-left pad-right">
 		<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
 	</div>
+<?php } ?>
+<?php if($write_access==2) { ?>	
 	<div class="pull-left pad-right">
 		<a title="Delete All" onclick="deleteAllFiles(); return false;"  ><img src="assets/img/delete_new.png" class="icon-width" alt="Delete"></a>
 	</div>
