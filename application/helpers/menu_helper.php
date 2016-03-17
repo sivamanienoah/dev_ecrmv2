@@ -154,7 +154,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 		$cfg = $ci->config->item('crm');
 		$huserdata = $ci->session->userdata('logged_in_user');
 		
-		$ci->db->where(array('user_id'=>$huserdata['userid'],'dms_type'=>'1'));
+		$ci->db->where(array('user_id'=>$huserdata['userid']));
 		$ci->db->from($cfg['dbpref'].'dms_users');
         $dms_res = $ci->db->get()->num_rows();
 		// echo $dms_res; exit;
