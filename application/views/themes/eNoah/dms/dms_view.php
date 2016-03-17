@@ -4,10 +4,11 @@ require (theme_url().'/tpl/header.php');
 $userdata  = $this->session->userdata('logged_in_user');
 $this->load->helper('custom_helper');
 $dmsAccess = get_dms_access($type=1);
+$dmsAdminAccess = get_dms_access($type=0);
 ?>
 <div id="content">
 	<div class="inner">
-	<?php if(($dmsAccess==1) || ($userdata['userid']==59)) { ?>
+	<?php if(($dmsAccess==1) || ($dmsAdminAccess==1) || ($userdata['userid']==59)) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 		</div>
