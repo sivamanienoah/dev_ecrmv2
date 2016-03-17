@@ -8,7 +8,8 @@ $dmsAdminAccess = get_dms_access($type=0);
 ?>
 <div id="content">
 	<div class="inner">
-	<?php if(($dmsAccess==1) || ($dmsAdminAccess==1) || ($userdata['role_id']==1)) { ?>
+	<?php #if(($dmsAccess==1) || ($dmsAdminAccess==1) || ($userdata['role_id']==1)) { ?>
+	<?php if($this->session->userdata('accesspage')==1) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading; ?></h2>
 		</div>
