@@ -3843,7 +3843,7 @@ HDOC;
 
 			$param['to_mail'] 		  = $to;
 			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
-			// $param['bcc_mail'] 		  = $bcc_email;
+			// $param['bcc_mail'] 	  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahisolultion.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = "Generate Invoice Notification";
@@ -3851,7 +3851,7 @@ HDOC;
 			$param['attach'] 		  = $attached_files;
 			$param['job_id'] 		  = $pjtid;
 
-			//$this->email_template_model->sent_email($param);
+			$this->email_template_model->sent_email($param);
 		} else {
 			$output['error'] = true;
 			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
@@ -4546,5 +4546,6 @@ HDOC;
 		}
 		exit;
 	}
+	
 }
 ?>
