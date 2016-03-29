@@ -44,6 +44,8 @@ class Welcome extends crm_controller {
 		$data['customers']    = $this->welcome_model->get_customers();
 		$data['lead_owner']   = $this->welcome_model->get_users();
 		$data['regions']      = $this->regionsettings_model->region_list();
+		$data['services']     = $this->welcome_model->get_lead_services();
+		$data['sources']      = $this->welcome_model->get_lead_sources();
 		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
 		// echo "<pre>"; print_r($data['saved_search']); exit;
 		
@@ -58,7 +60,9 @@ class Welcome extends crm_controller {
 	{
 		$filt = array();
 		$stage	      =null; 
-		$customer	  =null; 
+		$customer	  =null;
+		$service	  =null;
+		$lead_src	  =null;
 		$worth		  =null; 
 		$owner	 	  =null; 
 		$leadassignee =null; 
@@ -108,10 +112,13 @@ class Welcome extends crm_controller {
 			}
 		}
 		//print_r($this->session->userdata);
-		 if (count($filt)>0) { 
+		// echo "<pre>"; print_r($filt); exit;
+		 if (count($filt)>0) {			 
 		//echo 'yes';
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
+			$service 	  = $filt['service'];
+			$lead_src 	  = $filt['lead_src'];
 			$worth   	  = $filt['worth'];
 			$owner 		  = $filt['owner'];
 			$leadassignee = $filt['leadassignee'];
@@ -138,12 +145,14 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_keyword",'');
 		}
 
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		//echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
 
 		$data['stage'] 		  = $stage;
 		$data['customer']	  = $customer;
+		$data['service']	  = $service;
+		$data['lead_src']	  = $lead_src;
 		$data['worth'] 		  = $worth;
 		$data['owner'] 		  = $owner;
 		$data['leadassignee'] = $leadassignee;
@@ -1623,6 +1632,8 @@ class Welcome extends crm_controller {
 		
 		$stage=null;
 		$customer=null;
+		$service=null;
+		$lead_src=null;
 		$worth=null;
 		$owner=null;
 		$leadassignee=null;
@@ -1640,6 +1651,7 @@ class Welcome extends crm_controller {
 				
 		//echo '<pre>';print_r($this->session->userdata);
 		$exporttoexcel = real_escape_array($this->input->post()); 
+		// echo '<pre>';print_r($exporttoexcel); exit;
 		if($this->session->userdata("lead_search_by_default") || $this->session->userdata("lead_search_by_id")){
 			if($this->session->userdata("lead_search_by_id")){
 				$wh_condn = array('search_id'=>$this->session->userdata("lead_search_by_id"), 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
@@ -1667,6 +1679,8 @@ class Welcome extends crm_controller {
 
 			$stage 		  = $exporttoexcel['stage'];
 			$customer 	  = $exporttoexcel['customer'];
+			$service 	  = $exporttoexcel['service'];
+			$lead_src 	  = $exporttoexcel['lead_src'];
 			$worth		  = $exporttoexcel['worth'];
 			$owner		  = $exporttoexcel['owner'];
 			$leadassignee = $exporttoexcel['leadassignee'];
@@ -1679,7 +1693,7 @@ class Welcome extends crm_controller {
 			$keyword      = (!empty($exporttoexcel['keyword'])?$exporttoexcel['keyword']:'');
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
 		//load our new PHPExcel library
 		$this->load->library('excel');
@@ -2161,17 +2175,19 @@ HDOC;
 		$ins['search_name']  = $post_data['search_name'];
 		$ins['user_id']	  	 = $this->userdata['userid'];
 		$ins['is_default']	 = $post_data['is_default'];
-		$ins['stage'] 		 = $post_data['stage'];
-		$ins['customer']	 = $post_data['customer'];
-		$ins['worth']		 = $post_data['worth'];
-		$ins['owner']	  	 = $post_data['owner'];
-		$ins['leadassignee'] = $post_data['leadassignee'];
-		$ins['regionname'] 	 = $post_data['regionname'];
-		$ins['countryname']	 = $post_data['countryname'];
-		$ins['statename']	 = $post_data['statename'];
-		$ins['locname']	  	 = $post_data['locname'];
-		$ins['lead_status']  = $post_data['lead_status'];
-		$ins['lead_indi']	 = $post_data['lead_indi'];
+		$ins['stage'] 		 = isset($post_data['stage']) ? $post_data['stage'] : '';
+		$ins['customer']	 = isset($post_data['customer']) ? $post_data['customer'] : '';
+		$ins['service']	 	 = isset($post_data['service']) ? $post_data['service'] : '';
+		$ins['lead_src']	 = isset($post_data['lead_src']) ? $post_data['lead_src'] :'';
+		$ins['worth']		 = isset($post_data['worth']) ? $post_data['worth'] : '';
+		$ins['owner']	  	 = isset($post_data['owner']) ? $post_data['owner'] : '';
+		$ins['leadassignee'] = isset($post_data['leadassignee']) ? $post_data['leadassignee'] : '';
+		$ins['regionname'] 	 = isset($post_data['regionname']) ? $post_data['regionname'] : '';
+		$ins['countryname']	 = isset($post_data['countryname']) ? $post_data['countryname'] : '';
+		$ins['statename']	 = isset($post_data['statename']) ? $post_data['statename'] : '';
+		$ins['locname']	  	 = isset($post_data['locname']) ? $post_data['locname'] : '';
+		$ins['lead_status']  = isset($post_data['lead_status']) ? $post_data['lead_status'] : '';
+		$ins['lead_indi']	 = isset($post_data['lead_indi']) ? $post_data['lead_indi'] : '';
 		$ins['created_on'] 	 = date('Y-m-d H:i:s');
 		// echo "<pre>"; print_r($ins); exit;
 		$last_ins_id = $this->welcome_model->insert_row_return_id('saved_search_critriea', $ins);
@@ -2206,7 +2222,7 @@ HDOC;
 
 		} else {
 			$result['res'] = false;
-			$result['msg'] = 'Search Criteria cant be Saved.';
+			$result['msg'] = 'Search Criteria cannot be Saved.';
 		}
 		echo json_encode($result);
 		exit;

@@ -92,7 +92,8 @@ require (theme_url().'/tpl/header.php');
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
-									<td class="tblheadbg" colspan=2>By Lead Assignee</td>
+									<td class="tblheadbg">By Lead Assignee</td>
+									<td class="tblheadbg" colspan='2'>By Service</td>
 								</tr>
 								<tr>	
 									<td>
@@ -127,7 +128,7 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select> 
 									</td>
-									<td colspan=2>
+									<td>
 										<select style="width:130px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
@@ -137,8 +138,20 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select> 
 									</td>
+									<td colspan='2'>
+										<select multiple="multiple" id="service" name="service[]" >
+											<?php
+												if(isset($services) && count($services)>0){
+													foreach($services as $se){ ?>
+														<option value="<?php echo $se['sid'] ?>"><?php echo $se['services'] ?></option>
+													<?php }
+												}
+											?>
+										</select>
+									</td>
 								</tr>
 								<tr>
+									<td class="tblheadbg">By Source</td>
 									<td class="tblheadbg">By Region Wise</td>
 									<td class="tblheadbg">By Country Wise</td>
 									<td class="tblheadbg">By State Wise</td>
@@ -147,6 +160,17 @@ require (theme_url().'/tpl/header.php');
 									<td class="tblheadbg">By Lead Indicator</td>
 								</tr>
 								<tr>
+									<td>
+										<select multiple="multiple" id="lead_src" name="lead_src[]" >
+											<?php
+												if(isset($sources) && count($sources)>0){
+													foreach($sources as $srcs){ ?>
+														<option value="<?php echo $srcs['lead_source_id'] ?>"><?php echo $srcs['lead_source_name'] ?></option>
+													<?php }
+												}
+											?>
+										</select> 
+									</td>
 									<td>
 										<select style="width:210px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
@@ -158,7 +182,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td id="country_row">
-										<select style="width:210px" multiple="multiple" id="countryname" name="countryname[]">
+										<select style="width:170px" multiple="multiple" id="countryname" name="countryname[]">
 											
 										</select> 
 									</td>
@@ -189,7 +213,7 @@ require (theme_url().'/tpl/header.php');
 									</td>
 								</tr>
 								<tr align="right" >
-									<td colspan="6"><input type="reset" class="positive input-font" name="advance" value="Reset" />
+									<td colspan="7"><input type="reset" class="positive input-font" name="advance" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
@@ -219,24 +243,28 @@ $('#excel_lead').click(function() {
 	var search_type = $('#search_type').val();	
 	var url = site_base_url+"welcome/excelExport/";	
 	if(search_type == 'search'){
-		var stage     = $("#stage").val();
-		var customer 	= $("#customer").val();
-		var worth	= $("#worth").val();
-		var owner 	= $("#owner").val();
-		var leadassignee	= $("#leadassignee").val();
-		var regionname  	= $("#regionname").val();
-		var countryname = $("#countryname").val();
-		var statename   = $("#statename").val();
-		var locname   = $("#locname").val();
-		var lead_status   = $("#lead_status").val();
-		var lead_indi   = $("#lead_indi").val();
-		var keyword   = $("#keyword").val();
+		var stage        = $("#stage").val();
+		var customer     = $("#customer").val();
+		var service      = $("#service").val();
+		var lead_src     = $("#lead_src").val();
+		var worth	     = $("#worth").val();
+		var owner 	     = $("#owner").val();
+		var leadassignee = $("#leadassignee").val();
+		var regionname   = $("#regionname").val();
+		var countryname  = $("#countryname").val();
+		var statename    = $("#statename").val();
+		var locname      = $("#locname").val();
+		var lead_status  = $("#lead_status").val();
+		var lead_indi    = $("#lead_indi").val();
+		var keyword      = $("#keyword").val();
 		
 		
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 		  '<input id="project" type="hidden" name="stage" value="'+stage+'" />'+
 		  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
+		  '<input id="service" type="hidden" name="service" value="'+service+'" />'+
+		  '<input id="lead_src" type="hidden" name="lead_src" value="'+lead_src+'" />'+
 		  '<input id="worth" type="hidden" name="worth" value="'+worth+'" />'+
 		  '<input id="owner" type="hidden" name="owner" value="'+owner+'" />'+
 		  '<input id="leadassignee" type="hidden" name="leadassignee" value="'+leadassignee+'" />'+
