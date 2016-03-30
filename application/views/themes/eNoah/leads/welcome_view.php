@@ -4,7 +4,9 @@
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
-
+<style>
+.ui-autocomplete { max-height:200px; overflow-y:auto; overflow-x: hidden; }
+</style>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
 <?php 
@@ -867,7 +869,12 @@ h3 .small {
             </form>
             
             <?php if (isset($edit_quotation) && isset($quote_data)) { ?>
-				<h2> Edit Lead </h2>
+				<h2> Edit Lead  
+					<div style="overflow:hidden; padding-bottom:10px;" class="buttons pull-right">
+						<button onclick="document.location.href = '<?php echo base_url(); ?>welcome/view_quote/<?php echo $quote_data['lead_id']; ?>'" class="positive" type="submit">Back to View</button>
+					</div>
+				
+				</h2>
 				
 				<form name="lead_dates" id="lead-change-date" style="padding:0 5px 0 0; margin:0 !important;">
 					<table>
