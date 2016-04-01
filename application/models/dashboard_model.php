@@ -53,6 +53,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
@@ -143,6 +146,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('j.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('j.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('j.lead_indicator', $filter['lead_indi']);
 		}
@@ -194,6 +200,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
@@ -243,6 +252,9 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
 		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
@@ -323,6 +335,10 @@ class Dashboard_model extends crm_model {
 			$sorc = implode("','", $filter['lead_src']);
 			$condn  .= " AND lead_source IN ('".$sorc."')";
 		}
+		if (!empty($filter['industry'])) {
+			$inds = implode("','", $filter['industry']);
+			$condn  .= " AND industry IN ('".$inds."')";
+		}
 		if (!empty($filter['lead_indi'])) {
 			$indic = implode("','", $filter['lead_indi']);
 			$condn  .= " AND lead_indicator IN ('".$indic."')";
@@ -391,6 +407,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -444,6 +463,9 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('industry', $filter['industry']);
 		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('lead_indicator', $filter['lead_indi']);
@@ -499,6 +521,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
@@ -544,6 +569,8 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
 		if (!empty($fresult['flead_src_id']))
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		if (!empty($fresult['findustry']))
+			$this->db->where_in('jb.industry', $fresult['findustry']);
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -631,6 +658,10 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$sorc = implode("','", $filter['lead_src']);
 			$condn  .= " AND lead_source IN ('".$sorc."')";
+		}
+		if (!empty($filter['industry'])) {
+			$inds = implode("','", $filter['industry']);
+			$condn  .= " AND industry IN ('".$inds."')";
 		}
 		if (!empty($filter['lead_indi'])) {
 			$indic = implode("','", $filter['lead_indi']);
@@ -764,6 +795,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -821,6 +855,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -876,6 +913,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -930,6 +970,9 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
 		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
@@ -1020,6 +1063,9 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
 		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
@@ -1175,6 +1221,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('lead_indicator', $filter['lead_indi']);
 		}
@@ -1232,6 +1281,9 @@ class Dashboard_model extends crm_model {
 			if (!empty($fresult['flead_src_id'])) {
 				$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 			}
+			if (!empty($fresult['findustry'])) {
+				$this->db->where_in('jb.industry', $fresult['findustry']);
+			}
 			if (!empty($fresult['flead_indic_id'])) {
 				$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 			}
@@ -1284,12 +1336,68 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
 		$this->db->GROUP_BY('jb.lead_source');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;
+		$ls_query =  $query->result_array();
+		return $ls_query;
+	}
+
+	public function getIndustryLead($cusId = FALSE, $filter = FALSE) {
+		$this->db->select('i.industry, count(jb.industry) as src');
+		$this->db->from($this->cfg['dbpref'].'leads jb');
+		$this->db->join($this->cfg['dbpref'].'industry i', 'i.id = jb.industry');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
+		$this->db->where_in('jb.lead_stage', $this->stg);
+		$this->db->where('jb.lead_status',1);
+		if ($this->userdata['level']!=1) {
+			$this->db->where_in('jb.custid_fk', $cusId);
+		}
+		if (!empty($filter['customer'])) {
+			$this->db->where_in('jb.custid_fk', $filter['customer']);
+		}
+		if (!empty($filter['stage'])) {
+			$this->db->where_in('jb.lead_stage', $filter['stage']);
+		}
+		if (!empty($filter['owner'])) {
+			$this->db->where_in('jb.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee'])) {
+			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname'])) {
+			$this->db->where_in('cs.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname'])) {
+			$this->db->where_in('cs.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename'])) {
+			$this->db->where_in('cs.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname'])) {
+			$this->db->where_in('cs.add1_location', $filter['locname']);
+		}
+		if (!empty($filter['ser_requ'])) {
+			$this->db->where_in('jb.lead_service', $filter['ser_requ']);
+		}
+		if (!empty($filter['lead_src'])) {
+			$this->db->where_in('jb.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
+		if (!empty($filter['lead_indi'])) {
+			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
+		}
+		$this->db->GROUP_BY('jb.industry');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$ls_query =  $query->result_array();
 		return $ls_query;
 	}
@@ -1334,6 +1442,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_src'])) {
 			$this->db->where_in('jb.lead_source', $filter['lead_src']);
 		}
+		if (!empty($filter['industry'])) {
+			$this->db->where_in('jb.industry', $filter['industry']);
+		}
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
@@ -1344,7 +1455,7 @@ class Dashboard_model extends crm_model {
 		return $sq_query;
 	}
 	
-	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) {
+	/* public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
@@ -1390,6 +1501,65 @@ class Dashboard_model extends crm_model {
 		}
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['flead_indic_id'])) {
+			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
+		}
+		$this->db->order_by('jb.lead_id', 'desc');
+		$query = $this->db->get();
+		$ldsr_query =  $query->result_array();
+		return $ldsr_query;
+	} */
+	
+	public function getLeadsDetails_pie2($leadStage, $cusId = FALSE, $filters = FALSE) {
+		if (!empty($filters)) {
+			$fresult = $this->explod_arr($filters);
+		}
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.first_name, cs.last_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.industry as lead_source_name, ew.expect_worth_name', false);
+		$this->db->from($this->cfg['dbpref'].'leads jb');
+		$this->db->join($this->cfg['dbpref'].'industry ldsrc', 'ldsrc.id = jb.industry');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
+		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		$this->db->where_in('jb.lead_stage', $this->stg);
+   		$this->db->like('ldsrc.industry', $leadStage);
+		$this->db->where('jb.lead_status', 1);
+		if ($this->userdata['level']!=1) {
+			$this->db->where_in('jb.custid_fk',$cusId);
+		}
+		if (!empty($fresult['fstge'])) {
+			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
+		}
+		if (!empty($fresult['fcust_id'])) {
+			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
+		}
+		if (!empty($fresult['fownr_id'])) {
+			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
+		}
+		if (!empty($fresult['fassg_id'])) {
+			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+		}
+		if (!empty($fresult['freg_id'])) {
+			$this->db->where_in('cs.add1_region', $fresult['freg_id']);
+		}
+		if (!empty($fresult['fcntry_id'])) {
+			$this->db->where_in('cs.add1_country', $fresult['fcntry_id']);
+		}
+		if (!empty($fresult['fstet_id'])) {
+			$this->db->where_in('cs.add1_state', $fresult['fstet_id']);
+		}
+		if (!empty($fresult['flocn_id'])) {
+			$this->db->where_in('cs.add1_location', $fresult['flocn_id']);
+		}
+		if (!empty($fresult['fser_req_id'])) {
+			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
+		}
+		if (!empty($fresult['flead_src_id'])) {
+			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
+		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
 		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
@@ -1447,6 +1617,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
 		}
+		if (!empty($fresult['findustry'])) {
+			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -1458,6 +1631,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	function explod_arr($filters) {
+		// echo "<pre>"; print_r($filters); exit;
 		$fres = array();
 
 		if (isset($filters['stge']) && $filters['stge']!='')
@@ -1480,6 +1654,8 @@ class Dashboard_model extends crm_model {
 			$fres['fser_req_id'] 	= explode(',',$filters['servic_req']);
 		if (isset($filters['lead_sour']) && $filters['lead_sour']!='')
 			$fres['flead_src_id'] 	= explode(',',$filters['lead_sour']);
+		if (isset($filters['industry']) && $filters['industry']!='')
+			$fres['findustry'] 	= explode(',',$filters['industry']);
 		if (isset($filters['lead_indic']) && $filters['lead_indic']!='') {
 			$fres['flead_indic_id'] 	= explode(',',$filters['lead_indic']);
 		}
@@ -1556,6 +1732,15 @@ class Dashboard_model extends crm_model {
 	 
 		return $fy;
 	}
+	
+	function get_industry() 
+	{
+    	$this->db->select('id, industry');
+		$this->db->where('status', 1);
+    	$this->db->order_by('id');
+		$q = $this->db->get($this->cfg['dbpref'] . 'industry');
+		return $q->result_array();
+    }
 
 }
 

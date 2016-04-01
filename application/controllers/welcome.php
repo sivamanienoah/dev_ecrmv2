@@ -329,7 +329,7 @@ class Welcome extends crm_controller {
 				
 				$table ='<tr id="log" class="log'.$stick_class.'"><td id="log" class="log'.$stick_class.'">
 						 <p class="data log'.$stick_class.'"><span class="log'.$stick_class.'">'.$fancy_date.'</span>'.$user_data[0]['first_name'].' '.$user_data[0]['last_name'].'</p>
-						 <p class="desc log'.$stick_class.'">'.$log_content.'</p></td></tr>';
+						 <p class="desc log'.$stick_class.'">'.stripslashes($log_content).'</p></td></tr>';
 				$data['log_html'] .= $table;
 				unset($table, $user_data, $user, $log_content);
 			}
@@ -418,10 +418,11 @@ class Welcome extends crm_controller {
 		for ($i = 0; $i < $c; $i++) {
 			$data['categories'][$i]['records'] = $this->welcome_model->get_cat_records($data['categories'][$i]['cat_id']);
 		}
-		$data['lead_source'] = $this->welcome_model->get_lead_sources();
-		$data['expect_worth'] = $this->welcome_model->get_expect_worths();
-		$data['job_cate'] = $this->welcome_model->get_lead_services();
+		$data['lead_source']     = $this->welcome_model->get_lead_sources();
+		$data['expect_worth']    = $this->welcome_model->get_expect_worths();
+		$data['job_cate'] 	  	 = $this->welcome_model->get_lead_services();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+		$data['industry']		 = $this->welcome_model->get_industry();
 		
 		$this->load->view('leads/welcome_view', $data);
 	}
@@ -480,6 +481,7 @@ class Welcome extends crm_controller {
 			$data['lead_stage'] = $this->welcome_model->get_lead_stage();
 			$data['job_cate'] = $this->welcome_model->get_lead_services();
 			$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+			$data['industry']		 = $this->welcome_model->get_industry();
 			
             $this->load->view('leads/welcome_view', $data);
         }
@@ -557,7 +559,8 @@ class Welcome extends crm_controller {
 			}  
 			$ins['expect_worth_amount'] = $ewa; 
 			$ins['belong_to'] = $data['job_belong_to'];
-			$ins['division'] = $data['job_division'];
+			$ins['division']  = $data['job_division'];
+			$ins['industry']  = $data['industry'];
 			$ins['date_created'] = date('Y-m-d H:i:s');
 			$ins['date_modified'] = date('Y-m-d H:i:s');
 			$ins['lead_stage'] = 1;
@@ -864,6 +867,7 @@ class Welcome extends crm_controller {
 		} else {
             $ins['lead_title'] 			= $data['lead_title'];
 			$ins['division']			= $data['job_division'];
+			$ins['industry']			= $data['industry'];
 			$ins['lead_service']		= $data['lead_service'];
 			$ins['lead_source']			= $data['lead_source_edit'];
 			$ins['expect_worth_id']		= $data['expect_worth_edit'];
@@ -2271,6 +2275,261 @@ HDOC;
 		
 		echo json_encode($result);
 		exit;
+	}
+	
+	public function importcsv()
+	{
+		$this->load->view('leads/leads_import_view');
+	}
+	
+	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
+	 *	Starts here Dated on 29-01-2013
+	 */
+	function importleads() 
+	{
+		$expect_worth = $this->welcome_model->get_expect_worths();
+		$services 	  = $this->welcome_model->get_lead_services();
+		$sources 	  = $this->welcome_model->get_lead_sources();
+		$entity		  = $this->welcome_model->get_sales_divisions();
+		
+		$leadExpectWorth = array();
+		$leadServices	 = array();
+		$leadSources	 = array();
+		$leadEntity      = array();
+		
+		if(!empty($expect_worth)) {
+			foreach($expect_worth as $ew)
+			$leadExpectWorth[strtolower(trim($ew['expect_worth_name']))] = $ew['expect_worth_id'];
+		}
+		if(!empty($services)) {
+			foreach($services as $ser)
+			$leadServices[strtolower(trim($ser['services']))] = $ser['sid'];
+		}
+		if(!empty($services)) {
+			foreach($sources as $srcs)
+			$leadSources[strtolower(trim($srcs['lead_source_name']))] = $srcs['lead_source_id'];
+		}
+		if(!empty($entity)) {
+			foreach($entity as $en)
+			$leadEntity[strtolower(trim($en['division_name']))] = $en['div_id'];
+		}
+
+		$count = $updt_count = 0;
+		$this->load->library('excel_read');
+		$this->login_model->check_login();		
+	    $page['error'] = $page['msg'] = '';	
+		$objReader = new Excel_read();
+		if(isset($_FILES['card_file']['tmp_name'])) {
+			$strextension=explode(".",$_FILES['card_file']['name']);			
+		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {		
+				$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);
+				for($i=2; $i<=count($impt_data); $i++) {
+					
+					if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['C']) || empty($impt_data[$i]['D']) || empty($impt_data[$i]['E']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['G']) || empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['M']) || empty($impt_data[$i]['P']) || empty($impt_data[$i]['Q'])) {
+						$empty_error[] = $impt_data[$i]['Q'];
+					} else {
+						if (!empty($impt_data[$i]['G'])) {
+							$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+							if(!preg_match($regex, $impt_data[$i]['G'])) {
+								$email_invalid[]= $impt_data[$i]['G'];
+							}
+						}
+						//check leads exists or not in our crm by type & id
+						$chk_lead_condn = array('lead_from'=>$impt_data[$i]['P'],'lead_from_id'=>$impt_data[$i]['Q']);
+						$chk_leads = $this->welcome_model->get_data_by_id('leads', $chk_lead_condn);
+						// echo "<pre>"; print_r($chk_leads); exit;
+						
+						if(!empty($chk_leads)){
+							//**go for update**//
+							
+							//updating customers						
+							$updt_cus = array('first_name'=>$impt_data[$i]['A'],'company'=>$impt_data[$i]['B']);
+							if($impt_data[$i]['G']!='')
+							$updt_cus['email_1']=$impt_data[$i]['G'];
+							if($impt_data[$i]['H']!='')
+							$updt_cus['phone_1']=$impt_data[$i]['H'];
+							$this->db->where('custid', $chk_leads['custid_fk']);
+							$this->db->update($this->cfg['dbpref'].'customers', $updt_cus);
+							
+							//updating leads
+							$updt_leads['lead_title']			  = $impt_data[$i]['I'];
+							$updt_leads['lead_service']			  = $leadServices[strtolower($impt_data[$i]['J'])];
+							$updt_leads['lead_source']			  = $leadSources[strtolower($impt_data[$i]['K'])];
+							$updt_leads['expect_worth_id']		  = $leadExpectWorth[strtolower($impt_data[$i]['L'])];
+							$updt_leads['division']      		  = $leadEntity[strtolower($impt_data[$i]['N'])];
+							$updt_leads['expect_worth_amount']	  = $impt_data[$i]['M'];
+							$updt_leads['lead_indicator'] 		  = strtoupper($impt_data[$i]['O']);
+							$updt_leads['lead_assign']			  = $this->userdata['userid'];
+							$updt_leads['date_modified']		  = date('Y-m-d H:i:s');
+							$updt_leads['proposal_expected_date'] = date('Y-m-d H:i:s');
+							
+							$lead_id = $chk_leads['lead_id'];
+							
+							$this->db->where('lead_id', $lead_id);
+							$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
+							
+							$updt_count=$updt_count+1;
+
+						} else {
+							//**go for insert**//
+							//Region
+							if(!empty($impt_data[$i]['C']))
+							$strreg = $this->welcome_model->get_rscl('', '', 'region', strtolower($impt_data[$i]['C']));
+							//Country
+							if(!empty($impt_data[$i]['D']))
+							$strcunt = $this->welcome_model->get_rscl($strreg, 'regionid', 'country', strtolower($impt_data[$i]['D']));
+							//State
+							if(!empty($impt_data[$i]['E']))
+							$strstate = $this->welcome_model->get_rscl($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['E']));
+							//Location
+							if(!empty($impt_data[$i]['F']))
+							$strlid = $this->welcome_model->get_rscl($strstate, 'stateid', 'location', strtolower($impt_data[$i]['F']));
+						
+							if($strreg!='no_id' || $strcunt!='no_id' || $strstate!='no_id' || $strlid!='no_id' ){
+								$cust_res = $this->chk_customers($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['A'],$impt_data[$i]['B'],$impt_data[$i]['G']);
+								if($cust_res == 'no_customer'){
+									$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['A'],$impt_data[$i]['B'],$impt_data[$i]['G'],$impt_data[$i]['H']);
+								} else {
+									$custid=$cust_res;
+								}
+							} else {
+								//Region
+								if(!empty($impt_data[$i]['C']))
+								$strreg = $this->welcome_model->get_rscl_return_id('', '', 'region', strtolower($impt_data[$i]['C']));
+								//Country
+								if(!empty($impt_data[$i]['D']))
+								$strcunt = $this->welcome_model->get_rscl_return_id($strreg, 'regionid', 'country', strtolower($impt_data[$i]['D']));
+								//State
+								if(!empty($impt_data[$i]['E']))
+								$strstate = $this->welcome_model->get_rscl_return_id($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['E']));
+								//Location
+								if(!empty($impt_data[$i]['F']))
+								$strlid = $this->welcome_model->get_rscl_return_id($strstate, 'stateid', 'location', strtolower($impt_data[$i]['F']));
+								
+								$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['A'],$impt_data[$i]['B'],$impt_data[$i]['G'],$impt_data[$i]['H']);
+							}
+							
+							if($custid!=0){
+								//insert leads here.
+								$ins_leads 							 = array();
+								$ins_leads['custid_fk']				 = $custid;
+								$ins_leads['lead_title']			 = $impt_data[$i]['I'];
+								$ins_leads['lead_service']			 = $leadServices[strtolower($impt_data[$i]['J'])];
+								$ins_leads['lead_source']			 = $leadSources[strtolower($impt_data[$i]['K'])];
+								$ins_leads['expect_worth_id']		 = $leadExpectWorth[strtolower($impt_data[$i]['L'])];
+								$ins_leads['division']      		 = $leadEntity[strtolower($impt_data[$i]['N'])];
+								$ins_leads['expect_worth_amount']	 = $impt_data[$i]['M'];
+								$ins_leads['lead_indicator'] 		 = strtoupper($impt_data[$i]['O']);
+								$ins_leads['lead_stage']			 = 1;
+								$ins_leads['lead_assign']			 = $this->userdata['userid'];
+								$ins_leads['date_created']			 = date('Y-m-d H:i:s');
+								$ins_leads['date_modified']			 = date('Y-m-d H:i:s');
+								$ins_leads['proposal_expected_date'] = date('Y-m-d H:i:s');
+								$ins_leads['created_by']     		 = $this->userdata['userid'];
+								$ins_leads['modified_by']    		 = $this->userdata['userid'];
+								$ins_leads['belong_to']      		 = $this->userdata['userid'];
+								$this->db->insert($this->cfg['dbpref'].'leads', $ins_leads);
+								$new_id = $this->db->insert_id();
+								if($new_id){
+									$lead_id    = (int) $new_id;
+									$invoice_no = (int) $new_id;
+									$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
+									$updt_arr   = array('invoice_no'=>$invoice_no);
+									$this->db->where('lead_id', $new_id);
+									$this->db->update($this->cfg['dbpref'].'leads', $updt_arr);
+									
+									//history - lead_stage_history
+									$lead_hist['lead_id'] = $new_id;
+									$lead_hist['dateofchange'] = date('Y-m-d H:i:s');
+									$lead_hist['previous_status'] = 1;
+									$lead_hist['changed_status'] = 1;
+									$lead_hist['lead_status'] = 1;
+									$lead_hist['modified_by'] = $this->userdata['userid'];
+									$insert_lead_stg_his = $this->welcome_model->insert_row('lead_stage_history', $lead_hist);
+									
+									//history - lead_status_history
+									$lead_stat_hist['lead_id'] 		  = $new_id;
+									$lead_stat_hist['dateofchange']   = date('Y-m-d H:i:s');
+									$lead_stat_hist['changed_status'] = 1;
+									$lead_stat_hist['modified_by'] 	  = $this->userdata['userid'];
+									$insert_lead_stat_his 			  = $this->welcome_model->insert_row('lead_status_history', $lead_stat_hist);
+									
+									//folder name entry start
+									//creating files folder name
+									$f_dir = UPLOAD_PATH.'files/';
+									if (!is_dir($f_dir)) {
+										mkdir($f_dir);
+										chmod($f_dir, 0777);
+									}
+									//creating lead_id folder name
+									$f_dir = $f_dir.$new_id;
+									if (!is_dir($f_dir)) {
+										mkdir($f_dir);
+										chmod($f_dir, 0777);
+									}
+									$this->welcome_model->insert_default_folder($new_id);
+								}
+								$count=$count+1;
+							}
+						}
+						//For Logs
+						if(!empty($impt_data[$i]['R'])){
+							$log_ins['jobid_fk']     = $lead_id;
+							$log_ins['userid_fk']    = $this->userdata['userid'];
+							$log_ins['date_created'] = date('Y-m-d H:i:s');
+							$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['R']);
+							$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
+						}
+					}
+				}
+				$data['invalidemail'] = $email_invalid;
+				$data['updated_leads']    = $updt_count;
+				$data['succcount']    = $count;
+				$data['empty_error']  = $empty_error;
+				echo "<pre>"; print_r($data); exit;
+				$this->load->view('leads/success_import_view', $data);
+		 	} else {
+		 		$page['error'] = '<p class="error">Please Upload CSV, XLS File only!</p>';
+		    	$this->load->view('leads/leads_import_view', $page);		
+		 	}
+		} else {
+			$page['error'] = '<p class="error">Please Upload the file!</p>';
+			$this->load->view('leads/leads_import_view', $page);
+		}
+	/*Ends here*/ 
+	}
+	
+	function chk_customers($rid, $cid, $sid, $lid, $name, $companyname, $email=false)
+	{
+		$res = 'no_customer';
+		$whr_cond = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'first_name'=>$name,'company'=>$companyname);
+		if($email!=''){
+			$whr_cond['email_1'] = $email;
+		}
+		$results = $this->db->get_where($this->cfg['dbpref'].'customers', $whr_cond)->row_array();
+		// echo $this->db->last_query(); exit;
+		if(!empty($results)){
+			$res = $results['custid'];
+		}
+		return $res;
+	}
+	
+	function create_customer($rid, $cid, $sid, $lid, $name, $companyname, $email=false, $phone=false)
+	{
+		$res = 0;
+		$ins = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'first_name'=>$name,'company'=>$companyname);
+		if($email!=''){
+			$ins['email_1'] = $email;
+		}
+		if($phone!=''){
+			$ins['phone_1'] = $phone;
+		}
+		$this->db->insert($this->cfg['dbpref'].'customers', $ins);
+		$custid = $this->db->insert_id();
+		if(!empty($custid)){
+			$res = $custid;
+		}
+		return $res;
 	}
 	
 }

@@ -44,6 +44,8 @@ class Dashboard extends crm_controller {
 		
 		$data['val_export'] = 'no_search';
 		$filter = real_escape_array($this->input->post());
+		
+		// echo "<pre>"; print_r($filter); exit;
 
 		if (isset($filter['search_type']) && $filter['search_type'] == 'search') {
 			$data['val_export'] = 'search';
@@ -103,6 +105,11 @@ class Dashboard extends crm_controller {
 				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
 				else
 				$filter['lead_src'] = '';
+
+				if(!empty($get_rec['industry']) && $get_rec['industry'] !='null')
+				$filter['industry'] = @explode(',',$get_rec['industry']);
+				else
+				$filter['industry'] = '';
 				
 				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
 				$filter['regionname'] = @explode(',',$get_rec['regionname']);
@@ -184,6 +191,11 @@ class Dashboard extends crm_controller {
 				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
 				else
 				$filter['lead_src'] = '';
+			
+				if(!empty($get_rec['industry']) && $get_rec['industry'] !='null')
+				$filter['industry'] = @explode(',',$get_rec['industry']);
+				else
+				$filter['industry'] = '';
 				
 				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
 				$filter['regionname'] = @explode(',',$get_rec['regionname']);
@@ -354,7 +366,8 @@ class Dashboard extends crm_controller {
 		$data['getClosedOppor'] = $closedMonthArr;
 		
 		//for lead source & service requirement.
-		$data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId, $filter);
+		// $data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId, $filter);
+		$data['get_Lead_Industry'] = $this->dashboard_model->getIndustryLead($cusId, $filter);
 		$data['get_Service_Req'] = $this->dashboard_model->getServiceReq($cusId, $filter);
 		
 		//For Tasks & Projects access - Start here (for filter also)
@@ -367,6 +380,7 @@ class Dashboard extends crm_controller {
 		$data['services']    = $this->dashboard_model->get_serv_req();
 		$data['practices']   = $this->dashboard_model->get_practices();
 		$data['lead_sourc']  = $this->dashboard_model->get_lead_sources();
+		$data['industry']    = $this->dashboard_model->get_industry();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		$data['pm_accounts'] = array();
 		//Here "WHERE" condition used for Fetching the Project Managers.
@@ -431,6 +445,7 @@ class Dashboard extends crm_controller {
 				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -444,6 +459,7 @@ class Dashboard extends crm_controller {
 			$filters['locn_id']    = $res['locn_id'];
 			$filters['servic_req'] = $res['servic_req'];
 			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['industry']   = $res['industry'];
 			$filters['lead_indic'] = $res['lead_indic'];
 		}
 		
@@ -540,6 +556,7 @@ class Dashboard extends crm_controller {
 				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -553,6 +570,7 @@ class Dashboard extends crm_controller {
 			$filters['locn_id']    = $res['locn_id'];
 			$filters['servic_req'] = $res['servic_req'];
 			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['industry']   = $res['industry'];
 			$filters['lead_indic'] = $res['lead_indic'];
 		}
 
@@ -650,6 +668,7 @@ class Dashboard extends crm_controller {
 				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -663,6 +682,7 @@ class Dashboard extends crm_controller {
 			$filters['locn_id']    = $res['locn_id'];
 			$filters['servic_req'] = $res['servic_req'];
 			$filters['lead_sour']  = $res['lead_sour'];
+			$filters['industry']   = $res['industry'];
 			$filters['lead_indic'] = $res['lead_indic'];
 		}
 		
@@ -725,6 +745,7 @@ class Dashboard extends crm_controller {
 				$filter['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filter['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filter['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filter['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filter['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -770,6 +791,7 @@ class Dashboard extends crm_controller {
 				$expFilter['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$expFilter['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$expFilter['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$expFilter['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$expFilter['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -849,7 +871,8 @@ class Dashboard extends crm_controller {
 					$this->excel->getActiveSheet()->setTitle('Closed Opportunities');
 				break;
 				case 'pie2':
-					$this->excel->getActiveSheet()->setTitle('Lead Source');
+					// $this->excel->getActiveSheet()->setTitle('Lead Source');
+					$this->excel->getActiveSheet()->setTitle('Industry');
 				break;
 				case 'pie3':
 					$this->excel->getActiveSheet()->setTitle('Service Requirement');
@@ -1015,7 +1038,8 @@ class Dashboard extends crm_controller {
 					$filename = 'closed_oppor.xls';
 				break;
 				case 'pie2':
-					$filename = 'Leads_By_LeadSource.xls';
+					// $filename = 'Leads_By_LeadSource.xls';
+					$filename = 'Leads_By_Industry.xls';
 				break;
 				case 'pie3':
 					$filename = 'Leads_By_SerReq.xls';
@@ -1074,6 +1098,7 @@ class Dashboard extends crm_controller {
 				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['industry']   = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -1087,6 +1112,7 @@ class Dashboard extends crm_controller {
 			$filters['locn_id']    = $resu['locn_id'];
 			$filters['servic_req'] = $resu['servic_req'];
 			$filters['lead_sour']  = $resu['lead_sour'];
+			$filters['industry']   = $resu['industry'];
 			$filters['lead_indic'] = $resu['lead_indic'];
 		}
 
@@ -1174,6 +1200,7 @@ class Dashboard extends crm_controller {
 				$filters['locn_id']    = ($get_rec['locname'] != 'null') ? $get_rec['locname'] : '';
 				$filters['servic_req'] = ($get_rec['ser_requ'] != 'null') ? $get_rec['ser_requ'] : '';
 				$filters['lead_sour']  = ($get_rec['lead_src'] != 'null') ? $get_rec['lead_src'] : '';
+				$filters['industry']  = ($get_rec['industry'] != 'null') ? $get_rec['industry'] : '';
 				$filters['lead_indic'] = ($get_rec['lead_indi'] != 'null') ? $get_rec['lead_indi'] : '';
 			}
 		} else {
@@ -1187,6 +1214,7 @@ class Dashboard extends crm_controller {
 			$filters['locn_id']    = $resu['locn_id'];
 			$filters['servic_req'] = $resu['servic_req'];
 			$filters['lead_sour']  = $resu['lead_sour'];
+			$filters['industry']   = $resu['industry'];
 			$filters['lead_indic'] = $resu['lead_indic'];
 		}
 
@@ -1423,6 +1451,7 @@ class Dashboard extends crm_controller {
 		$ins['leadassignee'] = $post_data['leadassignee'];
 		$ins['ser_requ'] 	 = $post_data['ser_requ'];
 		$ins['lead_src'] 	 = $post_data['lead_src'];
+		$ins['industry'] 	 = $post_data['industry'];
 		$ins['regionname'] 	 = $post_data['regionname'];
 		$ins['countryname']	 = $post_data['countryname'];
 		$ins['statename']	 = $post_data['statename'];

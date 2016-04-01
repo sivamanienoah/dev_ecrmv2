@@ -142,7 +142,8 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 								<td class="tblheadbg" style="width:210px;">By Customer</td>
 								<td class="tblheadbg">By Lead Owner</td>
 								<td class="tblheadbg">By Lead Assignee</td>
-								<td class="tblheadbg" colspan=2>By Service Requirement</td>
+								<td class="tblheadbg">By Service Requirement</td>
+								<td class="tblheadbg">By Industry</td>
 							</tr>
 							<tr>	
 								<td>
@@ -179,11 +180,20 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 										?>
 									</select> 
 								</td>
-								<td colspan=2>
+								<td>
 									<select  style="width:150px;" multiple="multiple" id="ser_requ" name="ser_requ[]" class="advfilter">
 										<?php if (count($serv_requ)>0) { ?>
 											<?php foreach ($serv_requ as $serv) { ?>
 												<option value="<?php echo $serv['sid'] ?>"<?php if (!empty($filter['ser_requ'])) { echo in_array($serv['sid'], $filter['ser_requ']) ? 'selected="selected"' : ''; } ?>><?php echo $serv['services'] ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select> 
+								</td>
+								<td>
+									<select  style="width:150px;" multiple="multiple" id="industry" name="industry[]" class="advfilter">
+										<?php if (count($industry)>0) { ?>
+											<?php foreach ($industry as $ind) { ?>
+												<option value="<?php echo $ind['id'] ?>"<?php if (!empty($filter['industry'])) { echo in_array($ind['id'], $filter['industry']) ? 'selected="selected"' : ''; } ?>><?php echo $ind['industry'] ?></option>
 											<?php } ?>
 										<?php } ?>
 									</select> 
@@ -337,7 +347,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			<!--For Pie2 & Pie3 charts-->
 			<div class="clearfix">
 				<div class="pull-left dash-section left-canvas">
-					<h5 class="dash-tlt">Leads By Lead Source</h5>
+					<h5 class="dash-tlt">Leads By Industry</h5>
 					<div id="pie2" class="plot" style=""></div>
 				</div>
 				<div class="pull-right dash-section right-canvas">
@@ -725,11 +735,18 @@ foreach( $cls_oppo_values as $key=>$data ) {
 
 
 //For Leads - Lead Source. 
-$Ser_Req = array();
+/* $Ld_Src = array();
 foreach($get_Lead_Source as $getLdSrc) {
 	$Ld_Src[] = "['".$getLdSrc['lead_source_name'].'('.$getLdSrc["src"].')'."'".','.$getLdSrc["src"]."]";
 }
-$s7 = implode(',', $Ld_Src);
+$s7 = implode(',', $Ld_Src); */
+
+//For Leads - Industry.
+$indus = array();
+foreach($get_Lead_Industry as $getLdInd) {
+	$indus[] = "['".$getLdInd['industry'].'('.$getLdInd["src"].')'."'".','.$getLdInd["src"]."]";
+}
+$s7 = implode(',', $indus);
 
 //For Leads - Service Requirement. 
 $Ser_Req = array();
@@ -761,6 +778,8 @@ $s8 = implode(',', $Ser_Req);
 	$servic_req = implode(",",$filter['ser_requ']);
 	if (!empty($filter['lead_src']))
 	$lead_sour = implode(",",$filter['lead_src']);
+	if (!empty($filter['industry']))
+	$industry = implode(",",$filter['industry']);
 	if (!empty($filter['lead_indi']))
 	$lead_indic = implode(",",$filter['lead_indi']);
 ?>
@@ -786,6 +805,7 @@ $s8 = implode(',', $Ser_Req);
 	filter_location    = "<?php echo $loc_name ?>";
 	filter_servic_req  = "<?php echo $servic_req ?>";
 	filter_lead_sour   = "<?php echo $lead_sour ?>";
+	filter_industry    = "<?php echo $industry ?>";
 	filter_lead_indic  = "<?php echo $lead_indic ?>";
 </script>
 <script type="text/javascript" src="assets/js/dashboard/dashboard_view.js"></script>

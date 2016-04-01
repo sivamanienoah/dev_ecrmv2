@@ -1613,9 +1613,10 @@ if(viewlead==1) {
 		var locn_id    = filter_location;
 		var servic_req = filter_servic_req;
 		var lead_sour  = filter_lead_sour;
+		var industry   = filter_industry;
 		var lead_indic = filter_lead_indic;
 	
-		var filterParameterDataClick = {'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'lead_indic':lead_indic};
+		var filterParameterDataClick = {'stge':stge, 'cust_id':cust_id, 'ownr_id':ownr_id, 'assg_id':assg_id, 'reg_id':reg_id, 'cntry_id':cntry_id, 'stet_id':stet_id, 'locn_id':locn_id, 'servic_req':servic_req, 'lead_sour':lead_sour, 'industry':industry, 'lead_indic':lead_indic};
 		
 		return filterParameterDataClick;
 	}
@@ -1632,6 +1633,7 @@ if(viewlead==1) {
 		var locn_id    = filter_location;
 		var servic_req = filter_servic_req;
 		var lead_sour  = filter_lead_sour;
+		var industry   = filter_industry;
 		var lead_indic = filter_lead_indic;
 		
 		var filterParameter = '<input type="hidden" name="stge" value="' +stge+ '" />' +
@@ -1644,6 +1646,7 @@ if(viewlead==1) {
 		'<input type="hidden" name="locn_id" value="' +locn_id+ '" />' +
 		'<input type="hidden" name="servic_req" value="' +servic_req+ '" />' +
 		'<input type="hidden" name="lead_sour" value="' +lead_sour+ '" />' +
+		'<input type="hidden" name="industry" value="' +industry+ '" />' +
 		'<input type="hidden" name="lead_indic" value="' +lead_indic+ '" />';
 		
 		return filterParameter;
@@ -2136,6 +2139,7 @@ function save_search() {
 	var leadassignee = $("#leadassignee").val();
 	var ser_requ   	 = $("#ser_requ").val();
 	var lead_src     = $("#lead_src").val();
+	var industry     = $("#industry").val();
 	var regionname 	 = $("#regionname").val();
 	var countryname  = $("#countryname").val();
 	var statename    = $("#statename").val();
@@ -2147,7 +2151,7 @@ function save_search() {
 		dataType: 'json',
 		url: site_base_url+"dashboard/save_search/4",
 		cache: false,
-		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&owner="+owner+"&leadassignee="+leadassignee+"&ser_requ="+ser_requ+"&lead_src="+lead_src+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&owner="+owner+"&leadassignee="+leadassignee+"&ser_requ="+ser_requ+"&lead_src="+lead_src+"&industry="+industry+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+'&'+csrf_token_name+'='+csrf_hash_token,
 		// data: "search_name="+search_name+"&"+$("#advancefilterhome").serialize()+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');

@@ -278,14 +278,17 @@ function startQuote() {
     if ($('#lead_service').val() == 'not_select') {
         err.push('Service Requirement must be selected');
     }
-	 if ($('#lead_source').val() == 'not_select') {
+	if ($('#lead_source').val() == 'not_select') {
         err.push('Lead Source must be selected');
     }
-	 if ($('#lead_assign').val() == 'not_select') {
+	if ($('#lead_assign').val() == 'not_select') {
         err.push('Lead Assigned to must be selected');
     }
-	 if ($('#job_division').val() == 'not_select') {
+	if ($('#job_division').val() == 'not_select') {
         err.push('Entity must be selected');
+    }
+	if ($('#industry').val() == '') {
+        err.push('Industry must be selected');
     }
 	if ($('#expect_worth').val() == 'not_select') {
         err.push('Expected Worth Curreny must be selected');
@@ -536,6 +539,9 @@ function editQuoteDetails(arg) {
     }
 	if ($('#job_division_edit').val() == 'not_select') {
         err.push('Entity must be selected');
+    }
+	if ($('#industry_edit').val() == '') {
+        err.push('Industry must be selected');
     }
 	if ($('#expect_worth_edit').val() == 'not_select') {
         err.push('Expected Worth Currency must be selected');
@@ -832,6 +838,20 @@ h3 .small {
 							?>
                         </select>
                     </p>
+					<p><label>Industry</label></p>
+					<p>
+						<select name="industry" id="industry" class="textfield width300px">
+							<option value="">Please Select</option>
+                            <?php
+							foreach ($industry as $ind)
+							{
+							?>
+								<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
+							<?php
+							}
+							?>
+                        </select>
+                    </p>
 					<p><label>Lead Assigned To</label></p>
 					<p>
 						<select name="lead_assign" id="lead_assign" class="textfield width300px">
@@ -987,7 +1007,20 @@ h3 .small {
 								}
 								?>
 							</select>
-							
+						</p>
+						<p><label>Industry</label></p>
+						<p>
+							<select name="industry" id="industry_edit" class="textfield width300px">
+								<option value="">Please Select</option>
+								<?php
+								foreach ($industry as $ind)
+								{
+								?>
+									<option value="<?php echo $ind['id'] ?>"<?php echo ($quote_data['industry'] == $ind['id']) ? ' selected="selected"' : '' ?>><?php echo $ind['industry'] ?></option>
+								<?php
+								}
+								?>
+							</select>
 						</p>
 						<!-- lead owner edit owner starts -->
 						<p><label>Lead Owner </label></p>

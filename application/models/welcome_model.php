@@ -21,7 +21,7 @@ class Welcome_model extends crm_model {
 		j.date_start, j.date_due,
 		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
-		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name');
+		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name, i.industry');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
 		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
@@ -36,6 +36,7 @@ class Welcome_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'] . 'lead_source as lsrc', 'lsrc.lead_source_id = j.lead_source');
 		$this->db->join($this->cfg['dbpref'] . 'lead_services as jbcat', 'jbcat.sid = j.lead_service');
 		$this->db->join($this->cfg['dbpref'] . 'sales_divisions as sadiv', 'sadiv.div_id = j.division');
+		$this->db->join($this->cfg['dbpref'] . 'industry as i', 'i.id = j.industry', 'LEFT');
 		$this->db->where('j.lead_id = "'.$leadid.'" AND j.lead_stage IN ("'.$this->stages.'")');
 		$this->db->where('j.pjt_status', 0);
 		
@@ -90,6 +91,15 @@ class Welcome_model extends crm_model {
 		$this->db->where('status', 1);
     	$this->db->order_by('div_id');
 		$q = $this->db->get($this->cfg['dbpref'] . 'sales_divisions');
+		return $q->result_array();
+    }
+
+	function get_industry() 
+	{
+    	$this->db->select('id, industry');
+		$this->db->where('status', 1);
+    	$this->db->order_by('id');
+		$q = $this->db->get($this->cfg['dbpref'] . 'industry');
 		return $q->result_array();
     }
 	
@@ -1230,6 +1240,58 @@ class Welcome_model extends crm_model {
 		// echo "<pre>"; print_r($record_array); exit;
 		$this->db->insert($this->cfg['dbpref'].'lead_folder_access', $record_array);
 		// echo $this->db->last_query() . "<br/>";
+	}
+
+	function get_rscl($id, $cond, $table_name, $ch_name)
+	{
+		$res = 'no_id';
+		if( empty($id) && empty($cond) ) {
+			$whr_cond = array('lower('.$table_name.'_name'.')'=>$ch_name);
+		} else {
+			$whr_cond = array('lower('.$table_name.'_name'.')'=>$ch_name, $cond=>$id);
+		}
+		$this->db->select($table_name.'id');
+		$results = $this->db->get_where($this->cfg['dbpref'].$table_name, $whr_cond)->row_array();
+		if(!empty($results)) {
+			$res = $results[$table_name.'id'];
+		}
+		return $res;				
+	}
+	
+	function get_rscl_return_id($id, $cond, $table_name, $ch_name){		
+		if( empty($id) && empty($cond) ) {
+			$whr_cond = array('lower('.$table_name.'_name'.')'=>$ch_name);
+		} else {
+			$whr_cond = array('lower('.$table_name.'_name'.')'=>$ch_name, $cond=>$id);
+		}
+		$this->db->select($table_name.'id');
+		$results = $this->db->get_where($this->cfg['dbpref'].$table_name, $whr_cond)->row_array();
+		if(!empty($results)) {
+			$strreg = $results[$table_name.'id'];
+		} else {
+			$user_Detail = $this->session->userdata('logged_in_user');
+			if( empty($id) && empty($cond) ) {
+				$args = array(
+					$table_name.'_name' => $ch_name,
+					'created_by' => $user_Detail['userid'],
+					'modified_by' => $user_Detail['userid'],
+					'created' => date('Y-m-d H:i:s'),
+					'modified' => date('Y-m-d H:i:s')
+				);
+			} else {						
+				$args = array(
+					$cond => $id,
+					$table_name.'_name' => $ch_name,
+					'created_by' => $user_Detail['userid'],
+					'modified_by' => $user_Detail['userid'],
+					'created' => date('Y-m-d H:i:s'),
+					'modified' => date('Y-m-d H:i:s')
+				);	
+			}
+			$this->db->insert($this->cfg['dbpref'].$table_name, $args); 
+			$strreg = $this->db->insert_id();
+		}
+		return $strreg;				
 	}
 }
 

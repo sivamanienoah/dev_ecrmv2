@@ -483,6 +483,7 @@ if (get_default_currency()) {
 					endforeach;
 				endif;
 			?>
+			<div class="clear-both" style="margin-bottom:15px;"></div>
 			<div class="pull-left team-mem">
 			<label class="project-stake-members">Stake Holders</label>
 				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
