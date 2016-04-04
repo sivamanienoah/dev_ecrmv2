@@ -93,25 +93,26 @@ require (theme_url().'/tpl/header.php');
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
 									<td class="tblheadbg">By Lead Assignee</td>
-									<td class="tblheadbg" colspan='2'>By Service</td>
+									<td class="tblheadbg">By Service</td>
+									<td class="tblheadbg">By Industry</td>
 								</tr>
 								<tr>	
 									<td>
-										<select style="width:210px" multiple="multiple" id="stage" name="stage[]">
+										<select style="width:180px" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
 													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 											<?php } ?>					
 										</select> 
 									</td>
 									<td>
-										<select style="width:210px" multiple="multiple" id="customer" name="customer[]">
+										<select style="width:180px" multiple="multiple" id="customer" name="customer[]">
 										<?php foreach($customers as $customer) { ?>
 											<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>  
 									<td>
-										<select style="width:120px" multiple="multiple" id="worth" name="worth[]">
+										<select style="width:110px" multiple="multiple" id="worth" name="worth[]">
 											<option value="0-10000"> < 10000 </option>
 											<option value="10000-20000"> > 10000 < 20000 </option>
 											<option value="20000-50000"> > 20000 < 50000 </option>
@@ -129,7 +130,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select style="width:130px" multiple="multiple" id="leadassignee" name="leadassignee[]">
+										<select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
@@ -138,12 +139,23 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select> 
 									</td>
-									<td colspan='2'>
+									<td>
 										<select multiple="multiple" id="service" name="service[]" >
 											<?php
 												if(isset($services) && count($services)>0){
 													foreach($services as $se){ ?>
 														<option value="<?php echo $se['sid'] ?>"><?php echo $se['services'] ?></option>
+													<?php }
+												}
+											?>
+										</select>
+									</td>
+									<td>
+										<select multiple="multiple" id="industry" name="industry[]" >
+											<?php
+												if(isset($industry) && count($industry)>0){
+													foreach($industry as $ind){ ?>
+														<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
 													<?php }
 												}
 											?>
@@ -182,7 +194,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td id="country_row">
-										<select style="width:170px" multiple="multiple" id="countryname" name="countryname[]">
+										<select style="width:110px" multiple="multiple" id="countryname" name="countryname[]">
 											
 										</select> 
 									</td>
@@ -247,6 +259,7 @@ $('#excel_lead').click(function() {
 		var customer     = $("#customer").val();
 		var service      = $("#service").val();
 		var lead_src     = $("#lead_src").val();
+		var industry     = $("#industry").val();
 		var worth	     = $("#worth").val();
 		var owner 	     = $("#owner").val();
 		var leadassignee = $("#leadassignee").val();
@@ -265,6 +278,7 @@ $('#excel_lead').click(function() {
 		  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
 		  '<input id="service" type="hidden" name="service" value="'+service+'" />'+
 		  '<input id="lead_src" type="hidden" name="lead_src" value="'+lead_src+'" />'+
+		  '<input id="industry" type="hidden" name="industry" value="'+industry+'" />'+
 		  '<input id="worth" type="hidden" name="worth" value="'+worth+'" />'+
 		  '<input id="owner" type="hidden" name="owner" value="'+owner+'" />'+
 		  '<input id="leadassignee" type="hidden" name="leadassignee" value="'+leadassignee+'" />'+

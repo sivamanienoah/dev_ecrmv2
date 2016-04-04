@@ -469,17 +469,18 @@ class Welcome_model extends crm_model {
 		return $customers;
 	}
 	
-	public function get_filter_results($stage, $customer, $service, $lead_src, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
+	public function get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
 	{
 		$userdata 		= $this->session->userdata('logged_in_user');
 		
-		// echo $lead_src; exit;
+		// echo $industry; exit;
 		 
 		$stage 			= (count($stage)>0)?explode(',',$stage):'';
 		$owner 			= (count($owner)>0)?explode(',',$owner):'';
 		$customer 		= (count($customer)>0)?explode(',',$customer):'';
 		$service 		= (count($service)>0)?explode(',',$service):'';
 		$lead_src 		= (count($lead_src)>0)?explode(',',$lead_src):'';
+		$industry 		= (count($industry)>0)?explode(',',$industry):'';
 		$worth 			= (count($worth)>0)?explode(',',$worth):'';
 		$leadassignee 	= (count($leadassignee)>0)?explode(',',$leadassignee):'';
 		$regionname 	= (count($regionname)>0)?explode(',',$regionname):'';
@@ -488,6 +489,8 @@ class Welcome_model extends crm_model {
 		$locname 		= (count($locname)>0)?explode(',',$locname):'';
 		$lead_status 	= (count($lead_status)>0)?explode(',',$lead_status):'';
 		$lead_indi 		= (count($lead_indi)>0)?explode(',',$lead_indi):'';
+		
+		// echo "<pre>"; print_r($industry); exit;
   
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
@@ -524,8 +527,13 @@ class Welcome_model extends crm_model {
 				}
 			}
 			if(!empty($lead_src) && count($lead_src)>0){
-				if($lead_src[0] != 'null' && $lead_src[0] != 'all'){		
+				if($lead_src[0] != 'null' && $lead_src[0] != 'all' && $lead_src[0] != ''){		
 					$this->db->where_in('j.lead_source',$lead_src); 
+				}
+			}
+			if(!empty($industry) && count($industry)>0){
+				if($industry[0] != 'null' && $industry[0] != 'all' && $industry[0] != ''){		
+					$this->db->where_in('j.industry',$industry); 
 				}
 			}
 			if(!empty($worth) && count($worth)>0){
@@ -630,12 +638,17 @@ class Welcome_model extends crm_model {
 				}
 			}
 			if(!empty($lead_src) && count($lead_src)>0){
-				if($lead_src[0] != 'null' && $lead_src[0] != 'all'){		
+				if($lead_src[0] != 'null' && $lead_src[0] != 'all' && $lead_src[0] != ''){		
 					$this->db->where_in('j.lead_source',$lead_src);
 				}
 			}
+			if(!empty($industry) && count($industry)>0){
+				if($industry[0] != 'null' && $industry[0] != 'all' && $industry[0] != ''){
+					$this->db->where_in('j.industry',$industry);
+				}
+			}
 			if(!empty($worth) && count($worth)>0){
-				if($worth[0] != 'null' && $worth[0] != 'all') {	
+				if($worth[0] != 'null' && $worth[0] != 'all') {
 					if($worth[1] == 'above') {
 					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
 					} else {

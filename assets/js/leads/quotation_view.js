@@ -12,6 +12,7 @@
 	var customer	 = $("#customer").val(); 
 	var service	 	 = $("#service").val(); 
 	var lead_src	 = $("#lead_src").val(); 
+	var industry	 = $("#industry").val(); 
 	var worth		 = $("#worth").val();
 	var lead_status	 = $("#lead_status").val();
 	var lead_indi	 = $("#lead_indi").val();
@@ -44,6 +45,7 @@ $("#search_advance").click(function() {
 	var customer     = $("#customer").val();
 	var service      = $("#service").val();
 	var lead_src     = $("#lead_src").val();
+	var industry     = $("#industry").val();
 	var worth        = $("#worth").val();	
 	var lead_status  = $("#lead_status").val();
 	var lead_indi    = $("#lead_indi").val();
@@ -53,7 +55,7 @@ $("#search_advance").click(function() {
 		type: "POST",
 		url: site_base_url+"welcome/advance_filter_search/search",
 		cache: false,
-		data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 		success: function(data){
 			$('#advance_search_results').html(data);
 			$('#load').hide();
@@ -79,6 +81,7 @@ function show_search_results(search_id) {
 			$('#save_advance').show();
 			$('#load').hide();	
 			$("#search_type").val("");
+			$('.saved-search-head').trigger('click');
 		}
 	});
 }
@@ -169,6 +172,7 @@ function save_search() {
 	var customer     = $("#customer").val();
 	var service      = $("#service").val();
 	var lead_src     = $("#lead_src").val();
+	var industry     = $("#industry").val();
 	var worth        = $("#worth").val();	
 	var lead_status  = $("#lead_status").val();
 	var lead_indi    = $("#lead_indi").val();
@@ -181,7 +185,7 @@ function save_search() {
 		dataType: 'json',
 		url: site_base_url+"welcome/save_search/1",
 		cache: false,
-		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "search_name="+search_name+"&is_default="+is_default+"&stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
@@ -196,7 +200,7 @@ function save_search() {
 				type: "POST",
 				url: site_base_url+"welcome/advance_filter_search/search",
 				cache: false,
-				data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+				data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_status="+lead_status+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 				success: function(data){
 					$.unblockUI();
 					$('#advance_search_results').html(data);
@@ -222,6 +226,7 @@ $(function(){
 			var customer 		= $("#customer").val();
 			var service 		= $("#service").val();
 			var lead_src 		= $("#lead_src").val();
+			var industry 		= $("#industry").val();
 			var owner 			= $("#owner").val();
 			var leadassignee 	= $("#leadassignee").val();
 			var regionname 		= $("#regionname").val();
@@ -234,7 +239,7 @@ $(function(){
 			 $.ajax({
 			   type: "POST",
 			   url: site_base_url+"welcome/advance_filter_search",
-			   data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
+			   data: "stage="+stage+"&customer="+customer+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&worth="+worth+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&lead_indi="+lead_indi+"&keyword="+keyword+'&'+csrf_token_name+'='+csrf_hash_token,
 			   success: function(data){
 				   $('#advance_search_results').html(data);
 				   $("#search_type").val("");
@@ -291,6 +296,7 @@ function advanced_filter(){
 		var stage 			= $("#stage").val(); 
 		var customer 		= $("#customer").val(); 
 		var worth 			= $("#worth").val();
+		var industry 		= $("#industry").val();
 	} else {
 		$("#owner").val("");
 		$("#leadassignee").val("");
@@ -301,6 +307,7 @@ function advanced_filter(){
 		$("#stage").val("");
 		$("#customer").val("");
 		$("#worth").val("");
+		$("#industry").val("");
 	}
 }
 

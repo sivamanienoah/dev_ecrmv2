@@ -46,6 +46,7 @@ class Welcome extends crm_controller {
 		$data['regions']      = $this->regionsettings_model->region_list();
 		$data['services']     = $this->welcome_model->get_lead_services();
 		$data['sources']      = $this->welcome_model->get_lead_sources();
+		$data['industry']      = $this->welcome_model->get_industry();
 		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
 		// echo "<pre>"; print_r($data['saved_search']); exit;
 		
@@ -63,6 +64,7 @@ class Welcome extends crm_controller {
 		$customer	  =null;
 		$service	  =null;
 		$lead_src	  =null;
+		$industry	  =null;
 		$worth		  =null; 
 		$owner	 	  =null; 
 		$leadassignee =null; 
@@ -119,6 +121,7 @@ class Welcome extends crm_controller {
 			$customer 	  = $filt['customer'];
 			$service 	  = $filt['service'];
 			$lead_src 	  = $filt['lead_src'];
+			$industry 	  = $filt['industry'];
 			$worth   	  = $filt['worth'];
 			$owner 		  = $filt['owner'];
 			$leadassignee = $filt['leadassignee'];
@@ -145,7 +148,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_keyword",'');
 		}
 
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 		//echo $this->db->last_query();
 		$data['filter_results'] = $filter_results;
 
@@ -153,6 +156,7 @@ class Welcome extends crm_controller {
 		$data['customer']	  = $customer;
 		$data['service']	  = $service;
 		$data['lead_src']	  = $lead_src;
+		$data['industry']	  = $industry;
 		$data['worth'] 		  = $worth;
 		$data['owner'] 		  = $owner;
 		$data['leadassignee'] = $leadassignee;
@@ -1638,6 +1642,7 @@ class Welcome extends crm_controller {
 		$customer=null;
 		$service=null;
 		$lead_src=null;
+		$industry=null;
 		$worth=null;
 		$owner=null;
 		$leadassignee=null;
@@ -1650,10 +1655,8 @@ class Welcome extends crm_controller {
 		$keyword=null;
 
 		//$exporttoexcel = $this->session->userdata('excel_download');
-		
-		
-				
-		//echo '<pre>';print_r($this->session->userdata);
+
+		// echo '<pre>';print_r($this->session->userdata); die;
 		$exporttoexcel = real_escape_array($this->input->post()); 
 		// echo '<pre>';print_r($exporttoexcel); exit;
 		if($this->session->userdata("lead_search_by_default") || $this->session->userdata("lead_search_by_id")){
@@ -1685,6 +1688,7 @@ class Welcome extends crm_controller {
 			$customer 	  = $exporttoexcel['customer'];
 			$service 	  = $exporttoexcel['service'];
 			$lead_src 	  = $exporttoexcel['lead_src'];
+			$industry 	  = $exporttoexcel['industry'];
 			$worth		  = $exporttoexcel['worth'];
 			$owner		  = $exporttoexcel['owner'];
 			$leadassignee = $exporttoexcel['leadassignee'];
@@ -1697,7 +1701,7 @@ class Welcome extends crm_controller {
 			$keyword      = (!empty($exporttoexcel['keyword'])?$exporttoexcel['keyword']:'');
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
 
 		//load our new PHPExcel library
 		$this->load->library('excel');
@@ -2183,6 +2187,7 @@ HDOC;
 		$ins['customer']	 = isset($post_data['customer']) ? $post_data['customer'] : '';
 		$ins['service']	 	 = isset($post_data['service']) ? $post_data['service'] : '';
 		$ins['lead_src']	 = isset($post_data['lead_src']) ? $post_data['lead_src'] :'';
+		$ins['industry']	 = isset($post_data['industry']) ? $post_data['industry'] :'';
 		$ins['worth']		 = isset($post_data['worth']) ? $post_data['worth'] : '';
 		$ins['owner']	  	 = isset($post_data['owner']) ? $post_data['owner'] : '';
 		$ins['leadassignee'] = isset($post_data['leadassignee']) ? $post_data['leadassignee'] : '';
