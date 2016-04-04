@@ -262,10 +262,11 @@ if ( ! function_exists('formSubMenuList'))
 				}
 
 				$ci->load->database(); 
-				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.masterid asc');
+				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.order_id asc');
 				$SubMenuitms = $ci->db->get();
 				$submenus = $SubMenuitms->result_array();
 				$str = "<ul class='topstrip'>";
+				// echo "<pre>"; print_r($submenus); exit;
 				foreach($submenus as $submenu){
 					if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
 						continue;
