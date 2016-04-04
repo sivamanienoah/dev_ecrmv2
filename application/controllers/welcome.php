@@ -1780,7 +1780,7 @@ class Welcome extends crm_controller {
 		$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
 		$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);			
+		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
 		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
