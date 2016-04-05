@@ -32,6 +32,11 @@
 			$invalid_stages = implode('<br/>', $empty_stages);
 			echo " The following leads having <b>Invalid stages</b> <br /> $invalid_stages";
 		}
+		echo "<br>";
+		if(!empty($empty_errors)){
+			$invalid_errs = implode('<br/>', $empty_errors);
+			echo " <b> Mandatory fields are missing </b> for the following leads <br /> $invalid_errs";
+		}
 		?>
 	</div>
 <?php require (theme_url().'/tpl/footer.php'); ?>
