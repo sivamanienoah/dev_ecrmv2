@@ -2435,7 +2435,7 @@ HDOC;
 							if(!empty($impt_data[$i]['F']))
 							$strlid = $this->welcome_model->get_rscl($strstate, 'stateid', 'location', strtolower($impt_data[$i]['F']));
 						
-							if($strreg!='no_id' || $strcunt!='no_id' || $strstate!='no_id' || $strlid!='no_id' ){
+							if($strreg!='no_id' && $strcunt!='no_id' && $strstate!='no_id' && $strlid!='no_id' ){
 								$cust_res = $this->chk_customers($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['A'],$impt_data[$i]['B'],$impt_data[$i]['G']);
 								if($cust_res == 'no_customer'){
 									$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['A'],$impt_data[$i]['B'],$impt_data[$i]['G'],$impt_data[$i]['H']);
