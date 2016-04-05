@@ -2319,6 +2319,7 @@ HDOC;
 		$leadSources	 = array();
 		$leadEntity      = array();
 		$leadStages      = array();
+		$empty_errors    = array();
 		
 		if(!empty($expect_worth)) {
 			foreach($expect_worth as $ew)
@@ -2355,8 +2356,8 @@ HDOC;
 					if(!empty($impt_data[$i]['P'])){
 						$ewdt = date('Y-m-d H:i:s', strtotime($impt_data[$i]['P']));
 					}
-					if( empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['C']) || empty($impt_data[$i]['D']) || empty($impt_data[$i]['E']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['G']) || empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['M']) ) {
-						$empty_error[] = $impt_data[$i]['A'];
+					if( empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['C']) || empty($impt_data[$i]['D']) || empty($impt_data[$i]['E']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['I']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['N']) || empty($impt_data[$i]['O']) || empty($impt_data[$i]['Q']) ) {
+						$empty_errors[] = $impt_data[$i]['A'];
 					} else {
 
 						if (!empty($impt_data[$i]['G'])) {
@@ -2533,11 +2534,11 @@ HDOC;
 							$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
 						}
 					}
-				}
+				} //for loop
 				$data['invalidemail']  = $email_invalid;
 				$data['updated_leads'] = $updt_count;
 				$data['succcount']     = $count;
-				$data['empty_error']   = $empty_error;
+				$data['empty_errors']   = $empty_errors;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('leads/success_import_view', $data);
 		 	} else {
