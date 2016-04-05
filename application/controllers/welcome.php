@@ -2470,7 +2470,7 @@ HDOC;
 								$ins_leads['division']      		 = $leadEntity[strtolower($impt_data[$i]['N'])];
 								$ins_leads['expect_worth_amount']	 = $impt_data[$i]['M'];
 								$ins_leads['lead_indicator'] 		 = strtoupper($impt_data[$i]['O']);
-								$ins_leads['lead_stage']			 = $leadStages[strtolower($impt_data[$i]['Q'])];
+								$ins_leads['lead_stage']			 = 1;
 								$ins_leads['lead_assign']			 = $this->userdata['userid'];
 								$ins_leads['date_created']			 = date('Y-m-d H:i:s');
 								$ins_leads['date_modified']			 = date('Y-m-d H:i:s');
