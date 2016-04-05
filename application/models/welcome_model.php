@@ -94,6 +94,15 @@ class Welcome_model extends crm_model {
 		return $q->result_array();
     }
 
+	function get_lead_stages() 
+	{
+    	$this->db->select('lead_stage_id, lead_stage_name');
+		$this->db->where('status', 1);
+    	$this->db->order_by('sequence');
+		$q = $this->db->get($this->cfg['dbpref'] . 'lead_stage');
+		return $q->result_array();
+    }
+
 	function get_industry() 
 	{
     	$this->db->select('id, industry');

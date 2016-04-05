@@ -20,18 +20,7 @@
 			    </td>
 			    </tr> 
 				<tr><td colspan="4">&nbsp;</td></tr>
-			    <tr>
-					<td colspan="4"><b>Note:</b>
-					<br />
-					Please Follow the csv format
-					<br />
-					FirstName,Lastname,Position,Company,Address Line 1,
-					Address Line 2,Suburb,Postcode,Region,
-					Country,State,Location,Direct Phone,Work Phone,Mobile Phone,Fax Line,Primary Email,
-					secondary Email1,secondary Email2,secondary Email3,Skype Name,Web,Secondary Web,Comments
-</td>
-					
-				</tr>
+
 			    <tr><td colspan="4">&nbsp;</td></tr>
 				<tr>
 					<td width="100">Upload List:</td>

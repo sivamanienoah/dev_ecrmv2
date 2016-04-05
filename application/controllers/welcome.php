@@ -1315,7 +1315,9 @@ class Welcome extends crm_controller {
 	/**
 	 * Deletes lead from the list
 	 */
-	function delete_quote($id) {
+	function delete_quote() {
+		
+		$id = isset($_POST['id']) ? $this->input->post('id') : 0;
 
 		if ($this->session->userdata('delete')==1) {
 			if ($id > 0) {
@@ -1361,27 +1363,37 @@ class Welcome extends crm_controller {
 
 					$this->email_template_model->sent_email($param);
 					
-					$this->session->set_flashdata('confirm', array("Lead deleted from the system"));
+					// $this->session->set_flashdata('confirm', array("Lead deleted from the system"));
+					$res['error'] = false;
+					$res['msg'] = 'Lead deleted from the system';
 
-					redirect('welcome/quotation');
+					//redirect('welcome/quotation');
 				}
 				else 
 				{
-					$this->session->set_flashdata('login_errors', array("Error in Deletion."));
-					redirect('welcome/quotation');
+					// $this->session->set_flashdata('login_errors', array("Error in Deletion."));
+					// redirect('welcome/quotation');
+					$res['error'] = true;
+					$res['msg'] = 'Error in Deletion.';
 				}
 			}
 			else 
 			{
-				$this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
-				redirect('welcome/quotation');
+				// $this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
+				// redirect('welcome/quotation');
+				$res['error'] = true;
+				$res['msg'] = 'Lead does not exist or you may not be authorised to delete the leads.';
 			}
 		} 
 		else 
 		{
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
-			redirect('welcome/quotation');
+			// $this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
+			// redirect('welcome/quotation');
+			$res['error'] = true;
+			$res['msg'] = 'You have no rights to delete this lead.';
 		}
+		
+		echo json_encode($res); exit;
 		
 	}
 	
@@ -1727,6 +1739,7 @@ class Welcome extends crm_controller {
 		// $this->excel->getActiveSheet()->setCellValue('O1', 'Variance');
 		$this->excel->getActiveSheet()->setCellValue('N1', 'Lead Indicator');
 		$this->excel->getActiveSheet()->setCellValue('O1', 'Status');
+		$this->excel->getActiveSheet()->setCellValue('P1', 'Unique Id');
 		
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -1766,6 +1779,7 @@ class Welcome extends crm_controller {
 				break;
 			}
 			$this->excel->getActiveSheet()->setCellValue('O'.$i, $status);
+			$this->excel->getActiveSheet()->setCellValue('P'.$i, $excelarr['lead_id']);
 			$i++;
 		}
 		
@@ -2258,6 +2272,8 @@ HDOC;
 		
 		$updt = $this->welcome_model->update_records($tbl,$wh_condn,'',$up_arg=array('is_default'=>0));
 		$updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>1));
+		// $updt_condn = $this->welcome_model->update_records($tbl,$wh_condn=array('search_id'=>$search_id),'',$up_arg=array('is_default'=>$is_def_val));
+		// echo $this->db->last_query(); exit;
 
 		if($updt_condn) {
 			$result['resu'] = 'updated';
@@ -2296,11 +2312,13 @@ HDOC;
 		$services 	  = $this->welcome_model->get_lead_services();
 		$sources 	  = $this->welcome_model->get_lead_sources();
 		$entity		  = $this->welcome_model->get_sales_divisions();
+		$stages		  = $this->welcome_model->get_lead_stages();
 		
 		$leadExpectWorth = array();
 		$leadServices	 = array();
 		$leadSources	 = array();
 		$leadEntity      = array();
+		$leadStages      = array();
 		
 		if(!empty($expect_worth)) {
 			foreach($expect_worth as $ew)
@@ -2318,6 +2336,10 @@ HDOC;
 			foreach($entity as $en)
 			$leadEntity[strtolower(trim($en['division_name']))] = $en['div_id'];
 		}
+		if(!empty($stages)) {
+			foreach($stages as $st)
+			$leadStages[strtolower(trim($st['lead_stage_name']))] = $st['lead_stage_id'];
+		}
 
 		$count = $updt_count = 0;
 		$this->load->library('excel_read');
@@ -2329,10 +2351,14 @@ HDOC;
 		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {		
 				$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);
 				for($i=2; $i<=count($impt_data); $i++) {
-					
-					if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['C']) || empty($impt_data[$i]['D']) || empty($impt_data[$i]['E']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['G']) || empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['M']) || empty($impt_data[$i]['P']) || empty($impt_data[$i]['Q'])) {
-						$empty_error[] = $impt_data[$i]['Q'];
+					$ewdt = '';
+					if(!empty($impt_data[$i]['P'])){
+						$ewdt = date('Y-m-d H:i:s', strtotime($impt_data[$i]['P']));
+					}
+					if( empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['C']) || empty($impt_data[$i]['D']) || empty($impt_data[$i]['E']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['G']) || empty($impt_data[$i]['A']) || empty($impt_data[$i]['B']) || empty($impt_data[$i]['J']) || empty($impt_data[$i]['K']) || empty($impt_data[$i]['L']) || empty($impt_data[$i]['M']) ) {
+						$empty_error[] = $impt_data[$i]['A'];
 					} else {
+
 						if (!empty($impt_data[$i]['G'])) {
 							$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
 							if(!preg_match($regex, $impt_data[$i]['G'])) {
@@ -2340,11 +2366,14 @@ HDOC;
 							}
 						}
 						//check leads exists or not in our crm by type & id
-						$chk_lead_condn = array('lead_from'=>$impt_data[$i]['P'],'lead_from_id'=>$impt_data[$i]['Q']);
-						$chk_leads = $this->welcome_model->get_data_by_id('leads', $chk_lead_condn);
-						// echo "<pre>"; print_r($chk_leads); exit;
+						if(strtolower($impt_data[$i]['S']!='new')) {
+							$chk_lead_condn = array('lead_id'=>$impt_data[$i]['S']);
+							$chk_leads = $this->welcome_model->get_data_by_id('leads', $chk_lead_condn);
+							// echo $this->db->last_query(); exit;
+							// echo "<pre>"; print_r($chk_leads); exit;
+						}
 						
-						if(!empty($chk_leads)){
+						if(isset($chk_leads) && !empty($chk_leads)){
 							//**go for update**//
 							
 							//updating customers						
@@ -2361,17 +2390,33 @@ HDOC;
 							$updt_leads['lead_service']			  = $leadServices[strtolower($impt_data[$i]['J'])];
 							$updt_leads['lead_source']			  = $leadSources[strtolower($impt_data[$i]['K'])];
 							$updt_leads['expect_worth_id']		  = $leadExpectWorth[strtolower($impt_data[$i]['L'])];
-							$updt_leads['division']      		  = $leadEntity[strtolower($impt_data[$i]['N'])];
 							$updt_leads['expect_worth_amount']	  = $impt_data[$i]['M'];
+							$updt_leads['division']      		  = $leadEntity[strtolower($impt_data[$i]['N'])];
 							$updt_leads['lead_indicator'] 		  = strtoupper($impt_data[$i]['O']);
 							$updt_leads['lead_assign']			  = $this->userdata['userid'];
+							$updt_leads['lead_stage']		  	  = $leadStages[strtolower($impt_data[$i]['Q'])];
 							$updt_leads['date_modified']		  = date('Y-m-d H:i:s');
-							$updt_leads['proposal_expected_date'] = date('Y-m-d H:i:s');
+							$updt_leads['proposal_expected_date'] = isset($ewdt)?$ewdt:date('Y-m-d H:i:s');
 							
 							$lead_id = $chk_leads['lead_id'];
 							
 							$this->db->where('lead_id', $lead_id);
 							$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
+							
+							$cur_stat = empty($chk_leads['lead_stage']) ? 1 : $chk_leads['lead_stage'];
+							$new_stat = $leadStages[strtolower($impt_data[$i]['Q'])];
+							
+							if($cur_stat!=$new_stat){
+								$stgHist = array();
+								$stgHist['lead_id']      = $lead_id;
+								$stgHist['dateofchange'] = date('Y-m-d H:i:s');
+								$stgHist['previous_status'] = $cur_stat;
+								$stgHist['changed_status']  = $new_stat;
+								$stgHist['lead_status'] = 1;
+								$stgHist['modified_by'] = $this->userdata['userid'];
+								// echo "<pre>"; print_r($stgHist); die;
+								$insStgHis = $this->welcome_model->insert_row('lead_stage_history', $stgHist);
+							}
 							
 							$updt_count=$updt_count+1;
 
@@ -2418,18 +2463,19 @@ HDOC;
 								//insert leads here.
 								$ins_leads 							 = array();
 								$ins_leads['custid_fk']				 = $custid;
-								$ins_leads['lead_title']			 = $impt_data[$i]['I'];
+								$ins_leads['lead_title']			 = $impt_data[$i]['I'].' - '.$impt_data[$i]['B'];
 								$ins_leads['lead_service']			 = $leadServices[strtolower($impt_data[$i]['J'])];
 								$ins_leads['lead_source']			 = $leadSources[strtolower($impt_data[$i]['K'])];
 								$ins_leads['expect_worth_id']		 = $leadExpectWorth[strtolower($impt_data[$i]['L'])];
 								$ins_leads['division']      		 = $leadEntity[strtolower($impt_data[$i]['N'])];
 								$ins_leads['expect_worth_amount']	 = $impt_data[$i]['M'];
 								$ins_leads['lead_indicator'] 		 = strtoupper($impt_data[$i]['O']);
-								$ins_leads['lead_stage']			 = 1;
+								$ins_leads['lead_stage']			 = $leadStages[strtolower($impt_data[$i]['Q'])];
 								$ins_leads['lead_assign']			 = $this->userdata['userid'];
 								$ins_leads['date_created']			 = date('Y-m-d H:i:s');
 								$ins_leads['date_modified']			 = date('Y-m-d H:i:s');
-								$ins_leads['proposal_expected_date'] = date('Y-m-d H:i:s');
+								$ins_leads['proposal_expected_date'] = isset($ewdt)?$ewdt:date('Y-m-d H:i:s');
+								$ins_leads['industry']				 = 5;
 								$ins_leads['created_by']     		 = $this->userdata['userid'];
 								$ins_leads['modified_by']    		 = $this->userdata['userid'];
 								$ins_leads['belong_to']      		 = $this->userdata['userid'];
@@ -2481,17 +2527,18 @@ HDOC;
 						if(!empty($impt_data[$i]['R'])){
 							$log_ins['jobid_fk']     = $lead_id;
 							$log_ins['userid_fk']    = $this->userdata['userid'];
+							// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
 							$log_ins['date_created'] = date('Y-m-d H:i:s');
 							$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['R']);
 							$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
 						}
 					}
 				}
-				$data['invalidemail'] = $email_invalid;
-				$data['updated_leads']    = $updt_count;
-				$data['succcount']    = $count;
-				$data['empty_error']  = $empty_error;
-				echo "<pre>"; print_r($data); exit;
+				$data['invalidemail']  = $email_invalid;
+				$data['updated_leads'] = $updt_count;
+				$data['succcount']     = $count;
+				$data['empty_error']   = $empty_error;
+				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('leads/success_import_view', $data);
 		 	} else {
 		 		$page['error'] = '<p class="error">Please Upload CSV, XLS File only!</p>';
