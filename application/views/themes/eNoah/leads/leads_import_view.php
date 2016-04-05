@@ -1,11 +1,9 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <?php $this->userdata = $this->session->userdata('logged_in_user'); ?>
-<?php 
-	//echo $this->session->userdata('addImpCus');
-?>
+<?php #echo $this->session->userdata('add'); ?>
 <div id="content">
     <div class="inner">
-	<?php #if($this->session->userdata('addImpCus')==1) { ?>
+	<?php if($this->session->userdata('add')==1) { ?>
     	<form action="welcome/importleads" method="post" enctype="multipart/form-data" >
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -16,7 +14,7 @@
 			<table class="layout">
 			 <tr>
 				<td colspan="4">
-			          <a href="assets/leads list.csv" style="text-decoration: underline"><b>Download CSV Template</b></a>
+			          <a href="assets/leads_import_template.xls" style="text-decoration: underline"><b>Download Template</b></a>
 			    </td>
 			    </tr> 
 				<tr><td colspan="4">&nbsp;</td></tr>
@@ -45,9 +43,9 @@
 				</tr>
             </table>
 		</form>
-		<?php /* } else{
+		<?php } else{
 			echo "You have no rights to access this page";
-		} */ ?>
+		} ?>
 	</div>
 </div>
 <?php require (theme_url().'/tpl/footer.php'); ?>
