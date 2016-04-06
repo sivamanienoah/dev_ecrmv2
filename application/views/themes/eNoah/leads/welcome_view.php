@@ -805,7 +805,20 @@ h3 .small {
 						?>
                         </select>
                     </p>
-					
+					<p><label>Industry</label></p>
+					<p>
+						<select name="industry" id="industry" class="textfield width300px">
+							<option value="">Please Select</option>
+                            <?php
+							foreach ($industry as $ind)
+							{
+							?>
+								<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
+							<?php
+							}
+							?>
+                        </select>
+                    </p>
 					<p><label>Expected worth of Deal</label></p>
                     
 					<p><select name="expect_worth" id="expect_worth" class="textfield width100px">
@@ -833,20 +846,6 @@ h3 .small {
 							{
 							?>
 								<option value="<?php echo $sa_div['div_id'] ?>"><?php echo $sa_div['division_name'] ?></option>
-							<?php
-							}
-							?>
-                        </select>
-                    </p>
-					<p><label>Industry</label></p>
-					<p>
-						<select name="industry" id="industry" class="textfield width300px">
-							<option value="">Please Select</option>
-                            <?php
-							foreach ($industry as $ind)
-							{
-							?>
-								<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
 							<?php
 							}
 							?>
@@ -966,6 +965,20 @@ h3 .small {
 							?>
 							</select>
 						</p>
+						<p><label>Industry</label></p>
+						<p>
+							<select name="industry" id="industry_edit" class="textfield width300px">
+								<option value="">Please Select</option>
+								<?php
+								foreach ($industry as $ind)
+								{
+								?>
+									<option value="<?php echo $ind['id'] ?>"<?php echo ($quote_data['industry'] == $ind['id']) ? ' selected="selected"' : '' ?>><?php echo $ind['industry'] ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</p>
 						<p><label>Expected worth of Deal</label></p>
 						<p><select name="expect_worth_edit" id="expect_worth_edit" class="textfield" style="width:100px">
 								<option value="not_select">Please Select</option>
@@ -1004,20 +1017,6 @@ h3 .small {
 								?>
 									<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
 								<?php								
-								}
-								?>
-							</select>
-						</p>
-						<p><label>Industry</label></p>
-						<p>
-							<select name="industry" id="industry_edit" class="textfield width300px">
-								<option value="">Please Select</option>
-								<?php
-								foreach ($industry as $ind)
-								{
-								?>
-									<option value="<?php echo $ind['id'] ?>"<?php echo ($quote_data['industry'] == $ind['id']) ? ' selected="selected"' : '' ?>><?php echo $ind['industry'] ?></option>
-								<?php
 								}
 								?>
 							</select>

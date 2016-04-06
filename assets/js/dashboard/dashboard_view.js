@@ -1019,6 +1019,130 @@ if(viewlead==1) {
 			$('#pie3').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
 		} 
 	});
+	
+	$(document).ready(function() {
+		if (dashboard_s9!='') {
+			$.jqplot.config.enablePlugins = true;
+			var plot7 = $.jqplot('pie4', [dashboard_s9], {
+				gridPadding: {top:25, bottom:24, left:0, right:0},
+				//title:'<?php echo $chart_title; ?>',
+				animate: !$.jqplot.use_excanvas,
+				animateReplot: true,
+				seriesDefaults:{
+					shadow: false,
+					renderer:$.jqplot.PieRenderer, 
+					trendline:{ show:false }, 
+					rendererOptions: { 
+						padding: 8,
+						sliceMargin: 2,
+						showDataLabels: true
+					},
+					highlighter: {
+						show: true,
+						formatString:'%s',
+						tooltipLocation:'ne', 
+						useAxesFormatters:false
+					}				 
+				},
+				grid: {
+						drawGridLines: true,        // wether to draw lines across the grid or not.
+						gridLineColor: '#ffffff',   // CSS color spec of the grid lines.
+						background: '#ffffff',      // CSS color spec for background color of grid.
+						borderColor: '#ffffff',     // CSS color spec for border around grid.
+						//borderWidth: 2.0,           // pixel width of border around grid.
+						//backgroundColor: 'transparent', 
+						drawBorder: false,
+						shadow: false
+				},
+				legend:{
+					show:true, 
+					fontSize: '9pt',
+					location: 'e',
+					border: false
+				},
+				seriesColors: ["#eaa228", "#ff5800", "#c5b47f", "#8bbc21", "#579575", "#1aadce", "#839557", "#910000", "#027997", "#953579", "#422460", "#4b5de4", "#48596a", "#4bb2c5", "#0d233a", "#f0eded", "#492970", "#cc99cc", "#bfdde5", "#66ffcc", "#c747a3", "#ff99ff", "#ffff00", "#cc0000", "#a35b2e"]
+			});
+			
+			$('#pie4').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
+				/* if (filter_toggle_stat == 'toggle') {
+					var formdata = advanceFilterParameterForDataClick();
+				} else {
+					var formdata = {};
+				} */
+				var def_search_id = $("#val_export").val();
+	
+				if(!isNaN(def_search_id)) {
+					var formdata = {};
+					formdata['search_id'] = def_search_id;
+				} else if( def_search_id == 'search' ) {
+					var formdata = advanceFilterParameterForDataClick();
+				} else if( def_search_id == 'no_search' ) {
+					var formdata = {};
+				} else {
+					var formdata = {};
+				}
+				formdata['data'] 	      = data;
+				formdata['type'] 	      = 'pie4';
+				formdata[csrf_token_name] = csrf_hash_token;
+
+				$.ajax({
+					type: "POST",
+					url: site_base_url+'dashboard/showLeadsDetails/',
+					dataType:"json",                                                                
+					data: formdata,
+					cache: false,
+					beforeSend:function(){
+						$('#charts_info4').empty();
+						$('#charts_info4').show();
+						$('#charts_info4').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+						//$('#res').hide();
+					},
+					success: function(html){
+						//alert(html.html);
+						//$("#loadingImage").hide();
+						$('#charts_info4').empty();
+						$("#charts_info4").show();
+						if (html.html == 'NULL') {
+							$('#charts_info4').html('');
+						} else {
+							$('#charts_info4').show();
+							$('#charts_info4').html(html.html);
+							
+							$('#example_pie4').dataTable( {
+								"aaSorting": [[ 0, "desc" ]],
+								"iDisplayLength": 5,
+								"sPaginationType": "full_numbers",
+								"bInfo": true,
+								"bPaginate": true,
+								"bProcessing": true,
+								"bServerSide": false,
+								"bLengthChange": false,
+								"bSort": true,
+								"bAutoWidth": false,
+								"fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+									//alert(nRow);
+									var cost = 0
+									for ( var i=0 ; i<aaData.length ; i++ )
+									{
+										var TotalMarks = aaData[i][6];
+										cost += parseFloat(TotalMarks);
+										
+									}
+									var nCells = nRow.getElementsByTagName('td');
+									nCells[1].innerHTML = cost.toFixed(2);
+								}
+							});
+							$('html, body').animate({ scrollTop: $("#charts_info4").offset().top }, 1000);
+						}
+					}                                                                                       
+				});
+				return false;
+			});
+			
+		} else { 
+			$('#pie4').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
+		} 
+	});
 
 	
 	function getLeadDashboardTable(userid, user_name) {
@@ -1219,6 +1343,10 @@ if(viewlead==1) {
 	});
 	$('#charts_info3').delegate('.grid-close','click',function(){
 		var $lead = $("#charts_info3");
+		$lead.slideUp('fast', function () { $lead.css('display','none'); });
+	});
+	$('#charts_info4').delegate('.grid-close','click',function(){
+		var $lead = $("#charts_info4");
 		$lead.slideUp('fast', function () { $lead.css('display','none'); });
 	});
 
@@ -1466,6 +1594,40 @@ if(viewlead==1) {
 	$('#charts_info3').delegate('#leads-by-leadsource-export','click',function() {
 		var lead_source	= $("#leads-by-leadsource-export").attr('name'); 
 		var type   		= $("#lead-by-leadsource").val();   
+		var baseurl		= site_base_url;
+		
+		var url		 = baseurl+"dashboard/excel_export_lead_owner";
+		/* if (filter_toggle_stat == 'toggle') {	
+			var advancedFilters = advanceFilterParameterForExcel();
+		} */
+		
+		var def_search_id = $("#val_export").val();
+	
+		if(!isNaN(def_search_id)) {
+			var advancedFilters = '<input type="hidden" name="search_id" value="' +def_search_id+ '" />';
+		} else if( def_search_id == 'search' ) {
+			var advancedFilters = advanceFilterParameterForExcel();
+		} else if( def_search_id == 'no_search' ) {
+			var advancedFilters;
+		} else {
+			var advancedFilters;
+		}
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="lead_source" value="' +lead_source+ '" />' +
+		'<input type="hidden" name="type" value="' +type+ '" />' +
+		'"'+advancedFilters+'"' +
+		'</form>');
+		$('body').append(form);
+		$(form).submit();
+		return false;
+	});
+	
+	/*Lead Industry Report*/
+	$('#charts_info4').delegate('#leads-by-industry-export','click',function() {
+		var lead_source	= $("#leads-by-industry-export").attr('name'); 
+		var type   		= $("#lead-by-industry").val();   
 		var baseurl		= site_base_url;
 		
 		var url		 = baseurl+"dashboard/excel_export_lead_owner";
@@ -2195,8 +2357,9 @@ function delete_save_search(search_id) {
 }
 
 $('.search-root').on('click', '.set_default_search', function() {
-
+	
 	var search_id = $( this ).val();
+	//return;
 	$.ajax({
 		type: "POST",
 		dataType: 'json',
@@ -2210,14 +2373,14 @@ $('.search-root').on('click', '.set_default_search', function() {
 			});
 		},
 		success: function(response){
+			$('.search-root').unblock();
 			if(response.resu=='updated') {
 				// show_search_results(search_id);
 				// $('#val_export').val(search_id);
-				location.reload();
+				 location.reload();
 			} else {
 				alert('Not updated');
 			}
-			$('.search-root').unblock();
 		}
 	});
 });

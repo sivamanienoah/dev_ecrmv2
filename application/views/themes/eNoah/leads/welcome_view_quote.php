@@ -798,6 +798,7 @@ $(function(){
 						<p class="clearfix"><label>Lead Title</label>  <span><?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
 						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
+						<p class="clearfix"><label>Industry </label><span><?php echo $quote_data['industry'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
 								<?php
@@ -810,7 +811,6 @@ $(function(){
 						</span>
 						</p>
 						<p class="clearfix"><label>Entity </label><span><?php echo $quote_data['division_name'] ?></span></p>
-						<p class="clearfix"><label>Industry </label><span><?php echo $quote_data['industry'] ?></span></p>
 						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
 						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
 						<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>

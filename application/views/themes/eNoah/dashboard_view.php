@@ -347,7 +347,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			<!--For Pie2 & Pie3 charts-->
 			<div class="clearfix">
 				<div class="pull-left dash-section left-canvas">
-					<h5 class="dash-tlt">Leads By Industry</h5>
+					<h5 class="dash-tlt">Leads By Lead Source</h5>
 					<div id="pie2" class="plot" style=""></div>
 				</div>
 				<div class="pull-right dash-section right-canvas">
@@ -411,6 +411,14 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			</div>
 			</div>
 			<div id="lead-dependency-list" style="display:none;"></div><!--Opportunities By Lead Owner & Opportunities By Lead Assignee Info display here -->
+			
+			<div class="clearfix">
+				<div class="pull-left dash-section left-canvas">
+					<h5 class="dash-tlt">Leads By Industry</h5>
+					<div id="pie4" class="plot" style=""></div>
+				</div>
+			</div>
+			<div id="charts_info4" class="charts-info-block" style="display:none;"></div><!--pie4 charts info display here-->
 
 		</div>
 		<div id='popupGetSearchName'></div>
@@ -735,18 +743,18 @@ foreach( $cls_oppo_values as $key=>$data ) {
 
 
 //For Leads - Lead Source. 
-/* $Ld_Src = array();
+$Ld_Src = array();
 foreach($get_Lead_Source as $getLdSrc) {
 	$Ld_Src[] = "['".$getLdSrc['lead_source_name'].'('.$getLdSrc["src"].')'."'".','.$getLdSrc["src"]."]";
 }
-$s7 = implode(',', $Ld_Src); */
+$s7 = implode(',', $Ld_Src);
 
 //For Leads - Industry.
 $indus = array();
 foreach($get_Lead_Industry as $getLdInd) {
 	$indus[] = "['".$getLdInd['industry'].'('.$getLdInd["src"].')'."'".','.$getLdInd["src"]."]";
 }
-$s7 = implode(',', $indus);
+$s9 = implode(',', $indus);
 
 //For Leads - Service Requirement. 
 $Ser_Req = array();
@@ -756,7 +764,7 @@ foreach($get_Service_Req as $getSerReq) {
 $s8 = implode(',', $Ser_Req);
 ?>
 <?php
-	$stgs = $custs_id = $owr_id = $assg_id = $reg_nme = $county_name = $ste_name = $loc_name = $servic_req = $lead_sour = $lead_indic = '';
+	$stgs = $custs_id = $owr_id = $assg_id = $reg_nme = $county_name = $ste_name = $loc_name = $servic_req = $lead_sour = $lead_indic = $industry = '';
 	$toggle_stat =  isset($toggle_stat) ? "toggle" : "no_toggle";
 	if (!empty($filter['stage']))
 	$stgs = implode(",",$filter['stage']);
@@ -778,8 +786,10 @@ $s8 = implode(',', $Ser_Req);
 	$servic_req = implode(",",$filter['ser_requ']);
 	if (!empty($filter['lead_src']))
 	$lead_sour = implode(",",$filter['lead_src']);
-	if (!empty($filter['industry']))
-	$industry = implode(",",$filter['industry']);
+	if (!empty($filter['industry'])){
+		$industry = implode(",",$filter['industry']);
+	}
+	
 	if (!empty($filter['lead_indi']))
 	$lead_indic = implode(",",$filter['lead_indi']);
 ?>
@@ -791,6 +801,7 @@ $s8 = implode(',', $Ser_Req);
 	dashboard_s4	   = [<?php echo @rtrim($s4, ','); ?>];
 	dashboard_s7 	   = [<?php echo @rtrim($s7, ','); ?>];
 	dashboard_s8 	   = [<?php echo @rtrim($s8, ','); ?>];
+	dashboard_s9 	   = [<?php echo @rtrim($s9, ','); ?>];
 	dashboard_s3_name  = [<?php echo $s3_name; ?>];
 	dashboard_cls_oppr = [<?php echo rtrim($cls_oppr, ','); ?>];
 	dashboard_userid   = "<?php echo $userdata['userid']; ?>";

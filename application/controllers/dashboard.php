@@ -366,9 +366,9 @@ class Dashboard extends crm_controller {
 		$data['getClosedOppor'] = $closedMonthArr;
 		
 		//for lead source & service requirement.
-		// $data['get_Lead_Source'] = $this->dashboard_model->getLeadSource($cusId, $filter);
+		$data['get_Lead_Source']   = $this->dashboard_model->getLeadSource($cusId, $filter);
 		$data['get_Lead_Industry'] = $this->dashboard_model->getIndustryLead($cusId, $filter);
-		$data['get_Service_Req'] = $this->dashboard_model->getServiceReq($cusId, $filter);
+		$data['get_Service_Req']   = $this->dashboard_model->getServiceReq($cusId, $filter);
 		
 		//For Tasks & Projects access - Start here (for filter also)
 		$data['lead_stage']  = $this->welcome_model->get_lead_stage();
@@ -485,6 +485,10 @@ class Dashboard extends crm_controller {
 				$heading			   = "Leads for - ".$lead_stage[0];
 				$data['getLeadDetail'] = $this->dashboard_model->getLeadsDetails_pie3(trim($lead_stage[0]), $cusId, $filters);
 			break;
+			case "pie4":
+				$heading			   = "Leads for - ".$lead_stage[0];
+				$data['getLeadDetail'] = $this->dashboard_model->getLeadsDetails_pie4(trim($lead_stage[0]), $cusId, $filters);
+			break;
 		}
 		$res['html'] .= '<div class="dash-section dash-section1"><h5>'.$heading.'</h5><div class="grid-close"></div></div>';
 		$res['html'] .= "<div class='dashbrd'>";
@@ -510,6 +514,11 @@ class Dashboard extends crm_controller {
 				$res['html'] .= '<div class="export-to-excel"><a id="leads-by-service-req-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
 				$res['html'] .= "<input id='lead-by-service-req' type='hidden' value='".$type."'/>";
 				$dt_id = "example_pie3";
+			break;
+			case "pie4":
+				$res['html'] .= '<div class="export-to-excel"><a id="leads-by-industry-export" name="'.$lead_stage[0].'">Export to Excel</a></div>';
+				$res['html'] .= "<input id='lead-by-industry' type='hidden' value='".$type."'/>";
+				$dt_id = "example_pie4";
 			break;
 		}	
 		$res['html'] .= '<table cellspacing="0" id="'.$dt_id.'" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th width=62px;>Lead No.</th><th width=210px;>Lead Title </th><th width=145px;>Customer</th><th width=145px;>Lead Owner</th><th width=145px;>Lead Assignee</th><th width=105px;>Lead Indicator</th><th width=85px;>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
@@ -775,6 +784,7 @@ class Dashboard extends crm_controller {
 		
 		$result     = real_escape_array($this->input->post());
 		$graph_type = $result['type'];
+		// echo "<pre>"; print_r($result); exit;
 		
 		if(isset($result['search_id']) && is_numeric($result['search_id'])) {
 			$wh_condn = array('search_id'=>$result['search_id'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
@@ -830,6 +840,9 @@ class Dashboard extends crm_controller {
 			case 'pie3':
 				$res 			= $this->dashboard_model->getLeadsDetails_pie3($result['servic_require'], $cusId, $expFilter);
 			break;
+			case 'pie4':
+				$res 			= $this->dashboard_model->getLeadsDetails_pie4($result['lead_source'], $cusId, $expFilter);
+			break;
 			case 'leadowner':
 				$res 			= $this->dashboard_model->getLeadOwnerDependencies($result['user_id'], $cusId, $expFilter);
 				$lead_owner_opp = $res->result_array();
@@ -871,11 +884,13 @@ class Dashboard extends crm_controller {
 					$this->excel->getActiveSheet()->setTitle('Closed Opportunities');
 				break;
 				case 'pie2':
-					// $this->excel->getActiveSheet()->setTitle('Lead Source');
-					$this->excel->getActiveSheet()->setTitle('Industry');
+					$this->excel->getActiveSheet()->setTitle('Lead Source');
 				break;
 				case 'pie3':
 					$this->excel->getActiveSheet()->setTitle('Service Requirement');
+				break;
+				case 'pie4':
+					$this->excel->getActiveSheet()->setTitle('Industry');
 				break;
 				case 'leadowner':
 					$this->excel->getActiveSheet()->setTitle('Lead Owner Opportunities');
@@ -916,6 +931,7 @@ class Dashboard extends crm_controller {
 				case 'pie1':
 				case 'pie2':
 				case 'pie3':
+				case 'pie4':
 					for($j = 0; $j < count($res); $j++) {			
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $res[$j]['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $res[$j]['lead_title']);
@@ -1038,7 +1054,9 @@ class Dashboard extends crm_controller {
 					$filename = 'closed_oppor.xls';
 				break;
 				case 'pie2':
-					// $filename = 'Leads_By_LeadSource.xls';
+					$filename = 'Leads_By_LeadSource.xls';
+				break;
+				case 'pie4':
 					$filename = 'Leads_By_Industry.xls';
 				break;
 				case 'pie3':
