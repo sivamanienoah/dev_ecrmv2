@@ -2,9 +2,9 @@
 <?php //echo "<pre>"; $arr = implode(",", $dupsemail);print_r( $arr);exit; ?>
 <div id="content">
     <div class="inner">
-		<?php echo "$succcount leads(s) Succesfully Uploaded"; ?>
+		<?php echo "$succcount lead(s) Succesfully Uploaded"; ?>
 		<br />
-		<?php echo "$updated_leads leads(s) Succesfully Updated"; ?>
+		<?php echo "$updated_leads lead(s) Succesfully Updated"; ?>
 		
 		<?php 
 		echo "<br><br>";
