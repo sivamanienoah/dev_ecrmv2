@@ -10,10 +10,10 @@ $userdata = $this->session->userdata('logged_in_user');
 		<th>Lead No.</th>
 		<th>Lead Title</th>
 		<th>Customer</th>
+		<th>Expected Worth</th>
 		<th>Region</th>
 		<th>Lead Owner</th>
 		<th>Lead Assigned To</th>
-		<th>Expected Worth</th>
 		<th>Lead Stage</th>
 		<th>Lead Indicator</th>
 		<th>Status</th>
@@ -50,10 +50,10 @@ $userdata = $this->session->userdata('logged_in_user');
 				</td>
 				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
 					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
+				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
 				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
 				<td><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
-				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['lead_stage_name']; ?></td>
 				<td>
 					<?php 
