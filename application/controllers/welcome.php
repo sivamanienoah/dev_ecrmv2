@@ -2426,13 +2426,13 @@ HDOC;
 									$email_invalid[]= $impt_data[$i]['J'];
 								}
 							}
-							echo "sadfasdf"; exit;
+
 							//check leads exists or not in our crm by type & id
 							if(($impt_data[$i]['A']!='') && is_numeric($impt_data[$i]['A'])) {
 								$chk_lead_condn = array('lead_id'=>$impt_data[$i]['A']);
 								$chk_leads = $this->welcome_model->get_data_by_id('leads', $chk_lead_condn);
 							}
-							echo "<pre>"; print_r($chk_leads); exit;
+							
 							if(isset($chk_leads) && !empty($chk_leads)){
 								//**go for update**//
 								
@@ -2469,25 +2469,36 @@ HDOC;
 								$this->db->where('lead_id', $lead_id);
 								$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
 								
-								$cur_stat = empty($chk_leads['lead_stage']) ? 1 : $chk_leads['lead_stage'];
-								$new_stat = $ldStages;
-								
-								if($cur_stat!=$new_stat){
+								//log for lead stages
+								$cur_stage = empty($chk_leads['lead_stage']) ? 1 : $chk_leads['lead_stage'];
+								$new_stage = $ldStages;
+								if($cur_stage!=$new_stage){
 									$stgHist = array();
 									$stgHist['lead_id']      = $lead_id;
 									$stgHist['dateofchange'] = date('Y-m-d H:i:s');
-									$stgHist['previous_status'] = $cur_stat;
-									$stgHist['changed_status']  = $new_stat;
+									$stgHist['previous_status'] = $cur_stage;
+									$stgHist['changed_status']  = $new_stage;
 									$stgHist['lead_status'] = 1;
 									$stgHist['modified_by'] = $this->userdata['userid'];
 									// echo "<pre>"; print_r($stgHist); die;
 									$insStgHis = $this->welcome_model->insert_row('lead_stage_history', $stgHist);
 								}
 								
+								//log for lead status
+								$cur_status = empty($chk_leads['lead_status']) ? 1 : $chk_leads['lead_status'];
+								$new_status = $ldStatus;
+								if($cur_status!=$new_status){									
+									$statHist = array();
+									$statHist['lead_id']        = $lead_id;
+									$statHist['dateofchange']   = date('Y-m-d H:i:s');
+									$statHist['changed_status'] = $new_status;
+									$statHist['modified_by'] 	= $this->userdata['userid'];
+									$insStatHis = $this->welcome_model->insert_row('lead_status_history', $statHist);
+								}
+								
 								$updt_count=$updt_count+1;
 
 							} else {
-								echo "insert"; exit;
 								//**go for insert**//
 								//Region
 								if(!empty($impt_data[$i]['F']))
@@ -2556,7 +2567,7 @@ HDOC;
 										$this->db->where('lead_id', $new_id);
 										$this->db->update($this->cfg['dbpref'].'leads', $updt_arr);
 										
-										//history - lead_stage_history
+										//log - lead_stage_history
 										$lead_hist['lead_id'] = $new_id;
 										$lead_hist['dateofchange'] = date('Y-m-d H:i:s');
 										$lead_hist['previous_status'] = 1;
@@ -2565,7 +2576,7 @@ HDOC;
 										$lead_hist['modified_by'] = $this->userdata['userid'];
 										$insert_lead_stg_his = $this->welcome_model->insert_row('lead_stage_history', $lead_hist);
 										
-										//history - lead_status_history
+										//log - lead_status_history
 										$lead_stat_hist['lead_id'] 		  = $new_id;
 										$lead_stat_hist['dateofchange']   = date('Y-m-d H:i:s');
 										$lead_stat_hist['changed_status'] = 1;
@@ -2601,7 +2612,6 @@ HDOC;
 							}
 							
 						} else {
-							ECHO "INDUSTRTY"; EXIT;
 							
 							if(empty($ldService)){
 								$empty_service[] = $impt_data[$i]['C'];
@@ -2639,6 +2649,8 @@ HDOC;
 				$data['empty_source']  = $empty_source;
 				$data['empty_currency']= $empty_currency;
 				$data['empty_entity']  = $empty_entity;
+				$data['empty_industry']= $empty_industry;
+				$data['empty_status']  = $empty_status;
 				$data['empty_stages']  = $empty_stages;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('leads/success_import_view', $data);

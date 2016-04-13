@@ -14,7 +14,19 @@
 			<table class="layout">
 			 <tr>
 				<td colspan="4">
-			          <a href="assets/leads_import_template.xls" style="text-decoration: underline"><b>Download Template</b></a>
+					<a href="assets/lead_import_instructions.xls" style="text-decoration: underline">
+						<b>Instructions for Importing leads</b>
+					</a>
+					<br />
+					<br />
+					<a href="assets/crm_masters.xls" style="text-decoration: underline">
+						<b>Download Masters</b>
+					</a>
+					<br />
+					<br />
+					<a href="assets/leads_import_template.xls" style="text-decoration: underline">
+						<b>Download Import Template</b>
+					</a>
 			    </td>
 			    </tr> 
 				<tr><td colspan="4">&nbsp;</td></tr>

@@ -556,6 +556,9 @@ function editQuoteDetails(arg) {
 	if ( ($.trim($('#lead_status').val()) == 4) && (act_worth <= 0) ) {
 		err.push('Actual worth amount must not be empty and it must be greater than zero');
     }
+	if ( ($.trim($('#lead_stage').val()) == '')) {
+		err.push('Lead Stage must be selected');
+    }
 
     if (err.length > 0) {
         // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
@@ -1130,6 +1133,7 @@ h3 .small {
 							<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
 							<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
 						</p>
+						
 						<script>
 						//if(document.getElementById('lead_status').value == 2)
 						//document.getElementById('lead-reason').style.display = "block";
@@ -1153,6 +1157,16 @@ h3 .small {
 								<textarea class="textfield" style="width:300px; height:80px;" id="reason" name="reason"></textarea>
 								</div>
 							<?php } ?>
+						
+						<p><label>Lead Stage</label></p>
+						<p>
+							<select name="lead_stage" id="lead_stage" class="textfield width300px">
+								<?php foreach ($lead_stage as $stage) { ?>
+									<option value="<?php echo  $stage['lead_stage_id'] ?>" <?php if($quote_data['lead_stage'] == $stage['lead_stage_id']) echo 'selected="selected"'; ?> ><?php echo  $stage['lead_stage_name'] ?></option>
+								 <?php	} ?>
+							</select>
+							<input type="hidden" value="<?php echo $quote_data['lead_stage']; ?>" id="lead_stage_hidden" name="lead_stage_hidden" />
+						</p>
 						
 						<input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo  $quote_data['lead_id'] ?>" />
 						<div style="width:300px;">
@@ -1217,9 +1231,9 @@ h3 .small {
 			/**
 			 * This will include the select box that changes the status of a job
 			 */
-			if (isset($edit_quotation))
+			// if (isset($edit_quotation))
 				// include '../tpl/status_change_menu.php';
-				require (theme_url().'/tpl/status_change_menu.php');
+				// require (theme_url().'/tpl/status_change_menu.php');
 			?>
            
 			

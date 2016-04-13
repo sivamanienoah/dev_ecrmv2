@@ -8,14 +8,19 @@
 		
 		<?php 
 		echo "<br><br>";
+		if(!empty($empty_source)){
+			$invalid_source = implode('<br/>', $empty_source);
+			echo " The following leads having <b>Invalid Source</b> <br /> $invalid_source";
+		}
+		echo "<br>";
 		if(!empty($empty_service)){
 			$invalid_service = implode('<br/>', $empty_service);
 			echo " The following leads having <b>Invalid Service</b> <br /> $invalid_service";
 		}
 		echo "<br>";
-		if(!empty($empty_source)){
-			$invalid_source = implode('<br/>', $empty_source);
-			echo " The following leads having <b>Invalid Source</b> <br /> $invalid_source";
+		if(!empty($empty_industry)){
+			$invalid_industry = implode('<br/>', $empty_industry);
+			echo " The following leads having <b>Invalid industry</b> <br /> $invalid_industry";
 		}
 		echo "<br>";
 		if(!empty($empty_currency)){
@@ -33,10 +38,16 @@
 			echo " The following leads having <b>Invalid stages</b> <br /> $invalid_stages";
 		}
 		echo "<br>";
+		if(!empty($empty_status)){
+			$invalid_status = implode('<br/>', $empty_status);
+			echo " The following leads having <b>Invalid status</b> <br /> $invalid_status";
+		}
+		echo "<br>";
 		if(!empty($empty_errors)){
 			$invalid_errs = implode('<br/>', $empty_errors);
 			echo " <b> Mandatory fields are missing </b> for the following leads <br /> $invalid_errs";
 		}
+		
 		?>
 	</div>
 <?php require (theme_url().'/tpl/footer.php'); ?>
