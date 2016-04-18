@@ -2363,6 +2363,7 @@ HDOC;
 		$empty_entity    = array();
 		$empty_stages    = array();
 		$empty_status    = array();
+		$no_access    	 = array();
 		
 		if(!empty($expect_worth)) {
 			foreach($expect_worth as $ew)
@@ -2466,37 +2467,55 @@ HDOC;
 								
 								$lead_id = $chk_leads['lead_id'];
 								
-								$this->db->where('lead_id', $lead_id);
-								$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
-								
-								//log for lead stages
-								$cur_stage = empty($chk_leads['lead_stage']) ? 1 : $chk_leads['lead_stage'];
-								$new_stage = $ldStages;
-								if($cur_stage!=$new_stage){
-									$stgHist = array();
-									$stgHist['lead_id']      = $lead_id;
-									$stgHist['dateofchange'] = date('Y-m-d H:i:s');
-									$stgHist['previous_status'] = $cur_stage;
-									$stgHist['changed_status']  = $new_stage;
-									$stgHist['lead_status'] = 1;
-									$stgHist['modified_by'] = $this->userdata['userid'];
-									// echo "<pre>"; print_r($stgHist); die;
-									$insStgHis = $this->welcome_model->insert_row('lead_stage_history', $stgHist);
+								if($this->userdata['role_id'] == 1 || $this->userdata['userid'] == $chk_leads['belong_to'] || $this->userdata['userid'] == $chk_leads['lead_assign']) {
+									
+									$this->db->where('lead_id', $lead_id);
+									$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
+									
+									//log for lead stages
+									$cur_stage = empty($chk_leads['lead_stage']) ? 1 : $chk_leads['lead_stage'];
+									$new_stage = $ldStages;
+									if($cur_stage!=$new_stage){
+										$stgHist = array();
+										$stgHist['lead_id']      = $lead_id;
+										$stgHist['dateofchange'] = date('Y-m-d H:i:s');
+										$stgHist['previous_status'] = $cur_stage;
+										$stgHist['changed_status']  = $new_stage;
+										$stgHist['lead_status'] = 1;
+										$stgHist['modified_by'] = $this->userdata['userid'];
+										// echo "<pre>"; print_r($stgHist); die;
+										$insStgHis = $this->welcome_model->insert_row('lead_stage_history', $stgHist);
+									}
+									
+									//log for lead status
+									$cur_status = empty($chk_leads['lead_status']) ? 1 : $chk_leads['lead_status'];
+									$new_status = $ldStatus;
+									if($cur_status!=$new_status){									
+										$statHist = array();
+										$statHist['lead_id']        = $lead_id;
+										$statHist['dateofchange']   = date('Y-m-d H:i:s');
+										$statHist['changed_status'] = $new_status;
+										$statHist['modified_by'] 	= $this->userdata['userid'];
+										$insStatHis = $this->welcome_model->insert_row('lead_status_history', $statHist);
+									}
+									
+									$updt_count=$updt_count+1;
+									
+									//For Logs
+									if(!empty($impt_data[$i]['W'])){
+										$log_ins['jobid_fk']     = $lead_id;
+										$log_ins['userid_fk']    = $this->userdata['userid'];
+										// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
+										$log_ins['date_created'] = date('Y-m-d H:i:s');
+										$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['W']);
+										$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
+									}
+									
+								} else {
+									
+									$no_access[] = $impt_data[$i]['C'];
+									
 								}
-								
-								//log for lead status
-								$cur_status = empty($chk_leads['lead_status']) ? 1 : $chk_leads['lead_status'];
-								$new_status = $ldStatus;
-								if($cur_status!=$new_status){									
-									$statHist = array();
-									$statHist['lead_id']        = $lead_id;
-									$statHist['dateofchange']   = date('Y-m-d H:i:s');
-									$statHist['changed_status'] = $new_status;
-									$statHist['modified_by'] 	= $this->userdata['userid'];
-									$insStatHis = $this->welcome_model->insert_row('lead_status_history', $statHist);
-								}
-								
-								$updt_count=$updt_count+1;
 
 							} else {
 								//**go for insert**//
@@ -2597,20 +2616,20 @@ HDOC;
 											chmod($f_dir, 0777);
 										}
 										$this->welcome_model->insert_default_folder($new_id);
+										
+										//For Logs
+										if(!empty($impt_data[$i]['W'])){
+											$log_ins['jobid_fk']     = $lead_id;
+											$log_ins['userid_fk']    = $this->userdata['userid'];
+											// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
+											$log_ins['date_created'] = date('Y-m-d H:i:s');
+											$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['W']);
+											$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
+										}
 									}
 									$count=$count+1;
 								}
 							}
-							//For Logs
-							if(!empty($impt_data[$i]['W'])){
-								$log_ins['jobid_fk']     = $lead_id;
-								$log_ins['userid_fk']    = $this->userdata['userid'];
-								// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
-								$log_ins['date_created'] = date('Y-m-d H:i:s');
-								$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['W']);
-								$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
-							}
-							
 						} else {
 							
 							if(empty($ldService)){
@@ -2652,6 +2671,7 @@ HDOC;
 				$data['empty_industry']= $empty_industry;
 				$data['empty_status']  = $empty_status;
 				$data['empty_stages']  = $empty_stages;
+				$data['no_access']     = $no_access;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('leads/success_import_view', $data);
 		 	} else {

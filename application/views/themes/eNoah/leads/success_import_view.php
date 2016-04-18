@@ -47,6 +47,11 @@
 			$invalid_errs = implode('<br/>', $empty_errors);
 			echo " <b> Mandatory fields are missing </b> for the following leads <br /> $invalid_errs";
 		}
+		echo "<br>";
+		if(!empty($no_access)){
+			$no_acces = implode('<br/>', $no_access);
+			echo " You have <b>No rights</b> to update the following leads <br /> $no_acces";
+		}
 		
 		?>
 	</div>
