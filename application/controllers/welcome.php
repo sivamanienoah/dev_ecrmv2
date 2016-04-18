@@ -2467,7 +2467,7 @@ HDOC;
 								
 								$lead_id = $chk_leads['lead_id'];
 								
-								if($this->userdata['role_id'] == 1 || $this->userdata['userid'] == $chk_leads['belong_to'] || $this->userdata['userid'] == $chk_leads['lead_assign']) {
+								if($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['userid'] == $chk_leads['belong_to'] || $this->userdata['userid'] == $chk_leads['lead_assign']) {
 									
 									$this->db->where('lead_id', $lead_id);
 									$this->db->update($this->cfg['dbpref'].'leads', $updt_leads);
