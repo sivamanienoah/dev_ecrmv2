@@ -2338,7 +2338,7 @@ HDOC;
 	}
 	
 	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
-	 *	Starts here Dated on 29-01-2013
+	 *	Starts here Dated on 15-04-2016
 	 */
 	function importleads() 
 	{
