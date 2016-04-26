@@ -2427,8 +2427,8 @@ HDOC;
 									$email_invalid[]= $impt_data[$i]['J'];
 								}
 							}
-
-							//check leads exists or not in our crm by type & id
+							$chk_leads = array();
+							//check leads exists or not in our crm by id
 							if(($impt_data[$i]['A']!='') && is_numeric($impt_data[$i]['A'])) {
 								$chk_lead_condn = array('lead_id'=>$impt_data[$i]['A']);
 								$chk_leads = $this->welcome_model->get_data_by_id('leads', $chk_lead_condn);
@@ -2534,6 +2534,7 @@ HDOC;
 							
 								if($strreg!='no_id' && $strcunt!='no_id' && $strstate!='no_id' && $strlid!='no_id' ){
 									$cust_res = $this->chk_customers($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J']);
+									$custid = 0;
 									if($cust_res == 'no_customer'){
 										$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J'],$impt_data[$i]['K'],$impt_data[$i]['L']);
 									} else {
@@ -2552,7 +2553,7 @@ HDOC;
 									//Location
 									if(!empty($impt_data[$i]['I']))
 									$strlid = $this->welcome_model->get_rscl_return_id($strstate, 'stateid', 'location', strtolower($impt_data[$i]['I']));
-									
+									$custid = 0;
 									$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J'],$impt_data[$i]['K'],$impt_data[$i]['L']);
 								}
 								
