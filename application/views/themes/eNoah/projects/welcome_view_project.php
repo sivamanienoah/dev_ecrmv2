@@ -1768,8 +1768,10 @@ if (get_default_currency()) {
 							<th>Billable Hours</th>
 							<th>Internal Hours</th>
 							<th>Non-Billable Hours</th>
-							<th>Cost Per Hour(<?php echo $quote_data['expect_worth_name']; ?>)</th>
-							<th>Cost(<?php echo $quote_data['expect_worth_name']; ?>)</th>
+							<!--th>Cost Per Hour(<?php #echo $quote_data['expect_worth_name']; ?>)</th>
+							<th>Cost(<?php #echo $quote_data['expect_worth_name']; ?>)</th-->
+							<th>Cost Per Hour(USD)</th>
+							<th>Cost(USD)</th>
 						</tr>
 					</table>
 					<table class="data-table">

@@ -586,7 +586,9 @@ class Project extends crm_controller {
 				//echo '<pre>';print_r($data['timesheet_data']);
 				$res = $this->calcActualProjectCost($data['timesheet_data']);
 				if($res['total_cost']>0) {
-					$data['project_costs'] = $res['total_cost'];
+					// $data['project_costs'] = $res['total_cost'];
+					$data['project_costs'] = $this->conver_currency($res['total_cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
+					// echo $data['project_costs']; exit;
 				}
 				if($res['total_hours']>0) {
 					$data['actual_hour_data'] = $res['total_hours'];
