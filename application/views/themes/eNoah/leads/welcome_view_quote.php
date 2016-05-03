@@ -1323,6 +1323,18 @@ $(function(){
 					<td><p>&nbsp; <?php echo auto_link($quote_data['www_2']) ?>
 					</td>
 				</tr>
+				<tr>
+					<td><label>Comments</label></td>
+					<td>
+						<?php
+							$comments = "-";
+							if(isset($quote_data['comments']) && !empty($quote_data['comments'])) {
+								$comments = str_replace(array('\r\n', '\r', '\n'), '<br />', $quote_data['comments']);
+							}
+						?>
+					<p><?php echo stripslashes(nl2br($comments, false)); ?>
+					</td>
+				</tr>
 			</table>
 		</form>
 		
