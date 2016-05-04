@@ -1762,7 +1762,7 @@ class Welcome extends crm_controller {
 		$this->excel->getActiveSheet()->setCellValue('T1', 'Proposal Expected Date');
 		$this->excel->getActiveSheet()->setCellValue('U1', 'Lead Stage');
 		$this->excel->getActiveSheet()->setCellValue('V1', 'Lead Status');
-		$this->excel->getActiveSheet()->setCellValue('W1', 'Last Comments');
+		$this->excel->getActiveSheet()->setCellValue('W1', 'Latest Comments');
 
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -1816,7 +1816,7 @@ class Welcome extends crm_controller {
 		}
 		$this->excel->getActiveSheet()->getStyle('W2:W'.$i)->getAlignment()->setWrapText(true);
 		//make the font become bold
-		$this->excel->getActiveSheet()->getStyle('A1:V1')->getFont()->setBold(true);
+		$this->excel->getActiveSheet()->getStyle('A1:W1')->getFont()->setBold(true);
 		//merge cell A1 until D1
 		//$this->excel->getActiveSheet()->mergeCells('A1:D1');
 		//set aligment to center for that merged cell (A1 to D1)
