@@ -179,6 +179,12 @@ class Welcome_model extends crm_model {
 		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
 		return $query->result_array();
 	}
+	
+	function get_last_logs($id) {
+		$this->db->order_by('date_created', 'desc');
+		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
+		return $query->row_array();
+	}
     
 	function get_quote_items($lead_id) {
 		$this->db->where('jobid_fk', $lead_id);

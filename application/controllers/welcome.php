@@ -1762,7 +1762,8 @@ class Welcome extends crm_controller {
 		$this->excel->getActiveSheet()->setCellValue('T1', 'Proposal Expected Date');
 		$this->excel->getActiveSheet()->setCellValue('U1', 'Lead Stage');
 		$this->excel->getActiveSheet()->setCellValue('V1', 'Lead Status');
-		
+		$this->excel->getActiveSheet()->setCellValue('W1', 'Last Comments');
+
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 		$i=2;
@@ -1809,9 +1810,11 @@ class Welcome extends crm_controller {
 				break;
 			}
 			$this->excel->getActiveSheet()->setCellValue('V'.$i, $status);
+			$last_log = $this->get_last_log($excelarr['lead_id']);
+			$this->excel->getActiveSheet()->setCellValue('W'.$i, $last_log);
 			$i++;
 		}
-		
+		$this->excel->getActiveSheet()->getStyle('W2:W'.$i)->getAlignment()->setWrapText(true);
 		//make the font become bold
 		$this->excel->getActiveSheet()->getStyle('A1:V1')->getFont()->setBold(true);
 		//merge cell A1 until D1
@@ -1839,7 +1842,7 @@ class Welcome extends crm_controller {
 		{
 			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
 		}
-		
+		$this->excel->getActiveSheet()->getColumnDimension('W')->setWidth(80);
 		//cell format
 		// $this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
 		
@@ -1855,6 +1858,19 @@ class Welcome extends crm_controller {
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');
+	}
+	
+	function get_last_log($id)
+	{
+		$logs = '';
+		$getLog = $this->welcome_model->get_last_logs($id);
+		if(!empty($getLog) && count($getLog)>0){
+			$logs = stripslashes($getLog['log_content']);
+			$logs = str_replace(array('\r\n', '\n', '<br />', '<br>', '<br/>'), "\r", $logs);
+		}
+		
+	
+		return $logs;
 	}
 	
 	/**
