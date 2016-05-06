@@ -42,6 +42,9 @@ button.ui-datepicker-current { display: none; }
 					<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 						<tr>
 							<td class="tblheadbg">By Entity</td>
+							<td class="tblheadbg">By Service</td>
+							<td class="tblheadbg">By Practice</td>
+							<td class="tblheadbg">By Industry</td>
 							<td class="tblheadbg">By Customers</td>
 							<td class="tblheadbg">By Leads</td>
 							<td class="tblheadbg">By Projects</td>
@@ -56,7 +59,28 @@ button.ui-datepicker-current { display: none; }
 								</select> 
 							</td>
 							<td>
-								<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:195px;">
+								<select multiple="multiple" id="services" name="services[]" class="advfilter" style="width:100px;">
+									<?php foreach($services as $srv) { ?>
+										<option value="<?php echo $srv['sid']; ?>"><?php echo $srv['services']; ?></option>
+									<?php } ?>					
+								</select>
+							</td>
+							<td>
+								<select multiple="multiple" id="practices" name="practices[]" class="advfilter" style="width:100px;">
+									<?php foreach($practices as $pr) { ?>
+										<option value="<?php echo $pr['id']; ?>"><?php echo $pr['practices']; ?></option>
+									<?php } ?>					
+								</select>
+							</td>
+							<td>
+								<select multiple="multiple" id="industries" name="industries[]" class="advfilter" style="width:100px;">
+									<?php foreach($industries as $ind) { ?>
+										<option value="<?php echo $ind['id']; ?>"><?php echo $ind['industry']; ?></option>
+									<?php } ?>					
+								</select>
+							</td>
+							<td>
+								<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:155px;">
 									<?php 
 										if(!empty($customers)) {
 										array_unique($customers);
@@ -70,7 +94,7 @@ button.ui-datepicker-current { display: none; }
 								</select> 
 							</td> 
 							<td>
-								<select multiple="multiple" id="lead_ids" name="lead_ids[]" class="advfilter" style="width: 200px;">
+								<select multiple="multiple" id="lead_ids" name="lead_ids[]" class="advfilter" style="width: 150px;">
 									<?php 
 										if(!empty($leads_data)) {
 										foreach($leads_data as $ld) {
@@ -83,7 +107,7 @@ button.ui-datepicker-current { display: none; }
 								</select> 
 							</td>
 							<td>
-								<select multiple="multiple" id="project_ids" name="project_ids[]" class="advfilter" style="width: 200px;">
+								<select multiple="multiple" id="project_ids" name="project_ids[]" class="advfilter" style="width: 150px;">
 									<?php 
 										if(!empty($projects_data)) {
 										foreach($projects_data as $pj) {
@@ -93,7 +117,7 @@ button.ui-datepicker-current { display: none; }
 										}
 									}
 									?>
-								</select> 
+								</select>
 							</td>
 							<td>
 								From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" style="width:78px;" />
@@ -102,7 +126,7 @@ button.ui-datepicker-current { display: none; }
 							</td>
 						</tr>
 						<tr align="right" >
-							<td colspan="6">
+							<td colspan="8">
 								<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 								<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 								<div id = 'load' style = 'float:right;display:none;height:1px;'>

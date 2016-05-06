@@ -37,6 +37,9 @@
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td class="tblheadbg">By Entity</td>
+								<td class="tblheadbg">By Service</td>
+								<td class="tblheadbg">By Practice</td>
+								<td class="tblheadbg">By Industry</td>
 								<td class="tblheadbg">By Customers</td>
 								<td class="tblheadbg">By Leads/Projects</td>
 								<td class="tblheadbg">For the Month & Year</td>
@@ -50,7 +53,27 @@
 									</select> 
 								</td>
 								<td>
-								
+									<select multiple="multiple" id="services" name="services[]" class="advfilter" style="width:100px;">
+										<?php foreach($services as $srv) { ?>
+											<option value="<?php echo $srv['sid']; ?>"><?php echo $srv['services']; ?></option>
+										<?php } ?>					
+									</select>
+								</td>
+								<td>
+									<select multiple="multiple" id="practices" name="practices[]" class="advfilter" style="width:100px;">
+										<?php foreach($practices as $pr) { ?>
+											<option value="<?php echo $pr['id']; ?>"><?php echo $pr['practices']; ?></option>
+										<?php } ?>					
+									</select>
+								</td>
+								<td>
+									<select multiple="multiple" id="industries" name="industries[]" class="advfilter" style="width:100px;">
+										<?php foreach($industries as $ind) { ?>
+											<option value="<?php echo $ind['id']; ?>"><?php echo $ind['industry']; ?></option>
+										<?php } ?>					
+									</select>
+								</td>
+								<td>
 									<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:195px;">
 										<?php 
 											if(!empty($customers)) {
@@ -62,7 +85,7 @@
 										}
 										?>
 									</select> 
-								</td> 
+								</td>
 								<td>
 									<select multiple="multiple" id="lead_ids" name="lead_ids[]" class="advfilter" style="width: 200px;">
 										<?php 
@@ -83,7 +106,7 @@
 								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="6">
+								<td colspan="7">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>

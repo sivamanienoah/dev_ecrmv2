@@ -2059,12 +2059,12 @@ a.del_file{
     float: right;
     padding: 0;
     position: absolute;
-    right: -8px;
-    top: -6px;
+    right: -12px;
+    top: -15px;
 }
 
 
-.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right: 0;top: 0;width: 24px;z-index: 9;}
+.file-tabs-close-confirm-tab {background: url("../img/icon-close-circle.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;cursor: pointer;float: right;height: 24px;padding: 0;position: absolute;right: -9px;top: -9px;width: 24px;z-index: 9;}
 
 
 	
@@ -2241,7 +2241,7 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 	color: #fff !important;
 	font-size: 12px !important;
 	display:table;
-	width:100%;
+	width:99.8%;
 
 }
  h5 .forecast-heading { float: left !important; margin:0 0 0 20px;}
@@ -2263,7 +2263,7 @@ button.positive:hover{opacity:0.8;background:#4b6fb9;border:1px solid #274686;}
 #forecast_compare_chart .jqplot-grid-canvas { margin: 0 6px; }
 #trend_analysis_chart .jqplot-xaxis-tick { margin: 6px 0; }
 #trend_analysis_chart .jqplot-grid-canvas { margin: 0 6px; }
-.popup-forecast-head { font-size: 12px; text-align: left; font-weight: bold;}
+.popup-forecast-head { font-size: 12px; text-align: left; font-weight: bold; padding: 0 3px 5px;}
 
 #popupGetSearchName { display:none; }
 

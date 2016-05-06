@@ -59,8 +59,8 @@ function showFilter(forecast_type) {
         break;
 		case 'FA':
 			var top_pixel   = '570px';
-			var width_pixel = '750px';
-			var left_pixel  = ($(window).width() - 720) /2 + 'px';
+			var width_pixel = '1054px';
+			var left_pixel  = ($(window).width() - 1100) /2 + 'px';
         break;
 	}
 	
@@ -138,6 +138,9 @@ $('#actual_item_export').click(function() {
 $('#export_compare_data').click(function() {
 
 	var entity 				 = compare_entity;
+	var services 	 		 = compare_service;		
+	var practices 	 		 = compare_practice;
+	var industries 	 		 = compare_industry;
 	var customer        	 = compare_customer;
 	var lead_ids	 		 = compare_lead_ids;
 	var month_year_from_date = actual_entity_month_year_from_date;
@@ -152,6 +155,9 @@ $('#export_compare_data').click(function() {
 	var form = $('<form action="' + url + '" method="post">' +
 	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 	  '<input type="hidden" name="entity" value="' +entity+ '" />' +
+	  '<input type="hidden" name="services" value="' +services+ '" />' +
+	  '<input type="hidden" name="practices" value="' +practices+ '" />' +
+	  '<input type="hidden" name="industries" value="' +industries+ '" />' +
 	  '<input type="hidden" name="customer" value="' +customer+ '" />' +
 	  '<input type="hidden" name="lead_ids" value="' +lead_ids+ '" />' +
 	  '<input type="hidden" name="month_year_from_date" value="' +month_year_from_date+ '" />' +

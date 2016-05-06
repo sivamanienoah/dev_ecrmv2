@@ -102,10 +102,21 @@ class Sales_forecast_model extends crm_model {
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('sfc.job_id', $job_ids);
 		}
-		
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
 			$this->db->where_in('l.division', $filter['entity']);
+		}
+		if (!empty($filter['services']) && $filter['services']!='null') {
+			$filter['services'] = explode(',',$filter['services']);
+			$this->db->where_in('l.lead_service', $filter['services']);
+		}
+		if (!empty($filter['practices']) && $filter['practices']!='null') {
+			$filter['practices'] = explode(',',$filter['practices']);
+			$this->db->where_in('l.practice', $filter['practices']);
+		}
+		if (!empty($filter['industries']) && $filter['industries']!='null') {
+			$filter['industries'] = explode(',',$filter['industries']);
+			$this->db->where_in('l.industry', $filter['industries']);
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
@@ -584,6 +595,18 @@ class Sales_forecast_model extends crm_model {
 			$filter['entity'] = explode(',',$filter['entity']);
 			$this->db->where_in('l.division', $filter['entity']);
 		}
+		if (!empty($filter['services']) && $filter['services']!='null') {
+			$filter['services'] = explode(',',$filter['services']);
+			$this->db->where_in('l.lead_service', $filter['services']);
+		}
+		if (!empty($filter['practices']) && $filter['practices']!='null') {
+			$filter['practices'] = explode(',',$filter['practices']);
+			$this->db->where_in('l.practice', $filter['practices']);
+		}
+		if (!empty($filter['industries']) && $filter['industries']!='null') {
+			$filter['industries'] = explode(',',$filter['industries']);
+			$this->db->where_in('l.industry', $filter['industries']);
+		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
 			$this->db->where_in('c.custid', $filter['customer']);
@@ -695,6 +718,18 @@ class Sales_forecast_model extends crm_model {
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
 			$this->db->where_in('l.division', $filter['entity']);
+		}
+		if (!empty($filter['services']) && $filter['services']!='null') {
+			$filter['services'] = explode(',',$filter['services']);
+			$this->db->where_in('l.lead_service', $filter['services']);
+		}
+		if (!empty($filter['practices']) && $filter['practices']!='null') {
+			$filter['practices'] = explode(',',$filter['practices']);
+			$this->db->where_in('l.practice', $filter['practices']);
+		}
+		if (!empty($filter['industries']) && $filter['industries']!='null') {
+			$filter['industries'] = explode(',',$filter['industries']);
+			$this->db->where_in('l.industry', $filter['industries']);
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);

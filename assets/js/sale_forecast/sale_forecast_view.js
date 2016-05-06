@@ -18,7 +18,11 @@ function advanced_filter() {
 $("#advanceFiltersForecast").submit(function() {
 	$('#advance').hide();
 	$('#load').show();
+	
 	var entity      = $("#entity").val();
+	var services    = $("#services").val();
+	var practices   = $("#practices").val();
+	var industries  = $("#industries").val();
 	var customer    = $("#customer").val();
 	var lead_ids    = $("#lead_ids").val();
 	var project_ids = $("#project_ids").val();
@@ -29,7 +33,7 @@ $("#advanceFiltersForecast").submit(function() {
 		type: "POST",
 		url: site_base_url+"sales_forecast/index/",
 		// dataType: "json",
-		data: "filter=filter"+"&lead_ids="+lead_ids+"&project_ids="+project_ids+"&customer="+customer+"&entity="+entity+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+		data: "filter=filter"+"&lead_ids="+lead_ids+"&project_ids="+project_ids+"&customer="+customer+"&entity="+entity+"&services="+services+"&practices="+practices+"&industries="+industries+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#results').empty();
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');

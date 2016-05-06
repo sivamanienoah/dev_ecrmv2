@@ -10,6 +10,9 @@
 	<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 		<tr>
 			<td class="tblheadbg">By Entity</td>
+			<td class="tblheadbg">By Service</td>
+			<td class="tblheadbg">By Practice</td>
+			<td class="tblheadbg">By Industry</td>
 			<td class="tblheadbg">By Customers</td>
 			<td class="tblheadbg">By Leads/Projects</td>
 			<td class="tblheadbg">For the Month & Year</td>
@@ -21,6 +24,27 @@
 						<option value="<?php echo $ent['div_id']; ?>"><?php echo $ent['division_name']; ?></option>
 					<?php } ?>					
 				</select> 
+			</td>
+			<td>
+				<select multiple="multiple" id="services" name="services[]" class="advfilter" style="width:100px;">
+					<?php foreach($services as $srv) { ?>
+						<option value="<?php echo $srv['sid']; ?>"><?php echo $srv['services']; ?></option>
+					<?php } ?>					
+				</select>
+			</td>
+			<td>
+				<select multiple="multiple" id="practices" name="practices[]" class="advfilter" style="width:100px;">
+					<?php foreach($practices as $pr) { ?>
+						<option value="<?php echo $pr['id']; ?>"><?php echo $pr['practices']; ?></option>
+					<?php } ?>					
+				</select>
+			</td>
+			<td>
+				<select multiple="multiple" id="industries" name="industries[]" class="advfilter" style="width:100px;">
+					<?php foreach($industries as $ind) { ?>
+						<option value="<?php echo $ind['id']; ?>"><?php echo $ind['industry']; ?></option>
+					<?php } ?>					
+				</select>
 			</td>
 			<td>
 				<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:195px;">
@@ -51,11 +75,11 @@
 			<td>
 				From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" style="width:78px;" />
 				<br />
-				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
+				To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px;" />
 			</td>
 		</tr>
 		<tr>
-			<td colspan="6">
+			<td colspan="7">
 				<a class='link-btn' id="filtersForecastEntity" href="javascript:void(0);" onclick="advanceFiltersCompare('<?php echo $forecast_type ?>')">Search</a>
 				<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 				<!--input type="button" class="positive input-font" id="advance_filter" value="Search" /-->
@@ -112,6 +136,9 @@
 		$('#load').show();
 
 		var entity      = $("#entity").val();
+		var services    = $("#services").val();
+		var practices   = $("#practices").val();
+		var industries  = $("#industries").val();
 		var lead_ids    = $("#lead_ids").val();
 		var customer    = $("#customer").val();
 		var month_year_from_date = $("#month_year_from_date").val();
@@ -124,7 +151,7 @@
 			url: site_base_url+"sales_forecast/get_chart_value/"+forecast_type,
 			async: false,
 			// dataType: "json",
-			data: "filter=filter"+"&entity="+entity+"&lead_ids="+lead_ids+"&customer="+customer+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+			data: "filter=filter"+"&entity="+entity+"&services="+services+"&practices="+practices+"&industries="+industries+"&lead_ids="+lead_ids+"&customer="+customer+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
 			beforeSend:function(){
 				$('.leadAdvancedfiltertbl').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 			},

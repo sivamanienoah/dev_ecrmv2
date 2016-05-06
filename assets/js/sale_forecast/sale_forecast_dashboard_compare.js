@@ -99,6 +99,9 @@ $(function() {
 		var formdata			  		 = {};
 	
 		formdata['entity']      		 = compare_entity;
+		formdata['services']      		 = compare_service;
+		formdata['practices']      		 = compare_practice;
+		formdata['industries']      	 = compare_industry;
 		formdata['customer']      		 = compare_customer;
 		formdata['lead_ids']    		 = compare_lead_ids;
 		formdata['month_year_from_date'] = compare_month_year_from_date;
@@ -141,6 +144,9 @@ $(function() {
 		var formdata			  		 = {};
 
 		formdata['entity']      		 = compare_entity;
+		formdata['services']      		 = compare_service;
+		formdata['practices']      		 = compare_practice;
+		formdata['industries']      	 = compare_industry;
 		formdata['customer']      		 = compare_customer;
 		formdata['lead_ids']    		 = compare_lead_ids;
 		formdata['month_year_from_date'] = compare_month_year_from_date;

@@ -68,6 +68,9 @@ $("#advanceFiltersSFReport").submit(function() {
 	$('#advance').hide();
 	$('#load').show();
 	var entity      = $("#entity").val();
+	var services    = $("#services").val();
+	var practices   = $("#practices").val();
+	var industries  = $("#industries").val();
 	var customer    = $("#customer").val();
 	var lead_ids    = $("#lead_ids").val();
 	var month_year_from_date = $("#month_year_from_date").val();
@@ -77,8 +80,8 @@ $("#advanceFiltersSFReport").submit(function() {
 		type: "POST",
 		url: site_base_url+"sales_forecast/reports/",
 		// dataType: "json",
-		data: "filter=filter"+"&lead_ids="+lead_ids+"&customer="+customer+"&entity="+entity+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
-		beforeSend:function(){
+		data: "filter=filter"+"&lead_ids="+lead_ids+"&customer="+customer+"&entity="+entity+"&services="+services+"&practices="+practices+"&industries="+industries+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function() {
 			$('#results').empty();
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
@@ -94,6 +97,9 @@ $("#advanceFiltersSFReport").submit(function() {
 //export to excel
 $('#export_excel_forecast').click(function() {
 	var entity               = $("#entity").val();
+	var services    		 = $("#services").val();
+	var practices  		     = $("#practices").val();
+	var industries  		 = $("#industries").val();
 	var customer    		 = $("#customer").val();
 	var lead_ids   			 = $("#lead_ids").val();
 	var month_year_from_date = $("#month_year_from_date").val();
@@ -104,6 +110,9 @@ $('#export_excel_forecast').click(function() {
 	var form = $('<form action="' + url + '" method="post">' +
 	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 	  '<input type="hidden" name="entity" value="' +entity+ '" />' +
+	  '<input type="hidden" name="services" value="' +services+ '" />' +
+	  '<input type="hidden" name="practices" value="' +practices+ '" />' +
+	  '<input type="hidden" name="industries" value="' +industries+ '" />' +
 	  '<input type="hidden" name="customer" value="' +customer+ '" />' +
 	  '<input type="hidden" name="lead_ids" value="' +lead_ids+ '" />' +
 	  '<input type="hidden" name="month_year_from_date" value="' +month_year_from_date+ '" />' +

@@ -37,6 +37,9 @@
 	var forecast_values 	   		 = [<?php echo $forecast_values ?>];
 	var actual_values  		 		 = [<?php echo $actual_values ?>];
 	var compare_entity 			 	 = "<?php echo $filter['entity'] ?>";
+	var compare_service 			 = "<?php echo $filter['services'] ?>";
+	var compare_practice 			 = "<?php echo $filter['practices'] ?>";
+	var compare_industry 			 = "<?php echo $filter['industries'] ?>";
 	var compare_customer 			 = "<?php echo $filter['customer'] ?>";
 	var compare_lead_ids 			 = "<?php echo $filter['lead_ids'] ?>";
 	var compare_month_year_from_date = "<?php echo $filter['month_year_from_date'] ?>";

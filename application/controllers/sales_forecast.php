@@ -42,8 +42,14 @@ class Sales_forecast extends crm_controller {
 		$data['customers']      = $this->customer_model->customer_list();
 		$data['leads_data']     = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>1,'pjt_status'=>0), $order = array("lead_id"=>"asc"));
 		$data['projects_data']  = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>4,'pjt_status'=>1), $order = array("lead_id"=>"asc"));
+		$data['services']  = $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
+		$data['practices']  = $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
+		$data['industries']  = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
+		
+		// echo "<pre>"; print_r($data); exit;
 		
 		$filter   = real_escape_array($this->input->post());
+		 // echo "<pre>"; print_r($filter); exit;
 		
 		$data['sales_forecast'] = $this->sales_forecast_model->get_sf_milestone_records($filter);
 		$data['filter'] = $filter;
@@ -576,6 +582,9 @@ class Sales_forecast extends crm_controller {
 		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
 		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
+		$data['services']  = $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
+		$data['practices']  = $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
+		$data['industries']  = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
 		
 		$filter   			 = real_escape_array($this->input->post());
 		
@@ -663,6 +672,9 @@ class Sales_forecast extends crm_controller {
 		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
 		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
+		$data['services']  = $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
+		$data['practices']  = $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
+		$data['industries']  = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
 		
 		$filter   			 = real_escape_array($this->input->post());
 		
@@ -758,6 +770,9 @@ class Sales_forecast extends crm_controller {
 		$filter 			  = array();
 		
 		$entity 			  = $this->input->post('entity');
+		$services 			  = $this->input->post('services');
+		$practices 			  = $this->input->post('practices');
+		$industries 		  = $this->input->post('industries');
 		$customer			  = $this->input->post('customer');
 		$lead_ids			  = $this->input->post('lead_ids');
 		$month_year_from_date = $this->input->post('month_year_from_date');
@@ -765,6 +780,15 @@ class Sales_forecast extends crm_controller {
 		
 		if((!empty($entity)) && $entity!='null')
 		$filter['entity'] = $entity;
+	
+		if((!empty($services)) && $services!='null')
+		$filter['services'] = $services;
+	
+		if((!empty($practices)) && $practices!='null')
+		$filter['practices'] = $practices;
+	
+		if((!empty($industries)) && $industries!='null')
+		$filter['industries'] = $industries;
 		
 		if((!empty($customer)) && $customer!='null')
 		$filter['customer'] = $customer;
@@ -828,7 +852,7 @@ class Sales_forecast extends crm_controller {
 			$this->excel->getActiveSheet()->setTitle('Salesforecast');
 
 			//set cell A1 content with some text
-			$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 			//Set width for cells
 			$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
@@ -940,6 +964,9 @@ class Sales_forecast extends crm_controller {
 		$filter 			  = array();
 		
 		$entity 			  = $this->input->post('entity');
+		$services 			  = $this->input->post('services');
+		$practices 			  = $this->input->post('practices');
+		$industries 			  = $this->input->post('industries');
 		$customer			  = $this->input->post('customer');
 		$lead_ids			  = $this->input->post('lead_ids');
 		$month_year_from_date = $this->input->post('month_year_from_date');
@@ -947,7 +974,16 @@ class Sales_forecast extends crm_controller {
 		
 		if((!empty($entity)) && $entity!='null')
 		$filter['entity'] = $entity;
-		
+	
+		if((!empty($services)) && $services!='null')
+		$filter['services'] = $services;
+	
+		if((!empty($practices)) && $practices!='null')
+		$filter['practices'] = $practices;	
+	
+		if((!empty($industries)) && $industries!='null')
+		$filter['industries'] = $industries;
+	
 		if((!empty($customer)) && $customer!='null')
 		$filter['customer'] = $customer;
 		
@@ -1007,7 +1043,7 @@ class Sales_forecast extends crm_controller {
 
 			//set cell A1 content with some text
 			$this->excel->setActiveSheetIndex(0)->mergeCells('A1:A2');
-			$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 			$this->excel->setActiveSheetIndex(0)->mergeCells('B1:B2');
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 			$this->excel->setActiveSheetIndex(0)->mergeCells('C1:C2');
@@ -1159,6 +1195,7 @@ class Sales_forecast extends crm_controller {
 		// $data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
 		
 		$filter   			 = real_escape_array($this->input->post());
+		// echo "<pre>"; print_r($filter); exit;
 		
 		/* $forecast_data 		 = $this->sales_forecast_model->get_sf_milestone_records($filter);
 		// echo $this->db->last_query();
@@ -1225,7 +1262,7 @@ class Sales_forecast extends crm_controller {
 		// else
 		// $data['current_month'] = date('Y-m');
 		
-		// echo "<pre>"; print_r($data['report_data']); exit;
+		// echo "<pre>"; print_r($data); exit;
 		
 		$this->load->view('sales_forecast/sale_forecast_dashboard_view', $data);
 	}
@@ -1574,7 +1611,7 @@ class Sales_forecast extends crm_controller {
 				$this->excel->getActiveSheet()->setTitle('Salesforecast');
 
 				//set cell A1 content with some text
-				$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+				$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 				$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 				//Set width for cells
 				$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
@@ -1712,7 +1749,7 @@ class Sales_forecast extends crm_controller {
 					$this->excel->getActiveSheet()->setTitle('Salesforecast');
 
 					//set cell A1 content with some text
-					$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+					$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 					$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 					//Set width for cells
 					$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
@@ -1836,7 +1873,7 @@ class Sales_forecast extends crm_controller {
 
 					//set cell A1 content with some text
 					$this->excel->setActiveSheetIndex(0)->mergeCells('A1:A2');
-					$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+					$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 					$this->excel->setActiveSheetIndex(0)->mergeCells('B1:B2');
 					$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 					$this->excel->setActiveSheetIndex(0)->mergeCells('C1:C2');
@@ -2072,7 +2109,7 @@ class Sales_forecast extends crm_controller {
 				$this->excel->getActiveSheet()->setTitle('Salesforecast');
 
 				//set cell A1 content with some text
-				$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+				$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 				$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 				//Set width for cells
 				$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
@@ -2288,7 +2325,7 @@ class Sales_forecast extends crm_controller {
 				$this->excel->getActiveSheet()->setTitle('Salesforecast');
 
 				//set cell A1 content with some text
-				$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+				$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 				$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 				//Set width for cells
 				$this->excel->getActiveSheet()->setCellValue('C1', 'Lead/Project Name');
@@ -2414,7 +2451,7 @@ class Sales_forecast extends crm_controller {
 
 				//set cell A1 content with some text
 				$this->excel->setActiveSheetIndex(0)->mergeCells('A1:A2');
-				$this->excel->getActiveSheet()->setCellValue('A1', 'Customer');
+				$this->excel->getActiveSheet()->setCellValue('A1', 'Entity');
 				$this->excel->setActiveSheetIndex(0)->mergeCells('B1:B2');
 				$this->excel->getActiveSheet()->setCellValue('B1', 'Customer');
 				$this->excel->setActiveSheetIndex(0)->mergeCells('C1:C2');
@@ -2584,6 +2621,9 @@ class Sales_forecast extends crm_controller {
 		$data['entity']        = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		$data['customers']     = $this->sales_forecast_model->get_sf_records('customers');
 		$data['leads']         = $this->sales_forecast_model->get_sf_records('jobs');
+		$data['services']  	   = $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
+		$data['practices']     = $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
+		$data['industries']    = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
 		$data['forecast_type'] = $forecast_type;
 		
 		if($forecast_type == 'FA')
@@ -2617,6 +2657,8 @@ class Sales_forecast extends crm_controller {
 		$data['default_currency'] = $this->default_cur_name;
 		
 		$filter   			 = real_escape_array($this->input->post());
+		
+		// echo "<pre>"; print_R($filter); exit;
 		
 		$variance_data = $this->sales_forecast_model->get_variance_records_for_dashboard($filter);
 		// echo "<pre>"; print_R($variance_data); exit;
