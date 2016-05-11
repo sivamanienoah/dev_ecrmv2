@@ -6,6 +6,7 @@
 // csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable 
 
 $(function() {
+	alert(aocolumnsval);
 	$('.data-tbl').dataTable({
 		"aaSorting": [[ 0, "desc" ]],
 		"iDisplayLength": 10,
@@ -18,12 +19,7 @@ $(function() {
 		"bSort": true,
 		"bFilter": true,
 		"bAutoWidth": false,
-		"aoColumns": [{ sWidth: '8%' },
-					{ sWidth: '8%' },
-					for (i = 0; i < no_cur; i++) {
-						{ sWidth: '7%' },
-					}
-					{ sWidth: '10%' }]		
+		"aoColumns": [aocolumnsval]
 	});
 });
 function processDelete(curr_year, curr_id) {

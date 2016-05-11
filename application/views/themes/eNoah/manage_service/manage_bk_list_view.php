@@ -77,15 +77,15 @@ $userdata = $this->session->userdata('logged_in_user');
 $tot_columns = count($currencies) + 2;
 $aocolumns[0] = '{"sWidth":"8%"}';
 $aocolumns[1] = '{"sWidth":"8%"}';
-foreach($c=2;$c<$tot_columns;$c++){
+for($c=2; $c<$tot_columns; $c++){
   $aocolumns[$c] = '{"sWidth":"7%"}';
 }
 $aocolumns[$c] = '{"sWidth":"10%"}';
-echo "<pre>"; print_r($aocolumns); echo "</pre>";
+$aocolumns = join(",",$aocolumns);
+$aocolumnsval = '[' . $aocolumns . ']';
 ?>
 <script>
-var no_cur = '<?php echo $no_cur ?>';
-
+var aocolumnsval = '<?php echo $aocolumns ?>';
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/manage_service/manage_bk_list_view.js"></script>

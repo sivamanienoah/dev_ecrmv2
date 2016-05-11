@@ -253,8 +253,8 @@ $(function(){
 		/*
 		*Save & Search script
 		**/
-		// $( ".set_default_search" ).on( "click", function() {
 		$('.search-root').on('click', '.set_default_search', function() {
+			
 			var search_id = $( this ).val();
 			$.ajax({
 				type: "POST",

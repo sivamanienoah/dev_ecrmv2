@@ -393,6 +393,8 @@ class Request extends crm_controller {
 
 		//intial step - Showing 1st child folders and root files
 		$get_parent_data = $this->request_model->getParentData($job_id, $fparent_id);
+		// echo $this->db->last_query(); exit;
+		// echo "<pre>"; print_r($get_parent_data); exit;
 		
 		$fcpath = UPLOAD_PATH; 
 		$f_dir = $fcpath . 'files/' . $job_id . '/';
@@ -1945,9 +1947,13 @@ HDOC;
 		
 		$taskid = nl2br($array['taskid']);
 		//$task_desk = nl2br($array['task']);
-		$sqltask="select userid_fk,created_by,status from ".$this->cfg['dbpref']."tasks where taskid='$taskid'";
-		$rssqltask=mysql_query($sqltask);
-		$rows=mysql_fetch_array($rssqltask);
+		
+		$sqltask = $this->db->query("select userid_fk,created_by,status from ".$this->cfg['dbpref']."tasks where taskid='$taskid'");
+		$rows = $sqltask->row_array();
+		
+		// $sqltask="select userid_fk,created_by,status from ".$this->cfg['dbpref']."tasks where taskid='$taskid'";
+		// $rssqltask=mysql_query($sqltask);
+		// $rows=mysql_fetch_array($rssqltask);
 		$taskuid=$rows['userid_fk'];
 		$taskcid=$rows['created_by'];
 		$taskstatus = $rows['status'];
