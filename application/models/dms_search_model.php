@@ -318,7 +318,7 @@ class Dms_search_model extends crm_model {
 			//$locations_ids = implode(",",$locations_ids);
 		}
        
-        $offset = mysql_real_escape_string($offset);		
+        $offset = $this->db->escape_str($offset);		
 		$this->db->select('lds.lead_id,CUST.custid,CUST.first_name,CUST.last_name,CUST.company, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
 		$this->db->from($this->cfg['dbpref'].'customers as CUST');
 		$this->db->join($this->cfg['dbpref'].'leads as lds', 'CUST.custid = lds.custid_fk', 'join');

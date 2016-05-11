@@ -269,23 +269,6 @@ class Dms_model extends crm_model {
     	$this->db->where($cond);
 		return $this->db->update($this->cfg['dbpref'].$table, $data);
     }
-	
-	/*
-	*@Update Row for dynamic table
-	*@Method  update_row_return_affected_rows
-	*/
-    public function update_row_return_affected_rows($table, $cond, $data) {
-    	$sql =  '
-				UPDATE `'.$this->cfg['dbpref'].'sales_forecast_milestone` SET 
-				milestone_name = "'.$data['milestone_name'].'",
-				milestone_value = '.$data['milestone_value'].',
-				for_month_year = "'.date("Y-m-d", strtotime($data['for_month_year'])).'",
-				modified_by = '.$this->userdata['userid'].'
-				WHERE milestone_id = '.$cond.'
-				';
-		mysql_query($sql);
-		return mysql_affected_rows();
-    }
 
 	/*
 	*@Insert Row for dynamic table

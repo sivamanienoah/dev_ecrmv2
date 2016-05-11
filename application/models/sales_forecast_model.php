@@ -208,8 +208,8 @@ class Sales_forecast_model extends crm_model {
 	*@Update Row for dynamic table
 	*@Method  update_row_return_affected_rows
 	*/
-    public function update_row_return_affected_rows($table, $cond, $data) {
-    	$sql =  '
+    public function update_row_return_affected_rows($table, $id, $data) {
+    	/* $sql =  '
 				UPDATE `'.$this->cfg['dbpref'].'sales_forecast_milestone` SET 
 				milestone_name = "'.$data['milestone_name'].'",
 				milestone_value = '.$data['milestone_value'].',
@@ -218,7 +218,16 @@ class Sales_forecast_model extends crm_model {
 				WHERE milestone_id = '.$cond.'
 				';
 		mysql_query($sql);
-		return mysql_affected_rows();
+		return mysql_affected_rows(); */
+		
+		$cond = array('id'=>$id);
+		$updt = array();
+		$updt['milestone_name']  = $data['milestone_name'];
+		$updt['milestone_value'] = $data['milestone_value'];
+		$updt['for_month_year']  = date("Y-m-d", strtotime($data['for_month_year']));
+		$updt['modified_by']     = $this->userdata['userid'];
+		$this->db->where($cond);
+		return $this->db->update($this->cfg['dbpref'].'sales_forecast_milestone', $updt);
     }
 
 	/*

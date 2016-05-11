@@ -23,7 +23,7 @@ class Request extends crm_controller {
 		$data['results'] = array();
 		if (isset($_POST['keyword']) && trim($_POST['keyword']) != '' && ($_POST['keyword'] != 'Lead No, Job Title, Name or Company'))
 		{	
-			$keyword = mysql_real_escape_string($_POST['keyword']);
+			$keyword = $this->db->escape_str($_POST['keyword']);
 			
 			$restrict = '';
 

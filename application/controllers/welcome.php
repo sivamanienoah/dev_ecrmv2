@@ -2086,7 +2086,7 @@ HDOC;
 		$data['results'] = array();
 		if (isset($_POST['keyword']) && trim($_POST['keyword']) != '' && ($_POST['keyword'] != 'Lead No, Job Title, Name or Company'))
 		{	
-			$keyword = mysql_real_escape_string($_POST['keyword']);
+			$keyword = $this->db->escape_str($_POST['keyword']);
 			
 					
 			$sql = "SELECT * FROM '".$this->cfg['dbpref']."'customers,'".$this->cfg['dbpref']."'leads a WHERE `custid_fk` = `custid` AND lead_stage IN (1,4,2,5,3,7,6,9,10,11,12,13) AND ( `lead_title` LIKE '%{$keyword}%' OR `invoice_no` LIKE '%{$keyword}%' OR `custid_fk` IN ( SELECT `custid` FROM '".$this->cfg['dbpref']."'customers WHERE CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%{$keyword}%' OR `first_name` LIKE '%{$keyword}%' OR `last_name` LIKE '%{$keyword}%' OR `company` LIKE '%{$keyword}%' ) ) ORDER BY `lead_stage`, `lead_title`";
@@ -2523,7 +2523,7 @@ HDOC;
 										$log_ins['userid_fk']    = $this->userdata['userid'];
 										// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
 										$log_ins['date_created'] = date('Y-m-d H:i:s');
-										$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['W']);
+										$log_ins['log_content']  = $this->db->escape_str($impt_data[$i]['W']);
 										$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
 									}
 									
@@ -2640,7 +2640,7 @@ HDOC;
 											$log_ins['userid_fk']    = $this->userdata['userid'];
 											// $log_ins['date_created'] = isset($impt_data[$i]['S']) ? date('Y-m-d H:i:s', strtotime($impt_data[$i]['S'])) : date('Y-m-d H:i:s');
 											$log_ins['date_created'] = date('Y-m-d H:i:s');
-											$log_ins['log_content']  = mysql_real_escape_string($impt_data[$i]['W']);
+											$log_ins['log_content']  = $this->db->escape_str($impt_data[$i]['W']);
 											$insert_log			     = $this->welcome_model->insert_row('logs', $log_ins);
 										}
 									}

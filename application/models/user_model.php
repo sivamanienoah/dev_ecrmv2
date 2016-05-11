@@ -33,7 +33,7 @@ class User_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 			$this->db->where($where); 
         } else {			
-            $offset = mysql_real_escape_string($offset);
+            $offset = $this->db->escape_str($offset);
 			$this->db->select('a.*,b.level_id,b.level_name,c.id,c.name');
 			$this->db->from($this->cfg['dbpref']."users as a");
 			$this->db->join($this->cfg['dbpref'].'levels as b', 'b.level_id = a.level', 'left');

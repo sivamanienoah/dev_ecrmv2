@@ -45,7 +45,8 @@ if ( ! function_exists('real_escape_array'))
 				if(is_array($value) && sizeof($value)>0) {
 					$post_data_arr[$key] = real_escape_array($value);
 				} else {
-					$post_data_arr[$key] = mysql_real_escape_string($value);
+					$CI = get_instance();
+					$post_data_arr[$key] = $CI->db->escape_str($value);
 				}
 			}
 		}
