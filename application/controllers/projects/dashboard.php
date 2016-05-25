@@ -406,8 +406,10 @@ class Dashboard extends crm_controller
 		$this->db->where('t.resoursetype', $resource_type);
 		if(!empty($department_ids))
 		$this->db->where_in("t.dept_id", $department_ids);
-		if(!empty($skill_ids))
-		$this->db->where_in("t.skill_id", $skill_ids);
+		if(!empty($skill_ids)){
+			$skill = @explode(',',$skill_ids);
+			$this->db->where_in("t.skill_id", $skill);
+		}
 		if(empty($department_ids) && !empty($dept_type)) {
 			switch($dept_type) {
 				case 1:
