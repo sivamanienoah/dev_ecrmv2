@@ -50,7 +50,7 @@ class Project extends crm_controller {
 	 */
 	public function index()
 	{
-		$data['page_heading'] = "Projects - Lists";		
+		$data['page_heading'] = "Projects - Lists";
 		$data['pm_accounts'] = array();
 		$pjt_managers		 = $this->project_model->get_user_byrole(3);
 		if(!empty($pjt_managers))
@@ -60,9 +60,15 @@ class Project extends crm_controller {
 		$data['practices']   = $this->project_model->get_practices();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
 		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
+		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		if(!empty($db_fields) && count($db_fields)>0) {
+			foreach($db_fields as $record) {
+				$data['db_fields'][] = $record['column_name'];
+			}
+		}
 		// $data['records']     = $this->project_model->get_projects_results($pjtstage = '', $pm_acc = '', $cust = '', $service='', $keyword = '', $datefilter = '', $fromdate = '', $todate = '');
 		// $data['project_record'] = $this->getProjectsDataByDefaultCurrency($data['records']);
-		// echo "<pre>"; print_r($data['project_record']); exit;
+		// echo "<pre>"; print_r($data['db_fields']); exit;
 		// unset($data['records']);
 		// $data['records']     = array();
 		$this->load->view('projects/projects_view', $data);
@@ -224,9 +230,17 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
+		// echo "<pre>"; print_r($getProjects); die;
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		
+		//for field restriction
+		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		if(!empty($db_fields) && count($db_fields)>0) {
+			foreach($db_fields as $record) {
+				$data['db_fields'][] = $record['column_name'];
+			}
+		}
 		$this->load->view('projects/projects_view_inprogress', $data);
 	}
 	
@@ -314,6 +328,15 @@ class Project extends crm_controller {
 		
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=2, $divisions);
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects,$project_type=3,$metrics_date);
+		
+		//for field restriction
+		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		if(!empty($db_fields) && count($db_fields)>0) {
+			foreach($db_fields as $record) {
+				$data['db_fields'][] = $record['column_name'];
+			}
+		}
+		
 		$this->load->view('projects/projects_view_inprogress_monthly', $data);
 	}
 	
@@ -3352,6 +3375,8 @@ HDOC;
 	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
 	{
 		$rates = $this->get_currency_rates();
+		
+		// echo "<pre>"; print_r($rates); exit;
 		 
 		$data['project_record'] = array();
 		$i = 0;
@@ -3390,11 +3415,15 @@ HDOC;
 				$total_non_billable_hrs = 0;
 				$total_cost  = 0;
 				$total_hours = 0;
+				$total_dc_hours = 0;
+				
+				// echo "<pre>"; print_r($timesheet); die;
 				
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
 						$total_cost  += $ts['duration_cost'];
 						$total_hours += $ts['duration_hours'];
+						$total_dc_hours += $ts['duration_direct_cost'];
 						switch($ts['resoursetype']) {
 							case 'Billable':
 								$total_billable_hrs = $ts['duration_hours'];
@@ -3438,7 +3467,8 @@ HDOC;
 				$data['project_record'][$i]['int_hr'] 			= $total_internal_hrs;
 				$data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
 				$data['project_record'][$i]['total_hours'] 		= $total_hours;
-				$data['project_record'][$i]['total_amount_inv_raised'] 		= $total_amount_inv_raised;
+				$data['project_record'][$i]['total_dc_hours'] 	= $total_dc_hours;
+				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
 				
@@ -4546,6 +4576,83 @@ HDOC;
 		} else {
 			echo "true";
 		}
+		exit;
+	}
+	
+	function set_dashboard_fields()
+	{
+		$fields = array();
+		$fields['CP'] = 'Completion Percentage';
+		$fields['PT'] = 'Project Type';
+		$fields['RAG'] = 'RAG';
+		$fields['PH'] = 'Planned Hours';
+		$fields['BH'] = 'Billable Hours';
+		$fields['IH'] = 'Internal Hours';
+		$fields['NBH'] = 'Non Billable Hours';
+		$fields['TUH'] = 'Total Utilized Hours';
+		$fields['EV'] = 'Effort Variance';
+		$fields['PV'] = 'Project Value';
+		$fields['UC'] = 'Utilization Cost';
+		$fields['DC'] = 'Direct Cost';
+		$fields['IR'] = 'Invoice Raised';
+		$fields['Contribution %'] = 'Contribution %';
+		$fields['P&L'] = 'Profit & Loss';
+		$fields['P&L %'] = 'Profit & Loss %';
+		
+		$data['fields'] = $fields;
+		
+		$oldfields  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		$remove_select = array();
+		// echo "<pre>"; print_r($oldfields); die;
+		$old_select = $base_select = '';
+		if(!empty($oldfields) && count($oldfields)>0){
+			$cl_checked1 = ' selected="selected"';
+			foreach($oldfields as $record) {
+				$old_select .= '<option value="'.$record['column_name'].'"' .$cl_checked1.'>' . $fields[$record['column_name']].'</option>';
+				$remove_select[] = $record['column_name'];
+			}
+		}
+
+		foreach($fields as $key=>$val) {
+			if(!in_array($key, $remove_select)){
+				$base_select .= '<option value="'.$key.'">' . $val.'</option>';
+			}
+		}
+		$data['base_select'] = $base_select;
+		$data['old_select']  = $old_select;
+		// echo "<pre>"; print_r($old_select); echo"***"; print_r($base_select); die;
+		
+		$this->load->view('projects/set_dashboard_fields', $data);
+	}
+	
+	function save_dashboard_fields()
+	{	
+	
+		// echo "<pre>"; print_r($this->input->post()); die;
+	
+		$existfields  = $this->project_model->get_records('project_dashboard_fields', $arr=array('user_id'=>$this->userdata['userid']), $ord=array('column_order'=>'ASC'));
+		
+		$i=0;
+		$res = array();
+		$wh_condn = array('user_id'=>$this->userdata['userid']);
+		$del = $this->db->delete($this->cfg['dbpref'].'project_dashboard_fields', $wh_condn);
+		$newselect = $this->input->post('new_select');
+		
+		if(!empty($newselect) && count($newselect)>0){
+			foreach($newselect as $rec){
+				$ins_arr = array('user_id'=>$this->userdata['userid']);
+				$ins_arr['column_name'] = $rec;
+				$ins_arr['column_order'] = $i;
+				$i++;
+				$insert = $this->project_model->insert_row('project_dashboard_fields', $ins_arr);
+			}
+		}
+		if($insert){
+			$res['result'] = 'success';
+		} else {
+			$res['result'] = 'error';
+		}
+		echo json_encode($res); 
 		exit;
 	}
 	

@@ -28,7 +28,31 @@ $(function() {
 		$('#to_date').datepicker("option", "minDate", return_date);
 	}});
 	$('#to_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
-});	
+	
+	/*for project field customize*/
+	var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
+	nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
+	  $('.modal-custom-fields').click(function(){
+	   $.blockUI({
+					message:nc_form_msg,
+					css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+					overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
+				});
+		$.get(
+			'project/set_dashboard_fields',
+			{},
+			function(data){
+				$('.new-cust-form-loader').slideUp(500, function(){
+					$(this).parent().css({backgroundColor: '#fff', color: '#333'});
+					$(this).css('text-align', 'left').html(data).slideDown(500, function(){
+						$('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
+					});
+				})
+			}
+		);
+		return false;
+	});
+});
 	
 function dtPjtTable() {
 	$('.data-tbl').dataTable({

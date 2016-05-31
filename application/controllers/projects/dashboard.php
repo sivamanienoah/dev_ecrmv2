@@ -9,7 +9,16 @@ class Dashboard extends crm_controller
 		$this->login_model->check_login();
         $this->load->helper('custom');
         $this->load->library('validation');
+		$this->load->helper('custom_helper');
 		$this->load->model('projects/dashboard_model');
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id   = '1';
+			$this->default_cur_name = 'USD';
+		}
 	}
 	
 	function index()
@@ -393,7 +402,6 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		
 		
-		
 		/* $qry = "SELECT t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.project_code, t.empname
 		FROM crm_timesheet_data t
 		WHERE start_time between '$start_date' and '$end_date' $where"; */
@@ -442,7 +450,8 @@ class Dashboard extends crm_controller
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
 		}
-		if(!empty($practice_ids) && !empty($department_ids)) {
+		// if(!empty($practice_ids) && !empty($department_ids)) {
+		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
 			$this->db->where_in("t.practice_id", $pids);
 		}
@@ -718,8 +727,6 @@ class Dashboard extends crm_controller
 				echo "<br>";
 			}
 		}
-		
-		
 	}
 	
 	function get_practices()
@@ -910,7 +917,7 @@ class Dashboard extends crm_controller
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
 	*/
-	/* function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
 	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%Y',$date);
@@ -925,9 +932,282 @@ class Dashboard extends crm_controller
 		}
 	
 		return $fy;
-	} */
+	}
 	
+	public function service_dashboard()
+	{
+		$data  				  = array();
+		$data['page_heading'] = "IT Services Dashboard";
+		
+		$project_code = array();
+		$projects 	  = array();
+		$practice_arr = array();
+		
+		/* $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$start_date = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$end_date   = $curFiscalYear."-03-31"; //eg.2014-03-01 */
+		
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$data['practice_data'] = $pquery->result();
+		
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$practice_arr[$prow->id] = $prow->practices;
+			}
+		}
+		
+		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id');
+		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->where("l.lead_id != 'null' AND l.pjt_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status = 1 ");
+		// $this->db->limit('10');
+		$query = $this->db->get();
+		$res = $query->result_array();
+		
+		$month = date('Y-m-01 00:00:00');
+		
+		// echo "<pre>"; print_r($res); die;
+		$rates = $this->get_currency_rates();
+		/* $pjts_data = $this->getProjectsDataByDefaultCurrency($res);
+
+		if(!empty($pjts_data) && count($pjts_data)>0){
+			foreach($pjts_data as $prow) {
+				$projectsval['project'][$practice_arr[$prow['practice']]][] = $prow['pjt_id'];
+				
+				if (isset($projectsval['practicewise'][$practice_arr[$prow['practice']]])) {
+					$projectsval['practicewise'][$practice_arr[$prow['practice']]] += 1;
+					//need to calculate for the total IR
+					$projectsval['irval'][$practice_arr[$prow['practice']]] += $prow['total_amount_inv_raised'];
+					$projectsval['curmonth_irval'][$practice_arr[$prow['practice']]] += $this->get_ir_val($prow['lead_id'], $prow['expect_worth_id'], $month);
+				} else {
+					$projectsval['practicewise'][$practice_arr[$prow['practice']]]  = 1;  ///Initializing count
+					$projectsval['irval'][$practice_arr[$prow['practice']]] = $prow['total_amount_inv_raised'];
+					$projectsval['curmonth_irval'][$practice_arr[$prow['practice']]] = $this->get_ir_val($prow['lead_id'], $prow['expect_worth_id'], $month);
+				}
+				if($row->rag_status == 1){
+					if (isset($projectsval['rag_status'][$practice_arr[$prow['practice']]])) {
+						$projectsval['rag_status'][$practice_arr[$prow['practice']]] += 1;					
+					} else {
+						$projectsval['rag_status'][$practice_arr[$prow['practice']]]  = 1;  ///Initializing count
+					}
+				}
+			}
+		}
+		unset($projectsval['practicewise']);
+		echo "<pre>"; print_r($projectsval); echo "</pre>";  */
+		
+		if(!empty($res) && count($res)>0) {
+			foreach($res as $row) {
+				// $projects['project'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
+				$timesheet = array();
+				if(!empty($row['pjt_id']))
+				$timesheet = $this->get_timesheet_data($row['pjt_id']);
+				
+				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
+					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
+					//need to calculate for the total IR
+					$projects['irval'][$practice_arr[$row['practice']]] += $this->get_ir_val($row['lead_id'], $row['expect_worth_id']);
+					//need to calculate for the current month IR
+					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month);
+					$projects['cm_irval'][$practice_arr[$row['practice']]] += $curmonth_ir;
+					//effort variance
+					if(!empty($timesheet) && count($timesheet)>0){
+						$projects['eff_var'][$practice_arr[$row['practice']]] += round($timesheet['total_hours'] - $row['estimate_hour']);
+						$projects['dc'][$practice_arr[$row['practice']]] += round($timesheet['total_dc']);
+						$projects['cm_dc'][$practice_arr[$row['practice']]] += round($curmonth_ir - $timesheet['total_dc']);
+					}
+				} else {
+					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					$projects['irval'][$practice_arr[$row['practice']]] = $this->get_ir_val($row['lead_id'], $row['expect_worth_id']);
+					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month);
+					$projects['cm_irval'][$practice_arr[$row['practice']]] = $curmonth_ir;
+					if(!empty($timesheet) && count($timesheet)>0){
+						$projects['eff_var'][$practice_arr[$row['practice']]] = round($timesheet['total_hours'] - $row['estimate_hour']);
+						$projects['dc'][$practice_arr[$row['practice']]] = round($timesheet['total_dc']);
+						$projects['cm_dc'][$practice_arr[$row['practice']]] = round($curmonth_ir - $timesheet['total_dc']);
+					}
+				}
+				if($row['rag_status'] == 1){
+					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
+						$projects['rag_status'][$practice_arr[$row['practice']]] += 1;
+					} else {
+						$projects['rag_status'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					}
+				}
+			}
+		}
+
+		$data['projects'] = $projects;
+		// echo "<pre>"; print_r($projects); exit;
+		
+		// echo "<pre>"; print_r($user_data); exit;
+		
+		$this->load->view('projects/service_dashboard', $data);
+	}
 	
+	public function get_timesheet_data($pjt_code)
+	{
+		$start_date = $end_date = '';
+		$start_date = '2006-01-01';
+		$end_date   = date('Y-m-d');
+		
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
+		// sum( ts.`resource_duration_cost`) as duration_cost,
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		$this->db->where("ts.project_code", $pjt_code);
+		$this->db->where("DATE(ts.start_time) >= ", $start_date);
+		$this->db->where("DATE(ts.end_time) <= ", $end_date);
+		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		
+		$query = $this->db->get();
+		// echo $this->db->last_query() . "<br />"; exit;
+		$timesheet = $query->result_array();
+		$res = array();
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				// $res['total_cost']  += $ts['duration_cost'];
+				$res['total_hours']    += $ts['duration_hours'];
+				$res['total_dc'] 	   += $ts['duration_direct_cost'];
+			}
+		}
+		// echo "<pre>"; print_r($res); exit;
+		return $res;
+	}
+	
+	public function conver_currency($amount, $val) {
+		return round($amount*$val, 2);
+	}
+	
+	public function get_ir_val($lead_id, $ewid, $month=false) {
+		
+		$rates = $this->get_currency_rates();
+		
+		$this->db->select('milestone_value');
+		$this->db->from($this->cfg['dbpref']. 'view_sales_forecast_variance');
+		$this->db->where("type = 'A' AND job_id = '".$lead_id."' ");
+		if(!empty($month)) {
+			// $this->db->where("(for_month_year ='".date('Y-m-d 00:00:00', strtotime($month))."' )", NULL, FALSE);
+			$this->db->where("for_month_year", date('Y-m-d H:i:s', strtotime($month)));
+		}
+		$query  = $this->db->get();
+		$result = $query->result();
+		/* if(!empty($month)) {
+			echo $this->db->last_query() ."<br>";
+		} */
+		$val = 0;
+		if(!empty($result)) {
+			foreach($result as $row){
+				$val += $this->conver_currency($row->milestone_value, $rates[$ewid][$this->default_cur_id]);
+			}
+		}
+		return $val;
+	}
+	
+	/*
+	*method : get_currency_rates
+	*/
+	public function get_currency_rates() {
+		$this->load->model('report/report_lead_region_model');
+		$currency_rates = $this->report_lead_region_model->get_currency_rate();
+    	$rates 			= array();
+    	if(!empty($currency_rates)) {
+    		foreach ($currency_rates as $currency) {
+    			$rates[$currency->from][$currency->to] = $currency->value;
+    		}
+    	}
+    	return $rates;
+	}
+	
+		/* Change the actual worth amount to Default currency */
+	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
+	{
+		// echo "<pre>"; print_r($records); exit;
+		$this->load->model('project_model');
+		$rates = $this->get_currency_rates();
+		
+		// echo "<pre>"; print_r($rates); exit;
+		 
+		$data['project_record'] = array();
+		$i = 0;
+		if (isset($records) && count($records)) :
+			foreach($records as $rec) {
+				
+				 $amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				$data['timesheet_data'] = array();
+				$timesheet				= array();
+				$total_cost				= 0;
+				$total_hours			= 0;
+				$total_billable_hrs		= 0;
+				$total_internal_hrs		= 0;
+				$total_non_billable_hrs = 0;
+				$project_type			= '';
+				
+				if(!empty($rec['pjt_id'])){
+					$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type=1, $metrics_date, $groupby_type=2);
+				}
+				
+				$total_amount_inv_raised = 0;
+				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
+				if(count($invoice_amount)>0 && !empty($invoice_amount)){
+					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
+				}
+				
+				$total_billable_hrs = 0;
+				$total_internal_hrs = 0;
+				$total_non_billable_hrs = 0;
+				$total_cost  = 0;
+				$total_hours = 0;
+				$total_dc_hours = 0;
+				
+				// echo "<pre>"; print_r($timesheet); die;
+				
+				if(count($timesheet)>0) {
+					foreach($timesheet as $ts) {
+						$total_cost  += $ts['duration_cost'];
+						$total_hours += $ts['duration_hours'];
+						$total_dc_hours += $ts['duration_direct_cost'];
+						/* switch($ts['resoursetype']) {
+							case 'Billable':
+								$total_billable_hrs = $ts['duration_hours'];
+							break;
+							case 'Non-Billable':
+								$total_non_billable_hrs = $ts['duration_hours'];
+							break;
+							case 'Internal':
+								$total_internal_hrs = $ts['duration_hours'];
+							break;
+						} */
+					}
+				}
+				
+				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				//Build the Array
+				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
+				$data['project_record'][$i]['practice']			= $rec['practice'];
+				$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
+				$data['project_record'][$i]['pjt_id']			= $rec['pjt_id'];
+				$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
+				$data['project_record'][$i]['expect_worth_id'] 	= $rec['expect_worth_id'];
+				// $data['project_record'][$i]['bill_hr'] 			= $total_billable_hrs;
+				// $data['project_record'][$i]['int_hr'] 			= $total_internal_hrs;
+				// $data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
+				$data['project_record'][$i]['total_hours'] 		= $total_hours;
+				$data['project_record'][$i]['total_dc_hours'] 	= $total_dc_hours;
+				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
+				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
+				$i++;
+				
+			}
+			// echo "<pre>"; print_r($data['project_record']); exit;
+		endif;
+		return $data['project_record'];
+	}
 	
 
 }

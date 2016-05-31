@@ -51,6 +51,8 @@ if (get_default_currency()) {
 				</div>
 			</div>
 			
+			<div class="search-dropdown"><a href="#" class="modal-custom-fields">Customize</a></div>
+			
 			<div class="section-right">
 				<div class="form-cont search-table">
 					<form id="pjt_search_form" name="pjt_search_form" method="post">

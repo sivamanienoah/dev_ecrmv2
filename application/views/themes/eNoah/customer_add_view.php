@@ -223,7 +223,7 @@
 						$comments = "";
 						if(isset($this->validation->comments) && !empty($this->validation->comments)) {
 							$comments = str_replace(array('\r\n', '\r', '\n'), "\n", $this->validation->comments);
-							$comments = str_replace('<br />', PHP_EOL, $comments);
+							// $comments = str_replace('<br />', PHP_EOL, $comments);
 						}
 					?>
 					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo stripslashes($comments); ?></textarea></td>

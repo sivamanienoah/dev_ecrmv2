@@ -211,7 +211,6 @@ class Project_model extends crm_model
 					break;
 				}
 			}
-
 		}
 		
 		if($keyword != 'Project Title, Name or Company' && !empty($keyword)) {	
@@ -220,6 +219,7 @@ class Project_model extends crm_model
 		}
 		
 		$this->db->order_by("j.lead_id", "desc");
+		// $this->db->limit(5);
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();
@@ -569,7 +569,7 @@ class Project_model extends crm_model
 		// $where_condn = " ((DATE(ts.start_time) >= '".$start_date."') AND (DATE(ts.end_time) <= '".$end_date."')) ";
 		
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, sum( ts.`resource_duration_cost`) as duration_cost');
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
 		$this->db->where("ts.project_code",$pjt_code);
 		$this->db->where("DATE(ts.start_time) >= ",$start_date);
@@ -582,8 +582,7 @@ class Project_model extends crm_model
 		
 		$query = $this->db->get();
 		
-		// echo $this->db->last_query() . "<br />";
-		// exit;
+		// echo $this->db->last_query() . "<br />"; exit;
 		
 		return $query->result_array();
 	}
@@ -877,6 +876,15 @@ class Project_model extends crm_model
 			return $res;
 		}
 		return false;
+	}
+	
+	public function get_dashboard_field($id){
+		$this->db->select("column_name");
+		$this->db->from($this->cfg['dbpref'].'project_dashboard_fields');
+		$this->db->where('user_id', $id);
+		$this->db->order_by('column_order', 'ASC');
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 }
 ?>

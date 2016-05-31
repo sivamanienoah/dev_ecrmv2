@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 4;
+		$totalMonths  = 2;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -46,6 +46,7 @@ class Timesheet_data extends crm_controller
 		$monthYearIn  = 0;
 		
 		$userCostArr  = array();
+		$userDirectCostArr  = array();
 		
 		for($i=1;$i<=$totalMonths;$i++) {
 			$monthYear[] 	= $monthYearArr;
@@ -61,6 +62,8 @@ class Timesheet_data extends crm_controller
 		
 		$monthYearIn = implode("','",$monthYear);
 		
+		// echo "<pre>"; print_r($monthYearIn); exit;
+		
 		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') ";
 		
 		// echo $sql; #exit;
@@ -68,13 +71,19 @@ class Timesheet_data extends crm_controller
 		$query  = $timesheet_db->query($sql);
 		$result = $query->result_array();
 		
+		// echo "<pre>"; print_r($result); exit;
+		
 		if(!empty($result)) {
 			foreach($result as $row) {
 				$userCostArr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'] + $row['overheads_cost'];
+				$userDirectCostArr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'];
 			}
 		}
 		
 		ksort($userCostArr);
+		ksort($userDirectCostArr);
+		
+		// echo "<pre>"; print_r($userDirectCostArr); exit;
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -105,10 +114,12 @@ class Timesheet_data extends crm_controller
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
 		
+		// echo "<pre>"; print_r($times_result);
+		
 		if(!empty($times_result)) {
 		
 			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			
 		}
 		
@@ -141,37 +152,47 @@ class Timesheet_data extends crm_controller
 		}
 		// echo "<pre>"; print_r($practice_arr); exit;
 		//getting dept,skill,practice details
-		
+		// $del_status = 1;
 		if($del_status) {
 		
 			foreach($times_result as $key=>$val) {
 				// echo "<pre>"; print_r($val); exit;
 				$costPerHour = 0;
+				$directCostPerHour = 0;
 				
 				if( !empty($val['emp_id']) && !empty($val['entry_year']) && !empty($val['entry_month']) ) {
 				
-					$cost = $userCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']]; 
+					$cost = $userCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']];
+					$dcost = $userDirectCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']];
 					
 					if(!empty($cost)) {
 						$costPerHour = $cost;
+						$directCostPerHour = $dcost;
 					} else {
-						if(is_null($userCostArr['final_cost'][$val['emp_id']])){ 
+						if(is_null($userCostArr['final_cost'][$val['emp_id']])){
 							ksort($userCostArr[$val['emp_id']]);
+							ksort($userDirectCostArr[$val['emp_id']]);
 							$arr = end($userCostArr[$val['emp_id']]);
+							$darr = end($userDirectCostArr[$val['emp_id']]);
 							sort($arr);
+							sort($darr);
 							$costPerHour = end($arr);
+							$directCostPerHour = end($darr);
 							if(!is_null($costPerHour)){
 								$userCostArr['final_cost'][$val['emp_id']]=$costPerHour;
+								$userDirectCostArr['final_cost'][$val['emp_id']]=$directCostPerHour;
 							}
 						}else{
 							$costPerHour =  $userCostArr['final_cost'][$val['emp_id']];
+							$directCostPerHour =  $userDirectCostArr['final_cost'][$val['emp_id']];
 						}
 
 						if( is_null($costPerHour) ) {
 							if(!is_null($userCostArr['final_cost'][$val['emp_id']])) { 
 								$costPerHour = $userCostArr['final_cost'][$val['emp_id']];
+								$directCostPerHour = $userDirectCostArr['final_cost'][$val['emp_id']];
 							} else { 
-								$sql_finalcost = "SELECT round((direct_cost+overheads_cost),2) as cost  FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE uc.employee_id= '".$val['emp_id']."' order by year desc, month desc limit 0,1 ";
+								$sql_finalcost = "SELECT round((direct_cost+overheads_cost),2) as cost, direct_cost as dcost  FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE uc.employee_id= '".$val['emp_id']."' order by year desc, month desc limit 0,1 ";
 
 								 // echo "<br>sql_finalcost = ".$sql_finalcost;
 
@@ -179,7 +200,9 @@ class Timesheet_data extends crm_controller
 								$result_finalcost = $query_finalcost->row_array();
 								if($result_finalcost["cost"]) {
 									$userCostArr['final_cost'][$val['emp_id']] = $result_finalcost["cost"];
+									$userDirectCostArr['final_cost'][$val['emp_id']] = $result_finalcost["dcost"];
 									$costPerHour =  $result_finalcost["cost"];
+									$directCostPerHour =  $result_finalcost["dcost"];
 								}
 							}
 						}
@@ -188,8 +211,11 @@ class Timesheet_data extends crm_controller
 			
 				$ins_row[$key] = $val;
 				$ins_row[$key]['cost_per_hour'] = (!is_null($costPerHour)) ? $costPerHour : '';
+				$ins_row[$key]['direct_cost_per_hour'] = (!is_null($directCostPerHour)) ? $directCostPerHour : '';
 				$costPerHr = (!is_null($costPerHour)) ? $costPerHour : 0;
+				$diretCostPerHr = (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
 				$ins_row[$key]['resource_duration_cost'] = ($costPerHr * $val['duration_hours']);
+				$ins_row[$key]['resource_duration_direct_cost'] = ($diretCostPerHr * $val['duration_hours']);
 				// $ins_row[$key]['dept_id']       = $val['department_id'];
 				$ins_row[$key]['dept_name']		= isset($dept_arr[$val['dept_id']]) ? $dept_arr[$val['dept_id']] : '';;
 				$ins_row[$key]['practice_id']	= isset($practice_arr[$val['skill_id']]['pid']) ? $practice_arr[$val['skill_id']]['pid'] : 0;
@@ -200,7 +226,7 @@ class Timesheet_data extends crm_controller
 				// echo "<pre>"; print_r($ins_row[$key]); exit;
 
 				$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
-				// echo $this->db->last_query() . "<br />";
+				echo $this->db->last_query() . "<br />";
 			}
 		}
 		
@@ -218,7 +244,7 @@ class Timesheet_data extends crm_controller
 
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
 
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com';
 			// $param['from_email'] 	 = 'webmaster@enoahisolution.com';
 			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
@@ -239,7 +265,7 @@ class Timesheet_data extends crm_controller
 
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
 
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com';
 			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
 			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
@@ -248,9 +274,30 @@ class Timesheet_data extends crm_controller
 			$this->email_template_model->sent_email($param);
 			
 		}
-
+	}
+	
+	public function	updt_direct_cost()
+	{
+		@set_time_limit(-1); //disable the mysql query maximum execution time
+		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-
+		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc)";
+		
+		$query  = $timesheet_db->query($sql);
+		$result = $query->result_array();
+		
+		$userDirectCostArrr = array();
+		
+		if(!empty($result)) {
+			foreach($result as $row) {
+				// $userCostArr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'] + $row['overheads_cost'];
+				$userDirectCostArrr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'];
+			}
+		}
+		ksort($userDirectCostArrr);
+		
+		echo "<pre>"; print_r($userDirectCostArrr); exit;
+		
 	}
 
 }
