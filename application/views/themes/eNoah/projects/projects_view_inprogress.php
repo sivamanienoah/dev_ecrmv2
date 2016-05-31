@@ -173,7 +173,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$monthly_content .= "<td ".$td_ph.">".$estimate_hour."</td>";
 					if(($td_chk == true) && in_array('BH', $db_fields)) { $td_bh = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_bh.">".$bill_hr."</td>";
-					if(($td_chk == true) && in_array('IH', $db_fields)) { $td_nbh = 'style="display: table-cell;"'; }
+					if(($td_chk == true) && in_array('IH', $db_fields)) { $td_ih = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_ih.">".$int_hr."</td>";
 					if(($td_chk == true) && in_array('NBH', $db_fields)) { $td_nbh = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_nbh.">".$nbil_hr."</td>";
