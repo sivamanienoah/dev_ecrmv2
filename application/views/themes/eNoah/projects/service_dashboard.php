@@ -20,8 +20,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
-			
-			<div class="clearfix"></div>
 		</div>
  
 		<div class="clearfix"></div>
