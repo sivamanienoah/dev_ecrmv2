@@ -1,0 +1,91 @@
+<?php 
+$usernme = $this->session->userdata('logged_in_user'); 
+?>
+<div id="msg"></div>
+	<form name="set_dashboard_fields" id="set_dashboard_fields" method="post" onsubmit="return false;">
+		<input id="user_id" type="hidden" name="user_id" value="<?php echo $usernme['userid']; ?>" />
+		<input id="oldfields" type="hidden" name="oldfields" value="<?php echo $oldfields; ?>" />
+		
+		<div style="float:left;">
+			<span style="padding-left: 55px;">Available Fields</span><br />
+			<select multiple="multiple" name="base_select" id="base_select" style="width: 150px;">
+				<?php echo $base_select; ?>
+			</select>
+		</div>
+		<div style="float:left; padding-top: 29px; padding-left: 10px; padding-right: 10px;">
+		
+			<input type="button" id="add" class="add-member" value="&gt;&gt;" /><br />
+			<input type="button" id="remove" class="remove-member" value="&lt;&lt;" />
+			<input type="hidden" value ="" id="newfields" name="newfields"/>
+		
+		</div>
+		<div style="float:left;">
+			<span style="padding-left: 45px;">Dashboard Fields</span><br />
+			<select multiple="multiple" name="new_select" id="new_select" style="width: 150px;" >
+				<?php echo $old_select; ?>
+			</select>
+		</div>
+		<div class="buttons" style="clear:both;">
+			<button type="submit" class="positive" id="positiveSelectBox" onclick="setDashboardFields(); return false;">Set </button>
+			<a href="javascript:void(0)" onclick="form_cancel()">Cancel</a>
+		</div>
+</form>
+
+<script>
+/*Select boxs*/
+$(function() {
+	$('#add').click(function() { 
+		$('#newfields').val($('#base_select').val());	
+		return !$('#base_select option:selected').remove().appendTo('#new_select'); 
+	});  
+	$('#remove').click(function() { 
+		$('#newfields').val($('#new_select').val());
+		return !$('#new_select option:selected').remove().appendTo('#base_select');
+	});
+	$('#base_select').dblclick(function() {
+		$('#newfields').val($('#base_select').val());
+		return !$('#base_select option:selected').remove().appendTo('#new_select');
+	});
+	$('#new_select').dblclick(function() {
+		$('#newfields').val($('#new_select').val());
+		return !$('#new_select option:selected').remove().appendTo('#base_select');
+	});
+});
+
+function form_cancel() {
+    $.unblockUI();
+    return false;
+}
+
+function setDashboardFields() {
+	$('#new_select option').each(function(i) {
+		$(this).prop("selected", true);
+	});
+ 
+	var newselect = $('#new_select').val();
+	// alert(newselect)
+	if(newselect == null){
+		return false;
+	}
+	// alert(site_base_url);
+	var params = {'user_id':$("#user_id").val(),'new_select':newselect};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'project/save_dashboard_fields/',
+		data: params,
+		dataType: 'json',
+		success: function(data) {
+			if(data.result=='success'){
+				$('#msg').html('Saved Successfully');
+				setTimeout('timerfadeout()', 3000);
+			}
+		}
+	});
+	
+}
+function timerfadeout() { 
+	location.reload();
+}
+</script>
