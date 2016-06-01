@@ -2822,11 +2822,8 @@ form#edit-folder-permissions { overflow:visible !important; }
 .field-swap-left{float:left;}
 .field-swap-right{float:left;}
 .field-swap-left span, .field-swap-right span{display:inline-block;font-size:12px;margin:0 0 10px;text-align:center;width:100%;}
-.field-swap .buttons {border-top: 1px solid #dadada;
-    display: inline-block;
-    margin: 10px 0 0;
-    padding: 15px 0 0;
-    text-align: center;
-    width: 100%;}
+.field-swap .buttons {border-top: 1px solid #dadada;display: inline-block;margin: 10px 0 0;padding: 15px 0 0;text-align: center;width: 100%;}
 .field-swap .buttons button, .field-swap .buttons a {display:inline;float:none;}
+.modal-custom-fields{ border: medium none; color: #375695;font-size: 12px;font-weight: bold;margin: 5px 0 0 30px; padding: 3px 0 4px 22px !important; }
+.modal-custom-fields a:hover {text-decoration: none;}
 /****1-6-2016****/
