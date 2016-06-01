@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 6;
+		$totalMonths  = 5;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -224,9 +224,9 @@ class Timesheet_data extends crm_controller
 				$ins_row[$key]['skill_name'] 	= isset($skill_arr[$val['skill_id']]) ? $skill_arr[$val['skill_id']] : 0;
 				
 				// echo "<pre>"; print_r($ins_row[$key]); exit;
-				if(!empty($ins_row['client_id'])) {
+				// if(!empty($ins_row['client_id'])) {
 					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
-				}
+				// }
 				// echo $this->db->last_query() . "<br />";
 			}
 		}
