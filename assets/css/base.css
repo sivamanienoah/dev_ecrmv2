@@ -2810,3 +2810,23 @@ form#edit-folder-permissions { overflow:visible !important; }
 .manage-texaarea select{width:100%;}
 .manage-selectarea{margin:0 0 10px;  padding: 0 10px;}
 .resetBtn{line-height: 17px;margin-top: 3px !important;padding: 2px 6px !important;background-color: #d8d8d8;border: 1px solid #ccc;color: #d12f19;cursor: pointer;font-weight:normal;display: block;float: left;font-family: "Lucida Grande",Tahoma,Arial,Verdana,sans-serif;font-size: 100%;line-height: 130%;text-decoration: none;}
+
+
+/****1-6-2016****/
+.customize-sec {display:inline-block;width:100%;position:relative;}
+.customize-sec .tbl-field-customize {position:absolute;right:0;z-index:999;}
+.field-swap {margin:0 auto;width:520px;}
+.field-swap select {background:none;border:1px solid #dadada;padding:5px;height:150px}
+.field-swap input.add-member, .field-swap input.remove-member {background:none;border:1px solid #dadada;color:#666;font-size:9px;margin-bottom: 5px;padding:5px;}
+.field-swap input.add-member:hover, .field-swap input.remove-member:hover{background:#4b6fb9;border-color:#3c5b9b;color:#fff;cursor:pointer;}
+.field-swap-left{float:left;}
+.field-swap-right{float:left;}
+.field-swap-left span, .field-swap-right span{display:inline-block;font-size:12px;margin:0 0 10px;text-align:center;width:100%;}
+.field-swap .buttons {border-top: 1px solid #dadada;
+    display: inline-block;
+    margin: 10px 0 0;
+    padding: 15px 0 0;
+    text-align: center;
+    width: 100%;}
+.field-swap .buttons button, .field-swap .buttons a {display:inline;float:none;}
+/****1-6-2016****/

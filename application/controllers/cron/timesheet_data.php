@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 2;
+		$totalMonths  = 6;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -119,7 +119,7 @@ class Timesheet_data extends crm_controller
 		if(!empty($times_result)) {
 		
 			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
-			echo $this->db->last_query();
+			// echo $this->db->last_query();
 			
 		}
 		

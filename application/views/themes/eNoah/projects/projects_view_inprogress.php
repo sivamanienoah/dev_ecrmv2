@@ -218,6 +218,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 	</div>
 </div>
 
+<div class="customize-sec">
+<div class="tbl-field-customize">
+<a href="#" class="positive modal-custom-fields">Customize</a></div>
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
 		<tr>
@@ -264,6 +267,8 @@ if(!empty($db_fields) && count($db_fields)>0){
 		<?php echo $milestone_content; ?>
 	</tbody>	
 </table>
+</div>
+
 
 <div class="clear"></div>
 <?php 
@@ -393,6 +398,30 @@ if(!empty($db_fields) && count($db_fields)>0){
 <script type="text/javascript">
 $(function() {
 	dtPjtTable();
+	
+		/*for project field customize*/
+	var nc_form_msg = '<div class="new-cust-form-loader">Loading Content.<br />';
+	nc_form_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
+	  $('.modal-custom-fields').click(function(){
+	   $.blockUI({
+					message:nc_form_msg,
+					css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+					overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
+				});
+		$.get(
+			'project/set_dashboard_fields',
+			{},
+			function(data){
+				$('.new-cust-form-loader').slideUp(500, function(){
+					$(this).parent().css({backgroundColor: '#fff', color: '#333'});
+					$(this).css('text-align', 'left').html(data).slideDown(500, function(){
+						$('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
+					});
+				})
+			}
+		);
+		return false;
+	});
 });	
 	
 function dtPjtTable() {
