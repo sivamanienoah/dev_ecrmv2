@@ -22,9 +22,9 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
 		</div>
 
-		<div id="ajax_loader" style="margin:20px;display:none" align="center">
-			Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
-		</div>
+		<!--div id="ajax_loader" style="margin:20px;" align="center">
+			Loading Content.<br><img alt="wait" src="<?php #echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
+		</div-->
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 				<tr>
@@ -140,7 +140,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 	</div>
 
 <script type="text/javascript">
-
 /*
 $(function() {
 
