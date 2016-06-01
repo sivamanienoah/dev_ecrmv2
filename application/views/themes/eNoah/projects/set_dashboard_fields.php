@@ -96,7 +96,4 @@ function setDashboardFields() {
 	});
 	
 }
-function timerfadeout() { 
-	location.reload(true);
-}
 </script>
