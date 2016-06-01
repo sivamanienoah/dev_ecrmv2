@@ -89,7 +89,8 @@ function setDashboardFields() {
 		success: function(data) {
 			if(data.result=='success'){
 				$('#msg').html('<span class="ajx_success_msg">Saved Successfully</span>');
-				setTimeout('timerfadeout()', 2000);
+				// setTimeout('timerfadeout()', 2000);
+				setTimeout(function () { location.reload(true) }, 2000);
 			}
 		}
 	});
