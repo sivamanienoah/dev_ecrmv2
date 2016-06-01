@@ -21,8 +21,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
 		</div>
- 
-		<div class="clearfix"></div>
+
 		<div id="ajax_loader" style="margin:20px;display:none" align="center">
 			Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 		</div>
@@ -141,8 +140,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 	</div>
 
 <script type="text/javascript">
-/* var cur_mon = '<?php echo date('F Y') ?>';
 
+/*
 $(function() {
 
 	$('body').on('change','#skill_ids',function(){
