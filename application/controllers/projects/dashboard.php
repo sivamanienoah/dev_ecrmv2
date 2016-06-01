@@ -1007,7 +1007,7 @@ class Dashboard extends crm_controller
 		// $this->db->where("l.lead_id != 'null' AND l.pjt_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status = 1 ");
 		// $this->db->limit('10');
 		$query = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
 		$month = date('Y-m-01 00:00:00');
