@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 5;
+		$totalMonths  = 6;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -105,7 +105,7 @@ class Timesheet_data extends crm_controller
 						left join enoah_billrate_type brt on brt.billrate_type_id=t.billrate_type_id
 						WHERE
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
-						p.title is not null AND 
+						p.title is not null AND c.client_id is not null AND p.client_id is not null AND
 						p.project_code is not null
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
@@ -188,10 +188,10 @@ class Timesheet_data extends crm_controller
 						}
 
 						if( is_null($costPerHour) ) {
-							if(!is_null($userCostArr['final_cost'][$val['emp_id']])) { 
+							if(!is_null($userCostArr['final_cost'][$val['emp_id']])) {
 								$costPerHour = $userCostArr['final_cost'][$val['emp_id']];
 								$directCostPerHour = $userDirectCostArr['final_cost'][$val['emp_id']];
-							} else { 
+							} else {
 								$sql_finalcost = "SELECT round((direct_cost+overheads_cost),2) as cost, direct_cost as dcost  FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE uc.employee_id= '".$val['emp_id']."' order by year desc, month desc limit 0,1 ";
 
 								 // echo "<br>sql_finalcost = ".$sql_finalcost;
@@ -199,10 +199,10 @@ class Timesheet_data extends crm_controller
 								$query_finalcost  = $timesheet_db->query($sql_finalcost);
 								$result_finalcost = $query_finalcost->row_array();
 								if($result_finalcost["cost"]) {
-									$userCostArr['final_cost'][$val['emp_id']] = $result_finalcost["cost"];
+									$userCostArr['final_cost'][$val['emp_id']]       = $result_finalcost["cost"];
 									$userDirectCostArr['final_cost'][$val['emp_id']] = $result_finalcost["dcost"];
-									$costPerHour =  $result_finalcost["cost"];
-									$directCostPerHour =  $result_finalcost["dcost"];
+									$costPerHour 	   = $result_finalcost["cost"];
+									$directCostPerHour = $result_finalcost["dcost"];
 								}
 							}
 						}
