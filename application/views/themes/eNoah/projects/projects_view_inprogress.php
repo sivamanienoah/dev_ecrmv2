@@ -220,7 +220,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 
 <div class="customize-sec">
 <div class="tbl-field-customize">
-<a href="#" class="positive modal-custom-fields">Customize</a></div>
+<a href="#" class="positive modal-custom-fields"><p>Customize Table Fields</p></a></div>
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
 		<tr>
