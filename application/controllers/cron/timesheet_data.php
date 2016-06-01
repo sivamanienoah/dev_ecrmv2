@@ -226,7 +226,7 @@ class Timesheet_data extends crm_controller
 				// echo "<pre>"; print_r($ins_row[$key]); exit;
 
 				$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
-				echo $this->db->last_query() . "<br />";
+				// echo $this->db->last_query() . "<br />";
 			}
 		}
 		
