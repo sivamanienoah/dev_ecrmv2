@@ -957,7 +957,7 @@ class Dashboard extends crm_controller
 			$end_date = date("Y-m-t", strtotime($end_date));	
 		}
 		$project_status = 1;
-		if($this->input->post("project_status")) {
+		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
 			$project_status = @explode(',', $this->input->post("project_status"));
 			if(count($project_status) == 2){
 				$project_status = '';
