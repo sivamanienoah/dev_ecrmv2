@@ -105,7 +105,7 @@ class Timesheet_data extends crm_controller
 						left join enoah_billrate_type brt on brt.billrate_type_id=t.billrate_type_id
 						WHERE
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
-						p.title is not null AND c.client_id is not null AND p.client_id is not null AND
+						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
 						p.project_code is not null
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
@@ -210,11 +210,11 @@ class Timesheet_data extends crm_controller
 				}
 			
 				$ins_row[$key] = $val;
-				$ins_row[$key]['cost_per_hour'] = (!is_null($costPerHour)) ? $costPerHour : '';
-				$ins_row[$key]['direct_cost_per_hour'] = (!is_null($directCostPerHour)) ? $directCostPerHour : '';
+				$ins_row[$key]['cost_per_hour']				    = (!is_null($costPerHour)) ? $costPerHour : '';
+				$ins_row[$key]['direct_cost_per_hour'] 			= (!is_null($directCostPerHour)) ? $directCostPerHour : '';
 				$costPerHr = (!is_null($costPerHour)) ? $costPerHour : 0;
 				$diretCostPerHr = (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
-				$ins_row[$key]['resource_duration_cost'] = ($costPerHr * $val['duration_hours']);
+				$ins_row[$key]['resource_duration_cost'] 		= ($costPerHr * $val['duration_hours']);
 				$ins_row[$key]['resource_duration_direct_cost'] = ($diretCostPerHr * $val['duration_hours']);
 				// $ins_row[$key]['dept_id']       = $val['department_id'];
 				$ins_row[$key]['dept_name']		= isset($dept_arr[$val['dept_id']]) ? $dept_arr[$val['dept_id']] : '';;
