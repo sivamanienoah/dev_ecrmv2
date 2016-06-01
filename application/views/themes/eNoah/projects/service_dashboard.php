@@ -20,11 +20,66 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
-		</div>
 
+			<a class="choice-box" onclick="advanced_filter();" >
+				<img src="assets/img/advanced_filter.png" class="icon leads" />
+				<span>Advanced Filters</span>
+			</a>
+		</div>
 		<!--div id="ajax_loader" style="margin:20px;" align="center">
 			Loading Content.<br><img alt="wait" src="<?php #echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 		</div-->
+		
+		<div id="filter_section">
+			<div class="clear"></div>
+			<div id="advance_search" style="padding-bottom:15px; display:none;">
+				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<div style="border: 1px solid #DCDCDC;">
+						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+							<tr>
+								<td class="tblheadbg">MONTH & YEAR</td>
+								<td class="tblheadbg">PROJECT STATUS</td>
+								<td class="tblheadbg">ENTITY</td>
+							</tr>
+							<tr>
+								<td class="month-year">
+									<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="" />
+									<br />
+									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="" />
+								</td>
+								<td class="">
+									<select title="Status" id="project_status" name="project_status[]" multiple="multiple">
+										<option value="1">Project In Progress</option>
+										<option value="2">All Projects</option>
+									</select>
+								</td>								
+								<td class="">
+									<select title="Entity" id="entity" name="entity[]" multiple="multiple">
+										<?php if(count($entity_data)>0 && !empty($entity_data)) { ?>
+										<?php foreach($entity_data as $entityrec) {	?>
+												<option value="<?php echo $entityrec->div_id; ?>"><?php echo $entityrec->division_name;?></option>
+										<?php } 
+										}
+										?>
+									</select>
+								</td>
+							</tr>
+							<tr align="right" >
+								<td colspan="3">
+									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
+									<div id = 'load' style = 'float:right;display:none;height:1px;'>
+										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+		
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 				<tr>
@@ -80,7 +135,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo isset($projects['cm_dc'][$parr]) ? round(($projects['cm_dc'][$parr]/$totCM_DC)*100, 2) : ''; ?>
+								<?php echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : ''; ?>
 							</td>
 						<?php } ?>
 					<?php } ?>
@@ -140,6 +195,69 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 	</div>
 
 <script type="text/javascript">
+$( "#month_year_from_date, #month_year_to_date" ).datepicker({
+	changeMonth: true,
+	changeYear: true,
+	dateFormat: 'MM yy',
+	maxDate: 0,
+	showButtonPanel: true,	
+	onClose: function(dateText, inst) {
+		var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+		var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
+		$(this).datepicker('setDate', new Date(year, month, 1));
+	},
+	beforeShow : function(input, inst) {
+		if ((datestr = $(this).val()).length > 0) {
+			year = datestr.substring(datestr.length-4, datestr.length);
+			month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNames'));
+			$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
+			$(this).datepicker('setDate', new Date(year, month, 1));    
+		}
+			var other  = this.id  == "month_year_from_date" ? "#month_year_to_date" : "#month_year_from_date";
+			var option = this.id == "month_year_from_date" ? "maxDate" : "minDate";        
+		if ((selectedDate = $(other).val()).length > 0) {
+			year = selectedDate.substring(selectedDate.length-4, selectedDate.length);
+			month = jQuery.inArray(selectedDate.substring(0, selectedDate.length-5), $(this).datepicker('option', 'monthNames'));
+			$(this).datepicker( "option", option, new Date(year, month, 1));
+		}
+		$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+	}
+});
+function advanced_filter() {
+	$('#advance_search').slideToggle('slow');
+}
+//For Advance Filters functionality.
+$("#advanceFilterServiceDashboard").submit(function() {
+	$('#advance').hide();
+	$('#load').show();
+	var entity        		 = $("#entity").val();
+	var project_status 		 = $("#project_status").val();
+	var month_year_from_date = $("#month_year_from_date").val();
+	var month_year_to_date   = $("#month_year_to_date").val();
+
+	if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == ""){
+		$('#advance').show();
+		$('#load').hide();
+		return false;
+	}
+
+	$.ajax({
+		type: "POST",
+		url: site_base_url+"projects/dashboard/service_dashboard/",
+		// dataType: "json",
+		data: "filter=filter"+"&entity="+entity+"&project_status="+project_status+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+		beforeSend:function() {
+			$('#default_view').empty();
+			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success: function(res) {
+			$('#advance').show();
+			$('#default_view').html(res);
+			$('#load').hide();
+		}
+	});
+	return false;  //stop the actual form post !important!
+});
 /*
 $(function() {
 

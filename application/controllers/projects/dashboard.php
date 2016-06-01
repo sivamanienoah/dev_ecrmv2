@@ -939,19 +939,52 @@ class Dashboard extends crm_controller
 		$data  				  = array();
 		$data['page_heading'] = "IT Services Dashboard";
 		
+		// echo "<pre>"; print_R($this->input->post()); die;
+		
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$start_date = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$end_date   = $curFiscalYear."-03-31"; //eg.2014-03-01
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
+			}
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t", strtotime($end_date));	
+		}
+		$project_status = 1;
+		if($this->input->post("project_status")) {
+			$project_status = @explode(',', $this->input->post("project_status"));
+			if(count($project_status) == 2){
+				$project_status = '';
+			} else {
+				$project_status = $this->input->post("project_status");
+			}
+		}
+		$division = '';
+		if($this->input->post("entity")) {
+			$division = @explode(',', $this->input->post("entity"));
+		}
+		
 		$project_code = array();
 		$projects 	  = array();
 		$practice_arr = array();
-		
-		/* $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$start_date = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date   = $curFiscalYear."-03-31"; //eg.2014-03-01 */
-		
+
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
-		$data['practice_data'] = $pquery->result();
+		$data['practice_data'] = $pquery->result();		
+		
+		$this->db->select('div_id, division_name');
+		$this->db->from($this->cfg['dbpref']. 'sales_divisions');
+		$equery = $this->db->get();
+		$eres = $equery->result();
+		$data['entity_data'] = $equery->result();
 		
 		if(!empty($pres) && count($pres)>0){
 			foreach($pres as $prow) {
@@ -961,54 +994,38 @@ class Dashboard extends crm_controller
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
-		$this->db->where("l.lead_id != 'null' AND l.pjt_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status = 1 ");
-		// $this->db->limit('10');
+		$this->db->where("l.lead_id != ", 'null');
+		$this->db->where("l.pjt_id  != ", 'null');
+		$this->db->where("l.lead_status", '4');
+		if($project_status){
+			if($project_status != '2')
+			$this->db->where("l.pjt_status", $project_status);
+		}
+		if($division){
+			$this->db->where_in("l.division", $division);
+		}
+		// $this->db->where("l.lead_id != 'null' AND l.pjt_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status = 1 ");
+		$this->db->limit('10');
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
 		$month = date('Y-m-01 00:00:00');
 		
 		// echo "<pre>"; print_r($res); die;
 		$rates = $this->get_currency_rates();
-		/* $pjts_data = $this->getProjectsDataByDefaultCurrency($res);
-
-		if(!empty($pjts_data) && count($pjts_data)>0){
-			foreach($pjts_data as $prow) {
-				$projectsval['project'][$practice_arr[$prow['practice']]][] = $prow['pjt_id'];
-				
-				if (isset($projectsval['practicewise'][$practice_arr[$prow['practice']]])) {
-					$projectsval['practicewise'][$practice_arr[$prow['practice']]] += 1;
-					//need to calculate for the total IR
-					$projectsval['irval'][$practice_arr[$prow['practice']]] += $prow['total_amount_inv_raised'];
-					$projectsval['curmonth_irval'][$practice_arr[$prow['practice']]] += $this->get_ir_val($prow['lead_id'], $prow['expect_worth_id'], $month);
-				} else {
-					$projectsval['practicewise'][$practice_arr[$prow['practice']]]  = 1;  ///Initializing count
-					$projectsval['irval'][$practice_arr[$prow['practice']]] = $prow['total_amount_inv_raised'];
-					$projectsval['curmonth_irval'][$practice_arr[$prow['practice']]] = $this->get_ir_val($prow['lead_id'], $prow['expect_worth_id'], $month);
-				}
-				if($row->rag_status == 1){
-					if (isset($projectsval['rag_status'][$practice_arr[$prow['practice']]])) {
-						$projectsval['rag_status'][$practice_arr[$prow['practice']]] += 1;					
-					} else {
-						$projectsval['rag_status'][$practice_arr[$prow['practice']]]  = 1;  ///Initializing count
-					}
-				}
-			}
-		}
-		unset($projectsval['practicewise']);
-		echo "<pre>"; print_r($projectsval); echo "</pre>";  */
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
 				// $projects['project'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 				$timesheet = array();
 				if(!empty($row['pjt_id']))
-				$timesheet = $this->get_timesheet_data($row['pjt_id']);
+				$timesheet = $this->get_timesheet_data($row['pjt_id'], $start_date, $end_date);
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
 					//need to calculate for the total IR
-					$projects['irval'][$practice_arr[$row['practice']]] += $this->get_ir_val($row['lead_id'], $row['expect_worth_id']);
+					$projects['irval'][$practice_arr[$row['practice']]] += $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '', $start_date, $end_date);
 					//need to calculate for the current month IR
 					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month);
 					$projects['cm_irval'][$practice_arr[$row['practice']]] += $curmonth_ir;
@@ -1020,7 +1037,7 @@ class Dashboard extends crm_controller
 					}
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					$projects['irval'][$practice_arr[$row['practice']]] = $this->get_ir_val($row['lead_id'], $row['expect_worth_id']);
+					$projects['irval'][$practice_arr[$row['practice']]] = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '',$start_date, $end_date);
 					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month);
 					$projects['cm_irval'][$practice_arr[$row['practice']]] = $curmonth_ir;
 					if(!empty($timesheet) && count($timesheet)>0){
@@ -1042,16 +1059,17 @@ class Dashboard extends crm_controller
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
 		
-		// echo "<pre>"; print_r($user_data); exit;
-		
+		if($this->input->post("filter")!="")
+		$this->load->view('projects/service_dashboard_grid', $data);
+		else
 		$this->load->view('projects/service_dashboard', $data);
 	}
 	
-	public function get_timesheet_data($pjt_code)
+	public function get_timesheet_data($pjt_code, $start_date, $end_date)
 	{
-		$start_date = $end_date = '';
-		$start_date = '2006-01-01';
-		$end_date   = date('Y-m-d');
+		
+		// $start_date = '2006-01-01';
+		// $end_date   = date('Y-m-d');
 		
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
@@ -1081,7 +1099,7 @@ class Dashboard extends crm_controller
 		return round($amount*$val, 2);
 	}
 	
-	public function get_ir_val($lead_id, $ewid, $month=false) {
+	public function get_ir_val($lead_id, $ewid, $month=false, $start_date=false, $end_date=false) {
 		
 		$rates = $this->get_currency_rates();
 		
@@ -1092,8 +1110,15 @@ class Dashboard extends crm_controller
 			// $this->db->where("(for_month_year ='".date('Y-m-d 00:00:00', strtotime($month))."' )", NULL, FALSE);
 			$this->db->where("for_month_year", date('Y-m-d H:i:s', strtotime($month)));
 		}
+		if(!empty($start_date)) {
+			$this->db->where("for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+		}
+		if(!empty($end_date)) {
+			$this->db->where("for_month_year <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+		}
 		$query  = $this->db->get();
 		$result = $query->result();
+		// echo $this->db->last_query() ."<br>"; exit;
 		/* if(!empty($month)) {
 			echo $this->db->last_query() ."<br>";
 		} */
