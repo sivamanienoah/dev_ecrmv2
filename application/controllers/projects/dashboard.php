@@ -1005,7 +1005,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("l.division", $division);
 		}
 		// $this->db->where("l.lead_id != 'null' AND l.pjt_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status = 1 ");
-		$this->db->limit('10');
+		// $this->db->limit('10');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
