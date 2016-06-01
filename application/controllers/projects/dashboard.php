@@ -966,7 +966,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		$division = '';
-		if($this->input->post("entity")) {
+		if($this->input->post("entity") && ($this->input->post("entity")!='null')) {
 			$division = @explode(',', $this->input->post("entity"));
 		}
 		
