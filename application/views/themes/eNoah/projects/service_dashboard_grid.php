@@ -6,6 +6,7 @@
 				<?php foreach($practice_data as $prac) { ?>
 					<th><?php echo $prac->practices; ?></th>
 					<?php $practice_arr[] = $prac->practices; ?>
+					<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
 				<?php } ?>
 			<?php } ?>
 		</thead>
@@ -15,7 +16,16 @@
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php echo isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : ''; ?>
+					<?php
+						$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
+						if(isset($noProjects)) {
+						?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
+						<?php
+						} else {
+							echo '';
+						}
+					?>								
 					<?php
 						$total_irval += isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : 0;
 						$totCM_Irval += isset($projects['cm_irval'][$parr]) ? $projects['cm_irval'][$parr] : '';
@@ -32,33 +42,62 @@
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php echo isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : ''; ?>
+					<?php
+						$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+						if(isset($rag)) {
+						?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
+						<?php
+						} else {
+							echo '';
+						}  
+					?>
 				</td>
 			<?php } ?>
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>YTD Billing (USD)</b></td>
+		<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php echo isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : ''; ?>
+					<?php
+						$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
+						if(isset($irval) && ($irval != 0)) {
+						?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+						<?php
+						} else {
+							echo '';
+						}
+					?>
 				</td>
 			<?php } ?>
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>Billable for the month (%)</b></td>
+		<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : ''; ?>
+					<?php 
+						#echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : ''; 
+						$cm_irval = isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : '';
+						if(isset($cm_irval) && ($cm_irval != 0)) {
+							// echo $projects['cm_irval'][$parr];
+						?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php echo $cm_irval; ?></a>
+						<?php
+						} else {
+							echo '';
+						}
+					?>
 				</td>
 			<?php } ?>
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>Billable YTD (%)</b></td>
+		<td><b>Billable YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
@@ -68,7 +107,7 @@
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>Effort Variance (%)</b></td>
+		<td><b>Effort Variance (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
@@ -78,7 +117,7 @@
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>Contribution for the month (%)</b></td>
+		<td><b>Contribution for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
@@ -88,7 +127,7 @@
 		<?php } ?>
 	</tr>
 	<tr>
-		<td><b>Contribution YTD (%)</b></td>
+		<td><b>Contribution YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
@@ -98,3 +137,7 @@
 		<?php } ?>
 	</tr>
 </table>
+<div class="clearfix"></div>
+<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
+
+</div>

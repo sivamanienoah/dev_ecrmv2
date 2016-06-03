@@ -39,6 +39,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
+								<td class="tblheadbg">BILLABLE MONTH</td>
 								<td class="tblheadbg">PROJECT STATUS</td>
 								<td class="tblheadbg">ENTITY</td>
 							</tr>
@@ -49,9 +50,14 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="" />
 								</td>
 								<td class="">
+									<span>Billable Month</span> <input type="text" data-calendar="false" name="billable_month" id="billable_month" class="textfield" value="" />
+								</td>
+								<td class="">
 									<select title="Status" id="project_status" name="project_status[]" multiple="multiple">
 										<option value="1">Project In Progress</option>
-										<option value="2">All Projects</option>
+										<option value="2">Project Completed</option>
+										<option value="3">Project Onhold</option>
+										<option value="4">Inactive</option>
 									</select>
 								</td>								
 								<td class="">
@@ -66,7 +72,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="3">
+								<td colspan="4">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
@@ -89,16 +95,29 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<?php foreach($practice_data as $prac) { ?>
 								<th><?php echo $prac->practices; ?></th>
 								<?php $practice_arr[] = $prac->practices; ?>
+								<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
 							<?php } ?>
 						<?php } ?>
 					</thead>
 				</tr>
+				<?php
+					// echo "<pre>"; print_r($practice_id_arr); echo "</pre>"; exit;
+				?>
 				<tr>
 					<td><b>Number of Projects currently running</b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : ''; ?>
+								<?php
+									$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
+									if(isset($noProjects)) {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
+									<?php
+									} else {
+										echo '';
+									}
+								?>								
 								<?php
 									$total_irval += isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : 0;
 									$totCM_Irval += isset($projects['cm_irval'][$parr]) ? $projects['cm_irval'][$parr] : '';
@@ -115,33 +134,63 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : ''; ?>
+								<?php
+									$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+									if(isset($rag)) {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
+									<?php
+									} else {
+										echo '';
+									}
+								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>YTD Billing (USD)</b></td>
+					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : ''; ?>
+								<?php
+									$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
+									if(isset($irval) && ($irval != 0)) {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+									<?php
+									} else {
+										echo '';
+									}
+								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Billable for the month (%)</b></td>
+					<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : ''; ?>
+								<?php 
+									#echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : ''; 
+									$cm_irval = isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : '';
+									if(isset($cm_irval) && ($cm_irval != 0)) {
+										// echo $projects['cm_irval'][$parr];
+									?>
+									
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php echo $cm_irval; ?></a>
+									<?php
+									} else {
+										echo '';
+									}
+								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Billable YTD (%)</b></td>
+					<td><b>Billable YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
@@ -151,7 +200,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Effort Variance (%)</b></td>
+					<td><b>Effort Variance (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
@@ -161,7 +210,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Contribution for the month (%)</b></td>
+					<td><b>Contribution for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
@@ -171,7 +220,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Contribution YTD (%)</b></td>
+					<td><b>Contribution YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
@@ -223,6 +272,27 @@ $( "#month_year_from_date, #month_year_to_date" ).datepicker({
 		$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 	}
 });
+$( "#billable_month" ).datepicker({
+	changeMonth: true,
+	changeYear: true,
+	dateFormat: 'MM yy',
+	maxDate: 0,
+	showButtonPanel: true,	
+	onClose: function(dateText, inst) {
+		var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+		var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
+		$(this).datepicker('setDate', new Date(year, month, 1));
+	},
+	beforeShow : function(input, inst) {
+		if ((datestr = $(this).val()).length > 0) {
+			year = datestr.substring(datestr.length-4, datestr.length);
+			month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNames'));
+			$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
+			$(this).datepicker('setDate', new Date(year, month, 1));    
+		}
+		$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+	}
+});
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
@@ -234,8 +304,9 @@ $("#advanceFilterServiceDashboard").submit(function() {
 	var project_status 		 = $("#project_status").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
+	var billable_month   	 = $("#billable_month").val();
 
-	if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == ""){
+	if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
 		$('#advance').show();
 		$('#load').hide();
 		return false;
@@ -245,7 +316,7 @@ $("#advanceFilterServiceDashboard").submit(function() {
 		type: "POST",
 		url: site_base_url+"projects/dashboard/service_dashboard/",
 		// dataType: "json",
-		data: "filter=filter"+"&entity="+entity+"&project_status="+project_status+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+		data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function() {
 			$('#default_view').empty();
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
@@ -258,70 +329,21 @@ $("#advanceFilterServiceDashboard").submit(function() {
 	});
 	return false;  //stop the actual form post !important!
 });
-/*
-$(function() {
 
-	$('body').on('change','#skill_ids',function(){
-		var dids       = $('#department_ids').val();
-		var start_date = $('#month_year_from_date').val();
-		var end_date   = $('#month_year_to_date').val();
-		var sids = $(this).val();
-		$("#filter_area_status").val('1');
-		$('#member_ids').html('');
-		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.ajax({
-			type: 'POST',
-			url: site_base_url+'projects/dashboard/get_skill_members',
-			data: params,
-			success: function(members) {
-				if(members){
-					var mem_html;
-					var users = $.parseJSON(members);
-					if(users.length){
-						for(var i=0;i<users.length;i++){
-							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
-						}	
-					}
-					$('#member_ids').html('');
-					$('#member_ids').append(mem_html);
-				}
-			}
-		});
-	});
-
-function getData(resource_type, dept_type)
-{
-	$('#filter_group_by').prop('selectedIndex',0);
-	if($('#department_ids').val() == null) {
-		$('#hdept_ids').val('');
-	} else {
-		$('#hdept_ids').val($('#department_ids').val());
-	}
-	if($('#practice_ids').val() == null) {
-		$('#hprac_ids').val('');
-	} else {
-		$('#hprac_ids').val($('#practice_ids').val());
-	}
-	$('#hmonth_year').val($('#month_year_from_date').val());
-	$('#hmonth_to_year').val($('#month_year_to_date').val());
-	$('#hskill_ids').val($('#skill_ids').val())
-	$('#hmember_ids').val($('#member_ids').val())
-	if($('#exclude_leave').attr('checked'))
-	$('#hexclude_leave').val(1);
-	if($('#exclude_holiday').attr('checked'))
-	$('#hexclude_holiday').val(1)
-	
-	var formdata = $('#fliter_data').serialize();
+function getData(practice, clicktype)
+{	
+	var entity        		 = $("#entity").val();
+	var project_status 		 = $("#project_status").val();
+	var month_year_from_date = $("#month_year_from_date").val();
+	var month_year_to_date   = $("#month_year_to_date").val();
+	var billable_month   	 = $("#billable_month").val();
 	
 	$.ajax({
 		type: "POST",
-		url: site_base_url+'projects/dashboard/get_data/',                                                              
-		data: formdata+'&resource_type='+resource_type+'&dept_type='+dept_type+'&filter_group_by=0',
+		url: site_base_url+'projects/dashboard/service_dashboard_data/',
+		data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
 		cache: false,
 		beforeSend:function() {
-			$('#filter_group_by').prop('selectedIndex',0);
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 			$('#drilldown_data').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
@@ -333,6 +355,8 @@ function getData(resource_type, dept_type)
 		}                                                                                   
 	});
 }
-}); */
+$(function() {
+	
+});
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
