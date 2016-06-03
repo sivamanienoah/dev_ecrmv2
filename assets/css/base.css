@@ -2811,7 +2811,6 @@ form#edit-folder-permissions { overflow:visible !important; }
 .manage-selectarea{margin:0 0 10px;  padding: 0 10px;}
 .resetBtn{line-height: 17px;margin-top: 3px !important;padding: 2px 6px !important;background-color: #d8d8d8;border: 1px solid #ccc;color: #d12f19;cursor: pointer;font-weight:normal;display: block;float: left;font-family: "Lucida Grande",Tahoma,Arial,Verdana,sans-serif;font-size: 100%;line-height: 130%;text-decoration: none;}
 
-
 /****1-6-2016****/
 .customize-sec {display:inline-block;width:100%;position:relative;}
 .customize-sec .tbl-field-customize {position:absolute;right:0;z-index:999;}
@@ -2826,4 +2825,5 @@ form#edit-folder-permissions { overflow:visible !important; }
 .field-swap .buttons button, .field-swap .buttons a {display:inline;float:none;}
 .modal-custom-fields{ border: medium none; color: #375695;font-size: 12px;font-weight: bold;margin: 5px 0 0 30px; padding: 3px 0 4px 22px !important; }
 .modal-custom-fields a:hover {text-decoration: none;}
+.highlight_info {color:#f79158;}
 /****1-6-2016****/
