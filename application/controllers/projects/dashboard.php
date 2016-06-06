@@ -1343,7 +1343,7 @@ class Dashboard extends crm_controller
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
 		$this->db->where("DATE(l.date_start) >= ", $start_date);
-		$this->db->where("DATE(l.date_due) <= ", $end_date);
+		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($practice){
 			$this->db->where("l.practice", $practice);
 		}
