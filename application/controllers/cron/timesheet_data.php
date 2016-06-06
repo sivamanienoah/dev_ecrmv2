@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 6;
+		$totalMonths  = 7;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2014-03-01')); //For uploading old data
@@ -228,6 +228,7 @@ class Timesheet_data extends crm_controller
 					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
 				// }
 				// echo $this->db->last_query() . "<br />";
+				$ins_result = true;
 			}
 		}
 		
