@@ -235,7 +235,7 @@ class Timesheet_data extends crm_controller
 		echo "<br>End Time = ".date("Y-m-d H:i:s");
 		$ended_at = date("Y-m-d H:i:s");
 		
-		if($ins_res) {
+		if($ins_result) {
 		
 			$upload_status = "Insert successfully";
 			echo "<br>Insert successfully";
