@@ -1066,7 +1066,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in('l.lead_id', $result_ids);
 		}
 		
-		$this->db->limit('10');
+		// $this->db->limit('10');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
