@@ -119,7 +119,7 @@ class Timesheet_data extends crm_controller
 		if(!empty($times_result)) {
 		
 			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
-			// echo $this->db->last_query();
+			echo $this->db->last_query();
 			
 		}
 		
