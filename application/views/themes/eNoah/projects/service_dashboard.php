@@ -197,7 +197,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<?php
 									$billval = '';
 									if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
-									$billval = isset($projects['billable_ytd'][$parr]['Billable']['hour']) ? ($projects['billable_ytd'][$parr]['totalhour']/$projects['billable_ytd'][$parr]['totalhour']) : '';
+									$billval = ($projects['billable_ytd'][$parr]['Billable']['hour']-$projects['billable_ytd'][$parr]['totalhour'])/$projects['billable_ytd'][$parr]['totalhour'];
 									if(isset($billval) && ($billval != 0)) {
 									?>
 									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
