@@ -1175,7 +1175,6 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		echo "<pre>"; print_R($practice_arr); die;
 		// $start_date = '2006-01-01';
 		// $end_date   = date('Y-m-d');
 		
@@ -1199,7 +1198,7 @@ class Dashboard extends crm_controller
 		
 		$res = array();
 		
-		// echo "<pre>"; print_r($timesheet); exit;
+		echo "<pre>"; print_r($timesheet); exit;
 		$res['total_internal_hrs'] = $res['total_non_billable_hrs'] = $res['total_billable_hrs'] = 0;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $row) {
