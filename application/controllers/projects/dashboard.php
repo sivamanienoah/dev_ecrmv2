@@ -1176,20 +1176,39 @@ class Dashboard extends crm_controller
 	{
 		// echo "<pre>"; print_r($practice_arr); exit;
 		
-		$getITDataQry1 = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
+		$this->db->from($this->cfg['dbpref'].'timesheet_data');
+		$tswhere = "resoursetype is NOT NULL";
+		$this->db->where($tswhere);
+		if(!empty($start_date)) {
+			$this->db->where("start_time >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+		}
+		if(!empty($end_date)) {
+			$this->db->where("start_time <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+		}
+		if(!empty($month)) {
+			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
+		}
+		$query2 = $this->db->get();
+		echo $this->db->last_query(); die;
+		$timesheet_data = $query2->result();
+		
+		
+		
+		/* $getITDataQry1 = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
-		
-		echo $getITDataQry; exit;
+		// echo $getITDataQry; exit;
 		$sql1 	   = $this->db->query($getITDataQry1);
 		echo $this->db->last_query(); die;
-		$timesheet = $sql1->result();
+		$timesheet = $sql1->result(); */
+		
 		
 		$res = array();
 		
 		// echo "<pre>"; print_r($timesheet); exit;
-		if(count($timesheet)>0) {
-			foreach($timesheet as $row) {
+		if(count($timesheet_data)>0) {
+			foreach($timesheet_data as $row) {
 				if (isset($bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
 					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
