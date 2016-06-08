@@ -218,9 +218,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<td align='right'>
 								<?php
 								$eff_var = '';
-								// echo isset($projects['eff_var'][$parr]) ? round(($projects['eff_var'][$parr]/$totEV)*100, 2) : '';
-								if(isset($projects['estimate_hr'][$parr]) && isset($projects['fixedbid_totoleff'][$parr])) {
-									$eff_var = (($projects['fixedbid_totoleff'][$parr] - $projects['estimate_hr'][$parr])/$projects['estimate_hr'][$parr])*100;
+								if(isset($projects['eff_var'][$parr])) {
+									$eff_var = (($projects['eff_var']['total_actual_hrs'][$parr] - $projects['eff_var']['tot_estimate_hrs'][$parr])/$projects['eff_var']['tot_estimate_hrs'][$parr])*100;
 								}
 								echo round($eff_var, 2);
 								?>
