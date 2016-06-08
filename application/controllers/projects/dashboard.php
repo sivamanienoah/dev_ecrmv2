@@ -1225,7 +1225,7 @@ class Dashboard extends crm_controller
 		
 		// echo $month_contribution_query; exit;
 		$sql2 = $this->db->query($month_contribution_query);
-		$contribution_data = $sql2->result();
+		$month_contribution_data = $sql2->result();
 		if(!empty($month_contribution_data)) {
 			foreach($month_contribution_data as $mcdrow) {
 				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
