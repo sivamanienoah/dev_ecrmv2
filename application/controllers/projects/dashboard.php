@@ -1183,6 +1183,7 @@ class Dashboard extends crm_controller
 		$this->db->select('ts.practice_id, ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		// $this->db->where("sfv.for_month_year <= ")
 		
 		if( (!empty($start_date)) && (!empty($end_date)) ){
 			$this->db->where("DATE(ts.start_time) >= ", $start_date);
@@ -1194,7 +1195,7 @@ class Dashboard extends crm_controller
 		}
 
 		$sql = $this->db->get();
-		echo $this->db->last_query();
+		echo $this->db->last_query(); die;
 		$timesheet = $sql->result();
 		
 		$res = array();
