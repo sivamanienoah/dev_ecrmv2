@@ -1160,8 +1160,8 @@ class Dashboard extends crm_controller
 		}
 		
 		//for current month EFFORTS
-		$curtimesheet_val = $this->get_timesheet_data($practice_arr, "", "", $month);
-		$timesheet_val    = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
+		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		$data['projects'] = $projects;
 		echo "<pre>"; print_r($projects); exit;
