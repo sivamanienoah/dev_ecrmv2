@@ -1196,7 +1196,8 @@ class Dashboard extends crm_controller
 		$bu_arr = array();
 
 		if(count($timesheet_data)>0) {
-			foreach($timesheet_data as $row) {
+			echo "<pre>"; print_r($timesheet_data); exit;
+			/* foreach($timesheet_data as $row) {
 				if (isset($bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
 					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
@@ -1206,9 +1207,9 @@ class Dashboard extends crm_controller
 				}
 				$bu_arr[$practice_arr[$row->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
 				$bu_arr[$practice_arr[$row->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
-			}
+			} */
 		}
-		echo "<pre>"; print_r($bu_arr); exit;
+		
 		return $bu_arr;
 	}
 
