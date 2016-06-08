@@ -174,7 +174,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<td align='right'>
 								<?php
 									$cm_billval = '';
-									if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
+									// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
 									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'] - $projects['billable_month'][$parr]['totalhour'])/$projects['billable_month'][$parr]['totalhour'] : '';
 									if(isset($cm_billval) && ($cm_billval != 0)) {
 									?>					
