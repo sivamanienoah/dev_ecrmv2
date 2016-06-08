@@ -25,13 +25,6 @@
 						} else {
 							echo '';
 						}
-					?>								
-					<?php
-						/* $total_irval += isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : 0;
-						$totCM_Irval += isset($projects['cm_irval'][$parr]) ? $projects['cm_irval'][$parr] : '';
-						$totEV += isset($projects['eff_var'][$parr]) ? $projects['eff_var'][$parr] : '';
-						$totDC += isset($projects['dc'][$parr]) ? $projects['dc'][$parr] : '';
-						$totCM_DC += isset($projects['cm_dc'][$parr]) ? $projects['cm_dc'][$parr] : ''; */
 					?>
 				</td>
 			<?php } ?>
@@ -82,9 +75,8 @@
 				<td align='right'>
 					<?php
 						$cm_billval = '';
-						#echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : '';
-						if(isset($projects['cm_billeff'][$parr]) && isset($projects['cm_totoeff'][$parr]))
-						$cm_billval = isset($projects['cm_billeff'][$parr]) ? ($projects['cm_billeff'][$parr]/$projects['cm_totoeff'][$parr]) : '';
+						// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
+						$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'] - $projects['billable_month'][$parr]['totalhour'])/$projects['billable_month'][$parr]['totalhour'];
 						if(isset($cm_billval) && ($cm_billval != 0)) {
 						?>					
 						<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($cm_billval*100), 2); ?></a-->
@@ -105,8 +97,8 @@
 				<td align='right'>
 					<?php
 						$billval = '';
-						if(isset($projects['billableeff'][$parr]) && isset($projects['totoleff'][$parr]))
-						$billval = isset($projects['billableeff'][$parr]) ? ($projects['billableeff'][$parr]/$projects['totoleff'][$parr]) : '';
+						if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
+						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour']-$projects['billable_ytd'][$parr]['totalhour'])/$projects['billable_ytd'][$parr]['totalhour'];
 						if(isset($billval) && ($billval != 0)) {
 						?>
 						<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
@@ -127,12 +119,13 @@
 				<td align='right'>
 					<?php
 					$eff_var = '';
-					if(isset($projects['estimate_hr'][$parr]) && isset($projects['fixedbid_totoleff'][$parr])) {
-						$eff_var = (($projects['fixedbid_totoleff'][$parr] - $projects['estimate_hr'][$parr])/$projects['estimate_hr'][$parr])*100;
+					if(isset($projects['eff_var'][$parr])) {
+						$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 					}
 					echo round($eff_var, 2);
 					?>
 				</td>
+
 			<?php } ?>
 		<?php } ?>
 	</tr>
@@ -142,9 +135,10 @@
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
 					<?php #echo isset($projects['cm_dc'][$parr]) ? round(($projects['cm_dc'][$parr]/$totCM_DC)*100, 2) : ''; 
+						#((total invoice raised - total direct cost)/total invoice raised)*100;
 						$cm_dc_val = '';
-						if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_dc_tot'][$parr])) {
-							$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_dc_tot'][$parr])/$projects['cm_irval'][$parr]) * 100;
+						if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
+							$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
 						}
 						echo round($cm_dc_val, 2);
 					?>
@@ -157,11 +151,11 @@
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php #echo isset($projects['dc'][$parr]) ? round(($projects['dc'][$parr]/$totDC)*100, 2) : ''; 
+					<?php 
 						// ((total invoice raised - total direct cost)/total invoice raised)*100
 						$dc_val = '';
-						if(isset($projects['irval'][$parr]) && isset($projects['dc_tot'][$parr])) {
-							$dc_val = (($projects['irval'][$parr] - $projects['dc_tot'][$parr])/$projects['irval'][$parr]) * 100;
+						if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
+							$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 						}
 						echo round($dc_val, 2);
 					?>
