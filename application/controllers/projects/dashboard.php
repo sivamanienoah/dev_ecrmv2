@@ -1170,10 +1170,15 @@ class Dashboard extends crm_controller
 				if(!empty($proj_data) && count($proj_data)>0){
 					$dc = $this->get_timesheet_actual_hours($recrds, $start_date, $end_date);
 					$directcost[$practice_arr[$proj_data['practice']]]['total_direct_cost'] += $dc['total_dc'];
+					
+					$cm_dc = $this->get_timesheet_actual_hours($recrds, "", "", $month);
+					$cm_directcost[$practice_arr[$proj_data['practice']]]['total_cm_direct_cost'] += $cm_dc['total_dc'];
+					
 				}
 			}
 		}
 		$projects['direct_cost']   = $directcost;
+		$projects['cm_direct_cost'] = $cm_directcost;
 		// echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
@@ -1185,17 +1190,20 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard', $data);
 	}
 	
-	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false)
+	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false, $month=false)
 	{
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
 		$this->db->where("ts.project_code", $pjt_code);
 		if( (!empty($start_date)) && (!empty($end_date)) ){
-			$this->db->where("DATE(ts.start_time) >= ", $start_date);
-			$this->db->where("DATE(ts.end_time) <= ", $end_date);
+			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("DATE(ts.start_time) <= ", date('Y-m-d', strtotime($end_date)));
 		}
-		
+		if(!empty($month)) {
+			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
+		}
 		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
 		
 		$query = $this->db->get();
