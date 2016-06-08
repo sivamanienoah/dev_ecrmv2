@@ -1193,24 +1193,23 @@ class Dashboard extends crm_controller
 		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
-		$bu_arr = array();
+		$resarr = array();
 
 		if(count($timesheet_data)>0) {
-			echo "<pre>"; print_r($timesheet_data); exit;
-			/* foreach($timesheet_data as $row) {
-				if (isset($bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
-					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
+			foreach($timesheet_data as $row) {
+				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
+					$resarr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
 				} else {
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 				}
-				$bu_arr[$practice_arr[$row->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
-				$bu_arr[$practice_arr[$row->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
-			} */
+				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
+				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+			}
 		}
-		
-		return $bu_arr;
+		echo "<pre>"; print_r($resarr); die;
+		return $resarr;
 	}
 
 	
