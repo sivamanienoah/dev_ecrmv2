@@ -104,7 +104,7 @@ class Invoice_model extends crm_model {
 			$filter['month_year_to_date'] = '';
 		}
 	
-		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.first_name,c.last_name,c.company, sd.base_currency');
+		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.first_name,c.last_name,c.company,sd.base_currency');
 
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
@@ -182,7 +182,7 @@ class Invoice_model extends crm_model {
 			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
 		}
 		$query  = $this->db->get();
-		// echo $this->db->last_query();exit;
+		echo $this->db->last_query();exit;
 		$res 	= $query->result_array();
 		return $res;
     }
