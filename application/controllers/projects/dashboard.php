@@ -1223,7 +1223,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' ";
 		
-		echo $month_contribution_query; exit;
+		// echo $month_contribution_query; exit;
 		$sql2 = $this->db->query($month_contribution_query);
 		$contribution_data = $sql2->result();
 		if(!empty($month_contribution_data)) {
