@@ -219,7 +219,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<?php
 								$eff_var = '';
 								if(isset($projects['eff_var'][$parr])) {
-									$eff_var = (($projects['eff_var']['total_actual_hrs'][$parr] - $projects['eff_var']['tot_estimate_hrs'][$parr])/$projects['eff_var']['tot_estimate_hrs'][$parr])*100;
+									$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 								}
 								echo round($eff_var, 2);
 								?>
