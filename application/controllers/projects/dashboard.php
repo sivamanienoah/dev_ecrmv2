@@ -136,8 +136,6 @@ class Dashboard extends crm_controller
 	
 			$data['skill_ids_selected'] = $query->result();
 			}
-			
-			
 			// $data['skill_ids_selected'] = $qry->result();
 		}
 
@@ -150,7 +148,7 @@ class Dashboard extends crm_controller
 			}
 			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");			
 			$data['member_ids_selected'] = $qry1->result();			
-		}		
+		}
 		
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -1169,6 +1167,9 @@ class Dashboard extends crm_controller
 		
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
+		
+		echo "<pre>"; print_r($pcodes); exit;
+		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
