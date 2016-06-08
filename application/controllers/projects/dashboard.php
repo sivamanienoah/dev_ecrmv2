@@ -1127,8 +1127,8 @@ class Dashboard extends crm_controller
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
-				if(!in_array($ir['pjt_id'], $projects['dc'][$practice_arr[$ir['practice']]]['pjts']))
-				$projects['find_dc'][$practice_arr[$ir['practice']]]['pjts'][] = $ir['pjt_id'];
+				if(!in_array($ir['pjt_id'], $projects['dc_projects']))
+				$projects['dc_projects'][] = $ir['pjt_id'];
 			}
 		}
 		
@@ -1157,6 +1157,9 @@ class Dashboard extends crm_controller
 			}
 		}
 		$projects['eff_var']   = $effvar;
+		
+		//contribution
+		
 		// echo "<pre>"; print_r($effvar); die;
 		
 		$data['projects'] = $projects;
