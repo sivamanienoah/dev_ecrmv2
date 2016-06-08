@@ -940,6 +940,8 @@ class Dashboard extends crm_controller
 		$data  				  = array();
 		$data['page_heading'] = "IT Services Dashboard";
 		
+		$bk_rates = get_book_keeping_rates();
+		
 		// echo "<pre>"; print_R($this->input->post());
 		
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
@@ -1093,10 +1095,10 @@ class Dashboard extends crm_controller
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
 					//need to calculate for the total IR
-					$projects['irval'][$practice_arr[$row['practice']]] += $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '', $start_date, $end_date, $base_currency);
+					// $projects['irval'][$practice_arr[$row['practice']]] += $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '', $start_date, $end_date, $base_currency);
 					//need to calculate for the current month IR
-					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month, '', '', $base_currency);
-					$projects['cm_irval'][$practice_arr[$row['practice']]]        += $curmonth_ir;
+					// $curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month, '', '', $base_currency);
+					// $projects['cm_irval'][$practice_arr[$row['practice']]]        += $curmonth_ir;
 					//effort variance
 					if(!empty($timesheet) && count($timesheet)>0){
 						if($row['billing_type'] == 1) {
@@ -1114,9 +1116,9 @@ class Dashboard extends crm_controller
 					}
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					$projects['irval'][$practice_arr[$row['practice']]] = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '',$start_date, $end_date, $base_currency);
-					$curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month, '', '', $base_currency);
-					$projects['cm_irval'][$practice_arr[$row['practice']]] = $curmonth_ir;
+					// $projects['irval'][$practice_arr[$row['practice']]] = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], '',$start_date, $end_date, $base_currency);
+					// $curmonth_ir = $this->get_ir_val($row['lead_id'], $row['expect_worth_id'], $month, '', '', $base_currency);
+					// $projects['cm_irval'][$practice_arr[$row['practice']]] = $curmonth_ir;
 					if(!empty($timesheet) && count($timesheet)>0){
 						if($row['billing_type'] == 1) {
 							$projects['estimate_hr'][$practice_arr[$row['practice']]] = $row['estimate_hour'];
@@ -1142,6 +1144,22 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
+		
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		
+		foreach($invoices_data as $ir) {
+			$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
+			$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
+		}
+		
+		
+		
 
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
