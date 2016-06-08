@@ -173,7 +173,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$cm_billval = '';
+									echo $projects['billable_month'][$parr]['Billable'] . " " .$projects['billable_month'][$parr]['totalhour'];
+									/* $cm_billval = '';
 									if(isset($projects['billable_month'][$parr]['Billable']) && isset($projects['billable_month'][$parr]['totalhour']))
 									$cm_billval = isset($projects['billable_month'][$parr]['Billable']) ? ($projects['billable_month'][$parr]['totalhour']/$projects['billable_month'][$parr]['totalhour']) : '';
 									if(isset($cm_billval) && ($cm_billval != 0)) {
@@ -183,7 +184,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									<?php
 									} else {
 										echo '';
-									}
+									} */
 								?>
 							</td>
 						<?php } ?>
