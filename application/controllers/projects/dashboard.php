@@ -1161,7 +1161,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$query1 = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$invoices_data = $query1->result_array();
 
 		foreach($invoices_data as $ir) {
