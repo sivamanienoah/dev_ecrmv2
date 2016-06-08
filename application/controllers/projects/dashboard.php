@@ -1161,7 +1161,7 @@ class Dashboard extends crm_controller
 		
 		//for current month EFFORTS
 		// $curtimesheet = $this->get_timesheet_data($practice_arr, "", "", $month);
-		// $timesheets   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+		$timesheet_val   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		$data['projects'] = $projects;
 		echo "<pre>"; print_r($projects); exit;
@@ -1180,7 +1180,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
 		
-		// echo $getITDataQry; exit;
+		echo $getITDataQry; exit;
 		$sql1 	   = $this->db->query($getITDataQry1);
 		echo $this->db->last_query(); die;
 		$timesheet = $sql1->result();
