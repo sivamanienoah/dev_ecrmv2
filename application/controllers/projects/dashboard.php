@@ -1190,21 +1190,10 @@ class Dashboard extends crm_controller
 			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
 		}
 		$query2 = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
-		
-		
-		/* $getITDataQry1 = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
-		FROM crm_timesheet_data 
-		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
-		// echo $getITDataQry; exit;
-		$sql1 	   = $this->db->query($getITDataQry1);
-		echo $this->db->last_query(); die;
-		$timesheet = $sql1->result(); */
-		
-		
-		/* $bu_arr = array();
+		$bu_arr = array();
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
@@ -1220,7 +1209,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		echo "<pre>"; print_r($bu_arr); exit;
-		return $bu_arr; */
+		return $bu_arr;
 	}
 
 	
