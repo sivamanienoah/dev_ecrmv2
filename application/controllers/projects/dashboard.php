@@ -1201,7 +1201,8 @@ class Dashboard extends crm_controller
 			$this->db->where("start_time <= ", date('Y-m-d H:i:s', strtotime($end_date)));
 		}
 		if(!empty($month)) {
-			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
 		echo $this->db->last_query(); die;
