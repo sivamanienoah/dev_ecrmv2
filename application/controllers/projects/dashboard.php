@@ -1197,7 +1197,7 @@ class Dashboard extends crm_controller
 				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
 				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
 				if(!empty($start_date) && !empty($end_date)) {
-					if(!in_array($row->project_code, $resarr[$practice_arr[$row->practice_id]]['project_code'])){
+					if(!in_array($row->project_code, $resarr['project_code'])){
 						$resarr['project_code'][] = $row->project_code;
 					}
 				}
