@@ -184,7 +184,7 @@ button.ui-datepicker-current { display: none; }
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan='6' align='right'><strong>Total Value</strong></td><td align='right'><?php echo sprintf('%0.2f', $total_amt); ?></td>
+						<td colspan='8' align='right'><strong>Total Value</strong></td><td align='right'><?php echo sprintf('%0.2f', $total_amt); ?></td>
 					</tr>
 				</tfoot>
 			</table>
