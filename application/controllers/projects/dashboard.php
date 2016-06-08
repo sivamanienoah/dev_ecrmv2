@@ -1227,7 +1227,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		echo "<pre>"; print_r($bu_arr); die
+		echo "<pre>"; print_r($bu_arr); die;
 		
 		
 		
