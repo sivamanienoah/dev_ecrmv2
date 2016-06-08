@@ -1194,6 +1194,7 @@ class Dashboard extends crm_controller
 		}
 
 		$sql = $this->db->get();
+		echo $this->db->last_query();
 		$timesheet = $sql->result();
 		
 		$res = array();
