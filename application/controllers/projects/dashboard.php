@@ -1165,7 +1165,7 @@ class Dashboard extends crm_controller
 		// $timesheet    = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		$data['projects'] = $projects;
-		// echo "<pre>"; print_r($projects); exit;
+		echo "<pre>"; print_r($projects); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
