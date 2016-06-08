@@ -1180,7 +1180,7 @@ class Dashboard extends crm_controller
 		
 		// $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code FROM crm_timesheet_data WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
 		
-		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		$this->db->select('ts.practice_id, ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
 		
@@ -1198,8 +1198,7 @@ class Dashboard extends crm_controller
 		
 		$res = array();
 		
-		echo "<pre>"; print_r($timesheet); exit;
-		$res['total_internal_hrs'] = $res['total_non_billable_hrs'] = $res['total_billable_hrs'] = 0;
+		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $row) {
 				/* $res['total_cost']     += $ts['duration_cost'];
@@ -1217,17 +1216,17 @@ class Dashboard extends crm_controller
 					break;
 				} */
 				if (isset($bu_arr['it'][$row->resoursetype]['hour'])) {
-					$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
-					$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
+					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
+					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
 				} else {
-					$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours;
-					$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['hour'] = $row->duration_hours;
+					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 				}
 				$bu_arr['totalhour'] = $bu_arr['totalhour'] + $row->duration_hours;
 				$bu_arr['totalcost'] = $bu_arr['totalcost'] + $row->resource_duration_cost;
 			}
 		}
-		// echo "<pre>"; print_r($res); exit;
+		echo "<pre>"; print_r($bu_arr); exit;
 		return $res;
 	}
 	
