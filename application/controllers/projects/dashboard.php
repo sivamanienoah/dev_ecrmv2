@@ -1205,6 +1205,32 @@ class Dashboard extends crm_controller
 		}
 		$projects['direct_cost']   = $directcost;
 		
+		
+		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
+		FROM crm_timesheet_data 
+		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
+		
+		// echo $contribution_query; exit;
+		$sql1 = $this->db->query($contribution_query);
+		$contribution_data = $sql1->result();
+		if(!empty($contribution_data)) {
+			foreach($contribution_data as $cdrow){
+				if (isset($bu_arr[$row->resoursetype][$row->resoursetype]['hour'])) {
+					$bu_arr[$row->resoursetype][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr[$row->resoursetype][$row->resoursetype]['hour'];
+					$bu_arr[$row->resoursetype][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr[$row->resoursetype][$row->resoursetype]['cost'];
+				} else {
+					$bu_arr[$row->resoursetype][$row->resoursetype]['hour'] = $row->duration_hours;
+					$bu_arr[$row->resoursetype][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+				}
+				$bu_arr[$row->resoursetype]['totalhour'] = $bu_arr[$row->resoursetype]['totalhour'] + $row->duration_hours;
+				$bu_arr[$row->resoursetype]['totalcost'] = $bu_arr[$row->resoursetype]['totalcost'] + $row->resource_duration_cost;
+			}
+		}
+		
+		echo "<pre>"; print_r($bu_arr); die
+		
+		
+		
 		if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
 			foreach($cm_dc_projects as $recrdss){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
