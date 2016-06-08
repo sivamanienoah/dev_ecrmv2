@@ -1181,7 +1181,7 @@ class Dashboard extends crm_controller
 		// echo $this->db->last_query(); exit;
 		$timesheet = $query->result_array();
 		$res = array();
-		echo "<pre>"; print_r($timesheet); exit;
+		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
 				$res['total_cost']     += $ts['duration_cost'];
