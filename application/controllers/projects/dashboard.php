@@ -1158,6 +1158,10 @@ class Dashboard extends crm_controller
 		if(!empty($end_date)) {
 			$this->db->where("sfv.for_month_year <= ", date('Y-m-d H:i:s', strtotime($end_date)));
 		}
+		
+		$query1 = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$invoices_data = $query1->result_array();
 
 		foreach($invoices_data as $ir) {
 			$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
