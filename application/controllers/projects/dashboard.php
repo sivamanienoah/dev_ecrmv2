@@ -1195,17 +1195,17 @@ class Dashboard extends crm_controller
 		$this->db->where($tswhere);
 		$this->db->where_in('practice_id', $prs);
 		if(!empty($start_date)) {
-			$this->db->where("start_time >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+			$this->db->where("start_time >= ", date('Y-m-d', strtotime($start_date)));
 		}
 		if(!empty($end_date)) {
-			$this->db->where("start_time <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+			$this->db->where("start_time <= ", date('Y-m-d', strtotime($end_date)));
 		}
 		if(!empty($month)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
 			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
 		$resarr = array();
