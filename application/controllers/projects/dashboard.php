@@ -1154,10 +1154,10 @@ class Dashboard extends crm_controller
 			foreach($cm_invoices_data as $cm_ir) {
 				$base_conver_amt = $this->conver_currency($cm_ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['expect_worth_id']][$cm_ir['base_currency']]);
 				$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
-				if(!in_array($cm_ir['pjt_id'], $cm_dc_projects)){
+				/* if(!in_array($cm_ir['pjt_id'], $cm_dc_projects)){
 					if(!empty($cm_ir['pjt_id']))
 					$cm_dc_projects[] = $cm_ir['pjt_id'];
-				}
+				} */
 			}
 		}
 		
@@ -1190,7 +1190,7 @@ class Dashboard extends crm_controller
 		$projects['eff_var']   = $effvar;
 		
 		//contribution
-		if(!empty($dc_projects) && count($dc_projects)>0){
+		/* if(!empty($dc_projects) && count($dc_projects)>0){
 			foreach($dc_projects as $recrds){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -1202,10 +1202,8 @@ class Dashboard extends crm_controller
 					$directcost[$practice_arr[$proj_data['practice']]]['total_direct_cost'] += $dc['total_dc'];
 				}
 			}
-		}
-		$projects['direct_cost']   = $directcost;
-		
-		
+		} */
+
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
@@ -1215,19 +1213,18 @@ class Dashboard extends crm_controller
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
 			foreach($contribution_data as $cdrow){
-				if (isset($bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'])) {
-					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours + $bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'];
-					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost + $bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'];
+				/* if (isset($directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'])) {
+					$directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_direct_cost + $directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'];
 				} else {
-					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours;
-					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost;
-				}
-				$bu_arr[$practice_arr[$cdrow->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$cdrow->practice_id]]['totalhour'] + $cdrow->duration_hours;
-				$bu_arr[$practice_arr[$cdrow->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$cdrow->practice_id]]['totalcost'] + $cdrow->resource_duration_cost;
+					$directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_direct_cost;
+				} */
+				$directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['totalcost'] + $cdrow->resource_duration_direct_cost;
 			}
 		}
+		echo "<pre>"; print_r($directcost); die;
+		$projects['direct_cost']   = $directcost;
 		
-		echo "<pre>"; print_r($bu_arr); die;
+		
 		
 		
 		
