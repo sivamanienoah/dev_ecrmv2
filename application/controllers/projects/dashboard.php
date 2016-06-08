@@ -1127,9 +1127,9 @@ class Dashboard extends crm_controller
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
-				if(!in_array($ir['pjt_id'], $projects['dc_projects'])){
+				if(!in_array($ir['pjt_id'], $dc_projects)){
 					if(!empty($ir['pjt_id']))
-					$projects['dc_projects'][] = $ir['pjt_id'];
+					$dc_projects[] = $ir['pjt_id'];
 				}
 			}
 		}
@@ -1145,7 +1145,6 @@ class Dashboard extends crm_controller
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
 				$this->db->where("l.pjt_id", $rec);
-				$this->db->where("l.lead_status", '4');
 				$this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
 				$pro_data = $query3->result_array();
@@ -1161,8 +1160,21 @@ class Dashboard extends crm_controller
 		$projects['eff_var']   = $effvar;
 		
 		//contribution
+		if(!empty($dc_projects) && count($dc_projects)>0){
+			foreach($dc_projects as $recrds){
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				$this->db->where("l.pjt_id", $recrds);
+				$query4 = $this->db->get();
+				$proj_data = $query4->row_array();
+				if(!empty($proj_data) && count($proj_data)>0){
+					$dc = $this->get_timesheet_actual_hours($recrds, $start_date, $end_date);
+					$directcost[$practice_arr[$proj_data['practice']]]['total_actual_hrs'] += $dc['total_dc'];
+				}
+			}
+		}
 		
-		// echo "<pre>"; print_r($effvar); die;
+		echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
 		echo "<pre>"; print_r($projects); exit;
