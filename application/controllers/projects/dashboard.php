@@ -1213,22 +1213,28 @@ class Dashboard extends crm_controller
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
 			foreach($contribution_data as $cdrow){
-				/* if (isset($directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'])) {
-					$directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_direct_cost + $directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'];
-				} else {
-					$directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_direct_cost;
-				} */
-				$directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] + $cdrow->resource_duration_cost;
+				$directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] + $cdrow->resource_duration_direct_cost;
 			}
 		}
-		echo "<pre>"; print_r($directcost); die;
+		// echo "<pre>"; print_r($directcost); die;
 		$projects['direct_cost']   = $directcost;
 		
+		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
+		FROM crm_timesheet_data 
+		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
 		
+		// echo $contribution_query; exit;
+		$sql2 = $this->db->query($month_contribution_query);
+		$contribution_data = $sql2->result();
+		if(!empty($month_contribution_data)) {
+			foreach($month_contribution_data as $mcdrow) {
+				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
+			}
+		}
+		echo "<pre>"; print_r($cm_directcost); die;
+		$projects['cm_direct_cost'] = $cm_directcost;
 		
-		
-		
-		if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
+		/* if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
 			foreach($cm_dc_projects as $recrdss){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -1242,6 +1248,8 @@ class Dashboard extends crm_controller
 			}
 		}
 		$projects['cm_direct_cost'] = $cm_directcost;
+		*/
+		
 		// echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
