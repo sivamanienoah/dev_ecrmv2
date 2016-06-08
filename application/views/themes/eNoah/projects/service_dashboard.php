@@ -179,7 +179,10 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									if(isset($cm_billval) && ($cm_billval != 0)) {
 									?>					
 									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($cm_billval*100), 2); ?></a-->
-									<?php echo round(($cm_billval*100), 2); ?>
+									<?php #echo round(($cm_billval*100), 2); 
+										echo $cm_billval;
+
+									?>
 									<?php
 									} else {
 										echo '';
