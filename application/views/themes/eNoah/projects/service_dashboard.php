@@ -252,8 +252,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<?php #echo isset($projects['dc'][$parr]) ? round(($projects['dc'][$parr]/$totDC)*100, 2) : ''; 
 									// ((total invoice raised - total direct cost)/total invoice raised)*100
 									$dc_val = '';
-									if(isset($projects['irval'][$parr]) && isset($projects['dc_tot'][$parr])) {
-										$dc_val = (($projects['irval'][$parr] - $projects['dc_tot'][$parr])/$projects['irval'][$parr]) * 100;
+									if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr])) {
+										$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr])/$projects['irval'][$parr]) * 100;
 									}
 									echo round($dc_val, 2);
 								?>
