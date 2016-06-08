@@ -1173,46 +1173,7 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard', $data);
 	}
 	
-	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
-	{
-		echo "<pre>"; print_r($practice_arr); exit;
-		if( (!empty($start_date)) && (!empty($end_date)) ){
-			// $this->db->where("DATE(ts.start_time) >= ", $start_date);
-			// $this->db->where("DATE(ts.end_time) <= ", $end_date);
-		}
-		if(!empty($month)) {
-			// $this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
-			// $this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
-		}
-		
-		$getITDataQry1 = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
-		FROM crm_timesheet_data 
-		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
-		
-		// echo $getITDataQry; exit;
-		$sql1 	   = $this->db->query($getITDataQry1);
-		echo $this->db->last_query(); die;
-		$timesheet = $sql1->result();
-		
-		$res = array();
-		
-		// echo "<pre>"; print_r($timesheet); exit;
-		if(count($timesheet)>0) {
-			foreach($timesheet as $row) {
-				if (isset($bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
-					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
-				} else {
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
-					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
-				}
-				$bu_arr[$practice_arr[$row->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
-				$bu_arr[$practice_arr[$row->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
-			}
-		}
-		echo "<pre>"; print_r($bu_arr); exit;
-		return $res;
-	}
+
 	
 	public function conver_currency($amount, $val) {
 		return round($amount*$val, 2);
