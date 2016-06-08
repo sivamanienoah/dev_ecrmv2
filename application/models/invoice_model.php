@@ -182,7 +182,7 @@ class Invoice_model extends crm_model {
 			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
 		}
 		$query  = $this->db->get();
-		echo $this->db->last_query();exit;
+		// echo $this->db->last_query();exit;
 		$res 	= $query->result_array();
 		return $res;
     }
