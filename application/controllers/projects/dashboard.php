@@ -1215,15 +1215,15 @@ class Dashboard extends crm_controller
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
 			foreach($contribution_data as $cdrow){
-				if (isset($bu_arr[$row->resoursetype][$row->resoursetype]['hour'])) {
-					$bu_arr[$row->resoursetype][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr[$row->resoursetype][$row->resoursetype]['hour'];
-					$bu_arr[$row->resoursetype][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr[$row->resoursetype][$row->resoursetype]['cost'];
+				if (isset($bu_arr[$row->practice_id][$row->resoursetype]['hour'])) {
+					$bu_arr[$row->practice_id][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr[$row->practice_id][$row->resoursetype]['hour'];
+					$bu_arr[$row->practice_id][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr[$row->practice_id][$row->resoursetype]['cost'];
 				} else {
-					$bu_arr[$row->resoursetype][$row->resoursetype]['hour'] = $row->duration_hours;
-					$bu_arr[$row->resoursetype][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+					$bu_arr[$row->practice_id][$row->resoursetype]['hour'] = $row->duration_hours;
+					$bu_arr[$row->practice_id][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 				}
-				$bu_arr[$row->resoursetype]['totalhour'] = $bu_arr[$row->resoursetype]['totalhour'] + $row->duration_hours;
-				$bu_arr[$row->resoursetype]['totalcost'] = $bu_arr[$row->resoursetype]['totalcost'] + $row->resource_duration_cost;
+				$bu_arr[$row->practice_id]['totalhour'] = $bu_arr[$row->practice_id]['totalhour'] + $row->duration_hours;
+				$bu_arr[$row->practice_id]['totalcost'] = $bu_arr[$row->practice_id]['totalcost'] + $row->resource_duration_cost;
 			}
 		}
 		
