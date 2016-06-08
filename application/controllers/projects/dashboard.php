@@ -1218,7 +1218,7 @@ class Dashboard extends crm_controller
 				} else {
 					$directcost[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_direct_cost;
 				} */
-				$directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] + $cdrow->resource_duration_direct_cost;
+				$directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_cm_direct_cost'] + $cdrow->resource_duration_cost;
 			}
 		}
 		echo "<pre>"; print_r($directcost); die;
