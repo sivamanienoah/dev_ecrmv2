@@ -1104,7 +1104,7 @@ class Dashboard extends crm_controller
 		}
 		
 		//need to calculate for the total IR
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
@@ -1127,6 +1127,7 @@ class Dashboard extends crm_controller
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
+				$projects['irval'][$practice_arr[$ir['practice']]]['pjts'] = $ir['pjt_id'];
 			}
 		}
 		
