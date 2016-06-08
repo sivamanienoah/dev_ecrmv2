@@ -225,7 +225,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] . "-".$projects['cm_irval'][$parr]; 
+								<?php #echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] . "-". $projects['cm_irval'][$parr]; 
 									#((total invoice raised - total direct cost)/total invoice raised)*100;
 									$cm_dc_val = '';
 									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
