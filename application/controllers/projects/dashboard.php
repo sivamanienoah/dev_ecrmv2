@@ -1204,7 +1204,7 @@ class Dashboard extends crm_controller
 			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
 		}
 		$query2 = $this->db->get();
-		// echo $this->db->last_query(); die;
+		echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
 		$resarr = array();
@@ -1223,7 +1223,6 @@ class Dashboard extends crm_controller
 				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
 			}
 		}
-		echo "<pre>"; print_r($resarr); die;
 		return $resarr;
 	}
 
