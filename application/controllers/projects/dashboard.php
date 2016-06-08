@@ -1231,7 +1231,7 @@ class Dashboard extends crm_controller
 				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
 			}
 		}
-		echo "<pre>"; print_r($cm_directcost); die;
+		// echo "<pre>"; print_r($cm_directcost); die;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		
 		/* if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
