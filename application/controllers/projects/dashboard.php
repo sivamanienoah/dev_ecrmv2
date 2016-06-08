@@ -1083,7 +1083,6 @@ class Dashboard extends crm_controller
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
 				// $projects['project'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
-				$base_currency = $base_cur_arr[$row['division']];
 				$timesheet = array();
 				// echo $this->db->last_query();
 				// echo "<pre>"; print_r($curtimesheet); die;
@@ -1091,7 +1090,7 @@ class Dashboard extends crm_controller
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
 					//effort variance
-					if(!empty($timesheet) && count($timesheet)>0){
+					/* if(!empty($timesheet) && count($timesheet)>0){
 						if($row['billing_type'] == 1) {
 							$projects['estimate_hr'][$practice_arr[$row['practice']]] += $row['estimate_hour'];
 							$projects['fixedbid_totoleff'][$practice_arr[$row['practice']]] += $timesheet['total_hours'];
@@ -1104,10 +1103,10 @@ class Dashboard extends crm_controller
 						$projects['cm_billeff'][$practice_arr[$row['practice']]]  += $curtimesheet['total_billable_hrs'];
 						$projects['cm_totoeff'][$practice_arr[$row['practice']]]  += $curtimesheet['total_hours'];
 						$projects['cm_dc_tot'][$practice_arr[$row['practice']]]   += $curtimesheet['total_dc'];
-					}
+					} */
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					if(!empty($timesheet) && count($timesheet)>0){
+					/* if(!empty($timesheet) && count($timesheet)>0){
 						if($row['billing_type'] == 1) {
 							$projects['estimate_hr'][$practice_arr[$row['practice']]] = $row['estimate_hour'];
 							$projects['fixedbid_totoleff'][$practice_arr[$row['practice']]] = $timesheet['total_hours'];
@@ -1120,7 +1119,7 @@ class Dashboard extends crm_controller
 						$projects['cm_billeff'][$practice_arr[$row['practice']]]  = $curtimesheet['total_billable_hrs'];
 						$projects['cm_totoeff'][$practice_arr[$row['practice']]]  = $curtimesheet['total_hours'];
 						$projects['cm_dc_tot'][$practice_arr[$row['practice']]]   = $curtimesheet['total_dc'];
-					}
+					} */
 				}
 				// echo "<pre>"; print_r($projects); exit;
 				if($row['rag_status'] == 1){
