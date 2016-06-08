@@ -1201,7 +1201,9 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
+		if(!empty($start_date) && !empty($end_date)) {
 		echo "<pre>"; print_r($resarr); die;
+		}
 		return $resarr;
 	}
 
