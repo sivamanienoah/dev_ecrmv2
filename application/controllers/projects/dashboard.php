@@ -1165,8 +1165,7 @@ class Dashboard extends crm_controller
 	}
 	
 	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false)
-	{		
-		echo $pjt_code . $start_date . $end_date; die;
+	{
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
