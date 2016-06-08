@@ -1089,37 +1089,8 @@ class Dashboard extends crm_controller
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
-					//effort variance
-					/* if(!empty($timesheet) && count($timesheet)>0){
-						if($row['billing_type'] == 1) {
-							$projects['estimate_hr'][$practice_arr[$row['practice']]] += $row['estimate_hour'];
-							$projects['fixedbid_totoleff'][$practice_arr[$row['practice']]] += $timesheet['total_hours'];
-						}
-						$projects['billableeff'][$practice_arr[$row['practice']]] += $timesheet['total_billable_hrs'];
-						$projects['totoleff'][$practice_arr[$row['practice']]]	  += $timesheet['total_hours'];
-						$projects['dc_tot'][$practice_arr[$row['practice']]]      += $timesheet['total_dc'];
-					}
-					if(!empty($curtimesheet) && count($curtimesheet)>0){
-						$projects['cm_billeff'][$practice_arr[$row['practice']]]  += $curtimesheet['total_billable_hrs'];
-						$projects['cm_totoeff'][$practice_arr[$row['practice']]]  += $curtimesheet['total_hours'];
-						$projects['cm_dc_tot'][$practice_arr[$row['practice']]]   += $curtimesheet['total_dc'];
-					} */
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					/* if(!empty($timesheet) && count($timesheet)>0){
-						if($row['billing_type'] == 1) {
-							$projects['estimate_hr'][$practice_arr[$row['practice']]] = $row['estimate_hour'];
-							$projects['fixedbid_totoleff'][$practice_arr[$row['practice']]] = $timesheet['total_hours'];
-						}						
-						$projects['billableeff'][$practice_arr[$row['practice']]] = $timesheet['total_billable_hrs'];
-						$projects['totoleff'][$practice_arr[$row['practice']]] 	  = $timesheet['total_hours'];
-						$projects['dc_tot'][$practice_arr[$row['practice']]]      = $timesheet['total_dc'];
-					}
-					if(!empty($curtimesheet) && count($curtimesheet)>0){
-						$projects['cm_billeff'][$practice_arr[$row['practice']]]  = $curtimesheet['total_billable_hrs'];
-						$projects['cm_totoeff'][$practice_arr[$row['practice']]]  = $curtimesheet['total_hours'];
-						$projects['cm_dc_tot'][$practice_arr[$row['practice']]]   = $curtimesheet['total_dc'];
-					} */
 				}
 				// echo "<pre>"; print_r($projects); exit;
 				if($row['rag_status'] == 1){
@@ -1163,6 +1134,9 @@ class Dashboard extends crm_controller
 		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
 		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
+		//for effort variance
+		
+		
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
 		
@@ -1195,10 +1169,10 @@ class Dashboard extends crm_controller
 		$this->db->where($tswhere);
 		$this->db->where_in('practice_id', $prs);
 		if(!empty($start_date)) {
-			$this->db->where("start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
 		}
 		if(!empty($end_date)) {
-			$this->db->where("start_time <= ", date('Y-m-d', strtotime($end_date)));
+			$this->db->where("DATE(start_time) <= ", date('Y-m-d', strtotime($end_date)));
 		}
 		if(!empty($month)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
@@ -1222,8 +1196,12 @@ class Dashboard extends crm_controller
 				}
 				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
 				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+				if(!empty($start_date) && !empty($end_date)) {
+					$resarr[$practice_arr[$row->practice_id]]['project_code'] = $row->project_code;
+				}
 			}
 		}
+		echo "<pre>"; print_r($resarr); die;
 		return $resarr;
 	}
 
