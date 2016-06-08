@@ -1178,7 +1178,7 @@ class Dashboard extends crm_controller
 		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
 		
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$timesheet = $query->result_array();
 		$res = array();
 		echo "<pre>"; print_r($timesheet); exit;
