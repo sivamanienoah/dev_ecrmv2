@@ -117,13 +117,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									} else {
 										echo '';
 									}
-								?>								
-								<?php
-									/* $total_irval += isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : 0;
-									$totCM_Irval += isset($projects['cm_irval'][$parr]) ? $projects['cm_irval'][$parr] : '';
-									$totEV += isset($projects['eff_var'][$parr]) ? $projects['eff_var'][$parr] : '';
-									$totDC += isset($projects['dc'][$parr]) ? $projects['dc'][$parr] : '';
-									$totCM_DC += isset($projects['cm_dc'][$parr]) ? $projects['cm_dc'][$parr] : ''; */
 								?>
 							</td>
 						<?php } ?>
@@ -232,7 +225,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php #echo isset($projects['cm_dc'][$parr]) ? round(($projects['cm_dc'][$parr]/$totCM_DC)*100, 2) : ''; 
+								<?php echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost']; 
 									#((total invoice raised - total direct cost)/total invoice raised)*100;
 									$cm_dc_val = '';
 									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
