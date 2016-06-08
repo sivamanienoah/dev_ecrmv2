@@ -55,9 +55,9 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<td class="">
 									<select title="Status" id="project_status" name="project_status[]" multiple="multiple">
 										<option value="1">Project In Progress</option>
-										<option value="2">Project Completed</option>
-										<option value="3">Project Onhold</option>
-										<option value="4">Inactive</option>
+										<option value="2">All Projects</option>
+										<!--option value="3">Project Onhold</option-->
+										<!--option value="4">Inactive</option-->
 									</select>
 								</td>								
 								<td class="">
