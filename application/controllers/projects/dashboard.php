@@ -158,7 +158,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
-		// echo $getITDataQry; exit;
+		echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
 		$data['resdata'] = $sql->result();
 		$arr_depts          = array();
@@ -346,7 +346,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
-		echo $getITDataQry; exit;
+		// echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
 		$data['resdata'] = $sql->result();
 		$arr_depts          = array();
