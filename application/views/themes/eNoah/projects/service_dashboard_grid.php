@@ -125,7 +125,6 @@
 					echo round($eff_var, 2);
 					?>
 				</td>
-
 			<?php } ?>
 		<?php } ?>
 	</tr>
@@ -134,7 +133,7 @@
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
-					<?php #echo isset($projects['cm_dc'][$parr]) ? round(($projects['cm_dc'][$parr]/$totCM_DC)*100, 2) : ''; 
+					<?php #echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] . "-". $projects['cm_irval'][$parr]; 
 						#((total invoice raised - total direct cost)/total invoice raised)*100;
 						$cm_dc_val = '';
 						if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
@@ -152,6 +151,7 @@
 			<?php foreach($practice_arr as $parr) { ?>
 				<td align='right'>
 					<?php 
+						// echo $projects['irval'][$parr] . "-" .$projects['direct_cost'][$parr]['total_direct_cost'];
 						// ((total invoice raised - total direct cost)/total invoice raised)*100
 						$dc_val = '';
 						if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
