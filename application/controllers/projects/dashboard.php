@@ -1168,7 +1168,7 @@ class Dashboard extends crm_controller
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
 		
-		echo "<pre>"; print_r($pcodes); exit;
+		// echo "<pre>"; print_r($pcodes); exit;
 		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
