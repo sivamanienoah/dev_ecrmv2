@@ -1567,7 +1567,7 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'cmirval':
@@ -1642,7 +1642,7 @@ class Dashboard extends crm_controller
 		return $data['project_record'];
 	}
 	
-	public function getIRData($records, $start_date, $end_date)
+	public function getIRData($records, $start_date, $end_date, $practice)
 	{
 		$bk_rates = get_book_keeping_rates();
 		
@@ -1665,7 +1665,9 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		
+		if(!empty($practice)) {
+			$this->db->where("l.practice", $practice);
+		}
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
