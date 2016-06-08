@@ -1134,6 +1134,35 @@ class Dashboard extends crm_controller
 			}
 		}
 		
+		//for current month ir
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->where("sfv.type", 'A');
+		
+		if(!empty($month)) {
+			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
+			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
+		}
+		
+		$query5 = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$cm_invoices_data = $query5->result_array();
+
+		if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
+			foreach($cm_invoices_data as $cm_ir) {
+				$base_conver_amt = $this->conver_currency($cm_ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['expect_worth_id']][$cm_ir['base_currency']]);
+				$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
+				if(!in_array($cm_ir['pjt_id'], $cm_dc_projects)){
+					if(!empty($cm_ir['pjt_id']))
+					$cm_dc_projects[] = $cm_ir['pjt_id'];
+				}
+			}
+		}
+		
 		//for current month EFFORTS
 		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
 		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
@@ -1170,14 +1199,24 @@ class Dashboard extends crm_controller
 				if(!empty($proj_data) && count($proj_data)>0){
 					$dc = $this->get_timesheet_actual_hours($recrds, $start_date, $end_date);
 					$directcost[$practice_arr[$proj_data['practice']]]['total_direct_cost'] += $dc['total_dc'];
-					
-					$cm_dc = $this->get_timesheet_actual_hours($recrds, "", "", $month);
-					$cm_directcost[$practice_arr[$proj_data['practice']]]['total_cm_direct_cost'] += $cm_dc['total_dc'];
-					
 				}
 			}
 		}
 		$projects['direct_cost']   = $directcost;
+		
+		if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
+			foreach($cm_dc_projects as $recrdss){
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				$this->db->where("l.pjt_id", $recrdss);
+				$query4 = $this->db->get();
+				$proj_data = $query4->row_array();
+				if(!empty($proj_data) && count($proj_data)>0){					
+					$cm_dc = $this->get_timesheet_actual_hours($recrdss, "", "", $month);
+					$cm_directcost[$practice_arr[$proj_data['practice']]]['total_cm_direct_cost'] += $cm_dc['total_dc'];
+				}
+			}
+		}
 		$projects['cm_direct_cost'] = $cm_directcost;
 		// echo "<pre>"; print_r($directcost); die;
 		
