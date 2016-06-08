@@ -76,7 +76,7 @@
 					<?php
 						$cm_billval = '';
 						// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
-						$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'] - $projects['billable_month'][$parr]['totalhour'])/$projects['billable_month'][$parr]['totalhour'];
+						$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
 						if(isset($cm_billval) && ($cm_billval != 0)) {
 						?>					
 						<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($cm_billval*100), 2); ?></a-->
@@ -98,7 +98,7 @@
 					<?php
 						$billval = '';
 						if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
-						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour']-$projects['billable_ytd'][$parr]['totalhour'])/$projects['billable_ytd'][$parr]['totalhour'];
+						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 						if(isset($billval) && ($billval != 0)) {
 						?>
 						<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
