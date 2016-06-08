@@ -1147,13 +1147,14 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
-						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hr'] += $recrd['estimate_hour'];
+						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], $start_date, $end_date);
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
 					}
 				}
 			}
 		}
-		// echo "<pre>"; print_r($effvar); die;
+		echo "<pre>"; print_r($effvar); die;
 		
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
@@ -1200,7 +1201,7 @@ class Dashboard extends crm_controller
 				} */
 			}
 		}
-		echo "<pre>"; print_r($res); exit;
+		// echo "<pre>"; print_r($res); exit;
 		return $res;
 	}
 	
