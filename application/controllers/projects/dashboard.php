@@ -1138,7 +1138,19 @@ class Dashboard extends crm_controller
 		$pcodes = $projects['billable_ytd']['project_code'];
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
-				echo $rec ."<br>";
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				$this->db->where("l.pjt_id", $rec);
+				$this->db->where("l.lead_status", '4');
+				$this->db->where("l.billing_type", 1);
+				$query3 = $this->db->get();
+				$pr_data = $query3->result_array();
+				if(!empty($pr_data) && count($pr_data)>0){
+					foreach($pro_data as $recrd){
+						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hr'] += $recrd['l.estimate_hour'];
+						$actuals = $this->get_timesheet_actual_hours($recrd['l.pjt_id'], $start_date, $end_date);
+					}
+				}
 			}
 		}
 		echo "<pre>"; print_r($eff); die;
@@ -1150,6 +1162,46 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard_grid', $data);
 		else
 		$this->load->view('projects/service_dashboard', $data);
+	}
+	
+	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false)
+	{		
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		$this->db->where("ts.project_code", $pjt_code);
+		if( (!empty($start_date)) && (!empty($end_date)) ){
+			$this->db->where("DATE(ts.start_time) >= ", $start_date);
+			$this->db->where("DATE(ts.end_time) <= ", $end_date);
+		}
+		
+		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$timesheet = $query->result_array();
+		$res = array();
+		// echo "<pre>"; print_r($timesheet); exit;
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				$res['total_cost']     += $ts['duration_cost'];
+				$res['total_hours']    += $ts['duration_hours'];
+				$res['total_dc'] 	   += $ts['duration_direct_cost'];
+				/* switch($ts['resoursetype']) {
+					case 'Billable':
+						$res['total_billable_hrs'] += $ts['duration_hours'];
+					break;
+					case 'Non-Billable':
+						$res['total_non_billable_hrs'] += $ts['duration_hours'];
+					break;
+					case 'Internal':
+						$res['total_internal_hrs'] += $ts['duration_hours'];
+					break;
+				} */
+			}
+		}
+		echo "<pre>"; print_r($res); exit;
+		return $res;
 	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
