@@ -1162,10 +1162,10 @@ class Dashboard extends crm_controller
 		
 		//for current month EFFORTS
 		// $curtimesheet = $this->get_timesheet_data($practice_arr, "", "", $month);
-		// $timesheet    = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+		$timesheet    = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		$data['projects'] = $projects;
-		echo "<pre>"; print_r($projects); exit;
+		// echo "<pre>"; print_r($projects); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
@@ -1174,7 +1174,8 @@ class Dashboard extends crm_controller
 	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
-	{	
+	{
+		echo "<pre>"; print_r($practice_arr); exit;
 		if( (!empty($start_date)) && (!empty($end_date)) ){
 			// $this->db->where("DATE(ts.start_time) >= ", $start_date);
 			// $this->db->where("DATE(ts.end_time) <= ", $end_date);
