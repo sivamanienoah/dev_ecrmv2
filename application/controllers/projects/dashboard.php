@@ -1174,9 +1174,9 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		echo "<pre>"; print_r($start_date); exit;
+		// echo "<pre>"; print_r($start_date); exit;
 		
-		/* $this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
@@ -1190,7 +1190,7 @@ class Dashboard extends crm_controller
 			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
 		}
 		$query2 = $this->db->get();
-		$timesheet_data = $query2->result(); */
+		$timesheet_data = $query2->result();
 		
 		
 		
