@@ -1215,15 +1215,15 @@ class Dashboard extends crm_controller
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
 			foreach($contribution_data as $cdrow){
-				if (isset($bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['hour'])) {
-					$bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours + $bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['hour'];
-					$bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost + $bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['cost'];
+				if (isset($bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'])) {
+					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours + $bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'];
+					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost + $bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'];
 				} else {
-					$bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours;
-					$bu_arr[$cdrow->practice_id][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost;
+					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['hour'] = $cdrow->duration_hours;
+					$bu_arr[$practice_arr[$cdrow->practice_id]][$cdrow->resoursetype]['cost'] = $cdrow->resource_duration_cost;
 				}
-				$bu_arr[$cdrow->practice_id]['totalhour'] = $bu_arr[$cdrow->practice_id]['totalhour'] + $cdrow->duration_hours;
-				$bu_arr[$cdrow->practice_id]['totalcost'] = $bu_arr[$cdrow->practice_id]['totalcost'] + $cdrow->resource_duration_cost;
+				$bu_arr[$practice_arr[$cdrow->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$cdrow->practice_id]]['totalhour'] + $cdrow->duration_hours;
+				$bu_arr[$practice_arr[$cdrow->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$cdrow->practice_id]]['totalcost'] + $cdrow->resource_duration_cost;
 			}
 		}
 		
