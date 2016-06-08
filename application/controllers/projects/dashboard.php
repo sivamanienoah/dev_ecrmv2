@@ -1072,7 +1072,7 @@ class Dashboard extends crm_controller
 		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
-		echo "<pre>"; print_r($res); die;
+		// echo "<pre>"; print_r($res); die;
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
@@ -1140,7 +1140,7 @@ class Dashboard extends crm_controller
 		}
 
 		$data['projects'] = $projects;
-		// echo "<pre>"; print_r($projects); exit;
+		echo "<pre>"; print_r($projects); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
