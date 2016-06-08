@@ -1198,29 +1198,15 @@ class Dashboard extends crm_controller
 		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $row) {
-				/* $res['total_cost']     += $ts['duration_cost'];
-				$res['total_hours']    += $ts['duration_hours'];
-				$res['total_dc'] 	   += $ts['duration_direct_cost'];
-				switch($ts['resoursetype']) {
-					case 'Billable':
-						$res['total_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Non-Billable':
-						$res['total_non_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Internal':
-						$res['total_internal_hrs'] += $ts['duration_hours'];
-					break;
-				} */
-				if (isset($bu_arr['it'][$row->resoursetype]['hour'])) {
+				if (isset($bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
 					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
 				} else {
-					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['hour'] = $row->duration_hours;
-					$bu_arr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
+					$bu_arr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 				}
-				$bu_arr['totalhour'] = $bu_arr['totalhour'] + $row->duration_hours;
-				$bu_arr['totalcost'] = $bu_arr['totalcost'] + $row->resource_duration_cost;
+				$bu_arr[$practice_arr[$row->practice_id]]['totalhour'] = $bu_arr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
+				$bu_arr[$practice_arr[$row->practice_id]]['totalcost'] = $bu_arr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
 			}
 		}
 		echo "<pre>"; print_r($bu_arr); exit;
