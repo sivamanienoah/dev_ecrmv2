@@ -1190,6 +1190,7 @@ class Dashboard extends crm_controller
 			$this->db->where("start_time", date('Y-m-d H:i:s', strtotime($month)));
 		}
 		$query2 = $this->db->get();
+		echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
 		
