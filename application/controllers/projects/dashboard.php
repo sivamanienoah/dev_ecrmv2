@@ -1174,7 +1174,7 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		echo "<pre>"; print_r($practice_arr); exit;
+		// echo "<pre>"; print_r($practice_arr); exit;
 		
 		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
@@ -1197,7 +1197,7 @@ class Dashboard extends crm_controller
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
-				echo $practice_arr[$row->practice_id] . " " . $row->resoursetype; exit;
+				echo $row->practice_id . " " . $row->resoursetype; exit;
 				/* if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
 					$resarr[$practice_arr[$row->practice_id]]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
