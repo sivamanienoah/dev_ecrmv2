@@ -1189,9 +1189,9 @@ class Dashboard extends crm_controller
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
 		
 		// echo $getITDataQry; exit;
-		$sql 	   = $this->db->query($getITDataQry1);
+		$sql1 	   = $this->db->query($getITDataQry1);
 		echo $this->db->last_query(); die;
-		$timesheet = $sql->result();
+		$timesheet = $sql1->result();
 		
 		$res = array();
 		
