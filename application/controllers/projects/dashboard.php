@@ -1174,12 +1174,25 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		echo "<pre>"; print_r($practice_arr);
+		// echo "<pre>"; print_r($practice_arr);
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$pract = $pquery->result();
+		if(!empty($pract) && count($pract)>0){
+			foreach($pract as $pr){
+				$prs[] = $pr->id;
+			}
+		}
+		echo "<pre>"; print_r($prs); die;
 		
 		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
+		$this->db->where('practice_id !=', 3);
 		if(!empty($start_date)) {
 			$this->db->where("start_time >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
