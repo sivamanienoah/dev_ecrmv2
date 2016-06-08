@@ -1253,7 +1253,7 @@ class Dashboard extends crm_controller
 		// echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
-		echo "<pre>"; print_r($projects); exit;
+		// echo "<pre>"; print_r($projects); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
