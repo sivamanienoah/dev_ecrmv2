@@ -1174,17 +1174,7 @@ class Dashboard extends crm_controller
 	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
-	{
-		// $start_date = '2006-01-01';
-		// $end_date   = date('Y-m-d');
-		
-		// $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code FROM crm_timesheet_data WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
-		
-		$this->db->select('ts.practice_id, ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
-		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
-		// $this->db->where("sfv.for_month_year <= ")
-		
+	{	
 		if( (!empty($start_date)) && (!empty($end_date)) ){
 			$this->db->where("DATE(ts.start_time) >= ", $start_date);
 			$this->db->where("DATE(ts.end_time) <= ", $end_date);
@@ -1193,8 +1183,13 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
 			$this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
-
-		$sql = $this->db->get();
+		
+		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
+		FROM crm_timesheet_data 
+		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
+		
+		// echo $getITDataQry; exit;
+		$sql 	   = $this->db->query($getITDataQry);
 		echo $this->db->last_query(); die;
 		$timesheet = $sql->result();
 		
