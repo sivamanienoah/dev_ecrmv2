@@ -1153,7 +1153,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($eff); die;
+		echo "<pre>"; print_r($actuals); die;
 		
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
