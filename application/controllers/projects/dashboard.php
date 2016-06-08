@@ -973,11 +973,11 @@ class Dashboard extends crm_controller
 		$project_status = 1;
 		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
 			$project_status = @explode(',', $this->input->post("project_status"));
-			/* if(count($project_status) == 2){
+			if(count($project_status) == 2){
 				$project_status = '';
 			} else {
 				$project_status = $this->input->post("project_status");
-			} */
+			}
 		}
 		$division = '';
 		if($this->input->post("entity") && ($this->input->post("entity")!='null')) {
@@ -1056,6 +1056,7 @@ class Dashboard extends crm_controller
 		$this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($project_status){
+			if($project_status !=2)
 			$this->db->where_in("l.pjt_status", $project_status);
 		}
 		if($division){
@@ -1068,7 +1069,7 @@ class Dashboard extends crm_controller
 		
 		// $this->db->limit('10');
 		$query = $this->db->get();
-		// echo $this->db->last_query(); die;
+		echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
 		// echo "<pre>"; print_r($res); die;
