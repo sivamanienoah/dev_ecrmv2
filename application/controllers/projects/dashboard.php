@@ -1164,46 +1164,7 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard', $data);
 	}
 	
-	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false)
-	{		
-		echo $pjt_code . $start_date . $end_date; die;
-		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
-		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
-		$this->db->where("ts.project_code", $pjt_code);
-		if( (!empty($start_date)) && (!empty($end_date)) ){
-			$this->db->where("DATE(ts.start_time) >= ", $start_date);
-			$this->db->where("DATE(ts.end_time) <= ", $end_date);
-		}
-		
-		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
-		
-		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
-		$timesheet = $query->result_array();
-		$res = array();
-		echo "<pre>"; print_r($timesheet); exit;
-		if(count($timesheet)>0) {
-			foreach($timesheet as $ts) {
-				$res['total_cost']     += $ts['duration_cost'];
-				$res['total_hours']    += $ts['duration_hours'];
-				$res['total_dc'] 	   += $ts['duration_direct_cost'];
-				/* switch($ts['resoursetype']) {
-					case 'Billable':
-						$res['total_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Non-Billable':
-						$res['total_non_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Internal':
-						$res['total_internal_hrs'] += $ts['duration_hours'];
-					break;
-				} */
-			}
-		}
-		echo "<pre>"; print_r($res); exit;
-		return $res;
-	}
+
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
