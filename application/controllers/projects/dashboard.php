@@ -1069,10 +1069,10 @@ class Dashboard extends crm_controller
 		
 		// $this->db->limit('10');
 		$query = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
-		// echo "<pre>"; print_r($res); die;
+		echo "<pre>"; print_r($res); die;
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
