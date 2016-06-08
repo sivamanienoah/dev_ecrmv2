@@ -1135,7 +1135,8 @@ class Dashboard extends crm_controller
 		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		//for effort variance
-		
+		$eff = $projects['billable_ytd']['project_code'];
+		echo "<pre>"; print_r($eff); die;
 		
 		$data['projects'] = $projects;
 		// echo "<pre>"; print_r($projects); exit;
