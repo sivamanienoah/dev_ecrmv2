@@ -1148,7 +1148,7 @@ class Dashboard extends crm_controller
 				if(!empty($pr_data) && count($pr_data)>0){
 					foreach($pro_data as $recrd){
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hr'] += $recrd['l.estimate_hour'];
-						$actuals = $this->get_timesheet_actual_hours($recrd['l.pjt_id'], $start_date, $end_date);
+						// $actuals = $this->get_timesheet_actual_hours($recrd['l.pjt_id'], $start_date, $end_date);
 					}
 				}
 			}
