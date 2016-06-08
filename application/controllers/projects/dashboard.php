@@ -1125,10 +1125,10 @@ class Dashboard extends crm_controller
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
-				if(!in_array($ir['pjt_id'], $dc_projects)){
+				/* if(!in_array($ir['pjt_id'], $dc_projects)){
 					if(!empty($ir['pjt_id']))
 					$dc_projects[] = $ir['pjt_id'];
-				}
+				} */
 			}
 		}
 		
@@ -1646,15 +1646,41 @@ class Dashboard extends crm_controller
 	{
 		$bk_rates = get_book_keeping_rates();
 		
-		$$data = array();
-		$lead_id = array();
+		$data = array();
+		/* $lead_id = array();
 		if(!empty($records) && count($records)>0){
 			foreach($records as $lrow){
 				$lead_id[] = $lrow['lead_id'];
 				// $inv_val += $this->get_ir_val($lrow['lead_id'], $lrow['expect_worth_id'], '', $start_date, $end_date, $base_cur_arr[$lrow['division']]);
 			}
+		} */
+		
+		//***//
+		
+		//need to calculate for the total IR
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->where("sfv.type", 'A');
+		
+		if(!empty($start_date)) {
+			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
-		$this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
+		if(!empty($end_date)) {
+			$this->db->where("sfv.for_month_year <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+		}
+		
+		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$invoice_rec = $query->result_array();
+
+		//***//
+		
+
+		/* $this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
 
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
@@ -1668,7 +1694,7 @@ class Dashboard extends crm_controller
 		$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-d', strtotime($end_date)));
 		$query  = $this->db->get();
 		// echo $this->db->last_query(); exit;
-		$invoice_rec = $query->result_array();
+		$invoice_rec = $query->result_array(); */
 		$i = 0;
 		$data['total_amt'] = 0;
 		if(count($invoice_rec)>0) {
