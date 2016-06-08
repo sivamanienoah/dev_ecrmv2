@@ -1053,8 +1053,10 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
-		$not_in_arr = array('4','8');
-		$this->db->where_not_in("l.project_type", $not_in_arr);
+		$pt_not_in_arr = array('4','8');
+		$this->db->where_not_in("l.project_type", $pt_not_in_arr);
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($project_status){
@@ -1345,8 +1347,10 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
-		$not_in_arr = array('4','8');
-		$this->db->where_not_in("l.project_type", $not_in_arr);
+		$pt_not_in_arr = array('4','8');
+		$this->db->where_not_in("l.project_type", $pt_not_in_arr);
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($practice){
