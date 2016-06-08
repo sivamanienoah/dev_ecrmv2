@@ -1151,7 +1151,6 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
-		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
