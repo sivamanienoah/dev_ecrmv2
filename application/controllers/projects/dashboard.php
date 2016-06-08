@@ -1169,7 +1169,7 @@ class Dashboard extends crm_controller
 				$proj_data = $query4->row_array();
 				if(!empty($proj_data) && count($proj_data)>0){
 					$dc = $this->get_timesheet_actual_hours($recrds, $start_date, $end_date);
-					$directcost[$practice_arr[$proj_data['practice']]]['total_actual_hrs'] += $dc['total_dc'];
+					$directcost[$practice_arr[$proj_data['practice']]]['total_direct_cost'] += $dc['total_dc'];
 				}
 			}
 		}
