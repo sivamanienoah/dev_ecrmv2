@@ -174,9 +174,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<td align='right'>
 								<?php
 									$cm_billval = '';
-									#echo isset($projects['cm_irval'][$parr]) ? round(($projects['cm_irval'][$parr]/$totCM_DC)*100, 2) : '';
-									if(isset($projects['cm_billeff'][$parr]) && isset($projects['cm_totoeff'][$parr]))
-									$cm_billval = isset($projects['cm_billeff'][$parr]) ? ($projects['cm_billeff'][$parr]/$projects['cm_totoeff'][$parr]) : '';
+									if(isset($projects['billable_month'][$parr]['Billable']) && isset($projects['billable_month'][$parr]['totalhour']))
+									$cm_billval = isset($projects['billable_month'][$parr]['Billable']) ? ($projects['billable_month'][$parr]['totalhour']/$projects['billable_month'][$parr]['totalhour']) : '';
 									if(isset($cm_billval) && ($cm_billval != 0)) {
 									?>					
 									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($cm_billval*100), 2); ?></a-->
@@ -197,8 +196,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<td align='right'>
 								<?php
 									$billval = '';
-									if(isset($projects['billableeff'][$parr]) && isset($projects['totoleff'][$parr]))
-									$billval = isset($projects['billableeff'][$parr]) ? ($projects['billableeff'][$parr]/$projects['totoleff'][$parr]) : '';
+									if(isset($projects['billable_ytd'][$parr]['Billable']) && isset($projects['billable_ytd'][$parr]['totalhour']))
+									$billval = isset($projects['billable_ytd'][$parr]['Billable']) ? ($projects['billable_ytd'][$parr]['totalhour']/$projects['billable_ytd'][$parr]['totalhour']) : '';
 									if(isset($billval) && ($billval != 0)) {
 									?>
 									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
