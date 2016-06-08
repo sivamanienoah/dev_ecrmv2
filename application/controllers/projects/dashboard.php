@@ -1192,9 +1192,9 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
 			$this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
-		
-		$timesheet = $query->result_array();
-		$data['resdata'] = $sql->result();
+
+		$sql = $this->db->get();
+		$timesheet = $sql->result();
 		
 		$res = array();
 		
