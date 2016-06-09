@@ -1660,16 +1660,16 @@ class Dashboard extends crm_controller
 					// $timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type=1, $metrics_date, $groupby_type=2);
 					$timesheet = $this->get_timesheet_data_hours($rec['pjt_id'], "", "");
 				}
-				if($rec['pjt_id']=='ITS-DES-01-0715')
-				echo "<pre>"; print_R($timesheet);
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($timesheet);
 				
 				$total_amount_inv_raised = 0;
 				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
 					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
 				}
-				if($rec['pjt_id']=='ITS-DES-01-0715')
-				echo "<pre>"; print_R($total_amount_inv_raised); die;
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($total_amount_inv_raised); die;
 								
 				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
