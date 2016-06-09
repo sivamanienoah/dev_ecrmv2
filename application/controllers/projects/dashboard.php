@@ -1605,7 +1605,7 @@ class Dashboard extends crm_controller
 				$this->db->where("l.practice", $practice);
 				$this->db->where_in("l.pjt_id", $project_codes);
 				$query3 = $this->db->get();
-				echo $this->db->last_query(); die;
+				// echo $this->db->last_query(); die;
 				$pro_data = $query3->result_array();
 				// echo "<pre>"; print_r($fixed_bid); exit;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
