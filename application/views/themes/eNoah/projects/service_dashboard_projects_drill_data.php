@@ -153,6 +153,7 @@ if(!empty($project_type) && count($project_type)>0){
 			Export to Excel
 			</button>
 			<input type="hidden" name="practices" id="practices" value="<?php echo $practices_id; ?>">
+			<input type="hidden" name="excelexporttype" id="excelexporttype" value="<?php echo $excelexporttype; ?>">
 		</div>
 	</div>
 </div>
@@ -258,6 +259,7 @@ $(function() {
 	//export to excel
 	$('#service_dashboard_export_excel').click(function() {
 		var practice   			 = $('#practices').val();
+		var excelexporttype   	 = $('#excelexporttype').val();
 		var month_year_from_date = $("#month_year_from_date").val();
 		var month_year_to_date   = $("#month_year_to_date").val();
 		var billable_month   	 = $("#billable_month").val();
@@ -266,10 +268,10 @@ $(function() {
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 		  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
+		  '<input id="clicktype" type="hidden" name="clicktype" value="'+excelexporttype+'" />'+
 		  '<input id="month_year_from_date" type="hidden" name="month_year_from_date" value="'+month_year_from_date+'" />'+
 		  '<input id="month_year_to_date" type="hidden" name="month_year_to_date" value="'+month_year_to_date+'" />'+
 		  '<input id="billable_month" type="hidden" name="billable_month" value="'+billable_month+'" />'+
-		  '<input id="clicktype" type="hidden" name="clicktype" value="excelexport" />'+
 		  '</form>');
 		$('body').append(form);
 		$(form).submit();
