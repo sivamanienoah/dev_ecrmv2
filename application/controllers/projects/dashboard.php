@@ -1584,6 +1584,7 @@ class Dashboard extends crm_controller
 				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'rag_project_export':
+				echo "rag_project_export"; exit;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$res = $this->excelexport($data['projects_data']);
 			break;
