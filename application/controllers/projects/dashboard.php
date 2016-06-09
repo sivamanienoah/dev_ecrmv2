@@ -1438,7 +1438,7 @@ class Dashboard extends crm_controller
 	*/
 	public function service_dashboard_data()
 	{
-		// echo "<pre>"; print_R($this->input->post()); exit;
+		echo "<pre>"; print_R($this->input->post()); exit;
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
