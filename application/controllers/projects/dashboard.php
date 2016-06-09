@@ -2016,7 +2016,7 @@ class Dashboard extends crm_controller
 	
 	public function excelexportinvoice($invoices_res)
 	{
-		echo "<pre>"; print_r($invoices_res['invoices']); exit;
+		echo "<pre>"; print_r($invoices_res); exit;
 		if((count($invoices_res['invoices'])>0) && !empty($invoices_res['invoices'])) {
 			$this->load->library('excel');
 			//activate worksheet number 1
@@ -2040,13 +2040,8 @@ class Dashboard extends crm_controller
 					$this->excel->getActiveSheet()->setCellValue('A'.$i, date('M Y', strtotime($excelarr['month_year'])));
 					$this->excel->getActiveSheet()->setCellValue('B'.$i, $excelarr['lead_title']);
 					$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['pjt_id']);
-					$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['project_milestone_name']);
-					$base_conversion_amt = $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$excelarr['base_currency']]);
-					$this->excel->getActiveSheet()->setCellValue('E'.$i, $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]));
-					$amt = $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]);
-					// converting based on base currency
-					
-					$total_amt += $amt;
+					$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['milestone_name']);
+					$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['coverted_amt']);
 					$i++;
 				}
 			}
