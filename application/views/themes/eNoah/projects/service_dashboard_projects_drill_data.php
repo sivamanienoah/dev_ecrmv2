@@ -36,6 +36,7 @@ if(!empty($project_type) && count($project_type)>0){
 		$total_mile_uc_amt = 0;
 		$total_mile_pl_amt = 0;	
 		foreach($projects_data as $record){
+			$total_amount_inv_raised = '';
 			$title		   = character_limiter($record['lead_title'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
  			$project_type  = ($record['project_type']) ? $pt_arr[$record['project_type']] : '-';
