@@ -1053,8 +1053,8 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
-		$pt_not_in_arr = array('4','8');
-		$this->db->where_not_in("l.project_type", $pt_not_in_arr);
+		// $pt_not_in_arr = array('4','8');
+		$this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
@@ -1171,12 +1171,12 @@ class Dashboard extends crm_controller
 			foreach($pcodes as $rec){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				$pt_not_in_arra = array('4','8');
-				$this->db->where_not_in("l.project_type", $pt_not_in_arra);
+				// $pt_not_in_arra = array('4','8');
+				$this->db->where("l.project_type", 1);
 				$client_not_in_arra = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
-				$this->db->where("l.billing_type", 1);
+				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
@@ -1524,8 +1524,8 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
-		$pt_not_in_arr = array('4','8');
-		$this->db->where_not_in("l.project_type", $pt_not_in_arr);
+		// $pt_not_in_arr = array('4','8');
+		$this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		if($practice){
@@ -1627,8 +1627,8 @@ class Dashboard extends crm_controller
 				}
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				$pt_not_in_array = array('4','8');
-				$this->db->where_not_in("l.project_type", $pt_not_in_array);
+				// $pt_not_in_array = array('4','8');
+				$this->db->where("l.project_type", 1);
 				$client_not_in_array = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_array);
 				// $this->db->where("l.pjt_id", $rec);
@@ -1661,8 +1661,8 @@ class Dashboard extends crm_controller
 				}
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				$pt_not_in_array = array('4','8');
-				$this->db->where_not_in("l.project_type", $pt_not_in_array);
+				// $pt_not_in_array = array('4','8');
+				$this->db->where("l.project_type", 1);
 				$client_not_in_array = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_array);
 				// $this->db->where("l.pjt_id", $rec);
