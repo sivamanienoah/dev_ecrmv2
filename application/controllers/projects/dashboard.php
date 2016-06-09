@@ -1625,7 +1625,7 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status');
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
 				// $pt_not_in_array = array('4','8');
 				$this->db->where("l.project_type", 1);
@@ -1659,7 +1659,7 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
 				// $pt_not_in_array = array('4','8');
 				$this->db->where("l.project_type", 1);
@@ -1670,8 +1670,13 @@ class Dashboard extends crm_controller
 				$this->db->where("l.practice", $practice);
 				$this->db->where_in("l.pjt_id", $project_codes);
 				$query3 = $this->db->get();
-				// echo $this->db->last_query(); die;
 				$pro_data = $query3->result_array();
+				
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				
 				// echo "<pre>"; print_r($fixed_bid); exit;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);		
 				$res = $this->excelexport($data['projects_data']);
