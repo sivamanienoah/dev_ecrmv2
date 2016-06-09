@@ -1625,7 +1625,7 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
 				// $pt_not_in_array = array('4','8');
 				$this->db->where("l.project_type", 1);
