@@ -1781,35 +1781,16 @@ class Dashboard extends crm_controller
 	@method - get_billable_efforts()
 	@for drill down data
 	*/
-	public function get_billable_efforts()
-	{
-		$start_date = date("Y-m-1");
-		$end_date   = date("Y-m-d");
-		
-		if($this->input->post("month_year_from_date")) {
-			$start_date = $this->input->post("month_year_from_date");
-			$start_date = date("Y-m-01",strtotime($start_date));
-			if($this->input->post("month_year_to_date")== "") {
-				$end_date   = date("Y-m-t",strtotime($start_date));
-			}
-		}
-		if($this->input->post("month_year_to_date")) {
-			$end_date = $this->input->post("month_year_to_date");
-			$end_date = date("Y-m-t",strtotime($end_date));	
-		}
-		
+	public function get_billable_efforts($practice, $month)
+	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-
-		if(!empty($practice_ids)) {
-			$pids = explode(',', $practice_ids);
-			$this->db->where_in("t.practice_id", $pids);
-		}
+		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
+		$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
+		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
