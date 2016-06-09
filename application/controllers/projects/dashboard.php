@@ -1545,7 +1545,18 @@ class Dashboard extends crm_controller
 		} */
 		$query = $this->db->get();
 		// echo $this->db->last_query();
-		$res = $query->result_array();	
+		$res = $query->result_array();
+		
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		$pquery = $this->db->get();
+		$pres1 = $pquery->result();					
+		if(!empty($pres1) && count($pres1)>0){
+			foreach($pres1 as $prow1) {
+				$practice_arr[$prow1->id] = $prow1->practices;
+			}
+		}
 
 		switch($clicktype){
 			case 'noprojects':
@@ -1560,6 +1571,13 @@ class Dashboard extends crm_controller
 			case 'irval':
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'cm_eff':
+				
+				$data = $this->get_billable_efforts($practice, $month);
+				$data['practices_name'] = $practice_arrr[$practice];
+				// echo "<pre>"; print_r($data); exit;
+				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'cm_eff':
 				$this->db->select('p.practices, p.id');
@@ -1578,7 +1596,7 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
-				$this->db->select('p.practices, p.id');
+				/* $this->db->select('p.practices, p.id');
 				$this->db->from($this->cfg['dbpref']. 'practices as p');
 				$this->db->where('p.status', 1);
 				$pquery = $this->db->get();
@@ -1588,7 +1606,7 @@ class Dashboard extends crm_controller
 					foreach($pres as $prow) {
 						$practice_arr[$prow->id] = $prow->practices;
 					}
-				}
+				} */
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
 				$project_codes = array();
