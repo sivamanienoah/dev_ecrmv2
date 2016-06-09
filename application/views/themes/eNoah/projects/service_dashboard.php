@@ -171,8 +171,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
 									if(isset($cm_billval) && ($cm_billval != 0)) {
 									?>					
-									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($cm_billval*100), 2); ?></a-->
-									<?php echo round(($cm_billval*100), 2); ?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php echo round(($cm_billval*100), 2); ?></a>
 									<?php
 									} else {
 										echo '';
