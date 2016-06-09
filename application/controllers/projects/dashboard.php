@@ -1574,7 +1574,7 @@ class Dashboard extends crm_controller
 				}
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practice_name'] = $practice_arrr[$practice];
-				// $this->load->view('projects/prjt_drilldata', $data);
+				echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
