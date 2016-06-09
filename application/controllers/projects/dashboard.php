@@ -1592,7 +1592,13 @@ class Dashboard extends crm_controller
 			break;
 			case 'irval':
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "inv_project_export";
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'inv_project_export':
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$res = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
@@ -2008,6 +2014,75 @@ class Dashboard extends crm_controller
 		redirect('/projects/dashboard');
 	}
 	
-
+	public function excelexportinvoice($invoices_res)
+	{
+		echo "export to invoice"; die;
+		if((count($invoices_res)>0) && !empty($invoices_res)) {
+			$this->load->library('excel');
+			//activate worksheet number 1
+			$this->excel->setActiveSheetIndex(0);
+			//name the worksheet
+			$this->excel->getActiveSheet()->setTitle('Invoices');
+			//set cell A1 content with some text
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Month & Year');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Project Title');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Project Code');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'Milestone Name');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'Value('.$default_currency.')');
+			
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
+			$i=2;		
+			$total_amt = '';
+			if(count($invoices_res)>0) {
+				foreach($invoices_res as $excelarr) {
+					//display only date
+					$this->excel->getActiveSheet()->setCellValue('A'.$i, date('M Y', strtotime($excelarr['month_year'])));
+					$this->excel->getActiveSheet()->setCellValue('B'.$i, $excelarr['lead_title']);
+					$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['pjt_id']);
+					$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['project_milestone_name']);
+					$base_conversion_amt = $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$excelarr['base_currency']]);
+					$this->excel->getActiveSheet()->setCellValue('E'.$i, $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]));
+					$amt = $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]);
+					// converting based on base currency
+					
+					$total_amt += $amt;
+					$i++;
+				}
+			}
+			$this->excel->getActiveSheet()->setCellValue('E'.$i, $total_amt);
+			
+			// $this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+			//merge cell A1 until D1
+			//$this->excel->getActiveSheet()->mergeCells('A1:D1');
+			//set aligment to center for that merged cell (A1 to D1)
+			
+			//Set width for cells
+			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
+			
+			//cell format
+			// $this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+			
+			$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			
+			$filename='Invoice.xls'   ; //save our workbook as this file name
+			header('Content-Type: application/vnd.ms-excel'); //mime type
+			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+			header('Cache-Control: max-age=0'); //no cache
+						 
+			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+			//if you want to save it as .XLSX Excel 2007 format
+			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+			//force user to download the Excel file without writing it to server's HD
+			$objWriter->save('php://output');
+		}
+	}
 }
 /* End of dms resource_availability file */
