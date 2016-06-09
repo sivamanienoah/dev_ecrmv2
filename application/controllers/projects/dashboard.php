@@ -1562,7 +1562,8 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'cm_eff':
-				$data['data'] = $this->get_billable_efforts($practice, $month);
+				$data = $this->get_billable_efforts($practice, $month);
+				echo "<pre>"; print_r($data); die;
 				// $this->load->view('projects/prjt_drilldata', $data);
 				$this->load->view('projects/service_dashboard_prjt_drill_data', $data);
 			break;
@@ -1785,8 +1786,12 @@ class Dashboard extends crm_controller
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
-		$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
+		$tswhere = "t.resoursetype is NOT NULL";
+		$this->db->where($tswhere);
+		if(!empty($month)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
+		}
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
