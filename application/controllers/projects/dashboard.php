@@ -1662,8 +1662,8 @@ class Dashboard extends crm_controller
 					// $timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type=1, $metrics_date, $groupby_type=2);
 					$timesheet = $this->get_timesheet_data_hours($rec['pjt_id'], "", "");
 				}
-				if($rec['pjt_id']=='ITS-DES-01-0715')
-				echo "<pre>"; print_R($timesheet);
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($timesheet);
 				
 				$total_amount_inv_raised = 0;
 				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
@@ -1693,7 +1693,7 @@ class Dashboard extends crm_controller
 				$data['project_record'][$i]['total_hours'] 		= isset($timesheet['total_hours'])?$timesheet['total_hours']:'0';
 				$data['project_record'][$i]['total_dc_hours'] 	= isset($timesheet['total_dc'])?$timesheet['total_dc']:'0';
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
-				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
+				$data['project_record'][$i]['total_cost'] 		= isset($timesheet['total_cost'])?$timesheet['total_dc']:'0';
 				$i++;
 				
 			}
