@@ -1598,7 +1598,7 @@ class Dashboard extends crm_controller
 			break;
 			case 'inv_project_export':
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
-				$res = $this->excelexportinvoice($data['invoices_data']);
+				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
