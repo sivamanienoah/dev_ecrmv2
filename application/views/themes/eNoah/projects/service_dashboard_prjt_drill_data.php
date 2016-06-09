@@ -3,7 +3,6 @@
 </style>
 <div class="clear"></div>
 <?php
-echo "<pre>"; print_r($resdata); die;
 function array_sort($array, $on, $order='SORT_ASC')
 {
     $new_array = array();
