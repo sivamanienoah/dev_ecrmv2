@@ -1844,7 +1844,7 @@ class Dashboard extends crm_controller
 		return $data;
 	}
 	
-	public function excelexport($pjts_data){
+	public function excelexport($pjts_data) {
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
