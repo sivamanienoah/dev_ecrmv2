@@ -2028,7 +2028,7 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->setCellValue('B1', 'Project Title');
 			$this->excel->getActiveSheet()->setCellValue('C1', 'Project Code');
 			$this->excel->getActiveSheet()->setCellValue('D1', 'Milestone Name');
-			$this->excel->getActiveSheet()->setCellValue('E1', 'Value('.$default_currency.')');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'Value('.$this->default_cur_name.')');
 			
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -2059,7 +2059,7 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
 			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
 			
 			//cell format
