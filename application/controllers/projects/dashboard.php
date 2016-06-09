@@ -1598,15 +1598,27 @@ class Dashboard extends crm_controller
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
 				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "cm_eff_export";
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
+			break;
+			case 'cm_eff_export':
+				$data['projects_data'] = $this->get_billable_efforts($practice, $month);
+				$data['practices_name'] = $practice_arrr[$practice];
+				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'ytd_eff':
 				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "ytd_eff_export";
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
+			break;
+			case 'ytd_eff_export':
+				$data['projects_data'] = $this->get_billable_efforts($practice, "", $start_date, $end_date);
+				$data['practices_name'] = $practice_arr[$practice];
+				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'fixedbid':
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
