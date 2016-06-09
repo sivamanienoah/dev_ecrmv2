@@ -1285,7 +1285,7 @@ class Dashboard extends crm_controller
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
-		$this->db->where_in('practice_id', $prs);
+		// $this->db->where_in('practice_id', $prs);
 		if(!empty($start_date)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
 		}
