@@ -221,9 +221,9 @@ class Project_model extends crm_model
 		$this->db->order_by("j.lead_id", "desc");
 		// $this->db->limit(5);
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();
-		//echo '<pre>';print_r($pjts);exit;		
+		//echo '<pre>';print_r($pjts);exit;
 		return $pjts;
 	}
 	
