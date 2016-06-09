@@ -1813,6 +1813,8 @@ class Dashboard extends crm_controller
 		$data['heading'] 	   = $practice;
 		$data['dept_type']     = "eADS";
 		$data['resource_type'] = "Billable";
+		$data['filter_sort_by'] = 'desc';
+		$data['filter_sort_val'] = 'hour';
 		$timesheet_db->close();
 		
 		return $data;
