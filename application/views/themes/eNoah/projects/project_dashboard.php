@@ -202,6 +202,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						</thead>
 					</tr>
 					<?php
+						// echo "<pre>"; print_r($bu_arr); die;
 						$total_hour   = 0;
 						$percent_hour = 0;
 						$percent_cost = 0;

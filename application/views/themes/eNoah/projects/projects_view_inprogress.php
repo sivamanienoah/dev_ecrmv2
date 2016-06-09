@@ -2,10 +2,10 @@
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
 	$default_currency = get_default_currency();
-	$default_cur_id = $default_currency['expect_worth_id'];
+	$default_cur_id   = $default_currency['expect_worth_id'];
 	$default_cur_name = $default_currency['expect_worth_name'];
 } else {
-	$default_cur_id = '1';
+	$default_cur_id   = '1';
 	$default_cur_name = 'USD';
 }
 
@@ -220,7 +220,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 
 <div class="customize-sec">
 <div class="tbl-field-customize">
-<a href="#" class="positive modal-custom-fields"><p>Customize Table Fields</p></a></div>
+<a href="#" class="modal-custom-fields"><span>Customize Table Fields</span></a></div>
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
 	<thead>
 		<tr>
