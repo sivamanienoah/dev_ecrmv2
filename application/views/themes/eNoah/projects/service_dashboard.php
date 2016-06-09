@@ -1,5 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <style>
+table.leadAdvancedfiltertbl{ width:65% !important; }
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
 .ui-datepicker-calendar { display: none; }
