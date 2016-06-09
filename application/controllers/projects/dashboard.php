@@ -1438,7 +1438,7 @@ class Dashboard extends crm_controller
 	*/
 	public function service_dashboard_data()
 	{
-		echo "<pre>"; print_R($this->input->post()); exit;
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
@@ -1566,7 +1566,7 @@ class Dashboard extends crm_controller
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
 				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "inprogress_project";
+				$data['excelexporttype'] = "inprogress_project_export";
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'rag':
@@ -1576,10 +1576,10 @@ class Dashboard extends crm_controller
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
 				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "rag_project";
+				$data['excelexporttype'] = "rag_project_export";
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
-			case 'excelexport':
+			case 'inprogress_project_export':
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$this->db->select('project_billing_type, id');
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
