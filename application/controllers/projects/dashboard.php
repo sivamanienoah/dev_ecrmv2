@@ -1913,10 +1913,11 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->setCellValue('J1', 'Effort Variance');
 			$this->excel->getActiveSheet()->setCellValue('K1', 'Project Value ('.$this->default_cur_name.')');
 			$this->excel->getActiveSheet()->setCellValue('L1', 'Utilization Cost ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('M1', 'Invoice Raised ('.$this->default_cur_name.')');
-			
-			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L');
-			$this->excel->getActiveSheet()->setCellValue('O1', 'P&L %');
+			$this->excel->getActiveSheet()->setCellValue('M1', 'Direct Cost ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('N1', 'Invoice Raised ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('O1', 'Contribution %');
+			$this->excel->getActiveSheet()->setCellValue('P1', 'P&L');
+			$this->excel->getActiveSheet()->setCellValue('Q1', 'P&L %');
 
 			//change the font size
 			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
@@ -1968,10 +1969,10 @@ class Dashboard extends crm_controller
 				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
 				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
 				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
-				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_amount_inv_raised);
 				$total_dc_hours = (isset($rec['total_dc_hours'])) ? (round($rec['total_dc_hours'])) : '0';
 				$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
-				$this->excel->getActiveSheet()->setCellValue('N'.$i, $total_dc_hours);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_dc_hours);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $total_amount_inv_raised);
 				$this->excel->getActiveSheet()->setCellValue('O'.$i, $contributePercent);
 				$this->excel->getActiveSheet()->setCellValue('P'.$i, $profitloss);
 				$this->excel->getActiveSheet()->setCellValue('Q'.$i, $plPercent);
