@@ -1566,15 +1566,14 @@ class Dashboard extends crm_controller
 				$this->db->from($this->cfg['dbpref']. 'practices as p');
 				$this->db->where('p.status', 1);
 				$pquery = $this->db->get();
-				$pres = $pquery->result();
-				$data['practice_data'] = $pquery->result();						
-				if(!empty($pres) && count($pres)>0){
-					foreach($pres as $prow) {
-						$practice_arr[$prow->id] = $prow->practices;
+				$pres1 = $pquery->result();					
+				if(!empty($pres1) && count($pres1)>0){
+					foreach($pres1 as $prow1) {
+						$practice_arrr[$prow1->id] = $prow1->practices;
 					}
 				}
-				$data['practice_name'] = $practice_arr[$practice];
 				$data = $this->get_billable_efforts($practice, $month);
+				$data['practice_name'] = $practice_arrr[$practice];
 				// $this->load->view('projects/prjt_drilldata', $data);
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
