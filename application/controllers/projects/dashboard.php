@@ -1182,10 +1182,19 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
+						if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
+							$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
+							$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
+							$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
+						} else {
+							$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] = $recrd['estimate_hour'];
+							$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
+							$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
+						}
 						$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
-						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
-						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
-						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
+						// $effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
+						// $actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
+						// $effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
 					}
 				}
 			}
