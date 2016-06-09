@@ -1563,7 +1563,6 @@ class Dashboard extends crm_controller
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
-				echo "<pre>"; print_r($data); die;
 				// $this->load->view('projects/prjt_drilldata', $data);
 				$this->load->view('projects/service_dashboard_prjt_drill_data', $data);
 			break;
