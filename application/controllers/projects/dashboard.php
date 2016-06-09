@@ -1790,7 +1790,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
@@ -1808,22 +1808,10 @@ class Dashboard extends crm_controller
 		$data['project_master']  = $project_master;
 		$timesheet_db->close();
 		
-		$filter_group_by = $this->input->post("filter_group_by");
-		$filter_sort_by  = $this->input->post("filter_sort_by");
-		$filter_sort_val = $this->input->post("filter_sort_val");
-		
-		$data['filter_group_by'] = $this->input->post("filter_group_by");
-		if(isset($filter_sort_by) && !empty($filter_sort_by))
-		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
-		else
-		$data['filter_sort_by'] = 'desc';
-	
-		if(isset($filter_sort_val) && !empty($filter_sort_val))
-		$data['filter_sort_val'] = $this->input->post("filter_sort_val");
-		else
-		$data['filter_sort_val'] = 'hour';
-	
+		echo "<pre>"; print_r($data); die;
+
 		return $data;
+		
 	}
 	
 
