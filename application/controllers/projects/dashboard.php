@@ -1178,7 +1178,7 @@ class Dashboard extends crm_controller
 				$this->db->where("l.pjt_id", $rec);
 				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
-				echo $this->db->last_query(); exit;
+				// echo $this->db->last_query(); exit;
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
