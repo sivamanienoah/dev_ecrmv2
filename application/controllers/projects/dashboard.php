@@ -1920,9 +1920,9 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->setCellValue('Q1', 'P&L %');
 
 			//change the font size
-			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 			//make the font become bold
-			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
 
 			$i=2;
 			
