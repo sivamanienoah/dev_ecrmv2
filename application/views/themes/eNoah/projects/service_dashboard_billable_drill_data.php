@@ -92,7 +92,7 @@ if(!empty($resdata)) {
 		$prjt_cst[$rec->dept_name][$rec->project_code] = $rec->resource_duration_cost;
 	}
 }
-// echo "<pre>"; print_r($tbl_data); die;
+echo "<pre>"; print_r($tbl_data); die;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Project</h2>
@@ -156,12 +156,6 @@ if(!empty($tbl_data)) {
 			// $res_cnt = 0;
 			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
 			$name    = isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
-			/* $res_cnt = count($usercnt[$dept][$p_name]);
-			$per_sub_hr = ($sub_tot[$dept][$p_name]['sub_tot_hour']/(160*$res_cnt))*100;
-			foreach($usercnt[$dept][$p_name] as $usr){
-				$pj_tot_cost += $cost_arr[$usr]*160;
-			}
-			$sub_tot_pj_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/$pj_tot_cost)*100; */
 			$per_sub_hr 	 = ($sub_tot[$dept][$p_name]['sub_tot_hour']/$tot_hour)*100;
 			$sub_tot_pj_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/$tot_cost)*100;
 			$perc_tot_hr   += $per_sub_hr;
