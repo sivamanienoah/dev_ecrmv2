@@ -1189,7 +1189,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($fixed_bid); exit;
+		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
 
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
