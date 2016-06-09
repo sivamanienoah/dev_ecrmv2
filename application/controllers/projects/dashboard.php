@@ -1528,8 +1528,6 @@ class Dashboard extends crm_controller
 		$this->db->where_not_in("l.project_type", $pt_not_in_arr);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
-		// $this->db->where("DATE(l.date_start) >= ", $start_date);
-		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($practice){
 			$this->db->where("l.practice", $practice);
 		}
@@ -1559,21 +1557,11 @@ class Dashboard extends crm_controller
 		switch($clicktype){
 			case 'noprojects':
 			case 'rag':
-			
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-			
-				/* $this->load->model('project_model');
-				//for field restriction
-				$db_fields = $this->project_model->get_dashboard_field($this->userdata['userid']);
-				if(!empty($db_fields) && count($db_fields)>0) {
-					foreach($db_fields as $record) {
-						$data['db_fields'][] = $record['column_name'];
-					}
-				} */
 				$this->db->select('project_billing_type, id');
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
 				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();	
+				$data['project_type'] = $ptquery->result();
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'irval':
@@ -1583,6 +1571,43 @@ class Dashboard extends crm_controller
 			case 'cmirval':
 				$data['invoices_data'] = $this->getCMIRData($practice, $month);
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'fixedbid':
+				$this->db->select('p.practices, p.id');
+				$this->db->from($this->cfg['dbpref']. 'practices as p');
+				$this->db->where('p.status', 1);
+				$pquery = $this->db->get();
+				$pres = $pquery->result();
+				$data['practice_data'] = $pquery->result();						
+				if(!empty($pres) && count($pres)>0){
+					foreach($pres as $prow) {
+						$practice_arr[$prow->id] = $prow->practices;
+					}
+				}
+				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+				$pcodes = $billable_ytd['project_code'];
+				if(!empty($pcodes) && count($pcodes)>0){
+					foreach($pcodes as $rec){
+						$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
+						$this->db->from($this->cfg['dbpref']. 'leads as l');
+						$pt_not_in_array = array('4','8');
+						$this->db->where_not_in("l.project_type", $pt_not_in_array);
+						$client_not_in_array = array('ENO','NOA');
+						$this->db->where_not_in("l.client_code", $client_not_in_array);
+						$this->db->where("l.pjt_id", $rec);
+						$this->db->where("l.billing_type", 1);
+						$this->db->where("l.practice", $practice);
+						$query3 = $this->db->get();
+						$pro_data = $query3->result_array();
+					}
+				}
+				// echo "<pre>"; print_r($fixed_bid); exit;
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 		}
 	}
