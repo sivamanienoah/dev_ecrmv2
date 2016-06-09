@@ -40,8 +40,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
 								<td class="tblheadbg">BILLABLE MONTH</td>
-								<td class="tblheadbg">PROJECT STATUS</td>
-								<td class="tblheadbg">ENTITY</td>
+								<!--td class="tblheadbg">PROJECT STATUS</td>
+								<td class="tblheadbg">ENTITY</td-->
 							</tr>
 							<tr>
 								<td class="month-year">
