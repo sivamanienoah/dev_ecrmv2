@@ -1586,22 +1586,27 @@ class Dashboard extends crm_controller
 				}
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
-				echo "<pre>"; print_r($pcodes); die;
+				$project_codes = array();
 				if(!empty($pcodes) && count($pcodes)>0){
 					foreach($pcodes as $rec){
-						$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
-						$this->db->from($this->cfg['dbpref']. 'leads as l');
-						$pt_not_in_array = array('4','8');
-						$this->db->where_not_in("l.project_type", $pt_not_in_array);
-						$client_not_in_array = array('ENO','NOA');
-						$this->db->where_not_in("l.client_code", $client_not_in_array);
-						$this->db->where("l.pjt_id", $rec);
-						$this->db->where("l.billing_type", 1);
-						$this->db->where("l.practice", $practice);
-						$query3 = $this->db->get();
-						$pro_data = $query3->result_array();
+						if(!in_array($rec, $project_codes)){
+							$project_codes[] = $rec;
+						}
 					}
 				}
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				$pt_not_in_array = array('4','8');
+				$this->db->where_not_in("l.project_type", $pt_not_in_array);
+				$client_not_in_array = array('ENO','NOA');
+				$this->db->where_not_in("l.client_code", $client_not_in_array);
+				// $this->db->where("l.pjt_id", $rec);
+				$this->db->where("l.billing_type", 1);
+				$this->db->where("l.practice", $practice);
+				$this->db->where_in("l.pjt_id", $project_codes);
+				$query3 = $this->db->get();
+				echo $this->db->last_query(); die;
+				$pro_data = $query3->result_array();
 				// echo "<pre>"; print_r($fixed_bid); exit;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
 				$this->db->select('project_billing_type, id');
