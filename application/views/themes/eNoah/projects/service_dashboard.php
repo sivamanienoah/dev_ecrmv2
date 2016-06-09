@@ -7,7 +7,7 @@ button.ui-datepicker-current { display: none; }
 .dept_section div{ width:49%; }
 .dept_section div:first-child{ margin-right:2% }
 table.bu-tbl th{ text-align:center; }
-table.bu-tbl{ width:90%; }
+table.bu-tbl{ width:85%; }
 table.bu-tbl-inr th{ text-align:center; }
 </style>
 <div id="content">
