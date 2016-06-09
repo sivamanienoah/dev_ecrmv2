@@ -1804,7 +1804,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
