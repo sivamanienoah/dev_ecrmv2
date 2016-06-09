@@ -1438,7 +1438,7 @@ class Dashboard extends crm_controller
 	*/
 	public function service_dashboard_data()
 	{
-		echo "<pre>"; print_R($this->input->post()); exit;
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
@@ -1560,6 +1560,15 @@ class Dashboard extends crm_controller
 
 		switch($clicktype){
 			case 'noprojects':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "inprogress_project";
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
+			break;
 			case 'rag':
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$this->db->select('project_billing_type, id');
@@ -1567,11 +1576,17 @@ class Dashboard extends crm_controller
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
 				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "rag_project";
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
-			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
-				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			case 'excelexport':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
