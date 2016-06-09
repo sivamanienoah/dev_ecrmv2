@@ -1660,8 +1660,8 @@ class Dashboard extends crm_controller
 					// $timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type=1, $metrics_date, $groupby_type=2);
 					$timesheet = $this->get_timesheet_data_hours($rec['pjt_id'], $start_date, $end_date);
 				}
-				if($rec['pjt_id']=='ITS-DES-01-0715')
-				echo "<pre>"; print_R($timesheet); die;
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($timesheet); die;
 				
 				$total_amount_inv_raised = 0;
 				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
