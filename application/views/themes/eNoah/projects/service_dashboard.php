@@ -220,7 +220,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								} else {
 									echo '';
 								}
-								
 								?>
 							</td>
 						<?php } ?>
