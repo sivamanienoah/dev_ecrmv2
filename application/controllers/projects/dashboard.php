@@ -1580,7 +1580,6 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'inprogress_project_export':
-				echo "inprogress_project_export"; die;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$res = $this->excelexport($data['projects_data']);
 			break;
@@ -1846,6 +1845,7 @@ class Dashboard extends crm_controller
 	}
 	
 	public function excelexport($pjts_data) {
+		echo "<pre>"; print_r($pjts_data); echo "</pre>"; die;
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
