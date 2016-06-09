@@ -1581,7 +1581,7 @@ class Dashboard extends crm_controller
 			case 'ytd_eff':
 				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
-				echo "<pre>"; print_r($data); exit;
+				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
@@ -1804,7 +1804,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
