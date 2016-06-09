@@ -1540,19 +1540,12 @@ class Dashboard extends crm_controller
 		if(isset($clicktype) && ($clicktype == 'rag')) {
 			$this->db->where_in("l.rag_status", 1);
 		}
-		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$this->db->where_in('l.lead_id', $result_ids);
-		}
-		// $this->db->limit('10');
+		} */
 		$query = $this->db->get();
 		// echo $this->db->last_query();
-		$res = $query->result_array();
-		
-		// if(($clicktype == 'noprojects') || ($clicktype == 'rag'))
-		// $data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-		// if($clicktype == 'irval')
-		// $data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
-		
+		$res = $query->result_array();	
 
 		switch($clicktype){
 			case 'noprojects':
@@ -1568,9 +1561,10 @@ class Dashboard extends crm_controller
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
-			case 'cmirval':
-				$data['invoices_data'] = $this->getCMIRData($practice, $month);
-				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			case 'cm_eff':
+				$data['data'] = $this->get_billable_efforts($practice, $month);
+				// $this->load->view('projects/prjt_drilldata', $data);
+				$this->load->view('projects/service_dashboard_prjt_drill_data', $data);
 			break;
 			case 'fixedbid':
 				$this->db->select('p.practices, p.id');
@@ -1759,42 +1753,8 @@ class Dashboard extends crm_controller
 		$invoice_rec = $query2->result_array();
 		
 		$resarr = array();
-
-		/* if(count($timesheet_data)>0) {
-			foreach($timesheet_data as $row) {
-				// echo $row->practice_id . " " . $row->resoursetype; exit;
-				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
-					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
-					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
-				} else {
-					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
-					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
-				}
-				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
-				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
-				if(!empty($start_date) && !empty($end_date)) {
-					if(!in_array($row->project_code, $resarr['project_code'])){
-						$resarr['project_code'][] = $row->project_code;
-					}
-				}
-			}
-		} */
 		//****//
 		
-		/* $this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
-
-		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
-		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
-		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
-		$this->db->where('sfv.type', 'A');
-		if(!empty($lead_id) && count($lead_id)>0) {
-			$this->db->where_in('sfv.job_id', $lead_id);
-		}
-		$this->db->where('DATE(sfv.for_month_year) =', date('Y-m-d', strtotime($month)));
-		$query  = $this->db->get(); 
-		// echo $this->db->last_query(); exit;
-		$invoice_rec = $query->result_array(); */
 		$i = 0;
 		$data['total_amt'] = 0;
 		if(count($invoice_rec)>0) {
@@ -1814,6 +1774,74 @@ class Dashboard extends crm_controller
 			}
 		}
 		// echo "<pre>"; print_r($data); die;
+		return $data;
+	}
+	
+	/*
+	@method - get_billable_efforts()
+	@for drill down data
+	*/
+	public function get_billable_efforts()
+	{
+		$start_date = date("Y-m-1");
+		$end_date   = date("Y-m-d");
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
+			}
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		}
+		
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+
+		if(!empty($practice_ids)) {
+			$pids = explode(',', $practice_ids);
+			$this->db->where_in("t.practice_id", $pids);
+		}
+
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		
+		$data['resdata'] 	   = $query->result();
+		
+		// get all projects from timesheet
+		$timesheet_db = $this->load->database("timesheet", true);
+		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+		if($proj_mas_qry->num_rows()>0){
+			$project_res = $proj_mas_qry->result();
+		}
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			$project_master[$prec->project_code] = $prec->title;
+		}
+		$data['project_master']  = $project_master;
+		$timesheet_db->close();
+		
+		$filter_group_by = $this->input->post("filter_group_by");
+		$filter_sort_by  = $this->input->post("filter_sort_by");
+		$filter_sort_val = $this->input->post("filter_sort_val");
+		
+		$data['filter_group_by'] = $this->input->post("filter_group_by");
+		if(isset($filter_sort_by) && !empty($filter_sort_by))
+		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
+		else
+		$data['filter_sort_by'] = 'desc';
+	
+		if(isset($filter_sort_val) && !empty($filter_sort_val))
+		$data['filter_sort_val'] = $this->input->post("filter_sort_val");
+		else
+		$data['filter_sort_val'] = 'hour';
+	
 		return $data;
 	}
 	
