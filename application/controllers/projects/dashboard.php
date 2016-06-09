@@ -1573,40 +1573,18 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'cm_eff':
-				
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
-			case 'cm_eff':
-				$this->db->select('p.practices, p.id');
-				$this->db->from($this->cfg['dbpref']. 'practices as p');
-				$this->db->where('p.status', 1);
-				$pquery = $this->db->get();
-				$pres1 = $pquery->result();					
-				if(!empty($pres1) && count($pres1)>0){
-					foreach($pres1 as $prow1) {
-						$practice_arrr[$prow1->id] = $prow1->practices;
-					}
-				}
-				$data = $this->get_billable_efforts($practice, $month);
-				$data['practices_name'] = $practice_arrr[$practice];
-				// echo "<pre>"; print_r($data); exit;
+			case 'ytd_eff':
+				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
+				$data['practices_name'] = $practice_arr[$practice];
+				echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
-				/* $this->db->select('p.practices, p.id');
-				$this->db->from($this->cfg['dbpref']. 'practices as p');
-				$this->db->where('p.status', 1);
-				$pquery = $this->db->get();
-				$pres = $pquery->result();
-				$data['practice_data'] = $pquery->result();						
-				if(!empty($pres) && count($pres)>0){
-					foreach($pres as $prow) {
-						$practice_arr[$prow->id] = $prow->practices;
-					}
-				} */
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
 				$project_codes = array();
@@ -1810,7 +1788,7 @@ class Dashboard extends crm_controller
 	@method - get_billable_efforts()
 	@for drill down data
 	*/
-	public function get_billable_efforts($practice, $month)
+	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
@@ -1819,10 +1797,14 @@ class Dashboard extends crm_controller
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
 		}
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
