@@ -92,7 +92,7 @@ if(!empty($resdata)) {
 		$prjt_cst[$rec->dept_name][$rec->project_code] = $rec->resource_duration_cost;
 	}
 }
-echo "<pre>"; print_r($tbl_data); die;
+echo "<pre>"; print_r($tbl_data);
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Project</h2>
