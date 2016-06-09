@@ -1168,7 +1168,7 @@ class Dashboard extends crm_controller
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
 		
-		// echo "<pre>"; print_r($pcodes); exit;
+		echo "<pre>"; print_r($pcodes); exit;
 		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
@@ -1647,15 +1647,6 @@ class Dashboard extends crm_controller
 		$bk_rates = get_book_keeping_rates();
 		
 		$data = array();
-		/* $lead_id = array();
-		if(!empty($records) && count($records)>0){
-			foreach($records as $lrow){
-				$lead_id[] = $lrow['lead_id'];
-				// $inv_val += $this->get_ir_val($lrow['lead_id'], $lrow['expect_worth_id'], '', $start_date, $end_date, $base_cur_arr[$lrow['division']]);
-			}
-		} */
-		
-		//***//
 		
 		//need to calculate for the total IR
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
@@ -1679,24 +1670,6 @@ class Dashboard extends crm_controller
 		// echo $this->db->last_query(); die;
 		$invoice_rec = $query->result_array();
 
-		//***//
-		
-
-		/* $this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
-
-		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
-		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
-		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
-		$this->db->where('sfv.type', 'A');
-		if(!empty($lead_id) && count($lead_id)>0) {
-			$this->db->where_in('sfv.job_id', $lead_id);
-		}
-		$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($start_date)));
-		$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-d', strtotime($end_date)));
-		$query  = $this->db->get();
-		// echo $this->db->last_query(); exit;
-		$invoice_rec = $query->result_array(); */
 		$i = 0;
 		$data['total_amt'] = 0;
 		if(count($invoice_rec)>0) {
