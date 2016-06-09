@@ -1562,6 +1562,18 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'cm_eff':
+				$this->db->select('p.practices, p.id');
+				$this->db->from($this->cfg['dbpref']. 'practices as p');
+				$this->db->where('p.status', 1);
+				$pquery = $this->db->get();
+				$pres = $pquery->result();
+				$data['practice_data'] = $pquery->result();						
+				if(!empty($pres) && count($pres)>0){
+					foreach($pres as $prow) {
+						$practice_arr[$prow->id] = $prow->practices;
+					}
+				}
+				$data['practice_name'] = $practice_arr[$practice];
 				$data = $this->get_billable_efforts($practice, $month);
 				// $this->load->view('projects/prjt_drilldata', $data);
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
@@ -1810,9 +1822,9 @@ class Dashboard extends crm_controller
 		}
 		$data['project_master']  = $project_master;
 		
-		$data['heading'] 	   = $practice;
-		$data['resource_type'] = "Billable";
-		$data['filter_sort_by'] = 'desc';
+		$data['heading'] 	     = $practice;
+		$data['resource_type']   = "Billable";
+		$data['filter_sort_by']  = 'desc';
 		$data['filter_sort_val'] = 'hour';
 		$timesheet_db->close();
 		
