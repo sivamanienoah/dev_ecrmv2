@@ -1566,6 +1566,7 @@ class Dashboard extends crm_controller
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 			case 'irval':
@@ -1575,12 +1576,14 @@ class Dashboard extends crm_controller
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
+				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'ytd_eff':
 				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
@@ -1614,6 +1617,7 @@ class Dashboard extends crm_controller
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
 			break;
 		}
