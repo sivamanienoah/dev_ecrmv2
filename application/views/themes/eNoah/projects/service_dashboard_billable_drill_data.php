@@ -186,9 +186,6 @@ if(!empty($tbl_data)) {
 			foreach($prj_arr as $ukey=>$pval) {
 				$i=1;
 				$per_hr = $per_cost = 0;
-				/* $rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
-				$per_hr   	= ($pval['hour']/160) * 100;
-				$per_cost 	= (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100; */
 				$per_hr   	= ($pval['hour']/$tot_hour) * 100;
 				$per_cost 	= ($pval['cost']/$tot_cost) * 100;
 				echo "<tr data-depth='".$i."' class='collapse'>
