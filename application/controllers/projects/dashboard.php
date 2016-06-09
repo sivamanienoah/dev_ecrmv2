@@ -1845,14 +1845,13 @@ class Dashboard extends crm_controller
 	}
 	
 	public function excelexport($pjts_data) {
-		echo "<pre>"; print_r($pjts_data); echo "</pre>"; die;
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
 			//activate worksheet number 1
 			$this->excel->setActiveSheetIndex(0);
 			//name the worksheet
-			$this->excel->getActiveSheet()->setTitle($export_type);
+			$this->excel->getActiveSheet()->setTitle('Projects');
 
 			//set cell A1 content with some text			
 			$this->excel->getActiveSheet()->setCellValue('A1', 'Project Title');
@@ -1905,8 +1904,6 @@ class Dashboard extends crm_controller
 				$profitloss    = round($total_amount_inv_raised-$util_cost);
 				//$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
 				$plPercent = round(($profitloss/$util_cost)*100);
-				
-				//$percent = ($plPercent == FALSE)?'-':round($plPercent)*100;
 				
 				$bill_type = $rec['billing_type'];
 				
