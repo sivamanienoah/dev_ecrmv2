@@ -147,6 +147,13 @@ if(!empty($project_type) && count($project_type)>0){
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm">Projects</h2>
+	<div class="section-right">
+		<div class="buttons export-to-excel">
+			<button type="button" id='milestone' class="positive excel" onclick="location.href='#'">
+			Export to Excel
+			</button>
+		</div>
+	</div>
 </div>
 
 <div class="customize-sec">
