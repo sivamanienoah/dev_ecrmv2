@@ -1125,10 +1125,6 @@ class Dashboard extends crm_controller
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
-				/* if(!in_array($ir['pjt_id'], $dc_projects)){
-					if(!empty($ir['pjt_id']))
-					$dc_projects[] = $ir['pjt_id'];
-				} */
 			}
 		}
 		
@@ -1184,7 +1180,7 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
-						$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
+						// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
@@ -1194,21 +1190,6 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
-		
-		//contribution
-		/* if(!empty($dc_projects) && count($dc_projects)>0){
-			foreach($dc_projects as $recrds){
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
-				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				$this->db->where("l.pjt_id", $recrds);
-				$query4 = $this->db->get();
-				$proj_data = $query4->row_array();
-				if(!empty($proj_data) && count($proj_data)>0){
-					$dc = $this->get_timesheet_actual_hours($recrds, "","");
-					$directcost[$practice_arr[$proj_data['practice']]]['total_direct_cost'] += $dc['total_dc'];
-				}
-			}
-		} */
 
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
