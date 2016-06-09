@@ -1564,7 +1564,7 @@ class Dashboard extends crm_controller
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
 				// $this->load->view('projects/prjt_drilldata', $data);
-				$this->load->view('projects/service_dashboard_prjt_drill_data', $data);
+				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
 				$this->db->select('p.practices, p.id');
