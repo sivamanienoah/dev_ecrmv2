@@ -1438,7 +1438,7 @@ class Dashboard extends crm_controller
 	*/
 	public function service_dashboard_data()
 	{
-		echo "<pre>"; print_R($this->input->post()); exit;
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
@@ -1581,12 +1581,7 @@ class Dashboard extends crm_controller
 			break;
 			case 'inprogress_project_export':
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-				$this->db->select('project_billing_type, id');
-				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();
-				$data['practices_id'] = $practice;
-				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
+				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
@@ -1847,7 +1842,132 @@ class Dashboard extends crm_controller
 		$timesheet_db->close();
 		
 		return $data;
-		
+	}
+	
+	public function excelexport($pjts_data){
+		if(count($pjts_data)>0) {
+    		//load our new PHPExcel library
+			$this->load->library('excel');
+			//activate worksheet number 1
+			$this->excel->setActiveSheetIndex(0);
+			//name the worksheet
+			$this->excel->getActiveSheet()->setTitle($export_type);
+
+			//set cell A1 content with some text			
+			$this->excel->getActiveSheet()->setCellValue('A1', 'Project Title');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'Project Completion (%)');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'Project Type');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'RAG Status');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'Planned Hours');
+			$this->excel->getActiveSheet()->setCellValue('F1', 'Billable Hours');
+			$this->excel->getActiveSheet()->setCellValue('G1', 'Internal Hours');
+			$this->excel->getActiveSheet()->setCellValue('H1', 'Non-Billable Hours');
+			$this->excel->getActiveSheet()->setCellValue('I1', 'Total Utilized Hours (Actuals)');
+			$this->excel->getActiveSheet()->setCellValue('J1', 'Effort Variance');
+			$this->excel->getActiveSheet()->setCellValue('K1', 'Project Value ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('L1', 'Utilization Cost ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('M1', 'Invoice Raised ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L');
+			$this->excel->getActiveSheet()->setCellValue('O1', 'P&L %');
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+
+			$i=2;
+			
+    		foreach($pjts_data as $rec) {
+			
+				$estimate_hr =  (isset($rec['estimate_hour'])) ? $rec['estimate_hour'] : "-";
+				switch ($rec['rag_status']) {
+					case 1:
+						$rag = 'Red';
+					break;
+					case 2:
+						$rag = 'Amber';
+					break;
+					case 3:
+						$rag = 'Green';
+					break;
+					default:
+						$rag = '-';
+				}
+				$bill_hr = (isset($rec['bill_hr'])) ? round($rec['bill_hr']) : "-";
+				$inter_hr = (isset($rec['int_hr'])) ? round($rec['int_hr']) : "-";
+				$nbill_hr = (isset($rec['nbil_hr'])) ? round($rec['nbil_hr']) : "-";
+				$total_hr = ($rec['bill_hr']+$rec['int_hr']+$rec['nbil_hr']);
+				$pjt_val = (isset($rec['actual_worth_amt'])) ? $rec['actual_worth_amt'] : "-";
+				$util_cost = (isset($rec['total_cost'])) ? round($rec['total_cost']) : "-";
+				$total_amount_inv_raised = (isset($rec['total_amount_inv_raised'])) ? round($rec['total_amount_inv_raised']) : "-";
+				
+				$profitloss    = round($total_amount_inv_raised-$util_cost);
+				//$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
+				$plPercent = round(($profitloss/$util_cost)*100);
+				
+				//$percent = ($plPercent == FALSE)?'-':round($plPercent)*100;
+				
+				$bill_type = $rec['billing_type'];
+				
+				$this->excel->setActiveSheetIndex(0);
+				$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
+				$this->excel->getActiveSheet()->setCellValue('B'.$i, $rec['complete_status']);
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, $rec['project_type']);
+				$this->excel->getActiveSheet()->setCellValue('D'.$i, $rag);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $estimate_hr);
+				$this->excel->getActiveSheet()->setCellValue('F'.$i, $bill_hr);
+				$this->excel->getActiveSheet()->setCellValue('G'.$i, $inter_hr);
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $nbill_hr);
+				$this->excel->getActiveSheet()->setCellValue('I'.$i, $total_hr);
+				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
+				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
+				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_amount_inv_raised);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $profitloss);
+				$this->excel->getActiveSheet()->setCellValue('O'.$i, $plPercent);
+				$i++;
+    		}
+			
+			//for first sheet
+			$this->excel->setActiveSheetIndex(0);
+			//Set width for cells
+			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(19);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(13);
+			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(17);
+			$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(17);
+			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+			//Column Alignment
+			$this->excel->getActiveSheet()->getStyle('D2:D'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('F2:F'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('H2:H'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('I2:I'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getNumberFormat()->setFormatCode('0.00');
+			$this->excel->getActiveSheet()->getStyle('K2:K'.$i)->getNumberFormat()->setFormatCode('0.00');
+			
+			// $filename='Project_report.xls'   ; //save our workbook as this file name
+			$filename='Project_report_'.time().'.xls'   ; //save our workbook as this file name
+			header('Content-Type: application/vnd.ms-excel'); //mime type
+			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+			header('Cache-Control: max-age=0'); //no cache
+			//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+			//if you want to save it as .XLSX Excel 2007 format
+			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+			//force user to download the Excel file without writing it to server's HD
+			$objWriter->save('php://output');
+    	}
+		redirect('/projects/dashboard');
 	}
 	
 
