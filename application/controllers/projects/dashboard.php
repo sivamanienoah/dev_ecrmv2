@@ -2016,7 +2016,7 @@ class Dashboard extends crm_controller
 	
 	public function excelexportinvoice($invoices_res)
 	{
-		echo "<pre>"; print_r($invoices_res); exit;
+		// echo "<pre>"; print_r($invoices_res); exit;
 		if((count($invoices_res['invoices'])>0) && !empty($invoices_res['invoices'])) {
 			$this->load->library('excel');
 			//activate worksheet number 1
@@ -2045,7 +2045,7 @@ class Dashboard extends crm_controller
 					$i++;
 				}
 			}
-			$this->excel->getActiveSheet()->setCellValue('E'.$i, $total_amt);
+			$this->excel->getActiveSheet()->setCellValue('E'.$i, $invoices_res['total_amt']);
 			
 			// $this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
@@ -2057,7 +2057,7 @@ class Dashboard extends crm_controller
 			
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
 			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
