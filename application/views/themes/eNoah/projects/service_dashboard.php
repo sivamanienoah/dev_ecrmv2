@@ -215,12 +215,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 								}
 								?>
-								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 2); ?></a>
-								<?php
-								} else {
-									echo '';
-								}
-								?>
+								<?php echo round($eff_var, 2); ?>
 							</td>
 						<?php } ?>
 					<?php } ?>
