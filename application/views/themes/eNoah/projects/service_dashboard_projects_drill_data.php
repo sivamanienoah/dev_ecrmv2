@@ -51,7 +51,8 @@ if(!empty($project_type) && count($project_type)>0){
 			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
 			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
 			$total_dc_hours = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
-			$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
+			// $contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
+			$contributePercent = round($total_dc_hours, 2);
 			$profitloss        = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
 			
