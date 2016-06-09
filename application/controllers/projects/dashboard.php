@@ -1180,7 +1180,7 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
-						// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
+						$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
@@ -1188,7 +1188,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($fixed_bid); exit;
+		echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
 
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
