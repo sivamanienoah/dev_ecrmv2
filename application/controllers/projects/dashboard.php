@@ -1220,23 +1220,6 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($cm_directcost); die;
 		$projects['cm_direct_cost'] = $cm_directcost;
-		
-		/* if(!empty($cm_dc_projects) && count($cm_dc_projects)>0){
-			foreach($cm_dc_projects as $recrdss){
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
-				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				$this->db->where("l.pjt_id", $recrdss);
-				$query4 = $this->db->get();
-				$proj_data = $query4->row_array();
-				if(!empty($proj_data) && count($proj_data)>0){					
-					$cm_dc = $this->get_timesheet_actual_hours($recrdss, "", "", $month);
-					$cm_directcost[$practice_arr[$proj_data['practice']]]['total_cm_direct_cost'] += $cm_dc['total_dc'];
-				}
-			}
-		}
-		$projects['cm_direct_cost'] = $cm_directcost;
-		*/
-		
 		// echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
