@@ -2016,7 +2016,6 @@ class Dashboard extends crm_controller
 	
 	public function excelexportinvoice($invoices_res)
 	{
-		echo "export to invoice"; die;
 		if((count($invoices_res)>0) && !empty($invoices_res)) {
 			$this->load->library('excel');
 			//activate worksheet number 1
