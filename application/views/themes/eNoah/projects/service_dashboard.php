@@ -52,13 +52,13 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<td class="">
 									<span>Billable Month</span> <input type="text" data-calendar="false" name="billable_month" id="billable_month" class="textfield" value="" />
 								</td>
-								<td class="">
+								<!--td class="">
 									<select title="Status" id="project_status" name="project_status[]" multiple="multiple">
 										<option value="1">Project In Progress</option>
 										<option value="2">All Projects</option>
 										<!--option value="3">Project Onhold</option-->
 										<!--option value="4">Inactive</option-->
-									</select>
+									<!--/select>
 								</td>								
 								<td class="">
 									<select title="Entity" id="entity" name="entity[]" multiple="multiple">
@@ -69,10 +69,10 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 										}
 										?>
 									</select>
-								</td>
+								</td-->
 							</tr>
 							<tr align="right" >
-								<td colspan="4">
+								<td colspan="2">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
