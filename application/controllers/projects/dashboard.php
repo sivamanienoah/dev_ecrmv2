@@ -1188,7 +1188,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($fixed_bid); exit;
+		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
 		
 		//contribution
