@@ -1168,7 +1168,7 @@ class Dashboard extends crm_controller
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
 		
-		echo "<pre>"; print_r($pcodes); exit;
+		// echo "<pre>"; print_r($pcodes); exit;
 		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
@@ -1180,6 +1180,7 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
+						$fixed_bid[] = $rec;
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
@@ -1187,6 +1188,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
+		echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
 		
 		//contribution
