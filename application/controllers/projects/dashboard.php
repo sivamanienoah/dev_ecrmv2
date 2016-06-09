@@ -1891,7 +1891,7 @@ class Dashboard extends crm_controller
 	}
 	
 	public function excelexport($pjts_data) {
-		echo "<pre>"; print_r($pjts_data); die;
+		// echo "<pre>"; print_r($pjts_data); die;
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
@@ -1914,6 +1914,7 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->setCellValue('K1', 'Project Value ('.$this->default_cur_name.')');
 			$this->excel->getActiveSheet()->setCellValue('L1', 'Utilization Cost ('.$this->default_cur_name.')');
 			$this->excel->getActiveSheet()->setCellValue('M1', 'Invoice Raised ('.$this->default_cur_name.')');
+			
 			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L');
 			$this->excel->getActiveSheet()->setCellValue('O1', 'P&L %');
 
@@ -1968,8 +1969,12 @@ class Dashboard extends crm_controller
 				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
 				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
 				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_amount_inv_raised);
-				$this->excel->getActiveSheet()->setCellValue('N'.$i, $profitloss);
-				$this->excel->getActiveSheet()->setCellValue('O'.$i, $plPercent);
+				$total_dc_hours = (isset($rec['total_dc_hours'])) ? (round($rec['total_dc_hours'])) : '0';
+				$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $total_dc_hours);
+				$this->excel->getActiveSheet()->setCellValue('O'.$i, $contributePercent);
+				$this->excel->getActiveSheet()->setCellValue('P'.$i, $profitloss);
+				$this->excel->getActiveSheet()->setCellValue('Q'.$i, $plPercent);
 				$i++;
     		}
 			
@@ -1991,6 +1996,8 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(10);
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('D2:D'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
