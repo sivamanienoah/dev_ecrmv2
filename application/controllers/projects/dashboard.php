@@ -2016,8 +2016,8 @@ class Dashboard extends crm_controller
 	
 	public function excelexportinvoice($invoices_res)
 	{
-		echo "<pre>"; print_r($invoices_res); exit;
-		if((count($invoices_res)>0) && !empty($invoices_res)) {
+		// echo "<pre>"; print_r($invoices_res['invoices']); exit;
+		if((count($invoices_res['invoices'])>0) && !empty($invoices_res['invoices'])) {
 			$this->load->library('excel');
 			//activate worksheet number 1
 			$this->excel->setActiveSheetIndex(0);
@@ -2034,8 +2034,8 @@ class Dashboard extends crm_controller
 			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 			$i=2;		
 			$total_amt = '';
-			if(count($invoices_res)>0) {
-				foreach($invoices_res as $excelarr) {
+			if(count($invoices_res['invoices'])>0) {
+				foreach($invoices_res['invoices'] as $excelarr) {
 					//display only date
 					$this->excel->getActiveSheet()->setCellValue('A'.$i, date('M Y', strtotime($excelarr['month_year'])));
 					$this->excel->getActiveSheet()->setCellValue('B'.$i, $excelarr['lead_title']);
