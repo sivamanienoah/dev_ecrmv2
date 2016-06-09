@@ -1896,6 +1896,19 @@ class Dashboard extends crm_controller
 	}
 	
 	public function excelexport($pjts_data) {
+		
+		$this->db->select('project_billing_type, id');
+		$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+		$ptquery = $this->db->get();
+		$project_type = $ptquery->result();
+		
+		$pt_arr = array();
+		if(!empty($project_type) && count($project_type)>0){
+			foreach($project_type as $prec){
+				$pt_arr[$prec->id] = $prec->project_billing_type;
+			}
+		}
+		
 		// echo "<pre>"; print_r($pjts_data); die;
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
@@ -1964,7 +1977,7 @@ class Dashboard extends crm_controller
 				$this->excel->setActiveSheetIndex(0);
 				$this->excel->getActiveSheet()->setCellValue('A'.$i, $rec['lead_title']);
 				$this->excel->getActiveSheet()->setCellValue('B'.$i, $rec['complete_status']);
-				$this->excel->getActiveSheet()->setCellValue('C'.$i, $rec['project_type']);
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, $pt_arr[$rec['project_type']]);
 				$this->excel->getActiveSheet()->setCellValue('D'.$i, $rag);
 				$this->excel->getActiveSheet()->setCellValue('E'.$i, $estimate_hr);
 				$this->excel->getActiveSheet()->setCellValue('F'.$i, $bill_hr);
