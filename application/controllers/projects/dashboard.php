@@ -1689,7 +1689,7 @@ class Dashboard extends crm_controller
 				$data['project_record'][$i]['int_hr'] 			= isset($timesheet['total_internal_hrs'])?$timesheet['total_internal_hrs']:'0';
 				$data['project_record'][$i]['nbil_hr'] 			= isset($timesheet['total_non_billable_hrs'])?$timesheet['total_non_billable_hrs']:'0';
 				$data['project_record'][$i]['total_hours'] 		= isset($timesheet['total_hours'])?$timesheet['total_hours']:'0';
-				$data['project_record'][$i]['total_dc_hours'] 	= isset($timesheet['total_dc_hours'])?$timesheet['total_dc_hours']:'0';
+				$data['project_record'][$i]['total_dc_hours'] 	= $timesheet['total_dc_hours'];
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
