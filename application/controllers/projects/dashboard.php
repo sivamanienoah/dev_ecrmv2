@@ -1590,6 +1590,10 @@ class Dashboard extends crm_controller
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$res = $this->excelexport($data['projects_data']);
 			break;
+			case 'irval':
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
