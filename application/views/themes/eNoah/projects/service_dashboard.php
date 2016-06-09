@@ -193,8 +193,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 									if(isset($billval) && ($billval != 0)) {
 									?>
-									<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
-									<?php echo round(($billval*100), 2); ?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php echo round(($billval*100), 2); ?></a>
 									<?php
 									} else {
 										echo '';
@@ -205,7 +204,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Effort Variance (%) </b></td>
+					<td><b>Effort Variance (%) - <span class="highlight_info">For Fixed Bid projects</span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
