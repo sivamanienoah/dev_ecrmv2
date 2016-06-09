@@ -1172,7 +1172,7 @@ class Dashboard extends crm_controller
 		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
 				$this->db->where("l.pjt_id", $rec);
 				$this->db->where("l.billing_type", 1);
@@ -1180,7 +1180,7 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
-						$fixed_bid[$practice_arr[$recrd['practice']]][] = $rec;
+						$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
