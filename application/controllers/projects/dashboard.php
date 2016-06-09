@@ -1174,6 +1174,10 @@ class Dashboard extends crm_controller
 			foreach($pcodes as $rec){
 				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				$pt_not_in_arra = array('4','8');
+				$this->db->where_not_in("l.project_type", $pt_not_in_arra);
+				$client_not_in_arra = array('ENO','NOA');
+				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
 				$this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
@@ -1573,7 +1577,7 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'cmirval':
-				$data['invoices_data'] = $this->getCMIRData($res, $month);
+				$data['invoices_data'] = $this->getCMIRData($practice, $month);
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 		}
@@ -1694,18 +1698,51 @@ class Dashboard extends crm_controller
 		return $data;
 	}
 	
-	public function getCMIRData($records, $month)
+	public function getCMIRData($practice, $month)
 	{
 		$bk_rates = get_book_keeping_rates();
 		
-		$$data = array();
-		$lead_id = array();
-		if(!empty($records) && count($records)>0){
-			foreach($records as $lrow){
-				$lead_id[] = $lrow['lead_id'];
-			}
+		$data = array();
+		
+		//****//
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, lead_title');
+		$this->db->from($this->cfg['dbpref'].'timesheet_data');
+		$this->db->join($this->cfg['dbpref'].'leads', 'pjt_id = project_code');
+		$tswhere = "resoursetype is NOT NULL";
+		$this->db->where($tswhere);
+		$this->db->where('practice_id', $practice);
+		if(!empty($month)) {
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
-		$this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
+		$query2 = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$invoice_rec = $query2->result_array();
+		
+		$resarr = array();
+
+		/* if(count($timesheet_data)>0) {
+			foreach($timesheet_data as $row) {
+				// echo $row->practice_id . " " . $row->resoursetype; exit;
+				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
+				} else {
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+				}
+				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
+				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+				if(!empty($start_date) && !empty($end_date)) {
+					if(!in_array($row->project_code, $resarr['project_code'])){
+						$resarr['project_code'][] = $row->project_code;
+					}
+				}
+			}
+		} */
+		//****//
+		
+		/* $this->db->select('sfv.milestone_value, sfv.for_month_year, sfv.milestone_name, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, c.first_name, c.last_name, c.company, sd.base_currency');
 
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
@@ -1716,9 +1753,9 @@ class Dashboard extends crm_controller
 			$this->db->where_in('sfv.job_id', $lead_id);
 		}
 		$this->db->where('DATE(sfv.for_month_year) =', date('Y-m-d', strtotime($month)));
-		$query  = $this->db->get();
+		$query  = $this->db->get(); 
 		// echo $this->db->last_query(); exit;
-		$invoice_rec = $query->result_array();
+		$invoice_rec = $query->result_array(); */
 		$i = 0;
 		$data['total_amt'] = 0;
 		if(count($invoice_rec)>0) {
