@@ -1540,6 +1540,9 @@ class Dashboard extends crm_controller
 		if(isset($clicktype) && ($clicktype == 'rag')) {
 			$this->db->where_in("l.rag_status", 1);
 		}
+		if(isset($clicktype) && ($clicktype == 'rag_project_export')) {
+			$this->db->where_in("l.rag_status", 1);
+		}
 		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$this->db->where_in('l.lead_id', $result_ids);
 		} */
