@@ -27,7 +27,7 @@ if(!empty($project_type) && count($project_type)>0){
 	$milestone_content = '';
 	$monthly_content   = '';
 	
-	echo "<pre>"; print_r($projects_data); die;
+	// echo "<pre>"; print_r($projects_data); die;
 	
 	if (is_array($projects_data) && count($projects_data) > 0) {
 		$total_pv_amt = 0;
