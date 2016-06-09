@@ -1586,6 +1586,7 @@ class Dashboard extends crm_controller
 				}
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
+				echo "<pre>"; print_r($pcodes); die;
 				if(!empty($pcodes) && count($pcodes)>0){
 					foreach($pcodes as $rec){
 						$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
