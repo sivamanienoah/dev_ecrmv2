@@ -152,6 +152,7 @@ if(!empty($project_type) && count($project_type)>0){
 			<button type="button" id='service_dashboard_export_excel' class="positive excel" onclick="location.href='#'">
 			Export to Excel
 			</button>
+			<input type="hidden" name="practices" id="practices" value="<?php echo $practices_id; ?>">
 		</div>
 	</div>
 </div>
@@ -264,6 +265,7 @@ $(function() {
 		var url = site_base_url+"projects/dashboard/service_dashboard_data/";
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
 		  '<input id="month_year_from_date" type="hidden" name="month_year_from_date" value="'+month_year_from_date+'" />'+
 		  '<input id="month_year_to_date" type="hidden" name="month_year_to_date" value="'+month_year_to_date+'" />'+
 		  '<input id="billable_month" type="hidden" name="billable_month" value="'+billable_month+'" />'+
