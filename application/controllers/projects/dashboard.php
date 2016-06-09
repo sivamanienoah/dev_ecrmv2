@@ -1808,8 +1808,6 @@ class Dashboard extends crm_controller
 		$data['project_master']  = $project_master;
 		$timesheet_db->close();
 		
-		echo "<pre>"; print_r($data); die;
-
 		return $data;
 		
 	}
