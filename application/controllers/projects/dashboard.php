@@ -2057,9 +2057,9 @@ class Dashboard extends crm_controller
 			
 			//Set width for cells
 			$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
-			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
-			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+			$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(35);
+			$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+			$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
 			
 			//cell format
