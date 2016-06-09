@@ -1785,8 +1785,7 @@ class Dashboard extends crm_controller
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$tswhere = "t.resoursetype is NOT NULL";
-		$this->db->where($tswhere);
+		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
@@ -1810,6 +1809,10 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
+		
+		$data['heading'] 	   = $practice;
+		$data['dept_type']     = "eADS";
+		$data['resource_type'] = "Billable";
 		$timesheet_db->close();
 		
 		return $data;
