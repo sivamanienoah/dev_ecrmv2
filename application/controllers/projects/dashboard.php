@@ -1583,6 +1583,10 @@ class Dashboard extends crm_controller
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$res = $this->excelexport($data['projects_data']);
 			break;
+			case 'rag_project_export':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$res = $this->excelexport($data['projects_data']);
+			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
