@@ -364,8 +364,8 @@ $("#advanceFilterServiceDashboard").submit(function() {
 
 function getData(practice, clicktype)
 {	
-	var entity        		 = $("#entity").val();
-	var project_status 		 = $("#project_status").val();
+	// var entity        		 = $("#entity").val();
+	// var project_status 		 = $("#project_status").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
 	var billable_month   	 = $("#billable_month").val();
@@ -373,7 +373,8 @@ function getData(practice, clicktype)
 	$.ajax({
 		type: "POST",
 		url: site_base_url+'projects/dashboard/service_dashboard_data/',
-		data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
+		// data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: 'filter=filter'+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
 		cache: false,
 		beforeSend:function() {
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
