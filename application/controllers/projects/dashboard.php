@@ -1672,7 +1672,7 @@ class Dashboard extends crm_controller
 				$client_not_in_array = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_array);
 				// $this->db->where("l.pjt_id", $rec);
-				$this->db->where("l.billing_type", 1);
+				// $this->db->where("l.billing_type", 1);
 				$this->db->where("l.practice", $practice);
 				$this->db->where_in("l.pjt_id", $project_codes);
 				$query3 = $this->db->get();
