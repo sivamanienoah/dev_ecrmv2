@@ -1192,9 +1192,6 @@ class Dashboard extends crm_controller
 							$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
 						}
 						$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
-						// $effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
-						// $actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
-						// $effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
 					}
 				}
 			}
@@ -1642,13 +1639,12 @@ class Dashboard extends crm_controller
 				$client_not_in_array = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_array);
 				// $this->db->where("l.pjt_id", $rec);
-				$this->db->where("l.billing_type", 1);
+				// $this->db->where("l.billing_type", 1);
 				$this->db->where("l.practice", $practice);
 				$this->db->where_in("l.pjt_id", $project_codes);
 				$query3 = $this->db->get();
-				// echo $this->db->last_query(); die;
 				$pro_data = $query3->result_array();
-				// echo "<pre>"; print_r($fixed_bid); exit;
+				
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
 				$this->db->select('project_billing_type, id');
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
