@@ -1591,13 +1591,13 @@ class Dashboard extends crm_controller
 				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$data['practices_id'] = $practice;
 				$data['excelexporttype'] = "inv_project_export";
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'inv_project_export':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
