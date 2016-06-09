@@ -1257,17 +1257,6 @@ class Dashboard extends crm_controller
 				$res['total_cost']     += $ts['duration_cost'];
 				$res['total_hours']    += $ts['duration_hours'];
 				$res['total_dc'] 	   += $ts['duration_direct_cost'];
-				/* switch($ts['resoursetype']) {
-					case 'Billable':
-						$res['total_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Non-Billable':
-						$res['total_non_billable_hrs'] += $ts['duration_hours'];
-					break;
-					case 'Internal':
-						$res['total_internal_hrs'] += $ts['duration_hours'];
-					break;
-				} */
 			}
 		}
 		// echo "<pre>"; print_r($res); exit;
