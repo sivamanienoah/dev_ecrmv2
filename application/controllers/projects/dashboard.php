@@ -1180,7 +1180,7 @@ class Dashboard extends crm_controller
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
-						$fixed_bid[] = $rec;
+						$fixed_bid[$practice_arr[$recrd['practice']]][] = $rec;
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
 						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
