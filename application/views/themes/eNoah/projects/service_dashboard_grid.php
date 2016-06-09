@@ -101,8 +101,7 @@
 						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 						if(isset($billval) && ($billval != 0)) {
 						?>
-						<!--a onclick="getData('<?php #echo $practice_id_arr[$parr]; ?>', 'cmirval'); return false;"><?php #echo round(($billval*100), 2); ?></a-->
-						<?php echo round(($billval*100), 2); ?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 2); ?></a>
 						<?php
 						} else {
 							echo '';
@@ -122,7 +121,13 @@
 					if(isset($projects['eff_var'][$parr])) {
 						$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 					}
-					echo round($eff_var, 2);
+					if(isset($eff_var) && ($eff_var != 0)) {
+					?>
+					<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 2); ?></a>
+					<?php
+					} else {
+						echo '';
+					}
 					?>
 				</td>
 			<?php } ?>
