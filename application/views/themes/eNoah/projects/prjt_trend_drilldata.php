@@ -23,6 +23,7 @@
 		<select name="filter_sort_val" id="filter_sort_val">
 			<option value='hour' <?php if($filter_sort_val == 'hour') echo "selected='selected'"; ?>>Hour</option>
 			<option value='cost' <?php if($filter_sort_val == 'cost') echo "selected='selected'"; ?>>Cost</option>
+			<option value='directcost' <?php if($filter_sort_val == 'directcost') echo "selected='selected'"; ?>>Direct Cost</option>
 		</select>
 	</div>
 	<div class="pull-left" style="margin:0 15px;;">
