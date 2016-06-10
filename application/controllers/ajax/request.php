@@ -384,6 +384,8 @@ class Request extends crm_controller {
 		} else {
 			$chge_access = get_del_access($job_id, $this->userdata['userid']);
 		}
+		
+		$stake_holder_access = $this->project_model->get_stakeholder_access($id, $usernme['userid']);
 	
 		$file_upload_access = get_file_access($job_id, $this->userdata['userid']);
 	
@@ -406,7 +408,7 @@ class Request extends crm_controller {
 				// CHECK ACCESS PERMISSIONS START HERE //
 				$get_permissions   = $this->check_access_permissions($job_id, $res['folder_id'], $this->userdata['userid']);
 				$check_permissions = $get_permissions['access_type'];
-				if($check_permissions != 0 || $userdata['role_id'] == 1|| $chge_access == 1) { //check_permission
+				if($check_permissions != 0 || $userdata['role_id'] == 1 || $chge_access == 1 || $stake_holder_access == 1) { //check_permission
 					if($res['folder_id'] == $fparent_id) {
 						$get_files = $this->request_model->getFiles($job_id, $res['folder_id']);
 					} else {

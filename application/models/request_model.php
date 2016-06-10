@@ -412,6 +412,22 @@ class Request_model extends crm_model {
 	    return $sql->result_array();
     }
 	
+	public function get_stakeholder_access($id, $uid)
+	{
+		$this->db->select('lead_id, user_id');
+		$this->db->where('lead_id', $id);
+		$this->db->where('user_id', $uid);
+		$sql = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+		$res1 = $sql->result_array();
+		if (empty($res1)) {
+			$stake_access = 0;
+		}
+		else {
+			$stake_access = 1;
+		}
+		return $stake_access;
+	}
+	
 	/*
 	 * @method check_lead_file_access()
 	 * @access public	
