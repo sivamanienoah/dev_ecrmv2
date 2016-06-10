@@ -330,14 +330,14 @@ function advanced_filter() {
 $("#advanceFilterServiceDashboard").submit(function() {
 	$('#advance').hide();
 	$('#load').show();
-	// var entity        		 = $("#entity").val();
+	var entity        		 = $("#entity").val();
 	// var project_status 		 = $("#project_status").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
 	var billable_month   	 = $("#billable_month").val();
 
 	// if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
-	if(month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
+	if(entity == null && month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
 		$('#advance').show();
 		$('#load').hide();
 		return false;
@@ -348,7 +348,7 @@ $("#advanceFilterServiceDashboard").submit(function() {
 		url: site_base_url+"projects/dashboard/service_dashboard/",
 		// dataType: "json",
 		// data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
-		data: 'filter=filter'+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: 'filter=filter'+'&entity='+entity+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function() {
 			$('#default_view').empty();
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
@@ -364,7 +364,7 @@ $("#advanceFilterServiceDashboard").submit(function() {
 
 function getData(practice, clicktype)
 {	
-	// var entity        		 = $("#entity").val();
+	var entity        		 = $("#entity").val();
 	// var project_status 		 = $("#project_status").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
@@ -374,7 +374,7 @@ function getData(practice, clicktype)
 		type: "POST",
 		url: site_base_url+'projects/dashboard/service_dashboard_data/',
 		// data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
-		data: 'filter=filter'+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: 'filter=filter'+'&entity='+entity+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
 		cache: false,
 		beforeSend:function() {
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
