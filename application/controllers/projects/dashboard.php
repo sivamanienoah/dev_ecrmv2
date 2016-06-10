@@ -1793,7 +1793,7 @@ class Dashboard extends crm_controller
 			foreach ($invoice_rec as $inv) {
 				$data['invoices'][$i]['lead_title']		= $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 		= $inv['pjt_id'];
-				$data['invoices'][$i]['lead_id'] 		= $inv['lead_id'];
+				$data['invoices'][$i]['lead_id'] 		= $inv['job_id'];
 				$data['invoices'][$i]['customer'] 		= $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
 				$data['invoices'][$i]['milestone_name'] = $inv['milestone_name'];
 
