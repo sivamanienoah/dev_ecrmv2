@@ -238,6 +238,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
 			<th class='prac-dt' width='5%'>% of HOUR</th>
+			<th class='prac-dt' width='5%'>% of COST</th>
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
 	// foreach()
