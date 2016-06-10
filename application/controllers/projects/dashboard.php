@@ -535,7 +535,7 @@ class Dashboard extends crm_controller
 	*/
 	public function get_trend_drill_data()
 	{
-		// echo "<pre>"; print_r($this->input->post()); exit;
+		echo "<pre>"; print_r($this->input->post()); exit;
 		if($this->input->post("start_date")) {
 			$date = $this->input->post("start_date");
 			$start_date = date("Y-m-01",strtotime($date));
