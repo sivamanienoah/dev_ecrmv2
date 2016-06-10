@@ -180,7 +180,8 @@ class Login_model extends crm_model {
 							if($sr2 = @ldap_search($ds,$LDAPContainer,$filter,array("givenName","sn","displayName","mail"))) {
 								if($info2 = ldap_get_entries($ds, $sr2)) {
 									$data["name"] = $info2[0]["givenname"][0];
-									return $data["name"];
+									echo'<pre>';print_r($data["name"]);exit;
+									return ;
 									//return 0;
 								} else {
 									$data['login_error'] = "Could not read entries"; $data['login_error_code'] = 2;
@@ -209,7 +210,7 @@ class Login_model extends crm_model {
 		} else {
 			$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
 		} 
-		echo'<pre>';print_r($data);exit;
+		
 		return $data;
 	}
 	//LDAP connection end
