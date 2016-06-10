@@ -158,7 +158,15 @@ class Login_model extends crm_model {
 		//$filter = "sAMAccountName=".$this->input->post('email');
 		$filter = "sAMAccountName=".$username;
 	   
-		if(($ds=ldap_connect($LDAPServerAddress1))) {
+	   /*  $this->db->from($this->cfg['dbpref'].'users u');
+		$this->db->where('u.username', $username);
+		$this->db->limit(1);
+        $sql = $this->db->get();
+        $res = $sql->result_array();
+		return $res[0]['first_name']; */
+		//echo'<pre>';print_r($res[0]['first_name']);exit;
+	   
+		 if(($ds=ldap_connect($LDAPServerAddress1))) {
 			ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
 			ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 			
@@ -191,17 +199,17 @@ class Login_model extends crm_model {
 				}
 			} else {
 				$data['login_error'] = "Could not bind"; $data['login_error_code'] = 7;
-				/* ldap_error($r);
-				if (ldap_get_option($r, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
-				echo "Error Binding to LDAP: $extended_error";
-				} else {
-					echo "Error Binding to LDAP: No2 additional information is available.";
-				} */
+				// ldap_error($r);
+				// if (ldap_get_option($r, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+				// echo "Error Binding to LDAP: $extended_error";
+				// } else {
+					// echo "Error Binding to LDAP: No2 additional information is available.";
+				// } 
 			}
 		} else {
 			$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
-		}
-		
+		} 
+		echo'<pre>';print_r($data);exit;
 		return $data;
 	}
 	//LDAP connection end
