@@ -38,14 +38,17 @@ table.bu-tbl-inr th{ text-align:center; }
 			
 			<div class="chk-radio-box">	
 				<?php 
-					$checked_hr = $checked_cost = '';
+					$checked_hr = $checked_cost = $$checked_directcost = '';
 					if($graph_based == 'hour') 
 					$checked_hr = 'checked="checked"';
 					else if($graph_based == 'cost') 
 					$checked_cost = 'checked="checked"';
+					else if($graph_based == 'directcost') 
+					$checked_cost = 'checked="checked"';
 				?>
 				<label><input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /><span>Hour</span></label>
 				<label><input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /><span>Cost</span></label>
+				<label><input type='radio' name='graph_based' value='directcost' id='rd_grph_directcost' <?php echo $checked_directcost; ?> /><span>Cost</span></label>
 			</div>
 
 			<div class="chk-radio-box">	
@@ -242,6 +245,14 @@ table.bu-tbl-inr th{ text-align:center; }
 					$billable_value_cost_percent[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Billable'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
 					$internal_value_cost_percent[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Internal'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
 					$non_billable_value_cost_percent[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']) ? round(($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['cost']/$business_unit[date('Y-m', strtotime($i))]['totalcost'])*100) : 0;
+					//for direct cost
+					$billable_value_directcost[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['direct_cost']) ? round($business_unit['Billable'][date('Y-m', strtotime($i))]['direct_cost']) : 0;
+					$internal_value_directcost[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['direct_cost']) ? round($business_unit['Internal'][date('Y-m', strtotime($i))]['direct_cost']) : 0;
+					$non_billable_value_directcost[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['direct_cost']) ? round($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['direct_cost']) : 0;
+					//for direct cost percentage
+					$billable_value_directcost_percent[] = isset($business_unit['Billable'][date('Y-m', strtotime($i))]['direct_cost']) ? round(($business_unit['Billable'][date('Y-m', strtotime($i))]['direct_cost']/$business_unit[date('Y-m', strtotime($i))]['totaldirectcost'])*100) : 0;
+					$internal_value_directcost_percent[]   = isset($business_unit['Internal'][date('Y-m', strtotime($i))]['direct_cost']) ? round(($business_unit['Internal'][date('Y-m', strtotime($i))]['direct_cost']/$business_unit[date('Y-m', strtotime($i))]['totaldirectcost'])*100) : 0;
+					$non_billable_value_directcost_percent[]   = isset($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['direct_cost']) ? round(($business_unit['Non-Billable'][date('Y-m', strtotime($i))]['direct_cost']/$business_unit[date('Y-m', strtotime($i))]['totaldirectcost'])*100) : 0;
 					
 					if(substr($i, 5, 2) == "12")
 					$i = (date("Y", strtotime($i."-01")) + 1)."-01";
@@ -272,6 +283,17 @@ table.bu-tbl-inr th{ text-align:center; }
 					$internal_value 	= implode(',', $internal_value_cost_percent); //internal
 					$non_billable_value = implode(',', $non_billable_value_cost_percent); //non-billable
 				}
+				if(($graph_based == 'directcost') && ($value_based == 'value')){
+					$billable_value 	= implode(',', $billable_value_directcost); //billable
+					$internal_value 	= implode(',', $internal_value_directcost); //internal
+					$non_billable_value = implode(',', $non_billable_value_directcost); //non-billable
+				}
+				if(($graph_based == 'directcost') && ($value_based == 'percent')){
+					$billable_value 	= implode(',', $billable_value_directcost_percent); //billable
+					$internal_value 	= implode(',', $internal_value_directcost_percent); //internal
+					$non_billable_value = implode(',', $non_billable_value_directcost_percent); //non-billable
+				}
+				
 				$month_no_arr      = implode(',', $month_no_arr);
 				$month_name_arr    = implode(',', $month_name_arr);
 			?>
