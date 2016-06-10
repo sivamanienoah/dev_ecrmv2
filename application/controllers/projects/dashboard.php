@@ -1212,7 +1212,7 @@ class Dashboard extends crm_controller
 		JOIN crm_leads ON pjt_id=project_code
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' '".$where."' ";
 		
-		// echo $contribution_query; exit;
+		echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
