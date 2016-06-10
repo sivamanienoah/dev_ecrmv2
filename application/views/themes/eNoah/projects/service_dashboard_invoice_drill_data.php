@@ -9,6 +9,7 @@ if (get_default_currency()) {
 	$default_cur_id   = '1';
 	$default_cur_name = 'USD';
 }
+echo "<pre>"; print_r($invoices_data['invoices']); die;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm">Invoices</h2>
