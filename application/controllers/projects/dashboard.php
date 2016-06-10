@@ -1212,7 +1212,7 @@ class Dashboard extends crm_controller
 		JOIN crm_leads ON pjt_id=project_code
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ".$where." ";
 		
-		echo $contribution_query; exit;
+		// echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
@@ -1228,7 +1228,7 @@ class Dashboard extends crm_controller
 		JOIN crm_leads ON pjt_id=project_code
 		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != ''  ".$where." ";
 		
-		echo $month_contribution_query; exit;
+		// echo $month_contribution_query; exit;
 		$sql2 = $this->db->query($month_contribution_query);
 		$month_contribution_data = $sql2->result();
 		if(!empty($month_contribution_data)) {
