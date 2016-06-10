@@ -1567,7 +1567,7 @@ class Dashboard extends crm_controller
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
-				$data['practices_name'] = $practice_arrr[$practice];
+				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
