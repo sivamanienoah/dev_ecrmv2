@@ -33,6 +33,8 @@ $(function() {
 	yaxis_label = 'hour';
 	else if(graph_based == 'cost')
 	yaxis_label = 'cost';
+	else if(graph_based == 'directcost')
+	yaxis_label = 'direct cost';
 	
 	plot2 = $.jqplot('trend_analysis_chart', [bill_value, inter_value, nonbill_value], {
 		// title: ' ',
@@ -273,6 +275,11 @@ $('#rd_grph_hr').click(function() {
 $('#rd_grph_cost').click(function() {
 	$('#hgraph_based').val('cost');
 	$('#hidgraph_based').val('cost');
+	$( "#project_dashboard" ).submit();
+})
+$('#rd_grph_directcost').click(function() {
+	$('#hgraph_based').val('directcost');
+	$('#hidgraph_based').val('directcost');
 	$( "#project_dashboard" ).submit();
 })
 
