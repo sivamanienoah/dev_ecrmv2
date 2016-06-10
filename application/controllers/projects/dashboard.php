@@ -1200,12 +1200,18 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
-
+		
+		// SELECT `dept_id`, `dept_name`, `practice_id`, `practice_name`, `skill_id`, `skill_name`, `resoursetype`, `username`, `duration_hours`, `resource_duration_cost`, `project_code` FROM (`crm_timesheet_data`) JOIN `crm_leads` ON `pjt_id`=`project_code` WHERE `resoursetype` is NOT NULL AND `division` IN ('1', '2') AND `practice_id` != 0 AND DATE(start_time) >= '2016-05-01' AND DATE(end_time) <= '2016-05-31'
+		if($division){
+			$div = @implode(" ",$division);
+			$where = 'AND division IN ('.$div.')';
+		}
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
+		JOIN crm_leads ON pjt_id=project_code
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
 		
-		// echo $contribution_query; exit;
+		echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
@@ -1275,7 +1281,7 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false, $division=false)
 	{
-		// echo "<pre>"; print_r($division);  die;
+		// echo "<pre>"; print_r($division); die;
 		$prs = array();
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -1310,7 +1316,7 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
 		// echo "<pre>"; print_r($timesheet_data); die;
