@@ -40,8 +40,8 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
 								<td class="tblheadbg">BILLABLE MONTH</td>
-								<!--td class="tblheadbg">PROJECT STATUS</td>
-								<td class="tblheadbg">ENTITY</td-->
+								<!--td class="tblheadbg">PROJECT STATUS</td-->
+								<td class="tblheadbg">ENTITY</td>
 							</tr>
 							<tr>
 								<td class="month-year">
@@ -59,7 +59,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 										<!--option value="3">Project Onhold</option-->
 										<!--option value="4">Inactive</option-->
 									<!--/select>
-								</td>								
+								</td-->								
 								<td class="">
 									<select title="Entity" id="entity" name="entity[]" multiple="multiple">
 										<?php if(count($entity_data)>0 && !empty($entity_data)) { ?>
@@ -69,10 +69,10 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 										}
 										?>
 									</select>
-								</td-->
+								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="2">
+								<td colspan="3">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
