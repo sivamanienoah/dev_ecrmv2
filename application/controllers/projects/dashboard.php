@@ -722,7 +722,7 @@ class Dashboard extends crm_controller
 				// echo "<pre>"; print_r($updata_data); exit;
 				$wh_condn = array('username'=>$user_row->username);
 				$this->db->update($this->cfg['dbpref'].'timesheet_data', $updata_data, $wh_condn);
-				echo $this->db->last_query();
+				// echo $this->db->last_query();
 				echo "<br>";
 			}
 		}
@@ -1211,7 +1211,7 @@ class Dashboard extends crm_controller
 		JOIN crm_leads ON pjt_id=project_code
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
 		
-		echo $contribution_query; exit;
+		// echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
