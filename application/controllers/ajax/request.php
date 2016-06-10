@@ -385,7 +385,7 @@ class Request extends crm_controller {
 			$chge_access = get_del_access($job_id, $this->userdata['userid']);
 		}
 		
-		$stake_holder_access = $this->project_model->get_stakeholder_access($job_id, $this->userdata['userid']);
+		$stake_holder_access = $this->request_model->get_stakeholder_access($job_id, $this->userdata['userid']);
 	
 		$file_upload_access = get_file_access($job_id, $this->userdata['userid']);
 	
