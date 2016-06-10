@@ -1504,7 +1504,7 @@ class Dashboard extends crm_controller
 		}
 		
 		//role based filtering
-		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -1537,7 +1537,7 @@ class Dashboard extends crm_controller
 				}
 			}
 			$result_ids = array_unique($res);
-		}
+		} */
 		//role based filtering
 		
 		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
@@ -1612,13 +1612,13 @@ class Dashboard extends crm_controller
 				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice, $division);
 				$data['practices_id'] = $practice;
 				$data['excelexporttype'] = "inv_project_export";
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'inv_project_export':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice, $division);
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
@@ -1773,7 +1773,7 @@ class Dashboard extends crm_controller
 		return $data['project_record'];
 	}
 	
-	public function getIRData($records, $start_date, $end_date, $practice)
+	public function getIRData($records, $start_date, $end_date, $practice, $division)
 	{
 		$bk_rates = get_book_keeping_rates();
 		
@@ -1787,6 +1787,9 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
+		if($division){
+			$this->db->where_in("l.division", $division);
+		}
 		if(!empty($practice)) {
 			$this->db->where("l.practice", $practice);
 		}
@@ -1798,7 +1801,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$query = $this->db->get();
-		// echo $this->db->last_query(); die;
+		echo $this->db->last_query(); die;
 		$invoice_rec = $query->result_array();
 
 		$i = 0;
