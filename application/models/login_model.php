@@ -163,7 +163,7 @@ class Login_model extends crm_model {
 		$this->db->limit(1);
         $sql = $this->db->get();
         $res = $sql->result_array();
-		return $res[0]['first_name'].'.'.$res[0]['last_name']; 
+		return $res[0]['username']; 
 		//echo'<pre>';print_r($res[0]);exit;
 		/* 
 		if(($ds=ldap_connect($LDAPServerAddress1))) {
