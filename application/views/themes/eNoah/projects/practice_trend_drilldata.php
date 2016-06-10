@@ -426,8 +426,10 @@ if(!empty($tbl_data)) {
 			<td width='80%' colspan='4' align='right'><b>TOTAL:</b></td>
 			<td width='5%' align='right'><b>".round($calc_tot_hour, 1)."</b></td>
 			<td width='5%' align='right'><b>".round($calc_tot_cost, 0)."</b></td>
+			<td width='5%' align='right'><b>".round($calc_tot_directcost, 0)."</b></td>
 			<td width='5%' align='right'><b>".round($perc_tot_hr, 0)."</b></td>
 			<td width='5%' align='right'><b>".round($perc_tot_cost, 0)."</b></td>
+			<td width='5%' align='right'><b>".round($perc_tot_directcost, 0)."</b></td>
 			</tr>";
 	echo "</table>";
 }
