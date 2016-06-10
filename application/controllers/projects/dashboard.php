@@ -1013,7 +1013,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -1046,7 +1046,7 @@ class Dashboard extends crm_controller
 				}
 			}
 			$result_ids = array_unique($res);
-		}
+		} */
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -1067,9 +1067,9 @@ class Dashboard extends crm_controller
 			$this->db->where_in("l.division", $division);
 		}
 		
-		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$this->db->where_in('l.lead_id', $result_ids);
-		}
+		} */
 		$query = $this->db->get();
 		$res = $query->result_array();
 		
@@ -1113,7 +1113,6 @@ class Dashboard extends crm_controller
 		}
 		
 		$query1 = $this->db->get();
-		// echo $this->db->last_query(); die;
 		$invoices_data = $query1->result_array();
 
 		if(!empty($invoices_data) && count($invoices_data)>0) {
@@ -1138,7 +1137,6 @@ class Dashboard extends crm_controller
 		}
 		
 		$query5 = $this->db->get();
-		// echo $this->db->last_query(); die;
 		$cm_invoices_data = $query5->result_array();
 
 		if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
@@ -1164,7 +1162,6 @@ class Dashboard extends crm_controller
 				$client_not_in_arra = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
-				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
