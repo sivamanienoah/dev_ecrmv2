@@ -48,7 +48,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				?>
 				<label><input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /><span>Hour</span></label>
 				<label><input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /><span>Cost</span></label>
-				<label><input type='radio' name='graph_based' value='directcost' id='rd_grph_directcost' <?php echo $checked_directcost; ?> /><span>Cost</span></label>
+				<label><input type='radio' name='graph_based' value='directcost' id='rd_grph_directcost' <?php echo $checked_directcost; ?> /><span>Direct Cost</span></label>
 			</div>
 
 			<div class="chk-radio-box">	
