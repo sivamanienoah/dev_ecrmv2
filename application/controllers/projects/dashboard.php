@@ -1273,9 +1273,9 @@ class Dashboard extends crm_controller
 		return $res;
 	}
 	
-	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
+	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false, $division=false)
 	{
-		// echo "<pre>"; print_r($practice_arr);
+		echo "<pre>"; print_r($division);  die;
 		$prs = array();
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
