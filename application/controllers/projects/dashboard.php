@@ -1013,7 +1013,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -1046,7 +1046,7 @@ class Dashboard extends crm_controller
 				}
 			}
 			$result_ids = array_unique($res);
-		} */
+		}
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -1067,11 +1067,16 @@ class Dashboard extends crm_controller
 			$this->db->where_in("l.division", $division);
 		}
 		
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$this->db->where_in('l.lead_id', $result_ids);
-		} */
+		}
+		
+		// $this->db->limit('10');
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
+		
+		// echo "<pre>"; print_r($res); die;
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
@@ -1113,6 +1118,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$query1 = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$invoices_data = $query1->result_array();
 
 		if(!empty($invoices_data) && count($invoices_data)>0) {
@@ -1137,21 +1143,29 @@ class Dashboard extends crm_controller
 		}
 		
 		$query5 = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$cm_invoices_data = $query5->result_array();
 
 		if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
 			foreach($cm_invoices_data as $cm_ir) {
 				$base_conver_amt = $this->conver_currency($cm_ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['expect_worth_id']][$cm_ir['base_currency']]);
 				$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
+				/* if(!in_array($cm_ir['pjt_id'], $cm_dc_projects)){
+					if(!empty($cm_ir['pjt_id']))
+					$cm_dc_projects[] = $cm_ir['pjt_id'];
+				} */
 			}
 		}
 		
 		//for current month EFFORTS
 		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
+		// echo "<pre>"; print_R($projects['billable_month']); die;
 		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
+		
+		// echo "<pre>"; print_r($pcodes); exit;
 		
 		if(!empty($pcodes) && count($pcodes)>0){
 			foreach($pcodes as $rec){
@@ -1162,7 +1176,9 @@ class Dashboard extends crm_controller
 				$client_not_in_arra = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
+				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
+				// echo $this->db->last_query(); exit;
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
@@ -1180,12 +1196,14 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
+		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
 
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
-		WHERE start_time between $start_date and $end_date AND resoursetype != '' ";
-
+		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
+		
+		// echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
 		if(!empty($contribution_data)) {
@@ -1193,11 +1211,12 @@ class Dashboard extends crm_controller
 				$directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] + $cdrow->resource_duration_direct_cost;
 			}
 		}
+		// echo "<pre>"; print_r($directcost); die;
 		$projects['direct_cost']   = $directcost;
 		
 		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
-		WHERE start_time between '".date('Y-m-d', strtotime())."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' ";
+		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' ";
 		
 		// echo $month_contribution_query; exit;
 		$sql2 = $this->db->query($month_contribution_query);
@@ -1207,9 +1226,12 @@ class Dashboard extends crm_controller
 				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
 			}
 		}
+		// echo "<pre>"; print_r($cm_directcost); die;
 		$projects['cm_direct_cost'] = $cm_directcost;
+		// echo "<pre>"; print_r($directcost); die;
 		
 		$data['projects'] = $projects;
+		// echo "<pre>"; print_r($projects); exit;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
@@ -1234,8 +1256,10 @@ class Dashboard extends crm_controller
 		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
 		
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$timesheet = $query->result_array();
 		$res = array();
+		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
 				$res['total_cost']     += $ts['duration_cost'];
@@ -1249,6 +1273,7 @@ class Dashboard extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
+		// echo "<pre>"; print_r($practice_arr);
 		$prs = array();
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -1261,6 +1286,7 @@ class Dashboard extends crm_controller
 				$prs[] = $pr->id;
 			}
 		}
+		// echo "<pre>"; print_r($prs); die;
 		
 		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
@@ -1278,12 +1304,16 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
+		
+		// echo "<pre>"; print_r($timesheet_data); die;
 		
 		$resarr = array();
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
+				// echo $row->practice_id . " " . $row->resoursetype; exit;
 				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
@@ -1300,6 +1330,9 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
+		/* if(!empty($start_date) && !empty($end_date)) {
+			echo "<pre>"; print_r($resarr); die;
+		} */
 		return $resarr;
 	}
 	
@@ -1324,8 +1357,10 @@ class Dashboard extends crm_controller
 		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
 		
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$timesheet = $query->result_array();
 		$res = array();
+		// echo "<pre>"; print_r($timesheet); exit;
 		$res['total_internal_hrs'] = $res['total_non_billable_hrs'] = $res['total_billable_hrs'] = 0;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
@@ -1374,11 +1409,16 @@ class Dashboard extends crm_controller
 		}
 		$query  = $this->db->get();
 		$result = $query->result();
+		// echo $this->db->last_query() ."<br>"; exit;
+		/* if(!empty($month)) {
+			echo $this->db->last_query() ."<br>";
+		} */
 		$val = 0;
 		if(!empty($result)) {
 			foreach($result as $row) {
 				$base_conversion_amt = $this->conver_currency($row->milestone_value, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($row->for_month_year)),"4/1","3/31")][$ewid][$base_currency]);
 				$val += $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($row->for_month_year)),"4/1","3/31")][$base_currency][$this->default_cur_id]);
+				// $val += $this->conver_currency($row->milestone_value, $rates[$ewid][$this->default_cur_id]);
 			}
 		}
 		return $val;
@@ -1405,6 +1445,7 @@ class Dashboard extends crm_controller
 	*/
 	public function service_dashboard_data()
 	{
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
@@ -1416,6 +1457,9 @@ class Dashboard extends crm_controller
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
 			$start_date = date("Y-m-01",strtotime($start_date));
+			/* if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
+			} */
 		}
 		if($this->input->post("month_year_to_date")) {
 			$end_date = $this->input->post("month_year_to_date");
@@ -1435,7 +1479,7 @@ class Dashboard extends crm_controller
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
-
+		// echo $month;  die;
 		$project_status = 1;
 		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
 			$project_status = @explode(',', $this->input->post("project_status"));
@@ -1510,6 +1554,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in('l.lead_id', $result_ids);
 		} */
 		$query = $this->db->get();
+		// echo $this->db->last_query();
 		$res = $query->result_array();
 		
 		$this->db->select('p.practices, p.id');
@@ -1564,14 +1609,16 @@ class Dashboard extends crm_controller
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
-				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_name'] = $practice_arrr[$practice];
 				$data['practices_id'] = $practice;
+				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'ytd_eff':
 				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
+				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
@@ -1635,7 +1682,8 @@ class Dashboard extends crm_controller
 				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
 				$ptquery = $this->db->get();
 				$data['project_type'] = $ptquery->result();
-
+				
+				// echo "<pre>"; print_r($fixed_bid); exit;
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);		
 				$res = $this->excelexport($data['projects_data']);
 			break;
@@ -1645,8 +1693,11 @@ class Dashboard extends crm_controller
 	/* Change the actual worth amount to Default currency */
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
 	{
+		// echo "<pre>"; print_r($records); exit;
 		$this->load->model('project_model');
 		$rates = $this->get_currency_rates();
+		
+		// echo "<pre>"; print_r($rates); exit;
 		 
 		$data['project_record'] = array();
 		$i = 0;
@@ -1665,15 +1716,21 @@ class Dashboard extends crm_controller
 				$project_type			= '';
 				$timesheet 			    = array();
 				if(!empty($rec['pjt_id'])){
+					// $timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type=1, $metrics_date, $groupby_type=2);
 					$timesheet = $this->get_timesheet_data_hours($rec['pjt_id'], "", "");
 				}
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($timesheet);
 				
 				$total_amount_inv_raised = 0;
 				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
 					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
 				}
-
+				// if($rec['pjt_id']=='ITS-DES-01-0715')
+				// echo "<pre>"; print_R($total_amount_inv_raised); die;
+								
+				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 
 				//Build the Array
@@ -1697,6 +1754,7 @@ class Dashboard extends crm_controller
 				$i++;
 				
 			}
+			// echo "<pre>"; print_r($data['project_record']); exit;
 		endif;
 		return $data['project_record'];
 	}
@@ -1726,6 +1784,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$invoice_rec = $query->result_array();
 
 		$i = 0;
@@ -1734,7 +1793,7 @@ class Dashboard extends crm_controller
 			foreach ($invoice_rec as $inv) {
 				$data['invoices'][$i]['lead_title']		= $inv['lead_title'];
 				$data['invoices'][$i]['pjt_id'] 		= $inv['pjt_id'];
-				$data['invoices'][$i]['lead_id'] 		= $inv['job_id'];
+				$data['invoices'][$i]['lead_id'] 		= $inv['lead_id'];
 				$data['invoices'][$i]['customer'] 		= $inv['first_name'].' '.$inv['last_name'].' - '.$inv['company'];
 				$data['invoices'][$i]['milestone_name'] = $inv['milestone_name'];
 
@@ -1746,6 +1805,7 @@ class Dashboard extends crm_controller
 				$i++;
 			}
 		}
+		// echo "<pre>"; print_r($data); die;
 		return $data;
 	}
 	
@@ -1767,6 +1827,7 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$invoice_rec = $query2->result_array();
 		
 		$resarr = array();
@@ -1790,6 +1851,7 @@ class Dashboard extends crm_controller
 				$i++;
 			}
 		}
+		// echo "<pre>"; print_r($data); die;
 		return $data;
 	}
 	
@@ -1813,6 +1875,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
@@ -1852,6 +1915,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
+		// echo "<pre>"; print_r($pjts_data); die;
 		if(count($pjts_data)>0) {
     		//load our new PHPExcel library
 			$this->load->library('excel');
@@ -1985,6 +2049,7 @@ class Dashboard extends crm_controller
 	
 	public function excelexportinvoice($invoices_res)
 	{
+		// echo "<pre>"; print_r($invoices_res); exit;
 		if((count($invoices_res['invoices'])>0) && !empty($invoices_res['invoices'])) {
 			$this->load->library('excel');
 			//activate worksheet number 1
@@ -2015,6 +2080,7 @@ class Dashboard extends crm_controller
 			}
 			$this->excel->getActiveSheet()->setCellValue('E'.$i, $invoices_res['total_amt']);
 			
+			// $this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
 			//make the font become bold
 			$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
