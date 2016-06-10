@@ -1895,7 +1895,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("l.division", $division);
 		}
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
