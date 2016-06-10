@@ -154,7 +154,7 @@ class Dashboard extends crm_controller
 		$data['end_date']   = $end_date;
 		$json = '';
 		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code
+		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
@@ -342,7 +342,7 @@ class Dashboard extends crm_controller
 		$data['end_date']   = $end_date;
 		$json = '';
 		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time
+		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
@@ -367,7 +367,7 @@ class Dashboard extends crm_controller
 		$data['end_date']   	  = $end_date;
 		$data['results']    	  = $arr_depts;
 		$data['filter_area_status'] = $this->input->post("filter_area_status");
-		// echo "<pre>"; print_r($data); die;
+		echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/trend_analysis_view", $data);
 	}
 	
