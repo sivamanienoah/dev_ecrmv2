@@ -1204,13 +1204,13 @@ class Dashboard extends crm_controller
 		// SELECT `dept_id`, `dept_name`, `practice_id`, `practice_name`, `skill_id`, `skill_name`, `resoursetype`, `username`, `duration_hours`, `resource_duration_cost`, `project_code` FROM (`crm_timesheet_data`) JOIN `crm_leads` ON `pjt_id`=`project_code` WHERE `resoursetype` is NOT NULL AND `division` IN ('1', '2') AND `practice_id` != 0 AND DATE(start_time) >= '2016-05-01' AND DATE(end_time) <= '2016-05-31'
 		$where = '';
 		if($division){
-			$div = @implode(" ",$division);
-			$where = ' AND division IN ('.$div.')';
+			$div = @implode("','",$division);
+			$where = " AND division IN ('".$div."')";
 		}
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		JOIN crm_leads ON pjt_id=project_code
-		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' '".$where."' ";
+		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ".$where." ";
 		
 		echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
