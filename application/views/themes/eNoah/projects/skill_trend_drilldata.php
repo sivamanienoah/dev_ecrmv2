@@ -338,7 +338,7 @@ if(!empty($tbl_data)) {
 				} 
 				foreach($prj_arr as $ukey=>$uval){
 					$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
-					$dc_rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
+					$dc_rate_pr_hr = isset($directcost_arr[$ukey])?$directcost_arr[$ukey]:0;
 					/* $per_hr 	= ($uval['hour']/160) * 100;
 					$per_cost   = (($uval['hour']*$rate_pr_hr)/(160*$uval['hour'])) * 100; */
 					$per_hr	  = ($uval['hour']/$tot_hour)*100;
