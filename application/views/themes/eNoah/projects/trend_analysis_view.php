@@ -16,6 +16,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <div id="content">
     <div class="inner">
 	<?php
+	echo "<pre>"; print_r($resdata); die;
 		$this->load->helper('custom_helper');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
@@ -170,7 +171,6 @@ table.bu-tbl-inr th{ text-align:center; }
 			Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 		</div>
 			<?php
-				echo "<pre>"; print_r($resdata); 
 				$user_arr    = array();
 				$project_arr = array();
 				$bu_arr      = array();
