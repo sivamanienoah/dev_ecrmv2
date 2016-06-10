@@ -418,7 +418,7 @@ class Request extends crm_controller {
 			}
 		}	
 
-		echo "<pre>"; print_r($get_files); die;
+		// echo "<pre>"; print_r($get_files); die;
 		if(!empty($get_files)) {
 		
 			foreach($get_files as $files) {
