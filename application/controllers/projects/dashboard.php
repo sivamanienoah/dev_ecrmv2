@@ -1187,7 +1187,7 @@ class Dashboard extends crm_controller
 
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
-		WHERE start_time between $start_date and $end_date AND resoursetype != '' ";
+		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' ";
 
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
