@@ -1801,7 +1801,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$query = $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$invoice_rec = $query->result_array();
 
 		$i = 0;
