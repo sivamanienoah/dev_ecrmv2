@@ -95,7 +95,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<?php foreach($skill_ids_selected as $skills) {
 												$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
 												?>
-												<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id;?>"><?php echo $skills->name;?></option>
+												<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id; ?>"><?php echo $skills->name;?></option>
 										<?php } }?>
 									</select>
 								</td>
@@ -131,6 +131,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
 				<?php 
+				// echo "<pre>"; print_r($resdata); die;
 					$master      = array();
 					$user_arr    = array();
 					$project_arr = array();
@@ -159,12 +160,15 @@ table.bu-tbl-inr th{ text-align:center; }
 							if (isset($bu_arr['it'][$row->resoursetype]['hour'])) {
 								$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
 								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
+								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost + $bu_arr['it'][$row->resoursetype]['direct_cost'];
 							} else {
 								$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours;
 								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
 							}
 							$bu_arr['totalhour'] = $bu_arr['totalhour'] + $row->duration_hours;
 							$bu_arr['totalcost'] = $bu_arr['totalcost'] + $row->resource_duration_cost;
+							$bu_arr['totaldirectcost'] = $bu_arr['totaldirectcost'] + $row->resource_duration_direct_cost;
 							//for dept based
 							if (!in_array($row->username, $deptusercnt[$row->dept_name][$row->resoursetype])) {
 								$deptusercnt[$row->dept_name][$row->resoursetype][] = $row->username;
@@ -178,12 +182,15 @@ table.bu-tbl-inr th{ text-align:center; }
 							if (isset($dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'])) {
 								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'] = $row->duration_hours + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'];
 								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'] = $row->resource_duration_cost + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'];
+								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'];
 							} else {
 								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'] = $row->duration_hours;
 								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
 							}
 							$dept_arr[$row->dept_name]['totalhour'] = $dept_arr[$row->dept_name]['totalhour'] + $row->duration_hours;
 							$dept_arr[$row->dept_name]['totalcost'] = $dept_arr[$row->dept_name]['totalcost'] + $row->resource_duration_cost;
+							$dept_arr[$row->dept_name]['totaldirectcost'] = $dept_arr[$row->dept_name]['totaldirectcost'] + $row->resource_duration_direct_cost;
 							//for dept based
 						}
 					}
@@ -197,8 +204,10 @@ table.bu-tbl-inr th{ text-align:center; }
 							<th>Hours</th>
 							<th># Head Count *</th>
 							<th>Total Cost</th>
+							<th>Total Direct Cost</th>
 							<th>% of Hours</th>
 							<th>% of Cost</th>
+							<th>% of Direct Cost</th>
 						</thead>
 					</tr>
 					<?php
@@ -216,12 +225,15 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td align="right"><?= round($rtval['hour'],1); ?></td>
 									<td align="right"><?= round($rtval['headcount'],2); ?></td>
 									<td align="right"><?= round($rtval['cost'],0); ?></td>
+									<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
 									<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
 									<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
 								</tr>
 					<?php
 							$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
 							$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
+							$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
 							}
 						}
 					?>
@@ -230,8 +242,10 @@ table.bu-tbl-inr th{ text-align:center; }
 							<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
 							<td align="right"></td>
 							<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
+							<td align="right"><?= round($bu_arr['totaldirectcost'],0); ?></td>
 							<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
 							<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
+							<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 							</tr>
 				</table>
 				<div class="dept_section">
@@ -244,8 +258,10 @@ table.bu-tbl-inr th{ text-align:center; }
 									<th>Hours</th>
 									<th># Head Count *</th>
 									<th>Total Cost</th>
+									<th>Total Direct Cost</th>
 									<th>% of Hours</th>
 									<th>% of Cost</th>
+									<th>% of Direct Cost</th>
 								</thead>
 							</tr>
 							<?php
@@ -257,12 +273,15 @@ table.bu-tbl-inr th{ text-align:center; }
 											<td align="right"><?= round($adsval['hour'],1); ?></td>
 											<td align="right"><?= round($adsval['headcount'],2); ?></td>
 											<td align="right"><?= round($adsval['cost'],0); ?></td>
+											<td align="right"><?= round($adsval['direct_cost'],0); ?></td>
 											<td align="right"><?php echo round(($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100, 1) . ' %'; ?></td>
 											<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($adsval['direct_cost']/$dept_arr['eADS']['totaldirectcost']) * 100, 0) . ' %'; ?></td>
 										</tr>
 							<?php
 									$percent_adshour += ($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100;
 									$percent_adscost += ($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100;
+									$percent_adsdirectcost += ($adsval['direct_cost']/$dept_arr['eADS']['totaldirectcost']) * 100;
 									}
 							?>
 									<tr>
@@ -270,8 +289,10 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td align="right"><?= round($dept_arr['eADS']['totalhour'],1); ?></td>
 									<td align="right"></td>
 									<td align="right"><?= round($dept_arr['eADS']['totalcost'],0); ?></td>
+									<td align="right"><?= round($dept_arr['eADS']['totaldirectcost'],0); ?></td>
 									<td align="right"><?= round($percent_adshour, 1) . ' %'; ?></td>
 									<td align="right"><?= round($percent_adscost, 0) . ' %'; ?></td>
+									<td align="right"><?= round($percent_adsdirectcost, 0) . ' %'; ?></td>
 									</tr>
 						</table>
 					</div>
@@ -285,8 +306,10 @@ table.bu-tbl-inr th{ text-align:center; }
 									<th>Hours</th>
 									<th># Head Count *</th>
 									<th>Total Cost</th>
+									<th>Total Direct Cost</th>
 									<th>% of Hours</th>
 									<th>% of Cost</th>
+									<th>% of Direct Cost</th>
 								</thead>
 							</tr>
 							<?php
@@ -298,12 +321,15 @@ table.bu-tbl-inr th{ text-align:center; }
 											<td align="right"><?= round($qadval['hour'],1); ?></td>
 											<td align="right"><?= round($qadval['headcount'],2); ?></td>
 											<td align="right"><?= round($qadval['cost'],0); ?></td>
+											<td align="right"><?= round($qadval['direct_cost'],0); ?></td>
 											<td align="right"><?php echo round(($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100, 1) . ' %'; ?></td>
 											<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($qadval['direct_cost']/$dept_arr['eQAD']['totaldirectcost']) * 100, 0) . ' %'; ?></td>
 										</tr>
 							<?php
 									$percent_qadhour += ($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100;
 									$percent_qadcost += ($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100;
+									$percent_qaddirectcost += ($qadval['direct_cost']/$dept_arr['eQAD']['totaldirectcost']) * 100;
 									}
 							?>
 									<tr>
@@ -311,8 +337,10 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td align="right"><?= round($dept_arr['eQAD']['totalhour'],1); ?></td>
 									<td align="right"></td>
 									<td align="right"><?= round($dept_arr['eQAD']['totalcost'],0); ?></td>
+									<td align="right"><?= round($dept_arr['eQAD']['totaldirectcost'],0); ?></td>
 									<td align="right"><?= round($percent_qadhour, 1) . ' %'; ?></td>
 									<td align="right"><?= round($percent_qadcost, 0) . ' %'; ?></td>
+									<td align="right"><?= round($percent_qaddirectcost, 0) . ' %'; ?></td>
 									</tr>
 						</table>
 					</div>
@@ -337,7 +365,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php 
 		} else {
 			echo "You have no rights to access this page";
-		} 
+		}
 		?>
 	</div>
 </div>
