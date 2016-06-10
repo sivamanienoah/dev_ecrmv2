@@ -1622,14 +1622,14 @@ class Dashboard extends crm_controller
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
-				$data = $this->get_billable_efforts($practice, $month);
+				$data = $this->get_billable_efforts($practice, $month, "", "", $division);
 				$data['practices_name'] = $practice_arrr[$practice];
 				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'ytd_eff':
-				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
+				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date, $division);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
@@ -1876,10 +1876,11 @@ class Dashboard extends crm_controller
 	@method - get_billable_efforts()
 	@for drill down data
 	*/
-	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
+	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false, $division=false)
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code')
 		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
@@ -1890,9 +1891,11 @@ class Dashboard extends crm_controller
 			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
 		}
 		$this->db->where_in("t.practice_id", $practice);
-
+		if($division){
+			$this->db->where_in("l.division", $division);
+		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		
