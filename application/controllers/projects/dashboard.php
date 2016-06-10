@@ -1288,10 +1288,33 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($prs); die;
 		
-		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
+		/* $this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
+		$this->db->where('practice_id !=', 0);
+		if(!empty($start_date)) {
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
+		}
+		if(!empty($end_date)) {
+			$this->db->where("DATE(start_time) <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		if(!empty($month)) {
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
+		}
+		$query2 = $this->db->get();
+		echo $this->db->last_query(); die;
+		$timesheet_data = $query2->result(); */
+		
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
+		$this->db->from($this->cfg['dbpref'].'timesheet_data');
+		$this->db->join($this->cfg['dbpref'].'leads', 'pjt_id=project_code');
+		$tswhere = "resoursetype is NOT NULL";
+		$this->db->where($tswhere);
+		if($division){
+			$this->db->where_in("division", $division);
+		}
 		$this->db->where('practice_id !=', 0);
 		if(!empty($start_date)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
