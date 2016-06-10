@@ -3595,14 +3595,16 @@ HDOC;
 			$this->excel->getActiveSheet()->setCellValue('J1', 'Effort Variance');
 			$this->excel->getActiveSheet()->setCellValue('K1', 'Project Value ('.$this->default_cur_name.')');
 			$this->excel->getActiveSheet()->setCellValue('L1', 'Utilization Cost ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('M1', 'Invoice Raised ('.$this->default_cur_name.')');
-			$this->excel->getActiveSheet()->setCellValue('N1', 'P&L');
-			$this->excel->getActiveSheet()->setCellValue('O1', 'P&L %');
+			$this->excel->getActiveSheet()->setCellValue('M1', 'Direct Cost ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('N1', 'Invoice Raised ('.$this->default_cur_name.')');
+			$this->excel->getActiveSheet()->setCellValue('O1', 'Contribution %');
+			$this->excel->getActiveSheet()->setCellValue('P1', 'P&L');
+			$this->excel->getActiveSheet()->setCellValue('Q1', 'P&L %');
 
 			//change the font size
-			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(10);
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 			//make the font become bold
-			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
 
 			$i=2;
 			
@@ -3629,7 +3631,9 @@ HDOC;
 				$pjt_val = (isset($rec['actual_worth_amt'])) ? $rec['actual_worth_amt'] : "-";
 				$util_cost = (isset($rec['total_cost'])) ? round($rec['total_cost']) : "-";
 				$total_amount_inv_raised = (isset($rec['total_amount_inv_raised'])) ? round($rec['total_amount_inv_raised']) : "-";
-				
+				$total_dc_hours = (isset($rec['total_dc_hours'])) ? (round($rec['total_dc_hours'])) : '0';
+				$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
+
 				$profitloss    = round($total_amount_inv_raised-$util_cost);
 				//$plPercent = ($rec['actual_worth_amt']-$rec['total_cost'])/$rec['actual_worth_amt'];
 				$plPercent = round(($profitloss/$util_cost)*100);
@@ -3651,9 +3655,11 @@ HDOC;
 				$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_hr-$rec['estimate_hour']);
 				$this->excel->getActiveSheet()->setCellValue('K'.$i, $pjt_val);
 				$this->excel->getActiveSheet()->setCellValue('L'.$i, $util_cost);
-				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_amount_inv_raised);
-				$this->excel->getActiveSheet()->setCellValue('N'.$i, $profitloss);
-				$this->excel->getActiveSheet()->setCellValue('O'.$i, $plPercent);
+				$this->excel->getActiveSheet()->setCellValue('M'.$i, $total_dc_hours);
+				$this->excel->getActiveSheet()->setCellValue('N'.$i, $total_amount_inv_raised);
+				$this->excel->getActiveSheet()->setCellValue('O'.$i, $contributePercent);
+				$this->excel->getActiveSheet()->setCellValue('P'.$i, $profitloss);
+				$this->excel->getActiveSheet()->setCellValue('Q'.$i, $plPercent);
 				$i++;
     		}
 			
@@ -3673,8 +3679,10 @@ HDOC;
 			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
-			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(10);
 			//Column Alignment
 			$this->excel->getActiveSheet()->getStyle('D2:D'.$i)->getNumberFormat()->setFormatCode('0.00');
 			$this->excel->getActiveSheet()->getStyle('E2:E'.$i)->getNumberFormat()->setFormatCode('0.00');
@@ -3695,7 +3703,7 @@ HDOC;
 			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 			//force user to download the Excel file without writing it to server's HD
 			$objWriter->save('php://output');
-    	}    	
+    	}	
     	redirect('/project/');
     }
 	
