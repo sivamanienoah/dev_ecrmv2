@@ -535,7 +535,7 @@ class Dashboard extends crm_controller
 	*/
 	public function get_trend_drill_data()
 	{
-		echo "<pre>"; print_r($this->input->post()); exit;
+		// echo "<pre>"; print_r($this->input->post()); exit;
 		if($this->input->post("start_date")) {
 			$date = $this->input->post("start_date");
 			$start_date = date("Y-m-01",strtotime($date));
@@ -553,7 +553,7 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$data['hmonth_year'] = $this->input->post("month_year_from_date");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
