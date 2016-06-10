@@ -157,16 +157,16 @@ class Login_model extends crm_model {
 		$BIND_password = $password;
 		//$filter = "sAMAccountName=".$this->input->post('email');
 		$filter = "sAMAccountName=".$username;
-	   
-	   /*  $this->db->from($this->cfg['dbpref'].'users u');
+		
+		$this->db->from($this->cfg['dbpref'].'users u');
 		$this->db->where('u.username', $username);
 		$this->db->limit(1);
         $sql = $this->db->get();
         $res = $sql->result_array();
-		return $res[0]['first_name']; */
-		//echo'<pre>';print_r($res[0]['first_name']);exit;
-	   
-		 if(($ds=ldap_connect($LDAPServerAddress1))) {
+		return $res[0]['first_name'].'.'.$res[0]['last_name']; 
+		//echo'<pre>';print_r($res[0]);exit;
+		/* 
+		if(($ds=ldap_connect($LDAPServerAddress1))) {
 			ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
 			ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 			
@@ -180,8 +180,7 @@ class Login_model extends crm_model {
 							if($sr2 = @ldap_search($ds,$LDAPContainer,$filter,array("givenName","sn","displayName","mail"))) {
 								if($info2 = ldap_get_entries($ds, $sr2)) {
 									$data["name"] = $info2[0]["givenname"][0];
-									echo'<pre>';print_r($data["name"]);exit;
-									return ;
+									return $data["name"];
 									//return 0;
 								} else {
 									$data['login_error'] = "Could not read entries"; $data['login_error_code'] = 2;
@@ -205,13 +204,13 @@ class Login_model extends crm_model {
 				// echo "Error Binding to LDAP: $extended_error";
 				// } else {
 					// echo "Error Binding to LDAP: No2 additional information is available.";
-				// } 
+				// }
 			}
 		} else {
 			$data['login_error'] = "Could not connect"; $data['login_error_code'] = 8;
-		} 
-		
+		}
 		return $data;
+		 */
 	}
 	//LDAP connection end
 	
