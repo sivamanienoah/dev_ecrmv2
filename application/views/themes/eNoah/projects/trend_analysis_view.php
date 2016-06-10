@@ -16,7 +16,6 @@ table.bu-tbl-inr th{ text-align:center; }
 <div id="content">
     <div class="inner">
 	<?php
-	echo "<pre>"; print_r($resdata); die;
 		$this->load->helper('custom_helper');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
@@ -196,22 +195,26 @@ table.bu-tbl-inr th{ text-align:center; }
 						if (isset($bu_arr['it'][$row->resoursetype][$mont_yr]['hour'])) {
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype][$mont_yr]['hour'];
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype][$mont_yr]['cost'];
+							$bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'] = $row->resource_duration_direct_cost + $bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'];
 						} else {
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['hour'] = $row->duration_hours;
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] = $row->resource_duration_cost;
+							$bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'] = $row->resource_duration_direct_cost;
 						}
 						//total calculation by month
 						if (isset($bu_arr['it'][$mont_yr]['totalhour'])) {
 							$bu_arr['it'][$mont_yr]['totalhour'] += $row->duration_hours;
 							$bu_arr['it'][$mont_yr]['totalcost'] += $row->resource_duration_cost;
+							$bu_arr['it'][$mont_yr]['totaldirectcost'] += $row->resource_duration_direct_cost;
 						} else {
 							$bu_arr['it'][$mont_yr]['totalhour'] = $row->duration_hours;
 							$bu_arr['it'][$mont_yr]['totalcost'] = $row->resource_duration_cost;
+							$bu_arr['it'][$mont_yr]['totaldirectcost'] = $row->resource_duration_direct_cost;
 						}
 					}
 				}
 				$business_unit = $bu_arr['it'];
-				// echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
+				echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
 				// echo $end_date; exit;
 				
 				//creating values
