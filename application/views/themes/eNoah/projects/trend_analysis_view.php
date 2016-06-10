@@ -214,7 +214,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					}
 				}
 				$business_unit = $bu_arr['it'];
-				echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
+				// echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
 				// echo $end_date; exit;
 				
 				//creating values
