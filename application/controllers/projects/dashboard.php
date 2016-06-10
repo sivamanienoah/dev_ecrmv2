@@ -722,7 +722,7 @@ class Dashboard extends crm_controller
 				// echo "<pre>"; print_r($updata_data); exit;
 				$wh_condn = array('username'=>$user_row->username);
 				$this->db->update($this->cfg['dbpref'].'timesheet_data', $updata_data, $wh_condn);
-				// echo $this->db->last_query();
+				echo $this->db->last_query();
 				echo "<br>";
 			}
 		}
@@ -1013,7 +1013,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -1046,7 +1046,7 @@ class Dashboard extends crm_controller
 				}
 			}
 			$result_ids = array_unique($res);
-		} */
+		}
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -1067,10 +1067,11 @@ class Dashboard extends crm_controller
 			$this->db->where_in("l.division", $division);
 		}
 		
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$this->db->where_in('l.lead_id', $result_ids);
-		} */
+		}
 		
+		// $this->db->limit('10');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
@@ -1079,7 +1080,10 @@ class Dashboard extends crm_controller
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
+				// $projects['project'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 				$timesheet = array();
+				// echo $this->db->last_query();
+				// echo "<pre>"; print_r($curtimesheet); die;
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
@@ -1105,9 +1109,7 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		if($division){
-			$this->db->where_in("l.division", $division);
-		}
+		
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
@@ -1134,9 +1136,7 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		if($division){
-			$this->db->where_in("l.division", $division);
-		}
+		
 		if(!empty($month)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
 			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
@@ -1158,9 +1158,9 @@ class Dashboard extends crm_controller
 		}
 		
 		//for current month EFFORTS
-		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month, "");
-		// echo $this->db->last_query(); die;
-		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "", "");
+		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
+		// echo "<pre>"; print_R($projects['billable_month']); die;
+		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		//for effort variance
 		$pcodes = $projects['billable_ytd']['project_code'];
@@ -1176,11 +1176,9 @@ class Dashboard extends crm_controller
 				$client_not_in_arra = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
-				if($division){
-					$this->db->where_in("l.division", $division);
-				}
+				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
-
+				// echo $this->db->last_query(); exit;
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
@@ -1200,17 +1198,10 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($fixed_bid); exit;
 		$projects['eff_var']   = $effvar;
-		
-		// SELECT `dept_id`, `dept_name`, `practice_id`, `practice_name`, `skill_id`, `skill_name`, `resoursetype`, `username`, `duration_hours`, `resource_duration_cost`, `project_code` FROM (`crm_timesheet_data`) JOIN `crm_leads` ON `pjt_id`=`project_code` WHERE `resoursetype` is NOT NULL AND `division` IN ('1', '2') AND `practice_id` != 0 AND DATE(start_time) >= '2016-05-01' AND DATE(end_time) <= '2016-05-31'
-		$where = '';
-		if($division){
-			$div = @implode("','",$division);
-			$where = " AND division IN ('".$div."')";
-		}
+
 		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
-		JOIN crm_leads ON pjt_id=project_code
-		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ".$where." ";
+		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' ";
 		
 		// echo $contribution_query; exit;
 		$sql1 = $this->db->query($contribution_query);
@@ -1225,8 +1216,7 @@ class Dashboard extends crm_controller
 		
 		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
-		JOIN crm_leads ON pjt_id=project_code
-		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != ''  ".$where." ";
+		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' ";
 		
 		// echo $month_contribution_query; exit;
 		$sql2 = $this->db->query($month_contribution_query);
@@ -1281,9 +1271,9 @@ class Dashboard extends crm_controller
 		return $res;
 	}
 	
-	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false, $division=false)
+	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		// echo "<pre>"; print_r($division); die;
+		// echo "<pre>"; print_r($practice_arr);
 		$prs = array();
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -1300,12 +1290,8 @@ class Dashboard extends crm_controller
 		
 		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
-		$this->db->join($this->cfg['dbpref'].'leads', 'pjt_id=project_code');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
-		if($division){
-			$this->db->where_in("division", $division);
-		}
 		$this->db->where('practice_id !=', 0);
 		if(!empty($start_date)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
@@ -1504,7 +1490,7 @@ class Dashboard extends crm_controller
 		}
 		
 		//role based filtering
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+		if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
 			//Fetching Project Team Members.
@@ -1537,7 +1523,7 @@ class Dashboard extends crm_controller
 				}
 			}
 			$result_ids = array_unique($res);
-		} */
+		}
 		//role based filtering
 		
 		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
@@ -1612,24 +1598,24 @@ class Dashboard extends crm_controller
 				$res = $this->excelexport($data['projects_data']);
 			break;
 			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice, $division);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$data['practices_id'] = $practice;
 				$data['excelexporttype'] = "inv_project_export";
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
 			break;
 			case 'inv_project_export':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice, $division);
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
-				$data = $this->get_billable_efforts($practice, $month, "", "", $division);
+				$data = $this->get_billable_efforts($practice, $month);
 				$data['practices_name'] = $practice_arrr[$practice];
 				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'ytd_eff':
-				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date, $division);
+				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				// echo "<pre>"; print_r($data); exit;
@@ -1773,7 +1759,7 @@ class Dashboard extends crm_controller
 		return $data['project_record'];
 	}
 	
-	public function getIRData($records, $start_date, $end_date, $practice, $division)
+	public function getIRData($records, $start_date, $end_date, $practice)
 	{
 		$bk_rates = get_book_keeping_rates();
 		
@@ -1787,9 +1773,6 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		if($division){
-			$this->db->where_in("l.division", $division);
-		}
 		if(!empty($practice)) {
 			$this->db->where("l.practice", $practice);
 		}
@@ -1876,11 +1859,10 @@ class Dashboard extends crm_controller
 	@method - get_billable_efforts()
 	@for drill down data
 	*/
-	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false, $division=false)
+	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code');
 		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
@@ -1891,9 +1873,7 @@ class Dashboard extends crm_controller
 			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
 		}
 		$this->db->where_in("t.practice_id", $practice);
-		if($division){
-			$this->db->where_in("l.division", $division);
-		}
+
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		
