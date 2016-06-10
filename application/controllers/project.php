@@ -3680,7 +3680,7 @@ HDOC;
 			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(10);
 			$this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(10);
 			//Column Alignment
