@@ -189,6 +189,8 @@ if(!empty($resdata)) {
 		
 		//cost
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
+		//directcost
+		$directcost_arr[$rec->empname] = $rec->direct_cost_per_hour;
 		
 		//usercount
 		if (!in_array($rec->empname, $pr_usercnt[$rec->practice_name]))
@@ -381,18 +383,24 @@ if(!empty($tbl_data)) {
 							$prj_arr = array_sort($proj_arr, 'hour', 'SORT_ASC');
 						} else if($filter_sort_val=='cost') {
 							$prj_arr = array_sort($proj_arr, 'cost', 'SORT_ASC');
+						} else if($filter_sort_val=='directcost') {
+							$prj_arr = array_sort($proj_arr, 'directcost', 'SORT_ASC');
 						}
 					} else if($filter_sort_by=='desc') {
 						if($filter_sort_val=='hour') {
 							$prj_arr = array_sort($proj_arr, 'hour', 'SORT_DESC');
 						} else if($filter_sort_val=='cost') {
 							$prj_arr = array_sort($proj_arr, 'cost', 'SORT_DESC');
+						} else if($filter_sort_val=='directcost') {
+							$prj_arr = array_sort($proj_arr, 'directcost', 'SORT_DESC');
 						}
 					}
 					foreach($prj_arr as $p_name=>$pval) {
 						$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
+						$dc_rate_pr_hr = isset($directcost_arr[$ukey])?$directcost_arr[$ukey]:0;
 						$per_hr     = ($pval['hour']/160) * 100;
 						$per_cost   = (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
+						$per_directcost = (($pval['hour']*$dc_rate_pr_hr)/(160*$pval['hour'])) * 100;
 						echo "<tr data-depth='".$i."' class='collapse '>
 							<td width='16%'></td>
 							<td width='12%'></td>
@@ -400,11 +408,13 @@ if(!empty($tbl_data)) {
 							<td width='15%'>".$project_master[$p_name]."</td>
 							<td width='5%' align='right' width='5%'>".round($pval['hour'], 1)."</td>
 							<td width='5%' align='right' width='5%'>".round($pval['cost'], 2)."</td>
+							<td width='5%' align='right' width='5%'>".round($pval['directcost'], 2)."</td>
 							<td width='5%' align='right' width='5%'>".round($per_hr, 1)."</td>
 							<td width='5%' align='right' width='5%'>".round($per_cost, 2)."</td>
+							<td width='5%' align='right' width='5%'>".round($per_directcost, 2)."</td>
 						</tr>";
 						$per_hr     = '';
-						$rate_pr_hr = 0;
+						$rate_pr_hr = $dc_rate_pr_hr = 0;
 						$i++;
 						$prj_arr = array();
 					}
