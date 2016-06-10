@@ -3678,7 +3678,7 @@ HDOC;
 			$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(17);
 			$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(18);
-			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+			$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(18);
 			$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(13);
 			$this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(10);
