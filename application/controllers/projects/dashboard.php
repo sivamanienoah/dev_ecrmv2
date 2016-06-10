@@ -1880,7 +1880,7 @@ class Dashboard extends crm_controller
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code')
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code');
 		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
