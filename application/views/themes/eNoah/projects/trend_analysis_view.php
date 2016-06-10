@@ -38,13 +38,13 @@ table.bu-tbl-inr th{ text-align:center; }
 			
 			<div class="chk-radio-box">	
 				<?php 
-					$checked_hr = $checked_cost = $$checked_directcost = '';
+					$checked_hr = $checked_cost = $checked_directcost = '';
 					if($graph_based == 'hour') 
 					$checked_hr = 'checked="checked"';
 					else if($graph_based == 'cost') 
 					$checked_cost = 'checked="checked"';
 					else if($graph_based == 'directcost') 
-					$checked_cost = 'checked="checked"';
+					$checked_directcost = 'checked="checked"';
 				?>
 				<label><input type='radio' name='graph_based' value='hour' id='rd_grph_hr' <?php echo $checked_hr; ?> /><span>Hour</span></label>
 				<label><input type='radio' name='graph_based' value='cost' id='rd_grph_cost' <?php echo $checked_cost; ?> /><span>Cost</span></label>
