@@ -142,25 +142,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
-					<td><b>Billing For the Month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
-					<?php if(!empty($practice_arr)) { ?>
-						<?php foreach($practice_arr as $parr) { ?>
-							<td align='right'>
-								<?php
-									$irval = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
-									if(isset($cm_irval) && ($cm_irval != 0)) {
-									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
-									<?php
-									} else {
-										echo '';
-									}
-								?>
-							</td>
-						<?php } ?>
-					<?php } ?>
-				</tr>
-				<tr>
 					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
@@ -169,7 +150,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
 									if(isset($irval) && ($irval != 0)) {
 									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $cm_irval; ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
 									<?php
 									} else {
 										echo '';
