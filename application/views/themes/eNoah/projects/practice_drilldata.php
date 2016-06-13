@@ -230,7 +230,6 @@ if(!empty($resdata)) {
 <div class="clearfix"></div>
 <div>
 <?php
-echo "<pre>"; print_r($tbl_data); die;
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $perc_tot_directcost = $calc_tot_directcost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
@@ -270,6 +269,7 @@ if(!empty($tbl_data)) {
 				$sort_ar = $sub_tot_directcst;
 			}
 		}
+		echo "<pre>"; print_r($sort_ar); die;
 		foreach($sort_ar as $pkey=>$sortval) {
 			$i = 0;
 			// $pr_cnt = 0;
