@@ -50,6 +50,20 @@
 		<?php } ?>
 	</tr>
 	<tr>
+		<td><b>Billing for the month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
+		<?php if(!empty($practice_arr)) { ?>
+			<?php foreach($practice_arr as $parr) { ?>
+				<td align='right'>
+					<?php
+						$cm_billing = '';
+						$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
+						echo $cm_billing;
+					?>
+				</td>
+			<?php } ?>
+		<?php } ?>
+	</tr>
+	<tr>
 		<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 		<?php if(!empty($practice_arr)) { ?>
 			<?php foreach($practice_arr as $parr) { ?>
