@@ -232,7 +232,7 @@ if(!empty($resdata)) {
 <div>
 <?php
 // echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
-$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
+$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $perc_tot_directcost = $calc_tot_directcost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
@@ -417,7 +417,7 @@ if(!empty($tbl_data)) {
 							<td width='5%' align='right' width='5%'>".round($per_cost, 2)."</td>
 							<td width='5%' align='right' width='5%'>".round($per_directcost, 2)."</td>
 						</tr>";
-						$per_hr     = '';
+						$per_hr     = $per_directcost = '';
 						$rate_pr_hr = $dc_rate_pr_hr = 0;
 						$i++;
 						$prj_arr = array();
