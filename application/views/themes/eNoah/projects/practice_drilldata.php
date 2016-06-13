@@ -269,7 +269,7 @@ if(!empty($tbl_data)) {
 				$sort_ar = $sub_tot_directcst;
 			}
 		}
-		echo "<pre>"; print_r($sort_ar); die;
+		// echo "<pre>"; print_r($sort_ar); die;
 		foreach($sort_ar as $pkey=>$sortval) {
 			$i = 0;
 			// $pr_cnt = 0;
