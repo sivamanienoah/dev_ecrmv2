@@ -1565,6 +1565,12 @@ class Dashboard extends crm_controller
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$res = $this->excelexport($data['projects_data']);
 			break;
+			case 'cm_billing':
+				$data['invoices_data'] = $this->getCMIRData($practice, $month);
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "inv_project_export";
+				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
 			case 'irval':
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 				$data['practices_id'] = $practice;
@@ -1577,7 +1583,7 @@ class Dashboard extends crm_controller
 			break;
 			case 'cm_eff':
 				$data = $this->get_billable_efforts($practice, $month);
-				$data['practices_name'] = $practice_arrr[$practice];
+				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
@@ -1768,19 +1774,23 @@ class Dashboard extends crm_controller
 		
 		$data = array();
 		
-		//****//
-		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, lead_title');
-		$this->db->from($this->cfg['dbpref'].'timesheet_data');
-		$this->db->join($this->cfg['dbpref'].'leads', 'pjt_id = project_code');
-		$tswhere = "resoursetype is NOT NULL";
-		$this->db->where($tswhere);
-		$this->db->where('practice_id', $practice);
-		if(!empty($month)) {
-			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
-			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
+		//need to calculate for the total IR
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->where("sfv.type", 'A');
+		if(!empty($practice)) {
+			$this->db->where("l.practice", $practice);
 		}
-		$query2 = $this->db->get();
-		$invoice_rec = $query2->result_array();
+		if(!empty($month)) {
+			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
+			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
+		}
+		$query = $this->db->get();
+		$invoice_rec = $query->result_array();
 		
 		$resarr = array();
 		//****//
