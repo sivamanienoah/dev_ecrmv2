@@ -92,7 +92,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 				Export to Excel
 			</button>
 		</div>
-			<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
+			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
 				<tr>
 					<thead>
 						<th>IT Services Dashboard</th>
@@ -414,7 +414,15 @@ function getData(practice, clicktype)
 	});
 }
 $(function() {
-	
+	$("#btnExport").click(function () {
+		$("#it_services_dash").btechco_excelexport({
+			containerid: "it_services_dash"
+		   , datatype: $datatype.Table
+		   , filename: 'IT Services Data'
+		});
+	});
 });
 </script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
