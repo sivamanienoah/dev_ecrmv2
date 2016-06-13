@@ -74,12 +74,14 @@ function array_sort($array, $on, $order='SORT_ASC')
 $tbl_data = array();
 $sub_tot  = array();
 $cost_arr = array();
+$directcost_arr = array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
 $emp_hr   = array();
 $emp_cst  = array();
+$emp_directcst  = array();
 $tot_hour = 0;
 $tot_cost = 0;
 if(!empty($resdata)) {
