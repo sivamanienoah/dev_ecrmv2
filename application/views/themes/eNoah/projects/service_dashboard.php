@@ -87,6 +87,11 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 		</div>
 		
 		<div id="default_view">
+		<div class="buttons export-to-excel">
+			<button type="button" class="positive" id="btnExport">
+				Export to Excel
+			</button>
+		</div>
 			<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 				<tr>
 					<thead>
