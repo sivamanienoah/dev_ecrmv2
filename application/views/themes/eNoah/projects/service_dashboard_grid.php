@@ -1,4 +1,4 @@
-<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
+<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
 	<tr>
 		<thead>
 			<th>IT Services Dashboard</th>
