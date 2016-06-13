@@ -129,9 +129,9 @@ $(function() {
 		if(seriesIndex==0){
 			resource_data = 'Billable';
 		} else if(seriesIndex==1) {
-			resource_data = 'Internal';
-		} else if(seriesIndex==2) {
 			resource_data = 'Non-Billable';
+		} else if(seriesIndex==2) {
+			resource_data = 'Internal';
 		}
 		// alert($('#hdept_ids').val())
 		if($('#hdept_ids').val()==''){
