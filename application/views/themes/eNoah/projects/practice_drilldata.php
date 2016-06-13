@@ -329,7 +329,7 @@ if(!empty($tbl_data)) {
 					$skill_sort_arr = $skil_sort_directcst[$dept][$pkey];
 				}
 			}
-			// echo "<pre>"; print_r($skill_sort_arr); die;
+			echo "<pre>"; print_r($skill_sort_arr); die;
 			$sk_arr = array();
 			foreach($skill_sort_arr as $skkey=>$skval) {
 				$sk_arr = $prac_ar[$pkey][$skkey];
