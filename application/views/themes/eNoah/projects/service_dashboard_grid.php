@@ -43,7 +43,7 @@
 						<?php
 						} else {
 							echo '';
-						}  
+						}
 					?>
 				</td>
 			<?php } ?>
