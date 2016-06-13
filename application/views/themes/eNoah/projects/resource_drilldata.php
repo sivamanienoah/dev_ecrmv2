@@ -221,9 +221,9 @@ if(!empty($tbl_data)) {
 					<th width='15%' align='right' class='rt-ali'>SUB TOTAL:</th>
 					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 1)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>000</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_directcost'], 2)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_hr, 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_directcost, 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>000</th>
 				</tr>";
 			if($filter_sort_by=='asc') {
 				if($filter_sort_val=='hour') {
