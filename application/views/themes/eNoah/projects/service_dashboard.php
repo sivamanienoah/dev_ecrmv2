@@ -62,11 +62,11 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								</td>								
 								<td class="">
 									<select title="Entity" id="entity" name="entity[]" multiple="multiple">
-										<?php if(count($entity_data)>0 && !empty($entity_data)) { ?>
-										<?php foreach($entity_data as $entityrec) {	?>
-												<option value="<?php echo $entityrec->div_id; ?>"><?php echo $entityrec->division_name;?></option>
-										<?php } 
-										}
+										<?php #if(count($entity_data)>0 && !empty($entity_data)) { ?>
+										<?php #foreach($entity_data as $entityrec) {	?>
+												<option value="<?php #echo $entityrec->div_id; ?>"><?php #echo $entityrec->division_name;?></option>
+										<?php #} 
+										#}
 										?>
 									</select>
 								</td-->
@@ -142,6 +142,25 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					<?php } ?>
 				</tr>
 				<tr>
+					<td><b>Billing For the Month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$irval = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
+									if(isset($cm_irval) && ($cm_irval != 0)) {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+									<?php
+									} else {
+										echo '';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+				</tr>
+				<tr>
 					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
@@ -150,7 +169,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
 									if(isset($irval) && ($irval != 0)) {
 									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $cm_irval; ?></a>
 									<?php
 									} else {
 										echo '';
@@ -171,7 +190,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
 									if(isset($cm_billval) && ($cm_billval != 0)) {
 									?>					
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 2); ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 1); ?></a>
 									<?php
 									} else {
 										echo '';
@@ -192,7 +211,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 									if(isset($billval) && ($billval != 0)) {
 									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 2); ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 1); ?></a>
 									<?php
 									} else {
 										echo '';
@@ -214,7 +233,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								}
 								if(isset($eff_var) && ($eff_var != 0)) {
 								?>
-								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 2); ?></a>
+								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 1); ?></a>
 								<?php
 								} else {
 									echo '';
@@ -235,7 +254,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
 										$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
 									}
-									echo round($cm_dc_val, 2);
+									echo round($cm_dc_val, 1);
 								?>
 							</td>
 						<?php } ?>
@@ -253,7 +272,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 									if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
 										$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 									}
-									echo round($dc_val, 2);
+									echo round($dc_val, 1);
 								?>
 							</td>
 						<?php } ?>

@@ -79,7 +79,7 @@
 						$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
 						if(isset($cm_billval) && ($cm_billval != 0)) {
 						?>					
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 2); ?></a>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 1); ?></a>
 						<?php
 						} else {
 							echo '';
@@ -100,7 +100,7 @@
 						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 						if(isset($billval) && ($billval != 0)) {
 						?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 2); ?></a>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 1); ?></a>
 						<?php
 						} else {
 							echo '';
@@ -122,7 +122,7 @@
 					}
 					if(isset($eff_var) && ($eff_var != 0)) {
 					?>
-					<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 2); ?></a>
+					<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 1); ?></a>
 					<?php
 					} else {
 						echo '';
@@ -143,7 +143,7 @@
 						if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
 							$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
 						}
-						echo round($cm_dc_val, 2);
+						echo round($cm_dc_val, 1);
 					?>
 				</td>
 			<?php } ?>
@@ -161,7 +161,7 @@
 						if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
 							$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 						}
-						echo round($dc_val, 2);
+						echo round($dc_val, 1);
 					?>
 				</td>
 			<?php } ?>
