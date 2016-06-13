@@ -95,8 +95,8 @@ $(function() {
 		}], */
 		series:[
             {label:'Billable'},
-            {label:'Non-Billable'},
-			{label:'Internal'}
+            {label:'Internal'},
+            {label:'Non-Billable'}
         ],
 		grid: {
 			drawGridLines: true,        // wether to draw lines across the grid or not.
@@ -109,7 +109,7 @@ $(function() {
 			shadow: false
 		},
 		highlighter: { show: true, tooltipAxes: 'y', formatString: '%s', lineWidthAdjust:5.5, tooltipOffset:8 },
-		seriesColors: ["#00e143", "#ff0000", "#00a7e5"]
+		seriesColors: ["#00e143", "#00a7e5", "#ff0000"]
 	});
 	
 	$('#trend_analysis_chart').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
@@ -129,9 +129,9 @@ $(function() {
 		if(seriesIndex==0){
 			resource_data = 'Billable';
 		} else if(seriesIndex==1) {
-			resource_data = 'Non-Billable';
-		} else if(seriesIndex==2) {
 			resource_data = 'Internal';
+		} else if(seriesIndex==2) {
+			resource_data = 'Non-Billable';
 		}
 		// alert($('#hdept_ids').val())
 		if($('#hdept_ids').val()==''){
