@@ -81,14 +81,17 @@ $pj_usercnt = array();
 $sk_usercnt = array();
 $skil_hr  = array();
 $skil_cst = array();
+$skil_directcst= array();
 $prjt_hr  = array();
 $prjt_cst = array();
+$prjt_directcst= array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
+$tot_directcost= 0;
 
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
