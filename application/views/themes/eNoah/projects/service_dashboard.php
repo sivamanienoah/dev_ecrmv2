@@ -422,7 +422,6 @@ $(function() {
 		   , datatype: $datatype.Table
 		   , filename: 'IT Services Data'
 		});
-		// $('#drilldown_data').append();
 	});
 });
 </script>
