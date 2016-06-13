@@ -95,8 +95,8 @@ $(function() {
 		}], */
 		series:[
             {label:'Billable'},
-            {label:'Internal'},
-            {label:'Non-Billable'}
+            {label:'Non-Billable'},
+			{label:'Internal'}
         ],
 		grid: {
 			drawGridLines: true,        // wether to draw lines across the grid or not.
@@ -109,7 +109,7 @@ $(function() {
 			shadow: false
 		},
 		highlighter: { show: true, tooltipAxes: 'y', formatString: '%s', lineWidthAdjust:5.5, tooltipOffset:8 },
-		seriesColors: ["#00e143", "#00a7e5", "#ff0000"]
+		seriesColors: ["#00e143", "#ff0000", "#00a7e5"]
 	});
 	
 	$('#trend_analysis_chart').bind('jqplotDataClick', function (ev, seriesIndex, pointIndex, data) {
