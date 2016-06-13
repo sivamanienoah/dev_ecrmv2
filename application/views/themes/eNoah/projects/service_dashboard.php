@@ -416,6 +416,7 @@ function getData(practice, clicktype)
 }
 $(function() {
 	$("#btnExportITServices").click(function () {
+		$('#drilldown_data').hide();
 		$("#it_services_dash").btechco_excelexport({
 			containerid: "it_services_dash"
 		   , datatype: $datatype.Table
