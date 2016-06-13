@@ -35,10 +35,10 @@
 		<div class="bttons">
 			<input style="height:auto;" type="button" class="positive input-font" name="refine_trend_drilldown_data" id="refine_trend_drilldown_data" value="Go" />
 			<input style="height:auto;" type="button" class="positive input-font" name="reset_drilldown" id="reset_drilldown" value="Reset" />
-						</div>								
-					</div>
-				</div>
-				<div class="clear"></div>
+		</div>								
+	</div>
+</div>
+<div class="clear"></div>
 <?php
 function array_sort($array, $on, $order='SORT_ASC')
 {
@@ -81,8 +81,10 @@ $sk_usercnt    = array();
 $skil_sub_tot  = array();
 $skil_sort_hr  = array();
 $skil_sort_cst = array();
+$skil_sort_directcst = array();
 $user_hr 	   = array();
 $user_cst 	   = array();
+$user_directcst= array();
 $cost_arr 	   = array();
 $prac = array();
 $dept = array();
@@ -90,6 +92,7 @@ $skil = array();
 $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
+$tot_directcost = 0;
 // echo "<pre>"; print_r($resdata); exit;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
