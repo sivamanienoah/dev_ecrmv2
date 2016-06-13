@@ -1568,8 +1568,12 @@ class Dashboard extends crm_controller
 			case 'cm_billing':
 				$data['invoices_data'] = $this->getCMIRData($practice, $month);
 				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "inv_project_export";
+				$data['excelexporttype'] = "cm_billing_export";
 				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'cm_billing_export':
+				$data['invoices_data'] = $this->getCMIRData($practice, $month);
+				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'irval':
 				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
