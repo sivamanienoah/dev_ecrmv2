@@ -76,6 +76,7 @@ $tbl_data = array();
 $sub_tot  = array();
 $sub_tot_hr    = array();
 $sub_tot_cst   = array();
+$sub_tot_directcst= array();
 $pr_usercnt    = array();
 $sk_usercnt    = array();
 $skil_sub_tot  = array();
@@ -151,6 +152,11 @@ if(!empty($resdata)) {
 		$sub_tot_cst[$rec->dept_name][$rec->practice_name] +=  $rec->resource_duration_cost;
 		else
 		$sub_tot_cst[$rec->dept_name][$rec->practice_name] =  $rec->resource_duration_cost;
+		//for practicewise sorting-directcost
+		if(isset($sub_tot_directcst[$rec->dept_name][$rec->practice_name]))
+		$sub_tot_directcst[$rec->dept_name][$rec->practice_name] +=  $rec->resource_duration_direct_cost;
+		else
+		$sub_tot_directcst[$rec->dept_name][$rec->practice_name] =  $rec->resource_duration_direct_cost;
 		//for skillwise - sorting-hour
 		if(isset($skil_sort_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
 		$skil_sort_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name] += $rec->duration_hours;
@@ -162,10 +168,10 @@ if(!empty($resdata)) {
 		else 
 		$skil_sort_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name] = $rec->resource_duration_cost;
 		//for practicewise sorting-directcost
-		if(isset($sub_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
-		$sub_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] +=  $rec->resource_duration_direct_cost;
+		if(isset($skil_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
+		$skil_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] +=  $rec->resource_duration_direct_cost;
 		else
-		$sub_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] =  $rec->resource_duration_direct_cost;
+		$skil_tot_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] =  $rec->resource_duration_direct_cost;
 		//for userwise - sorting-hour
 		if(isset($user_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname]))
 		$user_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] += $rec->duration_hours;
