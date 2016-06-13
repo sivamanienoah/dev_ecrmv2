@@ -170,8 +170,10 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
 			<th class='prac-dt' width='5%'><b>HOUR</b></th>
 			<th class='prac-dt' width='5%'><b>COST</b></th>
+			<th class='prac-dt' width='5%'><b>DIRECT COST</b></th>
 			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
-			<th class='prac-dt' width='5%'><b>% of COST</b></th>";
+			<th class='prac-dt' width='5%'><b>% of COST</b></th>
+			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>";
 	foreach($tbl_data as $dept=>$us_ar) {
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
