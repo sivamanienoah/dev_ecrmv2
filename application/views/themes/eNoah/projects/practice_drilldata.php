@@ -305,7 +305,7 @@ if(!empty($tbl_data)) {
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
 			</tr>";
-			// echo "<pre>"; print_r($sortval); die;
+			echo "<pre>"; print_r($sortval); die;
 			if($filter_sort_by=='asc') {
 				if($filter_sort_val=='hour') {
 					asort($skil_sort_hr[$dept][$pkey]);
