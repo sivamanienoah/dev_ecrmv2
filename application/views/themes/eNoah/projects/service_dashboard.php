@@ -25,6 +25,12 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
+			
+			<div class="buttons export-to-excel">
+				<button type="button" class="positive" id="btnExport">
+					Export to Excel
+				</button>
+			</div>
 		</div>
 		<!--div id="ajax_loader" style="margin:20px;" align="center">
 			Loading Content.<br><img alt="wait" src="<?php #echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
@@ -87,11 +93,6 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 		</div>
 		
 		<div id="default_view">
-		<div class="buttons export-to-excel">
-			<button type="button" class="positive" id="btnExport">
-				Export to Excel
-			</button>
-		</div>
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
 				<tr>
 					<thead>
