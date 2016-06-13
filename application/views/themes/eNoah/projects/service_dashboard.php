@@ -416,12 +416,13 @@ function getData(practice, clicktype)
 }
 $(function() {
 	$("#btnExportITServices").click(function () {
-		$('#drilldown_data').remove();
+		$('#drilldown_data').empty();
 		$("#it_services_dash").btechco_excelexport({
 			containerid: "it_services_dash"
 		   , datatype: $datatype.Table
 		   , filename: 'IT Services Data'
 		});
+		// $('#drilldown_data').append();
 	});
 });
 </script>
