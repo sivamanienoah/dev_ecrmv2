@@ -57,7 +57,13 @@
 					<?php
 						$cm_billing = '';
 						$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
-						echo $cm_billing;
+						if(isset($cm_billing)){
+					?>
+						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
+					<?php
+						} else {
+							echo "";
+						}
 					?>
 				</td>
 			<?php } ?>
