@@ -75,6 +75,7 @@ function array_sort($array, $on, $order='SORT_ASC')
 $tbl_data   = array();
 $sub_tot    = array();
 $cost_arr   = array();
+$directcost_arr= array();
 $pj_sub_tot = array();
 $pj_usercnt = array();
 $sk_usercnt = array();
@@ -357,7 +358,7 @@ if(!empty($tbl_data)) {
 						<td width='5%' align='right'>".round($per_directcost, 2)."</td>
 					</tr>";
 					$per_hr 	= '';
-					$rate_pr_hr = 0;
+					$rate_pr_hr = $directrate_pr_hr = 0;
 					$i++;
 					$proj_arr = array();
 				}

@@ -201,7 +201,7 @@ if(!empty($tbl_data)) {
 				arsort($prjt_cst);
 				$sort_ar = $prjt_cst;
 			} else if($filter_sort_val=='directcost') {
-				asort($prjt_directcst);
+				arsort($prjt_directcst);
 				$sort_ar = $prjt_directcst;
 			}
 		}
