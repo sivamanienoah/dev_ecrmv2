@@ -27,7 +27,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 			</a>
 			
 			<div class="buttons export-to-excel">
-				<button type="button" class="positive" id="btnExport">
+				<button type="button" class="positive" id="btnExportITServices">
 					Export to Excel
 				</button>
 			</div>
@@ -415,7 +415,7 @@ function getData(practice, clicktype)
 	});
 }
 $(function() {
-	$("#btnExport").click(function () {
+	$("#btnExportITServices").click(function () {
 		$("#it_services_dash").btechco_excelexport({
 			containerid: "it_services_dash"
 		   , datatype: $datatype.Table
