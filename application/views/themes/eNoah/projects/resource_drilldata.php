@@ -23,6 +23,7 @@
 		<select name="filter_sort_val" id="filter_sort_val">
 			<option value='hour' <?php if($filter_sort_val == 'hour') echo "selected='selected'"; ?>>Hour</option>
 			<option value='cost' <?php if($filter_sort_val == 'cost') echo "selected='selected'"; ?>>Cost</option>
+			<option value='directcost' <?php if($filter_sort_val == 'directcost') echo "selected='selected'"; ?>>Direct Cost</option>
 		</select>
 	</div>
 	<div class="pull-left" style="margin:0 15px;;">
@@ -93,6 +94,11 @@ if(!empty($resdata)) {
 		else
 		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['cost'] = $rec->resource_duration_cost;
 	
+		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['directcost']))
+		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['directcost'] += $rec->resource_duration_direct_cost;
+		else
+		$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['directcost'] = $rec->resource_duration_direct_cost;
+	
 		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour']))
 		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_hour'] +=  $rec->duration_hours;
 		else
@@ -102,11 +108,18 @@ if(!empty($resdata)) {
 		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] +=  $rec->resource_duration_cost;
 		else
 		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_cost'] =  $rec->resource_duration_cost;
+	
+		if(isset($sub_tot[$rec->dept_name][$rec->empname]['sub_tot_directcost']))
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_directcost'] +=  $rec->resource_duration_direct_cost;
+		else
+		$sub_tot[$rec->dept_name][$rec->empname]['sub_tot_directcost'] =  $rec->resource_duration_direct_cost;
 		//total
 		$tot_hour = $tot_hour + $rec->duration_hours;
 		$tot_cost = $tot_cost + $rec->resource_duration_cost;
+		$tot_directcost = $tot_directcost + $rec->resource_duration_direct_cost;
 		//user
 		$cost_arr[$rec->empname] = $rec->cost_per_hour;
+		$directcost_arr[$rec->empname] = $rec->direct_cost_per_hour;
 		//for empname - sorting-hour
 		if(isset($emp_hr[$rec->dept_name][$rec->empname]))
 		$emp_hr[$rec->dept_name][$rec->empname] += $rec->duration_hours;
@@ -117,6 +130,11 @@ if(!empty($resdata)) {
 		$emp_cst[$rec->dept_name][$rec->empname] += $rec->resource_duration_cost;
 		else 
 		$emp_cst[$rec->dept_name][$rec->empname] = $rec->resource_duration_cost;
+	
+		if(isset($emp_directcst[$rec->dept_name][$rec->empname]))
+		$emp_directcst[$rec->dept_name][$rec->empname] += $rec->resource_duration_direct_cost;
+		else 
+		$emp_directcst[$rec->dept_name][$rec->empname] = $rec->resource_duration_direct_cost;
 	}
 }
 // echo "<pre>"; print_r($emp_hr); echo "</pre>";
@@ -153,8 +171,10 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
 			<th class='prac-dt' width='5%'><b>HOUR</b></th>
 			<th class='prac-dt' width='5%'><b>COST</b></th>
+			<th class='prac-dt' width='5%'><b>DIRECT COST</b></th>
 			<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
-			<th class='prac-dt' width='5%'><b>% of COST</b></th>";
+			<th class='prac-dt' width='5%'><b>% of COST</b></th>
+			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>";
 	foreach($tbl_data as $dept=>$us_ar) {
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
@@ -163,6 +183,9 @@ if(!empty($tbl_data)) {
 			} else if($filter_sort_val=='cost') {
 				asort($emp_cst[$dept]);
 				$us_sort_ar = $emp_cst[$dept];
+			} else if($filter_sort_val=='directcost') {
+				asort($emp_directcst[$dept]);
+				$us_sort_ar = $emp_directcst[$dept];
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
@@ -171,6 +194,9 @@ if(!empty($tbl_data)) {
 			} else if($filter_sort_val=='cost') {
 				arsort($emp_cst[$dept]);
 				$us_sort_ar = $emp_cst[$dept];
+			} else if($filter_sort_val=='directcost') {
+				arsort($emp_directcst[$dept]);
+				$us_sort_ar = $emp_directcst[$dept];
 			}
 		}
 		// foreach($us_ar as $p_name=>$proj_ar) {
@@ -180,49 +206,62 @@ if(!empty($tbl_data)) {
 			$i = 0;
 			$rs_sub_tot_hr   = 0;
 			$rs_sub_tot_cost = 0;
+			$rs_sub_tot_directcost = 0;
 			$rs_sub_tot_hr   = ($sub_tot[$dept][$p_name]['sub_tot_hour']/$tot_hour)*100;
 			$rs_sub_tot_cost = ($sub_tot[$dept][$p_name]['sub_tot_cost']/$tot_cost)*100;
+			$rs_sub_tot_directcost = ($sub_tot[$dept][$p_name]['sub_tot_directcost']/$tot_directcost)*100;
 			$perc_tot_hr   += $rs_sub_tot_hr;
 			$perc_tot_cost += $rs_sub_tot_cost;
+			$perc_tot_directcost += $rs_sub_tot_directcost;
 			$calc_tot_hour += $sub_tot[$dept][$p_name]['sub_tot_hour'];
 			$calc_tot_cost += $sub_tot[$dept][$p_name]['sub_tot_cost'];
+			$calc_tot_directcost += $sub_tot[$dept][$p_name]['sub_tot_directcost'];
 			echo "<tr data-depth='".$i."' class='collapse'>
 					<th align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($p_name)."</span></th>
 					<th width='15%' align='right' class='rt-ali'>SUB TOTAL:</th>
 					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_hour'], 1)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_cost'], 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$dept][$p_name]['sub_tot_directcost'], 2)."</th>
 					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_hr, 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_cost, 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($rs_sub_tot_directcost, 2)."</th>
 				</tr>";
 			if($filter_sort_by=='asc') {
 				if($filter_sort_val=='hour') {
 					$usr_arr = array_sort($user_arr, 'hour', 'SORT_ASC');
 				} else if($filter_sort_val=='cost') {
 					$usr_arr = array_sort($user_arr, 'cost', 'SORT_ASC');
+				} else if($filter_sort_val=='directcost') {
+					$usr_arr = array_sort($user_arr, 'directcost', 'SORT_ASC');
 				}
 			} else if($filter_sort_by=='desc') {
 				if($filter_sort_val=='hour') {
 					$usr_arr = array_sort($user_arr, 'hour', 'SORT_DESC');
 				} else if($filter_sort_val=='cost') {
 					$usr_arr = array_sort($user_arr, 'cost', 'SORT_DESC');
+				} else if($filter_sort_val=='directcost') {
+					$usr_arr = array_sort($user_arr, 'directcost', 'SORT_DESC');
 				}
 			}
 			// foreach($proj_ar as $pkey=>$pval) {
 			foreach($usr_arr as $pkey=>$pval) {
 				$i=1;
 				$rate_pr_hr = isset($cost_arr[$p_name])?$cost_arr[$p_name]:0;
+				$directrate_pr_hr = isset($directcost_arr[$p_name])?$directcost_arr[$p_name]:0;
 				$name       = isset($project_master[$pkey]) ? $project_master[$pkey] : $pkey;
-				$per_hr = $per_cost = 0;
+				$per_hr = $per_cost =  $per_directcost = 0;
 				$per_hr   	= ($pval['hour']/$tot_hour) * 100;
 				$per_cost 	= ($pval['cost']/$tot_cost) * 100;
+				$per_directcost = ($pval['directcost']/$tot_directcost) * 100;
 				
 				echo "<tr data-depth='".$i."' class='collapse'>
 					<td width='15%'></td>
 					<td width='15%'>".$name."</td>
 					<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
 					<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
+					<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
 					<td width='5%' align='right'>".round($per_hr, 1)."</td>
 					<td width='5%' align='right'>".round($per_cost, 2)."</td>
+					<td width='5%' align='right'>".round($per_directcost, 2)."</td>
 				</tr>";
 				$per_hr = '';
 				$i++;
@@ -239,8 +278,10 @@ if(!empty($tbl_data)) {
 		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></td>
 		</tr>";
 	echo "</table>";
 }
