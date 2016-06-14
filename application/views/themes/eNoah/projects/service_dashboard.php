@@ -15,7 +15,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $tot_billhour = $tot_tothours = 0;
+$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -237,16 +237,30 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $to
 									if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
 									$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 									if(isset($billval) && ($billval != 0)) {
+										$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
+										$tot_totbillval += $projects['billable_ytd'][$parr]['totalhour'];
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 0); ?></a>
 									<?php
 									} else {
-										echo '';
+										echo '-';
 									}
 								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'>
+						<?php 
+							$per_billval = 0;
+							if(($tot_billval != 0) && ($tot_totbillval != 0)){
+								$per_billval = ($tot_billval/$tot_totbillval);
+							}
+							if($per_billval!=0)
+							echo round(($per_billval * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td><b>Effort Variance (%) - <span class="highlight_info">For Fixed Bid projects</span></b></td>
