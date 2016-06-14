@@ -126,7 +126,7 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($total_projects!=0) ? $total_projects : ''; ?></td>
+					<td align='right'><?php echo ($total_projects!=0) ? $total_projects : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>Number of projects in Red</b></td>
@@ -147,7 +147,7 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($total_rag!=0) ? $total_rag : ''; ?></td>
+					<td align='right'><?php echo ($total_rag!=0) ? $total_rag : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>Billing for the month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
@@ -169,7 +169,7 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($totCM_Irval!=0) ? $totCM_Irval : ''; ?></td>
+					<td align='right'><?php echo ($totCM_Irval!=0) ? $totCM_Irval : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
@@ -190,7 +190,7 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($tot_Irval!=0) ? $tot_Irval : ''; ?></td>
+					<td align='right'><?php echo ($tot_Irval!=0) ? $tot_Irval : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
