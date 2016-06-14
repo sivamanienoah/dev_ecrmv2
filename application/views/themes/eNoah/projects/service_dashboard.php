@@ -15,7 +15,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
+$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $tot_billhour = $tot_tothours = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -202,6 +202,8 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 									// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
 									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
 									if(isset($cm_billval) && ($cm_billval != 0)) {
+										$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
+										$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
 									?>					
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 0); ?></a>
 									<?php
@@ -212,6 +214,18 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'>
+						<?php 
+							$per_billhr = 0;
+							if(($tot_billhour != 0) && ($tot_tothours != 0)){
+								$per_billhr = ($tot_billhour/$tot_tothours);
+							}
+							if($per_billhr!=0)
+							echo round(($per_billhr * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td><b>Billable YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
