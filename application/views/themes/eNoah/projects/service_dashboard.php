@@ -15,7 +15,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $total_rag = 0;
+$total_irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -158,6 +158,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 									$cm_billing = '';
 									$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
 									if($cm_billing!=''){
+										$totCM_Irval += $cm_billing;
 								?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
 								<?php
@@ -168,6 +169,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'><?php echo ($totCM_Irval!=0) ? $totCM_Irval : ''; ?></td>
 				</tr>
 				<tr>
 					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
