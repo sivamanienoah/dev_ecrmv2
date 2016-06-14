@@ -989,6 +989,8 @@ class Dashboard extends crm_controller
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
 		$this->db->where('p.status', 1);
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in('p.id', 6);
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
@@ -1055,6 +1057,8 @@ class Dashboard extends crm_controller
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in("l.practice", 6);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
 		if($project_status){
@@ -1101,7 +1105,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in("l.practice", 6);
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
@@ -1127,7 +1132,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in("l.practice", 6);
 		if(!empty($month)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
 			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
@@ -1159,6 +1165,8 @@ class Dashboard extends crm_controller
 				$client_not_in_arra = array('ENO','NOA');
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
+				//BPO practice are not shown in IT Services Dashboard
+				$this->db->where_not_in("l.practice", 6);
 				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
 				$pro_data = $query3->result_array();
