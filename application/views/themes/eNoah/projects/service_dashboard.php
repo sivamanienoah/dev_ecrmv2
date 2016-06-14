@@ -16,7 +16,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <?php
 $practice_arr = array();
 $tot_Irval = $totCM_Irval = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
-$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
+$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -336,6 +336,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 							<td align='right'>
 								<?php
 									$dc_val = '';
+									$tot_dc_vals += $projects['irval'][$parr];
+									$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
 									if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
 										$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 									}
@@ -344,6 +346,18 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'>
+						<?php
+							$per_dc_vals = 0;
+							if(($tot_dc_vals != 0) && ($tot_dc_tots != 0)){
+								$per_dc_vals = ($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals;
+							}
+							if($per_dc_vals!=0)
+							echo round(($per_dc_vals * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
 				</tr>
 			</table>
 				
