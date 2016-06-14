@@ -95,8 +95,8 @@ $(function() {
 		}], */
 		series:[
             {label:'Billable'},
-            {label:'Internal'},
-            {label:'Non-Billable'}
+            {label:'Non-Billable'},
+            {label:'Internal'}
         ],
 		grid: {
 			drawGridLines: true,        // wether to draw lines across the grid or not.
