@@ -354,7 +354,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									} else {
 										echo '-';
 									}
-									?>
+								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
