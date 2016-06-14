@@ -2827,4 +2827,5 @@ form#edit-folder-permissions { overflow:visible !important; }
 .modal-custom-fields a:hover {text-decoration: none;}
 .highlight_info {color:#f79158;}
 /****1-6-2016****/
-.itser_down_arrow{ background: url(../img/arrowdown.png) no-repeat; }
+.itser_down_arrow{background:url("../img/arrowdown.png") no-repeat left center;padding: 0 0 0 20px;}
+.itser_up_arrow{background:url("../img/arrowup.png") no-repeat left center;padding: 0 0 0 20px;}
