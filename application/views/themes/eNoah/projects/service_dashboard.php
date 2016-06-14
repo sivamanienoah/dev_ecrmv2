@@ -141,7 +141,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
 									<?php
 									} else {
-										echo '';
+										echo '-';
 									}
 								?>
 							</td>
