@@ -157,7 +157,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 								<?php
 									$cm_billing = '';
 									$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
-									if(isset($cm_billing)){
+									if($cm_billing!=''){
 								?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
 								<?php
