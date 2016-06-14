@@ -341,13 +341,14 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
 										$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 									}
-									echo ($dc_val!=0) ? round($dc_val, 0) : '-';
 									$arrow_val = 'down_arrow';
 									if($dc_val >= 45){
 										$arrow_val = 'up_arrow';
 									}
-								?>
-								<span class="<?php echo "itser_".$arrow_val;?>"></span>
+									?>
+									<span class="<?php echo "itser_".$arrow_val;?>">
+										<?php echo ($dc_val!=0) ? round($dc_val, 0) : '-'; ?>
+									</span>
 							</td>
 						<?php } ?>
 					<?php } ?>
