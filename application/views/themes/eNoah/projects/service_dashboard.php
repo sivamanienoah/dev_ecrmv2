@@ -15,7 +15,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$total_irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
+$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -178,17 +178,19 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0
 							<td align='right'>
 								<?php
 									$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
-									if(isset($irval) && ($irval != 0)) {
+									if($irval!="") {
+										$tot_Irval += $irval;
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
 									<?php
 									} else {
-										echo '';
+										echo '-';
 									}
 								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'><?php echo ($tot_Irval!=0) ? $tot_Irval : ''; ?></td>
 				</tr>
 				<tr>
 					<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
