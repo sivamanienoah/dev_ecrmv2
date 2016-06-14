@@ -15,7 +15,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = 0;
+$total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $total_rag = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -115,7 +115,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = 0;
 								<?php
 									$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
 									if(isset($noProjects)) {
-										$total_projects += $projects['practicewise'][$parr];
+										$total_projects += $noProjects;
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
 									<?php
@@ -136,6 +136,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = 0;
 								<?php
 									$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
 									if(isset($rag)) {
+										$total_rag += $rag;
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
 									<?php
@@ -146,6 +147,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'><?php echo ($total_rag!=0) ? $total_rag : ''; ?></td>
 				</tr>
 				<tr>
 					<td><b>Billing for the month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
