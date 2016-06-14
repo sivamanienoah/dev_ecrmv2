@@ -15,8 +15,8 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
-$tot_actual_hr = $tot_estimate_hr = 0;
+$tot_Irval = $totCM_Irval = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
+$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -304,9 +304,10 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php #echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] . "-". $projects['cm_irval'][$parr]; 
-									#((total invoice raised - total direct cost)/total invoice raised)*100;
+								<?php
 									$cm_dc_val = '';
+									$tot_cm_irvals = $projects['cm_irval'][$parr];
+									$tot_cm_dc_tot = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost']; 
 									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
 										$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
 									}
@@ -315,6 +316,18 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'>
+						<?php
+							$per_effvar = 0;
+							if(($tot_actual_hr != 0) && ($tot_estimated_hrs != 0)){
+								$per_effvar = ($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs;
+							}
+							if($per_effvar!=0)
+							echo round(($per_effvar * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td><b>Contribution YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
