@@ -280,7 +280,7 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
 								<?php
 								} else {
-									echo '';
+									echo '-';
 								}
 								?>
 							</td>
