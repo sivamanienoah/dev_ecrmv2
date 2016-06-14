@@ -1278,6 +1278,9 @@ class Dashboard extends crm_controller
 		$excludewhere = "project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
 		$this->db->where('practice_id !=', 0);
+		//for eads & eqad only
+		$deptwhere = "dept_id in ('10','11')";
+		$this->db->where($deptwhere);
 		if(!empty($start_date)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
 		}
