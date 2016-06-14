@@ -16,6 +16,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <?php
 $practice_arr = array();
 $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
+$tot_actual_hr = $tot_estimate_hr = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -273,6 +274,8 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $to
 									$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 								}
 								if(isset($eff_var) && ($eff_var != 0)) {
+									$tot_actual_hr += $projects['eff_var'][$parr]['total_actual_hrs'];
+									$tot_estimate_hr += $projects['eff_var'][$parr]['tot_estimate_hrs'];
 								?>
 								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
 								<?php
@@ -283,6 +286,18 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = $to
 							</td>
 						<?php } ?>
 					<?php } ?>
+					<td align='right'>
+						<?php 
+							$per_effvar = 0;
+							if(($tot_actual_hr != 0) && ($tot_estimate_hrs != 0)){
+								$per_effvar = ($tot_actual_hr/$tot_estimate_hrs);
+							}
+							if($per_effvar!=0)
+							echo round(($per_effvar * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td><b>Contribution for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
