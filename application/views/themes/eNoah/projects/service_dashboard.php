@@ -274,7 +274,7 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 									$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 								}
 								$tot_actual_hr += $projects['eff_var'][$parr]['total_actual_hrs'];
-								$tot_estimate_hr += $projects['eff_var'][$parr]['tot_estimate_hrs'];
+								echo $tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
 								if(isset($eff_var) && ($eff_var != 0)) {
 								?>
 								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
@@ -289,8 +289,8 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 					<td align='right'>
 						<?php
 							$per_effvar = 0;
-							if(($tot_actual_hr != 0) && ($tot_estimate_hrs != 0)){
-								$per_effvar = ($tot_actual_hr-$tot_estimate_hrs)/$tot_estimate_hrs;
+							if(($tot_actual_hr != 0) && ($tot_estimated_hrs != 0)){
+								$per_effvar = ($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs;
 							}
 							if($per_effvar!=0)
 							echo round(($per_effvar * 100), 0);
