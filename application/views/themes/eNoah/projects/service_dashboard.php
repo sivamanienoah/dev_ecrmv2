@@ -347,7 +347,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 										$arrow_val = 'up_arrow';
 									}
 								?>
-								<span class="<?php echo $arrow_val;?>"></span>
+								<span class="<?php echo "itser_".$arrow_val;?>"></span>
 							</td>
 						<?php } ?>
 					<?php } ?>
