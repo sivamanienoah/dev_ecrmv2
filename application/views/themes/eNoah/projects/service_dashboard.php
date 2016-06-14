@@ -21,10 +21,10 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
 
-			<a class="choice-box" onclick="advanced_filter();" >
+			<!--a class="choice-box" onclick="advanced_filter();" >
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
-			</a>
+			</a-->
 			
 			<div class="buttons export-to-excel">
 				<button type="button" class="positive" id="btnExportITServices">
@@ -32,22 +32,19 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 				</button>
 			</div>
 		</div>
-		<!--div id="ajax_loader" style="margin:20px;" align="center">
-			Loading Content.<br><img alt="wait" src="<?php #echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
-		</div-->
 		
-		<div id="filter_section">
+		<!--div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px; display:none;">
 				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<input type="hidden" name="<?php #echo $this->security->get_csrf_token_name(); ?>" value="<?php #echo $this->security->get_csrf_hash(); ?>" />
 					<div style="border: 1px solid #DCDCDC; width:65% !important;">
 						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
 								<td class="tblheadbg">BILLABLE MONTH</td>
-								<!--td class="tblheadbg">PROJECT STATUS</td>
-								<td class="tblheadbg">ENTITY</td-->
+								<td class="tblheadbg">PROJECT STATUS</td>
+								<td class="tblheadbg">ENTITY</td>
 							</tr>
 							<tr>
 								<td class="month-year">
@@ -58,31 +55,31 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 								<td class="">
 									<span>Billable Month</span> <input type="text" data-calendar="false" name="billable_month" id="billable_month" class="textfield" value="" />
 								</td>
-								<!--td class="">
+								<td class="">
 									<select title="Status" id="project_status" name="project_status[]" multiple="multiple">
 										<option value="1">Project In Progress</option>
 										<option value="2">All Projects</option>
-										<!--option value="3">Project Onhold</option-->
-										<!--option value="4">Inactive</option-->
-									<!--/select>
+										<option value="3">Project Onhold</option>
+										<option value="4">Inactive</option>
+									</select>
 								</td>								
 								<td class="">
 									<select title="Entity" id="entity" name="entity[]" multiple="multiple">
 										<?php #if(count($entity_data)>0 && !empty($entity_data)) { ?>
 										<?php #foreach($entity_data as $entityrec) {	?>
-												<option value="<?php #echo $entityrec->div_id; ?>"><?php #echo $entityrec->division_name;?></option>
-										<?php #} 
+												<option value="<?php #echo $entityrec->div_id; ?>"><?php #echo $entityrec->division_name; ?></option>
+										<?php #}
 										#}
 										?>
 									</select>
-								</td-->
+								</td>
 							</tr>
 							<tr align="right" >
 								<td colspan="2">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>
-										<img src = '<?php echo base_url().'assets/images/loading.gif'; ?>' width="54" />
+										<img src = '<?php #echo base_url().'assets/images/loading.gif'; ?>' width="54" />
 									</div>
 								</td>
 							</tr>
@@ -90,7 +87,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC =  0;
 					</div>
 				</form>
 			</div>
-		</div>
+		</div-->
 		
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
