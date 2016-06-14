@@ -290,7 +290,7 @@ $tot_actual_hr = $tot_estimate_hr = 0;
 						<?php echo $tot_actual_hr . " " . $tot_estimate_hrs;
 							$per_effvar = 0;
 							if(($tot_actual_hr != 0) && ($tot_estimate_hrs != 0)){
-								$per_effvar = ($tot_actual_hr/$tot_estimate_hrs);
+								$per_effvar = ($tot_actual_hr-$tot_estimate_hrs)/$tot_estimate_hrs;
 							}
 							if($per_effvar!=0)
 							echo round(($per_effvar * 100), 0);
