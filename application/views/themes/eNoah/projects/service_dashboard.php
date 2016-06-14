@@ -345,10 +345,16 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									if($dc_val >= 45){
 										$arrow_val = 'up_arrow';
 									}
+									if($dc_val!=0){
 									?>
 									<span class="<?php echo "itser_".$arrow_val;?>">
-										<?php echo ($dc_val!=0) ? round($dc_val, 0) : '-'; ?>
+										<?php echo round($dc_val, 0); ?>
 									</span>
+									<?php
+									} else {
+										echo '-';
+									}
+									?>
 							</td>
 						<?php } ?>
 					<?php } ?>
