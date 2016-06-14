@@ -1267,6 +1267,8 @@ class Dashboard extends crm_controller
 		$this->db->from($this->cfg['dbpref'].'timesheet_data');
 		$tswhere = "resoursetype is NOT NULL";
 		$this->db->where($tswhere);
+		$excludewhere = "project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
 		$this->db->where('practice_id !=', 0);
 		if(!empty($start_date)) {
 			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
@@ -1279,6 +1281,7 @@ class Dashboard extends crm_controller
 			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
 		$query2 = $this->db->get();
+		echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
 		// echo "<pre>"; print_r($timesheet_data); die;
