@@ -888,6 +888,7 @@ class Dashboard extends crm_controller
 			
 			$dids = implode(',',$ids);
 			$sids = implode(',',$skill_ids);
+			$where .= 'and status = "ACTIVE" ';
 			if(!empty($dids)) {
 				$where .= 'and v.department_id in ('.$dids.')';
 			}
