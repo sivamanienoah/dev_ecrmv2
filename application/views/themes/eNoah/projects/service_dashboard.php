@@ -306,7 +306,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 							<td align='right'>
 								<?php
 									$cm_dc_val = '';
-									$tot_cm_irvals += $projects['cm_irval'][$parr] ."ddd";
+									$tot_cm_irvals += $projects['cm_irval'][$parr];
 									$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost']; 
 									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
 										$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
