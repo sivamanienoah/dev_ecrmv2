@@ -206,7 +206,7 @@ $tot_Irval = $totCM_Irval = $totEV = $totDC = $total_projects = $total_rag = 0;
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 0); ?></a>
 									<?php
 									} else {
-										echo '';
+										echo '-';
 									}
 								?>
 							</td>
