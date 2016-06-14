@@ -1841,6 +1841,8 @@ class Dashboard extends crm_controller
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
 			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
 		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
