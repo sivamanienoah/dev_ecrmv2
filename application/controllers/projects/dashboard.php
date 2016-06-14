@@ -1295,7 +1295,7 @@ class Dashboard extends crm_controller
 		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
-		// echo "<pre>"; print_r($timesheet_data); die;
+		echo "<pre>"; print_r($timesheet_data); die;
 		
 		$resarr = array();
 
