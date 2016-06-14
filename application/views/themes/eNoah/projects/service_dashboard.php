@@ -134,7 +134,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+									echo $rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
 									if(isset($rag)) {
 										$total_rag += $rag;
 									?>
