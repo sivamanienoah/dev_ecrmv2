@@ -346,8 +346,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									if($dc_val >= 45){
 										$arrow_val = 'up_arrow';
 									}
-									echo $arrow_val;
 								?>
+								<span class="<?php echo $arrow_val;?>"></span>
 							</td>
 						<?php } ?>
 					<?php } ?>
