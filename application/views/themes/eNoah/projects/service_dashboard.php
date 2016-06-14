@@ -318,12 +318,12 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 					<?php } ?>
 					<td align='right'>
 						<?php
-							$per_effvar = 0;
-							if(($tot_actual_hr != 0) && ($tot_estimated_hrs != 0)){
-								$per_effvar = ($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs;
+							$per_cm_dc_val = 0;
+							if(($tot_cm_irvals != 0) && ($tot_cm_dc_tot != 0)){
+								$per_cm_dc_val = ($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals;
 							}
-							if($per_effvar!=0)
-							echo round(($per_effvar * 100), 0);
+							if($per_cm_dc_val!=0)
+							echo round(($per_cm_dc_val * 100), 0);
 							else
 							echo '-';
 						?>
