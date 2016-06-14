@@ -1151,6 +1151,7 @@ class Dashboard extends crm_controller
 		
 		//for current month EFFORTS
 		$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
+		echo $this->db->last_query(); die;
 		$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 		
 		//for effort variance
