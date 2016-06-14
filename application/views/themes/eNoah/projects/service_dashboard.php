@@ -334,14 +334,12 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = 0;
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php 
-									// echo $projects['irval'][$parr] . "-" .$projects['direct_cost'][$parr]['total_direct_cost'];
-									// ((total invoice raised - total direct cost)/total invoice raised)*100
+								<?php
 									$dc_val = '';
 									if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
 										$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 									}
-									echo round($dc_val, 0);
+									echo ($dc_val!=0) ? round($dc_val, 0) : 0;
 								?>
 							</td>
 						<?php } ?>
