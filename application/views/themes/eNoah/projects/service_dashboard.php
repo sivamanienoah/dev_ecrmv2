@@ -114,7 +114,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = $t
 							<td align='right'>
 								<?php
 									$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
-									if(isset($noProjects)) {
+									if($noProjects!='') {
 										$total_projects += $noProjects;
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
