@@ -1052,7 +1052,7 @@ class Dashboard extends crm_controller
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
 		// $pt_not_in_arr = array('4','8');
-		$this->db->where("l.project_type", 1);
+		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
