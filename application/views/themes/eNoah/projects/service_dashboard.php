@@ -126,7 +126,7 @@ $total_irval = $totCM_Irval = $totEV = $totDC = $totCM_DC = $total_projects = 0;
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($total_projects==0)?$total_projects:''; ?></td>
+					<td align='right'><?php echo "ood".($total_projects==0) ? $total_projects : ''; ?></td>
 				</tr>
 				<tr>
 					<td><b>Number of projects in Red</b></td>
