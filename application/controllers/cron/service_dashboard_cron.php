@@ -284,6 +284,7 @@ class Service_dashboard_cron extends crm_controller
 					
 					$this->db->where('practice_name', $parr);
 					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
+					$ins_array = array();
 			}
 		}
 		
