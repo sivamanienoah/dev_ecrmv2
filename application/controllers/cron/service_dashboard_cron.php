@@ -272,8 +272,10 @@ class Service_dashboard_cron extends crm_controller
 					$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 					$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
 					$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
-					$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
+					
+					$billval = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;
 					$ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
+					
 					$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 					$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 					
