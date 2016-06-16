@@ -152,15 +152,13 @@ class Service_dashboard_cron extends crm_controller
 		$query1 = $this->db->get();
 		$invoices_data = $query1->result_array();
 		
-		echo "<pre>"; print_r($invoices_data); die;
-
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 			}
 		}
-		
+		echo "<pre>"; print_r($projects['irval']); die;
 		//for current month ir
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
