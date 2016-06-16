@@ -274,6 +274,11 @@ class Service_dashboard_cron extends crm_controller
 	
 		return $fy;
 	}
+	
+	public function conver_currency($amount, $val) 
+	{
+		return round($amount*$val, 2);
+	}
 
 }
 ?>
