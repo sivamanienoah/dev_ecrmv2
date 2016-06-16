@@ -250,10 +250,6 @@ class Service_dashboard_cron extends crm_controller
 		
 		echo "<pre>"; print_r($projects); exit;
 		
-		/* if($this->input->post("filter")!="")
-		$this->load->view('projects/service_dashboard_grid', $data);
-		else
-		$this->load->view('projects/service_dashboard', $data); */
 		
 	}
 
