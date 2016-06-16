@@ -47,6 +47,10 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
 			$profitloss        = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
+			$proj_clr = 'red';
+			if(round($contributePercent, 0) >= 45){
+				$proj_clr = 'green';
+			}
 			
 			// $profitloss    = round($record['actual_worth_amt']-$total_cost);
 			// $profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
@@ -97,7 +101,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$milestone_content .= "<td>".$total_amount_inv_raised."</td>";
 					$milestone_content .= "<td>".$contributePercent." %</td>";
 					$milestone_content .= "<td>".$profitloss."</td>";
-					$milestone_content .= "<td>".$profitlossPercent." %</td>";
+					$milestone_content .= "<td><span class=".$proj_clr.">".$profitlossPercent." %</span></td>";
 				} else {
 					if(($td_cn == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_cn.">".$customer_name."</td>";
@@ -132,7 +136,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_pl.">".$profitloss."</td>";
 					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
-					$milestone_content .= "<td ".$td_plp.">".$profitlossPercent." %</td>";
+					$milestone_content .= "<td ".$td_plp."><span class=".$proj_clr.">".$profitlossPercent." %</span></td>";
 				}
 				$milestone_content .= "</tr>";
 				$full_total_mile_amount_inv_raised += $total_amount_inv_raised;
@@ -166,7 +170,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
 					$monthly_content .= "<td>".$contributePercent." %</td>";
 					$monthly_content .= "<td>".$profitloss."</td>";
-					$monthly_content .= "<td>".$profitlossPercent." %</td>";
+					$monthly_content .= "<td><span class=".$proj_clr.">".$profitlossPercent." %</span></td>";
 				} else {
 					if(($td_chk == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_cn.">".$customer_name."</td>";
@@ -199,7 +203,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_pl.">".$profitloss."</td>";
 					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_plp.">".$profitlossPercent." %</td>";
+					$monthly_content .= "<td ".$td_plp."><span class=".$proj_clr.">".$profitlossPercent." %</span></td>";
 				}
 				$monthly_content .= "</tr>";
 				$full_total_amount_inv_raised += $total_amount_inv_raised;
