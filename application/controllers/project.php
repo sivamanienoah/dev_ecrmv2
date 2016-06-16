@@ -4600,6 +4600,7 @@ HDOC;
 	function set_dashboard_fields()
 	{
 		$fields = array();
+		$fields['CN'] = 'Customer Name';
 		$fields['CP'] = 'Completion Percentage';
 		$fields['PT'] = 'Project Type';
 		$fields['RAG'] = 'RAG';
