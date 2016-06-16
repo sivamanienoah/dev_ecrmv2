@@ -1913,6 +1913,7 @@ class Dashboard extends crm_controller
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
 		$this->db->where_in("t.practice_id", $practice);
+		$this->db->where('t.resoursetype !=', 'NULL');
 
 		$query = $this->db->get();
 		
