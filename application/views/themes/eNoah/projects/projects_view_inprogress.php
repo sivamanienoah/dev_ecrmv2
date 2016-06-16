@@ -202,7 +202,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
 					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
-					$monthly_content .= "<td ".$td_contrib."><span class="">".$contributePercent." %</span></td>";
+					$monthly_content .= "<td ".$td_contrib."><span>".$contributePercent." %</span></td>";
 					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_pl.">".$profitloss."</td>";
 					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
