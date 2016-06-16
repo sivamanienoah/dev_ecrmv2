@@ -1613,6 +1613,12 @@ class Dashboard extends crm_controller
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
+			case 'dc_value':
+				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
+				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_id']   = $practice;
+				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
+			break;
 			case 'fixedbid':
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
@@ -1879,6 +1885,58 @@ class Dashboard extends crm_controller
 		$data['filter_sort_by']  = 'desc';
 		$data['filter_sort_val'] = 'hour';
 		$timesheet_db->close();
+		
+		return $data;
+	}
+	
+	/*
+	@method - get_billable_efforts()
+	@for drill down data
+	*/
+	public function get_direct_cost_val($practice, $month=false, $start_date=false, $end_date=false)
+	{
+
+		/* $contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
+		FROM crm_timesheet_data 
+		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')"; */
+	
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		if(!empty($month)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
+		}
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$this->db->where_in("t.practice_id", $practice);
+
+		$query = $this->db->get();
+		
+		$data['resdata'] 	   = $query->result();
+		
+		// get all projects from timesheet
+		$timesheet_db = $this->load->database("timesheet", true);
+		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+		if($proj_mas_qry->num_rows()>0){
+			$project_res = $proj_mas_qry->result();
+		}
+		$timesheet_db->close();
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			$project_master[$prec->project_code] = $prec->title;
+		}
+		$data['project_master']  = $project_master;
+		
+		$data['heading'] 	     = $practice;
+		$data['resource_type']   = "Billable";
+		$data['filter_sort_by']  = 'desc';
+		$data['filter_sort_val'] = 'cost';
+		
 		
 		return $data;
 	}
