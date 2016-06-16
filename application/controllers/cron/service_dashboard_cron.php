@@ -152,7 +152,7 @@ class Service_dashboard_cron extends crm_controller
 		$query1 = $this->db->get();
 		$invoices_data = $query1->result_array();
 		
-		echo "<pre>"; print_r($projects['invoices_data']); die;
+		echo "<pre>"; print_r($invoices_data); die;
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
