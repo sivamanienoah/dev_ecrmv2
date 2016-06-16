@@ -13,7 +13,7 @@ $td_chk = false;
 $td_style = '';
 if(!empty($db_fields) && count($db_fields)>0){
 	$td_chk = true;
-	$td_cp = $td_pt = $td_rag = $td_ph = $td_bh = $td_ih = $td_nbh = $td_tuh = $td_ev = $td_pv = $td_uc = $td_dc = $td_ir = $td_contrib = $td_pl = $td_plp = 'style="display: none;"';
+	$td_cn = $td_cp = $td_pt = $td_rag = $td_ph = $td_bh = $td_ih = $td_nbh = $td_tuh = $td_ev = $td_pv = $td_uc = $td_dc = $td_ir = $td_contrib = $td_pl = $td_plp = 'style="display: none;"';
 }
 ?>
 
@@ -26,6 +26,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 		$total_pl_amt = 0;
 		foreach($pjts_data as $record){
 			$title		   = character_limiter($record['lead_title'], 30);
+			$customer_name = character_limiter($record['customer_name'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
  			$project_type  = ($record['project_type']!=null) ? $record['project_type'] : '-';
 			$estimate_hour = (($record['estimate_hour'])) ? $record['estimate_hour'] : '-';
@@ -71,6 +72,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$monthly_content .= "</td>";
 			$monthly_content .= "<td><a href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 			if($td_chk == false) {
+				$monthly_content .= "<td>".$customer_name."</td>";
 				$monthly_content .= "<td>".$complete_stat."</td>";
 				$monthly_content .= "<td>".$project_type."</td>";
 				$monthly_content .= "<td>".$ragStatus."</td>";
@@ -85,36 +87,38 @@ if(!empty($db_fields) && count($db_fields)>0){
 				$monthly_content .= "<td>".$profitloss."</td>";
 				$monthly_content .= "<td>".$profitlossPercent." %</td>";
 			} else {
+				if(($td_cn == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
+				$milestone_content .= "<td ".$td_cn.">".$customer_name."</td>";
 				if(($td_chk == true) && in_array('CP', $db_fields)) { $td_cp = 'style="display: table-cell;"'; }
 				$monthly_content .= "<td ".$td_cp.">".$complete_stat."</td>";
 				if(($td_chk == true) && in_array('PT', $db_fields)) { $td_pt = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_pt.">".$project_type."</td>";
-					if(($td_chk == true) && in_array('RAG', $db_fields)) { $td_rag = 'style="display: table-cell;"'; }		
-					$monthly_content .= "<td ".$td_rag.">".$ragStatus."</td>";
-					if(($td_chk == true) && in_array('PH', $db_fields)) { $td_ph = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_ph.">".$estimate_hour."</td>";
-					if(($td_chk == true) && in_array('BH', $db_fields)) { $td_bh = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_bh.">".$bill_hr."</td>";
-					if(($td_chk == true) && in_array('IH', $db_fields)) { $td_ih = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_ih.">".$int_hr."</td>";
-					if(($td_chk == true) && in_array('NBH', $db_fields)) { $td_nbh = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_nbh.">".$nbil_hr."</td>";
-					if(($td_chk == true) && in_array('TUH', $db_fields)) { $td_tuh = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_tuh.">".$total_hours."</td>";
-					if(($td_chk == true) && in_array('PV', $db_fields)) { $td_pv = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";
-					if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_uc.">".$total_cost."</td>";
-					if(($td_chk == true) && in_array('DC', $db_fields)) { $td_dc = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_dc.">".$total_dc_hours."</td>";
-					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
-					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
-					$monthly_content .= "<td ".$td_contrib.">".$contributePercent." %</td>";
-					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_pl.">".$profitloss."</td>";
-					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_plp.">".$profitlossPercent." %</td>";
+				$monthly_content .= "<td ".$td_pt.">".$project_type."</td>";
+				if(($td_chk == true) && in_array('RAG', $db_fields)) { $td_rag = 'style="display: table-cell;"'; }		
+				$monthly_content .= "<td ".$td_rag.">".$ragStatus."</td>";
+				if(($td_chk == true) && in_array('PH', $db_fields)) { $td_ph = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_ph.">".$estimate_hour."</td>";
+				if(($td_chk == true) && in_array('BH', $db_fields)) { $td_bh = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_bh.">".$bill_hr."</td>";
+				if(($td_chk == true) && in_array('IH', $db_fields)) { $td_ih = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_ih.">".$int_hr."</td>";
+				if(($td_chk == true) && in_array('NBH', $db_fields)) { $td_nbh = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_nbh.">".$nbil_hr."</td>";
+				if(($td_chk == true) && in_array('TUH', $db_fields)) { $td_tuh = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_tuh.">".$total_hours."</td>";
+				if(($td_chk == true) && in_array('PV', $db_fields)) { $td_pv = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";
+				if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_uc.">".$total_cost."</td>";
+				if(($td_chk == true) && in_array('DC', $db_fields)) { $td_dc = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_dc.">".$total_dc_hours."</td>";
+				if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
+				if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
+				$monthly_content .= "<td ".$td_contrib.">".$contributePercent." %</td>";
+				if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_pl.">".$profitloss."</td>";
+				if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
+				$monthly_content .= "<td ".$td_plp.">".$profitlossPercent." %</td>";
 			}
 			$monthly_content .= "</tr>";
 				$full_total_amount_inv_raised += $total_amount_inv_raised;
@@ -132,6 +136,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th>Action</th>
 				<th>Title</th>
 				<?php if($td_chk == false) { ?>
+					<th title="Customer Name">CN</th>
 					<th title="Completion Percentage">CP%</th>
 					<th title="Project Type">PT</th>				
 					<th title="RAG Status">RAG</th>
@@ -148,6 +153,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					<th title="P&L">P&L </th>
 					<th title="P&L %">P&L %</th>
 				<?php } else { ?>
+					<th <?php echo $td_cn; ?> title="Customer Name">CN</th>
 					<th <?php echo $td_cp; ?> title="Completion Percentage">CP%</th>
 					<th <?php echo $td_pt; ?> title="Project Type">PT</th>				
 					<th <?php echo $td_rag; ?> title="RAG Status">RAG</th>

@@ -234,6 +234,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 			<th>Action</th>
 			<th>Title</th>
 			<?php if($td_chk == false) { ?>
+				<th title="Customer Name">CN</th>
 				<th title="Completion Percentage">CP % </th>
 				<th title="Project Type">PT</th>			
 				<th title="RAG Status">RAG</th>
@@ -251,6 +252,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th title="P&L">P&L </th>
 				<th title="P&L %">P&L % </th>
 			<?php } else { ?>
+				<th <?php echo $td_cn; ?> title="Customer Name">CN</th>
 				<th <?php echo $td_cp; ?> title="Completion Percentage">CP % </th>
 				<th <?php echo $td_pt; ?> title="Project Type">PT</th>			
 				<th <?php echo $td_rag; ?> title="RAG Status">RAG</th>
