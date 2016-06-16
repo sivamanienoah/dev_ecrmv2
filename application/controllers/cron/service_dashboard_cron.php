@@ -251,7 +251,7 @@ class Service_dashboard_cron extends crm_controller
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects'] = $projects;
 		
-		echo "<pre>"; print_r($data['projects']); exit;
+		echo "<pre>"; print_r($data['practice_data']); exit;
 	}
 	
 	/*
