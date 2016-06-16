@@ -29,6 +29,9 @@ class Service_dashboard_cron extends crm_controller
         parent::__construct();
 		$this->load->library('email');
 		$this->load->helper('text');
+		$this->load->helper('custom_helper');
+		$this->load->helper('url');
+		$this->load->helper('custom');
     }
 	
 	public function index() 
