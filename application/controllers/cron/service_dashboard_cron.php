@@ -264,7 +264,7 @@ class Service_dashboard_cron extends crm_controller
 		
 		if(!empty($practice_array)){
 			foreach($practice_array as $parr){
-				$ins_array[$parr] = $projects['cm_irval'][$parr];
+				$ins_array['cm_irval'][$parr] = $projects['cm_irval'][$parr];
 			}
 		}
 		
