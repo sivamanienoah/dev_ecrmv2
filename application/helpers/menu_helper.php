@@ -183,7 +183,7 @@ if ( ! function_exists('getSubtreeULMenu'))
 		$cfg = $ci->config->item('crm');
 		$userses = $ci->session->userdata('logged_in_user');
 		if( $subtreeRoot['id']==110 && in_array($userses['role_id'], array('8', '9', '11', '13'))){
-			$subtreeRoot['links_to'] = 'project';
+			$subtreeRoot['links_to'] = 'projects/dashboard/list';
 		}
 		$html ='';		 
 			if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
