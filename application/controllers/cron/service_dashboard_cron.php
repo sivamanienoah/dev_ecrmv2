@@ -279,6 +279,76 @@ class Service_dashboard_cron extends crm_controller
 	{
 		return round($amount*$val, 2);
 	}
+	
+	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
+	{
+		// echo "<pre>"; print_r($practice_arr);
+		$prs = array();
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$pract = $pquery->result();
+		if(!empty($pract) && count($pract)>0){
+			foreach($pract as $pr){
+				$prs[] = $pr->id;
+			}
+		}
+		
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code');
+		$this->db->from($this->cfg['dbpref'].'timesheet_data');
+		$tswhere = "resoursetype is NOT NULL";
+		$this->db->where($tswhere);
+		$excludewhere = "project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$this->db->where('practice_id !=', 0);
+		$this->db->where_not_in("practice_id", 6);
+		//for eads & eqad only
+		$deptwhere = "dept_id in ('10','11')";
+		$this->db->where($deptwhere);
+		if(!empty($start_date)) {
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($start_date)));
+		}
+		if(!empty($end_date)) {
+			$this->db->where("DATE(start_time) <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		if(!empty($month)) {
+			$this->db->where("DATE(start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(end_time) <= ", date('Y-m-t', strtotime($month)));
+		}
+		$query2 = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$timesheet_data = $query2->result();
+		
+		// echo "<pre>"; print_r($timesheet_data); die;
+		
+		$resarr = array();
+
+		if(count($timesheet_data)>0) {
+			foreach($timesheet_data as $row) {
+				// echo $row->practice_id . " " . $row->resoursetype; exit;
+				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
+				} else {
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
+					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+				}
+				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
+				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+				if(!empty($start_date) && !empty($end_date)) {
+					if(!in_array($row->project_code, $resarr['project_code'])){
+						$resarr['project_code'][] = $row->project_code;
+					}
+				}
+			}
+		}
+		/* if(!empty($start_date) && !empty($end_date)) {
+			echo "<pre>"; print_r($resarr); die;
+		} */
+		return $resarr;
+	}
 
 }
 ?>
