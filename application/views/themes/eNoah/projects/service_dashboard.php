@@ -205,10 +205,13 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									if( isset($projects['direct_cost'][$parr]['total_direct_cost']) ) {
 										$dc_value = $projects['direct_cost'][$parr]['total_direct_cost'];
 									}
-									if($dc_value!="")
-									echo round($dc_value, 0);
-									else
-									echo '-';
+									if($dc_value!="") {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'dc_value'); return false;"><?php echo round($dc_value, 0); ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
 								?>
 							</td>
 						<?php } ?>
@@ -229,9 +232,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 							<td align='right'>
 								<?php
 									$cm_billval = '';
-									// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
 									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
-									if(isset($cm_billval) && ($cm_billval != 0)) {
+									if(($cm_billval!="") && ($cm_billval != 0)) {
 										$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 										$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
 									?>					
