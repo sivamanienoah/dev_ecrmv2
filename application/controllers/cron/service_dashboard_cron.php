@@ -269,8 +269,8 @@ class Service_dashboard_cron extends crm_controller
 				if($projects['cm_irval'][$parr] != ''){
 					$this->db->where('practice_name', $parr);
 					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $projects['cm_irval'][$parr]);
-				}				
-				echo $this->db->last_query(); die;
+					echo $this->db->last_query();
+				}
 			}
 		}
 		
