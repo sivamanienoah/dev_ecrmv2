@@ -32,6 +32,14 @@ class Service_dashboard_cron extends crm_controller
 		$this->load->helper('custom_helper');
 		$this->load->helper('url');
 		$this->load->helper('custom');
+		if (get_default_currency()) {
+			$this->default_currency = get_default_currency();
+			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
+			$this->default_cur_name = $this->default_currency['expect_worth_name'];
+		} else {
+			$this->default_cur_id   = '1';
+			$this->default_cur_name = 'USD';
+		}
     }
 	
 	public function index() 
