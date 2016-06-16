@@ -3376,7 +3376,7 @@ HDOC;
 	{
 		$rates = $this->get_currency_rates();
 		
-		// echo "<pre>"; print_r($rates); exit;
+		// echo "<pre>"; print_r($records); exit;
 		 
 		$data['project_record'] = array();
 		$i = 0;
@@ -3441,11 +3441,21 @@ HDOC;
 				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
+				// for company name
+				$company = $rec['company'];
+				if($rec['cfname']!=''){
+					$company .= ' -'.$rec['cfname'];
+				}
+				if($rec['clname']!=''){
+					$company .= ' '.$rec['clname'];
+				}
+				
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
 				$data['project_record'][$i]['invoice_no'] 		= $rec['invoice_no'];
 				$data['project_record'][$i]['division'] 		= $rec['division'];
 				$data['project_record'][$i]['lead_title']		= $rec['lead_title'];
+				$data['project_record'][$i]['customer_name']	= $company;
 				$data['project_record'][$i]['actual_worth_amt'] = number_format($amt_converted, 2, '.', '');
 				$data['project_record'][$i]['lead_stage']		= $rec['lead_stage'];
 				$data['project_record'][$i]['pjt_id']			= $rec['pjt_id'];
