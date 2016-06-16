@@ -126,7 +126,9 @@ class Project_model extends crm_model
 			$this->db->select('lead_id');
 			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
 			$this->db->where("lead_status", 4);
-			$this->db->where("pjt_status", 1);
+			if (empty($stage) && $stage=='null') {
+				$this->db->where("pjt_status", 1);
+			}
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
 			$data['jobids1'] = $rowsJobs->result_array();
 
@@ -222,7 +224,7 @@ class Project_model extends crm_model
 		$this->db->order_by("j.lead_id", "desc");
 		// $this->db->limit(5);
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();
 		//echo '<pre>';print_r($pjts);exit;
 		return $pjts;
