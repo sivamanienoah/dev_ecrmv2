@@ -270,7 +270,7 @@ class Service_dashboard_cron extends crm_controller
 					$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 					$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
 					$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
-					$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
+					echo $cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour']; die;
 					$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
 					$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
 					$ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
