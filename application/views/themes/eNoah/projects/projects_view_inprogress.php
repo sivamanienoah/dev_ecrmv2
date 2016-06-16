@@ -48,12 +48,12 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$profitloss        = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
 			$prof_clr = 'orange-clr';
-			if((round($profitlossPercent, 0) <= 0) && (round($profitlossPercent, 0) >= 44)){
+			/* if((round($profitlossPercent, 0) <= 0) && (round($profitlossPercent, 0) >= 44)){
 				$prof_clr = 'red-clr';
 			}
 			if(round($profitlossPercent, 0) >= 45){
 				$prof_clr = 'green-clr';
-			}
+			} */
 			
 			// $profitloss    = round($record['actual_worth_amt']-$total_cost);
 			// $profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
