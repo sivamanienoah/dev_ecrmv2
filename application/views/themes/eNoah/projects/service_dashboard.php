@@ -264,6 +264,35 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					</td>
 				</tr>
 				<tr>
+					<td><b>Contribution YTD (USD)- <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$dc_value = '';
+									$tot_dc_values += $projects['irval'][$parr];
+									$tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
+									if( isset($projects['direct_cost'][$parr]['total_direct_cost']) ) {
+										$dc_value = $projects['direct_cost'][$parr]['total_direct_cost'];
+									}
+									if($dc_value!="")
+									echo round(($dc_value * 100), 0);
+									else
+									echo '-';
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
+						<?php
+							if($tot_dc_totals!=0)
+							echo round(($tot_dc_totals * 100), 0);
+							else
+							echo '-';
+						?>
+					</td>
+				</tr>
+				<tr>
 					<td><b>Effort Variance (%) - <span class="highlight_info">For Fixed Bid projects</span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
