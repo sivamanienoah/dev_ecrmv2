@@ -33,7 +33,6 @@ class Service_dashboard_cron extends crm_controller
 	
 	public function index() 
 	{
-		echo "I am here"; die;
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 		
 		$data  				  = array();
@@ -47,37 +46,14 @@ class Service_dashboard_cron extends crm_controller
 		
 		//default billable_month
 		$month = date('Y-m-01 00:00:00');
+		$start_date = date("Y-m-01",strtotime($start_date));
+		$end_date = date("Y-m-t", strtotime($end_date));
 		
-		if($this->input->post("month_year_from_date")) {
-			$start_date = $this->input->post("month_year_from_date");
-			$start_date = date("Y-m-01",strtotime($start_date));
-		}
-		if($this->input->post("month_year_to_date")) {
-			$end_date = $this->input->post("month_year_to_date");
-			$end_date = date("Y-m-t", strtotime($end_date));
-			$month    = date("Y-m-01 00:00:00", strtotime($end_date));
-		}
-		if($this->input->post("billable_month")) {
-			$bill_month = $this->input->post("billable_month");
-			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
-		}
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 
 		$project_status = 1;
-		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
-			$project_status = @explode(',', $this->input->post("project_status"));
-			if(count($project_status) == 2){
-				$project_status = '';
-			} else {
-				$project_status = $this->input->post("project_status");
-			}
-		}
-		$division = '';
-		if($this->input->post("entity") && ($this->input->post("entity")!='null')) {
-			$division = @explode(',', $this->input->post("entity"));
-		}
 		
 		$project_code = array();
 		$projects 	  = array();
@@ -271,6 +247,7 @@ class Service_dashboard_cron extends crm_controller
 		// echo "<pre>"; print_r($cm_directcost); die;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects'] = $projects;
+		
 		echo "<pre>"; print_r($projects); exit;
 		
 		/* if($this->input->post("filter")!="")
