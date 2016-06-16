@@ -44,9 +44,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 			//$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
 			$profitloss    = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);	
-			$proj_clr = 'red';
+			$proj_clr = 'red-clr';
 			if(round($contributePercent, 0) >= 45){
-				$proj_clr = 'green';
+				$proj_clr = 'green-clr';
 			}			
 			
 			switch ($record['rag_status']) {
