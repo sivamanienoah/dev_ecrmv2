@@ -260,6 +260,7 @@ if ( ! function_exists('formSubMenuList'))
 				if($dms_res>0){
 					$dms_access = 1;
 				}
+				// echo "<pre>"; print_r($huserdata['role_id']); die;
 
 				$ci->load->database(); 
 				$ci->db->select('vm.masterid,vm.master_parent_id,vm.master_name,vm.controller_name,vm.links_to  from '.$cfg['dbpref'].'masters as vm where vm.master_parent_id ='.$masterId .' and vm.inactive=0 order by vm.master_parent_id desc,vm.order_id asc');
@@ -271,9 +272,9 @@ if ( ! function_exists('formSubMenuList'))
 					if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
 						continue;
 					}
-					/* if($submenu['masterid']==149){
+					if($submenu['masterid']==154 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
 						continue;
-					} */
+					}
 					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";	
 				}
 				/* if($masterId==92){
