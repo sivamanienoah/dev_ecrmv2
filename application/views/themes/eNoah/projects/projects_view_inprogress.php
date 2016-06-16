@@ -48,7 +48,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$profitloss        = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
 			$prof_clr = 'orange-clr';
-			if((round($profitlossPercent, 0) <= 0) && (round($profitlossPercent, 0) >= 44)){
+			if((round($profitlossPercent, 0)>=0) && (round($profitlossPercent, 0)<=44)){
 				$prof_clr = 'red-clr';
 			}
 			if(round($profitlossPercent, 0) >= 45){
