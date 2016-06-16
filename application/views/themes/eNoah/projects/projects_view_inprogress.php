@@ -53,6 +53,13 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$prof_clr = 'red-clr';
 			if(round($profitlossPercent, 0) >= 45)
 			$prof_clr = 'green-clr';
+		
+			if( round($contributePercent, 0) <= 0 )
+			$contri_clr = 'orange-clr';
+			if((round($contributePercent, 0)>=1) && (round($contributePercent, 0)<=44))
+			$contri_clr = 'red-clr';
+			if(round($contributePercent, 0) >= 45)
+			$contri_clr = 'green-clr';
 			
 			
 			// $profitloss    = round($record['actual_worth_amt']-$total_cost);
@@ -135,7 +142,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
 					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
-					$milestone_content .= "<td ".$td_contrib."><span>".$contributePercent." %</span></td>";
+					$milestone_content .= "<td ".$td_contrib."><span class=".$contri_clr.">".$contributePercent." %</span></td>";
 					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_pl.">".$profitloss."</td>";
 					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
@@ -171,7 +178,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$monthly_content .= "<td>".$total_cost."</td>";
 					$monthly_content .= "<td>".$total_dc_hours."</td>";
 					$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
-					$monthly_content .= "<td><span>".$contributePercent." %</span></td>";
+					$monthly_content .= "<td><span class=".$contri_clr.">".$contributePercent." %</span></td>";
 					$monthly_content .= "<td>".$profitloss."</td>";
 					$monthly_content .= "<td><span class=".$prof_clr.">".$profitlossPercent." %</span></td>";
 				} else {
@@ -202,7 +209,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
 					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
-					$monthly_content .= "<td ".$td_contrib."><span>".$contributePercent." %</span></td>";
+					$monthly_content .= "<td ".$td_contrib."><span class=".$contri_clr.">".$contributePercent." %</span></td>";
 					if(($td_chk == true) && in_array('P&L', $db_fields)) { $td_pl = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_pl.">".$profitloss."</td>";
 					if(($td_chk == true) && in_array('P&L %', $db_fields)) { $td_plp = 'style="display: table-cell;"'; }
