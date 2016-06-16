@@ -42,8 +42,6 @@ class Service_dashboard_cron extends crm_controller
 		
 		$bk_rates = get_book_keeping_rates();
 		
-		echo "<pre>"; print_r($bk_rates); die;
-		
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
@@ -153,6 +151,8 @@ class Service_dashboard_cron extends crm_controller
 		
 		$query1 = $this->db->get();
 		$invoices_data = $query1->result_array();
+		
+		echo "<pre>"; print_r($projects['invoices_data']); die;
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
