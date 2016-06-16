@@ -166,7 +166,7 @@ class Service_dashboard_cron extends crm_controller
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 			}
 		}
-		echo "<pre>"; print_r($projects['irval']); die;
+		
 		//for current month ir
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
