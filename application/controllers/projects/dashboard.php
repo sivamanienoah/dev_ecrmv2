@@ -10,6 +10,7 @@ class Dashboard extends crm_controller
         $this->load->helper('custom');
         $this->load->library('validation');
 		$this->load->helper('custom_helper');
+		$this->load->helper('url'); 
 		$this->load->model('projects/dashboard_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
@@ -936,6 +937,9 @@ class Dashboard extends crm_controller
 	
 	public function service_dashboard()
 	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+			redirect('project'); 
+		}
 		$data  				  = array();
 		$data['page_heading'] = "IT Services Dashboard";
 		
