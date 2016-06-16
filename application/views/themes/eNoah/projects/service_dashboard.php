@@ -106,7 +106,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					</thead>
 				</tr>
 				<?php
-					// echo "<pre>"; print_r($practice_id_arr); echo "</pre>"; exit;
+					echo "<pre>"; print_r($practice_arr); echo "</pre>"; exit;
 				?>
 				<tr>
 					<td><b>Number of Projects currently running</b></td>
@@ -194,7 +194,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<td align='right'><?php echo ($tot_Irval!=0) ? $tot_Irval : '-'; ?></td>
 				</tr>
 				<tr>
-					<td><b>Contribution YTD (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<td><b>YTD Utilization Cost (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
