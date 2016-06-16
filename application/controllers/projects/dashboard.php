@@ -938,7 +938,7 @@ class Dashboard extends crm_controller
 	public function service_dashboard()
 	{
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
-			redirect('project'); 
+			redirect('project');
 		}
 		$data  				  = array();
 		$data['page_heading'] = "IT Services Dashboard";
