@@ -19,7 +19,7 @@ Reviewed By     : Subbiah.S
  * @author 		eNoah
  * @Controller
  */
-
+ini_set('display_errors', 1);
 class Service_dashboard_cron extends crm_controller 
 {
 	public $userdata;
