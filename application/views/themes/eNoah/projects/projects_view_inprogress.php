@@ -19,7 +19,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 <?php
 	$milestone_content = '';
 	$monthly_content   = '';
-	
+	echo "<pre>"; print_r($pjts_data); die;
 	if (is_array($pjts_data) && count($pjts_data) > 0) {
 		$total_pv_amt = 0;
 		$total_uc_amt = 0;
