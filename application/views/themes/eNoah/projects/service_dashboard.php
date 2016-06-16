@@ -16,7 +16,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <?php
 $practice_arr = array();
 $tot_Irval = $totCM_Irval = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
-$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
+$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = $tot_dc_values = $tot_dc_totals = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
