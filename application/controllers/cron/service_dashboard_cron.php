@@ -94,7 +94,7 @@ class Service_dashboard_cron extends crm_controller
 		if(!empty($pres) && count($pres)>0){
 			foreach($pres as $prow) {
 				$practice_arr[$prow->id] = $prow->practices;
-				$practice_array[] = $prac->practices;
+				$practice_array[] = $prow->practices;
 			}
 		}
 		
