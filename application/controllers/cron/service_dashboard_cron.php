@@ -71,17 +71,17 @@ class Service_dashboard_cron extends crm_controller
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
 		
-		$this->db->select('div_id, division_name, base_currency');
+		/* $this->db->select('div_id, division_name, base_currency');
 		$this->db->from($this->cfg['dbpref']. 'sales_divisions');
 		$equery = $this->db->get();
 		$eres = $equery->result();
-		$data['entity_data'] = $equery->result();
+		$data['entity_data'] = $equery->result(); 
 		
 		if(!empty($eres) && count($eres)>0){
 			foreach($eres as $erow) {
 				$base_cur_arr[$erow->div_id] = $erow->base_currency;
 			}
-		}
+		}*/
 		
 		if(!empty($pres) && count($pres)>0){
 			foreach($pres as $prow) {
