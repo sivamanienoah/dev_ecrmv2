@@ -3444,7 +3444,7 @@ HDOC;
 				// for company name
 				$company = $rec['company'];
 				if($rec['cfname']!=''){
-					$company .= ' -'.$rec['cfname'];
+					$company .= ' - '.$rec['cfname'];
 				}
 				if($rec['clname']!=''){
 					$company .= ' '.$rec['clname'];
