@@ -2829,5 +2829,6 @@ form#edit-folder-permissions { overflow:visible !important; }
 /****1-6-2016****/
 .itser_down_arrow{background:url("../img/arrowdown.png") no-repeat left center;padding: 0 0 0 20px; color: red;}
 .itser_up_arrow{background:url("../img/arrowup.png") no-repeat left center;padding: 0 0 0 20px; color: green;}
-.green-clr { color:#2bd066; font-weight:bold; }
-.red-clr { color:#f00; font-weight:bold; }
+.green-clr { color:#468847; font-weight:bold; }
+.red-clr { color:#c21706; font-weight:bold; }
+.orange-clr { color:#ff7e00; font-weight:bold; }
