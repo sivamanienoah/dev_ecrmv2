@@ -266,10 +266,9 @@ class Service_dashboard_cron extends crm_controller
 		
 		if(!empty($practice_array)){
 			foreach($practice_array as $parr){
-				// $this->db->where('practice_name', $parr);
-				// $this->db->update($this->cfg['dbpref'] . 'services_dashboard', $projects['cm_irval'][$parr]);
-				echo $projects['cm_irval'][$parr];
-				// echo $this->db->last_query();
+				$this->db->where('practice_name', $parr);
+				$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $projects['cm_irval'][$parr]);
+				echo $this->db->last_query();
 			}
 		}
 		
