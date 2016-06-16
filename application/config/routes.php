@@ -43,6 +43,7 @@ $route['default_controller'] = "dashboard";
 $route['scaffolding_trigger'] = "";
 
 $route['projects/dashboard/list'] = "project";
+$route['projects/dashboard/utilization_metrics'] = "projects/dashboard";
 
 // $route['invoice'] = "welcome/quotation/approved";
 // $route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
