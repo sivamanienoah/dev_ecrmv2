@@ -206,7 +206,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 										$dc_value = $projects['direct_cost'][$parr]['total_direct_cost'];
 									}
 									if($dc_value!="")
-									echo round(($dc_value * 100), 0);
+									echo round($dc_value, 0);
 									else
 									echo '-';
 								?>
@@ -216,7 +216,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<td align='right'>
 						<?php
 							if($tot_dc_totals!=0)
-							echo round(($tot_dc_totals * 100), 0);
+							echo round($tot_dc_totals, 0);
 							else
 							echo '-';
 						?>
