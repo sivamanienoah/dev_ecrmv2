@@ -260,9 +260,16 @@ class Service_dashboard_cron extends crm_controller
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects'] = $projects;
 		
+		$ins_array = array();
+		
+		if(!empty($practice_array)){
+			foreach($practice_array as $parr){
+				$ins_array[$parr] = $projects['cm_irval'][$parr];
+			}
+		}
 		
 		
-		echo "<pre>"; print_r($practice_array); exit;
+		echo "<pre>"; print_r($ins_array); exit;
 	}
 	
 	/*
