@@ -252,8 +252,27 @@ class Service_dashboard_cron extends crm_controller
 		$data['projects'] = $projects;
 		
 		echo "<pre>"; print_r($projects); exit;
-		
-		
+	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
+	{
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate){
+			$fy = intval($inputyear);
+		}else{
+			$fy = intval(intval($inputyear) + 1);
+		}
+	
+		return $fy;
 	}
 
 }
