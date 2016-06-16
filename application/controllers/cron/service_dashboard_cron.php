@@ -160,8 +160,6 @@ class Service_dashboard_cron extends crm_controller
 		$query1 = $this->db->get();
 		$invoices_data = $query1->result_array();
 		
-		echo "<pre>"; print_r($invoices_data); die;
-		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
