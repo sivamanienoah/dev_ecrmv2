@@ -33,6 +33,7 @@ class Service_dashboard_cron extends crm_controller
 	
 	public function index() 
 	{
+		echo "I am here"; die;
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 		
 		$data  				  = array();
