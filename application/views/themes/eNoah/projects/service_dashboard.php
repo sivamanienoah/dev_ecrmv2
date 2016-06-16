@@ -376,10 +376,14 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									}
 									if($dc_val!=0){
 									?>
-									<span class="<?php echo "itser_".$arrow_val;?>">
-										<?php echo round($dc_val, 0); ?>
-									</span>
-									<?php
+									<?php if($parr!='Testing') { ?>
+										<span class="<?php echo "itser_".$arrow_val;?>">
+											<?php echo round($dc_val, 0); ?>
+										</span>
+									<?php } 
+										else { 
+											echo '-'; 
+										} 
 									} else {
 										echo '-';
 									}
