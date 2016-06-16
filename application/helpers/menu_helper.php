@@ -136,11 +136,13 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 		} else {
 		//$ul .='<ul>';
 		}
+		
 		foreach ($trees as $root) {
+			// echo "<pre>"; print_r($root); exit;
 		 if($searchSubMenu==NULL){
 			  $ul.= '<li style="list-style:none">';
 			  }
-			   if($searchSubMenu==NULL){
+			 if($searchSubMenu==NULL){
 			 $ul .=  getSubtreeULMenu($root,0,$searchSubMenu);
 			 }else{
 			  
@@ -165,7 +167,7 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 		if($huserdata['userid']==59 || $dms_access==1) {
 			$ul.= '<li style="list-style:none"><a href="dms">Collateral</a></li>';
 		} */
-		// echo "<pre>"; print_r($huserdata); exit;
+		
 		if($searchSubMenu==NULL){
 			$ul.= '</ul>';
 		}	
@@ -176,7 +178,13 @@ function formMenuList($menu_itemsmod,$showCheckBox=NULL,$searchSubMenu=NULL,$par
 if ( ! function_exists('getSubtreeULMenu'))
 {	
 	function getSubtreeULMenu(array $subtreeRoot, $level = 0, $searchSubMenu=NULL)
-	{	
+	{
+		$ci  = &get_instance();
+		$cfg = $ci->config->item('crm');
+		$userses = $ci->session->userdata('logged_in_user');
+		if( $subtreeRoot['id']==110 && in_array($userses['role_id'], array('8', '9', '11', '13'))){
+			$subtreeRoot['links_to'] = 'project';
+		}
 		$html ='';		 
 			if(isset($subtreeRoot['name']) && $subtreeRoot['view']==1) {
 				$qurystring = explode('/',$_SERVER['REQUEST_URI']);
