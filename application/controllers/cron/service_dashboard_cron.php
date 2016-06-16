@@ -265,12 +265,13 @@ class Service_dashboard_cron extends crm_controller
 		$ins_array = array();
 		
 		if(!empty($practice_array)){
-			foreach($practice_array as $parr){
-				if($projects['cm_irval'][$parr] != ''){
+			foreach($practice_array as $parr){					
+					$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
+					$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
+					$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+					
 					$this->db->where('practice_name', $parr);
-					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', array('billing_month'=>$projects['cm_irval'][$parr]));
-					echo $this->db->last_query();
-				}
+					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
 			}
 		}
 		
