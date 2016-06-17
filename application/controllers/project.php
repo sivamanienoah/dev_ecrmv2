@@ -682,7 +682,7 @@ class Project extends crm_controller {
 			get the bug summary from the mantis bug table
 			**/
 			
-			$support_db = $this->load->database("support",true);
+			/* $support_db = $this->load->database("support",true);
 		
 			$data['bug_status'] = '';
 			$data['bug_severity'] = '';
@@ -706,7 +706,7 @@ class Project extends crm_controller {
 								$pjtIds[] = $cp->child_id;
 							}
 						} */
-					}
+					/*}
 					$pjtIds = array_unique($pjtIds);
 					//echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
@@ -758,6 +758,114 @@ class Project extends crm_controller {
 					if($qry_category->num_rows()>0){
 						$data['bug_category'] = $qry_category->result_array();
 					}
+				}
+				$support_db->close();	
+			} */
+			
+			/**
+			get the bug summary from the redmine
+			**/
+			$support_db = $this->load->database("redmine",true);
+		
+			$data['bug_status'] = '';
+			$data['bug_severity'] = '';
+			$data['bug_category'] = '';
+			if($support_db){
+				$support_db->select('id,name,parent_id,identifier');
+				$qry = $support_db->get_where($support_db->dbprefix("projects"),array("identifier" => $data['quote_data']['pjt_id']));
+				if($qry->num_rows()>0){
+					$res = $qry->result();
+					$pjtIds = array();					
+					$pjtNames = array();					
+					$pnames_arr = array();					
+					foreach($res as $r){
+						$pjtIds[] = $r->id;
+						//get sub projects as well.
+/* 						$support_db->select("child_id");
+						$childProjects = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("parent_id" => $r->id));
+						if($childProjects->num_rows()>0){
+							$cPresult = $childProjects->result();
+							foreach($cPresult as $cp){
+								$pjtIds[] = $cp->child_id;
+							}
+						} */
+					}
+					$pjtIds = array_unique($pjtIds);
+					//echo '<pre>';print_r($pjtIds);exit;
+					$AllPjtIds = implode(",",$pjtIds);
+					
+					$data['AllPjtIds'] = $pjtIds;
+					$parent_proj =  $pjtIds[0];
+					$parent_proj =  $pjtIds[0];
+					
+					/* $check_child = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("child_id" => $parent_proj));
+					if($check_child->num_rows()>0){
+						$check_child_row = $check_child->row();
+						$parent_proj = $check_child_row->parent_id.';'.$parent_proj;
+					} */
+					
+					$data['AllPjtIds_summary'] = $parent_proj;
+					
+					// get project wise report
+					$support_db->select("id,name");
+					$support_db->where_in("id",$pjtIds);
+					$pNames = $support_db->get($support_db->dbprefix("projects"));
+					if($pNames->num_rows()>0){
+						$pNamesRes = $pNames->result();
+						foreach($pNamesRes as $pnames){
+							$pnames_arr[$pnames->id] = $pnames->name;
+						}
+						$data['project_names'] = $pnames_arr;
+					}
+					
+					
+					$qry_project = $support_db->query("SELECT project_id, status_id, COUNT( status_id ) AS bugcount FROM ".$support_db->dbprefix("issues")." where project_id in ($AllPjtIds) GROUP BY project_id, status_id ORDER BY project_id asc");
+					if($qry_project->num_rows()>0) {
+						$data['bug_project'] = $qry_project->result();
+					}					
+					
+					//get all bug list based on the status
+					$qry_status = $support_db->query("SELECT COUNT(id) as bugcount, status_id FROM ".$support_db->dbprefix("issues")." WHERE project_id IN ($AllPjtIds) GROUP BY status_id ORDER BY status_id") ;
+					if($qry_status->num_rows()>0) {
+						$data['bug_status'] = $qry_status->result();
+					}
+					
+					// get all the bug list based on the severity
+					$qry_severity = $support_db->query("SELECT project_id,COUNT(id) as bugcount, priority_id ,status_id FROM ".$support_db->dbprefix("issues")." WHERE project_id IN ($AllPjtIds) GROUP BY priority_id ,status_id ORDER BY project_id asc ");
+					if($qry_severity->num_rows()>0){
+						$data['bug_severity'] = $qry_severity->result();
+					}
+					
+					// get all severity
+					$qry_all_severity = $support_db->query("SELECT id,name FROM ".$support_db->dbprefix("enumerations")." WHERE type = 'IssuePriority' GROUP BY id ORDER BY id asc ");
+					if($qry_all_severity->num_rows()>0){
+						$all_severities = $qry_all_severity->result();
+						$all_severities_array =array();
+						foreach($all_severities as $all_severity){
+							$all_severities_array[$all_severity->id] = $all_severity->name;
+						}
+						$data['all_severity'] = $all_severities_array;
+					}
+ 					
+					//get all bug list based on the category
+					$qry_category = $support_db->query("SELECT COUNT(b.id) as bugcount, c.name AS category_name, b.category_id, b.status_id FROM ".$support_db->dbprefix("issues")." b JOIN ".$support_db->dbprefix("issue_categories")." AS c ON b.category_id=c.id WHERE b.project_id IN ($AllPjtIds) GROUP BY category_id, c.name, b.status_id ORDER BY category_id, c.name, b.status_id");
+					if($qry_category->num_rows()>0){
+						$data['bug_category'] = $qry_category->result_array();
+					}
+					
+					//get category based on the project
+					/* $qry_all_category = $support_db->query("SELECT name FROM ".$support_db->dbprefix("issue_categories")." WHERE project_id IN ($AllPjtIds) GROUP BY id ORDER BY id");
+					if($qry_all_category->num_rows()>0){
+						$bug_categories= $qry_all_category->result_array();
+						$bug_categories_array =array();
+						$bug_categories= $qry_all_category->result();
+						foreach($bug_categories as $bug_category){
+							$bug_categories_array[] = $bug_category->name;
+						} 
+						
+						$data['bug_categories'] =$bug_categories;
+					} */
+					
 				}
 				$support_db->close();	
 			}
