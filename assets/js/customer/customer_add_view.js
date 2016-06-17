@@ -266,5 +266,123 @@ alert('location=='+location_id);
 
 }
 
+//Multiple customer add
+//for document format form
+$('#document_tbl').delegate( '#addRow', 'click', function () {
+	var thisRow = $(this).closest('tr');
+	$(this).hide();
+	$("#document_tbl tbody tr").find('.del_file').show();	
+	var obj = $(thisRow).clone().insertAfter(thisRow);
+		obj.find(".contact_id").val("");
+		obj.find(".first_name").val("");
+		obj.find(".last_name").val("");
+		obj.find(".position_title").val("");
+		obj.find(".phone").val("");
+		obj.find(".email").val("");
+		obj.find(".hyperfields").css('border','');
+		obj.find(".first_name_err_msg").text('');
+		obj.find(".last_name_err_msg").text('');
+		obj.find(".position_title_err_msg").text('');
+		obj.find(".phone_err_msg").text('');
+		obj.find(".email_err_msg").text('');
+		obj.find("#deleteRow").attr('hyperid','0'); 
+		// obj.find("td").find('.hyperlink_name').attr('placeholder','eg: http://www.google.com || https://google.com');
+		obj.find('.createBtn').show();
+});
 
+$('#document_tbl').delegate( '.del_file', 'click', function () {
+	var thisRow = $(this).parent('td').parent('tr');
+	if($(this).attr('hyperid') !=0){
+		var hyperid = $(this).attr('hyperid');
+		var x = confirm("Are you Sure want to remove?");
+		if(x==true)
+		{
+			$.post(base_url+'/document-format/delhyperlink?id='+hyperid+'&type=document_format',function( data ) {
+				$(thisRow).remove();
+				if($('#document_tbl tbody tr').length<=1){
+					$('#document_tbl .del_file').hide();
+					$('#document_tbl .createBtn').show();
+				}
+			});
+		}
+	} else {
+		//var y = confirm("Are you Sure want to remove?");
+		//if(y==true)
+		$(thisRow).remove();
+		
+		if($('#document_tbl tbody tr').length<=1){
+			$('#document_tbl .del_file').hide();
+			$('#document_tbl .createBtn').show();
+		}
+	}
+	
+	$("#document_tbl tbody tr").each(function(){
+		$("#document_tbl tbody tr:last").find('.createBtn').show();
+	})
+	if($('#document_tbl tbody tr').length<=1){
+		$('#document_tbl .del_file').hide();
+		$('#document_tbl .createBtn').show();
+	}
+});	
+function cust_validation()
+{
+	var err=true;
+	//First Name
+	$('.first_name').each(function(){
+		if($(this).val()=="")
+		{
+			$(this).closest('tr').find('.first_name_err_msg').html("This field is required");
+			err=false;
+		}else{
+			$(this).closest('tr').find('.first_name_err_msg').html(" ");
+		}
+	});
+	
+	//First Name
+	$('.last_name').each(function(){
+		if($(this).val()=="")
+		{
+			$(this).closest('tr').find('.last_name_err_msg').html("This field is required");
+			err=false;
+		}else{
+			$(this).closest('tr').find('.last_name_err_msg').html(" ");
+		}
+	});
+	
+	//First Name
+	$('.position_title').each(function(){
+		if($(this).val()=="")
+		{
+			$(this).closest('tr').find('.position_title_err_msg').html("This field is required");
+			err=false;
+		}else{
+			$(this).closest('tr').find('.position_title_err_msg').html(" ");
+		}
+	});
+	
+	//First Name
+	$('.phone').each(function(){
+		if($(this).val()=="")
+		{
+			$(this).closest('tr').find('.phone_err_msg').html("This field is required");
+			err=false;
+		}else{
+			$(this).closest('tr').find('.phone_err_msg').html(" ");
+		}
+	});
+	
+	//First Name
+	$('.email').each(function(){
+		if($(this).val()=="")
+		{
+			$(this).closest('tr').find('.email_err_msg').html("This field is required");
+			err=false;
+		}else{
+			$(this).closest('tr').find('.email_err_msg').html(" ");
+		}
+	});
+	if(err==true){
+		$('#formone').submit()
+	}
+}
 /////////////////
