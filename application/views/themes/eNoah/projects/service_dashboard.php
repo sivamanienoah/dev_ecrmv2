@@ -311,7 +311,7 @@ $practice_arr = array();
 									}
 									if($dc_val!='-'){
 									?>
-										<?php if(($parr=='Infra Services') && ($parr=='Infra Services')) { 
+										<?php if(($parr=='Testing') && ($parr=='Infra Services')) { 
 											echo '-';
 										} else {
 										?>
