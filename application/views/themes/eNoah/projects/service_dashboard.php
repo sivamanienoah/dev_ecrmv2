@@ -311,7 +311,7 @@ $practice_arr = array();
 									}
 									if($dc_val!=0){
 									?>
-									<?php if($parr!='Testing' || $parr!='Infra Services') { ?>
+									<?php if($parr!='Infra Services') { ?>
 										<span class="<?php echo "itser_".$arrow_val;?>">
 											<?php echo round($dc_val, 0); ?>
 										</span>
