@@ -1326,14 +1326,15 @@ class Dashboard extends crm_controller
 		$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
 		$this->db->from($this->cfg['dbpref']. 'services_dashboard');
 		$sql = $this->db->get();
-		$projects['dashboard_det'] = $sql->result_array();
+		$dashboard_details = $sql->result_array();
 		
 		$dashboard_det = array();
-		foreach($projects['dashboard_det'] as $key=>$val) {
-			$dashboard_det[$val['practice_name']] = $val;
+		if(!empty($dashboard_details)){
+			foreach($dashboard_details as $key=>$val) {
+				$dashboard_det[$val['practice_name']] = $val;
+			}
 		}
-		
-		echo "<pre>"; print_r($dashboard_det); die;
+		$data['dashboard_det'] = $dashboard_det;
 		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
