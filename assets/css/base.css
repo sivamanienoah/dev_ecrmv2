@@ -2827,8 +2827,8 @@ form#edit-folder-permissions { overflow:visible !important; }
 .modal-custom-fields a:hover {text-decoration: none;}
 .highlight_info {color:#f79158;}
 /****1-6-2016****/
-.itser_down_arrow{background:url("../img/arrowdown.png") no-repeat left center;padding: 0 0 0 20px; color: red;}
-.itser_up_arrow{background:url("../img/arrowup.png") no-repeat left center;padding: 0 0 0 20px; color: green;}
+.itser_down_arrow{background:url("../img/arrowdown.png") no-repeat left center;padding: 0 0 0 20px; color: #c81d1d;}
+.itser_up_arrow{background:url("../img/arrowup.png") no-repeat left center;padding: 0 0 0 20px; color: #1bb018;}
 .green-clr { color:#468847; font-weight:bold; }
 .red-clr { color:#c21706; font-weight:bold; }
 .orange-clr { color:#ff7e00; font-weight:bold; }
