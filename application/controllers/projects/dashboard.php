@@ -1598,7 +1598,6 @@ class Dashboard extends crm_controller
 		if($this->input->post("clicktype")) {
 			$clicktype = $this->input->post("clicktype");
 		}
-		echo $clicktype; die;
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -1886,6 +1885,8 @@ class Dashboard extends crm_controller
 	
 	public function getIRData($records, $start_date, $end_date, $practice)
 	{
+		echo "dfasf"; die;
+		
 		$bk_rates = get_book_keeping_rates();
 		
 		$data = array();
