@@ -127,7 +127,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 							<?php
 							if(!empty($projects['dashboard_det'])){
 								foreach($projects['dashboard_det'] as $det){
-									echo $det; die;
+									echo $det['practice_name']; die;
 								}
 							}
 							?>
