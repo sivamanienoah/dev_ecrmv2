@@ -935,7 +935,7 @@ class Dashboard extends crm_controller
 		return $fy;
 	}
 	
-	public function service_dashboard()
+	public function service_dashboard_old()
 	{
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
 			redirect('project');
@@ -1226,6 +1226,120 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard_grid', $data);
 		else
 		$this->load->view('projects/service_dashboard', $data);
+	}
+	
+	public function service_dashboard()
+	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+			redirect('project');
+		}
+		$data  				  = array();
+		$data['page_heading'] = "IT Services Dashboard";
+		
+		$bk_rates = get_book_keeping_rates();
+		
+		// echo "<pre>"; print_R($this->input->post());
+		
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
+		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
+		
+		//default billable_month
+		$month = date('Y-m-01 00:00:00');
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t", strtotime($end_date));
+			$month    = date("Y-m-01 00:00:00", strtotime($end_date));
+		}
+		if($this->input->post("billable_month")) {
+			$bill_month = $this->input->post("billable_month");
+			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
+		}
+		$data['bill_month'] = $month;
+		$data['start_date'] = $start_date;
+		$data['end_date']   = $end_date;
+
+		$project_status = 1;
+		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
+			$project_status = @explode(',', $this->input->post("project_status"));
+			if(count($project_status) == 2){
+				$project_status = '';
+			} else {
+				$project_status = $this->input->post("project_status");
+			}
+		}
+		$division = '';
+		if($this->input->post("entity") && ($this->input->post("entity")!='null')) {
+			$division = @explode(',', $this->input->post("entity"));
+		}
+		
+		$project_code = array();
+		$projects 	  = array();
+		$practice_arr = array();
+
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in('p.id', 6);
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$data['practice_data'] = $pquery->result();		
+		
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$practice_arr[$prow->id] = $prow->practices;
+			}
+		}
+		
+		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->where("l.lead_id != ", 'null');
+		$this->db->where("l.pjt_id  != ", 'null');
+		$this->db->where("l.lead_status", '4');
+		// $pt_not_in_arr = array('4','8');
+		// $this->db->where("l.project_type", 1);
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("l.client_code", $client_not_in_arr);
+		//BPO practice are not shown in IT Services Dashboard
+		$this->db->where_not_in("l.practice", 6);
+		// $this->db->where("DATE(l.date_start) >= ", $start_date);
+		// $this->db->where("DATE(l.date_due) <= ", $end_date);
+		if($project_status){
+			if($project_status !=2)
+			$this->db->where_in("l.pjt_status", $project_status);
+		}
+		if($division){
+			$this->db->where_in("l.division", $division);
+		}
+
+		$query = $this->db->get();
+		$res = $query->result_array();
+		
+		if(!empty($res) && count($res)>0) {
+			foreach($res as $row) {
+				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
+					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
+				} else {
+					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+				}
+				if($row['rag_status'] == 1){
+					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
+						$projects['rag_status'][$practice_arr[$row['practice']]] += 1;
+					} else {
+						$projects['rag_status'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					}
+				}
+			}
+		}
+		
+		echo "<pre>"; print_r($projects); exit;
 	}
 	
 	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false, $month=false)
