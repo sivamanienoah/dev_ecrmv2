@@ -286,8 +286,8 @@ class Service_dashboard_cron extends crm_controller
 					$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 					$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 					
-					$totCM_Irval += $projects['cm_irval'][$parr];
-					$tot_Irval   += $projects['irval'][$parr];
+					// $totCM_Irval += $projects['cm_irval'][$parr];
+					// $tot_Irval   += $projects['irval'][$parr];
 					
 					// $tot_dc_values += $projects['irval'][$parr];
 					// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
