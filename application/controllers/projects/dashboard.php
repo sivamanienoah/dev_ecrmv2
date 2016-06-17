@@ -1792,7 +1792,7 @@ class Dashboard extends crm_controller
 			case 'fixedbid_project_export':
 				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 				$pcodes = $billable_ytd['project_code'];
-				$project_codes = array();
+				$project_codes = array(0);
 				if(!empty($pcodes) && count($pcodes)>0){
 					foreach($pcodes as $rec){
 						if(!in_array($rec, $project_codes)){
