@@ -286,13 +286,13 @@ class Service_dashboard_cron extends crm_controller
 					$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 					$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 					
-					// $totCM_Irval += $projects['cm_irval'][$parr];
-					// $tot_Irval   += $projects['irval'][$parr];
+					$totCM_Irval += $projects['cm_irval'][$parr];
+					$tot_Irval   += $projects['irval'][$parr];
 					
 					// $tot_dc_values += $projects['irval'][$parr];
 					// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
 					
-					/* $tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
+					$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 					$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
 					
 					$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
@@ -305,14 +305,14 @@ class Service_dashboard_cron extends crm_controller
 					$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
 					
 					$tot_dc_vals += $projects['irval'][$parr];
-					$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost']; */
+					$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
 					
 					$this->db->where('practice_name', $parr);
 					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
 					$ins_array = array();
 			}
 			
-			/* $tot['billing_month'] = $totCM_Irval;
+			$tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
 			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
@@ -324,7 +324,7 @@ class Service_dashboard_cron extends crm_controller
 			//updating the total values
 			$this->db->where('practice_name', 'Total');
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
-			echo $this-db->last_query(); */
+			echo $this-db->last_query();
 			
 		}
 		
