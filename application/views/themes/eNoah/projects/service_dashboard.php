@@ -123,6 +123,15 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 									}
 								?>
 							</td>
+							
+							<?php
+							if(!empty($projects['dashboard_det'])){
+								foreach($projects['dashboard_det'] as $det){
+									echo $det; die;
+								}
+							}
+							?>
+							
 						<?php } ?>
 					<?php } ?>
 					<td align='right'><?php echo ($total_projects!=0) ? $total_projects : '-'; ?></td>
