@@ -1345,8 +1345,12 @@ class Dashboard extends crm_controller
 		$sql = $this->db->get();
 		$results = $sql->result_array();
 		
+		$data['projects'] = $results;
 		
-		echo "<pre>"; print_r($results); exit;
+		if($this->input->post("filter")!="")
+		$this->load->view('projects/service_dashboard_grid', $data);
+		else
+		$this->load->view('projects/service_dashboard', $data);
 	}
 	
 	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false, $month=false)
