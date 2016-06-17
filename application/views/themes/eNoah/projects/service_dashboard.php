@@ -263,14 +263,9 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php
-								$eff_var = '';
-								if(isset($projects['eff_var'][$parr])) {
-									$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
-								}
-								$tot_actual_hr += $projects['eff_var'][$parr]['total_actual_hrs'];
-								$tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
-								if(isset($eff_var) && ($eff_var != 0)) {
+								<?php								
+								$eff_var = ($dashboard_det[$parr]['effort_variance']!='-') ? round($dashboard_det[$parr]['effort_variance']) : '-';
+								if($eff_var != '-') {
 								?>
 								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
 								<?php
@@ -283,7 +278,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php } ?>
 					<td align='right'>
 						<?php
-							echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-';
+							echo ($dashboard_det['Total']['effort_variance']!='-') ? round($dashboard_det['Total']['effort_variance']) : '-';
 						?>
 					</td>
 				</tr>
