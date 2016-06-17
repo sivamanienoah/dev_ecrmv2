@@ -292,7 +292,7 @@ class Service_dashboard_cron extends crm_controller
 					// $tot_dc_values += $projects['irval'][$parr];
 					// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
 					
-					$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
+					/* $tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 					$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
 					
 					$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
@@ -305,7 +305,7 @@ class Service_dashboard_cron extends crm_controller
 					$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
 					
 					$tot_dc_vals += $projects['irval'][$parr];
-					$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
+					$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost']; */
 					
 					$this->db->where('practice_name', $parr);
 					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
