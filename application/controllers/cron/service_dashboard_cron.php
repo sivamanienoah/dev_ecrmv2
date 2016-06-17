@@ -258,7 +258,7 @@ class Service_dashboard_cron extends crm_controller
 		}
 		// echo "<pre>"; print_r($cm_directcost); die;
 		$projects['cm_direct_cost'] = $cm_directcost;
-		$data['projects'] = $projects;
+		$data['projects']           = $projects;
 		
 		// echo "<pre>"; print_r($projects); echo "</pre>";
 		
@@ -286,8 +286,8 @@ class Service_dashboard_cron extends crm_controller
 				$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				
-				echo $totCM_Irval += $projects['cm_irval'][$parr];
-				echo $tot_Irval   += $projects['irval'][$parr];
+				echo $totCM_Irval += $projects['cm_irval'][$parr] . "<br />";
+				echo $tot_Irval   += $projects['irval'][$parr]. "<br />";
 				
 				// $tot_dc_values += $projects['irval'][$parr];
 				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
