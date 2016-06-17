@@ -186,7 +186,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($dashboard_det['Total']['ytd_billing']!='-') ? $dashboard_det['Total']['ytd_billing'] : '-'; ?></td>
+					<td align='right'><?php echo ($dashboard_det['Total']['ytd_billing']!='-') ? round($dashboard_det['Total']['ytd_billing']) : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>YTD Utilization Cost (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
