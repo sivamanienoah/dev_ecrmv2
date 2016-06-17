@@ -263,7 +263,7 @@ $practice_arr = array();
 							<td align='right'>
 								<?php								
 								$eff_var = ($dashboard_det[$parr]['effort_variance']!='-') ? round($dashboard_det[$parr]['effort_variance']) : '-';
-								if($eff_var != '-') {
+								if(($eff_var != '-') && (($parr!='Infra Services'))) {
 								?>
 								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
 								<?php
