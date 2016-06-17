@@ -309,16 +309,17 @@ $practice_arr = array();
 									if(round($dc_val, 0) >= 45){
 										$arrow_val = 'up_arrow';
 									}
-									if($dc_val!=0){
+									if($dc_val!='-'){
 									?>
-									<?php if($parr!='Infra Services') { ?>
+										<?php if(($parr=='Infra Services') && ($parr=='Infra Services')) { 
+											echo '-';
+										} else {
+										?>
 										<span class="<?php echo "itser_".$arrow_val;?>">
 											<?php echo round($dc_val, 0); ?>
 										</span>
-									<?php } 
-										else { 
-											echo '-'; 
-										} 
+										<?php 
+										}
 									} else {
 										echo '-';
 									}
