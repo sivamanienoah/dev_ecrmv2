@@ -267,52 +267,52 @@ class Service_dashboard_cron extends crm_controller
 		$totCM_Irval = $tot_Irval = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = $tot_actual_hr = $tot_estimated_hrs = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
 		
 		if(!empty($practice_array)){
-			foreach($practice_array as $parr){					
-					$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
-					$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
-					$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
-					$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
-					$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
-					$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
-					
-					$billval = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;
-					$ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
-					
-					$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
-					$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
-					
-					$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
-					$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
-					$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
-					$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
-					
-					$totCM_Irval += $projects['cm_irval'][$parr];
-					$tot_Irval   += $projects['irval'][$parr];
-					
-					// $tot_dc_values += $projects['irval'][$parr];
-					// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
-					
-					$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
-					$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
-					
-					$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
-					$tot_totbillval += $projects['billable_ytd'][$parr]['totalhour'];
+			foreach($practice_array as $parr){			
+				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
+				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
+				$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
+				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
+				$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
 				
-					$tot_actual_hr += $projects['eff_var'][$parr]['total_actual_hrs'];
-					$tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
-					
-					$tot_cm_irvals += $projects['cm_irval'][$parr];
-					$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
-					
-					$tot_dc_vals += $projects['irval'][$parr];
-					$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
-					
-					$this->db->where('practice_name', $parr);
-					$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
-					$ins_array = array();
+				$billval = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;
+				$ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
+				
+				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
+				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
+				
+				$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
+				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
+				$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
+				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
+				
+				echo $totCM_Irval += $projects['cm_irval'][$parr];
+				echo $tot_Irval   += $projects['irval'][$parr];
+				
+				// $tot_dc_values += $projects['irval'][$parr];
+				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
+				
+				$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
+				$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
+				
+				$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
+				$tot_totbillval += $projects['billable_ytd'][$parr]['totalhour'];
+			
+				$tot_actual_hr += $projects['eff_var'][$parr]['total_actual_hrs'];
+				$tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
+				
+				$tot_cm_irvals += $projects['cm_irval'][$parr];
+				$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
+				
+				$tot_dc_vals += $projects['irval'][$parr];
+				$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
+				
+				$this->db->where('practice_name', $parr);
+				$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
+				$ins_array = array();
 			}
 			
-			$tot['billing_month'] = $totCM_Irval;
+			/* $tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
 			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
@@ -324,7 +324,7 @@ class Service_dashboard_cron extends crm_controller
 			//updating the total values
 			$this->db->where('practice_name', 'Total');
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
-			echo $this-db->last_query();
+			echo $this-db->last_query(); */
 			
 		}
 		
