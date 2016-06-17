@@ -275,6 +275,8 @@ class Service_dashboard_cron extends crm_controller
 				$ins_data['practice_name'] = $parr;
 				$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
 			}
+			$ins_data['practice_name'] = 'Total';
+			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
 			
 			echo $this->db->last_query(); die;
 			
