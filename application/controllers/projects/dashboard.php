@@ -1885,7 +1885,6 @@ class Dashboard extends crm_controller
 	
 	public function getIRData($records, $start_date, $end_date, $practice)
 	{
-		echo "dfasf"; die;
 		
 		$bk_rates = get_book_keeping_rates();
 		
