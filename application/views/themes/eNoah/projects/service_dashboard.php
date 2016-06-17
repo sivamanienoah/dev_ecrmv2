@@ -194,15 +194,10 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$dc_value = '';
-									$tot_dc_values += $projects['irval'][$parr];
-									$tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
-									if( isset($projects['direct_cost'][$parr]['total_direct_cost']) ) {
-										$dc_value = $projects['direct_cost'][$parr]['total_direct_cost'];
-									}
-									if($dc_value!="") {
+									$dc_value = ($dashboard_det[$parr]['ytd_utilization_cost']!='-') ? round($dashboard_det[$parr]['ytd_utilization_cost']) : '-';
+									if($dc_value!="-") {
 									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'dc_value'); return false;"><?php echo round($dc_value, 0); ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'dc_value'); return false;"><?php echo $dc_value; ?></a>
 									<?php
 									} else {
 										echo '-';
@@ -213,10 +208,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php } ?>
 					<td align='right'>
 						<?php
-							if($tot_dc_totals!=0)
-							echo round($tot_dc_totals, 0);
-							else
-							echo '-';
+							<?php echo ($dashboard_det['Total']['ytd_utilization_cost']!='-') ? round($dashboard_det['Total']['ytd_utilization_cost']) : '-'; ?>
 						?>
 					</td>
 				</tr>
