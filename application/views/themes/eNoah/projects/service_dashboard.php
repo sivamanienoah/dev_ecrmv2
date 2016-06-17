@@ -311,7 +311,7 @@ $practice_arr = array();
 									}
 									if($dc_val!=0){
 									?>
-									<?php if($parr!='Testing') { ?>
+									<?php if($parr!='Testing' || $parr!='Infra Services') { ?>
 										<span class="<?php echo "itser_".$arrow_val;?>">
 											<?php echo round($dc_val, 0); ?>
 										</span>
@@ -328,11 +328,7 @@ $practice_arr = array();
 					<?php } ?>
 					<td align='right'>
 						<?php
-							if($parr!='Testing' || $parr!='Infra Services') {
-								echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-';
-							} else {
-								echo '-';
-							}
+							echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-';
 						?>
 					</td>
 				</tr>
