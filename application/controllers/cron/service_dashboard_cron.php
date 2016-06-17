@@ -312,9 +312,7 @@ class Service_dashboard_cron extends crm_controller
 				$ins_array = array();
 			}
 			
-			echo $totCM_Irval . "<br>" .$tot_Irval; exit;
-			
-			/* $tot['billing_month'] = $totCM_Irval;
+			$tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
 			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
@@ -323,6 +321,8 @@ class Service_dashboard_cron extends crm_controller
 			$tot['contribution_month'] = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);
 			$tot['ytd_contribution'] = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 			
+			echo "<pre>"; print_r($tot); exit;
+			/* 
 			//updating the total values
 			$this->db->where('practice_name', 'Total');
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
