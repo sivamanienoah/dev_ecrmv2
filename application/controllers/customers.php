@@ -17,6 +17,7 @@ class Customers extends crm_controller {
     }
     
     function index($limit = 0, $search = false) {
+		echo'test';exit;
 		$default = array('last_name', 'asc');
 		if (!$this->session->userdata('customer_sort')) {
 			$this->session->set_userdata('customer_sort', $default);
