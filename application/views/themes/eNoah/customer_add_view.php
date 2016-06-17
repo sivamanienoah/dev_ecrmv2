@@ -45,12 +45,10 @@
 					<td width="240"><input type="text" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
 				</tr>-->
 				<tr>
-					<!--<td>Position:</td>
-					<td><input type="text" name="position_title" value="<?php echo $this->validation->position_title ?>" class="textfield width200px required" /></td>-->
+					<td>Position:</td>
+					<td><input type="text" name="position_title" value="<?php echo $this->validation->position_title ?>" class="textfield width200px required" /></td>
                     <td>Company: *</td>
 					<td><input type="text" name="company" value="<?php echo $this->validation->company ?>" class="textfield width200px required" /> </td>
-					<td>Work Phone:</td>
-					<td><input type="text" name="phone_2" value="<?php echo  $this->validation->phone_2 ?>" class="textfield width200px" /></td>
 				</tr>
 				<tr>
 					<td>Address Line 1:</td>
@@ -129,10 +127,11 @@
 				<!--<tr>
 					<td>Direct Phone:</td>
 					<td><input type="text" name="phone_1" value="<?php echo  $this->validation->phone_1 ?>" class="textfield width200px" />
-					</td>
+						</td>
                     
-					
-				</tr>-->
+					<td>Work Phone:</td>
+					<td><input type="text" name="phone_2" value="<?php echo  $this->validation->phone_2 ?>" class="textfield width200px" /></td>
+				</tr>
                     <tr>
 					<td>Mobile Phone:</td>
 					<td><input type="text" name="phone_3" value="<?php echo  $this->validation->phone_3 ?>" class="textfield width200px required" />
@@ -142,21 +141,18 @@
 					<td><input type="text" name="phone_4" value="<?php echo  $this->validation->phone_4 ?>" class="textfield width200px" /></td>
 				</tr>
                 <tr>
-					<!--<td>Email: </td>
-					<td>
-						<input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
-						
-						<div><span class="checkUser" style="color:green">Valid Email.</span></div>
-						<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
-						<div><span class="checkUser2" id="email-existsval" style="color:red">Invalid Email.</span></div>
-						
-						<input type="hidden" class="hiddenUrl"/>
-						<?php if ($this->uri->segment(3) == 'update') { ?>
-							<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="emailupdate" id="emailupdate" />
-						<?php } ?>
-					</td>-->
-					<td>Skype Name:</td>
-					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
+					<td>Email: </td>
+					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
+					
+					<div><span class="checkUser" style="color:green">Valid Email.</span></div>
+					<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
+					<div><span class="checkUser2" id="email-existsval" style="color:red">Invalid Email.</span></div>
+					
+					<input type="hidden" class="hiddenUrl"/>
+					<?php if ($this->uri->segment(3) == 'update') { ?>
+						<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="emailupdate" id="emailupdate" />
+					<?php } ?>
+				</td>
                     <td>Secondary Email:</td>
 					<td><input type="text" name="email_2" value="<?php echo  $this->validation->email_2 ?>" class="textfield width200px required" /> 
 					</td>
@@ -168,8 +164,21 @@
                     <td>Email 4:</td>
 					<td><input type="text" name="email_4" value="<?php echo  $this->validation->email_4 ?>" class="textfield width200px required" /> 
 					</td>
+				</tr>-->
+				<tr>
+					<td>Skype Name:</td>
+					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
+
+					
+					<?php if ($this->uri->segment(3) == 'update') { ?>
+					<td>Is a Client:</td>
+					<td>
+						<input type="checkbox" name="is_client" value="1" <?php if ($this->validation->is_client == 1) echo ' checked="checked"' ?> disabled >
+					</td>
+					<?php } else { ?>
+                    <td colspan="2">&nbsp;</td>
+					<?php } ?>
 				</tr>
-				
                 <tr>
 					<td>Web:</td>
 					<td><input type="text" name="www_1" value="<?php echo $this->validation->www_1 ?>" class="textfield width200px required" />
@@ -201,23 +210,6 @@
 					<td><input type="text" name="sales_contact_email" value="<?php echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
 					</td>
 				</tr>
-				<tr>
-					<?php /*?>  <td>Is a Client: </td>
-					<td>
-						<lable for="is_client_yes"><input type="radio" name="is_client"  id="is_client_yes" value="1" <?php if ((isset($this->validation->is_client) && $this->validation->is_client == 1) || $client_projects !=0 ) echo ' checked="checked"' ?> <?php if($client_projects != 0) { ?> disabled <?php }?>> Yes </lable>
-						<lable for="is_client_no"><input type="radio" name="is_client" id="is_client_no" value="0" <?php if (!isset($this->validation->is_client) ||  $this->validation->is_client == 0 && $client_projects == 0)  echo ' checked="checked"' ?> <?php if($client_projects != 0) { ?> disabled <?php }?> > No </lable>
-					</td><?php */?>
-					
-					
-					<?php if ($this->uri->segment(3) == 'update') { ?>
-					<td>Is a Client:</td>
-					<td>
-						<input type="checkbox" name="is_client" value="1" <?php if ($this->validation->is_client == 1) echo ' checked="checked"' ?> disabled >
-					</td>
-					<?php } else { ?>
-                    <td colspan="2">&nbsp;</td>
-					<?php } ?>
-				</tr>
                 <tr>
 					<td valign="top">Comments:</td>
 
@@ -246,74 +238,61 @@
 								</tr>
 							</thead>
 							<?php
-							    $i=1;
-								if(!empty($customer_contacts) && count($customer_contacts)>0){
-									foreach($customer_contacts as $row) {
+							   /* $i=1;
+								if(!empty($hyperlinkmodel) && count($hyperlinkmodel)>0){
+									foreach($hyperlinkmodel as $row) {
 										$disp_style = '';
-										if($i!=count($customer_contacts)){
+										if($i!=count($hyperlinkmodel)){
 											$disp_style = "style='display:none;'";
 										}
-										?>
+							?>
 										<tr>
 											<td>
-												<input type="hidden" name="contact_id[]" value="<?php echo $row['custid']; ?>" class="textfield contact_id width180px required" />
-												<input type="text" name="first_name[]" value="<?php echo $row['first_name']; ?>" class=" first_name textfield width180px required" />
-												<span class="first_name_err_msg text-danger"></span>
+												<input type="text" name="hyperlink_title[]" id="hyperlink_title" class="hyperfields hyperlink_title form-control" value="<?=$row['title']?>" />
+												<span class="hyperlink_title_err_msg text-danger"></span>
 											</td>
 											<td>
-												<input type="text" name="last_name[]" value="<?php echo $row['last_name']; ?>" class="last_name textfield width180px required" />
-												<span class="last_name_err_msg text-danger"></span>
-											</td>
-											<td>
-											   <input type="text" name="position_title[]" value="<?php echo $row['position_title']; ?>" class="position_title textfield width180px required" />
-												<span class="position_title_err_msg text-danger"></span>
-											</td>
-											<td>
-											   <input type="text" name="phone_no[]" value="<?php echo $row['phone_no']; ?>" class="textfield phone width180px required" />
-												<span class="position_title_err_msg text-danger"></span>
-											</td>
-											<td>
-											   <input type="text" name="email[]" value="<?php echo $row['email']; ?>" class="textfield email width180px required" />
-												<span class="position_title_err_msg text-danger"></span>
+												<input type="text" name="hyperlink_name[]" id="hyperlink_name" class="hyperfields hyperlink_name form-control" value="<?=$row['hyperlink']?>" />
+												<span class="hyperlink_name_err_msg text-danger"></span>
 											</td>
 											<td width="100">
-												<a id="addRow" class="createBtn" <?=$disp_style?> ></a>
-												<a id="deleteRow" hyperid="<?=$row['id']?>" class="del_file"></a>
+												<a id="addRow" class="createBtn" <?=$disp_style?> ><i class="fa fa-plus"></i></a>
+												<a id="deleteRow" hyperid="<?=$row['id']?>" class="del_file"><i class="fa fa-minus"></i></a>
 											</td>
 										</tr>
-									<?php
+							<?php
 									$i++;
 									}
-								} else {
+								} else {*/
 							?>
 								<tr>
 									<td>
-										<input type="text" name="first_name[]" value="<?php echo $this->validation->first_name ?>" class=" first_name textfield width180px required" />
+										<input type="text" name="first_name[]" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" />
 										<span class="first_name_err_msg text-danger"></span>
 									</td>
 									<td>
-										<input type="text" name="last_name[]" value="<?php echo $this->validation->last_name ?>" class="last_name textfield width180px required" />
+										<input type="text" name="last_name[]" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" />
 										<span class="last_name_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="position_title[]" value="<?php echo $this->validation->position_title ?>" class="position_title textfield width180px required" />
+									   <input type="text" name="position_title[]" value="<?php echo $this->validation->position_title ?>" class="textfield width200px required" />
 										<span class="position_title_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="phone_no[]" value="<?php echo $this->validation->phone_1 ?>" class="textfield phone width180px required" />
-										<span class="phone_err_msg text-danger"></span>
+									   <input type="text" name="phone_1[]" value="<?php echo $this->validation->phone_1 ?>" class="textfield width200px required" />
+										<span class="position_title_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="email[]" value="<?php echo $this->validation->email_1 ?>" class="textfield email width180px required" />
-										<span class="email_err_msg err_msg text-danger"></span>
+									   <input type="text" name="email_1[]" value="<?php echo $this->validation->email_1 ?>" class="textfield width200px required" />
+										<span class="position_title_err_msg text-danger"></span>
 									</td>
-									<td width="100" class='width180px'>
+									<td width="100">
 										<a id="addRow" class="createBtn"></a>
 										<a id="deleteRow" hyperid="0" class="del_file"></a>
 									</td>
 								</tr>
 							<?php 
-						    }
+						   // }
 							?>
 						</table>
 					   
@@ -326,7 +305,7 @@
 					</td>
 					<td colspan="3">
                         <div class="buttons">
-							<button type="button" onclick="return cust_validation()" name="update_customer" id="positiveBtn" class="positive">
+							<button type="submit" name="update_customer" id="positiveBtn" class="positive">
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
 							</button>
 						</div>
@@ -344,11 +323,6 @@
 		} ?>
 	</div>
 </div>
-<style>
-.text-danger{
-	color:red;
-}
-</style>
 
 <script>
 	var customer_user_id = "<?php echo $usernme['userid']; ?>";
