@@ -286,8 +286,8 @@ class Service_dashboard_cron extends crm_controller
 				$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				
-				echo $totCM_Irval += $projects['cm_irval'][$parr] . "<br />"; die;
-				echo $tot_Irval   += $projects['irval'][$parr]. "<br />";
+				$totCM_Irval += $projects['cm_irval'][$parr];
+				$tot_Irval   += $projects['irval'][$parr];
 				
 				// $tot_dc_values += $projects['irval'][$parr];
 				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
@@ -311,6 +311,8 @@ class Service_dashboard_cron extends crm_controller
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
 				$ins_array = array();
 			}
+			
+			echo $totCM_Irval . "<br>" .$tot_Irval; exit;
 			
 			/* $tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
