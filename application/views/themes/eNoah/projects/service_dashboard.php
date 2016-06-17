@@ -15,8 +15,6 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 <?php
 $practice_arr = array();
-$tot_Irval = $totCM_Irval = $total_projects = $total_rag = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = 0;
-$tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = $tot_dc_values = $tot_dc_totals = 0;
 // echo "<pre>"; print_r($projects); echo "</pre>";
 ?>
 		<div class="page-title-head">
@@ -105,7 +103,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<th>Total</th>
 					</thead>
 				</tr>
-				<?php echo "<pre>"; print_r($dashboard_det); echo "</pre>"; ?>
+				<?php // echo "<pre>"; print_r($dashboard_det); echo "</pre>"; ?>
 				<tr>
 					<td><b>Number of Projects currently running</b></td>
 					<?php if(!empty($practice_arr)) { ?>
