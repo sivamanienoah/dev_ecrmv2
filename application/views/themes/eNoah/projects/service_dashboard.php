@@ -174,9 +174,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
-									if($irval!="") {
-										$tot_Irval += $irval;
+									$irval = ($dashboard_det[$parr]['ytd_billing']!='-') ? round($dashboard_det[$parr]['ytd_billing']) : '-';
+									if($irval!="-") {
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
 									<?php
@@ -187,7 +186,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 							</td>
 						<?php } ?>
 					<?php } ?>
-					<td align='right'><?php echo ($tot_Irval!=0) ? $tot_Irval : '-'; ?></td>
+					<td align='right'><?php echo ($dashboard_det['Total']['ytd_billing']!='-') ? $dashboard_det['Total']['ytd_billing'] : '-'; ?></td>
 				</tr>
 				<tr>
 					<td><b>YTD Utilization Cost (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
