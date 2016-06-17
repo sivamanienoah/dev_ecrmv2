@@ -1343,9 +1343,9 @@ class Dashboard extends crm_controller
 		$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
 		$this->db->from($this->cfg['dbpref']. 'services_dashboard');
 		$sql = $this->db->get();
-		$results = $sql->result_array();
+		$projects['dashboard_det'] = $sql->result_array();
 		
-		$data['projects'] = $results;
+		$data['projects'] = $projects;
 		
 		if($this->input->post("filter")!="")
 		$this->load->view('projects/service_dashboard_grid', $data);
