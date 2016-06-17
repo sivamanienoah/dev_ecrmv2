@@ -328,7 +328,11 @@ $practice_arr = array();
 					<?php } ?>
 					<td align='right'>
 						<?php
-							echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-';
+							if($parr!='Testing' || $parr!='Infra Services') {
+								echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-';
+							} else {
+								echo '-'	
+							}
 						?>
 					</td>
 				</tr>
