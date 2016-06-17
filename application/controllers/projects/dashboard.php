@@ -1349,10 +1349,7 @@ class Dashboard extends crm_controller
 					} else {
 						$projects['rag_status'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
 					}
-				}
-				//
-				$deta[$row['practice']] = 
-				
+				}				
 			}
 		}
 		
