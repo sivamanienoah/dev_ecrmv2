@@ -154,10 +154,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$cm_billing = '';
-									$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
-									if($cm_billing!=''){
-										$totCM_Irval += $cm_billing;
+									$cm_billing = ($dashboard_det[$parr]['billing_month']!='-') ? round($dashboard_det[$parr]['billing_month']) : '-';
+									if($cm_billing!='-'){
 								?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
 								<?php
