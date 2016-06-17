@@ -1596,7 +1596,7 @@ class Dashboard extends crm_controller
 			$practice = $this->input->post("practice");
 		}
 		if($this->input->post("clicktype")) {
-			$clicktype = $this->input->post("clicktype");
+			echo $clicktype = $this->input->post("clicktype"); die
 		}
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
