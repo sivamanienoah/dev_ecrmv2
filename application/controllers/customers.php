@@ -30,6 +30,7 @@ class Customers extends crm_controller {
 			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
 			$config['total_rows'] = (string) $this->customer_model->customer_count();
         }
+		echo'<pre>';print_r($data);exit;
         $this->load->view('customer_view', $data);
     }
 	
