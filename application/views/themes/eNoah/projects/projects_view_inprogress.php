@@ -54,16 +54,16 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$ev_clr = 'red-clr';	
 			
 			if( round($profitlossPercent, 0) <= 0 )
-			$prof_clr = 'orange-clr';
-			if((round($profitlossPercent, 0)>=1) && (round($profitlossPercent, 0)<=44))
 			$prof_clr = 'red-clr';
+			if((round($profitlossPercent, 0)>=1) && (round($profitlossPercent, 0)<=44))
+			$prof_clr = 'orange-clr';
 			if(round($profitlossPercent, 0) >= 45)
 			$prof_clr = 'green-clr';
 		
 			if( round($contributePercent, 0) <= 0 )
-			$contri_clr = 'orange-clr';
-			if((round($contributePercent, 0)>=1) && (round($contributePercent, 0)<=44))
 			$contri_clr = 'red-clr';
+			if((round($contributePercent, 0)>=1) && (round($contributePercent, 0)<=44))
+			$contri_clr = 'orange-clr';
 			if(round($contributePercent, 0) >= 45)
 			$contri_clr = 'green-clr';
 			
