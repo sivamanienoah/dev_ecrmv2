@@ -1330,7 +1330,8 @@ class Dashboard extends crm_controller
 		
 		$dashboard_det = array();
 		foreach($projects['dashboard_det'] as $key=>$val) {
-			$dashboard_det[$val['practice_name']] = $val;
+			echo $val['practice_name']; die;
+			// $dashboard_det[$val['practice_name']] = $val;
 		}
 		
 		echo "<pre>"; print_r($dashboard_det); die;
