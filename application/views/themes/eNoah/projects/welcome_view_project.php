@@ -1836,19 +1836,30 @@ if (get_default_currency()) {
 				$checkValue = true;
 				 if(count($bug_project)>0 && !empty($bug_project)):?>
 					<div class="buttons task-init  toggler">
-						<div style="float:left;padding:5px;"><form target="_blank" method="post" name="form_set_project" action="http://support.enoahisolution.com/set_project.php"><input type="hidden" name="project_id" value="<?php echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form></div>
+						<div style="float:left;padding:5px;">
+						
+						<!--form target="_blank" method="post" name="form_set_project" action="http://support.enoahisolution.com/set_project.php"><input type="hidden" name="project_id" value="<?php //echo $AllPjtIds_summary;?>" /> <input type="hidden" name="ref" value="summary_page.php" /><button style="float:none;"  class="positive" type="submit">View Summary in Mantis</button></form-->
+						
+						<a style="background: #4b6fb9 none repeat scroll 0 0;border: 1px solid #274686;font-size: 11px;font-weight: normal;padding: 2px 6px;line-height: 17px; padding: 2px 6px" href="http://redmine.enoahprojects.com:3000/projects/<?php echo $quote_data['pjt_id']?>" class="positive" target="_blank">View Summary in Redmine</a>
+						</div>
 						<div class="clear"></div>
 					</div>
 					<div style="margin-bottom:10px;" class="pull-left">
 					<?php 
+					
 					$checkValue = false;
 					$bp_arr = array();
 					$tot = array();
 					foreach($bug_project as $bp):
-						$bp_arr['values'][$bp->project_id][$bp->status] = $bp->bugcount;
+						$bp_arr['values'][$bp->project_id][$bp->status_id] = $bp->bugcount;
 					endforeach;
 					ksort($bp_arr['values']);
-					$statusArray = array(10 => "New", 20 => "Feedback",30 => "Acknowledged",40 => "Confirmed",50 => "Assigned",80 => "Resolved",90 => "Closed");				
+					/* echo "<pre>";
+					print_r($bp_arr['values']);
+					echo "</pre>";
+					 */
+					//$statusArray = array(10 => "New", 20 => "Feedback",30 => "Acknowledged",40 => "Confirmed",50 => "Assigned",80 => "Resolved",5 => "Closed");
+					$statusArray = array(1 => "New", 2 => "In Progress",3 => "Resolved",4 => "Feedback",5 => "Closed",6 => "Rejected",7 => "Assigned",8 => "Reopened");					
 					?>
 					<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1" id="project-date-assign">
 						<tbody>
@@ -1856,14 +1867,15 @@ if (get_default_currency()) {
 							<th>Status</th>
 							<?php foreach($project_names as $pnames):	echo '<th style="width:400px;">'.$pnames.'</th>';endforeach;	?>
 						</tr>
+
 								<tr><td><strong>Open</strong></td><?php foreach($project_names as $key2 => $pnames): ?>
-									<?php $bgstatus_open = $bp_arr['values'][$key2][10]+$bp_arr['values'][$key2][20]+$bp_arr['values'][$key2][30]+$bp_arr['values'][$key2][40]+$bp_arr['values'][$key2][50];
+									<?php $bgstatus_open = $bp_arr['values'][$key2][1]+$bp_arr['values'][$key2][2]+$bp_arr['values'][$key2][4]+$bp_arr['values'][$key2][7]+$bp_arr['values'][$key2][8];
 									echo '<td>'.$bgstatus_open.'</td>';	
-									$tot[$key2][50] = $bgstatus_open;
+									$tot[$key2][7] = $bgstatus_open;
 									endforeach;?></tr>							
 								
 						<?php foreach($statusArray as $key => $sname): 
-								if($key == 80 || $key == 90){?>
+								if($key == 3 || $key == 5){?>
 									<tr><td><strong><?php echo $sname;?></strong></td><?php foreach($project_names as $key2 => $pnames): $showValue = (isset($bp_arr['values'][$key2][$key])?$bp_arr['values'][$key2][$key]:0); echo '<td>'.$showValue.'</td>'; $tot[$key2][$key] = $showValue; endforeach;?></tr>
 								<?php }	endforeach; ?>
 							<tr><td><strong>Total</strong></td>
@@ -1884,12 +1896,13 @@ if (get_default_currency()) {
 				$closed_arr = array();
 				
 				foreach($bug_severity as $bs):
-					$bs_arr['values'][$bs->project_id][$bs->severity][$bs->status] = $bs->bugcount;
+					$bs_arr['values'][$bs->project_id][$bs->priority_id][$bs->status_id] = $bs->bugcount;
 				endforeach;
 				ksort($bs_arr['values']);
-				$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");	?>
+				//$severityArray = array(10 => "Feature",20 => "Trivial",30 => "Text",40 => "Tweak",50 => "Minor",60 => "Major",70 => "Crash",80 => "Block");
+								
+				//$severityArray = array(1 => "Low",2 => "Moderate",3 => "High",4 => "Urgent",5 => "Critical");	?>
 				
-		
 				<div style="margin-bottom:10px;" class="pull-left">
 					<table width="<?php echo count($project_names)*150;?>" cellspacing="0" cellpadding="0" class="data-table1 table-style" id="project-date-assign">
 					<tbody>
@@ -1900,16 +1913,16 @@ if (get_default_currency()) {
 					</tr>
 					<?php 
 						$mast_tot = 0;
-						foreach($severityArray as $key => $sname):
+						foreach($all_severity as $key => $sname):
 							$tot_sev = 0;?>
 							<tr>
 							<td><strong><?php echo $sname;?></strong></td>
 							<?php foreach($project_names as $key2 => $pnames):
-									$opened = $bs_arr['values'][$key2][$key][10]+$bs_arr['values'][$key2][$key][20]+$bs_arr['values'][$key2][$key][30]+$bs_arr['values'][$key2][$key][40]+$bs_arr['values'][$key2][$key][50];								
+									$opened = $bs_arr['values'][$key2][$key][1]+$bs_arr['values'][$key2][$key][2]+$bs_arr['values'][$key2][$key][4]+$bs_arr['values'][$key2][$key][7]+$bs_arr['values'][$key2][$key][8];
 									
 									$opened = isset($opened)?$opened:0;
-									$resolved = (isset($bs_arr['values'][$key2][$key][80])?$bs_arr['values'][$key2][$key][80]:0);
-									$closed = (isset($bs_arr['values'][$key2][$key][90])?$bs_arr['values'][$key2][$key][90]:0);
+									$resolved = (isset($bs_arr['values'][$key2][$key][3])?$bs_arr['values'][$key2][$key][3]:0);
+									$closed = (isset($bs_arr['values'][$key2][$key][5])?$bs_arr['values'][$key2][$key][5]:0);
 									
 									$tot_sev += $opened+$resolved+$closed;
 									$mast_tot += $opened+$resolved+$closed;
@@ -1952,8 +1965,8 @@ if (get_default_currency()) {
 			if(count($bug_category)>0 && !empty($bug_category)) :	
 				$checkValue = false;
 				foreach($bug_category as $val):
-					$cat_arr[$val['category_id'].'##'.$val['category_name']][$val['status']] = $val['bugcount'];
-					$cat_status_arr[] = $val['status'];
+					$cat_arr[$val['category_id'].'##'.$val['category_name']][$val['status_id']] = $val['bugcount'];
+					$cat_status_arr[] = $val['status_id'];
 				endforeach;
 				$catstatusUnique = array_unique($cat_status_arr);
 				sort($catstatusUnique);	
@@ -1979,8 +1992,8 @@ if (get_default_currency()) {
 								 if(count($catstatusUnique)>0 && !empty($catstatusUnique)):
 									  foreach($catstatusUnique as $c): 
 										$total += $res[$c];
-										if($c==80) $resolved = $res[$c];
-										if($c==90) $closed = $res[$c];
+										if($c==3) $resolved = $res[$c];
+										if($c==5) $closed = $res[$c];
 									endforeach;  
 									$opened = $total - ($resolved+$closed);
 									$ex = explode("#",$key);
