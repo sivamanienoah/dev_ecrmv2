@@ -45,7 +45,7 @@ class Service_dashboard_cron extends crm_controller
 	public function index() 
 	{
 		@set_time_limit(-1); //disable the mysql query maximum execution time
-		
+			
 		$data  				  = array();
 		
 		$bk_rates = get_book_keeping_rates();
@@ -265,9 +265,20 @@ class Service_dashboard_cron extends crm_controller
 		$ins_array = array();
 		$tot = array();
 		$totCM_Irval = $tot_Irval = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = $tot_actual_hr = $tot_estimated_hrs = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
-		
+
 		if(!empty($practice_array)){
-			foreach($practice_array as $parr){			
+			
+			//truncate the table & inserting the practices name from table.
+			$this->db->truncate($this->cfg['dbpref'].'services_dashboard');
+			
+			foreach($practice_array as $parr){
+				$ins_data['practice_name'] = $parr;
+				$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
+			}
+			
+			echo $this->db->last_query(); die;
+			
+			foreach($practice_array as $parr){		
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
@@ -325,9 +336,7 @@ class Service_dashboard_cron extends crm_controller
 			$this->db->where('practice_name', 'Total');
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
 			// echo $this->db->last_query();
-			
 		}
-		
 	}
 	
 	/*
