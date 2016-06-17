@@ -19,7 +19,7 @@ Reviewed By     : Subbiah.S
  * @author 		eNoah
  * @Controller
  */
-// ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 class Service_dashboard_cron extends crm_controller 
 {
 	public $userdata;
@@ -74,23 +74,12 @@ class Service_dashboard_cron extends crm_controller
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
 		$this->db->where('p.status', 1);
 		//BPO practice are not shown in IT Services Dashboard
-		$this->db->where_not_in('p.id', 6);
+		$practice_not_in = array(6,13);
+		$this->db->where_not_in('p.id', $practice_not_in);
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
-		
-		/* $this->db->select('div_id, division_name, base_currency');
-		$this->db->from($this->cfg['dbpref']. 'sales_divisions');
-		$equery = $this->db->get();
-		$eres = $equery->result();
-		$data['entity_data'] = $equery->result(); 
-		
-		if(!empty($eres) && count($eres)>0){
-			foreach($eres as $erow) {
-				$base_cur_arr[$erow->div_id] = $erow->base_currency;
-			}
-		}*/
-		
+				
 		if(!empty($pres) && count($pres)>0){
 			foreach($pres as $prow) {
 				$practice_arr[$prow->id] = $prow->practices;
@@ -106,7 +95,9 @@ class Service_dashboard_cron extends crm_controller
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
-		$this->db->where_not_in("l.practice", 6);
+		// $this->db->where_not_in("l.practice", 6);
+		$practice_not_in = array(6,13);
+		$this->db->where_not_in('l.practice', $practice_not_in);
 
 		if($project_status){
 			if($project_status !=2)
@@ -150,7 +141,9 @@ class Service_dashboard_cron extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
 		//BPO practice are not shown in IT Services Dashboard
-		$this->db->where_not_in("l.practice", 6);
+		// $this->db->where_not_in("l.practice", 6);
+		$practice_not_in = array(6,13);
+		$this->db->where_not_in('l.practice', $practice_not_in);
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
@@ -176,8 +169,10 @@ class Service_dashboard_cron extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		//BPO practice are not shown in IT Services Dashboard
-		$this->db->where_not_in("l.practice", 6);
+		//BPO & Testing practice are not shown in IT Services Dashboard
+		// $this->db->where_not_in("l.practice", 6);
+		$practice_not_in = array(6,13);
+		$this->db->where_not_in('l.practice', $practice_not_in);
 		if(!empty($month)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
 			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
@@ -210,7 +205,9 @@ class Service_dashboard_cron extends crm_controller
 				$this->db->where_not_in("l.client_code", $client_not_in_arra);
 				$this->db->where("l.pjt_id", $rec);
 				//BPO practice are not shown in IT Services Dashboard
-				$this->db->where_not_in("l.practice", 6);
+				// $this->db->where_not_in("l.practice", 6);
+				$practice_not_in = array(6,13);
+				$this->db->where_not_in('l.practice', $practice_not_in);
 				// $this->db->where("l.billing_type", 1);
 				$query3 = $this->db->get();
 				$pro_data = $query3->result_array();
@@ -388,7 +385,9 @@ class Service_dashboard_cron extends crm_controller
 		$excludewhere = "project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
 		$this->db->where('practice_id !=', 0);
-		$this->db->where_not_in("practice_id", 6);
+		// $this->db->where_not_in("practice_id", 6);
+		$practice_not_in = array(6,13);
+		$this->db->where_not_in('practice_id', $practice_not_in);
 		//for eads & eqad only
 		$deptwhere = "dept_id in ('10','11')";
 		$this->db->where($deptwhere);
