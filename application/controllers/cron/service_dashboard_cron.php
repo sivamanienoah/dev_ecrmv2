@@ -278,8 +278,6 @@ class Service_dashboard_cron extends crm_controller
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
 			
-			echo $this->db->last_query(); die;
-			
 			foreach($practice_array as $parr){		
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
