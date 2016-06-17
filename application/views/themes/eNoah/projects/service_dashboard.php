@@ -218,13 +218,10 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$cm_billval = '';
-									$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
-									if(($cm_billval!="") && ($cm_billval != 0)) {
-										$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
-										$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
+									$cm_billval = ($dashboard_det[$parr]['billable_month']!='-') ? round($dashboard_det[$parr]['billable_month']) : '-';
+									if($cm_billval!="-") {
 									?>					
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 0); ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo $cm_billval; ?></a>
 									<?php
 									} else {
 										echo '-';
@@ -234,16 +231,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php } ?>
 					<?php } ?>
 					<td align='right'>
-						<?php 
-							$per_billhr = 0;
-							if(($tot_billhour != 0) && ($tot_tothours != 0)){
-								$per_billhr = ($tot_billhour/$tot_tothours);
-							}
-							if($per_billhr!=0)
-							echo round(($per_billhr * 100), 0);
-							else
-							echo '-';
-						?>
+						<?php echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-'; ?>
 					</td>
 				</tr>
 				<tr>
@@ -252,14 +240,10 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$billval = '';
-									if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
-									$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
-									if(isset($billval) && ($billval != 0)) {
-										$tot_billval += $projects['billable_ytd'][$parr]['Billable']['hour'];
-										$tot_totbillval += $projects['billable_ytd'][$parr]['totalhour'];
+									$billval = ($dashboard_det[$parr]['ytd_billable']!='-') ? round($dashboard_det[$parr]['ytd_billable']) : '-';
+									if($billval != '-') {
 									?>
-									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 0); ?></a>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo $billval; ?></a>
 									<?php
 									} else {
 										echo '-';
@@ -269,15 +253,8 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php } ?>
 					<?php } ?>
 					<td align='right'>
-						<?php 
-							$per_billval = 0;
-							if(($tot_billval != 0) && ($tot_totbillval != 0)){
-								$per_billval = ($tot_billval/$tot_totbillval);
-							}
-							if($per_billval!=0)
-							echo round(($per_billval * 100), 0);
-							else
-							echo '-';
+						<?php
+							echo ($dashboard_det['Total']['ytd_billable']!='-') ? round($dashboard_det['Total']['ytd_billable']) : '-';
 						?>
 					</td>
 				</tr>
@@ -306,14 +283,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php } ?>
 					<td align='right'>
 						<?php
-							$per_effvar = 0;
-							if(($tot_actual_hr != 0) && ($tot_estimated_hrs != 0)){
-								$per_effvar = ($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs;
-							}
-							if($per_effvar!=0)
-							echo round(($per_effvar * 100), 0);
-							else
-							echo '-';
+							echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-';
 						?>
 					</td>
 				</tr>
@@ -336,14 +306,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php } ?>
 					<td align='right'>
 						<?php
-							$per_cm_dc_val = 0;
-							if(($tot_cm_irvals != 0) && ($tot_cm_dc_tot != 0)){
-								$per_cm_dc_val = ($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals;
-							}
-							if($per_cm_dc_val!=0)
-							echo round(($per_cm_dc_val * 100), 0);
-							else
-							echo '-';
+							echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-';
 						?>
 					</td>
 				</tr>
@@ -382,14 +345,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 					<?php } ?>
 					<td align='right'>
 						<?php
-							$per_dc_vals = 0;
-							if(($tot_dc_vals != 0) && ($tot_dc_tots != 0)){
-								$per_dc_vals = ($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals;
-							}
-							if($per_dc_vals!=0)
-							echo round(($per_dc_vals * 100), 0);
-							else
-							echo '-';
+							echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-';
 						?>
 					</td>
 				</tr>
