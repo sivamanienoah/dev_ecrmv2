@@ -1322,6 +1322,19 @@ class Dashboard extends crm_controller
 		$query = $this->db->get();
 		$res = $query->result_array();
 		
+		//get values from services dashboard table
+		$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
+		$this->db->from($this->cfg['dbpref']. 'services_dashboard');
+		$sql = $this->db->get();
+		$projects['dashboard_det'] = $sql->result_array();
+		
+		$dashboard_det = array();
+		foreach($projects['dashboard_det'] as $key=>$val) {
+			$dashboard_det[$val['practice_name']] = $val;
+		}
+		
+		echo "<pre>"; print_r($dashboard_det); die;
+		
 		if(!empty($res) && count($res)>0) {
 			foreach($res as $row) {
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
@@ -1336,14 +1349,11 @@ class Dashboard extends crm_controller
 						$projects['rag_status'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
 					}
 				}
+				//
+				$deta[$row['practice']] = 
+				
 			}
 		}
-		
-		//get values from services dashboard table
-		$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
-		$this->db->from($this->cfg['dbpref']. 'services_dashboard');
-		$sql = $this->db->get();
-		$projects['dashboard_det'] = $sql->result_array();
 		
 		$data['projects'] = $projects;
 		
