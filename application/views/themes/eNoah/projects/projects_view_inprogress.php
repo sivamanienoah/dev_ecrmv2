@@ -115,9 +115,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$milestone_content .= "<td>".$total_cost."</td>";
 					$milestone_content .= "<td>".$total_dc_hours."</td>";
 					$milestone_content .= "<td>".$total_amount_inv_raised."</td>";
-					$milestone_content .= "<td>".$contributePercent." %</td>";
-					$milestone_content .= "<td><span class=".$proj_clr.">".$profitloss."</td>";
-					$milestone_content .= "<td><span class=".$proj_clr.">".$profitlossPercent." %</span></td>";
+					$milestone_content .= "<td><span class=".$contri_clr.">".$contributePercent." %</span></td>";
+					$milestone_content .= "<td>".$profitloss."</td>";
+					$milestone_content .= "<td><span class=".$prof_clr.">".$profitlossPercent." %</span></td>";
 				} else {
 					if(($td_cn == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_cn.">".$customer_name."</td>";
