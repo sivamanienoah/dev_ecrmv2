@@ -288,20 +288,15 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$cm_dc_val = '';
-									$tot_cm_irvals += $projects['cm_irval'][$parr];
-									$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost']; 
-									if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
-										$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
-									}
-									echo ($cm_dc_val!=0)?round($cm_dc_val, 0):'-';
+									$cm_dc_val = ($dashboard_det[$parr]['contribution_month']!='-') ? round($dashboard_det[$parr]['contribution_month']) : '-';
+									echo ($cm_dc_val!='-') ? $cm_dc_val : '-';
 								?>
 							</td>
 						<?php } ?>
 					<?php } ?>
 					<td align='right'>
 						<?php
-							echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-';
+							echo ($dashboard_det['Total']['contribution_month']!='-') ? round($dashboard_det['Total']['contribution_month']) : '-';
 						?>
 					</td>
 				</tr>
