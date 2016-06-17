@@ -324,7 +324,7 @@ class Service_dashboard_cron extends crm_controller
 			//updating the total values
 			$this->db->where('practice_name', 'Total');
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
-			echo $this->db->last_query();
+			// echo $this->db->last_query();
 			
 		}
 		
