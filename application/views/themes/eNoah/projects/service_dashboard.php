@@ -105,7 +105,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 						<th>Total</th>
 					</thead>
 				</tr>
-				<?php echo "<pre>"; print_r($projects['dashboard_det']); echo "</pre>"; ?>
+				<?php echo "<pre>"; print_r($dashboard_det); echo "</pre>"; ?>
 				<tr>
 					<td><b>Number of Projects currently running</b></td>
 					<?php if(!empty($practice_arr)) { ?>
@@ -122,16 +122,7 @@ $tot_actual_hr = $tot_estimate_hr = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_va
 										echo '-';
 									}
 								?>
-							</td>
-							
-							<?php
-							if(!empty($projects['dashboard_det'])){
-								foreach($projects['dashboard_det'] as $det){
-									echo $det['practice_name']; die;
-								}
-							}
-							?>
-							
+							</td>							
 						<?php } ?>
 					<?php } ?>
 					<td align='right'><?php echo ($total_projects!=0) ? $total_projects : '-'; ?></td>
