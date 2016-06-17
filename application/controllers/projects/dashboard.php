@@ -1339,7 +1339,14 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		echo "<pre>"; print_r($projects); exit;
+		//get values from services dashboard table
+		$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
+		$this->db->from($this->cfg['dbpref']. 'services_dashboard');
+		$sql = $this->db->get();
+		$results = $sql->result_array();
+		
+		
+		echo "<pre>"; print_r($results); exit;
 	}
 	
 	public function get_timesheet_actual_hours($pjt_code, $start_date=false, $end_date=false, $month=false)
