@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-ini_set('display_errors', 1);
+// ini_set('display_errors', 1);
 class Welcome extends crm_controller {
 	
 	public $cfg;
