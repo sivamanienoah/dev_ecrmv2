@@ -228,13 +228,103 @@
 					?>
 					<td colspan="3"><textarea name="comments" class="textfield width200px" style="width:544px;" rows="2" cols="25"><?php echo stripslashes($comments); ?></textarea></td>
 				</tr>
+				<tr><td colspan='4'>&nbsp;</td></tr>
+				<tr><td colspan='4'>&nbsp;</td></tr>
+				<tr>
+					<td colspan='4'>
+						  <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
+							<thead>
+								<tr class="bg-blue">
+									<td>First name</td>
+									<td>Last name</td>
+									<td>Position</td>
+									<td>Contact No</td>
+									<td>Email ID</td>
+									<td>Action</td>
+								</tr>
+							</thead>
+							<?php
+							    $i=1;
+								if(!empty($customer_contacts) && count($customer_contacts)>0){
+									foreach($customer_contacts as $row) {
+										$disp_style = '';
+										if($i!=count($customer_contacts)){
+											$disp_style = "style='display:none;'";
+										}
+										?>
+										<tr>
+											<td>
+												<input type="hidden" name="contact_id[]" value="<?php echo $row['custid']; ?>" class="textfield contact_id width180px required" />
+												<input type="text" name="first_name[]" value="<?php echo $row['first_name']; ?>" class=" first_name textfield width180px required" />
+												<span class="first_name_err_msg text-danger"></span>
+											</td>
+											<td>
+												<input type="text" name="last_name[]" value="<?php echo $row['last_name']; ?>" class="last_name textfield width180px required" />
+												<span class="last_name_err_msg text-danger"></span>
+											</td>
+											<td>
+											   <input type="text" name="position_title[]" value="<?php echo $row['position_title']; ?>" class="position_title textfield width180px required" />
+												<span class="position_title_err_msg text-danger"></span>
+											</td>
+											<td>
+											   <input type="text" name="phone_no[]" value="<?php echo $row['phone_no']; ?>" class="textfield phone width180px required" />
+												<span class="position_title_err_msg text-danger"></span>
+											</td>
+											<td>
+											   <input type="text" name="email[]" value="<?php echo $row['email']; ?>" class="textfield email width180px required" />
+												<span class="position_title_err_msg text-danger"></span>
+											</td>
+											<td width="100">
+												<a id="addRow" class="createBtn" <?=$disp_style?> ></a>
+												<a id="deleteRow" hyperid="<?=$row['id']?>" class="del_file"></a>
+											</td>
+										</tr>
+									<?php
+									$i++;
+									}
+								} else {
+							?>
+								<tr>
+									<td>
+										<input type="text" name="firstname[]" value="<?php echo $this->validation->first_name ?>" class=" first_name textfield width180px required" />
+										<span class="first_name_err_msg text-danger"></span>
+									</td>
+									<td>
+										<input type="text" name="lastname[]" value="<?php echo $this->validation->last_name ?>" class="last_name textfield width180px required" />
+										<span class="last_name_err_msg text-danger"></span>
+									</td>
+									<td>
+									   <input type="text" name="position[]" value="<?php echo $this->validation->position_title ?>" class="position_title textfield width180px required" />
+										<span class="position_title_err_msg text-danger"></span>
+									</td>
+									<td>
+									   <input type="text" name="phone_no[]" value="<?php echo $this->validation->phone_1 ?>" class="textfield phone width180px required" />
+										<span class="phone_err_msg text-danger"></span>
+									</td>
+									<td>
+									   <input type="text" name="email[]" value="<?php echo $this->validation->email_1 ?>" class="textfield email width180px required" />
+										<span class="email_err_msg err_msg text-danger"></span>
+									</td>
+									<td width="100" class='width180px'>
+										<a id="addRow" class="createBtn"></a>
+										<a id="deleteRow" hyperid="0" class="del_file"></a>
+									</td>
+								</tr>
+							<?php 
+						    }
+							?>
+						</table>
+					   
+					</td>
+				</tr>
+				<tr><td colspan='4'>&nbsp;</td></tr>
                 <tr>
 					<td>
 						&nbsp;
 					</td>
 					<td colspan="3">
                         <div class="buttons">
-							<button type="submit" name="update_customer" id="positiveBtn" class="positive">
+							<button type="button" onclick='cust_validation()' name="update_customer" id="positiveBtn" class="positive">
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
 							</button>
 						</div>
@@ -252,6 +342,11 @@
 		} ?>
 	</div>
 </div>
+<style>
+.text-danger{
+	color:red;
+}
+</style>
 <script>
 	var customer_user_id = "<?php echo $usernme['userid']; ?>";
 	var usr_level 		 = "<?php echo $usernme['level']; ?>";
