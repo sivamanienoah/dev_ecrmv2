@@ -288,23 +288,23 @@
 							?>
 								<tr>
 									<td>
-										<input type="text" name="firstname[]" value="<?php echo $this->validation->first_name ?>" class=" first_name textfield width180px required" />
+										<input type="text" name="firstname[]" value="" class=" first_name textfield width180px required" />
 										<span class="first_name_err_msg text-danger"></span>
 									</td>
 									<td>
-										<input type="text" name="lastname[]" value="<?php echo $this->validation->last_name ?>" class="last_name textfield width180px required" />
+										<input type="text" name="lastname[]" value="" class="last_name textfield width180px required" />
 										<span class="last_name_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="position[]" value="<?php echo $this->validation->position_title ?>" class="position_title textfield width180px required" />
+									   <input type="text" name="position[]" value="" class="position_title textfield width180px required" />
 										<span class="position_title_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="phone_no[]" value="<?php echo $this->validation->phone_1 ?>" class="textfield phone width180px required" />
+									   <input type="text" name="phone_no[]" value="" class="textfield phone width180px required" />
 										<span class="phone_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="email[]" value="<?php echo $this->validation->email_1 ?>" class="textfield email width180px required" />
+									   <input type="text" name="email[]" value="" class="textfield email width180px required" />
 										<span class="email_err_msg err_msg text-danger"></span>
 									</td>
 									<td width="100" class='width180px'>
