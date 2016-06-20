@@ -158,6 +158,16 @@ class Customer_model extends crm_model {
         }
     }
     
+    function insert_batch_customer($data) {
+	
+	    if ( $this->db->insert_batch($this->cfg['dbpref'] . 'customers', $data) ) {
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        } else {
+            return false;
+        }
+    }
+    
     function delete_customer($id) 
 	{
         $this->db->where('custid', $id);
@@ -234,6 +244,10 @@ class Customer_model extends crm_model {
 		$this->db->insert($this->cfg['dbpref'].'customers', $data);
 	}
 	
+	function insert_company($data) {
+		$this->db->insert($this->cfg['dbpref'].'customers_company', $data);
+		return $this->db->insert_id();
+	}
 	function get_customer_insert_id($data) {
 		$this->db->insert($this->cfg['dbpref'].'customers', $data);
 		return $this->db->insert_id();

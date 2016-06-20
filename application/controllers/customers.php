@@ -197,8 +197,37 @@ class Customers extends crm_controller {
 			
 				// print_r($update_data);exit;
 				//insert
+				$company_id	=	$this->customer_model->insert_company($update_data);
+				$update_data['company_id']	=	$company_id;
 				if ($newid = $this->customer_model->insert_customer($update_data)) 
 				{	
+				
+					//Entry to customer table
+					if (isset($pst_data['firstname']))
+					{
+						$first_name	=	$pst_data['firstname'];
+						$last_name	=	$pst_data['lastname'];
+						$position	=	$pst_data['position'];
+						$phone_no	=	$pst_data['phone_no'];
+						$email		=	$pst_data['email'];
+						$batch_insert_data	=	array();
+						for($i=0;$i<count($first_name);$i++)
+						{
+							$cust_data					=	array();
+							$cust_data					=	$update_data;
+							//$cust_data['company_id_fk']	=	$newid;
+							$cust_data['first_name']	=	$first_name[$i];
+							$cust_data['last_name']		=	$last_name[$i];
+							$cust_data['position_title']=	$position[$i];
+							$cust_data['phone_1']		=	$phone_no[$i];
+							$cust_data['email_1']			=	$email[$i];
+							
+							$batch_insert_data[]		=	$cust_data;
+						}
+						//echo'<pre>';print_r($batch_insert_data);exit;
+						$this->customer_model->insert_batch_customer($batch_insert_data);
+					}
+					
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));	
