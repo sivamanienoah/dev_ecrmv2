@@ -21,7 +21,7 @@ class Customer_contact_model extends crm_model {
     }
 	function get_customer_contacts($id) {
 		$this->db->order_by('custid','ASC');
-        $customer = $this->db->get_where($this->cfg['dbpref'].'customer_contacts', array('company_id_fk' => $id));
+        $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('company_id' => $id));
         if ($customer->num_rows() > 0) {
             return $customer->result_array();
         } else {

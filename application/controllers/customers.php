@@ -15,7 +15,7 @@ class Customers extends crm_controller {
         $this->load->library('validation');
     }
     
-    function index($limit = 0, $search = false) {
+    function index_old($limit = 0, $search = false) {
 		$default = array('last_name', 'asc');
 		if (!$this->session->userdata('customer_sort')) {
 			$this->session->set_userdata('customer_sort', $default);
@@ -31,7 +31,22 @@ class Customers extends crm_controller {
         }
         $this->load->view('customer_view', $data);
     }
-	
+	function index($limit = 0, $search = false) {
+		$default = array('last_name', 'asc');
+		if (!$this->session->userdata('customer_sort')) {
+			$this->session->set_userdata('customer_sort', $default);
+		}
+		
+		$current = $this->session->userdata('customer_sort');
+		$data['current_sort'] = $current;
+        $data['customers'] = $this->customer_model->company_list($limit, rawurldecode($search), $current[0], $current[1]);
+
+        if ($search == false) {           
+			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
+			$config['total_rows'] = (string) $this->customer_model->customer_count();
+        }
+        $this->load->view('customer_view', $data);
+    }
 	function set_search_order($type = 'last_name', $uri = 'customers') {
 		$current = $this->session->userdata('customer_sort');
 		$order = ($current[1] == 'asc') ? 'desc' : 'asc';
@@ -51,7 +66,7 @@ class Customers extends crm_controller {
 		
 		//echo '<pre>'; print_r($arrUsers);exit;
 
-        $rules['first_name'] = "trim|required";
+        //$rules['first_name'] = "trim|required";
 		// $rules['last_name'] = "trim|required";
 		$rules['company'] = "trim|required";
 		
@@ -71,9 +86,12 @@ class Customers extends crm_controller {
 		}
 		$this->validation->set_rules($rules);	
 		
-		$fields['first_name'] = "First Name";
+		/* $fields['first_name'] = "First Name";
 		$fields['last_name'] = "Last Name";
 		$fields['position_title'] = 'Position';
+		$fields['phone_1'] = "Phone Number";
+		$fields['email_1'] = "Primary Email Address"; */
+		
 		$fields['company'] = "Company";
 		$fields['add1_line1'] = "";
 		$fields['add1_line2'] = "";
@@ -83,11 +101,9 @@ class Customers extends crm_controller {
 		$fields['add1_country'] = "Country";
 		$fields['add1_state'] = "State";
 		$fields['add1_location'] = "Location";
-		$fields['phone_1'] = "Phone Number";
 		$fields['phone_2'] = '';
 		$fields['phone_3'] = '';
 		$fields['phone_4'] = '';
-		$fields['email_1'] = "Primary Email Address";
 		$fields['email_2'] = "";
 		$fields['email_3'] = "";
 		$fields['email_4'] = "";
@@ -109,7 +125,8 @@ class Customers extends crm_controller {
 		
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($pst_data['update_customer']))
 		{
-            $customer = $this->customer_model->get_customer($id);
+            $customer = $this->customer_model->get_company($id);
+			$data['customer_contacts'] 	= $this->customer_model->get_customer_contacts($id);
 			if($customer[0]['sales_contact_userid_fk']!='0') {
 				$data['sales_person_detail'] = $this->customer_model->get_records_by_id('users', array('userid'=>$customer[0]['sales_contact_userid_fk']));
 			}
@@ -131,7 +148,7 @@ class Customers extends crm_controller {
 		
 		if ($this->validation->run() == false) 
 		{
-			
+			//echo'<pre>'; print_r($data);exit;
             if ($ajax == false) {
                 $this->load->view('customer_add_view', $data);
             } else {
@@ -159,8 +176,45 @@ class Customers extends crm_controller {
 				$update_data['exported'] = NULL;
 				
 				//update
-				if ($this->customer_model->update_customer($id, $update_data)) 
+				if ($this->customer_model->update_company($id, $update_data)) 
 				{
+					if (isset($pst_data['firstname']))
+					{
+						//echo'<pre>';print_r($pst_data);exit;
+						$contact_id	=	$pst_data['contact_id'];
+						$first_name	=	$pst_data['firstname'];
+						$last_name	=	$pst_data['lastname'];
+						$position	=	$pst_data['position'];
+						$phone_no	=	$pst_data['phone_no'];
+						$email		=	$pst_data['email'];
+						$batch_insert_data	=	array();
+						
+						for($i=0;$i<count($first_name);$i++)
+						{
+							$cust_data					=	array();
+							$cust_data['first_name']	=	$first_name[$i];
+							$cust_data['last_name']		=	$last_name[$i];
+							$cust_data['position_title']=	$position[$i];
+							$cust_data['phone_1']		=	$phone_no[$i];
+							$cust_data['email_1']		=	$email[$i];
+							//echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
+							if($contact_id[$i])
+							{
+								$this->customer_model->update_customer_contacts($cust_data,$contact_id[$i]);
+							}else{
+								$cust_data['company_id']	=	$id;
+								$batch_insert_data[]		=	$cust_data;
+							}
+							
+						}
+						
+						//echo'<pre>';print_r($batch_insert_data);exit;
+						if(count($batch_insert_data))
+						{
+							$this->customer_model->insert_batch_customer($batch_insert_data);
+						}
+					}
+					
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
@@ -195,11 +249,11 @@ class Customers extends crm_controller {
 			else 
 			{
 			
-				// print_r($update_data);exit;
+				
 				//insert
-				$company_id	=	$this->customer_model->insert_company($update_data);
-				$update_data['company_id']	=	$company_id;
-				if ($newid = $this->customer_model->insert_customer($update_data)) 
+				
+				
+				if ($company_id	=	$this->customer_model->insert_company($update_data)) 
 				{	
 				
 					//Entry to customer table
@@ -214,13 +268,13 @@ class Customers extends crm_controller {
 						for($i=0;$i<count($first_name);$i++)
 						{
 							$cust_data					=	array();
-							$cust_data					=	$update_data;
-							//$cust_data['company_id_fk']	=	$newid;
+							//$cust_data					=	$update_data;
+							$cust_data['company_id']	=	$company_id;
 							$cust_data['first_name']	=	$first_name[$i];
 							$cust_data['last_name']		=	$last_name[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
-							$cust_data['email_1']			=	$email[$i];
+							$cust_data['email_1']		=	$email[$i];
 							
 							$batch_insert_data[]		=	$cust_data;
 						}

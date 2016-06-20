@@ -28,10 +28,10 @@
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 			<thead>
                 <tr>
-                    <th>Full Name</th>
+                    <!--<th>Full Name</th>-->
                     <th>Company</th>
-                    <th>Phone</th>
-                    <th>Email</th>
+                    <!--<th>Phone</th>-->
+                    <!--<th>Email</th>-->
 					<th>Region</th>
 					<th>Country</th>
 					<th>Is Client</th>
@@ -43,12 +43,12 @@
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
-                        <td>
+                        <!--<td>
 							<?php if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php echo  $customer['custid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a> <?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?>
-						</td>
+						</td>-->
                         <td><?php echo $customer['company'] ?></td>
-                        <td><?php echo $customer['phone_1'] ?></td>
-                        <td><?php echo $customer['email_1'] ?></td>
+                       <!-- <td><?php echo $customer['phone_1'] ?></td>-->
+                       <!-- <td><?php echo $customer['email_1'] ?></td>-->
                         <td><?php echo $customer['region_name'] ?></td>
                         <td><?php echo $customer['country_name'] ?></td>
                         <td>
@@ -61,10 +61,10 @@
 						<td><?php echo $customer['client_code'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
+								<a href="customers/add_customer/update/<?php echo $customer['company_id']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
 							<?php } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid']; ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete' ></a>
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['company_id']; ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete' ></a>
 							<?php } ?>
 							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						</td>
