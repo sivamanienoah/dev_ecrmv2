@@ -549,30 +549,29 @@ class Welcome extends crm_controller {
 			
 			$proposal_expected_date = strtotime($data['proposal_expected_date']);
 		    $ewa = '';
-			$ins['lead_title'] = $data['lead_title'];
-			$ins['custid_fk'] = $data['custid_fk'];
-			$ins['lead_service'] = $data['lead_service'];
-			$ins['lead_source'] = $data['lead_source'];
-			$ins['lead_assign'] = $data['lead_assign'];
+			$ins['lead_title']      = $data['lead_title'];
+			$ins['custid_fk']       = $data['custid_fk'];
+			$ins['lead_service']    = $data['lead_service'];
+			$ins['lead_source']     = $data['lead_source'];
+			$ins['lead_assign']     = $data['lead_assign'];
 			$ins['expect_worth_id'] = $data['expect_worth'];
 			if($data['expect_worth_amount'] == '') {
 				$ewa = '0.00';
+			} else {
+				$ewa = $data['expect_worth_amount'];
 			}
-			else {
-			$ewa = $data['expect_worth_amount'];
-			}  
 			$ins['expect_worth_amount'] = $ewa; 
-			$ins['belong_to'] = $data['job_belong_to'];
-			$ins['division']  = $data['job_division'];
-			$ins['industry']  = $data['industry'];
-			$ins['date_created'] = date('Y-m-d H:i:s');
-			$ins['date_modified'] = date('Y-m-d H:i:s');
-			$ins['lead_stage'] = 1;
-			$ins['lead_indicator'] = $data['lead_indicator'];
+			$ins['belong_to']		    = $data['job_belong_to'];
+			$ins['division'] 		    = $data['job_division'];
+			$ins['industry']		    = $data['industry'];
+			$ins['date_created']		= date('Y-m-d H:i:s');
+			$ins['date_modified']		= date('Y-m-d H:i:s');
+			$ins['lead_stage']			= 1;
+			$ins['lead_indicator']	    = $data['lead_indicator'];
 			$ins['proposal_expected_date'] = date('Y-m-d H:i:s', $proposal_expected_date);
-			$ins['created_by'] = $this->userdata['userid'];
-			$ins['modified_by'] = $this->userdata['userid'];
-			$ins['lead_status'] = 1;
+			$ins['created_by']			= $this->userdata['userid'];
+			$ins['modified_by']		    = $this->userdata['userid'];
+			$ins['lead_status']			= 1;
 			
 			if ($this->db->insert($this->cfg['dbpref'] . 'leads', $ins))
             {
@@ -581,13 +580,13 @@ class Welcome extends crm_controller {
 				$invoice_no = str_pad($invoice_no, 5, '0', STR_PAD_LEFT);
 				
 				//history - lead_stage_history
-				$lead_hist['lead_id'] = $insert_id;
-				$lead_hist['dateofchange'] = date('Y-m-d H:i:s');
+				$lead_hist['lead_id']		  = $insert_id;
+				$lead_hist['dateofchange']	  = date('Y-m-d H:i:s');
 				$lead_hist['previous_status'] = 1;
-				$lead_hist['changed_status'] = 1;
-				$lead_hist['lead_status'] = 1;
-				$lead_hist['modified_by'] = $this->userdata['userid'];
-				$insert_lead_stg_his = $this->welcome_model->insert_row('lead_stage_history', $lead_hist);
+				$lead_hist['changed_status']  = 1;
+				$lead_hist['lead_status'] 	  = 1;
+				$lead_hist['modified_by']	  = $this->userdata['userid'];
+				$insert_lead_stg_his		  = $this->welcome_model->insert_row('lead_stage_history', $lead_hist);
 				
 				//history - lead_status_history
 				$lead_stat_hist['lead_id'] = $insert_id;
@@ -637,7 +636,7 @@ class Welcome extends crm_controller {
 				echo "{error:true, errormsg:'Data insert failed!'}";
 			}
 			
-			$get_det = $this->welcome_model->get_lead_det($insert_id);
+			$get_det  = $this->welcome_model->get_lead_det($insert_id);
 			$customer = $this->welcome_model->get_customer_det($get_det['custid_fk']);
 			
 			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($get_det['lead_assign']);

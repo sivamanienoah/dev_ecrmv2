@@ -10,7 +10,8 @@ class Customer_model extends crm_model {
         $this->userdata = $this->session->userdata('logged_in_user');
     }
     
-    function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false) {
+	/* function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false) 
+	{
         $restrict = '';
         $restrict_search = '';
 		//customer restriction on level based.
@@ -73,7 +74,7 @@ class Customer_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
 		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
         if ($this->userdata['level'] == 2) {
-			$this->db->where_in('CUST.add1_region', $regions_ids);				
+			$this->db->where_in('CUST.add1_region', $regions_ids);
 		} else if ($this->userdata['level'] == 3) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
 			$this->db->where_in('CUST.add1_country', $countries_ids);
@@ -96,6 +97,91 @@ class Customer_model extends crm_model {
 		$customers = $this->db->get();        
         // echo $this->db->last_query();
         return $customers->result_array(); 
+    } */
+	
+	function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false)
+	{
+        $restrict = '';
+        $restrict_search = '';
+		//customer restriction on level based.
+		if ($this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4 || $this->userdata['level'] == 5) {
+			$cond = array('level_id' => $this->userdata['level'], 'user_id' => $this->userdata['userid']);
+			
+			$this->db->select('region_id');
+		 	$reg_res = $this->db->get_where($this->cfg['dbpref']."levels_region", $cond);
+			$reg_details = $reg_res->result_array();
+			foreach($reg_details as $reg) {
+				$regions[] = $reg['region_id'];
+			}
+			$regions_ids = array_unique($regions);
+			$regions_ids = (array_values($regions)); //reset the keys in the array
+		
+			//restriction for country
+			$this->db->select('country_id');
+			$coun_res = $this->db->get_where($this->cfg['dbpref']."levels_country", $cond);
+			$coun_details = $coun_res->result_array();
+			foreach($coun_details as $coun) {
+				$countries[] = $coun['country_id'];
+			}
+			if (!empty($countries)) {
+				$countries_ids = array_unique($countries);
+				$countries_ids = (array_values($countries)); //reset the keys in the array
+			}
+		
+			//restriction for state
+			$this->db->select('state_id');
+			$state_res = $this->db->get_where($this->cfg['dbpref']."levels_state", $cond);
+			$ste_details = $state_res->result_array();
+			foreach($ste_details as $ste) {
+				$states[] = $ste['state_id'];
+			}
+			if (!empty($states)) {
+				$states_ids = array_unique($states);
+				$states_ids = (array_values($states)); //reset the keys in the array				
+			}
+		
+			//restriction for location
+			$this->db->select('location_id');
+			$loc_res = $this->db->get_where($this->cfg['dbpref']."levels_location", $cond);
+			$loc_details = $loc_res->result_array();
+			foreach($loc_details as $loc) {
+				$locations[] = $loc['location_id'];
+			}
+			if (!empty($locations)) {
+				$locations_ids = array_unique($locations);
+				$locations_ids = (array_values($locations)); //reset the keys in the array
+			}
+		}
+       
+        $offset = $this->db->escape_str($offset);	
+		$this->db->select('CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
+		$this->db->from($this->cfg['dbpref'].'customers_company as CUST');
+		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
+		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
+        if ($this->userdata['level'] == 2) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+		} else if ($this->userdata['level'] == 3) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+		} else if ($this->userdata['level'] == 4) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+		} else if ($this->userdata['level'] == 5) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+			$this->db->where_in('CUST.add1_location', $locations_ids);
+		}
+		if($search != false) {
+			$search = $this->db->escape_str(urldecode($search));
+			$this->db->where("(company LIKE '%$search%')");
+		}
+		if(!empty($limit))
+		$this->db->limit($limit);
+		$customers = $this->db->get();
+        // echo $this->db->last_query(); exit;
+        return $customers->result_array();
     }
     
 	function company_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false) {
@@ -200,6 +286,20 @@ class Customer_model extends crm_model {
         }
     }
 	
+	function get_contacts($customer_id) {
+		$this->db->select('c.custid,c.first_name,c.last_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.custid = c.company_id');
+		$this->db->where_in('c.company_id', $customer_id);
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); die;
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return FALSE;
+        }
+    }
+	
     function get_company($id) {
         $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('company_id' => $id), 1);
         if ($customer->num_rows() > 0) {
@@ -217,6 +317,7 @@ class Customer_model extends crm_model {
             return FALSE;
         }
     }
+
     /**
      * List of new or updated customers
      * This will be used to generate the vcards

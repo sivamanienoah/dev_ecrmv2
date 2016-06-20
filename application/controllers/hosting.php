@@ -192,9 +192,10 @@ class Hosting extends crm_controller {
         }
     }
    
-	function ajax_customer_search() {
+	/* function ajax_customer_search() {
         if ($this->input->post('cust_name')) {
             $result = $this->customer_model->customer_list(0, $this->input->post('cust_name'));
+
             $i=0;
             if (count($result) > 0) foreach ($result as $cust) {
                 //$company = (trim($cust['company']) == '') ? '' : " - " . $cust['company'];
@@ -211,18 +212,37 @@ class Hosting extends crm_controller {
             }
         }
         echo json_encode($res); exit;
-    }
-	
-	/* function ajax_customer_search()
-    {
-        if ($this->input->post('q')) {
-            $result = $this->customer_model->customer_list(0, $this->input->post('q'));
-            if (count($result) > 0) foreach ($result as $cust) {
-                $company = (trim($cust['company']) == '') ? '' : " - " . $cust['company'];
-                echo "{$cust['first_name']} {$cust['last_name']}{$company}|{$cust['custid']}|{$cust['add1_region']}|{$cust['add1_country']}|{$cust['add1_state']}|{$cust['add1_location']}\n";
+    } */
+
+	function ajax_customer_search() {
+        if ($this->input->post('cust_name')) {
+            $result = $this->customer_model->customer_list(0, $this->input->post('cust_name'));
+			
+			$customer_id = array();
+			if (count($result) > 0) {
+				foreach ($result as $cust) {
+					$customer_id[] = $cust['custid'];
+				}
+			}
+            
+            if (count($customer_id) > 0) {
+				$contacts = $this->customer_model->get_contacts($customer_id);
+				if(!empty($contacts)) {
+					$i=0;
+					foreach($contacts as $rec){
+						$res[$i]['id']      = $rec['custid'];
+						$res[$i]['label']   = $rec['company'].' - '.$rec['first_name'].' '.$rec['last_name'];
+						$res[$i]['regId']   = $rec['add1_region'];
+						$res[$i]['cntryId'] = $rec['add1_country'];
+						$res[$i]['stId']	= $rec['add1_state'];
+						$res[$i]['locId']   = $rec['add1_location'];
+						$i++;
+					}
+				}
             }
         }
-    } */
+        echo json_encode($res); exit;
+    }
     
 	function hosts($custid='') {
 		if($custid<=0) redirect('hosting/');

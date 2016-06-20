@@ -26,7 +26,7 @@ class Customers extends crm_controller {
         $data['customers'] = $this->customer_model->customer_list($limit, rawurldecode($search), $current[0], $current[1]);
 
         if ($search == false) {           
-			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
+			$config['base_url']   = $this->config->item('base_url') . 'customers/index/';
 			$config['total_rows'] = (string) $this->customer_model->customer_count();
         }
         $this->load->view('customer_view', $data);

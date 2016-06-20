@@ -19,18 +19,19 @@ class Welcome_model extends crm_model {
 		j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
 		j.department_id_fk, j.resource_type, j.project_type, j.project_category, j.cost_center, j.project_center, j.sow_status, 
 		j.date_start, j.date_due,
-		c.*, c.first_name AS cfn, c.last_name AS cln, c.add1_region, c.add1_country, c.add1_state, c.add1_location,  rg.region_name, coun.country_name, 
+		c.*, c.first_name AS cfn, c.last_name AS cln, cc.add1_region, cc.add1_country, cc.add1_state, cc.add1_location,  rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name, i.industry');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
-		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');		
+		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+		$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.custid = c.company_id');		
 		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
 		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 		$this->db->join($this->cfg['dbpref'] . 'users as own', 'own.userid = j.belong_to');
-		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
-		$this->db->join($this->cfg['dbpref'] . 'country as coun', 'coun.countryid = c.add1_country');
-		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = c.add1_state');
-		$this->db->join($this->cfg['dbpref'] . 'location as loc', 'loc.locationid = c.add1_location');
+		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+		$this->db->join($this->cfg['dbpref'] . 'country as coun', 'coun.countryid = cc.add1_country');
+		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+		$this->db->join($this->cfg['dbpref'] . 'location as loc', 'loc.locationid = cc.add1_location');
 		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'] . 'lead_source as lsrc', 'lsrc.lead_source_id = j.lead_source');
@@ -144,21 +145,22 @@ class Welcome_model extends crm_model {
 		
 		$userdata = $this->session->userdata('logged_in_user');
 		
-	    $this->db->select('custid, first_name, last_name, company');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
+	    $this->db->select('custid, company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers_company');
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('custid', $cusId);
 		}
-		$this->db->order_by("first_name", "asc");
+		$this->db->order_by("company", "asc");
 	    $customers = $this->db->get();
 	    $customers=  $customers->result_array();
 	    return $customers;
 	}
 	
 	function get_customer_det($cid) {
-	    $this->db->select('first_name, last_name, company, email_1');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
-	    $this->db->where('custid', $cid);
+	    $this->db->select('c.first_name, c.last_name, cc.company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers as c');
+	    $this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.custid = c.company_id');
+	    $this->db->where('c.custid', $cid);
 	    $cust_det = $this->db->get();
 	    return $cust_det->row_array();
 	}
@@ -510,19 +512,20 @@ class Welcome_model extends crm_model {
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
-			c.first_name, c.last_name, c.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.first_name, c.last_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			$this->db->where('j.pjt_status', 0);
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+			$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.custid = c.company_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
 			$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
-			$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = c.add1_region');
-			$this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = c.add1_country');
-			$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = c.add1_state');
-			$this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = c.add1_location');
+			$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+			$this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
+			$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+			$this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
 			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
@@ -575,25 +578,25 @@ class Welcome_model extends crm_model {
 			
 			if(!empty($regionname) && count($regionname)>0){
 				if($regionname[0] != 'null' && $regionname[0] != 'all'){
-					$this->db->where_in('c.add1_region', $regionname);
+					$this->db->where_in('cc.add1_region', $regionname);
 				}
 			}
 			
 			if(!empty($countryname) && count($countryname)>0){
 				if(!empty($countryname) && $countryname[0] != 'null' && $countryname[0] != 'all'){
-					$this->db->where_in('c.add1_country', $countryname);
+					$this->db->where_in('cc.add1_country', $countryname);
 				}
 			}
 			
 			if(!empty($statename) && count($statename)>0){
 				if(!empty($statename) && $statename[0] != 'null' && $statename[0] != 'all'){	
-					$this->db->where_in('c.add1_state', $statename);
+					$this->db->where_in('cc.add1_state', $statename);
 				}
 			}
 			
 			if(!empty($locname) && count($locname)>0){
 				if(!empty($locname) && $locname[0] != 'null' && $locname[0] != 'all'){	
-					$this->db->where_in('c.add1_location', $locname);
+					$this->db->where_in('cc.add1_location', $locname);
 				}
 			}
 			
@@ -621,18 +624,19 @@ class Welcome_model extends crm_model {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 						
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
-			c.first_name, c.last_name, c.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.first_name, c.last_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			
-			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');		
+			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.custid = c.company_id');			
 			$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
 			$this->db->join($this->cfg['dbpref'].'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
-			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = c.add1_region');
-			$this->db->join($this->cfg['dbpref'].'country as co', 'co.countryid = c.add1_country');
-			$this->db->join($this->cfg['dbpref'].'state as st', 'st.stateid = c.add1_state');
-			$this->db->join($this->cfg['dbpref'].'location as locn', 'locn.locationid = c.add1_location');
+			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = cc.add1_region');
+			$this->db->join($this->cfg['dbpref'].'country as co', 'co.countryid = cc.add1_country');
+			$this->db->join($this->cfg['dbpref'].'state as st', 'st.stateid = cc.add1_state');
+			$this->db->join($this->cfg['dbpref'].'location as locn', 'locn.locationid = cc.add1_location');
 			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->where('j.pjt_status', 0); 
@@ -686,7 +690,7 @@ class Welcome_model extends crm_model {
 			}
 			if(!empty($keyword) && count($keyword)>0){
 				if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
 					$this->db->where($invwhere);
 				}
 			}
@@ -711,16 +715,16 @@ class Welcome_model extends crm_model {
 				if (isset($this->session->userdata['locationid']))
 				$locationid = explode(',',$this->session->userdata['locationid']);
 
-				$this->db->where_in('c.add1_region',$region);
+				$this->db->where_in('cc.add1_region',$region);
 				
 				if (isset($this->session->userdata['countryid'])) {
-					$this->db->where_in('c.add1_country',$countryid); 
+					$this->db->where_in('cc.add1_country',$countryid); 
 				}
 				if (isset($this->session->userdata['stateid'])) {
-					$this->db->where_in('c.add1_state',$stateid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				}
 				if (isset($this->session->userdata['locationid'])) {
-					$this->db->where_in('c.add1_location',$locationid); 
+					$this->db->where_in('cc.add1_location',$locationid); 
 				}
 				
 				//or_where condition is used for to bring the lead owner leads when he creating the leads for different region.
@@ -730,27 +734,27 @@ class Welcome_model extends crm_model {
 			
 			//Advanced filter
 				if(!empty($regionname) && $regionname[0] != 'null'){
-					$this->db->where_in('c.add1_region',$regionname);
+					$this->db->where_in('cc.add1_region',$regionname);
 				} else {
-					$this->db->where_in('c.add1_region',$region);
+					$this->db->where_in('cc.add1_region',$region);
 				}
 				// if($countryname[0] != 'null' && $countryname[0] != 'all') {
 				if(!empty($countryname) && $countryname[0] != 'null') {
-					$this->db->where_in('c.add1_country', $countryname);
+					$this->db->where_in('cc.add1_country', $countryname);
 				} else if ((($this->userdata['level'])==3) || (($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
-					$this->db->where_in('c.add1_country',$countryid);
+					$this->db->where_in('cc.add1_country',$countryid);
 				}
 				// if($statename[0] != 'null' && $statename[0] != 'all') {	
 				if(!empty($statename) && $statename[0] != 'null') {	
-					$this->db->where_in('c.add1_state', $statename);
+					$this->db->where_in('cc.add1_state', $statename);
 				} else if ((($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
-					$this->db->where_in('c.add1_state',$stateid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				}
 				// if($locname[0] != 'null' && $locname[0] != 'all') {	
 				if(!empty($locname) && $locname[0] != 'null') {	
-					$this->db->where_in('c.add1_location', $locname);
+					$this->db->where_in('cc.add1_location', $locname);
 				} else if (($this->userdata['level'])==5) {
-					$this->db->where_in('c.add1_location',$locationid);
+					$this->db->where_in('cc.add1_location', $locationid);
 				}
 				if(!empty($lead_status)  && $lead_status[0] != 'null'){	
 					$this->db->where_in('j.lead_status', $lead_status);
@@ -863,7 +867,7 @@ class Welcome_model extends crm_model {
 		}
 		$stat = $this->db->get($this->cfg['dbpref'] . 'state');
 		
-		return $stat->result_array();	
+		return $stat->result_array();
     }
 	
 	//for locations
@@ -1025,7 +1029,7 @@ class Welcome_model extends crm_model {
 	//For Customers
 	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) {
 		$this->db->select('custid');
-		$this->db->from($this->cfg['dbpref'].'customers');
+		$this->db->from($this->cfg['dbpref'].'customers_company');
 		if (!empty($regId)) {
 			$this->db->where_in('add1_region', $regId);
 		}

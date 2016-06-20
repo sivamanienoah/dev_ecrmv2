@@ -170,28 +170,32 @@ class User_model extends crm_model {
 	*@Method  get_userslist
 	*/
 	public function get_userslist($regid, $cntryid, $steid, $locid) {
+		$two_not = array(5,4,3);
 		$this->db->select('user_id');
 		$this->db->from($this->cfg['dbpref']."levels_region");
 		$this->db->where('region_id',$regid); 
-		$this->db->where_not_in('level_id','5,4,3');
-		$query = $this->db->get();		
-
+		$this->db->where_not_in('level_id', $two_not);
+		$query = $this->db->get();
+		
+		$three_not = array(5,4,2);
 		$this->db->select('user_id');
 		$this->db->from($this->cfg['dbpref']."levels_country");
 		$this->db->where('country_id',$cntryid); 
-		$this->db->where_not_in('level_id','5,4,2');
-		$cntryquery = $this->db->get();		
+		$this->db->where_not_in('level_id',$three_not);
+		$cntryquery = $this->db->get();
 
+		$four_not = array(5,3,2);
 		$this->db->select('user_id');
 		$this->db->from($this->cfg['dbpref']."levels_state");
 		$this->db->where('state_id',$steid); 
-		$this->db->where_not_in('level_id','5,3,2');
-		$stequery = $this->db->get();		
+		$this->db->where_not_in('level_id',$four_not);
+		$stequery = $this->db->get();
 
+		$five_not = array(4,3,2);
 		$this->db->select('user_id');
 		$this->db->from($this->cfg['dbpref']."levels_location");
 		$this->db->where('location_id',$locid); 
-		$this->db->where_not_in('level_id','4,3,2');
+		$this->db->where_not_in('level_id',$five_not);
 		$locquery = $this->db->get();		
 
 		$this->db->select('userid as user_id');

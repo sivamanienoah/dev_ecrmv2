@@ -775,7 +775,7 @@ h3 .small {
                 <h2>Create a Lead</h2>
              
                 <div>
-                    <p><label>Start by typing in <strong>customer name</strong> or <strong>company name</strong>.</label></p>
+                    <p><label>Start by typing in <strong>company name</strong>.</label></p>
                     <p><input type="text" name="ex_cust_name" id="ex-cust-name" class="textfield width300px" /></p>
                     <p class="notice width250px">If this is a new customer you need to add the<br /> customer
                     by <a href="#" class="modal-new-cust">completing their details</a>.</p>
