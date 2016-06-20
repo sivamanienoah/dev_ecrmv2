@@ -364,7 +364,8 @@ class Customer_model extends crm_model {
     }
 	
     function update_customer_contacts($data,$contact_id) {
-		$this->db->where(['custid'=>$contact_id]);
+		$condn = array('custid'=>$contact_id);
+		$this->db->where($condn);
         $customer = $this->db->update($this->cfg['dbpref'].'customers',$data);
     }
 	
