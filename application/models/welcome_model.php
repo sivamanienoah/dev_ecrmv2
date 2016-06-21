@@ -600,9 +600,29 @@ class Welcome_model extends crm_model {
 				}
 			}
 			
-			if(!empty($lead_status) && count($lead_status)>0){
+			/* if(!empty($lead_status) && count($lead_status)>0){
 				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='') {	
 					$this->db->where_in('j.lead_status', $lead_status);
+				}
+			} */
+			if(!empty($lead_status) && count($lead_status)>0){
+				if(!empty($lead_status) & count($lead_status)==1){
+					if(in_array('5', $lead_status)){
+						$lead_status = array_diff($lead_status, array('5'));
+						$this->db->where('j.move_to_project_status', 1);
+					}
+					if(in_array('4', $lead_status)){
+						$this->db->where('j.lead_status', 4);
+						$this->db->where('j.pjt_status', 0);
+					}
+				}
+				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
+					$this->db->where_in('j.lead_status', $lead_status);
+				}
+					if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
+					$lead_status = array_diff($lead_status, array('5'));
+					$this->db->where('j.move_to_project_status', 1);
+					$this->db->or_where_in('j.lead_status', $lead_status);
 				}
 			}
 			
@@ -756,8 +776,28 @@ class Welcome_model extends crm_model {
 				} else if (($this->userdata['level'])==5) {
 					$this->db->where_in('cc.add1_location', $locationid);
 				}
-				if(!empty($lead_status)  && $lead_status[0] != 'null'){	
+				/* if(!empty($lead_status)  && $lead_status[0] != 'null'){	
 					$this->db->where_in('j.lead_status', $lead_status);
+				} */
+				if(!empty($lead_status) && count($lead_status)>0){
+					if(!empty($lead_status) & count($lead_status)==1){
+						if(in_array('5', $lead_status)){
+							$lead_status = array_diff($lead_status, array('5'));
+							$this->db->where('j.move_to_project_status', 1);
+						}
+						if(in_array('4', $lead_status)){
+							$this->db->where('j.lead_status', 4);
+							$this->db->where('j.pjt_status', 0);
+						}
+					}
+					if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
+						$this->db->where_in('j.lead_status', $lead_status);
+					}
+						if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
+						$lead_status = array_diff($lead_status, array('5'));
+						$this->db->where('j.move_to_project_status', 1);
+						$this->db->or_where_in('j.lead_status', $lead_status);
+					}
 				}
 				if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
 					$this->db->where_in('j.lead_indicator', $lead_indi);
