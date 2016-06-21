@@ -25,11 +25,20 @@ $userdata = $this->session->userdata('logged_in_user');
 		{
 			foreach($filter_results as $filter_result) 
 			{
+				if($filter_result['pjt_status']!=0)
+				{
+					$view_url=base_url().'project/view_project/'.$filter_result['lead_id'];
+					$view_lead_url=base_url().'project/view_project/'.$filter_result['lead_id'];
+				}else
+				{
+					$view_url=base_url().'welcome/view_quote/'.$filter_result['lead_id'];
+					$view_lead_url=base_url().'welcome/view_quote/'.$filter_result['lead_id'].'/'.'draft';
+				}
 	?>
 			<tr id='<?php echo $filter_result['lead_id'] ?>'>
 				<td class="actions" align="center">
 					<?php if ($this->session->userdata('viewlead')==1) { ?>
-						<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo $filter_result['lead_id'] ?>" title='View'>
+						<a href="<?php echo $view_url;?>" title='View'>
 							<img src="assets/img/view.png" alt='view' >
 						</a>
 					<?php } ?>
@@ -45,10 +54,10 @@ $userdata = $this->session->userdata('logged_in_user');
 					<?php } ?>
 				</td>
 				<td>		
-				<a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>">		
+				<a href="<?php echo $view_lead_url;?>">		
 				<?php echo $filter_result['invoice_no']; ?></a> 
 				</td>
-				<td> <a href="<?php echo base_url(); ?>welcome/view_quote/<?php echo  $filter_result['lead_id'], '/', 'draft' ?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
+				<td> <a href="<?php echo $view_lead_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
 					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
 				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
@@ -73,6 +82,9 @@ $userdata = $this->session->userdata('logged_in_user');
 				</td>
 				<td>		
 					<?php 
+						if($filter_result['pjt_status']!=0){
+							$filter_result['lead_status']=5;
+						}
 						switch ($filter_result['lead_status'])
 						{
 							case 1:
@@ -86,6 +98,9 @@ $userdata = $this->session->userdata('logged_in_user');
 							break;
 							case 4:
 								echo $status = '<span class=label-success>Closed</span>';
+							break;
+							case 5:
+								echo $status = '<span class=label-success>Moved to Project</span>';
 							break;
 						}
 					?>
