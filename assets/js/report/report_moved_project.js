@@ -43,8 +43,8 @@ $(function(){
 				$('#advance').show();
 				$('#load').hide();	
 			});
-		}
-		/* else
+		/*}
+		 else
 		{
 			$('#report_error_msg').html('Please select From date or To date');
 			$('#advance').show();
