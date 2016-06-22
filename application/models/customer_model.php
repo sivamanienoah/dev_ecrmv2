@@ -99,7 +99,7 @@ class Customer_model extends crm_model {
         return $customers->result_array(); 
     } */
 	
-	function customer_list($offset, $search, $order_field = 'last_name', $order_type = 'asc', $limit = false)
+	function customer_list($offset, $search, $order_field='last_name', $order_type='asc', $limit = false)
 	{
         $restrict = '';
         $restrict_search = '';
@@ -286,6 +286,21 @@ class Customer_model extends crm_model {
         }
     }
 	
+	function get_lead_customer($id) {
+        // $this->db->select('c.custid,c.first_name,c.last_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
+        $this->db->select('c.*,cc.*');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.custid = c.company_id');
+		$this->db->where_in('c.custid', $id);
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); die;
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return FALSE;
+        }
+    }
+	
 	function get_contacts($customer_id) {
 		$this->db->select('c.custid,c.first_name,c.last_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
 		$this->db->from($this->cfg['dbpref'].'customers as c');
@@ -301,7 +316,7 @@ class Customer_model extends crm_model {
     }
 	
     function get_company($id) {
-        $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('company_id' => $id), 1);
+        $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('custid' => $id), 1);
         if ($customer->num_rows() > 0) {
             return $customer->result_array();
         } else {
@@ -355,7 +370,7 @@ class Customer_model extends crm_model {
     }
 	
     function update_company($id, $data) {
-        $this->db->where('company_id', $id);
+        $this->db->where('custid', $id);
 		$this->db->update($this->cfg['dbpref'] . 'customers_company', $data);
 		if(!empty($data['client_code'])) {
 			$this->update_client_details_to_timesheet($data['client_code']);
