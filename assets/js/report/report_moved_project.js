@@ -35,21 +35,21 @@ $(function(){
 		var params = {start_date:start_date,end_date:end_date,practices:practices,divisions:divisions};
 		params[csrf_token_name] = csrf_hash_token; 
 		
-		$('#report_error_msg').html('');
+		// $('#report_error_msg').html('');
 		
-		if(start_date!='' || end_date!='')
-		{
+		/* if(start_date!='' || end_date!='')
+		{ */
 			$('#report_grid').load(base_url+'report/report_moved_project/get_moved_project_report',params,function(){
 				$('#advance').show();
 				$('#load').hide();	
 			});
 		}
-		else
+		/* else
 		{
 			$('#report_error_msg').html('Please select From date or To date');
 			$('#advance').show();
 			$('#load').hide();
-		}
+		} */
 	});
 });
 
