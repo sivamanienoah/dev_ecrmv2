@@ -34,8 +34,8 @@ if (get_default_currency()) {
 				{
 			?>
 					<tr>
-						<td><?php echo empty($proj->invoice_no)?'':$proj->invoice_no; ?></td>
-						<td><?php echo empty($proj->lead_title)?'':$proj->lead_title; ?></td>
+						<td><a href="<?php echo base_url().'project/view_project/'.$proj->lead_id;?>"><?php echo empty($proj->invoice_no)?'':$proj->invoice_no; ?></a></td>
+						<td><a href="<?php echo base_url().'project/view_project/'.$proj->lead_id;?>"><?php echo empty($proj->lead_title)?'':$proj->lead_title; ?></a></td>
 						<td><?php echo $proj->first_name.' '.$proj->last_name; ?></td>
 						<td><?php echo $proj->practices; ?></td>
 						<td><?php echo $proj->division_name; ?></td>

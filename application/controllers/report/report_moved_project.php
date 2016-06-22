@@ -109,14 +109,14 @@ public $userdata;
     		$gross = 0;
     		$amt = 0;
     		foreach($leads as $lead) {
-				if($lead->actual_date_start!='') {
-					$start_date=date("d-m-Y",strtotime($lead->actual_date_start));
+				if($lead->date_start!='') {
+					$start_date=date("d-m-Y",strtotime($lead->date_start));
 				}else{
 					$start_date='';
 				}
 				
-				if($lead->actual_date_due!='') {
-					$end_date=date("d-m-Y",strtotime($lead->actual_date_due));
+				if($lead->date_due!='') {
+					$end_date=date("d-m-Y",strtotime($lead->date_due));
 				}else{
 					$end_date='';
 				}
