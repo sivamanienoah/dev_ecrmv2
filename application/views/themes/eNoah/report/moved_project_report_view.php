@@ -39,8 +39,8 @@ if (get_default_currency()) {
 						<td><?php echo $proj->first_name.' '.$proj->last_name; ?></td>
 						<td><?php echo $proj->practices; ?></td>
 						<td><?php echo $proj->division_name; ?></td>
-						<td><?php echo ($proj->actual_date_start!='') ? date("d-m-Y",strtotime($proj->actual_date_start)) : ''; ?></td>
-						<td><?php echo ($proj->actual_date_due!='') ? date("d-m-Y",strtotime($proj->actual_date_due)) : ''; ?></td>
+						<td><?php echo ($proj->date_start!='') ? date("d-m-Y",strtotime($proj->date_start)) : ''; ?></td>
+						<td><?php echo ($proj->date_due!='') ? date("d-m-Y",strtotime($proj->date_due)) : ''; ?></td>
 						<td>
 							<?php
 								switch ($proj->pjt_status)
