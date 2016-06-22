@@ -316,14 +316,15 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 		}
 	}
 	
-	$("#document_tbl tbody tr").each(function(){
+	
+});	
+$("#document_tbl tbody tr").each(function(){
 		$("#document_tbl tbody tr:last").find('.createBtn').show();
-	})
+	});
 	if($('#document_tbl tbody tr').length<=1){
 		$('#document_tbl .del_file').hide();
 		$('#document_tbl .createBtn').show();
 	}
-});	
 function cust_validation()
 {
 	var err=true;
