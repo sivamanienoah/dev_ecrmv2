@@ -41,7 +41,9 @@
             </thead>
             <tbody>
                 <?php if (is_array($customers) && count($customers) > 0) { ?>
-                    <?php foreach ($customers as $customer) { ?>
+                    <?php foreach ($customers as $customer) {
+						//echo'<pre>';print_r($customer);exit;
+					?>
                     <tr>
                         <!--<td>
 							<?php //if($this->session->userdata('edit')==1){ ?><a href="customers/add_customer/update/<?php //echo  $customer['custid'] ?>"><?php //echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a> <?php //} else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?>

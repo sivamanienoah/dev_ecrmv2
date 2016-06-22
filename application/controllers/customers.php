@@ -178,22 +178,22 @@ class Customers extends crm_controller {
 				//update
 				if ($this->customer_model->update_company($id, $update_data)) 
 				{
-					if (isset($pst_data['firstname']))
+					if (isset($pst_data['name']))
 					{
 						//echo'<pre>';print_r($pst_data);exit;
 						$contact_id	=	$pst_data['contact_id'];
-						$first_name	=	$pst_data['firstname'];
-						$last_name	=	$pst_data['lastname'];
+						$name		=	$pst_data['name'];
+						$skype		=	$pst_data['skype'];
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
 						$batch_insert_data	=	array();
 						
-						for($i=0;$i<count($first_name);$i++)
+						for($i=0;$i<count($name);$i++)
 						{
 							$cust_data					=	array();
-							$cust_data['first_name']	=	$first_name[$i];
-							$cust_data['last_name']		=	$last_name[$i];
+							$cust_data['name']			=	$name[$i];
+							$cust_data['skype_name']	=	$skype[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
 							$cust_data['email_1']		=	$email[$i];
@@ -257,10 +257,10 @@ class Customers extends crm_controller {
 				{	
 				
 					//Entry to customer table
-					if (isset($pst_data['firstname']))
+					if (isset($pst_data['name']))
 					{
-						$first_name	=	$pst_data['firstname'];
-						$last_name	=	$pst_data['lastname'];
+						$name	=	$pst_data['name'];
+						$skype	=	$pst_data['skype'];
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
@@ -270,8 +270,8 @@ class Customers extends crm_controller {
 							$cust_data					=	array();
 							//$cust_data					=	$update_data;
 							$cust_data['company_id']	=	$company_id;
-							$cust_data['first_name']	=	$first_name[$i];
-							$cust_data['last_name']		=	$last_name[$i];
+							$cust_data['name']			=	$name[$i];
+							$cust_data['skype_name']	=	$skype[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
 							$cust_data['email_1']		=	$email[$i];
@@ -282,7 +282,7 @@ class Customers extends crm_controller {
 						$this->customer_model->insert_batch_customer($batch_insert_data);
 					}
 					
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$user_name = $this->userdata['name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));	
 

@@ -237,11 +237,11 @@
 						  <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
 							<thead>
 								<tr class="bg-blue">
-									<td>First name</td>
-									<td>Last name</td>
+									<td>Name</td>
+									<td>Email ID</td>
 									<td>Position</td>
 									<td>Contact No</td>
-									<td>Email ID</td>
+									<td>Skype</td>
 									<td>Action</td>
 								</tr>
 							</thead>
@@ -257,12 +257,12 @@
 										<tr>
 											<td>
 												<input type="hidden" name="contact_id[]" value="<?php echo $row['custid']; ?>" class="textfield contact_id width180px required" />
-												<input type="text" name="firstname[]" value="<?php echo $row['first_name']; ?>" class=" first_name textfield width180px required" />
+												<input type="text" name="name[]" value="<?php echo $row['name']; ?>" class=" first_name textfield width180px required" />
 												<span class="first_name_err_msg text-danger"></span>
 											</td>
 											<td>
-												<input type="text" name="lastname[]" value="<?php echo $row['last_name']; ?>" class="last_name textfield width180px required" />
-												<span class="last_name_err_msg text-danger"></span>
+											   <input type="text" name="email[]" value="<?php echo $row['email_1']; ?>" class="textfield email width180px required" />
+												<span class="position_title_err_msg text-danger"></span>
 											</td>
 											<td>
 											   <input type="text" name="position[]" value="<?php echo $row['position_title']; ?>" class="position_title textfield width180px required" />
@@ -273,9 +273,10 @@
 												<span class="position_title_err_msg text-danger"></span>
 											</td>
 											<td>
-											   <input type="text" name="email[]" value="<?php echo $row['email_1']; ?>" class="textfield email width180px required" />
-												<span class="position_title_err_msg text-danger"></span>
+											   <input type="text" name="skype[]" value="<?php echo $row['skype_name']; ?>" class="textfield skype width180px required" />
+												<span class="skype_err_msg text-danger"></span>
 											</td>
+										
 											<td width="100">
 												<a id="addRow" class="createBtn" <?=$disp_style?> ></a>
 												<a id="deleteRow" hyperid="<?=$row['id']?>" class="del_file"></a>
@@ -288,12 +289,12 @@
 							?>
 								<tr>
 									<td>
-										<input type="text" name="firstname[]" value="" class=" first_name textfield width180px required" />
+										<input type="text" name="name[]" value="" class=" first_name textfield width180px required" />
 										<span class="first_name_err_msg text-danger"></span>
 									</td>
 									<td>
-										<input type="text" name="lastname[]" value="" class="last_name textfield width180px required" />
-										<span class="last_name_err_msg text-danger"></span>
+									   <input type="text" name="email[]" value="" class="textfield email width180px required" />
+										<span class="email_err_msg err_msg text-danger"></span>
 									</td>
 									<td>
 									   <input type="text" name="position[]" value="" class="position_title textfield width180px required" />
@@ -303,9 +304,10 @@
 									   <input type="text" name="phone_no[]" value="" class="textfield phone width180px required" />
 										<span class="phone_err_msg text-danger"></span>
 									</td>
+								
 									<td>
-									   <input type="text" name="email[]" value="" class="textfield email width180px required" />
-										<span class="email_err_msg err_msg text-danger"></span>
+									   <input type="text" name="skype[]" value="" class="textfield skype width180px required" />
+										<span class="skype_err_msg err_msg text-danger"></span>
 									</td>
 									<td width="100" class='width180px'>
 										<a id="addRow" class="createBtn"></a>
