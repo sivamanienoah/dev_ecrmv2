@@ -34,13 +34,13 @@
 				<table class="layout">
 					<tr>
 						<td>
-							* From Date
+							From Date
 						</td>
 						<td>
 							<input type="text" name="project_search_start_date" id ="project_search_start_date" class="textfield pick-date width100px" autocomplete = 'off' />
 						</td>
 						<td>
-							* To Date
+							To Date
 						</td>	
 						<td>
 							<input type="text" name="project_search_end_date" id ="project_search_end_date"class="textfield pick-date width100px" autocomplete = 'off' />
