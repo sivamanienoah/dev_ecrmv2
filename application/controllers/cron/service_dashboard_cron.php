@@ -133,10 +133,11 @@ class Service_dashboard_cron extends crm_controller
 		}
 		
 		//need to calculate for the total IR
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
@@ -162,10 +163,11 @@ class Service_dashboard_cron extends crm_controller
 		}
 		
 		//for current month ir
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
