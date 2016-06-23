@@ -444,7 +444,7 @@ class Customer_model extends crm_model {
     function delete_customer($id) 
 	{
         $this->db->where('custid', $id);
-        $this->db->delete($this->cfg['dbpref'] . 'customers');               
+        $this->db->delete($this->cfg['dbpref'] . 'customers');
         return TRUE;
     }
     
@@ -1291,6 +1291,37 @@ class Customer_model extends crm_model {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].$tbl);
 		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->row_array();
+	}
+	
+	function check_customer_company($strreg, $strcunt, $strstate, $strlid, $cmp_name, $cmp_email=false)
+	{
+		// customers_company
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref']."customers_company");
+		$this->db->where('add1_region', $strreg);
+		$this->db->where('add1_country', $strcunt);
+		$this->db->where('add1_state', $strstate);
+		$this->db->where('add1_location', $strlid);
+		if($cmp_name!="")
+		$this->db->where('company', $cmp_name);
+		if($cmp_email!="")
+		$this->db->where('email_2', $cmp_email);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->row_array();
+	}
+
+	function check_customer_details($company_id, $cust_email=false)
+	{
+		// customers
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref']."customers");
+		$this->db->where('company_id', $company_id);
+		if($cust_email!="")
+		$this->db->where('email_1', $cust_email);
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		return $query->row_array();

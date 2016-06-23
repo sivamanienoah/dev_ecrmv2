@@ -1,7 +1,7 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <?php $this->userdata = $this->session->userdata('logged_in_user'); ?>
 <?php 
-	//echo $this->session->userdata('addImpCus');
+	// echo "<pre>"; print_r($page); echo "</pre>"; exit;
 ?>
 <div id="content">
     <div id="left-menu">
@@ -9,13 +9,43 @@
     </div>
     <div class="inner">
 	<?php if($this->session->userdata('addImpCus')==1) { ?>
-    	<form action="customers/importload" method="post" enctype="multipart/form-data" >
+    	<form action="customers/import_customers" method="post" enctype="multipart/form-data" >
 		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
             <h2>Import Customer List </h2>
-            <?php echo  $error; ?>
-            <?php echo  $msg; ?>
+			
+            <?php 
+				if(isset($page) && ($page['insert_customers']!=0))
+				echo $page['insert_customers']." customer(s) Succesfully inserted. <br />";
+			?>
+			
+			<?php 
+				if(isset($page) && ($page['update_customers']!=0))
+				echo $page['update_customers']." customer(s) Succesfully updated. <br />"; 
+			?>
+			<?php 
+				if(isset($page) && ($page['insert_contacts']!=0))
+				echo $page['insert_contacts']." contact(s) Succesfully inserted. <br />"; 
+			?>
+			<?php 
+				if(isset($page) && ($page['update_contacts']!=0))
+				echo $page['update_contacts']." contact(s) Succesfully updated. <br />"; 
+			?>
+			<?php 
+				if(isset($page) && ($page['error']!=0))
+				echo $page['error']; 
+				echo "<br>";
+				if(isset($page) && !empty($page['invalid_email']) && count($page['invalid_email'])>0){
+					$invalid_email = implode('<br/>', $page['invalid_email']);
+					echo " The following companies having <b>Invalid emails</b> <br /> $invalid_email";
+				}
+				echo "<br>";
+				if(isset($page) && !empty($page['invalid_custemail']) && count($page['invalid_custemail'])>0){
+					$invalid_custemail = implode('<br/>', $page['invalid_custemail']);
+					echo " The following customers having <b>Invalid emails</b> <br /> $invalid_custemail";
+				}
+			?>
 			<table class="layout">
 			 <tr>
 				<td colspan="4">
@@ -24,16 +54,19 @@
 			    </tr> 
 				<tr><td colspan="4">&nbsp;</td></tr>
 			    <tr>
-					<td colspan="4"><b>Note:</b>
-					<br />
-					Please Follow the csv format
-					<br />
-					FirstName,Lastname,Position,Company,Address Line 1,
-					Address Line 2,Suburb,Postcode,Region,
-					Country,State,Location,Direct Phone,Work Phone,Mobile Phone,Fax Line,Primary Email,
-					secondary Email1,secondary Email2,secondary Email3,Skype Name,Web,Secondary Web,Comments
-</td>
-					
+					<td colspan="4">
+						<b>Note:</b><br />
+						Company Name<br />
+						Region<br />
+						Country<br />
+						State<br />
+						Location<br />
+						Customer Name<br />
+						Customer Position<br />
+						Customer Email<br />
+						Customer Phone<br />
+						<b>The Above mentioned fields are Mandatory Fields and the other fields are optional.</b><br />
+					</td>
 				</tr>
 			    <tr><td colspan="4">&nbsp;</td></tr>
 				<tr>

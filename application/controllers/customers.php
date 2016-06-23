@@ -623,7 +623,7 @@ class Customers extends crm_controller {
 	/*  Import Load Function this fuction import customer list from CSV, XLS & XLSX files
 	 *	Starts here Dated on 29-01-2013
 	 */
-	function importload() {
+	function importload_old() {
 		$count = 0;
 		$this->load->library('excel_read');
 		$this->login_model->check_login();		
@@ -727,6 +727,128 @@ class Customers extends crm_controller {
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
 		$this->customer_model->check_customer_status($data);
+	}
+	
+	function import_customers()
+	{
+		$this->load->library('excel_read');
+		
+		$page = array();
+		$count = $page['update_customers'] = $page['insert_customers'] = $page['update_contacts'] = $page['insert_contacts'] = 0;
+	    $page['error'] = $page['msg'] = '';	
+		
+		$objReader = new Excel_read();
+		
+		if(isset($_FILES['card_file']['tmp_name'])) {
+			
+			$strextension=explode(".",$_FILES['card_file']['name']);			
+		 	if ($strextension[1]=="csv" || $strextension[1]=="xls" || $strextension[1]=="xlsx" || $strextension[1]=="CSV") {		
+				$impt_data = $objReader->parseSpreadsheet($_FILES['card_file']['tmp_name']);
+				for($i=2; $i<=count($impt_data); $i++) {
+					if(empty($impt_data[$i]['A']) || empty($impt_data[$i]['F']) || empty($impt_data[$i]['G']) || empty($impt_data[$i]['H']) || empty($impt_data[$i]['I']) || empty($impt_data[$i]['O']) || empty($impt_data[$i]['P']) || empty($impt_data[$i]['Q']) || empty($impt_data[$i]['R'])) {
+						$empty_error[] = $i." row - ".$impt_data[$i]['A'];
+					} else {
+						//get the region, country, state & location id
+						if(!empty($impt_data[$i]['F']))
+						$strreg = $this->customer_model->get_rscl_id('', '', 'region', ucwords(strtolower($impt_data[$i]['F'])));
+						// Country
+						if(!empty($impt_data[$i]['G']))
+						$strcunt = $this->customer_model->get_rscl_id($strreg, 'regionid', 'country', ucwords(strtolower($impt_data[$i]['G'])));
+						// State
+						if(!empty($impt_data[$i]['H']))
+						$strstate = $this->customer_model->get_rscl_id($strcunt, 'countryid', 'state', ucwords(strtolower($impt_data[$i]['H'])));
+						// Location
+						if(!empty($impt_data[$i]['I']))
+						$strlid = $this->customer_model->get_rscl_id($strstate, 'stateid', 'location', ucwords(strtolower($impt_data[$i]['I'])));
+						//check customer company is exist or not
+						$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+						$valid_email = 0;
+						$cmp_email = '';
+						$valid_email = preg_match($regex, $impt_data[$i]['L']);
+						if($valid_email){
+							$cmp_email = $impt_data[$i]['L'];
+						} else {
+							$page['invalid_email'][] = $i." row - ".$impt_data[$i]['L'];
+						}
+						$company_exists = $this->customer_model->check_customer_company($strreg, $strcunt, $strstate, $strlid, $impt_data[$i]['A'], $cmp_email);
+						
+						$cmp_details  = array();
+						$cust_details = array();
+						$cmp_details['company']  	  = $impt_data[$i]['A'];
+						$cmp_details['add1_line1']	  = $impt_data[$i]['B'];
+						$cmp_details['add1_line2']	  = $impt_data[$i]['C'];
+						$cmp_details['add1_suburb']	  = $impt_data[$i]['D'];
+						$cmp_details['add1_region']   = $strreg;
+						$cmp_details['add1_country']  = $strcunt;
+						$cmp_details['add1_state'] 	  = $strstate;
+						$cmp_details['add1_location'] = $strlid;
+						$cmp_details['add1_postcode'] = $impt_data[$i]['E'];
+						$cmp_details['phone']		  = $impt_data[$i]['J'];
+						$cmp_details['fax']			  = $impt_data[$i]['K'];
+						if($cmp_email!="")
+						$cmp_details['email_2']		  = $cmp_email;
+						$cmp_details['www']			  = $impt_data[$i]['M'];
+						$cmp_details['comments']	  = $impt_data[$i]['N'];
+						$cmp_details['sales_contact_userid_fk'] = $this->userdata['userid'];
+						
+						if(!empty($company_exists)) {
+							//update the customer company details
+							$this->db->where_in('companyid', $company_exists['companyid']);
+							$this->db->update($this->cfg['dbpref'].'customers_company', $cmp_details);
+							$cust_details['company_id'] = $company_exists['companyid'];
+							$page['update_customers'] += 1;
+						} else {
+							//insert customer company details
+							$this->db->insert($this->cfg['dbpref'] . 'customers_company', $cmp_details);
+							$cust_details['company_id'] = $this->db->insert_id();
+							$page['insert_customers'] += 1;
+						}
+						
+						//insert or update the customer details
+						$valid_custemail = 0;
+						$cust_email = '';
+						$valid_custemail = preg_match($regex, $impt_data[$i]['Q']);
+						if($valid_custemail){
+							$cust_email = $impt_data[$i]['Q'];
+						} else {
+							$page['invalid_custemail'][] = $i." row - ".$impt_data[$i]['Q'];
+						}
+						
+						$cust_details['customer_name']  = $impt_data[$i]['O'];
+						$cust_details['position_title'] = $impt_data[$i]['P'];
+						$cust_details['phone_1']	= $impt_data[$i]['R'];
+						if($cust_email!="")
+						$cust_details['email_1']    = $cust_email;
+						$cust_details['skype_name'] = $impt_data[$i]['S'];
+						$cust_details['sales_contact_userid_fk'] = $this->userdata['userid'];
+						
+						if($cust_details['company_id']!=''){
+							$customer_exists = $this->customer_model->check_customer_details($cust_details['company_id'], $cust_email);
+							if(!empty($customer_exists)) {
+								//update the customer details
+								$this->db->where_in('custid', $customer_exists['custid']);
+								$this->db->update($this->cfg['dbpref'].'customers', $cust_details);
+								$page['update_contacts'] += 1;
+							} else {
+								//insert customer details
+								$this->db->insert($this->cfg['dbpref'] . 'customers', $cust_details);
+								$page['insert_contacts'] += 1;
+							}
+						}
+					}
+				}
+				$data['page'] = $page;
+				$this->load->view('customer_import_view', $data);
+			} else {
+		 		$page['error'] = '<p class="error">Please Upload CSV, XLS File only!</p>';
+				$data['page'] = $page;
+		    	$this->load->view('customer_import_view', $data);		
+		 	}
+		} else {
+			$page['error'] = '<p class="error">Please Upload Valid file!</p>';
+			$data['page'] = $page;
+			$this->load->view('customer_import_view', $data);
+		}
 	}
 	
 }
