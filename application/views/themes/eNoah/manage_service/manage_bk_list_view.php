@@ -72,7 +72,7 @@ $userdata = $this->session->userdata('logged_in_user');
 </div><!--Content div-close here -->
 <div id="edit_currency_container"></div>
 <div id="add_currency_container"></div>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<!--script type="text/javascript" src="assets/js/data-tbl.js"></script-->
 <?php 
 // $no_cur = (!empty($currencies)) ? count($currencies) : '1'; 
 // $tot_columns = count($currencies) + 2;
