@@ -31,7 +31,7 @@ class Report_moved_project_model extends crm_model {
 			$this->db->where_in('jb.division', $divisions);
 		}
 		
-    	$this->db->select('jb.*,prac.practices,division.division_name,cust.first_name,cust.last_name');
+    	$this->db->select('jb.*,prac.practices,division.division_name,cust.customer_name,cust.last_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid','INNER');
 		$this->db->join($this->cfg['dbpref'].'practices prac','jb.practice = prac.id','INNER');
