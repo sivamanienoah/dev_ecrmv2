@@ -21,7 +21,7 @@
 				<?php $curr_month_year      = date('t-m-Y'); ?>
 				<tr>
 					<td><?php echo $forecast['division_name']; ?></td>
-					<td><?php echo $forecast['company'].' - '.$forecast['first_name'].' '.$forecast['last_name']; ?></td>
+					<td><?php echo $forecast['company'].' - '.$forecast['customer_name']; ?></td>
 					<td><?php echo character_limiter($forecast['lead_title'], 35); ?></td>
 					<td><?php if($forecast['forecast_category'] == 1) echo "Lead"; else echo "Project" ?></td>
 					<td><?php echo $forecast['milestone_name']; ?></td>

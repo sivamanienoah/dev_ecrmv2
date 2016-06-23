@@ -290,7 +290,7 @@ class Customer_model extends crm_model {
         // $this->db->select('c.custid,c.first_name,c.last_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
         $this->db->select('c.*,cc.*');
 		$this->db->from($this->cfg['dbpref'].'customers as c');
-		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.custid = c.company_id');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
 		$this->db->where_in('c.custid', $id);
 		$sql = $this->db->get();
 		// echo $this->db->last_query(); die;
@@ -302,9 +302,9 @@ class Customer_model extends crm_model {
     }
 	
 	function get_contacts($customer_id) {
-		$this->db->select('c.custid,c.first_name,c.last_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
+		$this->db->select('c.custid,c.customer_name,cc.company,cc.add1_region,cc.add1_country,cc.add1_state,cc.add1_location');
 		$this->db->from($this->cfg['dbpref'].'customers as c');
-		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.custid = c.company_id');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
 		$this->db->where_in('c.company_id', $customer_id);
 		$sql = $this->db->get();
 		// echo $this->db->last_query(); die;
@@ -316,7 +316,7 @@ class Customer_model extends crm_model {
     }
 	
     function get_company($id) {
-        $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('custid' => $id), 1);
+        $customer = $this->db->get_where($this->cfg['dbpref'].'customers_company', array('companyid' => $id), 1);
         if ($customer->num_rows() > 0) {
             return $customer->result_array();
         } else {
@@ -369,8 +369,45 @@ class Customer_model extends crm_model {
 		return true;
     }
 	
+	function update_customer_details($companyid, $custid, $post_data) 
+	{
+		$customer_arr = array();
+		$contact_arr = array();
+			
+		$customer_arr['company'] = $post_data['company'];
+		$customer_arr['add1_line1'] = $post_data['add1_line1'];
+		$customer_arr['add1_line2'] = $post_data['add1_line2'];
+		$customer_arr['add1_suburb'] = $post_data['add1_suburb'];
+		$customer_arr['add1_postcode'] = $post_data['add1_postcode'];
+		$customer_arr['add1_region'] = $post_data['add1_region'];
+		$customer_arr['add1_country'] = $post_data['add1_country'];
+		$customer_arr['add1_state'] = $post_data['add1_state'];
+		$customer_arr['add1_location'] = $post_data['add1_location'];
+		$customer_arr['phone'] = $post_data['phone'];
+		$customer_arr['fax'] = $post_data['fax'];
+		$customer_arr['email_2'] = $post_data['email_2'];
+		$customer_arr['www'] = $post_data['www'];
+		$customer_arr['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+		
+		$contact_arr['customer_name']  = $post_data['customer_name'];
+		$contact_arr['email_1'] 	   = $post_data['email_1'];
+		$contact_arr['position_title'] = $post_data['position_title'];
+		$contact_arr['phone_1']	   	   = $post_data['phone_1'];
+		$contact_arr['skype_name']	   = $post_data['skype_name'];
+		
+		$this->db->where('companyid', $companyid);
+		$this->db->update($this->cfg['dbpref'] . 'customers_company', $customer_arr);
+		// echo $this->db->last_query();
+		
+        $this->db->where('custid', $custid);
+		$this->db->update($this->cfg['dbpref'] . 'customers', $contact_arr);
+		// echo $this->db->last_query(); die;
+		
+		return true;
+    }
+	
     function update_company($id, $data) {
-        $this->db->where('custid', $id);
+        $this->db->where('companyid', $id);
 		$this->db->update($this->cfg['dbpref'] . 'customers_company', $data);
 		if(!empty($data['client_code'])) {
 			$this->update_client_details_to_timesheet($data['client_code']);
@@ -494,6 +531,11 @@ class Customer_model extends crm_model {
 		$this->db->update($this->cfg['dbpref'].'customers', $data);
 	}
 	
+	function customer_update_isclient($id, $data) {
+		$this->db->where('companyid', $id);
+		$this->db->update($this->cfg['dbpref'].'customers_company', $data);
+	}
+	
 	/*
 	*@Check Customer Status
 	*@Method   check_customer_status
@@ -581,7 +623,7 @@ class Customer_model extends crm_model {
 	public function check_client_code_exists($client_code) { 
 		
 		$this->db->where('client_code', $client_code);
-		$query = $this->db->get($this->cfg['dbpref'].'customers');
+		$query = $this->db->get($this->cfg['dbpref'].'customers_company');
 		if($query->num_rows == 0) {
 			return true;
 		} else {
@@ -606,11 +648,12 @@ class Customer_model extends crm_model {
 		$available_code = '';
 		
 		$this->db->select('client_code');
-		$this->db->where('custid !=', $custid);
+		$this->db->where('companyid !=', $custid);
 		$this->db->where('is_client', 1);
 		$this->db->where('company', $client_name);
 		$this->db->group_by('client_code');
-		$query = $this->db->get($this->cfg['dbpref'].'customers');
+		$query = $this->db->get($this->cfg['dbpref'].'customers_company');
+		// echo $this->db->last_query(); die;
 		$result = $query->row_array();
 		
 		if(!empty($result['client_code'])) {
@@ -640,8 +683,8 @@ class Customer_model extends crm_model {
 		if($available_code != '') {
 			$available_code = strtoupper($available_code);
 			$data = array('client_code'=>$available_code);
-			$this->db->where('custid',$custid);
-			$this->db->update($this->cfg['dbpref'] . 'customers', $data);
+			$this->db->where('companyid',$custid);
+			$this->db->update($this->cfg['dbpref'] . 'customers_company', $data);
 		}
 		return $available_code;
     }
@@ -654,9 +697,9 @@ class Customer_model extends crm_model {
 	*/
 	function get_all_customers($client_code=false) {
 		
-		$this->db->select('*');
+		/* $this->db->select('*');
 		if($client_code != false) {		
-		$this->db->where('client_code',$client_code);		
+			$this->db->where('client_code',$client_code);		
 		}
 		$this->db->where('is_client',1);	
         $customer = $this->db->get($this->cfg['dbpref'].'customers');
@@ -664,7 +707,20 @@ class Customer_model extends crm_model {
             return $customer->result_array();
         } else {
             return FALSE;
+        } */
+		
+		$this->db->select('cc.*');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
+		$this->db->where_in('cc.client_code', $client_code);
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); die;
+        if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return FALSE;
         }
+		
     }
 	
 	/*
@@ -719,6 +775,23 @@ class Customer_model extends crm_model {
 					$sql =  '  UPDATE  '.$timesheet_db->dbprefix('client').'   SET '; $where  = '  WHERE `client_code` = "'.$listCustomers['client_code'].'"';
 				
 				}
+					/* $sql .=  ' 															`organisation` = "'.$listCustomers['company'].'",
+																						`description` = "'.$listCustomers['comments'].'",
+																						`address1` = "'.$listCustomers['add1_line1'].'",
+																						`city` = "'.$city.'",
+																						`state` = "'.$state.'",
+																						`country` = "'.$country.'",
+																						`postal_code` = "'.$listCustomers['add1_postcode'].'",
+																						`contact_first_name` = "",
+																						`contact_last_name` = "",
+																						`contact_email` = "'.$listCustomers['email_2'].'",
+																						`phone_number` = "'.$listCustomers['phone'].'",
+																						`gsm_number` = "",
+																						`http_url` = "",
+																						`address2` = "'.$listCustomers['add1_line2'].'",
+																						`client_code` = "'.$listCustomers['client_code'].'"
+																						  '.$where.''; */
+																						  
 					$sql .=  ' 															`organisation` = "'.$listCustomers['company'].'",
 																						`description` = "'.$listCustomers['comments'].'",
 																						`address1` = "'.$listCustomers['add1_line1'].'",
@@ -726,15 +799,11 @@ class Customer_model extends crm_model {
 																						`state` = "'.$state.'",
 																						`country` = "'.$country.'",
 																						`postal_code` = "'.$listCustomers['add1_postcode'].'",
-																						`contact_first_name` = "'.$listCustomers['first_name'].'",
-																						`contact_last_name` = "'.$listCustomers['last_name'].'",
-																						`contact_email` = "'.$listCustomers['email_1'].'",
-																						`phone_number` = "'.$listCustomers['phone_1'].'",
-																						`gsm_number` = "'.$listCustomers['phone_3'].'",
-																						`http_url` = "'.$listCustomers['www_1'].'",
+																						`contact_email` = "'.$listCustomers['email_2'].'",
+																						`phone_number` = "'.$listCustomers['phone'].'",
 																						`address2` = "'.$listCustomers['add1_line2'].'",
 																						`client_code` = "'.$listCustomers['client_code'].'"
-																						  '.$where.'';	
+																						  '.$where.'';
 				
 				$timesheet_db->query($sql);
 			
@@ -834,8 +903,13 @@ class Customer_model extends crm_model {
 			/*
 			*@Timesheet to insert project details start here
 			*/
+			
+				//get company id using $listProjects['custid_fk']
+				$client_det = $this->get_lead_customer($listProjects['custid_fk']);
+			
 				$timesheet_projects = $this->get_timesheet_project($listProjects['pjt_id']);
-				$client_code        = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
+				// $client_code        = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
+				$client_code        = $this->get_filed_id_by_name('customers_company', 'companyid', $client_det[0]['companyid'], 'client_code');
 				$client             = $this->get_client_id_by_code_from_timesheet($client_code);
 				
 				if($listProjects['pjt_status'] == 1) {
@@ -957,8 +1031,8 @@ class Customer_model extends crm_model {
 			*@E-Connect to insert project details start here 
 			*/
 				$econnect_projects = $this->get_econnect_project($listProjects['pjt_id']);
-				$client_code       = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
-				
+				// $client_code       = $this->get_filed_id_by_name('customers', 'custid', $listProjects['custid_fk'], 'client_code');
+				$client_code        = $this->get_filed_id_by_name('customers_company', 'companyid', $client_det[0]['companyid'], 'client_code');
 				$project_types     = $this->get_projecttype_name_by_name_from_timesheet($listProjects['project_type']);
 				
 				$arrBillCategory = $this->get_billing_type_by_id($listProjects['resource_type']);
@@ -1177,7 +1251,7 @@ class Customer_model extends crm_model {
 	 */
 	public function get_client_id_by_code_from_timesheet($client_code)
 	{
-	//echo $client_code;exit;
+		//echo $client_code;exit;
 		$timesheet_db = $this->load->database('timesheet',TRUE);		
 		$timesheet_db->select('*');
 		$timesheet_db->where('client_code', $client_code);

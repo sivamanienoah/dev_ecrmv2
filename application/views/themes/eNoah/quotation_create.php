@@ -93,7 +93,7 @@
 							?>
 							<?php echo $record['lead_title'] ?><img src="assets/img/cab.gif" alt="Invoice Downloaded" /></td>
 							<td>
-								<?php echo  $record['first_name'] . ' ' . $record['last_name'] . ' - ' . $record['company'] ?> <span style="color:#f70;">( <?php if($this->session->userdata('edit')==1) { ?><a href="customers/add_customer/update/<?php echo  $record['custid'] ?>" style="text-decoration:underline;">client info</a><?php } else echo "client info"; ?> )</span>
+								<?php echo  $record['company']. ' - ' . $record['customer_name'] ?> <span style="color:#f70;">( <?php if($this->session->userdata('edit')==1) { ?><a href="customers/add_customer/update/<?php echo  $record['custid'] ?>" style="text-decoration:underline;">client info</a><?php } else echo "client info"; ?> )</span>
 							</td>
 							<td>
 								<?php echo  date('d-m-Y H:i', strtotime($record['date_created'])) ?>

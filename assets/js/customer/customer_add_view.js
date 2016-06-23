@@ -279,12 +279,14 @@ $('#document_tbl').delegate( '#addRow', 'click', function () {
 		obj.find(".position_title").val("");
 		obj.find(".phone").val("");
 		obj.find(".email").val("");
+		obj.find(".skype").val("");
 		obj.find(".hyperfields").css('border','');
 		obj.find(".first_name_err_msg").text('');
 		obj.find(".last_name_err_msg").text('');
 		obj.find(".position_title_err_msg").text('');
 		obj.find(".phone_err_msg").text('');
 		obj.find(".email_err_msg").text('');
+		obj.find(".skype_err_msg").text('');
 		obj.find("#deleteRow").attr('hyperid','0'); 
 		// obj.find("td").find('.hyperlink_name').attr('placeholder','eg: http://www.google.com || https://google.com');
 		obj.find('.createBtn').show();

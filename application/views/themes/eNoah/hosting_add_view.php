@@ -28,7 +28,7 @@ $usernme = $this->session->userdata('logged_in_user');
 		
             <h2><?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> Subscription Details</h2>
             <?php if (!$this->input->post('domain_name') && $this->uri->segment(3) != 'update') { ?>
-            <p class="notice">If this is a new customer, please be sure to <a href="#" class="modal-new-cust" >add the customer</a> to the database before adding the hosting account.</p>
+            <!--p class="notice">If this is a new customer, please be sure to <a href="#" class="modal-new-cust" >add the customer</a> to the database before adding the hosting account.</p-->
 			<?php } ?>
             <?php if ($this->validation->error_string != '') { ?>
             <div class="form_error">

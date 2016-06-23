@@ -67,7 +67,7 @@ button.ui-datepicker-current { display: none; }
 					<?php foreach($results as $res) { ?>
 						<tr>
 							<td><?php echo date("d-m-Y",strtotime($res->created_date)); ?></td>
-							<td><?php echo $res->first_name.' '.$res->last_name; ?></td>
+							<td><?php echo $res->customer_name; ?></td>
 							<td><?php echo $res->paid_amount;?></td>
 							<td><?php echo $res->unique_link;?></td>
 							<td><?php echo date("d-m-Y",strtotime($res->expiry_date)); ?></td>

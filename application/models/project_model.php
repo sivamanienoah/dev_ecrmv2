@@ -18,9 +18,9 @@ class Project_model extends crm_model
 	
 	function get_customers() 
 	{
-	    $this->db->select('custid, first_name, last_name, company');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
-		$this->db->order_by("first_name", "asc");
+		$this->db->select('companyid, company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers_company');
+		$this->db->order_by("company", "asc");
 	    $customers = $this->db->get();
 	    $customers =  $customers->result_array();
 	    return $customers;
@@ -52,9 +52,10 @@ class Project_model extends crm_model
 		
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1')) {
 		 
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.customer_name as cfname, cc.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+			$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
@@ -66,7 +67,7 @@ class Project_model extends crm_model
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
 			if (!empty($customer) && $customer!='null') {
-				$this->db->where_in('j.custid_fk',$customer); 
+				$this->db->where_in('cc.companyid',$customer); 
 			}
 			/* if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
@@ -151,9 +152,10 @@ class Project_model extends crm_model
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
 			
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.first_name as cfname, c.last_name as clname, c.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.customer_name as cfname, cc.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+			$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
@@ -167,7 +169,7 @@ class Project_model extends crm_model
 				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
 			}
 			if (!empty($customer) && $customer!='null') {
-				$this->db->where_in('j.custid_fk',$customer); 
+				$this->db->where_in('cc.companyid',$customer); 
 			}
 			/* if(!empty($pm)){		
 				$this->db->where_in('j.assigned_to',$pm); 
@@ -217,7 +219,7 @@ class Project_model extends crm_model
 		
 		if($keyword != 'Project Title, Name or Company' && !empty($keyword)) {
 			$keyword = urldecode($keyword);
-			$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.company LIKE '%$keyword%' OR c.first_name LIKE '%$keyword%' OR c.last_name LIKE '%$keyword%'))";
+			$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR cc.company LIKE '%$keyword%' OR c.customer_name LIKE '%$keyword%' ))";
 			$this->db->where($invwhere);
 		}
 		
@@ -252,11 +254,12 @@ class Project_model extends crm_model
 	{
     	$this->db->select('*,jbcat.services as lead_service');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cus.company_id');
 		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.custid_fk = cus.custid', 'left');
-    	$this->db->join($this->cfg['dbpref'].'region as reg', 'reg.regionid = cus.add1_region', 'left');
-    	$this->db->join($this->cfg['dbpref'].'country as cnty', 'cnty.countryid = cus.add1_country', 'left');
-    	$this->db->join($this->cfg['dbpref'].'state as ste', 'ste.stateid = cus.add1_state', 'left');
-    	$this->db->join($this->cfg['dbpref'].'location as locn ', 'locn.locationid = cus.add1_location', 'left');
+    	$this->db->join($this->cfg['dbpref'].'region as reg', 'reg.regionid = cc.add1_region', 'left');
+    	$this->db->join($this->cfg['dbpref'].'country as cnty', 'cnty.countryid = cc.add1_country', 'left');
+    	$this->db->join($this->cfg['dbpref'].'state as ste', 'ste.stateid = cc.add1_state', 'left');
+    	$this->db->join($this->cfg['dbpref'].'location as locn ', 'locn.locationid = cc.add1_location', 'left');
     	$this->db->join($this->cfg['dbpref'].'expect_worth as exw', 'exw.expect_worth_id = jb.expect_worth_id', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = jb.lead_stage', 'left');
     	$this->db->join($this->cfg['dbpref'].'lead_services as jbcat', 'jbcat.sid = jb.lead_service', 'left');
@@ -873,7 +876,7 @@ class Project_model extends crm_model
 	public function get_invoice_total($lead_id){
 		$this->db->select("SUM(amount) as invoice_amount,SUM(tax_price) as tax_amount");
 		$this->db->group_by("jobid_fk");
-		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments",array("jobid_fk" => $lead_id,"invoice_status" => 1));
+		$qry = $this->db->get_where($this->cfg['dbpref']."expected_payments", array("jobid_fk" => $lead_id,"invoice_status" => 1));
 		if($qry->num_rows()>0){
 			$res = $qry->row();
 			return $res;

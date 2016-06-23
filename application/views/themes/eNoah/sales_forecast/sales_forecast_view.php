@@ -83,10 +83,10 @@ button.ui-datepicker-current { display: none; }
 								<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:155px;">
 									<?php 
 										if(!empty($customers)) {
-										array_unique($customers);
+										// array_unique($customers);
 										foreach($customers as $cust) {
 									?>
-											<option value="<?php echo $cust['custid']; ?>"><?php echo $cust['company'].' - '.$cust['first_name'].' '.$cust['last_name']; ?></option>
+											<option value="<?php echo $cust['companyid']; ?>"><?php echo $cust['company'] ?></option>
 									<?php
 										}
 									}
@@ -164,7 +164,7 @@ button.ui-datepicker-current { display: none; }
 						
 						<tr>
 							<td><?php echo $forecast['division_name']; ?></td>
-							<td><?php echo $forecast['company'].' - '.$forecast['first_name'].' '.$forecast['last_name']; ?></td>
+							<td><?php echo $forecast['company'].' - '.$forecast['customer_name']; ?></td>
 							<td><?php echo character_limiter($forecast['lead_title'], 35); ?></td>
 							<td><?php if($forecast['forecast_category'] == 1) echo "Lead"; else echo "Project" ?></td>
 							<td><?php echo $forecast['milestone_name']; ?></td>

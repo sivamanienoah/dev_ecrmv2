@@ -79,7 +79,7 @@
 											if(!empty($customers)) {
 											foreach($customers as $cust) {
 										?>
-												<option value="<?php echo $cust['custid']; ?>"><?php echo $cust['company'].' - '.$cust['first_name'].' '.$cust['last_name']; ?></option>
+												<option value="<?php echo $cust['companyid']; ?>"><?php echo $cust['company']; ?></option>
 										<?php
 											}
 										}
@@ -166,11 +166,18 @@
 										<?php if(array_key_exists($mon_number, $ms_value)) { ?>
 											<td align="<?php echo isset($ms_value[$mon_number]['F']) ? 'right' : 'center'; ?>">
 												<?php echo isset($ms_value[$mon_number]['F']) ? number_format($ms_value[$mon_number]['F'], 2, '.', '') : '-'; ?>
-												<?php $tot['F'][$mon_number] += $ms_value[$mon_number]['F']; ?>
+												<?php 
+													if(isset($ms_value[$mon_number]['F']))
+													$tot['F'][$mon_number] += $ms_value[$mon_number]['F'];
+												?>
 											</td>
 											<td align="<?php echo isset($ms_value[$mon_number]['A']) ? 'right' : 'center'; ?>">
 												<?php echo isset($ms_value[$mon_number]['A']) ? number_format($ms_value[$mon_number]['A'], 2, '.', '') : '-'; ?>
-												<?php $tot['A'][$mon_number] += $ms_value[$mon_number]['A']; ?>
+												<?php 
+													if(isset($ms_value[$mon_number]['A'])) {
+														$tot['A'][$mon_number] += $ms_value[$mon_number]['A']; 
+													}
+												?>
 											</td>
 										<?php } else { ?>
 											<td align="center">-</td>

@@ -54,7 +54,7 @@ class Hosting_model extends crm_model {
 		return $delist;
     }
     
-    function customer_account($id) {
+	/* function customer_account($id) {
         
         $customer = $this->db->get_where($this->cfg['dbpref'].'customers', array('custid' => $id), 1);
         if ($customer->num_rows() > 0) {
@@ -64,6 +64,23 @@ class Hosting_model extends crm_model {
             return "{$cust['first_name']} {$cust['last_name']}{$company}|{$cust['custid']}";
         } else {
             return false;
+        }
+    } */ 
+	function customer_account($id) {
+		
+		$this->db->select('c.*,cc.*');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
+		$this->db->where_in('c.custid', $id);
+		$customer = $this->db->get();
+		// echo $this->db->last_query(); die;
+        if ($customer->num_rows() > 0) {
+            $cust = $customer->result_array();
+            $cust = $cust[0];
+			$company = (trim($cust['company']) == '') ? '' : " - " . $cust['company'];
+			return "{$cust['customer_name']} {$company}|{$cust['custid']}";
+        } else {
+            return FALSE;
         }
     }
     function check_unique($domain) {

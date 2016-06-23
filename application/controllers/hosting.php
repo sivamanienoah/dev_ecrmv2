@@ -221,7 +221,7 @@ class Hosting extends crm_controller {
 			$customer_id = array();
 			if (count($result) > 0) {
 				foreach ($result as $cust) {
-					$customer_id[] = $cust['custid'];
+					$customer_id[] = $cust['companyid'];
 				}
 			}
             
@@ -231,7 +231,7 @@ class Hosting extends crm_controller {
 					$i=0;
 					foreach($contacts as $rec){
 						$res[$i]['id']      = $rec['custid'];
-						$res[$i]['label']   = $rec['company'].' - '.$rec['first_name'].' '.$rec['last_name'];
+						$res[$i]['label']   = $rec['company'].' - '.$rec['customer_name'];
 						$res[$i]['regId']   = $rec['add1_region'];
 						$res[$i]['cntryId'] = $rec['add1_country'];
 						$res[$i]['stId']	= $rec['add1_state'];

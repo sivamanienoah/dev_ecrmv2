@@ -198,6 +198,8 @@ function get_customers(data_type, cust_id) {
 
 function get_records(custid, job_id) {
 	
+	// alert(custid +' '+job_id);
+	
 	$('.show-entity, .show-currency, .show-exp-worth, .show-bill-type').hide();
 	$('#project-data').hide();
 	$('.project-ms-detail').hide();

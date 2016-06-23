@@ -161,10 +161,10 @@ function prepareQuoteForClient(custID) {
 		{},
 		function (details) {
 			$('.q-cust-company span').html(details.company);
-			$('.q-cust-name span').html(details.first_name + ' ' + details.last_name);
+			$('.q-cust-name span').html(details.customer_name);
 			$('.q-cust-email span').html(details.email_1);
 			if (existing_lead > 0) {
-				$('#ex-cust-name').val(details.first_name + ' ' + details.last_name);
+				$('#ex-cust-name').val(details.customer_name);
 			}
 		}
 	);
@@ -777,8 +777,8 @@ h3 .small {
                 <div>
                     <p><label>Start by typing in <strong>company name</strong>.</label></p>
                     <p><input type="text" name="ex_cust_name" id="ex-cust-name" class="textfield width300px" /></p>
-                    <p class="notice width250px">If this is a new customer you need to add the<br /> customer
-                    by <a href="#" class="modal-new-cust">completing their details</a>.</p>
+                    <!--p class="notice width250px">If this is a new customer you need to add the<br /> customer
+                    by <a href="#" class="modal-new-cust">completing their details</a>.</p-->
                     <p><label>Lead Title</label></p>
                     <p><input type="text" name="lead_title" id="lead_title" class="textfield width300px" onkeyup="$('.q-quote-items .quote-title span').html(this.value);" /></p>
 					<p><label>Lead Source</label></p>
@@ -1411,8 +1411,8 @@ function confirmaMoveLeadsToProject()
 			color:'#333',
 			padding:'8px',
 			top:  '400px',
-			left: ($(window).width() - 720) /2 + 'px',
-			width: '720px',
+			left: ($(window).width() - 820) /2 + 'px',
+			width: '820px',
 			position: 'absolute',
 			'overflow-y':'auto',
 			'overflow-x':'hidden'

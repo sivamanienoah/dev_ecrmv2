@@ -165,10 +165,10 @@ function prepareQuoteForClient(custID) {
 		{},
 		function (details) {
 			$('.q-cust-company span').html(details.company);
-			$('.q-cust-name span').html(details.first_name + ' ' + details.last_name);
+			$('.q-cust-name span').html(details.customer_name);
 			$('.q-cust-email span').html(details.email_1);
 			if (existing_lead > 0) {
-				$('#ex-cust-name').val(details.first_name + ' ' + details.last_name);
+				$('#ex-cust-name').val(details.customer_name);
 			}
 		}
 	);
@@ -803,8 +803,8 @@ h3 .small {
 					<tr>
 					   <td colspan="2"> <p><label>Start by typing in <strong>customer name</strong> or <strong>company name</strong>.</label></p>
                     <p><input type="text" name="ex_cust_name" id="ex-cust-name" class="textfield width200px" /></p>
-                    <p class="notice width250px">If this is a new customer you need to add the<br /> customer
-                    by <a href="#" class="modal-new-cust">completing their details</a>.</p>
+                    <!--p class="notice width250px">If this is a new customer you need to add the<br /> customer
+                    by <a href="#" class="modal-new-cust">completing their details</a>.</p-->
 					</td>
 					</tr>
 					<tr>

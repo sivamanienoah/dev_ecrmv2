@@ -7,7 +7,7 @@
 <div id="forecast_compare_chart" class="plot"></div>
 <!--div id="forecast_entity_chart_img"><button type="button">PDF</button></div-->
 <?php 
-	$i = date("Y-m", strtotime($compare_from_month)); 
+	$i = date("Y-m", strtotime($compare_from_month));
 	while($i <= date("Y-m", strtotime($compare_to_month))) {
 		// $month_arr[date('Y-m', strtotime($i))] = date('Y-M', strtotime($i));
 		$month_no_arr[] = '"'.date('Y-m', strtotime($i)).'"'; // using for graph dataClick

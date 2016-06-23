@@ -18,9 +18,9 @@ class Dashboard_model extends crm_model
 	
 	function get_customers() 
 	{
-	    $this->db->select('custid, first_name, last_name, company');
+	    $this->db->select('custid, customer_name, company');
 	    $this->db->from($this->cfg['dbpref'] . 'customers');
-		$this->db->order_by("first_name", "asc");
+		$this->db->order_by("company", "asc");
 	    $customers = $this->db->get();
 	    $customers =  $customers->result_array();
 	    return $customers;

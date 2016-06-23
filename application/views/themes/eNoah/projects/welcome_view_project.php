@@ -1599,7 +1599,7 @@ if (get_default_currency()) {
 			</tr>
 			<tr>
 				<td width="120"><label><b>First Name:</b></label></td>
-				<td><b><?php echo $quote_data['first_name'] ?></b></td>
+				<td><b><?php echo $quote_data['customer_name'] ?></b></td>
 			</tr>
 			
 			<tr>
@@ -2034,7 +2034,7 @@ if (get_default_currency()) {
 
 						<label for="email_to_customer" class="normal">Email Client:</label> <input type="checkbox" name="email_to_customer" id="email_to_customer" />
 						<input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
-						<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo (isset($quote_data)) ? $quote_data['first_name'] . ' ' . $quote_data['last_name'] : '' ?>" />
+						<input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo (isset($quote_data)) ? $quote_data['customer_name'] : '' ?>" />
 						<input type="hidden" name="requesting_client_approval" id="requesting_client_approval" value="0" />
 
 						<p id="multiple-client-emails">

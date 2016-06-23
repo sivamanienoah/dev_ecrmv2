@@ -1311,7 +1311,7 @@ class Dashboard extends crm_controller {
 						}
 					$CustomersId = $this->dashboard_model->getCustomersIds($reg); //Get the Customer id based on Regions
 						foreach ($CustomersId as $cus_id) {
-							$cusIds[] = $cus_id['custid'];
+							$cusIds[] = $cus_id['companyid'];
 						}
 					$cusId = $cusIds;
 				break;
@@ -1322,7 +1322,7 @@ class Dashboard extends crm_controller {
 						}
 					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou); //Get the Customer id based on Regions & Countries
 						foreach ($CustomersId as $cus_id) {
-							$cusIds[] = $cus_id['custid'];
+							$cusIds[] = $cus_id['companyid'];
 						}
 					$cusId = $cusIds;
 				break;
@@ -1333,7 +1333,7 @@ class Dashboard extends crm_controller {
 						}
 					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste); //Get the Customer id based on Regions & Countries
 						foreach ($CustomersId as $cus_id) {
-							$cusIds[] = $cus_id['custid'];
+							$cusIds[] = $cus_id['companyid'];
 						}
 					$cusId = $cusIds;
 				break;
@@ -1344,7 +1344,7 @@ class Dashboard extends crm_controller {
 						}	
 					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste,$loc); //Get the Customer id based on Regions & Countries
 						foreach ($CustomersId as $cus_id) {
-							$cusIds[] = $cus_id['custid'];
+							$cusIds[] = $cus_id['companyid'];
 						}
 					$cusId = $cusIds;
 				break;

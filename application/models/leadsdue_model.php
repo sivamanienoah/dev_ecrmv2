@@ -14,7 +14,7 @@ class Leadsdue_model extends crm_model {
     {
     	// $lead_stage = array(1,2,3,4,5,6,7,8,9,10,11,12);
     	
-    	$this->db->select('jb.*,cust.first_name as cust_first_name,cust.last_name as cust_last_name,cust.company,cust.add1_region,reg.region_name,u.first_name as owner_first_name,u.last_name as owner_last_name,u.email as owner_mail,au.first_name as assigned_first_name,au.last_name as assigned_last_name,au.email as assigned_mail,mu.first_name as modified_first_name,mu.last_name as modified_last_name,ls.lead_stage_name,ew.expect_worth_name');
+    	$this->db->select('jb.*,cust.customer_name as cust_first_name, cust.company, cust.add1_region, reg.region_name, u.first_name as owner_first_name, u.last_name as owner_last_name, u.email as owner_mail, au.first_name as assigned_first_name, au.last_name as assigned_last_name, au.email as assigned_mail, mu.first_name as modified_first_name, mu.last_name as modified_last_name, ls.lead_stage_name, ew.expect_worth_name');
     	$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid','INNER');
     	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid','INNER');
     	$this->db->join($this->cfg['dbpref'].'users u','u.userid = jb.created_by','INNER');

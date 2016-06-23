@@ -52,7 +52,7 @@
 						if(!empty($customers)) {
 						foreach($customers as $cust) {
 					?>
-							<option value="<?php echo $cust['custid']; ?>"><?php echo $cust['company'].' - '.$cust['first_name'].' '.$cust['last_name']; ?></option>
+							<option value="<?php echo $cust['companyid']; ?>"><?php echo $cust['company'] ?></option>
 					<?php
 						}
 					}

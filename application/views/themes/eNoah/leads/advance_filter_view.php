@@ -58,7 +58,7 @@ $userdata = $this->session->userdata('logged_in_user');
 				<?php echo $filter_result['invoice_no']; ?></a> 
 				</td>
 				<td> <a href="<?php echo $view_lead_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
-					<td><?php echo $filter_result['first_name'].' '.$filter_result['last_name'].' - '.$filter_result['company']; ?></td>
+					<td><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
 				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
 				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>

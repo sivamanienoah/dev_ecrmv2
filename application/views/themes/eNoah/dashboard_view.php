@@ -156,7 +156,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 								<td>
 									<select style="width:210px;" multiple="multiple" id="customer" name="customer[]" class="advfilter">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['custid']; ?>"<?php if (!empty($filter['customer'])) { echo in_array($customer['custid'], $filter['customer']) ? 'selected="selected"' : ''; } ?>><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>
+											<option value="<?php echo $customer['companyid']; ?>"<?php if (!empty($filter['customer'])) { echo in_array($customer['companyid'], $filter['customer']) ? 'selected="selected"' : ''; } ?>><?php echo $customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
@@ -605,7 +605,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 			<td>
 				<select style="width:210px;" multiple="multiple" id="customer1" name="customer1[]">
 					<?php foreach($customers as $customer) {?>
-						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+						<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['company'].' - '.$customer['customer_name']; ?></option>	
 					<?php } ?>
 				</select>
 			</td>

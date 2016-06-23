@@ -351,62 +351,35 @@ button:hover, .buttons a:hover{
 }
 /* end of notices - errors - confirms */
 
-.width80px {
-	width: 80px;
-}
-.width60px {
-	width: 60px;
-}
-.width100px {
-	width: 100px;
-}
-.width100pct {
-	width: 100%;
-}
-.width99pct {
-	width: 97%;
-}
-.width160px {
-	width: 160px;
-}
-.width180px {
-	width: 180px;
-}
-.width200px {
-	width: 200px;
-}
-.width210px {
-	width: 210px;
-}
-select.width200px {
-	width:208px;
-	float: left;
-}
+.width100pct { width: 100%; }
+.width99pct { width: 97%; }
+
+.width80px { width: 80px; }
+.width60px { width: 60px; }
+.width100px { width: 100px; }
+.width110px { width: 110px; }
+.width160px { width: 160px; }
+.width150px { width: 150px; }
+.width180px { width: 180px; }
+.width200px { width: 200px; }
+.width210px { width: 210px; }
+.width250px { width: 250px; }
+.width300px { width: 300px; }
+.width400px { width: 400px; }
+.width500px { width: 500px; }
+.width545px { width: 545px; }
+.width565px { width: 565px; }
+
+select.width200px { width:208px; float: left; }
 select.width160px {
 	width:170px;
 	float: left;
 }
-.width250px {
-	width: 250px;
-}
-.width300px {
-	width: 300px;
-}
+
 select.width300px {
 	width:310px;
 }
-.width400px {
-	width: 400px;
-}
-.width500px {
-	width: 500px;
-}
-.width545px {
-	width: 545px;
-}
-.width565px {
-	width: 565px;
-}
+
 .height50px {
 	height: 50px;
 }

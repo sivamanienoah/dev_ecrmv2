@@ -42,25 +42,26 @@ class Invoice_model extends crm_model {
 			$this->db->select('ls.lead_id');
 			$this->db->from($this->cfg['dbpref'].'leads as ls');
 			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
 			
 			switch($this->userdata['level']) {
 				case 2:
-					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cc.add1_region',$region);
 				break;
 				case 3:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
 				break;
 				case 4:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				break;
 				case 5:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
-					$this->db->where_in('cs.add1_location',$locationid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
+					$this->db->where_in('cc.add1_location',$locationid);
 				break;
 			}
 			// $this->db->where("ls.lead_status", 4); //for active projects only
@@ -104,12 +105,13 @@ class Invoice_model extends crm_model {
 			$filter['month_year_to_date'] = '';
 		}
 	
-		$this->db->select('expm.received,expm.expectid,expm.invoice_status,expm.amount,expm.project_milestone_name,expm.invoice_generate_notify_date,expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.first_name,c.last_name,c.company,sd.base_currency');
+		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency');
 
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
 		
 		if($invoice){
@@ -130,7 +132,7 @@ class Invoice_model extends crm_model {
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('l.custid_fk', $filter['customer']);
+			$this->db->where_in('cc.companyid', $filter['customer']);
 		}
 		
 		if (!empty($filter['divisions']) && $filter['divisions']!='null') {
@@ -224,9 +226,9 @@ class Invoice_model extends crm_model {
 	*@Method get_customers
 	*/
 	function get_customers() {
-	    $this->db->select('custid, first_name, last_name, company');
-	    $this->db->from($this->cfg['dbpref'] . 'customers');
-		$this->db->order_by("first_name");
+	    $this->db->select('companyid, company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers_company');
+		$this->db->order_by("company");
 	    $customers = $this->db->get();
 	    $customers = $customers->result_array();
 	    return $customers;
@@ -334,9 +336,10 @@ class Invoice_model extends crm_model {
 	
 	function get_payment_invoice_list()
 	{
-		$this->db->select("cus.first_name,cus.last_name,cus.company,inv.inv_id as invoice_id,inv.*,payhis.*");
+		$this->db->select("cus.customer_name, cc.company, inv.inv_id as invoice_id, inv.*,payhis.*");
 		$this->db->from($this->cfg['dbpref']."invoices as inv");
 		$this->db->join($this->cfg['dbpref']."customers as cus","cus.custid=inv.cust_id");
+		$this->db->join($this->cfg['dbpref']."customers_company as cc","cc.customerid=cus.company_id");
 		$this->db->join($this->cfg['dbpref']."payment_history as payhis","payhis.inv_id=inv.inv_id","left");
 		$qry = $this->db->get();
 		return $qry->result();

@@ -663,7 +663,7 @@ class Project extends crm_controller {
 			get the project variance report from timesheet
 			**/
 			$data['timesheet_variance'] = '';
-			$timesheet_db = $this->load->database('timesheet', TRUE); 			
+			$timesheet_db = $this->load->database('timesheet', TRUE);		
 			$project_code_ts = $data['quote_data']['pjt_id'];
 			//$qry_pv = $timesheet_db->query("SELECT pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,sum(pte.prj_task_hours) As EstimatedHours, (select sum(tim.duration)/60 from enoah_times As tim where tim.proj_id = pte.proj_id and tim.task_id = pte.task_id) As actualHours ,tt.task_id,tt.name as taskName FROM ".$timesheet_db->dbprefix('project_estimation')." AS pe INNER JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.prj_est_id = pe.prj_est_id INNER JOIN ".$timesheet_db->dbprefix('task')." AS tt ON tt.task_id = pte.task_id  join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = pte.proj_id  WHERE prj.project_code='".$project_code_ts."' group by pte.task_id");
 			
@@ -765,7 +765,7 @@ class Project extends crm_controller {
 			/**
 			get the bug summary from the redmine
 			**/
-			$support_db = $this->load->database("redmine",true);
+			$support_db = $this->load->database("redmine", true);
 		
 			$data['bug_status'] = '';
 			$data['bug_severity'] = '';
@@ -876,7 +876,6 @@ class Project extends crm_controller {
         {
 			$this->session->set_flashdata('login_errors', array("Project does not exist."));
 			redirect('project');
-            // echo "Project does not exist or if you are an account manager you may not be authorised to view this";
         }
     }
 	
@@ -3554,9 +3553,9 @@ HDOC;
 				if($rec['cfname']!=''){
 					$company .= ' - '.$rec['cfname'];
 				}
-				if($rec['clname']!=''){
+				/* if($rec['clname']!=''){
 					$company .= ' '.$rec['clname'];
-				}
+				} */
 				
 				//Build the Array
 				$data['project_record'][$i]['lead_id'] 			= $rec['lead_id'];
@@ -3576,7 +3575,7 @@ HDOC;
 				$data['project_record'][$i]['project_type']	 	= $rec['project_billing_type'];
 				$data['project_record'][$i]['rag_status'] 		= $rec['rag_status'];
 				$data['project_record'][$i]['cfname'] 			= $rec['cfname'];
-				$data['project_record'][$i]['clname'] 			= $rec['clname'];
+				$data['project_record'][$i]['clname'] 			= '';
 				$data['project_record'][$i]['company'] 			= $rec['company'];
 				$data['project_record'][$i]['fnm'] 				= $rec['fnm'];
 				$data['project_record'][$i]['lnm'] 				= $rec['lnm'];
@@ -4187,7 +4186,8 @@ HDOC;
 		
 		    $data['quote_data'] = $getLeadDet[0];
 
-			$customer = $this->customer_model->get_customer($data['quote_data']['custid_fk']);				
+			// $customer = $this->customer_model->get_customer($data['quote_data']['custid_fk']);	
+			$customer    = $this->customer_model->get_lead_customer($data['quote_data']['custid_fk']);
 			$data['customer_data'] = $customer[0];
 
 			if($customer[0]['sales_contact_userid_fk']!='0') {
@@ -4198,10 +4198,10 @@ HDOC;
 		 	$data['project_id'] = $inputData['job_id'];
 			
             $data['view_quotation'] = true;
-			$data['user_accounts'] = $this->welcome_model->get_users();
+			$data['user_accounts']  = $this->welcome_model->get_users();
 			
-			$data['user_roles']		     = $usid['role_id']; 
-			$data['login_userid']		 = $usid['userid']; 
+			$data['user_roles']		     = $this->userdata['role_id']; 
+			$data['login_userid']		 = $this->userdata['userid']; 
 			$data['project_belong_to']	 = $arrLeadInfo['belong_to']; 
 			$data['project_assigned_to'] = $arrLeadInfo['assigned_to']; 
 			$data['project_lead_assign'] = $arrLeadInfo['lead_assign']; 

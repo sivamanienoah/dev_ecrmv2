@@ -44,17 +44,17 @@ button.ui-datepicker-current { display: none; }
 			<!--p class="clearfix" ><h3>Client Details</h3></p-->
 			<form name="customer_detail_form" id="customer_detail_form" method="post" onsubmit="return false;">
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			<input type="hidden" name="custid" value="<?php echo $customer_data['custid'] ?>" />
+			<input type="hidden" name="companyid" value="<?php echo $customer_data['companyid'] ?>" />
 			<table class="layout">
-				<tr>
+				<!--tr>
 					<td width="100"><strong>First name:*</strong></td>
-					<td width="240"><input type="text" name="first_name" value="<?php echo $customer_data['first_name']; ?>" class="textfield width200px required" /> </td>
+					<td width="240"><input type="text" name="first_name" value="<?php #echo $customer_data['first_name']; ?>" class="textfield width200px required" /> </td>
 					<td width="100"><strong>Last Name:</strong></td>
-					<td width="240"><input type="text" name="last_name" value="<?php echo $customer_data['last_name']; ?>" class="textfield width200px required" /></td>
-				</tr>
+					<td width="240"><input type="text" name="last_name" value="<?php #echo $customer_data['last_name']; ?>" class="textfield width200px required" /></td>
+				</tr-->
 				<tr>
-					<td><strong>Position:</strong></td>
-					<td><input type="text" name="position_title" value="<?php echo $customer_data['position_title']; ?>" class="textfield width200px required" /></td>
+					<!--td><strong>Position:</strong></td>
+					<td><input type="text" name="position_title" value="<?php #echo $customer_data['position_title']; ?>" class="textfield width200px required" /></td-->
                     <td><strong>Company:*</strong></td>
 					<td><input type="text" name="company" value="<?php echo $customer_data['company']; ?>" class="textfield width200px required" /> </td>
 				</tr>
@@ -87,12 +87,12 @@ button.ui-datepicker-current { display: none; }
 						</select>
 					</td>
 					<td><strong>Country:*</strong></td>
-						<td id='country_row'>
-							<select id="add1_country" name="add1_country" class="textfield width200px required" >
-							<option value="0">Select Country</option>                           
-							</select>
-							<a class="addNew" id="addButton" style ="display:none;"></a>	
-						</td>
+					<td id='country_row'>
+						<select id="add1_country" name="add1_country" class="textfield width200px required" >
+						<option value="0">Select Country</option>                           
+						</select>
+						<a class="addNew" id="addButton" style ="display:none;"></a>	
+					</td>
 				</tr>
 				<tr>
 					<td><strong>State:*</strong></td>
@@ -111,38 +111,19 @@ button.ui-datepicker-current { display: none; }
 					</td>
 				</tr>
 				<tr>
-					<td><strong>Direct Phone:</strong></td>
-					<td><input type="text" name="phone_1" value="<?php echo $customer_data['phone_1']; ?>" class="textfield width200px" />
-						</td>
-                    
 					<td><strong>Work Phone:</strong></td>
-					<td><input type="text" name="phone_2" value="<?php echo $customer_data['phone_2']; ?>" class="textfield width200px" /></td>
-				</tr>
-                    <tr>
-					<td><strong>Mobile Phone:</strong></td>
-					<td><input type="text" name="phone_3" value="<?php echo $customer_data['phone_3']; ?>" class="textfield width200px required" />
-						</td>
-                    
+					<td><input type="text" name="phone" value="<?php echo $customer_data['phone']; ?>" class="textfield width200px" /></td>
 					<td><strong>Fax Line:</strong></td>
-					<td><input type="text" name="phone_4" value="<?php echo $customer_data['phone_4']; ?>" class="textfield width200px" /></td>
-				</tr>
-                <tr>
-					<td><strong>Email:</strong></td>
-					<td><input type="text" name="email_1" id="emailval" autocomplete="off" value="<?php echo $customer_data['email_1']; ?>" class="textfield width200px required" /> 
-					<div class="errmsg"></div>
-					<!--input type="hidden" value="<?php #echo $customer_data['custid']; ?>" name="email_1" id="email_1" /-->
-					</td>
-                    <td><strong>Secondary Email:</strong></td>
-					<td><input type="text" name="email_2" value="<?php echo $customer_data['email_2']; ?>" class="textfield width200px required" /> 
-					</td>
+					<td><input type="text" name="fax" value="<?php echo $customer_data['fax']; ?>" class="textfield width200px" /></td>
 				</tr>
 				<tr>
+					<td><strong>Email:</strong></td>
+					<td>
+						<input type="text" name="email_2" id="emailval" autocomplete="off" value="<?php echo $customer_data['email_2']; ?>" class="textfield width200px required" /> 
+						<div class="errmsg"></div>
+					</td>
 					<td><strong>Web:</strong></td>
-					<td><input type="text" name="www_1" value="<?php echo $customer_data['www_1']; ?>" class="textfield width200px required" />
-					</td>
-                    <td><strong>Secondary Web:</strong></td>
-					<td><input type="text" name="www_2" value="<?php echo $customer_data['www_2']; ?>" class="textfield width200px required" />
-					</td>
+					<td><input type="text" name="www" value="<?php echo $customer_data['www']; ?>" class="textfield width200px required" /></td>
 				</tr>
 				<tr>
 					<td><strong>Sales Contact Name:</strong></td>
@@ -162,8 +143,44 @@ button.ui-datepicker-current { display: none; }
 						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
 					</td>
                     <td><strong>Sales Contact Email:</strong></td>
-					<td>
-					<input type="text" name="sales_contact_email" value="<?php echo $sales_contact_email; ?>" class="textfield width200px" readonly />
+					<td><input type="text" name="sales_contact_email" value="<?php echo $sales_contact_email; ?>" class="textfield width200px" readonly /></td>
+				</tr>
+				<tr>
+					<td colspan='4'>
+						<table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
+							<thead>
+								<tr class="bg-blue">
+									<td>Name</td>
+									<td>Email ID</td>
+									<td>Position</td>
+									<td>Contact No</td>
+									<td>Skype</td>
+								</tr>
+							</thead>
+							<tr>
+								<td>
+									<input type="hidden" name="custid" value="<?php echo $customer_data['custid']; ?>" class="textfield contact_id required" />
+									<input type="text" name="customer_name" value="<?php echo $customer_data['customer_name']; ?>" class=" first_name textfield width150px required" />
+									<span class="first_name_err_msg text-danger"></span>
+								</td>
+								<td>
+								   <input type="text" name="email_1" value="<?php echo $customer_data['email_1']; ?>" class="textfield email width150px required" />
+									<span class="position_title_err_msg text-danger"></span>
+								</td>
+								<td>
+								   <input type="text" name="position_title" value="<?php echo $customer_data['position_title']; ?>" class="position_title textfield width80px required" />
+									<span class="position_title_err_msg text-danger"></span>
+								</td>
+								<td>
+								   <input type="text" name="phone_1" value="<?php echo $customer_data['phone_1']; ?>" class="textfield phone width150px required" />
+									<span class="position_title_err_msg text-danger"></span>
+								</td>
+								<td>
+								   <input type="text" name="skype_name" value="<?php echo $customer_data['skype_name']; ?>" class="textfield skype width110px required" />
+									<span class="skype_err_msg text-danger"></span>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<tr>

@@ -63,10 +63,10 @@
 						<td><?php echo $customer['client_code'] ?></td>
                         <td>
 							<?php if($this->session->userdata('edit')==1) { ?>
-								<a href="customers/add_customer/update/<?php echo $customer['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
+								<a href="customers/add_customer/update/<?php echo $customer['companyid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
 							<?php } ?>
 							<?php if($this->session->userdata('delete')==1) { ?>
-								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['custid']; ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete' ></a>
+								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['companyid']; ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete' ></a>
 							<?php } ?>
 							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
 						</td>

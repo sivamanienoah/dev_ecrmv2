@@ -22,7 +22,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						<option value="">Select</option>
 						<?php if(count($customers)>0 && !empty($customers)){
 									foreach($customers as $customer){?>
-										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->first_name.' '.$customer->last_name.' '.$customer->company;?></option>
+										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->customer_name.' '.$customer->company;?></option>
 						<?php }}?>
 					</select>
 				</div>

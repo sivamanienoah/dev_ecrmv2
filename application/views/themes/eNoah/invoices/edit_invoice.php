@@ -45,7 +45,7 @@ if(count($expresults)>0 && !empty($expresults)){
 						<option value="">Select</option>
 						<?php if(count($customers)>0 && !empty($customers)){
 									foreach($customers as $customer){?>
-										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->first_name.' '.$customer->last_name.' '.$customer->company;?></option>
+										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->customer_name.' '.$customer->company;?></option>
 						<?php }}?>
 					</select>
 				</div>
@@ -53,7 +53,7 @@ if(count($expresults)>0 && !empty($expresults)){
 						<option value="">Select</option>
 						<?php if(count($customers)>0 && !empty($customers)){
 									foreach($customers as $customer){?>
-										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->first_name.' '.$customer->last_name;?></option>
+										<option <?php echo ($customer->custid== $expresults->custid)?'selected="selected"':'';?> value="<?php echo $customer->custid;?>"><?php echo $customer->customer_name;?></option>
 						<?php }}?>
 					</select>				
 				<div class="clear"></div>	
@@ -281,7 +281,7 @@ $(document).ready(function(){
 					html += '</tbody></table>';
 					$(".js_leads_list").html(html);
 					$(".email_address").val(email_address);
-					$(".customer_name").val(inv[0].first_name+' '+inv[0].last_name);
+					$(".customer_name").val(inv[0].customer_name);
 					$('.js_expect_worth').html(inv[0].expect_worth_name)
 					$('.js_expect_worth').html(inv[0].expect_worth_name)
 					$('.currency_type').val(inv[0].expect_worth_name)

@@ -44,7 +44,7 @@
 							<option value="">Select</option>
 							<?php 
 								foreach($customers as $cs) {
-							?>		<option value="<?php echo $cs['custid'] ?>"><?php echo stripslashes($cs['company']).' - '.stripslashes($cs['first_name']).' '.stripslashes($cs['last_name']) ?></option>
+							?>		<option value="<?php echo $cs['custid'] ?>"><?php echo stripslashes($cs['company']).' - '.stripslashes($cs['customer_name']); ?></option>
 							<?php
 								}
 							?>

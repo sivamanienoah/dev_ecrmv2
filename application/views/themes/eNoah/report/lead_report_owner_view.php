@@ -40,7 +40,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->cust_first_name.' '.$lead->cust_last_name;
+				$content .= $lead->cust_first_name;
 				$content .= "</td>";
 				
 				$content .= "<td>";

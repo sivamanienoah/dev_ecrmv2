@@ -23,12 +23,12 @@ class Report_least_active_lead_model extends crm_model {
 		}
 		
     	if(!empty($options['cust_id'])) {   		
-    		$this->db->where_in('cust.custid',$options['cust_id']);
+    		$this->db->where_in('cc.companyid',$options['cust_id']);
     	}
     	
     	if(!empty($options['customer']) && $options['customer'] != 'null') {
 			$customer = @explode(',', $options['customer']);
-			$this->db->where_in('jb.custid_fk',$customer);
+			$this->db->where_in('cc.companyid',$customer);
 		}   	
 		
     	if(!empty($options['leadassignee']) && $options['leadassignee'] != 'null') {
@@ -48,22 +48,22 @@ class Report_least_active_lead_model extends crm_model {
 		
     	if(!empty($options['regionname']) && $options['regionname'] != 'null') {
 			$regionname = @explode(',',$options['regionname']);
-			$this->db->where_in('cust.add1_region', $regionname);
+			$this->db->where_in('cc.add1_region', $regionname);
 		}
 		
     	if(!empty($options['countryname']) && $options['countryname'] != 'null') {
 			$countryname = @explode(',',$options['countryname']);
-			$this->db->where_in('cust.add1_country', $countryname);
+			$this->db->where_in('cc.add1_country', $countryname);
 		}
 		
     	if(!empty($options['statename']) && $options['statename'] != 'null') {
 			$statename = @explode(',',$options['statename']);
-			$this->db->where_in('cust.add1_state', $statename);
+			$this->db->where_in('cc.add1_state', $statename);
 		}
 		
     	if(!empty($options['locname']) && $options['locname'] != 'null') {
 			$locname = @explode(',',$options['locname']);
-			$this->db->where_in('cust.add1_location', $locname);
+			$this->db->where_in('cc.add1_location', $locname);
 		}
 		
     	if(!empty($options['worth']) && $options['worth'] != 'null') {
@@ -81,10 +81,11 @@ class Report_least_active_lead_model extends crm_model {
 			$where.= ')';
 			$this->db->where($where);
 		} 
-    	$this->db->select('jb.*,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname,cust.first_name as cust_first_name,cust.last_name as cust_last_name,cust.company,cust.add1_region,reg.region_name,ls.lead_stage_name');
+    	$this->db->select('jb.*,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname,cust.customer_name as cust_first_name, cc.company, cc.add1_region, reg.region_name, ls.lead_stage_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid','INNER');
-    	$this->db->join($this->cfg['dbpref'].'region reg','cust.add1_region = reg.regionid','INNER');
+		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cust.company_id','INNER');
+    	$this->db->join($this->cfg['dbpref'].'region reg','cc.add1_region = reg.regionid','INNER');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage','INNER');

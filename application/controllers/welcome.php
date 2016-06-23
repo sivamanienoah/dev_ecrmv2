@@ -149,7 +149,7 @@ class Welcome extends crm_controller {
 		}
 
 		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
-		//echo $this->db->last_query();
+		// echo $this->db->last_query(); die;
 		$data['filter_results'] = $filter_results;
 
 		$data['stage'] 		  = $stage;
@@ -650,7 +650,7 @@ class Welcome extends crm_controller {
 			$mgmt_mail = implode(',',$mangement_email);
 			$admin_mail=implode(',',$arrSetEmails);
 			
-			$param['email_data'] = array('first_name'=>$customer['first_name'],'last_name'=>$customer['last_name'],'company'=>$customer['company'],'base_url'=>$this->config->item('base_url'),'insert_id'=>$insert_id);
+			$param['email_data'] = array('first_name'=>$customer['customer_name'],'last_name'=>'','company'=>$customer['company'],'base_url'=>$this->config->item('base_url'),'insert_id'=>$insert_id);
 
 			$param['to_mail'] = $mgmt_mail.','. $lead_assign_mail[0]['email'];
 			$param['bcc_mail'] = $admin_mail;
@@ -1427,6 +1427,7 @@ class Welcome extends crm_controller {
 		$update['date_modified']       = date('Y-m-d H:i:s');
 		
 		$updt_project_info = $this->welcome_model->update_row('leads', $update, $project_id);
+		// echo $this->db->last_query(); die;
 		if($updt_project_info) {
 			$res['result'] = 'ok';
 		}else{
@@ -1523,18 +1524,22 @@ class Welcome extends crm_controller {
 					$log['date_created']  = date('Y-m-d H:i:s');
 					$log['log_content']   = $log_detail;
 					$log_res = $this->welcome_model->insert_row("logs", $log);
-
 				}
 			}
 		}
 		
-		$customer = $this->customer_model->get_customer($lead_det['custid_fk']);
+		// $customer = $this->customer_model->get_customer($lead_det['custid_fk']);
+		$customer = $this->customer_model->get_lead_customer($lead_det['custid_fk']);
+		
+		// echo "<pre>"; print_r($customer); exit;
 		
 		$client_code = $customer[0]['client_code'];
 		
 		if($client_code == '') {
-			$client_code = $this->customer_model->update_client_code($customer[0]['company'], $lead_det['custid_fk']);
+			$client_code = $this->customer_model->update_client_code($customer[0]['company'], $customer[0]['companyid']);
 		}
+		
+		// echo $client_code; die;
 		
 		//update client code to this lead - for project count
 		$this->db->where('lead_id', $project_id);
@@ -1567,13 +1572,14 @@ class Welcome extends crm_controller {
 		
 		$update['pjt_id']        = $project_code;
 		$update['pjt_status']    = 1;
+		$update['move_to_project_status'] = 1;
 		$update['modified_by']   = $this->userdata['userid'];
 		$update['date_modified'] = date('Y-m-d H:i:s');
 	
 		$updt_job = $this->welcome_model->update_row('leads', $update, $project_id);
 		$pjt_id   = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $project_id, 'pjt_id');
 
-		$this->customer_model->customer_update($lead_det['custid_fk'], array('is_client'=>1));		
+		$this->customer_model->customer_update_isclient($customer[0]['companyid'], array('is_client'=>1));
 		$this->customer_model->update_client_details_to_timesheet($client_code);
 		
 		// give default folder access to the assigned users.
@@ -1773,7 +1779,7 @@ class Welcome extends crm_controller {
 			$lead_entity   = isset($excelarr['division'])?$leadEntity[$excelarr['division']]:'';
 			$this->excel->getActiveSheet()->setCellValue('A'.$i, $excelarr['lead_id']);
 			$this->excel->getActiveSheet()->setCellValue('B'.$i, stripslashes($excelarr['lead_title']));
-			$this->excel->getActiveSheet()->setCellValue('C'.$i, stripslashes($excelarr['first_name']));
+			$this->excel->getActiveSheet()->setCellValue('C'.$i, stripslashes($excelarr['customer_name']));
 			$this->excel->getActiveSheet()->setCellValue('D'.$i, stripslashes($excelarr['last_name']));
 			$this->excel->getActiveSheet()->setCellValue('E'.$i, stripslashes($excelarr['company']));
 			$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['region_name']);
@@ -1934,9 +1940,9 @@ class Welcome extends crm_controller {
 					}
 					$successful = 'This log has been emailed to:<br />';
 					
-					$log_subject = "eSmart Notification - {$job_details['lead_title']} [ref#{$job_details['lead_id']}] {$client[0]['first_name']} {$client[0]['last_name']} {$client[0]['company']}";
+					$log_subject = "eSmart Notification - {$job_details['lead_title']} [ref#{$job_details['lead_id']}] {$client[0]['customer_name']} {$client[0]['last_name']} {$client[0]['company']}";
 							
-					$param['email_data'] = array('first_name'=>$client[0]['first_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('first_name'=>$client[0]['customer_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
 
 					$json['debug_info'] = '0';
 					
@@ -1973,7 +1979,7 @@ class Welcome extends crm_controller {
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 
-						$param['email_data'] = array('first_name'=>$client[0]['first_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
+						$param['email_data'] = array('first_name'=>$client[0]['customer_name'],'last_name'=>$client[0]['last_name'],'print_fancydate'=>$print_fancydate,'log_content'=>$data_log['log_content'],'received_by'=>$received_by,'signature'=>$this->userdata['signature']);
 
 					}
 

@@ -43,25 +43,26 @@ class Sales_forecast_model extends crm_model {
 			$this->db->select('ls.lead_id');
 			$this->db->from($this->cfg['dbpref'].'leads as ls');
 			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
 			
 			switch($this->userdata['level']) {
 				case 2:
-					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cc.add1_region',$region);
 				break;
 				case 3:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
 				break;
 				case 4:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				break;
 				case 5:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
-					$this->db->where_in('cs.add1_location',$locationid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
+					$this->db->where_in('cc.add1_location',$locationid);
 				break;
 			}
 			
@@ -91,11 +92,12 @@ class Sales_forecast_model extends crm_model {
 		}
 		//LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, c.company, c.first_name, c.last_name, l.lead_id, l.lead_title, l.expect_worth_id, l.expect_worth_amount, l.lead_status, l.pjt_status, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfm.milestone_id, sfm.forecast_category, sfm.milestone_name, sfm.milestone_value, sfm.for_month_year, sfc.forecast_id, cc.company, c.customer_name, l.lead_id, l.lead_title, l.expect_worth_id, l.expect_worth_amount, l.lead_status, l.pjt_status, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'sales_forecast_milestone as sfm');
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sfc', 'sfc.forecast_id = sfm.forecast_id_fk');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfc.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
@@ -120,7 +122,8 @@ class Sales_forecast_model extends crm_model {
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('sfc.customer_id', $filter['customer']);
+			// $this->db->where_in('sfc.customer_id', $filter['customer']);
+			$this->db->where_in('cc.companyid', $filter['customer']);
 		}
 		if (!empty($filter['lead_ids']) && $filter['lead_ids']!='null') {
 			$filter['lead_ids'] = explode(',',$filter['lead_ids']);
@@ -324,8 +327,9 @@ class Sales_forecast_model extends crm_model {
 		/* $this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company,l.lead_status,l.pjt_status');
 		$this->db->from($this->cfg['dbpref'].'customers as c');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.custid_fk = c.custid'); */
-		$this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company');
-		$this->db->from($this->cfg['dbpref'].'customers as c');
+		// $this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company');
+		$this->db->select('distinct(c.custid),c.company');
+		$this->db->from($this->cfg['dbpref'].'customers_company as c');
 		if(!empty($wh_condn))
 		$this->db->where($wh_condn);
 
@@ -343,6 +347,103 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where_in('c.add1_country', $countries_ids);
 			$this->db->where_in('c.add1_state', $states_ids);
 			$this->db->where_in('c.add1_location', $locations_ids);
+		}
+
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		
+		$customers = $this->db->get();        
+        // echo $this->db->last_query(); exit;
+        return $customers->result_array(); 
+    }
+	
+	/*
+	*@Get Row for Customers
+	*@Method  get_customers
+	*/
+	function get_contacts($wh_condn='', $order='') 
+	{
+		//customer restriction on level based.
+		if ($this->userdata['level'] != 1) {
+			$cond = array('level_id' => $this->userdata['level'], 'user_id' => $this->userdata['userid']);
+			
+			$this->db->select('region_id');
+		 	$reg_res = $this->db->get_where($this->cfg['dbpref']."levels_region", $cond);
+			$reg_details = $reg_res->result_array();
+			foreach($reg_details as $reg) {
+				$regions[] = $reg['region_id'];
+			}
+			$regions_ids = array_unique($regions);
+			$regions_ids = (array_values($regions)); //reset the keys in the array
+			//$regions_ids = implode(",", $regions_ids);
+		
+			//restriction for country
+			$this->db->select('country_id');
+			$coun_res = $this->db->get_where($this->cfg['dbpref']."levels_country", $cond);
+			$coun_details = $coun_res->result_array();
+			foreach($coun_details as $coun) {
+				$countries[] = $coun['country_id'];
+			}
+			if (!empty($countries)) {
+				$countries_ids = array_unique($countries);
+				$countries_ids = (array_values($countries)); //reset the keys in the array
+				//$countries_ids = @implode(",",$countries_ids);
+			}
+		
+			//restriction for state
+			$this->db->select('state_id');
+			$state_res = $this->db->get_where($this->cfg['dbpref']."levels_state", $cond);
+			$ste_details = $state_res->result_array();
+			foreach($ste_details as $ste) {
+				$states[] = $ste['state_id'];
+			}
+			if (!empty($states)) {
+				$states_ids = array_unique($states);
+				$states_ids = (array_values($states)); //reset the keys in the array				
+			}
+			//$states_ids = implode(",",$states_ids);
+		
+			//restriction for location
+			$this->db->select('location_id');
+			$loc_res = $this->db->get_where($this->cfg['dbpref']."levels_location", $cond);
+			$loc_details = $loc_res->result_array();
+			foreach($loc_details as $loc) {
+				$locations[] = $loc['location_id'];
+			}
+			if (!empty($locations)) {
+				$locations_ids = array_unique($locations);
+				$locations_ids = (array_values($locations)); //reset the keys in the array
+			}
+			//$locations_ids = implode(",",$locations_ids);
+		}
+		
+		/* $this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company,l.lead_status,l.pjt_status');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.custid_fk = c.custid'); */
+		// $this->db->select('distinct(c.custid),c.first_name,c.last_name,c.company');
+		$this->db->select('distinct(cs.custid),cc.company,cs.customer_name');
+		$this->db->from($this->cfg['dbpref'].'customers as cs');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+
+        if ($this->userdata['level'] == 2) {
+			$this->db->where_in('cc.add1_region', $regions_ids);				
+		} else if ($this->userdata['level'] == 3) {
+			$this->db->where_in('cc.add1_region', $regions_ids);
+			$this->db->where_in('cc.add1_country', $countries_ids);
+		} else if ($this->userdata['level'] == 4) {
+			$this->db->where_in('cc.add1_region', $regions_ids);
+			$this->db->where_in('cc.add1_country', $countries_ids);
+			$this->db->where_in('cc.add1_state', $states_ids);
+		} else if ($this->userdata['level'] == 5) {
+			$this->db->where_in('cc.add1_region', $regions_ids);
+			$this->db->where_in('cc.add1_country', $countries_ids);
+			$this->db->where_in('cc.add1_state', $states_ids);
+			$this->db->where_in('cc.add1_location', $locations_ids);
 		}
 
 		if(!empty($order)) {
@@ -458,11 +559,15 @@ class Sales_forecast_model extends crm_model {
 	public function get_sf_records($type) {
 	
 		if($type=='customers')
-		$this->db->select('c.custid, c.company, c.first_name, c.last_name');
+		$this->db->select('cc.companyid, cc.company, c.customer_name');
 		else if($type=='jobs')
-		$this->db->select('c.custid, c.company, c.first_name, c.last_name, l.lead_id, l.lead_title');
+		$this->db->select('cc.companyid, cc.company, c.customer_name, l.lead_id, l.lead_title');
 		
-		$this->db->from($this->cfg['dbpref'].'customers as c');
+		// $this->db->from($this->cfg['dbpref'].'customers as c');
+		
+		$this->db->from($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
+		
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sf', 'sf.customer_id  = c.custid');
 		if($type=='jobs') {
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id  = sf.job_id');
@@ -481,28 +586,29 @@ class Sales_forecast_model extends crm_model {
 			
 			switch($this->userdata['level']) {
 				case 2:
-					$this->db->where_in('c.add1_region',$regionid);
+					$this->db->where_in('cc.add1_region',$regionid);
 				break;
 				case 3:
-					$this->db->where_in('c.add1_region',$regionid);
-					$this->db->where_in('c.add1_country',$countryid);
+					$this->db->where_in('cc.add1_region',$regionid);
+					$this->db->where_in('cc.add1_country',$countryid);
 				break;
 				case 4:
-					$this->db->where_in('c.add1_region',$regionid);
-					$this->db->where_in('c.add1_country',$countryid);
-					$this->db->where_in('c.add1_state',$stateid);
+					$this->db->where_in('cc.add1_region',$regionid);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				break;
 				case 5:
-					$this->db->where_in('c.add1_region',$regionid);
-					$this->db->where_in('c.add1_country',$countryid);
-					$this->db->where_in('c.add1_state',$stateid);
-					$this->db->where_in('c.add1_location',$locationid);
+					$this->db->where_in('cc.add1_region',$regionid);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
+					$this->db->where_in('cc.add1_location',$locationid);
 				break;
 			}
 		}
 		if($type=='customers') {
-			$this->db->group_by('c.custid');
+			$this->db->group_by('cc.companyid');
 		}
+		$this->db->order_by('cc.company', 'ASC');
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		return $query->result_array();
@@ -541,25 +647,26 @@ class Sales_forecast_model extends crm_model {
 			$this->db->select('ls.lead_id');
 			$this->db->from($this->cfg['dbpref'].'leads as ls');
 			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
 			
 			switch($this->userdata['level']) {
 				case 2:
-					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cc.add1_region',$region);
 				break;
 				case 3:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
 				break;
 				case 4:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				break;
 				case 5:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
-					$this->db->where_in('cs.add1_location',$locationid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
+					$this->db->where_in('cc.add1_location',$locationid);
 				break;
 			}
 			
@@ -589,10 +696,11 @@ class Sales_forecast_model extends crm_model {
 		}
 		//LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
@@ -618,7 +726,7 @@ class Sales_forecast_model extends crm_model {
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('c.custid', $filter['customer']);
+			$this->db->where_in('cc.companyid', $filter['customer']);
 		}
 		if (!empty($filter['lead_ids']) && $filter['lead_ids']!='null') {
 			$filter['lead_ids'] = explode(',',$filter['lead_ids']);
@@ -665,25 +773,26 @@ class Sales_forecast_model extends crm_model {
 			$this->db->select('ls.lead_id');
 			$this->db->from($this->cfg['dbpref'].'leads as ls');
 			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
 			
 			switch($this->userdata['level']) {
 				case 2:
-					$this->db->where_in('cs.add1_region',$region);
+					$this->db->where_in('cc.add1_region',$region);
 				break;
 				case 3:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
 				break;
 				case 4:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
 				break;
 				case 5:
-					$this->db->where_in('cs.add1_region',$region);
-					$this->db->where_in('cs.add1_country',$countryid);
-					$this->db->where_in('cs.add1_state',$stateid);
-					$this->db->where_in('cs.add1_location',$locationid);
+					$this->db->where_in('cc.add1_region',$region);
+					$this->db->where_in('cc.add1_country',$countryid);
+					$this->db->where_in('cc.add1_state',$stateid);
+					$this->db->where_in('cc.add1_location',$locationid);
 				break;
 			}
 			
@@ -711,12 +820,13 @@ class Sales_forecast_model extends crm_model {
 			$job_ids = array_unique($res);
 			
 		}
-		//LEVEL BASED RESTIRCTION
+		// LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, c.company, c.first_name, c.last_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
@@ -742,7 +852,7 @@ class Sales_forecast_model extends crm_model {
 		}
 		if (!empty($filter['customer']) && $filter['customer']!='null') {
 			$filter['customer'] = explode(',',$filter['customer']);
-			$this->db->where_in('c.custid', $filter['customer']);
+			$this->db->where_in('cc.companyid', $filter['customer']);
 		}
 		if (!empty($filter['lead_ids']) && $filter['lead_ids']!='null') {
 			$filter['lead_ids'] = explode(',',$filter['lead_ids']);
@@ -765,6 +875,83 @@ class Sales_forecast_model extends crm_model {
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
+    }
+	
+	function customer_list()
+	{
+		//customer restriction on level based.
+		if ($this->userdata['level'] == 2 || $this->userdata['level'] == 3 || $this->userdata['level'] == 4 || $this->userdata['level'] == 5) {
+			$cond = array('level_id' => $this->userdata['level'], 'user_id' => $this->userdata['userid']);
+			
+			$this->db->select('region_id');
+		 	$reg_res = $this->db->get_where($this->cfg['dbpref']."levels_region", $cond);
+			$reg_details = $reg_res->result_array();
+			foreach($reg_details as $reg) {
+				$regions[] = $reg['region_id'];
+			}
+			$regions_ids = array_unique($regions);
+			$regions_ids = (array_values($regions)); //reset the keys in the array
+		
+			//restriction for country
+			$this->db->select('country_id');
+			$coun_res = $this->db->get_where($this->cfg['dbpref']."levels_country", $cond);
+			$coun_details = $coun_res->result_array();
+			foreach($coun_details as $coun) {
+				$countries[] = $coun['country_id'];
+			}
+			if (!empty($countries)) {
+				$countries_ids = array_unique($countries);
+				$countries_ids = (array_values($countries)); //reset the keys in the array
+			}
+		
+			//restriction for state
+			$this->db->select('state_id');
+			$state_res = $this->db->get_where($this->cfg['dbpref']."levels_state", $cond);
+			$ste_details = $state_res->result_array();
+			foreach($ste_details as $ste) {
+				$states[] = $ste['state_id'];
+			}
+			if (!empty($states)) {
+				$states_ids = array_unique($states);
+				$states_ids = (array_values($states)); //reset the keys in the array				
+			}
+		
+			//restriction for location
+			$this->db->select('location_id');
+			$loc_res = $this->db->get_where($this->cfg['dbpref']."levels_location", $cond);
+			$loc_details = $loc_res->result_array();
+			foreach($loc_details as $loc) {
+				$locations[] = $loc['location_id'];
+			}
+			if (!empty($locations)) {
+				$locations_ids = array_unique($locations);
+				$locations_ids = (array_values($locations)); //reset the keys in the array
+			}
+		}
+
+		$this->db->select('CUST.*, REG.regionid, REG.region_name, COUN.countryid, COUN.country_name');
+		$this->db->from($this->cfg['dbpref'].'customers_company as CUST');
+		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
+		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
+        if ($this->userdata['level'] == 2) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+		} else if ($this->userdata['level'] == 3) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+		} else if ($this->userdata['level'] == 4) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+		} else if ($this->userdata['level'] == 5) {
+			$this->db->where_in('CUST.add1_region', $regions_ids);
+			$this->db->where_in('CUST.add1_country', $countries_ids);
+			$this->db->where_in('CUST.add1_state', $states_ids);
+			$this->db->where_in('CUST.add1_location', $locations_ids);
+		}
+		$this->db->order_by('CUST.company', 'ASC');
+		$customers = $this->db->get();
+        // echo $this->db->last_query(); exit;
+        return $customers->result_array();
     }
     
 }

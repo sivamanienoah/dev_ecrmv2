@@ -66,16 +66,12 @@ class Customers extends crm_controller {
 		
 		//echo '<pre>'; print_r($arrUsers);exit;
 
-        //$rules['first_name'] = "trim|required";
-		// $rules['last_name'] = "trim|required";
 		$rules['company'] = "trim|required";
 		
 		$rules['add1_region']    = "selected[add1_region]";
 		$rules['add1_country'] = "selected[add1_country]";
 		$rules['add1_state'] = "selected[add1_state]";
 		$rules['add1_location'] = "selected[add1_location]";
-			
-		//$rules['phone_1'] = "trim|required";
 		$rules['add1_postcode'] = "trim";
 		//$rules['email_1'] = "trim|required|valid_email";
 		if ($update == 'update') {
@@ -86,12 +82,6 @@ class Customers extends crm_controller {
 		}
 		$this->validation->set_rules($rules);	
 		
-		/* $fields['first_name'] = "First Name";
-		$fields['last_name'] = "Last Name";
-		$fields['position_title'] = 'Position';
-		$fields['phone_1'] = "Phone Number";
-		$fields['email_1'] = "Primary Email Address"; */
-		
 		$fields['company'] = "Company";
 		$fields['add1_line1'] = "";
 		$fields['add1_line2'] = "";
@@ -101,16 +91,17 @@ class Customers extends crm_controller {
 		$fields['add1_country'] = "Country";
 		$fields['add1_state'] = "State";
 		$fields['add1_location'] = "Location";
-		$fields['phone_2'] = '';
-		$fields['phone_3'] = '';
-		$fields['phone_4'] = '';
+		$fields['phone'] = '';
+		// $fields['phone_3'] = '';
+		// $fields['phone_4'] = '';
 		$fields['email_2'] = "";
-		$fields['email_3'] = "";
-		$fields['email_4'] = "";
-		$fields['skype_name'] = '';
+		// $fields['email_3'] = "";
+		// $fields['email_4'] = "";
+		$fields['fax'] = "";
+		// $fields['skype_name'] = '';
 		$fields['is_client'] = '';
-		$fields['www_1'] = "Primary Web Address";
-		$fields['www_2'] = "";
+		$fields['www'] = "Web Address";
+		// $fields['www_2'] = "";
 		// $fields['sales_contact_name'] = 'Sales Contact Name';
 		$fields['sales_contact_userid_fk'] = 'Sales Contact ID';
 		// $fields['sales_contact_email'] = 'Sales Contact Email';
@@ -173,16 +164,16 @@ class Customers extends crm_controller {
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) 
 			{
 				// set exported back to NULL so it will be exported to addressbook
-				$update_data['exported'] = NULL;
-				
+				// $update_data['exported'] = NULL;
+				// echo "<pre>"; print_r($update_data);
 				//update
 				if ($this->customer_model->update_company($id, $update_data)) 
 				{
-					if (isset($pst_data['name']))
+					if (isset($pst_data['customer_name']))
 					{
 						//echo'<pre>';print_r($pst_data);exit;
 						$contact_id	=	$pst_data['contact_id'];
-						$name		=	$pst_data['name'];
+						$name		=	$pst_data['customer_name'];
 						$skype		=	$pst_data['skype'];
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
@@ -192,12 +183,12 @@ class Customers extends crm_controller {
 						for($i=0;$i<count($name);$i++)
 						{
 							$cust_data					=	array();
-							$cust_data['name']			=	$name[$i];
+							$cust_data['customer_name']	=	$name[$i];
 							$cust_data['skype_name']	=	$skype[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
 							$cust_data['email_1']		=	$email[$i];
-							//echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
+							// echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
 							if($contact_id[$i])
 							{
 								$this->customer_model->update_customer_contacts($cust_data,$contact_id[$i]);
@@ -230,7 +221,7 @@ class Customers extends crm_controller {
 					//email sent by email template
 					$param = array();
 					
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>'','last_name'=>'','company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
 
 					$param['to_mail'] 	      = $admin_mail.','.$mgmt_mail;
 					$param['bcc_mail'] 		  = $admin_mail;
@@ -248,29 +239,25 @@ class Customers extends crm_controller {
 			} 
 			else 
 			{
-			
-				
 				//insert
-				
-				
 				if ($company_id	=	$this->customer_model->insert_company($update_data)) 
 				{	
 				
 					//Entry to customer table
 					if (isset($pst_data['name']))
 					{
-						$name	=	$pst_data['name'];
-						$skype	=	$pst_data['skype'];
+						$name	    =	$pst_data['customer_name'];
+						$skype	    =	$pst_data['skype'];
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
-						$batch_insert_data	=	array();
+						$batch_insert_data = array();
 						for($i=0;$i<count($first_name);$i++)
 						{
 							$cust_data					=	array();
-							//$cust_data					=	$update_data;
+							//$cust_data				=	$update_data;
 							$cust_data['company_id']	=	$company_id;
-							$cust_data['name']			=	$name[$i];
+							$cust_data['customer_name']	=	$name[$i];
 							$cust_data['skype_name']	=	$skype[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
@@ -318,14 +305,14 @@ class Customers extends crm_controller {
 					{
 						$json['error'] = false;
 						$json['custid'] = $newid;
-						$json['cust_name1'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'] . ' - ' . $pst_data['company'];
-						$json['cust_name'] = $pst_data['first_name'] . ' ' . $pst_data['last_name'];
-						$json['cust_email'] = $pst_data['email_1'];
+						$json['cust_name1']   = $pst_data['customer_name'] . ' - ' . $pst_data['company'];
+						$json['cust_name']    = $pst_data['customer_name'];
+						$json['cust_email']   = $pst_data['email_1'];
 						$json['cust_company'] = $pst_data['company'];
-						$json['cust_reg'] = $pst_data['add1_region'];
-						$json['cust_cntry'] = $pst_data['add1_country'];
-						$json['cust_ste'] = $pst_data['add1_state'];
-						$json['cust_locn'] = $pst_data['add1_location'];
+						$json['cust_reg'] 	  = $pst_data['add1_region'];
+						$json['cust_cntry']   = $pst_data['add1_country'];
+						$json['cust_ste'] 	  = $pst_data['add1_state'];
+						$json['cust_locn']	  = $pst_data['add1_location'];
 						echo json_encode($json);
 					}
 				}
@@ -344,12 +331,14 @@ class Customers extends crm_controller {
 		unset($post_data['addlocation']);
 		unset($post_data['addstate']);
 		
-		$id = $post_data['custid'];
-		if ($this->customer_model->update_customer($id, $post_data))
+		$companyid = $post_data['companyid'];
+		$custid    = $post_data['custid'];
+		if ($this->customer_model->update_customer_details($companyid, $custid, $post_data))
 		$res['result'] = 'ok';
 		
 		echo json_encode($res);
 	}
+	
 	
 	function email_1_check($email) 
 	{

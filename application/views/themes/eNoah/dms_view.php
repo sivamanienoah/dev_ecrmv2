@@ -50,7 +50,7 @@
 						<td>
 							<select style="width:210px;" multiple="multiple" id="customers" name="customers[]">
 								<?php if(count($customers)>0):foreach($customers as $customer) {?>
-								<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['company'].' - '.$customer['first_name'].' '.$customer['last_name']; ?></option>	
+								<option value="<?php echo $customer['companyid']; ?>"><?php echo $customer['company']; ?></option>	
 								<?php } endif;?>
 							</select>
 						</td>

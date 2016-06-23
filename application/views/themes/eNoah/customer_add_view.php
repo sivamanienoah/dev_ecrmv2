@@ -34,19 +34,19 @@
 			<?php if ($this->uri->segment(3) == 'update') { ?>
 			<!--<tr>
 					<td width="100">Client Code</td>
-					<td width="240"><input type="text" name="client_code" value="<?php echo $this->validation->client_code; ?>" class="textfield width200px" readonly /> </td>
+					<td width="240"><input type="text" name="client_code" value="<?php #echo $this->validation->client_code; ?>" class="textfield width200px" readonly /> </td>
 			</tr>-->
 			<?php } ?>
 			
 				<!--<tr>
 					<td width="100">First name: *</td>
-					<td width="240"><input type="text" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
+					<td width="240"><input type="text" name="first_name" value="<?php #echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
 					<td width="100">Last Name: </td>
-					<td width="240"><input type="text" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
+					<td width="240"><input type="text" name="last_name" value="<?php #echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
 				</tr>-->
 				<tr>
 					<!--<td>Position:</td>
-					<td><input type="text" name="position_title" value="<?php echo $this->validation->position_title ?>" class="textfield width200px required" /></td>-->
+					<td><input type="text" name="position_title" value="<?php #echo $this->validation->position_title ?>" class="textfield width200px required" /></td>-->
                     <td>Company: *</td>
 					<td><input type="text" name="company" value="<?php echo $this->validation->company ?>" class="textfield width200px required" /> </td>
 					<?php if ($this->uri->segment(3) == 'update') { ?>
@@ -129,20 +129,15 @@
 					<?php } ?>
 					</tr>
 				<tr>
-					<td>Work Phone:</td>
-					<td><input type="text" name="phone_3" value="<?php echo  $this->validation->phone_2 ?>" class="textfield width200px" />
-						</td>
-                    
-					<td>Mobile Phone:</td>
-					<td><input type="text" name="phone_3" value="<?php echo  $this->validation->phone_3 ?>" class="textfield width200px" /></td>
-				</tr>
-                    <tr>
-					<td>Fax Line:</td>
-					<td><input type="text" name="phone_4" value="<?php echo  $this->validation->phone_4 ?>" class="textfield width200px required" />
+					<td>Phone:</td>
+					<td><input type="text" name="phone" value="<?php echo  $this->validation->phone ?>" class="textfield width200px" /></td>
+                    <td>Fax Line:</td>
+					<td><input type="text" name="fax" value="<?php echo  $this->validation->fax ?>" class="textfield width200px required" />
 					</td>
-                    
+				</tr>
+				<tr>
 					<td>Email: </td>
-					<td><input type="text" name="email_2" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_1 ?>" class="textfield width200px required" /> 
+					<td><input type="text" name="email_2" id="emailval" autocomplete="off" value="<?php echo  $this->validation->email_2 ?>" class="textfield width200px required" /> 
 					
 					<div><span class="checkUser" style="color:green">Valid Email.</span></div>
 					<div><span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span></div>
@@ -152,24 +147,18 @@
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 						<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="emailupdate" id="emailupdate" />
 					<?php } ?>
+					<td>Web:</td>
+					<td><input type="text" name="www" value="<?php echo $this->validation->www ?>" class="textfield width200px required" />
+					</td>
 				</td>
-				</tr>
-                <tr>
-                    <td>Secondary Email:</td>
-					<td><input type="text" name="email_3" value="<?php echo  $this->validation->email_3 ?>" class="textfield width200px required" /> 
-					</td>
-				
-					<td>Email 3:</td>
-					<td><input type="text" name="email_4" value="<?php echo  $this->validation->email_4 ?>" class="textfield width200px required" />
-					</td>
 				</tr>
 				<tr>
                    <!-- <td>Email 4:</td>
-					<td><input type="text" name="email_4" value="<?php echo  $this->validation->email_4 ?>" class="textfield width200px required" /> 
+					<td><input type="text" name="email_4" value="<?php #echo  $this->validation->email_4 ?>" class="textfield width200px required" /> 
 					</td>-->
-				
-					<td>Skype Name:</td>
-					<td><input type="text" name="skype_name" value="<?php echo  $this->validation->skype_name ?>" class="textfield width200px required" /></td>
+					
+					<!--td>Skype Name:</td>
+					<td><input type="text" name="skype_name" value="<?php #echo $this->validation->skype_name ?>" class="textfield width200px required" /></td-->
 				
 				<?php /*?>  <td>Is a Client: </td>
 					<td>
@@ -186,14 +175,6 @@
 					<?php } else { ?>
                     <td colspan="2">&nbsp;</td>
 					<?php } ?>
-				</tr>
-                <tr>
-					<td>Web:</td>
-					<td><input type="text" name="www_1" value="<?php echo $this->validation->www_1 ?>" class="textfield width200px required" />
-					</td>
-                    <td>Secondary Web:</td>
-					<td><input type="text" name="www_2" value="<?php echo $this->validation->www_2 ?>" class="textfield width200px required" />
-					</td>
 				</tr>
 				<tr>
 					<td>Sales Contact Name:</td>
@@ -257,7 +238,7 @@
 										<tr>
 											<td>
 												<input type="hidden" name="contact_id[]" value="<?php echo $row['custid']; ?>" class="textfield contact_id width180px required" />
-												<input type="text" name="name[]" value="<?php echo $row['name']; ?>" class=" first_name textfield width180px required" />
+												<input type="text" name="customer_name[]" value="<?php echo $row['customer_name']; ?>" class=" first_name textfield width180px required" />
 												<span class="first_name_err_msg text-danger"></span>
 											</td>
 											<td>
@@ -289,7 +270,7 @@
 							?>
 								<tr>
 									<td>
-										<input type="text" name="name[]" value="" class=" first_name textfield width180px required" />
+										<input type="text" name="customer_name[]" value="" class="first_name textfield width180px required" />
 										<span class="first_name_err_msg text-danger"></span>
 									</td>
 									<td>

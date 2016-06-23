@@ -70,7 +70,7 @@
 						<td>
 							<select style="width:230px;" multiple="multiple" id="customer" name="customer[]">
 								<?php foreach($customers as $customer) { ?>
-									<option value="<?php echo $customer['custid']; ?>"><?php echo $customer['first_name'].' '.$customer['last_name'].' - '.$customer['company']; ?></option>	
+									<option value="<?php echo $customer['companyid']; ?>"><?php echo $customer['company']; ?></option>	
 								<?php } ?>
 							</select> 
 						</td>

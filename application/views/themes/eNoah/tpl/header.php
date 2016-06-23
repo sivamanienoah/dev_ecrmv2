@@ -285,7 +285,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$access_limit['delete'] = $masters[0]['delete'];
 		}
 	}
-
 	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
 	
 	$array= array();
