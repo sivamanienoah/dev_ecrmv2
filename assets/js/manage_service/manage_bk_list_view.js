@@ -17,13 +17,7 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false
-		/* "aoColumns": [{ sWidth: '8%' },
-					{ sWidth: '8%' },
-					for (i = 0; i < no_cur; i++) {
-						{ sWidth: '7%' },
-					}
-					{ sWidth: '10%' }]	 */	
+		"bAutoWidth": false,	
 	});
 });
 function processDelete(curr_year, curr_id) {
