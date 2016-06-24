@@ -64,13 +64,11 @@ class Customers extends crm_controller {
 		$data['login_sales_contact_name']  = $arrUsers['first_name'].' '.$arrUsers['last_name'];
 		$data['login_sales_contact_email'] = $arrUsers['email'];
 		
-		//echo '<pre>'; print_r($arrUsers);exit;
-
 		$rules['company'] = "trim|required";
 		
-		$rules['add1_region']    = "selected[add1_region]";
-		$rules['add1_country'] = "selected[add1_country]";
-		$rules['add1_state'] = "selected[add1_state]";
+		$rules['add1_region']   = "selected[add1_region]";
+		$rules['add1_country']  = "selected[add1_country]";
+		$rules['add1_state']    = "selected[add1_state]";
 		$rules['add1_location'] = "selected[add1_location]";
 		$rules['add1_postcode'] = "trim";
 		//$rules['email_1'] = "trim|required|valid_email";
@@ -127,7 +125,7 @@ class Customers extends crm_controller {
 			if($data['client_projects'] !=0) {
 				echo "<pre>"; print_r($data['client_projects']); die;
 				// $this->customer_model->customer_update($id, array('is_client'=>1));		
-				$this->customer_model->customer_update_isclient($id, array('is_client'=>1));		
+				$this->customer_model->customer_update_isclient($id, array('is_client'=>1));
 			} */
 			
 			//echo '<!--' . print_r($customer, true) . '-->';
@@ -198,7 +196,6 @@ class Customers extends crm_controller {
 								$cust_data['company_id']	=	$id;
 								$batch_insert_data[]		=	$cust_data;
 							}
-							
 						}
 						
 						//echo'<pre>';print_r($batch_insert_data);exit;
@@ -254,7 +251,7 @@ class Customers extends crm_controller {
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
 						$batch_insert_data = array();
-						for($i=0;$i<count($first_name);$i++)
+						for($i=0;$i<count($customer_name);$i++)
 						{
 							$cust_data					=	array();
 							//$cust_data				=	$update_data;
