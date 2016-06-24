@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-ini_set('display_errors', 1);
+
 class Dashboard extends crm_controller {
 	var $cfg;
 	var $userdata;
@@ -37,7 +37,8 @@ class Dashboard extends crm_controller {
 	*
 	*/
 	function index() {
-		 error_reporting(1);
+		ini_set('display_errors', 1);
+		echo "asdf"; die;
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
