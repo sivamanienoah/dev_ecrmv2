@@ -10,18 +10,28 @@ $(document).ready(function() {
 });
 
 function chk_practice_name() {
-	$('#succes_err_msg').empty();
+	$('#succes_err_msg,#hours_succes_err_msg').empty();
 	
 	var practices 			= $("#practices").val();
 	var practice_id     	= $("#practice_id").val();
+	var max_hours			= $("#max_hours").val();
 	var params 				= {name: practices, id: practice_id};
 	params[csrf_token_name] = csrf_hash_token;
 	
+	var error = true;
 	if (practices == "") {
 		$('#succes_err_msg').show();
 		$('#succes_err_msg').append("<span class='ajx_failure_msg'>Practice Required.</span>");
-		return false;
-	} else {
+		error = false;
+	}
+	if(max_hours == ""){
+		
+		$('#hours_succes_err_msg').show();
+		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max Hours Required.</span>");
+		error =  false;
+	}
+	console.log("error"+error);
+	if(error) {
 		$.ajax({
 			url: site_base_url+"manage_practice/chk_duplicate",
 			data: params,
