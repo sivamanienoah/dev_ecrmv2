@@ -192,13 +192,14 @@ class Customers extends crm_controller {
 							if($contact_id[$i])
 							{
 								$this->customer_model->update_customer_contacts($cust_data,$contact_id[$i]);
+								// echo $this->db->last_query();
 							}else{
 								$cust_data['company_id']	=	$id;
 								$batch_insert_data[]		=	$cust_data;
 							}
 						}
 						
-						//echo'<pre>';print_r($batch_insert_data);exit;
+						// echo'<pre>';print_r($batch_insert_data);exit;
 						if(count($batch_insert_data))
 						{
 							$this->customer_model->insert_batch_customer($batch_insert_data);
