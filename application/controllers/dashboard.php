@@ -12,8 +12,8 @@ class Dashboard extends crm_controller {
 	{
 		parent::__construct();
 		$this->login_model->check_login();
-		echo "dfdf"; die;
 		$this->load->model('dashboard_model');
+		echo "13123"; die;
 		$this->load->model('report/report_lead_region_model');
 		$this->load->model('regionsettings_model');
 		$this->load->model('welcome_model');
