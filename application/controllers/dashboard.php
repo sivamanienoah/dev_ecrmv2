@@ -36,6 +36,7 @@ class Dashboard extends crm_controller {
 	*
 	*/
 	function index() {
+		 error_reporting(1);
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
