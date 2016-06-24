@@ -10,13 +10,14 @@ class Dashboard extends crm_controller {
 	*/
 	function __construct()
 	{
+		//echo 'here';exit;
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->load->model('dashboard_model');
 		$this->load->model('report/report_lead_region_model');
 		$this->load->model('regionsettings_model');
 		$this->load->model('welcome_model');
-		$this->load->helper('custom_helper');
+		//$this->load->helper('custom_helper');
 		$this->load->helper('text_helper');
 		$this->load->helper('lead_stage_helper');
 		$this->userdata   = $this->session->userdata('logged_in_user');
