@@ -12,6 +12,7 @@ class Dashboard extends crm_controller {
 	{
 		parent::__construct();
 		$this->login_model->check_login();
+		echo "dfdf"; die;
 		$this->load->model('dashboard_model');
 		$this->load->model('report/report_lead_region_model');
 		$this->load->model('regionsettings_model');
@@ -30,7 +31,6 @@ class Dashboard extends crm_controller {
 			$this->default_cur_id   = '1';
 			$this->default_cur_name = 'USD';
 		}
-		echo "45215243"; die;
 	}
 	
 	
