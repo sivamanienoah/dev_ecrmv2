@@ -11,7 +11,6 @@ class Dashboard extends crm_controller {
 	function __construct()
 	{
 		parent::__construct();
-		ini_set('display_errors', 1);
 		$this->login_model->check_login();
 		$this->load->model('dashboard_model');
 		$this->load->model('report/report_lead_region_model');
