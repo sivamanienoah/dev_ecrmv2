@@ -240,7 +240,7 @@ function get_practice_max_hours($practice_id=false){
 		if(count($result)>0 && !empty($result)){
 			return $result;
 		}else{
-			return '';
+			return array();
 		}
 	}	
 }
