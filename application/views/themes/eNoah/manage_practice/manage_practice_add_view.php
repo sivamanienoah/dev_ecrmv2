@@ -28,6 +28,16 @@
 					</td>
 				</tr>
 				<tr>
+                    <td>Max Hours: * </td>
+					<td>
+						<input type="text" name="max_hours" id="max_hours" value="<?php echo $this->validation->max_hours; ?>" class="textfield width200px" />
+					
+					</td>
+					<td>
+						<div id="hours_succes_err_msg"></div>
+					</td>
+				</tr>
+				<tr>
 					<td>Status</td>
 					<td colspan="2">
 						<input type="checkbox" name="status" value="1" <?php if ($this->validation->status == 1) echo ' checked="checked"' ?>

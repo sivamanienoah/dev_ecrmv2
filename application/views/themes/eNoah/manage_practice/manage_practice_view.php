@@ -2,6 +2,7 @@
 ob_start();
 require (theme_url().'/tpl/header.php');
 $userdata = $this->session->userdata('logged_in_user');
+
 ?>
 <div id="content">
 	<div class="inner">
@@ -25,6 +26,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<thead>
 			<tr>
 				<th width="20%">Practice</th>
+				<th width="8%">Max Hours</th>
 				<th width="12%">Status</th>
 				<th>Action</th>
 			</tr>
@@ -34,6 +36,7 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php foreach($practices as $practice_name) { ?>
 				<tr>
 					<td><?php echo $practice_name['practices']; ?></td>
+					<td><?php echo $practice_name['max_hours']; ?></td>
 					<td>
 						<?php if ($practice_name['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					</td>
