@@ -118,15 +118,17 @@ class Customers extends crm_controller {
 		{
             $customer = $this->customer_model->get_company($id);
 			$data['customer_contacts'] 	= $this->customer_model->get_customer_contacts($id);
-			if($customer[0]['sales_contact_userid_fk']!='0') {
+			/* if($customer[0]['sales_contact_userid_fk']!='0') {
 				$data['sales_person_detail'] = $this->customer_model->get_records_by_id('users', array('userid'=>$customer[0]['sales_contact_userid_fk']));
 			}
 
 			$data['client_projects'] = $this->customer_model->get_records_by_num('leads', array('custid_fk'=>$id, 'pjt_status !='=>0));
-			
+			echo $this->db->last_query(); exit;
 			if($data['client_projects'] !=0) {
-				$this->customer_model->customer_update($id, array('is_client'=>1));		
-			}
+				echo "<pre>"; print_r($data['client_projects']); die;
+				// $this->customer_model->customer_update($id, array('is_client'=>1));		
+				$this->customer_model->customer_update_isclient($id, array('is_client'=>1));		
+			} */
 			
 			//echo '<!--' . print_r($customer, true) . '-->';
             if (is_array($customer) && count($customer) > 0) foreach ($customer[0] as $k => $v) 
