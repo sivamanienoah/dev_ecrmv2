@@ -76,8 +76,8 @@
 					<thead>
 						<tr>
 							<th style="width:10%">SL No</th>
-							<th>Max Hours</th>
 							<th>Financial Year</th>
+							<th>Max Hours</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -87,8 +87,8 @@
 						<?php foreach($practice_max_hours_history as $practice_max_hours_historys) { ?>
 							<tr>
 								<td><?php echo $i;?></td>
-								<td><?php echo $practice_max_hours_historys['practice_max_hours']; ?></td>
 								<td><?php echo $practice_max_hours_historys['financial_year']; ?></td>
+								<td><?php echo $practice_max_hours_historys['practice_max_hours']; ?></td>
 							
 							</tr>
 						<?php $i++;} ?>
