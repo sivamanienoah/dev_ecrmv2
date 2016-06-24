@@ -35,8 +35,7 @@ class Manage_practice extends crm_controller {
 	*/
     public function index($search = FALSE) 
 	{
-		
-        $data['page_heading'] = 'Manage Practice';
+	    $data['page_heading'] = 'Manage Practice';
 		$data['practices'] = $this->manage_practice_model->get_practices($search);
         $this->load->view('manage_practice/manage_practice_view', $data);
     }
@@ -78,9 +77,11 @@ class Manage_practice extends crm_controller {
 		
 		//for status
 		$data['cb_status'] = '';
+		$data['practice_max_hours_history']='';
 		if(!empty($id)) {
 			$this->db->where('practice', $id);
 			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+			$data['practice_max_hours_history']=get_practice_max_hours($id);
 		}
 		
 		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
