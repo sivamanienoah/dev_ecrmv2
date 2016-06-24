@@ -10,6 +10,7 @@ class Dashboard extends crm_controller {
 	*/
 	function __construct()
 	{
+		echo "asdfasdf"; die;
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->load->model('dashboard_model');
