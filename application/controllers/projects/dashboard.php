@@ -25,6 +25,9 @@ class Dashboard extends crm_controller
 	
 	function index()
 	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+			redirect('project');
+		}
 		$data  				  = array();
 		$dept   			  = array();
 		$data['page_heading'] = "Project Dashboard";
@@ -186,6 +189,9 @@ class Dashboard extends crm_controller
 	
 	function trend_analysis()
 	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+			redirect('project');
+		}
 		// echo "<pre>"; print_r($_POST); exit;
 		$data  				  = array();
 		$dept   			  = array();
