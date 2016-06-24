@@ -230,3 +230,16 @@ function get_current_financial_year(){
 	return $financial_year;
 }
 /*Get max hours based on practice id*/
+function get_practice_max_hours($practice_id=false){
+	$CI   	    = get_instance();
+	$cfg	    = $CI->config->item('crm'); /// load config
+	if($practice_id){
+		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id));
+		
+		if(count($qry->result())>0 && !empty($qry->result())){
+			return $qry->result();
+		}else{
+			return array();
+		} 
+	}	
+}
