@@ -25,6 +25,7 @@ class Manage_practice extends crm_controller {
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_practice_model');
+		$this->load->helper('custom_helper');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
     
@@ -34,6 +35,7 @@ class Manage_practice extends crm_controller {
 	*/
     public function index($search = FALSE) 
 	{
+		
         $data['page_heading'] = 'Manage Practice';
 		$data['practices'] = $this->manage_practice_model->get_practices($search);
         $this->load->view('manage_practice/manage_practice_view', $data);
@@ -64,10 +66,12 @@ class Manage_practice extends crm_controller {
         $data              = array();
         $post_data         = real_escape_array($this->input->post());
 		$rules['practices'] = "trim|required";
+		$rules['max_hours'] = "required";
 		
 		$this->validation->set_rules($rules);
 		$fields['practices'] = 'Practices';
 		$fields['status']   = 'Status';
+		$fields['max_hours']   = 'Maximum Hours';
 		
 		$this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
@@ -117,6 +121,20 @@ class Manage_practice extends crm_controller {
             {
                 //insert
                 $this->db->insert($this->cfg['dbpref']."practices", $update_data);
+				
+				if($this->db->affected_rows() > 0)
+				{
+					$practice_id = $this->db->insert_id();
+					
+					if($practice_id>0){
+						$history['practice_id'] = $practice_id;
+						
+	
+						$history['financial_year']   = get_current_financial_year();
+						
+						$this->db->insert($this->cfg['dbpref']."max_hours_history", $history);
+					}
+				}
                 $this->session->set_flashdata('confirm', array('New Practice Added!'));
                 
             }

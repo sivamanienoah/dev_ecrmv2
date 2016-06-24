@@ -108,7 +108,7 @@ class Manage_practice_model extends crm_model {
 		$res = $this->db->get($this->cfg['dbpref'].$tbl_name);
         return $res->num_rows();
 	}
-    
+	
 }
 
 ?>

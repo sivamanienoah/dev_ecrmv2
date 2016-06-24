@@ -220,3 +220,12 @@ if ( ! function_exists('get_dms_folder_access'))
 		return $dms_access;
 	}
 }
+/* Get current financial year*/
+function get_current_financial_year(){
+	if(date('m')<'04'){
+		$financial_year= date('Y',strtotime('-1 year'))."-".date('Y');
+	}else{
+		$financial_year= date('Y')."-".date('Y',strtotime('+1 year'));
+	}
+	return $financial_year;
+}
