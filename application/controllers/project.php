@@ -360,6 +360,7 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
+		
 		// echo '<pre>';print_r($result[0]);exit;
 		// $arrLeadInfo = $this->request_model->get_lead_info($id);
 		
@@ -367,6 +368,12 @@ class Project extends crm_controller {
 			
 			$data['quote_data']		= $result[0];
 			$data['view_quotation'] = true;
+			
+			//get customers & company
+			$data['company_det'] = $this->welcome_model->get_company_det($data['quote_data']['companyid']);
+			$data['contact_det'] = $this->welcome_model->get_contact_det($data['quote_data']['companyid']);
+			
+			// echo "<pre>"; print_r($data['company_det']); die;
 			
 			// Get User Role
 			// $data['user_roles']		= $usernme['role_id']; 

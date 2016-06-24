@@ -192,6 +192,11 @@ class Welcome extends crm_controller {
             $data['view_quotation'] = true;
 			$data['user_accounts'] = $this->welcome_model->get_users();
 			
+			//get customers & company
+			$data['company_det'] = $this->welcome_model->get_company_det($getLeadDet[0]['companyid']);
+			$data['contact_det'] = $this->welcome_model->get_contact_det($getLeadDet[0]['companyid']);
+			// echo "<pre>"; print_r($data['contact_det']); die;
+			
 			$data['user_roles']		= $usid['role_id']; 
 			$data['login_userid']		= $usid['userid']; 
 			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
@@ -466,6 +471,9 @@ class Welcome extends crm_controller {
 			$steUserList = $this->welcome_model->get_lvl_users('levels_state', 'state_id', $steid, $ste_lvl_id);
 			$locUserList = $this->welcome_model->get_lvl_users('levels_location', 'location_id', $locid, $loc_lvl_id);
 			$globalUserList = $this->welcome_model->get_lvlOne_users();
+			$getcustomerdetail = $this->welcome_model->get_customer_name_by_lead($id);
+			
+			// echo "<pre>"; print_r($getcustomerdetail); die;
 
 			$userList = array_merge_recursive($regUserList, $cntryUserList, $steUserList, $locUserList, $globalUserList);
 			$users[] = 0;
@@ -868,6 +876,7 @@ class Welcome extends crm_controller {
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
 			echo "{error:true, errormsg:'quote ID must be numeric!'}";
 		} else {
+            $ins['custid_fk'] 			= $data['customer_id'];
             $ins['lead_title'] 			= $data['lead_title'];
 			$ins['division']			= $data['job_division'];
 			$ins['industry']			= $data['industry'];
@@ -925,7 +934,7 @@ class Welcome extends crm_controller {
 			/* end of onhold reason insert */
 		
 			/* for proposal adjust date insert */
-			$ins_ad['log_content'] = 'Actual Worth Amount Modified On :' . ' ' . date('M j, Y g:i A'); 
+			$ins_ad['log_content'] = 'Actual Worth Amount Modified On :' . ' ' . date('M j, Y g:i A');
 			$ins_ad['jobid_fk']    = $data['jobid_edit'];
 			$ins_ad['userid_fk']   = $this->userdata['userid'];
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {
@@ -936,6 +945,14 @@ class Welcome extends crm_controller {
 			
 			$updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
 			
+			if($data['customer_id'] != $data['customer_id_old']){
+				$inser['log_content']  = "Customer has changed from ' ".$data['customer_company_name_old']." ' to ' ".$data['customer_company_name']." '";
+				$inser['jobid_fk']     = $data['jobid_edit'];
+				$inser['userid_fk']    = $this->userdata['userid'];
+				$insert_log			  = $this->welcome_model->insert_row('logs', $inser);
+			}
+
+			
 			if ($updt_job)
 			{				
 				$his['lead_status'] = $data['lead_status']; //lead_stage_history - lead_status update
@@ -943,17 +960,37 @@ class Welcome extends crm_controller {
 				if($data['lead_stage']!=$data['lead_stage_hidden']){
 					$this->ajax_update_quote($data['jobid_edit'],$data['lead_stage']);
 				}
-					
 				
+				$whee_condn = array('custid'=>$data['customer_id']);
+				$results = $this->db->get_where($this->cfg['dbpref'].'customers', $whee_condn)->row_array();
+				// echo $this->db->last_query(); die;
 				//update customer isclient
 				if($data['lead_status'] == 4) {
-					$update_cus = array('is_client'=>1);
-					$updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
+					if(count($results)>0){
+						$update_cus = array('is_client'=>1);
+						$this->db->where('companyid', $results['company_id']);
+						$this->db->update($this->cfg['dbpref'] . 'customers_company', $update_cus);
+					}
+					// $updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
 				} else if($data['lead_status'] != 4 && $data['lead_status_hidden'] == 4) {
-					$chk_isclient = $this->welcome_model->check_isclient_stat($data['customer_id']);
+					//get all contacts
+					$whee_condn  = array('company_id'=>$results['company_id']);
+					$getcontacts = $this->db->get_where($this->cfg['dbpref'].'customers', $whee_condn)->result_array();
+					if(!empty($getcontacts)){
+						$custids = array();
+						foreach($getcontacts as $re){
+							$custids[]=$re['custid'];
+						}
+					}
+					$chk_isclient=1;
+					if(!empty($custids)){
+						$chk_isclient = $this->welcome_model->check_isclient_stat($custids);
+					}
 					if($chk_isclient==0) {
-						$update_cus = array('is_client'=>0);
-						$updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
+						$update_cust = array('is_client'=>0);
+						$this->db->where('companyid', $results['company_id']);
+						$this->db->update($this->cfg['dbpref'] . 'customers_company', $update_cust);
+						// $updt_isclient = $this->welcome_model->updtCustomerIsClient($data['customer_id'], $update_cus);
 					}
 				}
 				
@@ -1747,16 +1784,16 @@ class Welcome extends crm_controller {
 		//set cell A1 content with some text
 		$this->excel->getActiveSheet()->setCellValue('A1', 'Lead ID');
 		$this->excel->getActiveSheet()->setCellValue('B1', 'Lead Title');
-		$this->excel->getActiveSheet()->setCellValue('C1', 'Customer First Name');
-		$this->excel->getActiveSheet()->setCellValue('D1', 'Customer Last Name');
-		$this->excel->getActiveSheet()->setCellValue('E1', 'Company Name');
-		$this->excel->getActiveSheet()->setCellValue('F1', 'Region');
-		$this->excel->getActiveSheet()->setCellValue('G1', 'Country');
-		$this->excel->getActiveSheet()->setCellValue('H1', 'State');
-		$this->excel->getActiveSheet()->setCellValue('I1', 'Location');
-		$this->excel->getActiveSheet()->setCellValue('J1', 'Email');
-		$this->excel->getActiveSheet()->setCellValue('K1', 'Phone No.');
-		$this->excel->getActiveSheet()->setCellValue('L1', 'Mobile No.');
+		$this->excel->getActiveSheet()->setCellValue('C1', 'Company Name');
+		$this->excel->getActiveSheet()->setCellValue('D1', 'Region');
+		$this->excel->getActiveSheet()->setCellValue('E1', 'Country');
+		$this->excel->getActiveSheet()->setCellValue('F1', 'State');
+		$this->excel->getActiveSheet()->setCellValue('G1', 'Location');
+		$this->excel->getActiveSheet()->setCellValue('H1', 'Customer Name');
+		$this->excel->getActiveSheet()->setCellValue('I1', 'Customer Position');
+		$this->excel->getActiveSheet()->setCellValue('J1', 'Customer Phone');
+		$this->excel->getActiveSheet()->setCellValue('K1', 'Customer Email');
+		$this->excel->getActiveSheet()->setCellValue('L1', 'Customer Skype.');
 		$this->excel->getActiveSheet()->setCellValue('M1', 'Lead Source');
 		$this->excel->getActiveSheet()->setCellValue('N1', 'Lead Service');
 		$this->excel->getActiveSheet()->setCellValue('O1', 'Lead Industry');
@@ -1779,16 +1816,16 @@ class Welcome extends crm_controller {
 			$lead_entity   = isset($excelarr['division'])?$leadEntity[$excelarr['division']]:'';
 			$this->excel->getActiveSheet()->setCellValue('A'.$i, $excelarr['lead_id']);
 			$this->excel->getActiveSheet()->setCellValue('B'.$i, stripslashes($excelarr['lead_title']));
-			$this->excel->getActiveSheet()->setCellValue('C'.$i, stripslashes($excelarr['customer_name']));
-			$this->excel->getActiveSheet()->setCellValue('D'.$i, stripslashes($excelarr['last_name']));
-			$this->excel->getActiveSheet()->setCellValue('E'.$i, stripslashes($excelarr['company']));
-			$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['region_name']);
-			$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['country_name']);
-			$this->excel->getActiveSheet()->setCellValue('H'.$i, $excelarr['state_name']);
-			$this->excel->getActiveSheet()->setCellValue('I'.$i, $excelarr['location_name']);
-			$this->excel->getActiveSheet()->setCellValue('J'.$i, $excelarr['email_1']);
-			$this->excel->getActiveSheet()->setCellValue('K'.$i, $excelarr['phone_1']);
-			$this->excel->getActiveSheet()->setCellValue('L'.$i, $excelarr['phone_2']);
+			$this->excel->getActiveSheet()->setCellValue('C'.$i, stripslashes($excelarr['company']));
+			$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['region_name']);
+			$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['country_name']);
+			$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['state_name']);
+			$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['location_name']);
+			$this->excel->getActiveSheet()->setCellValue('H'.$i, stripslashes($excelarr['customer_name']));
+			$this->excel->getActiveSheet()->setCellValue('I'.$i, stripslashes($excelarr['position_title']));
+			$this->excel->getActiveSheet()->setCellValue('J'.$i, $excelarr['phone_1']);
+			$this->excel->getActiveSheet()->setCellValue('K'.$i, $excelarr['email_1']);
+			$this->excel->getActiveSheet()->setCellValue('L'.$i, stripslashes($excelarr['skype_name']));
 			$this->excel->getActiveSheet()->setCellValue('M'.$i, $lead_source);
 			$this->excel->getActiveSheet()->setCellValue('N'.$i, $lead_service);
 			$this->excel->getActiveSheet()->setCellValue('O'.$i, $lead_industry);
@@ -2413,7 +2450,7 @@ HDOC;
 
 		$count = $updt_count = 0;
 		$this->load->library('excel_read');
-		$this->login_model->check_login();		
+		
 	    $page['error'] = $page['msg'] = '';	
 		$objReader = new Excel_read();
 		if(isset($_FILES['card_file']['tmp_name'])) {
@@ -2427,7 +2464,7 @@ HDOC;
 					if(!empty($impt_data[$i]['T'])){
 						$ewdt = date('Y-m-d H:i:s', strtotime($impt_data[$i]['T']));
 					}
-					if( !empty($impt_data[$i]['B']) || !empty($impt_data[$i]['C']) || !empty($impt_data[$i]['E']) || !empty($impt_data[$i]['F']) || !empty($impt_data[$i]['G']) || !empty($impt_data[$i]['H']) || !empty($impt_data[$i]['I']) || !empty($impt_data[$i]['M']) || !empty($impt_data[$i]['N']) || !empty($impt_data[$i]['O']) || !empty($impt_data[$i]['P']) || !empty($impt_data[$i]['Q']) || !empty($impt_data[$i]['R']) || !empty($impt_data[$i]['S']) || !empty($impt_data[$i]['U']) || !empty($impt_data[$i]['V']) ) {
+					if( !empty($impt_data[$i]['B']) || !empty($impt_data[$i]['C']) || !empty($impt_data[$i]['D']) || !empty($impt_data[$i]['E']) || !empty($impt_data[$i]['F']) || !empty($impt_data[$i]['G']) || !empty($impt_data[$i]['H']) || !empty($impt_data[$i]['M']) || !empty($impt_data[$i]['N']) || !empty($impt_data[$i]['O']) || !empty($impt_data[$i]['P']) || !empty($impt_data[$i]['Q']) || !empty($impt_data[$i]['R']) || !empty($impt_data[$i]['S']) || !empty($impt_data[$i]['U']) || !empty($impt_data[$i]['V']) ) {
 						
 						$ldSource   = $leadSources[strtolower($impt_data[$i]['M'])];
 						$ldService  = $leadServices[strtolower($impt_data[$i]['N'])];
@@ -2442,10 +2479,10 @@ HDOC;
 						if( !empty($ldSource) && !empty($ldService) && !empty($ldIndustry) && !empty($ldExpworth) && !empty($ldEntity) && !empty($ldStages) && !empty($ldStatus) ){
 							
 							
-							if (!empty($impt_data[$i]['J'])) {
+							if (!empty($impt_data[$i]['K'])) {
 								$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
-								if(!preg_match($regex, $impt_data[$i]['J'])) {
-									$email_invalid[]= $impt_data[$i]['J'];
+								if(!preg_match($regex, $impt_data[$i]['K'])) {
+									$email_invalid[]= $impt_data[$i]['K']."( ".$i." row)";
 								}
 							}
 							$chk_leads = array();
@@ -2458,8 +2495,8 @@ HDOC;
 							if(isset($chk_leads) && !empty($chk_leads)){
 								//**go for update**//
 								
-								//updating customers						
-								$updt_cus = array('first_name'=>$impt_data[$i]['C'],'company'=>$impt_data[$i]['E']);
+								//updating customers
+								/* $updt_cus = array('first_name'=>$impt_data[$i]['C'],'company'=>$impt_data[$i]['E']);
 								if($impt_data[$i]['D']!='')
 								$updt_cus['last_name']=$impt_data[$i]['D'];
 								if($impt_data[$i]['J']!='')
@@ -2469,7 +2506,51 @@ HDOC;
 								if($impt_data[$i]['L']!='')
 								$updt_cus['phone_2']=$impt_data[$i]['L'];
 								$this->db->where('custid', $chk_leads['custid_fk']);
+								$this->db->update($this->cfg['dbpref'].'customers', $updt_cus); */
+								
+								//get the customer company
+								$chk_cc_condn = array('custid'=>$chk_leads['custid_fk']);
+								$chk_cc       = $this->welcome_model->get_data_by_id('customers', $chk_cc_condn);
+								// echo $this->db->last_query(); die;
+								// echo "<pre>"; print_r($chk_cc); die;
+								
+								if(!empty($impt_data[$i]['D']))
+								$strreg = $this->welcome_model->get_rscl('', '', 'region', strtolower($impt_data[$i]['D']));
+								if(!empty($impt_data[$i]['E']))
+								$strcunt = $this->welcome_model->get_rscl($strreg, 'regionid', 'country', strtolower($impt_data[$i]['E']));
+								if(!empty($impt_data[$i]['F']))
+								$strstate = $this->welcome_model->get_rscl($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['F']));
+								if(!empty($impt_data[$i]['G']))
+								$strlid = $this->welcome_model->get_rscl($strstate, 'stateid', 'location', strtolower($impt_data[$i]['G']));
+								
+								//update the customer company
+								$updt_cmp = array();
+								$updt_cmp['company'] 	   = $impt_data[$i]['C'];
+								$updt_cmp['add1_region']   = $strreg;
+								$updt_cmp['add1_country']  = $strcunt;
+								$updt_cmp['add1_state']    = $strstate;
+								$updt_cmp['add1_location'] = $strlid;
+								
+								$this->db->where('companyid', $chk_cc['company_id']);
+								$this->db->update($this->cfg['dbpref'].'customers_company', $updt_cmp);
+								// echo $this->db->last_query(); die;
+								
+								//updating the contacts
+								$updt_cus = array();
+								$updt_cus = array('customer_name'=>$impt_data[$i]['H']);
+								if($impt_data[$i]['I']!='')
+								$updt_cus = array('position_title'=>$impt_data[$i]['I']);
+								if($impt_data[$i]['J']!='')
+								$updt_cus = array('phone_1'=>$impt_data[$i]['J']);
+								if($impt_data[$i]['K']!='')
+								$updt_cus = array('email_1'=>$impt_data[$i]['K']);
+								if($impt_data[$i]['L']!='')
+								$updt_cus = array('skype_name'=>$impt_data[$i]['L']);
+								$updt_cus = array('company_id'=>$chk_cc['company_id']);
+								
+								$this->db->where('custid', $chk_leads['custid_fk']);
 								$this->db->update($this->cfg['dbpref'].'customers', $updt_cus);
+								// echo $this->db->last_query(); die;
 								
 								//updating leads
 								$updt_leads['lead_title']			  = $impt_data[$i]['B'];
@@ -2504,7 +2585,6 @@ HDOC;
 										$stgHist['changed_status']  = $new_stage;
 										$stgHist['lead_status'] = 1;
 										$stgHist['modified_by'] = $this->userdata['userid'];
-										// echo "<pre>"; print_r($stgHist); die;
 										$insStgHis = $this->welcome_model->insert_row('lead_stage_history', $stgHist);
 									}
 									
@@ -2534,55 +2614,84 @@ HDOC;
 									
 								} else {
 									
-									$no_access[] = $impt_data[$i]['C'];
+									$no_access[] = $impt_data[$i]['C']."( ".$i." row)";
 									
 								}
 
 							} else {
 								//**go for insert**//
 								//Region
-								if(!empty($impt_data[$i]['F']))
-								$strreg = $this->welcome_model->get_rscl('', '', 'region', strtolower($impt_data[$i]['F']));
+								if(!empty($impt_data[$i]['D']))
+								$strreg = $this->welcome_model->get_rscl('', '', 'region', strtolower($impt_data[$i]['D']));
 								//Country
-								if(!empty($impt_data[$i]['G']))
-								$strcunt = $this->welcome_model->get_rscl($strreg, 'regionid', 'country', strtolower($impt_data[$i]['G']));
+								if(!empty($impt_data[$i]['E']))
+								$strcunt = $this->welcome_model->get_rscl($strreg, 'regionid', 'country', strtolower($impt_data[$i]['E']));
 								//State
-								if(!empty($impt_data[$i]['H']))
-								$strstate = $this->welcome_model->get_rscl($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['H']));
+								if(!empty($impt_data[$i]['F']))
+								$strstate = $this->welcome_model->get_rscl($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['F']));
 								//Location
-								if(!empty($impt_data[$i]['I']))
-								$strlid = $this->welcome_model->get_rscl($strstate, 'stateid', 'location', strtolower($impt_data[$i]['I']));
+								if(!empty($impt_data[$i]['G']))
+								$strlid = $this->welcome_model->get_rscl($strstate, 'stateid', 'location', strtolower($impt_data[$i]['G']));
 							
 								if($strreg!='no_id' && $strcunt!='no_id' && $strstate!='no_id' && $strlid!='no_id' ){
-									$cust_res = $this->chk_customers($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J']);
+									$compid = $this->chk_customers($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C']);
 									$custid = 0;
-									if($cust_res == 'no_customer'){
-										$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J'],$impt_data[$i]['K'],$impt_data[$i]['L']);
+									if($compid  == 'no_customer'){
+										$compid    = $this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C']);
+									
+										$customer_name = $impt_data[$i]['H'];
+										$position      = ($impt_data[$i]['I']!="")?$impt_data[$i]['I']:'';
+										$phone_1       = ($impt_data[$i]['J'])?$impt_data[$i]['J']:'';
+										$email_1       = ($impt_data[$i]['K'])?$impt_data[$i]['K']:'';
+										$skype_name    = ($impt_data[$i]['L'])?$impt_data[$i]['L']:'';
+										// $updt_cus = array('company_id'=>$chk_leads['company_id']);
+										
+										$custid = $this->create_contacts($compid, $customer_name, $position, $phone_1, $email_1, $skype_name);
 									} else {
-										$custid=$cust_res;
+										// $custid = $cust_res;
+										//check contact
+										$customer_name = $impt_data[$i]['H'];
+										$position      = ($impt_data[$i]['I']!="")?$impt_data[$i]['I']:'';
+										$phone_1       = ($impt_data[$i]['J'])?$impt_data[$i]['J']:'';
+										$email_1       = ($impt_data[$i]['K'])?$impt_data[$i]['K']:'';
+										$skype_name    = ($impt_data[$i]['L'])?$impt_data[$i]['L']:'';
+										$custid = $this->chk_contacts($compid, $customer_name, $email_1);
+										if($custid=='no_contacts'){
+											$custid = $this->create_contacts($compid, $customer_name, $position, $phone_1, $email_1, $skype_name);
+										}
 									}
 								} else {
 									//Region
-									if(!empty($impt_data[$i]['F']))
-									$strreg = $this->welcome_model->get_rscl_return_id('', '', 'region', strtolower($impt_data[$i]['F']));
+									if(!empty($impt_data[$i]['D']))
+									$strreg = $this->welcome_model->get_rscl_return_id('', '', 'region', strtolower($impt_data[$i]['D']));
 									//Country
-									if(!empty($impt_data[$i]['G']))
-									$strcunt = $this->welcome_model->get_rscl_return_id($strreg, 'regionid', 'country', strtolower($impt_data[$i]['G']));
+									if(!empty($impt_data[$i]['E']))
+									$strcunt = $this->welcome_model->get_rscl_return_id($strreg, 'regionid', 'country', strtolower($impt_data[$i]['E']));
 									//State
-									if(!empty($impt_data[$i]['H']))
-									$strstate = $this->welcome_model->get_rscl_return_id($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['H']));
+									if(!empty($impt_data[$i]['F']))
+									$strstate = $this->welcome_model->get_rscl_return_id($strcunt, 'countryid', 'state', strtolower($impt_data[$i]['F']));
 									//Location
-									if(!empty($impt_data[$i]['I']))
-									$strlid = $this->welcome_model->get_rscl_return_id($strstate, 'stateid', 'location', strtolower($impt_data[$i]['I']));
+									if(!empty($impt_data[$i]['G']))
+									$strlid = $this->welcome_model->get_rscl_return_id($strstate, 'stateid', 'location', strtolower($impt_data[$i]['G']));
 									$custid = 0;
-									$custid=$this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J'],$impt_data[$i]['K'],$impt_data[$i]['L']);
+									// $custid = $this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C'],$impt_data[$i]['D'],$impt_data[$i]['E'],$impt_data[$i]['J'],$impt_data[$i]['K'],$impt_data[$i]['L']);
+									$compid    = $this->create_customer($strreg,$strcunt,$strstate,$strlid,$impt_data[$i]['C']);
+									
+									$customer_name = $impt_data[$i]['H'];
+									$position      = ($impt_data[$i]['I']!="")?$impt_data[$i]['I']:'';
+									$phone_1       = ($impt_data[$i]['J'])?$impt_data[$i]['J']:'';
+									$email_1       = ($impt_data[$i]['K'])?$impt_data[$i]['K']:'';
+									$skype_name    = ($impt_data[$i]['L'])?$impt_data[$i]['L']:'';
+									// $updt_cus = array('company_id'=>$chk_leads['company_id']);
+									
+									$custid = $this->create_contacts($compid, $customer_name, $position, $phone_1, $email_1, $skype_name);
 								}
 								
 								if($custid!=0){
 									//insert leads here.
 									$ins_leads 							 = array();
 									$ins_leads['custid_fk']				 = $custid;
-									$ins_leads['lead_title']			 = $impt_data[$i]['B'].' - '.$impt_data[$i]['E'];
+									$ins_leads['lead_title']			 = $impt_data[$i]['B'].' - '.$impt_data[$i]['C'];
 									$ins_leads['lead_source']			 = $ldSource;
 									$ins_leads['lead_service']			 = $ldService;
 									$ins_leads['industry']			 	 = $ldIndustry;
@@ -2655,31 +2764,31 @@ HDOC;
 						} else {
 							
 							if(empty($ldService)){
-								$empty_service[] = $impt_data[$i]['C'];
+								$empty_service[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldSource)){
-								$empty_source[] = $impt_data[$i]['C'];
+								$empty_source[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldExpworth)){
-								$empty_currency[] = $impt_data[$i]['C'];
+								$empty_currency[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldEntity)){
-								$empty_entity[] = $impt_data[$i]['C'];
+								$empty_entity[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldStages)){
-								$empty_stages[] = $impt_data[$i]['C'];
+								$empty_stages[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldIndustry)){
-								$empty_industry[] = $impt_data[$i]['C'];
+								$empty_industry[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 							if(empty($ldStatus)){
-								$empty_status[] = $impt_data[$i]['C'];
+								$empty_status[] = $impt_data[$i]['C']."( ".$i." row)";
 							}
 						}	
 					} else {
 						
 						if(!empty($impt_data[$i]['C']))
-						$empty_errors[] = $impt_data[$i]['C'];
+						$empty_errors[] = $impt_data[$i]['C']."( ".$i." row)";
 					}
 				} //for loop
 				$data['invalidemail']  = $email_invalid;
@@ -2707,16 +2816,24 @@ HDOC;
 	/*Ends here*/ 
 	}
 	
-	function chk_customers($rid, $cid, $sid, $lid, $fname, $lname, $companyname, $email=false)
+	function chk_customers($rid, $cid, $sid, $lid, $companyname)
 	{
 		$res = 'no_customer';
-		$whr_cond = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'first_name'=>$fname,'company'=>$companyname);
-		if($lname!=''){
-			$whr_cond['last_name'] = $lname;
+		$whr_cond = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'company'=>$companyname);
+		$results = $this->db->get_where($this->cfg['dbpref'].'customers_company', $whr_cond)->row_array();
+		// echo $this->db->last_query(); exit;
+		if(!empty($results)){
+			$res = $results['companyid'];
 		}
-		if($email!=''){
-			$whr_cond['email_1'] = $email;
-		}
+		return $res;
+	}
+	
+	function chk_contacts($cust_res, $customer_name, $email_1=false)
+	{
+		$res = 'no_contacts';
+		$whr_cond = array('company_id'=>$cust_res,'customer_name'=>$customer_name);
+		if($email_1!='')
+		$whr_cond['email_1'] = $email_1;
 		$results = $this->db->get_where($this->cfg['dbpref'].'customers', $whr_cond)->row_array();
 		// echo $this->db->last_query(); exit;
 		if(!empty($results)){
@@ -2725,27 +2842,34 @@ HDOC;
 		return $res;
 	}
 	
-	function create_customer($rid, $cid, $sid, $lid, $fname, $lname, $companyname, $email=false, $phone=false, $mobile=false)
+	function create_customer($rid, $cid, $sid, $lid, $companyname)
 	{
 		$res = 0;
-		$ins = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'first_name'=>$fname,'company'=>$companyname);
-		if($lname!=''){
-			$ins['last_name'] = $lname;
+		$ins = array('add1_region'=>$rid,'add1_country'=>$cid,'add1_state'=>$sid,'add1_location'=>$lid,'company'=>$companyname);
+		
+		$this->db->insert($this->cfg['dbpref'].'customers_company', $ins);
+		$res = $this->db->insert_id();
+		return $res;
+	}
+
+	function create_contacts($company_id, $customer_name, $position=false, $phone_1=false, $email_1=false, $skype_name=false)
+	{
+		$res = 0;
+		$ins = array('company_id'=>$company_id,'customer_name'=>$customer_name);
+		if($position!=''){
+			$ins['position_title'] = $position;
+		}
+		if($phone_1!=''){
+			$ins['phone_1'] = $phone_1;
 		}
 		if($email!=''){
-			$ins['email_1'] = $email;
+			$ins['email_1'] = $email_1;
 		}
-		if($phone!=''){
-			$ins['phone_1'] = $phone;
-		}
-		if($mobile!=''){
-			$ins['phone_2'] = $mobile;
+		if($skype_name!=''){
+			$ins['skype_name'] = $skype_name;
 		}
 		$this->db->insert($this->cfg['dbpref'].'customers', $ins);
-		$custid = $this->db->insert_id();
-		if(!empty($custid)){
-			$res = $custid;
-		}
+		$res = $this->db->insert_id();
 		return $res;
 	}
 	

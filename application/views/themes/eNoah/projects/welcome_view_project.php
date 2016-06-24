@@ -1592,121 +1592,98 @@ if (get_default_currency()) {
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
-		<table class="tabbed-cust-layout" cellspacing="0" cellpadding="0">
-			<tr>
-				<td width="120"><label><b>Client Code:</b></label></td>
-				<td><b><?php echo $quote_data['client_code'] ?></b></td>
-			</tr>
-			<tr>
-				<td width="120"><label><b>First Name:</b></label></td>
-				<td><b><?php echo $quote_data['customer_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Last Name:</b></label></td>
-				<td><b><?php echo $quote_data['last_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Position:</b></label></td>
-				<td><b><?php echo $quote_data['position_title'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Company:</b></label></td>
-				<td><b><?php echo $quote_data['company'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Address Line 1:</b></label></td>
-				<td><b><?php echo $quote_data['add1_line1'] ?></b></td>
-			</tr>
-				
-			<tr>
-				<td><label><b>Address Line 2:</b></label></td>
-				<td><b><?php echo $quote_data['add1_line2'] ?></b></td>
-			</tr>
-				
-			<tr>
-				<td><label><b>Suburb:</b></label></td>
-				<td><b><?php echo $quote_data['add1_suburb'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Region:</b></label></td>
-				<td><b><?php echo $quote_data['region_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Country:</b></label></td>
-				<td><b><?php echo $quote_data['country_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>State:</b></label></td>
-				<td><b><?php echo $quote_data['state_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Location:</b></label></td>
-				<td><b><?php echo $quote_data['location_name'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Post code:</b></label></td>
-				<td><b><?php echo $quote_data['add1_postcode'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Direct Phone:</b></label></td>
-				<td><b><?php echo $quote_data['phone_1'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Work Phone:</b></label></td>
-				<td><b><?php echo $quote_data['phone_2'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Mobile Phone:</b></label></td>
-				<td><b><?php echo $quote_data['phone_3'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Fax Line:</b></label></td>
-				<td><b><?php echo $quote_data['phone_4'] ?></b></td>
-			</tr>
-
-			<tr>
-				<td><label><b>Email:</b></label></td>
-				<td><b><?php echo $quote_data['email_1'] ?></b></td>
-			</tr>
-
-			<tr>
-				<td><label><b>Secondary Email:</b></label></td>
-				<td><b><?php echo $quote_data['email_2'] ?></b></td>
-			</tr>
-
-			<tr>
-				<td><label><b>Email 3:</b></label></td>
-				<td><b><?php echo $quote_data['email_3'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Email 4:</b></label></td>
-				<td><b><?php echo $quote_data['email_4'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Web:</b></label></td>
-				<td><b><?php echo $quote_data['www_1'] ?></b></td>
-			</tr>
-			
-			<tr>
-				<td><label><b>Secondary Web:</b></label></td>
-				<td><b><?php echo $quote_data['www_2'] ?></b></td>
-			</tr>
-		</table>
+		<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="120"><label>Company Name</label></td>
+					<td><b><?php echo $company_det['company'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Address Line 1</label></td>
+					<td><b><?php echo $company_det['add1_line1'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Address Line 2</label></td>
+					<td><b><?php echo $company_det['add1_line2'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Suburb</label></td>
+					<td><b><?php echo $company_det['add1_suburb'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Region</label></td>
+					<td><b><?php echo $company_det['region_name'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Country</label></td>
+					<td><b><?php echo $company_det['country_name'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>State</label></td>
+					<td><b><?php echo $company_det['state_name'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Location</label></td>
+					<td><b><?php echo $company_det['location_name'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Post code</label></td>
+					<td><b><?php echo $company_det['add1_postcode'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Phone</label></td>
+					<td><b><?php echo $company_det['phone'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>Fax</label></td>
+					<td><b><?php echo $company_det['fax'] ?></b></td>
+				</tr>
+					<tr>
+					<td><label>Email</label></td>
+					<td><b><?php echo $company_det['email_2'] ?></b></td>
+				</tr>
+				<tr>
+					<td><label>WEB</label></td>
+					<td><b><?php echo $company_det['www'] ?></b></td>
+				</tr>			
+				<tr>
+					<td><label>Comments</label></td>
+					<td>
+						<?php
+							$comments = "-";
+							if(isset($company_det['comments']) && !empty($company_det['comments'])) {
+								$comments = str_replace(array('\r\n', '\r', '\n'), '<br />', $quote_data['comments']);
+							}
+						?>
+					<p><?php echo stripslashes(nl2br($comments, false)); ?>
+					</td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+				<thead>
+					<tr>
+						<th>Customer Name</th>
+						<th>Position</th>
+						<th>Phone</th>
+						<th>Email</th>
+						<th>Skype</th>
+						<th>Contact Mapped to Project</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if(!empty($contact_det) && count($contact_det)>0) { ?>
+						<?php foreach($contact_det as $cont) { ?>
+					<tr>
+						<td><?php echo $cont['customer_name']; ?></td>
+						<td><?php echo $cont['position_title']; ?></td>
+						<td><?php echo $cont['phone_1']; ?></td>
+						<td><?php echo $cont['email_1']; ?></td>
+						<td><?php echo $cont['skype_name']; ?></td>
+						<td><?php if($quote_data['custid_fk'] == $cont['custid']) echo '<img style="width:14px; height:14px" alt="lead" src="assets/img/tick.png">'; ?></td>
+					</tr>
+						<?php } ?>
+					<?php } ?>
+				</tbody>
+			</table>
 		</form>
 	</div><!-- id: jv-tab-5 end -->
 			

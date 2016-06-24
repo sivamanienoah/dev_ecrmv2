@@ -65,6 +65,32 @@ $(document).ready(function(){
 			}
 		});
 		
+		$( "#customer_company_name" ).autocomplete({
+			minLength: 2,
+			source: function(request, response) {
+				$.ajax({ 
+					url: "hosting/ajax_customer_search",
+					data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+					type: "POST",
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						response( data );
+					}
+				});
+			},
+			select: function(event, ui) {
+				$('#customer_id').val(ui.item.id);
+				// ex_cust_id = ui.item.id;
+				// regId = ui.item.regId;
+				// cntryId = ui.item.cntryId;
+				// stId = ui.item.stId;
+				// locId = ui.item.locId;
+				// prepareQuoteForClient(ex_cust_id);
+				// getUserForLeadAssign(regId,cntryId,stId,locId);
+			}
+		});
+		
 		<?php
 		if (isset($existing_lead) && isset($lead_customer))
 		{
@@ -938,6 +964,11 @@ h3 .small {
 
 				<form action="" method="post" id="quote-edit-form" onsubmit="return false;">				
 					<div>
+						<p><label>Customer</label></p>
+						<p><input type="text" name="customer_company_name" id="customer_company_name" class="textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" /></p>
+						<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
+						<input type="hidden" name="customer_id_old" id="customer_id_old" value="<?php echo $quote_data['custid_fk'] ?>" />
+						<input type="hidden" name="customer_company_name_old" id="customer_company_name_old" class="textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" />
 						<p><label>Lead No</label></p>
 						<p><input type="text" name="lead_no" id="lead_no" class="textfield width300px" value="<?php echo $quote_data['invoice_no'] ?>" disabled /></p>
 						<p><label>Lead Title</label></p>
@@ -1131,7 +1162,7 @@ h3 .small {
 							<option value="4"  <?php if($quote_data['lead_status'] == 4) echo 'selected="selected"'; ?>>Closed</option>
 							</select>
 							<input type="hidden" value="<?php echo $quote_data['lead_status']; ?>" id="lead_status_hidden" name="lead_status_hidden" />
-							<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
+							
 						</p>
 						
 						<script>

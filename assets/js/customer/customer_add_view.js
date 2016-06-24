@@ -290,43 +290,80 @@ $('#document_tbl').delegate( '#addRow', 'click', function () {
 		obj.find("#deleteRow").attr('hyperid','0'); 
 		// obj.find("td").find('.hyperlink_name').attr('placeholder','eg: http://www.google.com || https://google.com');
 		obj.find('.createBtn').show();
+		obj.find('.del_file').hide();
 });
 
 $('#document_tbl').delegate( '.del_file', 'click', function () {
 	var thisRow = $(this).parent('td').parent('tr');
-	if($(this).attr('hyperid') !=0){
+	if( $(this).attr('hyperid') !=0 ) {
 		var hyperid = $(this).attr('hyperid');
 		var x = confirm("Are you Sure want to remove?");
 		if(x==true)
 		{
-			$.post(base_url+'/document-format/delhyperlink?id='+hyperid+'&type=document_format',function( data ) {
+			/* $.post(site_base_url+'customers/delete_contact?id='+hyperid,function( data ) {
 				$(thisRow).remove();
 				if($('#document_tbl tbody tr').length<=1){
 					$('#document_tbl .del_file').hide();
 					$('#document_tbl .createBtn').show();
 				}
+			}); */
+			var formdata = { 'id':hyperid }
+			formdata[csrf_token_name] = csrf_hash_token;
+			$.ajax({
+				async: false,
+				type: "POST",
+				url: site_base_url+'customers/delete_contact/',
+				dataType:"json",                                                                
+				data: formdata,
+				cache: false,
+				beforeSend:function() {
+					// $('#dialog-err-msg').empty();
+				},
+				success: function(response) {
+					if (response.html == 'NO') {
+						// $('#dialog-err-msg').show();
+						alert('One or more Leads currently mapped to this customer. \n This cannot be deleted.');
+						// $('#dialog-err-msg').append('One or more Leads currently mapped to this customer. This cannot be deleted.');
+						// $('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
+						// setTimeout('timerfadeout()', 4000);
+					} else {
+						/* $.blockUI({
+							message:'<br /><h5>Are You Sure Want to Delete this Customer?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+							css:{width:'440px'}
+						}); */
+						$(thisRow).remove();
+						$("#document_tbl tbody tr:last").find('.createBtn').show();
+						$("#document_tbl tbody tr:last").find('.del_file').hide();
+						if($('#document_tbl tbody tr').length<=1){
+							$('#document_tbl .del_file').hide();
+							$('#document_tbl .createBtn').show();
+						}
+						alert('Contact Deleted.');
+					}
+				}          
 			});
+			
+			
 		}
-	} else {
-		//var y = confirm("Are you Sure want to remove?");
-		//if(y==true)
+	} /* else {
 		$(thisRow).remove();
 		
 		if($('#document_tbl tbody tr').length<=1){
 			$('#document_tbl .del_file').hide();
 			$('#document_tbl .createBtn').show();
 		}
-	}
-	
-	
-});	
+	} */
+});
+
+
 $("#document_tbl tbody tr").each(function(){
-		$("#document_tbl tbody tr:last").find('.createBtn').show();
-	});
-	if($('#document_tbl tbody tr').length<=1){
-		$('#document_tbl .del_file').hide();
-		$('#document_tbl .createBtn').show();
-	}
+	$("#document_tbl tbody tr:last").find('.createBtn').show();
+	$("#document_tbl tbody tr:last").find('.del_file').hide();
+});
+if($('#document_tbl tbody tr').length<=1){
+	$('#document_tbl .del_file').hide();
+	$('#document_tbl .createBtn').show();
+}
 function cust_validation()
 {
 	var err=true;
@@ -342,18 +379,18 @@ function cust_validation()
 	});
 	
 	//First Name
-	$('.last_name').each(function(){
+	$('.email').each(function(){
 		if($(this).val()=="")
 		{
-			$(this).closest('tr').find('.last_name_err_msg').html("This field is required");
+			$(this).closest('tr').find('.email_err_msg').html("This field is required");
 			err=false;
 		}else{
-			$(this).closest('tr').find('.last_name_err_msg').html(" ");
+			$(this).closest('tr').find('.email_err_msg').html(" ");
 		}
 	});
 	
 	//First Name
-	$('.position_title').each(function(){
+	/* $('.position_title').each(function(){
 		if($(this).val()=="")
 		{
 			$(this).closest('tr').find('.position_title_err_msg').html("This field is required");
@@ -361,7 +398,7 @@ function cust_validation()
 		}else{
 			$(this).closest('tr').find('.position_title_err_msg').html(" ");
 		}
-	});
+	}); */
 	
 	//First Name
 	$('.phone').each(function(){
@@ -371,17 +408,6 @@ function cust_validation()
 			err=false;
 		}else{
 			$(this).closest('tr').find('.phone_err_msg').html(" ");
-		}
-	});
-	
-	//First Name
-	$('.email').each(function(){
-		if($(this).val()=="")
-		{
-			$(this).closest('tr').find('.email_err_msg').html("This field is required");
-			err=false;
-		}else{
-			$(this).closest('tr').find('.email_err_msg').html(" ");
 		}
 	});
 	if(err==true){

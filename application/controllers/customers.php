@@ -244,9 +244,9 @@ class Customers extends crm_controller {
 				{	
 				
 					//Entry to customer table
-					if (isset($pst_data['name']))
+					if (isset($pst_data['customer_name']))
 					{
-						$name	    =	$pst_data['customer_name'];
+						$customer_name = $pst_data['customer_name'];
 						$skype	    =	$pst_data['skype'];
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
@@ -257,7 +257,7 @@ class Customers extends crm_controller {
 							$cust_data					=	array();
 							//$cust_data				=	$update_data;
 							$cust_data['company_id']	=	$company_id;
-							$cust_data['customer_name']	=	$name[$i];
+							$cust_data['customer_name']	=	$customer_name[$i];
 							$cust_data['skype_name']	=	$skype[$i];
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
@@ -265,7 +265,6 @@ class Customers extends crm_controller {
 							
 							$batch_insert_data[]		=	$cust_data;
 						}
-						//echo'<pre>';print_r($batch_insert_data);exit;
 						$this->customer_model->insert_batch_customer($batch_insert_data);
 					}
 					
@@ -285,16 +284,16 @@ class Customers extends crm_controller {
 					//email sent by email template
 					$param = array();
 					
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
+					// $param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'first_name'=>$update_data['first_name'],'last_name'=>$update_data['last_name'],'company'=>$update_data['company'],'signature'=>$this->userdata['signature']);
 
-					$param['to_mail'] = $mgmt_mail;
-					$param['bcc_mail'] = $admin_mail;
-					$param['from_email'] = $from;
-					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "New Customer Creation";
-					$param['subject'] = $subject;
+					// $param['to_mail'] = $mgmt_mail;
+					// $param['bcc_mail'] = $admin_mail;
+					// $param['from_email'] = $from;
+					// $param['from_email_name'] = $user_name;
+					// $param['template_name'] = "New Customer Creation";
+					// $param['subject'] = $subject;
 
-					$this->email_template_model->sent_email($param);
+					// $this->email_template_model->sent_email($param);
 
 					if ($ajax == false) 
 					{
@@ -849,6 +848,25 @@ class Customers extends crm_controller {
 			$data['page'] = $page;
 			$this->load->view('customer_import_view', $data);
 		}
+	}
+	
+	function delete_contact()
+	{
+		$data =	real_escape_array($this->input->post()); // escape special characters
+		$res = array();
+		$res['html'] = "NO";
+		$this->db->where('custid_fk', $data['id']);
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+
+		if($query == 0) {
+			$this->db->where('custid', $data['id']);
+			$del = $this->db->delete($this->cfg['dbpref'] . 'customers');
+			if($del){
+				$res['html'] = "YES";
+			}
+		}
+		echo json_encode($res);
+		exit;
 	}
 	
 }

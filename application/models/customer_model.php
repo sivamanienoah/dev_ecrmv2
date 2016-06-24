@@ -323,14 +323,24 @@ class Customer_model extends crm_model {
             return FALSE;
         }
     }
-	function get_customer_contacts($id) {
-		$this->db->order_by('company_id','ASC');
-        $customer = $this->db->get_where($this->cfg['dbpref'].'customers', array('company_id' => $id));
+	function get_customer_contacts($id) 
+	{
+		$this->db->select('c.*');
+		$this->db->from($this->cfg['dbpref'].'customers as c');
+		$this->db->where_in('c.company_id', $id);
+		$this->db->order_by('custid','ASC');
+		$sql = $this->db->get();		
+		if ($sql->num_rows() > 0) {
+            return $sql->result_array();
+        } else {
+            return FALSE;
+        }
+        /* $customer = $this->db->get_where($this->cfg['dbpref'].'customers', array('company_id' => $id));
         if ($customer->num_rows() > 0) {
             return $customer->result_array();
         } else {
             return FALSE;
-        }
+        } */
     }
 
     /**
@@ -534,6 +544,7 @@ class Customer_model extends crm_model {
 	function customer_update_isclient($id, $data) {
 		$this->db->where('companyid', $id);
 		$this->db->update($this->cfg['dbpref'].'customers_company', $data);
+		// echo $this->db->last_query(); exit;
 	}
 	
 	/*

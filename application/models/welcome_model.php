@@ -19,7 +19,7 @@ class Welcome_model extends crm_model {
 		j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
 		j.department_id_fk, j.resource_type, j.project_type, j.project_category, j.cost_center, j.project_center, j.sow_status, 
 		j.date_start, j.date_due, j.practice, j.project_types, 
-		c.*, c.customer_name AS cfn, cc.add1_region, cc.add1_country, cc.add1_state, cc.add1_location,  rg.region_name, coun.country_name, 
+		c.*, c.customer_name AS cfn, cc.add1_region, cc.add1_country, cc.add1_state, cc.add1_location, cc.companyid, rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name, i.industry');
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
@@ -45,6 +45,28 @@ class Welcome_model extends crm_model {
 		// echo $this->db->last_query(); exit;
 	    $res =  $sql->result_array();
 	    return $res;
+	}
+	
+	function get_company_det($id){
+		$this->db->select('cc.*, rg.region_name, coun.country_name, st.state_name, loc.location_name');
+		$this->db->from($this->cfg['dbpref'] . 'customers_company as cc');
+		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+		$this->db->join($this->cfg['dbpref'] . 'country as coun', 'coun.countryid = cc.add1_country');
+		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+		$this->db->join($this->cfg['dbpref'] . 'location as loc', 'loc.locationid = cc.add1_location');
+		$this->db->where('companyid', $id);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+	
+	function get_contact_det($cid){
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'] . 'customers');
+		$this->db->where('company_id', $cid);
+		$this->db->order_by('custid');
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 	
 	function get_lead_all_detail($id) 
@@ -162,6 +184,16 @@ class Welcome_model extends crm_model {
 	    $this->db->from($this->cfg['dbpref'] . 'customers as c');
 	    $this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
 	    $this->db->where('c.custid', $cid);
+	    $cust_det = $this->db->get();
+	    return $cust_det->row_array();
+	}
+	
+	function get_customer_name_by_lead($id) {
+	    $this->db->select('c.customer_name, cc.company');
+	    $this->db->from($this->cfg['dbpref'] . 'customers as c');
+	    $this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
+	    $this->db->join($this->cfg['dbpref'] . 'leads as l', 'l.custid_fk = c.custid');
+	    $this->db->where('l.lead_id', $id);
 	    $cust_det = $this->db->get();
 	    return $cust_det->row_array();
 	}
@@ -510,7 +542,7 @@ class Welcome_model extends crm_model {
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
-			c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
@@ -1115,9 +1147,10 @@ class Welcome_model extends crm_model {
 	{
 		$this->db->select('lead_status');
 		$this->db->from($this->cfg['dbpref'].'leads');
-		$this->db->where('custid_fk', $cus_id);
+		$this->db->where_in('custid_fk', $cus_id);
 		$this->db->where('lead_status', 4);
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		return $query->num_rows();
 	}	
 	
