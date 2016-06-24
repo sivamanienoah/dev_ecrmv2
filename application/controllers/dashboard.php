@@ -11,6 +11,7 @@ class Dashboard extends crm_controller {
 	function __construct()
 	{
 		parent::__construct();
+		ini_set('display_errors', 1);
 		$this->login_model->check_login();
 		$this->load->model('dashboard_model');
 		$this->load->model('report/report_lead_region_model');
@@ -19,7 +20,6 @@ class Dashboard extends crm_controller {
 		$this->load->helper('custom_helper');
 		$this->load->helper('text_helper');
 		$this->load->helper('lead_stage_helper');
-		echo "341234sadfasdf"; die;
 		$this->userdata   = $this->session->userdata('logged_in_user');
 		$this->pjt_stg 	  = array(0,1,2,3);
 		$this->pjt_stages = @implode("','", $this->pjt_stg);
@@ -33,12 +33,12 @@ class Dashboard extends crm_controller {
 		}
 	}
 	
-	
 	/*
 	*Method index
 	*
 	*/
 	function index() {
+		
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
