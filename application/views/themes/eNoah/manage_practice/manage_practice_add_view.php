@@ -30,6 +30,10 @@
 				<tr>
                     <td>Max Hours: * </td>
 					<td>
+						<?php
+						if($this->validation->max_hours==0){
+							$this->validation->max_hours="";
+						}?>
 						<input type="text" name="max_hours" id="max_hours" value="<?php echo $this->validation->max_hours; ?>" class="textfield width200px" />
 					
 					</td>
