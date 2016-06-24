@@ -37,8 +37,6 @@ class Dashboard extends crm_controller {
 	*
 	*/
 	function index() {
-		ini_set('display_errors', 1);
-		echo "asdf"; die;
 		$this->load->helper('text');
 		$this->load->helper('fix_text');
 		
