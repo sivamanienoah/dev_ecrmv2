@@ -29,7 +29,12 @@ function chk_practice_name() {
 		$('#hours_succes_err_msg').show();
 		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max Hours Required.</span>");
 		error =  false;
+	}else if(max_hours==0){
+		$('#hours_succes_err_msg').show();
+		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max hours should be morethan 0 hours.</span>");
+		error =  false;
 	}
+	
 	console.log("error"+error);
 	if(error) {
 		$.ajax({
