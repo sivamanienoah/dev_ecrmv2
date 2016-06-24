@@ -283,6 +283,12 @@ if ( ! function_exists('formSubMenuList'))
 					if($submenu['masterid']==154 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
 						continue;
 					}
+					if($submenu['masterid']==147 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+						continue;
+					}
+					if($submenu['masterid']==148 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+						continue;
+					}
 					$str .= "<li style='list-style:none'><a href ='". $submenu['links_to']."'>".$submenu['master_name']."</a></li>";	
 				}
 				/* if($masterId==92){
