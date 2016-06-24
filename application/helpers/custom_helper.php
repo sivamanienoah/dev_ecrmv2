@@ -237,7 +237,7 @@ function get_practice_max_hours($practice_id=false){
 	if($practice_id){
 		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id));
 		$result = $qry->result_array(); 
-		if(count($result)>0 && !empty($result)){
+		if(count($result)>0 && !empty($qry->result_array())){
 			return $result;
 		}else{
 			return array();
