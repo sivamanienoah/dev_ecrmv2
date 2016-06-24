@@ -114,6 +114,24 @@ class Manage_practice extends crm_controller {
                 
                 if ($this->db->update($this->cfg['dbpref']."practices", $update_data))
                 {	
+					//Update history table
+					$financial_year=get_current_financial_year();
+					$practice_hours_history_data = $this->db->get_where($this->cfg['dbpref']."practice_max_hours_history", array('financial_year' => $financial_year,'practice_id'=>$id))->row();
+					
+					$update_practice_hours_history = array();
+					$update_practice_hours_history['practice_id'] = $id;
+					$update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+					$update_practice_hours_history['financial_year']   = $financial_year;
+						
+					if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) 
+					{	
+						$this->db->where('id',$practice_hours_history_data->id);
+						$this->db->update($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
+					
+					}else{
+						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
+					}
+					
                     $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
                 }
             }
@@ -127,12 +145,10 @@ class Manage_practice extends crm_controller {
 					$practice_id = $this->db->insert_id();
 					
 					if($practice_id>0){
-						$history['practice_id'] = $practice_id;
-						
-	
-						$history['financial_year']   = get_current_financial_year();
-						
-						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $history);
+						$practice_hours_history['practice_id'] = $practice_id;
+						$practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+						$practice_hours_history['financial_year']   = get_current_financial_year();
+						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $practice_hours_history);
 					}
 				}
                 $this->session->set_flashdata('confirm', array('New Practice Added!'));
