@@ -68,6 +68,37 @@
 				</tr>
             </table>
 		</form>
+		<br/>
+		<?php if ($this->uri->segment(3) == 'update') { ?>
+					<h2>Practice Maximium Hours History</h2>
+					
+					<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:50%">
+					<thead>
+						<tr>
+							<th style="width:10%">SL No</th>
+							<th>Max Hours</th>
+							<th>Financial Year</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php if (is_array($practice_max_hours_history) && count($practice_max_hours_history) > 0 && !empty($practice_max_hours_history)) {
+								$i=1;
+						?>
+						<?php foreach($practice_max_hours_history as $practice_max_hours_historys) { ?>
+							<tr>
+								<td><?php echo $i;?></td>
+								<td><?php echo $practice_max_hours_historys['practice_max_hours']; ?></td>
+								<td><?php echo $practice_max_hours_historys['financial_year']; ?></td>
+							
+							</tr>
+						<?php $i++;} ?>
+					<?php }else{?>
+							<tr><td colspan="3">No Results Found</td></tr>
+						<?php } ?>
+					</tbody>
+				</table>
+		<?php } ?>
+	
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 <?php require (theme_url(). '/tpl/footer.php'); ?>
