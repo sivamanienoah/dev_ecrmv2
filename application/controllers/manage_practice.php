@@ -132,7 +132,7 @@ class Manage_practice extends crm_controller {
 	
 						$history['financial_year']   = get_current_financial_year();
 						
-						$this->db->insert($this->cfg['dbpref']."max_hours_history", $history);
+						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $history);
 					}
 				}
                 $this->session->set_flashdata('confirm', array('New Practice Added!'));
