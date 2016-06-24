@@ -235,7 +235,7 @@ function get_practice_max_hours($practice_id=false){
 	$cfg	    = $CI->config->item('crm'); /// load config
 	if($practice_id){
 		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id));
-		
+		echo $CI->db->last_query();exit;
 		if(count($qry->result())>0 && !empty($qry->result())){
 			return $qry->result();
 		}else{
