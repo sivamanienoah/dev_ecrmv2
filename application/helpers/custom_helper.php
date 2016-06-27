@@ -229,19 +229,44 @@ function get_current_financial_year(){
 	}
 	return $financial_year;
 }
-/*Get max hours based on practice id*/
+/*Get practice max hours based on practice id*/
 if ( ! function_exists('get_practice_max_hours')){
-function get_practice_max_hours($practice_id=false){
-	$CI   	    = get_instance();
-	$cfg	    = $CI->config->item('crm'); /// load config
-	if($practice_id){
-		$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id));
-		$result = $qry->result_array(); 
-		if(count($qry->result_array())>0 && !empty($result)){
-			return $result;
-		}else{
-			return array();
-		}
-	}	
+	function get_practice_max_hours($practice_id=false){
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+		if($practice_id){
+			$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id));
+			$result = $qry->result_array(); 
+			if(count($result)>0 && !empty($result)){
+				return $result;
+			}else{
+				return array();
+			}
+		}	
+	}
 }
+/*Get practice max hours based on practice id and financial year*/
+if ( ! function_exists('get_practice_max_hour_by_financial_year')){
+	function get_practice_max_hour_by_financial_year($practice_id=false,$financial_year=false){
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+		if($practice_id){
+			$CI->db->order_by("id","desc");
+			$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id,'financial_year' => $financial_year))->row();
+			
+			$result = $qry; 
+			if(count($result)>0 && !empty($result)){
+				return $result;
+			}else{
+				$CI->db->order_by("id","desc");
+				$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id))->row();
+				$result = $qry; 
+				if(count($result)>0 && !empty($result)){
+					return $result;
+				}else{
+					return array();
+				}
+			}
+		}	
+	}
 }
