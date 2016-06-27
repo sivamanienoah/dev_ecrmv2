@@ -8,6 +8,11 @@
 			<input id="custid" type="hidden" name="custid" value="<?php echo $contacts['custid']; ?>" />
 			
 			<h2>Update Customer Contact</h2>
+			
+			<?php if($this->session->userdata('edit')==1) { ?>
+				<a class="pull-right" target="_blank" href="customers/add_customer/update/<?php echo $contacts['company_id']; ?>" title='Edit'>Edit Company Details</a>
+			<?php } ?>
+			
             <?php if ($this->validation->error_string != '') { ?>
             <div class="form_error">
                 <?php echo $this->validation->error_string ?>
