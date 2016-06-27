@@ -322,7 +322,7 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 				success: function(response) {
 					if (response.html == 'NO') {
 						// $('#dialog-err-msg').show();
-						alert('One or more Leads currently mapped to this customer. \n This cannot be deleted.');
+						alert('One or more Leads currently mapped to this customer. This cannot be deleted.');
 						// $('#dialog-err-msg').append('One or more Leads currently mapped to this customer. This cannot be deleted.');
 						// $('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
 						// setTimeout('timerfadeout()', 4000);
