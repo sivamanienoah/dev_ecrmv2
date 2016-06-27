@@ -385,7 +385,14 @@ function cust_validation()
 			$(this).closest('tr').find('.email_err_msg').html("This field is required");
 			err=false;
 		}else{
-			$(this).closest('tr').find('.email_err_msg').html(" ");
+			var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			var emailres = regex.test($(this).val());
+			if(!emailres){
+				err = false;
+				$(this).closest('tr').find('.email_err_msg').html("Not a vaild email");
+			} else {
+				$(this).closest('tr').find('.email_err_msg').html(" ");
+			}
 		}
 	});
 	

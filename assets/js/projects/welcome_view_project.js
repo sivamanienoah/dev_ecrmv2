@@ -902,7 +902,7 @@ function addURLtoJob()
 		var customer_id_old = $('#customer_id_old').val();
 		var customer_company_name_old = $('#customer_company_name_old').val();
 		
-		if(lead_title == '') {
+		if(customer_id == '') {
 			return false;
 		}
 
@@ -922,6 +922,7 @@ function addURLtoJob()
 				} else {
 					$('#resmsg_customer').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
 				}
+				loadCustomer(curr_job_id);
 				$.unblockUI();
 			}
 		});
@@ -1565,6 +1566,9 @@ function addURLtoJob()
 				}
 				if (ui.newPanel[0].id=='jv-tab-9') {
 					loadLogs(project_jobid);
+				}
+				if (ui.newPanel[0].id=='jv-tab-5') {
+					loadCustomer(quote_id);
 				}
 			}
 		});
@@ -2770,6 +2774,23 @@ function loadLogs(id)
 			} else {
 				$('#load-log').html(data);
 				logsDataTable();
+			}
+		}
+	);
+}
+
+function loadCustomer(id) 
+{
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.post( 
+		site_base_url+'project/getCustomers/'+id, params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('#load-customer').html(data);
 			}
 		}
 	);
