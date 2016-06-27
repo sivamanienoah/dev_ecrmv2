@@ -599,6 +599,8 @@ class Project extends crm_controller {
 				}
 			} */
 			//echo '<pre>';print_r($timesheet);exit;
+			//$total_hours=get_timesheet_hours_by_user('dhanapal.p',2016,'May',array('leave'));
+				
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
 					if(isset($ts['cost'])) {
@@ -610,10 +612,14 @@ class Project extends crm_controller {
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+						
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('leave'));
 					}
 				}
 			}
-
+			/* echo "<pre>";
+			print_r($data['timesheet_data']);
+			echo "</pre>"; */
 			$data['project_costs'] = array();
 			
 			if(!empty($data['timesheet_data'])) {
