@@ -35,11 +35,6 @@ class Manage_practice extends crm_controller {
 	*/
     public function index($search = FALSE) 
 	{
-		$test=get_practice_max_hour_by_financial_year(15,get_current_financial_year());	
-		echo "<pre>";
-		print_r($test);
-		echo "</pre>";
-		
 	    $data['page_heading'] = 'Manage Practice';
 		$data['practices'] = $this->manage_practice_model->get_practices($search);
         $this->load->view('manage_practice/manage_practice_view', $data);
