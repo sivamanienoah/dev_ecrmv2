@@ -575,7 +575,7 @@ class Project_model extends crm_model
 		// $where_condn = " ((DATE(ts.start_time) >= '".$start_date."') AND (DATE(ts.end_time) <= '".$end_date."')) ";
 		
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
 		$this->db->where("ts.project_code",$pjt_code);
 		$this->db->where("DATE(ts.start_time) >= ",$start_date);

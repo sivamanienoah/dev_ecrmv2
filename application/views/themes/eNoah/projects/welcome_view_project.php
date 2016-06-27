@@ -1752,15 +1752,19 @@ if (get_default_currency()) {
 					</table>
 					<table class="data-table">
 						<?php
+						//echo '<pre>';print_r($timesheet_data);exit;
+						
 						$total_billable_hrs		= 0;
 						$total_non_billable_hrs = 0;
 						$total_internal_hrs		= 0;
 						$total_cost				= 0;
 						foreach($timesheet_data as $key1=>$value1) {
 							$resource_name = $key1;
+							$max_hours = $value1['max_hours'];
 							foreach($value1 as $key2=>$value2) {
 								$year = $key2;
 								foreach($value2 as $key3=>$value3) {
+									$individual_billable_hrs		= 0;
 									$month		 	  = $key3;
 									$billable_hrs	  = 0;
 									$non_billable_hrs = 0;
@@ -1771,21 +1775,30 @@ if (get_default_currency()) {
 												$rs_name			 = $value4['rs_name'];
 												$rate				 = $value4['rateperhr'];
 												$billable_hrs		 = $value4['duration'];
+												$individual_billable_hrs += $billable_hrs;
 												$total_billable_hrs += $billable_hrs;
 											break;
 											case 'Non-Billable':
 												$rs_name				 = $value4['rs_name'];
 												$rate					 = $value4['rateperhr'];
 												$non_billable_hrs		 = $value4['duration'];
+												$individual_billable_hrs += $non_billable_hrs;
 												$total_non_billable_hrs += $non_billable_hrs;
 											break;
 											case 'Internal':
 												$rs_name			 = $value4['rs_name'];
 												$rate				 = $value4['rateperhr'];
 												$internal_hrs 		 = $value4['duration'];
+												$individual_billable_hrs += $internal_hrs;
 												$total_internal_hrs += $internal_hrs;
 											break;
 										}
+									}
+									// calculation for the utilization cost based on the master hours entered.
+									$rate1 = $rate;
+									if($individual_billable_hrs>$max_hours){
+										$percentage = ($max_hours/$individual_billable_hrs);
+										$rate1 = number_format(($percentage*$rate),2);
 									}
 									echo "<tr>
 										<td>".$rs_name."</td>
@@ -1793,14 +1806,15 @@ if (get_default_currency()) {
 										<td align=right>".sprintf('%0.2f', $billable_hrs)."</td>
 										<td align=right>".sprintf('%0.2f', $internal_hrs)."</td>
 										<td align=right>".sprintf('%0.2f', $non_billable_hrs)."</td>
-										<td align=right>".$rate."</td>
-										<td align=right>".sprintf('%0.2f', $rate*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
+										<td align=right>".$rate1."</td>
+										<td align=right>".sprintf('%0.2f', $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs))."</td>
 									</tr>";
 									
-									$total_cost += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
+									$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
 								}
 							}
 						}
+						
 						echo "<tr>
 							<td align=right><b>Total</b></td>
 							<td></td>

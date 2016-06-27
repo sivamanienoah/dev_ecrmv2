@@ -509,6 +509,7 @@ class Project extends crm_controller {
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
+				//echo '<pre>';print_r($timesheet);exit;
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$timesheet_users = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
@@ -597,10 +598,13 @@ class Project extends crm_controller {
 					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
 				}
 			} */
-			
+			//echo '<pre>';print_r($timesheet);exit;
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
 					if(isset($ts['cost'])) {
+						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],'2015-2016',$ts['month_name'],$ts['yr']);
+						$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
+						$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
 						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
@@ -876,7 +880,7 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}
-		
+			//echo '<pre>';print_r($data['timesheet_data']);exit;
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
