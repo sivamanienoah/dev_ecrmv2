@@ -323,6 +323,7 @@ class Customer_model extends crm_model {
             return FALSE;
         }
     }
+
 	function get_customer_contacts($id) 
 	{
 		$this->db->select('c.*');
@@ -1338,5 +1339,28 @@ class Customer_model extends crm_model {
 		return $query->row_array();
 	}
     
+	function customer_contact_list($customers)
+	{
+		foreach($customers as $list)
+		{
+			$company_id[]=$list['companyid'];
+		}
+		
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref']."customers");
+		$this->db->join($this->cfg['dbpref'].'customers_company', $this->cfg['dbpref'].'customers_company.companyid = '.$this->cfg['dbpref'].'customers.company_id');
+		$this->db->where_in('company_id',$company_id);
+		
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;
+	}
+	
+	function delete_customer_contact($custid) 
+	{
+        $this->db->where('custid', $custid);
+        $this->db->delete($this->cfg['dbpref'] . 'customers');
+        return TRUE;
+    }
 }
 /* end of file */
