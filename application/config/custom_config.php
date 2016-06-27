@@ -101,7 +101,7 @@ $config['crm']['account_emails'] = array(
 								    );
 
 $config['crm']['account_emails_cc'] = array(
-									'mukesh' => 'rshankar@enoahisolution.com',
+									'mukesh' => 'ssriram@enoahisolution.com',
 								    );									
 									
 $config['crm']['crm_admin'] = array(
