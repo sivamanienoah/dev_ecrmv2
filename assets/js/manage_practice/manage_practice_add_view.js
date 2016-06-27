@@ -24,16 +24,17 @@ function chk_practice_name() {
 		$('#succes_err_msg').append("<span class='ajx_failure_msg'>Practice Required.</span>");
 		error = false;
 	}
+	
 	if(max_hours == ""){
 		
 		$('#hours_succes_err_msg').show();
-		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max Hours Required.</span>");
+		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max hours for resource per month is  required.</span>");
 		error =  false;
-	}/* else if(max_hours==0){
+	}else if($.isNumeric(max_hours)==false) {
 		$('#hours_succes_err_msg').show();
-		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Max hours should be morethan 0 hours.</span>");
+		$('#hours_succes_err_msg').append("<span class='ajx_failure_msg'>Please enter numbers only.</span>");
 		error =  false;
-	} */
+	}
 	
 	
 	if(error) {
