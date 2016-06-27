@@ -1,6 +1,7 @@
 <style>
 .ui-autocomplete{ z-index: 2147483647 !important; width: 204px; !important; }
 .clr-icon{ display:none; }
+.text-danger { color: red; }
 </style>
 <?php $usernme = $this->session->userdata('logged_in_user'); ?>
 <p>All mandatory fields marked * must be filled in correctly.</p><p class="error-cont" style="display:none;">&nbsp;</p>
@@ -18,7 +19,7 @@
 					<td><input type="text" name="position_title" value="" class="textfield width200px required" /></td-->
                     <td>Company:*</td>
 					<td>
-						<input type="text" id="company_name" name="company" value="" class="textfield width200px required" /><span class="clr-icon">clear</span>
+						<input type="text" id="company_name" name="company" value="" class="textfield width200px required" /><a class="clr-icon"></a>
 						<input type="hidden" id="company_id" name="company_id" value="" class="textfield width200px required" /> 
 					</td>
 				</tr>
@@ -280,5 +281,14 @@ function add_customer()
     )
     return false;
 }
+
+$('#customer_detail_form').delegate( '.clr-icon', 'click', function () {
+	$('#customer_detail_form')[0].reset();
+	$("#company_name").removeAttr("readonly");
+	$('#add1_country').prop('selectedIndex',0);
+	$('#add1_state').prop('selectedIndex',0);
+	$('#add1_location').prop('selectedIndex',0);
+	$('.clr-icon').hide();
+});
 </script>
 <script type="text/javascript" src="assets/js/helper/new_customer_form.js"></script>
