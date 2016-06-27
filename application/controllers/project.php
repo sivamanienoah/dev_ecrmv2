@@ -574,7 +574,7 @@ class Project extends crm_controller {
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			$data['stake_holders'] = $this->project_model->get_stake_holders($id);
+			$data['stake_holders']  = $this->project_model->get_stake_holders($id);
 			//echo '<pre>';print_r($project_members); 
 			//echo count($data['contract_users']);echo '<pre>';print_r($data['contract_users']);exit;
 			$rates = $this->get_currency_rates();
@@ -1008,6 +1008,40 @@ class Project extends crm_controller {
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$data     = array('lead_title'=>$updt['lead_title']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id){				
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+	}
+
+	/*
+	*@method set_customer
+	*
+	*/
+	public function update_customer()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+		
+		if($updt['customer_id'] != $updt['customer_id_old']){
+			$inser['log_content']  = "Customer has changed from ' ".$updt['customer_company_name_old']." ' to ' ".$updt['customer_company_name']." '";
+			$inser['jobid_fk']     = $updt['lead_id'];
+			$inser['userid_fk']    = $this->userdata['userid'];
+			$insert_log			   = $this->welcome_model->insert_row('logs', $inser);
+		}
+
+		if (($updt['customer_id'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$data     = array('custid_fk'=>$updt['customer_id']);
 			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
 			if($updt_id){				
 				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');

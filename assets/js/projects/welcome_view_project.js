@@ -895,6 +895,39 @@ function addURLtoJob()
 		setTimeout('timerfadeout()', 2000);
 	}
 	
+	function setCustomer() {
+		$('#resmsg_customer').empty();
+		var customer_company_name = $('#customer_company_name').val();
+		var customer_id = $('#customer_id').val();
+		var customer_id_old = $('#customer_id_old').val();
+		var customer_company_name_old = $('#customer_company_name_old').val();
+		
+		if(lead_title == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/update_customer/',
+			dataType: 'json',
+			data: 'customer_company_name='+customer_company_name+'&customer_id='+customer_id+'&customer_id_old='+customer_id_old+'&customer_company_name_old='+customer_company_name_old+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_customer').html("<span class='ajx_success_msg'>Customer Updated</span>");
+					// $('.job-title').html(lead_title);
+				} else {
+					$('#resmsg_customer').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
+	
 	//Set the Project Practices//
 	function setPractices() {
 		$('#resmsg_practice').empty();
