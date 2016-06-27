@@ -153,20 +153,22 @@
 						</td>
 					</tr>
 				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-                        <div id="subBtn" class="buttons">
+				<tr></tr>
+				<tr></tr>
+				<tr></tr>
+				<tr>	
+					<td></td>
+					<td style="float:right">
+						<div id="subBtn" class="buttons">
 							<button type="submit" class="positive" id="positiveBtn" onclick="add_customer(); return false;">Add</button>
 						</div>
+					</td>
+					<td>
 						<div class="buttons">
 							<button type="submit" onclick="ndf_cancel();">Cancel</button>
 						</div>
                     </td>
-                    <td>
-						
-					</td>
-                    <td>&nbsp;</td>
+					<td></td>
 				</tr>
 			</table>
 </form>
