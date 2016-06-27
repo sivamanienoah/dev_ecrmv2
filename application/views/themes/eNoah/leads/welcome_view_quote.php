@@ -523,6 +523,9 @@ $(function(){
 			if (ui.newPanel[0].id=='jv-tab-8') {
 				loadLogs(quote_id);
 			}
+			if (ui.newPanel[0].id=='jv-tab-6') {
+				loadCustomer(quote_id);
+			}
 		}
 	});
 
@@ -1230,102 +1233,8 @@ $(function(){
 	</div><!-- id: jv-tab-4 end -->
 			
 	<div id="jv-tab-6">
-		<form id="customer-detail-read-only" onsubmit="return false;">
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="120"><label>Company Name</label></td>
-					<td><b><?php echo $company_det['company'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Address Line 1</label></td>
-					<td><b><?php echo $company_det['add1_line1'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Address Line 2</label></td>
-					<td><b><?php echo $company_det['add1_line2'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Suburb</label></td>
-					<td><b><?php echo $company_det['add1_suburb'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Region</label></td>
-					<td><b><?php echo $company_det['region_name'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Country</label></td>
-					<td><b><?php echo $company_det['country_name'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>State</label></td>
-					<td><b><?php echo $company_det['state_name'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Location</label></td>
-					<td><b><?php echo $company_det['location_name'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Post code</label></td>
-					<td><b><?php echo $company_det['add1_postcode'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Phone</label></td>
-					<td><b><?php echo $company_det['phone'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>Fax</label></td>
-					<td><b><?php echo $company_det['fax'] ?></b></td>
-				</tr>
-					<tr>
-					<td><label>Email</label></td>
-					<td><b><?php echo $company_det['email_2'] ?></b></td>
-				</tr>
-				<tr>
-					<td><label>WEB</label></td>
-					<td><b><?php echo $company_det['www'] ?></b></td>
-				</tr>			
-				<tr>
-					<td><label>Comments</label></td>
-					<td>
-						<?php
-							$comments = "-";
-							if(isset($company_det['comments']) && !empty($company_det['comments'])) {
-								$comments = str_replace(array('\r\n', '\r', '\n'), '<br />', $quote_data['comments']);
-							}
-						?>
-					<p><?php echo stripslashes(nl2br($comments, false)); ?>
-					</td>
-				</tr>
-			</table>
-			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
-				<thead>
-					<tr>
-						<th>Customer Name</th>
-						<th>Position</th>
-						<th>Phone</th>
-						<th>Email</th>
-						<th>Skype</th>
-						<th>Contact Mapped to Lead</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if(!empty($contact_det) && count($contact_det)>0) { ?>
-						<?php foreach($contact_det as $cont) { ?>
-					<tr>
-						<td><?php echo $cont['customer_name']; ?></td>
-						<td><?php echo $cont['position_title']; ?></td>
-						<td><?php echo $cont['phone_1']; ?></td>
-						<td><?php echo $cont['email_1']; ?></td>
-						<td><?php echo $cont['skype_name']; ?></td>
-						<td><?php if($quote_data['custid_fk'] == $cont['custid']) echo '<img style="width:14px; height:14px" alt="lead" src="assets/img/tick.png">'; ?></td>
-					</tr>
-						<?php } ?>
-					<?php } ?>
-				</tbody>
-			</table>
-		</form>
-		
+		<div id="load-customer">
+		</div><!-- id: load customer end -->
 	</div><!-- id: jv-tab-6 end -->
 				
 	<div id="jv-tab-7"><!-- id: jv-tab-7 start -->
@@ -1422,6 +1331,22 @@ function loadLogs(id) {
 		}
 	);
 }
+function loadCustomer(id) 
+{
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.post( 
+		site_base_url+'welcome/getCustomers/'+id, params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('#load-customer').html(data);
+			}
+		}
+	);
+}
 function logsDataTable() {
 	$('#lead_log_list').dataTable( {
 		"iDisplayLength": 10,
@@ -1439,6 +1364,40 @@ function logsDataTable() {
 		}
 	});
 }
+
+	function setCustomer() {
+		$('#resmsg_customer').empty();
+		var customer_company_name = $('#customer_company_name').val();
+		var customer_id = $('#customer_id').val();
+		var customer_id_old = $('#customer_id_old').val();
+		var customer_company_name_old = $('#customer_company_name_old').val();
+		
+		if(customer_id == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'welcome/update_customer/',
+			dataType: 'json',
+			data: 'customer_company_name='+customer_company_name+'&customer_id='+customer_id+'&customer_id_old='+customer_id_old+'&customer_company_name_old='+customer_company_name_old+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_customer').html("<span class='ajx_success_msg'>Customer Updated</span>");
+					// $('.job-title').html(lead_title);
+				} else {
+					$('#resmsg_customer').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				loadCustomer(curr_job_id);
+				$.unblockUI();
+			}
+		});
+		setTimeout('timerfadeout()', 2000);
+	}
 </script>	
 <script type="text/javascript" src="assets/js/request/request.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>

@@ -4828,5 +4828,23 @@ HDOC;
 		exit;
 	}
 	
+	public function getCustomers($id)
+	{
+		$result = $this->project_model->get_quote_data($id);
+
+		$data['quote_data']		= $result[0];
+		// $this->userdata
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+			$data['chge_access'] = 1;
+		} else {
+			$data['chge_access'] = $this->project_model->get_access($id, $this->userdata['userid']);
+		}
+		//get customers & company
+		$data['company_det'] = $this->welcome_model->get_company_det($data['quote_data']['companyid']);
+		$data['contact_det'] = $this->welcome_model->get_contact_det($data['quote_data']['companyid']);
+		
+		$this->load->view('projects/load_customer_det', $data);
+	}
+	
 }
 ?>

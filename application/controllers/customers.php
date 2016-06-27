@@ -869,5 +869,85 @@ class Customers extends crm_controller {
 		exit;
 	}
 	
+	function ajax_company_search() 
+	{
+        if ($this->input->post('cust_name')) {
+            $result = $this->customer_model->get_companies($this->input->post('cust_name'));
+			$res = array();
+			if (count($result) > 0) {
+				$i=0;
+				foreach ($result as $rec) {
+					$res[$i]['label']     = $rec['company'];
+					$res[$i]['companyid'] = $rec['companyid'];
+					$res[$i]['add1_line1'] = $rec['add1_line1'];
+					$res[$i]['add1_line2'] = $rec['add1_line2'];
+					$res[$i]['add1_suburb'] = $rec['add1_suburb'];
+					$res[$i]['phone'] = $rec['phone'];
+					$res[$i]['fax'] = $rec['fax'];
+					$res[$i]['www'] = $rec['www'];
+					$res[$i]['email_2'] = $rec['email_2'];
+					$res[$i]['regId']     = $rec['add1_region'];
+					$res[$i]['cntryId']   = $rec['add1_country'];
+					$res[$i]['stId']	  = $rec['add1_state'];
+					$res[$i]['locId']     = $rec['add1_location'];
+					$i++;
+				}
+			}
+        }
+        echo json_encode($res); exit;
+    }
+	
+	function add_custom_customer()
+	{
+		$post_data = $this->input->post();
+
+		$cust_data['company_id'] = $post_data['company_id'];
+		
+		if($post_data['company_id']==''){
+			//insert company
+			$cmp_data['company'] = $post_data['company'];
+			$cmp_data['add1_line1'] = $post_data['add1_line1'];
+			$cmp_data['add1_line2'] = $post_data['add1_line2'];
+			$cmp_data['add1_suburb'] = $post_data['add1_suburb'];
+			$cmp_data['add1_postcode'] = $post_data['add1_postcode'];
+			$cmp_data['add1_region'] = $post_data['add1_region'];
+			$cmp_data['add1_country'] = $post_data['add1_country'];
+			$cmp_data['add1_state'] = $post_data['add1_state'];
+			$cmp_data['add1_location'] = $post_data['add1_location'];
+			$cmp_data['phone'] = $post_data['phone'];
+			$cmp_data['fax'] = $post_data['fax'];
+			$cmp_data['email_2'] = $post_data['email_2'];
+			$cmp_data['www'] = $post_data['www'];
+			$cmp_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+			
+			$this->db->insert($this->cfg['dbpref'] . 'customers_company', $cmp_data);
+			$cust_data['company_id'] = $this->db->insert_id();			
+		} 
+			
+			$cust_data['customer_name']	= $post_data['customer_name'];
+			$cust_data['skype_name']	= $post_data['skype_name'];
+			$cust_data['position_title']= $post_data['position_title'];
+			$cust_data['phone_1']		= $post_data['phone_1'];
+			$cust_data['email_1']		= $post_data['email_1'];
+			$cust_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+			
+			$this->db->insert($this->cfg['dbpref'] . 'customers', $cust_data);
+			$contact_id = $this->db->insert_id();
+		
+		$json['error'] = false;
+		$json['custid']       = $contact_id;
+		$json['cust_name1']   = $post_data['company'].' - '.$post_data['customer_name'];
+		$json['cust_name']    = $post_data['company']." - ".$post_data['customer_name'];
+		$json['cust_email']   = $post_data['email_1'];
+		$json['cust_company'] = $post_data['company'];
+		$json['cust_reg'] 	  = $post_data['add1_region'];
+		$json['cust_cntry']   = $post_data['add1_country'];
+		$json['cust_ste'] 	  = $post_data['add1_state'];
+		$json['cust_locn']	  = $post_data['add1_location'];
+		
+		echo json_encode($json);
+		
+	}
+	
 }
 ?>

@@ -2873,5 +2873,55 @@ HDOC;
 		return $res;
 	}
 	
+	public function getCustomers($id)
+	{
+		$result = $this->welcome_model->get_lead_detail($id);
+
+		$data['quote_data']		= $result[0];
+		$data['chge_access'] = 0;
+		// $this->userdata
+		// echo "<pre>"; print_r($data['quote_data']['companyid']); die;
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+			$data['chge_access'] = 1;
+		} else {
+			$data['chge_access'] = $this->project_model->get_access($id, $this->userdata['userid']);
+		}
+		//get customers & company
+		$data['company_det'] = $this->welcome_model->get_company_det($data['quote_data']['companyid']);
+		$data['contact_det'] = $this->welcome_model->get_contact_det($data['quote_data']['companyid']);
+		
+		$this->load->view('leads/load_customer_det', $data);
+	}
+	
+	public function update_customer()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+		
+		if($updt['customer_id'] != $updt['customer_id_old']){
+			$inser['log_content']  = "Customer has changed from ' ".$updt['customer_company_name_old']." ' to ' ".$updt['customer_company_name']." '";
+			$inser['jobid_fk']     = $updt['lead_id'];
+			$inser['userid_fk']    = $this->userdata['userid'];
+			$insert_log			   = $this->welcome_model->insert_row('logs', $inser);
+		}
+
+		if (($updt['customer_id'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$updata   = array('custid_fk'=>$updt['customer_id']);
+			
+			$this->db->where($wh_condn);
+			$updt_id = $this->db->update($this->cfg['dbpref'] . 'leads', $updata);
+			
+			if(!$updt_id){
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		// echo "<pre>"; print_r($data); die;
+		echo json_encode($data);
+	}
+	
 }
 ?>

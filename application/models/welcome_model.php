@@ -1419,6 +1419,22 @@ class Welcome_model extends crm_model {
 		}
 		return $strreg;				
 	}
+	
+	public function get_access($id, $uid)
+	{
+		$this->db->select('lead_assign, assigned_to, belong_to');
+		$this->db->where('lead_id', $id);
+		$this->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
+		$res1 = $sql->result_array();
+		if (empty($res1)) {
+			$chge_access = 0;
+		}
+		else {
+			$chge_access = 1;
+		}
+		return $chge_access;
+	}
 }
 
 ?>

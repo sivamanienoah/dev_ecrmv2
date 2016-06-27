@@ -55,7 +55,9 @@
 				<tr><td colspan="4">&nbsp;</td></tr>
 			    <tr>
 					<td colspan="4">
-						<b>Note:</b><br />
+						<b><h4>Instructions:</h4></b><br /><br />
+						
+						<b>The Below mentioned fields are Mandatory Fields and the other fields are optional.</b><br />
 						Company Name<br />
 						Region<br />
 						Country<br />
@@ -65,7 +67,10 @@
 						Customer Position<br />
 						Customer Email<br />
 						Customer Phone<br />
-						<b>The Above mentioned fields are Mandatory Fields and the other fields are optional.</b><br />
+						<br />
+						
+						<b>For importing Multiple contacts,</b> please use the same Company Name, Company Address Line 1, Company Address Line 2, Suburb, Postcode, Region, Country, State, Location in a Row & mention the contact details.
+
 					</td>
 				</tr>
 			    <tr><td colspan="4">&nbsp;</td></tr>

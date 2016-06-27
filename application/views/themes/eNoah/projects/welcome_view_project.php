@@ -110,24 +110,24 @@ if (get_default_currency()) {
 				<?php } ?>
 				</div>
 			</form>
-			<form>
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			<!--form>
+				<input type="hidden" name="<?php #echo $this->security->get_csrf_token_name(); ?>" value="<?php #echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="customer">Customer</label>					
-					<input type="text" style="width:180px;" name="customer_company_name" id="customer_company_name" class="textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> /></p>
-					<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
-					<input type="hidden" name="customer_id_old" id="customer_id_old" value="<?php echo $quote_data['custid_fk'] ?>" />
-					<input type="hidden" name="customer_company_name_old" id="customer_company_name_old" class="textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" />
+					<input type="text" style="width:180px;" name="customer_company_name" id="customer_company_name" class="textfield width300px" value="<?php #echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" <?php #if ($readonly_status == true) { ?> disabled <?php #} ?> />
+					<input type="hidden" name="customer_id" id="customer_id" value="<?php #echo $quote_data['custid_fk'] ?>" />
+					<input type="hidden" name="customer_id_old" id="customer_id_old" value="<?php #echo $quote_data['custid_fk'] ?>" />
+					<input type="hidden" name="customer_company_name_old" id="customer_company_name_old" class="textfield width300px" value="<?php #echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" />
 				</div>
 				<div>
-				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+				<?php #if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
 						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setCustomer(); return false;">Set</button>
 					</div>
 					<div id="resmsg_customer" class='succ_err_msg' style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
-				<?php } ?>
+				<?php #} ?>
 				</div>
-			</form>
+			</form-->
 			
 			<?php if($quote_data['project_category'] == 1) { ?>			
 			<form>
@@ -1606,6 +1606,7 @@ if (get_default_currency()) {
 	
 	<?php if($this->userdata['role_id'] != 8):?>
 	<div id="jv-tab-5">
+	<div id="load-customer">
 		<form id="customer-detail-read-only" onsubmit="return false;">
 		
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -1613,7 +1614,21 @@ if (get_default_currency()) {
 		<table class="tabbed-cust-layout" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="120"><label>Company Name</label></td>
-					<td><b><?php echo $company_det['company'] ?></b></td>
+					<td>
+						<b>
+							<?php #echo $company_det['company'] ?>
+							<input type="text" style="width:180px;" name="customer_company_name" id="customer_company_name" class="pull-left textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> />
+							<input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
+							<input type="hidden" name="customer_id_old" id="customer_id_old" value="<?php echo $quote_data['custid_fk'] ?>" />
+							<input type="hidden" name="customer_company_name_old" id="customer_company_name_old" class="textfield width300px" value="<?php echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" />
+							<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+							<div class="buttons pull-left">
+								<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setCustomer(); return false;">Set</button>
+							</div>
+							<div id="resmsg_customer" class='pull-left succ_err_msg' style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+							<?php } ?>
+						</b>
+					</td>
 				</tr>
 				<tr>
 					<td><label>Address Line 1</label></td>
@@ -1703,6 +1718,7 @@ if (get_default_currency()) {
 				</tbody>
 			</table>
 		</form>
+	</div><!-- id: load-customer end -->
 	</div><!-- id: jv-tab-5 end -->
 			
 	
@@ -2159,32 +2175,6 @@ $(document).ready(function(){
 			$(this).parent().next().next().children('.js_view_access').prop("checked",false);
 		}
 	})
-	
-	$( "#customer_company_name" ).autocomplete({
-		minLength: 2,
-		source: function(request, response) {
-			$.ajax({ 
-				url: "hosting/ajax_customer_search",
-				data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-				type: "POST",
-				dataType: 'json',
-				async: false,
-				success: function(data) {
-					response( data );
-				}
-			});
-		},
-		select: function(event, ui) {
-			$('#customer_id').val(ui.item.id);
-			// ex_cust_id = ui.item.id;
-			// regId = ui.item.regId;
-			// cntryId = ui.item.cntryId;
-			// stId = ui.item.stId;
-			// locId = ui.item.locId;
-			// prepareQuoteForClient(ex_cust_id);
-			// getUserForLeadAssign(regId,cntryId,stId,locId);
-		}
-	});
 	
 });  
   

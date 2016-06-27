@@ -104,7 +104,7 @@ $(document).ready(function(){
       $('.modal-new-cust').click(function(){
            $.blockUI({
                         message:nc_form_msg,
-                        css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+                        css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
                         overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
                     });
             $.get(
@@ -803,8 +803,8 @@ h3 .small {
                 <div>
                     <p><label>Start by typing in <strong>company name</strong>.</label></p>
                     <p><input type="text" name="ex_cust_name" id="ex-cust-name" class="textfield width300px" /></p>
-                    <!--p class="notice width250px">If this is a new customer you need to add the<br /> customer
-                    by <a href="#" class="modal-new-cust">completing their details</a>.</p-->
+                    <p class="notice width250px">If this is a new customer you need to add the<br /> customer
+                    by <a href="#" class="modal-new-cust">completing their details</a>.</p>
                     <p><label>Lead Title</label></p>
                     <p><input type="text" name="lead_title" id="lead_title" class="textfield width300px" onkeyup="$('.q-quote-items .quote-title span').html(this.value);" /></p>
 					<p><label>Lead Source</label></p>
