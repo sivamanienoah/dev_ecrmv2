@@ -242,8 +242,7 @@ class Project_model extends crm_model
 		$res1 = $sql->result_array();
 		if (empty($res1)) {
 			$chge_access = 0;
-		}
-		else {
+		} else {
 			$chge_access = 1;
 		}
 		return $chge_access;
