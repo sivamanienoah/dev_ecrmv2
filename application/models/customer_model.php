@@ -454,8 +454,8 @@ class Customer_model extends crm_model {
     
     function delete_customer($id) 
 	{
-        $this->db->where('custid', $id);
-        $this->db->delete($this->cfg['dbpref'] . 'customers');
+        $this->db->where('companyid', $id);
+        $this->db->delete($this->cfg['dbpref'] . 'customers_company');
         return TRUE;
     }
     
@@ -554,11 +554,31 @@ class Customer_model extends crm_model {
 	*@table    leads
 	*@return as Json response
 	*/
-	public function check_customer_status($data=array()) { 
+	public function check_customer_status($data=array()) {
+		//get custid from customer table
 		$id = $data['data'];
+		
+		$res = array();
+		$query = 1;
+		
+		$this->db->select('custid');
+		$this->db->where('company_id', $id);
+		$sql = $this->db->get($this->cfg['dbpref'].'customers');
+        $custid = $sql->result_array();
+		if(!empty($custid)){
+			foreach($custid as $rec)
+			$custids[]= $rec['custid'];
+		}
+		
+		/* $id = $data['data'];
 		$this->db->where('custid_fk', $id);
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
-		$res = array();
+		$res = array(); */
+		
+		if(!empty($custids)){
+			$this->db->where_in('custid_fk', $custids);
+			$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		}
 		if($query == 0) {
 			$res['html'] = "YES";
 		} else {
@@ -1341,14 +1361,16 @@ class Customer_model extends crm_model {
     
 	function customer_contact_list($customers)
 	{
-		foreach($customers as $list)
-		{
-			$company_id[]=$list['companyid'];
+		if(!empty($customers)){
+			foreach($customers as $list){
+				$company_id[] = $list['companyid'];
+			}
 		}
 		
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref']."customers");
 		$this->db->join($this->cfg['dbpref'].'customers_company', $this->cfg['dbpref'].'customers_company.companyid = '.$this->cfg['dbpref'].'customers.company_id');
+		if(!empty($company_id))
 		$this->db->where_in('company_id',$company_id);
 		
 		$query = $this->db->get();

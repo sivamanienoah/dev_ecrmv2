@@ -360,7 +360,21 @@ class Customers extends crm_controller {
 			if (preg_match('/^[0-9]+$/', $id)) 
 			{
 				// check to see if this customer has a job on the system before deleting
-				$leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
+				$this->db->select('custid');
+				$this->db->where('company_id', $id);
+				$sql = $this->db->get($this->cfg['dbpref'].'customers');
+				$custid = $sql->result_array();
+				if(!empty($custid)){
+					foreach($custid as $rec)
+					$custids[]= $rec['custid'];
+				}
+				
+				if(!empty($custids)){
+					$this->db->where_in('custid_fk', $custids);
+					$leads = $this->db->get($this->cfg['dbpref'].'leads');
+				}
+				
+				// $leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
 				if ($leads->num_rows() > 0) 
 				{
 					$this->session->set_flashdata('login_errors', array('Cannot delete customer with exiting lead records!'));
@@ -725,7 +739,8 @@ class Customers extends crm_controller {
 	function ajax_chk_status_customer()
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
-		$this->customer_model->check_customer_status($data);
+		$res = $this->customer_model->check_customer_status($data);
+		echo "<pre>"; print_r($res); die;
 	}
 	
 	function import_customers()
