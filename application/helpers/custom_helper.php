@@ -282,3 +282,32 @@ if ( ! function_exists('get_practice_max_hour_by_financial_year')){
 		}	
 	}
 }
+/*Get timesheet hours based on username, month and year*/
+if ( ! function_exists('get_timesheet_hours_by_user')){
+	function get_timesheet_hours_by_user($usename=false,$year=false,$month=false,$included_leave=false,$not_included_non_billable=false,$not_included_internal=false){
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+	
+		$qry="";
+		if($usename && $year && $month){
+			
+			$qry .="SELECT sum(duration_hours) as hours FROM ".$CI->cfg['dbpref']."timesheet_data WHERE username='$usename' and entry_month='$month' and entry_year=$year";
+			if($included_leave && is_array($included_leave)){
+				$included_leave=implode(',',$included_leave);
+				$qry .=" and project_code not in ('$included_leave')";
+			}
+			if($not_included_non_billable==true){
+				$qry .=" and resoursetype not in ('Non-Billable')";
+			}
+			if($not_included_internal==true){
+				$qry .=" and resoursetype not in ('Internal')";
+			}
+			$qry_project = $CI->db->query($qry);
+			if($qry_project->num_rows()>0) {
+				$result = $qry_project->result_array();
+				return $result[0]['hours'];
+			}	
+			
+		}	
+	}
+}
