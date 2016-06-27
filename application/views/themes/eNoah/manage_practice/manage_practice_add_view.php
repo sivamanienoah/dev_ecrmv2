@@ -28,7 +28,7 @@
 					</td>
 				</tr>
 				<tr>
-                    <td>Max Hours: * </td>
+                    <td>Max Hours for resource per month: * </td>
 					<td>
 						<?php
 						if($this->validation->max_hours==0){
