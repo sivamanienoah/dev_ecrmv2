@@ -4030,7 +4030,7 @@ HDOC;
 			$to				 = implode(',',$arrayEmails['account_emails']);
 			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
 			$subject		 = 'Generate Invoice Notification';
-			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['first_name'].' '.$project_details[0]['last_name'];
+			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['customer_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
 			$project_id	 	 = $project_details[0]['invoice_no'];
 			$project_code	 = $project_details[0]['pjt_id'];
