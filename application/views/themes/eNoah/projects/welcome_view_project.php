@@ -1810,6 +1810,9 @@ if (get_default_currency()) {
 											break;
 										}
 									}
+								
+									$individual_billable_hrs = $value3['total_hours'];
+									
 									// calculation for the utilization cost based on the master hours entered.
 									$rate1 = $rate;
 									if($individual_billable_hrs>$max_hours){
