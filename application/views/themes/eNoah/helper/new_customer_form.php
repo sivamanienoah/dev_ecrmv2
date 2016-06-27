@@ -20,7 +20,9 @@
                     <td>Company:*</td>
 					<td>
 						<input type="text" id="company_name" name="company" value="" class="textfield width200px required" /><a class="clr-icon"></a>
-						<input type="hidden" id="company_id" name="company_id" value="" class="textfield width200px required" /> 
+						<input type="hidden" id="company_id" name="company_id" value="" class="textfield width200px required" />
+						<br />
+						<span class="company_name_err_msg text-danger"></span>
 					</td>
 				</tr>
 				<tr>
@@ -58,7 +60,8 @@
 							<select id="add1_country" name="add1_country" class="textfield width200px required" >
 							<option value="0">Select Country</option>                           
 							</select>
-						<a class="addNew" id="addButton" style ="display:none;"></a>	
+						<a class="addNew" id="addButton" style ="display:none;"></a>
+						<br />
 						</td>
 					<?php } ?>
 				</tr>
@@ -72,6 +75,8 @@
 								<option value="0">Select State</option>                           
 							</select>
 						<a id="addStButton" class="addNew" style ="display:none;"></a>
+						<br />
+						<span class="add1_state_err_msg text-danger"></span>
 						</td>
 					<?php } ?>
 					<td>Location:*</td>
@@ -79,11 +84,14 @@
 						<td width="240" id="def_loc"></td> 
 					<?php } else { ?>
 						<td id='location_row'>
-							<select name="add1_location" class="textfield width200px required">
+							<select name="add1_location" id="add1_location" class="textfield width200px required">
 							<option value="0">Select Location</option>                           
 							</select>
 						<a id="addLocButton" class="addNew" style ="display:none;"></a>
+						<br />
+						<span class="add1_location_err_msg text-danger"></span>
 						</td>
+						
 					<?php } ?>
 				</tr>
 				<tr>                  
@@ -216,7 +224,39 @@ $(document).ready(function() {
 function add_customer() 
 {
 	var err=false;
+	$('.add1_location_err_msg, .add1_region_err_msg, .add1_country_err_msg, .add1_state_err_msg').remove();
 	
+	if($('#company_name').val()==""){
+		err = true;
+		$('.company_name_err_msg').html("This field is required");
+	} else {
+		$('.company_name_err_msg').html('');
+	}
+	if($('#add1_region').val()==0){
+		err = true;
+		// $('.add1_region_err_msg').html("This field is required");
+		$("#add1_region").parent().append('<div class="add1_region_err_msg text-danger" style="width: 100%; display: inline-block;">This field is required</div>');
+	} else {
+		$('.add1_region_err_msg').html('');
+	}
+	if($('#add1_country').val()==0){
+		err = true;
+		$("#add1_country").parent().append('<div class="add1_country_err_msg text-danger" style="width: 100%; display: inline-block;">This field is required</div>');
+	} else {
+		$('.add1_country_err_msg').html('');
+	}
+	if($('#add1_state').val()==0){
+		err = true;
+		$("#add1_state").parent().append('<div class="add1_state_err_msg text-danger" style="width: 100%; display: inline-block;">This field is required</div>');
+	} else {
+		$('.add1_state_err_msg').html('');
+	}
+	if($('#add1_location').val()==0){
+		err = true;
+		$("#add1_location").parent().append('<div class="add1_location_err_msg text-danger" style="width: 100%; display: inline-block;">This field is required</div>');
+	} else {
+		$('.add1_location_err_msg').html('');
+	}
 	if($('#contact_first_name').val()==""){
 		err = true;
 		$('.first_name_err_msg').html("This field is required");
