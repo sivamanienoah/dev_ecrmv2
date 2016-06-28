@@ -145,6 +145,7 @@ class Dashboard extends crm_controller
 
 		$member_ids = $this->input->post("member_ids");
 		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)) {
+			
 			$mids = "'".implode("','",$member_ids)."'";
 			if(count($member_ids)>0 && !empty($member_ids)) {
 				$data['member_ids'] = $member_ids;
@@ -154,11 +155,12 @@ class Dashboard extends crm_controller
 			$data['member_ids_selected'] = $qry1->result();			
 		}
 		
+		
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 		$json = '';
 		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
+		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
@@ -170,6 +172,9 @@ class Dashboard extends crm_controller
 		$check_user_array   = array();
 		$arr_depts1		    = array();
 		$arr_user_avail_set = array();
+		/* echo "<pre>";
+		print_r($data['resdata']);
+		echo "</pre>"; */
 		
 		// get all departments from timesheet
 		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
