@@ -262,7 +262,6 @@ if ( ! function_exists('get_practice_max_hour_by_financial_year')){
 	function get_practice_max_hour_by_financial_year($practice_id=false,$financial_year=false){
 		$CI   	    = get_instance();
 		$cfg	    = $CI->config->item('crm'); /// load config
-		echo '<br>'.$practice_id.'<br>'.$financial_year; 
 		if($practice_id && $financial_year){
 			$CI->db->order_by("id","desc");
 			$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id,'financial_year' => $financial_year))->row();
