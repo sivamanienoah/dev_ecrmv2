@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+//error_reporting(E_ALL);
 class Project extends crm_controller {
 	
 	public $cfg;
@@ -3561,7 +3561,7 @@ HDOC;
 				}
 				
 				if(!empty($rec['pjt_id'])){
-					$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
+					$timesheet = $this->project_model->get_timesheet_data_updated($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
 				}
 				
 				$total_amount_inv_raised = 0;
@@ -3577,10 +3577,7 @@ HDOC;
 				$total_hours = 0;
 				$total_dc_hours = 0;
 				
-				/* echo $rec['lead_title'];
-				echo "<pre>"; print_r($timesheet); */
-				
-				if(count($timesheet)>0) {
+				/* if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
 						$total_cost  += $ts['duration_cost'];
 						$total_hours += $ts['duration_hours'];
@@ -3597,9 +3594,109 @@ HDOC;
 							break;
 						}
 					}
-				}
+				} */
 				
-				// $total_cost = $this->conver_currency($total_cost, $rates[1][$this->default_cur_id]);
+				/* calculation for UC based on the max hours starts */
+				$timesheet_data = array();
+				if(count($timesheet)>0) {
+					foreach($timesheet as $ts) { 
+						$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
+						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
+						
+						$timesheet_data[$ts['username']]['practice_id'] = $ts['practice_id'];
+						$timesheet_data[$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+						$directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_cost'] = $ts['duration_direct_cost'];
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+						
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
+					
+					}
+				}
+				$total_billable_hrs		= 0;
+				$total_non_billable_hrs = 0;
+				$total_internal_hrs		= 0;
+				$total_cost				= 0;
+				$total_hours				= 0;
+				$total_dc_hours				= 0;
+				if(count($timesheet_data)>0 && !empty($timesheet_data)){
+					foreach($timesheet_data as $key1=>$value1) {
+						$resource_name = $key1;
+						$max_hours = $value1['max_hours'];
+						foreach($value1 as $key2=>$value2) {
+							$year = $key2;
+							foreach($value2 as $key3=>$value3) {
+								$individual_billable_hrs		= 0;
+								$month		 	  = $key3;
+								$billable_hrs	  = 0;
+								$non_billable_hrs = 0;
+								$internal_hrs	  = 0;
+								foreach($value3 as $key4=>$value4) {
+									
+									switch($key4) {
+										case 'Billable':
+											$rate				 = $value4['rateperhr'];
+											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											$billable_hrs		 = $value4['duration'];
+											$direct_billable_hrs		 = $value4['duration_direct_cost'];
+											$total_billable_hrs += $billable_hrs;
+										break;
+										case 'Non-Billable':
+											$rate				 = $value4['rateperhr'];
+											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											$non_billable_hrs		 = $value4['duration'];
+											$direct_non_billable_hrs		 = $value4['duration_direct_cost'];
+											$total_non_billable_hrs += $non_billable_hrs;
+										break;
+										case 'Internal':
+											$rate				 = $value4['rateperhr'];
+											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											$internal_hrs 		 = $value4['duration'];
+											$direct_internal_hrs		 = $value4['duration_direct_cost'];
+											$total_internal_hrs += $internal_hrs;
+										break;
+									}
+								}
+							
+								$individual_billable_hrs = $value3['total_hours'];
+								 
+								// calculation for the utilization cost based on the master hours entered.
+
+								$rate1 = $rate;
+								$direct_rateperhr1 = $direct_rateperhr;
+								if($individual_billable_hrs>$max_hours){
+									//echo 'max'.$max_hours.'<br>';
+									$percentage = ($max_hours/$individual_billable_hrs);
+									//echo 'percentage'.$percentage.'<br>';
+									$rate1 = number_format(($percentage*$rate),2);
+									$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+								}
+							 
+								$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;
+								//$total_dc_hours += $direct_billable_hrs+$direct_non_billable_hrs+$direct_internal_hrs;
+								$total_dc_hours += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
+								$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
+								/* echo '----<br>';
+								echo 'total_billable_hrs'.$total_billable_hrs.'<br>';
+								echo 'total_non_billable_hrs'.$total_non_billable_hrs.'<br>';
+								echo 'total_internal_hrs'.$total_internal_hrs.'<br>';
+								echo 'ind'.$individual_billable_hrs.'<br>';
+								echo 'max'.$max_hours.'<br>';
+								echo 'rate'.$rate1.'<br>';
+								echo 'total_hours'.$total_hours.'<br>';
+								echo 'total_cost'.$total_cost.'<br>';
+								echo '----<br>';	 */						
+							}
+						}
+					}	 
+				}	 
+				/* calculation for UC based on the max hours ends */
+				
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				// for company name
@@ -3642,9 +3739,7 @@ HDOC;
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
-				
 			}
-			// echo "<pre>"; print_r($data['project_record']); exit;
 		endif;
 		return $data['project_record'];
 	}

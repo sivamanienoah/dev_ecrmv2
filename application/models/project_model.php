@@ -555,24 +555,6 @@ class Project_model extends crm_model
 			break;
 		}
 
-		/* $timesheet_db = $this->load->database('timesheet', TRUE);
-		
-		$sql = "SELECT ROUND((ct.direct_cost + ct.overheads_cost), 2) as cost, Monthname(t.start_time) as month_name, YEAR(t.start_time) as yr, u.emp_id, u.first_name, u.last_name, u.username, t.start_time AS start_time_str, t.end_time AS end_time_str, SUM((t.duration/60)) as Duration, t.resoursetype, WEEK(t.start_time) AS Week, p.project_type_id, pt.project_type_name
-		FROM ".$timesheet_db->dbprefix('user')." AS u
-		LEFT JOIN ".$timesheet_db->dbprefix('times')." AS t ON t.uid = u.username
-		LEFT JOIN ".$timesheet_db->dbprefix('user_cost')." as ct ON ct.employee_id = u.emp_id AND ct.month=MONTH(t.start_time) AND ct.year=YEAR(t.start_time) 
-		LEFT JOIN ".$timesheet_db->dbprefix('project')." as p ON p.proj_id = t.proj_id
-		LEFT JOIN ".$timesheet_db->dbprefix('project_types')." as pt ON pt.project_type_id = p.project_type_id
-		WHERE ((DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."')) AND p.project_code = '".$pjt_code."'
-		GROUP BY cost, u.first_name, u.last_name, u.username, month_name, t.resoursetype
-		ORDER BY yr, month_name, Week, u.first_name, u.last_name, u.username, t.resoursetype, WEEKDAY(t.start_time)";
-		
-		// echo $sql; EXIT;
-		$query = $timesheet_db->query($sql);
-		return $query->result_array(); */
-
-		// $where_condn = " ((DATE(ts.start_time) >= '".$start_date."') AND (DATE(ts.end_time) <= '".$end_date."')) ";
-		
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
 		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
@@ -591,6 +573,44 @@ class Project_model extends crm_model
 		
 		return $query->result_array();
 	}
+	
+	public function get_timesheet_data_updated($pjt_code, $lead_id, $bill_type, $st_date=false, $groupby_type)
+	{
+		//$bill_type == 3 for view the particular month metrics data
+		$start_date = $end_date = '';
+		switch($bill_type){
+			case 1:	
+				$start_date = '2006-01-01';
+				$end_date   = date('Y-m-d');
+			break;
+			case 2:
+				$start_date = date('Y-m-01');
+				$end_date   = date('Y-m-d');
+			break;
+			case 3:
+				$start_date = $st_date;
+				$end_date   = date(('Y-m-t'), strtotime($st_date));
+			break;
+		}
+
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		$this->db->where("ts.project_code",$pjt_code);
+		$this->db->where("DATE(ts.start_time) >= ",$start_date);
+		$this->db->where("DATE(ts.end_time) <= ",$end_date);
+		if($groupby_type == 1) {
+			$this->db->group_by(array("ts.resoursetype"));
+		} else if($groupby_type == 2) {
+			$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		}
+		
+		$query = $this->db->get();
+		
+		// echo $this->db->last_query() . "<br />"; exit;
+		
+		return $query->result_array();
+	}	
 	
 	/*
 	 *@method get_timesheet_project_type
