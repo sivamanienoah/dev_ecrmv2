@@ -744,7 +744,7 @@ class Customers extends crm_controller {
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
 		$res = $this->customer_model->check_customer_status($data);
-		echo "<pre>"; print_r($res); die;
+		// echo "<pre>"; print_r($res); die;
 	}
 	
 	function import_customers()
