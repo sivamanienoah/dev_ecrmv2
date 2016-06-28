@@ -262,7 +262,7 @@ if ( ! function_exists('get_practice_max_hour_by_financial_year')){
 	function get_practice_max_hour_by_financial_year($practice_id=false,$financial_year=false){
 		$CI   	    = get_instance();
 		$cfg	    = $CI->config->item('crm'); /// load config
-		if($practice_id){
+		if($practice_id && $financial_year){
 			$CI->db->order_by("id","desc");
 			$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id,'financial_year' => $financial_year))->row();
 			
@@ -270,16 +270,19 @@ if ( ! function_exists('get_practice_max_hour_by_financial_year')){
 			if(count($result)>0 && !empty($result)){
 				return $result;
 			}else{
-				$CI->db->order_by("id","desc");
-				$qry 	    = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id))->row();
-				$result = $qry; 
-				if(count($result)>0 && !empty($result)){
-					return $result;
-				}else{
-					return array();
-				}
+				return array();
 			}
-		}	
+		}else if($practice_id){
+			$CI->db->order_by("id","desc");
+			$CI->db->limit(1);
+			$qry = $CI->db->get_where($CI->cfg['dbpref']."practice_max_hours_history", array('practice_id'=>$practice_id))->row();
+			$result = $qry; 
+			if(count($result)>0 && !empty($result)){
+				return $result;
+			}else{
+				return array();
+			}
+		}
 	}
 }
 /*Get timesheet hours based on username, month and year*/
