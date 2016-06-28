@@ -578,6 +578,10 @@ class Customer_model extends crm_model {
 		if(!empty($custids)){
 			$this->db->where_in('custid_fk', $custids);
 			$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		} else {
+			$res['html'] = "YES";
+			echo json_encode($res);
+			exit;
 		}
 		if($query == 0) {
 			$res['html'] = "YES";
