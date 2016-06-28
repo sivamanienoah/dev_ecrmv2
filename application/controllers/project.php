@@ -233,7 +233,7 @@ class Project extends crm_controller {
 		// echo $this->db->last_query(); exit;
 		// echo "<pre>"; print_r($getProjects); die;
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		
+		// echo "<pre>"; print_r($data['pjts_data']); die;
 		//for field restriction
 		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
 		if(!empty($db_fields) && count($db_fields)>0) {
@@ -604,7 +604,9 @@ class Project extends crm_controller {
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
 					if(isset($ts['cost'])) {
-						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],'2015-2016',$ts['month_name'],$ts['yr']);
+						$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
+						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
+						echo $max_hours_resource;exit;
 						$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
 						$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
@@ -3559,7 +3561,7 @@ HDOC;
 				}
 				
 				if(!empty($rec['pjt_id'])){
-					$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=1);
+					$timesheet = $this->project_model->get_timesheet_data($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
 				}
 				
 				$total_amount_inv_raised = 0;
@@ -3575,7 +3577,8 @@ HDOC;
 				$total_hours = 0;
 				$total_dc_hours = 0;
 				
-				// echo "<pre>"; print_r($timesheet); die;
+				/* echo $rec['lead_title'];
+				echo "<pre>"; print_r($timesheet); */
 				
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) {
