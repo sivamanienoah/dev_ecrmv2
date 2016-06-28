@@ -606,7 +606,7 @@ class Project extends crm_controller {
 					if(isset($ts['cost'])) {
 						$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
 						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
-						echo $max_hours_resource;exit;
+						
 						$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
 						$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
