@@ -307,7 +307,7 @@ if ( ! function_exists('get_timesheet_hours_by_user')){
 				$qry .=" and resoursetype not in ('Internal')";
 			}
 			$qry_project = $CI->db->query($qry);
-			echo $CI->db->last_query().'<br>';
+			//echo $CI->db->last_query().'<br>';
 			if($qry_project->num_rows()>0) {
 				$result = $qry_project->result_array();
 				return $result[0]['hours'];
