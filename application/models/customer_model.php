@@ -454,6 +454,9 @@ class Customer_model extends crm_model {
     
     function delete_customer($id) 
 	{
+		$this->db->where('company_id', $id);
+        $this->db->delete($this->cfg['dbpref'] . 'customers');
+		
         $this->db->where('companyid', $id);
         $this->db->delete($this->cfg['dbpref'] . 'customers_company');
         return TRUE;
