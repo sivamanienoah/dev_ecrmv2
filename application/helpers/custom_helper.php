@@ -298,7 +298,7 @@ if ( ! function_exists('get_timesheet_hours_by_user')){
 			$qry .="SELECT sum(duration_hours) as hours FROM ".$CI->cfg['dbpref']."timesheet_data WHERE username='$usename' and entry_month='$month' and entry_year=$year";
 			if($included_leave && is_array($included_leave)){
 				$included_leave=implode(',',$included_leave);
-				$qry .=" and project_code not in ($included_leave)";
+				$qry .=" and project_code not in ('$included_leave')";
 			}
 			if($not_included_non_billable==true){
 				$qry .=" and resoursetype not in ('Non-Billable')";
