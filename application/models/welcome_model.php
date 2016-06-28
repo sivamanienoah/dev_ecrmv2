@@ -669,8 +669,16 @@ class Welcome_model extends crm_model {
 				}
 					if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
 					$lead_status = array_diff($lead_status, array('5'));
-					$this->db->where('j.move_to_project_status', 1);
-					$this->db->or_where_in('j.lead_status', $lead_status);
+					// $this->db->where('j.move_to_project_status', 1);
+					// $this->db->or_where_in('j.lead_status', $lead_status);
+					$wh = '(';
+					if(!empty($lead_status)){
+						foreach($lead_status as $ls){
+							$wh .= 'j.lead_status = '.$ls;
+						}
+					}
+					$wh .= 'OR (j.move_to_project_status = 1) )'
+					$this->db->where($wh);
 				}
 			}
 			
