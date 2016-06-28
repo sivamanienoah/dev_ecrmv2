@@ -372,6 +372,10 @@ class Customers extends crm_controller {
 				if(!empty($custids)){
 					$this->db->where_in('custid_fk', $custids);
 					$leads = $this->db->get($this->cfg['dbpref'].'leads');
+				} else {
+					$this->customer_model->delete_customer($id);
+					$this->session->set_flashdata('confirm', array('Customer Record Deleted!'));
+					redirect('customers');
 				}
 				
 				// $leads = $this->db->get_where($this->login_model->cfg['dbpref'] . 'leads', array('custid_fk' => $id));
