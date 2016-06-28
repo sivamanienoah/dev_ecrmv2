@@ -96,7 +96,7 @@ class Project extends crm_controller {
 			$inputData = real_escape_array($this->input->post());			
 			// echo "<pre>"; print_r($inputData); exit;
 			$pjtstage 	= $inputData['pjtstage'];
-			$cust     	= $inputData['cust'];
+			$cust     	= $inputData['customer'];
 			$service 	= $inputData['service'];
 			$practice 	= $inputData['practice'];
 			$keyword  	= $inputData['keyword'];
