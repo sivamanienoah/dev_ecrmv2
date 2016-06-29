@@ -75,7 +75,8 @@ class Service_dashboard_cron extends crm_controller
 		$this->db->where('p.status', 1);
 		//BPO practice are not shown in IT Services Dashboard
 		$practice_not_in = array(6,13);
-		$this->db->where_not_in('p.id', $practice_not_in);
+		//$this->db->where_not_in('p.id', $practice_not_in);
+		$this->db->where_in('p.id', array(1));
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
@@ -231,17 +232,24 @@ class Service_dashboard_cron extends crm_controller
 		}
 		$projects['eff_var']   = $effvar;
 
-		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
+		$contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_month
 		FROM crm_timesheet_data 
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')";
 		
 		$sql1 = $this->db->query($contribution_query);
 		$contribution_data = $sql1->result();
+		$directcost_username = array();
 		if(!empty($contribution_data)) {
 			foreach($contribution_data as $cdrow){
 				$directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] + $cdrow->resource_duration_direct_cost;
+				$directcost_username[$practice_arr[$cdrow->practice_id]][$cdrow->username][$cdrow->entry_month] += $cdrow->duration_hours;
 			}
 		}
+		echo '<pre>';
+		print_r($directcost_username);
+		print_r($contribution_data);
+		print_r($directcost);
+		exit;
 		$projects['direct_cost']   = $directcost;
 		
 		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
@@ -259,7 +267,7 @@ class Service_dashboard_cron extends crm_controller
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects;
 		
-		// echo "<pre>"; print_r($projects); echo "</pre>";
+		
 		
 		$ins_array = array();
 		$tot = array();
@@ -268,15 +276,14 @@ class Service_dashboard_cron extends crm_controller
 		if(!empty($practice_array)){
 			
 			//truncate the table & inserting the practices name from table.
-			$this->db->truncate($this->cfg['dbpref'].'services_dashboard');
-			
+			$this->db->truncate($this->cfg['dbpref'].'services_dashboard');			 
 			foreach($practice_array as $parr){
 				$ins_data['practice_name'] = $parr;
 				$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
 			}
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
-			
+			 
 			foreach($practice_array as $parr){		
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
@@ -336,6 +343,7 @@ class Service_dashboard_cron extends crm_controller
 			$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $tot);
 			// echo $this->db->last_query();
 		}
+		/* echo "<pre>"; echo 'Projects - Array'.print_r($projects);echo 'ins_data - Array'.print_r($ins_data); echo 'tot_data - Array'.print_r($tot); echo "</pre>"; */
 	}
 	
 	/*
