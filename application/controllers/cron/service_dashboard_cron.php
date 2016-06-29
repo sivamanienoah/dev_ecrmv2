@@ -245,11 +245,11 @@ class Service_dashboard_cron extends crm_controller
 				$directcost_username[$practice_arr[$cdrow->practice_id]][$cdrow->username][$cdrow->entry_month] += $cdrow->duration_hours;
 			}
 		}
-		echo '<pre>';
+		/* echo '<pre>';
 		print_r($directcost_username);
 		print_r($contribution_data);
 		print_r($directcost);
-		exit;
+		exit; */
 		$projects['direct_cost']   = $directcost;
 		
 		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
