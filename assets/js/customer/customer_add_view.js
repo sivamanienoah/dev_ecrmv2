@@ -342,23 +342,24 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 					}
 				}          
 			});
-			
-			
 		}
-	} /* else {
+	} else {
 		$(thisRow).remove();
 		
 		if($('#document_tbl tbody tr').length<=1){
 			$('#document_tbl .del_file').hide();
 			$('#document_tbl .createBtn').show();
 		}
-	} */
+	}
+	$("#document_tbl tbody tr").each(function(){
+		$("#document_tbl tbody tr:last").find('.createBtn').show();
+	})
 });
 
 
 $("#document_tbl tbody tr").each(function(){
 	$("#document_tbl tbody tr:last").find('.createBtn').show();
-	$("#document_tbl tbody tr:last").find('.del_file').hide();
+	// $("#document_tbl tbody tr:last").find('.del_file').hide();
 });
 if($('#document_tbl tbody tr').length<=1){
 	$('#document_tbl .del_file').hide();
