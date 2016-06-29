@@ -290,7 +290,7 @@ $('#document_tbl').delegate( '#addRow', 'click', function () {
 		obj.find("#deleteRow").attr('hyperid','0'); 
 		// obj.find("td").find('.hyperlink_name').attr('placeholder','eg: http://www.google.com || https://google.com');
 		obj.find('.createBtn').show();
-		obj.find('.del_file').hide();
+		// obj.find('.del_file').hide();
 });
 
 $('#document_tbl').delegate( '.del_file', 'click', function () {
