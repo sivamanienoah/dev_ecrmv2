@@ -333,7 +333,7 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 						}); */
 						$(thisRow).remove();
 						$("#document_tbl tbody tr:last").find('.createBtn').show();
-						$("#document_tbl tbody tr:last").find('.del_file').hide();
+						// $("#document_tbl tbody tr:last").find('.del_file').hide();
 						if($('#document_tbl tbody tr').length<=1){
 							$('#document_tbl .del_file').hide();
 							$('#document_tbl .createBtn').show();
