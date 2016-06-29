@@ -45,6 +45,18 @@ button.ui-datepicker-current { display: none; }
 			<form name="customer_detail_form" id="customer_detail_form" method="post" onsubmit="return false;">
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			<input type="hidden" name="companyid" value="<?php echo $customer_data['companyid'] ?>" />
+			<?php
+				if(!empty($sales_person_detail)) {
+					$sales_contact_name      = $sales_person_detail['first_name'].' '.$sales_person_detail['last_name'];
+					$sales_contact_userid_fk = $sales_person_detail['userid'];
+					$sales_contact_email     = $sales_person_detail['email'];
+				} else {
+					$sales_contact_name      = $username['first_name'].' '.$username['last_name'];
+					$sales_contact_userid_fk = $username['userid'];
+					$sales_contact_email     = $username['email'];
+				}
+			?>
+			<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
 			<table class="layout">
 				<!--tr>
 					<td width="100"><strong>First name:*</strong></td>
@@ -125,26 +137,14 @@ button.ui-datepicker-current { display: none; }
 					<td><strong>Web:</strong></td>
 					<td><input type="text" name="www" value="<?php echo $customer_data['www']; ?>" class="textfield width200px required" /></td>
 				</tr>
-				<tr>
+				<!--tr>
 					<td><strong>Sales Contact Name:</strong></td>
 					<td>
-						<?php
-							if(!empty($sales_person_detail)) {
-								$sales_contact_name      = $sales_person_detail['first_name'].' '.$sales_person_detail['last_name'];
-								$sales_contact_userid_fk = $sales_person_detail['userid'];
-								$sales_contact_email     = $sales_person_detail['email'];
-							} else {
-								$sales_contact_name      = $username['first_name'].' '.$username['last_name'];
-								$sales_contact_userid_fk = $username['userid'];
-								$sales_contact_email     = $username['email'];
-							}
-						?>
-						<input type="text" name="sales_contact_name" value="<?php echo $sales_contact_name; ?>" class="textfield width200px" readonly />
-						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
+						<input type="text" name="sales_contact_name" value="<?php #echo $sales_contact_name; ?>" class="textfield width200px" readonly />
 					</td>
                     <td><strong>Sales Contact Email:</strong></td>
-					<td><input type="text" name="sales_contact_email" value="<?php echo $sales_contact_email; ?>" class="textfield width200px" readonly /></td>
-				</tr>
+					<td><input type="text" name="sales_contact_email" value="<?php #echo $sales_contact_email; ?>" class="textfield width200px" readonly /></td>
+				</tr-->
 				<tr>
 					<td colspan='4'>
 						<table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >

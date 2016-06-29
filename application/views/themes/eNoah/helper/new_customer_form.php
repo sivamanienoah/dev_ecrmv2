@@ -7,6 +7,7 @@
 <p>All mandatory fields marked * must be filled in correctly.</p><p class="error-cont" style="display:none;">&nbsp;</p>
 		<form name="customer_detail_form" id="customer_detail_form" method="post" onsubmit="return false;">
 		<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $usernme['userid']; ?>" class="textfield width200px" readonly />
 			<table class="layout">
 				<!--tr>
 					<td width="100">First name:*</td>
@@ -110,17 +111,16 @@
                    <td>Web:</td>
 					<td><input type="text" id="www" name="www" value="" class="textfield width200px required" />
 				</tr>
-				<tr>
+				<!--tr>
 					<td>Sales Contact Name:</td>
 					<td>
-						<input type="text" name="sales_contact_name" value="<?php echo $usernme['first_name'].' '.$usernme['last_name']; ?>" class="textfield width200px" readonly />
-						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $usernme['userid']; ?>" class="textfield width200px" readonly />
+						<input type="text" name="sales_contact_name" value="<?php #echo $usernme['first_name'].' '.$usernme['last_name']; ?>" class="textfield width200px" readonly />
 					</td>
                     <td>Sales Contact Email:</td>
 					<td>
-					<input type="text" name="sales_contact_email" value="<?php echo $usernme['email']; ?>" class="textfield width200px" readonly />
+					<input type="text" name="sales_contact_email" value="<?php #echo $usernme['email']; ?>" class="textfield width200px" readonly />
 					</td>
-				</tr>
+				</tr-->
 				<tr>
 					<tr>
 						<td colspan='4'>

@@ -176,29 +176,29 @@
                     <td colspan="2">&nbsp;</td>
 					<?php } ?>
 				</tr>
-				<tr>
+				<!--tr>
 					<td>Sales Contact Name:</td>
 					<td>
-						<?php if ($this->uri->segment(3) != 'update') { ?>
-							<input type="text" name="sales_contact_name" value="<?php echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
-						<?php } else { ?>
-							<?php if(!empty($sales_person_detail)) {
-									$login_sales_contact_name  = $sales_person_detail['first_name'].' '.$sales_person_detail['last_name'];
-									$login_sales_contact_email = $sales_person_detail['email'];
-								}
+						<?php #if ($this->uri->segment(3) != 'update') { ?>
+							<input type="text" name="sales_contact_name" value="<?php #echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+						<?php #} else { ?>
+							<?php #if(!empty($sales_person_detail)) {
+									#$login_sales_contact_name  = $sales_person_detail['first_name'].' '.$sales_person_detail['last_name'];
+									#$login_sales_contact_email = $sales_person_detail['email'];
+								#}
 							?>
-							<input type="text" name="sales_contact_name" value="<?php echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
-						<?php } ?>
-						<?php if ($this->uri->segment(3) != 'update') { ?>
-						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $usernme['userid']; ?>" class="textfield width200px" readonly />
-						<?php } else { ?>
-						<input type="hidden" name="sales_contact_userid_fk" value="<?php echo ($this->validation->sales_contact_userid_fk == 0) ? $usernme['userid'] : $this->validation->sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
-						<?php } ?>
+							<input type="text" name="sales_contact_name" value="<?php #echo $login_sales_contact_name; ?>" class="textfield width200px" readonly />
+						<?php #} ?>
+						<?php #if ($this->uri->segment(3) != 'update') { ?>
+						<input type="hidden" name="sales_contact_userid_fk" value="<?php #echo $usernme['userid']; ?>" class="textfield width200px" readonly />
+						<?php #} else { ?>
+						<input type="hidden" name="sales_contact_userid_fk" value="<?php #echo ($this->validation->sales_contact_userid_fk == 0) ? $usernme['userid'] : $this->validation->sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
+						<?php #} ?>
 					</td>
                     <td>Sales Contact Email:</td>
-					<td><input type="text" name="sales_contact_email" value="<?php echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
+					<td><input type="text" name="sales_contact_email" value="<?php #echo $login_sales_contact_email; ?>" class="textfield width200px" readonly />
 					</td>
-				</tr>
+				</tr-->
                 <tr>
 					<td valign="top">Comments:</td>
 

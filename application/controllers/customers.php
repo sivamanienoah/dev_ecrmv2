@@ -195,6 +195,7 @@ class Customers extends crm_controller {
 								// echo $this->db->last_query();
 							}else{
 								$cust_data['company_id']	=	$id;
+								$cust_data['sales_contact_userid_fk'] =	$this->userdata['userid'];
 								$batch_insert_data[]		=	$cust_data;
 							}
 						}
@@ -744,7 +745,7 @@ class Customers extends crm_controller {
 	{
 		$data =	real_escape_array($this->input->post()); // escape special characters
 		$res = $this->customer_model->check_customer_status($data);
-		// echo "<pre>"; print_r($res); die;
+		// echo $this->db->last_query(); die;
 	}
 	
 	function import_customers()
@@ -937,7 +938,7 @@ class Customers extends crm_controller {
 			$cmp_data['fax'] = $post_data['fax'];
 			$cmp_data['email_2'] = $post_data['email_2'];
 			$cmp_data['www'] = $post_data['www'];
-			$cmp_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+			// $cmp_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
 			
 			$this->db->insert($this->cfg['dbpref'] . 'customers_company', $cmp_data);
 			$cust_data['company_id'] = $this->db->insert_id();			

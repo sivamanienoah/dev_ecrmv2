@@ -13,7 +13,7 @@ class Customers_contact extends crm_controller {
     
 	function index() {
         $data['customers'] = $this->customer_model->customer_list();
-		$data['contact']=$this->customer_model->customer_contact_list($data['customers']);
+		$data['contact']   = $this->customer_model->customer_contact_list($data['customers']);
         $this->load->view('customer_contact_view', $data);
     }
 	
@@ -30,6 +30,8 @@ class Customers_contact extends crm_controller {
 			$update_data['position_title']=$this->input->post('position_title');
 			$update_data['phone_1']=$this->input->post('phone');
 			$update_data['skype_name']=$this->input->post('skype_name');
+			$update_data['sales_contact_userid_fk']=$this->userdata['userid'];
+			
 			$this->db->where('custid',$this->input->post('custid'));
 			$this->db->update($this->cfg['dbpref'].'customers',$update_data);
 			echo "1";exit;
