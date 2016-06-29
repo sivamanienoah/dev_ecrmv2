@@ -455,7 +455,7 @@ if (get_default_currency()) {
 					<?php if(!empty($all_users)):?>
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):?>
-								<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name']'-'.$pms['emp_id'];?></option>
+								<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
 							<?php endforeach;?>
 					<?php endif; ?>
 				</select>
@@ -490,7 +490,7 @@ if (get_default_currency()) {
 							<option value="">Select</option>
 							<?php foreach($all_users as $pms):
 									$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
-									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name']'-'.$pms['emp_id'];?></option>
+									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
 							<?php endforeach;?>
 					<?php endif; ?>
 				</select>
