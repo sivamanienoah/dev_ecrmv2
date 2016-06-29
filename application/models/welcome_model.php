@@ -92,7 +92,7 @@ class Welcome_model extends crm_model {
 	
 	function get_users()
 	{
-    	$this->db->select('userid, first_name, last_name, level, role_id, inactive');
+    	$this->db->select('userid, first_name, last_name, level, role_id, inactive, emp_id');
 		$this->db->where('inactive', 0);
 		$this->db->where('username !=', 'admin.enoah');
     	$this->db->order_by('first_name', "asc");
