@@ -1,6 +1,7 @@
 <?php 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
+//error_reporting(E_ALL);
 class Dashboard extends crm_controller 
 {
 	function Dashboard()
@@ -12,6 +13,7 @@ class Dashboard extends crm_controller
 		$this->load->helper('custom_helper');
 		$this->load->helper('url'); 
 		$this->load->model('projects/dashboard_model');
+		$this->load->model('report/report_lead_region_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
 			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
@@ -1754,7 +1756,7 @@ class Dashboard extends crm_controller
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
-				$data = $this->get_billable_efforts($practice, $month);
+				$data = $this->get_billable_efforts($practice, $month); 
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
@@ -2002,7 +2004,7 @@ class Dashboard extends crm_controller
 	*/
 	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
 	{		
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname');
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
@@ -2018,9 +2020,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.practice_id", $practice);
 
 		$query = $this->db->get();
-		
-		$data['resdata'] 	   = $query->result();
-		
+		$data['resdata'] 	   = $query->result(); 
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
 		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
@@ -2041,7 +2041,7 @@ class Dashboard extends crm_controller
 		$timesheet_db->close();
 		
 		return $data;
-	}
+	}	
 	
 	/*
 	@method - get_billable_efforts()
@@ -2054,7 +2054,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')"; */
 	
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);

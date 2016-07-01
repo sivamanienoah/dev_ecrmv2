@@ -162,6 +162,17 @@ class Report_lead_region_model extends crm_model {
 		$query = $this->db->get($this->cfg['dbpref'].'currency_rate');
 		return $query->result();
 	}
+	
+	public function get_currency_rates_new() {
+		$currency_rates = $this->get_currency_rate();
+    	$rates 			= array();
+    	if(!empty($currency_rates)) {
+    		foreach ($currency_rates as $currency) {
+    			$rates[$currency->from][$currency->to] = $currency->value;
+    		}
+    	}
+    	return $rates;
+	}	
 }
 
 ?>
