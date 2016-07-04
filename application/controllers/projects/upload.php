@@ -9,6 +9,7 @@ class Upload extends crm_controller
 
 	public function do_upload() 
 	{
+		echo "asd";exit;
 		$return=array();
 		$sourcePath = $_FILES['xmlfile']['tmp_name'];       // Storing source path of the file in a variable
 		$targetPath = "crm_data/Project_plan/".$_FILES['xmlfile']['name']; // Target path where file is to be stored
