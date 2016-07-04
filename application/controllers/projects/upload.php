@@ -56,8 +56,8 @@ class Upload extends crm_controller
 							}
 						}
 
-						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,task_id,task_name,duration,start_date,end_date,predecessors,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$estimated_start','$estimated_end','$complete_percent')";
-
+						echo $sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,task_id,task_name,duration,start_date,end_date,predecessors,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$estimated_start','$estimated_end','$complete_percent')";
+						exit;
 						$result=$this->db->query($sql);
 
 						if (!$result) 
