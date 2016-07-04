@@ -56,6 +56,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script>
 <script type="text/javascript" src="assets/js/tableHeadFixer.js"></script>
+<script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
 <?php echo js_global_variable($viewLeads['view'], $viewPjts['view']); ?>
 
 </head>

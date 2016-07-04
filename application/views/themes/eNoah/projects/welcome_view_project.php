@@ -1585,6 +1585,20 @@ if (get_default_currency()) {
 			echo $output;
 			?>
 		</div> <!--end of milestone-top-view-->
+		
+		<!-------------------FILE IMPORT FOR GANTT CHART--------------------->
+				
+		<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
+         <input type="file" name="xmlfile" id="xmlfile" /> 
+         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+         <br /><br /> 
+         <input type="submit" value="upload" name="submit"/>
+		<div id="success_msg"></div>
+		</form> 
+		
+		<br /><br />
+		<?php $this->load->view('projects/gantt_chart');?>
+		<!------------------------------------------------------------------->
 	</div><!-- id: jv-tab-4-5 end -->
 	<div id="jv-tab-7">
 		<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">

@@ -2817,3 +2817,48 @@ function editFolderPermissions(lead_id)
 	});	
 }
 // Edit folder permission end.
+
+//UPLOAD XML FILES FOR GANTT CHART 
+
+// Setup form validation on the #register-form element
+$(function() {
+	// Setup form validation on the #register-form element
+	$("#upload-form").validate({
+		// Specify the validation rules
+		rules: {
+			xmlfile:{
+                    required: true,
+                    accept:"xml"
+                }  
+		},
+		// Specify the validation error messages
+		messages: {
+			 xmlfile:{
+                    required: "Choose file",
+                    accept: "Only file type xml is allowed"
+                } 
+		},
+		submitHandler: function(form) {
+			var formData = new FormData($("#upload-form")[0]);
+			$.ajax({
+				type:'POST',
+				data:formData,
+				url:site_base_url+'projects/upload/do_upload',
+				cache:false,
+				dataType:'json',
+				processData:false, // Don't process the files
+				contentType:false,
+				success:function(data){
+					if(data.result=='success')
+					{
+						jQuery("#success_msg").html('File Uploaded Successfully');
+					}
+					else
+					{
+						jQuery("#success_msg").html('There was an error while uploading.Please try again..');
+					}
+				}
+			});
+		}
+	});
+});
