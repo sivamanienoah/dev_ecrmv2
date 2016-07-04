@@ -9,7 +9,6 @@ class Upload extends crm_controller
 
 	public function do_upload() 
 	{
-		echo "asd";exit;
 		$return=array();
 		$sourcePath = $_FILES['xmlfile']['tmp_name'];       // Storing source path of the file in a variable
 		$targetPath = "crm_data/Project_plan/".$_FILES['xmlfile']['name']; // Target path where file is to be stored
@@ -57,24 +56,28 @@ class Upload extends crm_controller
 							}
 						}
 
-						echo $sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,task_id,task_name,duration,start_date,end_date,predecessors,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$estimated_start','$estimated_end','$complete_percent')";
-						exit;
+						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,task_id,task_name,duration,start_date,end_date,predecessors,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$estimated_start','$estimated_end','$complete_percent')";
+
 						$result=$this->db->query($sql);
 
-						if (!$result) 
+						/* if (!$result) 
 						{        
 							echo 'failure';
 						} 
 						else 
 						{
 							echo 'success'."<br>";
-						} 
+						} */
 					}
 					$i++;
 				}
 			}
+			$return['result']='success';
 		}
-		$return['result']='success';
+		else
+		{
+			$return['result']='failure';
+		}
 		echo json_encode($return);
 	}
 
