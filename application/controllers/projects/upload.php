@@ -60,14 +60,14 @@ class Upload extends crm_controller
 
 						$result=$this->db->query($sql);
 
-						/* if (!$result) 
+						if (!$result) 
 						{        
 							echo 'failure';
 						} 
 						else 
 						{
 							echo 'success'."<br>";
-						} */
+						} 
 					}
 					$i++;
 				}
