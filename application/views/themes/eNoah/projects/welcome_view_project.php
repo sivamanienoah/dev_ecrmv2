@@ -1591,12 +1591,18 @@ if (get_default_currency()) {
 		<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
          <input type="file" name="xmlfile" id="xmlfile" /> 
          <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
          <br /><br /> 
          <input type="submit" value="upload" name="submit"/>
 		<div id="success_msg"></div>
 		</form> 
 		
 		<br /><br />
+		
+		<div id="upload_loading" style="display:none">
+			<img src = '<?php echo base_url().'assets/images/ajax_loader.gif'; ?>' width="54" />
+		</div>
+		
 		<?php $this->load->view('projects/gantt_chart');?>
 		<!------------------------------------------------------------------->
 	</div><!-- id: jv-tab-4-5 end -->

@@ -2840,18 +2840,26 @@ $(function() {
 		},
 		submitHandler: function(form) {
 			var formData = new FormData($("#upload-form")[0]);
+			var project_id=jQuery("#project_id").val();
 			$.ajax({
 				type:'POST',
 				data:formData,
-				url:site_base_url+'projects/upload/do_upload',
+				url:site_base_url+'projects/upload/do_upload?project_id='+project_id,
 				cache:false,
 				dataType:'json',
 				processData:false, // Don't process the files
 				contentType:false,
+				beforeSend: function() {
+					jQuery("#upload_loading").show();
+				},
 				success:function(data){
+					jQuery("#upload_loading").hide();
 					if(data.result=='success')
 					{
 						jQuery("#success_msg").html('File Uploaded Successfully');
+						 setTimeout(function(){// wait for 5 secs(2)
+							   location.reload(true); // then reload the page.(3)
+						  }, 3000); 
 					}
 					else
 					{
@@ -2859,6 +2867,7 @@ $(function() {
 					}
 				}
 			});
+			return false;
 		}
 	});
 });

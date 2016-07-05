@@ -9,6 +9,7 @@ class Upload extends crm_controller
 
 	public function do_upload() 
 	{
+		$project_id=$_GET['project_id'];
 		$return=array();
 		$sourcePath = $_FILES['xmlfile']['tmp_name'];       // Storing source path of the file in a variable
 		$targetPath = "crm_data/Project_plan/".$_FILES['xmlfile']['name']; // Target path where file is to be stored
@@ -18,8 +19,20 @@ class Upload extends crm_controller
 			$strContents = file_get_contents($file);
 			$strDatas = $this->Xml2Array($strContents);
 			$records=$strDatas['Project']['Tasks']['Task'];
+			$assignment=$strDatas['Project']['Assignments']['Assignment'];
+			$resources=$strDatas['Project']['Resources']['Resource'];
 			$i=1;
-
+			
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'project_plan');
+			$this->db->where('project_id', $project_id);
+			$sql_query = $this->db->get();
+			if($sql_query->num_rows()>0)
+			{
+				$sql_que="Delete from ".$this->cfg['dbpref']."project_plan WHERE project_id='$project_id'";
+				$res=$this->db->query($sql_que);
+			}
+						
 			if(count($records)!=0)
 			{
 				foreach($records as $list)
@@ -38,6 +51,7 @@ class Upload extends crm_controller
 						$estimated_start=date("Y-m-d",strtotime($list['ManualStart']));
 						$estimated_end=date("Y-m-d",strtotime($list['ManualFinish']));
 						$complete_percent=$list['PercentComplete'];
+						$resource_names=$this->get_resources($list['UID'],$assignment,$resources);
 						$predecessor='';
 						if(isset($list['PredecessorLink']))
 						{
@@ -55,11 +69,12 @@ class Upload extends crm_controller
 								$predecessor=implode(',',$prede);
 							}
 						}
-
-						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,task_id,task_name,duration,start_date,end_date,predecessors,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$estimated_start','$estimated_end','$complete_percent')";
+						
+						
+						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$resource_names','$estimated_start','$estimated_end','$complete_percent')";
 
 						$result=$this->db->query($sql);
-
+						
 						/* if (!$result) 
 						{        
 							echo 'failure';
@@ -79,6 +94,34 @@ class Upload extends crm_controller
 			$return['result']='failure';
 		}
 		echo json_encode($return);
+	}
+	
+	function get_resources($uid,$assignment,$resources)
+	{
+		$resource_id='';$resource_name='';
+		if(count($assignment)!=0)
+		{
+			foreach($assignment as $each_assignment)
+			{
+				if($each_assignment['TaskUID']==$uid)
+				{
+					$resource_id=$each_assignment['ResourceUID'];
+					
+					if(count($resources)!=0)
+					{
+						foreach($resources as $each_resources)
+						{
+							if($each_resources['UID']==$resource_id)
+							{
+								$resource_name=$each_resources['Name'];
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return $resource_name;
 	}
 
 	function Xml2Array($contents, $get_attributes=1, $priority = 'tag') 
