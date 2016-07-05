@@ -62,7 +62,7 @@ class Service_dashboard_cron extends crm_controller
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
 		$data  				  = array();
-		
+			
 		$bk_rates = get_book_keeping_rates();
 		
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
@@ -275,124 +275,161 @@ class Service_dashboard_cron extends crm_controller
 			}
 		} */
 		 
+		// 
+
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
+	 
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$resrc = 't.resoursetype IS NOT NULL';
+		$this->db->where($resrc);
+		$this->db->where("l.practice is not null");
+		$query = $this->db->get();		
+		$resdata = $query->result();
+		//echo '<pre>';print_r($resdata);exit;
+		## code starts here##
+		$tbl_data = array();
+		$sub_tot  = array();
+		$cost_arr = array();
+		$directcost_arr = array();
+		$usercnt  = array();
+		$prjt_hr  = array();
+		$prjt_cst = array();
+		$prjt_directcst = array();
+		$prac = array();
+		$dept = array();
+		$skil = array();
+		$proj = array();
+		$tot_hour = 0;
+		$tot_cost = 0;
+		$tot_directcost = 0;		
+		$timesheet_data = array();
+		$resource_cost = array();	
 		
-		$timesheet = array();
-		$timesheet_data1 = array();
-		$contribution_query = "SELECT cost_per_hour as cost, entry_month as month_name, entry_year as yr, emp_id, 
-		empname, username, SUM(duration_hours) as duration_hours, resoursetype, username, empname,practice_id,practice_name, sum( `resource_duration_cost`) as duration_cost, direct_cost_per_hour as direct_cost, sum( `resource_duration_direct_cost`) as duration_direct_cost
-		FROM crm_timesheet_data 
-		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave') group by username,yr,month_name,resoursetype";
-		$sql1 = $this->db->query($contribution_query);
-		
-		$timesheet = $sql1->result_array();
-		$rates = $this->get_currency_rates();
-		//echo '<pre>';print_r($timesheet); 
-			if(count($timesheet)>0) {
-				foreach($timesheet as $ts) {					 
-						$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
-						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
-						
-						$timesheet_data1[$ts['username']]['practice_id'] = $ts['practice_id'];
-						$timesheet_data1[$ts['username']]['practice_name'] = $ts['practice_name'];
-						$timesheet_data1[$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
-						$timesheet_data1[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-						$directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
-						$timesheet_data1[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
-						$timesheet_data1[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
-						$timesheet_data1[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
-						
-						$timesheet_data1[$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
-				}
+		if(count($resdata)>0) {
+			$rates = $this->get_currency_rates();
+			foreach($resdata as $rec) {		
+				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+				
+				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
+				$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+				
+				$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] =get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
 			}
-			$total_billable_hrs		= 0;
-			$total_non_billable_hrs = 0;
-			$total_internal_hrs		= 0;
-			$total_cost				= 0;
-			$total_dc_cost				= 0;
-			$total_hours				= 0;
-			$total_dc_hours				= 0;
-			$directcost				= array();
-			$cm_directcost				= array();
-			//echo '<pre>';print_r($timesheet_data1);print_r($practice_arr); 
-			if(count($timesheet_data1)>0 && !empty($timesheet_data1)){
-				foreach($timesheet_data1 as $key1=>$value1) {
-					$resource_name = $key1;
-					$max_hours = $value1['max_hours'];
-					if(count($value1)>0 && !empty($value1)){
+
+		//echo '<pre>';print_r($timesheet_data);exit;
+		if(count($timesheet_data)>0 && !empty($timesheet_data)){
+			foreach($timesheet_data as $key1=>$value1) {
+				$resource_name = $key1;
+				$max_hours = $value1['max_hours'];
+				$dept_name = $value1['dept_name'];
+				$resource_cost[$resource_name]['dept_name'] = $dept_name;
+				if(count($value1)>0 && !empty($value1)){
 					foreach($value1 as $key2=>$value2) {
 						$year = $key2;
-						//echo '<pre>';print_r($value2);
 						if(count($value2)>0 && !empty($value2)){
-						foreach($value2 as $key3=>$value3) {
-							$individual_billable_hrs		= 0;
-							$month		 	  = $key3;
-							$billable_hrs	  = 0;
-							$non_billable_hrs = 0;
-							$internal_hrs	  = 0;
-							$total_cost	  = 0;
-							$total_dc_cost	  = 0;
-							if(count($value3)>0 && !empty($value3)){
-							foreach($value3 as $key4=>$value4) {
-								switch($key4) {
-									case 'Billable':
-										$rate				 = $value4['rateperhr'];
-										$direct_rateperhr	 = $value4['direct_rateperhr'];
-										$billable_hrs		 = $value4['duration'];
-										$direct_billable_hrs		 = $value4['duration_direct_cost'];
-										$total_billable_hrs += $billable_hrs;
-									break;
-									case 'Non-Billable':
-										$rate				 = $value4['rateperhr'];
-										$direct_rateperhr	 = $value4['direct_rateperhr'];
-										$non_billable_hrs		 = $value4['duration'];
-										$direct_non_billable_hrs		 = $value4['duration_direct_cost'];
-										$total_non_billable_hrs += $non_billable_hrs;
-									break;
-									case 'Internal':
-										$rate				 = $value4['rateperhr'];
-										$direct_rateperhr	 = $value4['direct_rateperhr'];
-										$internal_hrs 		 = $value4['duration'];
-										$direct_internal_hrs		 = $value4['duration_direct_cost'];
-										$total_internal_hrs += $internal_hrs;
-									break;
+							foreach($value2 as $key3=>$value3) {
+								$individual_billable_hrs		= 0;
+								$month		 	  = $key3;
+								if(count($value3)>0 && !empty($value3)){
+									foreach($value3 as $key4=>$value4) {
+										if($key4 != 'total_hours'){ 
+											$individual_billable_hrs = $value3['total_hours'];
+											$duration_hours			= $value4['duration_hours'];
+											$rate				 = $value4['rateperhr'];
+											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											$rate1 = $rate;
+											$direct_rateperhr1 = $direct_rateperhr;
+											if($individual_billable_hrs>$max_hours){
+												//echo 'max'.$max_hours.'<br>';
+												$percentage = ($max_hours/$individual_billable_hrs);
+												$rate1 = number_format(($percentage*$rate),2);
+												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+											}
+											$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
+											$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
+											$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
+											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+										}
+									}
 								}
 							}
-							}
-						
-							$individual_billable_hrs = $value3['total_hours'];
-							 
-							// calculation for the utilization cost based on the master hours entered.
-
-							$rate1 = $rate;
-							$direct_rateperhr1 = $direct_rateperhr;
-							if($individual_billable_hrs>$max_hours){
-								//echo 'max'.$max_hours.'<br>';
-								$percentage = ($max_hours/$individual_billable_hrs);
-								//echo 'percentage'.$percentage.'<br>';
-								$rate1 = number_format(($percentage*$rate),2);
-								$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
-							}
-						 
-							$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;
-							//$total_dc_hours += $direct_billable_hrs+$direct_non_billable_hrs+$direct_internal_hrs;
-							$total_dc_cost = $direct_rateperhr1*($billable_hrs+$internal_hrs+$non_billable_hrs);
-							$total_cost = $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
-							//echo $timesheet_data1[$resource_name]['practice_id'].'<br>';
-							
-							
-							$directcost[$practice_arr[$timesheet_data1[$resource_name]['practice_id']]]['total_direct_cost'] += $total_cost;
-							$cm_directcost[$practice_arr[$timesheet_data1[$resource_name]['practice_id']]]['total_cm_direct_cost'] += $total_dc_cost;
-							
-						}
 						}
 					}
+				}
+			}	 
+		}
+		}
+		//echo '<pre>';print_r($resource_cost);exit;
+		if(count($resource_cost)>0 && !empty($resource_cost)){
+			foreach($resource_cost as $resourceName => $array1){
+				$dept_name = $resource_cost[$resourceName]['dept_name'];
+				if(count($array1)>0 && !empty($array1)){
+					foreach($array1 as $year => $array2){
+						if($year !='dept_name'){
+							if(count($array2)>0 && !empty($array2)){
+								foreach($array2 as $month => $array3){
+									$duration_hours = 0;
+									$total_cost = 0;
+									$total_dc_cost = 0;
+									foreach($array3 as $project_code => $array4){
+										//$available_projects[] = $project_code;
+										$duration_hours = $array4['duration_hours'];
+										$total_cost = $array4['total_cost'];
+										$total_dc_cost = $array4['total_dc_cost'];
+										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
+										$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
+									}
+								}
+							}
+						}
 					}
-				}	 
-			}			
-		
+				}
+			}
+		}
 		 
+		$this->db->select("pjt_id,practice,lead_title");
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
+		$project_res = $res->result();
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			//$project_master[$prec->project_code] = $prec->title;
+			$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
+			$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+		}
+ 
+		foreach($directcost2 as $practiceId => $val1){
+			foreach($val1 as $pjtCode => $val){
+				if($practiceId=='Web Technologies'){
+					$test[$practiceId][$pjtCode]['hours'] += $val['total_direct_cost'];	
+				}
+				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
+			}
+		}
+		foreach($cm_directcost2 as $practiceId => $cval1){
+			foreach($cval1 as $pjtCode => $cval){ 
+				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+			}
+		}		
+		## code ends here##
+		
+		
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
@@ -410,11 +447,13 @@ class Service_dashboard_cron extends crm_controller
 			}
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard', $ins_data);
-			 
-			foreach($practice_array as $parr){		
+			//echo '<pre>';print_r($practice_array); 
+			foreach($practice_array as $parr){
+				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+				//$ins_array['ytd_billable_bours'] = ($projects['direct_hours'][$parr]['total_hours'] != '') ? round($projects['direct_hours'][$parr]['total_hours']) : '-';
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
 				$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
@@ -451,6 +490,8 @@ class Service_dashboard_cron extends crm_controller
 				$tot_dc_vals += $projects['irval'][$parr];
 				$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
 				
+				//$tot_ytd_billable_hrs += $projects['direct_cost'][$parr]['total_hours'];
+				
 				$this->db->where('practice_name', $parr);
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard', $ins_array);
 				$ins_array = array();
@@ -459,6 +500,7 @@ class Service_dashboard_cron extends crm_controller
 			$tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
+			//$tot['ytd_billable_hrs'] = $tot_ytd_billable_hrs;
 			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
 			$tot['ytd_billable'] = round(($tot_billval/$tot_totbillval)*100);
 			$tot['effort_variance'] = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);

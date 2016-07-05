@@ -1274,6 +1274,7 @@ class Dashboard extends crm_controller
 			$bill_month = $this->input->post("billable_month");
 			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
 		}
+		 
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -2056,6 +2057,7 @@ class Dashboard extends crm_controller
 	
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
@@ -2066,10 +2068,9 @@ class Dashboard extends crm_controller
 		}
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
-		$this->db->where_in("t.practice_id", $practice);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
-
+		$this->db->where_in("l.practice", $practice);
 		$query = $this->db->get();
 		
 		$data['resdata'] 	   = $query->result();
