@@ -1529,7 +1529,7 @@ class Dashboard extends crm_controller
 		$data['month_status'] = $month_status;
 		
 		if($this->input->post("filter")!="")
-		$this->load->view('projects/service_dashboard_grid', $data);
+		$this->load->view('projects/service_dashboard_grid_beta', $data);
 		else
 		$this->load->view('projects/service_dashboard_beta', $data);
 	}
