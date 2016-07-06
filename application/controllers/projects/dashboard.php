@@ -1782,9 +1782,7 @@ class Dashboard extends crm_controller
 				$month    = date("Y-m-01 00:00:00");				
 			}			
 		}
-		echo 'month'.$month.'<br>';
-		echo 'end_date'.$end_date.'<br>';
-		
+ 
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;

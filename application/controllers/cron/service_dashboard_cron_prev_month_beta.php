@@ -75,9 +75,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$start_date = date("Y-m-01",strtotime($start_date));
 		$end_date = date("Y-m-t", strtotime($end_date));
 		
-		echo 'month'.$month.'<br>';
-		echo 'end_date'.$end_date.'<br>';	
-		exit;
+ 
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
