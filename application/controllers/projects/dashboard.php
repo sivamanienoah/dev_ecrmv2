@@ -1771,6 +1771,18 @@ class Dashboard extends crm_controller
 		if($this->input->post("clicktype")) {
 			$clicktype = $this->input->post("clicktype");
 		}
+		
+		$month_status = $this->input->post("month_status");
+		if(!empty($month_status)){
+			if($month_status==2){
+				$end_date  	   = date('Y-m-d', strtotime("-1 month"));
+				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
+			}else{
+				$end_date  	   = date('Y-m-d');
+				$month    = date("Y-m-01 00:00:00");				
+			}			
+		}		
+		
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
