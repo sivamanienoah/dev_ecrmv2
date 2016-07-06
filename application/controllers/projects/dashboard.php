@@ -2009,6 +2009,273 @@ class Dashboard extends crm_controller
 		}
 	}
 	
+	public function service_dashboard_data_beta()
+	{
+		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
+		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
+		
+		//default billable_month
+		$month = date('Y-m-01 00:00:00');
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t", strtotime($end_date));
+			$month    = date("Y-m-01 00:00:00", strtotime($end_date));
+		}
+		if($this->input->post("billable_month")) {
+			$bill_month = $this->input->post("billable_month");
+			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
+		}
+		if($this->input->post("practice")) {
+			$practice = $this->input->post("practice");
+		}
+		if($this->input->post("clicktype")) {
+			$clicktype = $this->input->post("clicktype");
+		}
+		
+		$month_status = $this->input->post("month_status");
+		if(!empty($month_status)){
+			if($month_status==2){
+				$end_date  	   = date('Y-m-t', strtotime("-1 month"));
+				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
+			}else{
+				$end_date  	   = date('Y-m-d');
+				$month    = date("Y-m-01 00:00:00");				
+			}			
+		}
+ 
+		$data['bill_month'] = $month;
+		$data['start_date'] = $start_date;
+		$data['end_date']   = $end_date;
+		// echo $month;  die;
+		$project_status = 1;
+		if($this->input->post("project_status") && ($this->input->post("project_status")!='null')) {
+			$project_status = @explode(',', $this->input->post("project_status"));
+		}
+		$division = '';
+		if($this->input->post("entity") && ($this->input->post("entity")!='null')) {
+			$division = @explode(',', $this->input->post("entity"));
+		}
+		
+		//role based filtering
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+			$varSessionId = $this->userdata['userid']; //Current Session Id.
+
+			//Fetching Project Team Members.
+			$this->db->select('jobid_fk as lead_id');
+			$this->db->where('userid_fk', $varSessionId);
+			$rowscj = $this->db->get($this->cfg['dbpref'] . 'contract_jobs');
+			$dat['jobids'] = $rowscj->result_array();
+			
+			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
+			$this->db->select('lead_id');
+			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
+			$this->db->where("lead_status", 4);
+			$this->db->where("pjt_status", 1);
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
+			$dat['jobids1'] = $rowsJobs->result_array();
+
+			//Fetching Stake Holders.
+			$data['jobids2'] = array();
+			$this->db->select('lead_id');
+			$this->db->where("user_id",$varSessionId);
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+			if($rowsJobs->num_rows()>0)	$dat['jobids2'] = $rowsJobs->result_array();			
+			
+			$data = array_merge_recursive($dat['jobids'], $dat['jobids1'],$dat['jobids2']);
+ 
+			$res[] = 0;
+			if (is_array($data) && count($data) > 0) { 
+				foreach ($data as $data) {
+					$res[] = $data['lead_id'];
+				}
+			}
+			$result_ids = array_unique($res);
+		} */
+		//role based filtering
+		
+		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
+		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->where("l.lead_id != ", 'null');
+		$this->db->where("l.pjt_id  != ", 'null');
+		$this->db->where("l.lead_status", '4');
+		// $pt_not_in_arr = array('4','8');
+		// $this->db->where("l.project_type", 1);
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("l.client_code", $client_not_in_arr);
+		if($practice){
+			$this->db->where("l.practice", $practice);
+		}
+		if($project_status){
+			$this->db->where_in("l.pjt_status", $project_status);
+		}
+		if($division){
+			$this->db->where_in("l.division", $division);
+		}
+		if(isset($clicktype) && ($clicktype == 'rag')) {
+			$this->db->where_in("l.rag_status", 1);
+		}
+		if(isset($clicktype) && ($clicktype == 'rag_project_export')) {
+			$this->db->where_in("l.rag_status", 1);
+		}
+		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
+			$this->db->where_in('l.lead_id', $result_ids);
+		} */
+		$query = $this->db->get();
+		$res = $query->result_array();
+		
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		$pquery = $this->db->get();
+		$pres1 = $pquery->result();					
+		if(!empty($pres1) && count($pres1)>0){
+			foreach($pres1 as $prow1) {
+				$practice_arr[$prow1->id] = $prow1->practices;
+			}
+		}
+
+		switch($clicktype){
+			case 'noprojects':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "inprogress_project_export";
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
+			break;
+			case 'rag':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "rag_project_export";
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
+			break;
+			case 'inprogress_project_export':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$res = $this->excelexport($data['projects_data']);
+			break;
+			case 'rag_project_export':
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
+				$res = $this->excelexport($data['projects_data']);
+			break;
+			case 'cm_billing':
+				$data['invoices_data'] = $this->getCMIRData($practice, $month);
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "cm_billing_export";
+				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'cm_billing_export':
+				$data['invoices_data'] = $this->getCMIRData($practice, $month);
+				$result = $this->excelexportinvoice($data['invoices_data']);
+			break;
+			case 'irval':
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "inv_project_export";
+				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
+			break;
+			case 'inv_project_export':
+				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+				$result = $this->excelexportinvoice($data['invoices_data']);
+			break;
+			case 'cm_eff':
+				$data = $this->get_billable_efforts($practice, $month); 
+				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_id'] = $practice;
+				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
+			break;
+			case 'ytd_eff':
+				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
+				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_id'] = $practice;
+				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
+			break;
+			case 'dc_value':
+				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
+				$data['practices_name'] = $practice_arr[$practice];
+				$data['practices_id']   = $practice;
+				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
+			break;
+			case 'fixedbid':
+				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+				$pcodes = $billable_ytd['project_code'];
+				$project_codes = array();
+				if(!empty($pcodes) && count($pcodes)>0){
+					foreach($pcodes as $rec){
+						if(!in_array($rec, $project_codes)){
+							$project_codes[] = $rec;
+						}
+					}
+				}
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				// $pt_not_in_array = array('4','8');
+				$this->db->where("l.project_type", 1);
+				$client_not_in_array = array('ENO','NOA');
+				$this->db->where_not_in("l.client_code", $client_not_in_array);
+				// $this->db->where("l.pjt_id", $rec);
+				// $this->db->where("l.billing_type", 1);
+				$this->db->where("l.practice", $practice);
+				$this->db->where_in("l.pjt_id", $project_codes);
+				$query3 = $this->db->get();
+				$pro_data = $query3->result_array();
+				
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				$data['practices_id'] = $practice;
+				$data['excelexporttype'] = "fixedbid_project_export";
+				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
+			break;
+			case 'fixedbid_project_export':
+				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+				$pcodes = $billable_ytd['project_code'];
+				$project_codes = array();
+				if(!empty($pcodes) && count($pcodes)>0){
+					foreach($pcodes as $rec){
+						if(!in_array($rec, $project_codes)){
+							$project_codes[] = $rec;
+						}
+					}
+				}
+				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
+				$this->db->from($this->cfg['dbpref']. 'leads as l');
+				// $pt_not_in_array = array('4','8');
+				$this->db->where("l.project_type", 1);
+				$client_not_in_array = array('ENO','NOA');
+				$this->db->where_not_in("l.client_code", $client_not_in_array);
+				// $this->db->where("l.pjt_id", $rec);
+				// $this->db->where("l.billing_type", 1);
+				$this->db->where("l.practice", $practice);
+				$this->db->where_in("l.pjt_id", $project_codes);
+				$query3 = $this->db->get();
+				$pro_data = $query3->result_array();
+				
+				$this->db->select('project_billing_type, id');
+				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+				$ptquery = $this->db->get();
+				$data['project_type'] = $ptquery->result();
+				
+				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);		
+				$res = $this->excelexport($data['projects_data']);
+			break;
+		}
+	}	
+	
 	/* Change the actual worth amount to Default currency */
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
 	{
