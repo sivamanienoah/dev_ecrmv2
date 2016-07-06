@@ -72,11 +72,11 @@ if(count($resdata)>0) {
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] =get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
+		$timesheet_data[$rec->username]['empname'] = $rec->empname;
 		 
 		
 		   
 	}
-
 $resource_cost = array();	
 if(count($timesheet_data)>0 && !empty($timesheet_data)){
 	foreach($timesheet_data as $key1=>$value1) {
@@ -345,7 +345,7 @@ if(!empty($tbl_data)) {
 				$per_directcost = ($pval['directcost']/$tot_directcost) * 100;
 				echo "<tr data-depth='".$i."' class='collapse'>
 					<td width='15%'></td>
-					<td width='15%'>".$ukey."</td>
+					<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
 					<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
 					<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
 					<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
