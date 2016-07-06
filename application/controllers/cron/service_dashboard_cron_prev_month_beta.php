@@ -417,9 +417,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
  
 		foreach($directcost2 as $practiceId => $val1){
 			foreach($val1 as $pjtCode => $val){
-				if($practiceId=='Web Technologies'){
-					$test[$practiceId][$pjtCode]['hours'] += $val['total_direct_cost'];	
-				}
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
 		}
@@ -469,8 +466,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				
 				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
-				
-				$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
+				if($projects['cm_direct_cost'][$parr]['total_cm_direct_cost']){
+					$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
+				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
