@@ -2191,13 +2191,13 @@ class Dashboard extends crm_controller
 				$result = $this->excelexportinvoice($data['invoices_data']);
 			break;
 			case 'cm_eff':
-				$data = $this->get_billable_efforts($practice, $month); 
+				$data = $this->get_billable_efforts_beta($practice, $month); 
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
 			break;
 			case 'ytd_eff':
-				$data = $this->get_billable_efforts($practice, "", $start_date, $end_date);
+				$data = $this->get_billable_efforts_beta($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
@@ -2433,11 +2433,52 @@ class Dashboard extends crm_controller
 		return $data;
 	}
 	
+	
+	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
+	{		
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->where('t.resoursetype', 'Billable');
+		if(!empty($month)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-t', strtotime($month))."' )", NULL, FALSE);
+		}
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$this->db->where_in("t.practice_id", $practice);
+
+		$query = $this->db->get();
+		$data['resdata'] 	   = $query->result(); 
+		// get all projects from timesheet
+		$timesheet_db = $this->load->database("timesheet", true);
+		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+		if($proj_mas_qry->num_rows()>0){
+			$project_res = $proj_mas_qry->result();
+		}
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			$project_master[$prec->project_code] = $prec->title;
+		}
+		$data['project_master']  = $project_master;
+		
+		$data['heading'] 	     = $practice;
+		$data['resource_type']   = "Billable";
+		$data['filter_sort_by']  = 'desc';
+		$data['filter_sort_val'] = 'hour';
+		$timesheet_db->close();
+		
+		return $data;
+	}	
 	/*
 	@method - get_billable_efforts()
 	@for drill down data
 	*/
-	public function get_billable_efforts($practice, $month=false, $start_date=false, $end_date=false)
+	public function get_billable_efforts_beta($practice, $month=false, $start_date=false, $end_date=false)
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
