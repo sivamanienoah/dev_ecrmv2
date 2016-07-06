@@ -31,7 +31,7 @@ $practice_arr = array();
 				</button>
 			</div>
 		</div>
-		
+		<?/*
 		<div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px;">
@@ -60,7 +60,7 @@ $practice_arr = array();
 					</div>
 				</form>
 			</div>
-		</div>
+		</div>*/?>
 		
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
