@@ -1,193 +1,248 @@
 <table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
-	<tr>
-		<thead>
-			<th>IT Services Dashboard</th>
-			<?php if(!empty($practice_data)) { ?>
-				<?php foreach($practice_data as $prac) { ?>
-					<th><?php echo $prac->practices; ?></th>
-					<?php $practice_arr[] = $prac->practices; ?>
-					<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
-				<?php } ?>
-			<?php } ?>
-		</thead>
-	</tr>
-	<tr>
-		<td><b>Number of Projects currently running</b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
-						if(isset($noProjects)) {
+				<tr>
+					<thead>
+						<th>IT Services Dashboard</th>
+						<?php if(!empty($practice_data)) { ?>
+							<?php foreach($practice_data as $prac) { ?>
+								<th><?php echo $prac->practices; ?></th>
+								<?php $practice_arr[] = $prac->practices; ?>
+								<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
+							<?php } ?>
+						<?php } ?>
+						<th>Total</th>
+					</thead>
+				</tr>
+				<?php // echo "<pre>"; print_r($dashboard_det); echo "</pre>"; ?>
+				<tr>
+					<td><b>Number of Projects currently running</b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
+									if($noProjects!='') {
+										$total_projects += $noProjects;
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>							
+						<?php } ?>
+					<?php } ?>
+					<td align='right'><?php echo ($total_projects!=0) ? $total_projects : '-'; ?></td>
+				</tr>
+				<tr>
+					<td><b>Number of projects in Red</b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+									if($rag!='') {
+										$total_rag += $rag;
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'><?php echo ($total_rag!=0) ? $total_rag : '-'; ?></td>
+				</tr>
+				<tr>
+					<td><b>Billing for the month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$cm_billing = ($dashboard_det[$parr]['billing_month']!='-') ? round($dashboard_det[$parr]['billing_month']) : '-';
+									if($cm_billing!='-'){
+								?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
+								<?php
+									} else {
+										echo "-";
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'><?php echo ($dashboard_det['Total']['billing_month']!='-') ? round($dashboard_det['Total']['billing_month']) : '-'; ?></td>
+				</tr>
+				<tr>
+					<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$irval = ($dashboard_det[$parr]['ytd_billing']!='-') ? round($dashboard_det[$parr]['ytd_billing']) : '-';
+									if($irval!="-") {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'><?php echo ($dashboard_det['Total']['ytd_billing']!='-') ? round($dashboard_det['Total']['ytd_billing']) : '-'; ?></td>
+				</tr>
+				<tr>
+					<td><b>YTD Utilization Cost (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$dc_value = ($dashboard_det[$parr]['ytd_utilization_cost']!='-') ? round($dashboard_det[$parr]['ytd_utilization_cost']) : '-';
+									if($dc_value!="-") {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'dc_value'); return false;"><?php echo $dc_value; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
+						<?php
+							echo ($dashboard_det['Total']['ytd_utilization_cost']!='-') ? round($dashboard_det['Total']['ytd_utilization_cost']) : '-';
 						?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'noprojects'); return false;"><?php echo $noProjects; ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$cm_billval = ($dashboard_det[$parr]['billable_month']!='-') ? round($dashboard_det[$parr]['billable_month']) : '-';
+									if($cm_billval!="-") {
+									?>					
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo $cm_billval; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
+						<?php echo ($dashboard_det['Total']['billable_month']!='-') ? round($dashboard_det['Total']['billable_month']) : '-'; ?>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Billable YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$billval = ($dashboard_det[$parr]['ytd_billable']!='-') ? round($dashboard_det[$parr]['ytd_billable']) : '-';
+									if($billval != '-') {
+									?>
+									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo $billval; ?></a>
+									<?php
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
 						<?php
-						} else {
-							echo '';
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Number of projects in Red</b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
-						if(isset($rag)) {
+							echo ($dashboard_det['Total']['ytd_billable']!='-') ? round($dashboard_det['Total']['ytd_billable']) : '-';
 						?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'rag'); return false;"><?php echo $rag; ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Effort Variance (%) - <span class="highlight_info">For Fixed Bid projects</span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php								
+								$eff_var = ($dashboard_det[$parr]['effort_variance']!='-') ? round($dashboard_det[$parr]['effort_variance']) : '-';
+								if(($eff_var != '-') && (($parr!='Infra Services'))) {
+								?>
+								<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 0); ?></a>
+								<?php
+								} else {
+									echo '-';
+								}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
 						<?php
-						} else {
-							echo '';
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Billing for the month (USD) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$cm_billing = '';
-						$cm_billing = isset($projects['cm_irval'][$parr]) ? round($projects['cm_irval'][$parr]) : '';
-						if(isset($cm_billing)){
-					?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
-					<?php
-						} else {
-							echo "";
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>YTD Billing (USD) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$irval = isset($projects['irval'][$parr]) ? round($projects['irval'][$parr]) : '';
-						if(isset($irval) && ($irval != 0)) {
+							echo ($dashboard_det['Total']['effort_variance']!='-') ? round($dashboard_det['Total']['effort_variance']) : '-';
 						?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Contribution for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$cm_dc_val = ($dashboard_det[$parr]['contribution_month']!='-') ? round($dashboard_det[$parr]['contribution_month']) : '-';
+									echo ($cm_dc_val!='-') ? $cm_dc_val : '-';
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
 						<?php
-						} else {
-							echo '';
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Billable for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$cm_billval = '';
-						// if(isset($projects['billable_month'][$parr]['Billable']['hour']) && isset($projects['billable_month'][$parr]['totalhour']))
-						$cm_billval = ($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'];
-						if(isset($cm_billval) && ($cm_billval != 0)) {
-						?>					
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_eff'); return false;"><?php echo round(($cm_billval*100), 1); ?></a>
-						<?php
-						} else {
-							echo '';
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Billable YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-						$billval = '';
-						if(isset($projects['billable_ytd'][$parr]['Billable']['hour']) && isset($projects['billable_ytd'][$parr]['totalhour']))
-						$billval = ($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'];
-						if(isset($billval) && ($billval != 0)) {
+							echo ($dashboard_det['Total']['contribution_month']!='-') ? round($dashboard_det['Total']['contribution_month']) : '-';
 						?>
-						<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'ytd_eff'); return false;"><?php echo round(($billval*100), 1); ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Contribution YTD (45 %) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
+					<?php if(!empty($practice_arr)) { ?>
+						<?php foreach($practice_arr as $parr) { ?>
+							<td align='right'>
+								<?php
+									$dc_val = ($dashboard_det[$parr]['ytd_contribution']!='-') ? round($dashboard_det[$parr]['ytd_contribution']) : '-';
+									$arrow_val = 'down_arrow';
+									if(round($dc_val, 0) >= 45){
+										$arrow_val = 'up_arrow';
+									}
+									if($dc_val!='-'){
+									?>
+										<?php if(($parr=='Testing') || ($parr=='Infra Services')) { 
+											echo '-';
+										} else {
+										?>
+										<span class="<?php echo "itser_".$arrow_val;?>">
+											<?php echo round($dc_val, 0); ?>
+										</span>
+										<?php 
+										}
+									} else {
+										echo '-';
+									}
+								?>
+							</td>
+						<?php } ?>
+					<?php } ?>
+					<td align='right'>
 						<?php
-						} else {
-							echo '';
-						}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Effort Variance (%) - <span class="highlight_info">For Fixed Bid projects</span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php
-					$eff_var = '';
-					if(isset($projects['eff_var'][$parr])) {
-						$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
-					}
-					if(isset($eff_var) && ($eff_var != 0)) {
-					?>
-					<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'fixedbid'); return false;"><?php echo round($eff_var, 1); ?></a>
-					<?php
-					} else {
-						echo '';
-					}
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Contribution for the month (%) - <span class="highlight_info"><?=date('M Y', strtotime($bill_month));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php #echo $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] . "-". $projects['cm_irval'][$parr]; 
-						#((total invoice raised - total direct cost)/total invoice raised)*100;
-						$cm_dc_val = '';
-						if(isset($projects['cm_irval'][$parr]) && isset($projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])) {
-							$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
-						}
-						echo round($cm_dc_val, 1);
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td><b>Contribution YTD (%) - <span class="highlight_info"><?=date('M Y', strtotime($start_date));?> To <?=date('M Y', strtotime($end_date));?></span></b></td>
-		<?php if(!empty($practice_arr)) { ?>
-			<?php foreach($practice_arr as $parr) { ?>
-				<td align='right'>
-					<?php 
-						// echo $projects['irval'][$parr] . "-" .$projects['direct_cost'][$parr]['total_direct_cost'];
-						// ((total invoice raised - total direct cost)/total invoice raised)*100
-						$dc_val = '';
-						if(isset($projects['irval'][$parr]) && isset($projects['direct_cost'][$parr]['total_direct_cost'])) {
-							$dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
-						}
-						echo round($dc_val, 1);
-					?>
-				</td>
-			<?php } ?>
-		<?php } ?>
-	</tr>
-</table>
+							echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-';
+						?>
+					</td>
+				</tr>
+			</table>
 <div class="clearfix"></div>
 <div id="drilldown_data" class="" style="margin:20px 0;display:none;">
 

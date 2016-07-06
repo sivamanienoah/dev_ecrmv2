@@ -37,13 +37,14 @@ $practice_arr = array();
 			<div id="advance_search" style="padding-bottom:15px;">
 				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					
 					<div style="border: 1px solid #DCDCDC; width:65% !important;">
-						<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
-								<td>
-									<input type="radio" name="filter_by" value="1" />Upto Current Date &nbsp;&nbsp;<input type="radio" name="filter_by" value="2" />Upto Previous month
+								<td align="left">
+									<input <?php echo ($month_status==1)?'checked="checked"':'';?> type="radio" name="filter_by" value="1" />&nbsp;Upto Current Date &nbsp;&nbsp;<input <?php echo ($month_status==2)?'checked="checked"':'';?> type="radio" name="filter_by" value="2" />&nbsp;Upto Previous month
 								</td>
-								<td align="right">
+								<td align="left">
 								<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 								</td>								
 							</tr>
@@ -383,6 +384,7 @@ $("#advanceFilterServiceDashboard").submit(function() {
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
 	var billable_month   	 = $("#billable_month").val();
+	var month_status   	 = $('input[name=filter_by]:checked', '#advanceFilterServiceDashboard').val()
 
 	// if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
 	if(month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
@@ -393,10 +395,10 @@ $("#advanceFilterServiceDashboard").submit(function() {
 
 	$.ajax({
 		type: "POST",
-		url: site_base_url+"projects/dashboard/service_dashboard/",
+		url: site_base_url+"projects/dashboard/service_dashboard_beta/",
 		// dataType: "json",
 		// data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
-		data: 'filter=filter'+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: 'filter=filter'+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&'+csrf_token_name+'='+csrf_hash_token+'&month_status='+month_status,
 		beforeSend:function() {
 			$('#default_view').empty();
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
