@@ -509,7 +509,12 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
 			$tot['ytd_billable'] = round(($tot_billval/$tot_totbillval)*100);
 			$tot['effort_variance'] = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
-			$tot['contribution_month'] = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);
+			$cmonth='-';
+			if($tot_cm_dc_tot){
+				$cmonth = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
+			}
+			$tot['contribution_month'] = $cmonth;			
+			//$tot['contribution_month'] = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);
 			$tot['ytd_contribution'] = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 			$tot['month_status'] = 2;
 
