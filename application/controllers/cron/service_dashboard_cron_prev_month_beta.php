@@ -71,7 +71,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$end_date  	   = date('Y-m-d',strtotime("-1 month")); //eg.2014-03-01
 		
 		//default billable_month
-		$month = date('Y-m-01 00:00:00');
+		$month = date('Y-m-01 00:00:00',strtotime("-1 month"));
 		$start_date = date("Y-m-01",strtotime($start_date));
 		$end_date = date("Y-m-t", strtotime($end_date));
 		
