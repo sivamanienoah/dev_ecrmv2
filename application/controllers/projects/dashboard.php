@@ -1775,7 +1775,7 @@ class Dashboard extends crm_controller
 		$month_status = $this->input->post("month_status");
 		if(!empty($month_status)){
 			if($month_status==2){
-				$end_date  	   = date('Y-m-d', strtotime("-1 month"));
+				$end_date  	   = date('Y-m-t', strtotime("-1 month"));
 				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
 			}else{
 				$end_date  	   = date('Y-m-d');
