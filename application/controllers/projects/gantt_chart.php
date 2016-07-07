@@ -74,5 +74,28 @@ class Gantt_chart extends crm_controller {
 		
 		echo json_encode($result);
 	  }
+	  
+		public function getProgress_status()
+		{
+			$progress=0;$result=array();
+			$project_id=$_GET['project_id'];
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'project_plan');
+			$this->db->where('project_id', $project_id);
+			$query = $this->db->get();
+			$result=array();
+			$row_count=$query->num_rows();
+			if($query->num_rows() > 0 )
+			{
+				$row = $query->result_array();
+				foreach($row as $list)
+				{
+					$total_percentage+=$list['complete_percentage'];
+					$progress=$total_percentage/$row_count;
+				}
+			}
+			$result['response']=round($progress);
+			echo json_encode($result);
+		}
    } 
  ?>

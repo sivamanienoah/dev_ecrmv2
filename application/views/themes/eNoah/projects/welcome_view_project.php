@@ -2223,9 +2223,33 @@ $(function(){
 	
 	
 });  
+
+
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/request/request.js"></script>
+
+<script>
+<!-------------------LOAD VALUES FOR METER----------------------->
+var progress_data = (function () {
+	var project_id=jQuery("#project_id").val();
+    var json = null;
+    $.ajax({
+        'async': false,
+        'global': false,
+        'url': site_base_url+"projects/gantt_chart/getProgress_status?project_id="+project_id,
+        'dataType': "json",
+        'success': function (data) {
+            json = data.response;
+        }
+    });
+    return json;
+})();
+
+updateVisualStatus(progress_data);
+
+<!------------------------------->
+</script>
 
 <?php // loaded files/folders manually when logged in user is developer
 if($this->userdata['role_id'] == 8): ?>
