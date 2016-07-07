@@ -555,6 +555,7 @@ if (get_default_currency()) {
 				<li><a href="<?php echo current_url() ?>#jv-tab-8-5">Quality Metrics</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-10">Send Email</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-9">Job History</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-11">Gantt Chart</a></li>
 			<?php endif; ?>
 		</ul>
 	</div>
@@ -1585,25 +1586,7 @@ if (get_default_currency()) {
 			echo $output;
 			?>
 		</div> <!--end of milestone-top-view-->
-		
-		<!-------------------FILE IMPORT FOR GANTT CHART--------------------->
-				
-		<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
-         <input type="file" name="xmlfile" id="xmlfile" /> 
-         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
-         <br /><br /> 
-         <input type="submit" value="upload" name="submit"/>
-		<div id="success_msg"></div>
-		</form> 
-		
-		<br /><br />
-		
-		<div id="upload_loading" style="display:none">
-			<img src = '<?php echo base_url().'assets/images/ajax_loader.gif'; ?>' width="54" />
-		</div>
-		
-		<?php $this->load->view('projects/gantt_chart');?>
+	
 		<!------------------------------------------------------------------->
 	</div><!-- id: jv-tab-4-5 end -->
 	<div id="jv-tab-7">
@@ -2151,7 +2134,32 @@ if (get_default_currency()) {
 			<h4>Job History</h4>
 			<div id="load-log"></div>
 		</div><!-- id: jv-tab-9 end -->
-	
+		
+		<div id="jv-tab-11">
+			<h4>Gantt chart</h4>
+			
+			<br /><br />
+			
+			<!-------------------FILE IMPORT FOR GANTT CHART--------------------->
+				
+			<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
+			 <input type="file" name="xmlfile" id="xmlfile" /> 
+			 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
+			 <br /><br /> 
+			 <input type="submit" value="upload" name="submit"/>
+			<div id="success_msg"></div>
+			</form> 
+		
+			<br /><br />
+		
+			<div id="upload_loading" style="display:none">
+				<img src = '<?php echo base_url().'assets/images/ajax_loader.gif'; ?>' width="54" />
+			</div>
+		
+			<?php $this->load->view('projects/gantt_chart');?>
+			
+		</div><!-- id: jv-tab-11 end -->
 	
 	<?php endif;?>
   </div>

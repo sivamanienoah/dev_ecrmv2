@@ -37,7 +37,7 @@ class Upload extends crm_controller
 			{
 				foreach($records as $list)
 				{
-					if($i>3)
+					if($i>2)
 					{
 						$uid=$list['UID'];
 						$task_name=mysql_real_escape_string($list['Name']);
@@ -52,6 +52,7 @@ class Upload extends crm_controller
 						$estimated_end=date("Y-m-d",strtotime($list['ManualFinish']));
 						$complete_percent=$list['PercentComplete'];
 						$resource_names=$this->get_resources($list['UID'],$assignment,$resources);
+						$parent_id=$this->get_parent($WBS,$project_id);
 						$predecessor='';
 						if(isset($list['PredecessorLink']))
 						{
@@ -71,7 +72,7 @@ class Upload extends crm_controller
 						}
 						
 						
-						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$WBS','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$resource_names','$estimated_start','$estimated_end','$complete_percent')";
+						$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,parent_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$WBS','$parent_id','$task_name','$duration_in_hours','$start_date','$finish_date','$predecessor','$resource_names','$estimated_start','$estimated_end','$complete_percent')";
 
 						$result=$this->db->query($sql);
 						
@@ -123,7 +124,24 @@ class Upload extends crm_controller
 		
 		return $resource_name;
 	}
-
+	
+	function get_parent($task_id,$project_id)
+	{
+		$parent_id=0;
+		$task_id=substr($task_id,0,strlen($task_id)-2);
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $project_id);
+		$this->db->where('task_id', $task_id);
+		$sql = $this->db->get();
+		if($sql->num_rows() > 0 )
+		{
+			$row = $sql->row_array();
+			$parent_id=$row['id'];
+		}
+		return $parent_id;
+	}
+	
 	function Xml2Array($contents, $get_attributes=1, $priority = 'tag') 
 	{
 		if(!$contents) return array();

@@ -8,8 +8,11 @@ class Gantt_chart extends crm_controller {
 	
 	  public function getTask()
 	  {
+		$project_id=$_GET['project_id'];
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $project_id);
+		// $this->db->limit(5);
 		$query = $this->db->get();
 		$result=array();
 		if($query->num_rows() > 0 )
@@ -19,23 +22,23 @@ class Gantt_chart extends crm_controller {
 			{
 				$id=$list['id'];
 				$task_name=$list['task_name'];
-				$start_date=$list['start_date'];
-				$end_date=$list['end_date'];
+				$start_date=date("d-m-Y",strtotime($list['start_date']));
+				$end_date=date("d-m-Y",strtotime($list['end_date']));
 				$predecessors=$this->get_task_id($list['predecessors']);
 				$duration=$list['duration'];
 				$resource_name=$list['resource_name'];
-				$complete_percentage=$list['complete_percentage'];
-				$result[]=array('id'=>$id,'text'=>$task_name,'start'=>$start_date,'end'=>$end_date,'predecessor'=>$predecessors,'duration'=>$duration,'resource_name'=>$resource_name,'complete'=>$complete_percentage);
+				$complete_percentage=$list['complete_percentage']/100;
+				$result['data'][]=array('id'=>$id,'text'=>$task_name,'start_date'=>$start_date,'end_date'=>$end_date,'predecessor'=>$predecessors,'duration'=>$duration,'resource_name'=>$resource_name,'progress'=>$complete_percentage,'parent'=>$list['parent_id'],'open'=>"true");
 			}
 		}
-		
 		echo json_encode($result);
 	  }
 	  
-	  public function get_task_id($uid)
+	  public function get_task_id($uid,$project_id)
 	  {
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $project_id);
 		$this->db->where('uid', $uid);
 		$query = $this->db->get();
 		$result=array();
