@@ -1303,7 +1303,7 @@ class Dashboard extends crm_controller
 		$this->db->where('p.status', 1);
 		//BPO practice are not shown in IT Services Dashboard
 		// $this->db->where_not_in('p.id', 6);
-		$practice_not_in = array(6,13);
+		$practice_not_in = array(6);
 		$this->db->where_not_in('p.id', $practice_not_in);
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
@@ -1326,7 +1326,7 @@ class Dashboard extends crm_controller
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
 		// $this->db->where_not_in("l.practice", 6);
-		$practice_not_in = array(6,13);
+		$practice_not_in = array(6);
 		$this->db->where_not_in('l.practice', $practice_not_in);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
@@ -1455,7 +1455,7 @@ class Dashboard extends crm_controller
 		$this->db->where('p.status', 1);
 		//BPO practice are not shown in IT Services Dashboard
 		// $this->db->where_not_in('p.id', 6);
-		$practice_not_in = array(6,13);
+		$practice_not_in = array(6);
 		$this->db->where_not_in('p.id', $practice_not_in);
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
@@ -1478,7 +1478,7 @@ class Dashboard extends crm_controller
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
 		// $this->db->where_not_in("l.practice", 6);
-		$practice_not_in = array(6,13);
+		$practice_not_in = array(6);
 		$this->db->where_not_in('l.practice', $practice_not_in);
 		// $this->db->where("DATE(l.date_start) >= ", $start_date);
 		// $this->db->where("DATE(l.date_due) <= ", $end_date);
