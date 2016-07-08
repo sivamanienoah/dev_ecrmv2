@@ -220,7 +220,7 @@
 									}
 									if($dc_val!='-'){
 									?>
-										<?php if(($parr=='Testing') || ($parr=='Infra Services')) { 
+										<?php if($parr=='Infra Services') { 
 											echo '-';
 										} else {
 										?>
