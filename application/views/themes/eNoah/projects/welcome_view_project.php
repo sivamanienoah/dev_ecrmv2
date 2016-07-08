@@ -2136,22 +2136,27 @@ if (get_default_currency()) {
 		</div><!-- id: jv-tab-9 end -->
 		
 		<div id="jv-tab-11">
-			<h4>Gantt chart</h4>
+			<h4 class="form_patb10">Gantt chart</h4>
 			
-			<br /><br />
+			
 			
 			<!-------------------FILE IMPORT FOR GANTT CHART--------------------->
 				
 			<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
-			 <input type="file" name="xmlfile" id="xmlfile" /> 
-			 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-			  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
-			 <br /><br /> 
-			 <input type="submit" value="upload" name="submit"/>
+			<div class="form_containerArea">
+				<div class="form_leftArea">
+				
+				 <input type="file" name="xmlfile" id="xmlfile" /> 
+				 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
+				</div>
+				<div class="form_rightArea">			
+					<input type="submit" value="upload" name="submit"/>
+				</div> 
+			 </div>
 			<div id="success_msg"></div>
 			</form> 
-		
-			<br /><br />
+			
 		
 			<div id="upload_loading" style="display:none">
 				<img src = '<?php echo base_url().'assets/images/ajax_loader.gif'; ?>' width="54" />
@@ -2249,6 +2254,13 @@ var progress_data = (function () {
 updateVisualStatus(progress_data);
 
 <!------------------------------->
+
+$(document).ready(function(){
+  var gantHiet= $(".gantt_task").height();
+  var getmHiet=$(".gantt_grid").height();
+  $(".gantt_task").css("height",gantHiet+20);
+  $(".gantt_grid").css("height",gantHiet+20);
+});
 </script>
 
 <?php // loaded files/folders manually when logged in user is developer

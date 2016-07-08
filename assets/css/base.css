@@ -2806,3 +2806,71 @@ form#edit-folder-permissions { overflow:visible !important; }
 .green-clr { color:#468847; font-weight:bold; }
 .red-clr { color:#c21706; font-weight:bold; }
 .orange-clr { color:#ff7e00; font-weight:bold; }
+/*--------------08/07/2016-----------------------*/
+.form_containerArea{
+	width:100%;
+	float:left;
+	margin:0 0 10px 0;
+	}
+.form_leftArea{
+	float:left;
+}
+.form_rightArea{
+	width:30%;
+	float:left;
+}
+.form_rightArea input{
+	background: #4b6fb9 none repeat scroll 0 0;
+	border: 1px solid #274686;
+	font-size: 11px;
+	font-weight: normal;
+	line-height: 17px;
+	padding: 2px 6px;
+	color:#fff;
+	cursor:pointer;
+}
+#project-tabs{
+	padding:10px;
+}
+.form_patb10{
+	border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px 0 5px;
+}
+.gantt_grid_scale{
+	background-color:#d5d5d5 !important;
+}
+.gantt_grid_head_cell{
+	 color:#212121 !important;
+}
+.gantt_scale_cell.weekend{
+	background-color:#d5d5d5 !important;
+	color:#212121 !important;
+}
+.gantt_scale_cell{
+	background-color:#d5d5d5 !important;
+	color:#212121 !important;
+}
+.gantt_scale_line{
+	background-color:#d5d5d5 !important;
+}
+.gantt_grid_scale .gantt_grid_head_cell {
+	border-right: 1px solid #a6a6a6 !important;
+   }
+   /* .gantt_grid{
+	padding-bottom:15px !important;
+   }
+   .gantt_ver_scroll{
+	padding-bottom:15px !important;
+   }
+   
+   .gantt_task{
+	padding-bottom:15px !important; 
+   }
+   .gantt_task .gantt_task_scale{
+	/* padding-bottom:15px !important; */
+   /* }   
+   .gantt_task .gantt_data_area{
+   padding-bottom:15px !important;
+   } */ 
+    

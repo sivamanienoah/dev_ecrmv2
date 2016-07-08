@@ -26,11 +26,13 @@ border-radius: 4px;
 
 .gantt_grid {
 	width: 436.25px !important;
+	
     overflow-x: auto;
     white-space: nowrap;
 }
 .gantt_task {
 	width: 699px !important;
+	
 	overflow-x: auto;
     white-space: nowrap;
 }
@@ -44,12 +46,10 @@ border-radius: 4px;
 
 <div class="container-fluid">
 	<div class="row">
-		<br>
-		<br>
 		<input type="hidden" id="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		<input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
 		<div class="col-md-10 col-md-pull-2">
-			<div class="gantt_wrapper panel" id="gantt_here"></div>
+			<div class="gantt_wrapper panel" id="gantt_here" style="height:500px;"></div>
 		</div>
 	</div>
 </div>
