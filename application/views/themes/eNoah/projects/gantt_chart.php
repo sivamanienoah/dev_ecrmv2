@@ -125,7 +125,7 @@ gantt.config.columns = [
 		return gantt.templates.date_grid(obj.end_date);
 	},align: "center",width:80},
 	{name:"duration",label:"Duration",align:"center",width:60},
-	{name:"resource_name",label:"&nbsp;$nbsp;Assigned To",align:"left",width:120},
+	{name:"resource_name",label:"&nbsp;&nbsp;Assigned To",align:"left",width:120},
 	{name:"progress",label:"%Complete",template:function(obj){
 		var progress=obj.progress*100;return Math.round(progress);
 	},align:"right",width:80}
