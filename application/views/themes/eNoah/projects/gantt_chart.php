@@ -155,13 +155,13 @@ gantt.config.drag_progress = false;
 gantt.config.drag_links = false;
 // gantt.config.details_on_dblclick = false;
 
-gantt.config.lightbox.sections = [
+/* gantt.config.lightbox.sections = [
     { name:"description", height:200, map_to:"text", type:"my_editor", focus:true},
-];
+]; */
 
-gantt.config.buttons_left = ["dhx_cancel_btn"];
+/* gantt.config.buttons_left = ["dhx_cancel_btn"];
 gantt.config.buttons_right = [];
-
+ */
 gantt.attachEvent("onLinkDblClick", function(id,e){return false;});
 gantt.attachEvent("onTaskCreated", function(id,e){return false;});	  
 gantt.init("gantt_here");
