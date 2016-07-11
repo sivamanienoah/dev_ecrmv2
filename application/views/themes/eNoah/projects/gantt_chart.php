@@ -1,4 +1,5 @@
 <script src="assets/js/gantt-chart/dhtmlxgantt.js" type="text/javascript" charset="utf-8"></script>
+<script src="assets/js/gantt-chart/dhtmlxgantt_tooltip.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="assets/css/gantt-chart/dhtmlxgantt.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 <style type="text/css">
