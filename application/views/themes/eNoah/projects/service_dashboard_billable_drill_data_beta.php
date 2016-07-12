@@ -138,7 +138,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								$duration_hours = $array4['duration_hours'];
 								$total_cost = $array4['total_cost'];
 								$total_dc_cost = $array4['total_dc_cost'];
-								if(isset($tbl_data[$project_code][$resourceName]['hour'])) {
+								/* if(isset($tbl_data[$project_code][$resourceName]['hour'])) {
 									$tbl_data[$project_code][$resourceName]['hour'] += $duration_hours;
 								} else {
 									$tbl_data[$project_code][$resourceName]['hour'] = $duration_hours;
@@ -152,7 +152,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								if(isset($tbl_data[$project_code][$resourceName]['directcost']))
 								$tbl_data[$project_code][$resourceName]['directcost'] += $total_dc_cost;
 								else
-								$tbl_data[$project_code][$resourceName]['directcost'] = $total_dc_cost;
+								$tbl_data[$project_code][$resourceName]['directcost'] = $total_dc_cost; */
 
 								if(isset($sub_tot[$project_code]['sub_tot_hour']))
 								$sub_tot[$project_code]['sub_tot_hour'] +=  $duration_hours;
@@ -315,7 +315,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost = 0;
  //echo "<pre>"; print_r($sub_tot); echo "</pre>";
-if(!empty($tbl_data)) {
+if(!empty($sub_tot)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
 			<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
