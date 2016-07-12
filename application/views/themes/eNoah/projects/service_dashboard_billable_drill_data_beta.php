@@ -169,6 +169,27 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								else
 								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost;
 							
+								if(isset($sub_tot[$project_code]['sub_tot_directcost']))
+								$sub_tot[$project_code]['sub_tot_directcost'] +=  $total_dc_cost;
+								else
+								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost;
+								
+								if(isset($sub_tot[$project_code][$resourceName]['hour'])) {
+									$sub_tot[$project_code][$resourceName]['hour'] += $duration_hours;
+								} else {
+									$sub_tot[$project_code][$resourceName]['hour'] = $duration_hours;
+								}
+
+								if(isset($sub_tot[$project_code][$resourceName]['cost']))
+								$sub_tot[$project_code][$resourceName]['cost'] += $total_cost;
+								else
+								$sub_tot[$project_code][$resourceName]['cost'] = $total_cost;
+
+								if(isset($sub_tot[$project_code][$resourceName]['directcost']))
+								$sub_tot[$project_code][$resourceName]['directcost'] += $total_dc_cost;
+								else
+								$sub_tot[$project_code][$resourceName]['directcost'] = $total_dc_cost;							
+							
 								$tot_hour = $tot_hour + $duration_hours;
 								$tot_cost = $tot_cost + $total_cost;
 								$tot_directcost = $tot_directcost + $total_dc_cost;
@@ -293,7 +314,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost = 0;
-// echo "<pre>"; print_r($prjt_hr); echo "</pre>";
+ echo "<pre>"; print_r($sub_tot); echo "</pre>";
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
@@ -307,8 +328,20 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>
 			</tr>";
 	//foreach($tbl_data as $projectCode => $proj_ar) {
-		arsort($tbl_data);
-		$sort_ar = $tbl_data;
+		//asort($sub_tot);
+function subval_sort($a,$subkey) {
+	foreach($a as $k=>$v) {
+		$b[$k] = strtolower($v[$subkey]);
+	}
+	asort($b);
+	foreach($b as $key=>$val) {
+		$c[] = $a[$key];
+	}
+	return $c;
+}
+$sub_tot = subval_sort($sub_tot,'artist'); 
+echo '<pre>';print_r($sub_tot);exit;
+		$sort_ar = $sub_tot;
 		$proj_arr = array();
 		//echo '<pre>';print_r($sort_ar);
 		foreach($sort_ar as $p_name=>$user_ar) {
