@@ -169,10 +169,10 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								else
 								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost;
 							
-								if(isset($sub_tot[$project_code]['sub_tot_directcost']))
+								/* if(isset($sub_tot[$project_code]['sub_tot_directcost']))
 								$sub_tot[$project_code]['sub_tot_directcost'] +=  $total_dc_cost;
 								else
-								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost;
+								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost; */
 								
 								if(isset($sub_tot[$project_code][$resourceName]['hour'])) {
 									$sub_tot[$project_code][$resourceName]['hour'] += $duration_hours;
@@ -314,7 +314,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost = 0;
- echo "<pre>"; print_r($sub_tot); echo "</pre>";
+ //echo "<pre>"; print_r($sub_tot); echo "</pre>";
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
@@ -329,18 +329,16 @@ if(!empty($tbl_data)) {
 			</tr>";
 	//foreach($tbl_data as $projectCode => $proj_ar) {
 		//asort($sub_tot);
-function subval_sort($a,$subkey) {
-	foreach($a as $k=>$v) {
-		$b[$k] = strtolower($v[$subkey]);
-	}
-	asort($b);
-	foreach($b as $key=>$val) {
-		$c[] = $a[$key];
-	}
-	return $c;
-}
-$sub_tot = subval_sort($sub_tot,'artist'); 
-echo '<pre>';print_r($sub_tot);exit;
+
+		
+		function cmp($a, $b) {
+			if ($a['sub_tot_hour'] == $b['sub_tot_hour']) {
+				return 0;
+			}
+			return ($a['sub_tot_hour'] > $b['sub_tot_hour']) ? -1 : 1;
+		} 
+
+		uasort($sub_tot, 'cmp');		
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
 		//echo '<pre>';print_r($sort_ar);
@@ -371,6 +369,7 @@ echo '<pre>';print_r($sub_tot);exit;
 			//echo '<pre>';print_r($user_ar);
 			if(count($user_ar)>0 && !empty($user_ar)):
 			foreach($user_ar as $ukey=>$pval) {
+				if(!empty($pval['hour'])):
 				$i=1;
 				$per_hr = $per_cost = $per_directcost = 0;
 				$per_hr   	= ($pval['hour']/$tot_hour) * 100;
@@ -389,6 +388,7 @@ echo '<pre>';print_r($sub_tot);exit;
 				$per_hr		= '';
 				$rate_pr_hr = 0;
 				$i++;
+				endif;
 				$user_ar = array();
 			}
 			endif;
