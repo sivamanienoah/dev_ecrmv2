@@ -168,6 +168,12 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								$sub_tot[$project_code]['sub_tot_directcost'] +=  $total_dc_cost;
 								else
 								$sub_tot[$project_code]['sub_tot_directcost'] =  $total_dc_cost;
+								
+								if(isset($sub_tot[$project_code][$resourceName]['hour'])) {
+									$sub_tot[$project_code][$resourceName]['hour'] += $duration_hours;
+								} else {
+									$sub_tot[$project_code][$resourceName]['hour'] = $duration_hours;
+								}
 							
 								$tot_hour = $tot_hour + $duration_hours;
 								$tot_cost = $tot_cost + $total_cost;
@@ -307,10 +313,10 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>
 			</tr>";
 	//foreach($tbl_data as $projectCode => $proj_ar) {
-		arsort($tbl_data);
-		$sort_ar = $tbl_data;
+		arsort($sub_tot);
+		$sort_ar = $sub_tot;
 		$proj_arr = array();
-		echo '<pre>';print_r($sort_ar);
+	//	echo '<pre>';print_r($sort_ar);
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$i       = 0;
 			// $res_cnt = 0;
