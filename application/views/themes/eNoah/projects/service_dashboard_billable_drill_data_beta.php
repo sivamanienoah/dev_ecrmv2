@@ -307,12 +307,10 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>
 			</tr>";
 	//foreach($tbl_data as $projectCode => $proj_ar) {
-		$ntbl_data=$tbl_data;
-		$ntbl_data=$tbl_data;
-		arsort($ntbl_data);
-		$sort_ar = $ntbl_data;
+		arsort($tbl_data);
+		$sort_ar = $tbl_data;
 		$proj_arr = array();
-		//echo '<pre>';print_r($sort_ar);
+		echo '<pre>';print_r($sort_ar);
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$i       = 0;
 			// $res_cnt = 0;
