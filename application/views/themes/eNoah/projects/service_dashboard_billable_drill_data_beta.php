@@ -313,7 +313,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'><b>% of DIRECT COST</b></th>
 			</tr>";
 	//foreach($tbl_data as $projectCode => $proj_ar) {
-		asort($sub_tot);
+		arsort($sub_tot);
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
 	//	echo '<pre>';print_r($sort_ar);
