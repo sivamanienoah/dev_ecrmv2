@@ -468,7 +468,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
-				
+				$cm_dc_val='-';
 				if($projects['cm_direct_cost'][$parr]['total_cm_direct_cost']){
 					$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
 				}
