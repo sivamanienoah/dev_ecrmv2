@@ -255,9 +255,11 @@
 	gantt.attachEvent("onBeforeTaskUpdate", function(id, task, is_new){
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d");
 		var csrf_token=jQuery("#ci_csrf_token").val();
+		var project_id=jQuery("#project_id").val();
 		$.post(site_base_url+"projects/gantt_chart/updateTask",{
 		ci_csrf_token:csrf_token,
 		id:id,
+		project_id:project_id,
 		duration:task.duration,
 		task_name:task.text,
 		progress:task.progress,
@@ -270,9 +272,11 @@
 	});
 	gantt.attachEvent("onBeforeTaskDelete", function(id, task, is_new){
 		var csrf_token=jQuery("#ci_csrf_token").val();
+		var project_id=jQuery("#project_id").val();
 		$.post(site_base_url+"projects/gantt_chart/deleteTask",{
 		ci_csrf_token:csrf_token,
 		id:id,
+		project_id:project_id,
 		},function(data){
 		//alert(data);
 		}) ;
