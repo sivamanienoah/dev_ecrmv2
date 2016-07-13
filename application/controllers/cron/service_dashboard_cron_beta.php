@@ -401,24 +401,23 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		 
+		// echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1);echo 'cm_direct cost'.'<br>';print_r($cm_directcost1);
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
 		$project_master = array();
 		if(!empty($project_res)){
-			foreach($project_res as $prec)
+			foreach($project_res as $prec){
+				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+				$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];			
+			}
 			//$project_master[$prec->project_code] = $prec->title;
-			$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
-			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
-			$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+
 		}
  
+		//echo '<pre>';print_r($practice_arr);echo 'directcost2'.'<br>';print_r($directcost2);echo 'cm_directcost2'.'<br>';print_r($cm_directcost2);exit;
 		foreach($directcost2 as $practiceId => $val1){
-			foreach($val1 as $pjtCode => $val){
-				if($practiceId=='Web Technologies'){
-					$test[$practiceId][$pjtCode]['hours'] += $val['total_direct_cost'];	
-				}
+			foreach($val1 as $pjtCode => $val){				
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
 		}
@@ -428,7 +427,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			}
 		}		
 		## code ends here##
-		
+		//echo '<pre>';print_r($practice_arr);print_r($directcost);print_r($cm_directcost);
 		
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
