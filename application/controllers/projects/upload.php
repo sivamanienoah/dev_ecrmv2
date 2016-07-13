@@ -128,7 +128,7 @@ class Upload extends crm_controller
 	function get_parent($task_id,$project_id)
 	{
 		$parent_id=0;
-		$task_id=substr($task_id,0,strlen($task_id)-2);
+		$task_id=substr($task_id, 0, strripos($task_id, '.'));
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'project_plan');
 		$this->db->where('project_id', $project_id);

@@ -1,48 +1,82 @@
 <script src="assets/js/gantt-chart/dhtmlxgantt.js" type="text/javascript" charset="utf-8"></script>
+<script src="assets/js/gantt-chart/dhtmlx.js" type="text/javascript" charset="utf-8"></script>
 <script src="assets/js/gantt-chart/dhtmlxgantt_tooltip.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="assets/css/gantt-chart/dhtmlxgantt.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="assets/css/gantt-chart/dhtmlx.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 <style type="text/css">
-html, body{ height:100%; padding:0px; margin:0px; }
-.weekend{ background: #f4f7f4 !important;}
-.gantt_selected .weekend{ background:#FFF3A1 !important; }
-.well {
-text-align: right;
-}
-@media (max-width: 991px) {
-.nav-stacked>li{ float: left;}
-}
-.container-fluid .row {
-margin-bottom: 10px;
-}
-.container-fluid .gantt_wrapper {
-height: 700px;
-width: 100%;
-}
-.gantt_container {
-border-radius: 4px;
-}
-.gantt_grid_scale { background-color: transparent; }
-.gantt_hor_scroll { display: none !important;margin-bottom: 1px; }
+	html, body{ height:100%; padding:0px; margin:0px; }
+	.weekend{ background: #f4f7f4 !important;}
+	.gantt_selected .weekend{ background:#FFF3A1 !important; }
+	.well {
+		text-align: right;
+	}
+	@media (max-width: 991px) {
+		.nav-stacked>li{ float: left;}
+	}
+	.container-fluid .row {
+		margin-bottom: 10px;
+	}
+	.container-fluid .gantt_wrapper {
+		height: 700px;
+		width: 100%;
+	}
+	.gantt_container {
+		border-radius: 4px;
+	}
+	.gantt_grid_scale { background-color: transparent; }
+	.gantt_hor_scroll { display: none !important;margin-bottom: 1px; }
 
-.gantt_grid {
-	width: 436.25px !important;
-	
-    overflow-x: auto;
-    white-space: nowrap;
-}
-.gantt_task {
-	width: 699px !important;
-	
-	overflow-x: auto;
-    white-space: nowrap;
-}
-.gantt_grid_head_resource_name{
-	text-align: left !important;
-}
-.gantt_grid_head_progress{
-	text-align: right !important;
-}
+	.gantt_grid {
+		width: 436.25px !important;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+	.gantt_task {
+		width: 699px !important;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+	.gantt_grid_head_resource_name{
+		text-align: left !important;
+	}
+	.gantt_grid_head_progress{
+		text-align: right !important;
+	}
+	.dhx_calendar_cont input {
+		width: 96px;
+		padding: 0;
+		margin: 3px 10px 10px 10px;
+		font-size: 11px;
+		height: 17px;
+		text-align: center;
+		border: 1px solid #ccc;
+		color: #646464;
+	}
+	.dhtmlxcalendar_dhx_skyblue, .dhtmlxcalendar_dhx_web, .dhtmlxcalendar_dhx_terrace {
+		z-index: 999999 !important;
+	}
+	.gantt_slider {
+		width: 530px;
+		height: 20px;
+		margin-left: 10px;
+		display: inline-block;
+	}
+	.gantt_slider input{
+		width: 34px;
+		height: 18px;
+		border: none;
+	}
+	.gantt_slider div:first-child, .gantt_slider .gantt_slider_value{
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 13px;
+	}
+	.gantt_slider .gantt_slider_value{
+		font-size: 15px;
+		color: black;
+		margin: 5px 10px;
+	}
 </style>
 
 <div class="container-fluid">
@@ -56,114 +90,213 @@ border-radius: 4px;
 </div>
 
 <script type="text/javascript">
-var data = (function () {
-	var project_id=jQuery("#project_id").val();
-    var json = null;
-    $.ajax({
-        'async': false,
-        'global': false,
-        'url': site_base_url+"projects/gantt_chart/getTask?project_id="+project_id,
-        'dataType': "json",
-        'success': function (data) {
-            json = data;
-        }
-    });
-    return json;
-})(); 
-var getListItemHTML = function (type, count, active) {
-		return '<li'+(active?' class="active"':'')+'><a href="#">'+type+'s <span class="badge">'+count+'</span></a></li>';
+	var data = (function () {
+		var project_id=jQuery("#project_id").val();
+		var json = null;
+		$.ajax({
+			'async': false,
+			'global': false,
+			'url': site_base_url+"projects/gantt_chart/getTask?project_id="+project_id,
+			'dataType': "json",
+			'success': function (data) {
+			json = data;
+			}
+		});
+		return json;
+	})(); 
+
+	gantt.config.columns = [
+		{name:"text",label:"Task name",width:300,tree:true},
+		{name:"start_date",label:"Start Date",template:function(obj){
+		return gantt.templates.date_grid(obj.start_date);
+		},align: "center",width:80},
+		{name:"end_date",label:"End Date",template:function(obj){
+		return gantt.templates.date_grid(obj.end_date);
+		},align: "center",width:80},
+		{name:"duration",label:"Duration",align:"center",width:60},
+		{name:"resource_name",label:"&nbsp;&nbsp;Assigned To",align:"left",width:120},
+		{name:"progress",label:"%Complete &nbsp;",template:function(obj){
+		var progress=obj.progress*100;return Math.round(progress);
+		},align:"right",width:80},
+		{name:"add",label:"",width:44 }
+	];
+
+	gantt.config.grid_width = 390;
+	gantt.config.date_grid = "%d-%m-%Y";
+	gantt.config.scale_height  = 60;
+	gantt.config.subscales = [
+		{ unit:"month", step:1, date:"%M"}
+	];
+	gantt.config.date_scale = "%d";
+
+	gantt.templates.task_text=function(start,end,task){
+		var progress=task.progress*100;
+		progress=Math.round(progress);
+		return "("+(progress)+"%)"+" "+task.text;
+	};
+	gantt.config.order_branch = true;
+	gantt.config.drag_move = false;
+	gantt.config.drag_resize = false;
+	gantt.config.drag_progress = false;
+	gantt.config.drag_links = false;
+	var duration = function (a, b, c) {
+		var res = gantt.calculateDuration(a.getDate(false), b.getDate(false));
+		c.innerHTML = res + ' days';
+	};
+	var calendar_init = function (id, data, date) {
+		var obj = new dhtmlXCalendarObject(id);
+		obj.setDateFormat(data.date_format ? data.date_format : '');
+		obj.setDate(date ? date : (new Date()));
+		obj.hideTime();
+		if (data.skin)
+		obj.setSkin(data.skin);
+		return obj;
+	};
+	gantt.form_blocks["dhx_calendar"] = {
+		render: function (sns) {
+			return "<div class='dhx_calendar_cont'><input type='text' readonly='true' id='calendar1'/> &#8211; "
+			+ "<input type='text' readonly='true' id='calendar2'/><label id='duration'></label></div>";
+		},
+		set_value: function (node, value, task, data) {
+			var a = node._cal_start = calendar_init('calendar1', data, task.start_date);
+			var b = node._cal_end = calendar_init('calendar2', data, task.end_date);
+			var c = node.lastChild;
+			b.setInsensitiveRange(null, new Date(a.getDate(false) - 86400000));
+			var a_click = a.attachEvent("onClick", function (date) {
+			b.setInsensitiveRange(null, new Date(date.getTime() - 86400000));
+			duration(a, b, c);
+			});
+			var b_click = b.attachEvent("onClick", function (date) {
+			duration(a, b, c);
+			});
+			var a_time_click = a.attachEvent("onChange", function (d) {
+			b.setInsensitiveRange(null, new Date(d.getTime() - 86400000));
+			duration(a, b, c);
+			});
+			var b_time_click = b.attachEvent("onChange", function (d) {
+			duration(a, b, c);
+			});
+			var id = gantt.attachEvent("onAfterLightbox", function () {
+			a.detachEvent(a_click);
+			a.detachEvent(a_time_click);
+			a.unload();
+			b.detachEvent(b_click);
+			b.detachEvent(b_time_click);
+			b.unload();
+			a = b = null;
+			this.detachEvent(id);
+			});
+
+			document.getElementById('calendar1').value = a.getDate(true);
+			document.getElementById('calendar2').value = b.getDate(true);
+			duration(a, b, c);
+		},
+		get_value: function (node, task) {
+			task.start_date = node._cal_start.getDate(false);
+			task.end_date = node._cal_end.getDate(false);
+			return task;
+		},
+		focus: function (node) {
+		}
 	};
 
-var updateInfo = function () {
-	var state = gantt.getState(),
-	tasks = gantt.getTaskByTime(state.min_date, state.max_date),
-	types = gantt.config.types,
-	result = {},
-	html = "",
-	active = false;
+	gantt.form_blocks["dhx_slider"] = {
+		render: function (sns) {
+			return '<div class="gantt_slider"><div><input type="text" readonly="true"/></div></div>';
+		},
+		set_value: function (node, value, task, data) {
+			if (!node._slider) {
+				node._slider = new dhtmlXSlider({
+				parent: node,
+				size: 270,
+				max: 100,
+				tooltip: true,
+				step: data.step ? data.step : 1,
+				skin: data.skin ? data.skin : ''
+				});
 
-	// get available types
-	for (var t in types) {
-		result[types[t]] = 0;
-	}
-	// sort tasks by type
-	for (var i=0, l=tasks.length; i<l; i++) {
-		if (tasks[i].type && result[tasks[i].type] != "undefined")
-			result[tasks[i].type] += 1;
-		else
-			result[types.task] += 1;
-	}
-	// render list items for each type
-	for (var j in result) {
-		if (j == types.task)
-			active = true;
-		else
-			active = false;
-		html += getListItemHTML(j, result[j], active);
-	}
+				node._count = document.createElement('div');
+				node._count.className = "gantt_slider_value";
 
-	// document.getElementById("gantt_info").innerHTML = html;
-};
+				node.appendChild(node._count);
+				var slider_id = node._slider.attachEvent("onChange", function (newValue, sliderObj) {
+				node._count.innerHTML = newValue + "%";
+				});
+				var id = gantt.attachEvent("onAfterLightbox", function () {
+				node._slider.detachEvent(slider_id);
+				node._slider.unload();
+				node._slider = null;
+				this.detachEvent(id);
+				});
+			}
+			if (task.progress || task.progress == 0) {
+				node._slider.setValue(parseInt(task.progress * 100));
+				node._count.innerHTML = parseInt(task.progress * 100) + "%";
+			}
+		},
+		get_value: function (node, task) {
+			return node._slider ? node._slider.getValue() / 100 : 0;
+		},
+		focus: function (node) {
+		}
+	};
+	gantt.config.lightbox.sections = [
+		{name: "description", height: 80, map_to: "text", type: "textarea", focus: true},
+		{name: "progress", type: "dhx_slider", map_to: "progress", step: 5},
+		{name: "time", type: "dhx_calendar", map_to: "auto", skin: '', date_format: '%d-%m-%Y'}
+	];
+	gantt.locale.labels.section_progress = "Progress";
 
-gantt.templates.scale_cell_class = function(date){
-	if(date.getDay()==0||date.getDay()==6){
-		return "weekend";
-	}
-};
-gantt.templates.task_cell_class = function(item,date){
-	if(date.getDay()==0||date.getDay()==6){
-		return "weekend" ;
-	}
-};
+	gantt.attachEvent("onLoadEnd", function(){
+		var first = gantt.getTaskByTime()[0];
+		gantt.showLightbox(first.id);
+	});
 
-
-gantt.config.columns = [
-	{name:"text",label:"Task name",width:300,tree:true},
-	{name:"start_date",label:"Start Date",template:function(obj){
-		return gantt.templates.date_grid(obj.start_date);
-	},align: "center",width:80},
-	{name:"end_date",label:"End Date",template:function(obj){
-		return gantt.templates.date_grid(obj.end_date);
-	},align: "center",width:80},
-	{name:"duration",label:"Duration",align:"center",width:60},
-	{name:"resource_name",label:"&nbsp;&nbsp;Assigned To",align:"left",width:120},
-	{name:"progress",label:"%Complete",template:function(obj){
-		var progress=obj.progress*100;return Math.round(progress);
-	},align:"right",width:80}
-];
-
-gantt.config.grid_width = 390;
-gantt.config.date_grid = "%d-%m-%Y";
-gantt.config.scale_height  = 60;
-gantt.config.subscales = [
-	{ unit:"month", step:1, date:"%M"}
-];
-gantt.config.date_scale = "%d";
-
-gantt.templates.task_text=function(start,end,task){
-    var progress=task.progress*100;
-	progress=Math.round(progress);
-	return "("+(progress)+"%)"+" "+task.text;
-};
-
-
-gantt.config.order_branch = true;
-
-gantt.config.drag_move = false;
-gantt.config.drag_resize = false;
-gantt.config.drag_progress = false;
-gantt.config.drag_links = false;
-// gantt.config.details_on_dblclick = false;
-
-/* gantt.config.lightbox.sections = [
-    { name:"description", height:200, map_to:"text", type:"my_editor", focus:true},
-]; */
-
-/* gantt.config.buttons_left = ["dhx_cancel_btn"];
-gantt.config.buttons_right = [];
- */
-gantt.attachEvent("onLinkDblClick", function(id,e){return false;});
-gantt.attachEvent("onTaskCreated", function(id,e){return false;});	  
-gantt.init("gantt_here");
-gantt.parse(data);
+	gantt.attachEvent("onBeforeTaskUpdate", function(id, task, is_new){
+		var dateToStr = gantt.date.date_to_str("%Y-%m-%d");
+		var csrf_token=jQuery("#ci_csrf_token").val();
+		$.post(site_base_url+"projects/gantt_chart/updateTask",{
+		ci_csrf_token:csrf_token,
+		id:id,
+		duration:task.duration,
+		task_name:task.text,
+		progress:task.progress,
+		start_date:dateToStr(task.start_date),
+		end_date:dateToStr(task.end_date)
+		},function(data){
+		//alert(data);
+		}) ;
+		return true;
+	});
+	gantt.attachEvent("onBeforeTaskDelete", function(id, task, is_new){
+		var csrf_token=jQuery("#ci_csrf_token").val();
+		$.post(site_base_url+"projects/gantt_chart/deleteTask",{
+		ci_csrf_token:csrf_token,
+		id:id,
+		},function(data){
+		//alert(data);
+		}) ;
+		return true;
+	});
+	gantt.attachEvent("onBeforeTaskAdd", function(id,item){
+		var csrf_token=jQuery("#ci_csrf_token").val();
+		var project_id=jQuery("#project_id").val();
+		var dateToStr = gantt.date.date_to_str("%Y-%m-%d");
+		$.post(site_base_url+"projects/gantt_chart/addTask",{
+			ci_csrf_token:csrf_token,
+			id:id,
+			project_id:project_id,
+			parent_id:item.parent,
+			duration:item.duration,
+			task_name:item.text,
+			progress:item.progress,
+			start_date:dateToStr(item.start_date),
+			end_date:dateToStr(item.end_date)
+		},function(data){
+			gantt.changeTaskId(id, data);
+		}) ;
+		return true;
+	});
+	gantt.init("gantt_here");
+	gantt.parse(data);
 </script>
