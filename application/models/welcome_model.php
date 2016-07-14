@@ -1443,6 +1443,114 @@ class Welcome_model extends crm_model {
 		}
 		return $chge_access;
 	}
+	
+	public function getClosedJobids($cusId = FALSE, $filter = FALSE) 
+	{
+		$date_range = false;
+		$leadid_arr = array();
+		
+		if(isset($filter) && $filter['month_year_from_date']) {
+			$from_date  = date('Y-m-d', strtotime($filter['month_year_from_date']));
+			$date_range = true;
+		}
+		if(isset($filter) && $filter['month_year_to_date']) {
+			$to_date    = date('Y-m-t', strtotime($filter['month_year_to_date']));
+			$date_range = true;
+		}
+		
+		if($date_range == true)
+		{
+			//get the ids from the lead stage history table			
+			$this->db->select('lead_id, dateofchange');
+			$this->db->from($this->cfg['dbpref'].'lead_status_history');
+			$this->db->where("changed_status", 4);
+			
+			if(!empty($from_date) && empty($to_date)) {
+				$this->db->where('DATE(dateofchange) >=', $from_date);
+			} else if(!empty($from_date) && !empty($to_date)) {
+				$this->db->where('DATE(dateofchange) >=', $from_date);
+				$this->db->where('DATE(dateofchange) <=', $to_date);
+			} else if(empty($from_date) && !empty($to_date)) {
+				$this->db->where('DATE(dateofchange) <=', $to_date);
+			}
+			// if(empty($from_date) && empty($to_date)){
+				// $this->db->where('DATE(dateofchange) >=', date('Y-m'));
+			// }
+			$this->db->order_by('dateofchange', 'desc');
+			$sql = $this->db->get();
+
+			$res_arr = $sql->result_array();
+			
+			if(!empty($res_arr) && count($res_arr)>0){
+				foreach($res_arr as $row)
+				$leadid_arr[] = $row['lead_id'];
+			}
+			// echo "<pre>"; print_r($leadid_arr); die;
+		}
+		
+		
+		// $pjt_stat = array(0,1,2,3);
+		$pjt_stat = array(1,2,3);
+		
+		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y");
+		//eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
+		// $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+
+		// $frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		// $to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.actual_worth_amount, j.lead_status, j.belong_to, j.lead_assign, j.pjt_status, cc.company, c.customer_name, rg.region_name, co.country_name, u.first_name as ufname, u.last_name as ulname, ub.first_name as ubfn, ub.last_name as ubln, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'leads as j');
+		$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
+		$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = cc.add1_region');
+		$this->db->join($this->cfg['dbpref'].'country as co', 'co.countryid = cc.add1_country');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+		$this->db->where('lead_status', 4);
+		if ($this->userdata['level']!= 1) {
+			$this->db->where_in('cc.companyid',$cusId);
+		}
+		if(!empty($leadid_arr) && count($leadid_arr)){
+			$this->db->where_in('j.lead_id',$leadid_arr);
+		}
+		if (!empty($filter['customer']) && ($filter['customer']!='null')) {
+			$this->db->where_in('cc.companyid', $filter['customer']);
+		}
+		if (!empty($filter['owner']) && ($filter['owner']!='null')) {
+			$this->db->where_in('j.belong_to', $filter['owner']);
+		}
+		if (!empty($filter['leadassignee']) && ($filter['leadassignee']!='null')) {
+			$this->db->where_in('j.lead_assign', $filter['leadassignee']);
+		}
+		if (!empty($filter['regionname']) && ($filter['regionname']!='null')) {
+			$this->db->where_in('cc.add1_region', $filter['regionname']);
+		}
+		if (!empty($filter['countryname']) && ($filter['countryname']!='null')) {
+			$this->db->where_in('cc.add1_country', $filter['countryname']);
+		}
+		if (!empty($filter['statename']) && ($filter['statename']!='null')) {
+			$this->db->where_in('cc.add1_state', $filter['statename']);
+		}
+		if (!empty($filter['locname']) && ($filter['locname']!='null')) {
+			$this->db->where_in('cc.add1_location', $filter['locname']);
+		}
+		if (!empty($filter['service']) && ($filter['service']!='null')) {
+			$this->db->where_in('j.lead_service', $filter['service']);
+		}
+		if (!empty($filter['lead_src']) && ($filter['lead_src']!='null')) {
+			$this->db->where_in('j.lead_source', $filter['lead_src']);
+		}
+		if (!empty($filter['industry']) && ($filter['industry']!='null')) {
+			$this->db->where_in('j.industry', $filter['industry']);
+		}		
+   		$this->db->where_in('j.pjt_status', $pjt_stat);
+		$this->db->order_by('j.lead_id', 'desc');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$cls_query =  $query->result_array();
+		return $cls_query;
+	}
 }
 
 ?>

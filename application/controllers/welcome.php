@@ -11,6 +11,7 @@ class Welcome extends crm_controller {
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('welcome_model');
+		$this->load->model('dashboard_model');
 		$this->load->model('request_model');
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
@@ -2922,5 +2923,201 @@ HDOC;
 		echo json_encode($data);
 	}
 	
+	public function closed_opportunities()
+	{
+		$data = array();
+		$cusId = $this->level_restriction();
+		
+		$filter = $this->input->post();
+		// echo "<pre>"; print_r($filter); die;
+		
+		$data['customers']    = $this->welcome_model->get_customers();
+		$data['lead_owner']   = $this->welcome_model->get_users();
+		$data['regions']      = $this->regionsettings_model->region_list();
+		$data['services']     = $this->welcome_model->get_lead_services();
+		$data['sources']      = $this->welcome_model->get_lead_sources();
+		$data['industry']     = $this->welcome_model->get_industry();
+		
+		$data['closed_jobs'] = $this->welcome_model->getClosedJobids($cusId, $filter);
+		
+		if($this->input->post("filter")!="")
+		$this->load->view('leads/closed_opportunities_view_grid', $data);
+		else
+		$this->load->view('leads/closed_opportunities_view', $data);
+	}
+	
+	public function excelExportClosedLeads() 
+	{
+		/*master*/
+		/* $services = $this->welcome_model->get_lead_services();
+		$sources  = $this->welcome_model->get_lead_sources();
+		$entity	  = $this->welcome_model->get_sales_divisions();
+		$industry = $this->welcome_model->get_industry();
+
+		$leadServices = array();
+		$leadSources  = array();
+		$leadEntity   = array();
+		$leadIndustry = array();
+
+		if(!empty($services)) {
+			foreach($services as $ser)
+			$leadServices[$ser['sid']] = $ser['services'];
+		}
+		if(!empty($services)) {
+			foreach($sources as $srcs)
+			$leadSources[$srcs['lead_source_id']] = $srcs['lead_source_name'];
+		}
+		if(!empty($entity)) {
+			foreach($entity as $en)
+			$leadEntity[$en['div_id']] = $en['division_name'];
+		}
+		if(!empty($industry)) {
+			foreach($industry as $ind)
+			$leadIndustry[$ind['id']] = $ind['industry'];
+		} */		
+		/*master*/
+
+		$filter = real_escape_array($this->input->post()); 
+
+		$filter_res = $this->welcome_model->getClosedJobids($cusId, $filter);
+		
+		// echo "<pre>"; print_r($filter_res); exit;
+
+		//load our new PHPExcel library
+		$this->load->library('excel');
+		//activate worksheet number 1
+		$this->excel->setActiveSheetIndex(0);
+		//name the worksheet
+		$this->excel->getActiveSheet()->setTitle('Closed Leads');
+		//set cell A1 content with some text
+		$this->excel->getActiveSheet()->setCellValue('A1', 'Project No.');
+		$this->excel->getActiveSheet()->setCellValue('B1', 'Project Title');
+		$this->excel->getActiveSheet()->setCellValue('C1', 'Customer');
+		$this->excel->getActiveSheet()->setCellValue('D1', 'Currency Type');
+		$this->excel->getActiveSheet()->setCellValue('E1', 'Actual Worth Amount');
+		$this->excel->getActiveSheet()->setCellValue('F1', 'Region');
+		$this->excel->getActiveSheet()->setCellValue('G1', 'Lead Owner');
+		$this->excel->getActiveSheet()->setCellValue('H1', 'Lead Assigned To');
+		$this->excel->getActiveSheet()->setCellValue('I1', 'Status');
+
+		//change the font size
+		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setSize(10);
+		$i=2;
+		foreach($filter_res as $excelarr) {
+			// $lead_source   = isset($excelarr['lead_source'])?$leadSources[$excelarr['lead_source']]:'';
+			// $lead_service  = isset($excelarr['lead_service'])?$leadServices[$excelarr['lead_service']]:'';
+			// $lead_industry = isset($excelarr['industry'])?$leadIndustry[$excelarr['industry']]:'';
+			// $lead_entity   = isset($excelarr['division'])?$leadEntity[$excelarr['division']]:'';
+			
+			$this->excel->getActiveSheet()->setCellValue('A'.$i, $excelarr['invoice_no']);
+			$this->excel->getActiveSheet()->setCellValue('B'.$i, stripslashes($excelarr['lead_title']));
+			$this->excel->getActiveSheet()->setCellValue('C'.$i, stripslashes($excelarr['company'].' - '.stripslashes($excelarr['customer_name'])));
+			$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['expect_worth_name']);
+			$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['actual_worth_amount']);
+			$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['region_name']);
+			$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['ubfn'].' '.$excelarr['ubln']);
+			$this->excel->getActiveSheet()->setCellValue('H'.$i, $excelarr['ufname'].' '.$excelarr['ulname']);
+
+			switch ($excelarr['pjt_status']) {
+				case 1:
+					$status = 'Project In Progress';
+				break;
+				case 2:
+					$status = 'Project Completed';
+				break;
+				case 3:
+					$status = 'Inactive';
+				break;
+				case 4:
+					$status = 'Project Onhold';
+				break;
+			}
+			$this->excel->getActiveSheet()->setCellValue('I'.$i, $status);
+			$i++;
+		}
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+	
+		foreach(range('A','I') as $columnID)
+		{
+			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+		}
+		$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
+		
+		$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		
+		$filename='closed_leads.xls'   ; //save our workbook as this file name
+		header('Content-Type: application/vnd.ms-excel'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+					 
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+	}
+	
+	public function level_restriction() {
+		$userdata = $this->session->userdata('logged_in_user');
+		// if (($userdata['role_id'] == 1 && $userdata['level'] == 1) || ($userdata['role_id'] == 2 && $userdata['level'] == 1)) {
+		if ($userdata['level'] == 1) {
+			$cusId = '';
+		} else {
+			$cusIds = array();
+			$reg = array();
+			$cou = array();
+			$ste = array();
+			$loc = array();
+			$cusIds[] = 0;
+			switch($userdata['level']) {
+				case 2:
+					$regions = $this->dashboard_model->getRegions($userdata['userid'], $userdata['level']); //Get the Regions based on Level
+						foreach ($regions as $rgid) {
+							$reg[] = $rgid['region_id'];
+						}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg); //Get the Customer id based on Regions
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['companyid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 3:
+					$countries = $this->dashboard_model->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
+						foreach ($countries as $couid) {
+							$cou[] = $couid['country_id'];
+						}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['companyid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 4:
+					$states = $this->dashboard_model->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
+						foreach ($states as $steid) {
+							$ste[] = $steid['state_id'];
+						}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['companyid'];
+						}
+					$cusId = $cusIds;
+				break;
+				case 5:
+					$locations = $this->dashboard_model->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
+						foreach ($locations as $locid) {
+							$loc[] = $locid['location_id'];
+						}	
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste,$loc); //Get the Customer id based on Regions & Countries
+						foreach ($CustomersId as $cus_id) {
+							$cusIds[] = $cus_id['companyid'];
+						}
+					$cusId = $cusIds;
+				break;
+			}
+		}
+		return $cusId;
+	}
 }
 ?>
