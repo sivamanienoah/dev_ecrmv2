@@ -48,7 +48,6 @@ class Welcome extends crm_controller {
 		$data['sources']      = $this->welcome_model->get_lead_sources();
 		$data['industry']      = $this->welcome_model->get_industry();
 		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
-		// echo "<pre>"; print_r($data['saved_search']); exit;
 		
 		$this->load->view('leads/quotation_view', $data);
 	}
