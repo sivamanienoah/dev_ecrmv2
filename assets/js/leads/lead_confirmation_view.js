@@ -351,6 +351,10 @@ function update_project_detail(project_id,current_tab) {
         err.push('SOW End Date is required');
 		$('#date_due_err').html('SOW End Date is required');
     }
+	if ($("input[name=customer_type]").is(":checked") == false) {
+        err.push('Customer Type must be selected');
+		$('#customer_type_err').html('Customer Type must be selected');
+    }
     if (err.length > 0) {
 		setTimeout('timerfadeout()', 6000);
 		// $('.errmsg_confirm').html('<b>Few errors occured! Please correct them and submit again!</b><br />' + err.join('<br />'));

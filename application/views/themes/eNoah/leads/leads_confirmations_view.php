@@ -383,6 +383,14 @@ button.ui-datepicker-current { display: none; }
 						<div class="ajx_failure_msg" id="cost_center_value_err"></div>							
 						</td>
 					</tr>
+					<tr>
+						<td><strong>Customer Type:*</strong></td>
+						<td>					
+							<label for="project_center"><input type="radio" name="customer_type" id="int_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==0) ? "checked='checked'" : ""; ?> value="0" tabindex="6" /> Internal</label>
+							<label for="cost_center"><input type="radio" name="customer_type" id="ext_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==1) ? "checked='checked'" : ""; ?> value="1" tabindex="7" /> External</label>
+							<div class="ajx_failure_msg" id="customer_type_err"></div>							
+						</td>
+					</tr>
 
 					<tr>
 						<td colspan="4">

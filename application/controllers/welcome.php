@@ -1459,6 +1459,7 @@ class Welcome extends crm_controller {
 		$update['practice']    	       = $post_data['practice'];
 		$update['rag_status']    	   = 3;
 		$update['sow_status']	       = $post_data['sow_status'];
+		$update['customer_type']	   = $post_data['customer_type'];
 		$update['resource_type']	   = $post_data['resource_type'];
 		$update['modified_by']         = $this->userdata['userid'];
 		$update['date_modified']       = date('Y-m-d H:i:s');

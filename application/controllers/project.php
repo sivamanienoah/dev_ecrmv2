@@ -3068,6 +3068,33 @@ HDOC;
 		echo json_encode($data);
 	}
 	
+	/*
+	 *@method set_customer_type
+	 *@set the customer type for the Project
+	 */
+	public function set_customer_type()
+	{
+		$updt_data = real_escape_array($this->input->post());
+		$data['error'] = FALSE;
+		$customer_type = $updt_data['customer_type'];
+		if ($updt_data['customer_type'] == '') {
+			$data['error'] = 'Please Check';
+		} else {
+			$wh_condn  = array('lead_id'=>$updt_data['lead_id']);
+			$data 	   = array('customer_type'=>$customer_type);
+			$updt_date = $this->project_model->update_row('leads', $data, $wh_condn);
+			
+			if($updt_date) {
+				// $project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt_data['lead_id'], 'pjt_id');
+				// $this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+	}
+	
 
 	/*
 	*@For Add & Update addMilestones

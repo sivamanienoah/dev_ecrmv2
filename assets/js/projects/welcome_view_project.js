@@ -2509,10 +2509,7 @@ function addURLtoJob()
 			}
 			$("#errmsg_sow_status").show();
 		});
-		
-		
-		
-		
+
 		$( ".bill_type" ).change(function() {
 			$("#errmsg_bill_type").empty();
 			$("#errmsg_bill_type").hide();
@@ -2553,6 +2550,49 @@ function addURLtoJob()
 				);
 			}
 			$("#errmsg_bill_type").show();
+		});
+		
+		//set customer type
+		$( ".customer_type" ).change(function() {
+			$("#errmsg_customer_type").empty();
+			$("#errmsg_customer_type").hide();
+			var customer_type_val = $(this).val();
+			if (customer_type_val=='') {
+				$("#errmsg_customer_type").text('Please Check Customer Type');
+				$("#errmsg_customer_type").show();
+				return false;
+			} else {
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
+				var params 				= {'lead_id':curr_job_id, 'customer_type':customer_type_val};
+				params[csrf_token_name] = csrf_hash_token;
+			
+				$.post(
+					site_base_url+'project/set_customer_type/',
+					params,
+					function(_data) {
+						if (typeof(_data) == 'object') {
+							if (_data.error == false) {
+								$('#errmsg_customer_type').html("<span class='ajx_success_msg'>Customer Type Updated.</span>");
+								setTimeout(function(){
+									$.blockUI({
+										message:'<h4>Status Updating...</h4><img src="assets/img/ajax-loader.gif" />',
+										css: {background:'#666', border: '2px solid #999', padding:'2px', height:'35px', color:'#333'}
+									});
+									window.location.reload(true);
+								},500);
+							} else {
+								$("#errmsg_customer_type").text(data.error);
+							}
+						} else {
+							$("#errmsg_bill_type").text('Updating faild, please try again.');
+						}
+					},"json"
+				);
+			}
+			$("#errmsg_customer_type").show();
 		});
 	});
 

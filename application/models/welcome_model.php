@@ -18,7 +18,7 @@ class Welcome_model extends crm_model {
 		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.custid_fk, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.actual_worth_amount, j.expect_worth_id, j.division,
 		j.lead_indicator, j.lead_status, j.lead_assign, j.proposal_expected_date, j.log_view_status, j.lead_hold_reason, j.assigned_to, 
 		j.department_id_fk, j.resource_type, j.project_type, j.project_category, j.cost_center, j.project_center, j.sow_status, 
-		j.date_start, j.date_due, j.practice, j.project_types, 
+		j.date_start, j.date_due, j.practice, j.project_types, j.customer_type, 
 		c.*, c.customer_name AS cfn, cc.add1_region, cc.add1_country, cc.add1_state, cc.add1_location, cc.companyid, rg.region_name, coun.country_name, 
 		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name, i.industry');
@@ -1507,7 +1507,8 @@ class Welcome_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = cc.add1_region');
 		$this->db->join($this->cfg['dbpref'].'country as co', 'co.countryid = cc.add1_country');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
-		$this->db->where('lead_status', 4);
+		$this->db->where('j.lead_status', 4);
+		$this->db->where('j.customer_type', 1);
 		if ($this->userdata['level']!= 1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
