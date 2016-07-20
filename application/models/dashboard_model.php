@@ -370,7 +370,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
@@ -760,7 +760,7 @@ class Dashboard_model extends crm_model {
 			break;	
 		}
 		
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cs.company_id', 'LEFT');
@@ -826,7 +826,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-	    $lead_dependencies = $this->db->select('jb.lead_id,jb.lead_title,ew.expect_worth_id, cs.customer_name as cfname, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id,jb.lead_title,ew.expect_worth_id, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
@@ -884,7 +884,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title,cs.customer_name as cfname, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title,cs.customer_name as cfname, cc.company, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
@@ -1005,7 +1005,7 @@ class Dashboard_model extends crm_model {
 			$fresult = $this->explod_arr($filters);
 		}
 		
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
@@ -1094,7 +1094,7 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getCurrentLeadActivity($lead_id) {
-	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title,cs.customer_name as cfname, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 							 $this->db->from($this->cfg['dbpref'].'leads jb');
 							 $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 							 $this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
@@ -1261,7 +1261,7 @@ class Dashboard_model extends crm_model {
 			$fresult = $this->explod_arr($filters);
 		}
 		if (!empty($jbid)) {
-			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'leads jb');
 			$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', "LEFT");
@@ -1483,7 +1483,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
@@ -1544,7 +1544,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.industry as lead_source_name, ew.expect_worth_name', false);
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.industry as lead_source_name, ew.expect_worth_name', false);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'industry ldsrc', 'ldsrc.id = jb.industry');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
@@ -1605,7 +1605,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.services, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.services, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_services jbc', 'jbc.sid = jb.lead_service');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');

@@ -706,15 +706,16 @@ foreach($getLeadIndicator as $key => $value) {
 $coldColor = array();
 $warmColor = array();
 $assignColor = array("COLD"=>"#bfdde5", "WARM"=>"#910000");
+
 foreach($getLeastLeadCount as $getClr) {
 	switch($getClr['lead_indicator']){
 		case "COLD":
-			for($i=1;$i<=$getClr['count(`lead_indicator`)'];$i++) {
+			for($i=1;$i<=$getClr['count(j.lead_indicator)'];$i++) {
 				$coldColor[] = $assignColor[$getClr['lead_indicator']];
 			}
 		break;
 		case "WARM":
-			for($j=1;$j<=$getClr['count(`lead_indicator`)'];$j++) {
+			for($j=1;$j<=$getClr['count(j.lead_indicator)'];$j++) {
 				$warmColor[] = $assignColor[$getClr['lead_indicator']];
 			}
 		break;

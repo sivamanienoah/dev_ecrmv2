@@ -346,7 +346,7 @@ if (get_default_currency()) {
 				<input type="radio" name="customer_type" value="1" class="customer_type" id="external_customer" <?php if ($readonly_status == true) { ?> disabled <?php } ?> <?php if(isset($quote_data['customer_type']) && $quote_data['customer_type'] == 1) { echo 'checked="checked"'; } ?> > External
 				<span id="errmsg_customer_type" style="color:red"></span>
 			</div>
-			
+			<div class="clear"></div>
 			<div class="pull-left">
 				<label class="project-id">Entity</label>
 				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $quote_data['division_name'] ?>" readonly style="width: 125px;" />

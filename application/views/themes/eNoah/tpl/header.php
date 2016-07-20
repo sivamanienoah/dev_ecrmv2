@@ -2,23 +2,24 @@
 $this->load->helper('text');
 $cfg = $this->config->item('crm');
 
-$vid=$this->session->userdata['logged_in_user']['role_id'];
-$viewLeads = getAccess(51, $vid);
-$viewEnquiries = getAccess(130, $vid);
-$viewTasks = getAccess(108, $vid);
-$viewPjts  = getAccess(110, $vid);
+if ($this->session->userdata('logged_in') == TRUE) {
+	$vid=$this->session->userdata['logged_in_user']['role_id'];
+	$viewLeads = getAccess(51, $vid);
+	$viewEnquiries = getAccess(130, $vid);
+	$viewTasks = getAccess(108, $vid);
+	$viewPjts  = getAccess(110, $vid);
 
-// for floating div
-$proposal_notify_status = get_notify_status(1);
-if($proposal_notify_status) {
-	$proposal_notify_msg = proposal_expect_end_msg($proposal_notify_status);
+	// for floating div
+	$proposal_notify_status = get_notify_status(1);
+	if($proposal_notify_status) {
+		$proposal_notify_msg = proposal_expect_end_msg($proposal_notify_status);
+	}
+	$task_notify_status = get_notify_status(2);
+	if($task_notify_status) {
+		$task_notify_msg = task_end_msg($task_notify_status);
+	}
+	// for floating div
 }
-$task_notify_status = get_notify_status(2);
-if($task_notify_status) {
-	$task_notify_msg = task_end_msg($task_notify_status);
-}
-// for floating div
-
 if ($this->session->userdata('logged_in') == TRUE) {
  	$userdata 		= $this->session->userdata('logged_in_user');
 	$menu_itemsmod 	= $this->session->userdata('menu_item_list');
@@ -57,8 +58,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <script type="text/javascript" src="assets/js/jquery-ui-1.10.3.js"></script>
 <script type="text/javascript" src="assets/js/tableHeadFixer.js"></script>
 <script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
+<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
 <?php echo js_global_variable($viewLeads['view'], $viewPjts['view']); ?>
-
+<?php } ?>
 </head>
 <body>
 
@@ -196,6 +198,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	?>
    
 <?php 
+if ($this->session->userdata('logged_in') == TRUE) {
+	
+
 	$menulist_access = explode('#',$menu_itemsmod);
 	$menulist_access=array_reverse($menulist_access);
 
@@ -285,8 +290,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$access_limit['edit'] 	= $masters[0]['edit'];
 			$access_limit['delete'] = $masters[0]['delete'];
 		}
-	}
 	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
+	}
+	
 	
 	$array= array();
 	$array['accesspage']	= $access_limit['view'];
@@ -311,7 +317,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$array['deletePjt'] 	= $deletePjt;
 	$array['addImpCus'] 	= $addImpCus;
 	$this->session->set_userdata($array);
-	?>
+	
+}	
+?>
 
 <script>
 var fid = "<?php echo isset($userdata['userid']) ? $userdata['userid'] : '' ?>";
