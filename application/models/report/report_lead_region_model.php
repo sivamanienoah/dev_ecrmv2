@@ -122,7 +122,7 @@ class Report_lead_region_model extends crm_model {
 		$user_data = $this->session->userdata('logged_in_user');		
 		$str = array();
 		
-		$this->db->select('c.custid');
+		$this->db->select('c.companyid');
 		
 		if($user_data['level']==5){			
 			$this->db->where('loc.user_id', $user_data['userid']);	
@@ -149,7 +149,7 @@ class Report_lead_region_model extends crm_model {
 		
 		if($query->num_rows()>0){			
 			foreach ($res as $rows){
-				$str[]=$rows->custid;				
+				$str[]=$rows->companyid;				
 			}			
 		}else{
 			$str[]=0;
