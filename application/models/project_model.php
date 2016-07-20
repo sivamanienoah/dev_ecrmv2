@@ -609,8 +609,6 @@ class Project_model extends crm_model
 		
 		$query = $this->db->get();
 		
-		echo $this->db->last_query() . "<br />"; exit;
-		
 		return $query->result_array();
 	}	
 	
