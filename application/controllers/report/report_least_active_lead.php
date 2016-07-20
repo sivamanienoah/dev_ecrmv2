@@ -128,8 +128,7 @@ public $userdata;
     			
     			$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead->invoice_no);
     			$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead->lead_title);
-    			$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead->cust_first_name.' '.$lead->cust_last_name);
-    			
+    			$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead->company.' - '.$lead->cust_first_name);
     			$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead->region_name);
     			$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead->ownrfname.' '.$lead->ownrlname);
     			$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead->usrfname.' '.$lead->usrlname);

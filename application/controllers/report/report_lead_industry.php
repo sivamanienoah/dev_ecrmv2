@@ -136,8 +136,7 @@ public $userdata;
     		foreach($leads as $lead) {		
     			$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead->invoice_no);
     			$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead->lead_title);
-    			$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead->cust_first_name.' '.$lead->cust_last_name);
-    			
+    			$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead->company.' - '.$lead->cust_first_name);
     			$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead->region_name);
     			$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead->assigned_first_name.' '.$lead->assigned_last_name);
     			$this->excel->getActiveSheet()->setCellValue('G'.$i, $lead->lead_indicator);
