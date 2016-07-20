@@ -290,9 +290,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			$access_limit['edit'] 	= $masters[0]['edit'];
 			$access_limit['delete'] = $masters[0]['delete'];
 		}
-	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
 	}
-	
+	echo $menulistss 		= formSubMenuList($master_id, $access_limit);
 	
 	$array= array();
 	$array['accesspage']	= $access_limit['view'];

@@ -2885,7 +2885,7 @@ HDOC;
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$data['chge_access'] = 1;
 		} else {
-			$data['chge_access'] = $this->project_model->get_access($id, $this->userdata['userid']);
+			$data['chge_access'] = $this->welcome_model->get_access($id, $this->userdata['userid']);
 		}
 		//get customers & company
 		$data['company_det'] = $this->welcome_model->get_company_det($data['quote_data']['companyid']);
