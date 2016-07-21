@@ -4977,5 +4977,23 @@ HDOC;
 		$this->load->view('projects/load_customer_det', $data);
 	}
 	
+	public function sendTestEmail() 
+	{
+		//email sent by email template
+		$param = array();
+
+		$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
+		$param['from_email']	  = 'webmaster@enoahprojects.com';
+		$param['from_email_name'] = 'Webmaster';
+		$param['template_name']	  = "test email";
+		$param['subject'] 		  = "test email";
+
+		if($this->email_template_model->sent_email($param)){
+			echo "Email Sent";
+		} else {
+			echo "Email Not Sent";
+		}
+	}
+	
 }
 ?>
