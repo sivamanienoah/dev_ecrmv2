@@ -4177,7 +4177,7 @@ HDOC;
 			$param['to_mail'] 		  = $to;
 			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
 			// $param['bcc_mail'] 	  = $bcc_email;
-			$param['from_email']	  = 'webmaster@enoahisolultion.com';
+			$param['from_email']	  = 'webmaster@enoahprojects.com';
 			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = "Generate Invoice Notification";
 			$param['subject'] 		  = $subject;
