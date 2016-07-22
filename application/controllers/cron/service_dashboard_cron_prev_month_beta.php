@@ -261,9 +261,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$directcost_username[$practice_arr[$cdrow->practice_id]][$cdrow->username][$cdrow->entry_month] += $cdrow->duration_hours;
 			}
 		} 
-		
- 
-		
+
 		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')";
@@ -275,7 +273,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
 			}
 		} */
-		 
 		// 
 
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
@@ -364,7 +361,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 											$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
 											$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
 											$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
-											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+											//$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
 										}
 									}
 								}
@@ -391,9 +388,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 										//$available_projects[] = $project_code;
 										$duration_hours = $array4['duration_hours'];
 										$total_cost = $array4['total_cost'];
-										$total_dc_cost = $array4['total_dc_cost'];
+										// $total_dc_cost = $array4['total_dc_cost'];
 										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
-										$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
+										//$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
 									}
 								}
 							}
@@ -412,7 +409,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			//$project_master[$prec->project_code] = $prec->title;
 			$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
 			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
-			$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+			//$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
 			}
 		}
  
@@ -421,14 +418,164 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
 		}
+		/* foreach($cm_directcost2 as $practiceId => $cval1){
+			foreach($cval1 as $pjtCode => $cval){ 
+				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+			}
+		}	 */	
+		## code ends here##
+		
+		## code for month contribution starts here##
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
+	 
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$resrc = 't.resoursetype IS NOT NULL';
+		$this->db->where($resrc);
+		$this->db->where("l.practice is not null");
+		$query = $this->db->get();		
+		$resdata = $query->result();
+		//echo '<pre>';print_r($resdata);exit;
+		## code starts here##
+		$tbl_data = array();
+		$sub_tot  = array();
+		$cost_arr = array();
+		$directcost_arr = array();
+		$usercnt  = array();
+		$prjt_hr  = array();
+		$prjt_cst = array();
+		$prjt_directcst = array();
+		$prac = array();
+		$dept = array();
+		$skil = array();
+		$proj = array();
+		$tot_hour = 0;
+		$tot_cost = 0;
+		$tot_directcost = 0;		
+		$timesheet_data = array();
+		$resource_cost = array();	
+		
+		if(count($resdata)>0) {
+			$rates = $this->get_currency_rates();
+			foreach($resdata as $rec) {		
+				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+				
+				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
+				$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+				
+				$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] =get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
+			}
+
+		//echo '<pre>';print_r($timesheet_data);exit;
+		if(count($timesheet_data)>0 && !empty($timesheet_data)){
+			foreach($timesheet_data as $key1=>$value1) {
+				$resource_name = $key1;
+				$max_hours = $value1['max_hours'];
+				$dept_name = $value1['dept_name'];
+				$resource_cost[$resource_name]['dept_name'] = $dept_name;
+				if(count($value1)>0 && !empty($value1)){
+					foreach($value1 as $key2=>$value2) {
+						$year = $key2;
+						if(count($value2)>0 && !empty($value2)){
+							foreach($value2 as $key3=>$value3) {
+								$individual_billable_hrs		= 0;
+								$month		 	  = $key3;
+								if(count($value3)>0 && !empty($value3)){
+									foreach($value3 as $key4=>$value4) {
+										if($key4 != 'total_hours'){ 
+											$individual_billable_hrs = $value3['total_hours'];
+											$duration_hours			= $value4['duration_hours'];
+											//$rate				 = $value4['rateperhr'];
+											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											//$rate1 = $rate;
+											$direct_rateperhr1 = $direct_rateperhr;
+											if($individual_billable_hrs>$max_hours){
+												//echo 'max'.$max_hours.'<br>';
+												$percentage = ($max_hours/$individual_billable_hrs);
+												//$rate1 = number_format(($percentage*$rate),2);
+												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+											}
+											//$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
+											//$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
+											//$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
+											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}	 
+		}
+		}
+		//echo '<pre>';print_r($resource_cost);exit;
+		if(count($resource_cost)>0 && !empty($resource_cost)){
+			foreach($resource_cost as $resourceName => $array1){
+				$dept_name = $resource_cost[$resourceName]['dept_name'];
+				if(count($array1)>0 && !empty($array1)){
+					foreach($array1 as $year => $array2){
+						if($year !='dept_name'){
+							if(count($array2)>0 && !empty($array2)){
+								foreach($array2 as $month => $array3){
+									//$duration_hours = 0;
+									//$total_cost = 0;
+									//$total_dc_cost = 0;
+									foreach($array3 as $project_code => $array4){
+										//$available_projects[] = $project_code;
+									//	$duration_hours = $array4['duration_hours'];
+										//$total_cost = $array4['total_cost'];
+										$total_dc_cost = $array4['total_dc_cost'];
+										//$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
+										$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		 
+		$this->db->select("pjt_id,practice,lead_title");
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
+		$project_res = $res->result();
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec){
+			//$project_master[$prec->project_code] = $prec->title;
+			//$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
+			$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+			}
+		}
+		/* 
+		foreach($directcost2 as $practiceId => $val1){
+			foreach($val1 as $pjtCode => $val){
+				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
+			}
+		} */
 		foreach($cm_directcost2 as $practiceId => $cval1){
 			foreach($cval1 as $pjtCode => $cval){ 
 				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
 			}
-		}		
-		## code ends here##
-		
-		
+		}
+		## code for month contribution ends here##
+
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
