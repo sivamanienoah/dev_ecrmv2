@@ -430,9 +430,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 	 
-		if(!empty($start_date) && !empty($end_date)) {
+		if(!empty($month)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($month)));
-			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($month)));
 		}
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
@@ -442,7 +442,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$query = $this->db->get();		
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
-		## code starts here##
+		
 		$tbl_data = array();
 		$sub_tot  = array();
 		$cost_arr = array();
