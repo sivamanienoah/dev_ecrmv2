@@ -454,7 +454,7 @@ function validate_customer()
 			success : function(response){
 				if(response == 'userNo') {
 					cmpy_err = false;
-					$(".company_err_msg").html("<span class='ajx_failure_msg'>The Company Already Exists for same Region, Country, State & Location</span>");
+					$(".company_err_msg").html("<span class='ajx_failure_msg'>The Company Already Exists for this Region, Country, State & Location</span>");
 					return false;
 				} else {
 					// $("#positiveBtn").removeAttr("disabled");

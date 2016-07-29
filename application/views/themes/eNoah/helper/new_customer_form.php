@@ -224,6 +224,7 @@ $(document).ready(function() {
 function add_customer() 
 {
 	var err=false;
+	var cmpy_err  = true;
 	$('.add1_location_err_msg, .add1_region_err_msg, .add1_country_err_msg, .add1_state_err_msg').remove();
 	
 	if($('#company_name').val()==""){
@@ -283,6 +284,46 @@ function add_customer()
 		$('.phone_err_msg').html('');
 	}
 	
+	if(($('#add1_region').val()==0) && ($('#add1_country').val()==0) && ($('#add1_state').val()==0) && ($('#add1_location').val()==0) && $('#company_name').val()==""){
+		return false;
+	} else {
+		//validate company name
+		
+		if($('#company_id').val()==""){
+			var company_id = 0;
+		} else {
+			var company_id = $('#company_id').val();
+		}
+		var params					= {};
+		params[csrf_token_name] 	= csrf_hash_token;
+		params['company_name']		= $('#company_name').val();
+		params['add1_region'] 		= $('#add1_region').val();
+		params['add1_country'] 		= $('#add1_country').val();
+		params['add1_state'] 		= $('#add1_state').val();
+		params['add1_location']		= $('#add1_location').val();
+		params['company_id']		= company_id;
+		
+		$.ajax({
+			async: false,
+			type: "POST",
+			url : site_base_url + 'customers/check_company/',
+			cache : false,
+			data : params,
+			success : function(response){
+				if(response == 'userNo') {
+					cmpy_err = false;
+					$(".company_name_err_msg").html("<span class='ajx_failure_msg'>The Company Already Exists for this Region, Country, State & Location</span>");
+					return false;
+				} else {
+					// $("#positiveBtn").removeAttr("disabled");
+				}
+			}
+		});
+	}
+	
+	if(false == cmpy_err) {
+		return false;
+	}
 	if(err == true){
 		return false;
 	}
