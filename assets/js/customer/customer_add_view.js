@@ -31,7 +31,8 @@ getLocation(st,loc,updt);
 function getCountry(val,id,updt) {
 	var sturl = "regionsettings/getCountry/"+ val+"/"+id+"/"+updt;	
 	//alert("SDfds");
-    $('#country_row').load(sturl);	
+    $('#country_row').load(sturl);
+	$('.region_err_msg').empty();
     return false;	
 }
 function getState(val,id,updt) {
@@ -69,12 +70,13 @@ $(document).ready(function() {
 		}
 		return false;
     });
-    function getResult(username){
+
+    function getResult(email){
         var baseurl = $('.hiddenUrl').val();
-		var email = username
+		var email = email
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
-		params['email'] = username;
+		params['email'] = email;
 		$.ajax({
 			type: "POST",
 			url : baseurl + 'customers/Check_email/',
@@ -96,6 +98,54 @@ $(document).ready(function() {
             }
         });
 	}
+	
+	
+	$('#document_tbl').delegate( '.check_email', 'keyup', function () {
+		var thisRow = $(this).parent('td');
+		if( $(this).val().length >= 3 )
+		{
+			var email 	   = $(this).val();
+			var company_id = $('#emailupdate').val();
+			var custids    = $(this).parent().parent().children().find('.contact_id').val();
+
+			var filter = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+			if(filter.test(email)){
+				if (custids == "")
+				var custid 	= 0;
+				else
+				var custid 	= custids;
+			
+				var params		= {};
+				params[csrf_token_name] = csrf_hash_token;
+				params['email'] 		= email;
+				params['custid'] 		= custid;
+				params['company_id'] 	= company_id;
+				$.ajax({
+					type: "POST",
+					url : site_base_url + 'customers/Check_email/',
+					cache : false,
+					data : params,
+					success : function(response){
+						if(response == 'userOk') {
+							$("#positiveBtn").removeAttr("disabled");
+							$(thisRow).children(".email_err_msg").html("<span class='ajx_success_msg'>Email Available.</span>");
+						} else { 
+							$(thisRow).children(".email_err_msg").html('Email Already Exists.');
+							$("#positiveBtn").attr("disabled", "disabled");
+						}
+					}
+				});
+			} else {
+				$("#positiveBtn").attr("disabled", "disabled");
+				$(thisRow).children(".email_err_msg").html('Not valid email.');
+			}
+		}
+		return false;
+    });
+	
+	$( "#company" ).keyup(function() {
+		$('.company_err_msg').empty();
+	});
 });
 
 
@@ -112,7 +162,7 @@ function ajxSaveCty(){
 		}
 		else {
 			var regionId = $("#add1_region").val();
-			var newCty = $('#newcountry').val();
+			var newCty 	 = $('#newcountry').val();
             getCty(newCty, regionId);
 		}	
 
@@ -287,10 +337,8 @@ $('#document_tbl').delegate( '#addRow', 'click', function () {
 		obj.find(".phone_err_msg").text('');
 		obj.find(".email_err_msg").text('');
 		obj.find(".skype_err_msg").text('');
-		obj.find("#deleteRow").attr('hyperid','0'); 
-		// obj.find("td").find('.hyperlink_name').attr('placeholder','eg: http://www.google.com || https://google.com');
+		obj.find("#deleteRow").attr('hyperid','0');
 		obj.find('.createBtn').show();
-		// obj.find('.del_file').hide();
 });
 
 $('#document_tbl').delegate( '.del_file', 'click', function () {
@@ -317,20 +365,11 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 				data: formdata,
 				cache: false,
 				beforeSend:function() {
-					// $('#dialog-err-msg').empty();
 				},
 				success: function(response) {
 					if (response.html == 'NO') {
-						// $('#dialog-err-msg').show();
 						alert('One or more Leads currently mapped to this customer. This cannot be deleted.');
-						// $('#dialog-err-msg').append('One or more Leads currently mapped to this customer. This cannot be deleted.');
-						// $('html, body').animate({ scrollTop: $('#dialog-err-msg').offset().top }, 500);
-						// setTimeout('timerfadeout()', 4000);
 					} else {
-						/* $.blockUI({
-							message:'<br /><h5>Are You Sure Want to Delete this Customer?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
-							css:{width:'440px'}
-						}); */
 						$(thisRow).remove();
 						$("#document_tbl tbody tr:last").find('.createBtn').show();
 						// $("#document_tbl tbody tr:last").find('.del_file').hide();
@@ -359,15 +398,72 @@ $('#document_tbl').delegate( '.del_file', 'click', function () {
 
 $("#document_tbl tbody tr").each(function(){
 	$("#document_tbl tbody tr:last").find('.createBtn').show();
-	// $("#document_tbl tbody tr:last").find('.del_file').hide();
 });
 if($('#document_tbl tbody tr').length<=1){
 	$('#document_tbl .del_file').hide();
 	$('#document_tbl .createBtn').show();
 }
-function cust_validation()
+function validate_customer()
 {
-	var err=true;
+	var err 	  = true;
+	var empty_err = true;
+	var cmpy_err  = true;
+	$(".company_err_msg").empty();
+	$('.ajx_failure_msg').remove();
+	
+	if($('#company').val()=="") {
+		$(".company_err_msg").html("<span class='ajx_failure_msg'>Company is Required</span>");
+		empty_err = false;
+	}
+	if($('#add1_region').val()==0) {
+		$(".region_err_msg").html("<span class='ajx_failure_msg'>Region is Required</span>");
+		empty_err = false;
+	}
+	if($('#add1_country').val()==0) {
+		$('#add1_country').after('<span class="ajx_failure_msg">Country is Required</span>')
+		empty_err = false;
+	}
+	if($('#add1_state').val()==0) {
+		$('#add1_state').after('<span class="ajx_failure_msg">State is Required</span>');
+		empty_err = false;
+	}
+	if($('#add1_location').val()==0) {
+		$('#add1_location').after('<span class="ajx_failure_msg">Location is Required</span>');
+		empty_err = false;
+	}
+	
+	if(($('#add1_region').val()==0) && ($('#add1_country').val()==0) && ($('#add1_state').val()==0) && ($('#add1_location').val()==0) && $('#company').val()==""){
+		return false;
+	} else {
+		//validate company name
+		var params					= {};
+		params[csrf_token_name] 	= csrf_hash_token;
+		params['company_name']		= $('#company').val();
+		params['add1_region'] 		= $('#add1_region').val();
+		params['add1_country'] 		= $('#add1_country').val();
+		params['add1_state'] 		= $('#add1_state').val();
+		params['add1_location']		= $('#add1_location').val();
+		params['company_id']		= $('#emailupdate').val();
+		
+		$.ajax({
+			async: false,
+			type: "POST",
+			url : site_base_url + 'customers/check_company/',
+			cache : false,
+			data : params,
+			success : function(response){
+				if(response == 'userNo') {
+					cmpy_err = false;
+					$(".company_err_msg").html("<span class='ajx_failure_msg'>The Company Already Exists for same Region, Country, State & Location</span>");
+					return false;
+				} else {
+					// $("#positiveBtn").removeAttr("disabled");
+				}
+			}
+		});
+	}	
+
+	
 	//First Name
 	$('.first_name').each(function(){
 		if($(this).val()=="")
@@ -398,17 +494,6 @@ function cust_validation()
 	});
 	
 	//First Name
-	/* $('.position_title').each(function(){
-		if($(this).val()=="")
-		{
-			$(this).closest('tr').find('.position_title_err_msg').html("This field is required");
-			err=false;
-		}else{
-			$(this).closest('tr').find('.position_title_err_msg').html(" ");
-		}
-	}); */
-	
-	//First Name
 	$('.phone').each(function(){
 		if($(this).val()=="")
 		{
@@ -418,8 +503,18 @@ function cust_validation()
 			$(this).closest('tr').find('.phone_err_msg').html(" ");
 		}
 	});
-	if(err==true){
+
+	if(false == empty_err) {
+		return false;
+	}
+	if(false == cmpy_err) {
+		return false;
+	}
+	
+	if(err == true) {
 		$('#formone').submit()
+	} else if(err == false) {
+		return false;
 	}
 }
 /////////////////

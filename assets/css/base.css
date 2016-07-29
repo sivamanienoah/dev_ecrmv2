@@ -2806,6 +2806,7 @@ form#edit-folder-permissions { overflow:visible !important; }
 .green-clr { color:#468847; font-weight:bold; }
 .red-clr { color:#c21706; font-weight:bold; }
 .orange-clr { color:#ff7e00; font-weight:bold; }
+.mandatory_asterick { color: #c60000; font-weight:bold; }
 /*--------------08/07/2016-----------------------*/
 .form_containerArea{
 	width:100%;

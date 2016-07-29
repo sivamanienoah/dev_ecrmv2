@@ -28,7 +28,7 @@
                 <?php echo  $this->validation->error_string ?>
             </div>
             <?php } ?>
-            <p>All mandatory fields marked * must be filled in correctly.</p>
+            <p>All mandatory fields marked <span class='mandatory_asterick'>*</span> must be filled in correctly.</p>
 			<table class="layout">
 			
 			<?php if ($this->uri->segment(3) == 'update') { ?>
@@ -39,7 +39,7 @@
 			<?php } ?>
 			
 				<!--<tr>
-					<td width="100">First name: *</td>
+					<td width="100">First name: <span class='mandatory_asterick'>*</span> </td>
 					<td width="240"><input type="text" name="first_name" value="<?php #echo $this->validation->first_name ?>" class="textfield width200px required" /> </td>
 					<td width="100">Last Name: </td>
 					<td width="240"><input type="text" name="last_name" value="<?php #echo $this->validation->last_name ?>" class="textfield width200px required" /> </td>
@@ -47,8 +47,11 @@
 				<tr>
 					<!--<td>Position:</td>
 					<td><input type="text" name="position_title" value="<?php #echo $this->validation->position_title ?>" class="textfield width200px required" /></td>-->
-                    <td>Company: *</td>
-					<td><input type="text" name="company" value="<?php echo $this->validation->company ?>" class="textfield width200px required" /> </td>
+                    <td>Company: <span class='mandatory_asterick'>*</span> </td>
+					<td>
+						<input type="text" name="company" id="company" value="<?php echo $this->validation->company; ?>" class="textfield width200px required" />
+						<span class="company_err_msg"></span>
+					</td>
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 					<td width="100">Client Code</td>
 					<td width="240"><input type="text" name="client_code" value="<?php echo $this->validation->client_code; ?>" class="textfield width200px" readonly /> </td>
@@ -69,7 +72,7 @@
 				</tr>
 				
 				<tr>
-				<td width="100">Region: *</td>
+				<td width="100">Region: <span class='mandatory_asterick'>*</span> </td>
 				<?php if (($usernme['level']>=2) && ($this->uri->segment(3)!='update')) { ?>
 					<td width="240" id="def_reg"></td>
 				<?php } else { ?>
@@ -83,9 +86,10 @@
 								<?php } ?>
 							<?php } ?>
 						</select>
+						<span class="region_err_msg"></span>
 					</td>
 				<?php } ?>
-				<td width="100">Country: *</td>
+				<td width="100">Country: <span class='mandatory_asterick'>*</span> </td>
 				<?php if (($usernme['level']>=3) && ($this->uri->segment(3)!='update')) { ?>
 					<td width="240" id="def_cntry"></td>
 				<?php } else { ?>
@@ -95,13 +99,13 @@
 						</select>
 						<?php if ($this->userdata['level'] == 1 || $this->userdata['level'] == 2) { ?>
 							<a class="addNew" id="addButton"></a> <!--Display the Add button-->
-						<?php } ?>	
+						<?php } ?>
 					</td>
 				<?php } ?>
 				</tr>
 				
 				<tr>
-					<td width="100">State: *</td>
+					<td width="100">State: <span class='mandatory_asterick'>*</span> </td>
 					<?php if (($usernme['level']>=4) && ($this->uri->segment(3)!='update')) { ?>
 						<td width="240" id="def_ste"></td>
 					<?php } else { ?>
@@ -114,7 +118,7 @@
 							<?php } ?>
 						</td>
 					<?php } ?>
-					<td width="100">Location: *</td>
+					<td width="100">Location: <span class='mandatory_asterick'>*</span> </td>
 					<?php if (($usernme['level']>=5) && ($this->uri->segment(3)!='update')) { ?>
 						<td width="240" id="def_loc"></td>
 					<?php } else { ?>
@@ -146,6 +150,8 @@
 					<input type="hidden" class="hiddenUrl"/>
 					<?php if ($this->uri->segment(3) == 'update') { ?>
 						<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="emailupdate" id="emailupdate" />
+					<?php } else { ?>
+						<input type="hidden" value="0" name="emailupdate" id="emailupdate" />
 					<?php } ?>
 					<td>Web:</td>
 					<td><input type="text" name="www" value="<?php echo $this->validation->www ?>" class="textfield width200px required" />
@@ -218,10 +224,10 @@
 						  <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
 							<thead>
 								<tr class="bg-blue">
-									<td>Name</td>
+									<td>Name <span class='mandatory_asterick'>*</span></td>
 									<td>Position</td>
-									<td>Email ID</td>
-									<td>Contact No</td>
+									<td>Email ID <span class='mandatory_asterick'>*</span></td>
+									<td>Contact No <span class='mandatory_asterick'>*</span></td>
 									<td>Skype</td>
 									<td>Action</td>
 								</tr>
@@ -231,7 +237,7 @@
 								if(!empty($customer_contacts) && count($customer_contacts)>0){
 									foreach($customer_contacts as $row) {
 										$disp_style = '';
-										if($i!=count($customer_contacts)){
+										if($i!=count($customer_contacts)) {
 											$disp_style = "style='display:none;'";
 										}
 										?>
@@ -246,7 +252,7 @@
 												<span class="position_title_err_msg text-danger"></span>
 											</td>
 											<td>
-											   <input type="text" name="email[]" value="<?php echo $row['email_1']; ?>" class="textfield email width180px required" />
+											   <input type="text" name="email[]" value="<?php echo $row['email_1']; ?>" class="textfield email width180px required check_email" />
 												<span class="email_err_msg text-danger"></span>
 											</td>
 											<td>
@@ -278,7 +284,7 @@
 										<span class="position_title_err_msg text-danger"></span>
 									</td>
 									<td>
-									   <input type="text" name="email[]" value="" class="textfield email width180px required" />
+									   <input type="text" name="email[]" value="" class="textfield email width180px required check_email" />
 										<span class="email_err_msg err_msg text-danger"></span>
 									</td>
 									
@@ -310,7 +316,7 @@
 					</td>
 					<td colspan="3">
                         <div class="buttons">
-							<button type="button" onclick='cust_validation()' name="update_customer" id="positiveBtn" class="positive">
+							<button type="button" onclick='validate_customer()' name="update_customer" id="positiveBtn" class="positive">
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> Customer
 							</button>
 						</div>

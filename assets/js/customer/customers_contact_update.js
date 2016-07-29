@@ -8,20 +8,18 @@
 $(document).ready(function() {
 	$('#name_msg').empty();
 	
-	$('#document_tbl').delegate( '.check_email', 'keyup', function () {
-		var thisRow = $(this).parent('td');
+	$('.layout').delegate( '#email', 'keyup', function () {
+		$("#email_msg").empty();
 		if( $(this).val().length >= 3 )
 		{
 			var email 	   = $(this).val();
-			var company_id = $('#emailupdate').val();
-			var custids    = $(this).parent().parent().children().find('.contact_id').val();
+			var company_id = $('#company_id').val();
+			var custid 	   = $('#custid').val();
 
 			var filter = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 			if(filter.test(email)){
-				if (custids == "")
-				var custid 	= 0;
-				else
-				var custid 	= custids;
+
+				var custid 	= custid;
 			
 				var params		= {};
 				params[csrf_token_name] = csrf_hash_token;
@@ -36,16 +34,19 @@ $(document).ready(function() {
 					success : function(response){
 						if(response == 'userOk') {
 							$("#positiveBtn").removeAttr("disabled");
-							$(thisRow).children(".email_err_msg").html("<span class='ajx_success_msg'>Email Available.</span>");
+							$("#email_msg").html("<span class='ajx_success_msg'>Email Available.</span>");
+							$("#email_msg").show();
 						} else { 
-							$(thisRow).children(".email_err_msg").html('Email Already Exists.');
+							$("#email_msg").html('<span class="ajx_failure_msg">Email Already Exists.</span>');
+							$("#email_msg").show();
 							$("#positiveBtn").attr("disabled", "disabled");
 						}
 					}
 				});
 			} else {
 				$("#positiveBtn").attr("disabled", "disabled");
-				$(thisRow).children(".email_err_msg").html('Not valid email.');
+				$("#email_msg").html('<span class="ajx_failure_msg">Not valid email.</span>');
+				$("#email_msg").show();
 			}
 		}
 		return false;
@@ -72,14 +73,16 @@ function chk_customers_contact() {
 	if (email == "") {
 		$('#email_msg').show();
 		$('#email_msg').append("<span class='ajx_failure_msg'>Email Required.</span>");
-	}if (position_title == "") {
+	}
+	/* if (position_title == "") {
 		$('#position_msg').show();
 		$('#position_msg').append("<span class='ajx_failure_msg'>Position Title Required.</span>");
-	}if (phone == "") {
+	} */
+	if (phone == "") {
 		$('#phone_msg').show();
 		$('#phone_msg').append("<span class='ajx_failure_msg'>Phone No Required.</span>");
 	} 
-	if(customer_name!='' && email!= "" && position_title!= "" && phone!="")
+	if(customer_name!='' && email!= "" && phone!="")
 	{
 		$.ajax({
 			url: "customers_contact/update_contacts",

@@ -459,9 +459,9 @@ if (get_default_currency()) {
 			<div class="sec-right">
 			<div class="pull-left">
 			<label class="project-manager">Project Manager</label>
-				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> class="chzn-select"  id="project_manager" name="project_manager">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> class="chzn-select" data-placeholder="Select Member" id="project_manager" name="project_manager">
 					<?php if(!empty($all_users)):?>
-							<option value="">Select</option>
+							<option value=""></option>
 							<?php foreach($all_users as $pms):?>
 								<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
 							<?php endforeach;?>
@@ -493,9 +493,9 @@ if (get_default_currency()) {
 			<div class="clear-both" style="margin-bottom:15px;"></div>
 			<div class="pull-left team-mem">
 			<label class="project-stake-members">Stake Holders</label>
-				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="stake_members" name="stake_members[]">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select" data-placeholder="Select Members"  id="stake_members" name="stake_members[]">
 					<?php if(!empty($all_users)):?>
-							<option value="">Select</option>
+							<!--option value=""></option-->
 							<?php foreach($all_users as $pms):
 									$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
 									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
@@ -518,9 +518,9 @@ if (get_default_currency()) {
 			<!--List the project assigned members from the timesheet-->
 			<div class="pull-left team-mem">
 			<label class="project-team-members">Team Members</label>
-				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select"  id="project_team_members" name="project_team_members[]">
+				<select <?php if($show_disable) { echo 'disabled="disabled"';} ?> multiple="multiple" class="chzn-select" data-placeholder="Select Members" id="project_team_members" name="project_team_members[]">
 					<?php if(!empty($all_users)):?>
-							<option value="">Select</option>
+							<!--option value=""></option-->
 							<?php foreach($all_users as $pms):
 									$selected = (in_array($pms['userid'],$restrict1))?'selected="selected"':'';?>
 									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>

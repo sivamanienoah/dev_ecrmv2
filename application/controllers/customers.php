@@ -602,9 +602,42 @@ class Customers extends crm_controller {
 	}
 	
 	//checking primary_mail in customer table
-	function Check_email() {
-		$res = $this->customer_model->primary_mail_check($this->input->post('email'));
-		if($res == 0)
+	function Check_email()
+	{
+		$post_data = $this->input->post();
+		
+		$this->db->where('company_id', $post_data['company_id']);
+		$this->db->where('email_1', $post_data['email']);
+		if(0!=$post_data['custid']){
+			$this->db->where('custid !=', $post_data['custid']);
+		}
+		$res = $this->db->get($this->cfg['dbpref'].'customers');
+		
+		// echo $this->db->last_query(); die;
+
+		if($res->num_rows() == 0)
+		echo 'userOk';
+		else
+		echo 'userNo';
+	}
+
+
+	//checking primary_mail in customer table
+	function check_company() 
+	{		
+		$post_data = $this->input->post();
+		
+		$this->db->where('company', $post_data['company_name']);
+		$this->db->where('add1_region', $post_data['add1_region']);
+		$this->db->where('add1_country', $post_data['add1_country']);
+		$this->db->where('add1_state', $post_data['add1_state']);
+		$this->db->where('add1_location', $post_data['add1_location']);
+		if($post_data['company_id']!=0){
+			$this->db->where('companyid !=', $post_data['company_id']);
+		}
+		$res = $this->db->get($this->cfg['dbpref'].'customers_company');
+
+		if($res->num_rows() == 0)
 		echo 'userOk';
 		else
 		echo 'userNo';
