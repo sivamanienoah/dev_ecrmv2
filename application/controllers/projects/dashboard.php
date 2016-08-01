@@ -1070,6 +1070,7 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
+		$this->db->where("l.customer_type", '1');
 		// $pt_not_in_arr = array('4','8');
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
@@ -1320,6 +1321,7 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
+		$this->db->where("l.customer_type", '1');
 		// $pt_not_in_arr = array('4','8');
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
@@ -1472,6 +1474,7 @@ class Dashboard extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
+		$this->db->where("l.customer_type", '1');
 		// $pt_not_in_arr = array('4','8');
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
