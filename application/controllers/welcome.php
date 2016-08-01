@@ -2978,7 +2978,9 @@ HDOC;
 		} */		
 		/*master*/
 
-		$filter = real_escape_array($this->input->post()); 
+		$filter = real_escape_array($this->input->post());
+		
+		$cusId = $this->level_restriction();
 
 		$filter_res = $this->welcome_model->getClosedJobids($cusId, $filter);
 		
