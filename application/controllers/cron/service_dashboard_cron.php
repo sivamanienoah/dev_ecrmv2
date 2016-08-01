@@ -108,6 +108,7 @@ class Service_dashboard_cron extends crm_controller
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", '4');
+		$this->db->where("l.customer_type", '1');
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
@@ -227,7 +228,7 @@ class Service_dashboard_cron extends crm_controller
 				$practice_not_in = array(6,13);
 				$this->db->where_not_in('l.practice', $practice_not_in);
 				// $this->db->where("l.billing_type", 1);
-				$query3 = $this->db->get();
+				$query3   = $this->db->get();
 				$pro_data = $query3->result_array();
 				if(!empty($pro_data) && count($pro_data)>0){
 					foreach($pro_data as $recrd){
