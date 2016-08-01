@@ -293,7 +293,26 @@ button.ui-datepicker-current { display: none; }
 	</div>
 </div>
 <div id='popupGetSearchName'></div>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript">
+$(function() {
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 1, "desc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": true,
+		"bAutoWidth": false,
+		"aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0 ] }
+		]
+	});
+});
+</script>
 <script type="text/javascript" src="assets/js/leads/closed_opportunities_view.js"></script>
 <script>
 
@@ -335,7 +354,6 @@ $('#excel_lead').click(function() {
 	return false;
 
 });
-
 </script>
 <?php
 require (theme_url().'/tpl/footer.php'); 

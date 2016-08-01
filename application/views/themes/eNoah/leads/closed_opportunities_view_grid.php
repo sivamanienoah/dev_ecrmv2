@@ -81,4 +81,23 @@ $userdata = $this->session->userdata('logged_in_user');
 		?>
 	</tbody>
 </table>
-<script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript">
+$(function() {
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 1, "desc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": true,
+		"bAutoWidth": false,
+		"aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ 0 ] }
+		]
+	});
+});
+</script>
