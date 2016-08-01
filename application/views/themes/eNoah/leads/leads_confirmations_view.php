@@ -1,21 +1,5 @@
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
-<script type="text/javascript">
-$(function(){
-	var config = {
-		'.chzn-select'           : {},
-		'.chzn-select-deselect'  : {allow_single_deselect:true},
-		'.chzn-select-no-single' : {disable_search_threshold:10},
-		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
-		'.chzn-select-width'     : {width:"95%"}
-	}
-	for (var selector in config) {
-		$(selector).chosen(config[selector]);
-	}
-	
-	
-});  
-</script>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
@@ -59,7 +43,7 @@ button.ui-datepicker-current { display: none; }
 			<input type="hidden" name="sales_contact_userid_fk" value="<?php echo $sales_contact_userid_fk; ?>" class="textfield width200px" readonly />
 			<table class="layout">
 				<!--tr>
-					<td width="100"><strong>First name:*</strong></td>
+					<td width="100"><strong>First name: <span class='mandatory_asterick'>*</span></strong></td>
 					<td width="240"><input type="text" name="first_name" value="<?php #echo $customer_data['first_name']; ?>" class="textfield width200px required" /> </td>
 					<td width="100"><strong>Last Name:</strong></td>
 					<td width="240"><input type="text" name="last_name" value="<?php #echo $customer_data['last_name']; ?>" class="textfield width200px required" /></td>
@@ -67,7 +51,7 @@ button.ui-datepicker-current { display: none; }
 				<tr>
 					<!--td><strong>Position:</strong></td>
 					<td><input type="text" name="position_title" value="<?php #echo $customer_data['position_title']; ?>" class="textfield width200px required" /></td-->
-                    <td><strong>Company:*</strong></td>
+                    <td><strong>Company: <span class='mandatory_asterick'>*</span></strong></td>
 					<td><input type="text" name="company" value="<?php echo $customer_data['company']; ?>" class="textfield width200px required" /> </td>
 				</tr>
 				<tr>
@@ -83,7 +67,7 @@ button.ui-datepicker-current { display: none; }
 					<td><input type="text" name="add1_postcode" value="<?php echo $customer_data['add1_postcode']; ?>" class="textfield width200px" /></td>
 				</tr>
 				<tr>
-					<td><strong>Region:*</strong></td>
+					<td><strong>Region: <span class='mandatory_asterick'>*</span></strong></td>
 					<td>
 						<select name="add1_region" id="add1_region" class="textfield width200px" onchange="getCountry(this.value)" class="textfield width200px required">
 							<option value="0">Select Region</option>
@@ -98,7 +82,7 @@ button.ui-datepicker-current { display: none; }
 							?>
 						</select>
 					</td>
-					<td><strong>Country:*</strong></td>
+					<td><strong>Country: <span class='mandatory_asterick'>*</span></strong></td>
 					<td id='country_row'>
 						<select id="add1_country" name="add1_country" class="textfield width200px required" >
 						<option value="0">Select Country</option>                           
@@ -107,14 +91,14 @@ button.ui-datepicker-current { display: none; }
 					</td>
 				</tr>
 				<tr>
-					<td><strong>State:*</strong></td>
+					<td><strong>State: <span class='mandatory_asterick'>*</span></strong></td>
 					<td id='state_row'>
 						<select id="add1_state" name="add1_state" class="textfield width200px required">
 							<option value="0">Select State</option>                           
 						</select>
 						<a id="addStButton" class="addNew" style ="display:none;"></a>
 					</td>
-					<td><strong>Location:*</strong></td>
+					<td><strong>Location: <span class='mandatory_asterick'>*</span></strong></td>
 					<td id='location_row'>
 						<select name="add1_location" class="textfield width200px required">
 						<option value="0">Select Location</option>                           
@@ -150,10 +134,10 @@ button.ui-datepicker-current { display: none; }
 						<table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
 							<thead>
 								<tr class="bg-blue">
-									<td>Name</td>
-									<td>Email ID</td>
+									<td>Name <span class='mandatory_asterick'>*</span></td>
+									<td>Email ID <span class='mandatory_asterick'>*</span></td>
 									<td>Position</td>
-									<td>Contact No</td>
+									<td>Contact No <span class='mandatory_asterick'>*</span></td>
 									<td>Skype</td>
 								</tr>
 							</thead>
@@ -199,18 +183,18 @@ button.ui-datepicker-current { display: none; }
 		
 		<div id="tabs-project" >
 			<?php #echo "<pre>"; print_r($quote_data); exit; ?>
-			<!--p class="clearfix" ><h3>Project Details*</h3></p-->
+			<!--p class="clearfix" ><h3>Project Details<span class='mandatory_asterick'>*</span></h3></p-->
 			<form action="" method="post" id="project-confirm-form" onsubmit="return false;">
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="errmsg_confirm ajx_failure_msg"></div>
 				<table class="layout" cellspacing="10">
 					<tr>
-						<td width="115"><strong>Project Name:*</strong></td>
+						<td width="115"><strong>Project Name: <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
 							<input type="text" name="project_name" id="project_name" class="textfield" style=" width:200px" value="<?php echo  htmlentities($quote_data['lead_title'], ENT_QUOTES) ?>" tabindex="1" />
 							<div class="ajx_failure_msg" id="project_name_err"></div>
 						</td>
-						<td width="115"><strong>Practice:*</strong></td>
+						<td width="115"><strong>Practice: <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">					
 							<select name="practice" id="practice" class="textfield width200px" tabindex="10">
 								<option value="not_select">Please Select</option>
@@ -229,7 +213,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Resource Type:*</strong></td>
+						<td><strong>Resource Type: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>
 							<select name="resource_type" id="resource_type" class="textfield width200px" tabindex="2">
 								<option value="not_select">Please Select</option>
@@ -246,7 +230,7 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="resource_type_err"></div>
 						</td>
-						<td><strong>SOW Status:*</strong></td>
+						<td><strong>SOW Status: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>					
 							<label for="sow_status_signed"><input type="radio" name="sow_status" <?php echo ($quote_data['sow_status']==1) ?" checked='checked'" : "";  ?> id="sow_status_signed" value="1" tabindex="11" /> Signed</label>
 							<label for="sow_status_unsigned"><input type="radio" name="sow_status" id="sow_status_unsigned" <?php echo ($quote_data['sow_status']==0) ?" checked='checked'" : "";  ?> value="0" tabindex="12" /> Un signed</label>
@@ -254,7 +238,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Departments:*</strong></td>
+						<td><strong>Departments: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>
 							<select name="department_id_fk" id="department_id_fk" class="textfield width200px" tabindex="3">
 								<option value="not_select">Please Select</option>
@@ -271,7 +255,7 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="department_err"></div>
 						</td>
-						<td width="115"><strong>SOW Value:*</strong></td>
+						<td width="115"><strong>SOW Value: <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
 							<input type="text" name="expect_worth_name" id="expect_worth_name" class="textfield" style=" width:23px" readonly value="<?php echo $quote_data['expect_worth_name']; ?>" />
 							<input type="text" name="actual_worth_amount" id="actual_worth_amount" class="textfield" style=" width:163px" value="<?php echo $quote_data['actual_worth_amount']; ?>" tabindex="13" />
@@ -279,7 +263,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Project Billing Type:*</strong></td>
+						<td><strong>Project Billing Type: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>
 							<select name="timesheet_project_types" id="timesheet_project_types" class="textfield width200px" tabindex="4">
 								<option value="not_select">Please Select</option>
@@ -296,14 +280,14 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="timesheet_project_types_err"></div>
 						</td>
-						<td width="115"><strong>Planned Start Date (SOW Start Date):*</strong></td>
+						<td width="115"><strong>Planned Start Date (SOW Start Date): <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
 							<input type="text" data-calendar="true" name="date_start" id="date_start" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" readonly tabindex="14" />
 							<div class="ajx_failure_msg" id="date_start_err"></div>
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Project Type:*</strong></td>
+						<td><strong>Project Type: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>					
 							<select name="project_types" id="project_types" class="textfield width200px" tabindex="5">
 								<option value="not_select">Please Select</option>
@@ -320,14 +304,14 @@ button.ui-datepicker-current { display: none; }
 							</select>
 							<div class="ajx_failure_msg" id="project_type_err"></div>							
 						</td>
-						<td width="115"><strong>Planned End Date (SOW End Date):*</strong></td>
+						<td width="115"><strong>Planned End Date (SOW End Date): <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
 							<input type="text" data-calendar="true" name="date_due" id="date_due" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" readonly tabindex="15" />
 							<div class="ajx_failure_msg" id="date_due_err"></div>
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Project Category:*</strong></td>
+						<td><strong>Project Category: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>					
 							<label for="project_center"><input type="radio" name="project_category" onclick="change_project_category(1);" id="project_center" <?php echo ($quote_data['project_category']==1) ? "checked='checked'" : ""; ?> value="1" tabindex="6" /> Profit Center</label>
 							<label for="cost_center"><input type="radio" name="project_category" id="cost_center" onclick="change_project_category(2);" <?php echo ($quote_data['project_category']==2) ? "checked='checked'" : ""; ?> value="2" tabindex="7" /> Cost Center</label>
@@ -345,7 +329,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 					</tr>
 					<tr id="project_center_tr" style="display:none;">
-						<td><strong>Profit Center:*</strong></td>
+						<td><strong>Profit Center: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>
 							<select name="project_center_value" id="project_center_value" class="textfield width200px" tabindex="8">
 							<?php 
@@ -365,7 +349,7 @@ button.ui-datepicker-current { display: none; }
 					</tr>
 				
 					<tr id="cost_center_tr" style="display:none; height:40px;">
-						<td><strong>Cost Center:*</strong></td>
+						<td><strong>Cost Center: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>
 							<select name="cost_center_value" id="cost_center_value" class="textfield width200px" tabindex="9" >
 								<?php 
@@ -384,10 +368,10 @@ button.ui-datepicker-current { display: none; }
 						</td>
 					</tr>
 					<tr>
-						<td><strong>Customer Type:*</strong></td>
+						<td><strong>Customer Type: <span class='mandatory_asterick'>*</span></strong></td>
 						<td>					
-							<label for="project_center"><input type="radio" name="customer_type" id="int_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==0) ? "checked='checked'" : ""; ?> value="0" tabindex="6" /> Internal</label>
-							<label for="cost_center"><input type="radio" name="customer_type" id="ext_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==1) ? "checked='checked'" : ""; ?> value="1" tabindex="7" /> External</label>
+							<label for="int_customer_type"><input type="radio" name="customer_type" id="int_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==0) ? "checked='checked'" : ""; ?> value="0" tabindex="6" /> Internal</label>
+							<label for="ext_customer_type"><input type="radio" name="customer_type" id="ext_customer_type" <?php echo (isset($quote_data['customer_type']) && $quote_data['customer_type']==1) ? "checked='checked'" : ""; ?> value="1" tabindex="7" /> External</label>
 							<div class="ajx_failure_msg" id="customer_type_err"></div>							
 						</td>
 					</tr>
@@ -416,10 +400,10 @@ button.ui-datepicker-current { display: none; }
 					<tbody>
 					 <tr>
 						<td valign="top"  width="240">
-							<select  class="chzn-select" id="project_manager" name="project_manager">
+							<select class="chzn-select" id="project_manager" data-placeholder="Select Member" name="project_manager">
 							<?php if(!empty($user_accounts)):?>
-								<option value="">Select</option>
 								<?php foreach($user_accounts as $pms):?>
+									<option value=""></option>
 									<option <?php echo ($quote_data['assigned_to'] == $pms['userid'])?'selected="selected"':''?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
 								<?php endforeach;?>
 							<?php endif; ?>
@@ -434,9 +418,9 @@ button.ui-datepicker-current { display: none; }
 						}
 						?>
 						<td valign="top"  width="240">
-						<select  class="chzn-select" multiple="multiple" id="project_team_members" name="project_team_members[]">
+						<select  class="chzn-select" multiple="multiple" id="project_team_members" data-placeholder="Select Members" name="project_team_members[]">
 						<?php if(!empty($user_accounts)):?>
-							<option value="">Select</option>
+							<!--option value="">Select</option-->
 							<?php foreach($user_accounts as $pms):
 									$selected = (in_array($pms['userid'],$team_members))?'selected="selected"':'';?>
 								<option <?php echo $selected;?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
@@ -455,9 +439,9 @@ button.ui-datepicker-current { display: none; }
 						//	echo '<pre>';print_r($restrict1);exit;
 						?>						
 						<td valign="top"  width="150">
-							<select class="chzn-select" multiple="multiple" id="stake_members" name="stake_members[]">
+							<select class="chzn-select" multiple="multiple" id="stake_members" data-placeholder="Select Members" name="stake_members[]">
 							<?php if(!empty($user_accounts)):?>
-								<option value="">Select</option>
+								<!--option value="">Select</option-->
 								<?php foreach($user_accounts as $pms):
 								$selected = (in_array($pms['userid'],$stake_users_array))?'selected="selected"':'';?>
 								<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
@@ -512,7 +496,19 @@ button.ui-datepicker-current { display: none; }
 		
 	</div>
 </div>
-<script>
+<script type="text/javascript">
+	$(function(){
+		var config = {
+			'.chzn-select'           : {},
+			'.chzn-select-deselect'  : {allow_single_deselect:false},
+			'.chzn-select-no-single' : {disable_search_threshold:10},
+			'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+			'.chzn-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+	}); 
 	var usr_level 		 = "<?php echo $username['level']; ?>";
 	var cur_project_id   = "<?php echo $project_id; ?>";
 	var project_category = "<?php echo $quote_data['project_category']; ?>";
