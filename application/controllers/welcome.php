@@ -3061,7 +3061,8 @@ HDOC;
 		$objWriter->save('php://output');
 	}
 	
-	public function level_restriction() {
+	public function level_restriction() 
+	{
 		$userdata = $this->session->userdata('logged_in_user');
 		// if (($userdata['role_id'] == 1 && $userdata['level'] == 1) || ($userdata['role_id'] == 2 && $userdata['level'] == 1)) {
 		if ($userdata['level'] == 1) {
@@ -3121,6 +3122,18 @@ HDOC;
 			}
 		}
 		return $cusId;
+	}
+	
+	public function get_base_currency()
+	{
+		$post_data = $this->input->post();
+		$result = $this->welcome_model->get_record('sales_divisions', $wh_condn=array('div_id'=>$post_data['division']));
+		$res = array();
+		if(!empty($result)){
+			$res['base_cur'] = $result['base_currency'];
+		}
+		echo json_encode($res);
+		exit;
 	}
 }
 ?>

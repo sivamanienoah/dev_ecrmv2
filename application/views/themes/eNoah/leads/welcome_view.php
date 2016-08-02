@@ -42,7 +42,7 @@ $(document).ready(function(){
 		$( "#ex-cust-name" ).autocomplete({
 			minLength: 2,
 			source: function(request, response) {
-				$.ajax({ 
+				$.ajax({
 					url: "hosting/ajax_customer_search",
 					data: { 'cust_name': $("#ex-cust-name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
 					type: "POST",
@@ -848,27 +848,10 @@ h3 .small {
 							?>
                         </select>
                     </p>
-					<p><label>Expected worth of Deal</label></p>
-                    
-					<p><select name="expect_worth" id="expect_worth" class="textfield width100px">
-                            <option value="not_select">Please Select</option>
-                        <?php 
-						foreach ($expect_worth as $expect) {
-						?>
-                            <option value="<?php echo  $expect['expect_worth_id'] ?>"><?php echo  $expect['expect_worth_name'] ?></option>
-                        <?php
-						}
-						?>
-                        </select> <?php '/t';?><label> Amount</label> <input type="text" name="expect_worth_amount" id="expect_worth_amount" class="textfield" style=" width:140px" />
-                    </p>
-					
-					
-				
-					<input name="job_belong_to" id="job_belong_to" type="hidden"  value="<?php echo $userdata['userid'] ?>" class="textfield width300px">
 					
 					<p><label>Entity</label></p>
 					<p>
-						<select name="job_division" id="job_division" class="textfield width300px">
+						<select name="job_division" id="job_division" class="textfield width300px" onchange="getBaseCurrency(this.value);">
 							<option value="not_select">Please Select</option>
                             <?php
 							foreach ($sales_divisions as $sa_div)
@@ -880,6 +863,23 @@ h3 .small {
 							?>
                         </select>
                     </p>
+					
+					<p><label>Expected worth of Deal</label></p>
+                    <input name="expect_worth" id="expect_worth" type="hidden"  value="" class="textfield width300px">
+					<p><select name="expect_worth_readonly" id="expect_worth_readonly" disabled='disabled' class="textfield width100px">
+                            <option value="not_select">Please Select</option>
+                        <?php 
+						foreach ($expect_worth as $expect) {
+						?>
+                            <option value="<?php echo  $expect['expect_worth_id'] ?>"><?php echo  $expect['expect_worth_name'] ?></option>
+                        <?php
+						}
+						?>
+                        </select> <?php '/t';?><label> Amount</label> <input type="text" name="expect_worth_amount" id="expect_worth_amount" class="textfield" style=" width:140px" />
+                    </p>
+
+					<input name="job_belong_to" id="job_belong_to" type="hidden"  value="<?php echo $userdata['userid'] ?>" class="textfield width300px">
+					
 					<p><label>Lead Assigned To</label></p>
 					<p>
 						<select name="lead_assign" id="lead_assign" class="textfield width300px">
@@ -1001,7 +1001,7 @@ h3 .small {
 						</p>
 						<p><label>Industry</label></p>
 						<p>
-							<select name="industry" id="industry_edit" class="textfield width300px">
+							<select name="industry" id="industry_edit" class="textfield width300px" >
 								<option value="">Please Select</option>
 								<?php
 								foreach ($industry as $ind)
@@ -1013,12 +1013,28 @@ h3 .small {
 								?>
 							</select>
 						</p>
+						<p><label>Entity</label></p>
+						<p>
+							<select name="job_division" id="job_division_edit" class="textfield width300px" onchange="getBaseCurrencyEdit(this.value);">
+								<option value="not_select">Please Select</option>
+								<?php
+								
+								foreach ($sales_divisions as $sa_div)
+								{								
+								?>
+									<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
+								<?php								
+								}
+								?>
+							</select>
+						</p>
 						<p><label>Expected worth of Deal</label></p>
-						<p><select name="expect_worth_edit" id="expect_worth_edit" class="textfield" style="width:100px">
+						<input name="expect_worth_edit" id="expect_worth_edit" type="hidden" value="<?php echo $quote_data['expect_worth_id']; ?>" class="textfield width300px">
+						<p><select name="expect_worth_edit_readonly" id="expect_worth_edit_readonly" disabled='disabled' class="textfield" style="width:100px">
 								<option value="not_select">Please Select</option>
 							<?php foreach ($expect_worth as $worth) {							
 								?>
-								<option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo  ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo  $worth['expect_worth_name'] ?></option>
+								<option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo $worth['expect_worth_name'] ?></option>
 							<?php
 								
 							}
@@ -1040,21 +1056,6 @@ h3 .small {
 							<input name="job_belong_to" id="job_belong_to_edit"  class="textfield width300px">
 								
 						</p> -->
-						<p><label>Entity</label></p>
-						<p>
-							<select name="job_division" id="job_division_edit" class="textfield width300px">
-								<option value="not_select">Please Select</option>
-								<?php
-								
-								foreach ($sales_divisions as $sa_div)
-								{								
-								?>
-									<option value="<?php echo $sa_div['div_id'] ?>"<?php echo ($quote_data['division'] == $sa_div['div_id']) ? ' selected="selected"' : '' ?>><?php echo $sa_div['division_name'] ?></option>
-								<?php								
-								}
-								?>
-							</select>
-						</p>
 						<!-- lead owner edit owner starts -->
 						<p><label>Lead Owner </label></p>
 						<p>
@@ -1743,6 +1744,34 @@ function reloadWithMessagePjt(str, statusid) {
 	$.get('ajax/request/set_flash_data/' + str,{},function(data){
 		document.location.href = site_base_url+'project/view_project/' + curr_job_id;
 		$.unblockUI();
+	});
+}
+
+function getBaseCurrency(val){
+	$.ajax({
+		url: "welcome/get_base_currency",
+		data: { 'division': val,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		type: "POST",
+		dataType: 'json',
+		async: false,
+		success: function(data) {
+			$('#expect_worth').val(data.base_cur);
+			$('#expect_worth_readonly').val(data.base_cur);
+		}
+	});
+}
+
+function getBaseCurrencyEdit(val){
+	$.ajax({
+		url: "welcome/get_base_currency",
+		data: { 'division': val,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+		type: "POST",
+		dataType: 'json',
+		async: false,
+		success: function(data) {
+			$('#expect_worth_edit').val(data.base_cur);
+			$('#expect_worth_edit_readonly').val(data.base_cur);
+		}
 	});
 }
 </script>

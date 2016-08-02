@@ -1552,6 +1552,16 @@ class Welcome_model extends crm_model {
 		$cls_query =  $query->result_array();
 		return $cls_query;
 	}
+	
+	function get_record($tbl, $wh_condn)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->row_array();
+	}
 }
 
 ?>
