@@ -227,8 +227,7 @@ class Dashboard extends crm_controller {
 				$filter['lead_indi'] = '';
 			}
 		}
-		
-		
+
 		// $filter   = real_escape_array($this->input->post());
 		// echo "<pre>"; print_r($filter); exit;
 		if (isset($filter['advance'])) {
