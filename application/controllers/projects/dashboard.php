@@ -2410,6 +2410,7 @@ class Dashboard extends crm_controller
 			$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
 		}
 		$query = $this->db->get();
+		echo $this->db->last_query(); die;
 		$invoice_rec = $query->result_array();
 		
 		$resarr = array();
