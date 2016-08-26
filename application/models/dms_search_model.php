@@ -24,7 +24,7 @@ class Dms_search_model extends crm_model {
 			$st = implode(",",$stake_arr);
 		}		
 		 
-		$this->db->select('f.folder_name, cc.company, cus.customer_name as cust_firstname, cus.last_name as cust_lastname, le.lead_title, lf.file_id, lf.lead_id, lf.lead_files_name, lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
+		$this->db->select('f.folder_name, cc.company, cus.customer_name as cust_firstname, le.lead_title, lf.file_id, lf.lead_id, lf.lead_files_name, lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'leads AS le', 'le.lead_id = lf.lead_id', 'join');
