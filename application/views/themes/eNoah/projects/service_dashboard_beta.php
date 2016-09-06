@@ -53,7 +53,7 @@ $practice_arr = array();
 			</div>
 		</div>
 		<div class="leadstg_note">
-			"Infra Services" Practice Values are merged to "Others" Practice.
+			"Infra Services" Practice Values are Merged With "Others" Practice.
 		</div>
 		<? #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
 		<div id="default_view">
