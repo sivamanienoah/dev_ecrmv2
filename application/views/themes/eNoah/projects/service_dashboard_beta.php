@@ -37,7 +37,7 @@ $practice_arr = array();
 				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
-					<div style="border: 1px solid #DCDCDC; width:65% !important;">
+					<div style="width:65% !important;">
 						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
