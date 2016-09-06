@@ -4,9 +4,11 @@
 						<th>IT Services Dashboard</th>
 						<?php if(!empty($practice_data)) { ?>
 							<?php foreach($practice_data as $prac) { ?>
-								<th><?php echo $prac->practices; ?></th>
-								<?php $practice_arr[] = $prac->practices; ?>
-								<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
+								<?php if($prac->id != 7) { ?>
+									<th><?php echo $prac->practices; ?></th>
+									<?php $practice_arr[] = $prac->practices; ?>
+									<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
+								<?php } ?>
 							<?php } ?>
 						<?php } ?>
 						<th>Total</th>
@@ -19,7 +21,14 @@
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
+									if($parr == 'Others') {
+										$infraProjects = isset($projects['practicewise']['Infra Services']) ? $projects['practicewise']['Infra Services'] : 0;
+										$otherProjects = isset($projects['practicewise']['Others']) ? $projects['practicewise']['Others'] : 0;
+										$noProjects = $infraProjects+$otherProjects;
+										$noProjects = isset($noProjects) ? $noProjects : '';
+									} else {
+										$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
+									}
 									if($noProjects!='') {
 										$total_projects += $noProjects;
 									?>
@@ -40,7 +49,14 @@
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+									if($parr == 'Others') {
+										$infraRAG = isset($projects['rag_status']['Infra Services']) ? $projects['rag_status']['Infra Services'] : 0;
+										$otherRAG = isset($projects['rag_status']['Others']) ? $projects['rag_status']['Others'] : 0;
+										$ragProjects = $infraRAG+$otherRAG;
+										$rag = isset($ragProjects) ? $ragProjects : '';
+									} else {
+										$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
+									}
 									if($rag!='') {
 										$total_rag += $rag;
 									?>
@@ -61,7 +77,15 @@
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$cm_billing = ($dashboard_det[$parr]['billing_month']!='-') ? round($dashboard_det[$parr]['billing_month']) : '-';
+									if($parr == 'Others') {
+										$infraCMB = isset($dashboard_det['Infra Services']['billing_month']) ? $dashboard_det['Infra Services']['billing_month'] : 0;
+										$otherCMB = isset($dashboard_det['Others']['billing_month']) ? $dashboard_det['Others']['billing_month'] : 0;
+										$CMBProjects = $infraCMB + $otherCMB;
+										$CMBProjects = isset($CMBProjects) ? $CMBProjects : '';
+										$cm_billing = isset($CMBProjects) ? round($CMBProjects) : '-';
+									} else {
+										$cm_billing = ($dashboard_det[$parr]['billing_month']!='-') ? round($dashboard_det[$parr]['billing_month']) : '-';
+									}
 									if($cm_billing!='-'){
 								?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'cm_billing'); return false;"><?php echo $cm_billing; ?></a>
@@ -81,7 +105,15 @@
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$irval = ($dashboard_det[$parr]['ytd_billing']!='-') ? round($dashboard_det[$parr]['ytd_billing']) : '-';
+									if($parr == 'Others') {
+										$infra_irval 	= isset($dashboard_det['Infra Services']['ytd_billing']) ? $dashboard_det['Infra Services']['ytd_billing'] : 0; 
+										$other_irval 	= isset($dashboard_det['Others']['ytd_billing']) ? $dashboard_det['Others']['ytd_billing'] : 0;
+										$irvalProjects 	= $infra_irval + $other_irval;
+										$irvalProjects 	= isset($irvalProjects) ? $irvalProjects : '';
+										$irval 			= isset($irvalProjects) ? round($irvalProjects) : '-';
+									} else {
+										$irval 			= ($dashboard_det[$parr]['ytd_billing']!='-') ? round($dashboard_det[$parr]['ytd_billing']) : '-';
+									}
 									if($irval!="-") {
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'irval'); return false;"><?php echo $irval; ?></a>
@@ -101,7 +133,16 @@
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
 								<?php
-									$dc_value = ($dashboard_det[$parr]['ytd_utilization_cost']!='-') ? round($dashboard_det[$parr]['ytd_utilization_cost']) : '-';
+									if($parr == 'Others') {
+										$infra_dc_value = isset($dashboard_det['Infra Services']['ytd_utilization_cost']) ? $dashboard_det['Infra Services']['ytd_utilization_cost'] : 0;
+										$other_dc_value	= isset($dashboard_det['Others']['ytd_utilization_cost']) ? $dashboard_det['Others']['ytd_utilization_cost'] : 0;
+										$dc_value_Projects 	= $infra_dc_value + $other_dc_value;
+										$dc_value_Projects 	= isset($dc_value_Projects) ? $dc_value_Projects : '';
+										$dc_value 			= isset($dc_value_Projects) ? round($dc_value_Projects) : '-';
+									} else {
+										$dc_value = ($dashboard_det[$parr]['ytd_utilization_cost']!='-') ? round($dashboard_det[$parr]['ytd_utilization_cost']) : '-';
+									}
+									
 									if($dc_value!="-") {
 									?>
 									<a onclick="getData('<?php echo $practice_id_arr[$parr]; ?>', 'dc_value'); return false;"><?php echo $dc_value; ?></a>
