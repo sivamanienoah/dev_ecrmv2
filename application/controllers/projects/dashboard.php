@@ -1415,18 +1415,17 @@ class Dashboard extends crm_controller
 			$bill_month = $this->input->post("billable_month");
 			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
 		} */
-
 		
 		$month_status = $this->input->post("month_status");
-		if(!empty($month_status)){
-			if($month_status==2){
-				$end_date  	   = date('Y-m-d', strtotime("-1 month"));
-				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
-			}else{
-				$end_date  	   = date('Y-m-d');
-				$month    = date("Y-m-01 00:00:00");				
+		if(!empty($month_status)) {
+			if($month_status == 2) {
+				$end_date  	= date('Y-m-d', strtotime("-1 month"));
+				$month    	= date("Y-m-01 00:00:00", strtotime("-1 month"));				
+			} else {
+				$end_date  	= date('Y-m-d');
+				$month    	= date("Y-m-01 00:00:00");				
 			}			
-		}else{
+		} else {
 			$month_status = 1;
 		}
 		
@@ -1518,7 +1517,7 @@ class Dashboard extends crm_controller
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
 				}
-				if($row['rag_status'] == 1){
+				if($row['rag_status'] == 1) {
 					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
 						$projects['rag_status'][$practice_arr[$row['practice']]] += 1;
 					} else {
@@ -2112,8 +2111,13 @@ class Dashboard extends crm_controller
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
-		if($practice){
-			$this->db->where("l.practice", $practice);
+		if($practice) {
+			if($practice == 10) { //practice - others
+				$pr_arr = array(7, 10);
+				$this->db->where_in("l.practice", $pr_arr);
+			} else {
+				$this->db->where("l.practice", $practice);
+			}
 		}
 		if($project_status){
 			$this->db->where_in("l.pjt_status", $project_status);
@@ -2131,6 +2135,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in('l.lead_id', $result_ids);
 		} */
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
 		$this->db->select('p.practices, p.id');
@@ -2355,7 +2360,13 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
 		if(!empty($practice)) {
-			$this->db->where("l.practice", $practice);
+			if($practice == 10){ //INFRA SERVICES practice values merged to other practice
+				$pra_arr = array(7, 10);
+				$this->db->where_in("l.practice", $pra_arr);
+			} else {
+				$this->db->where("l.practice", $practice);
+			}
+			
 		}
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
@@ -2404,7 +2415,12 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
 		if(!empty($practice)) {
-			$this->db->where("l.practice", $practice);
+			if($practice == 10) { //infra service practice values can be merged with others practice
+				$pr_arra = array(7, 10);
+				$this->db->where_in("l.practice", $pr_arra);
+			} else {
+				$this->db->where("l.practice", $practice);
+			}
 		}
 		if(!empty($month)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($month)));
@@ -2549,9 +2565,14 @@ class Dashboard extends crm_controller
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
-		$this->db->where_in("l.practice", $practice);
-		$query = $this->db->get();
+		if($practice == 10) { //Infra services practive values merged to other practices 
+			$p_arr = array(7, 10);
+			$this->db->where_in("l.practice", $p_arr);
+		} else {
+			$this->db->where_in("l.practice", $practice);
+		}
 		
+		$query = $this->db->get();
 		$data['resdata'] 	   = $query->result();
 		
 		// get all projects from timesheet
