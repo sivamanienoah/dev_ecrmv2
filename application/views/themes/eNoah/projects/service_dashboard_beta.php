@@ -52,6 +52,9 @@ $practice_arr = array();
 				</form>
 			</div>
 		</div>
+		<div class="leadstg_note">
+			"Infra Services" Practice Values are merged to "Others" Practice.
+		</div>
 		<? #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
