@@ -504,6 +504,7 @@ function validate_customer()
 		}
 	}); */
 	
+	//valid phone no validation
 	$('.phone').each(function(){
 		if($(this).val()!="")
 		{
