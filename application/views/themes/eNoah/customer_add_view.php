@@ -227,7 +227,7 @@
 									<td>Name <span class='mandatory_asterick'>*</span></td>
 									<td>Position</td>
 									<td>Email ID <span class='mandatory_asterick'>*</span></td>
-									<td>Contact No <span class='mandatory_asterick'>*</span></td>
+									<td>Contact No</td>
 									<td>Skype</td>
 									<td>Action</td>
 								</tr>
