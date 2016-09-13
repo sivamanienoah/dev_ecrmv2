@@ -277,10 +277,26 @@ function add_customer()
 			$('.email_err_msg').html('');
 		}
 	}
-	if($('#contact_phone').val()==""){
+	/* if($('#contact_phone').val()==""){
 		err = true;
 		$('.phone_err_msg').html("This field is required");
 	} else {
+		$('.phone_err_msg').html('');
+	} */
+	
+	if($('#contact_phone').val()!="")
+	{
+		var regex = /^(?=.*[0-9])[- +()0-9]+$/;
+		var phoneres = regex.test($('#contact_phone').val());
+		if(!phoneres){
+			err = true;
+			$('.phone_err_msg').html("Not a vaild phone no");
+		} else {
+			$('.phone_err_msg').html('');
+		}
+	}
+	else
+	{
 		$('.phone_err_msg').html('');
 	}
 	
