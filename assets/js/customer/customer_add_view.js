@@ -493,13 +493,31 @@ function validate_customer()
 		}
 	});
 	
-	//First Name
-	$('.phone').each(function(){
+	//for phone no
+	/* $('.phone').each(function(){
 		if($(this).val()=="")
 		{
 			$(this).closest('tr').find('.phone_err_msg').html("This field is required");
 			err=false;
 		}else{
+			$(this).closest('tr').find('.phone_err_msg').html(" ");
+		}
+	}); */
+	
+	$('.phone').each(function(){
+		if($(this).val()!="")
+		{
+			var regex = /^(?=.*[0-9])[- +()0-9]+$/;
+			var phoneres = regex.test($(this).val());
+			if(!phoneres){
+				err = false;
+				$(this).closest('tr').find('.phone_err_msg').html("Not a vaild phone no");
+			} else {
+				$(this).closest('tr').find('.phone_err_msg').html(" ");
+			}
+		}
+		else
+		{
 			$(this).closest('tr').find('.phone_err_msg').html(" ");
 		}
 	});
