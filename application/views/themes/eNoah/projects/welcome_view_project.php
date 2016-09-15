@@ -4,12 +4,12 @@
 <?php
 $this->load->helper('custom_helper');
 if (get_default_currency()) {
-	$default_currency = get_default_currency();
-	$default_cur_id = $default_currency['expect_worth_id'];
-	$default_cur_name = $default_currency['expect_worth_name'];
+	$default_currency 	= get_default_currency();
+	$default_cur_id 	= $default_currency['expect_worth_id'];
+	$default_cur_name 	= $default_currency['expect_worth_name'];
 } else {
-	$default_cur_id = '1';
-	$default_cur_name = 'USD';
+	$default_cur_id 	= '1';
+	$default_cur_name 	= 'USD';
 }
 	
 	$this->load->helper('lead_helper'); 
@@ -550,6 +550,7 @@ if (get_default_currency()) {
 		<ul id="job-view-tabs">
 			<?php if($this->userdata['role_id'] != 8):?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-0-a">Other Cost</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
 			<?php endif; ?>
@@ -722,7 +723,12 @@ if (get_default_currency()) {
 		</div>
 	</div><!--end of jv-tab-0 -->
 	
-	<div id="jv-tab-1">
+	<div id="jv-tab-0-a"><!--start of jv-tab-0-a-->
+		<div style="color:red; margin:7px 0 0;" id="err_other_cost_data" class="succ_err_msg"></div>
+		<div id="other_cost_data"> </div>
+	</div><!--end of jv-tab-0-a-->
+	
+	<div id="jv-tab-1"><!--start of jv-tab-1-->
 				<div class="q-view-main-top">
 					
 					<div class="payment-buttons clearfix">

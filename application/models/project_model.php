@@ -911,5 +911,15 @@ class Project_model extends crm_model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
+	public function getOtherCost($id)
+	{
+		$this->db->select("id, description, cost_incurred_date, currency_type, value");
+		$this->db->from($this->cfg['dbpref'].'project_other_cost');
+		$this->db->where('project_id', $id);
+		$this->db->order_by('id', 'ASC');
+		$query = $this->db->get();
+		return $query->result_array();
+	}
 }
 ?>

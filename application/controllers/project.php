@@ -350,8 +350,6 @@ class Project extends crm_controller {
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
-		
-		//echo '<pre>'; print_r($usernme);
 
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
 			$data['chge_access'] = 1;
@@ -362,7 +360,6 @@ class Project extends crm_controller {
 		$result = $this->project_model->get_quote_data($id);
 		
 		// echo '<pre>';print_r($result[0]);exit;
-		// $arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($result)) {
 			
@@ -372,24 +369,11 @@ class Project extends crm_controller {
 			//get customers & company
 			$data['company_det'] = $this->welcome_model->get_company_det($data['quote_data']['companyid']);
 			$data['contact_det'] = $this->welcome_model->get_contact_det($data['quote_data']['companyid']);
-			
-			// echo "<pre>"; print_r($data['company_det']); die;
-			
-			// Get User Role
-			// $data['user_roles']		= $usernme['role_id']; 
-			// $data['login_userid']		= $usernme['userid']; 
-			// $data['project_belong_to']		= $arrLeadInfo['belong_to']; 
-			// $data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
-			// $data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
-			// $temp_cont = $this->project_model->get_contract_jobs($result[0]['lead_id']);
 
 			$data['timesheetProjectType']   = array();
 			$data['timesheetProjectLead']   = array();
 			$data['timesheetAssignedUsers'] = array();
 
-			/* foreach ($temp_cont as $tc) {
-				$data['assigned_contractors'][] = $tc['userid_fk'];
-			} */
 			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid'])) {
 				$log_view_status['log_view_status'] = $data['quote_data']['log_view_status'] . ':' . $this->userdata['userid'];
 				$logViewStatus = $this->project_model->updt_log_view_status($id, $log_view_status);
@@ -413,7 +397,6 @@ class Project extends crm_controller {
 			
 			if ($data['quote_data']['payment_terms'] == 1)
 			{
-				// $data['payment_data'] = $this->project_model->get_payment_terms($data['quote_data']['lead_id']);
 				$data['payment_data'] = $this->project_model->get_expect_payment_terms($data['quote_data']['lead_id']);
 			}
 			
@@ -428,17 +411,7 @@ class Project extends crm_controller {
 			 */
 			$fcpath = UPLOAD_PATH; 
 		    $f_dir = $fcpath . 'files/' . $id . '/'; 
-			// $data['job_files_html'] = $this->project_model->get_job_files($f_dir, $fcpath, $data['quote_data']);
 			$get_parent_folder_id = $this->request_model->getParentFfolderId($id,$parent=0);
-			
-			// $project_members = array();
-			// $project_leaders = array();
-		
-			//$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR);
-			
-			//echo '<pre>'; print_r($get_parent_folder_id);exit;
-			//echo '<pre>'; print_r($project_leaders);
-			//echo '<pre>'; print_r($project_members);exit;
 			
 			$data['project_members'] = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details
 			
@@ -463,38 +436,6 @@ class Project extends crm_controller {
 			
 				$ins = array('lead_id'=>$id,'folder_name'=>$id,'parent'=>0,'created_by'=>$this->userdata['userid']);
 				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
-				
-				
-				// $project_members = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details.
-				// $project_leaders = $this->request_model->get_project_leads($id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-				// $arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-				// $arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				// $arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
-				
-				
-				
-					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-	
-						foreach($arrProjectMembers as $members){
-							
-							$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
-								if(empty($arrLeadExistFolderAccess)) {	
-								
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;									
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}
-								$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$members['userid']);
-								$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
-								
-							}							
-						}
-					} */
 			}
 			
 			/**
@@ -553,9 +494,6 @@ class Project extends crm_controller {
 					}
 				} */
 				
-				/* echo '<pre>';
-				print_r($team_mem);
-				print_r($ts_team_members); */
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
 				if(!$result) {
@@ -576,30 +514,10 @@ class Project extends crm_controller {
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
 			$data['stake_holders']  = $this->project_model->get_stake_holders($id);
-			//echo '<pre>';print_r($project_members); 
-			//echo count($data['contract_users']);echo '<pre>';print_r($data['contract_users']);exit;
+
 			$rates = $this->get_currency_rates();
 
 			$data['timesheet_data'] = array();
-			/* if(count($timesheet)>0) {
-				foreach($timesheet as $ts) {
-					$costdata = array();
-					if(isset($ts['cost'])) {
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-					} else {
-						$costdata = $this->project_model->get_latest_cost($ts['username']);
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $costdata['cost'];
-						$rateCostPerHr = $this->conver_currency($costdata['cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
-					}
-					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['Duration'];
-					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['first_name'] . ' ' .$ts['last_name'];
-				}
-			} */
-			//echo '<pre>';print_r($timesheet);exit;
-			//$total_hours=get_timesheet_hours_by_user('dhanapal.p',2016,'May',array('leave'));
 				
 			if(count($timesheet)>0) {
 				foreach($timesheet as $ts) {
@@ -619,18 +537,13 @@ class Project extends crm_controller {
 					}
 				}
 			}
-			/* echo "<pre>";
-			print_r($data['timesheet_data']);
-			echo "</pre>"; */
+
 			$data['project_costs'] = array();
 			
 			if(!empty($data['timesheet_data'])) {
-				//echo '<pre>';print_r($data['timesheet_data']);
 				$res = $this->calcActualProjectCost($data['timesheet_data']);
 				if($res['total_cost']>0) {
-					// $data['project_costs'] = $res['total_cost'];
 					$data['project_costs'] = $this->conver_currency($res['total_cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
-					// echo $data['project_costs']; exit;
 				}
 				if($res['total_hours']>0) {
 					$data['actual_hour_data'] = $res['total_hours'];
@@ -684,9 +597,7 @@ class Project extends crm_controller {
 			$data['timesheet_variance'] = '';
 			$timesheet_db = $this->load->database('timesheet', TRUE);		
 			$project_code_ts = $data['quote_data']['pjt_id'];
-			//$qry_pv = $timesheet_db->query("SELECT pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,sum(pte.prj_task_hours) As EstimatedHours, (select sum(tim.duration)/60 from enoah_times As tim where tim.proj_id = pte.proj_id and tim.task_id = pte.task_id) As actualHours ,tt.task_id,tt.name as taskName FROM ".$timesheet_db->dbprefix('project_estimation')." AS pe INNER JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.prj_est_id = pe.prj_est_id INNER JOIN ".$timesheet_db->dbprefix('task')." AS tt ON tt.task_id = pte.task_id  join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = pte.proj_id  WHERE prj.project_code='".$project_code_ts."' group by pte.task_id");
-			
-			
+		
 			$qry_pv = $timesheet_db->query("SELECT tt.task_id,tt.name as taskName, sum(pte.prj_task_hours) As EstimatedHours, pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,(select sum(tim.duration)/60 from ".$timesheet_db->dbprefix('times')." As tim where tim.proj_id = tt.proj_id and tim.task_id = tt.task_id) As actualHours from ".$timesheet_db->dbprefix('task')." AS tt LEFT JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.task_id = tt.task_id LEFT JOIN ".$timesheet_db->dbprefix('project_estimation')." AS pe ON pe.prj_est_id = pte.prj_est_id  left join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = tt.proj_id WHERE prj.project_code='".$project_code_ts."' group by tt.task_id");
 			//echo $timesheet_db->last_query();exit;
 			if($qry_pv->num_rows()>0){
@@ -694,92 +605,6 @@ class Project extends crm_controller {
 				$data['timesheet_variance'] = $res_pv;
 			}
 			$timesheet_db->close();
-			
-			
-			
-			/**
-			get the bug summary from the mantis bug table
-			**/
-			
-			/* $support_db = $this->load->database("support",true);
-		
-			$data['bug_status'] = '';
-			$data['bug_severity'] = '';
-			$data['bug_category'] = '';
-			if($support_db){
-				$support_db->select('id,name');
-				$qry = $support_db->get_where($support_db->dbprefix("project_table"),array("code" => $data['quote_data']['pjt_id']));
-				if($qry->num_rows()>0){
-					$res = $qry->result();
-					$pjtIds = array();					
-					$pjtNames = array();					
-					$pnames_arr = array();					
-					foreach($res as $r){
-						$pjtIds[] = $r->id;
-						//get sub projects as well.
-/* 						$support_db->select("child_id");
-						$childProjects = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("parent_id" => $r->id));
-						if($childProjects->num_rows()>0){
-							$cPresult = $childProjects->result();
-							foreach($cPresult as $cp){
-								$pjtIds[] = $cp->child_id;
-							}
-						} */
-					/*}
-					$pjtIds = array_unique($pjtIds);
-					//echo '<pre>';print_r($pjtIds);exit;
-					$AllPjtIds = implode(",",$pjtIds);
-					
-					$data['AllPjtIds'] = $pjtIds;
-					$parent_proj =  $pjtIds[0];
-					$parent_proj =  $pjtIds[0];
-					
-					$check_child = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("child_id" => $parent_proj));
-					if($check_child->num_rows()>0){
-						$check_child_row = $check_child->row();
-						$parent_proj = $check_child_row->parent_id.';'.$parent_proj;
-					}
-					
-					$data['AllPjtIds_summary'] = $parent_proj;
-					
-					// get project wise report
-					$support_db->select("id,name");
-					$support_db->where_in("id",$pjtIds);
-					$pNames = $support_db->get($support_db->dbprefix("project_table"));
-					if($pNames->num_rows()>0){
-						$pNamesRes = $pNames->result();
-						foreach($pNamesRes as $pnames){
-							$pnames_arr[$pnames->id] = $pnames->name;
-						}
-						$data['project_names'] = $pnames_arr;
-					}
-					
-					
-					$qry_project = $support_db->query("SELECT project_id, status, COUNT( status ) AS bugcount FROM ".$support_db->dbprefix("bug_table")." where project_id in ($AllPjtIds) GROUP BY project_id, status ORDER BY project_id asc");
-					if($qry_project->num_rows()>0) {
-						$data['bug_project'] = $qry_project->result();
-					}					
-					
-					//get all bug list based on the status
-					$qry_status = $support_db->query("SELECT COUNT(id) as bugcount, status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY status ORDER BY status") ;
-					if($qry_status->num_rows()>0) {
-						$data['bug_status'] = $qry_status->result();
-					}
-					
-					// get all the bug list based on the severity
-					$qry_severity = $support_db->query("SELECT project_id,COUNT(id) as bugcount, severity ,status FROM ".$support_db->dbprefix("bug_table")." WHERE project_id IN ($AllPjtIds) GROUP BY severity ,status ORDER BY project_id asc ");
-					if($qry_severity->num_rows()>0){
-						$data['bug_severity'] = $qry_severity->result();
-					}
- 					
-					//get all bug list based on the category
-					$qry_category = $support_db->query("SELECT COUNT(b.id) as bugcount, c.name AS category_name, category_id, b.status FROM ".$support_db->dbprefix("bug_table")." b JOIN ".$support_db->dbprefix("category_table")." AS c ON b.category_id=c.id WHERE b.project_id IN ($AllPjtIds) GROUP BY category_id, c.name, b.status ORDER BY category_id, c.name, b.status");
-					if($qry_category->num_rows()>0){
-						$data['bug_category'] = $qry_category->result_array();
-					}
-				}
-				$support_db->close();	
-			} */
 			
 			/**
 			get the bug summary from the redmine
@@ -888,7 +713,6 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}
-			//echo '<pre>';print_r($data['timesheet_data']);exit;
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -897,6 +721,43 @@ class Project extends crm_controller {
 			redirect('project');
         }
     }
+	
+	/*
+	* Get the Other Cost details
+	*/
+	public function getOtherCostData($project_id)
+	{
+		$data['project_id'] 	 = $project_id;
+		$project_det 			 = $this->project_model->get_lead_det($project_id);
+		$data['base_currency'] 	 = $project_det['expect_worth_id'];
+		$data['currencies'] 	 = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		$data['other_cost_data'] = $this->project_model->getOtherCost($project_id);
+		echo $this->load->view("projects/add_other_cost", $data, true);
+		exit;
+	}
+	
+	/*
+	* Inserting the other cost
+	*/
+	public function addOtherCost()
+	{
+		$ins_val = array();
+		$ins_val['project_id'] 			= $this->input->post('project_id');
+		$ins_val['description'] 		= $this->input->post('description');
+		$ins_val['cost_incurred_date'] 	= ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
+		$ins_val['currency_type'] 		= $this->input->post('currency_type');
+		$ins_val['value'] 				= $this->input->post('value');
+		$ins_val['created_by'] 			= $this->userdata['userid'];
+		$ins_val['created_on'] 			= date('Y-m-d H:i:s');
+		$ins_val['modified_by'] 		= $this->userdata['userid'];
+		$ins_val['modified_on'] 		= date('Y-m-d H:i:s');
+		$insert_cost = $this->project_model->insert_row('project_other_cost', $ins_val);
+		if($insert_cost){
+			echo "Record Inserted";
+		} else {
+			echo "Error in inserting the other cost";
+		}
+	}
 	
 	/*
 	*Check the two arrays
@@ -4929,10 +4790,7 @@ HDOC;
 	}
 	
 	function save_dashboard_fields()
-	{	
-	
-		// echo "<pre>"; print_r($this->input->post()); die;
-	
+	{
 		$existfields  = $this->project_model->get_records('project_dashboard_fields', $arr=array('user_id'=>$this->userdata['userid']), $ord=array('column_order'=>'ASC'));
 		
 		$i=0;
