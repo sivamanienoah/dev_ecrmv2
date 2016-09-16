@@ -725,15 +725,25 @@ class Project extends crm_controller {
 	/*
 	* Get the Other Cost details
 	*/
-	public function getOtherCostData($project_id)
+	public function getOtherCostData($project_id, $grid=false)
 	{
+		$data['currency_arr'] 	 = array();
 		$data['project_id'] 	 = $project_id;
 		$project_det 			 = $this->project_model->get_lead_det($project_id);
 		$data['base_currency'] 	 = $project_det['expect_worth_id'];
 		$data['currencies'] 	 = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		if(!empty($data['currencies'])) {
+			foreach($data['currencies'] as $curr){
+				$data['currency_arr'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
+			}
+		}
 		$data['other_cost_data'] = $this->project_model->getOtherCost($project_id);
-		echo $this->load->view("projects/add_other_cost", $data, true);
-		exit;
+		if($grid==true){
+			$result = $this->load->view("projects/add_other_cost_grid", $data, true);
+		} else {
+			$result = $this->load->view("projects/add_other_cost", $data, true);
+		}
+		echo $result; exit;
 	}
 	
 	/*
@@ -753,10 +763,73 @@ class Project extends crm_controller {
 		$ins_val['modified_on'] 		= date('Y-m-d H:i:s');
 		$insert_cost = $this->project_model->insert_row('project_other_cost', $ins_val);
 		if($insert_cost){
-			echo "Record Inserted";
+			echo "success";
 		} else {
-			echo "Error in inserting the other cost";
+			echo "error";
 		}
+	}
+
+	/*
+	* editing the other cost
+	*/
+	public function getEditOtherCostData()
+	{
+		$data 		 = array();
+		$editdata 	 = array();
+		$data['msg'] = 'error'; 
+		$wh_condn	 = array('id'=>$this->input->post('costid'),'project_id'=>$this->input->post('projectid'));
+		$editdata['cost_data'] 	 = $this->project_model->get_data_by_id('project_other_cost', $wh_condn);
+		if(!empty($editdata['cost_data']) && count($editdata['cost_data'])>0) 
+		{
+			$editdata['project_id'] = $this->input->post('projectid');
+			$editdata['currencies'] = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			$data['res'] = $this->load->view("projects/edit_other_cost_form", $editdata, true);
+			$data['msg'] = 'success';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
+	/*
+	* editing the other cost data
+	*/
+	public function editOtherCost()
+	{
+		$updt_val = array();
+		$updt_val['description'] 		= $this->input->post('description');
+		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
+		$updt_val['currency_type'] 		= $this->input->post('currency_type');
+		$updt_val['value'] 				= $this->input->post('value');
+		$updt_val['modified_by'] 		= $this->userdata['userid'];
+		$updt_val['modified_on'] 		= date('Y-m-d H:i:s');
+		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
+		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
+		
+		if($update_cost){
+			echo "success";
+		} else {
+			echo "error";
+		}
+		exit;
+	}
+
+	/*
+	* Deleting the other cost
+	* @params costid & project id
+	* return json encoded array.
+	*/
+	public function deleteOtherCostData()
+	{
+		$data = array();
+		$wh_condn = array('id'=>$this->input->post('costid'), 'project_id'=>$this->input->post('projectid'));
+		$delOtherCost = $this->project_model->delete_row('project_other_cost', $wh_condn);
+		if($delOtherCost) {
+			$data['res'] = 'success';
+		} else {
+			$data['res'] = 'failure';
+		}
+		echo json_encode($data);
+		exit;
 	}
 	
 	/*
