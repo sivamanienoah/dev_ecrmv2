@@ -725,6 +725,7 @@ if (get_default_currency()) {
 	
 	<div id="jv-tab-0-a"><!--start of jv-tab-0-a-->
 		<div style="color:red; margin:7px 0 0;" id="err_other_cost_data" class="succ_err_msg"></div>
+		<div style="margin:7px 0 0;" id="succes_other_cost_data" class="succ_err_msg"></div>
 		<div id="other_cost_data"> </div>
 	</div><!--end of jv-tab-0-a-->
 	
