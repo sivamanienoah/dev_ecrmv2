@@ -622,7 +622,7 @@ if (get_default_currency()) {
 				</tr>
 			</table>
 			<div id="dates_errmsg" style="color:red; margin:5px"></div>
-			</div>
+		</div>
 		<div class="pull-left">
 			<table id="project-efforts" class="data-table1" cellpadding="0" cellspacing="0">
 				<tr>

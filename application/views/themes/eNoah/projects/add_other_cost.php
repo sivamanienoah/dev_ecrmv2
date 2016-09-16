@@ -67,6 +67,8 @@
 						</td>
 					</tr>
 				<?php } ?>
+			<?php } else { ?>
+				<tr><td colspan='4'> No Records Available. </td></tr>
 			<?php } ?>
 		</tbody>
 	</table>
@@ -179,15 +181,17 @@ function editOtherCostData(costid, projectid)
 	$.ajax({
 		type:'POST',
 		data:params,
-		url:site_base_url+'project/editOtherCostData/',
+		url:site_base_url+'project/getEditOtherCostData/',
 		cache:false,
-		dataType:'html',
+		dataType:'json',
 		beforeSend: function() {
 			//show loading symbol
 		},
 		success:function(data) {
-			// console.info(data);
-			$('#other_cost_form').html(data);
+			// alert(data);
+			if(data.msg == 'success'){
+				$('#other_cost_form').html(data.res);
+			}
 		}
 	});
 }
