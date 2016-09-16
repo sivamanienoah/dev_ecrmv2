@@ -921,5 +921,11 @@ class Project_model extends crm_model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+	
+	function get_data_by_id($table, $wh_condn) {
+		$this->db->where($wh_condn);
+		$user = $this->db->get($this->cfg['dbpref'] . $table);
+		return $user->row_array();
+	}
 }
 ?>
