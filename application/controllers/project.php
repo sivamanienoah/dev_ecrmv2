@@ -163,8 +163,6 @@ class Project extends crm_controller {
 				$divisions = @explode(",",$divisions);
 				else
 				$divisions = '';
-				
-				
 			}
 		} else {
 			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -3504,7 +3502,7 @@ HDOC;
 		if (isset($records) && count($records)) :
 			foreach($records as $rec) {
 				
-				 $amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				$amt_converted = $this->conver_currency($rec['actual_worth_amount'], $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				$data['timesheet_data'] = array();
 				$timesheet				= array();
@@ -3561,7 +3559,7 @@ HDOC;
 				$timesheet_data = array();
 				if(count($timesheet)>0) {
 					foreach($timesheet as $ts) { 
-						$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
+						$financialYear 		= get_current_financial_year($ts['yr'],$ts['month_name']);
 						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
 						
 						$timesheet_data[$ts['username']]['practice_id'] = $ts['practice_id'];
@@ -3583,8 +3581,8 @@ HDOC;
 				$total_non_billable_hrs = 0;
 				$total_internal_hrs		= 0;
 				$total_cost				= 0;
-				$total_hours				= 0;
-				$total_dc_hours				= 0;
+				$total_hours			= 0;
+				$total_dc_hours			= 0;
 				if(count($timesheet_data)>0 && !empty($timesheet_data)){
 					foreach($timesheet_data as $key1=>$value1) {
 						$resource_name = $key1;
@@ -3604,21 +3602,21 @@ HDOC;
 											$rate				 = $value4['rateperhr'];
 											$direct_rateperhr	 = $value4['direct_rateperhr'];
 											$billable_hrs		 = $value4['duration'];
-											$direct_billable_hrs		 = $value4['duration_direct_cost'];
+											$direct_billable_hrs = $value4['duration_direct_cost'];
 											$total_billable_hrs += $billable_hrs;
 										break;
 										case 'Non-Billable':
-											$rate				 = $value4['rateperhr'];
-											$direct_rateperhr	 = $value4['direct_rateperhr'];
+											$rate				 	 = $value4['rateperhr'];
+											$direct_rateperhr	 	 = $value4['direct_rateperhr'];
 											$non_billable_hrs		 = $value4['duration'];
-											$direct_non_billable_hrs		 = $value4['duration_direct_cost'];
+											$direct_non_billable_hrs = $value4['duration_direct_cost'];
 											$total_non_billable_hrs += $non_billable_hrs;
 										break;
 										case 'Internal':
 											$rate				 = $value4['rateperhr'];
 											$direct_rateperhr	 = $value4['direct_rateperhr'];
 											$internal_hrs 		 = $value4['duration'];
-											$direct_internal_hrs		 = $value4['duration_direct_cost'];
+											$direct_internal_hrs = $value4['duration_direct_cost'];
 											$total_internal_hrs += $internal_hrs;
 										break;
 									}
@@ -3641,17 +3639,7 @@ HDOC;
 								$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;
 								//$total_dc_hours += $direct_billable_hrs+$direct_non_billable_hrs+$direct_internal_hrs;
 								$total_dc_hours += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
-								$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
-								/* echo '----<br>';
-								echo 'total_billable_hrs'.$total_billable_hrs.'<br>';
-								echo 'total_non_billable_hrs'.$total_non_billable_hrs.'<br>';
-								echo 'total_internal_hrs'.$total_internal_hrs.'<br>';
-								echo 'ind'.$individual_billable_hrs.'<br>';
-								echo 'max'.$max_hours.'<br>';
-								echo 'rate'.$rate1.'<br>';
-								echo 'total_hours'.$total_hours.'<br>';
-								echo 'total_cost'.$total_cost.'<br>';
-								echo '----<br>';	 */						
+								$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);				
 							}
 						}
 					}	 
@@ -3659,6 +3647,9 @@ HDOC;
 				/* calculation for UC based on the max hours ends */
 				
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				//get the other cost details for the project.
+				$other_cost_values = $this->getOtherCostValues($rec['lead_id']);
 				
 				// for company name
 				$company = $rec['company'];
@@ -3697,12 +3688,56 @@ HDOC;
 				$data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
 				$data['project_record'][$i]['total_hours'] 		= $total_hours;
 				$data['project_record'][$i]['total_dc_hours'] 	= $total_dc_hours;
+				$data['project_record'][$i]['other_cost'] 		= $other_cost_values;
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
 			}
 		endif;
 		return $data['project_record'];
+	}
+	
+	/*
+	*get all other cost values from the db & sum it
+	*base currency
+	*/
+	function getOtherCostValues($project_id)
+	{
+		$value = 0;
+		$bk_rates = get_book_keeping_rates(); //get all the book keeping rates
+		$other_cost_data = $this->project_model->getOtherCost($project_id);
+		if(!empty($other_cost_data) && count($other_cost_data)>0) {
+			foreach($other_cost_data as $rec) {
+				$conver_value  = 0;
+				$curFiscalYear = date('Y'); //set as default current year as fiscal year
+				$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+				$convert_value = $this->conver_currency($rec['value'], $bk_rates[$curFiscalYear][$rec['currency_type']][$this->default_cur_id]);
+				$value += $convert_value;
+			}
+		}		
+		return $value;
+	}
+	
+	/*
+	*@Get Current Financial year
+	*@Method  calculateFiscalYearForDate
+	*@param date, fy start date & fy end date
+	*@return fy
+	*/
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
+	{
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate) {
+			$fy = intval($inputyear);
+		} else {
+			$fy = intval(intval($inputyear) + 1);
+		}
+		return $fy;
 	}
 	
 	/* Export to Excel */
@@ -4830,7 +4865,8 @@ HDOC;
 		$fields['EV'] = 'Effort Variance';
 		$fields['PV'] = 'Project Value';
 		$fields['UC'] = 'Utilization Cost';
-		$fields['DC'] = 'Direct Cost';
+		$fields['RC'] = 'Resource Cost';
+		$fields['OC'] = 'Other Cost';
 		$fields['IR'] = 'Invoice Raised';
 		$fields['Contribution %'] = 'Contribution %';
 		$fields['P&L'] = 'Profit & Loss';
