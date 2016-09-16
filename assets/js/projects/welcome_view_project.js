@@ -1564,6 +1564,9 @@ function addURLtoJob()
 					loadExistingFiles($('#filefolder_id').val());
 					showBreadCrumbs($('#filefolder_id').val());
 				}
+				if (ui.newPanel[0].id=='jv-tab-0-a') {
+					viewOtherCost(project_jobid);
+				}
 				if (ui.newPanel[0].id=='jv-tab-9') {
 					loadLogs(project_jobid);
 				}
@@ -1755,23 +1758,24 @@ function addURLtoJob()
 	
 	function dataTable()
 	{
-	$('#list_file_tbl').dataTable({
-					"iDisplayLength": 15,
-					"sPaginationType": "full_numbers",
-					"bInfo": true,
-					"bPaginate": true,
-					"bProcessing": true,
-					"bServerSide": false,
-					"bLengthChange": true,
-					"bSort": true,
-					"bFilter": false,
-					"bAutoWidth": false,
-					"bDestroy": true,
-					"aoColumnDefs": [
-						{ 'bSortable': false, 'aTargets': [ 0 ] }
-					]
-				});
+		$('#list_file_tbl').dataTable({
+			"iDisplayLength": 15,
+			"sPaginationType": "full_numbers",
+			"bInfo": true,
+			"bPaginate": true,
+			"bProcessing": true,
+			"bServerSide": false,
+			"bLengthChange": true,
+			"bSort": true,
+			"bFilter": false,
+			"bAutoWidth": false,
+			"bDestroy": true,
+			"aoColumnDefs": [
+				{ 'bSortable': false, 'aTargets': [ 0 ] }
+			]
+		});
 	}
+
 	var job_complete_percentage;
 
 	function updateJobStatus(status) {
@@ -2817,6 +2821,27 @@ function loadLogs(id)
 			}
 		}
 	);
+}
+
+function viewOtherCost(project_id) 
+{
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'project/getOtherCostData/'+project_id,
+		cache:false,
+		dataType:'html',
+		beforeSend: function() {
+			//show loading symbol
+		},
+		success:function(data) {
+			// console.info(data);
+			$('#other_cost_data').html(data);
+		}
+	});
 }
 
 function loadCustomer(id) 
