@@ -619,21 +619,19 @@ class Service_dashboard_cron_beta extends crm_controller
 			$projects['other_cost'][$pra] = $other_cost_val;
 		} */
 
-			echo '<pre>';print_r($projects['othercost_projects']);
+			// echo '<pre>';print_r($projects['othercost_projects']);
 			foreach($practice_array as $parr){ //inserting here //code will insert
-			echo $parr; exit;
-				// echo "<pre>"; print_r($projects['other_cost']); die;
-			
-				/* $other_cost_val = 0;
+		
+				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						echo $val = getOtherCostByLeadId($pro_id, $this->default_cur_id)."<br/>";
 						$other_cost_val += $val;
 					}
 				}
-				$projects['other_cost'][$parr] = $other_cost_val; */
+				$projects['other_cost'][$parr] = $other_cost_val;
 				
-				echo "<pre>"; print_r($projects['other_cost'][$parr]); die;
+				echo "<pre>"; print_r($projects['other_cost']); die;
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
