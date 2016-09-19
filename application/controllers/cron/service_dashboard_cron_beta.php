@@ -619,7 +619,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			$projects['other_cost'][$pra] = $other_cost_val;
 		} */
 
-			echo '<pre>';print_r($projects['othercost_projects']);  exit;
+			echo '<pre>';print_r($projects['othercost_projects']);
 			foreach($practice_array as $parr){ //inserting here //code will insert
 			echo $parr; exit;
 				// echo "<pre>"; print_r($projects['other_cost']); die;
