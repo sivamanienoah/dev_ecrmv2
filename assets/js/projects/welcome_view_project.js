@@ -2836,6 +2836,7 @@ function viewOtherCost(project_id)
 		dataType:'html',
 		beforeSend: function() {
 			//show loading symbol
+			$('#other_cost_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success:function(data) {
 			// console.info(data);
@@ -2936,3 +2937,62 @@ $(function() {
 		}
 	});
 });
+
+
+/*for other cost inclusion*/
+/*load the other cost grid*/
+function loadOtherCostGrid(project_id) 
+{ alert('df');
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'project/getOtherCostData/'+project_id+'/'+true,
+		cache:false,
+		dataType:'html',
+		beforeSend: function() {
+			//show loading symbol
+			$('#list_other_cost').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success:function(data) {
+			// console.info(data);
+			$('#list_other_cost').html(data);
+		}
+	});
+}
+
+//deleting the other cost data
+function deleteOtherCostData(costid, projectid)
+{
+	var agree=confirm("Are you sure you want to delete?");
+	if (agree) {
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		params['costid'] 		= costid;
+		params['projectid'] 	= projectid;
+		$.ajax({
+			type:'POST',
+			data:params,
+			url:site_base_url+'project/deleteOtherCostData/',
+			cache:false,
+			dataType:'json',
+			beforeSend: function() {
+				//show loading symbol
+			},
+			success:function(data) {
+				if(data.res == 'success'){
+					$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Deleted Successfully.</span>");
+					$('#cost_'+costid).remove();
+					setTimeout('timerfadeout()', 4000);
+				} else if(data.res == 'failure'){
+					$('#succes_other_cost_data').html("<span class='ajx_failure_msg'>Error in deleting other cost.</span>");
+				}
+			}
+		});
+	} else {
+		return false;
+	}
+}
+/*for other cost inclusion*/
