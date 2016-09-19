@@ -350,9 +350,9 @@ if ( ! function_exists('getOtherCostByProjectId'))
 		$CI   	     = get_instance();
 		$cfg	     = $CI->config->item('crm'); /// load config
 		$result 	 = array();
-		$value 		 = 0;
+		$data['value'] = 0;
 		if(!empty($project_code)) {
-			$CI->db->select("cost_incurred_date, currency_type, value");
+			$CI->db->select("description, cost_incurred_date, currency_type, value");
 			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
 			$CI->db->join($CI->cfg['dbpref'].'leads', 'lead_id = project_id');
 			$CI->db->where('pjt_id', $project_code);
@@ -361,16 +361,21 @@ if ( ! function_exists('getOtherCostByProjectId'))
 			$result = $query->result_array();
 
 			if(count($result)>0 && !empty($result)) {
+				$i=0;
 				foreach($result as $rec) {
 					$conver_value  = 0;
 					$curFiscalYear = date('Y'); //set as default current year as fiscal year
 					$curFiscalYear = getFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
 					$convert_value = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]);
-					$value += $convert_value;
+					$data['value'] += $convert_value;
+					//for detail
+					$data['det'][$i]['desc'] = $rec['description'] ." On ".date('d-m-Y', strtotime($rec['cost_incurred_date']));
+					$data['det'][$i]['amt']  = $convert_value;
+					$i++;
 				}	
 			}
 		}
-		return $value;
+		return $data;
 	}
 }
 
