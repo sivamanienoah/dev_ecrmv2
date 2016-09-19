@@ -2942,7 +2942,7 @@ $(function() {
 /*for other cost inclusion*/
 /*load the other cost grid*/
 function loadOtherCostGrid(project_id) 
-{ alert('df');
+{
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
 	
