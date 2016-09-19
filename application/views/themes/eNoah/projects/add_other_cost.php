@@ -162,6 +162,7 @@ function loadOtherCostGrid(project_id)
 		dataType:'html',
 		beforeSend: function() {
 			//show loading symbol
+			$('#list_other_cost').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success:function(data) {
 			// console.info(data);
@@ -186,6 +187,7 @@ function editOtherCostData(costid, projectid)
 		dataType:'json',
 		beforeSend: function() {
 			//show loading symbol
+			$('#other_cost_form').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success:function(data) {
 			// alert(data);

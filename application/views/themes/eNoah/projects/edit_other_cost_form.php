@@ -60,7 +60,7 @@ $(function(){
 
 $( document ).ajaxSuccess(function( event, xhr, settings ) {
 	if(settings.target=="#edit_costdata") {
-		console.info(xhr.responseText);
+		// console.info(xhr.responseText);
 		if(xhr.responseText=='success') {
 			$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Other Cost Updated Successfully.</span>");
 			reset_editcostdata();
