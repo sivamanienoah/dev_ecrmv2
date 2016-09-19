@@ -114,9 +114,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$milestone_content .= "<td>".$total_hours."</td>";
 					$milestone_content .= "<td><span class=".$ev_clr.">".$eff_variance."</span></td>";
 					$milestone_content .= "<td>".$actual_amt."</td>";
-					$milestone_content .= "<td>".$total_cost."</td>";
 					$milestone_content .= "<td>".$total_dc_hours."</td>";
 					$milestone_content .= "<td>".$other_cost."</td>";
+					$milestone_content .= "<td>".$total_cost."</td>";
 					$milestone_content .= "<td>".$total_amount_inv_raised."</td>";
 					$milestone_content .= "<td><span class=".$contri_clr.">".$contributePercent." %</span></td>";
 					$milestone_content .= "<td>".$profitloss."</td>";
@@ -144,12 +144,12 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$milestone_content .= "<td ".$td_ev."><span class=".$ev_clr.">".$eff_variance."</span></td>";
 					if(($td_chk == true) && in_array('PV', $db_fields)) { $td_pv = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_pv.">".$actual_amt."</td>";
-					if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
-					$milestone_content .= "<td ".$td_uc.">".$total_cost."</td>";
 					if(($td_chk == true) && in_array('RC', $db_fields)) { $td_dc = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_dc.">".$total_dc_hours."</td>";
 					if(($td_chk == true) && in_array('OC', $db_fields)) { $td_oc = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_oc.">".$other_cost."</td>";
+					if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
+					$milestone_content .= "<td ".$td_uc.">".$total_cost."</td>";
 					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
 					$milestone_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
 					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
@@ -186,9 +186,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$monthly_content .= "<td>".$nbil_hr."</td>";
 					$monthly_content .= "<td>".$total_hours."</td>";
 					$monthly_content .= "<td>".$actual_amt."</td>";
-					$monthly_content .= "<td>".$total_cost."</td>";
 					$monthly_content .= "<td>".$total_dc_hours."</td>";
 					$monthly_content .= "<td>".$other_cost."</td>";
+					$monthly_content .= "<td>".$total_cost."</td>";
 					$monthly_content .= "<td>".$total_amount_inv_raised."</td>";
 					$monthly_content .= "<td><span class=".$contri_clr.">".$contributePercent." %</span></td>";
 					$monthly_content .= "<td>".$profitloss."</td>";
@@ -213,13 +213,13 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('TUH', $db_fields)) { $td_tuh = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_tuh.">".$total_hours."</td>";
 					if(($td_chk == true) && in_array('PV', $db_fields)) { $td_pv = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";
-					if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_uc.">".$total_cost."</td>";
+					$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";					
 					if(($td_chk == true) && in_array('RC', $db_fields)) { $td_dc = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_dc.">".$total_dc_hours."</td>";
 					if(($td_chk == true) && in_array('OC', $db_fields)) { $td_oc = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_oc.">".$other_cost."</td>";
+					if(($td_chk == true) && in_array('UC', $db_fields)) { $td_uc = 'style="display: table-cell;"'; }
+					$monthly_content .= "<td ".$td_uc.">".$total_cost."</td>";
 					if(($td_chk == true) && in_array('IR', $db_fields)) { $td_ir = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_ir.">".$total_amount_inv_raised."</td>";
 					if(($td_chk == true) && in_array('Contribution %', $db_fields)) {$td_contrib = 'style="display: table-cell;"';}
@@ -273,9 +273,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th title="Total Utilized Hours">TUH</th>
 				<th title="Effort Variance">EV</th>
 				<th title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
-				<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 				<th title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
 				<th title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
+				<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 				<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 				<th title="Contribution Percentage">Contribution %</th>
 				<th title="P&L">P&L </th>
@@ -292,9 +292,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th <?php echo $td_tuh; ?> title="Total Utilized Hours">TUH</th>
 				<th <?php echo $td_ev; ?> title="Effort Variance">EV</th>
 				<th <?php echo $td_pv; ?> title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
-				<th <?php echo $td_uc; ?> title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_dc; ?> title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_oc; ?> title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
+				<th <?php echo $td_uc; ?> title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_ir; ?> title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_contrib; ?> title="Contribution Percentage">Contribution %</th>
 				<th <?php echo $td_pl; ?> title="P&L">P&L </th>
@@ -370,9 +370,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					<th title="Non-Billable Hour">NBH</th>
 					<th title="Total Utilized Hours">TUH</th>
 					<th title="Project Value">PV</th>
-					<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 					<th title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
 					<th title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
+					<th title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 					<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 					<th title="Invoice Raised">Contribution %</th>
 					<th title="P&L">P&L </th>
@@ -388,9 +388,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					<th <?php echo $td_nbh; ?> title="Non-Billable Hour">NBH</th>
 					<th <?php echo $td_tuh; ?> title="Total Utilized Hours">TUH</th>
 					<th <?php echo $td_pv; ?> title="Project Value">PV</th>
-					<th <?php echo $td_uc; ?> title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 					<th <?php echo $td_dc; ?> title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
 					<th <?php echo $td_oc; ?> title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
+					<th <?php echo $td_uc; ?> title="Utilization Cost">UC(<?php echo $default_cur_name; ?>)</th>
 					<th <?php echo $td_ir; ?> title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 					<th <?php echo $td_contrib; ?> title="Contribution Percentage">Contribution %</th>
 					<th <?php echo $td_pl; ?> title="P&L">P&L </th>
@@ -432,9 +432,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 			<div class="pull-left"><strong>TUH</strong> - Total Utilized Hours</div>
 			<div class="pull-left"><strong>PV</strong> - Project Value </div>
 			<div class="pull-left"><strong>EV</strong> - Effort Variance </div>
-			<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
 			<div class="pull-left"><strong>RC</strong> - Resource Cost</div>
 			<div class="pull-left"><strong>OC</strong> - Other Cost</div>
+			<div class="pull-left"><strong>UC</strong> - Utilization Cost</div>
 			<div class="pull-left"><strong>IR</strong> - Invoice Raised </div>
 			<div class="pull-left"><strong>P&L </strong> - Profit & Loss </div>
 		</div>
