@@ -325,7 +325,7 @@ if(!empty($sub_tot)) {
 				<th class='prac-dt' width='5%'><b>% of COST</b></th>
 				<th class='prac-dt' width='5%'><b>% of RESOURCE COST</b></th>
 			</tr>";
-	//foreach($tbl_data as $projectCode => $proj_ar) {
+		//foreach($tbl_data as $projectCode => $proj_ar) {
 		//asort($sub_tot);
 
 		
@@ -356,7 +356,7 @@ if(!empty($sub_tot)) {
 			$calc_tot_hour += $sub_tot[$p_name]['sub_tot_hour'];
 			$calc_tot_cost += $sub_tot[$p_name]['sub_tot_cost'];
 			$calc_tot_directcost += $sub_tot[$p_name]['sub_tot_directcost'];
-			$calc_tot_othercost += $other_cost_val;
+			$calc_tot_othercost += $other_cost_val['value'];
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
@@ -364,23 +364,31 @@ if(!empty($sub_tot)) {
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_cost'], 2)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".$other_cost_val."</th>
+				<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_cost, 2)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			if(count($user_ar)>0 && !empty($user_ar)):
+			$i=1;
+			$j = 0;
 			foreach($user_ar as $ukey=>$pval) {
+				
 				if(!empty($pval['hour'])):
 				$i=1;
 				$per_hr = $per_cost = $per_directcost = 0;
 				$per_hr   	= ($pval['hour']/$tot_hour) * 100;
 				$per_cost 	= ($pval['cost']/$tot_cost) * 100;
 				$per_directcost = ($pval['directcost']/$tot_directcost) * 100;
-				echo "<tr data-depth='".$i."' class='collapse'>
-					<td width='15%'></td>
-					<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
+				
+				echo "<tr data-depth='".$i."' class='collapse'>";
+					if($j==0){
+						echo "<td width='15%' align='right'><b>Resources</b></td>";
+					} else {
+						echo "<td width='15%'></td>";
+					}
+					echo "<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
 					<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
 					<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
 					<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
@@ -392,11 +400,38 @@ if(!empty($sub_tot)) {
 				$per_hr		= '';
 				$rate_pr_hr = 0;
 				$i++;
+				$j++;
 				endif;
 				$user_ar = array();
 			}
 			endif;
+			
+			//other cost value with description
+			if((!empty($other_cost_val['det'])) && count($other_cost_val['det'])>0) {
+				$e = 0;
+				foreach($other_cost_val['det'] as $oc_key=>$oc_val) {
+					$p=1;
+					echo "<tr data-depth='".$i."' class='collapse'>";
+					if($e==0){
+						echo "<td width='15%' align='right'><b>Other Cost</b></td>";
+					} else {
+						echo "<td width='15%'></td>";
+					}
+					echo "<td width='15%'>".ucfirst($oc_val['desc'])."</td>
+						<td width='5%' align='right'>-</td>
+						<td width='5%' align='right'>-</td>
+						<td width='5%' align='right'></td>
+						<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
+						<td width='5%' align='right'>-</td>
+						<td width='5%' align='right'>-</td>
+						<td width='5%' align='right'>-</td>
+					</tr>";
+					$p++;
+					$e++;
+				}
+			}
 		}
+		
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></th>
@@ -407,7 +442,7 @@ if(!empty($sub_tot)) {
 		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></th>
 		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></th>
 		</tr>";
-	echo "</table>";		
+	echo "</table>";	
 	
 }			
 ?>
