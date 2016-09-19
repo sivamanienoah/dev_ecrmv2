@@ -317,3 +317,59 @@ if ( ! function_exists('get_timesheet_hours_by_user')){
 		}	
 	}
 }
+if ( ! function_exists('getFiscalYearForDate'))
+{
+	function getFiscalYearForDate($inputDate, $fyStart, $fyEnd)
+	{
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate) {
+			$fy = intval($inputyear);
+		} else {
+			$fy = intval(intval($inputyear) + 1);
+		}
+		return $fy;
+	}
+}
+
+function converCurrency($amount, $val) 
+{
+	return round($amount*$val, 2);
+}
+
+//for other cost details in IT service dashboard details(click YTD Utilization Cost)
+if ( ! function_exists('getOtherCostByProjectId'))
+{
+	function getOtherCostByProjectId($project_code = false, $default_curr = false)
+	{
+		$cur_bk_rate = get_book_keeping_rates();
+		$CI   	     = get_instance();
+		$cfg	     = $CI->config->item('crm'); /// load config
+		$result 	 = array();
+		$value 		 = 0;
+		if(!empty($project_code)) {
+			$CI->db->select("cost_incurred_date, currency_type, value");
+			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
+			$CI->db->join($CI->cfg['dbpref'].'leads', 'lead_id = project_id');
+			$CI->db->where('pjt_id', $project_code);
+			$CI->db->order_by('id', 'ASC');
+			$query  = $CI->db->get();
+			$result = $query->result_array();
+
+			if(count($result)>0 && !empty($result)) {
+				foreach($result as $rec) {
+					$conver_value  = 0;
+					$curFiscalYear = date('Y'); //set as default current year as fiscal year
+					$curFiscalYear = getFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+					$convert_value = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]);
+					$value += $convert_value;
+				}	
+			}
+		}
+		return $value;
+	}
+}
