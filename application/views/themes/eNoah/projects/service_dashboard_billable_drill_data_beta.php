@@ -420,7 +420,7 @@ if(!empty($sub_tot)) {
 					echo "<td width='15%'>".ucfirst($oc_val['desc'])."</td>
 						<td width='5%' align='right'>-</td>
 						<td width='5%' align='right'>-</td>
-						<td width='5%' align='right'></td>
+						<td width='5%' align='right'>-</td>
 						<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
 						<td width='5%' align='right'>-</td>
 						<td width='5%' align='right'>-</td>
