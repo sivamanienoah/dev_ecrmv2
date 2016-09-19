@@ -77,11 +77,6 @@
 var project_id = '<?php echo $project_id ?>';
 	$( document ).ajaxSuccess(function( event, xhr, settings ) {
 		if(settings.target=="#output1") {
-			/* $('.payment-profile-view:visible').slideUp(400);
-			$('.payment-terms-mini-view1').html(xhr.responseText);
-			$('#set-payment-terms')[0].reset();
-			$('#show_files').empty();
-			$('.payment-terms-mini-view1').css('display', 'block'); */
 			if(xhr.responseText=='success') {
 				$('#add-other-cost')[0].reset();
 				$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Other Cost Added Successfully.</span>");
@@ -146,31 +141,7 @@ function validateForm()
 		$('#err_other_cost_data').html(errors.join(''));
 		return false;
 	}
-}                   
-
-/*load the other cost grid*/
-function loadOtherCostGrid(project_id) 
-{
-	var params = {};
-	params[csrf_token_name] = csrf_hash_token;
-	
-	$.ajax({
-		type:'POST',
-		data:params,
-		url:site_base_url+'project/getOtherCostData/'+project_id+'/'+true,
-		cache:false,
-		dataType:'html',
-		beforeSend: function() {
-			//show loading symbol
-			$('#list_other_cost').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
-		},
-		success:function(data) {
-			// console.info(data);
-			$('#list_other_cost').html(data);
-		}
-	});
 }
-	
 //editing the other cost data
 function editOtherCostData(costid, projectid)
 {
@@ -196,41 +167,5 @@ function editOtherCostData(costid, projectid)
 			}
 		}
 	});
-}
-
-//deleting the other cost data
-function deleteOtherCostData(costid, projectid)
-{
-	
-	var agree=confirm("Are you sure you want to delete?");
-	if (agree) {
-		var params = {};
-		params[csrf_token_name] = csrf_hash_token;
-		params['costid'] 		= costid;
-		params['projectid'] 	= projectid;
-		$.ajax({
-			type:'POST',
-			data:params,
-			url:site_base_url+'project/deleteOtherCostData/',
-			cache:false,
-			dataType:'json',
-			beforeSend: function() {
-				//show loading symbol
-			},
-			success:function(data) {
-				if(data.res == 'success'){
-					$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Deleted Successfully.</span>");
-					$('#cost_'+costid).remove();
-					setTimeout('timerfadeout()', 4000);
-				} else if(data.res == 'failure'){
-					$('#succes_other_cost_data').html("<span class='ajx_failure_msg'>Error in deleting other cost.</span>");
-				}
-			}
-		});
-	} else {
-		return false;
-	}
-	
-	
 }
 </script>

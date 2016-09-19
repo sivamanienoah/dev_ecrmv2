@@ -51,7 +51,7 @@ var project_id = '<?php echo $project_id ?>';
 $(function(){
 	var options = {
 		target:      '#edit_costdata',   // target element(s) to be updated with server response 
-		beforeSubmit: validateForm, // pre-submit callback 
+		beforeSubmit: editValidateForm, // pre-submit callback 
 		success:      ''  // post-submit callback 
 	}; 
 	$('#edit-other-cost').ajaxForm(options);
@@ -72,7 +72,7 @@ $( document ).ajaxSuccess(function( event, xhr, settings ) {
 	}
 });
 //validate the form
-function validateForm()
+function editValidateForm()
 {
 	var date_entered = true;
 	var errors = [];
