@@ -2550,7 +2550,7 @@ class Dashboard extends crm_controller
 		FROM crm_timesheet_data 
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')"; */
 	
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, l.lead_id');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		if(!empty($month)) {
@@ -2571,9 +2571,11 @@ class Dashboard extends crm_controller
 		} else {
 			$this->db->where_in("l.practice", $practice);
 		}
-		
-		$query = $this->db->get();
-		$data['resdata'] 	   = $query->result();
+		// $this->db->where_in('l.lead_id', array(710, 276)); // for temporary - load some data only
+		// $this->db->where('l.lead_id', 710); // for temporary - load some data only
+		// $this->db->limit(3); // for temporary - load some data only
+		$query 					= $this->db->get();
+		$data['resdata'] 	   	= $query->result();
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
@@ -2593,7 +2595,6 @@ class Dashboard extends crm_controller
 		$data['resource_type']   = "Billable";
 		$data['filter_sort_by']  = 'desc';
 		$data['filter_sort_val'] = 'cost';
-		
 		
 		return $data;
 	}
