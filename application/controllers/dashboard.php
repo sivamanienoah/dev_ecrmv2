@@ -1441,7 +1441,8 @@ class Dashboard extends crm_controller {
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
 	*/
-	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) {
+	function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd) 
+	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%Y',$date);
 	 
