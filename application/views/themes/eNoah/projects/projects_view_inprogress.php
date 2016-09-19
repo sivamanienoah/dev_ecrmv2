@@ -42,9 +42,10 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$total_amount_inv_raised = (isset($record['total_amount_inv_raised'])) ? ($record['total_amount_inv_raised']) : '-';
 			$eff_variance  = round($total_hours-$estimate_hour);
 			$actual_amt    = (isset($record['actual_worth_amt'])) ? (round($record['actual_worth_amt'])) : '0';
-			$total_cost    = (isset($record['total_cost'])) ? (round($record['total_cost'])) : '0';
 			$other_cost    = (isset($record['other_cost'])) ? (round($record['other_cost'])) : '0';
-			$total_dc_hours = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
+			$total_temp_cost = $other_cost + $record['total_cost'];
+			$total_cost    	 = (isset($total_temp_cost)) ? (round($total_temp_cost)) : '0'; //total cost = utilization cost+other cost
+			$total_dc_hours  = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
 			$contributePercent = round((($total_amount_inv_raised-$total_dc_hours)/$total_amount_inv_raised)*100);
 			$profitloss        = round($total_amount_inv_raised-$total_cost);
 			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
