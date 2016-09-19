@@ -1,7 +1,7 @@
 <?php
 
 /********************************************************************************
-File Name       : service_dashboard_cron.php
+File Name       : Service_dashboard_cron_beta.php
 Created Date    : 16/06/2016
 Modified Date   : 16/06/2016
 Created By      : Sriram.S
@@ -10,9 +10,9 @@ Reviewed By     : Subbiah.S
 *********************************************************************************/
 
 /**
- * Service_dashboard_cron
+ * Service_dashboard_cron_beta
  *
- * @class 		Service_dashboard_cron
+ * @class 		Service_dashboard_cron_beta
  * @extends		crm_controller (application/core/CRM_Controller.php)
  * @parent      Cron
  * @Menu        Cron
@@ -136,8 +136,10 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				}
 				if($row['rag_status'] == 1){
 					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
@@ -148,7 +150,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		
+
 		//need to calculate for the total IR
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
@@ -158,7 +160,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
-		//BPO practice are not shown in IT Services Dashboard
+		// BPO practice are not shown in IT Services Dashboard
 		// $this->db->where_not_in("l.practice", 6);
 		$practice_not_in = array(6);
 		$this->db->where_not_in('l.practice', $practice_not_in);
@@ -413,7 +415,6 @@ class Service_dashboard_cron_beta extends crm_controller
 				$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];			
 			}
 			//$project_master[$prec->project_code] = $prec->title;
-
 		}
  
 		//echo '<pre>';print_r($practice_arr);echo 'directcost2'.'<br>';print_r($directcost2);echo 'cm_directcost2'.'<br>';print_r($cm_directcost2);exit;
@@ -469,7 +470,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
 			foreach($resdata as $rec) {		
-				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
@@ -583,7 +584,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		
 		//echo '<pre>';print_r($practice_arr);print_r($directcost);print_r($cm_directcost);
 		
-		$projects['direct_cost']   = $directcost;
+		$projects['direct_cost']    = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
 		$ins_array = array();
@@ -605,8 +606,21 @@ class Service_dashboard_cron_beta extends crm_controller
 			$ins_data['practice_name'] = 'Total';
 			$ins_data['month_status'] = 1;
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
-			//echo '<pre>';print_r($practice_array); 
-			foreach($practice_array as $parr){
+			
+			
+			/* foreach($practice_arr as $pra) {
+			$other_cost_val = 0;
+			if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$pra]) && count($projects['othercost_projects'][$pra])>0) {
+				foreach($projects['othercost_projects'][$pra] as $pro_id) {
+					echo $val = getOtherCostByLeadId($pro_id, $this->default_cur_id)."<br/>";
+					$other_cost_val += $val;
+				}
+			}
+			$projects['other_cost'][$pra] = $other_cost_val;
+		} */
+
+			echo '<pre>';print_r($practice_array); 
+			foreach($practice_array as $parr){ //inserting here //code will insert
 				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
@@ -808,6 +822,69 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
 		// echo "<pre>"; print_r($res); exit;
 		return $res;
+	}
+	
+	//for other cost
+	public function getOtherCost()
+	{
+		$projects 	  = array();
+		$practice_arr = array();
+		
+		$project_status = 1;
+
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		//BPO practice are not shown in IT Services Dashboard
+		// $this->db->where_not_in('p.id', 6);
+		$practice_not_in = array(6);
+		$this->db->where_not_in('p.id', $practice_not_in);
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$data['practice_data'] = $pquery->result();		
+		
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$practice_arr[$prow->id] = $prow->practices;
+			}
+		}
+		
+		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
+		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->where("l.lead_id != ", 'null');
+		$this->db->where("l.pjt_id  != ", 'null');
+		$this->db->where("l.lead_status", '4');
+		$this->db->where("l.customer_type", '1');
+		// $pt_not_in_arr = array('4','8');
+		// $this->db->where("l.project_type", 1);
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("l.client_code", $client_not_in_arr);
+		//BPO practice are not shown in IT Services Dashboard
+		// $this->db->where_not_in("l.practice", 6);
+		$practice_not_in = array(6);
+		$this->db->where_not_in('l.practice', $practice_not_in);
+		if($project_status){
+			if($project_status !=2)
+			$this->db->where_in("l.pjt_status", $project_status);
+		}
+		$query = $this->db->get();
+		$res = $query->result_array();
+		
+		// echo "<pre>"; print_r($res); die;
+		
+		if(!empty($res) && count($res)>0) {
+			foreach($res as $row) {
+				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
+					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
+					$projects['leads'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+				} else {
+					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					$projects['leads'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+				}
+			}
+		}
+		
+		echo "<pre>"; print_r($projects); die;
 	}
 
 }
