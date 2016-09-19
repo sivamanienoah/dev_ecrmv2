@@ -1,16 +1,16 @@
-	<?php require (theme_url().'/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); ?>
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <?php
-$this->load->helper('custom_helper');
-if (get_default_currency()) {
-	$default_currency 	= get_default_currency();
-	$default_cur_id 	= $default_currency['expect_worth_id'];
-	$default_cur_name 	= $default_currency['expect_worth_name'];
-} else {
-	$default_cur_id 	= '1';
-	$default_cur_name 	= 'USD';
-}
+	$this->load->helper('custom_helper');
+	if (get_default_currency()) {
+		$default_currency 	= get_default_currency();
+		$default_cur_id 	= $default_currency['expect_worth_id'];
+		$default_cur_name 	= $default_currency['expect_worth_name'];
+	} else {
+		$default_cur_id 	= '1';
+		$default_cur_name 	= 'USD';
+	}
 	
 	$this->load->helper('lead_helper'); 
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
