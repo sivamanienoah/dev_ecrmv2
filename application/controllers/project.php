@@ -760,7 +760,24 @@ class Project extends crm_controller {
 		$ins_val['modified_by'] 		= $this->userdata['userid'];
 		$ins_val['modified_on'] 		= date('Y-m-d H:i:s');
 		$insert_cost = $this->project_model->insert_row('project_other_cost', $ins_val);
-		if($insert_cost){
+		if($insert_cost) {
+			//do log
+			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			$log_detail = "Added Other Cost: \n";
+			$log_detail .= "\nDescription: ".$this->input->post('description');
+			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
+			$log_detail .= "\nValue: ".$all_cur[$ins_val['currency_type']].' '.number_format($ins_val['value'],2);
+			$log = array();
+			$log['jobid_fk']      = $this->input->post('project_id');
+			$log['userid_fk']     = $this->userdata['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->project_model->insert_row("logs", $log);
 			echo "success";
 		} else {
 			echo "error";
@@ -805,6 +822,23 @@ class Project extends crm_controller {
 		
 		if($update_cost){
 			echo "success";
+			//do log
+			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			$log_detail = "Updated the Other Cost: \n";
+			$log_detail .= "\nDescription: ".$updt_val['description'];
+			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
+			$log_detail .= "\nValue: ".$all_cur[$updt_val['currency_type']].' '.number_format($updt_val['value'], 2);
+			$log = array();
+			$log['jobid_fk']      = $this->input->post('project_id');
+			$log['userid_fk']     = $this->userdata['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->project_model->insert_row("logs", $log);
 		} else {
 			echo "error";
 		}
@@ -818,10 +852,31 @@ class Project extends crm_controller {
 	*/
 	public function deleteOtherCostData()
 	{
+		//save the old values
+		$wh_condn	 = array('id'=>$this->input->post('costid'),'project_id'=>$this->input->post('projectid'));
+		$editdata 	 = $this->project_model->get_data_by_id('project_other_cost', $wh_condn);
+		
 		$data = array();
 		$wh_condn = array('id'=>$this->input->post('costid'), 'project_id'=>$this->input->post('projectid'));
 		$delOtherCost = $this->project_model->delete_row('project_other_cost', $wh_condn);
 		if($delOtherCost) {
+			//do log
+			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			$log_detail = "Deleted the Other Cost: \n";
+			$log_detail .= "\nDescription: ".$editdata['description'];
+			$log_detail .= "\nCost Incurred Date: ".date('d-m-Y', strtotime($editdata['cost_incurred_date']));
+			$log_detail .= "\nValue: ".$all_cur[$editdata['currency_type']].' '.number_format($editdata['value'], 2);
+			$log = array();
+			$log['jobid_fk']      = $this->input->post('projectid');
+			$log['userid_fk']     = $this->userdata['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->project_model->insert_row("logs", $log);
 			$data['res'] = 'success';
 		} else {
 			$data['res'] = 'failure';
