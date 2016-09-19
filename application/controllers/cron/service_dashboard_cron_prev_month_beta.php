@@ -1,7 +1,7 @@
 <?php
 
 /********************************************************************************
-File Name       : service_dashboard_cron.php
+File Name       : service_dashboard_cron_prev_month_beta.php
 Created Date    : 16/06/2016
 Modified Date   : 16/06/2016
 Created By      : Sriram.S
@@ -10,9 +10,9 @@ Reviewed By     : Subbiah.S
 *********************************************************************************/
 
 /**
- * Service_dashboard_cron
+ * Service_dashboard_cron_prev_month_beta
  *
- * @class 		Service_dashboard_cron
+ * @class 		Service_dashboard_cron_prev_month_beta
  * @extends		crm_controller (application/core/CRM_Controller.php)
  * @parent      Cron
  * @Menu        Cron
@@ -137,8 +137,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				}
 				if($row['rag_status'] == 1){
 					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
@@ -601,10 +603,26 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
 			foreach($practice_array as $parr){
+				
+				/**other cost data*/
+				$other_cost_val = 0;
+				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
+					foreach($projects['othercost_projects'][$parr] as $pro_id) {
+						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
+						$other_cost_val += $val;
+					}
+					$projects['other_cost'][$parr] = $other_cost_val;
+				}
+				/**other cost data*/
+				
+				
 				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
-				$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+				
+				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				
+				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				//$ins_array['ytd_billable_bours'] = ($projects['direct_hours'][$parr]['total_hours'] != '') ? round($projects['direct_hours'][$parr]['total_hours']) : '-';
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;

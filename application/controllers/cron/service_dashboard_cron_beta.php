@@ -606,30 +606,20 @@ class Service_dashboard_cron_beta extends crm_controller
 			$ins_data['practice_name'] = 'Total';
 			$ins_data['month_status'] = 1;
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
-			
-			
-			/* foreach($practice_arr as $pra) {
-			$other_cost_val = 0;
-			if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$pra]) && count($projects['othercost_projects'][$pra])>0) {
-				foreach($projects['othercost_projects'][$pra] as $pro_id) {
-					echo $val = getOtherCostByLeadId($pro_id, $this->default_cur_id)."<br/>";
-					$other_cost_val += $val;
-				}
-			}
-			$projects['other_cost'][$pra] = $other_cost_val;
-		} */
 
 			// echo '<pre>';print_r($projects['othercost_projects']);
 			foreach($practice_array as $parr){ //inserting here //code will insert
 		
+				/**other cost data*/
 				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
-						echo $val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
+						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$other_cost_val += $val;
 					}
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
+				/**other cost data*/
 
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
