@@ -1501,7 +1501,7 @@ class Dashboard extends crm_controller
 		$this->db->where("month_status",$month_status);
 		$sql = $this->db->get();
 		$dashboard_details = $sql->result_array();
-	//	echo '<pre>';print_r($dashboard_details);exit;
+		//	echo '<pre>';print_r($dashboard_details);exit;
 		$dashboard_det = array();
 		if(!empty($dashboard_details)){
 			foreach($dashboard_details as $key=>$val) {
