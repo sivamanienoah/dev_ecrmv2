@@ -630,11 +630,13 @@ class Service_dashboard_cron_beta extends crm_controller
 					}
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
-				echo "<pre>"; print_r($projects['other_cost']); die;
-				
+
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
-				$ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+				
+				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				
+				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				//$ins_array['ytd_billable_bours'] = ($projects['direct_hours'][$parr]['total_hours'] != '') ? round($projects['direct_hours'][$parr]['total_hours']) : '-';
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
