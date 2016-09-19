@@ -70,9 +70,9 @@ $(function() {
 						$('#loading').show();
 					},
 					success: function(data) {
-						$("#monthly_based").html(data);
-						$('#metrics_data').show();
 						$('#loading').hide();
+						$('#metrics_data').show();
+						$("#monthly_based").html(data);						
 					}
 				});
 				return false;
@@ -88,9 +88,9 @@ $(function() {
 						$('#loading').show();
 					},
 					success: function(data) {
-						$("#monthly_based").html(data);
-						$('#metrics_data').show();
 						$('#loading').hide();
+						$('#metrics_data').show();
+						$("#monthly_based").html(data);
 					}
 				});
 				return false;
