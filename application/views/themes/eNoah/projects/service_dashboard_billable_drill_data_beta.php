@@ -415,7 +415,7 @@ if(!empty($sub_tot)) {
 					$per_cost = 0;
 					if(!empty($oc_val['amt'])){
 						$per_cost = ($oc_val['amt']/$tot_cost) * 100;
-					}					
+					}
 					echo "<tr data-depth='".$i."' class='collapse'>";
 					if($e==0){
 						echo "<td width='15%' align='right'><b>Other Cost</b></td>";
