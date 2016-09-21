@@ -547,6 +547,8 @@ class Project extends crm_controller {
 					$data['actual_hour_data'] = $res['total_hours'];
 				}
 			}
+			
+			
 		
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
@@ -589,6 +591,8 @@ class Project extends crm_controller {
 				}
 			}
 			
+			$data['othercost_val'] = getOtherCostByLeadId($id, $this->default_cur_id); 
+			
 			/**
 			get the project variance report from timesheet
 			**/
@@ -622,15 +626,6 @@ class Project extends crm_controller {
 					$pnames_arr = array();					
 					foreach($res as $r){
 						$pjtIds[] = $r->id;
-						//get sub projects as well.
-/* 						$support_db->select("child_id");
-						$childProjects = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("parent_id" => $r->id));
-						if($childProjects->num_rows()>0){
-							$cPresult = $childProjects->result();
-							foreach($cPresult as $cp){
-								$pjtIds[] = $cp->child_id;
-							}
-						} */
 					}
 					$pjtIds = array_unique($pjtIds);
 					//echo '<pre>';print_r($pjtIds);exit;
@@ -639,12 +634,6 @@ class Project extends crm_controller {
 					$data['AllPjtIds'] = $pjtIds;
 					$parent_proj =  $pjtIds[0];
 					$parent_proj =  $pjtIds[0];
-					
-					/* $check_child = $support_db->get_where($support_db->dbprefix("project_hierarchy_table"),array("child_id" => $parent_proj));
-					if($check_child->num_rows()>0){
-						$check_child_row = $check_child->row();
-						$parent_proj = $check_child_row->parent_id.';'.$parent_proj;
-					} */
 					
 					$data['AllPjtIds_summary'] = $parent_proj;
 					
@@ -694,19 +683,6 @@ class Project extends crm_controller {
 					if($qry_category->num_rows()>0){
 						$data['bug_category'] = $qry_category->result_array();
 					}
-					
-					//get category based on the project
-					/* $qry_all_category = $support_db->query("SELECT name FROM ".$support_db->dbprefix("issue_categories")." WHERE project_id IN ($AllPjtIds) GROUP BY id ORDER BY id");
-					if($qry_all_category->num_rows()>0){
-						$bug_categories= $qry_all_category->result_array();
-						$bug_categories_array =array();
-						$bug_categories= $qry_all_category->result();
-						foreach($bug_categories as $bug_category){
-							$bug_categories_array[] = $bug_category->name;
-						} 
-						
-						$data['bug_categories'] =$bug_categories;
-					} */
 					
 				}
 				$support_db->close();	
@@ -1177,7 +1153,7 @@ class Project extends crm_controller {
 						$time_ins['rate_id'] = 1;
 						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);	
 						// Added all the task for assigned users in timesheet 10/7/2015
-							$this->project_model->task_timesheet_entry($timesheet_proj_id,$username);
+						$this->project_model->task_timesheet_entry($timesheet_proj_id,$username);
 					}
 				}
 			}else{
@@ -3741,9 +3717,9 @@ HDOC;
 				$data['project_record'][$i]['bill_hr'] 			= $total_billable_hrs;
 				$data['project_record'][$i]['int_hr'] 			= $total_internal_hrs;
 				$data['project_record'][$i]['nbil_hr'] 			= $total_non_billable_hrs;
+				$data['project_record'][$i]['other_cost'] 		= $other_cost_values;
 				$data['project_record'][$i]['total_hours'] 		= $total_hours;
 				$data['project_record'][$i]['total_dc_hours'] 	= $total_dc_hours;
-				$data['project_record'][$i]['other_cost'] 		= $other_cost_values;
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				$i++;
