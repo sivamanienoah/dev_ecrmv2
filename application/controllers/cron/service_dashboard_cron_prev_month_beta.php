@@ -3,7 +3,7 @@
 /********************************************************************************
 File Name       : service_dashboard_cron_prev_month_beta.php
 Created Date    : 16/06/2016
-Modified Date   : 16/06/2016
+Modified Date   : 21/09/2016
 Created By      : Sriram.S
 Modified By     : Sriram.S
 Reviewed By     : Subbiah.S
@@ -393,7 +393,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 										$total_cost = $array4['total_cost'];
 										// $total_dc_cost = $array4['total_dc_cost'];
 										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
-										//$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
+										// $cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
 									}
 								}
 							}
@@ -434,8 +434,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 	 
 		if(!empty($month)) {
-			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($month)));
-			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("t.start_time >= ", date('Y-m-01 H:i:s', strtotime($month)));
+			$this->db->where("t.start_time <= ", date('Y-m-t H:i:s', strtotime($month)));
 		}
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
@@ -467,7 +467,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
 			foreach($resdata as $rec) {		
-				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
@@ -478,7 +478,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
-				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] =get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
 			}
@@ -539,11 +539,11 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 									//$total_cost = 0;
 									//$total_dc_cost = 0;
 									foreach($array3 as $project_code => $array4){
-										//$available_projects[] = $project_code;
-									//	$duration_hours = $array4['duration_hours'];
-										//$total_cost = $array4['total_cost'];
+										// $available_projects[] = $project_code;
+										// $duration_hours = $array4['duration_hours'];
+										// $total_cost = $array4['total_cost'];
 										$total_dc_cost = $array4['total_dc_cost'];
-										//$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
+										// $directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
 										$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
 									}
 								}
@@ -615,15 +615,13 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 				/**other cost data*/
 				
-				
 				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
-				
-				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
-				
+				$temp_ytd_utilization_cost 	= $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
-				//$ins_array['ytd_billable_bours'] = ($projects['direct_hours'][$parr]['total_hours'] != '') ? round($projects['direct_hours'][$parr]['total_hours']) : '-';
+				// $ins_array['ytd_utilization_cost'] = ($projects['direct_cost'][$parr]['total_direct_cost'] != '') ? round($projects['direct_cost'][$parr]['total_direct_cost']) : '-';
+				// $ins_array['ytd_billable_bours'] = ($projects['direct_hours'][$parr]['total_hours'] != '') ? round($projects['direct_hours'][$parr]['total_hours']) : '-';
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
 				$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
@@ -639,6 +637,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
+				// $dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				$ins_array['month_status'] = 2;
 				
@@ -678,9 +677,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			$tot['ytd_billable'] = round(($tot_billval/$tot_totbillval)*100);
 			$tot['effort_variance'] = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
 			$cmonth='-';
-			//if($tot_cm_dc_tot){
+			if($tot_cm_dc_tot){
 				$cmonth = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
-			//}
+			}
 			$tot['contribution_month'] = $cmonth;			
 			//$tot['contribution_month'] = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);
 			$tot['ytd_contribution'] = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
