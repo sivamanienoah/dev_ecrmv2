@@ -668,61 +668,61 @@
 						<?php 
 							$metrics_total_cost					= 0;
 							if(count($timesheet_data) >0 ) {
-							$metrics_total_billable_hrs		= 0;
-							$metrics_total_non_billable_hrs = 0;
-							$metrics_total_internal_hrs		= 0;
-							
-							foreach($timesheet_data as $metrics_key1=>$metrics_value1) {
-								$metrics_resource_name = $metrics_key1;
-								$metrics_max_hours = $metrics_value1['max_hours'];
-								foreach($metrics_value1 as $metrics_key2=>$metrics_value2) {
-									$metrics_year = $metrics_key2;
-									foreach($metrics_value2 as $metrics_key3=>$metrics_value3) {
-										$metrics_individual_billable_hrs = 0;
-										$metrics_month		 	  = $metrics_key3;
-										$metrics_billable_hrs	  = 0;
-										$metrics_non_billable_hrs = 0;
-										$metrics_internal_hrs	  = 0;
-										foreach($metrics_value3 as $metrics_key4=>$metrics_value4) {
-											switch($metrics_key4) {
-												case 'Billable':
-													$metrics_rs_name			 = $metrics_value4['rs_name'];
-													$metrics_rate				 = $metrics_value4['rateperhr'];
-													$metrics_billable_hrs		 = $metrics_value4['duration'];
-													$metrics_individual_billable_hrs += $metrics_billable_hrs;
-													$metrics_total_billable_hrs 	 += $metrics_billable_hrs;
-												break;
-												case 'Non-Billable':
-													$metrics_rs_name				 = $metrics_value4['rs_name'];
-													$metrics_rate					 = $metrics_value4['rateperhr'];
-													$metrics_non_billable_hrs		 = $metrics_value4['duration'];
-													$metrics_individual_billable_hrs += $metrics_non_billable_hrs;
-													$metrics_total_non_billable_hrs  += $metrics_non_billable_hrs;
-												break;
-												case 'Internal':
-													$metrics_rs_name			 = $metrics_value4['rs_name'];
-													$metrics_rate				 = $metrics_value4['rateperhr'];
-													$metrics_internal_hrs 		 = $metrics_value4['duration'];
-													$metrics_individual_billable_hrs += $metrics_internal_hrs;
-													$metrics_total_internal_hrs 	 += $metrics_internal_hrs;
-												break;
+								$metrics_total_billable_hrs		= 0;
+								$metrics_total_non_billable_hrs = 0;
+								$metrics_total_internal_hrs		= 0;
+								
+								foreach($timesheet_data as $metrics_key1=>$metrics_value1) {
+									$metrics_resource_name = $metrics_key1;
+									$metrics_max_hours = $metrics_value1['max_hours'];
+									foreach($metrics_value1 as $metrics_key2=>$metrics_value2) {
+										$metrics_year = $metrics_key2;
+										foreach($metrics_value2 as $metrics_key3=>$metrics_value3) {
+											$metrics_individual_billable_hrs = 0;
+											$metrics_month		 	  = $metrics_key3;
+											$metrics_billable_hrs	  = 0;
+											$metrics_non_billable_hrs = 0;
+											$metrics_internal_hrs	  = 0;
+											foreach($metrics_value3 as $metrics_key4=>$metrics_value4) {
+												switch($metrics_key4) {
+													case 'Billable':
+														$metrics_rs_name			 = $metrics_value4['rs_name'];
+														$metrics_rate				 = $metrics_value4['rateperhr'];
+														$metrics_billable_hrs		 = $metrics_value4['duration'];
+														$metrics_individual_billable_hrs += $metrics_billable_hrs;
+														$metrics_total_billable_hrs 	 += $metrics_billable_hrs;
+													break;
+													case 'Non-Billable':
+														$metrics_rs_name				 = $metrics_value4['rs_name'];
+														$metrics_rate					 = $metrics_value4['rateperhr'];
+														$metrics_non_billable_hrs		 = $metrics_value4['duration'];
+														$metrics_individual_billable_hrs += $metrics_non_billable_hrs;
+														$metrics_total_non_billable_hrs  += $metrics_non_billable_hrs;
+													break;
+													case 'Internal':
+														$metrics_rs_name			 = $metrics_value4['rs_name'];
+														$metrics_rate				 = $metrics_value4['rateperhr'];
+														$metrics_internal_hrs 		 = $metrics_value4['duration'];
+														$metrics_individual_billable_hrs += $metrics_internal_hrs;
+														$metrics_total_internal_hrs 	 += $metrics_internal_hrs;
+													break;
+												}
 											}
-										}
-									
-										$metrics_individual_billable_hrs = $metrics_value3['total_hours'];
-										 
-										// calculation for the utilization cost based on the master hours entered.
-										$metrics_rate1 = $metrics_rate;
-										if($metrics_individual_billable_hrs>$metrics_max_hours){
-											$metrics_percentage = ($metrics_max_hours/$metrics_individual_billable_hrs);
-											$metrics_rate1 		= number_format(($metrics_percentage*$metrics_rate),2);
-										}
 										
-										$metrics_total_cost += $metrics_rate1*($metrics_billable_hrs+$metrics_internal_hrs+$metrics_non_billable_hrs);
+											$metrics_individual_billable_hrs = $metrics_value3['total_hours'];
+											 
+											// calculation for the utilization cost based on the master hours entered.
+											$metrics_rate1 = $metrics_rate;
+											if($metrics_individual_billable_hrs>$metrics_max_hours){
+												$metrics_percentage = ($metrics_max_hours/$metrics_individual_billable_hrs);
+												$metrics_rate1 		= number_format(($metrics_percentage*$metrics_rate),2);
+											}
+											
+											$metrics_total_cost += $metrics_rate1*($metrics_billable_hrs+$metrics_internal_hrs+$metrics_non_billable_hrs);
+										}
 									}
 								}
 							}
-						}
 						?>
 					
 						<?php # $project_cost = (!empty($project_costs)) ? $project_costs : 0; ?>
