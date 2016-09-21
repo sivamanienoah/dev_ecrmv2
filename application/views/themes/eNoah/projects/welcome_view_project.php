@@ -726,7 +726,10 @@
 						?>
 					
 						<?php # $project_cost = (!empty($project_costs)) ? $project_costs : 0; ?>
-						<?php $project_cost = (!empty($metrics_total_cost)) ? $metrics_total_cost : 0; /*changed based on user max hours calculation*/ ?>
+						<?php
+							$total_other_cost = (!empty($othercost_val)) ? $othercost_val : 0;
+							$project_cost = $metrics_total_cost + $othercost_val; /*changed based on user max hours calculation*/ 
+						?>
 						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
 					<?php if($quote_data['billing_type'] != 2) { ?>
