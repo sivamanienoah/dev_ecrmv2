@@ -541,7 +541,8 @@ class Project extends crm_controller {
 			if(!empty($data['timesheet_data'])) {
 				$res = $this->calcActualProjectCost($data['timesheet_data']);
 				if($res['total_cost']>0) {
-					$data['project_costs'] = $this->conver_currency($res['total_cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
+					// $data['project_costs'] = $this->conver_currency($res['total_cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
+					$data['project_costs'] = $res['total_cost'];
 				}
 				if($res['total_hours']>0) {
 					$data['actual_hour_data'] = $res['total_hours'];
@@ -873,7 +874,7 @@ class Project extends crm_controller {
 	/*
 	* calculate the project actual value based on actual hour
 	*/
-	function calcActualProjectCost($timesheet_data)
+	/* function calcActualProjectCost($timesheet_data)
 	{
 		$total_billable_hrs		= 0;
 		$total_non_billable_hrs = 0;
@@ -886,34 +887,38 @@ class Project extends crm_controller {
 			$resource_name = $key1;
 			foreach($value1 as $key2=>$value2) {
 				$year = $key2;
-				foreach($value2 as $key3=>$value3) {
-					$month		 	  = $key3;
-					$billable_hrs	  = 0;
-					$non_billable_hrs = 0;
-					$internal_hrs	  = 0;
-					foreach($value3 as $key4=>$value4) {
-						switch($key4) {
-							case 'Billable':
-								$rs_name			 = $value4['rs_name'];
-								$rate				 = $value4['rateperhr'];
-								$billable_hrs		 = $value4['duration'];
-								$total_billable_hrs += $billable_hrs;
-							break;
-							case 'Non-Billable':
-								$rs_name				 = $value4['rs_name'];
-								$rate				 	 = $value4['rateperhr'];
-								$non_billable_hrs		 = $value4['duration'];
-								$total_non_billable_hrs += $non_billable_hrs;
-							break;
-							case 'Internal':
-								$rs_name			 = $value4['rs_name'];
-								$rate				 = $value4['rateperhr'];
-								$internal_hrs		 = $value4['duration'];
-								$total_internal_hrs += $internal_hrs;
-							break;
+				if(is_array($value2) && count($value2)>0) {
+					foreach($value2 as $key3=>$value3) {
+						$month		 	  = $key3;
+						$billable_hrs	  = 0;
+						$non_billable_hrs = 0;
+						$internal_hrs	  = 0;
+						if(is_array($value3) && count($value3)>0) {
+							foreach($value3 as $key4=>$value4) {
+								switch($key4) {
+									case 'Billable':
+										$rs_name			 = $value4['rs_name'];
+										$rate				 = $value4['rateperhr'];
+										$billable_hrs		 = $value4['duration'];
+										$total_billable_hrs += $billable_hrs;
+									break;
+									case 'Non-Billable':
+										$rs_name				 = $value4['rs_name'];
+										$rate				 	 = $value4['rateperhr'];
+										$non_billable_hrs		 = $value4['duration'];
+										$total_non_billable_hrs += $non_billable_hrs;
+									break;
+									case 'Internal':
+										$rs_name			 = $value4['rs_name'];
+										$rate				 = $value4['rateperhr'];
+										$internal_hrs		 = $value4['duration'];
+										$total_internal_hrs += $internal_hrs;
+									break;
+								}
+							}
 						}
+						$data['total_cost'] += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 					}
-					$data['total_cost'] += $rate*($billable_hrs+$internal_hrs+$non_billable_hrs);
 				}
 			}
 		}
@@ -922,6 +927,76 @@ class Project extends crm_controller {
 		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
 		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
 		//echo '<pre>';print_r($data);
+		return $data;
+	} */
+	
+	function calcActualProjectCost($timesheet_data)
+	{
+		$total_billable_hrs		= 0;
+		$total_non_billable_hrs = 0;
+		$total_internal_hrs		= 0;
+		$data['total_cost']		= 0;
+		
+		foreach($timesheet_data as $key1=>$value1) {
+			$resource_name = $key1;
+			$max_hours = $value1['max_hours'];
+			if(is_array($value1) && count($value1)>0) {
+				foreach($value1 as $key2=>$value2) {
+					$year = $key2;
+					if(is_array($value2) && count($value2)>0) {
+						foreach($value2 as $key3=>$value3) {
+							$individual_billable_hrs		= 0;
+							$month		 	  = $key3;
+							$billable_hrs	  = 0;
+							$non_billable_hrs = 0;
+							$internal_hrs	  = 0;
+							if(is_array($value3) && count($value3)>0) {
+								foreach($value3 as $key4=>$value4) {
+									switch($key4) {
+										case 'Billable':
+											$rs_name			 = $value4['rs_name'];
+											$rate				 = $value4['rateperhr'];
+											$billable_hrs		 = $value4['duration'];
+											$individual_billable_hrs += $billable_hrs;
+											$total_billable_hrs += $billable_hrs;
+										break;
+										case 'Non-Billable':
+											$rs_name				 = $value4['rs_name'];
+											$rate					 = $value4['rateperhr'];
+											$non_billable_hrs		 = $value4['duration'];
+											$individual_billable_hrs += $non_billable_hrs;
+											$total_non_billable_hrs += $non_billable_hrs;
+										break;
+										case 'Internal':
+											$rs_name			 = $value4['rs_name'];
+											$rate				 = $value4['rateperhr'];
+											$internal_hrs 		 = $value4['duration'];
+											$individual_billable_hrs += $internal_hrs;
+											$total_internal_hrs += $internal_hrs;
+										break;
+									}
+								}
+							}
+						
+							$individual_billable_hrs = $value3['total_hours'];
+							 
+							// calculation for the utilization cost based on the master hours entered.
+							$rate1 = $rate;
+							if($individual_billable_hrs>$max_hours){
+								$percentage = ($max_hours/$individual_billable_hrs);
+								$rate1 = number_format(($percentage*$rate),2);
+							}
+							
+							$data['total_cost'] += $rate1 * ($billable_hrs + $internal_hrs + $non_billable_hrs);
+						}
+					}
+				}
+			}
+		}
+		$data['total_billable_hrs']		= $total_billable_hrs;
+		$data['total_internal_hrs']	    = $total_internal_hrs;
+		$data['total_non_billable_hrs'] = $total_non_billable_hrs;
+		$data['total_hours']			= $total_billable_hrs+$total_internal_hrs+$total_non_billable_hrs;
 		return $data;
 	}
 	
