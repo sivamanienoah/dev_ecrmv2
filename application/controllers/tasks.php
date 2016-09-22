@@ -8,8 +8,10 @@ class Tasks extends crm_controller {
     public function __construct() {
         parent::__construct();
 		$this->load->helper('form');
+		$this->load->helper('task');
 		$this->load->model('task_model');
 		$this->login_model->check_login();
+		$this->load->helper('text');
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
 	
@@ -48,7 +50,7 @@ class Tasks extends crm_controller {
 		
 		$data['created_by'] = $this->task_model->get_task_created_by();
 
-		$this->load->view('tasks/main_view', $data);
+		$this->load->view('tasks/main_view', $data);		
 	}
 	
 	

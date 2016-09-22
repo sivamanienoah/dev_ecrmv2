@@ -1590,7 +1590,7 @@ HDOC;
 	 * Adds a random task for a user
 	 */
 	function add_job_task($update = 'NO', $random = 'NO')
-	{	
+	{
 		$this->load->model('user_model');
 		$this->load->library('email');
 		$errors = array();
@@ -1604,21 +1604,19 @@ HDOC;
 		if($update == 'NO') {
 			$ins['jobid_fk'] = (int) $_POST['lead_id'];
 		}
-		$ins['task'] = $_POST['job_task'];
-		$ins['userid_fk'] = $_POST['task_user'];
-		// $ins['hours'] = (int) $_POST['task_hours'];
-		// $ins['mins'] = (int) $_POST['task_mins'];
-		$ins['remarks'] = $_POST['remarks'];
+		$ins['task'] 		= $_POST['job_task'];
+		$ins['userid_fk'] 	= $_POST['task_user'];
+		$ins['remarks'] 	= $_POST['remarks'];
 		if($update == 'NO') {
 			$ins['approved'] = 1;
 		}
 		if($update == 'NO') {
 			$ins['created_by'] = $this->userdata['userid'];
 		}			
-		$ins['created_on'] = date('Y-m-d H:i:s');
+		$ins['created_on'] 	= date('Y-m-d H:i:s');
 		
-		$task_start_date = explode('-', trim($_POST['task_start_date']));
-		$task_end_date = explode('-', trim($_POST['task_end_date']));
+		$task_start_date 	= explode('-', trim($_POST['task_start_date']));
+		$task_end_date 		= explode('-', trim($_POST['task_end_date']));
 		
 		
 		if (count($task_start_date) != 3 || ! $start_date = mktime(0, 0, 0, $task_start_date[1], $task_start_date[0], $task_start_date[2]))
@@ -1676,100 +1674,108 @@ HDOC;
 		}
 		else
 		{
-			$ins['start_date'] = date('Y-m-d H:i:s', $start_date);
-			$ins['end_date'] = date('Y-m-d H:i:s', $end_date);
+			$ins['start_date'] 	= date('Y-m-d H:i:s', $start_date);
+			$ins['end_date'] 	= date('Y-m-d H:i:s', $end_date);
 			
-			
-			$dtask_start_date=date('d-m-Y H:i:s', $start_date);
-			$dtask_end_date=date('d-m-Y H:i:s' , $end_date);
+			$dtask_start_date	= date('d-m-Y H:i:s', $start_date);
+			$dtask_end_date		= date('d-m-Y H:i:s' , $end_date);
 			if (isset($_POST['task_end_hour']))
 			{
 				$ins['end_date'] = date('Y-m-d H:i:s', $end_date);
 			}
 			
-			$ins['require_qc'] = (isset($_POST['require_qc']) && $_POST['require_qc'] == 'YES') ? '1' : '0';
-			$ins['priority'] = (isset($_POST['priority']) && $_POST['priority'] == 'YES') ? '1' : '0';
+			$ins['require_qc'] 	= (isset($_POST['require_qc']) && $_POST['require_qc'] == 'YES') ? '1' : '0';
+			$ins['priority'] 	= (isset($_POST['priority']) && $_POST['priority'] == 'YES') ? '1' : '0';
 			
 			if ($update != 'NO' && $old_task = $this->get_task($update))
 			{
-			//$vard = $_POST['actualstart_date'];
-			//echo $vard;
-			//exit;
-				//mychanges
 				$updatedby = $this->user_model->updatedby($old_task->taskid);
 				$ins['created_by'] = $updatedby[0]['created_by'];				
-					
-					$task_actualstart_date = explode('-', trim($_POST['actualstart_date']));
-					if (count($task_actualstart_date) != 3 || ! $actualtask_date = mktime(0, 0, 0, $task_actualstart_date[1], $task_actualstart_date[0], $task_actualstart_date[2]))
-						{
-							$errors[] = 'Invalid Actual Start Date!';
-						}
-				if($_POST['actualstart_date'] =='0000-00-00'){
-				$ins['actualstart_date']='0000-00-00 00:00:00';
-				} else {
-				$ins['actualstart_date'] = date('Y-m-d H:i:s', $actualtask_date);
+				$task_actualstart_date = explode('-', trim($_POST['actualstart_date']));
+				
+				if (count($task_actualstart_date) != 3 || ! $actualtask_date = mktime(0, 0, 0, $task_actualstart_date[1], $task_actualstart_date[0], $task_actualstart_date[2])) {
+					$errors[] = 'Invalid Actual Start Date!';
 				}
-						//$ins['actualstart_date'] = date('Y-m-d H:i:s', $actualtask_date); //- sriram
-	
-				//ends
+				if($_POST['actualstart_date'] =='0000-00-00') {
+					$ins['actualstart_date']	= '0000-00-00 00:00:00';
+				} else {
+					$ins['actualstart_date'] 	= date('Y-m-d H:i:s', $actualtask_date);
+				}
 				//update
-				//echo "<pre>"; print_r($ins); exit;
 				$this->db->where('taskid', $update);
 				$this->db->update($this->cfg['dbpref'].'tasks', $ins);
 				
 				//echo $this->db->last_query();exit;
-				$ins['user_label'] = $_POST['user_label'];
-				$ins['status'] = $ins['is_complete'] = 0;
-				$ins['taskid'] = $update;
-				$ins['userid'] = $ins['userid_fk'];
-				$taskowner = $this->user_model->get_user($ins['userid']);
-				$taskAssignedTo=$taskowner[0]['first_name'].'&nbsp;'.$taskowner[0]['last_name'];
-				$taskAssignedToEmail=$taskowner[0]['email'];
-				// $hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
+				$ins['user_label'] 	= $_POST['user_label'];
+				$ins['status'] 		= $ins['is_complete'] = 0;
+				$ins['taskid'] 		= $update;
+				$ins['userid'] 		= $ins['userid_fk'];
+				$taskowner 			= $this->user_model->get_user($ins['userid']);
+				$taskAssignedTo		= $taskowner[0]['first_name'].'&nbsp;'.$taskowner[0]['last_name'];
+				$taskAssignedToEmail= $taskowner[0]['email'];
 
-				$json['html'] = $this->format_task($ins);
+				$json['html'] 		= $this->format_task($ins);
 				
-				# add a record
-				$record['taskid_fk'] = $old_task->taskid;
-				$record['event'] = 'Task Update';
-				$record['date'] = date('Y-m-d H:i:s');
-				$record['event_data'] = json_encode($old_task);
+				# add a record in tasks_track table while updating
+				$record['taskid_fk']	= $old_task->taskid;
+				$record['event']		= 'Task Update';
+				$record['date'] 	 	= date('Y-m-d H:i:s');
+				$record['event_data'] 	= json_encode($old_task);
 				$this->db->insert($this->cfg['dbpref'].'tasks_track', $record);
-				$from_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
+				$from_name 				= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$arrEmails 				= $this->config->item('crm');
+				$arrSetEmails			= $arrEmails['director_emails'];
 				
-				$admin_mail=implode(',',$arrSetEmails);
-				$subject = 'New Task Update Notification';
-				$from=$this->userdata['email'];
+				$admin_mail				= implode(',',$arrSetEmails);
+				$subject 				= 'New Task Update Notification';
+				$from					= $this->userdata['email'];
 				
-				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$user_name 				= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				
-				$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
+				$task_owner_name 		= $this->db->query("SELECT u.first_name,u.last_name,t.remarks,t.jobid_fk,t.actualstart_date
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$update}");
-				$task_owners = $task_owner_name->result_array();
+				$task_owners 			= $task_owner_name->result_array();
 
-				$dis['date_created'] = date('Y-m-d H:i:s');
-				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+				$dis['date_created'] 	= date('Y-m-d H:i:s');
+				$print_fancydate 		= date('l, jS F y h:iA', strtotime($dis['date_created']));
+				
+				/*insert log-start here*/
+					
+				$log_detail  = "Task Updated: \n";
+				$log_detail .= "\nTask Desc: ".$this->input->post('job_task');
+				$log_detail .= "\nAllocated To: ".$taskowner[0]['first_name'].' '.$taskowner[0]['last_name'];
+				$log_detail .= "\nAllocated By: ".$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'];
+				$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($dtask_start_date)).'  :: Planned End Date:'.date('d-m-Y', strtotime($dtask_end_date));
+				$log_detail .= "\nActual Start Date: ".date('d-m-Y', strtotime($task_owners[0]['actualstart_date']));
+				$log_detail .= "\nRemarks: ".$task_owners[0]['remarks'];
+				$log_detail .= "\nStatus: ".$ins['status'].' %';
+				$log = array();
+				$log['jobid_fk']      = $task_owners[0]['jobid_fk'];
+				$log['userid_fk']     = $this->userdata['userid'];
+				$log['date_created']  = date('Y-m-d H:i:s');
+				$log['log_content']   = $log_detail;
+				$log_res = $this->project_model->insert_row("logs", $log);
+				
+				/*insert log-end here*/
 				
 				//email sent by email template
 				$param = array();
 
 				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>date('d-m-Y', strtotime($dtask_start_date)),'end_date'=>date('d-m-Y', strtotime($dtask_end_date)),'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
 
-				$param['to_mail'] = $taskAssignedToEmail;
-				// $param['bcc_mail'] = $admin_mail;
-				$param['cc_mail'] = $from;
-				$param['from_email'] = $from;
+				$param['to_mail'] 		= $taskAssignedToEmail;
+				// $param['bcc_mail'] 	= $admin_mail;
+				$param['cc_mail'] 		= $from;
+				$param['from_email'] 	= $from;
 				$param['from_email_name'] = $from_name;
-				$param['template_name'] = "Task Update Notification";
-				$param['subject'] = $subject;
+				$param['template_name']   = "Task Update Notification";
+				$param['subject'] 		  = $subject;
 
 				$this->email_template_model->sent_email($param);
 			}
-			else if ($update == 'NO')
+			else if ($update == 'NO') //inserting new task here
 			{
 				if ( ! $this->db->insert($this->cfg['dbpref'].'tasks', $ins))
 				{
@@ -1778,35 +1784,49 @@ HDOC;
 				}
 				else
 				{
+					$ins['user_label'] 	= $_POST['user_label'];
+					$ins['status'] 		= $ins['is_complete'] = 0;
+					$ins['taskid'] 		= $this->db->insert_id();
+					$ins['userid'] 		= $ins['userid_fk'];
+					$json['html'] 		= $this->format_task($ins);
 					
-					$ins['user_label'] = $_POST['user_label'];
-					$ins['status'] = $ins['is_complete'] = 0;
-					$ins['taskid'] = $this->db->insert_id();
-					$ins['userid'] = $ins['userid_fk'];
-					$json['html'] = $this->format_task($ins);
-					
-					
-					$creator = $this->user_model->get_user($this->userdata['userid']);
-					$creator = $creator[0];
-					$task_owner = $this->user_model->get_user($ins['userid_fk']);
-					$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
-					$taskSetToEmail=$task_owner[0]['email'];
-					// $hm="&nbsp;".$ins['hours']."&nbsp;Hours&nbsp;".$ins['mins']."&nbsp;Mins";
-					$job_url = ($ins['jobid_fk'] != 0) ? $this->config->item('base_url')."welcome/view_quote/{$ins['jobid_fk']}" : '';
-					$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
+					$creator 			= $this->user_model->get_user($this->userdata['userid']);
+					$creator 			= $creator[0];
+					$task_owner 		= $this->user_model->get_user($ins['userid_fk']);
+					$taskSetTo			= $task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
+					$taskSetToEmail		= $task_owner[0]['email'];
+					$job_url 			= ($ins['jobid_fk'] != 0) ? $this->config->item('base_url')."welcome/view_quote/{$ins['jobid_fk']}" : '';
+					$task_owner_name 	= $this->db->query("SELECT u.first_name,u.last_name,t.remarks
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$ins['taskid']}");
-					$task_owners = $task_owner_name->result_array();
+					$task_owners 		= $task_owner_name->result_array();
 		
 					$dis['date_created'] = date('Y-m-d H:i:s');
-					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+					$print_fancydate 	= date('l, jS F y h:iA', strtotime($dis['date_created']));
+					
+					/*insert log-start here*/
+					
+					$log_detail = "New Task Added: \n";
+					$log_detail .= "\nTask Desc: ".$this->input->post('job_task');
+					$log_detail .= "\nAllocated To: ".$task_owner[0]['first_name'].' '.$task_owner[0]['last_name'];
+					$log_detail .= "\nAllocated By: ".$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'];
+					$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($dtask_start_date)).'  :: Planned End Date:'.date('d-m-Y', strtotime($dtask_end_date));
+					$log_detail .= "\nRemarks: ".$task_owners[0]['remarks'];
+					$log_detail .= "\nStatus: ".$ins['status'].' %';
+					$log = array();
+					$log['jobid_fk']      = $this->input->post('lead_id');
+					$log['userid_fk']     = $this->userdata['userid'];
+					$log['date_created']  = date('Y-m-d H:i:s');
+					$log['log_content']   = $log_detail;
+					$log_res = $this->project_model->insert_row("logs", $log);
+					
+					/*insert log-end here*/
 
-					$subject = 'New Task Notification';
-					$from = $this->userdata['email'];;
-
-					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-					$arrEmails = $this->config->item('crm');
+					$subject 			= 'New Task Notification';
+					$from 				= $this->userdata['email'];;
+					$user_name 			= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+					$arrEmails 			= $this->config->item('crm');
 					
 					//email sent by using email template
 					$param = array();

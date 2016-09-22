@@ -3,8 +3,6 @@ ob_start();
 $cfg = $this->config->item('crm');
 if ($this->session->userdata('logged_in') == TRUE) {
 	$userdata = $this->session->userdata('logged_in_user');
-	#define the users who can see the prices
-	#$sensitive_information_allowed = ( in_array($userdata['level'], array(0, 1, 2, 4, 5)) ) ? TRUE : FALSE;
 }
 ?>
 
@@ -26,9 +24,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <link rel="stylesheet" href="assets/css/tasks.css?q=2" type="text/css" />
 <link rel="stylesheet" href="assets/css/smoothness/ui.all.css?q=2" type="text/css" />
 <link rel="stylesheet" href="assets/css/ui-lightness/jquery-ui-1.7.2.custom.css?q=1" type="text/css" />
-<!-- link rel="stylesheet" media="screen" href="assets/css/jquery.timepickr.css" type="text/css" / -->
-<!--script type="text/javascript" src="assets/js/jquery-1.2.6-min.js"></script-->
-<!--script type="text/javascript" src="assets/js/jq-ui-1.6b.min.js?q=2"></script-->
 <style>
 .prior{background:purple;color:#CCC;color:#ccc;}
 </style>
@@ -55,9 +50,16 @@ $b = array();
 foreach($created_by as $value) {
 	$b[] = $value['created_by'];					
 }
-
 foreach ($results as $result)
 {
+	$lead_access = getAccessFromLead($userdata['userid'], $result['lead_id']);
+	$team_access = getAccessFromTeam($userdata['userid'], $result['lead_id']);
+	$stake_access = getAccessFromStakeHolder($userdata['userid'], $result['lead_id']);
+	
+	$link_access = 0;
+	if($lead_access == 1 || $team_access == 1 || $stake_access == 1) {
+		$link_access = 1;
+	}
 	if ($result['approved'] == 0)
 	{
 		$unallocated_tasks[$result['userid_fk']]['user_name'] = $result['user_label'];
@@ -72,6 +74,7 @@ foreach ($results as $result)
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
 																			'lead_id' => $result['lead_id'],
+																			'lead_title' => $result['lead_title'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -80,7 +83,9 @@ foreach ($results as $result)
 																			'actualend_date' => $result['actualend_date'],
 																			'created_byid' => $result['created_byid'],
 																			'userid_fk' => $result['userid_fk'],
-																			'remark' => $result['remark']
+																			'remark' => $result['remark'],
+																			'lead_or_project' => $result['move_to_project_status'],
+																			'link_access' => $link_access
 																		);
 	}
 	else
@@ -97,6 +102,7 @@ foreach ($results as $result)
 																			'delayed' => (int) $result['delayed'] * -1,
 																			'due_today' => $result['due_today'],
 																			'lead_id' => $result['lead_id'],
+																			'lead_title' => $result['lead_title'],
 																			'leadid' => $result['leadid'],
 																			'require_qc' => $result['require_qc'],
 																			'priority' => $result['priority'],
@@ -105,7 +111,9 @@ foreach ($results as $result)
 																			'actualend_date' => $result['actualend_date'],
 																			'created_byid' => $result['created_byid'],
 																			'userid_fk' => $result['userid_fk'],
-																			'remark' => $result['remark']
+																			'remark' => $result['remark'],
+																			'lead_or_project' => $result['move_to_project_status'],
+																			'link_access' => $link_access
 																		);
 	}
 }
@@ -116,22 +124,20 @@ foreach ($results as $result)
 	
 	$i = 0;
 	if(!empty($user_tasks[$uk]))
-	{	
+	{
 		if($userdata['role_id'] == 1 || $userdata['userid'] != $uk ) {
-			$use = $ut['user_name'].' - ';			
-		}
-		else {
-			$use =  '' ; 
+			$use = $ut['user_name'].' - ';
+		} else {
+			$use = ''; 
 		}
 		
-			$utuser = $ut['user_name'];
-			$td = '<td align="center">Assigned To</td>';
-			$tdcon = '<td>'.$utuser.'</td>';
-		
+		$utuser = $ut['user_name'];
+		$td = '<td align="center">Assigned To</td>';
+		$tdcon = '<td>'.$utuser.'</td>';
 
-			$utowner = $task['taskowner'];
-			$tdowner = '<td align="center">Assigned By</td>';
-			$tdownercon = '<td>'.$utowner.'</td>';
+		$utowner = $task['taskowner'];
+		$tdowner = '<td align="center">Assigned By</td>';
+		$tdownercon = '<td>'.$utowner.'</td>';
 		
 		
 		echo <<< EOD
@@ -141,7 +147,6 @@ foreach ($results as $result)
 			<td align="center">Remarks</td>
 			{$tdowner}
 			{$td}
-			
 			<td align="center">Planned Start Date</td>
 			<td align="center">Planned End Date</td>
 			<td align="center" width="154px">Actual Start Date</td>
@@ -429,9 +434,9 @@ EOD;
 		<tr class="row-header">
 			<td class="user">Task Description</td>
 			<td class="user" align="center">Task Remarks</td>
+			<td class="user" align="center">Customer - Lead Title</td>
 			{$tdowner}
 			{$td}
-			
 			<td class="user" align="center" width="200px">Planned Start Date</td>
 			<td class="user" align="center" width="200px">Planned End Date</td>
 			<td class="user" align="center" width="220px">Actual Start Date</td>
@@ -443,7 +448,7 @@ EOD;
 		$total_time = $today_total_time = 0;
 		foreach ($ut['tasks'] as $tk => $task)
 		{		
-		//print_r($task);exit;
+		// echo"<pre>";print_r($task); echo "</pre>";
 			$format_task = nl2br($task['task']);
 			$prior='';$complete = '';
 			if ($task['priority'] == '1' && $task['status'] != '100')
@@ -593,10 +598,28 @@ EOD;
 		} else {
 			$action = 'No Access';
 		}
+		
+		$company_lead_title = '';
+		$lead_title			= '';
+		if( $task['lead_id'] != 0 ){
+			$company_lead_title = isset($task['company']) ? $task['company'] . " - ": '';
+			$company_lead_title .= isset($task['lead_title']) ? $task['lead_title'] : '';
+			if($task['link_access'] == 1){
+				if($task['lead_or_project'] == 1) {
+					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$task['lead_id']}\">{$company_lead_title}</a>";
+				} else {
+					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$task['lead_id']}\">{$company_lead_title}</a>";
+				}
+			} else {
+				$lead_title = $company_lead_title;
+			}
 			
+		}
+		
 		echo "<tr class=\"tasks{$delayed}{$due_today}{$require_qc}{$prior}{$complete}\">
 			<td class=\"first\" rel='{$tk}' valign=top >{$format_task}</td>
 			<td class=\"rema\" valign=top >{$task['remark']}</td>
+			<td class=\"rema\" valign=top >{$lead_title}</td>
 			{$tdownercon}
 			{$tdcon}";
 
