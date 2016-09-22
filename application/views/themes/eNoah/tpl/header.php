@@ -1,5 +1,6 @@
 <?php
 $this->load->helper('text');
+$this->load->helper('lead');
 $cfg = $this->config->item('crm');
 
 if ($this->session->userdata('logged_in') == TRUE) {
@@ -16,7 +17,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	}
 	$task_notify_status = get_notify_status(2);
 	if($task_notify_status) {
-		$task_notify_msg = task_end_msg($task_notify_status);
+		$task_notify_msg 	= task_end_msg($task_notify_status);
 	}
 	// for floating div
 }
@@ -65,34 +66,24 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <body>
 
 <div id="page">
-
 <div class="header">
-
-
 	<div id="logo" class="logo-header">
-	
-	<div class="brand-logo">
-	<a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt=""/></a>
+		<div class="brand-logo">
+			<a href="dashboard"><img src="assets/img/esmart_logo.jpg" alt=""/></a>
+		</div>
+		<div class="client-logo">
+			<?php 
+			if (getClientLogo()) {
+			$cilentLogo = getClientLogo();
+			?>
+			<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="crm_data/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
+			<?php	
+			} else {
+			?>
+			<a href="dashboard"></a>
+			<?php } ?>
+		</div>
 	</div>
-	
-	<div class="client-logo">
-	<?php 
-	if (getClientLogo()) {
-	$cilentLogo = getClientLogo();
-	?>
-	<a href="http://<?php echo $cilentLogo['client_url']; ?>" target="_blank"><img src="crm_data/client_logo/<?php echo $cilentLogo['filename']; ?>" alt="client-logo" /></a>
-	<?php	
-	} else {
-	?>
-	<a href="dashboard"></a>
-	<?php } ?>
-	</div>
-	
-	
-	</div>
-	
-	
-	
 	<div class="row-two">
 		<div id="user-status">
 			<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
@@ -120,14 +111,14 @@ if ($this->session->userdata('logged_in') == TRUE) {
 </div>
 	
 	<?php
-	$notify = $this->session->flashdata('notify_msg');
-	$messages = $this->session->flashdata('header_messages');
+	$notify 	= $this->session->flashdata('notify_msg');
+	$messages 	= $this->session->flashdata('header_messages');
 	/* if (isset($userdata['signature']) && trim($userdata['signature']) == '') {
 		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
 	} */
 	
 		$content = '';
-	// if ($this->uri->segment(1) == 'welcome' || $this->uri->segment(1) == 'dashboard') {
+
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			$content .= '<tr><td class="fontbld" width="30px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
@@ -139,10 +130,10 @@ if ($this->session->userdata('logged_in') == TRUE) {
 				$content .= '<tr><td><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.character_limiter($arr['lead_title'], 50).'</a></td><td>'.date('d-m-Y', strtotime($arr['dt'])).'</td></tr>';
 			}
 		}
-	// }
 		$taskcontent = '';
-	// if ($this->uri->segment(1) == 'tasks' || $this->uri->segment(1) == 'dashboard') {
+
 		if (!empty($task_notify_msg)) {
+			$notify[] = "<span class=notify_high>Task</span>";
 			$taskcontent .= '<tr><td class="fontbld" rowspan="'.(count($task_notify_msg)+1).'">Tasks</td>';
 			$taskcontent .= '<td class="fontbld">Task Description</td>';
 			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';
@@ -151,7 +142,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 				$taskcontent .= '<tr><td><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a></td><td>'.date('d-m-Y', strtotime($arr['end_date'])).'</td></tr>';
 			}
 		}
-	// }
 
 	if (!isset($_COOKIE['floatStat'])) {
 		if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
@@ -159,7 +149,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 				<div class="grid-close grid-close1" id="grid-close"></div>
 				<table border="0" class="follow-style" cellpadding="5" cellspacing="0">
 					<tr><td colspan='3' class="follow-title">Follow Up Reminder(s)</td></tr>
-						<!--p><?php #for ($i = 0; $i < count ($notify);  $i ++) { echo $notify[$i]; if (isset($notify[$i + 1])) echo '<br />'; } ?></p-->
 						<?php echo $content; ?>
 						<?php echo $taskcontent; ?>
 				</table>
@@ -199,7 +188,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
    
 <?php 
 if ($this->session->userdata('logged_in') == TRUE) {
-	
 
 	$menulist_access = explode('#',$menu_itemsmod);
 	$menulist_access=array_reverse($menulist_access);
