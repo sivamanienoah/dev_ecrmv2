@@ -52,14 +52,18 @@ foreach($created_by as $value) {
 }
 foreach ($results as $result)
 {
-	$lead_access = getAccessFromLead($userdata['userid'], $result['lead_id']);
-	$team_access = getAccessFromTeam($userdata['userid'], $result['lead_id']);
-	$stake_access = getAccessFromStakeHolder($userdata['userid'], $result['lead_id']);
-	
 	$link_access = 0;
-	if($lead_access == 1 || $team_access == 1 || $stake_access == 1) {
+	if($userdata['role_id'] == 1 || $userdata['role_id'] == 2) {
 		$link_access = 1;
+	} else {
+		$lead_access = getAccessFromLead($userdata['userid'], $result['lead_id']);
+		$team_access = getAccessFromTeam($userdata['userid'], $result['lead_id']);
+		$stake_access = getAccessFromStakeHolder($userdata['userid'], $result['lead_id']);
+		if($lead_access == 1 || $team_access == 1 || $stake_access == 1) {
+			$link_access = 1;
+		}
 	}
+	
 	if ($result['approved'] == 0)
 	{
 		$unallocated_tasks[$result['userid_fk']]['user_name'] = $result['user_label'];
