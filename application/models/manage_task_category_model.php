@@ -26,7 +26,7 @@ class Manage_task_category_model extends crm_model {
 	*@Get task_type for Search
 	*@Manage_task_category_model
 	*/
-	public function get_task_category($search = FALSE) {
+	public function get_task_category($search = FALSE) { echo "modle"; exit;
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].SELF::TABLE_NAME);
 		if ($search != false) {
