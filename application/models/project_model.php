@@ -688,7 +688,7 @@ class Project_model extends crm_model
 		$query = $timesheet_db->query($sql);
 		$res = $query->result_array();		
 		if(count($res) > 0) {
-		foreach($res as $row){				
+			foreach($res as $row) {				
 				$taskid = $row['task_id'];
 				$timesheet_db->insert($timesheet_db->dbprefix("task_assignments"), array("task_id"=>$taskid,"proj_id"=>$pjt_id,"username"=>$username));
 			}
