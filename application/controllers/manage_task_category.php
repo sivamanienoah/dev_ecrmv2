@@ -22,6 +22,7 @@ class Manage_task_category extends crm_controller {
 	*/
 	public function __construct() 
 	{
+		echo "test"; die;
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_task_category_model');
