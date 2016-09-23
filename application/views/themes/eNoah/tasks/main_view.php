@@ -63,7 +63,16 @@ $(function(){
 							</select>
 						</td>
 					</tr>
-					
+					<tr>
+						<td>Allocate to</td>
+						<td>
+							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
+							<?php
+								echo $remind_options, $remind_options_all;
+							?>
+							</select>
+						</td>
+					</tr>
 					<tr>
 						<td>Start Date</td>
 						<td><input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin-top:5px;"/></td>
