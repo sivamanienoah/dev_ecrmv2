@@ -36,7 +36,7 @@ class Manage_task_category extends crm_controller {
 	{
         $data['page_heading'] = 'Manage Task Category';
 		$data['task_category'] = $this->manage_task_category_model->get_task_category($search);
-		echo "<pre>"; print_r($data); exit;
+		echo $this->db->last_query(); die;
         $this->load->view('manage_task_category/manage_task_category_view', $data);
     }
 	
