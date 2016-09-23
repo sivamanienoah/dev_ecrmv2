@@ -1732,7 +1732,7 @@ HDOC;
 				
 				$user_name 				= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 				
-				$task_owner_name 		= $this->db->query("SELECT u.first_name,u.last_name,t.remarks,t.jobid_fk,t.actualstart_date
+				$task_owner_name 		= $this->db->query("SELECT u.first_name,u.last_name,t.remarks,t.jobid_fk,t.actualstart_date, t.status
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.taskid ={$update}");
@@ -1750,7 +1750,7 @@ HDOC;
 				$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($dtask_start_date)).'  :: Planned End Date:'.date('d-m-Y', strtotime($dtask_end_date));
 				$log_detail .= "\nActual Start Date: ".date('d-m-Y', strtotime($task_owners[0]['actualstart_date']));
 				$log_detail .= "\nRemarks: ".$task_owners[0]['remarks'];
-				$log_detail .= "\nStatus: ".$ins['status'].' %';
+				$log_detail .= "\nStatus: ".$task_owners[0]['status'].' %';
 				$log = array();
 				$log['jobid_fk']      = $task_owners[0]['jobid_fk'];
 				$log['userid_fk']     = $this->userdata['userid'];
@@ -2255,30 +2255,48 @@ EOD;
 					$this->db->where('taskid', $taskid);
 					$this->db->update($task_table, $upd);
 					$uid=$data->userid_fk;
-				$task_name=$data->task;
-				if($upd['is_complete']==1){
+					$task_name=$data->task;
+					if($upd['is_complete']==1) {
 						$task_status="Completed";
-				}					
+					}					
 					$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 
-					$task_owner = $this->user_model->get_user($uid);
-					$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
-					$taskStatusToEmail=$task_owner[0]['email'];
-					$start_date=$data->start_date;
-					$end_date=$data->end_date;
-					$hours=$data->hours;
-					$mins=$data->mins;
+					$task_owner 		= $this->user_model->get_user($uid);
+					$taskSetTo			= $task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
+					$taskStatusToEmail	= $task_owner[0]['email'];
+					$start_date			= $data->start_date;
+					$end_date			= $data->end_date;
+					$hours				= $data->hours;
+					$mins				= $data->mins;
 					// $hm=$hours.'&nbsp;Hours&nbsp;and&nbsp;'.$mins.'&nbsp;mins';
-					$start_date=date('d-m-Y', strtotime($start_date));
-					$end_date=date('d-m-Y', strtotime($end_date));
-					$completed_date=date('l, jS F y h:iA', strtotime($upd['marked_complete']));
-					$task_owner_name = $this->db->query("SELECT u.first_name,u.last_name,t.remarks
+					$start_date			= date('d-m-Y', strtotime($start_date));
+					$end_date			= date('d-m-Y', strtotime($end_date));
+					$completed_date		= date('l, jS F y h:iA', strtotime($upd['marked_complete']));
+					$task_owner_name 	= $this->db->query("SELECT u.email, u.first_name, u.last_name, t.remarks, t.jobid_fk, t.start_date, t.jobid_fk, t.status, t.start_date, t.end_date, t.actualstart_date, t.actualend_date, t.task
 														FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 														WHERE u.userid = t.created_by
 														AND t.taskid ={$taskid}");
 					$task_owners = $task_owner_name->result_array();
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+					
+					/*insert log-start here*/
+					$log_detail  = "Task Approved: \n";
+					$log_detail .= "\nTask Desc: ".$task_owners[0]['task'];
+					$log_detail .= "\nAllocated To: ".$task_owners[0]['first_name'].'&nbsp;'.$task_owners[0]['last_name'];
+					$log_detail .= "\nAllocated By: ".$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];;
+					$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($task_owners[0]['start_date'])).'  :: Planned End Date:'.date('d-m-Y', strtotime($task_owners[0]['start_date']));
+					$log_detail .= "\nActual Start Date: ".date('d-m-Y', strtotime($task_owners[0]['actualstart_date'])).'  :: Planned End Date:'.date('d-m-Y', strtotime($task_owners[0]['actualend_date']));
+					$log_detail .= "\nRemarks: ".$task_owners[0]['remarks'];
+					$log_detail .= "\nStatus: ".$task_owners[0]['status'].' %';
+					$log = array();
+					$log['jobid_fk']      = $task_owners[0]['jobid_fk'];
+					$log['userid_fk']     = $this->userdata['userid'];
+					$log['date_created']  = date('Y-m-d H:i:s');
+					$log['log_content']   = $log_detail;
+					
+					$log_res = $this->project_model->insert_row("logs", $log);
+					/*insert log-end here*/
 				
 					$subject='Task Completion Notification';
 					$from = $this->userdata['email'];
@@ -2312,24 +2330,42 @@ EOD;
 		
 				$this->db->where('taskid', $taskid);
 				$this->db->delete($task_table);
-				$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-				$task_name=$data->task;
-				$task_createdby=$data->created_by;
-				$uid=$data->userid_fk;
-				$task_owner = $this->user_model->get_user($task_createdby);
-				$taskCreatedBy=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
-				$taskCreatedByEmail=$task_owner[0]['email'];
+				$user_name 		= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+				$task_name		= $data->task;
+				$task_createdby	= $data->created_by;
+				$uid			= $data->userid_fk;
+				$task_owner 	= $this->user_model->get_user($task_createdby);
+				$taskCreatedBy	= $task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
+				$taskCreatedByEmail = $task_owner[0]['email'];
 				$task_allocated = $this->user_model->get_user($uid);
-				$taskSetTo=$task_allocated[0]['first_name'].'&nbsp;'.$task_allocated[0]['last_name'];
-				$taskSetEmail=$task_allocated[0]['email'];
+				$taskSetTo		= $task_allocated[0]['first_name'].'&nbsp;'.$task_allocated[0]['last_name'];
+				$taskSetEmail	= $task_allocated[0]['email'];
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
 				
-				$from=$this->userdata['email'];
-				$arrEmails = $this->config->item('crm');
-				$arrSetEmails=$arrEmails['director_emails'];
-				$admin_mail=implode(',',$arrSetEmails);
-				$subject='Task Delete Notification';
+				/*insert log-start here*/
+				$log_detail  = "Task Deleted: \n";
+				$log_detail .= "\nTask Desc: ".$data->task;
+				$log_detail .= "\nAllocated To: ".$task_allocated[0]['first_name'].'&nbsp;'.$task_allocated[0]['last_name'];
+				$log_detail .= "\nAllocated By: ".$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];;
+				$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($data->start_date)).'  :: Planned End Date:'.date('d-m-Y', strtotime($data->start_date));
+				$log_detail .= "\nActual Start Date: ".date('d-m-Y', strtotime($data->actualstart_date));
+				$log_detail .= "\nRemarks: ".$data->remarks;
+				$log_detail .= "\nStatus: ".$data->status.' %';
+				$log = array();
+				$log['jobid_fk']      = $data->jobid_fk;
+				$log['userid_fk']     = $this->userdata['userid'];
+				$log['date_created']  = date('Y-m-d H:i:s');
+				$log['log_content']   = $log_detail;
+				
+				$log_res = $this->project_model->insert_row("logs", $log);
+				/*insert log-end here*/
+				
+				$from			= $this->userdata['email'];
+				$arrEmails 		= $this->config->item('crm');
+				$arrSetEmails 	= $arrEmails['director_emails'];
+				$admin_mail 	= implode(',',$arrSetEmails);
+				$subject    	= 'Task Delete Notification';
 				
 				//email sent by email template
 				$param = array();
@@ -2388,12 +2424,32 @@ EOD;
 				$task_owner = $this->user_model->get_user($uid);
 				$taskSetTo=$task_owner[0]['first_name'].'&nbsp;'.$task_owner[0]['last_name'];
 				$taskStatusToEmail=$task_owner[0]['email'];
-				$task_owner_mail = $this->db->query("SELECT u.email,u.first_name,u.last_name,t.remarks
+				$task_owner_mail = $this->db->query("SELECT u.email, u.first_name, u.last_name, t.remarks, t.jobid_fk, t.start_date, t.jobid_fk, t.status, t.start_date, t.end_date, t.actualstart_date, t.actualend_date, t.task
 													FROM `".$this->cfg['dbpref']."tasks` AS t, `".$this->cfg['dbpref']."users` AS u
 													WHERE u.userid = t.created_by
 													AND t.created_by ={$task_createdby}
 													AND t.taskid ={$taskid}");
 				$task_owners = $task_owner_mail->result_array();
+				
+				/*insert log-start here*/
+					
+				$log_detail  = "Task Updated: \n";
+				$log_detail .= "\nTask Desc: ".$task_owners[0]['task'];
+				$log_detail .= "\nAllocated To: ".$task_owner[0]['first_name'].' '.$task_owner[0]['last_name'];
+				$log_detail .= "\nAllocated By: ".$task_owners[0]['first_name'].' '.$task_owners[0]['last_name'];
+				$log_detail .= "\nPlanned Start Date: ".date('d-m-Y', strtotime($task_owners[0]['start_date'])).'  :: Planned End Date:'.date('d-m-Y', strtotime($task_owners[0]['end_date']));
+				$log_detail .= "\nActual Start Date: ".date('d-m-Y', strtotime($task_owners[0]['actualstart_date']));
+				$log_detail .= "\nRemarks: ".$task_owners[0]['remarks'];
+				$log_detail .= "\nStatus: ".$task_owners[0]['status'].' %';
+				$log = array();
+				$log['jobid_fk']      = $task_owners[0]['jobid_fk'];
+				$log['userid_fk']     = $this->userdata['userid'];
+				$log['date_created']  = date('Y-m-d H:i:s');
+				$log['log_content']   = $log_detail;
+
+				$log_res = $this->project_model->insert_row("logs", $log);
+				
+				/*insert log-end here*/
 
 				$dis['date_created'] = date('Y-m-d H:i:s');
 				$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
