@@ -67,26 +67,6 @@ $db['support']['swap_pre'] = '';
 $db['support']['autoinit'] = TRUE;
 $db['support']['stricton'] = FALSE;
 
-//Redmine DATABASE
-$db['support']['hostname'] = 'localhost';
-/* $db['support']['username'] = 'dev_support';
-$db['support']['password'] = 'Su996thj';
-$db['support']['database'] = 'dev_support'; */
-$db['redmine']['username'] = 'dev_redmine';
-$db['redmine']['password'] = 'hLYKfN8srDCX7eSB';
-$db['redmine']['database'] = 'dev_redmine';
-$db['redmine']['dbdriver'] = 'mysqli';
-$db['redmine']['dbprefix'] = '';
-$db['redmine']['pconnect'] = FALSE;
-$db['redmine']['db_debug'] = TRUE;
-$db['redmine']['cache_on'] = FALSE;
-$db['redmine']['cachedir'] = '';
-$db['redmine']['char_set'] = 'utf8';
-$db['redmine']['dbcollat'] = 'utf8_general_ci';
-$db['redmine']['swap_pre'] = '';
-$db['redmine']['autoinit'] = TRUE;
-$db['redmine']['stricton'] = FALSE;
-
 // Third Database
 // $active_group = "econnect";
 // $active_record = false;
