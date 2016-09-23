@@ -748,7 +748,7 @@ class Project extends crm_controller {
 			$log_detail = "Added Other Cost: \n";
 			$log_detail .= "\nDescription: ".$this->input->post('description');
 			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
-			$log_detail .= "\nValue: ".$all_cur[$ins_val['currency_type']].' '.number_format($ins_val['value'],2);
+			$log_detail .= "\nValue: ".$all_cur[$ins_val['currency_type']].' '.number_format($ins_val['value'], 2);
 			$log = array();
 			$log['jobid_fk']      = $this->input->post('project_id');
 			$log['userid_fk']     = $this->userdata['userid'];
@@ -1168,6 +1168,10 @@ class Project extends crm_controller {
 		echo json_encode($data);
 	}
 	
+	/*
+	*Set Project Members in Crm & timesheet db
+	*Timesheet DB - Update concept changed on - 23 sep 2016
+	*/
 	public function set_project_members(){
 		$updt = real_escape_array($this->input->post());
 		$data['error'] = FALSE;
@@ -1211,27 +1215,64 @@ class Project extends crm_controller {
 			// get the project id from project table of timesheet 
 			$timesheet_db = $this->load->database('timesheet', TRUE); 
 			$qry = $timesheet_db->get_where($timesheet_db->dbprefix('project'),array("project_code" => $project_code));
-			if($qry->num_rows())
-			{
-				$res_t = $qry->row();
-				$timesheet_proj_id =  $res_t->proj_id;
-				$time_ins = array();
-				$time_ins_task=array();
-				//delete the existing assigned users in the timesheet assignment table, before inserting.
+			if($qry->num_rows()) {
+				$res_t 				= $qry->row();
+				$timesheet_proj_id 	=  $res_t->proj_id;
+				$time_ins 			= array();
+				$time_ins_task		= array();
+				
+				/* //delete the existing assigned users in the timesheet assignment table, before inserting.
 				$timesheet_db->delete($timesheet_db->dbprefix("assignments"),array("proj_id" => $timesheet_proj_id));
 				$timesheet_db->delete($timesheet_db->dbprefix("task_assignments"),array("proj_id" => $timesheet_proj_id));
 				$time_ins['proj_id'] = $timesheet_proj_id;
-				if(count($rs_cm_users) > 0){
-					foreach($rs_cm_users as $muser){
+				if(count($rs_cm_users) > 0) {
+					foreach($rs_cm_users as $muser) {
 						$username= strtolower($muser->username);
-						$time_ins['username'] = strtolower($muser->username);
-						$time_ins['rate_id'] = 1;
+						$time_ins['username'] 	= strtolower($muser->username);
+						$time_ins['rate_id'] 	= 1;
 						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);	
 						// Added all the task for assigned users in timesheet 10/7/2015
 						$this->project_model->task_timesheet_entry($timesheet_proj_id,$username);
 					}
+				} */
+				
+				/* changed on 23 Sep 2016 */
+				$ts_wh_condn = array('proj_id' => $timesheet_proj_id);
+				$ts_set_data = array('status' => 1);
+				$timesheet_db->update($timesheet_db->dbprefix("assignments"), $ts_set_data, $ts_wh_condn); /*Inactive all the members in the project*/
+				
+				/* // UPDATE enoah_project_billrate_type SET status='1' WHERE project_id='732'
+				$ts_wh_condn_pbr = array('proj_id' => $timesheet_proj_id);
+				$ts_set_data_pbr = array('status' => 1);
+				$timesheet_db->update($timesheet_db->dbprefix("project_billrate_type"), $ts_set_data_pbr, $ts_wh_condn_pbr); */
+				
+				if(count($rs_cm_users) > 0) { /*set active the current project members in the project*/
+					foreach($rs_cm_users as $muser) {
+						
+						$username = strtolower($muser->username);
+						
+						// SELECT * FROM $ASSIGNMENTS_TABLE WHERE proj_id='$proj_id' && username ='$username'
+						$wh_condn_member = array('proj_id'=>$timesheet_proj_id, 'username'=>$username);
+						$get_member = $timesheet_db->get_where($timesheet_db->dbprefix('assignments'), $wh_condn_member);
+						if($qry->num_rows()) { /*if user exist made user to be active*/
+							// UPDATE $ASSIGNMENTS_TABLE SET status='0' WHERE proj_id='$proj_id' && username ='$username'
+							$ts_set_data_user = array('status' => 0);
+							$ts_wh_condn_user = array('username' => $username);
+							$timesheet_db->update($timesheet_db->dbprefix("assignments"), $ts_set_data_user, $ts_wh_condn_user);
+						} else {
+							// INSERT INTO $ASSIGNMENTS_TABLE VALUES ($proj_id, '$username', 1,0)
+							$time_ins['proj_id'] 	= $timesheet_proj_id;
+							$time_ins['username'] 	= $username;
+							$time_ins['rate_id'] 	= 1;
+							$time_ins['status'] 	= 0;
+							$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);
+							// Added all the task for assigned users in timesheet 10/7/2015
+							$this->project_model->task_timesheet_entry($timesheet_proj_id, $username);
+						}						
+					}
 				}
-			}else{
+				
+			} else {
 				$data['error'] = 'Project Members not Updated in Timesheet!';
 			}
 			$timesheet_db->close();
@@ -5050,7 +5091,7 @@ HDOC;
 		$this->load->view('projects/load_customer_det', $data);
 	}
 	
-	public function sendTestEmail() 
+	public function sendTestEmail()
 	{
 		//email sent by email template
 		$param = array();
