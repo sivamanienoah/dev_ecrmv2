@@ -22,7 +22,6 @@ class Manage_task_category extends crm_controller {
 	*/
 	public function __construct() 
 	{
-		echo "test"; die;
         parent::__construct();
         $this->login_model->check_login();
 		$this->load->model('manage_task_category_model');
@@ -35,6 +34,7 @@ class Manage_task_category extends crm_controller {
 	*/
     public function index($search = FALSE) 
 	{
+		echo "manage_task_category"; die;
         $data['page_heading'] = 'Manage Task Category';
 		$data['task_category'] = $this->manage_task_category_model->get_task_category($search);
         $this->load->view('manage_task_category/manage_task_category_view', $data);
