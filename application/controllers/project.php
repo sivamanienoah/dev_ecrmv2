@@ -1177,9 +1177,9 @@ class Project extends crm_controller {
 		$data['error'] = FALSE;
 		$ins = array();
 		
-		$project_team_members = $this->input->post('project_team_members');
-		$project_code = $this->input->post('project_code');
-		$lead_id = $this->input->post('lead_id');
+		$project_team_members 	= $this->input->post('project_team_members');
+		$project_code 			= $this->input->post('project_code');
+		$lead_id 				= $this->input->post('lead_id');
 		
 		if ($project_team_members == "")
 		{
@@ -1191,7 +1191,6 @@ class Project extends crm_controller {
 			
 			// delete the existing assigned users from the contract jobs table before inserting the new things.
 			$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
-					
 			if($project_team_members)
 			{
 				$ins['jobid_fk'] = $lead_id;
@@ -1254,7 +1253,7 @@ class Project extends crm_controller {
 						// SELECT * FROM $ASSIGNMENTS_TABLE WHERE proj_id='$proj_id' && username ='$username'
 						$wh_condn_member = array('proj_id'=>$timesheet_proj_id, 'username'=>$username);
 						$get_member = $timesheet_db->get_where($timesheet_db->dbprefix('assignments'), $wh_condn_member);
-						if($qry->num_rows()) { /*if user exist made user to be active*/
+						if($get_member->num_rows()) { /*if user exist made user to be active*/
 							// UPDATE $ASSIGNMENTS_TABLE SET status='0' WHERE proj_id='$proj_id' && username ='$username'
 							$ts_set_data_user = array('status' => 0);
 							$ts_wh_condn_user = array('username' => $username);
