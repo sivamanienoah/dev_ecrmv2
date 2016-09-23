@@ -11,8 +11,6 @@
 
 class Manage_task_category_model extends crm_model {
     
-	CONST TABLE_NAME = 'task_category';
-	
 	/*
 	*@construct
 	*@Manage Service Model
@@ -28,13 +26,12 @@ class Manage_task_category_model extends crm_model {
 	*/
 	public function get_task_category($search = FALSE) {
 		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].SELF::TABLE_NAME);
+		$this->db->from($this->cfg['dbpref'].'task_category');
 		if ($search != false) {
 			$search = urldecode($search);
 			$this->db->like('task_category', $search); 
 		}
 		$query = $this->db->get();
-		echo $this->db->last_query(); die;
 		return $query->result_array();
     }
 
