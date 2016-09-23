@@ -34,6 +34,7 @@ class Manage_task_category_model extends crm_model {
 			$this->db->like('task_category', $search); 
 		}
 		$query = $this->db->get();
+		echo $this->db->last_query(); die;
 		return $query->result_array();
     }
 
