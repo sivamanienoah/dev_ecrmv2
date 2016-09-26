@@ -3,6 +3,8 @@ $this->load->helper('text');
 $this->load->helper('lead');
 $cfg = $this->config->item('crm');
 
+$show_notify = false;
+
 if ($this->session->userdata('logged_in') == TRUE) {
 	$vid=$this->session->userdata['logged_in_user']['role_id'];
 	$viewLeads = getAccess(51, $vid);
@@ -12,12 +14,14 @@ if ($this->session->userdata('logged_in') == TRUE) {
 
 	// for floating div
 	$proposal_notify_status = get_notify_status(1);
+	$proposal_notify_msg 	= array();
 	if($proposal_notify_status) {
 		$proposal_notify_msg = proposal_expect_end_msg($proposal_notify_status);
 	}
 	$task_notify_status = get_notify_status(2);
+	$task_notify_msg 	= array();
 	if($task_notify_status) {
-		$task_notify_msg 	= task_end_msg($task_notify_status);
+		$task_notify_msg = task_end_msg($task_notify_status);
 	}
 	// for floating div
 }
@@ -84,6 +88,52 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			<?php } ?>
 		</div>
 	</div>
+	
+	<!--notification bell - start -->
+	<?php
+	
+		$notify 	= $this->session->flashdata('notify_msg');
+		$messages 	= $this->session->flashdata('header_messages'); 
+	
+		$content = '';
+
+		if (!empty($proposal_notify_msg)) {
+			$notify[] = "<span class=notify_high>Leads</span>";
+			$content .= '<li><span class="fontbld">Leads ('.count($proposal_notify_msg).')</li>';
+			// $content .= '<td class="fontbld">Lead Title</td>';
+			// $content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
+			foreach ($proposal_notify_msg as $arr) {
+				$content .= '<li><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.character_limiter($arr['lead_title'], 50).'</a> <span> '.date('d-m-Y', strtotime($arr['dt'])).' </span></li>';
+			}
+		}
+		$taskcontent = '';
+		
+		if (!empty($task_notify_msg)) {
+			$notify[] = "<span class=notify_high>Task</span>";
+			$taskcontent .= '<li><span class="fontbld">Tasks ('.count($task_notify_msg).')</li>';
+			// $taskcontent .= '<li class="fontbld">Task Description :: Task Completion Date</li>';
+			foreach ($task_notify_msg as $arr) {
+				$task_desc = character_limiter($arr['task'], 50);
+				$taskcontent .= '<li><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a> <span> '.date('d-m-Y', strtotime($arr['end_date'])).' </span></li>';
+			}
+		}
+	?>
+	<?php 
+	if (is_array($notify) && count($notify) > 0 && ($this->session->userdata('logged_in') == TRUE)) {
+	?>
+		<!--div id="floatNotifyDiv">	
+			<div class="grid-close grid-close1" id="grid-close"></div>
+			<table border="0" class="follow-style" cellpadding="5" cellspacing="0">
+				<tr><td colspan='3' class="follow-title">Follow Up Reminder(s)</td></tr>
+					<?php #echo $content; ?>
+					<?php #echo $taskcontent; ?>
+			</table>
+		</div-->
+	<?php 
+	}
+	?>
+	<!--notification bell - end -->
+
 	<div class="row-two">
 		<div id="user-status">
 			<?php if ($this->session->userdata('logged_in') == TRUE) { ?>
@@ -104,63 +154,53 @@ if ($this->session->userdata('logged_in') == TRUE) {
 					</div>
 				</div>
 			<?php } ?>
-			
+			<?php
+			$proposal_notify_count = $task_notify_count = 0;
+			if (is_array($proposal_notify_msg) && !empty($proposal_notify_msg) && count($proposal_notify_msg)>0) {
+				$show_notify 			= true;
+				$proposal_notify_count 	= count($proposal_notify_msg);
+			}
+			if (is_array($task_notify_msg) && !empty($task_notify_msg) && count($task_notify_msg)>0) {
+				$show_notify 		= true;
+				$task_notify_count 	= count($task_notify_msg);
+			}
+			?>
+			<?php 
+			if( $show_notify == true )
+			{
+				$notify_count = $proposal_notify_count + $task_notify_count;
+			?>
+				<div class="notify-area">
+					<a id="pending_task_notify">
+						<img class="" src="assets/img/bell-icon.png" title="Notify" alt="bell" />
+					</a>
+					<div class="notify-count"><span><?php echo $notify_count; ?></span></div>
+					<div id="pending_task_list" style="display: none; ">
+						<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
+						<ul class="search-root">
+							<?php echo $content; ?>
+							<?php echo $taskcontent; ?>
+						</ul>
+					</div>
+				</div>
+			<?php
+			}
+			?>
 			<p class="date-time"><?php echo date('l jS F Y') ?> <!--span class="msg-highlight"></span--></p>
+
 		</div>
 	</div>
 </div>
-	
-	<?php
-	$notify 	= $this->session->flashdata('notify_msg');
-	$messages 	= $this->session->flashdata('header_messages');
-	/* if (isset($userdata['signature']) && trim($userdata['signature']) == '') {
-		$messages[] = 'Your signature for the eSmart is not complete, please update the signature by visiting <a href="myaccount/">your account</a>.';
-	} */
-	
-		$content = '';
-
-		if (!empty($proposal_notify_msg)) {
-			$notify[] = "<span class=notify_high>Leads</span>";
-			$content .= '<tr><td class="fontbld" width="30px" rowspan="'.(count($proposal_notify_msg)+1).'">Leads</td>';
-			$content .= '<td class="fontbld">Lead Title</td>';
-			$content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
-			foreach ($proposal_notify_msg as $arr) {
-				// $lead_title = word_limiter($arr['lead_title'], 4);
-				// $lead_title = character_limiter($arr['lead_title'], 50);
-				$content .= '<tr><td><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.character_limiter($arr['lead_title'], 50).'</a></td><td>'.date('d-m-Y', strtotime($arr['dt'])).'</td></tr>';
-			}
-		}
-		$taskcontent = '';
-
-		if (!empty($task_notify_msg)) {
-			$notify[] = "<span class=notify_high>Task</span>";
-			$taskcontent .= '<tr><td class="fontbld" rowspan="'.(count($task_notify_msg)+1).'">Tasks</td>';
-			$taskcontent .= '<td class="fontbld">Task Description</td>';
-			$taskcontent .= '<td class="fontbld">Task Completion Date</td></tr>';
-			foreach ($task_notify_msg as $arr) {
-				$task_desc = character_limiter($arr['task'], 50);
-				$taskcontent .= '<tr><td><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a></td><td>'.date('d-m-Y', strtotime($arr['end_date'])).'</td></tr>';
-			}
-		}
-
-	if (!isset($_COOKIE['floatStat'])) {
-		if (is_array($notify) && count($notify) > 0 &&  ($this->session->userdata('logged_in') == TRUE)) { ?>
-			<div id="floatNotifyDiv">
-				<div class="grid-close grid-close1" id="grid-close"></div>
-				<table border="0" class="follow-style" cellpadding="5" cellspacing="0">
-					<tr><td colspan='3' class="follow-title">Follow Up Reminder(s)</td></tr>
-						<?php echo $content; ?>
-						<?php echo $taskcontent; ?>
-				</table>
-			</div>
-		<?php } ?>
 		
-		<?php if (is_array($messages) && count($messages) > 0 ) { ?>
+	<?php
+	if (!isset($_COOKIE['floatStat'])) {
+		 if (is_array($messages) && count($messages) > 0 ) { ?>
 			<div id="messages">
 				<p><?php for ($i = 0; $i < count ($messages);  $i ++) { echo $messages[$i]; if (isset($messages[$i + 1])) echo '<br />'; } ?></p>
 			</div>
-		<?php }
+	<?php }
     }
+	
     $confirm = $this->session->flashdata('confirm');
 	if (is_array($confirm) && count($confirm) > 0 ) { ?>
 		<div id="confirm">
@@ -352,6 +392,30 @@ $(document).ready(function(){
 	$(document).mouseup(function() {
 		$(".submenu").hide();
 		$(".account").attr('id', '');
+	});
+	
+	
+	$("#pending_task_notify").click(function() {
+		var XX=$(this).attr('id');
+		if(XX==1) {
+			$("#pending_task_list").hide();
+			$(this).attr('id', '0');
+		} else {
+			$("#pending_task_list").show();
+			$(this).attr('id', '1');
+		}
+	});
+	//Mouseup textarea false
+	$("#pending_task_list").mouseup(function() {
+		return false
+	});
+	$("#pending_task_notify").mouseup(function() {
+		return false
+	});
+	//Textarea without editing.
+	$(document).mouseup(function() {
+		$("#pending_task_list").hide();
+		$("#pending_task_notify").attr('id', '');
 	});
 	
 });
