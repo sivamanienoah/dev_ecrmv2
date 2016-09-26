@@ -410,3 +410,35 @@ if ( ! function_exists('getOtherCostByLeadId'))
 		return $value;
 	}
 }
+
+//for other cost based on project based currency
+if ( ! function_exists('getOtherCostByLeadIdBasedProjectCurrency'))
+{
+	function getOtherCostByLeadIdBasedProjectCurrency($lead_id = false, $project_curr = false)
+	{
+		$cur_bk_rate = get_book_keeping_rates();
+		$CI   	     = get_instance();
+		$cfg	     = $CI->config->item('crm'); /// load config
+		$result 	 = array();
+		$value 		 = 0;
+		if(!empty($lead_id)) {
+			$CI->db->select("cost_incurred_date, currency_type, value");
+			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
+			$CI->db->where('project_id', $lead_id);
+			$CI->db->order_by('id', 'ASC');
+			$query  = $CI->db->get();
+			$result = $query->result_array();
+
+			if(count($result)>0 && !empty($result)) {
+				foreach($result as $rec) {
+					$conver_value  = 0;
+					$curFiscalYear = date('Y'); //set as default current year as fiscal year
+					$curFiscalYear = getFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+					$convert_value = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$project_curr]);
+					$value += $convert_value;
+				}	
+			}
+		}
+		return $value;
+	}
+}
