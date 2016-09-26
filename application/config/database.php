@@ -45,6 +45,26 @@
 | the active record class
 */
 
+//Redmine DATABASE
+$db['redmine']['hostname'] = 'localhost';
+// $db['redmine']['username'] = 'root';
+// $db['redmine']['password'] = '';
+// $db['redmine']['database'] = 'dev_redmine';
+$db['redmine']['username'] = 'dev_redmine';
+$db['redmine']['password'] = 'hLYKfN8srDCX7eSB';
+$db['redmine']['database'] = 'dev_redmine';
+$db['redmine']['dbdriver'] = 'mysqli';
+$db['redmine']['dbprefix'] = '';
+$db['redmine']['pconnect'] = FALSE;
+$db['redmine']['db_debug'] = TRUE;
+$db['redmine']['cache_on'] = FALSE;
+$db['redmine']['cachedir'] = '';
+$db['redmine']['char_set'] = 'utf8';
+$db['redmine']['dbcollat'] = 'utf8_general_ci';
+$db['redmine']['swap_pre'] = '';
+$db['redmine']['autoinit'] = TRUE;
+$db['redmine']['stricton'] = FALSE;
+
 // Fourth Database added
 // $active_group = "support";
 // $active_record = false;
