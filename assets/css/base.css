@@ -2857,7 +2857,7 @@ form#edit-folder-permissions { overflow:visible !important; }
 }
 .gantt_grid_scale .gantt_grid_head_cell {
 	border-right: 1px solid #a6a6a6 !important;
-   }
+}
    /* .gantt_grid{
 	padding-bottom:15px !important;
    }
@@ -2874,4 +2874,7 @@ form#edit-folder-permissions { overflow:visible !important; }
    .gantt_task .gantt_data_area{
    padding-bottom:15px !important;
    } */ 
-    
+.notify-area{ padding: 10px; float: left; margin: 0 20px 0 0; position: relative; }
+.notify-count { background-color: red; border-radius: 50%; color: #fff; font-weight: bold; height: 22px; position: absolute; right: -6px; text-align: center; top: -6px; width: 22px; }
+.notify-count span{ display: block; padding-top: 4px; }
+#pending_task_list { background: #fff none repeat scroll 0 0; box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.45); display: none; margin: 0; padding: 0;  position: absolute; right: 0; top: 40px; width: 350px; z-index: 100; }
