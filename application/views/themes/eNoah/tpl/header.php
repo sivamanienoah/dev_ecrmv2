@@ -95,13 +95,11 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		$notify 	= $this->session->flashdata('notify_msg');
 		$messages 	= $this->session->flashdata('header_messages'); 
 	
-		$content = '';
+		/* $content = '';
 
 		if (!empty($proposal_notify_msg)) {
 			$notify[] = "<span class=notify_high>Leads</span>";
 			$content .= '<li><span class="fontbld">Leads ('.count($proposal_notify_msg).')</li>';
-			// $content .= '<td class="fontbld">Lead Title</td>';
-			// $content .= '<td class="fontbld" width="130px">Expected Proposal Date</td></tr>';
 			foreach ($proposal_notify_msg as $arr) {
 				$content .= '<li><a href="'.base_url().'welcome/view_quote/'.$arr['lead_id'].'">'.character_limiter($arr['lead_title'], 50).'</a> <span> '.date('d-m-Y', strtotime($arr['dt'])).' </span></li>';
 			}
@@ -111,15 +109,14 @@ if ($this->session->userdata('logged_in') == TRUE) {
 		if (!empty($task_notify_msg)) {
 			$notify[] = "<span class=notify_high>Task</span>";
 			$taskcontent .= '<li><span class="fontbld">Tasks ('.count($task_notify_msg).')</li>';
-			// $taskcontent .= '<li class="fontbld">Task Description :: Task Completion Date</li>';
 			foreach ($task_notify_msg as $arr) {
 				$task_desc = character_limiter($arr['task'], 50);
 				$taskcontent .= '<li><a href="'.base_url().'tasks/all/?id='.$arr['taskid'].'&type=random">'.$task_desc.'</a> <span> '.date('d-m-Y', strtotime($arr['end_date'])).' </span></li>';
 			}
-		}
+		} */
 	?>
 	<?php 
-	if (is_array($notify) && count($notify) > 0 && ($this->session->userdata('logged_in') == TRUE)) {
+	#if (is_array($notify) && count($notify) > 0 && ($this->session->userdata('logged_in') == TRUE)) {
 	?>
 		<!--div id="floatNotifyDiv">	
 			<div class="grid-close grid-close1" id="grid-close"></div>
@@ -130,7 +127,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 			</table>
 		</div-->
 	<?php 
-	}
+	#}
 	?>
 	<!--notification bell - end -->
 
@@ -173,13 +170,14 @@ if ($this->session->userdata('logged_in') == TRUE) {
 				<div class="notify-area">
 					<a id="pending_task_notify">
 						<img class="" src="assets/img/bell-icon.png" title="Notify" alt="bell" />
+						<div class="notify-count"><span><?php echo $notify_count; ?></span></div>
 					</a>
-					<div class="notify-count"><span><?php echo $notify_count; ?></span></div>
 					<div id="pending_task_list" style="display: none; ">
 						<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
-						<ul class="search-root">
-							<?php echo $content; ?>
-							<?php echo $taskcontent; ?>
+						<ul class="root">
+							<li class='pending-task'>Pending Tasks</li>
+							<?php if($proposal_notify_count != 0) { ?><li><a class="my-profile" href="javascript:void(0)" onclick="getProposalExpectEndLead(); return false;">Leads(<?php echo $proposal_notify_count; ?>)</a></li><?php } ?>
+							<?php if($task_notify_count != 0) { ?><li><a class="my-profile" href="javascript:void(0)" onclick="getEndTasks(); return false;">Tasks (<?php echo $task_notify_count; ?>)</a></li><?php } ?>
 						</ul>
 					</div>
 				</div>
@@ -192,39 +190,39 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	</div>
 </div>
 		
-	<?php
-	if (!isset($_COOKIE['floatStat'])) {
-		 if (is_array($messages) && count($messages) > 0 ) { ?>
-			<div id="messages">
-				<p><?php for ($i = 0; $i < count ($messages);  $i ++) { echo $messages[$i]; if (isset($messages[$i + 1])) echo '<br />'; } ?></p>
-			</div>
-	<?php }
-    }
+<?php
+if (!isset($_COOKIE['floatStat'])) {
+	 if (is_array($messages) && count($messages) > 0 ) { ?>
+		<div id="messages">
+			<p><?php for ($i = 0; $i < count ($messages);  $i ++) { echo $messages[$i]; if (isset($messages[$i + 1])) echo '<br />'; } ?></p>
+		</div>
+<?php }
+}
 	
-    $confirm = $this->session->flashdata('confirm');
-	if (is_array($confirm) && count($confirm) > 0 ) { ?>
-		<div id="confirm">
-			<p>
-				<?php for ($i = 0; $i < count ($confirm);  $i ++) { echo $confirm[$i]; if (isset($confirm[$i + 1])) echo '<br />'; } ?>
-			</p>
-		</div>
-	<?php }
+$confirm = $this->session->flashdata('confirm');
+if (is_array($confirm) && count($confirm) > 0 ) { ?>
+	<div id="confirm">
+		<p>
+			<?php for ($i = 0; $i < count ($confirm);  $i ++) { echo $confirm[$i]; if (isset($confirm[$i + 1])) echo '<br />'; } ?>
+		</p>
+	</div>
+<?php }
 
-	$errors = $this->session->flashdata('login_errors');
-	if (is_array($errors) && count($errors) > 0 ) { ?>
-		<div id="errors">
-			<p>
-				<?php for ($i = 0; $i < count ($errors);  $i ++) { echo $errors[$i]; if (isset($errors[$i + 1])) echo '<br />'; } ?>
-			</p>
-		</div>
-	<?php } ?>
+$errors = $this->session->flashdata('login_errors');
+if (is_array($errors) && count($errors) > 0 ) { ?>
+	<div id="errors">
+		<p>
+			<?php for ($i = 0; $i < count ($errors);  $i ++) { echo $errors[$i]; if (isset($errors[$i + 1])) echo '<br />'; } ?>
+		</p>
+	</div>
+<?php } ?>
 
-	<?php
-		if ($this->session->userdata('logged_in') == TRUE)
-		{
-			echo $menulist; 
-		} 
-	?>
+<?php
+	if ($this->session->userdata('logged_in') == TRUE)
+	{
+		echo $menulist; 
+	} 
+?>
    
 <?php 
 if ($this->session->userdata('logged_in') == TRUE) {
@@ -362,6 +360,28 @@ function setCookie(c_name,value,exdays)
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()+";path=/");
 	document.cookie=c_name + "=" + c_value;
+}
+function getProposalExpectEndLead()
+{
+	var url = site_base_url+"welcome/quotation/";
+	var form = $('<form action="' + url + '" method="post">' +
+				  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+				  '<input type="hidden" name="type" value="load_proposal_expect_end" />' +
+				  '</form>');
+	$('body').append(form);
+	$(form).submit(); 
+}
+
+function getEndTasks()
+{
+	alert('tst');
+	var url = site_base_url+"welcome/quotation/";
+	var form = $('<form action="' + url + '" method="post">' +
+				  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+				  '<input type="hidden" name="type" value="load_proposal_expect_end" />' +
+				  '</form>');
+	$('body').append(form);
+	$(form).submit(); 
 }
 </script>
 

@@ -519,7 +519,7 @@ class Welcome_model extends crm_model {
 		return $customers;
 	}
 	
-	public function get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword)
+	public function get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword, $proposal_expect_end)
 	{
 		$userdata 		= $this->session->userdata('logged_in_user');
 		 
@@ -539,6 +539,10 @@ class Welcome_model extends crm_model {
 		$lead_indi 		= (count($lead_indi)>0)?explode(',',$lead_indi):'';
 		
 		// echo "<pre>"; print_r($lead_status); die;
+		
+		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
+			$proposal_notify_day = get_notify_status(1);
+		}
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['level'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
@@ -559,7 +563,6 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
-			 
 			if(!empty($stage) && count($stage)>0){
 				if($stage[0] != 'null' && $stage[0] != 'all') {		
 					$this->db->where_in('j.lead_stage',$stage); 
@@ -630,29 +633,6 @@ class Welcome_model extends crm_model {
 				}
 			}
 			
-			/* if(!empty($lead_status) && count($lead_status)>0){
-				
-				if(!empty($lead_status) & count($lead_status)==1){
-					if(in_array('5', $lead_status)){
-						$lead_status = array_diff($lead_status, array('5'));
-						$this->db->where('j.move_to_project_status', 1);
-					}
-					if(in_array('4', $lead_status)){
-						$this->db->where('j.lead_status', 4);
-						$this->db->where('j.pjt_status', 0);
-					}
-				}
-				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
-					$this->db->where_in('j.lead_status', $lead_status);
-				}
-
-				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
-					$lead_status = array_diff($lead_status, array('5'));
-					$this->db->where('j.move_to_project_status', 1);
-					$this->db->or_where_in('j.lead_status', $lead_status);
-				}
-
-			} */
 			if(!empty($lead_status) && count($lead_status)>0){
 				if(!empty($lead_status) & count($lead_status)==1){
 					if(in_array('5', $lead_status)){
@@ -667,18 +647,10 @@ class Welcome_model extends crm_model {
 				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
 					$this->db->where_in('j.lead_status', $lead_status);
 				}
-					if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
+				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))) {
 					$lead_status = array_diff($lead_status, array('5'));
 					$this->db->where('j.move_to_project_status', 1);
 					$this->db->or_where_in('j.lead_status', $lead_status);
-					/* $wh = '(';
-					if(!empty($lead_status)){
-						foreach($lead_status as $ls){
-							$wh .= 'j.lead_status = '.$ls;
-						}
-					}
-					$wh .= 'OR (j.move_to_project_status = 1) )'
-					$this->db->where($wh); */
 				}
 			}
 			
@@ -693,10 +665,8 @@ class Welcome_model extends crm_model {
 					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR cc.company LIKE '%$keyword%' OR c.customer_name LIKE '%$keyword%' ))";
 					$this->db->where($invwhere);
 				}
-			}
-			$this->db->order_by("j.lead_id", "desc");
-			 
-		}else{
+			} 
+		} else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 						
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
@@ -715,8 +685,7 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'location as locn', 'locn.locationid = cc.add1_location');
 			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
-			// $this->db->where('j.pjt_status', 0); 
-			// $this->db->where('j.lead_id != "null" AND j.lead_stage IN (1,2,3,4,5,6,7,8,9,10,11,12)');
+			
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			
 			if(!empty($stage) && count($stage)>0){
@@ -802,68 +771,61 @@ class Welcome_model extends crm_model {
 				if (isset($this->session->userdata['locationid'])) {
 					$this->db->where_in('cc.add1_location',$locationid); 
 				}
-				
-				//or_where condition is used for to bring the lead owner leads when he creating the leads for different region.
-				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.lead_stage IN (1,2,3,4,5,6,7,8,9,10,11,12))');
-				// $this->db->or_where('(j.belong_to = '.$curusid.' AND j.lead_stage IN ("'.$this->stages.'") AND j.pjt_status = 0)');
 			}
 			
-			//Advanced filter
-				if(!empty($regionname) && $regionname[0] != 'null'){
-					$this->db->where_in('cc.add1_region',$regionname);
-				} else {
-					$this->db->where_in('cc.add1_region',$region);
-				}
-				// if($countryname[0] != 'null' && $countryname[0] != 'all') {
-				if(!empty($countryname) && $countryname[0] != 'null') {
-					$this->db->where_in('cc.add1_country', $countryname);
-				} else if ((($this->userdata['level'])==3) || (($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
-					$this->db->where_in('cc.add1_country',$countryid);
-				}
-				// if($statename[0] != 'null' && $statename[0] != 'all') {	
-				if(!empty($statename) && $statename[0] != 'null') {	
-					$this->db->where_in('cc.add1_state', $statename);
-				} else if ((($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
-					$this->db->where_in('cc.add1_state',$stateid);
-				}
-				// if($locname[0] != 'null' && $locname[0] != 'all') {	
-				if(!empty($locname) && $locname[0] != 'null') {	
-					$this->db->where_in('cc.add1_location', $locname);
-				} else if (($this->userdata['level'])==5) {
-					$this->db->where_in('cc.add1_location', $locationid);
-				}
-				/* if(!empty($lead_status)  && $lead_status[0] != 'null'){	
-					$this->db->where_in('j.lead_status', $lead_status);
-				} */
-				
-				if(!empty($lead_status) && count($lead_status)>0){
-					if(!empty($lead_status) & count($lead_status)==1){
-						if(in_array('5', $lead_status)){
-							$lead_status = array_diff($lead_status, array('5'));
-							$this->db->where('j.move_to_project_status', 1);
-						}
-						if(in_array('4', $lead_status)){
-							$this->db->where('j.lead_status', 4);
-							$this->db->where('j.pjt_status', 0);
-						}
-					}
-					if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
-						$this->db->where_in('j.lead_status', $lead_status);
-					}
-						if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))){
+			/*Advanced filter*/
+			if(!empty($regionname) && $regionname[0] != 'null'){
+				$this->db->where_in('cc.add1_region', $regionname);
+			} else {
+				$this->db->where_in('cc.add1_region', $region);
+			}
+			if(!empty($countryname) && $countryname[0] != 'null') {
+				$this->db->where_in('cc.add1_country', $countryname);
+			} else if ((($this->userdata['level'])==3) || (($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
+				$this->db->where_in('cc.add1_country', $countryid);
+			}
+			if(!empty($statename) && $statename[0] != 'null') {	
+				$this->db->where_in('cc.add1_state', $statename);
+			} else if ((($this->userdata['level'])==4) || (($this->userdata['level'])==5)) {
+				$this->db->where_in('cc.add1_state', $stateid);
+			}
+			if(!empty($locname) && $locname[0] != 'null') {	
+				$this->db->where_in('cc.add1_location', $locname);
+			} else if (($this->userdata['level'])==5) {
+				$this->db->where_in('cc.add1_location', $locationid);
+			}
+			
+			if(!empty($lead_status) && count($lead_status)>0){
+				if(!empty($lead_status) & count($lead_status)==1){
+					if(in_array('5', $lead_status)){
 						$lead_status = array_diff($lead_status, array('5'));
 						$this->db->where('j.move_to_project_status', 1);
-						$this->db->or_where_in('j.lead_status', $lead_status);
+					}
+					if(in_array('4', $lead_status)){
+						$this->db->where('j.lead_status', 4);
+						$this->db->where('j.pjt_status', 0);
 					}
 				}
-				if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
-					$this->db->where_in('j.lead_indicator', $lead_indi);
+				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && !in_array('5', $lead_status)) {
+					$this->db->where_in('j.lead_status', $lead_status);
 				}
-			//Advanced filter
-
-			$this->db->order_by("j.lead_id", "desc");
-			
+				if(!empty($lead_status) && $lead_status[0] != 'null' && $lead_status[0] !='' && in_array('5', $lead_status) && (in_array('4', $lead_status) || in_array('3', $lead_status) || in_array('2', $lead_status) || in_array('1', $lead_status))) {
+					$lead_status = array_diff($lead_status, array('5'));
+					$this->db->where('j.move_to_project_status', 1);
+					$this->db->or_where_in('j.lead_status', $lead_status);
+				}
+			}
+			if(!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] !='') {	
+				$this->db->where_in('j.lead_indicator', $lead_indi);
+			}
+			/*Advanced filter*/
 		}
+		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
+			$this->db->where('j.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$proposal_notify_day.' DAY)) ');
+			$this->db->where('j.lead_status', 1);
+			$this->db->where('j.lead_assign', $userdata['userid']);
+		}
+		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		
@@ -908,11 +870,11 @@ class Welcome_model extends crm_model {
 		if($this->session->userdata['locationid'] != '') {
 			$this->db->where_in('cc.add1_location',$locationid); 
 		}
+		
+		$query = $this->db->get();
 		 
-		 $query = $this->db->get();
-		 
-		 $customers =  $query->result_array();       
-		 return $customers;
+		$customers =  $query->result_array();       
+		return $customers;
 	}
 	
 	//advanced search functionality- new requirement

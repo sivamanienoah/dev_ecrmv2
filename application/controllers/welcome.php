@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-// ini_set('display_errors', 1);
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING); 
 class Welcome extends crm_controller {
 	
 	public $cfg;
@@ -20,6 +20,7 @@ class Welcome extends crm_controller {
 		$this->email->set_newline("\r\n");
 		
 		$this->load->helper('lead_stage_helper');
+		$this->load->helper('lead');
 		$this->stg = getLeadStage();
 		$this->stg_name = getLeadStageName();
 		$this->stages = @implode('","', $this->stg);
@@ -28,8 +29,8 @@ class Welcome extends crm_controller {
     /*
 	 * Redirect user to quotation list
 	 */
-	public function index() {
-		
+	public function index() 
+	{
 		redirect('welcome/quotation');
     }
 	
@@ -38,8 +39,16 @@ class Welcome extends crm_controller {
 	 * @access public
 	 */
 	public function quotation($type = 'draft', $tab='') {
+		
+		// ECHO "<pre>"; print_r($this->input->post()); die;
 
-		$page_label = 'Leads List' ;
+		$page_label = 'Leads List';
+		
+		if(isset($_POST) && isset($_POST['type']) && $_POST['type'] == 'load_proposal_expect_end'){
+			$data['load_proposal_expect_end'] = 'load_proposal_expect_end';
+		} else {
+			$data['load_proposal_expect_end'] = '';
+		}
 		
 		$data['lead_stage']   = $this->stg_name;
 		$data['customers']    = $this->welcome_model->get_customers();
@@ -47,7 +56,7 @@ class Welcome extends crm_controller {
 		$data['regions']      = $this->regionsettings_model->region_list();
 		$data['services']     = $this->welcome_model->get_lead_services();
 		$data['sources']      = $this->welcome_model->get_lead_sources();
-		$data['industry']      = $this->welcome_model->get_industry();
+		$data['industry']     = $this->welcome_model->get_industry();
 		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=1);
 		
 		$this->load->view('leads/quotation_view', $data);
@@ -59,29 +68,32 @@ class Welcome extends crm_controller {
 	// public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
 	public function advance_filter_search($search_type = false, $search_id = false)
 	{
-		$filt = array();
-		$stage	      =null; 
-		$customer	  =null;
-		$service	  =null;
-		$lead_src	  =null;
-		$industry	  =null;
-		$worth		  =null; 
-		$owner	 	  =null; 
-		$leadassignee =null; 
-		$regionname	  =null;
-		$countryname  =null; 
-		$statename	  =null; 
-		$locname	  =null; 
-		$lead_status  =null; 
-		$lead_indi    =null; 
-		$keyword      =null;
+		$filt 			= array();
+		$stage	      	=null; 
+		$customer	 	=null;
+		$service	  	=null;
+		$lead_src	  	=null;
+		$industry	  	=null;
+		$worth		  	=null; 
+		$owner	 	  	=null; 
+		$leadassignee 	=null; 
+		$regionname	  	=null;
+		$countryname  	=null; 
+		$statename	  	=null; 
+		$locname	  	=null; 
+		$lead_status  	=null; 
+		$lead_indi    	=null; 
+		$keyword      	=null;
+		$proposal_expect_end = null;
+		
+		$this->session->unset_userdata('load_proposal_expect_end');
 		
 		if($search_type == 'search' && $search_id == false) {
 			$filt = real_escape_array($this->input->post());
 			$this->session->set_userdata("lead_search_by_default",0);
 			$this->session->set_userdata("lead_search_by_id",0);
 			$this->session->set_userdata("lead_search_only",1);
-		} else if ($search_type == 'search' && is_numeric($search_id)) {	
+		} else if ($search_type == 'search' && is_numeric($search_id)) {
 			$wh_condn = array('search_id'=>$search_id, 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			unset($get_rec['search_id']);
@@ -94,6 +106,9 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("lead_search_by_default",0);
 			$this->session->set_userdata("lead_search_by_id",$search_id);
 			$this->session->set_userdata("lead_search_only",0);
+		} else if ($search_type == 'load_proposal_expect_end' && $search_id == false) {
+			$this->session->set_userdata("load_proposal_expect_end", 1);
+			$proposal_expect_end = 'load_proposal_expect_end';
 		} else {
 			$wh_condn = array('search_for'=>1, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -148,7 +163,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_keyword",'');
 		}
 
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
 		// echo $this->db->last_query(); die;
 		$data['filter_results'] = $filter_results;
 
@@ -1722,7 +1737,12 @@ class Welcome extends crm_controller {
 		if(!empty($industry)) {
 			foreach($industry as $ind)
 			$leadIndustry[$ind['id']] = $ind['industry'];
-		}		
+		}
+		
+		$proposal_expect_end = null;
+		if(isset($this->session->userdata) && $this->session->userdata('load_proposal_expect_end') == 1){
+			$proposal_expect_end = 'load_proposal_expect_end';
+		}
 		/*master*/
 
 		//$exporttoexcel = $this->session->userdata('excel_download');
@@ -1772,7 +1792,7 @@ class Welcome extends crm_controller {
 			$keyword      = (!empty($exporttoexcel['keyword'])?$exporttoexcel['keyword']:'');
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword);
+		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
 		
 		// echo "<pre>"; print_r($filter_res); exit;
 
