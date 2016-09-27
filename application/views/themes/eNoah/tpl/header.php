@@ -374,11 +374,10 @@ function getProposalExpectEndLead()
 
 function getEndTasks()
 {
-	alert('tst');
-	var url = site_base_url+"welcome/quotation/";
+	var url = site_base_url+"tasks/all";
 	var form = $('<form action="' + url + '" method="post">' +
 				  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-				  '<input type="hidden" name="type" value="load_proposal_expect_end" />' +
+				  '<input type="hidden" name="type" value="task_end_notify" />' +
 				  '</form>');
 	$('body').append(form);
 	$(form).submit(); 

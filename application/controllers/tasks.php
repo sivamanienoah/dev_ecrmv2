@@ -9,6 +9,7 @@ class Tasks extends crm_controller {
         parent::__construct();
 		$this->load->helper('form');
 		$this->load->helper('task');
+		$this->load->helper('lead');
 		$this->load->model('task_model');
 		$this->login_model->check_login();
 		$this->load->helper('text');
@@ -16,10 +17,10 @@ class Tasks extends crm_controller {
     }
 	
 	
-	public function index($extend = FALSE) {	
+	public function index($extend = FALSE, $task_end_notify = FALSE) {	
 		$data['created_by'] = $this->task_model->get_task_created_by();
 
-		$res = $this->get_daily_tasks($extend);
+		$res = $this->get_daily_tasks($extend, $task_end_notify);
 
 		foreach($res[0] as $r) 
 		{
@@ -35,21 +36,22 @@ class Tasks extends crm_controller {
 	/**
 	 * Tasks for the main menu
 	 */
-	public function all() {
-		$data = array();
-		
-		$data['user_accounts'] = array();
-
+	public function all() 
+	{
+		$data 					= array();
+		$data['user_accounts'] 	= array();
+		if(isset($_POST) && isset($_POST['type']) && $_POST['type'] == 'task_end_notify'){
+			$data['task_end_notify'] = 'task_end_notify';
+		} else {
+			$data['task_end_notify'] = '';
+		}
 		// $users = $this->db->get($this->cfg['dbpref'] . 'users');
 		$users = $this->task_model->getActiveUsers();
-
 		if ($users['num'] > 0)
 		{
 			$data['user_accounts'] = $users['user'];
 		}
-		
 		$data['created_by'] = $this->task_model->get_task_created_by();
-
 		$this->load->view('tasks/main_view', $data);		
 	}
 	
@@ -58,7 +60,9 @@ class Tasks extends crm_controller {
 	 * Get all tasks
 	 * For today
 	 */
-	private function get_daily_tasks($extend = FALSE) {
+	private function get_daily_tasks($extend = FALSE, $task_end_notify = FALSE) 
+	{
+		// echo $task_end_notify; exit;
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
 
@@ -73,7 +77,7 @@ class Tasks extends crm_controller {
 		
 		$today = date('Y-m-d', $now);
 
-		$data = $this->task_model->get_task_daily($uid, $today);
+		$data = $this->task_model->get_task_daily($uid, $today, $task_end_notify);
 		
 		return array($data, $now);
 	}

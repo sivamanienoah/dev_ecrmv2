@@ -288,9 +288,10 @@ $(function(){
 	
 </div>
 <script type="text/javascript">
-	var task_userid = '<?php echo $userdata['userid'] ?>';
-	var get_type 	= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
-	var get_id      = '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
+	var task_userid 	= '<?php echo $userdata['userid'] ?>';
+	var get_type 		= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
+	var get_id      	= '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
+	var task_end_notify = '<?php echo $task_end_notify ?>';
 </script>
 <script type="text/javascript" src="assets/js/tasks/main_view.js"></script>
 <?php

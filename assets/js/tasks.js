@@ -113,7 +113,7 @@ function openEditTask(taskid, random)
 	var edit_table_el = $('.blockUI .task-edit');
 	var createdbyid = $.trim($('.task-cid', the_task_el).text());
 	
-	var uid=$.trim($('.task-uid', the_task_el).text());	
+	var uid = $.trim($('.task-uid', the_task_el).text());	
 	// workout the existing values and replace them
 
 	$('.edit-task-remarks', edit_table_el).val($.trim($('.taskremarks', the_task_el).text()));

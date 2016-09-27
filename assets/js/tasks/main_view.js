@@ -8,7 +8,14 @@ $(function(){
 	var params    		     = {};	
 	params[csrf_token_name]  = csrf_hash_token;
 	
-	$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, loadEditTables);
+	// alert(task_end_notify)
+	
+	// $('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, loadEditTables);
+	if(task_end_notify == 'task_end_notify') {
+		$('.all-tasks').load('tasks/index/extend/task_end_notify #task-page .task-contents', params, loadEditTables);
+	} else {
+		$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, loadEditTables);
+	}
 	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
