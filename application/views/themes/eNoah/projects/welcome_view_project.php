@@ -570,7 +570,7 @@
 	</div>
 	<?php if($this->userdata['role_id'] != 8):?>
 	<div id="jv-tab-0">
-		<div style="overflow: auto;">
+		<div class="metrics_overlay" style="overflow: auto;">
 		<div class="pull-left">
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">
 				<tr>

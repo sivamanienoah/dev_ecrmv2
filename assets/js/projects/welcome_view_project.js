@@ -1564,6 +1564,9 @@ function addURLtoJob()
 					loadExistingFiles($('#filefolder_id').val());
 					showBreadCrumbs($('#filefolder_id').val());
 				}
+				if (ui.newPanel[0].id=='jv-tab-0') {
+					updtActualProjectValue(project_jobid);
+				}
 				if (ui.newPanel[0].id=='jv-tab-0-a') {
 					viewOtherCost(project_jobid);
 				}
@@ -2995,4 +2998,31 @@ function deleteOtherCostData(costid, projectid)
 		return false;
 	}
 }
-/*for other cost inclusion*/
+/*for updating the actual cost inclusion*/
+function updtActualProjectValue(projectid)
+{
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	params['project_id'] 	= project_id;
+	
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'project/getAcutalCostDataForProject/',
+		cache:false,
+		dataType:'json',
+		beforeSend: function() {
+			//show loading symbol or overlay
+			$('.metrics_overlay').block({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success:function(data) {
+			$.unblockUI();
+			$('.blockUI').css('display', 'none');
+			$('#actualValue').val(data.project_cost);
+			$('#varianceValue').val(data.varianceProjectVal);
+		}
+	});
+}
