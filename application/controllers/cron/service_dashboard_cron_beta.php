@@ -359,14 +359,14 @@ class Service_dashboard_cron_beta extends crm_controller
 												$direct_rateperhr1 = $direct_rateperhr;
 												if($individual_billable_hrs>$max_hours){
 													//echo 'max'.$max_hours.'<br>';
-													$percentage = ($max_hours/$individual_billable_hrs);
-													$rate1 = number_format(($percentage*$rate),2);
-													$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+													$percentage 		= ($max_hours/$individual_billable_hrs);
+													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 												}
-												$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
-												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
-												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
-												$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+												$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
+												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] 	 = ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
 											}
 										}
 									}
@@ -404,7 +404,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1);echo 'cm_direct cost'.'<br>';print_r($cm_directcost1); exit;
+		echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1); exit;
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
@@ -557,7 +557,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		
+		echo 'cm_direct cost'.'<br>';print_r($cm_directcost1); exit;
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
