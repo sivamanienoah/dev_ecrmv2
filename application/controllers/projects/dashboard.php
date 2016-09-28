@@ -2558,7 +2558,7 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
-			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-t', strtotime($end_date)));
 		}
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
