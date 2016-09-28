@@ -471,7 +471,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
 			foreach($resdata as $rec) {		
-				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
@@ -530,7 +530,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			}	 
 		}
 		}
-		//echo '<pre>';print_r($resource_cost);exit;
+		echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
