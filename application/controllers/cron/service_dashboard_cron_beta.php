@@ -334,50 +334,50 @@ class Service_dashboard_cron_beta extends crm_controller
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
 			}
 
-		//echo '<pre>';print_r($timesheet_data);exit;
-		if(count($timesheet_data)>0 && !empty($timesheet_data)){
-			foreach($timesheet_data as $key1=>$value1) {
-				$resource_name = $key1;
-				$max_hours = $value1['max_hours'];
-				$dept_name = $value1['dept_name'];
-				$resource_cost[$resource_name]['dept_name'] = $dept_name;
-				if(count($value1)>0 && !empty($value1)){
-					foreach($value1 as $key2=>$value2) {
-						$year = $key2;
-						if(count($value2)>0 && !empty($value2)){
-							foreach($value2 as $key3=>$value3) {
-								$individual_billable_hrs		= 0;
-								$month		 	  = $key3;
-								if(count($value3)>0 && !empty($value3)){
-									foreach($value3 as $key4=>$value4) {
-										if($key4 != 'total_hours'){ 
-											$individual_billable_hrs = $value3['total_hours'];
-											$duration_hours			= $value4['duration_hours'];
-											$rate				 = $value4['rateperhr'];
-											$direct_rateperhr	 = $value4['direct_rateperhr'];
-											$rate1 = $rate;
-											$direct_rateperhr1 = $direct_rateperhr;
-											if($individual_billable_hrs>$max_hours){
-												//echo 'max'.$max_hours.'<br>';
-												$percentage = ($max_hours/$individual_billable_hrs);
-												$rate1 = number_format(($percentage*$rate),2);
-												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+			//echo '<pre>';print_r($timesheet_data);exit;
+			if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				foreach($timesheet_data as $key1=>$value1) {
+					$resource_name = $key1;
+					$max_hours = $value1['max_hours'];
+					$dept_name = $value1['dept_name'];
+					$resource_cost[$resource_name]['dept_name'] = $dept_name;
+					if(count($value1)>0 && !empty($value1)){
+						foreach($value1 as $key2=>$value2) {
+							$year = $key2;
+							if(count($value2)>0 && !empty($value2)){
+								foreach($value2 as $key3=>$value3) {
+									$individual_billable_hrs		= 0;
+									$month		 	  = $key3;
+									if(count($value3)>0 && !empty($value3)){
+										foreach($value3 as $key4=>$value4) {
+											if($key4 != 'total_hours'){ 
+												$individual_billable_hrs = $value3['total_hours'];
+												$duration_hours			= $value4['duration_hours'];
+												$rate				 = $value4['rateperhr'];
+												$direct_rateperhr	 = $value4['direct_rateperhr'];
+												$rate1 = $rate;
+												$direct_rateperhr1 = $direct_rateperhr;
+												if($individual_billable_hrs>$max_hours){
+													//echo 'max'.$max_hours.'<br>';
+													$percentage = ($max_hours/$individual_billable_hrs);
+													$rate1 = number_format(($percentage*$rate),2);
+													$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+												}
+												$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
+												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
 											}
-											$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
-											$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
-											$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
-											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
 										}
 									}
 								}
 							}
 						}
 					}
-				}
-			}	 
+				}	 
+			}
 		}
-		}
-		//echo '<pre>';print_r($resource_cost);exit;
+		echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -512,9 +512,9 @@ class Service_dashboard_cron_beta extends crm_controller
 											$direct_rateperhr1 = $direct_rateperhr;
 											if($individual_billable_hrs>$max_hours){
 												//echo 'max'.$max_hours.'<br>';
-												$percentage = ($max_hours/$individual_billable_hrs);
-												$rate1 = number_format(($percentage*$rate),2);
-												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+												$percentage 		= ($max_hours/$individual_billable_hrs);
+												$rate1 				= number_format(($percentage*$rate),2);
+												$direct_rateperhr1 	= number_format(($percentage*$direct_rateperhr),2);
 											}
 											// $resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
 											// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$rate1);
@@ -530,7 +530,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			}	 
 		}
 		}
-		echo '<pre>';print_r($resource_cost);exit;
+		// echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
