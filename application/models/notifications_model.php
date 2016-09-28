@@ -12,6 +12,8 @@ class notifications_model extends crm_model {
 
 	function get_all_crons($search, $uid)
 	{
+		$default_days = 7; // show notification default for leads & task
+		
 		$this->db->select('c.cron_id, c.cron_name');
 		$this->db->from("{$this->cfg['dbpref']}" . 'crons c');
 		$this->db->order_by('c.cron_id', 'asc');
@@ -22,30 +24,36 @@ class notifications_model extends crm_model {
 		$this->db->where('cn.userid', $uid);
 		$this->db->order_by('cn.cron_id', 'asc');
 		$sql1 = $this->db->get();
-		// echo $this->db->last_query();
+		// echo $this->db->last_query(); exit;
 		$res = array();
-		$res['crons_all'] =  $sql->result_array();
-		$res['crons_stat'] =  $sql1->result_array();
+		$res['crons_all'] 	=  $sql->result_array();
+		$res['crons_stat'] 	=  $sql1->result_array();
 		
-		// echo "<pre>"; print_r($res);
-		
-		// foreach($res['crons_all'] as $resl)
 		for($i=0; $i<count($res['crons_all']);$i++)
 		{
 			$fin_res[$i] = $res['crons_all'][$i];
 
-			foreach($res['crons_stat'] as $resa)
+			if(is_array($res['crons_stat']) && !empty($res['crons_stat']) && count($res['crons_stat'])>0) 
 			{
-				if ($res['crons_all'][$i]['cron_id'] == $resa['cron_id'])
+				foreach($res['crons_stat'] as $resa)
 				{
-					$fin_res[$i]['onscreen_notify_status'] = $resa['onscreen_notify_status'];
-					$fin_res[$i]['email_notify_status'] = $resa['email_notify_status'];
-					$fin_res[$i]['no_of_days'] = $resa['no_of_days'];
+					if ($res['crons_all'][$i]['cron_id'] == $resa['cron_id'])
+					{
+						$fin_res[$i]['onscreen_notify_status'] 	= $resa['onscreen_notify_status'];
+						$fin_res[$i]['email_notify_status'] 	= $resa['email_notify_status'];
+						$fin_res[$i]['no_of_days'] 				= $resa['no_of_days'];
+					}
 				}
 			}
+			else
+			{
+				$fin_res[$i]['onscreen_notify_status'] 	= 1;
+				$fin_res[$i]['email_notify_status'] 	= 0;
+				$fin_res[$i]['no_of_days'] 				= $default_days;
+			}
+			
 		}
 		// echo "<pre>"; print_r($fin_res); exit;
-		
 		return $fin_res;
 	
     }

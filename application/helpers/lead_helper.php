@@ -38,6 +38,8 @@ if ( ! function_exists('get_notify_status') )
 {
 	function get_notify_status($cid)
 	{	
+		$default_days = 7; // show notification default for leads & task
+		
 		$CI=get_instance();
 		$userdata = $CI->session->userdata('logged_in_user');
 		$cfg = $CI->config->item('crm'); // load config
@@ -49,7 +51,8 @@ if ( ! function_exists('get_notify_status') )
 		$num = $sql->num_rows();
 		// echo $CI->db->last_query();
 		if ($num<1) {
-			return false;
+			// return false;
+			return $default_days;
 		} else { 
 			$res = $sql->row_array();
 			if ($res['onscreen_notify_status'] == 1)

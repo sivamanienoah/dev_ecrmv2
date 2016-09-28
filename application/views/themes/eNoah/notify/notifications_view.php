@@ -21,19 +21,17 @@ $userdata = $this->session->userdata('logged_in_user');
 		</thead>
 		<tbody>
 			<?php $i = 0; ?>
-			<?php //echo "<pre>"; print_r($getAllCrons);  ?>
+			<?php #echo "<pre>"; print_r($getAllCrons); echo "</pre>"; ?>
 			<?php foreach($getAllCrons as $cron) { ?>
 				<?php if (($cron['cron_id'] == 1) && ($viewLeads['view'] == 0)) { continue; } ?>
 				<?php if (($cron['cron_id'] == 2) && ($viewTasks['view'] == 0)) { continue; } ?>
 				<tr>
 					<td class="actions">
-						<?php //if($this->session->userdata('edit')==1) { ?>
-							<a href="notifications/crons_edit/update/<?php echo $cron['cron_id'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'> </a> 
-						<?php //} else { echo "-"; } ?>
+						<a href="notifications/crons_edit/update/<?php echo $cron['cron_id'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'> </a> 
 					</td>
 					<td><?php echo $cron['cron_name']; ?></td>
-					<td><?php if ($cron['onscreen_notify_status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
-					<td><?php if ($cron['email_notify_status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
+					<td><?php if (isset($cron['onscreen_notify_status']) && $cron['onscreen_notify_status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
+					<td><?php if (isset($cron['email_notify_status']) && $cron['email_notify_status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
 					<td><?php echo $cron['no_of_days']; ?></td>
 				</tr>
 			<?php $i++; } ?>

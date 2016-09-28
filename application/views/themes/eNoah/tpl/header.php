@@ -3,27 +3,28 @@ $this->load->helper('text');
 $this->load->helper('lead');
 $cfg = $this->config->item('crm');
 
-$show_notify = false;
+/*for notification - bell*/
+$show_notify 		 = false;
+$proposal_notify_msg = array();
+$task_notify_msg	 = array();
 
 if ($this->session->userdata('logged_in') == TRUE) {
 	$vid=$this->session->userdata['logged_in_user']['role_id'];
-	$viewLeads = getAccess(51, $vid);
-	$viewEnquiries = getAccess(130, $vid);
-	$viewTasks = getAccess(108, $vid);
-	$viewPjts  = getAccess(110, $vid);
+	$viewLeads 		= getAccess(51, $vid);
+	$viewEnquiries 	= getAccess(130, $vid);
+	$viewTasks 		= getAccess(108, $vid);
+	$viewPjts  		= getAccess(110, $vid);
 
-	// for floating div
+	// for floating div -- changed to bell icon
 	$proposal_notify_status = get_notify_status(1);
-	$proposal_notify_msg 	= array();
 	if($proposal_notify_status) {
 		$proposal_notify_msg = proposal_expect_end_msg($proposal_notify_status);
 	}
 	$task_notify_status = get_notify_status(2);
-	$task_notify_msg 	= array();
 	if($task_notify_status) {
 		$task_notify_msg = task_end_msg($task_notify_status);
 	}
-	// for floating div
+	// for floating div -- changed to bell icon
 }
 if ($this->session->userdata('logged_in') == TRUE) {
  	$userdata 		= $this->session->userdata('logged_in_user');
