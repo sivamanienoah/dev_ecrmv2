@@ -377,7 +377,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}	 
 			}
 		}
-		// echo '<pre>';print_r($resource_cost);exit;
+		echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
