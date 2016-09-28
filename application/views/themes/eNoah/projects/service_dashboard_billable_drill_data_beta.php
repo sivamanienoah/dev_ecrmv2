@@ -56,7 +56,7 @@ $tot_directcost = 0;
 
 $timesheet_data = array();
 if(count($resdata)>0) {
-	$rates = $this->report_lead_region_model->get_currency_rates_new();
+	// $rates = $this->report_lead_region_model->get_currency_rates_new();
 	foreach($resdata as $rec) {	
 		$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 		$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
