@@ -151,7 +151,6 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		ECHO "<PRE>"; print_r($projects['othercost_projects']); exit;
 		
 		//need to calculate for the total IR
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
@@ -612,8 +611,8 @@ class Service_dashboard_cron_beta extends crm_controller
 			$ins_data['month_status'] = 1;
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
+			
 			foreach($practice_array as $parr){
-				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';		
 				
 				/**other cost data*/
 				$other_cost_val = 0;
@@ -622,8 +621,22 @@ class Service_dashboard_cron_beta extends crm_controller
 						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$other_cost_val += $val;
 					}
-					$projects['other_cost'][$parr] = $other_cost_val;
+					echo $projects['other_cost'][$parr] = $other_cost_val . "<br/>";
 				}
+			}
+			exit;
+			foreach($practice_array as $parr){
+				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';		
+				
+				/**other cost data*/
+				/* $other_cost_val = 0;
+				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
+					foreach($projects['othercost_projects'][$parr] as $pro_id) {
+						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
+						$other_cost_val += $val;
+					}
+					$projects['other_cost'][$parr] = $other_cost_val;
+				} */
 				/**other cost data*/
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
