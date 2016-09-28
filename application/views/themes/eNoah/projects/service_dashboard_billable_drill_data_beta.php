@@ -101,10 +101,10 @@ if(count($resdata)>0) {
 										$direct_rateperhr1 = $direct_rateperhr;
 										if($individual_billable_hrs>$max_hours){
 											//echo 'max'.$max_hours.'<br>';
-											$percentage = ($max_hours/$individual_billable_hrs);
+											$percentage 		= ($max_hours/$individual_billable_hrs);
 											// $rate1 				= number_format(($percentage*$rate),2);
 											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
-											$direct_rateperhr1 	= number_format(($percentage*$direct_rateperhr),2);
+											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
 										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
