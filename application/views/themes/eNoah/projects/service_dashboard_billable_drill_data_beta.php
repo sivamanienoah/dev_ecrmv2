@@ -107,7 +107,8 @@ if(count($resdata)>0) {
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
-										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
+										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
+										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
 										$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
 									}
 								}
