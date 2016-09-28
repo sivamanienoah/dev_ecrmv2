@@ -392,8 +392,8 @@ class Service_dashboard_cron_beta extends crm_controller
 									foreach($array3 as $project_code => $array4){
 										//$available_projects[] = $project_code;
 										$duration_hours = $array4['duration_hours'];
-										$total_cost = $array4['total_cost'];
-										$total_dc_cost = $array4['total_dc_cost'];
+										$total_cost 	= $array4['total_cost'];
+										$total_dc_cost 	= $array4['total_dc_cost'];
 										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
 										// $cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
 									}
