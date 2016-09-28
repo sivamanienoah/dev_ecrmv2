@@ -514,7 +514,8 @@ class Service_dashboard_cron_beta extends crm_controller
 											if($individual_billable_hrs>$max_hours){
 												//echo 'max'.$max_hours.'<br>';
 												$percentage 		= ($max_hours/$individual_billable_hrs);
-												$rate1 				= number_format(($percentage*$rate),2);
+												// $rate1 				= number_format(($percentage*$rate),2);
+												$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 												$direct_rateperhr1 	= number_format(($percentage*$direct_rateperhr),2);
 											}
 											// $resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
@@ -615,10 +616,10 @@ class Service_dashboard_cron_beta extends crm_controller
 				/**other cost data*/
 				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
-					foreach($projects['othercost_projects'][$parr] as $pro_id) {
+					/* foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$other_cost_val += $val;
-					}
+					} */
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
