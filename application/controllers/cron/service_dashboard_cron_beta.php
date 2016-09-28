@@ -377,7 +377,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}	 
 			}
 		}
-		echo '<pre>';print_r($resource_cost);exit;
+		// echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -404,7 +404,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1);echo 'cm_direct cost'.'<br>';print_r($cm_directcost1);
+		echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1);echo 'cm_direct cost'.'<br>';print_r($cm_directcost1); exit;
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
