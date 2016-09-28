@@ -612,7 +612,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
 			
-			foreach($practice_array as $parr){
+			foreach($practice_array as $parr){ echo $parr; exit;
 				
 				/**other cost data*/
 				$other_cost_val = 0;
