@@ -2574,7 +2574,7 @@ class Dashboard extends crm_controller
 		// $this->db->where('l.lead_id', 710); // for temporary - load some data only
 		// $this->db->limit(3); // for temporary - load some data only
 		$query 					= $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   	= $query->result();
 		
 		// get all projects from timesheet
