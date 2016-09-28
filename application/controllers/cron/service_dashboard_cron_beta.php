@@ -293,8 +293,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		$query = $this->db->get();		
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 		## code starts here##
@@ -361,6 +360,7 @@ class Service_dashboard_cron_beta extends crm_controller
 												if($individual_billable_hrs>$max_hours){
 													//echo 'max'.$max_hours.'<br>';
 													$percentage 		= ($max_hours/$individual_billable_hrs);
+													// $rate1 				= number_format(($percentage*$rate),2);
 													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 												}
@@ -447,7 +447,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();
+		$query = $this->db->get();		
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 
