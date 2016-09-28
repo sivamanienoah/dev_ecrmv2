@@ -293,7 +293,8 @@ class Service_dashboard_cron_beta extends crm_controller
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();		
+		$query = $this->db->get();
+		echo $this->db->last_query(); exit;
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 		## code starts here##
@@ -446,7 +447,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();		
+		$query = $this->db->get();
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 
