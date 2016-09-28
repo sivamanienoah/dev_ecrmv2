@@ -404,7 +404,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1); exit;
+		// echo '<pre>';echo 'direct cost'.'<br>';print_r($directcost1); exit;
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
