@@ -57,7 +57,8 @@ $tot_directcost = 0;
 $timesheet_data = array();
 if(count($resdata)>0) {
 	$rates = $this->report_lead_region_model->get_currency_rates_new();
-	foreach($resdata as $rec) {		
+	echo "<pre>"; print_r($rates); die;
+	foreach($resdata as $rec) {	
 		$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 		$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 		
@@ -65,7 +66,7 @@ if(count($resdata)>0) {
 		$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
 		$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
 		
-		$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+		$rateCostPerHr 		 = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 		//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
@@ -93,8 +94,8 @@ if(count($resdata)>0) {
 									if($key4 != 'total_hours'){ 
 										$individual_billable_hrs = $value3['total_hours'];
 										$duration_hours			= $value4['duration_hours'];
-										$rate				 = $value4['rateperhr'];
-										$direct_rateperhr	 = $value4['direct_rateperhr'];
+										$rate				 	= $value4['rateperhr'];
+										$direct_rateperhr	 	= $value4['direct_rateperhr'];
 										$rate1 = $rate;
 										$direct_rateperhr1 = $direct_rateperhr;
 										if($individual_billable_hrs>$max_hours){
@@ -167,8 +168,8 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								else
 								$sub_tot[$project_code][$resourceName]['directcost'] = $total_dc_cost;							
 							
-								$tot_hour = $tot_hour + $duration_hours;
-								$tot_cost = $tot_cost + $total_cost;
+								$tot_hour 		= $tot_hour + $duration_hours;
+								$tot_cost 		= $tot_cost + $total_cost;
 								$tot_directcost = $tot_directcost + $total_dc_cost;
 								
 								$cost_arr[$resourceName] = $rec->cost_per_hour;
