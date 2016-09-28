@@ -2545,7 +2545,6 @@ class Dashboard extends crm_controller
 	*/
 	public function get_direct_cost_val($practice, $month=false, $start_date=false, $end_date=false)
 	{
-
 		/* $contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_data 
 		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')"; */
@@ -2575,6 +2574,7 @@ class Dashboard extends crm_controller
 		// $this->db->where('l.lead_id', 710); // for temporary - load some data only
 		// $this->db->limit(3); // for temporary - load some data only
 		$query 					= $this->db->get();
+		echo $this->db->last_query(); exit;
 		$data['resdata'] 	   	= $query->result();
 		
 		// get all projects from timesheet
