@@ -59,6 +59,7 @@ class Service_dashboard_cron_beta extends crm_controller
 	
 	public function index() 
 	{
+		
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
 		$data  				  = array();
@@ -150,6 +151,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
+		ECHO "<PRE>"; print_r($projects['othercost_projects']); exit;
 		
 		//need to calculate for the total IR
 		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
@@ -616,10 +618,10 @@ class Service_dashboard_cron_beta extends crm_controller
 				/**other cost data*/
 				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
-					/* foreach($projects['othercost_projects'][$parr] as $pro_id) {
+					foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$other_cost_val += $val;
-					} */
+					}
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
