@@ -190,7 +190,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-echo "<pre>"; print_r($sub_tot); exit;
+// echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
 //calculating the other cost
