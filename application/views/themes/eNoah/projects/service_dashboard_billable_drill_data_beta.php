@@ -258,6 +258,7 @@ if(!empty($sub_tot)) {
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
 		// echo '<pre>';print_r($sort_ar); exit;
+		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
 			// $other_cost_val = getOtherCostByProjectId($p_name, $this->default_cur_id);
 			$other_cost_val = $other_cost_arr[$p_name];
