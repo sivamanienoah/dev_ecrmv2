@@ -73,7 +73,7 @@ if(count($resdata)>0) {
 		//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
+		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 		$timesheet_data[$rec->username]['empname'] = $rec->empname;
 	}
 	$resource_cost = array();	
@@ -102,8 +102,8 @@ if(count($resdata)>0) {
 										if($individual_billable_hrs>$max_hours){
 											//echo 'max'.$max_hours.'<br>';
 											$percentage 		= ($max_hours/$individual_billable_hrs);
-											// $rate1 				= number_format(($percentage*$rate),2);
-											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+											$rate1 				= number_format(($percentage*$rate),2);
+											// $rate1 				= number_format(($percentage*$direct_rateperhr),2);
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
