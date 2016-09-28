@@ -612,14 +612,14 @@ class Service_dashboard_cron_beta extends crm_controller
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
 			
-			foreach($practice_array as $parr){ echo $parr; exit;
+			foreach($practice_array as $parr){
 				
 				/**other cost data*/
 				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
-						echo $val . "<br />";
+						echo $val . " ".$parr. "<br />";
 						$other_cost_val += $val;
 					}
 					echo $projects['other_cost'][$parr] = $other_cost_val . "<br/>";
