@@ -4305,7 +4305,6 @@ HDOC;
 
 		$data['project_costs'] = array();
 		if(!empty($data['timesheet_data'])) {
-			// echo "<pre>"; print_r($data['timesheet_data']); exit;
 			$res = $this->calcActualProjectCost($data['timesheet_data']);
 			if($res['total_cost']>0) {
 				$data['project_costs'] = $res['total_cost'];
