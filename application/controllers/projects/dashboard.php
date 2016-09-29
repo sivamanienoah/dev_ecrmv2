@@ -1938,12 +1938,13 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'dc_value':
+				$data = array();
 				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
 				$data['crm_data']		= $res;
 				
-				// echo "<pre>"; print_r($data['othercost_projects']); die;
+				echo "<pre>"; print_r($data); die;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
