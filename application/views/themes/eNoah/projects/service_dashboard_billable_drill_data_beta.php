@@ -4,7 +4,7 @@
 <div class="clear"></div>
 <?php
 error_reporting(E_ALL);
-echo "<pre>"; print_r($othercost_projects); exit;
+// echo "<pre>"; print_r($othercost_projects); exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
     $new_array = array();
@@ -191,7 +191,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-// echo "<pre>"; print_r($sub_tot); exit;
+echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
 //calculating the other cost
