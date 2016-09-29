@@ -586,7 +586,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		## code month contribution ends here##
 		
 		
-		echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
+		// echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
 		
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
