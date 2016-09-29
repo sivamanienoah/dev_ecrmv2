@@ -199,7 +199,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
 // echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
 
-echo "<pre>"; print_r($sub_tot); echo "***** <br/>";
+echo "<pre>"; print_r($sub_tot);
 
 /*include the other cost value project to timesheet projects*/
 // [sub_tot_hour] => 59
@@ -212,7 +212,6 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 		$sub_tot[$crmPjtName]['sub_tot_directcost'] = 0;
 	}
 }
-print_r($sub_tot); exit;
 
 $other_cost_arr = array();
 
@@ -229,14 +228,14 @@ if(!empty($sub_tot)) {
 	}
 }
 /**including the other cost values crm projects only & not in timesheet**/
-if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
+/* if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
 	foreach($resource_cost_not_value_project as $crmPjtName) {
 		$other_cost_val = getOtherCostByProjectId($crmPjtName, $this->default_cur_id);
 		$other_cost_arr[$crmPjtName]['detail'] 	 = $other_cost_val['det'];
 		$other_cost_arr[$crmPjtName]['value']    = $other_cost_val['value'];
 		$other_cost_arr['other_cost_total'] 	+= $other_cost_val['value'];
 	}
-}
+} */
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
 echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
