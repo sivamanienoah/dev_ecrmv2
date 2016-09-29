@@ -1865,7 +1865,7 @@ class Dashboard extends crm_controller
 		$query = $this->db->get();
 		$res = $query->result_array();
 		
-		echo "<pre>"; print_r($res); die;
+		// echo "<pre>"; print_r($res); die;
 		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -1943,7 +1943,7 @@ class Dashboard extends crm_controller
 				//*For Other cost project only*//
 				if(!empty($res) && count($res)>0) {
 					foreach($res as $row) {
-						if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
+						if (isset($data['practicewise'][$practice_arr[$row['practice']]])) {
 							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 						} else {
 							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
