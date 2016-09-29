@@ -223,7 +223,8 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 		$other_cost_arr['other_cost_total'] 	+= $other_cost_val['value'];
 	}
 }
-$tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
+echo $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
+exit;
 echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
 <div class="page-title-head">
