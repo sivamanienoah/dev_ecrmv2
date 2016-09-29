@@ -42,11 +42,11 @@ $(function() {
 			export_proj_type = 'number';
 		}
 		
-		var stage = $('#pjt_stage').val();
-		// var pm    = $('#pm_acc').val();
-		var customers = $('#customer1').val();
+		var stage 		= $('#pjt_stage').val();
+		// var pm   	= $('#pm_acc').val();
+		var customers 	= $('#customer1').val();
 		var service 	= $('#services').val();
-		var practice = $('#practices').val();
+		var practice 	= $('#practices').val();
 		var datefilter  = $("#datefilter").val();
 		var from_date   = $("#from_date").val();
 		var to_date  	= $("#to_date").val();
