@@ -11,6 +11,7 @@ class Dashboard extends crm_controller
         $this->load->helper('custom');
         $this->load->library('validation');
 		$this->load->helper('custom_helper');
+		$this->load->helper('lead_stage_helper');
 		$this->load->helper('url'); 
 		$this->load->model('projects/dashboard_model');
 		$this->load->model('report/report_lead_region_model');
@@ -2288,11 +2289,6 @@ class Dashboard extends crm_controller
 				
 				$bill_type = 1;
 				
-				if(!empty($rec['pjt_id'])){
-					$timesheet = $this->project_model->get_timesheet_data_updated($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
-					echo $this->db->last_query(); die;
-				}
-				
 				$total_amount_inv_raised = 0;
 				$invoice_amount = $this->project_model->get_invoice_total($rec['lead_id']);
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
@@ -2300,6 +2296,10 @@ class Dashboard extends crm_controller
 				}
 
 				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
+				
+				if(!empty($rec['pjt_id'])){
+					$timesheet = $this->project_model->get_timesheet_data_updated($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
+				}
 				
 				$total_billable_hrs 	= 0;
 				$total_internal_hrs 	= 0;
