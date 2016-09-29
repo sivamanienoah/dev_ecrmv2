@@ -2188,7 +2188,6 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				echo "<pre> adsfasdf"; print_r($data['othercost_projects']); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
 			break;
 			case 'fixedbid':
