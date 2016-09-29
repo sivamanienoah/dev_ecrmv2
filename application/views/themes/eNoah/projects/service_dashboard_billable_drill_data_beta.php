@@ -134,8 +134,12 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 							$duration_hours = 0;
 							$total_cost 	= 0;
 							$total_dc_cost 	= 0;
+							$timesheet_projects = array();
 							foreach($array3 as $project_code => $array4){
 								$available_projects[] = $project_code;
+								if(!in_array($project_code, $timesheet_projects)) {
+									$timesheet_projects[] = $project_code;
+								}								
 								$duration_hours = $array4['duration_hours'];
 								$total_cost 	= $array4['total_cost'];
 								$total_dc_cost 	= $array4['total_dc_cost'];
