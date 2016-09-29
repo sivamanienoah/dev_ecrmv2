@@ -617,13 +617,13 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				/**other cost data*/
 				$other_cost_val = 0;
-				/* if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
+				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$other_cost_val += $val;
 					}
 					$projects['other_cost'][$parr] = $other_cost_val;
-				} */
+				}
 				/**other cost data*/
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
