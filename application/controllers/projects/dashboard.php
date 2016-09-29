@@ -1875,8 +1875,8 @@ class Dashboard extends crm_controller
 				$practice_arr[$prow1->id] = $prow1->practices;
 			}
 		}
-
-		switch($clicktype){
+		
+		switch($clicktype) {
 			case 'noprojects':
 				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
 				$this->db->select('project_billing_type, id');
@@ -1937,8 +1937,7 @@ class Dashboard extends crm_controller
 				$data['practices_id'] = $practice;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
-			case 'dc_value':
-				echo "dc_Vauie" exit;
+			case 'dc_value': echo "dc_Vauie"; exit;
 				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
