@@ -195,8 +195,8 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-echo "<pre>"; print_r($timesheet_projects); exit;
-echo "<pre>"; print_r($sub_tot); exit;
+// echo "<pre>"; print_r($timesheet_projects); exit;
+// echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
 //calculating the other cost
@@ -204,14 +204,15 @@ $other_cost_arr = array();
 if(!empty($sub_tot)) {
 	$other_cost_arr['other_cost_total'] = 0;
 	foreach($sub_tot as $pname=>$pvals) {
+		echo $pname . "<br>";
 		$other_cost_val = getOtherCostByProjectId($pname, $this->default_cur_id);
-		$other_cost_arr[$pname]['detail']  = $other_cost_val['det'];
-		$other_cost_arr[$pname]['value']   = $other_cost_val['value'];
+		$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
+		$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
 		$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
 	}
 }
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
-// echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
+// echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
