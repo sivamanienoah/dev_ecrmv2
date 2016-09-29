@@ -196,7 +196,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 	}
 }
 $resource_cost_not_value_project = array_diff($othercost_projects, $timesheet_projects);
-print_r($resource_cost_not_value_project); exit;
+echo "<pre>"; print_r($resource_cost_not_value_project); exit;
 // echo "<pre>"; print_r($timesheet_projects); exit;
 // echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
