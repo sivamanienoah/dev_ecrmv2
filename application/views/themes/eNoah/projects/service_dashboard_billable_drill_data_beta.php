@@ -265,14 +265,21 @@ if(!empty($sub_tot)) {
 		//asort($sub_tot);
 
 		
-		function cmp($a, $b) {
+		/* function cmp($a, $b) {
 			if ($a['sub_tot_hour'] == $b['sub_tot_hour']) {
 				return 0;
 			}
 			return ($a['sub_tot_hour'] > $b['sub_tot_hour']) ? -1 : 1;
+		}  */
+		
+		function cmp($a, $b) {
+			if ($a['sub_tot_directcost'] == $b['sub_tot_directcost']) {
+				return 0;
+			}
+			return ($a['sub_tot_directcost'] > $b['sub_tot_directcost']) ? -1 : 1;
 		} 
 
-		// uasort($sub_tot, 'cmp');	
+		uasort($sub_tot, 'cmp');
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
 		// echo '<pre>';print_r($sort_ar); exit;
