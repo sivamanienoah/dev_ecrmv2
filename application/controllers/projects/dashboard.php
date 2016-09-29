@@ -2330,7 +2330,7 @@ class Dashboard extends crm_controller
 					
 					}
 				}
-				echo "<pre>"; print_r($timesheet_data); die;
+				// echo "<pre>"; print_r($timesheet_data); die;
 				$total_billable_hrs		= 0;
 				$total_non_billable_hrs = 0;
 				$total_internal_hrs		= 0;
@@ -2429,6 +2429,28 @@ class Dashboard extends crm_controller
 			}
 		}
 		return $data['project_record'];
+	}
+	
+	/*
+	*get all other cost values from the db & sum it
+	*base currency
+	*/
+	function getOtherCostValues($project_id)
+	{
+		$this->load->model('project_model');
+		$value = 0;
+		$bk_rates = get_book_keeping_rates(); //get all the book keeping rates
+		$other_cost_data = $this->project_model->getOtherCost($project_id);
+		if(!empty($other_cost_data) && count($other_cost_data)>0) {
+			foreach($other_cost_data as $rec) {
+				$conver_value  = 0;
+				$curFiscalYear = date('Y'); //set as default current year as fiscal year
+				$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+				$convert_value = $this->conver_currency($rec['value'], $bk_rates[$curFiscalYear][$rec['currency_type']][$this->default_cur_id]);
+				$value += $convert_value;
+			}
+		}		
+		return $value;
 	}
 	
 	public function getIRData($records, $start_date, $end_date, $practice)
