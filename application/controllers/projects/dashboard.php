@@ -1944,14 +1944,14 @@ class Dashboard extends crm_controller
 				
 				if(!empty($res) && count($res)>0) {
 					foreach($res as $row) {
-						if (isset($data['practicewise'][$practice_arr[$practice]])) {
+						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {
 							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 						} else {
 							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 						}
 					}
 				}
-				// echo "<pre>"; print_r($data['othercost_projects']); die;
+				echo "<pre>"; print_r($data['othercost_projects']); die;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'fixedbid':
