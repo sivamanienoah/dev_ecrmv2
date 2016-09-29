@@ -181,7 +181,7 @@ if(!empty($project_type) && count($project_type)>0){
 				<th title="Effort Variance">EV</th>
 				<th title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
 				<th title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
-				<th title="Direct Cost">DC(<?php echo $default_cur_name; ?>)</th>
+				<th title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
 				<th title="Total Utilization Cost">TUC(<?php echo $default_cur_name; ?>)</th>
 				<th title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 				<th title="Contribution Percentage">Contribution %</th>
@@ -199,7 +199,7 @@ if(!empty($project_type) && count($project_type)>0){
 				<th <?php echo $td_ev; ?> title="Effort Variance">EV</th>
 				<th <?php echo $td_pv; ?> title="Project Value">PV(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_uc; ?> title="Resource Cost">RC(<?php echo $default_cur_name; ?>)</th>
-				<th <?php echo $td_dc; ?> title="Direct Cost">DC(<?php echo $default_cur_name; ?>)</th>
+				<th <?php echo $td_dc; ?> title="Other Cost">OC(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_uc; ?> title="Total Utilization Cost">TUC(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_ir; ?> title="Invoice Raised">IR(<?php echo $default_cur_name; ?>)</th>
 				<th <?php echo $td_contrib; ?> title="Contribution Percentage">Contribution %</th>
