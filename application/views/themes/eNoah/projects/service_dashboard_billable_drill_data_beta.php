@@ -16,7 +16,7 @@ if(!empty($pres1) && count($pres1)>0){
 		$practice_arry[$prow1->id] = $prow1->practices;
 	}
 }
-
+echo "<pre>"; print_r($crm_data); die;
 $othercost_projects = array();
 if(!empty($crm_data) && count($crm_data)>0) {
 	foreach($crm_data as $row) {
