@@ -4,7 +4,6 @@
 <div class="clear"></div>
 <?php
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-echo $practices_name; exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
     $new_array = array();
@@ -196,7 +195,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 	}
 }
 //**Get the other cost value projects only**//
-$resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
+$resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
 
 /**including the other cost values crm projects only & not in timesheet**/
 if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
