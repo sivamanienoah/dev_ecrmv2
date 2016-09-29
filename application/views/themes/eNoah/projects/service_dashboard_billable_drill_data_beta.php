@@ -199,12 +199,9 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
 // echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
 
-echo "<pre>"; print_r($sub_tot);
+// echo "<pre>"; print_r($sub_tot);
 
-/*include the other cost value project to timesheet projects*/
-// [sub_tot_hour] => 59
-// [sub_tot_cost] => 417.15
-// [sub_tot_directcost] => 417.15
+/**including the other cost values crm projects only & not in timesheet**/
 if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
 	foreach($resource_cost_not_value_project as $crmPjtName) {
 		$sub_tot[$crmPjtName]['sub_tot_hour'] 		= 0;
@@ -216,28 +213,19 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 $other_cost_arr = array();
 
 //calculating the other cost
-// echo "<pre>"; print_r($sub_tot); echo "</pre>";
-//Including the other cost values to timesheet projects//
 $other_cost_arr['other_cost_total'] = 0;
 if(!empty($sub_tot)) {
 	foreach($sub_tot as $pname=>$pvals) {
-		$other_cost_val = getOtherCostByProjectId($pname, $this->default_cur_id);
+		$other_cost_val 					 = getOtherCostByProjectId($pname, $this->default_cur_id);
 		$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
 		$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
 		$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
 	}
 }
-/**including the other cost values crm projects only & not in timesheet**/
-/* if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
-	foreach($resource_cost_not_value_project as $crmPjtName) {
-		$other_cost_val = getOtherCostByProjectId($crmPjtName, $this->default_cur_id);
-		$other_cost_arr[$crmPjtName]['detail'] 	 = $other_cost_val['det'];
-		$other_cost_arr[$crmPjtName]['value']    = $other_cost_val['value'];
-		$other_cost_arr['other_cost_total'] 	+= $other_cost_val['value'];
-	}
-} */
-$tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
-echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
+
+echo $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
+// echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
+exit;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
