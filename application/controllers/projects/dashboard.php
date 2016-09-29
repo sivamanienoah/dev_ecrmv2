@@ -1865,6 +1865,8 @@ class Dashboard extends crm_controller
 		$query = $this->db->get();
 		$res = $query->result_array();
 		
+		echo "<pre>"; print_r($res); die;
+		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
 		$this->db->where('p.status', 1);
