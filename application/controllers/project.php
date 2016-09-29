@@ -601,7 +601,7 @@ class Project extends crm_controller {
 			**/
 			$data['timesheet_variance'] = '';
 			$timesheet_db = $this->load->database('timesheet', TRUE);		
-			echo $project_code_ts = $data['quote_data']['pjt_id']; exit;
+			$project_code_ts = $data['quote_data']['pjt_id'];
 		
 			$qry_pv = $timesheet_db->query("SELECT tt.task_id,tt.name as taskName, sum(pte.prj_task_hours) As EstimatedHours, pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,(select sum(tim.duration)/60 from ".$timesheet_db->dbprefix('times')." As tim where tim.proj_id = tt.proj_id and tim.task_id = tt.task_id) As actualHours from ".$timesheet_db->dbprefix('task')." AS tt LEFT JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.task_id = tt.task_id LEFT JOIN ".$timesheet_db->dbprefix('project_estimation')." AS pe ON pe.prj_est_id = pte.prj_est_id  left join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = tt.proj_id WHERE prj.project_code='".$project_code_ts."' group by tt.task_id");
 			//echo $timesheet_db->last_query();exit;
@@ -690,6 +690,7 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}
+			echo "vere"; exit;
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
