@@ -1,7 +1,7 @@
 <?php 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 class Dashboard extends crm_controller 
 {
 	function Dashboard()
