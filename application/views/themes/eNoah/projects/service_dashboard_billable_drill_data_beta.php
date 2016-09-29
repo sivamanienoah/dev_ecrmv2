@@ -247,7 +247,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost =  $calc_tot_othercost = 0;
-echo '<pre>';print_r($sub_tot); exit;
+// echo '<pre>';print_r($sub_tot); exit;
 if(!empty($sub_tot)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
@@ -263,22 +263,12 @@ if(!empty($sub_tot)) {
 			</tr>";
 		//foreach($tbl_data as $projectCode => $proj_ar) {
 		//asort($sub_tot);
-
-		
-		/* function cmp($a, $b) {
+		function cmp($a, $b) {
 			if ($a['sub_tot_hour'] == $b['sub_tot_hour']) {
 				return 0;
 			}
 			return ($a['sub_tot_hour'] > $b['sub_tot_hour']) ? -1 : 1;
-		}  */
-		
-		function cmp($a, $b) {
-			if ($a['sub_tot_directcost'] == $b['sub_tot_directcost']) {
-				return 0;
-			}
-			return ($a['sub_tot_directcost'] > $b['sub_tot_directcost']) ? -1 : 1;
 		} 
-
 		uasort($sub_tot, 'cmp');
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
