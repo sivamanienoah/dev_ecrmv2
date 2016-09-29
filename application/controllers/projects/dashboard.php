@@ -1940,6 +1940,17 @@ class Dashboard extends crm_controller
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
 			break;
 			case 'dc_value':
+				//*For Other cost project only*//
+				if(!empty($res) && count($res)>0) {
+					foreach($res as $row) {
+						if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
+							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
+						} else {
+							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
+						}
+					}
+				}
+				//*For Other cost project only*//
 				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
