@@ -3,7 +3,7 @@
 </style>
 <div class="clear"></div>
 <?php
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 // echo "<pre>"; print_r($othercost_projects); exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
