@@ -195,11 +195,8 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-// echo "<pre>"; print_r($timesheet_projects); echo "</pre>";
+//**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
-// echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
-
-// echo "<pre>"; print_r($sub_tot);
 
 /**including the other cost values crm projects only & not in timesheet**/
 if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
@@ -223,9 +220,8 @@ if(!empty($sub_tot)) {
 	}
 }
 
-echo $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
+$tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
 // echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
-exit;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
