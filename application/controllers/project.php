@@ -539,7 +539,7 @@ class Project extends crm_controller {
 
 			$data['project_costs'] = array();
 			
-			if(!empty($data['timesheet_data'])) {
+			if(!empty($data['timesheet_data'])) { echo "dfdf"; exit;
 				// $res = $this->calcActualProjectCost($data['timesheet_data']);
 				$res = $this->calcActualProjectCostBaseCurrency($data['timesheet_data'], $data['quote_data']['expect_worth_id']);
 				if($res['total_cost']>0) {
