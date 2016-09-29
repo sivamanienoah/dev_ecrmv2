@@ -124,6 +124,7 @@ if(count($resdata)>0) {
 }	
 // echo '<pre>';print_r($resource_cost); die;
 if(count($resource_cost)>0 && !empty($resource_cost)){
+	$timesheet_projects = array();
 	foreach($resource_cost as $resourceName => $array1){
 		$dept_name = $resource_cost[$resourceName]['dept_name'];
 		if(count($array1)>0 && !empty($array1)){
@@ -134,7 +135,6 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 							$duration_hours = 0;
 							$total_cost 	= 0;
 							$total_dc_cost 	= 0;
-							$timesheet_projects = array();
 							foreach($array3 as $project_code => $array4){
 								$available_projects[] = $project_code;
 								if(!in_array($project_code, $timesheet_projects)) {
