@@ -539,7 +539,7 @@ class Project extends crm_controller {
 
 			$data['project_costs'] = array();
 			
-			if(!empty($data['timesheet_data'])) { echo "dfdf"; exit;
+			if(!empty($data['timesheet_data'])) {
 				// $res = $this->calcActualProjectCost($data['timesheet_data']);
 				$res = $this->calcActualProjectCostBaseCurrency($data['timesheet_data'], $data['quote_data']['expect_worth_id']);
 				if($res['total_cost']>0) {
@@ -550,10 +550,10 @@ class Project extends crm_controller {
 					$data['actual_hour_data'] = $res['total_hours'];
 				}
 			}
-			echo "test"; exit;
+
 			/*get the other cost*/
 			// $data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $this->default_cur_id);
-			$data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $data['quote_data']['expect_worth_id']);
+			echo $data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $data['quote_data']['expect_worth_id']); exit;
 		
 			//Intially Get all the Milestone data
 			$data['milestone_data'] = $this->project_model->get_milestone_terms($id);
