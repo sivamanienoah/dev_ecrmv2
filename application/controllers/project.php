@@ -541,16 +541,16 @@ class Project extends crm_controller {
 			
 			if(!empty($data['timesheet_data'])) {
 				// $res = $this->calcActualProjectCost($data['timesheet_data']);
-				echo $res = $this->calcActualProjectCostBaseCurrency($data['timesheet_data'], $data['quote_data']['expect_worth_id']); exit;
+				$res = $this->calcActualProjectCostBaseCurrency($data['timesheet_data'], $data['quote_data']['expect_worth_id']);
 				if($res['total_cost']>0) {
 					// $data['project_costs'] = $this->conver_currency($res['total_cost'], $rates[1][$data['quote_data']['expect_worth_id']]);
-					echo $data['project_costs'] = $res['total_cost']; exit;
+					$data['project_costs'] = $res['total_cost'];
 				}
 				if($res['total_hours']>0) {
 					$data['actual_hour_data'] = $res['total_hours'];
 				}
 			}
-			
+			echo "test"; exit;
 			/*get the other cost*/
 			// $data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $this->default_cur_id);
 			$data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $data['quote_data']['expect_worth_id']);
