@@ -195,28 +195,32 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-echo "<pre>"; print_r($timesheet_projects); echo "</pre>";
+// echo "<pre>"; print_r($timesheet_projects); echo "</pre>";
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
-echo "<pre>"; print_r($resource_cost_not_value_project); exit;
+echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
 
 // echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
 //calculating the other cost
 // echo "<pre>"; print_r($sub_tot); echo "</pre>";
+//Including the other cost values to timesheet projects//
+$other_cost_arr['other_cost_total'] = 0;
 if(!empty($sub_tot)) {
-	$other_cost_arr['other_cost_total'] = 0;
 	foreach($sub_tot as $pname=>$pvals) {
-		echo $pname . "<br>";
-		if(in_array($pname, $othercost_projects)){
-			$other_cost_val = getOtherCostByProjectId($pname, $this->default_cur_id);
-			$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
-			$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
-			$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
-		} else {
-			
-		}
-		
+		$other_cost_val = getOtherCostByProjectId($pname, $this->default_cur_id);
+		$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
+		$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
+		$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
+	}
+}
+/**including the other cost values crm projects only & not in timesheet**/
+if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
+	foreach($resource_cost_not_value_project as $crmPjtName) {
+		$other_cost_val = getOtherCostByProjectId($crmPjtName, $this->default_cur_id);
+		$other_cost_arr[$crmPjtName]['detail'] 	 = $other_cost_val['det'];
+		$other_cost_arr[$crmPjtName]['value']    = $other_cost_val['value'];
+		$other_cost_arr['other_cost_total'] 	+= $other_cost_val['value'];
 	}
 }
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
