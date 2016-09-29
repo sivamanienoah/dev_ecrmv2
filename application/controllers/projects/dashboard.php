@@ -2290,6 +2290,7 @@ class Dashboard extends crm_controller
 				
 				if(!empty($rec['pjt_id'])){
 					$timesheet = $this->project_model->get_timesheet_data_updated($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
+					echo $this->db->last_query(); die;
 				}
 				
 				$total_amount_inv_raised = 0;
@@ -2317,9 +2318,7 @@ class Dashboard extends crm_controller
 						$timesheet_data[$ts['username']]['practice_id'] = $ts['practice_id'];
 						$timesheet_data[$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						// $rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-						// $directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
-						$rateCostPerHr = $ts['cost'];
+						$rateCostPerHr		 = $ts['cost'];
 						$directrateCostPerHr = $ts['direct_cost'];
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
