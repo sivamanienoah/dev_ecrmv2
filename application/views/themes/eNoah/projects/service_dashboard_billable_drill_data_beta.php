@@ -272,7 +272,7 @@ if(!empty($sub_tot)) {
 			return ($a['sub_tot_hour'] > $b['sub_tot_hour']) ? -1 : 1;
 		} 
 
-		uasort($sub_tot, 'cmp');		
+		// uasort($sub_tot, 'cmp');	
 		$sort_ar = $sub_tot;
 		$proj_arr = array();
 		// echo '<pre>';print_r($sort_ar); exit;
