@@ -3,7 +3,7 @@
 </style>
 <div class="clear"></div>
 <?php
-// error_reporting(E_ALL);
+error_reporting(E_ALL);
 $practice_arry = array();
 $this->db->select('p.practices, p.id');
 $this->db->from($this->cfg['dbpref']. 'practices as p');
