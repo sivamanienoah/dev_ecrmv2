@@ -4,18 +4,7 @@
 <div class="clear"></div>
 <?php
 error_reporting(E_ALL);
-$practice_arry = array();
-$this->db->select('p.practices, p.id');
-$this->db->from($this->cfg['dbpref']. 'practices as p');
-$this->db->where('p.status', 1);
-$pquery = $this->db->get();
-$pres1 = $pquery->result();	
-echo $this->db->last_query(); exit;
-if(!empty($pres1) && count($pres1)>0){
-	foreach($pres1 as $prow1) {
-		$practice_arry[$prow1->id] = $prow1->practices;
-	}
-}
+
 echo "dfdf"; exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
