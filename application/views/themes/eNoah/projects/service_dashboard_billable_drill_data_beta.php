@@ -4,7 +4,7 @@
 <div class="clear"></div>
 <?php
 // error_reporting(E_ALL);
- // echo "<pre>"; print_r($resdata); die;
+echo "<pre>"; print_r($othercost_projects); exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
     $new_array = array();
@@ -52,29 +52,6 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-
-/*Other cost value projects only*/
-$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
-$this->db->from($this->cfg['dbpref']. 'leads as l');
-$this->db->where("l.lead_id != ", 'null');
-$this->db->where("l.pjt_id  != ", 'null');
-$this->db->where("l.lead_status", '4');
-$this->db->where("l.customer_type", '1');
-$client_not_in_arr = array('ENO','NOA');
-$this->db->where_not_in("l.client_code", $client_not_in_arr);
-//BPO practice are not shown in IT Services Dashboard
-// $this->db->where_not_in("l.practice", 6);
-$practice_not_in = array(6);
-$this->db->where_not_in('l.practice', $practice_not_in);
-$project_status = 1;
-if($project_status){
-	if($project_status !=2)
-	$this->db->where_in("l.pjt_status", $project_status);
-}
-$query = $this->db->get();
-$res = $query->result_array();
-echo "<pre>"; print_r($res); die;
-/*Other cost value projects only*/
 
 if(!empty($resdata)) {
 $timesheet_data = array();
