@@ -4,6 +4,7 @@
 <div class="clear"></div>
 <?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+echo "<pre>"; print_r($project_master); echo "</pre>"; exit;
 echo "<pre>"; print_r($othercost_projects); echo "</pre>";
 function array_sort($array, $on, $order='SORT_ASC')
 {
@@ -279,12 +280,9 @@ if(!empty($sub_tot)) {
 		// echo '<pre>';print_r($sort_ar); exit;
 		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
-			// $other_cost_val = getOtherCostByProjectId($p_name, $this->default_cur_id);
 			$other_cost_val = $other_cost_arr[$p_name];
 
-			// echo "<pre>"; print_r($other_cost_val); die;
 			$i       = 0;
-			// $res_cnt = 0;
 			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
 			$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
 			$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
