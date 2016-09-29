@@ -3819,6 +3819,7 @@ HDOC;
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
 					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
 				}
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				$total_billable_hrs = 0;
 				$total_internal_hrs = 0;
@@ -3938,8 +3939,6 @@ HDOC;
 					}	 
 				}	 
 				/* calculation for UC based on the max hours ends */
-				
-				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				//get the other cost details for the project.
 				$other_cost_values = $this->getOtherCostValues($rec['lead_id']);
