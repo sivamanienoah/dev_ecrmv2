@@ -195,7 +195,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-echo "<pre>"; print_r($available_projects); exit;
+echo "<pre>"; print_r($timesheet_projects); exit;
 echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
