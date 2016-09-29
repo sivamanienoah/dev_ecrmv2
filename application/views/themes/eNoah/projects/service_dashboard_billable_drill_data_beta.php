@@ -197,9 +197,9 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 }
 // echo "<pre>"; print_r($timesheet_projects); echo "</pre>";
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
-echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
+// echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
 
-// echo "<pre>"; print_r($sub_tot); exit;
+echo "<pre>"; print_r($sub_tot); exit;
 $other_cost_arr = array();
 
 //calculating the other cost
@@ -223,8 +223,7 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 		$other_cost_arr['other_cost_total'] 	+= $other_cost_val['value'];
 	}
 }
-echo $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
-exit;
+$tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
 echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
 <div class="page-title-head">
