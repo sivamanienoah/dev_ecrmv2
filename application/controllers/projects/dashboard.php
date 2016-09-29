@@ -2180,6 +2180,7 @@ class Dashboard extends crm_controller
 				$data['practices_id']   = $practice;
 				$data['othercost_projects'] = array();
 				if(!empty($res) && count($res)>0) {
+					echo "<pre>"; print_R($res); die;
 					foreach($res as $row) {
 						if (isset($data['othercost_projects'][$practice_arr[$row[$practice]]])) {
 							$data['othercost_projects'][$practice_arr[$row[$practice]]][] = $row['pjt_id'];
