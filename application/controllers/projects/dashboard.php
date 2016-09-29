@@ -1950,6 +1950,8 @@ class Dashboard extends crm_controller
 							$data['othercost_projects'][$practice_arr[$row['practice']]][] = $row['pjt_id'];
 						}
 					}
+				} else {
+					echo "empt"; exit;
 				}
 				echo "<pre>"; print_r($data['othercost_projects']); die;
 				$this->load->view('projects/service_dashboard_billable_drill_data', $data);
