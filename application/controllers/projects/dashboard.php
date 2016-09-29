@@ -2286,7 +2286,7 @@ class Dashboard extends crm_controller
 					$timesheet = $this->get_timesheet_data_hours($rec['pjt_id'], "", "");
 				} */
 				
-				$bill_type = 3;
+				$bill_type = 1;
 				
 				if(!empty($rec['pjt_id'])){
 					$timesheet = $this->project_model->get_timesheet_data_updated($rec['pjt_id'], $rec['lead_id'], $bill_type, $metrics_date, $groupby_type=2);
