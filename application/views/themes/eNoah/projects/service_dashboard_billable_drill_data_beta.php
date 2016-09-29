@@ -53,7 +53,7 @@ $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
  if(!empty($resdata)) {
-
+echo '<pre>';print_r($resdata); die;
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -122,7 +122,7 @@ if(count($resdata)>0) {
 }
 
 }	
-echo '<pre>';print_r($resource_cost); die;
+// echo '<pre>';print_r($resource_cost); die;
 if(count($resource_cost)>0 && !empty($resource_cost)){
 	foreach($resource_cost as $resourceName => $array1){
 		$dept_name = $resource_cost[$resourceName]['dept_name'];
