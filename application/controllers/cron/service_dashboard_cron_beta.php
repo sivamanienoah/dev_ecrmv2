@@ -356,8 +356,8 @@ class Service_dashboard_cron_beta extends crm_controller
 												$duration_hours			 = $value4['duration_hours'];
 												$rate				 	 = $value4['rateperhr'];
 												$direct_rateperhr	 	 = $value4['direct_rateperhr'];
-												$rate1 = $rate;
-												$direct_rateperhr1 = $direct_rateperhr;
+												$rate1 					 = $rate;
+												$direct_rateperhr1 		 = $direct_rateperhr;
 												if($individual_billable_hrs>$max_hours){
 													//echo 'max'.$max_hours.'<br>';
 													$percentage 		= ($max_hours/$individual_billable_hrs);
@@ -366,7 +366,7 @@ class Service_dashboard_cron_beta extends crm_controller
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 												}
 												$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
-												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
 												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] 	 = ($duration_hours*$rate1);
 												$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
 											}
@@ -586,7 +586,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		## code month contribution ends here##
 		
 		
-		// echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
+		echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
 		
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
