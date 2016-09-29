@@ -353,9 +353,9 @@ class Service_dashboard_cron_beta extends crm_controller
 										foreach($value3 as $key4=>$value4) {
 											if($key4 != 'total_hours'){ 
 												$individual_billable_hrs = $value3['total_hours'];
-												$duration_hours			= $value4['duration_hours'];
-												$rate				 = $value4['rateperhr'];
-												$direct_rateperhr	 = $value4['direct_rateperhr'];
+												$duration_hours			 = $value4['duration_hours'];
+												$rate				 	 = $value4['rateperhr'];
+												$direct_rateperhr	 	 = $value4['direct_rateperhr'];
 												$rate1 = $rate;
 												$direct_rateperhr1 = $direct_rateperhr;
 												if($individual_billable_hrs>$max_hours){
@@ -586,7 +586,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		## code month contribution ends here##
 		
 		
-		echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
+		// echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
 		
 		$projects['direct_cost']   = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
