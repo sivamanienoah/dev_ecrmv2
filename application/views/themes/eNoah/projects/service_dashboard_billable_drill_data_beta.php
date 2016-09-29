@@ -16,18 +16,7 @@ if(!empty($pres1) && count($pres1)>0){
 		$practice_arry[$prow1->id] = $prow1->practices;
 	}
 }
-
-$othercost_projects = array();
-if(!empty($crm_data) && count($crm_data)>0) {
-	foreach($crm_data as $row) {
-		if (isset($othercost_projects[$practice_arry[$practices_id]])) {
-			$othercost_projects[$practice_arry[$row[$practices_id]]][] = $row['pjt_id'];
-		} else {
-			$othercost_projects[$practice_arry[$row[$practices_id]]][] = $row['pjt_id'];
-		}
-	}
-}
-echo "<pre> adsfasdf"; print_r($othercost_projects); exit;
+echo "dfdf"; exit;
 function array_sort($array, $on, $order='SORT_ASC')
 {
     $new_array = array();
