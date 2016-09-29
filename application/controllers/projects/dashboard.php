@@ -2330,6 +2330,7 @@ class Dashboard extends crm_controller
 					
 					}
 				}
+				echo "<pre>"; print_r($timesheet_data); die;
 				$total_billable_hrs		= 0;
 				$total_non_billable_hrs = 0;
 				$total_internal_hrs		= 0;
