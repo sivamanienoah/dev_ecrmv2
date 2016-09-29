@@ -2181,10 +2181,10 @@ class Dashboard extends crm_controller
 				$data['othercost_projects'] = array();
 				if(!empty($res) && count($res)>0) {
 					foreach($res as $row) {
-						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {
+						if (isset($data['othercost_projects'][$practice_arr[$row[$practice]]])) {
 							$data['othercost_projects'][$practice_arr[$row[$practice]]][] = $row['pjt_id'];
 						} else {
-							$data['othercost_projects'][$practice_arr[$row[$practice]]] = $row['pjt_id'];
+							$data['othercost_projects'][$practice_arr[$row[$practice]]][] = $row['pjt_id'];
 						}
 					}
 				}
