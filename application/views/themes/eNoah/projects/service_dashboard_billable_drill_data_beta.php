@@ -199,7 +199,21 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 $resource_cost_not_value_project = array_diff($othercost_projects['SAP'], $timesheet_projects);
 // echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>";
 
-echo "<pre>"; print_r($sub_tot); exit;
+echo "<pre>"; print_r($sub_tot); echo "***** <br/>";
+
+/*include the other cost value project to timesheet projects*/
+// [sub_tot_hour] => 59
+// [sub_tot_cost] => 417.15
+// [sub_tot_directcost] => 417.15
+if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value_project) && count($resource_cost_not_value_project)>0) {
+	foreach($resource_cost_not_value_project as $crmPjtName) {
+		$sub_tot[$crmPjtName]['sub_tot_hour'] 		= 0;
+		$sub_tot[$crmPjtName]['sub_tot_cost'] 		= 0;
+		$sub_tot[$crmPjtName]['sub_tot_directcost'] = 0;
+	}
+}
+print_r($sub_tot); exit;
+
 $other_cost_arr = array();
 
 //calculating the other cost
