@@ -21,9 +21,9 @@ class Welcome extends crm_controller {
 		
 		$this->load->helper('lead_stage_helper');
 		$this->load->helper('lead');
-		$this->stg = getLeadStage();
+		$this->stg 		= getLeadStage();
 		$this->stg_name = getLeadStageName();
-		$this->stages = @implode('","', $this->stg);
+		$this->stages 	= @implode('","', $this->stg);
 	}
 	
     /*
@@ -39,8 +39,6 @@ class Welcome extends crm_controller {
 	 * @access public
 	 */
 	public function quotation($type = 'draft', $tab='') {
-		
-		// ECHO "<pre>"; print_r($this->input->post()); die;
 
 		$page_label = 'Leads List';
 		
@@ -117,19 +115,17 @@ class Welcome extends crm_controller {
 			unset($get_rec['search_name']);
 			unset($get_rec['user_id']);
 			unset($get_rec['is_default']);
-			if(!empty($get_rec)){
+			if(!empty($get_rec)) {
 			$filt	  = real_escape_array($get_rec);
 				$this->session->set_userdata("lead_search_by_default",1);
 				$this->session->set_userdata("lead_search_only",0);
 				$this->session->set_userdata("lead_search_by_id",0);	
-			}else{
+			} else {
 				$this->session->set_userdata("lead_search_by_default",0);
 				$this->session->set_userdata("lead_search_only",1);
 				$this->session->set_userdata("lead_search_by_id",0);				
 			}
 		}
-		//print_r($this->session->userdata);
-		// echo "<pre>"; print_r($filt); exit;
 		 if (count($filt)>0) {			 
 		//echo 'yes';
 			$stage 		  = $filt['stage'];
@@ -260,14 +256,11 @@ class Welcome extends crm_controller {
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
 
-				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-
-					foreach($arrProjectMembers as $members){
-						
+				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
+					foreach($arrProjectMembers as $members) {
 						$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
 						
 						if(empty($arrLeadExistFolderAccess)) {
-						
 								$read_access = 0;
 								$write_access = 0;
 								$delete_access = 0;									
@@ -277,18 +270,12 @@ class Welcome extends crm_controller {
 								$write_access = 1;
 								$delete_access = 1;								
 								}
-								
-								
-
 							$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>0);
 							$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
-							
-						}							
+						}					
 					}
 				} */
-					
 			}
-			
 			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
 
 			/**
@@ -2947,10 +2934,11 @@ HDOC;
 	public function closed_opportunities()
 	{
 		$data = array();
+		$cusId = '';
 		$cusId = $this->level_restriction();
 		
 		$filter = $this->input->post();
-		// echo "<pre>"; print_r($filter); die;
+		// echo "<pre>"; print_r($cusId); die;
 		
 		$data['customers']    = $this->welcome_model->get_customers();
 		$data['lead_owner']   = $this->welcome_model->get_users();

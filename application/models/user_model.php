@@ -22,7 +22,8 @@ class User_model extends crm_model {
 	*@Get User list
 	*@Method  user_list
 	*/
-    public function user_list($offset, $search) {
+    public function user_list($offset, $search) 
+	{
         if ($search != false) {
 			$search = urldecode($search);
 			$where = "(CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%$search%' OR `first_name` LIKE '%$search%' OR `last_name` LIKE '%$search%') ORDER BY a.first_name";
@@ -40,6 +41,24 @@ class User_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 			$this->db->order_by("a.first_name", "asc"); 
 		}	
+
+		$query = $this->db->get();		
+		$customers = $query->result_array();	
+        return $customers;
+    }
+	
+	/*
+	*@Get User list
+	*@Method  user_list
+	*/
+    public function getUserLists($type) 
+	{
+		$this->db->select('u.userid,u.role_id,u.first_name,u.last_name,u.username,u.emp_id');
+		$this->db->from($this->cfg['dbpref']."users as u");
+		if($type == 'active'){
+			$this->db->where('inactive', 0);
+		}
+		$this->db->order_by("u.first_name", "asc");	
 
 		$query = $this->db->get();		
 		$customers = $query->result_array();	

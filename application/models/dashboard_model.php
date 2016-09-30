@@ -21,6 +21,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref']. 'customers_company as cc', 'cc.companyid = c.company_id');
    		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -101,6 +105,9 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = j.expect_worth_id','inner');
 		$this->db->where('j.lead_status',1);
 		// $this->db->where_in('j.lead_stage', $lead_stage);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('c.created_by', $this->userdata['userid']);
+		}
 		$this->db->where_in('j.lead_stage', $this->stg);
 		
 		if ($this->userdata['level']==1) {
@@ -170,6 +177,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -224,6 +235,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -347,6 +362,10 @@ class Dashboard_model extends crm_model {
 			$indic = implode("','", $filter['lead_indi']);
 			$condn  .= " AND j.lead_indicator IN ('".$indic."')";
 		}
+		$reseller_condn = '';
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = ' AND (j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+		}
 		$indicator_query = $this->db->query("SELECT COUNT(
 			CASE WHEN j.lead_indicator = 'HOT'
 			THEN j.lead_indicator
@@ -361,7 +380,7 @@ class Dashboard_model extends crm_model {
 			JOIN ".$this->cfg['dbpref']."customers c ON c.custid = j.custid_fk
 			JOIN ".$this->cfg['dbpref']."customers_company cc ON cc.companyid = c.company_id
 			WHERE j.lead_stage IN ('".$this->stages."')
-			AND j.lead_status =1".$where_level." ".$condn);
+			AND j.lead_status =1".$where_level." ".$condn." ".$reseller_condn);
 			// echo $this->db->last_query(); exit;
 			return $indicator_query->row_array();
 	}
@@ -379,6 +398,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -438,6 +461,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('j.lead_stage', $this->stg);
 		$this->db->where('j.lead_status',1);
 		$this->db->where('j.lead_indicator != ', 'HOT');
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -499,6 +526,10 @@ class Dashboard_model extends crm_model {
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		//advanced filter
 		if (!empty($filter['stage'])) {
 			$this->db->where_in('jb.lead_stage', $filter['stage']);
@@ -556,6 +587,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -594,41 +629,39 @@ class Dashboard_model extends crm_model {
 	public function getLeadsAging($cusId = FALSE, $filter = FALSE) {
 		$todayDate = date('Y-m-d h:m:s');
 		// $todayDate = date('Y-m-d');
-		$thirtyDays = date('Y-m-d h:m:s', strtotime("now -30 days"));
-		$sixtyDays = date('Y-m-d h:m:s', strtotime("now -60 days"));
-		$ninetyDays = date('Y-m-d h:m:s', strtotime("now -90 days"));
-		$oneTwentyDays = date('Y-m-d h:m:s', strtotime("now -120 days"));
-		$oneFiftyDays = date('Y-m-d h:m:s', strtotime("now -150 days"));
-		$oneEightyDays = date('Y-m-d h:m:s', strtotime("now -180 days"));
+		$thirtyDays 	= date('Y-m-d h:m:s', strtotime("now -30 days"));
+		$sixtyDays 		= date('Y-m-d h:m:s', strtotime("now -60 days"));
+		$ninetyDays 	= date('Y-m-d h:m:s', strtotime("now -90 days"));
+		$oneTwentyDays 	= date('Y-m-d h:m:s', strtotime("now -120 days"));
+		$oneFiftyDays 	= date('Y-m-d h:m:s', strtotime("now -150 days"));
+		$oneEightyDays 	= date('Y-m-d h:m:s', strtotime("now -180 days"));
 		
 		
-		$thirtyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $thirtyDays ));
-		$thirtyOneDays = date ( 'Y-m-d h:m:s' , $thirtyOneDaysTemp);
+		$thirtyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $thirtyDays ));
+		$thirtyOneDays 		= date ( 'Y-m-d h:m:s' , $thirtyOneDaysTemp);
 		
-		$sixtyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $sixtyDays ));
-		$sixtyOneDays = date ( 'Y-m-d h:m:s' , $sixtyOneDaysTemp);
+		$sixtyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $sixtyDays ));
+		$sixtyOneDays 		= date ( 'Y-m-d h:m:s' , $sixtyOneDaysTemp);
 		
-		$ninetyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $ninetyDays ));
-		$ninetyOneDays = date ( 'Y-m-d h:m:s' , $ninetyOneDaysTemp);
+		$ninetyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $ninetyDays ));
+		$ninetyOneDays 		= date ( 'Y-m-d h:m:s' , $ninetyOneDaysTemp);
 		
-		$oneTwentyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $oneTwentyDays ));
-		$oneTwentyOneDays = date ( 'Y-m-d h:m:s' , $oneTwentyOneDaysTemp);
+		$oneTwentyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $oneTwentyDays ));
+		$oneTwentyOneDays 		= date ( 'Y-m-d h:m:s' , $oneTwentyOneDaysTemp);
 		
-		$oneFiftyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $oneFiftyDays ));
-		$oneFiftyOneDays = date ( 'Y-m-d h:m:s' , $oneFiftyOneDaysTemp);
+		$oneFiftyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $oneFiftyDays ));
+		$oneFiftyOneDays 		= date ( 'Y-m-d h:m:s' , $oneFiftyOneDaysTemp);
 		
-		$oneEightyOneDaysTemp = strtotime ( '+1 day' , strtotime ( $oneEightyDays ));
-		$oneEightyOneDays = date ( 'Y-m-d h:m:s' , $oneEightyOneDaysTemp);
+		$oneEightyOneDaysTemp 	= strtotime ( '+1 day' , strtotime ( $oneEightyDays ));
+		$oneEightyOneDays 		= date ( 'Y-m-d h:m:s' , $oneEightyOneDaysTemp);
 
 		$where_level = "";
 		if (!empty($cusId)) {
 			$cusId = implode("','", $cusId);
-			//echo $cusId; exit;
 			if ($this->userdata['level']!=1) {
 				$where_level = " AND cc.companyid IN ('".$cusId."')";
 			}
 		}
-		
 		$condn = "";
 		if (!empty($filter['customer'])) {
 			$custom = implode("','", $filter['customer']);
@@ -678,6 +711,9 @@ class Dashboard_model extends crm_model {
 			$indic = implode("','", $filter['lead_indi']);
 			$condn  .= " AND j.lead_indicator IN ('".$indic."')";
 		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = ' AND (j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+		}
 		$stg = $this->stages;
 		$age_query = $this->db->query("SELECT 
 		COUNT(CASE WHEN DATE(j.date_created) BETWEEN '".$thirtyDays."' AND '".$todayDate."' THEN DATE(j.date_created) END) as '0-30 Days',
@@ -691,7 +727,7 @@ class Dashboard_model extends crm_model {
 		JOIN ".$this->cfg['dbpref']."customers c ON c.custid = j.custid_fk
 		JOIN ".$this->cfg['dbpref']."customers_company cc ON cc.companyid = c.company_id		
 		WHERE j.lead_stage IN ('".$stg."')
-		AND j.lead_status = 1".$where_level." ".$condn);
+		AND j.lead_status = 1".$where_level." ".$condn." ".$reseller_condn);
 		// echo $this->db->last_query(); exit;
 		return $age_query->row_array();
 	}
@@ -769,6 +805,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', 'LEFT');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -836,6 +876,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('ownr.userid', $userid);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -894,6 +938,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('usr.userid', $userid);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -953,6 +1001,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ls.lead_stage_name', $leadStage, 'after');
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -1016,6 +1068,11 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 
 		if ($this->userdata['level']==1) {
 			if ((!empty($fresult['freg_id'])) && (empty($fresult['fcntry_id'])) && (empty($fresult['fstet_id'])) && (empty($fresult['flocn_id'])))
@@ -1048,6 +1105,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where('jb.lead_status', 1);
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
+		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
 		}
 		//for advanced filter
 		if (!empty($fresult['fstge'])) {
@@ -1207,6 +1268,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
 		$this->db->where('lead_status', 4);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!= 1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -1271,6 +1336,10 @@ class Dashboard_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', "LEFT");
 			$this->db->where_in('jb.lead_id', $jbid);
 			$this->db->where('jb.lead_status', 4);
+			if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+				$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+				$this->db->where($reseller_condn);
+			}
 			if (!empty($fresult['fstge'])) {
 				$this->db->where_in('jb.lead_stage', $fresult['fstge']);
 			}
@@ -1325,6 +1394,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -1379,6 +1452,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -1433,6 +1510,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
@@ -1494,6 +1575,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ldsrc.lead_source_name', $leadStage);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -1555,6 +1640,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ldsrc.industry', $leadStage);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -1616,6 +1705,10 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('jbc.services', $leadStage);
 		$this->db->where('jb.lead_status', 1);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}

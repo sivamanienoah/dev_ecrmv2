@@ -44,19 +44,19 @@ public $userdata;
     public function get_lead_report() {
     	$data =array();
     	$options = array();
-    	$options['customer'] = $this->input->post('customer');
-		$options['end_date'] = $this->input->post('end_date');
+    	$options['customer'] 	 = $this->input->post('customer');
+		$options['end_date'] 	 = $this->input->post('end_date');
 		$options['leadassignee'] = $this->input->post('leadassignee');
-		$options['owner'] = $this->input->post('owner');
-		$options['stage'] = $this->input->post('stage');
-		$options['start_date'] = $this->input->post('start_date');
-		$options['worth'] = $this->input->post('worth');
+		$options['owner'] 		 = $this->input->post('owner');
+		$options['stage'] 		 = $this->input->post('stage');
+		$options['start_date']   = $this->input->post('start_date');
+		$options['worth'] 		 = $this->input->post('worth');
 		
-		$options['regionname'] = $this->input->post('regionname');		
+		$options['regionname'] 	= $this->input->post('regionname');		
 		$options['countryname'] = $this->input->post('countryname');		
-		$options['statename'] = $this->input->post('statename');		
-		$options['locname'] = $this->input->post('locname');
-		$options['lead_src'] = $this->input->post('lead_src');
+		$options['statename'] 	= $this->input->post('statename');		
+		$options['locname'] 	= $this->input->post('locname');
+		$options['lead_src'] 	= $this->input->post('lead_src');
 		
     	if($this->userdata['level'] >1){
 			$options['cust_id'] =  $this->report_lead_region_model->getCustomerByLocation();						

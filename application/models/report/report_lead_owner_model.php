@@ -106,6 +106,11 @@ class Report_lead_owner_model extends crm_model {
     	$this->db->order_by('u.userid','ASC');
     	$this->db->where('lead_status',1);
 		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to = '.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
+		
     	$query = $this->db->get($this->cfg['dbpref'].'leads jb');
     	//echo $this->db->last_query();
     	$result['res'] = $query->result();

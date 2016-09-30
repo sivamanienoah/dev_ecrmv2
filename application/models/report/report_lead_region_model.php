@@ -109,6 +109,11 @@ class Report_lead_region_model extends crm_model {
     	$this->db->where_in('jb.lead_stage', $this->stg);
     	$this->db->order_by($order_by,'ASC');
     	$this->db->where('lead_status',1);
+		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to = '.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 
     	$query = $this->db->get($this->cfg['dbpref'].'leads jb');
     	$result['res'] = $query->result();

@@ -1,13 +1,19 @@
-<?php require (theme_url().'/tpl/header.php'); 
-// echo "<pre>"; print_r($roles);
+<?php require (theme_url().'/tpl/header.php'); ?>
+<?php 
+#error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING); 
+$this->userdata = $this->session->userdata('logged_in_user');
 ?>
-
 <div id="content">
     <div class="inner">
 	<?php 
-	if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update')|| (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1))) {
+	if(($this->session->userdata('add')==1 && $this->uri->segment(3) != 'update') || (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1))) {
 	?>
-		<form action="<?php echo  $this->uri->uri_string() ?>" method="post" id="frm">
+		<?php if($this->uri->segment(3) != 'update') { ?>
+			<form action="<?php echo  $this->uri->uri_string() ?>" method="post" onsubmit="return checkAddUser();" id="frm">
+		<?php } else { ?>
+			<form action="<?php echo  $this->uri->uri_string() ?>" method="post" id="frm">
+		<?php } ?>
+		
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
             <h2><?php echo  ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'New' ?> User Details</h2>
@@ -25,19 +31,62 @@
 				<tr>
 					<td width="115">First Name: *</td>
 					<td width="240"><input type="text" id="first_name" name="first_name" value="<?php echo $this->validation->first_name ?>" class="textfield width200px required" />
-						<div class="error" style="color:red;" id="error12">required</div>			
+						<div class="error" style="color:red;" id="error12">Required</div>			
 					</td>					
 					<td width="115">Last Name: *</td>
 					<td width="240"><input type="text" id="last_name" name="last_name" value="<?php echo $this->validation->last_name ?>" class="textfield width200px required" /> 
-						<div class="error" style="color:red;" id="error2">required</div>
+						<div class="error" style="color:red;" id="error2">Required</div>
 					</td>
 				</tr>
 				<tr>
 					<td>Username: *</td>
 					<td>
 						<input type="text" name="username" id="username" value="<?php echo $this->validation->username ?>" class="textfield width200px required" autocomplete="off" />
-						<div class="error" style="color:red;" id="errorun">required</div>
+						<div class="error" style="color:red;" id="errorun">Required</div>
 						<div id='username_errmsg'></div>
+					</td>
+					<td>Role: *</td>
+					<td>
+                        <select id="role_id" name="role_id" class="textfield width200px">
+                            <option value="">Please Select</option>
+							<?php foreach ($roles as $role) { ?>
+								<option value="<?php echo $role['id'];?>" <?php echo ($this->validation->role_id == $role['id']) ? ' selected="selected"' : '' ?>><?php echo $role['name'] ;?></option>
+							<?php } ?>
+                        </select> 
+						<div class="error" style="color:red;" id="error3">Required</div>
+						<input type="hidden" value="0" id="role_change_mail" name="role_change_mail"/>
+						<script>
+							$('#role_id').change(function() {
+								var assign_mail = $('#role_id').val();
+								//alert(assign_mail);
+								$('#role_change_mail').val(assign_mail);
+							});
+						</script>
+					</td>
+				</tr>
+				<tr id="reseller_row" style="display:none;">
+					<td>Contract Manager</td>
+					<td>
+						<select name="contract_manager" id="contract_manager" class="textfield width200px">
+							<option value="">Please Select</option>
+							<?php 
+								if(is_array($users) && !empty($users) && count($users)) {
+									foreach($users as $user_row) {
+										$user_name = $user_row['first_name'];
+										if(isset($user_row['last_name']) && !empty($user_row['last_name'])){
+											$user_name .= " ".$user_row['last_name'];
+										}
+										if(isset($user_row['emp_id']) && !empty($user_row['emp_id'])) {
+											$user_name .= " - ".$user_row['emp_id'];
+										}
+							?>
+										<option value="<?php echo $user_row['userid']; ?>" <?php echo ($this->validation->contract_manager == $user_row['userid']) ? ' selected="selected"' : '' ?>><?php echo $user_name; ?></option>
+							<?php
+									}
+								}
+							?>
+						</select>
+						<div class="error" style="color:red;" id="error_contractmanager">Required</div>
 					</td>
 				</tr>
 				<tr>
@@ -49,7 +98,7 @@
 				<tr>
 					<td>Email: *</td>
 					<td><input type="text" id="email" name="email" value="<?php echo $this->validation->email ?>" class="textfield width200px" autocomplete="off"/><br/> 
-					<span class="error" style="color:red;" id="error4">required</span>
+					<span class="error" style="color:red;" id="error4">Required</span>
 					<span class="error" style="color:red;" id="notvalid">Not a valid e-mail address</span>
 					<span class="checkUser" style="color:green">Email Available.</span>
 					<span class="checkUser1" id="email-existsval" style="color:red">Email Already Exists.</span>
@@ -58,31 +107,12 @@
 						<input type="hidden" value="<?php echo $this->uri->segment(4); ?>" name="email_1" id="email_1" />
 					<?php } ?>	
 					</td>
-                    
-					<td>Role: *</td>
-					<td>
-                        <select id="role_id" name="role_id" class="textfield width200px">
-                            <option value="">Please Select</option>
-							<?php foreach ($roles as $role) { ?>
-								<option value="<?php echo $role['id'];?>" <?php echo  ($this->validation->role_id == $role['id']) ? ' selected="selected"' : '' ?>><?php echo $role['name'] ;?></option>
-								
-							<?php } ?>
-                        </select> 
-						<div class="error" style="color:red;" id="error3">required</div><input type="hidden" value="0" id="role_change_mail" name="role_change_mail"/>
-						<script>
-							$('#role_id').change(function() {
-								var assign_mail = $('#role_id').val();
-								//alert(assign_mail);
-								$('#role_change_mail').val(assign_mail);
-							});
-						</script>
-					</td>
 				</tr>
 				<tr>
 					<td>Password: *</td>
 					<td><input type="password" id="password" name="password" value="" class="textfield width200px" autocomplete="off"/>
 						<?php if ($this->uri->segment(3) != 'update') { ?>
-							<div class="error" style="color:red;" id="error5">required</div>
+							<div class="error" style="color:red;" id="error5">Required</div>
 						<?php } ?>
 					</td>
                     <td>
@@ -108,7 +138,7 @@
 						<label for="auth-ldb">LDB</label>
 						<input <?php echo ($this->validation->auth_type == 0) ? ' checked="checked"' : '' ?> id="auth-dp" type="radio" name="auth_type" value="0"/>&nbsp;&nbsp;&nbsp;
 						<label for="auth-ldap">LDAP</label>
-						<input <?php echo ($this->validation->auth_type == 1) ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth_type" value="1"/>						
+						<input <?php echo ($this->validation->auth_type == 1) ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth_type" value="1"/>
 					</td>
 				</tr>
 				<tr>
@@ -125,7 +155,7 @@
 								<?php } ?>
 							</select> 
 							<br/>
-							<div class="error" style="color:red;" id="error6">required</div><br/> <br/> 
+							<div class="error" style="color:red;" id="error6">Required</div><br/> <br/> 
 							<div class="level-message"></div>
 						<?php 
 						} else { 
@@ -135,7 +165,7 @@
 								<?php foreach ($levels as $val) { ?>
 									<option value="<?php echo $val['level_id']; ?>"<?php echo  ($this->validation->level == $val['level_id']) ? ' selected="selected"' : '' ?>><?php echo  $val['level_name']; ?></option>
 								<?php } ?>
-							</select><br/> <div class="error" style="color:red;" id="error6">required</div><br/><br/> <div class="level-message"></div>
+							</select><br/> <div class="error" style="color:red;" id="error6">Required</div><br/><br/> <div class="level-message"></div>
 						<?php 
 						} 
 						?>						
@@ -202,7 +232,11 @@
 					<td>&nbsp;</td>
 					<td>
                         <div class="buttons">
+						<?php if($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) { ?>
 							<button type="submit" onclick="return last();" name="update_user" class="positive" id="checkemail">				
+						<?php } else { ?>
+							<button type="submit" name="update_user" class="positive" id="checkemail">	
+						<?php } ?>							
 								<?php echo ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) ? 'Update' : 'Add' ?> User
 							</button>
 						</div>
@@ -222,5 +256,8 @@
 		?>
 	</div>
 </div>
-<?php require (theme_url(). '/tpl/footer.php'); ?>
+<script>
+	var curUserId = '<?php echo $this->userdata['userid'] ?>';
+</script>
 <script type="text/javascript" src="assets/js/user/add_user.js"></script>
+<?php require (theme_url(). '/tpl/footer.php'); ?>

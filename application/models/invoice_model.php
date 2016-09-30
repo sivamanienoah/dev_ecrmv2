@@ -90,6 +90,7 @@ class Invoice_model extends crm_model {
 			$job_ids = array_unique($res);
 			
 		}
+		
 		//LEVEL BASED RESTIRCTION
  
 		if($filter['from_date']=='0000-00-00 00:00:00'){
@@ -113,6 +114,11 @@ class Invoice_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
+		
+		if($this->userdata['role_id'] == 14){
+			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		
 		if($invoice){
 			$this->db->where('expm.invoice_status',0);
@@ -215,6 +221,10 @@ class Invoice_model extends crm_model {
 		$this->db->select('l.lead_id,l.lead_title,l.invoice_no,l.custid_fk');
 		$this->db->from($this->cfg['dbpref'].'leads as l');
 		$this->db->where("l.lead_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status IN ('1','2','3','4') ");
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		$this->db->order_by("l.lead_title");
 		$query  = $this->db->get();
 		$res 	= $query->result_array();
@@ -228,6 +238,9 @@ class Invoice_model extends crm_model {
 	function get_customers() {
 	    $this->db->select('companyid, company');
 	    $this->db->from($this->cfg['dbpref'] . 'customers_company');
+		if ($this->userdata['role_id']==14) {
+			$this->db->where('created_by', $this->userdata['userid']);
+		}
 		$this->db->order_by("company");
 	    $customers = $this->db->get();
 	    $customers = $customers->result_array();

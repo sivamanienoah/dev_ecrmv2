@@ -158,7 +158,7 @@ class Customer_model extends crm_model {
 		$this->db->from($this->cfg['dbpref'].'customers_company as CUST');
 		$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
 		$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
-        if ($this->userdata['level'] == 2) {
+		if ($this->userdata['level'] == 2) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
 		} else if ($this->userdata['level'] == 3) {
 			$this->db->where_in('CUST.add1_region', $regions_ids);
@@ -173,12 +173,17 @@ class Customer_model extends crm_model {
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
 		}
+		
 		if($search != false) {
 			$search = $this->db->escape_str(urldecode($search));
 			$this->db->where("(company LIKE '%$search%')");
 		}
-		if(!empty($limit))
-		$this->db->limit($limit);
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('CUST.created_by', $this->userdata['userid']);
+		}
+		if(!empty($limit)){
+			$this->db->limit($limit);
+		}
 		$customers = $this->db->get();
         // echo $this->db->last_query(); exit;
         return $customers->result_array();
@@ -261,10 +266,9 @@ class Customer_model extends crm_model {
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
 		}
-		/* if($search != false) {
-			$search = $this->db->escape_str(urldecode($search));
-			$this->db->where("(first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR company LIKE '%$search%' OR email_1 LIKE '%$search%')");
-		} */
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('CUST.created_by', $this->userdata['userid']);
+		}
 		if(!empty($limit))
 		$this->db->limit($limit);
 		$customers = $this->db->get();        
@@ -1462,6 +1466,9 @@ class Customer_model extends crm_model {
 			$this->db->where_in('CUST.add1_country', $countries_ids);
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
+		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('CUST.created_by', $this->userdata['userid']);
 		}
 		if(!empty($name))
 		$this->db->where("(company LIKE '%$name%')");

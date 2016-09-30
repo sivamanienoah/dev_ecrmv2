@@ -166,6 +166,7 @@ class Customers extends crm_controller {
 				// set exported back to NULL so it will be exported to addressbook
 				// $update_data['exported'] = NULL;
 				// echo "<pre>"; print_r($update_data);
+				$update_data['modified_by'] = $this->userdata['userid'];
 				//update
 				if ($this->customer_model->update_company($id, $update_data)) 
 				{
@@ -188,6 +189,7 @@ class Customers extends crm_controller {
 							$cust_data['position_title']=	$position[$i];
 							$cust_data['phone_1']		=	$phone_no[$i];
 							$cust_data['email_1']		=	$email[$i];
+							$cust_data['modified_by'] 	= $this->userdata['userid'];
 							// echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
 							if($contact_id[$i])
 							{
@@ -241,6 +243,9 @@ class Customers extends crm_controller {
 			else 
 			{
 				//insert
+				$update_data['created_by']  = $this->userdata['userid'];
+				$update_data['modified_by'] = $this->userdata['userid'];
+				$update_data['created_on']  = date('Y-m-d H:i:s');
 				if ($company_id	=	$this->customer_model->insert_company($update_data)) 
 				{	
 				
@@ -255,14 +260,16 @@ class Customers extends crm_controller {
 						$batch_insert_data = array();
 						for($i=0;$i<count($customer_name);$i++)
 						{
-							$cust_data					=	array();
-							//$cust_data				=	$update_data;
-							$cust_data['company_id']	=	$company_id;
-							$cust_data['customer_name']	=	$customer_name[$i];
-							$cust_data['skype_name']	=	$skype[$i];
-							$cust_data['position_title']=	$position[$i];
-							$cust_data['phone_1']		=	$phone_no[$i];
-							$cust_data['email_1']		=	$email[$i];
+							$cust_data					= array();
+							//$cust_data				= $update_data;
+							$cust_data['company_id']	= $company_id;
+							$cust_data['customer_name']	= $customer_name[$i];
+							$cust_data['skype_name']	= $skype[$i];
+							$cust_data['position_title']= $position[$i];
+							$cust_data['phone_1']		= $phone_no[$i];
+							$cust_data['email_1']		= $email[$i];
+							$cust_data['created_by'] 	= $this->userdata['userid'];
+							$cust_data['created_on'] 	= date('Y-m-d H:i:s');
 							
 							$batch_insert_data[]		=	$cust_data;
 						}

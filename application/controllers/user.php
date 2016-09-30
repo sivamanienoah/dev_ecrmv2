@@ -21,7 +21,6 @@ class User extends crm_controller {
 	*/
     public function index($limit = 0, $search = false)
 	{
-		$this->login_model->check_login();
         $data['customers'] = $this->user_model->user_list($limit, $search);
         
         if ($search == false) {
@@ -59,6 +58,7 @@ class User extends crm_controller {
         $fields['mobile']      = "Mobile";
 		$fields['email']       = "Email Address";
 		$fields['role_id']     = "Role";
+		$fields['contract_manager'] = "Contract Manager";
 		$fields['password']    = "Password";
 		$fields['level']       = "User Level";
 		$fields['inactive']    = 'Inactive';
@@ -86,8 +86,10 @@ class User extends crm_controller {
 		
         $data['roles']	= $this->role_model->active_role_list();
 		$data['levels'] = $this->user_model->get_levels();
+		$data['users'] 	= $this->user_model->getUserLists($type='active');
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_user'])) {
-            $customer = $this->user_model->get_user($id);
+            $customer = $this->user_model->get_user($id); /*get the user details*/
+			$data['users'] 			 = $this->user_model->getUserLists($type='all');
             $data['this_user']		 = $customer[0]['userid'];
 			$data['this_user_level'] = $customer[0]['level'];
 
@@ -133,7 +135,9 @@ class User extends crm_controller {
 			foreach($fields1 as $key => $val) {
                 $update_data1[$key] = $this->input->post($key);
             }
-			
+			if($update_data['role_id'] == 14) {
+				$update_data['contract_manager'] = $this->input->post('contract_manager');
+			}
             if ($this->input->post('new_user') || $this->input->post('update_password')) 
 			{
                 $update_data['password'] = sha1($update_data['password']);
@@ -223,7 +227,6 @@ class User extends crm_controller {
 				$newid = $this->user_model->insert_user($update_data);
 				if ($newid == 'maxusers')
 				{
-					// echo $newid . "maxusers"; exit;
 					$this->session->set_flashdata('login_errors', array('You can create maximum '.$this->cfg['max_allowed_users'][0].' users only.!'));
 					redirect('user');
 				}
@@ -253,12 +256,12 @@ class User extends crm_controller {
 
 					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'user_name'=>$user_name, 'first_name'=>$update_data['first_name'], 'last_name'=>$update_data['last_name'],'login_username'=>$update_data['username'], 'base_url'=>$this->config->item('base_url'), 'email'=>$update_data['email'], 'password'=>$post_data['password'], 'signature'=>$this->userdata['signature']);
 
-					$param['to_mail'] = $update_data['email'];
-					$param['bcc_mail'] = $admin_mail;
-					$param['from_email'] = $from;
-					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "New User Creation Notification";
-					$param['subject'] = $subject;
+					$param['to_mail'] 			= $update_data['email'];
+					$param['bcc_mail'] 			= $admin_mail;
+					$param['from_email'] 		= $from;
+					$param['from_email_name'] 	= $user_name;
+					$param['template_name'] 	= "New User Creation Notification";
+					$param['subject'] 			= $subject;
 
 					$this->email_template_model->sent_email($param);
 		
@@ -268,9 +271,9 @@ class User extends crm_controller {
 					} 
 					else 
 					{
-						$json['error'] = false;
-						$json['custid'] = $newid;
-						$json['cust_name'] = $this->input->post('first_name') . ' ' . $this->input->post('last_name');
+						$json['error'] 		= false;
+						$json['custid'] 	= $newid;
+						$json['cust_name'] 	= $this->input->post('first_name') . ' ' . $this->input->post('last_name');
 						$json['cust_email'] = $this->input->post('email');
 						echo json_encode($json);
 					}

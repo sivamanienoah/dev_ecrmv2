@@ -95,6 +95,12 @@ class Report_least_active_lead_model extends crm_model {
 		//$this->db->where('jb.date_modified BETWEEN DATE_SUB(NOW(), INTERVAL '.$isSelect.' DAY) AND NOW()');
 		$this->db->where('jb.lead_status',1);   	
     	$this->db->where('jb.lead_indicator !=','HOT');
+		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to = '.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
+		
     	$this->db->order_by('jb.lead_indicator','ASC');
 		$query = $this->db->get();
 		//echo $this->db->last_query(); exit;

@@ -10,7 +10,6 @@ class Report_lead_industry_model extends crm_model {
     
     public function getLeadReportByIndustry($options = array())
     {
-    	
     	if(!empty($options['cust_id'])){    		
     		$this->db->where_in('cc.companyid',$options['cust_id']);
     	}
@@ -25,57 +24,46 @@ class Report_lead_industry_model extends crm_model {
 			$end_date = date('Y-m-d',strtotime($options['end_date']));
 			$this->db->where('date(jb.date_created) <=',$end_date);
 		}
-		
 		if(!empty($options['customer']) && $options['customer'] != 'null')
 		{
 			$customer = explode(',', $options['customer']);
 			$this->db->where_in('cc.companyid',$customer);
-		}   	
-		
+		}
     	if(!empty($options['leadassignee']) && $options['leadassignee'] != 'null')
 		{
 			$leadassignee = explode(',', $options['leadassignee']);
 			$this->db->where_in('jb.lead_assign',$leadassignee);
 		}
-		
     	if(!empty($options['owner']) && $options['owner'] != 'null')
 		{
 			$owner = explode(',', $options['owner']);
 			$this->db->where_in('jb.created_by',$owner);
 		}
-		
    		if(!empty($options['stage']) && $options['stage'] != 'null')
 		{
 			$stage = explode(',', $options['stage']);
 			$this->db->where_in('jb.lead_stage',$stage);
-		}   	
-		
-		
+		}
 		if(!empty($options['regionname']) && $options['regionname'] != 'null'){
 			$regionname = explode(',',$options['regionname']);
 			$this->db->where_in('cc.add1_region', $regionname);
 		}
-		
     	if(!empty($options['countryname']) && $options['countryname'] != 'null'){
 			$countryname = explode(',',$options['countryname']);
 			$this->db->where_in('cc.add1_country', $countryname);
 		}
-		
     	if(!empty($options['statename']) && $options['statename'] != 'null'){
 			$statename = explode(',',$options['statename']);
 			$this->db->where_in('cc.add1_state', $statename);
 		}
-		
     	if(!empty($options['locname']) && $options['locname'] != 'null'){
 			$locname = explode(',',$options['locname']);
 			$this->db->where_in('cc.add1_location', $locname);
 		}
-		
 		if(!empty($options['industry']) && $options['industry'] != 'null'){
 			$industry = explode(',',$options['industry']);
 			$this->db->where_in('jb.industry', $industry);
 		}
-		
     	if(!empty($options['worth']) && $options['worth'] != 'null')
 		{
 			$worth = explode(',', $options['worth']);
@@ -110,6 +98,11 @@ class Report_lead_industry_model extends crm_model {
     	$this->db->where_in('jb.lead_stage', $this->stg);
     	$this->db->order_by('jb.industry','ASC');
     	$this->db->where('lead_status',1);
+		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to = '.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		
     	$query = $this->db->get($this->cfg['dbpref'].'leads jb');
     	// echo $this->db->last_query(); exit;

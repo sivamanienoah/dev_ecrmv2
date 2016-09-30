@@ -55,11 +55,11 @@ class Invoice extends CRM_Controller {
 	{
         $data['page_heading'] = 'Invoices';
 		
-		$data['projects']  = $this->invoice_model->get_projects();
-		$data['customers'] = $this->invoice_model->get_customers();
-		$data['practices'] = $this->invoice_model->get_practices();
+		$data['projects']  		 = $this->invoice_model->get_projects();
+		$data['customers'] 		 = $this->invoice_model->get_customers();
+		$data['practices'] 		 = $this->invoice_model->get_practices();
 		$data['sales_divisions'] = $this->invoice_model->get_sales_divisions();
-		$data['saved_search'] = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
+		$data['saved_search']    = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
 		
 		$project   = 'null';
 		$customer  = 'null';

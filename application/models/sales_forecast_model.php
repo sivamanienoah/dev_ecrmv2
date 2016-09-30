@@ -133,6 +133,10 @@ class Sales_forecast_model extends crm_model {
 			$filter['project_ids'] = explode(',',$filter['project_ids']);
 			$this->db->where_in('l.lead_id', $filter['project_ids']);
 		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if(!empty($filter['month_year_from_date']) && empty($filter['month_year_to_date'])) {
 			$this->db->where('DATE(sfm.for_month_year) >=', date('Y-m-d', strtotime($filter['month_year_from_date'])));
 		} else if(!empty($filter['month_year_from_date']) && !empty($filter['month_year_to_date'])) {
@@ -212,18 +216,7 @@ class Sales_forecast_model extends crm_model {
 	*@Method  update_row_return_affected_rows
 	*/
     public function update_row_return_affected_rows($table, $id, $data) {
-    	/* $sql =  '
-				UPDATE `'.$this->cfg['dbpref'].'sales_forecast_milestone` SET 
-				milestone_name = "'.$data['milestone_name'].'",
-				milestone_value = '.$data['milestone_value'].',
-				for_month_year = "'.date("Y-m-d", strtotime($data['for_month_year'])).'",
-				modified_by = '.$this->userdata['userid'].'
-				WHERE milestone_id = '.$cond.'
-				';
-		mysql_query($sql);
-		return mysql_affected_rows(); */
-		
-		$cond = array('id'=>$id);
+		$cond = array('milestone_id'=>$id);
 		$updt = array();
 		$updt['milestone_name']  = $data['milestone_name'];
 		$updt['milestone_value'] = $data['milestone_value'];
@@ -445,7 +438,9 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where_in('cc.add1_state', $states_ids);
 			$this->db->where_in('cc.add1_location', $locations_ids);
 		}
-
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('cc.created_by', $this->userdata['userid']);
+		}
 		if(!empty($order)) {
 			foreach($order as $key=>$value) {
 				$this->db->order_by($key,$value);
@@ -556,21 +551,18 @@ class Sales_forecast_model extends crm_model {
 	*@get_sf_customers
 	*@Sales Forecast Model
 	*/
-	public function get_sf_records($type) {
-	
-		if($type=='customers')
-		$this->db->select('cc.companyid, cc.company, c.customer_name');
-		else if($type=='jobs')
-		$this->db->select('cc.companyid, cc.company, c.customer_name, l.lead_id, l.lead_title');
-		
-		// $this->db->from($this->cfg['dbpref'].'customers as c');
-		
+	public function get_sf_records($type) 
+	{	
+		if($type=='customers') {
+			$this->db->select('cc.companyid, cc.company, c.customer_name');
+		} else if($type=='jobs') {
+			$this->db->select('cc.companyid, cc.company, c.customer_name, l.lead_id, l.lead_title');
+		}
 		$this->db->from($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
-		
 		$this->db->join($this->cfg['dbpref'].'sales_forecast as sf', 'sf.customer_id  = c.custid');
 		if($type=='jobs') {
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id  = sf.job_id');
+			$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id  = sf.job_id');
 		}
 	
 		//LEVEL BASED RESTIRCTION
@@ -603,6 +595,14 @@ class Sales_forecast_model extends crm_model {
 					$this->db->where_in('cc.add1_state',$stateid);
 					$this->db->where_in('cc.add1_location',$locationid);
 				break;
+			}
+		}
+		if($this->userdata['role_id'] == 14) {
+			if($type=='customers') {
+				$this->db->where('cc.created_by', $this->userdata['userid']);
+			} else if($type=='jobs') {
+				$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+				$this->db->where($reseller_condn);
 			}
 		}
 		if($type=='customers') {
@@ -703,11 +703,14 @@ class Sales_forecast_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
-		
+
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('sfv.job_id', $job_ids);
 		}
-		
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
 			$this->db->where_in('l.division', $filter['entity']);
@@ -830,10 +833,14 @@ class Sales_forecast_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
+			$this->db->where($reseller_condn);
+		}
+		
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('sfv.job_id', $job_ids);
 		}
-		
 		if (!empty($filter['entity']) && $filter['entity']!='null') {
 			$filter['entity'] = explode(',',$filter['entity']);
 			$this->db->where_in('l.division', $filter['entity']);
@@ -948,6 +955,9 @@ class Sales_forecast_model extends crm_model {
 			$this->db->where_in('CUST.add1_state', $states_ids);
 			$this->db->where_in('CUST.add1_location', $locations_ids);
 		}
+		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+			$this->db->where('CUST.created_by', $this->userdata['userid']);
+		}
 		$this->db->order_by('CUST.company', 'ASC');
 		$customers = $this->db->get();
         // echo $this->db->last_query(); exit;
@@ -955,5 +965,3 @@ class Sales_forecast_model extends crm_model {
     }
     
 }
-
-?>

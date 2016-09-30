@@ -1,5 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 /**
  * Sales Forecast
  *
@@ -40,8 +40,13 @@ class Sales_forecast extends crm_controller {
 		$data['entity'] 		= $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
 		// $this->load->model('customer_model');
 		$data['customers']      = $this->sales_forecast_model->customer_list();
-		$data['leads_data']     = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>1,'pjt_status'=>0), $order = array("lead_id"=>"asc"));
-		$data['projects_data']  = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>4,'pjt_status'=>1), $order = array("lead_id"=>"asc"));
+		
+		$or_where = '';
+		if($this->userdata['role_id'] == 14) {
+			$or_where = '(belong_to = '.$this->userdata['userid'].' OR lead_assign = '.$this->userdata['userid'].' OR assigned_to ='.$this->userdata['userid'].')';
+		}
+		$data['leads_data']     = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>1,'pjt_status'=>0), $order = array("lead_id"=>"asc"), $or_where);
+		$data['projects_data']  = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>4,'pjt_status'=>1), $order = array("lead_id"=>"asc"), $or_where);
 		$data['services']  		= $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
 		$data['practices']  	= $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
 		$data['industries']  	= $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
@@ -54,10 +59,11 @@ class Sales_forecast extends crm_controller {
 		$data['sales_forecast'] = $this->sales_forecast_model->get_sf_milestone_records($filter);
 		$data['filter'] = $filter;
 
-		if($this->input->post("filter")!="")
-		$this->load->view('sales_forecast/sales_forecast_view_grid', $data);
-		else
-		$this->load->view('sales_forecast/sales_forecast_view', $data);	
+		if($this->input->post("filter")!="") {
+			$this->load->view('sales_forecast/sales_forecast_view_grid', $data);
+		} else {
+			$this->load->view('sales_forecast/sales_forecast_view', $data);
+		}
     }
 	
 	/*
@@ -622,7 +628,7 @@ class Sales_forecast extends crm_controller {
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']]['entity']    = $sf['division_name'];
 			$data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['type']      = ($sf['forecast_category']==1)?'Lead':'Project';
 			// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$rates[$sf['expect_worth_id']][$this->default_cur_id]);
-			// $data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
+			// $data['report_data'][$sf['forecast_id']][$sf['milestone_qame']][$month]['ms_value'] += $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$this->default_cur_id]);
 			//Based on Base Currency conversion
 			$base_conversion_amt = $this->conver_currency($sf['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($sf['for_month_year'])),"4/1","3/31")][$sf['expect_worth_id']][$sf['base_currency']]);
 			if(isset($data['report_data'][$sf['forecast_id']][$sf['milestone_name']][$month]['ms_value'])){
@@ -675,16 +681,14 @@ class Sales_forecast extends crm_controller {
 		
 		$bk_rates = get_book_keeping_rates();
 		
-		$data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
-		$data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
-		$data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
-		$data['services']  = $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
+		$data['entity']     = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
+		$data['customers']  = $this->sales_forecast_model->get_sf_records('customers');
+		$data['leads']      = $this->sales_forecast_model->get_sf_records('jobs');
+		$data['services']  	= $this->sales_forecast_model->get_records('lead_services', $wh_condn=array('status'=>1), $order = array("services"=>"asc"));
 		$data['practices']  = $this->sales_forecast_model->get_records('practices', $wh_condn=array('status'=>1), $order = array("practices"=>"asc"));
-		$data['industries']  = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
-		
-		$filter   			 = real_escape_array($this->input->post());
-		
-		$variance_data 		 = $this->sales_forecast_model->get_variance_records($filter);
+		$data['industries'] = $this->sales_forecast_model->get_records('industry', $wh_condn=array('status'=>1), $order = array("industry"=>"asc"));
+		$filter   			= real_escape_array($this->input->post());
+		$variance_data 		= $this->sales_forecast_model->get_variance_records($filter);
 		// echo '<pre>'; print_r($variance_data); exit;
 		
 		$highest_month = date('Y-m-d');
@@ -1207,29 +1211,13 @@ class Sales_forecast extends crm_controller {
 		
 		$bk_rates = get_book_keeping_rates();
 		
-		// $data['entity']      = $this->sales_forecast_model->get_records('sales_divisions', $wh_condn = array('status'=>1), $order = array("div_id"=>"asc"));
-		// $data['customers']   = $this->sales_forecast_model->get_sf_records('customers');
-		// $data['leads']       = $this->sales_forecast_model->get_sf_records('jobs');
-		
 		$filter   			 = real_escape_array($this->input->post());
 		// echo "<pre>"; print_r($filter); exit;
 		
-		/* $forecast_data 		 = $this->sales_forecast_model->get_sf_milestone_records($filter);
-		// echo $this->db->last_query();
-		$current_month = date('Y-m');
-		$highest_month = date('Y-m-d');
-		
-		foreach($forecast_data as $fc) {
-			$highest_month = ($highest_month > date('Y-m-d', strtotime($fc['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($fc['for_month_year']));
-			$data['entity_data'][$fc['division_name']] += $this->conver_currency($fc['milestone_value'],$rates[$fc['expect_worth_id']][$this->default_cur_id]);
-		}
-		echo "<pre>"; print_R($data['entity_data']); exit; */
-		
 		$variance_data = $this->sales_forecast_model->get_variance_records_for_dashboard($filter);
-		// echo "<pre>"; print_R($variance_data); exit;
 		
-		$compare_from_month = $actual_from_month = $current_month = date('Y-m');
-		$highest_month = date('Y-m-d');
+		$compare_from_month 	  = $actual_from_month = $current_month = date('Y-m');
+		$highest_month 			  = date('Y-m-d');
 		$data['compare_data']     = '';
 		$data['forecast_entity']  = '';
 		$data['actual_entity']    = '';
@@ -1238,9 +1226,6 @@ class Sales_forecast extends crm_controller {
 			$highest_month = ($highest_month > date('Y-m-d', strtotime($vr['for_month_year']))) ? $highest_month : date('Y-m-d', strtotime($vr['for_month_year']));
 			// if($month <= $current_month) {
 				$compare_from_month = ($compare_from_month < date('Y-m', strtotime($vr['for_month_year']))) ? $compare_from_month : date('Y-m', strtotime($vr['for_month_year']));
-				// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$rates[$vr['expect_worth_id']][$this->default_cur_id]);
-				// $data['compare_data'][$month][$vr['type']] += $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$this->default_cur_id]);
-				//Based on Base currency conversion
 				$base_conversion_camt = $this->conver_currency($vr['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['expect_worth_id']][$vr['base_currency']]);
 				if(isset($data['compare_data'][$month][$vr['type']])){
 					$data['compare_data'][$month][$vr['type']] += $this->conver_currency($base_conversion_camt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($vr['for_month_year'])),"4/1","3/31")][$vr['base_currency']][$this->default_cur_id]);
@@ -2811,4 +2796,4 @@ class Sales_forecast extends crm_controller {
 		}
 		return $fy;
 	}
-}
+}
