@@ -851,7 +851,8 @@ h3 .small {
 					
 					<p><label>Entity</label></p>
 					<p>
-						<select name="job_division" id="job_division" class="textfield width300px" onchange="getBaseCurrency(this.value);">
+						<!--select name="job_division" id="job_division" class="textfield width300px" onchange="getBaseCurrency(this.value);"-->
+						<select name="job_division" id="job_division" class="textfield width300px">
 							<option value="not_select">Please Select</option>
                             <?php
 							foreach ($sales_divisions as $sa_div)
@@ -865,8 +866,8 @@ h3 .small {
                     </p>
 					
 					<p><label>Expected worth of Deal</label></p>
-                    <input name="expect_worth" id="expect_worth" type="hidden"  value="" class="textfield width300px">
-					<p><select name="expect_worth_readonly" id="expect_worth_readonly" disabled='disabled' class="textfield width100px">
+                    <!--input name="expect_worth" id="expect_worth" type="hidden"  value="" class="textfield width300px"-->
+					<p><select name="expect_worth" id="expect_worth" class="textfield width100px">
                             <option value="not_select">Please Select</option>
                         <?php 
 						foreach ($expect_worth as $expect) {
@@ -1015,7 +1016,8 @@ h3 .small {
 						</p>
 						<p><label>Entity</label></p>
 						<p>
-							<select name="job_division" id="job_division_edit" class="textfield width300px" onchange="getBaseCurrencyEdit(this.value);">
+							<!--select name="job_division" id="job_division_edit" class="textfield width300px" onchange="getBaseCurrencyEdit(this.value);"-->
+							<select name="job_division" id="job_division_edit" class="textfield width300px">
 								<option value="not_select">Please Select</option>
 								<?php
 								
@@ -1029,16 +1031,14 @@ h3 .small {
 							</select>
 						</p>
 						<p><label>Expected worth of Deal</label></p>
-						<input name="expect_worth_edit" id="expect_worth_edit" type="hidden" value="<?php echo $quote_data['expect_worth_id']; ?>" class="textfield width300px">
-						<p><select name="expect_worth_edit_readonly" id="expect_worth_edit_readonly" disabled='disabled' class="textfield" style="width:100px">
+						<!--input name="expect_worth_edit_readonly" id="expect_worth_edit_readonly" type="hidden" value="<?php #echo $quote_data['expect_worth_id']; ?>" class="textfield width300px"-->
+						<p><select name="expect_worth_edit" id="expect_worth_edit" class="textfield" style="width:100px">
 								<option value="not_select">Please Select</option>
-							<?php foreach ($expect_worth as $worth) {							
+								<?php foreach ($expect_worth as $worth) { ?>
+									<option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo $worth['expect_worth_name'] ?></option>
+								<?php
+								}
 								?>
-								<option value="<?php echo $worth['expect_worth_id'] ?>"<?php echo ($quote_data['expect_worth_id'] == $worth['expect_worth_id']) ? ' selected="selected"' : '' ?>><?php echo $worth['expect_worth_name'] ?></option>
-							<?php
-								
-							}
-							?>
 							</select><?php echo'&nbsp;&nbsp;&nbsp;' ?>
 							<label> Amount</label> <?php echo'&nbsp;&nbsp;&nbsp;' ?><input type="text" name="expect_worth_amount" value="<?php echo $quote_data['expect_worth_amount'];?>" id="expect_worth_amount" class="textfield" style=" width:132px" />
 						</p>
