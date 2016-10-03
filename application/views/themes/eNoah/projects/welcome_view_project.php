@@ -666,10 +666,10 @@
 						<?php } ?>
 					</td>
 					<td>
-						<?php # $project_cost = (!empty($project_costs)) ? $project_costs : 0; ?>
 						<?php
-							$total_other_cost = (!empty($othercost_val)) ? $othercost_val : 0;
-							$project_cost 	  = $project_costs + $total_other_cost; /*changed based on user max hours calculation*/ 
+							$project_cost 		= (!empty($project_costs)) ? $project_costs : 0;
+							$total_other_cost 	= (!empty($othercost_val)) ? $othercost_val : 0;
+							$project_cost 		= $project_cost + $total_other_cost; /*changed based on user max hours calculation*/
 						?>
 						<input type="text" id="actualValue" value="<?php echo sprintf('%0.02f', $project_cost); ?>" class="textfield width60px" readonly />
 					</td>
