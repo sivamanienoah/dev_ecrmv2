@@ -609,7 +609,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$other_cost_val = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
-						$val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
+						// $val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
+						$val 			 = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
 						$other_cost_val += $val;
 					}
 					$projects['other_cost'][$parr] = $other_cost_val;
