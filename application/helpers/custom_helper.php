@@ -382,7 +382,7 @@ if ( ! function_exists('getOtherCostByProjectId'))
 //for other cost details in IT service dashboard details(click YTD Utilization Cost)
 if ( ! function_exists('getOtherCostByProjectIdByDateRange'))
 {
-	function getOtherCostByProjectIdByDateRange($project_code = false, $default_curr = false)
+	function getOtherCostByProjectIdByDateRange($project_code = false, $default_curr = false, $start_date = false, $end_date = false)
 	{
 		$cur_bk_rate = get_book_keeping_rates();
 		$CI   	     = get_instance();
@@ -394,6 +394,13 @@ if ( ! function_exists('getOtherCostByProjectIdByDateRange'))
 			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
 			$CI->db->join($CI->cfg['dbpref'].'leads', 'lead_id = project_id');
 			$CI->db->where('pjt_id', $project_code);
+			//cost_incurred_date
+			if(!empty($start_date)) {
+				$CI->db->where("cost_incurred_date >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+			}
+			if(!empty($end_date)) {
+				$CI->db->where("cost_incurred_date <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+			}
 			$CI->db->order_by('id', 'ASC');
 			$query  = $CI->db->get();
 			$result = $query->result_array();
@@ -420,7 +427,7 @@ if ( ! function_exists('getOtherCostByProjectIdByDateRange'))
 //for other cost details in IT service dashboard details(click YTD Utilization Cost)
 if ( ! function_exists('getOtherCostByLeadId'))
 {
-	function getOtherCostByLeadId($lead_id = false, $default_curr = false, $start_date = false, $end_date = false)
+	function getOtherCostByLeadId($lead_id = false, $default_curr = false)
 	{
 		$cur_bk_rate = get_book_keeping_rates();
 		$CI   	     = get_instance();
@@ -430,17 +437,9 @@ if ( ! function_exists('getOtherCostByLeadId'))
 		if(!empty($lead_id)) {
 			$CI->db->select("cost_incurred_date, currency_type, value");
 			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
-			$CI->db->where('project_id', $lead_id);
-			//cost_incurred_date
-			if(!empty($start_date)) {
-				$CI->db->where("cost_incurred_date >= ", date('Y-m-d H:i:s', strtotime($start_date)));
-			}
-			if(!empty($end_date)) {
-				$CI->db->where("cost_incurred_date <= ", date('Y-m-d H:i:s', strtotime($end_date)));
-			}
+			$CI->db->where('project_id', $lead_id);			
 			$CI->db->order_by('id', 'ASC');
 			$query  = $CI->db->get();
-			echo $CI->db->last_query(); exit;
 			$result = $query->result_array();
 
 			if(count($result)>0 && !empty($result)) {
