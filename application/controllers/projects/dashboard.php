@@ -2053,7 +2053,6 @@ class Dashboard extends crm_controller
 				$month    = date("Y-m-01 00:00:00");				
 			}			
 		}
- echo $end_date; exit;
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -2180,7 +2179,7 @@ class Dashboard extends crm_controller
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
 				$data['start_date']   	= $start_date;
-				$data['end_date']   	= $start_date;
+				$data['end_date']   	= $end_date;
 				//*for other cost value projects only*//
 				$data['othercost_projects'] = array();
 				if(!empty($res) && count($res)>0) {
