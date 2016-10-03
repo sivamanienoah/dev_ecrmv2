@@ -2023,7 +2023,7 @@ class Dashboard extends crm_controller
 		//default billable_month
 		$month = date('Y-m-01 00:00:00');
 		
-		if($this->input->post("month_year_from_date")) {
+		/* if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
 			$start_date = date("Y-m-01",strtotime($start_date));
 		}
@@ -2031,7 +2031,7 @@ class Dashboard extends crm_controller
 			$end_date = $this->input->post("month_year_to_date");
 			$end_date = date("Y-m-t", strtotime($end_date));
 			$month    = date("Y-m-01 00:00:00", strtotime($end_date));
-		}
+		} */
 		if($this->input->post("billable_month")) {
 			$bill_month = $this->input->post("billable_month");
 			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
@@ -2046,7 +2046,7 @@ class Dashboard extends crm_controller
 		$month_status = $this->input->post("month_status");
 		if(!empty($month_status)){
 			if($month_status==2){
-				$end_date  	   = date('Y-m-t', strtotime("-1 month"));
+				echo $end_date  	   = date('Y-m-t', strtotime("-1 month")); exit;
 				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
 			}else{
 				$end_date  	   = date('Y-m-d');
