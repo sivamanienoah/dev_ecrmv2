@@ -31,7 +31,12 @@ class Customers extends crm_controller {
         }
         $this->load->view('customer_view', $data);
     }
-	function index($limit = 0, $search = false) {
+	
+	/*
+	*Listing all the customers based on level & role
+	*/
+	function index($limit = 0, $search = false) 
+	{
 		$default = array('last_name', 'asc');
 		if (!$this->session->userdata('customer_sort')) {
 			$this->session->set_userdata('customer_sort', $default);
@@ -40,6 +45,7 @@ class Customers extends crm_controller {
 		$current = $this->session->userdata('customer_sort');
 		$data['current_sort'] = $current;
         $data['customers'] = $this->customer_model->company_list($limit, rawurldecode($search), $current[0], $current[1]);
+		// echo $this->db->last_query(); die;
 
         if ($search == false) {           
 			$config['base_url'] = $this->config->item('base_url') . 'customers/index/';
@@ -47,6 +53,7 @@ class Customers extends crm_controller {
         }
         $this->load->view('customer_view', $data);
     }
+	
 	function set_search_order($type = 'last_name', $uri = 'customers') {
 		$current = $this->session->userdata('customer_sort');
 		$order = ($current[1] == 'asc') ? 'desc' : 'asc';
@@ -179,16 +186,16 @@ class Customers extends crm_controller {
 						$position	=	$pst_data['position'];
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
-						$batch_insert_data	=	array();
+						$batch_insert_data	= array();
 						
 						for($i=0;$i<count($name);$i++)
 						{
-							$cust_data					=	array();
-							$cust_data['customer_name']	=	$name[$i];
-							$cust_data['skype_name']	=	$skype[$i];
-							$cust_data['position_title']=	$position[$i];
-							$cust_data['phone_1']		=	$phone_no[$i];
-							$cust_data['email_1']		=	$email[$i];
+							$cust_data					= array();
+							$cust_data['customer_name']	= $name[$i];
+							$cust_data['skype_name']	= $skype[$i];
+							$cust_data['position_title']= $position[$i];
+							$cust_data['phone_1']		= $phone_no[$i];
+							$cust_data['email_1']		= $email[$i];
 							$cust_data['modified_by'] 	= $this->userdata['userid'];
 							// echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
 							if($contact_id[$i])
@@ -849,6 +856,9 @@ class Customers extends crm_controller {
 						$cmp_details['www']			  = $impt_data[$i]['M'];
 						$cmp_details['comments']	  = $impt_data[$i]['N'];
 						$cmp_details['sales_contact_userid_fk'] = $this->userdata['userid'];
+						$cmp_details['created_by'] 	  = $this->userdata['userid'];
+						$cmp_details['created_on']    = date('Y-m-d H:i:s');
+						$cmp_details['modified_by']   = $this->userdata['userid'];
 						
 						if(!empty($company_exists)) {
 							//update the customer company details
@@ -880,6 +890,9 @@ class Customers extends crm_controller {
 						$cust_details['email_1']    = $cust_email;
 						$cust_details['skype_name'] = $impt_data[$i]['S'];
 						$cust_details['sales_contact_userid_fk'] = $this->userdata['userid'];
+						$cust_details['created_by']    = $this->userdata['userid'];
+						$cust_details['created_on']    = date('Y-m-d H:i:s');
+						$cust_details['modified_by']   = $this->userdata['userid'];
 						
 						if($cust_details['company_id']!=''){
 							$customer_exists = $this->customer_model->check_customer_details($cust_details['company_id'], $cust_email);
@@ -965,20 +978,23 @@ class Customers extends crm_controller {
 		
 		if($post_data['company_id']==''){
 			//insert company
-			$cmp_data['company'] = $post_data['company'];
-			$cmp_data['add1_line1'] = $post_data['add1_line1'];
-			$cmp_data['add1_line2'] = $post_data['add1_line2'];
-			$cmp_data['add1_suburb'] = $post_data['add1_suburb'];
-			$cmp_data['add1_postcode'] = $post_data['add1_postcode'];
-			$cmp_data['add1_region'] = $post_data['add1_region'];
-			$cmp_data['add1_country'] = $post_data['add1_country'];
-			$cmp_data['add1_state'] = $post_data['add1_state'];
-			$cmp_data['add1_location'] = $post_data['add1_location'];
-			$cmp_data['phone'] = $post_data['phone'];
-			$cmp_data['fax'] = $post_data['fax'];
-			$cmp_data['email_2'] = $post_data['email_2'];
-			$cmp_data['www'] = $post_data['www'];
-			// $cmp_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+			$cmp_data['company'] 		= $post_data['company'];
+			$cmp_data['add1_line1'] 	= $post_data['add1_line1'];
+			$cmp_data['add1_line2'] 	= $post_data['add1_line2'];
+			$cmp_data['add1_suburb'] 	= $post_data['add1_suburb'];
+			$cmp_data['add1_postcode'] 	= $post_data['add1_postcode'];
+			$cmp_data['add1_region'] 	= $post_data['add1_region'];
+			$cmp_data['add1_country'] 	= $post_data['add1_country'];
+			$cmp_data['add1_state'] 	= $post_data['add1_state'];
+			$cmp_data['add1_location']  = $post_data['add1_location'];
+			$cmp_data['phone'] 			= $post_data['phone'];
+			$cmp_data['fax'] 			= $post_data['fax'];
+			$cmp_data['email_2'] 		= $post_data['email_2'];
+			$cmp_data['www'] 			= $post_data['www'];
+			$cmp_data['sales_contact_userid_fk'] = $this->userdata['userid'];
+			$cmp_data['created_by'] 	= $this->userdata['userid'];
+			$cmp_data['created_on'] 	= date('Y-m-d H:i:s');
+			$cmp_data['modified_by'] 	= $this->userdata['userid'];
 			
 			$this->db->insert($this->cfg['dbpref'] . 'customers_company', $cmp_data);
 			$cust_data['company_id'] = $this->db->insert_id();			
@@ -990,6 +1006,8 @@ class Customers extends crm_controller {
 			$cust_data['phone_1']		= $post_data['phone_1'];
 			$cust_data['email_1']		= $post_data['email_1'];
 			$cust_data['sales_contact_userid_fk'] = $post_data['sales_contact_userid_fk'];
+			$cust_data['created_by'] 			  = $this->userdata['userid'];
+			$cust_data['modified_by'] 			  = $this->userdata['userid'];
 			
 			$this->db->insert($this->cfg['dbpref'] . 'customers', $cust_data);
 			$contact_id = $this->db->insert_id();
