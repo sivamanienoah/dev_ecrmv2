@@ -2179,6 +2179,8 @@ class Dashboard extends crm_controller
 				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
+				$data['start_date']   	= $start_date;
+				$data['end_date']   	= $start_date;
 				//*for other cost value projects only*//
 				$data['othercost_projects'] = array();
 				if(!empty($res) && count($res)>0) {
