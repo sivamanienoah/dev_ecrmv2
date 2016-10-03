@@ -758,11 +758,11 @@ $(function(){
 						<br/>
 						<select data-placeholder="Choose Users..." name="email_users" multiple id="email_users" class="chzn-select" style="width:400px;">
 							<?php foreach ($user_accounts as $ua) {
-								if ((($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
+								// if ((($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
 								?>
 									<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'] . ' ' . $ua['last_name']; ?></option>
 								<?php 
-								}
+								// }
 							}
 					?>
 						</select>
