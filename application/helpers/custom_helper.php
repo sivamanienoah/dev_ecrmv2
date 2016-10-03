@@ -416,7 +416,6 @@ if ( ! function_exists('getOtherCostByLeadIdByDateRange'))
 {
 	function getOtherCostByLeadIdByDateRange($lead_id = false, $default_curr = false, $start_date = false, $end_date = false)
 	{
-		echo $start_date . " " .$end_date; exit;
 		$cur_bk_rate = get_book_keeping_rates();
 		$CI   	     = get_instance();
 		$cfg	     = $CI->config->item('crm'); /// load config
