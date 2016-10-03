@@ -54,7 +54,6 @@
 		 
 			//Re-Assign the Keys in the array.
 			$final_restrict_user = array_values($restrict_users);
-			
 		?>
 		
 		
@@ -68,13 +67,10 @@
 					}
 				}
 				$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
-			}
-			
-			
+			}		
 			function array_remove_by_value($array, $value) {
 				return array_values(array_diff($array, array($value)));
 			}
-			
 		?>
 		
 		
@@ -355,6 +351,11 @@
 			<div class="pull-left">
 				<label class="project-id">Base Currency</label>
 				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['base_currency']] ?>" readonly style="width: 125px;" />
+			</div>
+			<div class="clear"></div>
+			<div class="pull-left">
+				<label class="project-id">Project Currency</label>
+				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['expect_worth_id']] ?>" readonly style="width: 125px;" />
 			</div>
 			<div class="clear"></div>
 			<form>
@@ -2063,20 +2064,30 @@
 	
 		<div id="jv-tab-10">
 			<form id="comm-log-form">
-			
+				<!--div class="email-list">
+					<label>Email To:</label>
+					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
+						<?php
+						// foreach($final_restrict_user as $ua) {
+						?>
+						<option value="<?php #echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php #echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+						<?php
+						// }
+						?>
+					</select>
+				</div-->
 				<div class="email-list">
 					<label>Email To:</label>
 					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
 						<?php
-						foreach($final_restrict_user as $ua) {
+						foreach($user_accounts as $ua) {
 						?>
-						<option value="<?php echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
+						<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'] . ' ' . $ua['last_name']; ?></option>
 						<?php
 						}
 						?>
 					</select>
 				</div>
-				
 				<?php
 				if (isset($userdata)) {
 				?>
