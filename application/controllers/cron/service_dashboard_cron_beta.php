@@ -677,20 +677,20 @@ class Service_dashboard_cron_beta extends crm_controller
 				$ins_array = array();
 			}
 			
-			$tot['billing_month'] = $totCM_Irval;
-			$tot['ytd_billing']   = $tot_Irval;
+			$tot['billing_month'] 		 = $totCM_Irval;
+			$tot['ytd_billing']   		 = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
-			//$tot['ytd_billable_hrs'] = $tot_ytd_billable_hrs;
-			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
-			$tot['ytd_billable'] = round(($tot_billval/$tot_totbillval)*100);
-			$tot['effort_variance'] = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
-			$cmonth='-';
+			//$tot['ytd_billable_hrs'] 	 = $tot_ytd_billable_hrs;
+			$tot['billable_month'] 		 = round(($tot_billhour/$tot_tothours)*100);
+			$tot['ytd_billable'] 		 = round(($tot_billval/$tot_totbillval)*100);
+			$tot['effort_variance'] 	 = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
+			$cmonth						 = '-';
 			//if($tot_cm_dc_tot){
-			$cmonth = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
+			$cmonth 					 = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
 			//}
-			$tot['contribution_month'] = $cmonth;
-			$tot['ytd_contribution'] = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
-			$tot['month_status'] = 1;
+			$tot['contribution_month'] 	 = $cmonth;
+			$tot['ytd_contribution'] 	 = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
+			$tot['month_status'] 		 = 1;
 
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total','month_status' => 1));
