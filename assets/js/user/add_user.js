@@ -5,189 +5,32 @@
 */
 
 $(document).ready(function() {
-$('.error').hide();
- 
-if(url_segment[3]!='update'){
-
-		$('button.positive').click(function() {
-			var varFirstname=$('#first_name').val();
-			if(varFirstname.trim() == ""){
-				$('div#error12.error').show();
-				return false;
-			}else {
-				$('div#error12.error').hide();
-			}
-			
-			var varLastname=$('#last_name').val();
-			if(varLastname.trim() == ""){
-				$('div#error2.error').show();
-				return false;
-			} else {
-				$('div#error2.error').hide();
-			}
-			
-			var varusername=$('#username').val();
-			if(varusername.trim() == ""){
-				$('div#errorun.error').show();
-				return false;
-			} else {
-				$('div#errorun.error').hide();
-			}
-			
-			var varRoleid=$('#role_id').val();
-			if(varRoleid == ""){
-				$('div#error3.error').show();
-				return false;
-			} else {
-				$('div#error3.error').hide();
-			}	
-			
-			var varEmail=$('#email').val();		
-			var atpos=varEmail.indexOf("@");
-			var dotpos=varEmail.lastIndexOf(".");
-			if(varEmail == ""){
-				$('span#error4.error').show();
-				$('span#notvalid.error').hide();
-				$('span.checkUser').hide();
-				return false;
-			} 
-			else if (atpos<1 || dotpos<atpos+2 || dotpos+2>=varEmail.length)
-			{
-				$('span#notvalid.error').show();
-				$('span#error4.error').hide();
-				$('span.checkUser').hide();
-				return false;		  
-			} else {
-				$('span.checkUser').show();
-				$('span#error4.error').hide();
-				$('span#notvalid.error').hide();
-			}
-			
-			
-			var varPassword=$('#password').val();
-			if(varPassword.trim() == ""){
-				$('div#error5.error').show();
-				return false;
-			} else if(varPassword.length < 6 ) {
-				alert('Password should be 6 characters');
-				return false;
-			} else {
-				$('div#error5.error').hide();
-			}
-
-			var varLevelid=$('#level_id').val();
-			if(varLevelid == ""){
-				$('div#error6.error').show();
-				return false;
-			} else {
-				$('div#error6.error').hide();
-			}	
-			
-		if(varLevelid == 2) {
-				var region_load = $('#region_load').val();	
-				if(region_load == null) {
-					alert('Please select region');
-				}else {
-					document.getElementById("frm").submit();
+	$('#role_id').change(function () {
+        var val = $('#role_id').val();
+        if( val == 14 ) {
+			if(url_segment[3]!='update') {
+				if(curUserId != 59) {
+					$('#contract_manager').val(curUserId);
 				}
-		} else if(varLevelid == 1) {
-			   $(".level-message").html("Your level has set to Global");
-			   document.getElementById("frm").submit();
-		}else if(varLevelid == 3) {
-				var region_load = $('#region_load').val();
-				var country_load = $('#country_load').val();		
-				if(region_load == null) {
-					alert('Please select region');
-					return false;
-				} else if(country_load == null) {
-					alert('Please select country');
-					return false;
-				}	
-				$.ajax({
-					type: 'POST',
-					url: 'user/checkcountry',
-					dataType:'json',
-					data: 'region_load='+region_load+'&country_load='+country_load+'&'+csrf_token_name+'='+csrf_hash_token,
-					success:function(data){		
-						if(data.msg == 'noans'){
-							alert('Please select corresponding country');
-							return false;
-						} else if(data.msg == 'success'){
-							document.getElementById("frm").submit();
-						}
-						
-					}			
-				});
-		} else if(varLevelid == 4) {
-				var region_load = $('#region_load').val();
-				var country_load = $('#country_load').val();
-				var state_load = $('#state_load').val();
-				if(region_load == null) {
-					alert('Please select region');
-					return false;
-				} else if(country_load == null) {
-					alert('Please select country');
-					return false;
-				}else if(state_load == null) {
-					alert('Please select state');
-					return false;
-				}
-				$.ajax({
-					type: 'POST',
-					url: 'user/checkstate',
-					dataType:'json',
-					data: 'region_load='+region_load+'&country_load='+country_load+'&state_load='+state_load+'&'+csrf_token_name+'='+csrf_hash_token,
-					success:function(data){		
-						if(data.countrymsg == 'noans' || data.statemsg == 'nostate'){
-							alert('Please select corresponding country/state');
-							return false;
-						} else if(data.countrymsg == 'success' && data.statemsg == 'success' ){
-							document.getElementById("frm").submit();
-						}
-						
-					}			
-				});
-		} else if(varLevelid == 5) {
-
-				var region_load = $('#region_load').val();
-				var country_load = $('#country_load').val();
-				var state_load = $('#state_load').val();
-				var location_load = $('#location_load').val();
-				if(region_load == null) {
-					alert('Please select region');
-					return false;
-				} else if(country_load == null) {
-					alert('Please select country');
-					return false;
-				}else if(state_load == null) {
-					alert('Please select state');
-					return false;
-				}else if(location_load == null) {
-					alert('Please select location');
-					return false;
-				}
-				$.ajax({
-					type: 'POST',
-					url: 'user/checklocation',
-					dataType:'json',
-					data: 'region_load='+region_load+'&country_load='+country_load+'&state_load='+state_load+'&location_load='+location_load+'&'+csrf_token_name+'='+csrf_hash_token,
-					success:function(data){		
-						if(data.countrymsg == 'noans' || data.statemsg == 'nostate'|| data.locationmsg == 'noloc'){
-							alert('Please select corresponding country/state/location');
-							return false;
-						} else if(data.countrymsg == 'success' && data.statemsg == 'success' && data.locationmsg == 'success' ){
-							document.getElementById("frm").submit();
-						}
-						
-					}			
-				});
-		}
-		return false;	
-		});
+			}
+			$('#auth-db').prop('checked', true);
+			$('#auth-ldap').prop('checked', false);
+			$('#auth-ldap').attr('disabled', 'disabled');
+			$('#reseller_row').show();
+        } else {
+			$('#reseller_row').hide();
+			$('#auth-ldap').attr('disabled', false);
+        }
+    });
 	
- } /// segment 3 is update end
+	$('.error').hide();
+ 
+if(url_segment[3]!='update') {
+
+} /*segment 3 is update end*/ 
 
 	if(url_segment[3] != 'update') {
+		
 	//adduser
        var addlevelid = $('#level_id').val();
 		if($("#level_id").val() == 1) {
@@ -269,7 +112,15 @@ if(url_segment[3]!='update'){
 	//end of adduser
 	
 	
-	if(url_segment[3] == 'update') {
+	if(url_segment[3] == 'update') { 
+	
+		if($('#role_id').val() == 14) {
+			$('#reseller_row').show();
+			$('#auth-ldap').attr('disabled', true);
+		} else {
+			$('#reseller_row').hide();
+		}
+	
 		var editlevelid = $('#level_id').val();	
 
 		if(editlevelid == "5") {
@@ -328,10 +179,7 @@ if(url_segment[3]!='update'){
 		$(".level-message").html("Your level has set to Global");
 		}	
    }
-	
-	
-	
-	
+
 	function editloadRegion() {
 		$(".region-box").css('display', 'block');
 		//var region_id = $("#region_load").val();
@@ -856,4 +704,184 @@ $('#username').blur(function() {
 		}
 	});
 	return false;
-});   
+}); 
+
+function checkAddUser()
+{
+	// alert('test');
+	var is_error = false;
+	
+	var varFirstname = $('#first_name').val();
+	if(varFirstname.trim() == "") {
+		is_error = true;
+		$('div#error12.error').show();
+	} else {
+		$('div#error12.error').hide();
+	}
+	
+	var varLastname = $('#last_name').val();
+	if(varLastname.trim() == "") {
+		is_error = true;
+		$('div#error2.error').show();
+	} else {
+		$('div#error2.error').hide();
+	}
+	
+	var varusername = $('#username').val();
+	if(varusername.trim() == "") {
+		is_error = true;
+		$('div#errorun.error').show();
+	} else {
+		$('div#errorun.error').hide();
+	}
+	
+	var varRoleid = $('#role_id').val();
+	if(varRoleid == "") {
+		is_error = true;
+		$('div#error3.error').show();
+	} else {
+		$('div#error3.error').hide();
+	}
+	
+	if(varRoleid == "14") {
+		if($('#contract_manager').val() == "") {
+			is_error = true;
+			$('div#error_contractmanager.error').show();
+		} else {
+			$('div#error_contractmanager.error').hide();
+		}
+	}
+	
+	var varEmail 	= $('#email').val();		
+	var atpos		= varEmail.indexOf("@");
+	var dotpos		= varEmail.lastIndexOf(".");
+	if(varEmail == "") {
+		is_error = true;
+		$('span#error4.error').show();
+		$('span#notvalid.error').hide();
+		$('span.checkUser').hide();
+	} else if (atpos<1 || dotpos<atpos+2 || dotpos+2>=varEmail.length) {
+		is_error = true;
+		$('span#notvalid.error').show();
+		$('span#error4.error').hide();
+		$('span.checkUser').hide();	  
+	} else {
+		$('span.checkUser').show();
+		$('span#error4.error').hide();
+		$('span#notvalid.error').hide();
+	}
+	
+	var varPassword = $('#password').val();
+	if(varPassword.trim() == "") {
+		is_error = true;
+		$('div#error5.error').show();
+	} else if(varPassword.length < 6 ) {
+		is_error = true;
+		alert('Password should be 6 characters');
+	} else {
+		$('div#error5.error').hide();
+	}
+	
+	var varLevelid = $('#level_id').val();
+	if(varLevelid == "") {
+		is_error = true;
+		$('div#error6.error').show();
+	} else {
+		$('div#error6.error').hide();
+	}
+	// alert(varLevelid);
+	/*condition for checking the levels*/
+	if(varLevelid == 1) {
+		$(".level-message").html("Your level has set to Global");
+	} else if(varLevelid == 2) {
+		var region_load = $('#region_load').val();	
+		if(region_load == null) {
+			is_error = true;
+			alert('Please select region');
+		}
+	} else if(varLevelid == 3) {
+		var region_load  = $('#region_load').val();
+		var country_load = $('#country_load').val();		
+		if(region_load == null) {
+			is_error = true;
+			alert('Please select region');
+		} else if(country_load == null) {
+			is_error = true;
+			alert('Please select country');
+		}
+		$.ajax({
+			type: 'POST',
+			url: 'user/checkcountry',
+			dataType:'json',
+			data: 'region_load='+region_load+'&country_load='+country_load+'&'+csrf_token_name+'='+csrf_hash_token,
+			success:function(data){		
+				if(data.msg == 'noans') {
+					is_error = true;
+					alert('Please select corresponding country');
+				}
+			}			
+		});
+	} else if(varLevelid == 4) {
+		var region_load 	= $('#region_load').val();
+		var country_load 	= $('#country_load').val();
+		var state_load 		= $('#state_load').val();		
+		if(region_load == null) {
+			is_error = true;
+			alert('Please select region');
+		} else if(country_load == null) {
+			is_error = true;
+			alert('Please select country');
+		} else if(state_load == null) {
+			is_error = true;
+			alert('Please select state');
+		}
+		$.ajax({
+			type: 'POST',
+			url: 'user/checkstate',
+			dataType:'json',
+			data: 'region_load='+region_load+'&country_load='+country_load+'&state_load='+state_load+'&'+csrf_token_name+'='+csrf_hash_token,
+			success:function(data){		
+				if(data.countrymsg == 'noans' || data.statemsg == 'nostate') {
+					is_error = true;
+					alert('Please select corresponding Country / State');
+				}
+			}			
+		});
+	} else if(varLevelid == 5) {
+		var region_load 	= $('#region_load').val();
+		var country_load 	= $('#country_load').val();
+		var state_load 		= $('#state_load').val();
+		var location_load 	= $('#location_load').val();
+		if(region_load == null) {
+			is_error = true;
+			alert('Please select region');
+		} else if(country_load == null) {
+			is_error = true;
+			alert('Please select country');
+		} else if(state_load == null) {
+			is_error = true;
+			alert('Please select state');
+		} else if(location_load == null) {
+			is_error = true;
+			alert('Please select location');
+		}
+		$.ajax({
+			type: 'POST',
+			url: 'user/checklocation',
+			dataType:'json',
+			data: 'region_load='+region_load+'&country_load='+country_load+'&state_load='+state_load+'&location_load='+location_load+'&'+csrf_token_name+'='+csrf_hash_token,
+			success:function(data){		
+				if(data.countrymsg == 'noans' || data.statemsg == 'nostate'|| data.locationmsg == 'noloc'){
+					is_error = true;
+					alert('Please select corresponding country/state/location');
+				}
+			}			
+		});
+	}
+	
+	if(is_error == true) {
+		return false;
+	} else {
+		return true;
+	}
+}	
