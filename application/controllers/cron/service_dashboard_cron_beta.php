@@ -173,7 +173,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
 		
 		$query1 = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$invoices_data = $query1->result_array();
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
