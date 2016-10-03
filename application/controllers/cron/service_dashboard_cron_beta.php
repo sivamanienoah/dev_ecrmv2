@@ -668,7 +668,8 @@ class Service_dashboard_cron_beta extends crm_controller
 				$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
 				
 				$tot_dc_vals += $projects['irval'][$parr];
-				$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
+				$tot_dc_tots += $temp_ytd_utilization_cost;
+				// $tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
 				
 				//$tot_ytd_billable_hrs += $projects['direct_cost'][$parr]['total_hours'];
 				
