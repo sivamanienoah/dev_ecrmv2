@@ -426,8 +426,16 @@ if ( ! function_exists('getOtherCostByLeadIdByDateRange'))
 			$CI->db->select("cost_incurred_date, currency_type, value");
 			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
 			$CI->db->where('project_id', $lead_id);
+			//cost_incurred_date
+			if(!empty($start_date)) {
+				$CI->db->where("cost_incurred_date >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+			}
+			if(!empty($end_date)) {
+				$CI->db->where("cost_incurred_date <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+			}
 			$CI->db->order_by('id', 'ASC');
 			$query  = $CI->db->get();
+			echo $CI->db->last_query(); die;
 			$result = $query->result_array();
 
 			if(count($result)>0 && !empty($result)) {
