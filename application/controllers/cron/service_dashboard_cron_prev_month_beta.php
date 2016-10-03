@@ -580,7 +580,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		}
 		## code for month contribution ends here##
 
-		$projects['direct_cost']   = $directcost;
+		$projects['direct_cost']    = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
 		$ins_array = array();
@@ -607,13 +607,17 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				
 				/**other cost data*/
 				$other_cost_val = 0;
+				$cm_other_cost_val  = 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
 					foreach($projects['othercost_projects'][$parr] as $pro_id) {
 						// $val = getOtherCostByLeadId($pro_id, $this->default_cur_id);
 						$val 			 = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
+						$cm_val 		 = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $month, $month);
 						$other_cost_val += $val;
+						$cm_other_cost_val += $cm_val;
 					}
 					$projects['other_cost'][$parr] = $other_cost_val;
+					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
 				/**other cost data*/
 				
@@ -634,8 +638,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 				$cm_dc_val = '-';
-				if($projects['cm_direct_cost'][$parr]['total_cm_direct_cost']){
-					$cm_dc_val = (($projects['cm_irval'][$parr] - $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'])/$projects['cm_irval'][$parr]) * 100;
+				
+				$temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr];
+				if($temp_cm_utd_cost){
+					$cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
 				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
@@ -659,10 +665,12 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
 				
 				$tot_cm_irvals += $projects['cm_irval'][$parr];
-				$tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
+				// $tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
+				$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
 				$tot_dc_vals += $projects['irval'][$parr];
-				$tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
+				// $tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
+				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				//$tot_ytd_billable_hrs += $projects['direct_cost'][$parr]['total_hours'];
 				
