@@ -479,6 +479,7 @@ if ( ! function_exists('getOtherCostByLeadIdByDateRange'))
 				$CI->db->where("cost_incurred_date <= ", date('Y-m-d H:i:s', strtotime($end_date)));
 			}
 			$CI->db->order_by('id', 'ASC');
+			echo $CI->db->last_query(); exit;
 			$query  = $CI->db->get();
 			$result = $query->result_array();
 
