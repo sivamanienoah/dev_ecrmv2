@@ -66,16 +66,18 @@ class Service_dashboard_cron_beta extends crm_controller
 			
 		$bk_rates = get_book_keeping_rates();
 		
+		
+		
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
 		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
 		
 		//default billable_month
-		$month = date('Y-m-01 00:00:00');
+		$month 		= date('Y-m-01 00:00:00');
 		$start_date = date("Y-m-01",strtotime($start_date));
-		$end_date = date("Y-m-t", strtotime($end_date));
-		
+		$end_date 	= date("Y-m-t", strtotime($end_date));
+
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -173,6 +175,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
 		
 		$query1 = $this->db->get();
+		echo $this->db->last_query(); exit;
 		$invoices_data = $query1->result_array();
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
