@@ -38,7 +38,7 @@ if ( ! function_exists('getResellerActiveLeads'))
 		$query  = $CI->db->get($CI->cfg['dbpref'].'leads jb');
 		// echo $CI->db->last_query(); exit;
 		$num 	= $query->num_rows();
-		if ($num<1){
+		if ($num<1) {
 			return false;
 		} else {
 			return $num;
@@ -59,11 +59,36 @@ if ( ! function_exists('getResellerActiveProjects'))
 		$reseller_condn = '(`jb`.`belong_to` = '.$userid.' OR `jb`.`lead_assign` = '.$userid.' OR `jb`.`assigned_to` = '.$userid.')';
 		$CI->db->where($reseller_condn);
 		$query  = $CI->db->get($CI->cfg['dbpref'].'leads jb');
+		// echo $CI->db->last_query(); exit;
+		$num 	= $query->num_rows();
+		if ($num<1) {
+			return false;
+		} else {
+			return $num;
+		}
+	}
+}
+
+if ( ! function_exists('getResellerAgreementDate'))
+{
+	function getResellerAgreementDate($userid)
+	{	
+		$res = array();
+		$CI  = get_instance();
+		$cfg = $CI->config->item('crm'); /// load config
+		
+		$CI->db->select('contract_start_date, contract_end_date, renewal_reminder_date');
+		$CI->db->where('contract_status', 1);
+		$CI->db->order_by('contract_end_date', 'desc');
+		$CI->db->limit(1);
+		$query  = $CI->db->get($CI->cfg['dbpref'].'contracts');
+		// echo $CI->db->last_query(); exit;
 		$num 	= $query->num_rows();
 		if ($num<1){
 			return false;
 		} else {
-			return $num;
+			$res = $query->row_array();
+			return $res;
 		}
 	}
 }

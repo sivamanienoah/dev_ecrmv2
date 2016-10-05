@@ -9,13 +9,15 @@
  * @author 		eNoah
  */
 
-class Reseller_model extends crm_model {
+class Reseller_model extends crm_model 
+{
     
 	/*
 	*@construct
 	*@Reseller_model
 	*/
-    function __construct() {
+    function __construct() 
+	{
        parent::__construct();
 	   $this->userdata = $this->session->userdata('logged_in_user');
     }
@@ -44,7 +46,8 @@ class Reseller_model extends crm_model {
 	*@Get row record for dynamic table
 	*@Method get_row
 	*/
-	public function get_row($table, $cond) {
+	public function get_row($table, $cond) 
+	{
     	$res = $this->db->get_where($this->cfg['dbpref'].$table, $cond);
         return $res->result_array();
     }
@@ -53,7 +56,8 @@ class Reseller_model extends crm_model {
 	*@Get the projects details
 	*@Method get_projects
 	*/
-	function get_projects() {
+	function get_projects() 
+	{
 		$this->db->select('l.lead_id,l.lead_title,l.invoice_no,l.custid_fk');
 		$this->db->from($this->cfg['dbpref'].'leads as l');
 		$this->db->where("l.lead_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status IN ('1','2','3','4') ");
@@ -71,7 +75,8 @@ class Reseller_model extends crm_model {
 	*@Get the customer details
 	*@Method get_customers
 	*/
-	function get_customers() {
+	function get_customers() 
+	{
 	    $this->db->select('companyid, company');
 	    $this->db->from($this->cfg['dbpref'] . 'customers_company');
 		if ($this->userdata['role_id']==14) {
@@ -86,7 +91,8 @@ class Reseller_model extends crm_model {
 	/*
 	*@method insert_row_return_id
 	*/
-	function insert_row_return_id($tbl, $ins) {
+	function insert_row_return_id($tbl, $ins) 
+	{
 		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
 		return $this->db->insert_id();
     }
@@ -94,7 +100,8 @@ class Reseller_model extends crm_model {
 	/*
 	*@method get_data_by_id
 	*/
-	function get_data_by_id($table, $wh_condn) {
+	function get_data_by_id($table, $wh_condn) 
+	{
 		$this->db->where($wh_condn);
 		$user = $this->db->get($this->cfg['dbpref'] . $table);
 		// echo $this->db->last_query(); exit;
@@ -104,7 +111,8 @@ class Reseller_model extends crm_model {
 	/*
 	*@method update_records
 	*/
-	function update_records($tbl, $wh_condn, $not_wh_condn, $up_arg) {
+	function update_records($tbl, $wh_condn, $not_wh_condn, $up_arg) 
+	{
     	$this->db->where($wh_condn);
 		if(!empty($not_wh_condn) && $not_wh_condn != '') {
 			foreach($not_wh_condn as $key=>$value) {
@@ -129,13 +137,50 @@ class Reseller_model extends crm_model {
 	*@Get the Currency details
 	*@Method get_currencies
 	*/
-	function get_currencies() 
+	public function get_records($tbl, $wh_condn='', $order='') 
 	{
-	    $this->db->select('expect_worth_id, expect_worth_name');
-	    $this->db->from($this->cfg['dbpref'] . 'expect_worth');
-	    $query = $this->db->get();
-	    return $query->result_array();
-	}
-}
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
 
-?>
+	/*
+	*@Get the Currency details
+	*@Method get_currencies
+	*/
+	public function getLeads($userid) 
+	{
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
+		c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+		us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref']. 'leads as j');
+		$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
+		$this->db->where('j.pjt_status', 0);
+		$this->db->where('j.lead_status', 1);
+		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+		$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
+		$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
+		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
+		$this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
+		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+		$this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
+		$this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+		$this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
+		$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
+		$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+		$reseller_condn = '(j.belong_to = '.$userid.' OR j.lead_assign = '.$userid.' OR j.assigned_to ='.$userid.')';
+		$this->db->where($reseller_condn);
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		return $query->result_array();
+    }
+}

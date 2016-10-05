@@ -37,16 +37,50 @@ require (theme_url().'/tpl/header.php');
 							?>
 							<a href="reseller/view_reseller/update/<?php echo $row['userid'] ?>" title='View Reseller'><?php echo $reseller_name; ?></a>
 						</td>
-						<td><?php $get_resller_leads = getResellerActiveLeads($row['userid']); echo isset($get_resller_leads) ? $get_resller_leads : ""; ?></td>
-						<td><?php $get_resller_projects = getResellerActiveProjects($row['userid']); echo isset($get_resller_projects) ? $get_resller_projects : ""; ?></td>
-						<td><?php  ?></td>
-						<td><?php  ?></td>
+						<td>
+							<?php
+								$get_resller_leads = getResellerActiveLeads($row['userid']); 
+								$active_leads = isset($get_resller_leads) ? $get_resller_leads : "";
+								if(isset($active_leads) && !empty($active_leads)) {
+							?>
+									<a href="javascript:void(0)" onclick="getActiveLeads('<?php echo $row['userid']; ?>'); return false;"><?php echo $active_leads; ?></a>
+							<?php
+								}
+							?>
+						</td>
+						<td>
+							<?php 
+								$get_resller_projects = getResellerActiveProjects($row['userid']); 
+								$active_projects = isset($get_resller_projects) ? $get_resller_projects : "";
+								if(isset($active_projects) && !empty($active_projects)) {
+							?>
+									<a href="javascript:void(0)" onclick="getActiveProjects('<?php echo $row['userid']; ?>'); return false;"><?php echo $active_projects; ?></a>
+							<?php
+								}
+							?>
+						</td>
+						<td>
+							<?php
+								$get_dates = getResellerAgreementDate($row['userid']);
+								echo (isset($get_dates) && !empty($get_dates['contract_start_date'])) ? date('d-m-Y', strtotime($get_dates['contract_start_date'])) : "";
+							?>
+						</td>
+						<td>
+							<?php
+								echo (isset($get_dates) && !empty($get_dates['contract_end_date'])) ? date('d-m-Y', strtotime($get_dates['contract_end_date'])) : "";
+								if(strtotime($get_dates['renewal_reminder_date']) <= strtotime(date('Y-m-d H:i:s'))) {
+									echo " <span class='red pull-right'>Renew</span>";
+								}
+							?>
+						</td>
 						<td><?php $get_contract_manager_name = getContractManagerName($row['contract_manager']); echo isset($get_contract_manager_name) ? $get_contract_manager_name : ""; ?></td>
 					</tr>
 				<?php $i++; $sno++; } ?>
 			<?php } ?>
 		</tbody>
 	</table>
+	<div class="clearfix"></div>
+	<div id="drilldown_data" class="" style="margin:20px 0;display:none;"></div>
 	<?php } else { 
 		echo "You have no rights to access this page"; 
 	} 
@@ -54,6 +88,47 @@ require (theme_url().'/tpl/header.php');
 	</div><!--/Inner div -->
 </div><!--/Content div -->
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript">
+function getActiveProjects(userid)
+{
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'reseller/getResellerActiveProjects/',
+		data: 'filter=filter'+'&userid='+userid+'&'+csrf_token_name+'='+csrf_hash_token,
+		cache: false,
+		beforeSend:function() {
+			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		},
+		success: function(data) {
+			$('#drilldown_data').html(data);
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		}                                                                                   
+	});
+}
+
+function getActiveLeads(userid)
+{
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'reseller/getResellerActiveLeads/',
+		data: 'filter=filter'+'&userid='+userid+'&'+csrf_token_name+'='+csrf_hash_token,
+		cache: false,
+		beforeSend:function() {
+			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		},
+		success: function(data) {
+			$('#drilldown_data').html(data);
+			$('#drilldown_data').show();
+			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
+		}                                                                                   
+	});
+}
+</script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

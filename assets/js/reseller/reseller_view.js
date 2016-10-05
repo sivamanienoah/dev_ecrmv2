@@ -25,4 +25,37 @@ $(document).ready(function() {
 	});
 });
 
+function getAddContractForm(reseller_id)
+{
+	alert('getAddContractForm');
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'reseller/getContractForm/'+reseller_id,
+		cache:false,
+		dataType:'html',
+		beforeSend: function() {
+			//show loading symbol
+			$('#add_contract_form').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success:function(data) {
+			// console.info(data);
+			$('#add_contract_form').html(data);
+		}
+	});
+}
+
+function reset_add_form()
+{
+	// alert('tst');
+	$('#add_contract_form').html('');
+}
+
+function timerfadeout()
+{
+	$('.succ_err_msg').empty();
+}
 /////////////////
