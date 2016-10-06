@@ -29,7 +29,19 @@ class Task_model extends crm_model
 			{
 				$query="";
 			}
-			
+			if (array_key_exists("taskstartdate",$task_search) && array_key_exists("taskenddate",$task_search))
+			{
+				if($task_search['taskstartdate']!=""  &&  $task_search['taskenddate']!="")
+				{
+					echo $ts_startdate = $this->dateFormat($task_search['taskstartdate']);
+					$ts_enddate = $this->dateFormat($task_search['taskenddate']);
+					$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` BETWEEN '". $ts_startdate." 00:00:00"."' AND '".$ts_enddate." 23:59:59"."')";
+				}	
+			}
+			else
+			{
+					$query_date="";
+			}
 		
 		
 		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
@@ -37,7 +49,7 @@ class Task_model extends crm_model
 				LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
 				LEFT JOIN  `".$this->cfg['dbpref']."leads`ON`".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."leads`.`lead_id`
 				WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
-				AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query."
+				AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date."
 				AND (`".$this->cfg['dbpref']."tasks`.`created_by` = '".$task_search['taskowner']."'
 				 ".$both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."')
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
