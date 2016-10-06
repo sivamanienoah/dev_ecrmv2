@@ -692,5 +692,66 @@ $this->db->where('userid', $userid);
 			
 		return $arrNewUserArray;	
 	}	
+		/*
+	 * @Author 
+	 * @method taskCategoryQuery()
+	 * @Used Generate tasks from category types	
+	 * @access public
+	 * @param category value
+	 
+	 
+	 */	
+	public function taskCategoryQuery($category_id,$lead_id,$category_name,$task_complete)
+	{
+		
+		if($task_complete == 0)
+		{
+			$task_complete = "AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_complete."'";
+		}
+		else
+		{
+			$task_complete ="";
+		}
+		
+		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`
+				FROM `".$this->cfg['dbpref']."tasks`, `".$this->cfg['dbpref']."users`
+				WHERE `".$this->cfg['dbpref']."tasks`.`jobid_fk` =  '".$lead_id."'
+				AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+				AND `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'".$task_complete.
+				"ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
+		$q = $this->db->query($sql, array('jobid_fk' => $lead_id));
+			//echo $this->db->last_query().'<br/><br/><br/><br/>';
+	
+		$data['records'] = $q->result_array();	
+		$data['values'] = $category_name;
+		$data['categoryid'] = $category_id;
+		$data['rows'] = $q->num_rows();
+		return $data;	
+	}
+	
+	public function taskCountQuery($lead_id,$task_complete)
+	{
+		if($task_complete == 0)
+		{
+			$task_complete = "AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_complete."'";
+		}
+		else
+		{
+			$task_complete ="";
+		}
+		
+		$sql = "SELECT count(taskid) as count
+				FROM `".$this->cfg['dbpref']."tasks`, `".$this->cfg['dbpref']."users`
+				WHERE `".$this->cfg['dbpref']."tasks`.`jobid_fk` =  '".$lead_id."'
+				AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`".$task_complete."
+				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
+		$q = $this->db->query($sql, array('jobid_fk' => $lead_id));
+	
+		$data['records'] = $q->result_array();
+		
+		return $data['records'][0]['count'];	
+	}
+	
+	
 }
 ?>

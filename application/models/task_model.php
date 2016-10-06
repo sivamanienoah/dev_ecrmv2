@@ -9,8 +9,47 @@ class Task_model extends crm_model
 	
 	public function get_task_created_by() {
 		$sql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`,`".$this->cfg['dbpref']."tasks`.`jobid_fk`,`".$this->cfg['dbpref']."tasks`.`userid_fk` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
-		
+		//echo $this->db->last_query();
 		return $sql->result_array();
+	}
+	public function taskCategoryQuery($category_id,$category_name,$task_search,$both)
+	{
+		//print_r($task_search);
+		//echo $task_search['taskproject']."rammm";
+			if (array_key_exists("taskproject",$task_search))
+			{
+
+				if($task_search['taskproject']!="" )
+				{
+				$query="AND `".$this->cfg['dbpref']."tasks`.`jobid_fk` = '".$task_search['taskproject']."'";
+				}
+				
+			}
+			else
+			{
+				$query="";
+			}
+			
+		
+		
+		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
+				"FROM `".$this->cfg['dbpref']."tasks`
+				LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+				LEFT JOIN  `".$this->cfg['dbpref']."leads`ON`".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."leads`.`lead_id`
+				WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
+				AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query."
+				AND (`".$this->cfg['dbpref']."tasks`.`created_by` = '".$task_search['taskowner']."'
+				 ".$both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."')
+				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
+		
+
+		$q = $this->db->query($sql);
+		$data['records'] = $q->result_array();
+		//echo $this->db->last_query().'<br/><br/><br/>';		
+		$data['values'] = $category_name;
+		$data['categoryid'] = $category_id;
+		$data['rows'] = $q->num_rows();
+		return $data;	
 	}
 	
 	public function get_task_daily($uid, $today, $task_end_notify) 
@@ -139,6 +178,7 @@ class Task_model extends crm_model
 	{
 		
 	}
+
     
 }
 ?>

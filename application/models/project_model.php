@@ -929,5 +929,26 @@ class Project_model extends crm_model
 		$user = $this->db->get($this->cfg['dbpref'] . $table);
 		return $user->row_array();
 	}
+	public function getTaskCategoryList($id="")
+	{
+		$this->db->select('id, task_category, status');
+		$this->db->where('status', 1);
+		if(!empty($id))
+		{
+			$this->db->where('id', $id);
+		}
+		$list_users = $this->db->get($this->cfg['dbpref'] . 'task_category');
+		return $list_users->result_array();
+	}
+	
+	public function ListActiveprojects()
+	{
+		$this->db->select('lead_id,lead_title');
+		$this->db->where('lead_status', 4);
+		$this->db->where('pjt_status', 1);
+		$list_projects = $this->db->get($this->cfg['dbpref'] . 'leads');
+		return $list_projects->result_array();
+
+	}
 }
 ?>
