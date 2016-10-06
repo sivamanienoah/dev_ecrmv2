@@ -66,10 +66,15 @@ class Reseller extends crm_controller {
 		}
 		$data['page_heading'] 	= "View Reseller";
 		$data['reseller_det'] 	= array();
-		// $data['reseller_det'] = $this->reseller_model->get_reseller_details($id);
 		$data['reseller_det'] 	= $this->reseller_model->get_reseller($id);
 		$data['currencies'] 	= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		if(!empty($data['currencies'])) {
+			foreach($data['currencies'] as $curr){
+				$data['currency_arr'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
+			}
+		}
 		$data['users'] 			= $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
+		$data['contract_data'] 	= $this->reseller_model->get_contracts_details($id);
 		$this->load->view('reseller/reseller_view', $data);
     }
 	
@@ -95,6 +100,7 @@ class Reseller extends crm_controller {
 	{
 		$ins_val = array();
 		$ins_val['contracter_id'] 			= $this->input->post('contracter_id');
+		$ins_val['contract_title'] 			= $this->input->post('contract_title');
 		$ins_val['contract_manager'] 		= $this->input->post('contract_manager');
 		$ins_val['contract_start_date'] 	= ($this->input->post('contract_start_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('contract_start_date'))) : '';
 		$ins_val['contract_end_date'] 		= ($this->input->post('contract_end_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('contract_end_date'))) : '';

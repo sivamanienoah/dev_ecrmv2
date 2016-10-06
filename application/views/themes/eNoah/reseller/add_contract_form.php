@@ -27,6 +27,13 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Contract Title<span class='red'> *</span></td>
+			<td>
+				<input type="text" name="contract_title" id="contract_title" class="textfield width200px" />
+				<div class='ajx_failure_msg succ_err_msg' id='contract_title_err'></div>
+			</td>
+		</tr>
+		<tr>
 			<td>Contract Start date<span class='red'> *</span></td>
 			<td>
 				<input type="text" name="contract_start_date" id="contract_start_date" data-calendar="true" class="textfield width200px pick-date" readonly />
@@ -179,6 +186,14 @@ function validateContractForm()
 		$('#contract_manager_err').html('Select Contract Manager.');
 	} else {
 		$('#contract_manager_err').html('');
+	}
+	if(($.trim($('#contract_title').val()) == '')) 
+	{
+		validate_form = false;
+		errors.push('<p>Enter Contract Title.</p>');
+		$('#contract_title_err').html('Enter Contract Title.');
+	} else {
+		$('#contract_title_err').html('');
 	}
 	if(($.trim($('#contract_start_date').val()) == '')) 
 	{

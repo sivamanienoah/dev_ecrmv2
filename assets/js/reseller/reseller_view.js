@@ -43,6 +43,7 @@ function getAddContractForm(reseller_id)
 		},
 		success:function(data) {
 			// console.info(data);
+			$('#create_contract_btn').hide();
 			$('#add_contract_form').html(data);
 		}
 	});
@@ -52,6 +53,7 @@ function reset_add_form()
 {
 	// alert('tst');
 	$('#add_contract_form').html('');
+	$('#create_contract_btn').show();
 }
 
 function timerfadeout()

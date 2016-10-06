@@ -183,4 +183,23 @@ class Reseller_model extends crm_model
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
     }
+	
+	/*
+	*@Get Reseller User list
+	*@Method  user_list
+	*/
+    public function get_contracts_details($id = false) 
+	{
+		$this->db->select('c.id, c.contract_title, c.contracter_id, c.contract_manager, c.contract_start_date, c.contract_end_date, c.renewal_reminder_date, c.contract_document, c.description, c.contract_signed_date, c.contract_status, c.currency, c.tax, u.first_name, u.last_name');
+		$this->db->from($this->cfg['dbpref']."contracts as c");
+		if($id){
+			$this->db->where('c.contracter_id', $id);
+		}
+		$this->db->join($this->cfg['dbpref']."users as u", 'u.userid = c.contract_manager', 'left');
+		$this->db->order_by("c.contract_start_date", "desc");
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$reseller = $query->result_array();	
+        return $reseller;
+    }
 }
