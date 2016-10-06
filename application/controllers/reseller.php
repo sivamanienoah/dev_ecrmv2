@@ -110,7 +110,6 @@ class Reseller extends crm_controller {
 		$ins_val['contract_status'] 		= $this->input->post('contract_status');
 		$ins_val['currency'] 				= $this->input->post('currency');
 		$ins_val['tax'] 					= $this->input->post('tax');
-		$ins_val['contract_document'] 		= $this->input->post('contract_document');
 		$ins_val['created_by'] 				= $this->userdata['userid'];
 		$ins_val['created_on'] 				= date('Y-m-d H:i:s');
 		$ins_val['modified_by'] 			= $this->userdata['userid'];
@@ -118,6 +117,16 @@ class Reseller extends crm_controller {
 		
 		$insert_contract = $this->reseller_model->insert_row_return_id('contracts', $ins_val);
 		if($insert_contract) {
+			$uploaded_files 			= $this->input->post('file_id');
+			$ins_map_val    			= array();
+			$ins_map_val['contract_id'] = $insert_contract;
+			if(is_array($uploaded_files) && !empty($uploaded_files) && count($uploaded_files)>0) {
+				/**insert into contract upload mapping table**/
+				foreach($uploaded_files as $row_file_id) {
+					$ins_map_val['contract_file_upload_id'] = $row_file_id;
+					$this->reseller_model->insert_row_return_id('contracts_uploads_mapping', $ins_map_val);
+				}
+			}
 			//do log
 			/* $currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 			if(!empty($currencies)) {
@@ -188,6 +197,176 @@ class Reseller extends crm_controller {
 		} else {
 			echo "Email Not Sent";
 		}
+	}
+	
+	
+		/**
+	 * Uploads a file posted to a specified job
+	 * works with the Ajax file uploader
+	 */
+	public function contractFileUpload($contracter_id)
+	{
+		$this->load->library('upload');
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['contract_document']['name']);
+	
+		//creating files folder name
+		$f_dir = UPLOAD_PATH.'contracts/';
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		//creating lead_id folder name
+		$f_dir = $f_dir.$contracter_id;
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		$this->upload->initialize(array(
+		   "upload_path" => $f_dir,
+		   "overwrite" => FALSE,
+		   "remove_spaces" => TRUE,
+		   "max_size" => 51000000,
+		   "allowed_types" => "*"
+		)); 
+		// $config['allowed_types'] = '*';
+		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		
+		$returnUpload = array();
+		$json  		  = array();
+		$res_file     = array();
+		if(!empty($_FILES['contract_document']['name'][0])) {
+			if ($this->upload->do_multi_upload("contract_document")) {
+			   $returnUpload  = $this->upload->get_multi_upload_data();
+			   $json['error'] = FALSE;
+			   $json['msg']   = "File successfully uploaded!";
+			   $i = 1;
+			   if(!empty($returnUpload)) {
+					foreach($returnUpload as $file_up) {
+						$lead_files['contracter_user_id'] 	= $contracter_id;	
+						$lead_files['file_name'] 			= $file_up['file_name'];
+						$lead_files['created_by'] 			= $this->userdata['userid'];
+						$lead_files['created_on'] 			= date('Y-m-d H:i:s');
+						$lead_files['modified_by'] 			= $this->userdata['userid'];
+						$lead_files['modified_on'] 			= date('Y-m-d H:i:s');
+						$insert_file						= $this->reseller_model->insert_row_return_id('contracts_uploads', $lead_files);
+						$json['res_file'][]					= $insert_file.'~'.$file_up['file_name'];
+						
+						/* $logs['jobid_fk']	   = $lead_id;
+						$logs['userid_fk']	   = $this->userdata['userid'];
+						$logs['date_created']  = date('Y-m-d H:i:s');
+						$logs['log_content']   = $file_up['file_name'].' is added.';
+						$logs['attached_docs'] = $file_up['file_name'];
+						$insert_logs 		   = $this->reseller_model->insert_row('logs', $logs); */	
+						$i++;
+					}
+				}
+			} else {
+				$this->upload_error = strip_tags($this->upload->display_errors());
+				$json['error'] = TRUE;
+				$json['msg']   = $this->upload_error;
+				// return $this->upload_error;					
+				// exit;
+			}
+		}
+		echo json_encode($json); 
+		exit;
+	}
+	
+	/*
+	* Deleting the contract
+	* @params contract id & contracter user id
+	* return json encoded array.
+	*/
+	public function deleteContractData()
+	{
+		//save the old values
+		$contract_log	= array();
+		$wh_condn		= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$contract_log 	= $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		
+		$data 		= array();
+		$wh_condn 	= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$is_deleted = $this->reseller_model->delete_records('contracts', $wh_condn);
+		if($is_deleted) {
+			//do log
+			unset($contract_log['id']);
+			$contract_log['contract_id'] 	= $this->input->post('contract_id');
+			$contract_log['action_on']  	= date('Y-m-d H:i:s');
+			$contract_log['action_by']  	= $this->userdata['userid'];
+			$contract_log['action']  		= 2;
+			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			$data['res'] = 'success';
+		} else {
+			$data['res'] = 'failure';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
+	/*
+	* editing the other cost
+	*/
+	public function getEditContractData()
+	{
+		$data 		 = array();
+		$editdata 	 = array();
+		$data['msg'] = 'error'; 
+		$wh_condn	 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$editdata['contract_data'] = $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		if(!empty($editdata['contract_data']) && count($editdata['contract_data'])>0) 
+		{
+			$editdata['contract_id'] = $this->input->post('contract_id');
+			$editdata['currencies']  = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			$editdata['users'] 		 = $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
+			$editdata['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
+			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
+			$data['msg'] = 'success';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
+	/*
+	* editing the edit Reseller Contract
+	*/
+	public function editResellerContract()
+	{
+		echo "<pre>"; print_r($this->input->post()); exit;
+		$updt_val = array();
+		$updt_val['description'] 		= $this->input->post('description');
+		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
+		$updt_val['currency_type'] 		= $this->input->post('currency_type');
+		$updt_val['value'] 				= $this->input->post('value');
+		$updt_val['modified_by'] 		= $this->userdata['userid'];
+		$updt_val['modified_on'] 		= date('Y-m-d H:i:s');
+		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
+		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
+		
+		if($update_cost){
+			echo "success";
+			//do log
+			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			$log_detail = "Updated the Other Cost: \n";
+			$log_detail .= "\nDescription: ".$updt_val['description'];
+			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
+			$log_detail .= "\nValue: ".$all_cur[$updt_val['currency_type']].' '.number_format($updt_val['value'], 2);
+			$log = array();
+			$log['jobid_fk']      = $this->input->post('project_id');
+			$log['userid_fk']     = $this->userdata['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->project_model->insert_row("logs", $log);
+		} else {
+			echo "error";
+		}
+		exit;
 	}
 	
 }

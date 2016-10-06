@@ -1,7 +1,8 @@
-<?php $attributes = array('id'=>'add-contract', 'name'=>'add-contract'); ?>
-<?php echo form_open_multipart("reseller/addResellerContract", $attributes); ?>
+<?php $attributes = array('id'=>'edit-contract', 'name'=>'edit-contract'); ?>
+<?php #echo "<pre>"; print_r($contract_data); echo "<pre>"; ?>
+<?php echo form_open_multipart("reseller/editResellerContract", $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	<input type="hidden" name="contracter_id" id="contracter_id" class="textfield width200px pick-date" value="<?php echo $reseller_det[0]['userid']; ?>" readonly />
+	<input type="hidden" name="contracter_id" id="contracter_id" class="textfield width200px pick-date" value="<?php echo $contract_data['contracter_id']; ?>" readonly />
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Contracter Manager<span class='red'> *</span></td>
@@ -19,7 +20,7 @@
 									$username .= " - ".$user_rec['emp_id'];
 								}
 							?>
-							<option value=<?php echo $user_rec['userid']; ?> <?php if($reseller_det[0]['contract_manager'] == $user_rec['userid']) echo "selected='selected'"; ?>><?php echo $username; ?></option>
+							<option value=<?php echo $user_rec['userid']; ?> <?php if($contract_data['contract_manager'] == $user_rec['userid']) echo "selected='selected'"; ?>><?php echo $username; ?></option>
 						<?php } ?>
 					<?php } ?>
 				</select>
@@ -29,41 +30,53 @@
 		<tr>
 			<td>Contract Title<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="contract_title" id="contract_title" class="textfield width200px" />
+				<input type="text" name="contract_title" id="contract_title" class="textfield width200px" value="<?php echo $contract_data['contract_title'] ?>" />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_title_err'></div>
 			</td>
 		</tr>
 		<tr>
 			<td>Contract Start date<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="contract_start_date" id="contract_start_date" data-calendar="true" class="textfield width200px pick-date" readonly />
+				<?php
+					$start_date = (!empty($contract_data['contract_start_date'] && ($contract_data['contract_start_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_start_date'])) : '';
+				?>
+				<input type="text" name="contract_start_date" id="contract_start_date" data-calendar="true" value="<?php echo $start_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_start_date_err'></div>
 			</td>
 		</tr>
 		<tr>
 			<td>Contract End date<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="contract_end_date" id="contract_end_date" data-calendar="true" class="textfield width200px pick-date" readonly />
+				<?php
+					$end_date = (!empty($contract_data['contract_end_date'] && ($contract_data['contract_end_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_end_date'])) : '';
+				?>
+				<input type="text" name="contract_end_date" id="contract_end_date" data-calendar="true" value="<?php echo $end_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_end_date_err'></div>
 			</td>
 		</tr>
 		<tr>
 			<td>Renewal Reminder date<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="renewal_reminder_date" id="renewal_reminder_date" data-calendar="true" class="textfield width200px pick-date" readonly />
+				<?php
+					$renew_date = (!empty($contract_data['renewal_reminder_date'] && ($contract_data['renewal_reminder_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['renewal_reminder_date'])) : '';
+				?>
+				<input type="text" name="renewal_reminder_date" id="renewal_reminder_date" data-calendar="true" value="<?php echo $renew_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='renewal_reminder_date_err'></div>
 			</td>
 		</tr>
 		<tr>
 			<td>Description</td>
 			<td>
-				<textarea name="description" id="description" class="textfield width200px" > </textarea>
+				<textarea name="description" id="description" class="textfield width200px" ><?php echo $contract_data['description']; ?></textarea>
 			</td>
 		</tr>
 		<tr>
 			<td>Contract Signed Date<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="contract_signed_date" id="contract_signed_date" data-calendar="true" class="textfield width200px pick-date" readonly />
+				<?php
+					$signed_date = (!empty($contract_data['contract_signed_date'] && ($contract_data['contract_signed_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_signed_date'])) : '';
+				?>
+				<input type="text" name="contract_signed_date" id="contract_signed_date" data-calendar="true" value="<?php echo $signed_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_signed_date_err'></div>
 			</td>
 		</tr>
@@ -73,7 +86,7 @@
 				<select name='contract_status' class="textfield width200px" id='contract_status'>
 					<?php if(is_array($this->contract_status) && !empty($this->contract_status) && count($this->contract_status)>0) { ?>
 						<?php foreach($this->contract_status as $sta_key=>$sta_val) { ?>
-							<option value=<?php echo $sta_key; ?> <?php ?>><?php echo $sta_val; ?></option>
+							<option value=<?php echo $sta_key; ?> <?php if($contract_data['contract_status'] == $sta_key) echo "selected='selected'"; ?>><?php echo $sta_val; ?></option>
 						<?php } ?>
 					<?php } ?>
 				</select>
@@ -87,7 +100,7 @@
 					<option value=''>Select</option>
 					<?php if(!empty($currencies) && count($currencies)>0) { ?>
 						<?php foreach($currencies as $cur_rec) { ?>
-							<option value=<?php echo $cur_rec['expect_worth_id']; ?> <?php ?>><?php echo $cur_rec['expect_worth_name']; ?></option>
+							<option value=<?php echo $cur_rec['expect_worth_id']; ?> <?php if($contract_data['currency'] == $cur_rec['expect_worth_id']) echo "selected='selected'"; ?>><?php echo $cur_rec['expect_worth_name']; ?></option>
 						<?php } ?>
 					<?php } ?>
 				</select>
@@ -97,7 +110,7 @@
 		<tr>
 			<td>Tax</td>
 			<td>
-				<input onkeypress="return isNumberKey(event)" type="text" name="tax" id="tax" maxlength="5" class="textfield width200px"/>
+				<input onkeypress="return isNumberKey(event)" type="text" name="tax" id="tax" maxlength="5" value="<?php echo $contract_data['tax'] ?>" class="textfield width200px"/>
 				<span class='red'>(Numbers)</span>
 				<div class='ajx_failure_msg succ_err_msg' id='tax_err'></div>
 			</td>
@@ -111,7 +124,7 @@
 						<input type="file" multiple title='upload' class="textfield" id="contract_document" name="contract_document[]" onchange="return runContractAjaxFileUpload();" />
 						<input type="hidden" id="exp_type" value="">									
 					</div>
-				</form>	
+				</form>
 				<div id="contractUploadFile"></div>
 			</td>
 		</tr>
@@ -119,7 +132,7 @@
 			<td colspan='2'>
 				<?php //if ($readonly_status == false) { ?>
 				<div class="buttons">
-					<button type="submit" class="positive">Add</button>
+					<button type="submit" class="positive">Edit</button>
 					<button onclick="reset_add_form(); return false;" class="negative">Cancel</button>
 				</div>
 				<?php //} ?>
@@ -128,17 +141,16 @@
 	</table>
 <?php form_close(); ?>
 <script type="text/javascript">
-	var contracter_user_id = '<?php echo $reseller_det[0]['userid'] ?>';
+	var contracter_user_id = '<?php echo $contract_data['contracter_id']; ?>';
 	$( document ).ajaxSuccess(function( event, xhr, settings ) {
 		if(settings.target=="#output1") {
 			if(xhr.responseText=='success') {
-				$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Contract Added Successfully.</span>");
+				$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Contract Updated Successfully.</span>");
 				reset_add_form();
 			} else if(xhr.responseText == 'error') {
-				$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in adding contract.</span>");
+				$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in updating the contract.</span>");
 			}
 			$('#succes_add_contract_data').show();
-			// loadOtherCostGrid(project_id);
 			setTimeout('timerfadeout()', 4000);
 		}
 	});
@@ -146,10 +158,10 @@
 	$(function(){
 		var options = {
 			target:      '#output1',   // target element(s) to be updated with server response 
-			beforeSubmit: validateContractForm, // pre-submit callback 
+			beforeSubmit: validateEditContractForm, // pre-submit callback 
 			success:      ''  // post-submit callback 
 		}; 
-		$('#add-contract').ajaxForm(options);
+		$('#edit-contract').ajaxForm(options);
 
 		$('#contract_start_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
 			if($('#contract_end_date').val!='')
@@ -176,9 +188,9 @@
 	}
 	
 //validate the form
-function validateContractForm()
+function validateEditContractForm()
 {
-	// alert('validateContractForm');
+	// alert('validateEditContractForm');
 	var errors = [];
 	var validate_form = true;
 	if(($.trim($('#contract_manager').val()) == '')) 
@@ -256,8 +268,6 @@ function validateContractForm()
 	if (errors.length > 0 && validate_form == false) 
 	{
 		setTimeout('timerfadeout()', 6000);
-		// $('#succes_add_contract_data').html(errors.join(''));
-		// $('#succes_add_contract_data').show();
 		return false;
 	}
 }

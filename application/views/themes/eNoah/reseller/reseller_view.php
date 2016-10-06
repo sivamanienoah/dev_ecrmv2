@@ -77,13 +77,13 @@ require (theme_url().'/tpl/header.php');
 										<td align="right"><?php echo $currency_arr[$row['currency']];?></td>
 										<td align="right"><?php echo $row['tax']; ?></td>
 										<td align="left">
-											<a title="Edit" onclick="editOtherCostData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"> </a>
-											<a title="Delete" onclick="deleteOtherCostData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+											<a title="Edit" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
+											<a title="Delete" onclick="deleteContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
 										</td>
 									</tr>
 								<?php } ?>
 							<?php } else { ?>
-								<tr><td colspan='4'> No Records Available. </td></tr>
+								<tr><td colspan='10'> No Records Available. </td></tr>
 							<?php } ?>
 						</tbody>
 					</table>
@@ -103,6 +103,8 @@ require (theme_url().'/tpl/header.php');
 	</div><!--/Inner div -->
 </div><!--/Content div -->
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
+<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/reseller/reseller_view.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');

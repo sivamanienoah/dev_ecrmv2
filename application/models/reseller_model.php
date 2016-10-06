@@ -190,9 +190,9 @@ class Reseller_model extends crm_model
 	*/
     public function get_contracts_details($id = false) 
 	{
-		$this->db->select('c.id, c.contract_title, c.contracter_id, c.contract_manager, c.contract_start_date, c.contract_end_date, c.renewal_reminder_date, c.contract_document, c.description, c.contract_signed_date, c.contract_status, c.currency, c.tax, u.first_name, u.last_name');
+		$this->db->select('c.id, c.contract_title, c.contracter_id, c.contract_manager, c.contract_start_date, c.contract_end_date, c.renewal_reminder_date, c.description, c.contract_signed_date, c.contract_status, c.currency, c.tax, u.first_name, u.last_name');
 		$this->db->from($this->cfg['dbpref']."contracts as c");
-		if($id){
+		if($id) {
 			$this->db->where('c.contracter_id', $id);
 		}
 		$this->db->join($this->cfg['dbpref']."users as u", 'u.userid = c.contract_manager', 'left');
@@ -201,5 +201,26 @@ class Reseller_model extends crm_model
 		// echo $this->db->last_query(); exit;
 		$reseller = $query->result_array();	
         return $reseller;
+    }
+
+	/*
+	*@Get Reseller User list
+	*@Method  user_list
+	*/
+    public function getUploadsFile($id = false) 
+	{
+		if($id) {
+			$this->db->select('cu.id, cu.file_name');
+			$this->db->from($this->cfg['dbpref']."contracts_uploads_mapping as cum");
+			$this->db->where('cum.contract_id', $id);
+			$this->db->join($this->cfg['dbpref']."contracts_uploads as cu", 'cu.id = cum.contract_file_upload_id', 'left');
+			$this->db->order_by("cu.id", "asc");
+			$query = $this->db->get();
+			// echo $this->db->last_query(); exit;
+			$reseller = $query->result_array();	
+			return $reseller;
+		} else {
+			return false;
+		}
     }
 }

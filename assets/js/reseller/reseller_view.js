@@ -9,7 +9,7 @@ $(document).ready(function() {
 	$( "#reseller_tabs" ).tabs({
 		beforeActivate: function( event, ui ) {
 			if (ui.newPanel[0].id=='rt-tab-1')
-				// loadExistingTasks();
+				reset_add_form();
 			if (ui.newPanel[0].id=='rt-tab-2') {
 				// populateJobOverview();
 			}
@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 function getAddContractForm(reseller_id)
 {
-	alert('getAddContractForm');
+	// alert('getAddContractForm');
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
 	
@@ -47,6 +47,73 @@ function getAddContractForm(reseller_id)
 			$('#add_contract_form').html(data);
 		}
 	});
+}
+
+
+/*
+*Edit the contract Details
+*@params contract_id, contracter_user_id
+*/
+function editContractData(contract_id, contracter_user_id)
+{
+	var params 						= {};
+	params[csrf_token_name] 		= csrf_hash_token;
+	params['contract_id'] 			= contract_id;
+	params['contracter_user_id'] 	= contracter_user_id;
+	
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'reseller/getEditContractData/',
+		cache:false,
+		dataType:'json',
+		beforeSend: function() {
+			//show loading symbol
+			$('#add_contract_form').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success:function(data) {
+			// alert(data);
+			if(data.msg == 'success'){
+				$('#add_contract_form').html(data.res);
+			}
+		}
+	});
+}
+
+/*
+*Deleting the Contract data
+*@params contract_id, contracter_user_id
+**/
+function deleteContractData(contract_id, contracter_user_id)
+{
+	var agree							= confirm("Are you sure you want to delete?");
+	if (agree) {
+		var params 						= {};
+		params[csrf_token_name] 		= csrf_hash_token;
+		params['contract_id'] 			= contract_id;
+		params['contracter_user_id'] 	= contracter_user_id;
+		$.ajax({
+			type:'POST',
+			data:params,
+			url:site_base_url+'reseller/deleteContractData/',
+			cache:false,
+			dataType:'json',
+			beforeSend: function() {
+				//show loading symbol
+			},
+			success:function(data) {
+				if(data.res == 'success'){
+					$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Deleted Successfully.</span>");
+					$('#contr_'+contract_id).remove();
+					setTimeout('timerfadeout()', 4000);
+				} else if(data.res == 'failure'){
+					$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in deleting contract.</span>");
+				}
+			}
+		});
+	} else {
+		return false;
+	}
 }
 
 function reset_add_form()
