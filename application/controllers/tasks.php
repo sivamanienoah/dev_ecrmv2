@@ -106,7 +106,7 @@ class Tasks extends crm_controller {
 	
 	//Search functionality
 	function search() {
-		/* $uidd = $this->session->userdata['logged_in_user']; 
+		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
 	
 		$task_owner =element_value_check('task_owner_user');
@@ -138,7 +138,7 @@ class Tasks extends crm_controller {
 		else
 		{
 			$operation ='OR';
-		} */
+		}
 		
 		
 /* 		$data['created_by'] = $this->task_model->get_task_created_by();
