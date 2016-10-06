@@ -1607,6 +1607,8 @@ HDOC;
 		$ins['task'] 		= $_POST['job_task'];
 		$ins['userid_fk'] 	= $_POST['task_user'];
 		$ins['remarks'] 	= $_POST['remarks'];
+		$ins['task_category'] 	= $_POST['task_category'];
+		$ins['task_priority'] 	= $_POST['task_priority'];
 		if($update == 'NO') {
 			$ins['approved'] = 1;
 		}
@@ -1924,28 +1926,38 @@ HDOC;
 
 	function get_job_tasks($lead_id)
 	{	
+	
+	if(isset($_GET['task_completed']))
+	{
+		$data['taskcompleted']=$_GET['task_completed'];
+		/*  1=> Approved Task, 0 Pending Tasks */
+	}
+	else
+	{
+		$data['taskcompleted']=0;
+	}
 		$uidd = $this->session->userdata['logged_in_user'];
 		$uid = $uidd['userid'];
-		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`
-				FROM `".$this->cfg['dbpref']."tasks`, `".$this->cfg['dbpref']."users`
-				WHERE `".$this->cfg['dbpref']."tasks`.`jobid_fk` = ?
-				AND `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
-				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete`, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";				
-		$q = $this->db->query($sql, array('jobid_fk' => $lead_id));
-		$data = $q->result_array();	
-
+		 
 		$html = '';
-		foreach ($data as $row)
-		{		
-			$html .= $this->format_task($row);
-		}
+		$this->load->model('manage_task_category_model');
+		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
+		$newarray=array();
 		
-		if ($html == '')
+		
+		foreach($data['category_listing_ls'] as $row) 
 		{
-			$html = '<p class="task-notice">Sorry, there are no tasks set for this project!</p>';
+	
+			$newarray[]=$this->request_model->taskCategoryQuery($row['id'],$lead_id,$row['task_category'],$data['taskcompleted']);
 		}
+		$data['pendingtasks'] =$this->request_model->taskCountQuery($lead_id,0);
+		$data['completedtasks']=$this->request_model->taskCountQuery($lead_id,1);
 		
-		echo $html;
+		$data['newarray']=$newarray;
+		$this->load->view('tasks/task_list_view', $data);
+	
+		
+	
 	}
 	
 	/**
@@ -2252,6 +2264,7 @@ EOD;
 					$upd = array();
 					$upd['is_complete'] = 1;
 					$upd['marked_complete'] = date('Y-m-d H:i:s');
+					$upd['actualstart_date'] = date('Y-m-d H:i:s');
 					$this->db->where('taskid', $taskid);
 					$this->db->update($task_table, $upd);
 					$uid=$data->userid_fk;
@@ -2327,7 +2340,6 @@ EOD;
 			else if (isset($_POST['delete_task']))
 			{
 				$data = $q->row();
-		
 				$this->db->where('taskid', $taskid);
 				$this->db->delete($task_table);
 				$user_name 		= $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
