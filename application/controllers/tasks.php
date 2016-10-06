@@ -106,17 +106,26 @@ class Tasks extends crm_controller {
 	
 	//Search functionality
 	function search() {
-
+		$task_owner =element_value_check('task_owner_user');
+		$task_allocated =element_value_check('task_allocated_user');
 		
 		
 		$search=array(
 					'taskcomplete'=>element_value_check('task_search'),
-					'taskowner'=>element_value_check('task_owner_user'),
-					'taskallocateduser'=>element_value_check('task_allocated_user'),
+					'taskowner'=> $task_owner,
+					'taskallocateduser'=>$task_allocated,
 					'taskstartdate'=>element_value_check('task_search_start_date'),
 					'taskenddate'=>element_value_check('task_search_end_date'),
 					'taskproject'=>element_value_check('task_project')
 					);
+		if(!empty($task_owner) &&!empty($task_owner))
+		{
+			$operation= 'AND';
+		}
+		else
+		{
+			$operation ='OR';
+		}
 /* 		$data['created_by'] = $this->task_model->get_task_created_by();
 		
 		$res = $this->search_user_tasks($_POST['task_search_start_date'], $_POST['task_search_end_date'], $_POST['task_search']);
@@ -135,7 +144,7 @@ class Tasks extends crm_controller {
 		
 		foreach($data['category_listing_ls'] as $row) 
 		{
-			$newarray[]=$this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,'AND');
+			$newarray[]=$this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,$operation);
 		}
 
 		$data['newarray']=$newarray;
