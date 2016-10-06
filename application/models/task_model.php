@@ -58,7 +58,7 @@ class Task_model extends crm_model
 
 		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
-		echo $this->db->last_query().'<br/><br/><br/>';		
+		//echo $this->db->last_query().'<br/><br/><br/>';		
 		$data['values'] = $category_name;
 		$data['categoryid'] = $category_id;
 		$data['rows'] = $q->num_rows();
