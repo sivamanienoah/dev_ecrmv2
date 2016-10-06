@@ -110,7 +110,7 @@ var random_task_edit;
 function openEditTask(taskid, random)
 { 
 
-if( $('#search-job-task').length ) 
+if( $('#search-job-task').length  ||  $('#dashboard').val()==1) 
         // use this if you are using id to check
 {
     var add=1;
