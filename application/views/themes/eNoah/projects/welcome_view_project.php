@@ -54,6 +54,7 @@
 		 
 			//Re-Assign the Keys in the array.
 			$final_restrict_user = array_values($restrict_users);
+			
 		?>
 		
 		
@@ -67,10 +68,13 @@
 					}
 				}
 				$final_restrict_user = array_remove_by_value($final_restrict_user, 0);
-			}		
+			}
+			
+			
 			function array_remove_by_value($array, $value) {
 				return array_values(array_diff($array, array($value)));
 			}
+			
 		?>
 		
 		
@@ -357,8 +361,7 @@
 				<label class="project-id">Project Currency</label>
 				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['expect_worth_id']] ?>" readonly style="width: 125px;" />
 			</div>
-			<div class="clear"></div>
-			<form>
+			<div class="clear"></div>			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
 					<label class="project-id">Project Code</label>
@@ -1294,9 +1297,36 @@
 						<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
 					</td>
 				</tr>
-				<tr>
-					<td>Allocate to</td>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
 					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td >Allocate to</td>
+					<td style="padding-top:5px;">
 						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select" id="taskToAlloc" style="width:140px;">
 							<option value=""></option>
 							<?php
@@ -1312,7 +1342,6 @@
 						</select>
 					</td>
 				</tr>
-				
 				<tr>
 					<td>
 						Planned Start Date
@@ -1344,7 +1373,8 @@
 				</tr>
 			</table>
 			<div class="buttons task-init  toggler">
-				<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>
+				<button type="button" class="positive" onclick="$('.toggler').slideToggle();">Add New</button>&nbsp; &nbsp; 
+				
 			</div>
 			
 			<div class="existing-task-list">
@@ -1354,8 +1384,8 @@
 		</form>
 		
 		<form id="edit-job-task" onsubmit="return false;">
-		
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+			<input type="hidden" name ="taskcompleted" value="0" id="taskcompleted" />
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 		
 		<!-- edit task -->
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
@@ -1375,11 +1405,39 @@
 						<textarea name="job_task" class="edit-job-task-desc width420px"></textarea>
 					</td>
 				</tr>
-				<tr>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
 					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select edit-task-category textfield" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority textfield" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td >
 						Allocate to
 					</td>
-					<td>
+					<td style="padding-top:5px;">
 						<select name="task_user" data-placeholder="Choose a User..." class="chzn-select edit-task-allocate textfield" style="width:140px;">
 							<?php
 								foreach($final_restrict_user as $ua){
@@ -2064,30 +2122,20 @@
 	
 		<div id="jv-tab-10">
 			<form id="comm-log-form">
-				<!--div class="email-list">
-					<label>Email To:</label>
-					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
-						<?php
-						// foreach($final_restrict_user as $ua) {
-						?>
-						<option value="<?php #echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php #echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
-						<?php
-						// }
-						?>
-					</select>
-				</div-->
+			
 				<div class="email-list">
 					<label>Email To:</label>
 					<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
 						<?php
-						foreach($user_accounts as $ua) {
+						foreach($final_restrict_user as $ua) {
 						?>
-						<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'] . ' ' . $ua['last_name']; ?></option>
+						<option value="<?php echo 'email-log-'.$user_details_id[$ua]['userid']; ?>"><?php echo $user_details_id[$ua]['first_name'] . ' ' . $user_details_id[$ua]['last_name']; ?></option>
 						<?php
 						}
 						?>
 					</select>
 				</div>
+				
 				<?php
 				if (isset($userdata)) {
 				?>
