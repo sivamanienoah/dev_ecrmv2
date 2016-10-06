@@ -81,11 +81,11 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				//$('.toggler').slideToggle();
 				if ( $( "#search-job-task" ).length ) 
 				{
-					//resetpage();
+					resetpage();
 				}
 				else
 				{
-					//tabselector();
+					tabselector();
 				}
 				if (random_task_url != '')
 				{
