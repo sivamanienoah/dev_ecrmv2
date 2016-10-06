@@ -553,17 +553,18 @@ function sumint(a,b)
 
 function tabselector()
 {
-	$( ".ui-tabs-nav li" ).each(function( index ) 
+	loadExistingTasks();
+	/* $( ".ui-tabs-nav li" ).each(function( index ) 
 	{
 		alert("triugger");
-		/* if($( this ).attr('aria-controls')=='jv-tab-4')
+		if($( this ).attr('aria-controls')=='jv-tab-4')
 		{		
 			$('.ui-tabs-nav li').eq(0).find("a").trigger('click');
 			$('.ui-tabs-nav li').eq(index).find("a").trigger('click');
 		}
- */
+
 	}
-	);
+	); */
 	
 }
 
