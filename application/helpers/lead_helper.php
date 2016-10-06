@@ -242,6 +242,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 
 
 	$userid = $permission['logged_in_user']['userid'];
+	$userroleid = $permission['logged_in_user']['role_id'];
 	$project_td ="";
 	$CI  = get_instance();
 	$CI->load->model('user_model');
@@ -273,7 +274,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 		$team_access = getAccessFromTeam($userid, $row['lead_id']);
 		$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
 		$link_access = 0;
-		if($lead_access == 1 || $team_access == 1 || $stake_access == 1) 
+		if($lead_access == 1 || $team_access == 1 || $stake_access == 1 || $userroleid == 1) 
 		{
 			$link_access = 1;
 		}
