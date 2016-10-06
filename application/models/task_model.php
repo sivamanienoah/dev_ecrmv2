@@ -67,8 +67,7 @@ class Task_model extends crm_model
 				 ".$both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."')
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
 		
-		echo $sql;
-		exit();
+		
 		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
 		
