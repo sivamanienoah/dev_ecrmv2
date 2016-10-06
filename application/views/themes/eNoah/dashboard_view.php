@@ -451,28 +451,55 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 
 		<form id="edit-job-task" onsubmit="return false;">
 			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-		
+			<input type ="hidden" id="dashboard" value="1"/>
 			<!-- edit task -->
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add task-edit">
 				<tr>
 					<td colspan="4">
-						<strong>All fields are required!</strong>
+						<strong>All fields are required!</strong>						
 					</td>
-				</tr>						
-				<tr>				
+				</tr>
+				<tr>
 					<td valign="top" width="80">
 						<br /><br />Task Desc
 					</td>
 					<td colspan="3">
 						<strong><span id="edit-task-desc-countdown">1000</span></strong> characters left.<br />
-						<textarea name="job_task" class="edit-job-task-desc width420px"></textarea>
+						<textarea name="job_task" class="edit-job-task-desc width420px" ></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td>Task Owner</td>
-					<td><input type="text" class="edit-task-owner textfield" readonly ></td>
-				</tr>			
-				<?php
+					<td><input type="text" class="edit-task-owner textfield" readonly="readonly"></td>					
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
+					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select edit-task-category" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
+		<?php
 				if(in_array($uio,$b) || $userdata['role_id'] == 1) {
 				?>
 				<tr>
@@ -509,35 +536,49 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 					<td>
 						Planned Start Date
 					</td>
-					<?php if(in_array($uio,$b) || $userdata['role_id'] == 1) { ?>
 					<td>
-						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" />
-					</td>
-					<?php } else { ?>
-					<td>
-						<input type="text" name="task_start_date" class="edit-start-date textfield width100px" readonly />
-					</td>
-					<?php } ?>
+						<input type="text" name="task_start_date" class="edit-start-date textfield pick-date width100px" style="margin-top:5px;"/>
+					</td>		
 					<td>
 						Planned End Date
 					</td>
-					<td>
-						<?php if(in_array($uio,$b) || $userdata['role_id'] == 1) { ?>
-							<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />									
-						<?php } else { ?>
-							<input type="text" name="task_end_date" class="edit-end-date textfield width100px" readonly />
-						<?php } ?>
+					<td>								
+					<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />	
 					</td>
 				</tr>
 				<tr>
 					<td>Actual Start Date</td>
-					<td><input type="text" name="task_actualstart_date" class="edit-actualstart-date textfield pick-date width100px" /></td>
+					<td>
+						<?php
+						if($created_by['jobid_fk'] == $remind_options) {
+						?>
+							<input type="text"  name="task_actualstart_date" class="edit-actualstart textfield pick-date width100px" readonly />
+						<?php 
+						} else {
+						?>
+							<input type="text" name="task_actualstart_date" class="edit-actualstart-date textfield pick-date width100px"  />
+						<?php 
+						} 
+						?>
+					</td>
 					<td>Actual End Date</td>
 					<td class="actualend-date"><input type="text" class="edit-actualend-date textfield" readonly></td>
 				</tr>
 				<tr>
 					<td>Remarks</td>
-					<td colspan="3"><textarea name="remarks" class="edit-task-remarks" width="420px"></textarea></td>
+					<td colspan="3">
+						<?php 
+						if($created_by['jobid_fk'] == $remind_options) {
+						?>
+							<textarea name="remarks" class="edit-task-remarks" width="420px" readonly ></textarea>
+						<?php
+						} else {
+						?>
+							<textarea name="remarks" class="edit-task-remarks" width="420px"  ></textarea>
+						<?php
+						}
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="4">
