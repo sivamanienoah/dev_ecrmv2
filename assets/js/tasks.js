@@ -79,7 +79,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 			{
 				//$('.existing-task-list').find('.task-notice').remove().end().append(data.html);
 				//$('.toggler').slideToggle();
-				if ( $( "#search-job-task" ).length ) 
+				if ( $( "#search-job-task" ).length  ||  $('#dashboard').val()==1 ) 
 				{
 					resetpage();
 				}
@@ -303,7 +303,7 @@ function editTask()
 			$('.blockUI .task-add.task-edit').unblock();
 			$.unblockUI();
 			$('#edit-job-task')[0].reset();
-			if ( $( "#search-job-task" ).length ) 
+			if ( $( "#search-job-task" ).length ||  $('#dashboard').val()==1 ) 
 			{
 			resetpage();
 			}
@@ -457,7 +457,7 @@ function setTaskStatus(taskid, el)
 					if(1==$("#taskslistval").val())
 					{
 						
-					if ( $( "#search-job-task" ).length ) 
+					if ( $( "#search-job-task" ).length ||  $('#dashboard').val()==1) 
 					{
 						resetpage();
 					}
