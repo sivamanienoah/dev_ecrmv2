@@ -71,8 +71,8 @@ class Task_model extends crm_model
 				 ".$notify_query.")
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
 		
-/*  		echo $sql;
-		echo "notifiy query check";
+ 		echo $sql;
+		/* echo "notifiy query check";
 		exit(); */
  		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
