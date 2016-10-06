@@ -1,12 +1,10 @@
 <?php
 ob_start();
 require (theme_url().'/tpl/header.php');
-// echo "<pre>"; print_r($this->session->userdata);
-// echo "<pre>"; print_r($created_by);
 ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <style type="text/css">
-@import url(assets/css/tasks.css?q=1);
+
 </style>
 
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
@@ -53,8 +51,35 @@ $(function(){
 							<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
 						</td>
 					</tr>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
+					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
 					<tr>
-						<td>Allocate to</td>
+						<td >Alslocate to</td>
 						<td>
 							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
 							<?php
@@ -63,14 +88,6 @@ $(function(){
 							</select>
 						</td>
 					</tr>
-					<!--tr>
-						<td>Allocate to</td>
-						<td>
-							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
-							<?php #echo $remind_options, $remind_options_all; ?>
-							</select>
-						</td>
-					</tr-->
 					<tr>
 						<td>Start Date</td>
 						<td><input type="text" name="task_start_date" class="textfield pick-date width100px" style="margin-top:5px;"/></td>
@@ -124,10 +141,71 @@ $(function(){
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
-				<table border="0" cellpadding="0" cellspacing="4" class="task-add">
+				<table border="0" cellpadding="0" cellspacing="4" class="task-add" style="width:46%;">
 					<tr>
 						<td colspan="4">
 							<h4>Search</h4>
+						</td>
+					</tr>
+					
+					<tr >
+					<td style="padding-bottom:10px;" ><br/></td>
+					<td>
+
+					</td>
+				</tr>
+				<tr>
+						<td>
+							Project
+						</td>
+						<td>
+							<select name="task_project" data-placeholder="Choose Projects" class="chzn-select" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+							foreach($project_listing_ls as $ua)
+							{
+								echo '<option value="'.$ua['lead_id'].'">'.$ua['lead_title'].'</option>';
+							}
+							?>
+							</select>
+						</td>
+						<td>
+							Category
+						</td>
+						<td>
+							<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+							foreach($category_listing_ls as $ua)
+							{
+							echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+							}
+							?>
+							</select>
+						</td>
+					</tr>
+				
+				<tr>
+						
+						<td>
+							Task Owner
+						</td>
+						<td>
+							<select name="task_owner_user" class="chzn-select edit-task-allocate textfield width100px" >
+							<?php						
+							echo $remind_options, $remind_options_all;
+							?>						
+							</select>
+						</td>
+						<td>
+							Allocated Member
+						</td>
+						<td>
+						<select name="task_allocated_user" class="chzn-select edit-task-allocate textfield width100px" >
+							<?php						
+							echo $remind_options, $remind_options_all;
+							?>						
+						</select>
 						</td>
 					</tr>
 					<tr>
@@ -136,7 +214,7 @@ $(function(){
 						</td>
 						<td>
 							<?php $arrayTask = $cfg['tasks_search']; ?>
-							<select id="task_search" name="task_search" class="textfield width118px">
+							<select id="task_search" name="task_search"   data-placeholder="Choose category."  class=" chzn-select textfield width118px">
 								<?php
 									foreach($arrayTask as $key => $value):
 										echo '<option value="'.$key.'">'.$value.'</option>';
@@ -145,12 +223,20 @@ $(function(){
 							</select>
 						</td>
 						<td>
-							&nbsp;
+							Task Priority
 						</td>
 						<td>
-							&nbsp;
+							<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
 						</td>
 					</tr>
+
 					<tr>
 						<td>
 							From Date
@@ -168,8 +254,11 @@ $(function(){
 					<tr>
 						<td colspan="4">
 							<div class="buttons">
+							
+							<br/>
+							<br/>
 								<button type="submit" class="positive" onclick="searchTasks();">Search</button>
-								<button type="reset" class="negative">Reset</button>
+								<button type="reset" class="negative" onclick="resetpage();">Reset</button>
 							</div>
 						</td>
 					</tr>
@@ -205,9 +294,36 @@ $(function(){
 					<td>Task Owner</td>
 					<td><input type="text" class="edit-task-owner textfield" readonly="readonly"></td>					
 				</tr>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
+					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select edit-task-category" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
 				<tr>
 					<td>
-						Allocate to
+						Alloceate to
 					</td>
 					<td>
 						<select name="task_user" class="chzn-select edit-task-allocate textfield width100px" >
@@ -278,7 +394,7 @@ $(function(){
 				</tr>
 			</table>
 		</form>
-		<div style="margin-top:20px;" class="all-tasks">
+		<div style="margin-top:20px;" class="all-tasks" id="tasks_content_ajax">
 		</div>
 		<form style="display:none;" class="random-task-tables" onsubmit="return false;">
 		</form>
@@ -286,10 +402,9 @@ $(function(){
 	
 </div>
 <script type="text/javascript">
-	var task_userid 	= '<?php echo $userdata['userid'] ?>';
-	var get_type 		= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
-	var get_id      	= '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
-	var task_end_notify = '<?php echo $task_end_notify ?>';
+	var task_userid = '<?php echo $userdata['userid'] ?>';
+	var get_type 	= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
+	var get_id      = '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
 </script>
 <script type="text/javascript" src="assets/js/tasks/main_view.js"></script>
 <?php
