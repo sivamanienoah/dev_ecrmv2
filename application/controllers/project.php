@@ -228,7 +228,7 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-		// echo $this->db->last_query(); exit;
+		// echo "query".$this->db->last_query(); exit;
 		// echo "<pre>"; print_r($getProjects); die;
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		// echo "<pre>"; print_r($data['pjts_data']); die;
@@ -508,6 +508,7 @@ class Project extends crm_controller {
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
 			$data['list_users'] = $this->project_model->get_list_users($id);
+			$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
@@ -526,7 +527,7 @@ class Project extends crm_controller {
 						$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
 						$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						// $rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]); //change the currency type from usd to other. usd to usd conversion
+						//$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
 						$rateCostPerHr = $ts['cost'];
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
@@ -550,7 +551,7 @@ class Project extends crm_controller {
 					$data['actual_hour_data'] = $res['total_hours'];
 				}
 			}
-
+			
 			/*get the other cost*/
 			// $data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $this->default_cur_id);
 			$data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($id, $data['quote_data']['expect_worth_id']);
@@ -779,8 +780,7 @@ class Project extends crm_controller {
 		exit;
 	}
 	
-	/*
-	* Inserting the other cost
+	/*	* Inserting the other cost
 	*/
 	public function addOtherCost()
 	{
@@ -3819,7 +3819,6 @@ HDOC;
 				if(count($invoice_amount)>0 && !empty($invoice_amount)){
 					$total_amount_inv_raised = $invoice_amount->invoice_amount+$invoice_amount->tax_price;
 				}
-				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				$total_billable_hrs = 0;
 				$total_internal_hrs = 0;
@@ -3857,10 +3856,8 @@ HDOC;
 						$timesheet_data[$ts['username']]['practice_id'] = $ts['practice_id'];
 						$timesheet_data[$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-						// $rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-						// $directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
-						$rateCostPerHr = $ts['cost'];
-						$directrateCostPerHr = $ts['direct_cost'];
+						$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+						$directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
@@ -3939,6 +3936,8 @@ HDOC;
 					}	 
 				}	 
 				/* calculation for UC based on the max hours ends */
+				
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$rec['expect_worth_id']][$this->default_cur_id]);
 				
 				//get the other cost details for the project.
 				$other_cost_values = $this->getOtherCostValues($rec['lead_id']);
@@ -4304,6 +4303,7 @@ HDOC;
 
 		$data['project_costs'] = array();
 		if(!empty($data['timesheet_data'])) {
+			// echo "<pre>"; print_r($data['timesheet_data']); exit;
 			$res = $this->calcActualProjectCost($data['timesheet_data']);
 			if($res['total_cost']>0) {
 				$data['project_costs'] = $res['total_cost'];
