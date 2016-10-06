@@ -79,8 +79,8 @@ $(function(){
 					</td>
 				</tr>
 					<tr>
-						<td >Alslocate to</td>
-						<td>
+						<td >Allocate to</td>
+						<td style="padding: 5px 0;">
 							<select name="task_user" style="width:160px;" class="chzn-select textfield" data-placeholder="Choose a User...">
 							<?php
 								echo $remind_options, $remind_options_all;
