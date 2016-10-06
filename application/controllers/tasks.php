@@ -118,7 +118,7 @@ class Tasks extends crm_controller {
 					'taskenddate'=>element_value_check('task_search_end_date'),
 					'taskproject'=>element_value_check('task_project')
 					);
-		if(!empty($task_owner) &&!empty($task_owner))
+		if(!empty($task_owner) &&!empty($task_allocated))
 		{
 			$operation= 'AND';
 		}
