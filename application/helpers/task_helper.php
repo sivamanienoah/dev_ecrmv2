@@ -6,10 +6,14 @@ if ( ! function_exists('getAccessFromLead'))
 		$CI = get_instance();
 		$cfg = $CI->config->item('crm'); // load config
 		
+		
+		
 		$CI->db->select('lead_assign, assigned_to, belong_to');
 		$CI->db->where('lead_id', $id);
 		$CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
 		$sql = $CI->db->get($cfg['dbpref'].'leads');
+		
+		//echo $CI->db->last_query();
 		$res = $sql->result_array();
 		if (empty($res)) {
 			$chge_access = 0;
@@ -31,6 +35,7 @@ if ( ! function_exists('getAccessFromTeam'))
 		$CI->db->where('jobid_fk', $id);
 		$CI->db->where('userid_fk', $uid);
 		$sql = $CI->db->get($cfg['dbpref'].'contract_jobs');
+		//echo $CI->db->last_query();
 		$res = $sql->result_array();
 		$res_num = $sql->num_rows();
 		if ($res_num>0) {
@@ -53,6 +58,7 @@ if ( ! function_exists('getAccessFromStakeHolder'))
 		$CI->db->where('lead_id', $id);
 		$CI->db->where('user_id', $uid);
 		$sql = $CI->db->get($cfg['dbpref'].'stake_holders');
+		//echo $CI->db->last_query();
 		$res = $sql->result_array();
 		$res_num = $sql->num_rows();
 		if ($res_num>0) {
@@ -63,6 +69,9 @@ if ( ! function_exists('getAccessFromStakeHolder'))
 		return $stake_access;
 	}
 }
+
+
+
 
 /* End of file number_helper.php */
 /* Location: ./system/helpers/number_helper.php */

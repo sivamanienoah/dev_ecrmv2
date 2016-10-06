@@ -1,5 +1,7 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+
+	
 if ( ! function_exists('getAccess'))
 {
 	function getAccess($mid, $rid)
@@ -51,7 +53,7 @@ if ( ! function_exists('get_notify_status') )
 		$num = $sql->num_rows();
 		// echo $CI->db->last_query();
 		if ($num<1) {
-			// return false;
+			//return false;
 			return $default_days;
 		} else { 
 			$res = $sql->row_array();
@@ -203,6 +205,241 @@ if ( ! function_exists('check_is_root'))
 		} else {
 			return $res['parent'];
 		}
+	}
+}
+// changes the date format to readable without time
+if ( ! function_exists('date_format_readable'))
+{
+	function date_format_readable($date)
+	{
+		// If date value exist it enters the condition
+		if(!empty($date))
+		{
+			if($date=='0000-00-00 00:00:00')
+			{
+				$date="Not Assigned";				
+			}
+			else
+			{
+				$date = date('d-m-Y', strtotime($date));
+			}
+			
+		}
+		else
+		{
+			$date="";
+		}
+
+		return $date;
+	}
+}
+
+
+if ( ! function_exists('datatable_structure'))
+{
+function datatable_structure($task_category,$permission,$category_title,$category_id,$table_head,$additionalcolumn)
+{
+
+
+	$userid = $permission['logged_in_user']['userid'];
+	$project_td ="";
+	$CI  = get_instance();
+	$CI->load->model('user_model');
+	
+	
+	$tableid= strtolower(str_replace(' ', '', $category_title));
+	echo '<div style="padding:10px;">
+	<h4 style="margin-bottom:0px;">'.$category_title.' </h4>
+	<table border="0" id="'.$tableid.'"  rel="'.$category_id.'" cellpadding="0" cellspacing="0"  class="data-tbls dashboard-heads dataTable  ">
+		<thead>
+			<tr>';
+			foreach ($table_head as $key => $value) 
+			{
+ 				echo'<th style="PADDING:11PX;" width="'.$value.'%">'.$key.'</th>';
+			}	
+		echo'</tr>
+		</thead>
+		<tbody>';
+		if (is_array($task_category) && count($task_category) > 0) 
+		{ 
+			foreach($task_category as $row) { 
+			$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
+			$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
+			$taskid="'".$row['taskid']."'";
+			if($additionalcolumn==1)
+	{
+		
+		$lead_access = getAccessFromLead($userid, $row['lead_id']);	
+		$team_access = getAccessFromTeam($userid, $row['lead_id']);
+		$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
+		$link_access = 0;
+		if($lead_access == 1 || $team_access == 1 || $stake_access == 1) 
+		{
+			$link_access = 1;
+		}
+	
+		if($link_access == 1)
+		{
+				if($row['lead_or_project'] == 1) {
+					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$row['lead_title']}</a>";
+				} else {
+					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$row['lead_title']}</a>";
+				}
+		}
+		else
+		{
+			$lead_title = $row['lead_title'];
+		}
+		
+		
+		$project_td ='<td style="padding:10px;">'. $lead_title.'</td>';
+		
+	}
+	
+		if($userid== $row['taskcreated_by'] || $userid==$row['userid_fk'])
+		{
+			$status_return =1;
+		}
+		else
+		{
+			$status_return =0;
+		}
+	
+
+			echo '<tr >
+					'.$project_td.'					
+					<td style="padding:10px;" id="'.$row['taskcreated_by'].'" >'. $createdUser[0]['first_name'].'</td>
+					<td style="padding:10px;">'. $row['task'].'</td>
+					<td style="padding:10px;" id="'.$row['task_priority'].'">'. priority_name_define($row['task_priority']).'</td>
+					<td style="padding:10px;" id="'.$row['userid_fk'].'" >'. $allocatedUser[0]['first_name'].'</td>
+					<td style="padding:10px;">'. date_format_readable($row['start_date']).'</td>
+					<td style="padding:10px;">'. date_format_readable($row['end_date']).'</td>
+					<td style="padding:10px;">'. date_format_readable($row['actualstart_date']).'</td>
+					<td style="padding:10px;">'. date_format_readable($row['actualend_date']).'</td>
+					<td style="padding:10px;">'.taskStatusForm($row['taskid'],$status_return,$row['status']).'</td>
+					<td style="padding:10px;">'. $row['remarks'].'</td>
+					<td style="padding:10px;" class="actions">';
+					
+					
+					if (1 == $row['is_complete'])
+					{
+						
+						echo '<span class="label-success">&nbsp;Approved&nbsp;</span>';
+					}
+					else
+					{
+					
+					
+					if($userid ==$row['taskcreated_by'])
+					{
+						if(100 ==$row['status'])
+						{
+							
+							$s="setTaskStatus($taskid,'complete');return false";
+							echo'<a  onclick="'.$s.'"href="javascript:void(0);" title="Approve"><img src="assets/img/tick.png" alt="edit"> </a>';
+						}
+					
+						echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
+						$s="deleteItem('delete','ajax','set_task_status',$taskid)";
+						echo'<a class="delete" href="javascript:void(0)" onclick="'.$s.'" title="Delete"> <img src="assets/img/trash.png" alt="delete"> </a>';
+					
+					
+					}else if($userid ==$row['userid_fk'])
+					{
+						
+					
+						echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
+						
+					
+					}
+					
+
+					}
+					echo '<div class="dialog-err pull-right" id="dialog-message-$row[id]" style="display:none"></div>
+					</td>
+				</tr>';
+			} } 
+		echo'</tbody>
+	</table>'.'<br/></div>';
+	
+}
+}
+
+
+if ( ! function_exists('priority_name_define'))
+{
+	function priority_name_define($id)
+	{
+		switch ($id)
+		{
+		case "1":
+			$val="<span class='label-hot'>&nbsp;Critical&nbsp;</span>";
+		break;
+		case "2":
+			$val="<span class='label-hot'>&nbsp;High&nbsp;</span>";
+		break;
+		case "3":
+			$val="<span class='label-warm'>Medium</span>";
+		break;
+		case "4":
+			$val="<span class='label-cold'>&nbsp;Low&nbsp;</span>";
+		break;		
+		
+		default:
+			$val="null";
+		}
+
+		return $val;
+	}
+}
+
+if ( ! function_exists('element_value_check'))
+{
+	function element_value_check($element)
+	{
+	
+		if(isset($_GET[$element]))
+		{
+			$element=$_GET[$element];
+		}
+		else
+		{
+			$element="";
+		}
+
+		return $element;
+	}
+}
+
+if ( ! function_exists('taskStatusForm'))
+{
+	function taskStatusForm($tk,$val,$status)
+	{
+		if($val==1)
+		{
+		$options = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+		$opts = '';
+		foreach ($options as $o)
+		{
+			$sel = ($status == $o) ? ' selected="selected"' : '';
+			$opts .= "<option value=\"{$o}\"{$sel}>{$o}%</option>";
+		}
+		$own_task_form =  <<< EOD
+		<form onsubmit="return false" style="margin-bottom:0;">
+			<select name="set_task_status_{$tk}" id="set_task_status_{$tk}" class="set-task-status" style="margin-bottom:0;">
+				{$opts}
+			</select>
+			<div class="buttons">
+				<button type="submit" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
+			</div>
+		</form>
+EOD;
+		}
+		else
+		{
+			$own_task_form = $status.'%';
+		}
+		return $own_task_form;
 	}
 }
 
