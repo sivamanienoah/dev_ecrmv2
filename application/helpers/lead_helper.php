@@ -105,7 +105,7 @@ if (  ! function_exists('task_end_msg') )
 		$CI->db->where('t.userid_fk', $userdata['userid']);
 		$sql1 = $CI->db->get($cfg['dbpref'].'tasks as t');
 		
-		 echo $CI->db->last_query(); 
+		// echo $CI->db->last_query(); 
 		
 		$res = $sql1->num_rows();
 
