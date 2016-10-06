@@ -111,6 +111,7 @@ class Tasks extends crm_controller {
 	
 		$task_owner =element_value_check('task_owner_user');
 		$task_allocated =element_value_check('task_allocated_user');
+		$task_complete =element_value_check('task_search');
 		
 		if(isset($_POST['task_end_notify']))
 		{
@@ -120,6 +121,10 @@ class Tasks extends crm_controller {
 		if($task_owner=="")
 		{
 			$task_owner = $uid;
+		}
+		if($task_complete=="")
+		{
+			$task_complete = 0;
 		}
 		
 		$search=array(
