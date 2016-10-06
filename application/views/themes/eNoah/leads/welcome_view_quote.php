@@ -1091,7 +1091,7 @@ $(function(){
 		if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { 
 		?>
 			<form id="set-job-task" onsubmit="return false;">
-				
+				<input type="hidden" name ="taskcompleted" value="0" id="taskcompleted" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
 				<?php
