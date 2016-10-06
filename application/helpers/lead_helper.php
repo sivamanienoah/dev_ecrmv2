@@ -101,7 +101,7 @@ if (  ! function_exists('task_end_msg') )
 		
 		$CI->db->select('t.taskid, t.end_date, t.task');
 		$CI->db->where('t.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL "'.$day.'" DAY)) ');
-		$CI->db->where('t.actualend_date', '0000-00-00 00:00:00');
+		//$CI->db->where('t.actualend_date', '0000-00-00 00:00:00');
 		$CI->db->where('t.userid_fk', $userdata['userid']);
 		$sql1 = $CI->db->get($cfg['dbpref'].'tasks as t');
 		
