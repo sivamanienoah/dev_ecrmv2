@@ -382,7 +382,7 @@ function getEndTasks()
 				  '</form>');
 	$('body').append(form);
 	$(form).submit();  */
-	var params    		     = {'a':'1'};	
+	var params    		     = {'task_end_notify':'1'};	
 	params[csrf_token_name]  = csrf_hash_token;
     $(".all-tasks").load("tasks/search",params, function(responseTxt, statusTxt, xhr){
     if(statusTxt == "success")
