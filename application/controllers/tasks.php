@@ -140,7 +140,7 @@ class Tasks extends crm_controller {
 			$operation ='OR';
 		}
 				$search=array(
-					'taskcomplete'=>element_value_check('task_search'),
+					'taskcomplete'=>$task_complete,
 					'taskowner'=> $task_owner,
 					'taskallocateduser'=>$task_allocated,
 					'task_end_notify'=>$task_end_notify,
