@@ -59,7 +59,7 @@ class Task_model extends crm_model
 					$query_date="";
 			}
 		
-		
+			$notify_query = $both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'";
 		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
 				"FROM `".$this->cfg['dbpref']."tasks`
 				LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
@@ -67,12 +67,13 @@ class Task_model extends crm_model
 				WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
 				AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date.$query_end_notify."
 				AND (`".$this->cfg['dbpref']."tasks`.`created_by` = '".$task_search['taskowner']."'
-				 ".$both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."')
+				 ".$notify_query.")
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
 		
-/* 		echo $sql;
+ 		echo $sql;
+		echo "notifiy query check";
 		exit();
- */		$q = $this->db->query($sql);
+ 		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
 		
 		$data['values'] = $category_name;
