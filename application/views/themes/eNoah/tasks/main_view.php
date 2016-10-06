@@ -192,8 +192,8 @@ $(function(){
 						</td>
 						<td>
 							<select name="task_owner_user" class="chzn-select edit-task-allocate textfield width100px" >
-							<option value=""></option>
-							<?php						
+							
+<?php						
 							echo $remind_options, $remind_options_all;
 							?>						
 							</select>
