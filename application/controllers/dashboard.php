@@ -401,6 +401,8 @@ class Dashboard extends crm_controller {
 			$data['user_accounts'] = $users->result_array();
 		}
 		//For Tasks access - End here
+		$this->load->model('project_model');
+		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
 		$this->load->view('dashboard_view', $data);
     }
 	
