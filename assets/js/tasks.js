@@ -174,8 +174,8 @@ else
 		selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
 		selectvalueassign('.edit-task-priority',taskPriority,edit_table_el);
 		
-		$('.edit-job-task-desc', edit_table_el).val($.trim($(taskdescvalue).text()));	
-	    $('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim($(taskdescvalue).text())) );
+		$('.edit-job-task-desc', edit_table_el).val($.trim(taskdescvalue));	
+	    $('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim(taskdescvalue)) );
 		$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
 		$('.edit-start-date', edit_table_el).removeAttr('disabled', ($.trim(taskplStartdate)) );
 		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
@@ -189,8 +189,8 @@ else
 		selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
 		selectvalueassign('.edit-task-priority',taskPriority,edit_table_el);
 		
-		$('.edit-job-task-desc', edit_table_el).val($.trim($(taskdescvalue).text()));	
-	    $('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim($(taskdescvalue).text())) );
+		$('.edit-job-task-desc', edit_table_el).val($.trim(taskdescvalue));	
+	    $('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim(taskdescvalue)) );
 		$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
 		$('.edit-start-date', edit_table_el).attr('disabled', ($.trim(taskplStartdate)) );
 		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
