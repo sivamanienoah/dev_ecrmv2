@@ -111,7 +111,10 @@ class Tasks extends crm_controller {
 	
 		$task_owner =element_value_check('task_owner_user');
 		$task_allocated =element_value_check('task_allocated_user');
-		echo "notificate".$notification_val =$_POST['a'];
+		if(isset($_POST['task_end_notify']))
+		{
+			$task_end_notify=$_POST['task_end_notify'];
+		}
 		
 		if($task_owner=="")
 		{
@@ -122,6 +125,7 @@ class Tasks extends crm_controller {
 					'taskcomplete'=>element_value_check('task_search'),
 					'taskowner'=> $task_owner,
 					'taskallocateduser'=>$task_allocated,
+					'task_end_notify'=>$task_end_notify,
 					'taskstartdate'=>element_value_check('task_search_start_date'),
 					'taskenddate'=>element_value_check('task_search_end_date'),
 					'taskproject'=>element_value_check('task_project')
