@@ -58,7 +58,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	$('#jv-tab-4').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-	}).delay(10);
+	}).delay(1);
 	
 	var random_task_url = '';
 	if (random == 'random')
