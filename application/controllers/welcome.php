@@ -13,6 +13,7 @@ class Welcome extends crm_controller {
 		$this->load->model('welcome_model');
 		$this->load->model('dashboard_model');
 		$this->load->model('request_model');
+		
 		$this->load->model('customer_model');
 		$this->load->model('regionsettings_model');
 		$this->load->model('email_template_model');
@@ -295,6 +296,7 @@ class Welcome extends crm_controller {
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			
 			$data['job_cate'] = $this->welcome_model->get_lead_services();
+			$this->load->model('project_model');
 			$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
 			$this->load->view('leads/welcome_view_quote', $data);
         }
