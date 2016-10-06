@@ -2394,4 +2394,23 @@ function show_search_results(search_id) {
 	$(form).submit();
 }
 
+function loadajaxwithurl(url)
+{
+		var params    		     = {};	
+	params[csrf_token_name]  = csrf_hash_token;
+	
+	//$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, check());
+	
+ 	    $(".all-tasks").load(url,params, function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success")
+          // alert("External content loaded successfully!");
+        if(statusTxt == "error")
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+    }); 
+}
+
+function resetpage()
+{
+	loadajaxwithurl('tasks/index/extend');
+}
 /////////////////
