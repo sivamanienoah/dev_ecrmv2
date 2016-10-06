@@ -123,15 +123,7 @@ class Tasks extends crm_controller {
 			$task_complete = 0;
 		}
 		
-		$search=array(
-					'taskcomplete'=>element_value_check('task_search'),
-					'taskowner'=> $task_owner,
-					'taskallocateduser'=>$task_allocated,
-					'task_end_notify'=>$task_end_notify,
-					'taskstartdate'=>element_value_check('task_search_start_date'),
-					'taskenddate'=>element_value_check('task_search_end_date'),
-					'taskproject'=>element_value_check('task_project')
-					);
+
 		if(!empty($task_owner) &&!empty($task_allocated))
 		{
 			$operation= 'AND';
@@ -147,7 +139,15 @@ class Tasks extends crm_controller {
 			$task_allocated = $uid;
 			$operation ='OR';
 		}
-		
+				$search=array(
+					'taskcomplete'=>element_value_check('task_search'),
+					'taskowner'=> $task_owner,
+					'taskallocateduser'=>$task_allocated,
+					'task_end_notify'=>$task_end_notify,
+					'taskstartdate'=>element_value_check('task_search_start_date'),
+					'taskenddate'=>element_value_check('task_search_end_date'),
+					'taskproject'=>element_value_check('task_project')
+					);
 		
 /* 		$data['created_by'] = $this->task_model->get_task_created_by();
 		
