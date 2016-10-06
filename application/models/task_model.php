@@ -191,6 +191,11 @@ class Task_model extends crm_model
 		
 	}
 
+		function dateFormat($value)
+	{
+		$date=date_create($value);
+		return date_format($date,"Y-m-d");
+	}	
     
 }
 ?>
