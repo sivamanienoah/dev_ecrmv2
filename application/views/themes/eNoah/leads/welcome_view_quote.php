@@ -1117,6 +1117,33 @@ $(function(){
 					<tr>
 						<td><input type="hidden" class="edit-task-owner textfield"></td>
 					</tr>
+					<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
+					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select edit-task-category textfield" id="taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority textfield" id="taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+							
+						</select>
+					</td>
+				</tr>
 					<tr>
 						<td>Allocate to</td>
 						<td>
