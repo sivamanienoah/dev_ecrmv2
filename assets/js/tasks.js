@@ -11,6 +11,8 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	task_end_date = $('#set-job-task input[name="task_end_date"]').val(),
 	task_end_hour = $('#set-job-task select[name="task_end_hour"]').val(),
 	actualstart_date = $('#actualstart-date').val(),
+	taskCategory = $("#taskCategory").val(),
+	taskpriority = $("#taskpriority").val(),
 	require_qc = ($('#set-job-task input[name="require_qc"]').is(':checked')) ? 'YES' : 'NO';
 	priority = ($('#set-job-task input[name="priority"]').is(':checked')) ? 'YES' : 'NO';
 	if (job_task == '')
@@ -27,6 +29,14 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	{
 		errors.push('Task user required!');
 	}
+	if ( ! /^[0-9]+$/.test(taskpriority))
+	{
+		errors.push('Task Priority required!');
+	}
+	if ( ! /^[0-9]+$/.test(taskCategory))
+	{
+		errors.push('Task Category required!');
+	}	
 	
 	if ( ! /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(task_start_date))
 	{
@@ -48,7 +58,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	$('#jv-tab-4').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-	});
+	}).delay(12000);
 	
 	var random_task_url = '';
 	if (random == 'random')
@@ -58,7 +68,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	
 	$.post(
 		'ajax/request/add_job_task' + random_task_url,
-		{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks,'ci_csrf_token': csrf_hasf},
+		{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'task_category': taskCategory, 'task_priority': taskpriority,'ci_csrf_token': csrf_hasf},
 		function (data)
 		{
 			if (data.error)
@@ -67,9 +77,16 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 			}
 			else
 			{
-				$('.existing-task-list').find('.task-notice').remove().end().append(data.html);
-				$('.toggler').slideToggle();
-				
+				//$('.existing-task-list').find('.task-notice').remove().end().append(data.html);
+				//$('.toggler').slideToggle();
+				if ( $( "#search-job-task" ).length ) 
+				{
+					resetpage();
+				}
+				else
+				{
+					tabselector();
+				}
 				if (random_task_url != '')
 				{
 					window.location.href = window.location.href;
@@ -78,6 +95,8 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				$('#set-job-task')[0].reset();
 			}
 			$("#taskToAlloc").val('').trigger("liszt:updated");
+			$("#taskCategory").val('').trigger("liszt:updated");
+			$("#taskpriority").val('').trigger("liszt:updated");
 			$('#jv-tab-4').unblock();
 			// $.unblockUI();
 		},
@@ -90,7 +109,33 @@ var random_task_edit;
 
 function openEditTask(taskid, random)
 { 
-	task_being_edited = taskid;
+
+if( $('#search-job-task').length ) 
+        // use this if you are using id to check
+{
+    var add=1;
+}
+else
+{
+	var add=0;
+}
+
+ var tr= $("#"+taskid).closest('tr');
+ var taskcategory = $("#"+taskid).closest('table').attr('rel');
+ var taskdescvalue = tr[0].cells[0].innerHTML;
+ var Createduser = tr[0].cells[sumint(1,add)]['id'];
+ var taskPriority = tr[0].cells[sumint(2,add)]['id'];
+ var Allocateduser = tr[0].cells[sumint(3,add)]['id'];
+ var taskplStartdate = tr[0].cells[sumint(4,add)].innerHTML;
+ var taskplEnddate = tr[0].cells[sumint(5,add)].innerHTML;
+ var taskacStartdate = tr[0].cells[sumint(6,add)].innerHTML;
+ var taskacEnddate = tr[0].cells[sumint(7,add)].innerHTML;
+ var taskremarksvalue = tr[0].cells[sumint(9,add)].innerHTML;
+ 
+
+
+
+ task_being_edited = taskid;
 	
 	if (random == 'random')
 	{
@@ -107,60 +152,57 @@ function openEditTask(taskid, random)
 			css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
         });
 	// alert($('#task-table-' + taskid).length);
-	var the_task_el = $('#task-table-' + taskid);
-	//alert(the_task_el);
+	var the_task_el = $("#"+taskid).closest('table').attr('id');
+	console.log(the_task_el);
 	var the_task_el1 = taskid;
-	var edit_table_el = $('.blockUI .task-edit');
+	var edit_table_el = $('.task-edit');
 	var createdbyid = $.trim($('.task-cid', the_task_el).text());
 	
-	var uid = $.trim($('.task-uid', the_task_el).text());	
+	var uid=$.trim($('.task-uid', the_task_el).text());	
 	// workout the existing values and replace them
 
-	$('.edit-task-remarks', edit_table_el).val($.trim($('.taskremarks', the_task_el).text()));
+	$('.edit-task-remarks', edit_table_el).val($.trim(taskremarksvalue));
 	
-	$(".edit-task-allocate").val( $('.user-name', the_task_el).attr('rel') ).prop('selected',true);
-	$('.edit-task-allocate').next("div").find("span").html($(".edit-task-allocate option:selected").text());
+
+		selectoptionassign('.edit-task-category',taskcategory)
+		selectoptionassign('.edit-task-allocate',Allocateduser)
+		selectoptionassign('.edit-task-priority',taskPriority)
 	
 	if (createdbyid == uid)
 	{
-		// alert(createdbyid + "==" + uid);
-		$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
-		$('.edit-task-allocate', edit_table_el).removeAttr('disabled', ($.trim($('.user-name', the_task_el).attr('rel'))) );
-		$('.edit-job-task-desc', edit_table_el).val($.trim($('.task', the_task_el).text()));	
-	    $('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim($('.task', the_task_el).text())) );
-		// $('.edit-task-allocate').next("div").find(".chzn-drop").show();
-		$(".edit-task-allocate").removeAttr('disabled', true).trigger("liszt:updated");
-		$('.edit-start-date', edit_table_el).val($.trim($('.start-date', the_task_el).text()));
-		$('.edit-start-date', edit_table_el).removeAttr('disabled', ($.trim($('.start-date', the_task_el).text())) );
-		$('.edit-end-date', edit_table_el).val($.trim($('.end-date span.date_part', the_task_el).text()));
-		$('.edit-end-date', edit_table_el).removeAttr('disabled', ($.trim($('.end-date', the_task_el).text())) );
-		$('.edit-actualend-date', edit_table_el).val($.trim($('.actualend-date', the_task_el).text()));
-	    $('.edit-actualend-date', edit_table_el).removeAttr('disabled', ($.trim($('.actualend-date', the_task_el).text())) )
+		selectvalueassign('.edit-task-allocate',Allocateduser,edit_table_el);
+		selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
+		selectvalueassign('.edit-task-priority',taskPriority,edit_table_el);
+		
+		$('.edit-job-task-desc', edit_table_el).val($.trim($(taskdescvalue).text()));	
+	    $('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim($(taskdescvalue).text())) );
+		$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
+		$('.edit-start-date', edit_table_el).removeAttr('disabled', ($.trim(taskplStartdate)) );
+		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
+		$('.edit-end-date', edit_table_el).removeAttr('disabled', ($.trim(taskplEnddate)) );
+		$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
+	    $('.edit-actualend-date', edit_table_el).removeAttr('disabled', ($.trim(taskacEnddate)) )
 	}
 	else
 	{
-		$('.edit-task-allocate', edit_table_el).val($('.user-name', the_task_el).attr('rel'));
-		$('.edit-task-allocate', edit_table_el).attr('disabled', ($.trim($('.user-name', the_task_el).attr('rel'))) );
-		// $('.edit-task-allocate').next("div").find(".chzn-drop").hide();
-		$('.edit-job-task-desc', edit_table_el).val($.trim($('.task', the_task_el).text()));	
-	    $('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim($('.task', the_task_el).text())) );
-		$(".edit-task-allocate").attr('disabled', true).trigger("liszt:updated");
-		$('.edit-start-date', edit_table_el).val($.trim($('.start-date', the_task_el).text()));
-		$('.edit-start-date', edit_table_el).attr('disabled', ($.trim($('.start-date', the_task_el).text())) );
-		$('.edit-end-date', edit_table_el).val($.trim($('.end-date span.date_part', the_task_el).text()));
-		$('.edit-end-date', edit_table_el).attr('disabled', ($.trim($('.end-date', the_task_el).text())) );
-		$('.edit-actualend-date', edit_table_el).val($.trim($('.actualend-date', the_task_el).text()));
-		$('.edit-actualend-date', edit_table_el).attr('disabled', ($.trim($('.actualend-date', the_task_el).text())) )
+		selectvalueassign('.edit-task-allocate',Allocateduser,edit_table_el);
+		selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
+		selectvalueassign('.edit-task-priority',taskPriority,edit_table_el);
+		
+		$('.edit-job-task-desc', edit_table_el).val($.trim($(taskdescvalue).text()));	
+	    $('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim($(taskdescvalue).text())) );
+		$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
+		$('.edit-start-date', edit_table_el).attr('disabled', ($.trim(taskplStartdate)) );
+		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
+		$('.edit-end-date', edit_table_el).attr('disabled', ($.trim(taskplEnddate)) );
+		$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
+		$('.edit-actualend-date', edit_table_el).attr('disabled', ($.trim(taskacEnddate)) )
 	}	
 	
-	$('.edit-actualstart-date', edit_table_el).val($.trim($('.actualstart-date', the_task_el).text()));	;
-	$('.edit-task-owner', edit_table_el).val($.trim($('.task-owner', the_task_el).text()));
+	$('.edit-actualstart-date', edit_table_el).val($.trim(taskacStartdate));	;
+	$('.edit-task-owner', edit_table_el).val($.trim(Createduser));
 	$('.task-require-qc', edit_table_el).attr('checked', ($.trim($('.task-require-qc', the_task_el).text()) == '0') ? false : true);
 	$('.priority', edit_table_el).attr('checked', ($.trim($('.priority', the_task_el).text()) == '0') ? false : true);	
-	//$('#edit-job-task-id', edit_table_el).val($.trim($('.task-id', the_task_el).text()));
-	
-	//if (window.console) console.log($.trim($('item.start-date', the_task_el).text()));
-	// get the hours and mins
 	return false;
 }
 
@@ -176,6 +218,10 @@ function editTask()
 		remarks = $('.edit-task-remarks', edit_table_el).val(),
 		task_user = $('.edit-task-allocate', edit_table_el).val(),
 		user_label = $('.edit-task-allocate option:selected', edit_table_el).text(),
+		taskCategory = $('.edit-task-category', edit_table_el).val(),	
+		category_label = $('.edit-task-category option:selected', edit_table_el).text(),
+		taskpriority = $('.edit-task-priority', edit_table_el).val(),
+		priority_label = $('.edit-task-priority option:selected', edit_table_el).text(),		
 		task_hours = $('.edit-task-hours', edit_table_el).val(),
 		task_mins = $('.edit-task-mins', edit_table_el).val(),
 		task_start_date = $('.edit-start-date', edit_table_el).val(),
@@ -199,7 +245,14 @@ function editTask()
 	{
 		errors.push('Task user required!');
 	}
-	
+	if ( ! /^[0-9]+$/.test(taskpriority))
+	{
+		errors.push('Task Priority required!');
+	}
+	if ( ! /^[0-9]+$/.test(taskCategory))
+	{
+		errors.push('Task Category required!');
+	}
 	if ( ! /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(task_start_date))
 	{
 		errors.push('Valid start date is required!');
@@ -227,7 +280,7 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
-	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner };
+	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority };
 	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,
@@ -250,6 +303,14 @@ function editTask()
 			$('.blockUI .task-add.task-edit').unblock();
 			$.unblockUI();
 			$('#edit-job-task')[0].reset();
+			if ( $( "#search-job-task" ).length ) 
+			{
+			resetpage();
+			}
+			else
+			{
+			tabselector();
+			}
 		},
 		'json'
 	);
@@ -263,18 +324,25 @@ function loadExistingTasks()
 {	
 	if (tasks_loaded)
 	{
-		return false;
+		
+		if(1!=$( "#taskslistval" ).val())
+		{
+			//return false;
+		}
+		
 	}
 	$('#jv-tab-4').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 	});
 	$.get(
-		'ajax/request/get_job_tasks/' + curr_job_id,
+		'ajax/request/get_job_tasks/' + curr_job_id+'?task_completed='+$("#taskcompleted").val(),
 		{},
 		function(data)
 		{
+			$( ".existing-task-list" ).empty();
 			$('.existing-task-list').append(data);
+			
 			$('#jv-tab-4').unblock();
 			$.unblockUI();
 		}
@@ -287,6 +355,7 @@ var _task_require_qc = false;
 
 function setTaskStatus(taskid, el)
 {	
+
 
 	var params = {};
 
@@ -324,6 +393,7 @@ function setTaskStatus(taskid, el)
 	}
 	else /* set the status */
 	{
+		//alert("percentage_val");
 		var notifyPM = 'NO', task_status_val = $('#set_task_status_' + taskid).val();
 		
 		if (task_status_val == 100 && ! _task_require_qc && $('tr.require-qc-' + taskid).size() > 0)
@@ -369,8 +439,6 @@ function setTaskStatus(taskid, el)
 					}
 					else if (data.task_delete)
 					{
-						//if (window.location.href == 'http://localhost/ecrmv2/tasks/all/')
-						// if (window.location.href == 'http://' + hstname + '/' + pth[1] + '/tasks/all/')
 						if (window.location.href == site_base_url+'tasks/all/')
 						{
 							window.location.href = window.location.href;
@@ -386,7 +454,20 @@ function setTaskStatus(taskid, el)
 					{
 						$('#set_task_status_' + taskid).parents('.tasks').removeClass('complete')
 					}
-					if (typeof(this_is_home) != 'undefined')
+					if(1==$("#taskslistval").val())
+					{
+						
+					if ( $( "#search-job-task" ).length ) 
+					{
+						resetpage();
+					}
+					else
+					{
+						tabselector();
+					}
+						
+					}
+					else if(typeof(this_is_home) != 'undefined')
 					{
 						window.location.href = window.location.href;
 					}
@@ -448,3 +529,41 @@ function cancelDel() {
 	$.unblockUI();
 	return false;
 }
+
+function selectvalueassign(elementname,elementvalue,edit_table_el)
+{
+	$(elementname, edit_table_el).val(elementvalue);
+	$(elementname, edit_table_el).removeAttr('disabled', ($.trim(elementvalue)) );
+	$(elementname).removeAttr('disabled', true).trigger("liszt:updated");	
+}
+
+function selectoptionassign(elementname,elementvalue)
+{
+	$(elementname).val( elementvalue ).prop('selected',true);
+	$(elementname).next("div").find("span").html($(elementname+" option:selected").text());			
+}
+
+function sumint(a,b)
+{
+	var input1 = parseInt(a);
+	var input2 = parseInt(b);
+	var input = input1 + input2;
+	return input;
+}
+
+function tabselector()
+{
+	$( ".ui-tabs-nav li" ).each(function( index ) 
+	{
+		if($( this ).attr('aria-controls')=='jv-tab-4')
+		{		
+			$('.ui-tabs-nav li').eq(0).find("a").trigger('click');
+			$('.ui-tabs-nav li').eq(index).find("a").trigger('click');
+		}
+
+	}
+	);
+	
+}
+
+

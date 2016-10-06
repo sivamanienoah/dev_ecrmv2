@@ -78,7 +78,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 	<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 	<script type="text/javascript" src="assets/js/tasks.js?q=34"></script>
 	<style type="text/css">
-	@import url(assets/css/tasks.css?q=1);
+
 	</style>
 <?php 
 } 
