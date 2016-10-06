@@ -17,12 +17,16 @@ class Task_model extends crm_model
 		//print_r($task_search);
 		//echo $task_search['taskproject']."rammm";
 		//$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY)) 		
-		
-		
-	if($task_search['task_end_notify']!="" )
-	{
-		$task_notify_status = get_notify_status(2);
-	}
+
+			if($task_search['task_end_notify']!="" )
+			{
+				$task_notify_status = get_notify_status(2);
+				$query_end_notify="AND `".$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY))";
+			}
+			else
+			{
+				$query_end_notify="";
+			}
 		
 		
 			if (array_key_exists("taskproject",$task_search))
