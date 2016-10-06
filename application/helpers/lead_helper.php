@@ -246,6 +246,8 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 	$project_td ="";
 	$CI  = get_instance();
 	$CI->load->model('user_model');
+	$CI->load->model('customer_model');
+	
 	
 	
 	$tableid= strtolower(str_replace(' ', '', $category_title));
@@ -266,6 +268,8 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 			foreach($task_category as $row) { 
 			$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
 			$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
+			$company_name= $CI->customer_model->get_company($row['custid_fk']);
+			$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
 			$taskid="'".$row['taskid']."'";
 			if($additionalcolumn==1)
 	{
@@ -282,14 +286,14 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 		if($link_access == 1)
 		{
 				if($row['lead_or_project'] == 1) {
-					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$row['lead_title']}</a>";
+					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
 				} else {
-					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$row['lead_title']}</a>";
+					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$company_title}</a>";
 				}
 		}
 		else
 		{
-			$lead_title = $row['lead_title'];
+			$lead_title = $company_title;
 		}
 		
 		
