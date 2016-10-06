@@ -5,17 +5,8 @@
 */
 
 $(function(){
-	var params    		     = {};	
-	params[csrf_token_name]  = csrf_hash_token;
-	
-	// alert(task_end_notify)
-	
-	// $('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, loadEditTables);
-	if(task_end_notify == 'task_end_notify') {
-		$('.all-tasks').load('tasks/index/extend/task_end_notify #task-page .task-contents', params, loadEditTables);
-	} else {
-		$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, loadEditTables);
-	}
+
+	loadajaxwithurl('tasks/index/extend');
 	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
@@ -45,13 +36,19 @@ $(function(){
 });
 
 function searchTasks(){
-	$('.tasks-search .search-results').empty().html('Loading...');
-	$.post('tasks/search',$('#search-job-task').serialize()+'&'+csrf_token_name+'='+csrf_hash_token,function(data) {
-		$('.tasks-search').find('.search-results').remove();
-		$('.all-tasks').hide();
-		$('.tasks-search').append(data);
-	});
-	return false;
+	var params    		     = $('#search-job-task').serialize();	
+	params[csrf_token_name]  = csrf_hash_token;
+    $(".all-tasks").load("tasks/search",params, function(responseTxt, statusTxt, xhr){
+    if(statusTxt == "success")
+	{
+		
+	}
+   else if(statusTxt == "error")
+   {
+	 alert("Error: " + xhr.status + ": " + xhr.statusText);
+   }    
+
+    }); 
 }
 function searchtodayTasks(){
 	$('.tasks-search .search-results').empty().html('Loading...');
@@ -61,6 +58,22 @@ function searchtodayTasks(){
 		$('.tasks-search').append(data);
 	});
 	return false;
+}
+function check()
+{
+ $.getScript( "assets/js/tasks/task_list.js", function( data, textStatus, jqxhr ) {
+  console.log( data ); // Data returned
+  console.log( textStatus ); // Success
+  console.log( jqxhr.status ); // 200
+  console.log( "Load was performed." );
+});
+$.getScript( "assets/js/tasks/task_list.js" )
+  .done(function( script, textStatus ) {
+    console.log( textStatus );
+  })
+  .fail(function( jqxhr, settings, exception ) {
+    $( "div.log" ).text( "Triggered ajaxError handler." );
+});
 }
 function loadEditTables(){
 	$('#jv-tab-4').block({
@@ -93,6 +106,7 @@ function loadEditTables(){
 	params[csrf_token_name] = csrf_hash_token;
 	
 	$.post('ajax/request/get_random_tasks', params, function(data){
+		//alert("tes");
 		if (data != '')	{
 			$('form.random-task-tables').html(data);
 		}
@@ -104,4 +118,23 @@ function loadEditTables(){
 	});
 }
 	
+function loadajaxwithurl(url)
+{
+		var params    		     = {};	
+	params[csrf_token_name]  = csrf_hash_token;
+	
+	//$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, check());
+	
+ 	    $(".all-tasks").load(url,params, function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success")
+          // alert("External content loaded successfully!");
+        if(statusTxt == "error")
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+    }); 
+}
+
+function resetpage()
+{
+	loadajaxwithurl('tasks/index/extend');
+}	
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
