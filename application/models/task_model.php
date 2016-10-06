@@ -24,10 +24,11 @@ class Task_model extends crm_model
 				$query_end_notify="AND `".$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY))
 									AND `".$this->cfg['dbpref']."tasks`.actualend_date='0000-00-00 00:00:00'";
 			
-				
+				$notify_query="";
 			}
 			else
 			{
+				$notify_query = $both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'";
 				$query_end_notify="";
 			}
 		
@@ -59,7 +60,6 @@ class Task_model extends crm_model
 					$query_date="";
 			}
 		
-			$notify_query = $both."`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'";
 			
 			$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
 				"FROM `".$this->cfg['dbpref']."tasks`
