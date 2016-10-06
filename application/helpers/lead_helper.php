@@ -269,7 +269,14 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 			$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
 			$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
 			$company_name= $CI->customer_model->get_company($row['custid_fk']);
-			$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
+			if(!empty($row['lead_title']))
+			{
+				$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
+			}
+			else
+			{
+				$company_title ="";
+			}
 			$taskid="'".$row['taskid']."'";
 			if($additionalcolumn==1)
 	{
