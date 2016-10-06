@@ -325,9 +325,9 @@ $(function(){
 				</tr>
 				<tr>
 					<td>
-						Alloceate to
+						Allocate to
 					</td>
-					<td>
+					<td style="padding: 5px 0;">
 						<select name="task_user" class="chzn-select edit-task-allocate textfield width100px" >
 							<?php						
 							echo $remind_options, $remind_options_all;
