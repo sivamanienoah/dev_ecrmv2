@@ -91,7 +91,6 @@ function valueassign(val)
 function refreshalltask(val)
 {
 				$("#taskcompleted").val(val);
-				$('.ui-tabs-nav li').eq(4).find("a").trigger('click');
-				$('.ui-tabs-nav li').eq(5).find("a").trigger('click');
+				loadExistingTasks();
 	
 }
