@@ -116,6 +116,7 @@ class Tasks extends crm_controller {
 		if(isset($_POST['task_end_notify']))
 		{
 			$task_end_notify=$_POST['task_end_notify'];
+			$task_allocated = $uid;
 		}
 		
 		if($task_owner=="")
