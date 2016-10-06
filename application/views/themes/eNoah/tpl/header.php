@@ -375,13 +375,28 @@ function getProposalExpectEndLead()
 
 function getEndTasks()
 {
-	var url = site_base_url+"tasks/all";
+/* 	var url = site_base_url+"tasks/all";
 	var form = $('<form action="' + url + '" method="post">' +
 				  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 				  '<input type="hidden" name="type" value="task_end_notify" />' +
 				  '</form>');
 	$('body').append(form);
-	$(form).submit(); 
+	$(form).submit();  */
+	var params    		     = {'a':'1'};	
+	params[csrf_token_name]  = csrf_hash_token;
+    $(".all-tasks").load("tasks/search",params, function(responseTxt, statusTxt, xhr){
+    if(statusTxt == "success")
+	{
+		
+	}
+   else if(statusTxt == "error")
+   {
+	 alert("Error: " + xhr.status + ": " + xhr.statusText);
+   }    
+
+    }); 	
+	
+	
 }
 </script>
 
