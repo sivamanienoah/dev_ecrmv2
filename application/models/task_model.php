@@ -16,12 +16,14 @@ class Task_model extends crm_model
 	{
 		//print_r($task_search);
 		//echo $task_search['taskproject']."rammm";
+		//$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY)) 		
+		
 			if (array_key_exists("taskproject",$task_search))
 			{
 
 				if($task_search['taskproject']!="" )
 				{
-				$query="AND `".$this->cfg['dbpref']."tasks`.`jobid_fk` = '".$task_search['taskproject']."'";
+					$query="AND `".$this->cfg['dbpref']."tasks`.`jobid_fk` = '".$task_search['taskproject']."'";
 				}
 				
 			}
@@ -57,7 +59,7 @@ class Task_model extends crm_model
 
 		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
-		//echo $this->db->last_query().'<br/><br/><br/>';		
+		echo $this->db->last_query().'<br/><br/><br/>';		
 		$data['values'] = $category_name;
 		$data['categoryid'] = $category_id;
 		$data['rows'] = $q->num_rows();
