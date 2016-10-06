@@ -35,7 +35,8 @@ class Task_model extends crm_model
 				{
 					$ts_startdate = $this->dateFormat($task_search['taskstartdate']);
 					$ts_enddate = $this->dateFormat($task_search['taskenddate']);
-					$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` BETWEEN '". $ts_startdate." 00:00:00"."' AND '".$ts_enddate." 23:59:59"."')";
+					$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` >= '". $ts_startdate." 00:00:00"."' AND 
+					`".$this->cfg['dbpref']."tasks`.`end_date` <= '". $ts_enddate." 00:00:00"."')";
 				}	
 			}
 			else
@@ -57,7 +58,7 @@ class Task_model extends crm_model
 
 		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
-		//echo $this->db->last_query().'<br/><br/><br/>';		
+		echo $this->db->last_query().'<br/><br/><br/>';		
 		$data['values'] = $category_name;
 		$data['categoryid'] = $category_id;
 		$data['rows'] = $q->num_rows();
