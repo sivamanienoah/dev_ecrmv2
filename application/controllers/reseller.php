@@ -150,7 +150,6 @@ class Reseller extends crm_controller {
 		$data['msg'] = 'error';
 		$wh_condn	 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
 		$editdata['contract_data'] = $this->reseller_model->get_data_by_id('contracts', $wh_condn);
-		echo "<pre>"; print_r($editdata); exit;
 		if(!empty($editdata['contract_data']) && count($editdata['contract_data'])>0) 
 		{
 			$editdata['contract_id'] = $this->input->post('contract_id');
@@ -160,6 +159,7 @@ class Reseller extends crm_controller {
 			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
 			$data['msg'] = 'success';
 		}
+		echo "<pre>"; print_r($data); die;
 		echo json_encode($data);
 		exit;
 	}
