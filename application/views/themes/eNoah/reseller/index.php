@@ -68,8 +68,10 @@ require (theme_url().'/tpl/header.php');
 						<td>
 							<?php
 								echo (isset($get_dates) && !empty($get_dates['contract_end_date'])) ? date('d-m-Y', strtotime($get_dates['contract_end_date'])) : "";
-								if(strtotime($get_dates['renewal_reminder_date']) <= strtotime(date('Y-m-d H:i:s'))) {
-									echo " <span class='red pull-right'>Renew</span>";
+								if(isset($get_dates) && !empty($get_dates['renewal_reminder_date'])) {
+									if(strtotime($get_dates['renewal_reminder_date']) <= strtotime(date('Y-m-d H:i:s'))) {
+										echo " <span class='red pull-right'>Renew</span>";
+									}
 								}
 							?>
 						</td>
