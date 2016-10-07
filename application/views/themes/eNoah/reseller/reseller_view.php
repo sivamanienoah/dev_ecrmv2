@@ -10,11 +10,11 @@ require (theme_url().'/tpl/header.php');
 		<?php if(is_array($reseller_det) && !empty($reseller_det) && count($reseller_det)>0) { ?>
 			<p>
 				<label>First Name :</label>
-				<?php echo $reseller_det[0]['first_name']; ?>
+				<?php echo ucfirst($reseller_det[0]['first_name']); ?>
 			</p>
 			<p>
 				<label>Last Name :</label>
-				<?php echo $reseller_det[0]['last_name']; ?>
+				<?php echo isset($reseller_det[0]['last_name']) ? ucfirst($reseller_det[0]['last_name']) : ''; ?>
 			</p>
 			<p>
 				<label>Email :</label>
