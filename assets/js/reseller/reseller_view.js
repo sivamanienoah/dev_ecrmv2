@@ -107,6 +107,9 @@ function deleteContractData(contract_id, contracter_user_id)
 					$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Deleted Successfully.</span>");
 					$('#contr_'+contract_id).remove();
 					setTimeout('timerfadeout()', 4000);
+					if($('#list_contract_det tbody tr').length==0){
+						reset_add_form();
+					}
 				} else if(data.res == 'failure'){
 					$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in deleting contract.</span>");
 				}
