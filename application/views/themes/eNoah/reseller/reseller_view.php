@@ -1,6 +1,7 @@
 <?php
 ob_start();
 require (theme_url().'/tpl/header.php');
+echo "<pre>"; print_r($reseller_det); echo "</pre>";
 ?>
 <div id="content">
 	<div class="inner">	
