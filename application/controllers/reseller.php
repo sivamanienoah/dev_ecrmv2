@@ -145,6 +145,7 @@ class Reseller extends crm_controller {
 	*/
 	public function getEditContractData()
 	{
+		echo $this->input->post(); exit;
 		$data 		 = array();
 		$editdata 	 = array();
 		$data['msg'] = 'error';
