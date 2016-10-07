@@ -145,12 +145,12 @@ class Reseller extends crm_controller {
 	*/
 	public function getEditContractData()
 	{
-		print_r($this->input->post()); exit;
 		$data 		 = array();
 		$editdata 	 = array();
 		$data['msg'] = 'error';
 		$wh_condn	 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
 		$editdata['contract_data'] = $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		echo "<pre>"; print_r($editdata); exit;
 		if(!empty($editdata['contract_data']) && count($editdata['contract_data'])>0) 
 		{
 			$editdata['contract_id'] = $this->input->post('contract_id');
