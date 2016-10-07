@@ -329,10 +329,12 @@ function runContractAjaxFileUpload()
 }
 
 $("#contractUploadFile").delegate("a.del_file","click",function() {
-	var str_delete 	= $(this).attr("id");
+	// var str_delete 	= $(this).attr("id");
+	var str_delete 	= $(this).attr("serial_id");
 	var result 		= confirm("Are you sure you want to delete this attachment?");
 	if (result==true) {
-		$('#'+str_delete).parent("div").remove();
+		// $('#'+str_delete).parent("div").remove();
+		$('a[serial_id="'+str_delete+'"]').parent("div").remove();
 	}
 });
 </script>
