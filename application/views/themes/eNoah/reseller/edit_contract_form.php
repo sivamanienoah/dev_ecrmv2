@@ -40,7 +40,7 @@
 			<td>Contract Start date<span class='red'> *</span></td>
 			<td>
 				<?php
-					$start_date = (!empty($contract_data['contract_start_date'] && ($contract_data['contract_start_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_start_date'])) : '';
+					$start_date = (!empty($contract_data['contract_start_date']) && ($contract_data['contract_start_date'] != '0000-00-00 00:00:00')) ? date('d-m-Y', strtotime($contract_data['contract_start_date'])) : '';
 				?>
 				<input type="text" name="contract_start_date" id="contract_start_date" data-calendar="true" value="<?php echo $start_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_start_date_err'></div>
@@ -50,7 +50,7 @@
 			<td>Contract End date<span class='red'> *</span></td>
 			<td>
 				<?php
-					$end_date = (!empty($contract_data['contract_end_date'] && ($contract_data['contract_end_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_end_date'])) : '';
+					$end_date = (!empty($contract_data['contract_end_date']) && ($contract_data['contract_end_date'] != '0000-00-00 00:00:00')) ? date('d-m-Y', strtotime($contract_data['contract_end_date'])) : '';
 				?>
 				<input type="text" name="contract_end_date" id="contract_end_date" data-calendar="true" value="<?php echo $end_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_end_date_err'></div>
@@ -60,7 +60,7 @@
 			<td>Renewal Reminder date<span class='red'> *</span></td>
 			<td>
 				<?php
-					$renew_date = (!empty($contract_data['renewal_reminder_date'] && ($contract_data['renewal_reminder_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['renewal_reminder_date'])) : '';
+					$renew_date = (!empty($contract_data['renewal_reminder_date']) && ($contract_data['renewal_reminder_date'] != '0000-00-00 00:00:00')) ? date('d-m-Y', strtotime($contract_data['renewal_reminder_date'])) : '';
 				?>
 				<input type="text" name="renewal_reminder_date" id="renewal_reminder_date" data-calendar="true" value="<?php echo $renew_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='renewal_reminder_date_err'></div>
@@ -76,7 +76,7 @@
 			<td>Contract Signed Date<span class='red'> *</span></td>
 			<td>
 				<?php
-					$signed_date = (!empty($contract_data['contract_signed_date'] && ($contract_data['contract_signed_date'] != '0000-00-00 00:00:00'))) ? date('d-m-Y', strtotime($contract_data['contract_signed_date'])) : '';
+					$signed_date = (!empty($contract_data['contract_signed_date']) && ($contract_data['contract_signed_date'] != '0000-00-00 00:00:00')) ? date('d-m-Y', strtotime($contract_data['contract_signed_date'])) : '';
 				?>
 				<input type="text" name="contract_signed_date" id="contract_signed_date" data-calendar="true" value="<?php echo $signed_date; ?>" class="textfield width200px pick-date" readonly />
 				<div class='ajx_failure_msg succ_err_msg' id='contract_signed_date_err'></div>
