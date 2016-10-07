@@ -159,7 +159,6 @@ class Reseller extends crm_controller {
 			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
 			$data['msg'] = 'success';
 		}
-		echo "<pre>"; print_r($data); die;
 		echo json_encode($data);
 		exit;
 	}
