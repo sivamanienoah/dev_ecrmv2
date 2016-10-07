@@ -122,9 +122,9 @@ else
 
  var tr= $("#"+taskid).closest('tr');
  var taskcategory = $("#"+taskid).closest('table').attr('rel');
- var taskdescvalue = tr[0].cells[sumint(1,add)].innerHTML;
- var Createduser = tr[0].cells[sumint(0,add)].innerHTML;
- var taskPriority = tr[0].cells[sumint(2,add)]['id'];
+ var taskdescvalue = tr[0].cells[sumint(0,add)].innerHTML;
+ var Createduser = tr[0].cells[sumint(2,add)].innerHTML;
+ var taskPriority = tr[0].cells[sumint(1,add)]['id'];
  var Allocateduser = tr[0].cells[sumint(3,add)]['id'];
  var taskplStartdate = tr[0].cells[sumint(4,add)].innerHTML;
  var taskplEnddate = tr[0].cells[sumint(5,add)].innerHTML;
