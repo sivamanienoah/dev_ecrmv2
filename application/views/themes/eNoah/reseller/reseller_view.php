@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require (theme_url().'/tpl/header.php');
-echo "<pre>"; print_r($reseller_det); echo "</pre>";
+#echo "<pre>"; print_r($reseller_det); echo "</pre>";
 ?>
 <div id="content">
 	<div class="inner">	
@@ -9,16 +9,21 @@ echo "<pre>"; print_r($reseller_det); echo "</pre>";
 	<?php if($this->session->userdata('accesspage')==1) { ?>
 		<?php if(is_array($reseller_det) && !empty($reseller_det) && count($reseller_det)>0) { ?>
 			<p>
-				<label>Reseller Name :</label>
-				<?php
-					$reseller_name = $reseller_det[0]['first_name'];
-					if(!empty($reseller_det[0]['last_name'])){
-						$reseller_name .= " ".$reseller_det[0]['last_name'];
-					}
-					echo $reseller_name;
-				?>
+				<label>First Name :</label>
+				<?php echo $reseller_det[0]['first_name']; ?>
 			</p>
-			
+			<p>
+				<label>Last Name :</label>
+				<?php echo $reseller_det[0]['last_name']; ?>
+			</p>
+			<p>
+				<label>Email :</label>
+				<?php echo $reseller_det[0]['email']; ?>
+			</p>
+			<p>
+				<label>Username :</label>
+				<?php echo $reseller_det[0]['username']; ?>
+			</p>
 			<p>
 				<label>Contract Manager Name :</label>
 				<?php
