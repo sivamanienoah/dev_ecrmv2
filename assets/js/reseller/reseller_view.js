@@ -74,6 +74,7 @@ function editContractData(contract_id, contracter_user_id)
 		success:function(data) {
 			// alert(data);
 			if(data.msg == 'success'){
+				$('#create_contract_btn').hide();
 				$('#add_contract_form').html(data.res);
 			}
 		}
@@ -118,9 +119,30 @@ function deleteContractData(contract_id, contracter_user_id)
 
 function reset_add_form()
 {
-	// alert('tst');
 	$('#add_contract_form').html('');
+	load_contract_grid(reseller_id);
 	$('#create_contract_btn').show();
+}
+
+function load_contract_grid(contracter_user_id)
+{
+	// alert('tst');
+	var params 						= {};
+	params[csrf_token_name] 		= csrf_hash_token;
+	params['contracter_user_id'] 	= contracter_user_id;
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'reseller/loadContractGrid/',
+		cache:false,
+		dataType:'json',
+		beforeSend: function() {
+			//show loading symbol
+		},
+		success:function(data) {
+			$('#list_contract_det').html(data.res);
+		}
+	});
 }
 
 function timerfadeout()

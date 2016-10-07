@@ -1,7 +1,8 @@
 <?php $attributes = array('id'=>'add-contract', 'name'=>'add-contract'); ?>
 <?php echo form_open_multipart("reseller/addResellerContract", $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	<input type="hidden" name="contracter_id" id="contracter_id" class="textfield width200px pick-date" value="<?php echo $reseller_det[0]['userid']; ?>" readonly />
+	<input type="hidden" name="contracter_id" id="contracter_id" value="<?php echo $reseller_det[0]['userid']; ?>" readonly />
+	<input type="hidden" name="hidden_contract_manager" id="hidden_contract_manager" value="<?php echo $reseller_det[0]['contract_manager']; ?>" readonly />
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Contracter Manager<span class='red'> *</span></td>
@@ -159,10 +160,21 @@
 			var return_date = $('#contract_start_date').val();
 			$('#contract_end_date').datepicker("option", "minDate", return_date);
 		}});
-		$('#contract_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+		$('#contract_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true , onSelect: function(dateText, instance) {
+			var end_date 	= $('#contract_end_date').val();
+			var start_date  = $('#contract_start_date').val();
+			/*set one month minus on renewal reminder date*/
+			var date = $.datepicker.parseDate(instance.settings.dateFormat, dateText, instance.settings);
+            date.setMonth(date.getMonth() - 1);
+			$("#renewal_reminder_date").datepicker("setDate", date);
+			$('#renewal_reminder_date').datepicker("option", "minDate", start_date);
+			$('#contract_signed_date').datepicker("option", "minDate", start_date);
+			$('#renewal_reminder_date').datepicker("option", "maxDate", end_date);
+			$('#contract_signed_date').datepicker("option", "maxDate", end_date);
+		}});
 		
-		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy"});
-		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy"});
+		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
+		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
 		
 	});
 	
@@ -289,9 +301,9 @@ function runContractAjaxFileUpload()
 					if(data.msg == 'File successfully uploaded!') {
 						// alert(data.msg);				
 						$.each(data.res_file, function(i, item) {
-							var res = item.split("~",2);
+							var res = item.split("~",3);
 							// alert(res[0]+res[1]);	
-							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" class="del_file"> </a></div>';
+							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
 							$("#contractUploadFile").append(name);
 						});
 						$.unblockUI();

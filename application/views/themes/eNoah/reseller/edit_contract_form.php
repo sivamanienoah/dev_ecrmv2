@@ -1,8 +1,10 @@
 <?php $attributes = array('id'=>'edit-contract', 'name'=>'edit-contract'); ?>
-<?php #echo "<pre>"; print_r($contract_data); echo "<pre>"; ?>
+<?php #echo "<pre>"; print_r($upload_data); echo "</pre>"; ?>
 <?php echo form_open_multipart("reseller/editResellerContract", $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-	<input type="hidden" name="contracter_id" id="contracter_id" class="textfield width200px pick-date" value="<?php echo $contract_data['contracter_id']; ?>" readonly />
+	<input type="hidden" name="contracter_id" id="contracter_id" value="<?php echo $contract_data['contracter_id']; ?>" readonly />
+	<input type="hidden" name="contract_id" id="contract_id" value="<?php echo $contract_data['id']; ?>" readonly />
+	<input type="hidden" name="hidden_contract_manager" id="hidden_contract_manager" value="<?php echo $contract_data['contract_manager']; ?>" readonly />
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Contracter Manager<span class='red'> *</span></td>
@@ -125,6 +127,22 @@
 						<input type="hidden" id="exp_type" value="">									
 					</div>
 				</form>
+				<div id='existUploadedFile'>
+					<?php if(is_array($upload_data) && !empty($upload_data) && count($upload_data)>0) { ?>
+						<?php $serial_id = 1; ?>
+						<?php foreach($upload_data as $rec_file) { ?>
+							<div style="float: left; width: 100%;">
+								<span style="float: left;">
+									<?php $file_id = base64_encode($rec_file['id']); ?>
+									<?php #$file_id = $rec_file['id']; ?>
+									<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
+								</span>
+								<a class="del_file" serial_id="<?php echo $serial_id; ?>" id="<?php echo $file_id; ?>"> </a>
+							</div>
+						<?php $serial_id++; ?>
+						<?php } ?>
+					<?php } ?>
+				</div>
 				<div id="contractUploadFile"></div>
 			</td>
 		</tr>
@@ -141,7 +159,8 @@
 	</table>
 <?php form_close(); ?>
 <script type="text/javascript">
-	var contracter_user_id = '<?php echo $contract_data['contracter_id']; ?>';
+	var contracter_user_id  = '<?php echo $contract_data['contracter_id']; ?>';
+	var contract_id 		= '<?php echo $contract_data['id']; ?>';
 	$( document ).ajaxSuccess(function( event, xhr, settings ) {
 		if(settings.target=="#output1") {
 			if(xhr.responseText=='success') {
@@ -162,20 +181,51 @@
 			success:      ''  // post-submit callback 
 		}; 
 		$('#edit-contract').ajaxForm(options);
-
-		$('#contract_start_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, onSelect: function(date) {
-			if($('#contract_end_date').val!='')
-			{
-				$('#contract_end_date').val('');
+		
+		/*Date picker*/
+		var on_load_start_date = $('#contract_start_date').val();
+		var on_load_end_date   = $('#contract_end_date').val();
+		
+		$('#renewal_reminder_date').datepicker("option", "minDate", on_load_start_date);
+		$('#contract_signed_date').datepicker("option", "minDate", on_load_start_date);
+		$('#renewal_reminder_date').datepicker("option", "maxDate", on_load_end_date);
+		$('#contract_signed_date').datepicker("option", "maxDate", on_load_end_date);
+		
+		$('#contract_start_date').datepicker({ 
+			dateFormat: 'dd-mm-yy', 
+			maxDate: on_load_end_date, 
+			changeMonth: true, 
+			changeYear: true, 
+			onSelect: function(date) {
+				if($('#contract_end_date').val!='')
+				{
+					$('#contract_end_date').val('');
+				}
+				var return_date = $('#contract_start_date').val();
+				$('#contract_end_date').datepicker("option", "minDate", return_date);
 			}
-			var return_date = $('#contract_start_date').val();
-			$('#contract_end_date').datepicker("option", "minDate", return_date);
-		}});
-		$('#contract_end_date').datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true });
+		});
+		$('#contract_end_date').datepicker({ 
+			dateFormat: 'dd-mm-yy',
+			minDate: on_load_start_date,
+			changeMonth: true, 
+			changeYear: true, 
+			onSelect: function(dateText, instance) {
+				var end_date 	= $('#contract_end_date').val();
+				var start_date  = $('#contract_start_date').val();
+				/*set one month minus on renewal reminder date*/
+				var date = $.datepicker.parseDate(instance.settings.dateFormat, dateText, instance.settings);
+				date.setMonth(date.getMonth() - 1);
+				$("#renewal_reminder_date").datepicker("setDate", date);
+				$('#renewal_reminder_date').datepicker("option", "minDate", start_date);
+				$('#contract_signed_date').datepicker("option", "minDate", start_date);
+				$('#renewal_reminder_date').datepicker("option", "maxDate", end_date);
+				$('#contract_signed_date').datepicker("option", "maxDate", end_date);
+			}
+		});
 		
-		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy"});
-		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy"});
-		
+		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
+		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
 	});
 	
 	function isNumberKey(evt)
@@ -272,6 +322,7 @@ function validateEditContractForm()
 	}
 }
 
+/*file upload by ajax*/
 function runContractAjaxFileUpload() 
 {
 	var _uid				 = new Date().getTime();
@@ -299,9 +350,9 @@ function runContractAjaxFileUpload()
 					if(data.msg == 'File successfully uploaded!') {
 						// alert(data.msg);				
 						$.each(data.res_file, function(i, item) {
-							var res = item.split("~",2);
-							// alert(res[0]+res[1]);	
-							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" class="del_file"> </a></div>';
+							var res = item.split("~",3);
+							// alert(res[2]); return false;
+							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
 							$("#contractUploadFile").append(name);
 						});
 						$.unblockUI();
@@ -326,11 +377,49 @@ function runContractAjaxFileUpload()
 	return false;
 }
 
-$("#contractUploadFile").delegate("a.del_file","click",function() {
-	var str_delete 	= $(this).attr("id");
+function download_files(file_id) 
+{
+	var url  = site_base_url+'reseller/download_file';
+	var form = $('<form action="' + url + '" method="post">' +
+	'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	'<input type="hidden" name="file_id" value="' +file_id+ '" />' +
+	'</form>');
+	$('body').append(form);
+	$(form).submit();
+	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
+}
+$("#existUploadedFile").delegate("a.del_file","click",function() {
+	/*delete the file by ajax function*/
+	var str_delete 	= $(this).attr("serial_id");
 	var result 		= confirm("Are you sure you want to delete this attachment?");
 	if (result==true) {
-		$('#'+str_delete).parent("div").remove();
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: site_base_url+'reseller/deleteContractUploads/',
+			data: '&file_id='+$(this).attr("id")+'&contract_id='+contract_id+'&contracter_user_id='+contracter_user_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			cache: false,
+			beforeSend:function() {
+
+			},
+			success: function(data) {
+				console.info(data);
+				if(data.res=='success'){
+					$('a[serial_id="'+str_delete+'"]').parent("div").remove();
+				}
+			}                                                                                   
+		});
+	} else {
+		return false;
+	}
+});
+$("#contractUploadFile").delegate("a.del_file","click",function() {
+	// var str_delete 	= $(this).attr("id");
+	var str_delete 	= $(this).attr("serial_id");
+	var result 		= confirm("Are you sure you want to delete this attachment?");
+	if (result==true) {
+		// $('#'+str_delete).parent("div").remove();
+		$('a[serial_id="'+str_delete+'"]').parent("div").remove();
 	}
 });
 </script>

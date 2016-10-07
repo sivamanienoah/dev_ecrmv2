@@ -12,7 +12,7 @@ require (theme_url().'/tpl/header.php');
 				<?php
 					$reseller_name = $reseller_det[0]['first_name'];
 					if(!empty($reseller_det[0]['last_name'])){
-						$reseller_name .= " ". $reseller_det[0]['last_name'];
+						$reseller_name .= " ".$reseller_det[0]['last_name'];
 					}
 					echo $reseller_name;
 				?>
@@ -68,7 +68,15 @@ require (theme_url().'/tpl/header.php');
 								<?php foreach($contract_data as $row) { ?>
 									<tr id="contr_<?php echo $row['id']; ?>">
 										<td align="left"><?php echo $row['contract_title']; ?></td>
-										<td align="left"><?php echo $row['description']; ?></td>
+										<td align="left">
+											<?php
+												$cm_name = $row['first_name'];
+												if(isset($row['last_name']) && !empty($row['last_name'])){
+													$cm_name .= " ".$row['last_name'];
+												}
+												echo $cm_name;
+											?>
+										</td>
 										<td align="left"><?php echo ($row['contract_start_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['contract_start_date'])) : '';?></td>
 										<td align="left"><?php echo ($row['contract_end_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['contract_end_date'])) : '';?></td>
 										<td align="left"><?php echo ($row['renewal_reminder_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['renewal_reminder_date'])) : '';?></td>
@@ -102,6 +110,9 @@ require (theme_url().'/tpl/header.php');
 	?>
 	</div><!--/Inner div -->
 </div><!--/Content div -->
+<script>
+var reseller_id = '<?php echo $reseller_det[0]['userid']; ?>';
+</script>
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>

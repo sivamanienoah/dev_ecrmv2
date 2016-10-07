@@ -114,42 +114,140 @@ class Reseller extends crm_controller {
 		$ins_val['created_on'] 				= date('Y-m-d H:i:s');
 		$ins_val['modified_by'] 			= $this->userdata['userid'];
 		$ins_val['modified_on'] 			= date('Y-m-d H:i:s');
-		
+
 		$insert_contract = $this->reseller_model->insert_row_return_id('contracts', $ins_val);
 		if($insert_contract) {
-			$uploaded_files 			= $this->input->post('file_id');
-			$ins_map_val    			= array();
-			$ins_map_val['contract_id'] = $insert_contract;
-			if(is_array($uploaded_files) && !empty($uploaded_files) && count($uploaded_files)>0) {
-				/**insert into contract upload mapping table**/
-				foreach($uploaded_files as $row_file_id) {
-					$ins_map_val['contract_file_upload_id'] = $row_file_id;
-					$this->reseller_model->insert_row_return_id('contracts_uploads_mapping', $ins_map_val);
-				}
+			//if contract manager changed, update the contract manager in user table
+			if($this->input->post('contract_manager') != $this->input->post('hidden_contract_manager')) {
+				$cm_val = array();
+				$cm_val['contract_manager'] = $this->input->post('contract_manager');
+				$cm_condn = array('userid'=>$this->input->post('contracter_id'));
+				$chge_manager = $this->reseller_model->update_records('users', $cm_condn, '', $cm_val);
 			}
+			
+			$uploaded_files 			= $this->input->post('file_id');			
+			$map_files = $this->reseller_model->mapUploadedFiles($uploaded_files, $insert_contract);
+			
 			//do log
-			/* $currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
-			if(!empty($currencies)) {
-				foreach($currencies as $curr){
-					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
-				}
-			}
-			$log_detail  = "Added Other Cost: \n";
-			$log_detail .= "\nDescription: ".$this->input->post('description');
-			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
-			$log_detail .= "\nValue: ".$all_cur[$ins_val['currency_type']].' '.number_format($ins_val['value'], 2);
-			$log = array();
-			$log['jobid_fk']      = $this->input->post('project_id');
-			$log['userid_fk']     = $this->userdata['userid'];
-			$log['date_created']  = date('Y-m-d H:i:s');
-			$log['log_content']   = $log_detail;
-			$log_res = $this->project_model->insert_row("logs", $log); */
+			$contract_log['contract_id'] 	= $insert_contract;
+			$contract_log['action_on']  	= date('Y-m-d H:i:s');
+			$contract_log['action_by']  	= $this->userdata['userid'];
+			$contract_log['action']  		= 0; //For Added
+			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
 			echo "success";
 		} else {
 			echo "error";
 		}
 	}
 	
+	/*
+	* Get the contract details for edit form
+	*/
+	public function getEditContractData()
+	{
+		$data 		 = array();
+		$editdata 	 = array();
+		$data['msg'] = 'error';
+		$wh_condn	 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$editdata['contract_data'] = $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		if(!empty($editdata['contract_data']) && count($editdata['contract_data'])>0) 
+		{
+			$editdata['contract_id'] = $this->input->post('contract_id');
+			$editdata['currencies']  = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			$editdata['users'] 		 = $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
+			$editdata['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
+			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
+			$data['msg'] = 'success';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
+	/*
+	* editing the edit Reseller Contract
+	*/
+	public function editResellerContract()
+	{
+		// echo "<pre>"; print_r($this->input->post()); exit;
+		$updt_val 		= array();
+		$contract_log 	= array();
+		$updt_val['contracter_id'] 			= $this->input->post('contracter_id');
+		$updt_val['contract_title'] 		= $this->input->post('contract_title');
+		$updt_val['contract_manager'] 		= $this->input->post('contract_manager');
+		$updt_val['contract_start_date'] 	= ($this->input->post('contract_start_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('contract_start_date'))) : '';
+		$updt_val['contract_end_date'] 		= ($this->input->post('contract_end_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('contract_end_date'))) : '';
+		$updt_val['renewal_reminder_date'] 	= ($this->input->post('renewal_reminder_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('renewal_reminder_date'))) : '';
+		$updt_val['description'] 			= $this->input->post('description');
+		$updt_val['contract_signed_date']	= ($this->input->post('contract_signed_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('contract_signed_date'))) : '';
+		$updt_val['contract_status'] 		= $this->input->post('contract_status');
+		$updt_val['currency'] 				= $this->input->post('currency');
+		$updt_val['tax'] 					= $this->input->post('tax');
+		$updt_val['modified_by'] 			= $this->userdata['userid'];
+		$updt_val['modified_on'] 			= date('Y-m-d H:i:s');
+		//**Updating the contract details**//
+		$condn 			 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_id'));
+		$update_contract = $this->reseller_model->update_records('contracts', $condn, '', $updt_val); //$tbl, $wh_condn, $not_wh_condn, $up_arg
+		
+		if($update_contract){
+			//*mapping uploaded files*//
+			$uploaded_files = $this->input->post('file_id');
+			$map_files 		= $this->reseller_model->mapUploadedFiles($uploaded_files, $this->input->post('contract_id'));
+			
+			//if contract manager changed, update the contract manager in user table
+			if($this->input->post('contract_manager') != $this->input->post('hidden_contract_manager')) {
+				$cm_val = array();
+				$cm_val['contract_manager'] = $this->input->post('contract_manager');
+				$cm_condn = array('userid'=>$this->input->post('contracter_id'));
+				$chge_manager = $this->reseller_model->update_records('users', $cm_condn, '', $cm_val);
+			}
+			
+			//do log
+			$contract_log = $updt_val;
+			unset($contract_log['id']);
+			$contract_log['contract_id'] 	= $this->input->post('contract_id');
+			$contract_log['action_on']  	= date('Y-m-d H:i:s');
+			$contract_log['action_by']  	= $this->userdata['userid'];
+			$contract_log['action']  		= 1;
+			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			
+			echo "success";
+		} else {
+			echo "error";
+		}
+		exit;
+	}
+	
+	/*
+	* Deleting the contract
+	* @params contract id & contracter user id
+	* return json encoded array.
+	*/
+	public function deleteContractData()
+	{
+		//save the old values
+		$contract_log	= array();
+		$wh_condn		= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$contract_log 	= $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		
+		$data 		= array();
+		$wh_condn 	= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
+		$is_deleted = $this->reseller_model->delete_records('contracts', $wh_condn);
+		if($is_deleted) {
+			//do log
+			unset($contract_log['id']);
+			$contract_log['contract_id'] 	= $this->input->post('contract_id');
+			$contract_log['action_on']  	= date('Y-m-d H:i:s');
+			$contract_log['action_by']  	= $this->userdata['userid'];
+			$contract_log['action']  		= 2;
+			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			$data['res'] = 'success';
+		} else {
+			$data['res'] = 'failure';
+		}
+		echo json_encode($data);
+		exit;
+	}
+		
 	public function getResellerActiveProjects()
 	{
 		$this->load->library('../controllers/projects/dashboard');
@@ -180,27 +278,8 @@ class Reseller extends crm_controller {
 		$data['filter_results'] = $this->reseller_model->getLeads($this->input->post('userid'));
 		$this->load->view('reseller/leads_drill_data', $data);
 	}
-		
-	public function sendTestEmail()
-	{
-		//email sent by email template
-		$param = array();
-
-		$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
-		$param['from_email']	  = 'webmaster@enoahprojects.com';
-		$param['from_email_name'] = 'Webmaster';
-		$param['template_name']	  = "test email";
-		$param['subject'] 		  = "test email";
-
-		if($this->email_template_model->sent_email($param)){
-			echo "Email Sent";
-		} else {
-			echo "Email Not Sent";
-		}
-	}
 	
-	
-		/**
+	/**
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
@@ -251,14 +330,8 @@ class Reseller extends crm_controller {
 						$lead_files['modified_by'] 			= $this->userdata['userid'];
 						$lead_files['modified_on'] 			= date('Y-m-d H:i:s');
 						$insert_file						= $this->reseller_model->insert_row_return_id('contracts_uploads', $lead_files);
-						$json['res_file'][]					= $insert_file.'~'.$file_up['file_name'];
-						
-						/* $logs['jobid_fk']	   = $lead_id;
-						$logs['userid_fk']	   = $this->userdata['userid'];
-						$logs['date_created']  = date('Y-m-d H:i:s');
-						$logs['log_content']   = $file_up['file_name'].' is added.';
-						$logs['attached_docs'] = $file_up['file_name'];
-						$insert_logs 		   = $this->reseller_model->insert_row('logs', $logs); */	
+						$insert_file						= base64_encode($insert_file);
+						$json['res_file'][]					= $insert_file.'~'.$file_up['file_name'].'~'.microtime();
 						$i++;
 					}
 				}
@@ -266,8 +339,6 @@ class Reseller extends crm_controller {
 				$this->upload_error = strip_tags($this->upload->display_errors());
 				$json['error'] = TRUE;
 				$json['msg']   = $this->upload_error;
-				// return $this->upload_error;					
-				// exit;
 			}
 		}
 		echo json_encode($json); 
@@ -275,28 +346,37 @@ class Reseller extends crm_controller {
 	}
 	
 	/*
-	* Deleting the contract
-	* @params contract id & contracter user id
-	* return json encoded array.
-	*/
-	public function deleteContractData()
+	*Download file by id
+	**/
+	function download_file()
 	{
-		//save the old values
-		$contract_log	= array();
-		$wh_condn		= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
-		$contract_log 	= $this->reseller_model->get_data_by_id('contracts', $wh_condn);
+		$file_id = base64_decode($this->input->post('file_id'));
+		$getFile = $this->reseller_model->get_data_by_id('contracts_uploads', $wh_condn = array('id'=>$file_id));
+		// echo "<pre>"; print_r($getFile); exit;
+		$this->load->helper('download');
+		$file_dir 	= UPLOAD_PATH.'contracts/'.$getFile['contracter_user_id'].'/'.$getFile['file_name'];
+		$data 		= file_get_contents($file_dir); // Read the file's contents
+		force_download($getFile['file_name'], $data);
+	}
+	
+	/*
+	* Deleting the Contract uploads by ajax
+	* return json_encode
+	*/
+	public function deleteContractUploads()
+	{
+		$file_id = base64_decode($this->input->post('file_id'));
 		
 		$data 		= array();
-		$wh_condn 	= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
-		$is_deleted = $this->reseller_model->delete_records('contracts', $wh_condn);
+		$wh_condn 	= array('contract_id'=>$this->input->post('contract_id'), 'contract_file_upload_id'=>$file_id);
+		$is_deleted = $this->reseller_model->delete_records('contracts_uploads_mapping', $wh_condn);
 		if($is_deleted) {
-			//do log
-			unset($contract_log['id']);
-			$contract_log['contract_id'] 	= $this->input->post('contract_id');
-			$contract_log['action_on']  	= date('Y-m-d H:i:s');
-			$contract_log['action_by']  	= $this->userdata['userid'];
-			$contract_log['action']  		= 2;
-			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			//update contracts upload table
+			$updt_val = array();
+			$updt_val['status'] = 0;
+			$condn 			 = array('id'=>$this->input->post('contract_id'), 'contracter_user_id'=>$this->input->post('contracter_user_id'));
+			$update_contract = $this->reseller_model->update_records('contracts_uploads', $condn, '', $updt_val); //$tbl, $wh_condn, $not_wh_condn, $up_arg
+
 			$data['res'] = 'success';
 		} else {
 			$data['res'] = 'failure';
@@ -304,69 +384,42 @@ class Reseller extends crm_controller {
 		echo json_encode($data);
 		exit;
 	}
-	
+
 	/*
-	* editing the other cost
+	* Deleting the Contract uploads by ajax
+	* return json_encode
 	*/
-	public function getEditContractData()
+	public function loadContractGrid()
 	{
-		$data 		 = array();
-		$editdata 	 = array();
-		$data['msg'] = 'error'; 
-		$wh_condn	 = array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
-		$editdata['contract_data'] = $this->reseller_model->get_data_by_id('contracts', $wh_condn);
-		if(!empty($editdata['contract_data']) && count($editdata['contract_data'])>0) 
-		{
-			$editdata['contract_id'] = $this->input->post('contract_id');
-			$editdata['currencies']  = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
-			$editdata['users'] 		 = $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
-			$editdata['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
-			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
-			$data['msg'] = 'success';
+		$contracts['currencies'] 	= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		if(!empty($contracts['currencies'])) {
+			foreach($contracts['currencies'] as $curr){
+				$contracts['currency_arr'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
+			}
 		}
+		$contracts['contract_data'] 	= $this->reseller_model->get_contracts_details($this->input->post('contracter_user_id'));
+		$data['res'] = $this->load->view("reseller/contract_grid", $contracts, true);
+		
 		echo json_encode($data);
 		exit;
 	}
 	
-	/*
-	* editing the edit Reseller Contract
-	*/
-	public function editResellerContract()
+	public function sendTestEmail()
 	{
-		echo "<pre>"; print_r($this->input->post()); exit;
-		$updt_val = array();
-		$updt_val['description'] 		= $this->input->post('description');
-		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
-		$updt_val['currency_type'] 		= $this->input->post('currency_type');
-		$updt_val['value'] 				= $this->input->post('value');
-		$updt_val['modified_by'] 		= $this->userdata['userid'];
-		$updt_val['modified_on'] 		= date('Y-m-d H:i:s');
-		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
-		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
-		
-		if($update_cost){
-			echo "success";
-			//do log
-			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
-			if(!empty($currencies)) {
-				foreach($currencies as $curr){
-					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
-				}
-			}
-			$log_detail = "Updated the Other Cost: \n";
-			$log_detail .= "\nDescription: ".$updt_val['description'];
-			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
-			$log_detail .= "\nValue: ".$all_cur[$updt_val['currency_type']].' '.number_format($updt_val['value'], 2);
-			$log = array();
-			$log['jobid_fk']      = $this->input->post('project_id');
-			$log['userid_fk']     = $this->userdata['userid'];
-			$log['date_created']  = date('Y-m-d H:i:s');
-			$log['log_content']   = $log_detail;
-			$log_res = $this->project_model->insert_row("logs", $log);
+		//email sent by email template
+		$param = array();
+
+		$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
+		$param['from_email']	  = 'webmaster@enoahprojects.com';
+		$param['from_email_name'] = 'Webmaster';
+		$param['template_name']	  = "test email";
+		$param['subject'] 		  = "test email";
+
+		if($this->email_template_model->sent_email($param)){
+			echo "Email Sent";
 		} else {
-			echo "error";
+			echo "Email Not Sent";
 		}
-		exit;
 	}
 	
 }

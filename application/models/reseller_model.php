@@ -223,4 +223,22 @@ class Reseller_model extends crm_model
 			return false;
 		}
     }
+
+	/*
+	*@Get Reseller User list
+	*@Method  user_list
+	*/
+    public function mapUploadedFiles($uploaded_files, $contract_id) 
+	{
+		$ins_map_val    			= array();
+		$ins_map_val['contract_id'] = $contract_id;
+		if(is_array($uploaded_files) && !empty($uploaded_files) && count($uploaded_files)>0) {
+			/**insert into contract upload mapping table**/
+			foreach($uploaded_files as $row_file_id) {
+				$ins_map_val['contract_file_upload_id'] = base64_decode($row_file_id);
+				$this->db->insert($this->cfg['dbpref'] . 'contracts_uploads_mapping', $ins_map_val);
+			}
+		}
+		return true;
+    }
 }
