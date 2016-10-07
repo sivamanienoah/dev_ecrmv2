@@ -24,13 +24,13 @@ require (theme_url().'/tpl/header.php');
 				<label>Username :</label>
 				<?php echo $reseller_det[0]['username']; ?>
 			</p>
-			<p>
+			<!--p>
 				<label>Contract Manager Name :</label>
 				<?php
-					$get_contract_manager_name = getContractManagerName($reseller_det[0]['contract_manager']);
-					echo isset($get_contract_manager_name) ? $get_contract_manager_name : "";
+					// $get_contract_manager_name = getContractManagerName($reseller_det[0]['contract_manager']);
+					// echo isset($get_contract_manager_name) ? $get_contract_manager_name : "";
 				?>
-			</p>
+			</p-->
 		<?php } ?> <!--If condition - end-->
 		
 		<!-- Tabs --->
