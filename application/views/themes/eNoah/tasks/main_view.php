@@ -137,7 +137,7 @@ $(function(){
 		<p>&nbsp;</p>
 			
 		<div style="margin-top:15px;" class="tasks-search">
-			<form id="search-job-task" onsubmit="return false;">
+			<form id="search-job-task" onsubmit="return false;" style="overflow:visible;">
 			
 				<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			
