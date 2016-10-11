@@ -418,7 +418,7 @@ function setTaskStatus(taskid, el)
 		{
 			notifyPM = 'YES';
 		}
-		//alert(task_status_val);
+
 		params = {'taskid': taskid, 'task_status': task_status_val, 'notify_pm': notifyPM};
 		params[csrf_token_name] = csrf_hash_token;
 	}
