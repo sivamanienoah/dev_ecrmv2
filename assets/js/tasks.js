@@ -457,14 +457,14 @@ function setTaskStatus(taskid, el)
 					if(1==$("#taskslistval").val())
 					{
 						
-					if ( $( "#search-job-task" ).length ||  $('#dashboard').val()==1) 
-					{
-						resetpage();
-					}
-					else
-					{
-						tabselector();
-					}
+						if ( $( "#search-job-task" ).length ||  $('#dashboard').val()==1) 
+						{
+							resetpage();
+						}
+						else
+						{
+							tabselector();
+						}
 						
 					}
 					else if(typeof(this_is_home) != 'undefined')
