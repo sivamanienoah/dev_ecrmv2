@@ -15,6 +15,7 @@ $(function() {
 		"bLengthChange": true,
 		"bSort": true,
 		"bFilter": true,
-		"bAutoWidth": false,	
+		"bAutoWidth": false,
+		"bDestroy": true
 	});
 });
