@@ -70,11 +70,8 @@ btnActions.prototype.doAction = function() {
 };
 function deleteItem(actionType,moduleName,methodName,itemId,formId)
 {
-/* 	$.blockUI({
-	message:'<br /><h5>Are you sure you want to delete this task?</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="button" class="positive" onclick="valueassign(); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
-	css:{width:'440px'}
-	}); */
-var r = confirm("Are you sure?");
+
+	var r = confirm("Are you sure?");
 	if (r == true) 
 	{
 		var myAction = new btnActions(actionType, moduleName, methodName, itemId,"");
