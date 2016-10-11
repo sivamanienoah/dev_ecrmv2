@@ -305,11 +305,11 @@ function editTask()
 			$('#edit-job-task')[0].reset();
 			if ( $( "#search-job-task" ).length ||  $('#dashboard').val()==1 ) 
 			{
-			resetpage();
+				resetpage();
 			}
 			else
 			{
-			tabselector();
+				tabselector();
 			}
 		},
 		'json'
