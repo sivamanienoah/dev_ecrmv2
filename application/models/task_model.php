@@ -3,11 +3,13 @@
 class Task_model extends crm_model 
 {
     
-    function Task_model() {
+    function Task_model() 
+	{
 		parent::__construct();
     }
 	
-	public function get_task_created_by() {
+	public function get_task_created_by()
+	{
 		$sql = $this->db->query("SELECT `".$this->cfg['dbpref']."tasks`.`created_by`,`".$this->cfg['dbpref']."tasks`.`jobid_fk`,`".$this->cfg['dbpref']."tasks`.`userid_fk` FROM `".$this->cfg['dbpref']."tasks`,`".$this->cfg['dbpref']."users` WHERE `".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`");
 		//echo $this->db->last_query();
 		return $sql->result_array();
