@@ -78,6 +78,7 @@ if ( ! function_exists('getResellerAgreementDate'))
 		$cfg = $CI->config->item('crm'); /// load config
 		
 		$CI->db->select('contract_start_date, contract_end_date, renewal_reminder_date');
+		$CI->db->where('contracter_id', $userid);
 		$CI->db->where('contract_status', 1);
 		$CI->db->order_by('contract_end_date', 'desc');
 		$CI->db->limit(1);
