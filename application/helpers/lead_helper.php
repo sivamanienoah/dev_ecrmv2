@@ -419,7 +419,6 @@ if ( ! function_exists('element_value_check'))
 		{
 			$element="";
 		}
-
 		return $element;
 	}
 }
