@@ -23,10 +23,10 @@ $permission =$this->session->all_userdata();
 						"Task Owner"=>"8",
 						"Allocated to"=>"10",
 						"Planned Start Date"=>"11",
-						"Planned End Date"=>"11",
+						"Planned End Date"=>"10",
 						"Actual Start Date"=>"9",
 						"Actual End Date"=>"9",
-						"Status"=>"10",
+						"Status"=>"11",
 						"Remarks"=>"4",	
 						"Action"=>"7",		
 						);	
