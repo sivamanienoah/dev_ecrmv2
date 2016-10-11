@@ -24,9 +24,9 @@ $permission =$this->session->all_userdata();
 						"Allocated to"=>"10",
 						"Planned Start Date"=>"11",
 						"Planned End Date"=>"11",
-						"Actual Start Date"=>"11",
-						"Actual End Date"=>"11",
-						"Status"=>"6",
+						"Actual Start Date"=>"9",
+						"Actual End Date"=>"9",
+						"Status"=>"10",
 						"Remarks"=>"4",	
 						"Action"=>"7",		
 						);	
