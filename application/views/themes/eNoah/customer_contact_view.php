@@ -36,7 +36,7 @@
                         <td><?php echo $list['email_1']; ?></td>
                         <td><?php echo $list['position_title']; ?></td>
 						<td><?php echo $list['skype_name'] ?></td>
-						 <td>
+						<td>
 							<?php if($this->session->userdata('edit')==1) { ?>
 								<a href="customers_contact/update_contacts/<?php echo $list['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
 							<?php } ?>

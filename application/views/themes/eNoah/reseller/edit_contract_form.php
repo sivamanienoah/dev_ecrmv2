@@ -1,3 +1,6 @@
+<style>
+.hide-calendar .ui-datepicker-calendar { display: block; }
+</style>
 <?php $attributes = array('id'=>'edit-contract', 'name'=>'edit-contract'); ?>
 <?php #echo "<pre>"; print_r($upload_data); echo "</pre>"; ?>
 <?php echo form_open_multipart("reseller/editResellerContract", $attributes); ?>
@@ -150,7 +153,7 @@
 			<td colspan='2'>
 				<?php //if ($readonly_status == false) { ?>
 				<div class="buttons">
-					<button type="submit" class="positive">Edit</button>
+					<button type="submit" class="positive">Update</button>
 					<button onclick="reset_add_form(); return false;" class="negative">Cancel</button>
 				</div>
 				<?php //} ?>
@@ -377,7 +380,7 @@ function runContractAjaxFileUpload()
 	return false;
 }
 
-function download_files(file_id) 
+function download_files(file_id)
 {
 	var url  = site_base_url+'reseller/download_file';
 	var form = $('<form action="' + url + '" method="post">' +

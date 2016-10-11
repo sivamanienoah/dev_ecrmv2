@@ -1,3 +1,6 @@
+<style>
+.hide-calendar .ui-datepicker-calendar { display: block !important; }
+</style>
 <?php $attributes = array('id'=>'add-contract', 'name'=>'add-contract'); ?>
 <?php echo form_open_multipart("reseller/addResellerContract", $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -58,7 +61,7 @@
 		<tr>
 			<td>Description</td>
 			<td>
-				<textarea name="description" id="description" class="textfield width200px" > </textarea>
+				<textarea name="description" id="description" class="textfield width200px" ></textarea>
 			</td>
 		</tr>
 		<tr>

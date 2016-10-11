@@ -103,12 +103,65 @@ require (theme_url().'/tpl/header.php');
 					</table>
 				</div>
 			</div><!--rt-tab-1 - End -->
-			<div id="rt-tab-2"></div><!--rt-tab-2 - End -->
+			<div id="rt-tab-2">
+				<div class="buttons" id="create_commission_btn">
+					<a href="javascript:void(0)" class="positive" onclick="getAddCommissionForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Create Commission</a>
+				</div>
+				<div class="clear"></div>
+				<div style="margin:7px 0 0;" id="succes_add_commission_data" class="succ_err_msg"></div>
+				<div id="commission_form"></div><!---Add Contract Form----->
+				<div id="list_commission_det"><!---List Contract Details----->
+					<table class="data-table" cellspacing="0" cellpadding="0" border="0">
+						<thead>
+							<tr align="left">
+								<th class="header">Title</th>
+								<th class="header">Project Name</th>
+								<th class="header">Payment Advice Date</th>
+								<th class="header">Milestone Name</th>
+								<th class="header">For The Month Year</th>
+								<th class="header">Currency</th>
+								<th class="header">Value</th>
+								<th class="header">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(!empty($commission_data) && count($commission_data)>0) { ?>
+								<?php foreach($commission_data as $cmsn_row) { ?>
+									<tr id="csmn_<?php echo $cmsn_row['id']; ?>">
+										<td align="left"><?php echo $cmsn_row['commission_title']; ?></td>
+										<td align="left"><?php echo $cmsn_row['lead_title']; ?></td>
+										<td align="left"><?php echo ($cmsn_row['payment_advice_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($cmsn_row['payment_advice_date'])) : '';?></td>
+										<td align="left"><?php echo $cmsn_row['commission_milestone_name'];?></td>
+										<td align="left"><?php echo ($cmsn_row['for_the_month_year']!='0000-00-00 00:00:00') ? date('M Y', strtotime($cmsn_row['for_the_month_year'])) : '';?></td>
+										<td align="right"><?php echo $currency_arr[$cmsn_row['commission_currency']];?></td>
+										<td align="left"><?php echo $cmsn_row['commission_value']; ?></td>
+										<td align="left">
+											<a title="Edit" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
+											<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+										</td>
+									</tr>
+								<?php } ?>
+							<?php } else { ?>
+								<tr><td colspan='8'> No Records Available. </td></tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div><!--rt-tab-2 - End -->
 			<div id="rt-tab-3"></div><!--rt-tab-3 - End -->
-			<div id="rt-tab-4"></div><!--rt-tab-4 - End -->
-			<div id="rt-tab-5"></div><!--rt-tab-5 - End -->
-			<div id="rt-tab-6"></div><!--rt-tab-6 - End -->
-			<div id="rt-tab-7"></div><!--rt-tab-7 - End -->
+			<div id="rt-tab-4">
+				<h2 class="pull-left borderBtm">Leads</h2>
+				<div id="reseller_lead_data"></div>
+			</div><!--rt-tab-4 - End -->
+			<div id="rt-tab-5">
+				<div id="reseller_project_data"></div>
+			</div><!--rt-tab-5 - End -->
+			<div id="rt-tab-6">
+				<div id="reseller_contact_data"></div>
+			</div><!--rt-tab-6 - End -->
+			<div id="rt-tab-7">
+				<div id="audit_history_data"></div>
+			</div><!--rt-tab-7 - End -->
 		</div><!--reseller_tabs-end-->
 	<?php } else { 
 		echo "You have no rights to access this page";

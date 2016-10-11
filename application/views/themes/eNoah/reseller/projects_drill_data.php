@@ -152,7 +152,7 @@ if(!empty($project_type) && count($project_type)>0){
 	}
 ?>
 <div class="page-title-head">
-	<h2 class="pull-left borderBtm">Active Projects</h2>
+	<h2 class="pull-left borderBtm">Projects</h2>
 	<!--div class="section-right">
 		<div class="buttons export-to-excel">
 			<button type="button" id='service_dashboard_export_excel' class="positive excel" onclick="location.href='#'">
@@ -165,7 +165,7 @@ if(!empty($project_type) && count($project_type)>0){
 </div>
 
 <div class="customize-sec">
-<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" id="pjts-data-tbl" width="100%">
 	<thead>
 		<tr>
 			<th>Action</th>
@@ -290,7 +290,7 @@ $(function() {
 });	
 	
 function dtPjtTable() {
-	$('.data-tbl').dataTable({
+	$('#pjts-data-tbl').dataTable({
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
