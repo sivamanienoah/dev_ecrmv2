@@ -61,7 +61,7 @@ class Tasks extends crm_controller
 		}	
 		$users = $this->task_model->getActiveUsers();
 		// If active users greater than 0 it enters the condition
-		if (0 < $users['num'])
+		if (CONST_ZERO < $users['num'])
 		{
 			$data['user_accounts'] = $users['user'];
 		}
@@ -113,7 +113,7 @@ class Tasks extends crm_controller
 		// if task_complete value is empty it enters the condition
 		if($task_complete=="")
 		{
-			$task_complete = 0;
+			$task_complete = CONST_ZERO;
 		}
 		// if task owner and task allocated value exist it enters the condition
 		if(!empty($task_owner) &&!empty($task_allocated))
