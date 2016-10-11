@@ -441,7 +441,7 @@ if ( ! function_exists('taskStatusForm'))
 			<select name="set_task_status_{$tk}" id="set_task_status_{$tk}" class="set-task-status" style="margin-bottom:0;">
 				{$opts}
 			</select>
-			<div style="padding:2px;">
+			<div class="buttons">
 				<button type="submit" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
 			</div>
 		</form>
