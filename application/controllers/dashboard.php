@@ -163,63 +163,97 @@ class Dashboard extends crm_controller {
 				unset($get_rec['to_date']);
 				unset($get_rec['month_year_from_date']);
 				unset($get_rec['month_year_to_date']);
-				
 				$filter	  = real_escape_array($get_rec);
-				
 				if(!empty($get_rec['stage']) && $get_rec['stage'] !='null')
-				$filter['stage'] = @explode(',',$get_rec['stage']);
+				{
+					$filter['stage'] = @explode(',',$get_rec['stage']);
+				}
 				else
-				$filter['stage'] = '';
-				
+				{
+					$filter['stage'] = '';
+				}
 				if(!empty($get_rec['customer']) && $get_rec['customer'] !='null')
-				$filter['customer'] = @explode(',',$get_rec['customer']);
+				{
+					$filter['customer'] = @explode(',',$get_rec['customer']);
+				}
 				else
-				$filter['customer'] = '';
-				
+				{
+					$filter['customer'] = '';
+				}
 				if(!empty($get_rec['owner']) && $get_rec['owner'] !='null')
-				$filter['owner'] = @explode(',',$get_rec['owner']);
+				{
+					$filter['owner'] = @explode(',',$get_rec['owner']);
+				}
 				else
-				$filter['owner'] = '';
-				
+				{	
+					$filter['owner'] = '';
+				}
 				if(!empty($get_rec['leadassignee']) && $get_rec['leadassignee'] !='null')
-				$filter['leadassignee'] = @explode(',',$get_rec['leadassignee']);
+				{
+					$filter['leadassignee'] = @explode(',',$get_rec['leadassignee']);
+				}
 				else
-				$filter['leadassignee'] = '';
-			
+				{
+					$filter['leadassignee'] = '';
+				}
 				if(!empty($get_rec['ser_requ']) && $get_rec['ser_requ'] !='null')
-				$filter['ser_requ'] = @explode(',',$get_rec['ser_requ']);
+				{
+					$filter['ser_requ'] = @explode(',',$get_rec['ser_requ']);
+				}
 				else
-				$filter['ser_requ'] = '';
-				
+				{
+					$filter['ser_requ'] = '';
+				}
 				if(!empty($get_rec['lead_src']) && $get_rec['lead_src'] !='null')
-				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				{
+					$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				}
 				else
-				$filter['lead_src'] = '';
-			
+				{
+					$filter['lead_src'] = '';
+				}
 				if(!empty($get_rec['industry']) && $get_rec['industry'] !='null')
-				$filter['industry'] = @explode(',',$get_rec['industry']);
+				{
+					$filter['industry'] = @explode(',',$get_rec['industry']);
+				}
 				else
-				$filter['industry'] = '';
+				{
+					$filter['industry'] = '';
+				}
 				
 				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
-				$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				{
+					$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				}
 				else
-				$filter['regionname'] = '';
-				
+				{
+					$filter['regionname'] = '';
+				}
 				if(!empty($get_rec['countryname']) && $get_rec['countryname'] !='null')
-				$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				{
+					$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				}
 				else
-				$filter['countryname'] = '';
-				
+				{
+					$filter['countryname'] = '';
+				}
 				if(!empty($get_rec['statename']) && $get_rec['statename'] !='null')
-				$filter['statename'] = @explode(',',$get_rec['statename']);
+				{
+					$filter['statename'] = @explode(',',$get_rec['statename']);
+				}
 				else
-				$filter['statename'] = '';
-				
+				{
+					$filter['statename'] = '';
+				}
 				if(!empty($get_rec['locname']) && $get_rec['locname'] !='null')
-				$filter['locname'] = @explode(',',$get_rec['locname']);
+				{
+					$filter['locname'] = @explode(',',$get_rec['locname']);	
+				}	
 				else
-				$filter['locname'] = '';
+				{
+					$filter['locname'] = '';
+				}
+
 				
 				if(!empty($get_rec['lead_indi']) && $get_rec['lead_indi'] !='null')
 				{
@@ -234,7 +268,8 @@ class Dashboard extends crm_controller {
 		}
 
 
-		if (isset($filter['advance'])) {
+		if (isset($filter['advance'])) 
+		{
 			$data['toggle_stat'] = 1;
 			$data['filter'] 	 = $filter;
 		}
