@@ -102,16 +102,17 @@ class Tasks extends crm_controller {
 		$task_owner =element_value_check('task_owner_user');
 		$task_allocated =element_value_check('task_allocated_user');
 		$task_complete =element_value_check('task_search');
+		// if Task_owner value is empty it enters the condition
 		if($task_owner=="")
 		{
 			$task_owner = $uid;
 		}
+		// if task_complete value is empty it enters the condition
 		if($task_complete=="")
 		{
 			$task_complete = 0;
 		}
-		
-
+		// if task owner and task allocated value exist it enters the condition
 		if(!empty($task_owner) &&!empty($task_allocated))
 		{
 			$operation= 'AND';
@@ -120,14 +121,14 @@ class Tasks extends crm_controller {
 		{
 			$operation ='OR';
 		}
-		
+		// if post [task_end_notify] value exist it enters the condition
 		if(isset($_POST['task_end_notify']))
 		{
 			$task_end_notify=$_POST['task_end_notify'];
 			$task_allocated = $uid;
 			$operation ='OR';
 		}
-				$search=array(
+		$search=array(
 					'taskcomplete'=>$task_complete,
 					'taskowner'=> $task_owner,
 					'taskallocateduser'=>$task_allocated,
