@@ -269,6 +269,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 				$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
 				$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
 				$company_name= $CI->customer_model->get_company($row['custid_fk']);
+				// If lead_title value exist it enters the condition
 				if(!empty($row['lead_title']))
 				{
 					$company_title = $row['lead_title'].'-'.$company_name[CONST_ZERO]['company'];
@@ -278,19 +279,22 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					$company_title ="";
 				}
 				$taskid="'".$row['taskid']."'";
+				// if additionalcolumn value equals 1 it enters the condition
 				if(CONST_ONE == $additionalcolumn)
 				{
 					$lead_access = getAccessFromLead($userid, $row['lead_id']);	
 					$team_access = getAccessFromTeam($userid, $row['lead_id']);
 					$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
 					$link_access = CONST_ZERO;
+					// If Lead access or team access or stake access or user role access equals 1 it enters the condition
 					if(CONST_ONE == $lead_access  || CONST_ONE == $team_access  || CONST_ONE == $stake_access  || CONST_ONE == $userroleid ) 
 					{
 						$link_access = CONST_ONE;
 					}
-	
+					// If link access equals 1 it enters the condition
 					if(CONST_ONE == $link_access)
 					{
+						// If lead_or_project value equals 1 it enters the condition
 						if(CONST_ONE == $row['lead_or_project'])
 						{
 							$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
@@ -309,7 +313,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					$project_td ='<td style="padding:10px;">'. $lead_title.'</td>';
 		
 				}
-	
+				// if userid equals the task created user or task assigned user it enters the condition
 				if($userid== $row['taskcreated_by'] || $userid==$row['userid_fk'])
 				{
 					$status_return =CONST_ONE;
@@ -334,41 +338,34 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					<td style="padding:10px;">'. $row['remarks'].'</td>
 					<td style="padding:10px;" class="actions">';
 					
-					
+					// if is_complete value equals 1 it enters the condition
 					if (CONST_ONE == $row['is_complete'])
 					{
-						
 						echo '<span class="label-success">&nbsp;Approved&nbsp;</span>';
 					}
 					else
 					{
-					
-					
-					if($userid ==$row['taskcreated_by'])
-					{
-						if(CONST_HUNDRED ==$row['status'])
+						// if userid equals the task created user it enters the condition
+						if($userid ==$row['taskcreated_by'])
 						{
-							
-							$s="setTaskStatus($taskid,'complete');return false";
-							echo'<a  onclick="'.$s.'"href="javascript:void(0);" title="Approve"><img src="assets/img/tick.png" alt="edit"> </a>';
+							// if status value equals the 100  it enters the condition 
+							if(CONST_HUNDRED ==$row['status'])
+							{
+								
+								$s="setTaskStatus($taskid,'complete');return false";
+								echo'<a  onclick="'.$s.'"href="javascript:void(0);" title="Approve"><img src="assets/img/tick.png" alt="edit"> </a>';
+							}
+						
+							echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
+							$s="deleteItem('delete','ajax','set_task_status',$taskid)";
+							echo'<a class="delete" href="javascript:void(0)" onclick="'.$s.'" title="Delete"> <img src="assets/img/trash.png" alt="delete"> </a>';
+						
+						
 						}
-					
-						echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
-						$s="deleteItem('delete','ajax','set_task_status',$taskid)";
-						echo'<a class="delete" href="javascript:void(0)" onclick="'.$s.'" title="Delete"> <img src="assets/img/trash.png" alt="delete"> </a>';
-					
-					
-					}
-					else if($userid ==$row['userid_fk'])
-					{
-						
-					
-						echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
-						
-					
-					}
-					
-
+						else if($userid ==$row['userid_fk'])
+						{
+							echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
+						}
 					}
 					echo '<div class="dialog-err pull-right" id="dialog-message-$row[id]" style="display:none"></div>
 					</td>
