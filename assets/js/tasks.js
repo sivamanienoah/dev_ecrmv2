@@ -393,7 +393,7 @@ function setTaskStatus(taskid, el)
 	}
 	else /* set the status */
 	{
-		//alert("percentage_val");
+
 		var notifyPM = 'NO', task_status_val = $('#set_task_status_' + taskid).val();
 		
 		if (task_status_val == 100 && ! _task_require_qc && $('tr.require-qc-' + taskid).size() > 0)
