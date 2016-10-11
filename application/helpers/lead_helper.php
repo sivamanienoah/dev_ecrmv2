@@ -263,65 +263,66 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 		echo'</tr>
 		</thead>
 		<tbody>';
-		if (is_array($task_category) && count($task_category) > 0) 
+		// If task_category is array and array count of task category greater than 0 it enters the condition
+		if (is_array($task_category) && 0 < count($task_category)) 
 		{ 
-			foreach($task_category as $row) { 
-			$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
-			$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
-			$company_name= $CI->customer_model->get_company($row['custid_fk']);
-			if(!empty($row['lead_title']))
-			{
-				$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
-			}
-			else
-			{
-				$company_title ="";
-			}
-			$taskid="'".$row['taskid']."'";
-			if(1 == $additionalcolumn)
-	{
-		
-		$lead_access = getAccessFromLead($userid, $row['lead_id']);	
-		$team_access = getAccessFromTeam($userid, $row['lead_id']);
-		$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
-		$link_access = 0;
-		if(1 == $lead_access  || 1 == $team_access  || 1 == $stake_access  || 1 == $userroleid ) 
-		{
-			$link_access = 1;
-		}
-	
-		if(1 == $link_access)
-		{
-				if(1 == $row['lead_or_project'])
+			foreach($task_category as $row) 
+			{ 
+				$createdUser=$CI->user_model->get_user($row['taskcreated_by']);
+				$allocatedUser=$CI->user_model->get_user($row['userid_fk']);
+				$company_name= $CI->customer_model->get_company($row['custid_fk']);
+				if(!empty($row['lead_title']))
 				{
-					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
-				} 
+					$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
+				}
 				else
 				{
-					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$company_title}</a>";
+					$company_title ="";
 				}
-		}
-		else
-		{
-			$lead_title = $company_title;
-		}
-		
-		
-		$project_td ='<td style="padding:10px;">'. $lead_title.'</td>';
-		
-	}
+				$taskid="'".$row['taskid']."'";
+				if(1 == $additionalcolumn)
+				{
+					$lead_access = getAccessFromLead($userid, $row['lead_id']);	
+					$team_access = getAccessFromTeam($userid, $row['lead_id']);
+					$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
+					$link_access = 0;
+					if(1 == $lead_access  || 1 == $team_access  || 1 == $stake_access  || 1 == $userroleid ) 
+					{
+						$link_access = 1;
+					}
 	
-		if($userid== $row['taskcreated_by'] || $userid==$row['userid_fk'])
-		{
-			$status_return =1;
-		}
-		else
-		{
-			$status_return =0;
-		}
+					if(1 == $link_access)
+					{
+						if(1 == $row['lead_or_project'])
+						{
+							$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
+						} 
+						else
+						{
+							$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$company_title}</a>";
+						}
+					}
+					else
+					{
+						$lead_title = $company_title;
+					}
+		
+		
+					$project_td ='<td style="padding:10px;">'. $lead_title.'</td>';
+		
+				}
+	
+				if($userid== $row['taskcreated_by'] || $userid==$row['userid_fk'])
+				{
+					$status_return =1;
+				}
+				else
+				{
+					$status_return =0;
+				}
 	
 
-			echo '<tr >
+				echo '<tr >
 					'.$project_td.'					
 					<td style="padding:10px;">'. $row['task'].'</td>
 					<td style="padding:10px;" id="'.$row['task_priority'].'">'. priority_name_define($row['task_priority']).'</td>
@@ -359,7 +360,8 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 						echo'<a class="delete" href="javascript:void(0)" onclick="'.$s.'" title="Delete"> <img src="assets/img/trash.png" alt="delete"> </a>';
 					
 					
-					}else if($userid ==$row['userid_fk'])
+					}
+					else if($userid ==$row['userid_fk'])
 					{
 						
 					
@@ -373,7 +375,8 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					echo '<div class="dialog-err pull-right" id="dialog-message-$row[id]" style="display:none"></div>
 					</td>
 				</tr>';
-			} } 
+			}
+		} 
 		echo'</tbody>
 	</table>'.'<br/></div>';
 	
@@ -385,6 +388,7 @@ if ( ! function_exists('priority_name_define'))
 {
 	function priority_name_define($id)
 	{
+		// Switch case base on the Priority Id
 		switch ($id)
 		{
 		case "1":
@@ -412,7 +416,7 @@ if ( ! function_exists('element_value_check'))
 {
 	function element_value_check($element)
 	{
-	
+		// If get element of value exist it enters the condition
 		if(isset($_GET[$element]))
 		{
 			$element=$_GET[$element];
@@ -430,24 +434,26 @@ if ( ! function_exists('taskStatusForm'))
 {
 	function taskStatusForm($tk,$val,$status)
 	{
+		// If val equals 1 it enters the condition
 		if($val==1)
 		{
-		$options = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
-		$opts = '';
-		foreach ($options as $o)
-		{
-			$sel = ($status == $o) ? ' selected="selected"' : '';
-			$opts .= "<option value=\"{$o}\"{$sel}>{$o}%</option>";
-		}
-		$own_task_form =  <<< EOD
-		<form onsubmit="return false" style="margin-bottom:0;">
-			<select name="set_task_status_{$tk}" id="set_task_status_{$tk}" class="set-task-status" style="margin-bottom:0;">
-				{$opts}
-			</select>
-			<div class="buttons">
-				<button type="submit"style="margin-left:0px;" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
-			</div>
-		</form>
+			$options = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+			$opts = '';
+			foreach ($options as $o)
+			{
+				$sel = ($status == $o) ? ' selected="selected"' : '';
+				$opts .= "<option value=\"{$o}\"{$sel}>{$o}%</option>";
+			}
+			$own_task_form =  <<< EOD
+			<form onsubmit="return false" style="margin-bottom:0;">
+				<select name="set_task_status_{$tk}" id="set_task_status_{$tk}" class="set-task-status" style="margin-bottom:0;">
+					{$opts}
+				</select>
+				<div class="buttons">
+					<button type="submit"style="margin-left:0px;" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
+				</div>
+			</form>
+		
 EOD;
 		}
 		else
