@@ -3,10 +3,6 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
-<style type="text/css">
-
-</style>
-
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript">var curr_job_id = 0;</script>
