@@ -18,14 +18,14 @@ $permission =$this->session->all_userdata();
 		$pendingtasks=0;
 	$table_head= array(
 						"Task Description"=>"12",
-						"Priority"=>"6",
+						"Priority"=>"5",
 						"Task Owner"=>"8",
 						"Allocated to"=>"10",
 						"Planned Start Date"=>"11",
 						"Planned End Date"=>"11",
 						"Actual Start Date"=>"11",
 						"Actual End Date"=>"11",
-						"Status"=>"5",
+						"Status"=>"6",
 						"Remarks"=>"8",	
 						"Action"=>"7",		
 						);		
