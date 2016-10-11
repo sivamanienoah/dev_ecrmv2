@@ -51,10 +51,13 @@ class Dashboard extends crm_controller {
 		
 		// echo "<pre>"; print_r($filter); exit;
 
-		if (isset($filter['search_type']) && $filter['search_type'] == 'search') {
+		if (isset($filter['search_type']) && $filter['search_type'] == 'search') 
+		{
 			$data['val_export'] = 'search';
 			// echo "<pre>"; print_r($filter); exit;
-		} else if(isset($filter['search_type']) && is_numeric($filter['search_type'])) {
+		} 
+		else if(isset($filter['search_type']) && is_numeric($filter['search_type'])) 
+		{
 			$wh_condn = array('search_id'=>$filter['search_type'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
 			if(!empty($get_rec)) {
@@ -217,9 +220,14 @@ class Dashboard extends crm_controller {
 				$filter['statename'] = '';
 				
 				if(!empty($get_rec['locname']) && $get_rec['locname'] !='null')
-				$filter['locname'] = @explode(',',$get_rec['locname']);
+				{
+					$filter['locname'] = @explode(',',$get_rec['locname']);		
+				}
 				else
-				$filter['locname'] = '';
+				{
+					$filter['locname'] = '';		
+				}
+
 				
 				if(!empty($get_rec['lead_indi']) && $get_rec['lead_indi'] !='null')
 				$filter['lead_indi'] = @explode(',',$get_rec['lead_indi']);
@@ -230,9 +238,9 @@ class Dashboard extends crm_controller {
 
 		// $filter   = real_escape_array($this->input->post());
 		// echo "<pre>"; print_r($filter); exit;
-		if (isset($filter['advance'])) {
+		if (isset($filter['advance'])) 
+		{
 			$data['toggle_stat'] = 1;
-			$filter 			 = $filter;
 			$data['filter'] 	 = $filter;
 		}
 		$cusId = $this->level_restriction();
