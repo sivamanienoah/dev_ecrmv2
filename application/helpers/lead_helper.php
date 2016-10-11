@@ -373,8 +373,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 			}
 		} 
 		echo'</tbody>
-	</table>'.'<br/></div>';
-	
+	</table>'.'<br/></div>';	
 }
 }
 
