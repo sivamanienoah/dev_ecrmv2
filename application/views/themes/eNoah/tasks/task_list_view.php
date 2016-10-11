@@ -21,11 +21,11 @@ $permission =$this->session->all_userdata();
 						"Priority"=>"5",
 						"Task Owner"=>"8",
 						"Allocated to"=>"10",
-						"Planned Start Date"=>"11",
+						"Planned Start Date"=>"12",
 						"Planned End Date"=>"10",
 						"Actual Start Date"=>"9",
 						"Actual End Date"=>"9",
-						"Status"=>"11",
+						"Status"=>"10",
 						"Remarks"=>"8",	
 						"Action"=>"7",		
 						);		
