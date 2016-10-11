@@ -5,17 +5,6 @@ if ($this->session->userdata('logged_in') == TRUE) {
 	$userdata = $this->session->userdata('logged_in_user');
 }
 $permission =$this->session->all_userdata();
-
-/* $lead_access = getAccessFromLead($userdata['userid'], $result['lead_id']);
-	$team_access = getAccessFromTeam($userdata['userid'], $result['lead_id']);
-	$stake_access = getAccessFromStakeHolder($userdata['userid'], $result['lead_id']);
-	
-	$link_access = 0;
-	if($lead_access == 1 || $team_access == 1 || $stake_access == 1) {
-		$link_access = 1;
-	} */
-	
-	
 ?>
 <div id="task-page">
 	<div class="task-contents">
