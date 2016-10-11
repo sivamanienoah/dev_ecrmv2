@@ -61,7 +61,6 @@ require (theme_url().'/tpl/header.php');
 						</td>
 						<td>
 							<?php
-								$get_dates = array();
 								$get_dates = getResellerAgreementDate($row['userid']);
 								echo (isset($get_dates) && !empty($get_dates['contract_start_date'])) ? date('d-m-Y', strtotime($get_dates['contract_start_date'])) : "";
 							?>
@@ -74,6 +73,7 @@ require (theme_url().'/tpl/header.php');
 										echo " <span class='red pull-right'>Renew</span>";
 									}
 								}
+								$get_dates = array();
 							?>
 						</td>
 						<td><?php $get_contract_manager_name = getContractManagerName($row['contract_manager']); echo isset($get_contract_manager_name) ? $get_contract_manager_name : ""; ?></td>
