@@ -262,7 +262,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 		</thead>
 		<tbody>';
 		// If task_category is array and array count of task category greater than 0 it enters the condition
-		if (is_array($task_category) && 0 < count($task_category)) 
+		if (is_array($task_category) && CONST_ZERO < count($task_category)) 
 		{ 
 			foreach($task_category as $row) 
 			{ 
@@ -271,27 +271,27 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 				$company_name= $CI->customer_model->get_company($row['custid_fk']);
 				if(!empty($row['lead_title']))
 				{
-					$company_title = $row['lead_title'].'-'.$company_name[0]['company'];
+					$company_title = $row['lead_title'].'-'.$company_name[CONST_ZERO]['company'];
 				}
 				else
 				{
 					$company_title ="";
 				}
 				$taskid="'".$row['taskid']."'";
-				if(1 == $additionalcolumn)
+				if(CONST_ONE == $additionalcolumn)
 				{
 					$lead_access = getAccessFromLead($userid, $row['lead_id']);	
 					$team_access = getAccessFromTeam($userid, $row['lead_id']);
 					$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
 					$link_access = 0;
-					if(1 == $lead_access  || 1 == $team_access  || 1 == $stake_access  || 1 == $userroleid ) 
+					if(CONST_ONE == $lead_access  || CONST_ONE == $team_access  || CONST_ONE == $stake_access  || CONST_ONE == $userroleid ) 
 					{
 						$link_access = 1;
 					}
 	
-					if(1 == $link_access)
+					if(CONST_ONE == $link_access)
 					{
-						if(1 == $row['lead_or_project'])
+						if(CONST_ONE == $row['lead_or_project'])
 						{
 							$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
 						} 
@@ -335,7 +335,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					<td style="padding:10px;" class="actions">';
 					
 					
-					if (1 == $row['is_complete'])
+					if (CONST_ONE == $row['is_complete'])
 					{
 						
 						echo '<span class="label-success">&nbsp;Approved&nbsp;</span>';
@@ -346,7 +346,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					
 					if($userid ==$row['taskcreated_by'])
 					{
-						if(100 ==$row['status'])
+						if(CONST_HUNDRED ==$row['status'])
 						{
 							
 							$s="setTaskStatus($taskid,'complete');return false";
@@ -433,7 +433,7 @@ if ( ! function_exists('taskStatusForm'))
 	function taskStatusForm($tk,$val,$status)
 	{
 		// If val equals 1 it enters the condition
-		if($val==1)
+		if($val==CONST_ONE)
 		{
 			$options = array(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 			$opts = '';
