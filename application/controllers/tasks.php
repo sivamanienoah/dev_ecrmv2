@@ -1,11 +1,13 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Tasks extends crm_controller {
+class Tasks extends crm_controller 
+{
     
 	public $userdata;
 	public $cfg;
 	
-    public function __construct() {
+    public function __construct() 
+	{
         parent::__construct();
 		$this->load->helper('form');
 		$this->load->helper('task');
@@ -17,7 +19,7 @@ class Tasks extends crm_controller {
 		$this->userdata = $this->session->userdata('logged_in_user');
     }
 	
-	
+	// Index page of the Module.
 	public function index($extend = FALSE, $task_end_notify = FALSE) 
 	{	
 		$this->load->model('task_model');
@@ -74,7 +76,8 @@ class Tasks extends crm_controller {
 	 * Get all tasks
 	 * For today
 	 */
-	private function get_daily_tasks($extend = FALSE,$task_end_notify = FALSE) {
+	private function get_daily_tasks($extend = FALSE,$task_end_notify = FALSE) 
+	{
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
 
