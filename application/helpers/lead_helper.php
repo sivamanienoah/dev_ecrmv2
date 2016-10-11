@@ -248,8 +248,6 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 	$CI->load->model('user_model');
 	$CI->load->model('customer_model');
 	
-	
-	
 	$tableid= strtolower(str_replace(' ', '', $category_title));
 	echo '<div style="padding:10px;">
 	<h4 style="margin-bottom:0px;">'.$category_title.' </h4>
