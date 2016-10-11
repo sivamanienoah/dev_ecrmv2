@@ -422,7 +422,7 @@ if ( ! function_exists('element_value_check'))
 		return $element;
 	}
 }
-// THis function is for status 100% listing to update the status
+// This function is for status 100% listing to update the status
 if ( ! function_exists('taskStatusForm'))
 {
 	function taskStatusForm($tk,$val,$status)
