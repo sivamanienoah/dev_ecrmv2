@@ -3,11 +3,6 @@ ob_start();
 $userdata = $this->session->userdata('logged_in_user');
 $permission =$this->session->all_userdata();
 ?>
-<style>
-
-
- 
-</style>
 <div id="dashboardcount" style="margin-left: 30%;position: relative;bottom: 26px;">
 <label id="pendingval" class="label-warm"><a href='javascript:void(0);' onclick= 'refreshalltask(0);'> Pending Tasks : <?php echo $pendingtasks;?></a></label>&nbsp; &nbsp;
 <label id="completedval" class="label-success"><a href='javascript:void(0);' onclick= 'refreshalltask(1);'> All Tasks: <?php echo $completedtasks;?> </a></label> </div>
@@ -46,5 +41,4 @@ $permission =$this->session->all_userdata();
 	}
 	?>
 </div>
-
 <script type="text/javascript" src="assets/js/tasks/task_list.js"></script>
