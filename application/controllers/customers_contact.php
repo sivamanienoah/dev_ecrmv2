@@ -11,7 +11,8 @@ class Customers_contact extends crm_controller {
         $this->load->library('validation');
     }
     
-	function index() {
+	function index() 
+	{
         $data['customers'] = $this->customer_model->customer_list();
 		$data['contact']   = $this->customer_model->customer_contact_list($data['customers']);
         $this->load->view('customer_contact_view', $data);
