@@ -99,12 +99,9 @@ class Tasks extends crm_controller {
 	{
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
-	
 		$task_owner =element_value_check('task_owner_user');
 		$task_allocated =element_value_check('task_allocated_user');
 		$task_complete =element_value_check('task_search');
-		
-		
 		if($task_owner=="")
 		{
 			$task_owner = $uid;
