@@ -12,60 +12,63 @@ class Task_model extends crm_model
 		//echo $this->db->last_query();
 		return $sql->result_array();
 	}
+	// This Function list out the tasks with the category from task table
 	public function taskCategoryQuery($category_id,$category_name,$task_search,$both)
 	{
-			if($task_search['task_end_notify']!="" )
+		// if $task_search['endnotify']  value exist it enters the condition
+		if($task_search['task_end_notify']!="" )
+		{
+			$task_notify_status = get_notify_status(2);
+			$query_end_notify="AND `".$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY))
+								AND `".$this->cfg['dbpref']."tasks`.actualend_date='0000-00-00 00:00:00'";
+		
+			$notify_query="";
+		}
+		else
+		{
+			$notify_query = $both."`".$this->cfg['dbpref']."tasks`.`created_by` = '".$task_search['taskowner']."'";
+			$query_end_notify="";
+		}
+		// if taskproject key exist in task_search array it enters the condition	
+		if (array_key_exists("taskproject",$task_search))
+		{
+			//if taskproject value exist it enters the condition
+			if($task_search['taskproject']!="" )
 			{
-				$task_notify_status = get_notify_status(2);
-				$query_end_notify="AND `".$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY))
-									AND `".$this->cfg['dbpref']."tasks`.actualend_date='0000-00-00 00:00:00'";
+				$query="AND `".$this->cfg['dbpref']."tasks`.`jobid_fk` = '".$task_search['taskproject']."'";
+			}
 			
-				$notify_query="";
-			}
-			else
+		}
+		else
+		{
+			$query="";
+		}
+		// if taskstartdate & taskenddate key exist in task_search array it enters the condition	
+		if (array_key_exists("taskstartdate",$task_search) && array_key_exists("taskenddate",$task_search))
+		{
+			//if taskstartdate & taskenddate value exist it enters the condition
+			if($task_search['taskstartdate']!=""  &&  $task_search['taskenddate']!="")
 			{
-				$notify_query = $both."`".$this->cfg['dbpref']."tasks`.`created_by` = '".$task_search['taskowner']."'";
-				$query_end_notify="";
-			}
+				$ts_startdate = $this->dateFormat($task_search['taskstartdate']);
+				$ts_enddate = $this->dateFormat($task_search['taskenddate']);
+				$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` >= '". $ts_startdate." 00:00:00"."' AND `".$this->cfg['dbpref']."tasks`.`end_date` <='".$ts_enddate." 23:59:59"."')";
+			}	
+		}
+		else
+		{
+			$query_date="";
+		}
+	
 		
-		
-			if (array_key_exists("taskproject",$task_search))
-			{
-
-				if($task_search['taskproject']!="" )
-				{
-					$query="AND `".$this->cfg['dbpref']."tasks`.`jobid_fk` = '".$task_search['taskproject']."'";
-				}
-				
-			}
-			else
-			{
-				$query="";
-			}
-			if (array_key_exists("taskstartdate",$task_search) && array_key_exists("taskenddate",$task_search))
-			{
-				if($task_search['taskstartdate']!=""  &&  $task_search['taskenddate']!="")
-				{
-					$ts_startdate = $this->dateFormat($task_search['taskstartdate']);
-					$ts_enddate = $this->dateFormat($task_search['taskenddate']);
-					$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` >= '". $ts_startdate." 00:00:00"."' AND `".$this->cfg['dbpref']."tasks`.`end_date` <='".$ts_enddate." 23:59:59"."')";
-				}	
-			}
-			else
-			{
-				$query_date="";
-			}
-		
-			
-			$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
-				"FROM `".$this->cfg['dbpref']."tasks`
-				LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
-				LEFT JOIN  `".$this->cfg['dbpref']."leads`ON`".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."leads`.`lead_id`
-				WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
-				AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date.$query_end_notify."
-				AND (`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'
-				 ".$notify_query.")
-				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
+		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
+			"FROM `".$this->cfg['dbpref']."tasks`
+			LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
+			LEFT JOIN  `".$this->cfg['dbpref']."leads`ON`".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."leads`.`lead_id`
+			WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
+			AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date.$query_end_notify."
+			AND (`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'
+			 ".$notify_query.")
+			ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
  		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
 		$data['values'] = $category_name;
