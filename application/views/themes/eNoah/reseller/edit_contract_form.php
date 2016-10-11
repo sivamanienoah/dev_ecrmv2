@@ -187,9 +187,9 @@
 		var on_load_end_date   = $('#contract_end_date').val();
 		
 		$('#renewal_reminder_date').datepicker("option", "minDate", on_load_start_date);
-		$('#contract_signed_date').datepicker("option", "minDate", on_load_start_date);
+		// $('#contract_signed_date').datepicker("option", "minDate", on_load_start_date);
 		$('#renewal_reminder_date').datepicker("option", "maxDate", on_load_end_date);
-		$('#contract_signed_date').datepicker("option", "maxDate", on_load_end_date);
+		// $('#contract_signed_date').datepicker("option", "maxDate", on_load_end_date);
 		
 		$('#contract_start_date').datepicker({ 
 			dateFormat: 'dd-mm-yy', 
@@ -218,14 +218,14 @@
 				date.setMonth(date.getMonth() - 1);
 				$("#renewal_reminder_date").datepicker("setDate", date);
 				$('#renewal_reminder_date').datepicker("option", "minDate", start_date);
-				$('#contract_signed_date').datepicker("option", "minDate", start_date);
+				// $('#contract_signed_date').datepicker("option", "minDate", start_date);
 				$('#renewal_reminder_date').datepicker("option", "maxDate", end_date);
-				$('#contract_signed_date').datepicker("option", "maxDate", end_date);
+				// $('#contract_signed_date').datepicker("option", "maxDate", end_date);
 			}
 		});
 		
 		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
-		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
+		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, maxDate: 0});
 	});
 	
 	function isNumberKey(evt)
