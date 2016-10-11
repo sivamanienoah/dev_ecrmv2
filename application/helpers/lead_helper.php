@@ -385,21 +385,21 @@ if ( ! function_exists('priority_name_define'))
 		// Switch case base on the Priority Id
 		switch ($id)
 		{
-		case "1":
-			$val="<span class='label-hot'>&nbsp;Critical&nbsp;</span>";
-		break;
-		case "2":
-			$val="<span class='label-hot'>&nbsp;High&nbsp;</span>";
-		break;
-		case "3":
-			$val="<span class='label-warm'>Medium</span>";
-		break;
-		case "4":
-			$val="<span class='label-cold'>&nbsp;Low&nbsp;</span>";
-		break;		
-		
-		default:
-			$val="null";
+			case "1":
+				$val="<span class='label-hot'>&nbsp;Critical&nbsp;</span>";
+			break;
+			case "2":
+				$val="<span class='label-hot'>&nbsp;High&nbsp;</span>";
+			break;
+			case "3":
+				$val="<span class='label-warm'>Medium</span>";
+			break;
+			case "4":
+				$val="<span class='label-cold'>&nbsp;Low&nbsp;</span>";
+			break;		
+			
+			default:
+				$val="null";
 		}
 
 		return $val;
