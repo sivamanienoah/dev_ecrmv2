@@ -97,7 +97,7 @@ class Tasks extends crm_controller
 		return array($data, $now);
 	}
 	
-	//Search functionality
+	//Search functionality for the Tasks Menu
 	function search() 
 	{
 		$uidd = $this->session->userdata['logged_in_user']; 
