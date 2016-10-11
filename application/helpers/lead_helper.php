@@ -442,7 +442,7 @@ if ( ! function_exists('taskStatusForm'))
 				{$opts}
 			</select>
 			<div class="buttons">
-				<button type="submit" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
+				<button type="submit"style="margin-left:0px;" onclick="setTaskStatus('{$tk}'); return false;">Set</button>
 			</div>
 		</form>
 EOD;
