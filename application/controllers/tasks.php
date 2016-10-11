@@ -18,22 +18,8 @@ class Tasks extends crm_controller {
     }
 	
 	
-	public function index($extend = FALSE, $task_end_notify = FALSE) {	
-/*	$data['created_by'] = $this->task_model->get_task_created_by();
-	
- 	
-		$res = $this->get_daily_tasks($extend, $task_end_notify = FALSE);
-
-		foreach($res[0] as $r) 
-		{
-			$data['userid_fk'] = $this->task_model->get_created_by_for_task($r['taskid']);
-		}
-		$data['results'] = $res[0];
-		$data['start_date_stamp'] = $res[1];
-		$data['page_title'] = 'Task List for '. date('l, jS F y', $res[1]);
- */
-		
-
+	public function index($extend = FALSE, $task_end_notify = FALSE) 
+	{	
 		$this->load->model('task_model');
 		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
 		$newarray=array();
@@ -57,16 +43,20 @@ class Tasks extends crm_controller {
 	/**
 	 * Tasks for the main menu
 	 */
-	public function all() {
+	public function all() 
+	{
 		$data = array();
 		
 		$data['user_accounts'] = array();
 
-		if(isset($_POST) && isset($_POST['type']) && $_POST['type'] == 'task_end_notify'){
+		if(isset($_POST) && isset($_POST['type']) && $_POST['type'] == 'task_end_notify')
+		{
 			$data['task_end_notify'] = 'task_end_notify';
-		} else {
+		} 
+		else 
+		{
 			$data['task_end_notify'] = '';
-		}		// $users = $this->db->get($this->cfg['dbpref'] . 'users');
+		}	
 		$users = $this->task_model->getActiveUsers();
 
 		if ($users['num'] > 0)
@@ -105,7 +95,8 @@ class Tasks extends crm_controller {
 	}
 	
 	//Search functionality
-	function search() {
+	function search() 
+	{
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid = $uidd['userid'];
 	
@@ -149,17 +140,7 @@ class Tasks extends crm_controller {
 					'taskproject'=>element_value_check('task_project')
 					);
 		
-/* 		$data['created_by'] = $this->task_model->get_task_created_by();
-		
-		$res = $this->search_user_tasks($_POST['task_search_start_date'], $_POST['task_search_end_date'], $_POST['task_search']);
 
-		foreach($res[0] as $r) 
-		{
-			$data['userid_fk'] = $this->task_model->get_created_by_for_task($r['taskid']);
-		}
-
-		$data['results'] = $res[0]; */
-	
 		$this->load->model('task_model');
 		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList(element_value_check('task_category'));
 		
