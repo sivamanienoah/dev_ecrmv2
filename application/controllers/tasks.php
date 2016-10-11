@@ -48,7 +48,7 @@ class Tasks extends crm_controller {
 		$data = array();
 		
 		$data['user_accounts'] = array();
-
+		// if post element of type equals task_end_notify it enters the condition
 		if(isset($_POST) && isset($_POST['type']) && $_POST['type'] == 'task_end_notify')
 		{
 			$data['task_end_notify'] = 'task_end_notify';
@@ -58,8 +58,8 @@ class Tasks extends crm_controller {
 			$data['task_end_notify'] = '';
 		}	
 		$users = $this->task_model->getActiveUsers();
-
-		if ($users['num'] > 0)
+		// If active users greater than 0 it enters the condition
+		if (0 < $users['num'])
 		{
 			$data['user_accounts'] = $users['user'];
 		}
