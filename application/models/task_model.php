@@ -14,10 +14,6 @@ class Task_model extends crm_model
 	}
 	public function taskCategoryQuery($category_id,$category_name,$task_search,$both)
 	{
-		//print_r($task_search);
-		//echo $task_search['taskproject']."rammm";
-		//$this->cfg['dbpref']."tasks`.end_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL ".$task_notify_status." DAY)) 		
-
 			if($task_search['task_end_notify']!="" )
 			{
 				$task_notify_status = get_notify_status(2);
@@ -50,15 +46,14 @@ class Task_model extends crm_model
 			{
 				if($task_search['taskstartdate']!=""  &&  $task_search['taskenddate']!="")
 				{
-					 $ts_startdate = $this->dateFormat($task_search['taskstartdate']);
+					$ts_startdate = $this->dateFormat($task_search['taskstartdate']);
 					$ts_enddate = $this->dateFormat($task_search['taskenddate']);
-					//$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` BETWEEN '". $ts_startdate." 00:00:00"."' AND '".$ts_enddate." 23:59:59"."')";
 					$query_date= "AND (`".$this->cfg['dbpref']."tasks`.`start_date` >= '". $ts_startdate." 00:00:00"."' AND `".$this->cfg['dbpref']."tasks`.`end_date` <='".$ts_enddate." 23:59:59"."')";
 				}	
 			}
 			else
 			{
-					$query_date="";
+				$query_date="";
 			}
 		
 			
@@ -71,13 +66,8 @@ class Task_model extends crm_model
 				AND (`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'
 				 ".$notify_query.")
 				ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
-		
- 		/*echo $sql;
-		 echo "notifiy query check";
-		exit(); */
  		$q = $this->db->query($sql);
 		$data['records'] = $q->result_array();
-		
 		$data['values'] = $category_name;
 		$data['categoryid'] = $category_id;
 		$data['rows'] = $q->num_rows();
