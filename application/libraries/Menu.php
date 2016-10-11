@@ -161,7 +161,7 @@
 			$qurystring =explode('/',$_SERVER['REQUEST_URI']);
 			$class='';
 			if($qurystring[2]==$subtreeRoot['links_to']){
-				$class='class="selected"';
+				$class='class=""';
 			}
 			$html = '<a href="'.$subtreeRoot['links_to'].'" '.$class.' >'.$subtreeRoot['name'].'</a>';
 			 if(!empty($subtreeRoot['children'])){
