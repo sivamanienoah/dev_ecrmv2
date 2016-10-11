@@ -49,7 +49,7 @@ require (theme_url().'/tpl/header.php');
 							?>
 						</td>
 						<td>
-							<?php 
+							<?php
 								$get_resller_projects = getResellerActiveProjects($row['userid']); 
 								$active_projects = isset($get_resller_projects) ? $get_resller_projects : "";
 								if(isset($active_projects) && !empty($active_projects)) {
@@ -61,6 +61,7 @@ require (theme_url().'/tpl/header.php');
 						</td>
 						<td>
 							<?php
+								$get_dates = array();
 								$get_dates = getResellerAgreementDate($row['userid']);
 								echo (isset($get_dates) && !empty($get_dates['contract_start_date'])) ? date('d-m-Y', strtotime($get_dates['contract_start_date'])) : "";
 							?>
