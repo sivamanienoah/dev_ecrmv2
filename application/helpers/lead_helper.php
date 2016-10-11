@@ -234,7 +234,7 @@ if ( ! function_exists('date_format_readable'))
 	}
 }
 
-
+// This Function is used to define the datatable with the table details(table heads,table datas, category id)
 if ( ! function_exists('datatable_structure'))
 {
 function datatable_structure($task_category,$permission,$category_title,$category_id,$table_head,$additionalcolumn)
@@ -278,23 +278,26 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 				$company_title ="";
 			}
 			$taskid="'".$row['taskid']."'";
-			if($additionalcolumn==1)
+			if(1 == $additionalcolumn)
 	{
 		
 		$lead_access = getAccessFromLead($userid, $row['lead_id']);	
 		$team_access = getAccessFromTeam($userid, $row['lead_id']);
 		$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
 		$link_access = 0;
-		if($lead_access == 1 || $team_access == 1 || $stake_access == 1 || $userroleid == 1) 
+		if(1 == $lead_access  || 1 == $team_access  || 1 == $stake_access  || 1 == $userroleid ) 
 		{
 			$link_access = 1;
 		}
 	
-		if($link_access == 1)
+		if(1 == $link_access)
 		{
-				if($row['lead_or_project'] == 1) {
+				if(1 == $row['lead_or_project'])
+				{
 					$lead_title = "<a target=\"blank\" href=\"project/view_project/{$row['lead_id']}\">{$company_title}</a>";
-				} else {
+				} 
+				else
+				{
 					$lead_title = "<a target=\"blank\" href=\"welcome/view_quote/{$row['lead_id']}\">{$company_title}</a>";
 				}
 		}
@@ -377,7 +380,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 }
 }
 
-
+// It is used to define the priority name using the id
 if ( ! function_exists('priority_name_define'))
 {
 	function priority_name_define($id)
@@ -404,7 +407,7 @@ if ( ! function_exists('priority_name_define'))
 		return $val;
 	}
 }
-
+//Checks if value exist or not.
 if ( ! function_exists('element_value_check'))
 {
 	function element_value_check($element)
@@ -422,7 +425,7 @@ if ( ! function_exists('element_value_check'))
 		return $element;
 	}
 }
-
+// THis function is for status 100% listing to update the status
 if ( ! function_exists('taskStatusForm'))
 {
 	function taskStatusForm($tk,$val,$status)
