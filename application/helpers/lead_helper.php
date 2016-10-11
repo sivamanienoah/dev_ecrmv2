@@ -283,10 +283,10 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					$lead_access = getAccessFromLead($userid, $row['lead_id']);	
 					$team_access = getAccessFromTeam($userid, $row['lead_id']);
 					$stake_access = getAccessFromStakeHolder($userid, $row['lead_id']);
-					$link_access = 0;
+					$link_access = CONST_ZERO;
 					if(CONST_ONE == $lead_access  || CONST_ONE == $team_access  || CONST_ONE == $stake_access  || CONST_ONE == $userroleid ) 
 					{
-						$link_access = 1;
+						$link_access = CONST_ONE;
 					}
 	
 					if(CONST_ONE == $link_access)
@@ -312,11 +312,11 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 	
 				if($userid== $row['taskcreated_by'] || $userid==$row['userid_fk'])
 				{
-					$status_return =1;
+					$status_return =CONST_ONE;
 				}
 				else
 				{
-					$status_return =0;
+					$status_return =CONST_ZERO;
 				}
 	
 
