@@ -184,7 +184,7 @@ function validateCommissionForm()
 	{
 		validate_form = false;
 		errors.push('<p>Select Project.</p>');
-		$('#job_id_err').html('Select Contract Manager.');
+		$('#job_id_err').html('Select Project.');
 	} else {
 		$('#job_id_err').html('');
 	}
@@ -231,8 +231,8 @@ function validateCommissionForm()
 	if (errors.length > 0 && validate_form == false) 
 	{
 		setTimeout('timerfadeout()', 6000);
-		$('#succes_add_commission_data').html(errors.join(''));
-		$('#succes_add_commission_data').show();
+		// $('#succes_add_commission_data').html(errors.join(''));
+		// $('#succes_add_commission_data').show();
 		return false;
 	}
 }
