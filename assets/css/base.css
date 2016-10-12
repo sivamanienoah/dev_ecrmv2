@@ -2888,6 +2888,5 @@ form#edit-folder-permissions { overflow:visible !important; }
 	border-bottom:1px solid #dedede;
 	font-size:12px;
 }
-.notify-area .root{
-	padding:4px;
-}
+.notify-area .root{ padding:4px; }
+.custom-blue-btn { background-color: #3b5998 !important; color: #fff !important; }
