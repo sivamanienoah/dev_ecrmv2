@@ -122,7 +122,22 @@ class Userlogin extends crm_controller {
             redirect('userlogin/');
             exit();
 		} else {
+			
 			$userdata   = $userdata['res'];
+			
+			//do log for reseller user login
+			if($userdata[0]['role_id'] == 14) {
+				
+				$log_detail = "Logged In: \n";
+				$log_detail .= date('d-m-Y H:i:s')."\n";
+				
+				$log['jobid_fk']      = 0;
+				$log['userid_fk']     = $userdata[0]['userid'];
+				$log['date_created']  = date('Y-m-d H:i:s');
+				$log['log_content']   = $log_detail;
+				$log_res = $this->login_model->insert_row("logs", $log);
+			}
+
 			$menu_items = $this->role_model->UserModuleList($userdata[0]['userid']);
 			$whole = '';
 			$val   = '';
@@ -280,6 +295,22 @@ class Userlogin extends crm_controller {
 		/*
         * destroy session*/ //&& ($SSO_Status=='1') $SSO_Status = $this->config->item('IS_SSO');
 		$username = $this->session->userdata['logged_in_user']['username'];
+		
+		$log_user = $this->session->userdata['logged_in_user'];
+		
+		//do log for reseller user login
+		if($log_user['role_id'] == 14) 
+		{
+			$log_detail = "Logout On: \n";
+			$log_detail .= date('d-m-Y H:i:s')."\n";
+			
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $log_user['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->login_model->insert_row("logs", $log);
+		}
+		
 		$sessionId = $this->session->userdata('session_id');
 		$sql = "DELETE FROM `".$this->cfg['dbpref']."sessions` WHERE `session_id` = ?";
         $this->db->query($sql, array($sessionId));
