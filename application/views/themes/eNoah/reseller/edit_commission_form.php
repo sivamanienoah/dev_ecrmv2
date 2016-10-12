@@ -131,6 +131,7 @@
 		if(settings.target=="#output1") {
 			if(xhr.responseText=='success') {
 				$('#succes_add_commission_data').html("<span class='ajx_success_msg'>Commission Updated Successfully.</span>");
+				setTimeout('timerfadeout()', 6000);
 				reset_commission_form();
 			} else if(xhr.responseText == 'error') {
 				$('#succes_add_commission_data').html("<span class='ajx_failure_msg'>Error in Adding Commission.</span>");

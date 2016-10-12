@@ -10,7 +10,7 @@
 	<input type="hidden" name="hidden_contract_manager" id="hidden_contract_manager" value="<?php echo $contract_data['contract_manager']; ?>" readonly />
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
-			<td>Contracter Manager<span class='red'> *</span></td>
+			<td>Contract Manager<span class='red'> *</span></td>
 			<td>
 				<select name='contract_manager' class="textfield width200px" id='contract_manager'>
 					<option value=''>Select</option>

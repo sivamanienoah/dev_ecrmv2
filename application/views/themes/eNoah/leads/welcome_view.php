@@ -1041,6 +1041,7 @@ h3 .small {
 								?>
 							</select><?php echo'&nbsp;&nbsp;&nbsp;' ?>
 							<label> Amount</label> <?php echo'&nbsp;&nbsp;&nbsp;' ?><input type="text" name="expect_worth_amount" value="<?php echo $quote_data['expect_worth_amount'];?>" id="expect_worth_amount" class="textfield" style=" width:132px" />
+							<input type="hidden" name="hidden_expect_worth_amount" value="<?php echo $quote_data['expect_worth_amount'];?>" id="hidden_expect_worth_amount" />
 						</p>
 						
 						<p><label>Actual worth of Project</label><?php echo'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' ?><input type="text" name="actual_worth" value="<?php
