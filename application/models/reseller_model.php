@@ -34,9 +34,9 @@ class Reseller_model extends crm_model
 		if($id) {
 			$this->db->where('a.userid', $id);
 		}
-		if($this->userdata['role_id'] != 1) {
+		/* if($this->userdata['role_id'] != 1) {
 			$this->db->where('a.contract_manager', $this->userdata['userid']);
-		}
+		} */
 		$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 		$this->db->order_by("a.first_name", "asc");
 		$query = $this->db->get();
@@ -304,10 +304,11 @@ class Reseller_model extends crm_model
 	*/
 	function getLogs($userid)
 	{
-		$this->db->select('lg.*, j.lead_title');
+		$this->db->select('lg.*, j.lead_title, CONCAT(u.first_name," ",u.last_name) as log_user', false);
 		$this->db->from($this->cfg['dbpref']."logs as lg");
 		$this->db->where('lg.userid_fk', $userid);
 		$this->db->join($this->cfg['dbpref']."leads as j", 'j.lead_id = lg.jobid_fk', 'left');
+		$this->db->join($this->cfg['dbpref']."users as u", 'u.userid = lg.userid_fk', 'left');
 		$this->db->order_by("lg.date_created", "desc");
 		$query = $this->db->get();
 		return $query->result_array();

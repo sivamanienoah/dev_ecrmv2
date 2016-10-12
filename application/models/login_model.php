@@ -69,8 +69,7 @@ class Login_model extends crm_model {
 	public function process_login($username, $password)
 	{
 		/*First time check the CRM DB*/
-		$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.password,u.email,u.auth_type,u.level,u.role_id,u.signature,
-		u.inactive,r.name');
+		$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.password,u.email,u.auth_type,u.level,u.role_id,u.signature,u.inactive,r.name');
 		$this->db->from($this->cfg['dbpref'].'users u');
 		$this->db->join($this->cfg['dbpref'].'roles r', 'r.id = u.role_id');
 		$this->db->where('u.username', $username);
@@ -96,7 +95,7 @@ class Login_model extends crm_model {
 					break;
 					case 1: //for ladp authentication
 						$SSO_Status = $this->config->item('IS_SSO');
-						if($SSO_Status=='1'){
+						if($SSO_Status=='1') {
 							$registerCookie=$this->registerCookie($username,$password);
 							if($registerCookie['error'])
 							{
@@ -115,8 +114,7 @@ class Login_model extends crm_model {
 							);
 							$this->input->set_cookie($cookie);
 							return $data;
-						}
-						else{
+						} else {
 							$data = $this->ldapConnection($username,$password);
 							//echo $data;exit;
 							//print_r($data);exit;
@@ -143,6 +141,11 @@ class Login_model extends crm_model {
 			return $data;
 		}
 	}
+	
+	function insert_row($tbl, $ins) 
+	{
+		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
+    }
 
 	
 	protected function ldapConnection($username,$password){
