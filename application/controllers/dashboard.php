@@ -106,25 +106,37 @@ class Dashboard extends crm_controller {
 				$filter['ser_requ'] = '';
 				
 				if(!empty($get_rec['lead_src']) && $get_rec['lead_src'] !='null')
-				$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				{
+					$filter['lead_src'] = @explode(',',$get_rec['lead_src']);
+				}
 				else
-				$filter['lead_src'] = '';
-
+				{
+					$filter['lead_src'] = '';
+				}
 				if(!empty($get_rec['industry']) && $get_rec['industry'] !='null')
-				$filter['industry'] = @explode(',',$get_rec['industry']);
+				{
+					$filter['industry'] = @explode(',',$get_rec['industry']);
+				}
 				else
-				$filter['industry'] = '';
-				
+				{
+					$filter['industry'] = '';
+				}
 				if(!empty($get_rec['regionname']) && $get_rec['regionname'] !='null')
-				$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				{
+					$filter['regionname'] = @explode(',',$get_rec['regionname']);
+				}
 				else
-				$filter['regionname'] = '';
-				
+				{
+					$filter['regionname'] = '';
+				}
 				if(!empty($get_rec['countryname']) && $get_rec['countryname'] !='null')
-				$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				{
+					$filter['countryname'] = @explode(',',$get_rec['countryname']);
+				}
 				else
-				$filter['countryname'] = '';
-				
+				{
+					$filter['countryname'] = '';
+				}
 				if(!empty($get_rec['statename']) && $get_rec['statename'] !='null')
 				$filter['statename'] = @explode(',',$get_rec['statename']);
 				else
