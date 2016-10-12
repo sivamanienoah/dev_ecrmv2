@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require (theme_url().'/tpl/header.php');
-#echo "<pre>"; print_r($reseller_det); echo "</pre>";
+// echo "<pre>"; print_r($reseller_det); echo "</pre>";
 ?>
 <div id="content">
 	<div class="inner">	
@@ -20,9 +20,17 @@ require (theme_url().'/tpl/header.php');
 				<label>Email :</label>
 				<?php echo $reseller_det[0]['email']; ?>
 			</p>
-			<p>
+			<!--p>
 				<label>Username :</label>
-				<?php echo $reseller_det[0]['username']; ?>
+				<?php #echo $reseller_det[0]['username']; ?>
+			</p-->
+			<p>
+				<label>Phone :</label>
+				<?php echo (isset($reseller_det[0]['phone']) && !empty($reseller_det[0]['phone'])) ? $reseller_det[0]['phone'] : '-'; ?>
+			</p>
+			<p>
+				<label>Mobile :</label>
+				<?php echo (isset($reseller_det[0]['mobile']) && !empty($reseller_det[0]['mobile'])) ? $reseller_det[0]['mobile'] : '-'; ?>
 			</p>
 			<!--p>
 				<label>Contract Manager Name :</label>
@@ -148,9 +156,38 @@ require (theme_url().'/tpl/header.php');
 					</table>
 				</div>
 			</div><!--rt-tab-2 - End -->
-			<div id="rt-tab-3"></div><!--rt-tab-3 - End -->
+			<div id="rt-tab-3">
+				<div id='sale_filter' style="margin-top: 10px; position: relative;">
+					<?php $attributes = array('id'=>'sale_history', 'name'=>'sale_history'); ?>
+					<?php echo form_open_multipart("reseller/getSaleHistory", $attributes); ?>
+						<table>
+							<tr>
+								<td><label>Financial Year:</label></td>
+								<td>
+									<select name="financial_year" id="financial_year" class="textfield" style="width: 90px;">
+									<option value ="">Select</option>
+									<?php for($i=date("Y")+1;$i>=2010;$i--) { ?>
+										<option value="<?php echo $i ?>" <?php if($curFiscalYear == $i) echo "selected='selected'"; ?>><?php echo ($i-1).' - '.$i ?></option>
+									<?php } ?>
+									</select>
+									<input type="hidden" name="reseller_id" id="reseller_id" value="<?php echo $reseller_det[0]['userid']; ?>">
+									<input type="hidden" name="hidden_curFiscalYear" id="hidden_curFiscalYear" value="<?php echo $curFiscalYear; ?>">
+								</td>
+								<td style="padding-bottom: 5px;">
+									<div class="buttons">
+										<button type="submit" id="sale_history_submit" class="positive">Search</button>
+									</div>
+								</td>
+								<td><div id="financial_year_err"></div></td>
+							</tr>
+						</table>
+					<?php form_close(); ?>
+				</div>
+				<div id="sale_history_data">
+					<?php echo $this->load->view('reseller/sale_history_grid', $sales); ?>
+				</div>
+			</div><!--rt-tab-3 - End -->
 			<div id="rt-tab-4">
-				<h2 class="pull-left borderBtm">Leads</h2>
 				<div id="reseller_lead_data"></div>
 			</div><!--rt-tab-4 - End -->
 			<div id="rt-tab-5">

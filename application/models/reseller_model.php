@@ -28,11 +28,14 @@ class Reseller_model extends crm_model
 	*/
     public function get_reseller($id = false) 
 	{
-		$this->db->select('a.userid, a.role_id, a.contract_manager, a.first_name, a.last_name, a.username, a.email, c.id, c.name');
+		$this->db->select('a.userid, a.role_id, a.contract_manager, a.first_name, a.last_name, a.username, a.email, a.phone, a.mobile, c.id, c.name');
 		$this->db->from($this->cfg['dbpref']."users as a");
 		$this->db->where('a.role_id', $this->reseller_role_id);
-		if($id){
+		if($id) {
 			$this->db->where('a.userid', $id);
+		}
+		if($this->userdata['role_id'] != 1) {
+			$this->db->where('a.contract_manager', $this->userdata['userid']);
 		}
 		$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 		$this->db->order_by("a.first_name", "asc");
@@ -404,4 +407,49 @@ class Reseller_model extends crm_model
 		}
     }
 	
+	
+	//for closed opportunities getClosedJobids
+	public function getClosedJobids($reseller_id)
+	{
+		$pjt_stat = array(0,1,2,3);
+		
+		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y"); eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
+		// $curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		// $frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		// $to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
+		$this->db->select('j.lead_id, j.lead_title, j.expect_worth_id, j.actual_worth_amount, j.lead_status, j.pjt_status, c.customer_name AS customer_contact_name, cc.company AS company_name');
+		$this->db->from($this->cfg['dbpref'].'leads as j');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
+		$this->db->where('lead_status', 4);
+		$reseller_condn = '(j.belong_to = '.$reseller_id.' OR j.lead_assign = '.$reseller_id.' OR j.assigned_to ='.$reseller_id.')';
+		$this->db->where($reseller_condn);
+		
+   		$this->db->where_in('j.pjt_status', $pjt_stat);
+   		// $this->db->where('j.date_modified BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
+		$this->db->order_by('j.lead_id', 'DESC');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		return $query->result_array();
+	}
+	
+	function getLeadClosedDate($id, $curFiscalYear)
+	{
+		// my fiscal year starts on July,1 and ends on June 30, so... $curYear = date("Y");
+		// eg. calculateFiscalYearForDate("5/15/08","7/1","6/30"); m/d/y
+		// $curFiscalYear 	= getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$frm_dt 		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$to_dt  		= $curFiscalYear."-03-31"; //eg.2014-03-01
+		
+	    $this->db->select('lead_id, dateofchange, modified_by, CONCAT(u.first_name," ",u.last_name) as sale_by', false);
+	    $this->db->from($this->cfg['dbpref'].'lead_status_history');
+		$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = modified_by');
+		$this->db->where("lead_id", $id);
+		$this->db->where("changed_status", 4);
+		$this->db->where('dateofchange BETWEEN "'.$frm_dt.'" AND "'.$to_dt.'" ');
+		$this->db->order_by('dateofchange', 'desc');
+		$this->db->limit(1);
+	    $sql = $this->db->get();
+	    return $sql->row_array();
+	}
 }

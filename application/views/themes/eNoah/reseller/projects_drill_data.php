@@ -82,9 +82,9 @@ if(!empty($project_type) && count($project_type)>0){
 				$milestone_content .= '<tr bgcolor='.$rag_color.'>';
 				$milestone_content .= "<td class='actions' align='center'>";
 				$milestone_content .= "<a title='View' class='view-icon' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view'></a> ";
-				if($this->session->userdata('delete')==1) {
+				/* if($this->session->userdata('delete')==1) {
 				$milestone_content .= "<a title='Delete' class='delete' href='javascript:void(0)' onclick='return deleteProject(".$record['lead_id']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>";
-				}
+				} */
 				$milestone_content .= "</td>";
 				$milestone_content .= "<td><a target='_blank' href='project/view_project/".$record['lead_id']."'>".$title."</a></td>";
 				if($td_chk == false) {

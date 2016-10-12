@@ -115,7 +115,7 @@ function deleteContractData(contract_id, contracter_user_id)
 					$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Deleted Successfully.</span>");
 					$('#contr_'+contract_id).remove();
 					setTimeout('timerfadeout()', 4000);
-					alert($('#list_contract_det tbody tr').length)
+					// alert($('#list_contract_det tbody tr').length)
 					if($('#list_contract_det tbody tr').length==0){
 						reset_add_form();
 					}
@@ -369,4 +369,50 @@ function deleteCommissionData(commission_id, contracter_user_id)
 	}
 }
 //**Commission - End**//
+
+//**sale history**//
+
+$( "#sale_history" ).submit(function( event ) {
+	// alert($('#hidden_curFiscalYear').val());
+	var errors = [];
+	var validate_form = true;
+	if($('#financial_year').val() == $('#hidden_curFiscalYear').val()) {
+		$('#financial_year_err').html('<span class="red">Please Select Other Financial Year.</span>');
+		setTimeout('timerfadeout()', 6000);
+		return false;
+	}
+	if(($.trim($('#financial_year').val()) == '')) 
+	{
+		validate_form = false;
+		errors.push('<p>Select Financial Year.</p>');
+		$('#financial_year_err').html('<span class="red">Select Financial Year.</span>');
+	} else {
+		$('#financial_year_err').html('');
+	}
+	
+	if (errors.length > 0 && validate_form == false) 
+	{
+		setTimeout('timerfadeout()', 6000);
+		return false;
+	}
+	
+	$.ajax({
+		type: "POST",
+		dataType: "html",
+		url: site_base_url+'reseller/getSaleHistory/',
+		data: '&financial_year='+$('#financial_year').val()+'&reseller_id='+$('#reseller_id').val()+'&'+csrf_token_name+'='+csrf_hash_token,
+		cache: false,
+		beforeSend:function() {
+			$('#sale_history_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
+		},
+		success: function(data) {
+			// console.info(data);
+			$('#sale_history_data').html(data);
+			$('#hidden_curFiscalYear').val($('#financial_year').val());
+		}                                                                                   
+	});
+	
+  event.preventDefault();
+});
+//**sale history**//
 /////////////////

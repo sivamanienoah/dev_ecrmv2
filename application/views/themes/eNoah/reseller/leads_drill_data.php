@@ -2,6 +2,9 @@
 $cfg 		= $this->config->item('crm');
 $userdata 	= $this->session->userdata('logged_in_user'); 
 ?>
+<div class="page-title-head">
+	<h2 class="pull-left borderBtm">LEADS</h2>
+</div>
 <div id="ad_filter" class="custom_dashboardfilter" style="overflow-x:scroll; width:100%;" >
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
@@ -49,9 +52,9 @@ $userdata 	= $this->session->userdata('logged_in_user');
 						</a>
 					<?php } ?> 
 					<?php
-					if (($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2) && $filter_result['pjt_status']==0) { ?>
-						<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false;" title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
-					<?php } ?>
+					//if (($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2) && $filter_result['pjt_status']==0) { ?>
+						<!--a href="javascript:void(0)" onclick="return deleteLeads(<?php #echo $filter_result['lead_id']; ?>); return false;" title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a--> 
+					<?php //} ?>
 				</td>
 				<td>		
 				<a href="<?php echo $view_lead_url;?>" target="_blank"><?php echo $filter_result['invoice_no']; ?></a> 

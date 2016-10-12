@@ -38,6 +38,8 @@ class Reseller extends crm_controller {
 		}
 		$this->reseller_role_id = 14; /**Role Id of Reseller**/
 		$this->contract_status = array(0=>'Not started',1=>'Active',2=>'Closed');/**Contract Status of Reseller**/
+		$this->lead_status = array(4=>'Closed');/**Lead Status**/
+		$this->pjt_status  = array(0=>'Not Started',1=>'Project In Progress',2=>'Project Completed',3=>'Project Onhold',4=>'Project Inactive');/**Project Status**/
 	}
 	
 	/*
@@ -65,6 +67,7 @@ class Reseller extends crm_controller {
 		{
 			redirect('reseller');
 		}
+		
 		$data['page_heading'] 	= "View Reseller";
 		$data['reseller_det'] 	= array();
 		$data['reseller_det'] 	= $this->reseller_model->get_reseller($id);
@@ -74,10 +77,64 @@ class Reseller extends crm_controller {
 				$data['currency_arr'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
 			}
 		}
-		$data['users'] 			= $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
-		$data['contract_data'] 	= $this->reseller_model->get_contracts_details($id);
-		$data['commission_data'] = $this->reseller_model->get_commission_details($id);
+		$data['users'] 				= $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
+		$data['contract_data'] 		= $this->reseller_model->get_contracts_details($id);
+		$data['commission_data'] 	= $this->reseller_model->get_commission_details($id);
+		//get the current financial year
+		$curFiscalYear 				= getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		//get the closed job ids
+		$closed_sale_data 			= $this->reseller_model->getClosedJobids($id);
+		
+		$data['sales']				= $this->calcClosedJobs($closed_sale_data, $curFiscalYear);
+		$data['curFiscalYear']		= $curFiscalYear;
+		// echo "<pre>"; print_r($data['sales']); echo "</pre>";
+		
 		$this->load->view('reseller/reseller_view', $data);
+    }
+	
+	function calcClosedJobs($closed_sale_data, $curFiscalYear)
+	{
+		$bk_rates = get_book_keeping_rates(); //get all the book keeping rates
+		$rates = array();
+		$sales = array();
+		$i = 0;
+		if(is_array($closed_sale_data) && !empty($closed_sale_data) && count($closed_sale_data)>0) {
+			foreach ($closed_sale_data as $closed_row) {
+				$result						  = array();
+				$result						  = $this->reseller_model->getLeadClosedDate($closed_row['lead_id'], $curFiscalYear);
+				if(!empty($result) && count($result)>0) {
+					$sales[$i]['lead_id'] 			 	= $closed_row['lead_id'];
+					$sales[$i]['project_name'] 		 	= $closed_row['lead_title'];
+					$sales[$i]['lead_status'] 		 	= $closed_row['lead_status'];
+					$sales[$i]['pjt_status'] 		 	= $closed_row['pjt_status'];
+					$sales[$i]['expect_worth_id'] 	 	= $closed_row['expect_worth_id'];
+					$sales[$i]['actual_worth_amount'] 	= $closed_row['actual_worth_amount'];
+					$sales[$i]['converted_amount'] 		= converCurrency($closed_row['actual_worth_amount'], $bk_rates[$curFiscalYear][$closed_row['expect_worth_id']][$this->default_cur_id]);
+					$sales[$i]['company_name'] 		 	= $closed_row['company_name'];
+					$sales[$i]['customer_contact_name'] = $closed_row['customer_contact_name'];
+					$sales[$i]['sale_date']  			= $result['dateofchange'];
+					$sales[$i]['sale_by']  				= $result['sale_by'];
+				}
+				$i++;
+			}
+		}
+		return $sales;
+	}
+	
+	/*
+	 * Get Reseller Sale History By Ajax
+	 * @access public
+	 * @param reseller user id, financial year
+	 */
+	public function getSaleHistory()
+	{
+		// echo "<pre>"; print_r($this->input->post()); exit;
+		$data				  	= array();
+		$closed_sale_data 		= $this->reseller_model->getClosedJobids($this->input->post('reseller_id'));
+		$data['sales']			= $this->calcClosedJobs($closed_sale_data, $this->input->post('financial_year'));
+		$data['curFiscalYear']	= $this->input->post('financial_year');
+		$result 			  	= $this->load->view("reseller/sale_history_grid", $data, true);
+		echo $result; exit;
     }
 	
 	/*
