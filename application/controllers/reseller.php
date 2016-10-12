@@ -195,6 +195,52 @@ class Reseller extends crm_controller {
 			$contract_log['action_by']  	= $this->userdata['userid'];
 			$contract_log['action']  		= 0; //For Added
 			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$contract_manager_name = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->input->post('contract_manager')));
+			$log_name = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			$contract_status_id = $this->input->post('contract_status');
+			
+			$log_detail = "Contract Added by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
+			$log_detail .= "\nContract Manager: ".$contract_manager_name['first_name']." ".$contract_manager_name['last_name'];
+			$log_detail .= "\nContract Title: ".$this->input->post('contract_title');
+			$log_detail .= "\nContract Start date: ".$this->input->post('contract_start_date');
+			$log_detail .= "\nContract End date: ".$this->input->post('contract_end_date');
+			$log_detail .= "\nRenewal Reminder date: ".$this->input->post('renewal_reminder_date');
+			$log_detail .= "\nDescription: ".$this->input->post('description');
+			$log_detail .= "\nContract Signed Date: ".$this->input->post('contract_signed_date');
+			$log_detail .= "\nContract Status: ".$this->contract_status[$contract_status_id];
+			$log_detail .= "\nCurrency: ".$all_cur[$ins_val['currency']];
+			$log_detail .= "\nTax: ".$this->input->post('tax');
+			
+			$file_details = '';
+			$file_arr = array();
+			$log_upload['upload_data'] = $this->reseller_model->getUploadsFile($insert_contract);
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nContract Documents: ".rtrim($file_details,",");
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
 			echo "success";
 		} else {
 			echo "error";
@@ -271,6 +317,49 @@ class Reseller extends crm_controller {
 			$contract_log['action']  		= 1;
 			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
 			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$contract_manager_names = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->input->post('contract_manager')));
+			$log_names = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			
+			$log_detail = "Contract Updated by: ".$log_names['first_name']." ".$log_names['last_name']."\n";
+			$log_detail .= "\nContract Manager: ".$contract_manager_names['first_name']." ".$contract_manager_names['last_name'];
+			$log_detail .= "\nContract Title: ".$this->input->post('contract_title');
+			$log_detail .= "\nContract Start date: ".$this->input->post('contract_start_date');
+			$log_detail .= "\nContract End date: ".$this->input->post('contract_end_date');
+			$log_detail .= "\nRenewal Reminder date: ".$this->input->post('renewal_reminder_date');
+			$log_detail .= "\nDescription: ".$this->input->post('description');
+			$log_detail .= "\nContract Signed Date: ".$this->input->post('contract_signed_date');
+			$log_detail .= "\nContract Status: ".$this->contract_status[$this->input->post('contract_status')];
+			$log_detail .= "\nCurrency: ".$all_cur[$this->input->post('currency')];
+			$log_detail .= "\nTax: ".sprintf('%0.2f', $this->input->post('tax'));
+			$file_details = '';
+			$file_arr = array();
+			$log_upload['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nContract Documents: ".rtrim($file_details,",");
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
 			echo "success";
 		} else {
 			echo "error";
@@ -290,6 +379,8 @@ class Reseller extends crm_controller {
 		$wh_condn		= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
 		$contract_log 	= $this->reseller_model->get_data_by_id('contracts', $wh_condn);
 		
+		$log_upload['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
+		
 		$data 		= array();
 		$wh_condn 	= array('id'=>$this->input->post('contract_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
 		$is_deleted = $this->reseller_model->delete_records('contracts', $wh_condn);
@@ -301,6 +392,53 @@ class Reseller extends crm_controller {
 			$contract_log['action_by']  	= $this->userdata['userid'];
 			$contract_log['action']  		= 2;
 			$log_res = $this->reseller_model->insert_row_return_id("contracts_logs", $contract_log);
+			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$contract_manager_name = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$contract_log['contract_manager']));
+			$log_name = $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			$contract_status_id = $this->input->post('contract_status');
+			
+			$log_detail = "Contract Deleted by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
+			$log_detail .= "\nContract Manager: ".$contract_manager_name['first_name']." ".$contract_manager_name['last_name'];
+			$log_detail .= "\nContract Title: ".$contract_log['contract_title'];
+			$log_detail .= "\nContract Start date: ".date('d-m-Y', strtotime($contract_log['contract_start_date']));
+			$log_detail .= "\nContract End date: ".date('d-m-Y', strtotime($contract_log['contract_end_date']));
+			$log_detail .= "\nRenewal Reminder date: ".date('d-m-Y', strtotime($contract_log['renewal_reminder_date']));
+			$log_detail .= "\nDescription: ".$contract_log['description'];
+			$log_detail .= "\nContract Signed Date: ".date('d-m-Y', strtotime($contract_log['contract_signed_date']));
+			$log_detail .= "\nContract Status: ".$this->contract_status[$contract_log['contract_status']];
+			$log_detail .= "\nCurrency: ".$all_cur[$contract_log['currency']];
+			$log_detail .= "\nTax: ".$contract_log['tax'];
+			
+			$file_details = '';
+			$file_arr = array();
+
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nContract Documents: ".rtrim($file_details,",");
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_user_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			// echo "<pre>"; print_r($log); die;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
 			$data['res'] = 'success';
 		} else {
 			$data['res'] = 'failure';
@@ -613,6 +751,50 @@ class Reseller extends crm_controller {
 			$commission_log['commission_id'] = $insert_commission;
 			$commission_log['action']  		 = 0; //For Added
 			$log_res = $this->reseller_model->insert_row_return_id("commission_history_log", $commission_log);
+			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$project_name 	= $this->reseller_model->get_data_by_id('leads', $wh_condn=array('lead_id'=>$this->input->post('job_id')));
+			$log_name 		= $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			
+			$log_detail = "Commission Added by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
+			$log_detail .= "\nProject Name: ".$project_name['lead_title'];
+			$log_detail .= "\nCommission Title: ".$this->input->post('commission_title');
+			$log_detail .= "\nPayment Advice date: ".$this->input->post('payment_advice_date');
+			$log_detail .= "\nFor the Month & Year: ".$this->input->post('for_the_month_year');
+			$log_detail .= "\nMilestone Name: ".$this->input->post('commission_milestone_name');
+			$log_detail .= "\nCurrency: ".$all_cur[$this->input->post('commission_currency')];
+			$log_detail .= "\nValue: ".sprintf('%0.2f', $this->input->post('commission_value'));
+			$log_detail .= "\nRemarks: ".$this->input->post('remarks');
+			
+			$file_details = '';
+			$file_arr = array();
+			$log_upload['upload_data'] = $this->reseller_model->getCommissionUploadsFile($insert_commission);
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nAttachment Documents: ".rtrim($file_details,",");
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
 			echo "success";
 		} else {
 			echo "error";
@@ -746,6 +928,49 @@ class Reseller extends crm_controller {
 			$commission_log['action']  		 = 1;
 			$log_res = $this->reseller_model->insert_row_return_id("commission_history_log", $commission_log);
 			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$project_name 	= $this->reseller_model->get_data_by_id('leads', $wh_condn=array('lead_id'=>$this->input->post('job_id')));
+			$log_name 		= $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			
+			$log_detail = "Commission Added by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
+			$log_detail .= "\nProject Name: ".$project_name['lead_title'];
+			$log_detail .= "\nCommission Title: ".$this->input->post('commission_title');
+			$log_detail .= "\nPayment Advice date: ".$this->input->post('payment_advice_date');
+			$log_detail .= "\nFor the Month & Year: ".$this->input->post('for_the_month_year');
+			$log_detail .= "\nMilestone Name: ".$this->input->post('commission_milestone_name');
+			$log_detail .= "\nCurrency: ".$all_cur[$this->input->post('commission_currency')];
+			$log_detail .= "\nValue: ".$this->input->post('commission_value');
+			$log_detail .= "\nRemarks: ".$this->input->post('remarks');
+			
+			$file_details = '';
+			$file_arr = array();
+			$log_upload['upload_data'] = $this->reseller_model->getCommissionUploadsFile($this->input->post('commission_id'));
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nAttachment Documents: ".rtrim($file_details,",");
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
 			echo "success";
 		} else {
 			echo "error";
@@ -764,6 +989,7 @@ class Reseller extends crm_controller {
 		$commission_log	= array();
 		$wh_condn		= array('id'=>$this->input->post('commission_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
 		$commission_log = $this->reseller_model->get_data_by_id('commission_history', $wh_condn);
+		$log_upload['upload_data'] = $this->reseller_model->getCommissionUploadsFile($this->input->post('commission_id'));
 		
 		$data 		= array();
 		$wh_condn 	= array('id'=>$this->input->post('commission_id'), 'contracter_id'=>$this->input->post('contracter_user_id'));
@@ -774,6 +1000,49 @@ class Reseller extends crm_controller {
 			$commission_log['commission_id'] = $this->input->post('commission_id');
 			$commission_log['action']  		 = 2;
 			$log_res = $this->reseller_model->insert_row_return_id("commission_history_log", $commission_log);
+			
+			//do log in logs table
+			$currencies = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			$project_name 	= $this->reseller_model->get_data_by_id('leads', $wh_condn=array('lead_id'=>$commission_log['job_id']));
+			$log_name 		= $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			
+			$log_detail = "Commission Deleted by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
+			$log_detail .= "\nProject Name: ".$project_name['lead_title'];
+			$log_detail .= "\nCommission Title: ".$commission_log['commission_title'];
+			$log_detail .= "\nPayment Advice date: ".date('d-m-Y', strtotime($commission_log['payment_advice_date']));
+			$log_detail .= "\nFor the Month & Year: ".date('F Y', strtotime($commission_log['for_the_month_year']));
+			$log_detail .= "\nMilestone Name: ".$commission_log['commission_milestone_name'];
+			$log_detail .= "\nCurrency: ".$all_cur[$commission_log['commission_currency']];
+			$log_detail .= "\nValue: ".sprintf('%0.2f', $commission_log['commission_value']);
+			$log_detail .= "\nRemarks: ".$commission_log['remarks'];
+			
+			$file_details = '';
+			$file_arr = array();
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nAttachment Documents: ".rtrim($file_details,",");
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $this->input->post('contracter_user_id');
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
 			$data['res'] = 'success';
 		} else {
 			$data['res'] = 'failure';
