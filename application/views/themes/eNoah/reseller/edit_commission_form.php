@@ -97,7 +97,7 @@
 					<?php if(is_array($upload_data) && !empty($upload_data) && count($upload_data)>0) { ?>
 						<?php $serial_id = 1; ?>
 						<?php foreach($upload_data as $rec_file) { ?>
-							<div style="float: left; width: 100%;">
+							<div style="float: left; width: 100%; margin-top: 5px;">
 								<span style="float: left;">
 									<?php $file_id = base64_encode($rec_file['id']); ?>
 									<?php #$file_id = $rec_file['id']; ?>
@@ -290,7 +290,7 @@ function runCommissionAjaxFileUpload()
 						$.each(data.res_file, function(i, item) {
 							var res = item.split("~",3);
 							// alert(res[0]+res[1]);	
-							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
+							var name = '<div style="float: left; width: 100%; margin-top: 5px;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
 							$("#commissionUploadFile").append(name);
 						});
 						$.unblockUI();

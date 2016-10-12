@@ -306,7 +306,7 @@ function runContractAjaxFileUpload()
 						$.each(data.res_file, function(i, item) {
 							var res = item.split("~",3);
 							// alert(res[0]+res[1]);	
-							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
+							var name = '<div style="float: left; width: 100%; margin-top: 5px;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" serial_id="'+res[2]+'" class="del_file"> </a></div>';
 							$("#contractUploadFile").append(name);
 						});
 						$.unblockUI();
