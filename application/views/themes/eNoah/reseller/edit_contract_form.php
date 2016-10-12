@@ -200,10 +200,10 @@
 			changeMonth: true, 
 			changeYear: true, 
 			onSelect: function(date) {
-				if($('#contract_end_date').val!='')
+				/* if($('#contract_end_date').val!='')
 				{
 					$('#contract_end_date').val('');
-				}
+				} */				
 				var return_date = $('#contract_start_date').val();
 				$('#contract_end_date').datepicker("option", "minDate", return_date);
 			}
