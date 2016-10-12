@@ -48,7 +48,7 @@ class Reseller extends crm_controller {
 	 */
 	public function index()
 	{
-		$data['page_heading'] 	= "Reseller";
+		$data['page_heading'] 	= "Reseller Dashboard";
 		$data['reseller'] 		= array();
 		$data['reseller'] 		= $this->reseller_model->get_reseller();
 		$this->load->view('reseller/index', $data);
