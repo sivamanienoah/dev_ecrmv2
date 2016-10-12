@@ -651,6 +651,15 @@ class Welcome extends crm_controller {
 			$get_det  = $this->welcome_model->get_lead_det($insert_id);
 			$customer = $this->welcome_model->get_customer_det($get_det['custid_fk']);
 			
+			//insert logs
+			$ins_log = array();
+			$ins_log['log_content'] 	= "Lead Created For the ".$customer['company']." - ".$customer['customer_name']." On :" . " " . date('M j, Y g:i A');
+			$ins_log['log_content'] 	.= "\n Lead Title ".$get_det['lead_title'];
+			$ins_log['jobid_fk']    	= $insert_id;
+			$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+			$ins_log['userid_fk']   	= $this->userdata['userid'];
+			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
+			
 			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($get_det['lead_assign']);
 
 			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
@@ -932,14 +941,24 @@ class Welcome extends crm_controller {
 			$inse['log_content']  = "Lead Onhold Reason: "; 
 			$inse['log_content'] .= $data['reason'];
             $inse['jobid_fk']     = $data['jobid_edit'];
+			$inse['date_created'] = date('Y-m-d H:i:s');
             $inse['userid_fk']    = $this->userdata['userid'];
 			if($data['reason']   != '' && $data['reason'] != 'null')
 			$insert_log			  = $this->welcome_model->insert_row('logs', $inse);
 			/* end of onhold reason insert */
 		
 			/* for proposal adjust date insert */
+			$ins_ad1['log_content'] = 'Expected Worth Amount Modified On :' . ' ' . date('M j, Y g:i A');
+			$ins_ad1['jobid_fk']    = $data['jobid_edit'];
+			$ins_ad1['date_created'] = date('Y-m-d H:i:s');
+			$ins_ad1['userid_fk']   = $this->userdata['userid'];
+			if($data['expect_worth_amount'] != $data['hidden_expect_worth_amount']) {
+				$insert_log = $this->welcome_model->insert_row('logs', $ins_ad1);
+			}
+			//insert log for expect worth amount changes
 			$ins_ad['log_content'] = 'Actual Worth Amount Modified On :' . ' ' . date('M j, Y g:i A');
 			$ins_ad['jobid_fk']    = $data['jobid_edit'];
+			$ins_ad['date_created'] = date('Y-m-d H:i:s');
 			$ins_ad['userid_fk']   = $this->userdata['userid'];
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {
 				$insert_log = $this->welcome_model->insert_row('logs', $ins_ad);
@@ -1000,7 +1019,7 @@ class Welcome extends crm_controller {
 				
 				$updt_lead_stage_his = $this->welcome_model->update_row('lead_stage_history', $his, $lead_id);
 				
-				if(($data['lead_assign_edit_hidden'] ==  $data['lead_assign_edit'])) 
+				if(($data['lead_assign_edit_hidden'] == $data['lead_assign_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk']  = $lead_id;

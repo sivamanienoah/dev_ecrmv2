@@ -407,8 +407,12 @@ class Reseller extends crm_controller {
 
 			foreach ($log_data as $ld) 
 			{
+				$job_name 	 = '';
 				$log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $ld['log_content'])))), 'url', TRUE));
 				$job_name 	 = $ld['lead_title'];
+				if(empty($job_name)){
+					$job_name 	 = $ld['log_user'];
+				}
 				$fancy_date  = date('l, jS F y h:iA', strtotime($ld['date_created']));
 				$stick_class = ($ld['stickie'] == 1) ? ' stickie' : '';
 				
