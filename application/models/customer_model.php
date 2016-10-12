@@ -446,10 +446,14 @@ class Customer_model extends crm_model {
         }
     }
     
-    function insert_batch_customer($data) {
+    function insert_batch_customer($data, $data_log) {
 	
 	    if ( $this->db->insert_batch($this->cfg['dbpref'] . 'customers', $data) ) {
             $insert_id = $this->db->insert_id();
+			
+			//insert_log
+			$this->db->insert_batch($this->cfg['dbpref'] . 'logs', $data_log);
+			
             return $insert_id;
         } else {
             return false;
@@ -1475,6 +1479,10 @@ class Customer_model extends crm_model {
 		$customers = $this->db->get();
         // echo $this->db->last_query(); exit;
         return $customers->result_array();
+    }
+	
+	function insert_row($tbl, $ins) {
+		return $this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
     }
 }
 /* end of file */
