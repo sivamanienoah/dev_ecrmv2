@@ -56,7 +56,7 @@ require (theme_url().'/tpl/header.php');
 			</div>
 			<div id="rt-tab-1">
 				<div class="buttons" id="create_contract_btn">
-					<a href="javascript:void(0)" class="positive" onclick="getAddContractForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Create Contract</a>
+					<a href="javascript:void(0)" class="" onclick="getAddContractForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Create Contract</a>
 				</div>
 				<div class="clear"></div>
 				<div style="margin:7px 0 0;" id="succes_add_contract_data" class="succ_err_msg"></div>
