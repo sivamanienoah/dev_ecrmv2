@@ -158,7 +158,6 @@ class Customers extends crm_controller {
 		} 
 		else 
 		{
-			
 			// all good
             foreach($fields as $key => $val) 
 			{
@@ -253,9 +252,15 @@ class Customers extends crm_controller {
 				$update_data['created_by']  = $this->userdata['userid'];
 				$update_data['modified_by'] = $this->userdata['userid'];
 				$update_data['created_on']  = date('Y-m-d H:i:s');
-				if ($company_id	=	$this->customer_model->insert_company($update_data)) 
+				if ($company_id	= $this->customer_model->insert_company($update_data))
 				{	
-				
+					$ins_log = array();
+					$ins_log['log_content'] 	= "Company ".$update_data['company']." Created On :".date('M j, Y g:i A');
+					$ins_log['jobid_fk']    	= 0;
+					$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+					$ins_log['userid_fk']   	= $this->userdata['userid'];
+					$insert_log = $this->customer_model->insert_row('logs', $ins_log);
+					
 					//Entry to customer table
 					if (isset($pst_data['customer_name']))
 					{
@@ -265,6 +270,7 @@ class Customers extends crm_controller {
 						$phone_no	=	$pst_data['phone_no'];
 						$email		=	$pst_data['email'];
 						$batch_insert_data = array();
+						$batch_insert_data_log = array();
 						for($i=0;$i<count($customer_name);$i++)
 						{
 							$cust_data					= array();
@@ -278,9 +284,15 @@ class Customers extends crm_controller {
 							$cust_data['created_by'] 	= $this->userdata['userid'];
 							$cust_data['created_on'] 	= date('Y-m-d H:i:s');
 							
+							$ins_log['log_content'] 	= $customer_name[$i]." Contact Created for the company ".$update_data['company']." On :" . " " . date('M j, Y g:i A');
+							$ins_log['jobid_fk']    	= 0;
+							$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+							$ins_log['userid_fk']   	= $this->userdata['userid'];
+							
 							$batch_insert_data[]		=	$cust_data;
+							$batch_insert_data_log[]	=	$ins_log;
 						}
-						$this->customer_model->insert_batch_customer($batch_insert_data);
+						$this->customer_model->insert_batch_customer($batch_insert_data, $batch_insert_data_log);
 					}
 					
 					$user_name = $this->userdata['name'];
