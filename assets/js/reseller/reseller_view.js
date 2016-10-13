@@ -4,8 +4,21 @@
 */
 
 // 'accesspage' is global variable 
-	
+
 $(document).ready(function() {
+	/*Chosen Select box*/
+	var config = {
+		'.chzn-select'           : {},
+		'.chzn-select-deselect'  : {allow_single_deselect:true},
+		'.chzn-select-no-single' : {disable_search_threshold:10},
+		'.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+		'.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+	/*Chosen Select box*/
+	
 	$( "#reseller_tabs" ).tabs({
 		beforeActivate: function( event, ui ) {
 			if (ui.newPanel[0].id=='rt-tab-1')
@@ -14,8 +27,6 @@ $(document).ready(function() {
 			if (ui.newPanel[0].id=='rt-tab-2') {
 				reset_add_form();
 				reset_commission_form();
-			}
-			if (ui.newPanel[0].id=='rt-tab-3') {
 			}
 			if (ui.newPanel[0].id=='rt-tab-4') {
 				getAllJobs(reseller_id, '1');				
@@ -417,4 +428,65 @@ $( "#sale_history" ).submit(function( event ) {
   event.preventDefault();
 });
 //**sale history**//
+
+/**Add Log**/
+function addLog() 
+{
+	var the_log = $('#job_log').val();
+		
+	if ($.trim(the_log) == '') {
+		alert('Please enter your post!');
+		return false;
+	}
+
+	var email_set = '';
+	$('.email-list input[type="hidden"]').each(function(){
+		email_set += $(this).attr('value') + ':';
+	});
+
+	var form_data 			   = {'reseller_id':reseller_id, 'log_content':the_log, 'emailto':email_set}
+	form_data[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: site_base_url+'reseller/addLog/',
+		data: form_data,
+		cache: false,
+		beforeSend:function() {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success: function(data) {
+			// console.info(data);
+			$.unblockUI();
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('#job_log').val('');
+				$('#user_mail').val('').trigger('liszt:updated');
+			}
+		}                                                                                   
+	});
+}
+
+function resellerDataTable()
+{
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": true,
+		"bAutoWidth": false,
+		"bDestroy": true
+	});
+}
 /////////////////
