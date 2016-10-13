@@ -65,6 +65,10 @@ btnActions.prototype.doAction = function() {
 						}
 
 						});
+							if ( $( "#search-job-task" ).length  ||  $('#dashboard').val()==1 ) 
+				{
+					resetpage();
+				}
 			 }		
 	});
 };
