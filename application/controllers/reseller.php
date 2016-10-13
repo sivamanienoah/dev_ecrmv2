@@ -48,6 +48,10 @@ class Reseller extends crm_controller {
 	 */
 	public function index()
 	{
+		if($this->userdata['role_id'] == $this->reseller_role_id) {
+			redirect('reseller/view_reseller/update/'.$this->userdata['userid']);
+			exit;
+		}
 		$data['page_heading'] 	= "Reseller Dashboard";
 		$data['reseller'] 		= array();
 		$data['reseller'] 		= $this->reseller_model->get_reseller();
@@ -68,7 +72,7 @@ class Reseller extends crm_controller {
 			redirect('reseller');
 		}
 		
-		$data['page_heading'] 	= "View Reseller";
+		$data['page_heading'] 	= "View Reseller Details";
 		$data['reseller_det'] 	= array();
 		$data['reseller_det'] 	= $this->reseller_model->get_reseller($id);
 		$data['currencies'] 	= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
