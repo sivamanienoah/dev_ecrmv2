@@ -62,12 +62,13 @@ function getAddContractForm(reseller_id)
 *Edit the contract Details
 *@params contract_id, contracter_user_id
 */
-function editContractData(contract_id, contracter_user_id)
+function editContractData(contract_id, contracter_user_id, load_type)
 {
 	var params 						= {};
 	params[csrf_token_name] 		= csrf_hash_token;
 	params['contract_id'] 			= contract_id;
 	params['contracter_user_id'] 	= contracter_user_id;
+	params['load_type'] 			= load_type;
 	
 	$.ajax({
 		type:'POST',
@@ -302,12 +303,13 @@ function getAddCommissionForm(reseller_id)
 *Edit the Commission Details
 *@params commission_id, contracter_user_id
 */
-function editCommissionData(commission_id, contracter_user_id)
+function editCommissionData(commission_id, contracter_user_id, load_type)
 {
 	var params 						= {};
 	params[csrf_token_name] 		= csrf_hash_token;
 	params['commission_id'] 		= commission_id;
 	params['contracter_user_id'] 	= contracter_user_id;
+	params['load_type'] 			= load_type;
 	
 	$.ajax({
 		type:'POST',
