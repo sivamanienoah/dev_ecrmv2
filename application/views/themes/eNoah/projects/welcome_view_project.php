@@ -1286,7 +1286,7 @@
 	
 	<div id="jv-tab-4">
 		<form id="set-job-task" onsubmit="return false;">
-		
+			<div style="position:relative;">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			<h3>Tasks</h3>
 			<table border="0" cellpadding="0" cellspacing="0" class="task-add  toggler">
@@ -1380,6 +1380,7 @@
 			<div class="existing-task-list">
 				<br /><br />
 				<h4>Existing Tasks</h4>
+			</div>
 			</div>
 		</form>
 		
