@@ -3,6 +3,7 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 // echo "<pre>"; print_r($reseller_det); echo "</pre>";
 ?>
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <div id="content">
 	<div class="inner">	
 	<h2><?php echo $page_heading; ?></h2>
@@ -52,6 +53,7 @@ require (theme_url().'/tpl/header.php');
 					<li><a href="<?php echo current_url() ?>#rt-tab-5">Projects</a></li>
 					<li><a href="<?php echo current_url() ?>#rt-tab-6">Contacts</a></li>
 					<li><a href="<?php echo current_url() ?>#rt-tab-7">Audit History</a></li>
+					<li><a href="<?php echo current_url() ?>#rt-tab-8">Send Email</a></li>
 				</ul>
 			</div>
 			<div id="rt-tab-1">
@@ -119,6 +121,9 @@ require (theme_url().'/tpl/header.php');
 			</div><!--rt-tab-4 - End -->
 			
 			<div id="rt-tab-5">
+				<div class="page-title-head">
+					<h2 class="pull-left borderBtm">Projects</h2>
+				</div>
 				<div id="reseller_project_data"></div>
 			</div><!--rt-tab-5 - End -->
 			
@@ -130,6 +135,46 @@ require (theme_url().'/tpl/header.php');
 				<div id="audit_history_data"></div>
 			</div><!--rt-tab-7 - End -->
 			
+			<div id="rt-tab-8">
+				<div id="send_email_data">
+					<form id="comm-log-form">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<div class="email-list">
+						<label>Email To:</label>
+						<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
+						<?php
+							if( is_array($users) && !empty($users) && count($users)>0) {
+								foreach($users as $ua) {
+								?>
+								<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'].' '.$ua['last_name']; ?></option>
+								<?php
+								}
+							}
+						?>
+						</select>
+						</div>
+						<div class="clear"></div>
+						<div class="email-list">
+						<label class="normal">Message:</label>
+						<textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea>
+						</div>
+						<div class="clear"></div>
+						<div style="position:relative; width:560px;">
+						<label class="normal">Signature:</label>
+						<textarea name="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;"><?php echo $this->userdata['signature'] ?></textarea>
+						</div>
+						<div class="clear"></div>
+						<div style="overflow:hidden;">
+							<div class="button-container">
+								<div class="buttons">
+									<button type="submit" class="positive" onclick="addLog(); return false;" id="add-log-submit-button">Add Post</button>
+								</div>
+							</div>				
+						</div>
+					</form>
+				</div>
+			</div><!--rt-tab-8 - End -->
+			
 		</div><!--reseller_tabs-end-->
 	<?php } else { 
 		echo "You have no rights to access this page";
@@ -139,9 +184,11 @@ require (theme_url().'/tpl/header.php');
 </div><!--/Content div -->
 <script>
 var reseller_id = '<?php echo $reseller_det[0]['userid']; ?>';
+var project_request_url = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
 </script>
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/reseller/reseller_view.js"></script>
 <?php

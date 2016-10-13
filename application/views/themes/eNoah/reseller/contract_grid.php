@@ -1,4 +1,4 @@
-<table class="data-table" cellspacing="0" cellpadding="0" border="0">
+<table class="dashboard-heads dataTable data-tbl" cellspacing="0" cellpadding="0" border="0" width="100%">
 	<thead>
 		<tr align="left">
 			<th class="header">Contract Title</th>
@@ -46,8 +46,11 @@
 					</td>
 				</tr>
 			<?php } ?>
-		<?php } else { ?>
-			<tr><td colspan='10'> No Records Available. </td></tr>
 		<?php } ?>
 	</tbody>
 </table>
+<script type="text/javascript">
+$(function() {
+	resellerDataTable();
+});
+</script>

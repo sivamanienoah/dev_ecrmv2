@@ -3,7 +3,7 @@
 </style>
 <?php $attributes = array('id'=>'add_commission', 'name'=>'add_commission'); ?>
 <?php echo form_open_multipart("reseller/addResellerCommission", $attributes); ?>
-<?php #echo "<pre>"; print_r($contracts_det['currency']); echo "</pre>"; ?>
+<?php echo "<pre>"; print_r($contracts_det); echo "</pre>"; ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 	<input type="hidden" name="contracter_id" id="contracter_id" value="<?php echo $reseller_det[0]['userid']; ?>" readonly />
 	<table class="payment-table" style="margin: 10px 0px;">

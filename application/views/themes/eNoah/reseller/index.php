@@ -83,7 +83,9 @@ require (theme_url().'/tpl/header.php');
 		</tbody>
 	</table>
 	<div class="clearfix"></div>
-	<div id="drilldown_data" class="" style="margin:20px 0;display:none;"></div>
+	<div id="heading_container" style="margin:20px 0;"></div>
+	<div id="drilldown_data" class="" style="margin:5px 0;display:none;"></div>
+
 	<?php } else { 
 		echo "You have no rights to access this page"; 
 	} 
@@ -105,6 +107,7 @@ function getActiveProjects(userid)
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		},
 		success: function(data) {
+			$('#heading_container').html('<div class="page-title-head"><h2 class="pull-left borderBtm">Active Projects</h2></div>');
 			$('#drilldown_data').html(data);
 			$('#drilldown_data').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
@@ -125,10 +128,29 @@ function getActiveLeads(userid)
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		},
 		success: function(data) {
+			$('#heading_container').html('<div class="page-title-head"><h2 class="pull-left borderBtm">Active Leads</h2></div>');
 			$('#drilldown_data').html(data);
 			$('#drilldown_data').show();
 			$('html, body').animate({ scrollTop: $("#drilldown_data").offset().top }, 1000);
 		}                                                                                   
+	});
+}
+
+function resellerDataTable()
+{
+	$('.data-tbl').dataTable({
+		"aaSorting": [[ 0, "asc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": true,
+		"bAutoWidth": false,
+		"bDestroy": true
 	});
 }
 </script>

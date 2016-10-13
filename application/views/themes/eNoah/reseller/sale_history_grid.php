@@ -1,7 +1,4 @@
-<div class="page-title-head">
-	<h2 class="pull-left borderBtm">Sales History</h2>
-</div>
-<table class="data-table" cellspacing="0" cellpadding="0" border="0">
+<table class="dashboard-heads dataTable data-tbl" cellspacing="0" cellpadding="0" border="0" width="100%">
 	<thead>
 		<tr align="left">
 			<th class="header">Customer & Contact Name</th>
@@ -49,8 +46,11 @@
 					</td>
 				</tr>
 			<?php } ?>
-		<?php } else { ?>
-			<tr><td colspan='10'> No Records Available. </td></tr>
 		<?php } ?>
 	</tbody>
 </table>
+<script type="text/javascript">
+$(function() {
+	resellerDataTable();
+});
+</script>

@@ -2,10 +2,7 @@
 $cfg 		= $this->config->item('crm');
 $userdata 	= $this->session->userdata('logged_in_user'); 
 ?>
-<div class="page-title-head">
-	<h2 class="pull-left borderBtm">LEADS</h2>
-</div>
-<div id="ad_filter" class="custom_dashboardfilter" style="overflow-x:scroll; width:100%;" >
+<div id="ad_filter" class="" style="overflow-x:scroll; width:100%;" >
 <table border="0" cellpadding="0" cellspacing="0" style="width:1650px !important;" class="data-tbl dashboard-heads dataTable">
 <thead>
 	<tr>
@@ -115,5 +112,8 @@ $userdata 	= $this->session->userdata('logged_in_user');
 </tbody>
 </table>
 </div>
-<script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>
+<script type="text/javascript">
+$(function() {
+	resellerDataTable();
+});
+</script>

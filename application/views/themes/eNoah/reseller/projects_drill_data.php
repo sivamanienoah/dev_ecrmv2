@@ -8,19 +8,6 @@ if(!empty($project_type) && count($project_type)>0){
 }
 ?>
 <?php #echo "<pre>"; print_r($projects_data); echo "</pre>"; ?>
-<div class="page-title-head">
-	<h2 class="pull-left borderBtm">Projects</h2>
-	<!--div class="section-right">
-		<div class="buttons export-to-excel">
-			<button type="button" id='service_dashboard_export_excel' class="positive excel" onclick="location.href='#'">
-			Export to Excel
-			</button>
-			<input type="hidden" name="practices" id="practices" value="<?php #echo $practices_id; ?>">
-			<input type="hidden" name="excelexporttype" id="excelexporttype" value="<?php #echo $excelexporttype; ?>">
-		</div>
-	</div-->
-</div>
-
 <div class="customize-sec">
 <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" id="pjts-data-tbl" width="100%">
 	<thead>
@@ -85,20 +72,6 @@ $(function() {
 });	
 	
 function dtPjtTable() {
-	/* $('#pjts-data-tbl').dataTable({
-		"iDisplayLength": 10,
-		"sPaginationType": "full_numbers",
-		"bInfo": true,
-		"bPaginate": true,
-		"bProcessing": true,
-		"bServerSide": false,
-		"bLengthChange": true,
-		"bSort": true,
-		"bFilter": false,
-		"bAutoWidth": false,
-		"bDestroy": true
-	}); */
-	
 	$('#pjts-data-tbl').dataTable( {
 		"aaSorting": [[ 0, "desc" ]],
 		"iDisplayLength": 10,
@@ -127,4 +100,3 @@ function dtPjtTable() {
 	});
 }
 </script>
-
