@@ -70,7 +70,6 @@ $(function() {
 		return false;
 	});
 });	
-	
 function dtPjtTable() {
 	$('#pjts-data-tbl').dataTable( {
 		"aaSorting": [[ 0, "desc" ]],
@@ -80,7 +79,7 @@ function dtPjtTable() {
 		"bPaginate": true,
 		"bProcessing": true,
 		"bServerSide": false,
-		"bLengthChange": false,
+		"bLengthChange": true,
 		"bSort": true,
 		"bAutoWidth": false,
 		"bDestroy": true,

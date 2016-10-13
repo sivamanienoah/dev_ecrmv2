@@ -117,10 +117,32 @@ require (theme_url().'/tpl/header.php');
 			</div><!--rt-tab-3 - End -->
 			
 			<div id="rt-tab-4">
+				<div id='lead_filter' style="margin-top: 10px; position: relative;">
+					<?php $attributes = array('id'=>'lead_filter_form', 'name'=>'lead_filter_form'); ?>
+					<?php echo form_open_multipart("reseller/getResellerLeads", $attributes); ?>
+						<table>
+							<tr>
+								<td><input type="radio" name="filter_leads" value="active" checked="checked" /></td><td>Open Leads</td>
+								<td><input type="radio" name="filter_leads" value="all"></td><td>All Leads</td>
+							</tr>
+						</table>
+					<?php form_close(); ?>
+				</div>
 				<div id="reseller_lead_data"></div>
 			</div><!--rt-tab-4 - End -->
 			
 			<div id="rt-tab-5">
+				<div id='sale_filter' style="margin-top: 10px; position: relative;">
+					<?php $attributes = array('id'=>'reseller_project_form', 'name'=>'reseller_project_form'); ?>
+					<?php echo form_open_multipart("reseller/getResellerJobs", $attributes); ?>
+						<table>
+							<tr>
+								<td><input type="radio" name="filter_projects" value="active" checked="checked" /></td><td>Active</td>
+								<td><input type="radio" name="filter_projects" value="all"></td><td>All</td>
+							</tr>
+						</table>
+					<?php form_close(); ?>
+				</div>
 				<div id="reseller_project_data"></div>
 			</div><!--rt-tab-5 - End -->
 			

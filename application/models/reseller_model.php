@@ -34,9 +34,9 @@ class Reseller_model extends crm_model
 		if($id) {
 			$this->db->where('a.userid', $id);
 		}
-		/* if($this->userdata['role_id'] != 1) {
-			$this->db->where('a.contract_manager', $this->userdata['userid']);
-		} */
+		if($this->userdata['role_id'] == $this->reseller_role_id) {
+			$this->db->where('a.userid', $this->userdata['userid']);
+		}
 		$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
 		$this->db->order_by("a.first_name", "asc");
 		$query = $this->db->get();
@@ -191,7 +191,7 @@ class Reseller_model extends crm_model
 	*@Get the Currency details
 	*@Method getAllLeads
 	*/
-	public function getResellerLeads($userid) 
+	public function getResellerLeads($userid, $filter_type) 
 	{
 		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
 		c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
@@ -199,7 +199,13 @@ class Reseller_model extends crm_model
 		$this->db->from($this->cfg['dbpref']. 'leads as j');
 		$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 		$this->db->where('j.pjt_status', 0);
-		$this->db->where_in('j.lead_status', array(1,2,3,4));
+		if($filter_type=='all'){
+			$this->db->where_in('j.lead_status', array(1,2,3,4));
+		} else if ($filter_type=='active') {
+			$this->db->where_in('j.lead_status', array(1));
+		} else {
+			$this->db->where_in('j.lead_status', array(1));
+		}
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 		$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
 		$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
