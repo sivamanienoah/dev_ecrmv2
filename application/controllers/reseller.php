@@ -456,7 +456,7 @@ class Reseller extends crm_controller {
 	{
 		$this->load->library('../controllers/projects/dashboard');
 	
-		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
+		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division, l.actual_date_start, l.actual_date_due');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
@@ -473,6 +473,11 @@ class Reseller extends crm_controller {
 		$this->db->from($this->cfg['dbpref']. 'project_billing_type');
 		$ptquery = $this->db->get();
 		$data['project_type'] = $ptquery->result();
+		
+		$this->db->select('id, practices');
+		$this->db->from($this->cfg['dbpref']. 'practices');
+		$prtquery = $this->db->get();
+		$data['practices'] = $prtquery->result();
 		// echo "<pre>"; print_r($data['projects_data']); exit;
 		$this->load->view('reseller/projects_drill_data', $data);
 	}
@@ -500,10 +505,33 @@ class Reseller extends crm_controller {
 			$res = $this->load->view('reseller/leads_drill_data', $data, true);
 		} else if($this->input->post('type') == 2) {
 			
-			$this->load->library('../controllers/projects/dashboard');
+			// $this->load->library('../controllers/projects/dashboard');
 			
-			$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
+			$data = array();
+			
+			//project billing type
+			$this->db->select('project_billing_type, id');
+			$this->db->from($this->cfg['dbpref']. 'project_billing_type');
+			$ptquery = $this->db->get();
+			$data['project_type'] = $ptquery->result();
+			
+			// for practices
+			$this->db->select('id, practices');
+			$this->db->from($this->cfg['dbpref']. 'practices');
+			$prtquery = $this->db->get();
+			$practices = $prtquery->result();
+			
+			$prt_arr = array();
+			if(!empty($practices) && count($practices)>0){
+				foreach($practices as $prtrec){
+					$prt_arr[$prtrec->id] = $prtrec->practices;
+				}
+			}
+			
+			$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division, l.actual_date_start, l.actual_date_due, c.customer_name AS customer_contact_name, cc.company AS company_name');
 			$this->db->from($this->cfg['dbpref']. 'leads as l');
+			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
+			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
 			$this->db->where("l.lead_id != ", 'null');
 			$this->db->where("l.pjt_id  != ", 'null');
 			$this->db->where("l.lead_status", 4);
@@ -514,12 +542,37 @@ class Reseller extends crm_controller {
 			// echo $this->db->last_query(); die;
 			$res = $query->result_array();
 			
-			$data['projects_data'] = $this->dashboard->getProjectsDataByDefaultCurrency($res, '', '');
-			$this->db->select('project_billing_type, id');
-			$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-			$ptquery = $this->db->get();
-			$data['project_type'] = $ptquery->result();
+			// $data['projects_data'] = $this->dashboard->getProjectsDataByDefaultCurrency($res, '', '');
 			
+			$bk_rates = get_book_keeping_rates(); //get all the book keeping rates
+			$sales = array();
+			$i = 0;
+			if(is_array($res) && !empty($res) && count($res)>0) {
+				foreach ($res as $prow) {
+					$result						  = array();
+					$result						  = $this->reseller_model->getLeadClosedDateYear($prow['lead_id']);
+					// echo "<pre>"; print_r($result); die;
+					if(!empty($result) && count($result)>0) {
+						$curFiscalYear 	= getFiscalYearForDate(date("m/d/y", strtotime($result['dateofchange'])),"4/1","3/31");
+						$curFiscalYear = isset($curFiscalYear) ? $curFiscalYear : getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+						$sales[$i]['lead_id'] 			 	= $prow['lead_id'];
+						$sales[$i]['project_name'] 		 	= $prow['lead_title'];
+						$sales[$i]['lead_status'] 		 	= $prow['lead_status'];
+						$sales[$i]['pjt_status'] 		 	= $prow['pjt_status'];
+						$sales[$i]['expect_worth_id'] 	 	= $prow['expect_worth_id'];
+						$sales[$i]['actual_worth_amount'] 	= $prow['actual_worth_amount'];
+						$sales[$i]['actual_date_start'] 	= (isset($prow['actual_date_start']) && !empty($prow['actual_date_start'])) ? date('d-m-Y', strtotime($prow['actual_date_start'])) : '-';
+						$sales[$i]['actual_date_due'] 		= (isset($prow['actual_date_due']) && !empty($prow['actual_date_due'])) ? date('d-m-Y', strtotime($prow['actual_date_due'])) : '-';
+						$sales[$i]['converted_amount'] 		= converCurrency($prow['actual_worth_amount'], $bk_rates[$curFiscalYear][$prow['expect_worth_id']][$this->default_cur_id]);
+						$sales[$i]['company_name'] 		 	= $prow['company_name'];
+						$sales[$i]['customer_contact_name'] = $prow['customer_contact_name'];					
+						$sales[$i]['practice'] 				= (isset($prow['practice']) && !empty($prow['practice'])) ? $prt_arr[$prow['practice']] : '';	
+					}
+					$i++;
+				}
+			}
+			$data['projects_data'] = $sales;
+		
 			$res = $this->load->view('reseller/projects_drill_data', $data, true);
 		}
 		echo $res; exit;
