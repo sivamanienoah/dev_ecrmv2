@@ -3163,8 +3163,8 @@ HDOC;
 					$arrEmails = $this->config->item('crm');
 					$arrSetEmails=$arrEmails['director_emails'];
 					$mangement_email = $arrEmails['management_emails'];
-					$mgmt_mail = implode(',',$mangement_email);
-					$admin_mail=implode(',',$arrSetEmails);
+					$mgmt_mail  = implode(',',$mangement_email);
+					$admin_mail = implode(',',$arrSetEmails);
 					
 					//email sent by email template
 					$param = array();
