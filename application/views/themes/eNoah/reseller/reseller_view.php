@@ -121,9 +121,6 @@ require (theme_url().'/tpl/header.php');
 			</div><!--rt-tab-4 - End -->
 			
 			<div id="rt-tab-5">
-				<div class="page-title-head">
-					<h2 class="pull-left borderBtm">Projects</h2>
-				</div>
 				<div id="reseller_project_data"></div>
 			</div><!--rt-tab-5 - End -->
 			
