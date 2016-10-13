@@ -267,7 +267,11 @@ class Reseller extends crm_controller {
 			$editdata['currencies']  = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 			$editdata['users'] 		 = $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
 			$editdata['upload_data'] = $this->reseller_model->getUploadsFile($this->input->post('contract_id'));
-			$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
+			if($this->input->post('load_type') == 'edit') {
+				$data['res'] = $this->load->view("reseller/edit_contract_form", $editdata, true);
+			} else if($this->input->post('load_type') == 'view') {
+				$data['res'] = $this->load->view("reseller/view_contract_form", $editdata, true);
+			}
 			$data['msg'] = 'success';
 		}
 		echo json_encode($data);
@@ -983,7 +987,12 @@ class Reseller extends crm_controller {
 			$editdata['currencies']  		= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 			$editdata['reseller_projects'] 	= $this->reseller_model->get_closed_jobs($this->input->post('contracter_user_id'));
 			$editdata['upload_data'] 		= $this->reseller_model->getCommissionUploadsFile($this->input->post('commission_id'));
-			$data['res'] = $this->load->view("reseller/edit_commission_form", $editdata, true);
+			if($this->input->post('load_type') == 'edit') {
+				$data['res'] = $this->load->view("reseller/edit_commission_form", $editdata, true);
+			} else if($this->input->post('load_type') == 'view') {
+				$data['res'] = $this->load->view("reseller/view_commission_form", $editdata, true);
+			}
+			
 			$data['msg'] = 'success';
 		}
 		echo json_encode($data);
