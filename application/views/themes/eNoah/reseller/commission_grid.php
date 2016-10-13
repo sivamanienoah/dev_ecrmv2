@@ -23,8 +23,14 @@
 					<td align="right"><?php echo $currency_arr[$cmsn_row['commission_currency']];?></td>
 					<td align="left"><?php echo $cmsn_row['commission_value']; ?></td>
 					<td align="left">
-						<a title="Edit" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
-						<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a title="Edit" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>, 'edit'); return false;"><img src="assets/img/edit.png" alt="edit"></a>
+						<?php } else { ?>
+							<a title="View" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>, 'view'); return false;"><img src="assets/img/view.png" alt="edit"></a>
+						<?php } ?>
+						<?php if($this->session->userdata('delete')==1) { ?>
+							<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+						<?php } ?>
 					</td>
 				</tr>
 			<?php } ?>

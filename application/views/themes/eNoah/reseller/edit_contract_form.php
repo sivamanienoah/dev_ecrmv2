@@ -140,7 +140,9 @@
 									<?php #$file_id = $rec_file['id']; ?>
 									<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
 								</span>
+								<?php if($this->session->userdata('delete')==1) { ?>
 								<a class="del_file" serial_id="<?php echo $serial_id; ?>" id="<?php echo $file_id; ?>"> </a>
+								<?php } ?>
 							</div>
 						<?php $serial_id++; ?>
 						<?php } ?>
@@ -153,7 +155,9 @@
 			<td colspan='2'>
 				<?php //if ($readonly_status == false) { ?>
 				<div class="buttons">
-					<button type="submit" class="positive">Update</button>
+					<?php if($this->session->userdata('edit')==1) { ?>
+						<button type="submit" class="positive">Update</button>
+					<?php } ?>
 					<button onclick="reset_add_form(); return false;" class="negative">Cancel</button>
 				</div>
 				<?php //} ?>

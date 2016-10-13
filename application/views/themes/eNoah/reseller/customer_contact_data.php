@@ -26,9 +26,9 @@
 				<td><?php echo $list['position_title']; ?></td>
 				<td><?php echo $list['skype_name'] ?></td>
 				<td>
-					<?php if($this->session->userdata('edit')==1) { ?>
+					<?php #if($this->session->userdata('edit')==1) { ?>
 						<a target="_blank" href="customers_contact/update_contacts/<?php echo $list['custid']; ?>" title='Edit'><img src="assets/img/edit.png" alt='edit' ></a>
-					<?php } ?>
+					<?php #} ?>
 					<?php if($this->session->userdata('delete')==1) { ?>
 						<!--a class="delete" href="javascript:void(0)" onclick="return checkStatus_contact(<?php #echo $list['custid']; ?>);" title='Delete'><img src="assets/img/trash.png" alt='delete' ></a-->
 					<?php } ?>

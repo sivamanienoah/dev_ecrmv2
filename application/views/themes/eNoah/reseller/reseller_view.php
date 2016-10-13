@@ -55,107 +55,33 @@ require (theme_url().'/tpl/header.php');
 				</ul>
 			</div>
 			<div id="rt-tab-1">
-				<div class="buttons" id="create_contract_btn">
-					<a href="javascript:void(0)" class="custom-blue-btn" onclick="getAddContractForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Add Contract</a>
-				</div>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons" id="create_contract_btn">
+						<a href="javascript:void(0)" class="custom-blue-btn" onclick="getAddContractForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Add Contract</a>
+					</div>
+				<?php } ?>
 				<div class="clear"></div>
 				<div style="margin:7px 0 0;" id="succes_add_contract_data" class="succ_err_msg"></div>
 				<div id="add_contract_form"></div><!---Add Contract Form----->
 				<div id="list_contract_det"><!---List Contract Details----->
-					<table class="data-table" cellspacing="0" cellpadding="0" border="0">
-						<thead>
-							<tr align="left">
-								<th class="header">Contract Title</th>
-								<th class="header">Contract Manager</th>
-								<th class="header">Contract Start Date</th>
-								<th class="header">Contract End Date</th>
-								<th class="header">Renewal Reminder Date</th>
-								<th class="header">Contract Signed Date</th>
-								<th class="header">Contract Status</th>
-								<th class="header">Currency</th>
-								<th class="header">Tax</th>
-								<th class="header">Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if(!empty($contract_data) && count($contract_data)>0) { ?>
-								<?php foreach($contract_data as $row) { ?>
-									<tr id="contr_<?php echo $row['id']; ?>">
-										<td align="left"><?php echo $row['contract_title']; ?></td>
-										<td align="left">
-											<?php
-												$cm_name = $row['first_name'];
-												if(isset($row['last_name']) && !empty($row['last_name'])){
-													$cm_name .= " ".$row['last_name'];
-												}
-												echo $cm_name;
-											?>
-										</td>
-										<td align="left"><?php echo ($row['contract_start_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['contract_start_date'])) : '';?></td>
-										<td align="left"><?php echo ($row['contract_end_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['contract_end_date'])) : '';?></td>
-										<td align="left"><?php echo ($row['renewal_reminder_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['renewal_reminder_date'])) : '';?></td>
-										<td align="left"><?php echo ($row['contract_signed_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['contract_signed_date'])) : '';?></td>
-										<td align="left"><?php echo $this->contract_status[$row['contract_status']]; ?></td>
-										<td align="right"><?php echo $currency_arr[$row['currency']];?></td>
-										<td align="right"><?php echo $row['tax']; ?></td>
-										<td align="left">
-											<a title="Edit" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
-											<a title="Delete" onclick="deleteContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
-										</td>
-									</tr>
-								<?php } ?>
-							<?php } else { ?>
-								<tr><td colspan='10'> No Records Available. </td></tr>
-							<?php } ?>
-						</tbody>
-					</table>
+					<?php echo $this->load->view('reseller/contract_grid', $contract_data); ?>
 				</div>
 			</div><!--rt-tab-1 - End -->
+			
 			<div id="rt-tab-2">
-				<div class="buttons" id="create_commission_btn">
-					<a href="javascript:void(0)" class="custom-blue-btn" onclick="getAddCommissionForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Add Commission</a>
-				</div>
+				<?php if($this->session->userdata('add')==1) { ?>
+					<div class="buttons" id="create_commission_btn">
+						<a href="javascript:void(0)" class="custom-blue-btn" onclick="getAddCommissionForm('<?php echo $reseller_det[0]['userid']; ?>'); return false;">Add Commission</a>
+					</div>
+				<?php } ?>
 				<div class="clear"></div>
 				<div style="margin:7px 0 0;" id="succes_add_commission_data" class="succ_err_msg"></div>
 				<div id="commission_form"></div><!---Add Contract Form----->
 				<div id="list_commission_det"><!---List Contract Details----->
-					<table class="data-table" cellspacing="0" cellpadding="0" border="0">
-						<thead>
-							<tr align="left">
-								<th class="header">Title</th>
-								<th class="header">Project Name</th>
-								<th class="header">Payment Advice Date</th>
-								<th class="header">Milestone Name</th>
-								<th class="header">For The Month Year</th>
-								<th class="header">Currency</th>
-								<th class="header">Value</th>
-								<th class="header">Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if(!empty($commission_data) && count($commission_data)>0) { ?>
-								<?php foreach($commission_data as $cmsn_row) { ?>
-									<tr id="csmn_<?php echo $cmsn_row['id']; ?>">
-										<td align="left"><?php echo $cmsn_row['commission_title']; ?></td>
-										<td align="left"><?php echo $cmsn_row['lead_title']; ?></td>
-										<td align="left"><?php echo ($cmsn_row['payment_advice_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($cmsn_row['payment_advice_date'])) : '';?></td>
-										<td align="left"><?php echo $cmsn_row['commission_milestone_name'];?></td>
-										<td align="left"><?php echo ($cmsn_row['for_the_month_year']!='0000-00-00 00:00:00') ? date('M Y', strtotime($cmsn_row['for_the_month_year'])) : '';?></td>
-										<td align="right"><?php echo $currency_arr[$cmsn_row['commission_currency']];?></td>
-										<td align="left"><?php echo $cmsn_row['commission_value']; ?></td>
-										<td align="left">
-											<a title="Edit" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
-											<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
-										</td>
-									</tr>
-								<?php } ?>
-							<?php } else { ?>
-								<tr><td colspan='8'> No Records Available. </td></tr>
-							<?php } ?>
-						</tbody>
-					</table>
+					<?php echo $this->load->view('reseller/commission_grid', $commission_data); ?>
 				</div>
 			</div><!--rt-tab-2 - End -->
+			
 			<div id="rt-tab-3">
 				<div id='sale_filter' style="margin-top: 10px; position: relative;">
 					<?php $attributes = array('id'=>'sale_history', 'name'=>'sale_history'); ?>
@@ -187,18 +113,23 @@ require (theme_url().'/tpl/header.php');
 					<?php echo $this->load->view('reseller/sale_history_grid', $sales); ?>
 				</div>
 			</div><!--rt-tab-3 - End -->
+			
 			<div id="rt-tab-4">
 				<div id="reseller_lead_data"></div>
 			</div><!--rt-tab-4 - End -->
+			
 			<div id="rt-tab-5">
 				<div id="reseller_project_data"></div>
 			</div><!--rt-tab-5 - End -->
+			
 			<div id="rt-tab-6">
 				<div id="reseller_contact_data"></div>
 			</div><!--rt-tab-6 - End -->
+			
 			<div id="rt-tab-7">
 				<div id="audit_history_data"></div>
 			</div><!--rt-tab-7 - End -->
+			
 		</div><!--reseller_tabs-end-->
 	<?php } else { 
 		echo "You have no rights to access this page";

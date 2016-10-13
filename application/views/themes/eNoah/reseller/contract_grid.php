@@ -35,8 +35,14 @@
 					<td align="right"><?php echo $currency_arr[$row['currency']];?></td>
 					<td align="right"><?php echo $row['tax']; ?></td>
 					<td align="left">
-						<a title="Edit" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/edit.png" alt="edit"></a>
-						<a title="Delete" onclick="deleteContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+						<?php if($this->session->userdata('edit')==1) { ?>
+							<a title="Edit" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>, 'edit'); return false;"><img src="assets/img/edit.png" alt="edit"></a>
+						<?php } else { ?>
+							<a title="View" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>, 'view'); return false;"><img src="assets/img/view.png" alt="edit"></a>
+						<?php } ?>
+						<?php if($this->session->userdata('delete')==1) { ?>
+							<a title="Delete" onclick="deleteContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+						<?php } ?>
 					</td>
 				</tr>
 			<?php } ?>
