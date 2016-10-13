@@ -1192,6 +1192,162 @@ class Reseller extends crm_controller {
 		echo json_encode($data);
 		exit;
 	}
+	
+		//adding log
+	function addLog()
+	{
+		$this->load->helper('text');
+		$this->load->helper('fix_text');
+		
+		$data_log = real_escape_array($this->input->post());
+		
+		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
+		$ins['log_content'] 	 = str_replace('\n', "", $data_log['log_content']);
+		
+		$break = 120;
+		$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+        if (isset($data_log['reseller_id']) && isset($data_log['log_content'])) {
+
+			$user_details = $this->reseller_model->get_data_by_id('users', $wh_condn = array('userid'=>$data_log['reseller_id']));
+			
+			//logged in user detail
+			$user_data = $this->reseller_model->get_data_by_id('users', $wh_condn = array('userid'=>$this->userdata['userid']));
+            
+            if (count($user_details) > 0)
+            {
+                $this->load->helper('url');
+				
+				$emails = trim($data_log['emailto'], ':');
+				
+				$successful = $received_by = '';
+				
+				if ($emails != '' || isset($data_log['email_to_customer']))
+				{
+					$emails = explode(':', $emails);
+					$mail_id = array();
+					foreach ($emails as $mail)
+					{
+						$mail_id[] = str_replace('email-log-', '', $mail);
+					}
+
+					$data['user_accounts'] = array();
+					$this->db->where_in('userid', $mail_id);
+					$users = $this->db->get($this->cfg['dbpref'] . 'users');
+					
+					if ($users->num_rows() > 0)
+					{
+						$data['user_accounts'] = $users->result_array();
+					}
+					foreach ($data['user_accounts'] as $ua)
+					{
+						# default email
+						$to_user_email = $ua['email'];
+
+						$send_to[] 		= array($to_user_email, $ua['first_name'] . ' ' . $ua['last_name'], '');
+						$received_by   .= $ua['first_name'] . ' ' . $ua['last_name'] . ', ';
+					}
+					// print_r($send_to); exit;
+					$successful = 'This log has been emailed to:<br />';
+					
+					$log_subject = "eSmart Notification - Reseller # {$user_details['first_name']} {$user_details['last_name']}";
+					
+					//email sent by email template
+					$param = array();
+
+					$print_fancydate = date('l, jS F y h:iA');
+
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$user_details['first_name'], 'last_name'=>$user_details['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
+					
+					foreach($send_to as $recps) 
+					{
+						$arrRecs[]=$recps[0];
+					}
+					$senders=implode(',',$arrRecs);
+					
+					$arrEmails    	= $this->config->item('crm');
+					$arrSetEmails 	= $arrEmails['director_emails'];
+					$admin_mail 	= implode(',', $arrSetEmails);
+
+					$param['to_mail'] 			= $senders;
+					$param['bcc_mail'] 			= $admin_mail;
+					$param['from_email'] 		= $user_data['email'];
+					$param['from_email_name'] 	= $user_data['first_name']." ".$user_data['last_name'];
+					$param['template_name'] 	= "Reseller Notification Message";
+					$param['subject'] 			= $log_subject;
+					
+					$json['debug_info'] = '';				
+					
+					if($this->email_template_model->sent_email($param))
+					{
+						$successful .= trim($received_by, ', ');
+					}
+					else
+					{
+						echo 'failure';
+					}
+					
+					if (isset($full_file_path) && is_file($full_file_path)) unlink ($full_file_path);
+					
+					if ($successful == 'This log has been emailed to:<br />')
+					{
+						$successful = '';
+					}
+					else
+					{
+						$successful = '<br /><br />' . $successful;
+					}
+				}
+			
+				$ins['jobid_fk'] = 0;
+				// use this to update the view status
+				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['reseller_id'];
+				$ins['date_created'] = date('Y-m-d H:i:s');
+				$ins['log_content'] = $ins['log_content'] . $successful;
+				
+				// inset the new log
+				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
+                
+                $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
+                
+				$fancy_date = date('l, jS F y h:iA', strtotime($ins['date_created']));
+				
+$table = <<<HDOC
+<tr id="log" class="log">
+<td id="log" class="log">
+<p class="data">
+        <span>{$fancy_date}</span>
+    {$user_data['first_name']} {$user_data['last_name']}
+    </p>
+    <p class="desc">
+        {$log_content}
+    </p>
+</td>
+</tr>
+HDOC;
+				
+                $json['error'] = FALSE;
+                $json['html'] = $table;
+				
+                echo json_encode($json);
+				exit;
+            }
+            else
+            {
+
+				$json['error'] = true;
+				$json['errormsg'] = 'Post insert failed';
+				echo json_encode($json);
+				exit;
+            }
+        }
+        else
+        {
+			$json['error'] = true;
+			$json['errormsg'] = 'Invalid data supplied';
+			echo json_encode($json);
+			exit;
+        }
+    }
 
 	
 	
