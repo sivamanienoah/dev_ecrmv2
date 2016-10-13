@@ -453,4 +453,17 @@ class Reseller_model extends crm_model
 	    $sql = $this->db->get();
 	    return $sql->row_array();
 	}
+	
+	function getLeadClosedDateYear($id)
+	{	
+	    $this->db->select('lead_id, dateofchange, modified_by, CONCAT(u.first_name," ",u.last_name) as sale_by', false);
+	    $this->db->from($this->cfg['dbpref'].'lead_status_history');
+		$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = modified_by');
+		$this->db->where("lead_id", $id);
+		$this->db->where("changed_status", 4);
+		$this->db->order_by('dateofchange', 'desc');
+		$this->db->limit(1);
+	    $sql = $this->db->get();
+	    return $sql->row_array();
+	}
 }

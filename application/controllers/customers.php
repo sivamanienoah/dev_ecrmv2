@@ -174,8 +174,15 @@ class Customers extends crm_controller {
 				// echo "<pre>"; print_r($update_data);
 				$update_data['modified_by'] = $this->userdata['userid'];
 				//update
-				if ($this->customer_model->update_company($id, $update_data)) 
+				if ($this->customer_model->update_company($id, $update_data))
 				{
+					$ins_log 					= array();
+					$ins_log['jobid_fk']    	= 0;
+					$ins_log['userid_fk']   	= $this->userdata['userid'];
+					$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+					$ins_log['log_content'] 	= $update_data['company']." Company Detail modified On :" . " " . date('M j, Y g:i A');
+					$log_res = $this->customer_model->insert_row("logs", $ins_log);
+					
 					if (isset($pst_data['customer_name']))
 					{
 						//echo'<pre>';print_r($pst_data);exit;
@@ -199,19 +206,34 @@ class Customers extends crm_controller {
 							// echo $contact_id[$i].'SS<pre>';print_r($cust_data);exit;
 							if($contact_id[$i])
 							{
-								$this->customer_model->update_customer_contacts($cust_data,$contact_id[$i]);
+								$cust_res = $this->customer_model->update_customer_contacts($cust_data, $contact_id[$i]);
+								if($cust_res) {
+									$ins_log 					= array();
+									$ins_log['jobid_fk']    	= 0;
+									$ins_log['userid_fk']   	= $this->userdata['userid'];
+									$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+									$ins_log['log_content'] 	= $name[$i]." Contact Updated for the company ".$update_data['company']." On :" . " " . date('M j, Y g:i A');
+									$log_res = $this->customer_model->insert_row("logs", $ins_log);
+								}
 								// echo $this->db->last_query();
 							}else{
-								$cust_data['company_id']	=	$id;
-								$cust_data['sales_contact_userid_fk'] =	$this->userdata['userid'];
-								$batch_insert_data[]		=	$cust_data;
+								$cust_data['company_id']				= $id;
+								$cust_data['sales_contact_userid_fk'] 	= $this->userdata['userid'];
+								$batch_insert_data[]					= $cust_data;
+								
+								$ins_log['log_content'] 	= $cust_data['customer_name']." Contact Created for the company ".$update_data['company']." On :" . " " . date('M j, Y g:i A');
+								$ins_log['jobid_fk']    	= 0;
+								$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+								$ins_log['userid_fk']   	= $this->userdata['userid'];
+							
+								$batch_insert_data_log[]	=	$ins_log;
 							}
 						}
 						
 						// echo'<pre>';print_r($batch_insert_data);exit;
 						if(count($batch_insert_data))
 						{
-							$this->customer_model->insert_batch_customer($batch_insert_data);
+							$this->customer_model->insert_batch_customer($batch_insert_data, $batch_insert_data_log);
 						}
 					}
 					
@@ -944,10 +966,20 @@ class Customers extends crm_controller {
 		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 
 		if($query == 0) {
+			
+			$contact_log_data = $this->db->get_where($this->login_model->cfg['dbpref'] . 'customers', array('custid' => $data['id']))->row_array();
+			
 			$this->db->where('custid', $data['id']);
 			$del = $this->db->delete($this->cfg['dbpref'] . 'customers');
 			if($del){
 				$res['html'] = "YES";
+				$company_log_data = $this->db->get_where($this->login_model->cfg['dbpref'] . 'customers_company', array('companyid' => $contact_log_data['company_id']))->row_array();
+				$ins_log 					= array();
+				$ins_log['jobid_fk']    	= 0;
+				$ins_log['userid_fk']   	= $this->userdata['userid'];
+				$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+				$ins_log['log_content'] 	= $contact_log_data['customer_name']." Contact Deleted for the company ".$company_log_data['company']." On :" . " " . date('M j, Y g:i A');
+				$log_res = $this->customer_model->insert_row("logs", $ins_log);
 			}
 		}
 		echo json_encode($res);

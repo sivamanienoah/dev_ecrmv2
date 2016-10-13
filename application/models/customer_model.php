@@ -433,7 +433,8 @@ class Customer_model extends crm_model {
     function update_customer_contacts($data,$contact_id) {
 		$condn = array('custid'=>$contact_id);
 		$this->db->where($condn);
-        $customer = $this->db->update($this->cfg['dbpref'].'customers',$data);
+        $this->db->update($this->cfg['dbpref'].'customers',$data);
+		return $this->db->affected_rows();
     }
 	
     function insert_customer($data) {
@@ -1395,8 +1396,19 @@ class Customer_model extends crm_model {
 	
 	function delete_customer_contact($custid) 
 	{
+		$contact_log_data = $this->db->get_where($this->login_model->cfg['dbpref'] . 'customers', array('custid' => $custid))->row_array();
+
         $this->db->where('custid', $custid);
-        $this->db->delete($this->cfg['dbpref'] . 'customers');
+        $res = $this->db->delete($this->cfg['dbpref'] . 'customers');
+		if($res) {
+			$company_log_data = $this->db->get_where($this->login_model->cfg['dbpref'] . 'customers_company', array('companyid' => $contact_log_data['company_id']))->row_array();
+			$ins_log 					= array();
+			$ins_log['jobid_fk']    	= 0;
+			$ins_log['userid_fk']   	= $this->userdata['userid'];
+			$ins_log['date_created'] 	= date('Y-m-d H:i:s');
+			$ins_log['log_content'] 	= $contact_log_data['customer_name']." Contact Deleted for the company ".$company_log_data['company']." On :" . " " . date('M j, Y g:i A');
+			$log_res = $this->customer_model->insert_row("logs", $ins_log);
+		}
         return TRUE;
     }
 	
