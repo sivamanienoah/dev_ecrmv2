@@ -3,9 +3,9 @@ ob_start();
 $userdata = $this->session->userdata('logged_in_user');
 $permission =$this->session->all_userdata();
 ?>
-<div id="dashboardcount" style="margin-left: 30%;position: relative;bottom: 26px;">
-<label id="pendingval" class="label-warm"><a href='javascript:void(0);' onclick= 'refreshalltask(0);'> Pending Tasks : <?php echo $pendingtasks;?></a></label>&nbsp; &nbsp;
-<label id="completedval" class="label-success"><a href='javascript:void(0);' onclick= 'refreshalltask(1);'> All Tasks: <?php echo $completedtasks;?> </a></label> </div>
+<div id="dashboardcount" style="position: absolute;top: 10px;right:-50px;">
+<label id="pendingval" class=""><a href='javascript:void(0);' onclick= 'refreshalltask(0);'> Pending Tasks : <?php echo $pendingtasks;?></a></label>&nbsp; &nbsp;
+<label id="completedval" class=""><a href='javascript:void(0);' onclick= 'refreshalltask(1);'> All Tasks: <?php echo $completedtasks;?> </a></label> </div>
 <div  style="width:100%">
 <input type="hidden" value="1" name="taskslistval" id="taskslistval"/>
 	<?php 
