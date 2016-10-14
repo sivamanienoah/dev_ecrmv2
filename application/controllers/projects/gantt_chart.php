@@ -152,18 +152,19 @@ class Gantt_chart extends crm_controller
 	{
 		if($this->input->post())
 		{
+
 			$id=$this->input->post('id');
 			$project_id=$this->input->post('project_id');
 			$parent_id=$this->input->post('parent_id');
 			$task_name=$this->input->post('task_name');
 			$start_date=$this->input->post('start_date');
 			$end_date=$this->input->post('end_date');
-			$duration=$this->input->post('duration');
+			$hours=$this->input->post('hours');
 			$progress=($this->input->post('progress')*100);
 			$uid=$this->get_last_uid($project_id);
 			$task_id=$this->get_taskid($parent_id,$project_id);
 
-			$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,parent_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$task_id','$parent_id','$task_name','$duration','$start_date','$end_date','','','','','$progress')";
+			$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,parent_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$task_id','$parent_id','$task_name','$hours','$start_date','$end_date','','','','','$progress')";
 			$exe=$this->db->query($sql);
 			$id = $this->db->insert_id();
 			
