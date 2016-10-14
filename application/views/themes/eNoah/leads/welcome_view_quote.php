@@ -1185,7 +1185,7 @@ $(function(){
 		<?php 
 		} 
 		?>
-		<div class="existing-task-list">
+		<div class="existing-task-list" id="welcome_view_quote">
 			<h4>Existing Tasks</h4>
 		</div>
 			
