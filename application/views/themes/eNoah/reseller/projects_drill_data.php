@@ -27,7 +27,7 @@ if(!empty($project_type) && count($project_type)>0){
 				foreach($projects_data as $record) {
 		?>			
 					<td class="actions" align="center">
-						<a title="View" target="_blank" class="view-icon" href="project/view_project/".<?php echo $record['lead_id']; ?>><img src='assets/img/view.png' alt='view'></a>
+						<a title="View" target="_blank" class="view-icon" href="<?php echo base_url(); ?>project/view_project/<?php echo $record['lead_id']; ?>"><img src='assets/img/view.png' alt='view'></a>
 					</td>
 					<td><?php echo $record['company_name']." - ".$record['customer_contact_name']; ?></td>
 					<td><?php echo character_limiter($record['project_name'], 30); ?></td>
