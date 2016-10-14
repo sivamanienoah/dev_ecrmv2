@@ -1,3 +1,4 @@
+<?php #echo "<pre>"; print_r($commission_data); echo "</pre>"; ?>
 <table class="dashboard-heads dataTable data-tbl" cellspacing="0" cellpadding="0" border="0" width="100%">
 	<thead>
 		<tr align="left">
@@ -45,13 +46,18 @@
 							</div>
 					</td>
 					<td align="left">
-						<?php if($this->session->userdata('edit')==1) { ?>
+						<?php if(($this->session->userdata('edit')==1) && ($cmsn_row['commission_raised']==0)) { ?>
 							<a title="Edit" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>, 'edit'); return false;"><img src="assets/img/edit.png" alt="edit"></a>
 						<?php } else { ?>
 							<a title="View" onclick="editCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>, 'view'); return false;"><img src="assets/img/view.png" alt="edit"></a>
 						<?php } ?>
-						<?php if($this->session->userdata('delete')==1) { ?>
+						<?php if(($this->session->userdata('delete')==1) && ($cmsn_row['commission_raised']==0)) { ?>
 							<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
+						<?php } ?>
+						<?php if(($this->session->userdata('edit')==1) && ($cmsn_row['commission_raised']==0)) { ?>
+						<a title="Generate Commission Invoice" href="javascript:void(0)" onclick="generate_commission_inv(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/generate_invoice.png" alt="Generate Commission Invoice"></a>
+						<?php } else { ?>
+						<a title="Commission Invoice Raised" href="javascript:void(0)" class="readonly-status img-opacity"><img src="assets/img/generate_invoice.png" alt="Generate Invoice"></a>
 						<?php } ?>
 					</td>
 				</tr>

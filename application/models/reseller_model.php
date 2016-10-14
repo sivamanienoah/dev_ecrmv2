@@ -250,7 +250,7 @@ class Reseller_model extends crm_model
 	*/
     public function get_commission_details($id = false) 
 	{
-		$this->db->select('c.id, c.contracter_id, c.commission_title, c.job_id, c.payment_advice_date, c.commission_milestone_name, c.for_the_month_year, c.commission_currency, c.commission_value, c.remarks, j.lead_title');
+		$this->db->select('c.id, c.contracter_id, c.commission_title, c.job_id, c.payment_advice_date, c.commission_milestone_name, c.for_the_month_year, c.commission_currency, c.commission_value, c.remarks, c.commission_raised, j.lead_title');
 		$this->db->from($this->cfg['dbpref']."commission_history as c");
 		if($id) {
 			$this->db->where('c.contracter_id', $id);

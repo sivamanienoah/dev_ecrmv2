@@ -166,83 +166,74 @@
 	</table>
 <?php form_close(); ?>
 <script type="text/javascript">
-	var contracter_user_id  = '<?php echo $contract_data['contracter_id']; ?>';
-	var contract_id 		= '<?php echo $contract_data['id']; ?>';
-	$( document ).ajaxSuccess(function( event, xhr, settings ) {
-		if(settings.target=="#output1") {
-			if(xhr.responseText=='success') {
-				$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Contract Updated Successfully.</span>");
-				reset_add_form();
-			} else if(xhr.responseText == 'error') {
-				$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in updating the contract.</span>");
-			}
-			$('#succes_add_contract_data').show();
-			setTimeout('timerfadeout()', 4000);
+var contracter_user_id  = '<?php echo $contract_data['contracter_id']; ?>';
+var contract_id 		= '<?php echo $contract_data['id']; ?>';
+$( document ).ajaxSuccess(function( event, xhr, settings ) {
+	if(settings.target=="#output1") {
+		if(xhr.responseText=='success') {
+			$('#succes_add_contract_data').html("<span class='ajx_success_msg'>Contract Updated Successfully.</span>");
+			reset_add_form();
+		} else if(xhr.responseText == 'error') {
+			$('#succes_add_contract_data').html("<span class='ajx_failure_msg'>Error in updating the contract.</span>");
+		}
+		$('#succes_add_contract_data').show();
+		setTimeout('timerfadeout()', 4000);
+	}
+});
+
+$(function(){
+	var options = {
+		target:      '#output1',   // target element(s) to be updated with server response 
+		beforeSubmit: validateEditContractForm, // pre-submit callback 
+		success:      ''  // post-submit callback 
+	}; 
+	$('#edit-contract').ajaxForm(options);
+	
+	/*Date picker*/
+	var on_load_start_date = $('#contract_start_date').val();
+	var on_load_end_date   = $('#contract_end_date').val();
+	
+	$('#renewal_reminder_date').datepicker("option", "minDate", on_load_start_date);
+	// $('#contract_signed_date').datepicker("option", "minDate", on_load_start_date);
+	$('#renewal_reminder_date').datepicker("option", "maxDate", on_load_end_date);
+	// $('#contract_signed_date').datepicker("option", "maxDate", on_load_end_date);
+	
+	$('#contract_start_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		maxDate: on_load_end_date, 
+		changeMonth: true, 
+		changeYear: true, 
+		onSelect: function(date) {
+			/* if($('#contract_end_date').val!='')
+			{
+				$('#contract_end_date').val('');
+			} */				
+			var return_date = $('#contract_start_date').val();
+			$('#contract_end_date').datepicker("option", "minDate", return_date);
 		}
 	});
-
-	$(function(){
-		var options = {
-			target:      '#output1',   // target element(s) to be updated with server response 
-			beforeSubmit: validateEditContractForm, // pre-submit callback 
-			success:      ''  // post-submit callback 
-		}; 
-		$('#edit-contract').ajaxForm(options);
-		
-		/*Date picker*/
-		var on_load_start_date = $('#contract_start_date').val();
-		var on_load_end_date   = $('#contract_end_date').val();
-		
-		$('#renewal_reminder_date').datepicker("option", "minDate", on_load_start_date);
-		// $('#contract_signed_date').datepicker("option", "minDate", on_load_start_date);
-		$('#renewal_reminder_date').datepicker("option", "maxDate", on_load_end_date);
-		// $('#contract_signed_date').datepicker("option", "maxDate", on_load_end_date);
-		
-		$('#contract_start_date').datepicker({ 
-			dateFormat: 'dd-mm-yy', 
-			maxDate: on_load_end_date, 
-			changeMonth: true, 
-			changeYear: true, 
-			onSelect: function(date) {
-				/* if($('#contract_end_date').val!='')
-				{
-					$('#contract_end_date').val('');
-				} */				
-				var return_date = $('#contract_start_date').val();
-				$('#contract_end_date').datepicker("option", "minDate", return_date);
-			}
-		});
-		$('#contract_end_date').datepicker({ 
-			dateFormat: 'dd-mm-yy',
-			minDate: on_load_start_date,
-			changeMonth: true, 
-			changeYear: true, 
-			onSelect: function(dateText, instance) {
-				var end_date 	= $('#contract_end_date').val();
-				var start_date  = $('#contract_start_date').val();
-				/*set one month minus on renewal reminder date*/
-				var date = $.datepicker.parseDate(instance.settings.dateFormat, dateText, instance.settings);
-				date.setMonth(date.getMonth() - 1);
-				$("#renewal_reminder_date").datepicker("setDate", date);
-				$('#renewal_reminder_date').datepicker("option", "minDate", start_date);
-				// $('#contract_signed_date').datepicker("option", "minDate", start_date);
-				$('#renewal_reminder_date').datepicker("option", "maxDate", end_date);
-				// $('#contract_signed_date').datepicker("option", "maxDate", end_date);
-			}
-		});
-		
-		$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
-		$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, maxDate: 0});
+	$('#contract_end_date').datepicker({ 
+		dateFormat: 'dd-mm-yy',
+		minDate: on_load_start_date,
+		changeMonth: true, 
+		changeYear: true, 
+		onSelect: function(dateText, instance) {
+			var end_date 	= $('#contract_end_date').val();
+			var start_date  = $('#contract_start_date').val();
+			/*set one month minus on renewal reminder date*/
+			var date = $.datepicker.parseDate(instance.settings.dateFormat, dateText, instance.settings);
+			date.setMonth(date.getMonth() - 1);
+			$("#renewal_reminder_date").datepicker("setDate", date);
+			$('#renewal_reminder_date').datepicker("option", "minDate", start_date);
+			// $('#contract_signed_date').datepicker("option", "minDate", start_date);
+			$('#renewal_reminder_date').datepicker("option", "maxDate", end_date);
+			// $('#contract_signed_date').datepicker("option", "maxDate", end_date);
+		}
 	});
 	
-	function isNumberKey(evt)
-	{
-		var charCode = (evt.which) ? evt.which : event.keyCode;
-		if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-		return false;
-
-		return true;
-	}
+	$("#renewal_reminder_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
+	$("#contract_signed_date").datepicker({dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true, maxDate: 0});
+});
 	
 //validate the form
 function validateEditContractForm()

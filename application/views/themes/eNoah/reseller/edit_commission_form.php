@@ -3,7 +3,7 @@
 </style>
 <?php $attributes = array('id'=>'edit_commission', 'name'=>'edit_commission'); ?>
 <?php echo form_open_multipart("reseller/editResellerCommission", $attributes); ?>
-<?php #echo "<pre>"; print_r($contracts_det['currency']); echo "</pre>"; ?>
+<?php #echo "<pre>"; print_r($commission_data); echo "</pre>"; ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 	<input type="hidden" name="contracter_id" id="contracter_id" value="<?php echo $commission_data['contracter_id']; ?>" readonly />
 	<input type="hidden" name="commission_id" id="commission_id" value="<?php echo $commission_data['id']; ?>" readonly />
@@ -27,6 +27,21 @@
 					<?php } ?>
 				</select>
 				<div class='ajx_failure_msg succ_err_msg clear' id='job_id_err'></div>
+			</td>
+		</tr>
+		<tr>
+			<td>Contract<span class='red'> *</span></td>
+			<td>
+				<select name="contract_id" class="textfield width200px" id="contract_id" onchange="getContractsDetails(this.value)">
+					<option value=''>Select</option>
+					<?php if(isset($active_contracts) && !empty($active_contracts) && count($active_contracts)>0) { ?>
+						<?php foreach($active_contracts as $con_rec) { ?>
+							<option value=<?php echo $con_rec['id']; ?> <?php if($commission_data['contract_id'] == $con_rec['id']) { echo "selected='selected'"; } ?>><?php echo $con_rec['contract_title']; ?></option>
+						<?php } ?>
+					<?php } ?>
+				</select>
+				<div class="ajx_failure_msg succ_err_msg clear" id="contract_id_err"></div>
+				<input type="hidden" name="hidden_contract_title" id="hidden_contract_title" value="" readonly />
 			</td>
 		</tr>
 		<tr>
@@ -56,10 +71,10 @@
 				<div class="ajx_failure_msg succ_err_msg" id="for_the_month_year_err"></div>
 			</td>
 		</tr>
-		<tr>
+		<tr class="set_cont">
 			<td>Currency<span class='red'> *</span></td>
 			<td>
-				<select name='commission_currency' class="textfield width200px" id='commission_currency'>
+				<select name="hidden_commission_currency" class="textfield width200px" disabled id="hidden_commission_currency">
 					<option value=''>Select</option>
 					<?php if(!empty($currencies) && count($currencies)>0) { ?>
 						<?php foreach($currencies as $cur_rec) { ?>
@@ -67,7 +82,15 @@
 						<?php } ?>
 					<?php } ?>
 				</select>
-				<div class='ajx_failure_msg succ_err_msg clear' id='commission_currency_err'></div>
+				<div class="ajx_failure_msg succ_err_msg clear" id='hidden_commission_currency_err'></div>
+				<input type="hidden" name="commission_currency" id="commission_currency" class="textfield width200px" maxlength="10" value="<?php echo $commission_data['commission_currency']; ?>" readonly />
+			</td>
+		</tr>
+		<tr class="set_cont">
+			<td>Tax %<span class='red'> *</span></td>
+			<td>
+				<input type="text" name="commission_tax" id="commission_tax" class="textfield width200px" value="<?php echo $commission_data['commission_tax']; ?>" maxlength="10" readonly />
+				<div class="ajx_failure_msg succ_err_msg" id="commission_tax_err"></div>
 			</td>
 		</tr>
 		<tr>

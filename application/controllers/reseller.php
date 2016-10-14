@@ -861,6 +861,7 @@ class Reseller extends crm_controller {
 		$data['reseller_det'] 		= $this->reseller_model->get_reseller($reseller_id);
 		$data['reseller_projects'] 	= $this->reseller_model->get_closed_jobs($reseller_id);
 		$data['contracts_det']  	= $this->reseller_model->get_active_contract('contracts', $wh_condn=array('contract_status'=>1,'contracter_id'=>$reseller_id), $order=array('contract_start_date'=>'DESC'), $limit=1);
+		$data['active_contracts']  	= $this->reseller_model->get_records('contracts', $wh_condn=array('contract_status'=>1,'contracter_id'=>$reseller_id), $order=array('contract_start_date'=>'DESC'));
 		$data['currencies']   		= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 		$result 			  = $this->load->view("reseller/add_commission_form", $data, true);
 		echo $result; exit;
@@ -875,11 +876,13 @@ class Reseller extends crm_controller {
 		$ins_val = array();
 		$ins_val['contracter_id'] 			= $this->input->post('contracter_id');
 		$ins_val['commission_title'] 		= $this->input->post('commission_title');	
-		$ins_val['job_id'] 					= $this->input->post('job_id');	
+		$ins_val['job_id'] 					= $this->input->post('job_id');
+		$ins_val['contract_id'] 			= $this->input->post('contract_id');
 		$ins_val['payment_advice_date'] 	= ($this->input->post('payment_advice_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('payment_advice_date'))) : '';
 		$ins_val['for_the_month_year'] 		= ($this->input->post('for_the_month_year')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('for_the_month_year'))) : '';
 		$ins_val['commission_milestone_name'] = $this->input->post('commission_milestone_name');
 		$ins_val['commission_currency'] 	= $this->input->post('commission_currency');
+		$ins_val['commission_tax'] 			= $this->input->post('commission_tax');
 		$ins_val['commission_value'] 		= $this->input->post('commission_value');
 		$ins_val['remarks'] 				= $this->input->post('remarks');
 		$ins_val['created_by'] 				= $this->userdata['userid'];
@@ -913,11 +916,13 @@ class Reseller extends crm_controller {
 			
 			$log_detail = "Commission Added by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
 			$log_detail .= "\nProject Name: ".$project_name['lead_title'];
+			$log_detail .= "\nContract: ".$this->input->post('hidden_contract_title');
 			$log_detail .= "\nCommission Title: ".$this->input->post('commission_title');
 			$log_detail .= "\nPayment Advice date: ".$this->input->post('payment_advice_date');
 			$log_detail .= "\nFor the Month & Year: ".$this->input->post('for_the_month_year');
 			$log_detail .= "\nMilestone Name: ".$this->input->post('commission_milestone_name');
 			$log_detail .= "\nCurrency: ".$all_cur[$this->input->post('commission_currency')];
+			$log_detail .= "\nTax %: ".$this->input->post('commission_tax');
 			$log_detail .= "\nValue: ".sprintf('%0.2f', $this->input->post('commission_value'));
 			$log_detail .= "\nRemarks: ".$this->input->post('remarks');
 			
@@ -1031,6 +1036,7 @@ class Reseller extends crm_controller {
 			$editdata['currencies']  		= $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 			$editdata['reseller_projects'] 	= $this->reseller_model->get_closed_jobs($this->input->post('contracter_user_id'));
 			$editdata['upload_data'] 		= $this->reseller_model->getCommissionUploadsFile($this->input->post('commission_id'));
+			$editdata['active_contracts']  	= $this->reseller_model->get_records('contracts', $wh_condn=array('contract_status'=>1,'contracter_id'=>$this->input->post('contracter_user_id')), $order=array('contract_start_date'=>'DESC'));
 			if($this->input->post('load_type') == 'edit') {
 				$data['res'] = $this->load->view("reseller/edit_commission_form", $editdata, true);
 			} else if($this->input->post('load_type') == 'view') {
@@ -1055,12 +1061,14 @@ class Reseller extends crm_controller {
 		$commission_log 	= array();
 		
 		$updt_val['contracter_id'] 				= $this->input->post('contracter_id');
-		$updt_val['commission_title'] 			= $this->input->post('commission_title');	
-		$updt_val['job_id'] 					= $this->input->post('job_id');	
+		$updt_val['commission_title'] 			= $this->input->post('commission_title');
+		$updt_val['job_id'] 					= $this->input->post('job_id');
+		$updt_val['contract_id'] 				= $this->input->post('contract_id');
 		$updt_val['payment_advice_date'] 		= ($this->input->post('payment_advice_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('payment_advice_date'))) : '';
 		$updt_val['for_the_month_year'] 		= ($this->input->post('for_the_month_year')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('for_the_month_year'))) : '';
 		$updt_val['commission_milestone_name'] 	= $this->input->post('commission_milestone_name');
 		$updt_val['commission_currency'] 		= $this->input->post('commission_currency');
+		$updt_val['commission_tax'] 			= $this->input->post('commission_tax');
 		$updt_val['commission_value'] 			= $this->input->post('commission_value');
 		$updt_val['remarks'] 					= $this->input->post('remarks');
 		$updt_val['modified_by'] 				= $this->userdata['userid'];
@@ -1091,14 +1099,17 @@ class Reseller extends crm_controller {
 			
 			$project_name 	= $this->reseller_model->get_data_by_id('leads', $wh_condn=array('lead_id'=>$this->input->post('job_id')));
 			$log_name 		= $this->reseller_model->get_data_by_id('users', $wh_condn=array('userid'=>$this->userdata['userid']));
+			$contract_det 	= $this->reseller_model->get_data_by_id('contracts', $wh_condn=array('id'=>$this->input->post('contract_id')));
 			
 			$log_detail = "Commission Added by: ".$log_name['first_name']." ".$log_name['last_name']."\n";
 			$log_detail .= "\nProject Name: ".$project_name['lead_title'];
+			$log_detail .= "\nContract: ".$contract_det['contract_title'];
 			$log_detail .= "\nCommission Title: ".$this->input->post('commission_title');
 			$log_detail .= "\nPayment Advice date: ".$this->input->post('payment_advice_date');
 			$log_detail .= "\nFor the Month & Year: ".$this->input->post('for_the_month_year');
 			$log_detail .= "\nMilestone Name: ".$this->input->post('commission_milestone_name');
 			$log_detail .= "\nCurrency: ".$all_cur[$this->input->post('commission_currency')];
+			$log_detail .= "\nTax: ".$this->input->post('commission_tax');
 			$log_detail .= "\nValue: ".$this->input->post('commission_value');
 			$log_detail .= "\nRemarks: ".$this->input->post('remarks');
 			
@@ -1379,9 +1390,188 @@ class Reseller extends crm_controller {
 			exit;
         }
     }
+	
+	function getContractsDetails()
+	{
+		$res 		  = array();
+		$res['error'] = true;
+		$postdata 	  = $this->input->post();
+		$contract_det = $this->reseller_model->get_data_by_id('contracts', $wh_condn=array('id'=>$postdata['cont_id'],'contracter_id'=>$postdata['reseller_id']));
+		if(!empty($contract_det) && count($contract_det)>0) {
+			$res['contract_det'] = $contract_det;
+			$res['error'] 		 = false;
+		} else {
+			$res['errormsg'] = 'Contract Details Missing';
+		}
+		echo json_encode($res);
+		exit;
+	}
+	
+	/*
+	*generateCommissionInvoice
+	*@params commission_id, reseller_id
+	*/
+	public function generateCommissionInvoice()
+	{
+		$output['error'] = FALSE;
+		
+		$postdata = $this->input->post();
+		// echo "<pre>"; print_r($postdata); exit;
+		
+		$condn 			 	= array('id'=>$postdata['commission_id'], 'contracter_id'=>$postdata['reseller_id']);
+		$updt_data		 	= array('commission_raised'=>1, 'commission_invoice_generate_on'=>date('Y-m-d H:i:s'));
+		$update_commission 	= $this->reseller_model->update_records('commission_history', $condn, '', $updt_data); //$tbl, $wh_condn, $not_wh_condn, $up_arg
+		
+		if($update_commission) {
+			$wh_condn	 		  = array('id'=>$postdata['commission_id'], 'contracter_id'=>$postdata['reseller_id']);
+			$log_commission_data  = $this->reseller_model->get_data_by_id('commission_history', $wh_condn);
+			
+			// echo "<pre>"; print_r($log_commission_data); exit;
+			
+			$reseller_user_det    = $this->reseller_model->get_data_by_id('users', $w_cond=array('userid'=>$postdata['reseller_id']));
+			$project_details   	  = $this->reseller_model->get_data_by_id('leads', $w_cond=array('lead_id'=>$log_commission_data['job_id']));
+			$contract_details     = $this->reseller_model->get_data_by_id('contracts', $w_cond=array('id'=>$log_commission_data['contract_id']));
+			$con_manager_user_det = $this->reseller_model->get_data_by_id('users', $w_cond=array('userid'=>$contract_details['contract_manager']));
+			$contract_files   	  = $this->reseller_model->getUploadsFile($log_commission_data['contract_id']);
+			$commission_files 	  = $this->reseller_model->getCommissionUploadsFile($postdata['commission_id']);
+			
+			$currencies 		  = $this->reseller_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$currency_arr[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			
+			//do log
+			$commission_log 				 = $log_commission_data;
+			unset($commission_log['id']);
+			$commission_log['commission_id'] = $postdata['commission_id'];
+			$commission_log['action']  		 = 1;
+			$log_res = $this->reseller_model->insert_row_return_id("commission_history_log", $commission_log);
+			
+			//do logs in crm_logs table
+			$log_detail = "Commission Invoice Raised by: ".$this->userdata['first_name']." ".$this->userdata['last_name']."\n";
+			$log_detail .= "\nInvoice Raised Date: ".date('d-m-Y', strtotime($commission_log['commission_invoice_generate_on']));
+			$log_detail .= "\nProject Name: ".$project_details['lead_title'];
+			$log_detail .= "\nContract: ".$contract_details['contract_title'];
+			$log_detail .= "\nCommission Title: ".$commission_log['commission_title'];
+			$log_detail .= "\nPayment Advice date: ".date('d-m-Y', strtotime($commission_log['payment_advice_date']));
+			$log_detail .= "\nFor the Month & Year: ".date('F Y', strtotime($commission_log['for_the_month_year']));
+			$log_detail .= "\nMilestone Name: ".$commission_log['commission_milestone_name'];
+			$log_detail .= "\nCurrency: ".$currency_arr[$commission_log['commission_currency']];
+			$log_detail .= "\nTax %: ".$commission_log['commission_tax'];
+			$log_detail .= "\nValue: ".sprintf('%0.2f', $commission_log['commission_value']);
+			$log_detail .= "\nRemarks: ".$commission_log['remarks'];
+			
+			$file_details = '';
+			$file_arr = array();
+			$log_upload['upload_data'] = $this->reseller_model->getCommissionUploadsFile($postdata['commission_id']);
+			
+			if(!empty($log_upload['upload_data']) && count($log_upload['upload_data'])>0 && is_array($log_upload['upload_data'])){
+				foreach($log_upload['upload_data'] as $rec) {
+					$file_arr[] = $rec['file_name'];
+				}
+				if(!empty($file_arr) && count($file_arr)>0 && is_array($file_arr)){
+					$file_details = @implode(",",$file_arr);
+				}
+			}
+			
+			$log_detail .= "\nAttachment Documents: ".rtrim($file_details,",");
+			
+			
+			$log = array();
+			$log['jobid_fk']      = 0;
+			$log['userid_fk']     = $postdata['reseller_id'];
+			$log['date_created']  = $commission_log['commission_invoice_generate_on'];
+			$log['log_content']   = $log_detail;
+			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
+			//checking attaching attachment not exceed to 5 mb - (5mb == 5242880)
+			$file_size = 0;
+			$attachment_array = array();
+			if(is_array($contract_files) && !empty($contract_files) && count($contract_files)>0){
+				$contract_file_path = UPLOAD_PATH.'contracts/'.$postdata['reseller_id'].'/';
+				foreach($contract_files as $cont_file) {
+					$file_size += filesize($contract_file_path.$cont_file['file_name']);
+					$attachment_array[] = $contract_file_path.$cont_file['file_name'];
+				}
+			}
+			if(is_array($commission_files) && !empty($commission_files) && count($commission_files)>0){
+				$commission_file_path = UPLOAD_PATH.'commission_attachments/'.$postdata['reseller_id'].'/';
+				foreach($commission_files as $comsn_file) {
+					$file_size += filesize($commission_file_path.$comsn_file['file_name']);
+					$attachment_array[] = $commission_file_path.$comsn_file['file_name'];
+				}
+			}
+			// echo "<pre>"; print_r($attachment_array); exit;
+			
+			$user_name 		 = $this->userdata['first_name'].' '.$this->userdata['last_name'];
+			$print_fancydate = date('l, jS F y h:iA');
 
-	
-	
+			$from		  	 = $this->userdata['email'];
+			$arrayEmails   	 = $this->config->item('crm');
+			$to				 = implode(',',$arrayEmails['account_emails']);
+			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
+			$subject		 = 'Generate Commission Invoice Notification';
+			// $customer_name   = $project_details['company'].' - '.$project_details['customer_name'];
+			// $project_name	  = word_limiter($project_details['lead_title'], 4);
+			$commission_title 	 = $log_commission_data['commission_title'];
+			$contract_title   	 = $contract_details['contract_title'];
+			$contract_manager 	 = $con_manager_user_det['first_name'].' '.$con_manager_user_det['last_name'];
+			$project_name	  	 = $project_details['lead_title'];
+			$project_id	 	  	 = $project_details['invoice_no'];
+			$project_code	  	 = $project_details['pjt_id'];
+			$milestone_name   	 = $log_commission_data['commission_milestone_name'];
+			$month_year  	  	 = date('F Y', strtotime($log_commission_data['for_the_month_year']));
+			$payment_advice_date = date('d-m-Y', strtotime($log_commission_data['payment_advice_date']));
+			$commission_currency = $currency_arr[$log_commission_data['commission_currency']];
+			$commission_tax 	 = $log_commission_data['commission_tax'];
+			$commission_value 	 = $log_commission_data['commission_value'];
+			$remarks  			 = isset($log_commission_data['remarks']) ? $log_commission_data['remarks'] : '-';
+			//add remarks for file attachments
+			if($file_size != 0) {
+				if(5242880 < $file_size) {
+					$remarks .= "<br /><br /> <span style='color:red';>Attachments Size exceeds to 5 Mb. So attachments are not included in this mail.</span>";
+					$attachment_array = array();
+				}
+			}		
+			
+			//email sent by email template
+			$param = array();
+			
+			$param['email_data'] = array('print_fancydate'=>$print_fancydate,
+										'reseller_name'=>$reseller_user_det['first_name'].' '.$reseller_user_det['last_name'],
+										'project_name'=>$project_name,
+										'project_id'=>$project_id,
+										'project_code'=>$project_code,
+										'commission_title'=>$commission_title,
+										'contract_title'=>$contract_title,
+										'milestone_name'=>$milestone_name,
+										'month_year'=>$month_year,
+										'payment_advice_date'=>$payment_advice_date,
+										'commission_currency'=>$commission_currency,
+										'commission_tax'=>$commission_tax,
+										'commission_value'=>$commission_value,
+										'remarks'=>$remarks,
+										'user_name'=>$user_name,
+										'signature'=>$this->userdata['signature']);
+
+			$param['to_mail'] 		  = $to;
+			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
+			$param['from_email']	  = 'webmaster@enoahprojects.com';
+			$param['from_email_name'] = 'Webmaster';
+			$param['template_name']	  = "Generate Commission Invoice Notification";
+			$param['subject'] 		  = $subject;
+			$param['attachments'] 	  = $attachment_array;
+			$param['job_id'] 		  = $pjtid;
+
+			$this->email_template_model->sent_email($param);
+		} else {
+			$output['error'] = true;
+			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
+		}
+		echo json_encode($output);
+	}	
 	
 	public function sendTestEmail()
 	{

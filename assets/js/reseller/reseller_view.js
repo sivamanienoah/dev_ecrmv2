@@ -47,6 +47,15 @@ $(document).ready(function() {
 	});
 });
 
+function isNumberKey(evt)
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+	return false;
+
+	return true;
+}
+
 function getAddContractForm(reseller_id)
 {
 	// alert('getAddContractForm');
@@ -533,5 +542,76 @@ function download_commission_files(file_id)
 	$('body').append(form);
 	$(form).submit();
 	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
+}
+
+function getContractsDetails(cont_id)
+{
+	var form_data 			   = {'cont_id':cont_id, 'reseller_id':reseller_id}
+	form_data[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: site_base_url+'reseller/getContractsDetails/',
+		data: form_data,
+		cache: false,
+		beforeSend:function() {
+			$.blockUI({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success: function(data) {
+			// console.info(data.contract_det.currency);
+			$.unblockUI();
+			if (data.error == true) {
+				alert(data.errormsg);
+			} else {
+				$('#commission_currency').val(data.contract_det.currency);
+				$('#hidden_commission_currency').val(data.contract_det.currency);
+				$('#hidden_contract_title').val(data.contract_det.contract_title);
+				$('#commission_tax').val(data.contract_det.tax);
+				$('.set_cont').show();
+			}
+		}                                                                                   
+	});
+}
+
+/*Reseller module Generate Commission Invoice genration*/
+function generate_commission_inv(comsn_id, reslr_id)
+{
+	// alert('generateCommissionInvoice'); return false;
+	var agree = confirm("Are you sure you want to generate the commission invoice?\nIt will send an email to accounts department.");
+	if (agree) {
+		var params 				= {};
+		params[csrf_token_name] = csrf_hash_token;
+		params['commission_id'] = comsn_id;
+		params['reseller_id'] 	= reslr_id;
+		$.ajax({
+			type:'POST',
+			data:params,
+			url :site_base_url+'reseller/generateCommissionInvoice/',
+			cache:false,
+			dataType:'json',
+			beforeSend: function() {
+				$.blockUI({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
+			},
+			success:function(data) {
+				$.unblockUI();
+				if(data.error==false){
+					$('#succes_add_commission_data').html("<span class='ajx_success_msg'>Commission Invoice Raised Successfully.</span>");
+					reset_commission_form();
+				} else if(data.error==true){
+					$('#succes_add_commission_data').html("<span class='ajx_failure_msg'>Error in Raising the Commisssion Invoice.</span>");
+				}
+				setTimeout('timerfadeout()', 4000);
+			}
+		});
+	} else {
+		return false;
+	}
 }
 /////////////////

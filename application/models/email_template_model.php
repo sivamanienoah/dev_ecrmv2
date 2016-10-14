@@ -178,13 +178,14 @@ class email_template_model extends crm_model {
 
 		// $this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->from($email_from,$email_from_name);
+		$data['to_mail'] = array('ssriram@enoahisolution.com');
 		$this->email->to($data['to_mail']);
-		if (!empty($data['cc_mail'])) {
+		/* if (!empty($data['cc_mail'])) {
 			$this->email->cc($data['cc_mail']);
 		}
 		if (!empty($data['bcc_mail'])) {
 			$this->email->bcc($data['bcc_mail']);
-		}
+		} */
 		$this->email->subject($email_subject);
 		$this->email->message($email_template);
 		
@@ -193,31 +194,27 @@ class email_template_model extends crm_model {
 			foreach ($data['attach'] as $attach){
 				$this->email->attach($file_path.$attach['lead_files_name']);
 			}
-			
 		}
-		
 		if(!empty($data['external_attach'])) {
 			$file_path = FCPATH.'crm_data/invoices/';
 			foreach ($data['external_attach'] as $attach){
 				$this->email->attach($file_path.$attach['file_name']);
 			}
-			
-		}		
-		 // $this->email->send();
-		 // echo $this->email->print_debugger();exit;
-		if($this->email->send())
-		{ 
-			return true;
 		}
-		else
-		{
+		if(!empty($data['attachments'])) {
+			foreach ($data['attachments'] as $att_row){
+				$this->email->attach($att_row);
+			}
+		}		
+		// return true;
+		// $this->email->send();
+		// echo $this->email->print_debugger();exit;
+		if($this->email->send()) { 
+			return true;
+		} else {
 			return false;
 		}
-	
 	}
-	
-	
-	
 }
 
 ?>

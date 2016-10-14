@@ -29,6 +29,21 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Contract<span class='red'> *</span></td>
+			<td>
+				<select name="contract_id" class="textfield width200px" id="contract_id" onchange="getContractsDetails(this.value)">
+					<option value=''>Select</option>
+					<?php if(isset($active_contracts) && !empty($active_contracts) && count($active_contracts)>0) { ?>
+						<?php foreach($active_contracts as $con_rec) { ?>
+							<option value=<?php echo $con_rec['id']; ?>><?php echo $con_rec['contract_title']; ?></option>
+						<?php } ?>
+					<?php } ?>
+				</select>
+				<div class="ajx_failure_msg succ_err_msg clear" id="contract_id_err"></div>
+				<input type="hidden" name="hidden_contract_title" id="hidden_contract_title" value="" readonly />
+			</td>
+		</tr>
+		<tr>
 			<td>Payment Advice Date<span class='red'> *</span></td>
 			<td>
 				<input type="text" name="payment_advice_date" id="payment_advice_date" data-calendar="true" class="textfield width200px" readonly />
@@ -49,10 +64,10 @@
 				<div class="ajx_failure_msg succ_err_msg" id="for_the_month_year_err"></div>
 			</td>
 		</tr>
-		<tr>
+		<tr class="set_cont" style="display:none;">
 			<td>Currency<span class='red'> *</span></td>
 			<td>
-				<select name='commission_currency' class="textfield width200px" id='commission_currency'>
+				<select name="hidden_commission_currency" class="textfield width200px" disabled id="hidden_commission_currency">
 					<option value=''>Select</option>
 					<?php if(!empty($currencies) && count($currencies)>0) { ?>
 						<?php foreach($currencies as $cur_rec) { ?>
@@ -60,13 +75,21 @@
 						<?php } ?>
 					<?php } ?>
 				</select>
-				<div class='ajx_failure_msg succ_err_msg clear' id='commission_currency_err'></div>
+				<div class="ajx_failure_msg succ_err_msg clear" id='hidden_commission_currency_err'></div>
+				<input type="hidden" name="commission_currency" id="commission_currency" class="textfield width200px" maxlength="10" readonly />
+			</td>
+		</tr>
+		<tr class="set_cont" style="display:none;">
+			<td>Tax %<span class='red'> *</span></td>
+			<td>
+				<input type="text" name="commission_tax" id="commission_tax" class="textfield width200px" maxlength="10" readonly />
+				<div class="ajx_failure_msg succ_err_msg" id="commission_tax_err"></div>
 			</td>
 		</tr>
 		<tr>
 			<td>Commission Value<span class='red'> *</span></td>
 			<td>
-				<input type="text" name="commission_value" id="commission_value" class="textfield width200px" maxlength="10" />
+				<input type="text" name="commission_value" id="commission_value" class="textfield width200px" maxlength="10" onkeypress="return isNumberKey(event)" />
 				<div class="ajx_failure_msg succ_err_msg" id="commission_value_err"></div>
 			</td>
 		</tr>
@@ -157,15 +180,6 @@
 		
 	});
 	
-	function isNumberKey(evt)
-	{
-		var charCode = (evt.which) ? evt.which : event.keyCode;
-		if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-		return false;
-
-		return true;
-	}
-	
 //validate the form
 function validateCommissionForm()
 {
@@ -188,6 +202,14 @@ function validateCommissionForm()
 		$('#job_id_err').html('Select Project.');
 	} else {
 		$('#job_id_err').html('');
+	}
+	if(($.trim($('#contract_id').val()) == '')) 
+	{
+		validate_form = false;
+		errors.push('<p>Select Contracts.</p>');
+		$('#contract_id_err').html('Select Contracts.');
+	} else {
+		$('#contract_id_err').html('');
 	}
 	if(($.trim($('#payment_advice_date').val()) == '')) 
 	{
@@ -293,11 +315,9 @@ function runCommissionAjaxFileUpload()
 }
 
 $("#commissionUploadFile").delegate("a.del_file","click",function() {
-	// var str_delete 	= $(this).attr("id");
 	var str_delete 	= $(this).attr("serial_id");
 	var result 		= confirm("Are you sure you want to delete this attachment?");
 	if (result==true) {
-		// $('#'+str_delete).parent("div").remove();
 		$('a[serial_id="'+str_delete+'"]').parent("div").remove();
 	}
 });
