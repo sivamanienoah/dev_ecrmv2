@@ -146,11 +146,7 @@
 		progress=Math.round(progress);
 		return "("+(progress)+"%)"+" "+task.text;
 	};
-	gantt.config.order_branch = true;
-	gantt.config.drag_move = false;
-	gantt.config.drag_resize = false;
-	gantt.config.drag_progress = false;
-	gantt.config.drag_links = false;
+	
 	
 	var duration = function (a, b, c) {
 		var res = gantt.calculateDuration(a.getDate(false), b.getDate(false));
@@ -334,17 +330,24 @@
 			ci_csrf_token:csrf_token,
 			id:id,
 			project_id:project_id,
-			parent_id:item.parent,
-			duration:item.duration,
-			task_name:item.text,
-			progress:item.progress,
-			start_date:dateToStr(item.start_date),
-			end_date:dateToStr(item.end_date)
+			hours:task.hours,
+			task_name:task.text,
+			progress:task.progress,
+			start_date:dateToStr(task.start_date),
+			end_date:dateToStr(task.enddate),
+			resource:task.resource,
 		},function(data){
 			gantt.changeTaskId(id, data);
+			refresh();
 		}) ;
 		return true;
 	});
+	
+	gantt.config.order_branch = true;
+	gantt.config.drag_move = false;
+	gantt.config.drag_resize = false;
+	gantt.config.drag_progress = false;
+	gantt.config.drag_links = false;
 	
 	gantt.init("gantt_here");
 	
