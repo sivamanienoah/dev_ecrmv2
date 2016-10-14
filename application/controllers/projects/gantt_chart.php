@@ -172,7 +172,7 @@ class Gantt_chart extends crm_controller
 			
 			$this->updateParentProgress($id);
 			
-			echo $id;exit;
+			//echo $id;exit;
 		}
 	}
 

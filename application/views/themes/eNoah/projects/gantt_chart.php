@@ -337,7 +337,7 @@
 			end_date:dateToStr(item.enddate),
 			resource:item.resource,
 		},function(data){
-			gantt.changeTaskId(id, data);
+			//gantt.changeTaskId(id, data);
 			refresh();
 		}) ;
 		return true;
