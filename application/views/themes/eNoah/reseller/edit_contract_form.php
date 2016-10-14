@@ -130,7 +130,7 @@
 						<input type="hidden" id="exp_type" value="">									
 					</div>
 				</form>
-				<div id='existUploadedFile'>
+				<div id="existUploadedFile">
 					<?php if(is_array($upload_data) && !empty($upload_data) && count($upload_data)>0) { ?>
 						<?php $serial_id = 1; ?>
 						<?php foreach($upload_data as $rec_file) { ?>
@@ -138,7 +138,7 @@
 								<span style="float: left;">
 									<?php $file_id = base64_encode($rec_file['id']); ?>
 									<?php #$file_id = $rec_file['id']; ?>
-									<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
+									<a onclick="download_contract_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
 								</span>
 								<?php if($this->session->userdata('delete')==1) { ?>
 								<a class="del_file" serial_id="<?php echo $serial_id; ?>" id="<?php echo $file_id; ?>"> </a>
@@ -384,17 +384,6 @@ function runContractAjaxFileUpload()
 	return false;
 }
 
-function download_files(file_id)
-{
-	var url  = site_base_url+'reseller/download_file';
-	var form = $('<form action="' + url + '" method="post">' +
-	'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-	'<input type="hidden" name="file_id" value="' +file_id+ '" />' +
-	'</form>');
-	$('body').append(form);
-	$(form).submit();
-	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
-}
 $("#existUploadedFile").delegate("a.del_file","click",function() {
 	/*delete the file by ajax function*/
 	var str_delete 	= $(this).attr("serial_id");

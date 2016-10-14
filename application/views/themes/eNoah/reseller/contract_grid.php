@@ -9,7 +9,7 @@
 			<th class="header">Contract Signed Date</th>
 			<th class="header">Contract Status</th>
 			<th class="header">Currency</th>
-			<th class="header">Tax</th>
+			<th class="header">Tax %</th>
 			<th class="header">Contract Document</th>
 			<th class="header">Action</th>
 		</tr>
@@ -48,7 +48,7 @@
 										<div style="float: left; width: 100%; margin-top: 5px;">
 											<span style="float: left;">
 												<?php $file_id = base64_encode($rec_file['id']); ?>
-												<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
+												<a onclick="download_contract_files('<?php echo $file_id; ?>'); return false;" title="<?php echo $rec_file['file_name']; ?>"><img src="assets/img/file-download.png">&nbsp;Download</a>
 											</span>
 										</div>
 									<?php $serial_id++; ?>

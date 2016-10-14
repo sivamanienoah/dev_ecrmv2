@@ -93,7 +93,7 @@
 						<input type="hidden" id="exp_type" value="">									
 					</div>
 				</form>
-				<div id='existUploadedFile'>
+				<div id="existCommUploadedFile">
 					<?php if(is_array($upload_data) && !empty($upload_data) && count($upload_data)>0) { ?>
 						<?php $serial_id = 1; ?>
 						<?php foreach($upload_data as $rec_file) { ?>
@@ -315,9 +315,32 @@ function runCommissionAjaxFileUpload()
 	$('#attachment_document').val('');
 	return false;
 }
+$("#existCommUploadedFile").delegate("a.del_file","click",function() {
+	/*delete the file by ajax function*/
+	var str_delete 	= $(this).attr("serial_id");
+	var result 		= confirm("Are you sure you want to delete this attachment?");
+	if (result==true) {
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: site_base_url+'reseller/deleteCommissionUploads/',
+			data: '&file_id='+$(this).attr("id")+'&commission_id='+commission_id+'&contracter_user_id='+contracter_user_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			cache: false,
+			beforeSend:function() {
 
+			},
+			success: function(data) {
+				console.info(data);
+				if(data.res=='success'){
+					$('a[serial_id="'+str_delete+'"]').parent("div").remove();
+				}
+			}                                                                                   
+		});
+	} else {
+		return false;
+	}
+});
 $("#commissionUploadFile").delegate("a.del_file","click",function() {
-	// var str_delete 	= $(this).attr("id");
 	var str_delete 	= $(this).attr("serial_id");
 	var result 		= confirm("Are you sure you want to delete this attachment?");
 	if (result==true) {
@@ -325,16 +348,4 @@ $("#commissionUploadFile").delegate("a.del_file","click",function() {
 		$('a[serial_id="'+str_delete+'"]').parent("div").remove();
 	}
 });
-
-function download_commission_files(file_id)
-{
-	var url  = site_base_url+'reseller/downloadCommissionFile';
-	var form = $('<form action="' + url + '" method="post">' +
-	'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-	'<input type="hidden" name="file_id" value="' +file_id+ '" />' +
-	'</form>');
-	$('body').append(form);
-	$(form).submit();
-	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
-}
 </script>

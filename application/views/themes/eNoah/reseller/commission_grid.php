@@ -7,8 +7,8 @@
 			<th class="header">Milestone Name</th>
 			<th class="header">For The Month Year</th>
 			<th class="header">Currency</th>
-			<th class="header">Value</th>
-			<th class="header">Attachment Documents</th>
+			<th class="header">Commission Value</th>
+			<th class="header">Attachment</th>
 			<th class="header">Action</th>
 		</tr>
 	</thead>
@@ -36,7 +36,7 @@
 										<div style="float: left; width: 100%; margin-top: 5px;">
 											<span style="float: left;">
 												<?php $file_id = base64_encode($rec_file['id']); ?>
-												<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
+												<a onclick="download_commission_files('<?php echo $file_id; ?>'); return false;" title="<?php echo $rec_file['file_name']; ?>"><img src="assets/img/file-download.png">&nbsp;Download</a>
 											</span>
 										</div>
 									<?php $serial_id++; ?>
