@@ -318,7 +318,7 @@
 		id:id,
 		project_id:project_id,
 		},function(data){
-		//alert(data);
+			refresh();
 		}) ;
 		return true;
 	});
