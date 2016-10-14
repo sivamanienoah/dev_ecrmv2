@@ -330,12 +330,12 @@
 			ci_csrf_token:csrf_token,
 			id:id,
 			project_id:project_id,
-			hours:task.hours,
-			task_name:task.text,
-			progress:task.progress,
-			start_date:dateToStr(task.start_date),
-			end_date:dateToStr(task.enddate),
-			resource:task.resource,
+			hours:item.hours,
+			task_name:item.text,
+			progress:item.progress,
+			start_date:dateToStr(item.start_date),
+			end_date:dateToStr(item.enddate),
+			resource:item.resource,
 		},function(data){
 			gantt.changeTaskId(id, data);
 			refresh();
