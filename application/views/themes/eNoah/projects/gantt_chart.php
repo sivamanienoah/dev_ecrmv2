@@ -344,7 +344,7 @@
 		return true;
 	});
 	
-	gantt.config.order_branch = true;
+	gantt.config.order_branch = false;
 	gantt.config.drag_move = false;
 	gantt.config.drag_resize = false;
 	gantt.config.drag_progress = false;
