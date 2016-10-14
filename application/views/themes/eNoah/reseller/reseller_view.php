@@ -158,38 +158,43 @@ require (theme_url().'/tpl/header.php');
 				<div id="send_email_data">
 					<form id="comm-log-form">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<div class="email-list">
-						<label>Email To:</label>
-						<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
-						<?php
-							if( is_array($users) && !empty($users) && count($users)>0) {
-								foreach($users as $ua) {
-								?>
-								<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'].' '.$ua['last_name']; ?></option>
-								<?php
-								}
-							}
-						?>
-						</select>
-						</div>
-						<div class="clear"></div>
-						<div class="email-list">
-						<label class="normal">Message:</label>
-						<textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea>
-						</div>
-						<div class="clear"></div>
-						<div style="position:relative; width:560px;">
-						<label class="normal">Signature:</label>
-						<textarea name="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;"><?php echo $this->userdata['signature'] ?></textarea>
-						</div>
-						<div class="clear"></div>
-						<div style="overflow:hidden;">
-							<div class="button-container">
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="addLog(); return false;" id="add-log-submit-button">Add Post</button>
-								</div>
-							</div>				
-						</div>
+						<table>
+							<tr>
+								<td><label>Email To:</label></td>
+								<td class="email-list">
+									<select data-placeholder="Choose User..." name="user_mail" multiple='multiple' id="user_mail" class="chzn-select" style="width:420px;">
+									<?php
+										if( is_array($users) && !empty($users) && count($users)>0) {
+											foreach($users as $ua) {
+											?>
+												<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'].' '.$ua['last_name']; ?></option>
+											<?php
+											}
+										}
+									?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><label class="normal">Message:</label></td>
+								<td><textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea></td>
+							</tr>
+							<tr>
+								<td><label class="normal">Signature:</label></td>
+								<td><textarea name="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;"><?php echo $this->userdata['signature'] ?></textarea></td>
+							</tr>
+							<tr>
+								<td colspan=2 align="right">
+									<div style="overflow:hidden;">
+										<div class="button-container">
+											<div class="buttons">
+												<button type="submit" class="positive" onclick="addLog(); return false;" id="add-log-submit-button">Add Post</button>
+											</div>
+										</div>
+									</div>									
+								</td>
+							</tr>
+						</table>
 					</form>
 				</div>
 			</div><!--rt-tab-8 - End -->
