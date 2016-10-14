@@ -800,6 +800,32 @@ class Reseller extends crm_controller {
 		echo json_encode($data);
 		exit;
 	}
+	
+	/*
+	* Deleting the Commission uploads by ajax
+	* return json_encode
+	*/
+	public function deleteCommissionUploads()
+	{
+		$file_id = base64_decode($this->input->post('file_id'));
+		
+		$data 		= array();
+		$wh_condn 	= array('commission_id'=>$this->input->post('commission_id'), 'commission_file_upload_id'=>$file_id);
+		$is_deleted = $this->reseller_model->delete_records('commission_uploads_mapping', $wh_condn);
+		if($is_deleted) {
+			//update contracts upload table
+			$updt_val = array();
+			$updt_val['status'] = 0;
+			$condn 			 = array('id'=>$this->input->post('commission_id'), 'contracter_user_id'=>$this->input->post('contracter_user_id'));
+			$update_contract = $this->reseller_model->update_records('commission_uploads', $condn, '', $updt_val); //$tbl, $wh_condn, $not_wh_condn, $up_arg
+
+			$data['res'] = 'success';
+		} else {
+			$data['res'] = 'failure';
+		}
+		echo json_encode($data);
+		exit;
+	}
 
 	/*
 	* Loading the contract data by ajax
