@@ -453,6 +453,10 @@ class Reseller extends crm_controller {
 			// echo "<pre>"; print_r($log); die;
 			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
 			
+			//delete the file upload mapping tbl
+			$wh_condnf 	= array('id'=>$this->input->post('contract_id'));
+			$this->reseller_model->delete_records('contracts_uploads_mapping', $wh_condnf);
+			
 			$data['res'] = 'success';
 		} else {
 			$data['res'] = 'failure';
@@ -1191,6 +1195,10 @@ class Reseller extends crm_controller {
 			$log['date_created']  = date('Y-m-d H:i:s');
 			$log['log_content']   = $log_detail;
 			$log_res = $this->reseller_model->insert_row_return_id("logs", $log);
+			
+			//delete the file upload mapping tbl
+			$wh_condnf 	= array('id'=>$this->input->post('commission_id'));
+			$this->reseller_model->delete_records('commission_uploads_mapping', $wh_condnf);
 			
 			$data['res'] = 'success';
 		} else {
