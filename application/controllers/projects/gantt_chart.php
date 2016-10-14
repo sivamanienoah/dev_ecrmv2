@@ -6,7 +6,7 @@ class Gantt_chart extends crm_controller
 		parent::__construct(); 
 		$this->load->helper(array('form', 'url')); 
 	}
-
+	
 	public function getTask()
 	{
 		$project_id=$_GET['project_id'];
@@ -26,11 +26,21 @@ class Gantt_chart extends crm_controller
 				$task_name=$list['task_name'];
 				$start_date=date("d-m-Y",strtotime($list['start_date']));
 				$end_date=date("d-m-Y",strtotime($list['end_date']));
+				
+				$startdate=date("Y-m-d",strtotime($list['start_date']));
+				$enddate=date("Y-m-d",strtotime($list['end_date']));
+				
 				$predecessors=$this->get_task_id($list['predecessors']);
 				$duration=$list['duration'];
 				$resource_name=$list['resource_name'];
 				$complete_percentage=$list['complete_percentage']/100;
-				$result['data'][]=array('id'=>$id,'text'=>$task_name,'start_date'=>$start_date,'end_date'=>$end_date,'predecessor'=>$predecessors,'duration'=>$duration,'resource_name'=>$resource_name,'progress'=>$complete_percentage,'parent'=>$list['parent_id'],'open'=>"true");
+				
+				$datetime1 = date_create($startdate);
+				$datetime2 = date_create($enddate);
+				$interval = date_diff($datetime1, $datetime2);
+				$days=$interval->format('%a')+1;
+
+				$result['data'][]=array('text'=>$task_name,'start_date'=>$start_date,'hours'=>$duration,'duration'=>$days,'progress'=>$complete_percentage,'parent'=>$list['parent_id'],'id'=>$id,'owner'=>$resource_name,'resource'=>$resource_name,'enddate'=>$end_date,"open"=>"true");
 			}
 		}
 		echo json_encode($result);
@@ -107,12 +117,17 @@ class Gantt_chart extends crm_controller
 			$task_name=$this->input->post('task_name');
 			$start_date=$this->input->post('start_date');
 			$end_date=$this->input->post('end_date');
-			$duration=$this->input->post('duration');
+			$hours=$this->input->post('hours');
 			$progress=($this->input->post('progress')*100);
 			$project_id=$this->input->post('project_id');
+			$resource=$this->input->post('resource');
 
-			$sql="update ".$this->cfg['dbpref']."project_plan set task_name='$task_name',duration='$duration',start_date='$start_date',end_date='$end_date',complete_percentage='$progress' WHERE id='$id' and project_id='$project_id'";
+			$sql="update ".$this->cfg['dbpref']."project_plan set task_name='$task_name',duration='$hours',start_date='$start_date',end_date='$end_date',complete_percentage='$progress',resource_name='$resource' WHERE id='$id'";
 			$exe=$this->db->query($sql);
+			
+			$this->updateParentHours($id);
+			
+			$this->updateParentProgress($id);
 		}
 	}
 
@@ -151,6 +166,11 @@ class Gantt_chart extends crm_controller
 			$sql="INSERT INTO ".$this->cfg['dbpref']."project_plan( 	uid,project_id,task_id,parent_id,task_name,duration,start_date,end_date,predecessors,resource_name,estimated_start,estimated_end,complete_percentage) VALUES ('$uid','$project_id','$task_id','$parent_id','$task_name','$duration','$start_date','$end_date','','','','','$progress')";
 			$exe=$this->db->query($sql);
 			$id = $this->db->insert_id();
+			
+			$this->updateParentHours($id);
+			
+			$this->updateParentProgress($id);
+			
 			echo $id;exit;
 		}
 	}
@@ -206,5 +226,95 @@ class Gantt_chart extends crm_controller
 		}
 		return $first_id.'.'.$last_id; 
 	} 
+	
+	public function updateParentHours($id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('id', $id);
+		$this->db->where('parent_id != ', 0);
+		$this->db->order_by("id", "desc");
+		$sql = $this->db->get();
+		// echo $sql->num_rows();exit;
+		if($sql->num_rows() > 0 )
+		{
+			$row = $sql->row_array();
+			$parent_id=$row['parent_id'];
+			
+			$this->db->select_sum('duration');
+			$this->db->from($this->cfg['dbpref'].'project_plan');
+			$this->db->where('parent_id', $parent_id);
+			$sql = $this->db->get();
+			$row = $sql->row_array();
+			$total_hours=$row['duration'];
+						
+			$sql_query="update ".$this->cfg['dbpref']."project_plan set duration='$total_hours' WHERE id='$parent_id'";
+			$exe=$this->db->query($sql_query);
+			
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'project_plan');
+			$this->db->where('id', $parent_id);
+			$this->db->where('parent_id != ', 0);
+			$this->db->order_by("id", "desc");
+			$sql = $this->db->get();
+			if($sql->num_rows() > 0 )
+			{
+				//repeat function
+				$this->updateParentHours($parent_id);
+			}
+		}
+	}
+	
+	
+	public function updateParentProgress($id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('id', $id);
+		$this->db->where('parent_id != ', 0);
+		$this->db->order_by("id", "desc");
+		$sql = $this->db->get();
+		// echo $sql->num_rows();exit;
+		if($sql->num_rows() > 0 )
+		{
+			$row = $sql->row_array();
+			echo $parent_id=$row['parent_id'];
+			
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'project_plan');
+			$this->db->where('parent_id', $parent_id);
+			$sql = $this->db->get();
+			
+			if($sql->num_rows() > 0 )
+			{
+				$total_percentage=0;$total_work_hours=0;
+				$row = $sql->result_array();
+				foreach($row as $each_row)
+				{
+					$work_hours=$each_row['duration'];
+					$progress=$each_row['complete_percentage'];
+					$total_percentage+=$work_hours*$progress;
+					$total_work_hours+=$work_hours;
+				}
+				
+				$total_progress=$total_percentage/$total_work_hours;
+				
+				$sql_query="update ".$this->cfg['dbpref']."project_plan set complete_percentage='$total_progress' WHERE id='$parent_id'";
+				$exe=$this->db->query($sql_query);
+				
+				$this->db->select('*');
+				$this->db->from($this->cfg['dbpref'].'project_plan');
+				$this->db->where('id', $parent_id);
+				$this->db->where('parent_id != ', 0);
+				$this->db->order_by("id", "desc");
+				$sql = $this->db->get();
+				if($sql->num_rows() > 0 )
+				{
+					//repeat function
+					$this->updateParentProgress($parent_id);
+				}
+			}
+		}
+	}
 } 
 ?>

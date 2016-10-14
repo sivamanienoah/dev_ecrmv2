@@ -40,19 +40,19 @@ class Upload extends crm_controller
 			{
 				foreach($records as $list)
 				{
-					if($i>2)
+					if($i>1)
 					{
 						$uid=$list['UID'];
 						$task_name=mysql_real_escape_string($list['Name']);
 						$WBS=$list['WBS'];
-						$duration=split('PT',$list['Duration']);
+						$duration=split('PT',$list['Work']);
 						$split_duration=split('PT',$duration[1]);
 						$duration_hours=split('H',$split_duration[0]);
 						$duration_in_hours=$duration_hours[0];
-						$start_date=date("Y-m-d",strtotime($list['Start']));
-						$finish_date=date("Y-m-d",strtotime($list['Finish']));
-						$estimated_start=date("Y-m-d",strtotime($list['ManualStart']));
-						$estimated_end=date("Y-m-d",strtotime($list['ManualFinish']));
+						$start_date=date("Y-m-d H:i:s",strtotime($list['Start']));
+						$finish_date=date("Y-m-d H:i:s",strtotime($list['Finish']));
+						$estimated_start=date("Y-m-d H:i:s",strtotime($list['ManualStart']));
+						$estimated_end=date("Y-m-d H:i:s",strtotime($list['ManualFinish']));
 						$complete_percent=$list['PercentComplete'];
 						$resource_names=$this->get_resources($list['UID'],$assignment,$resources);
 						$parent_id=$this->get_parent($WBS,$project_id);
