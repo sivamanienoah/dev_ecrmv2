@@ -510,4 +510,28 @@ function resellerDataTable()
 		"bDestroy": true
 	});
 }
+
+function download_contract_files(file_id)
+{
+	var url  = site_base_url+'reseller/download_file';
+	var form = $('<form action="' + url + '" method="post">' +
+	'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	'<input type="hidden" name="file_id" value="' +file_id+ '" />' +
+	'</form>');
+	$('body').append(form);
+	$(form).submit();
+	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
+}
+
+function download_commission_files(file_id)
+{
+	var url  = site_base_url+'reseller/downloadCommissionFile';
+	var form = $('<form action="' + url + '" method="post">' +
+	'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	'<input type="hidden" name="file_id" value="' +file_id+ '" />' +
+	'</form>');
+	$('body').append(form);
+	$(form).submit();
+	// window.location.href = site_base_url+'reseller/download_file/'+file_id;
+}
 /////////////////
