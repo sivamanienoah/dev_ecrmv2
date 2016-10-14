@@ -20,6 +20,7 @@ class Gantt_chart extends crm_controller
 		if($query->num_rows() > 0 )
 		{
 			$row = $query->result_array();
+			
 			foreach($row as $list)
 			{
 				$id=$list['id'];
@@ -39,13 +40,33 @@ class Gantt_chart extends crm_controller
 				$datetime2 = date_create($enddate);
 				$interval = date_diff($datetime1, $datetime2);
 				$days=$interval->format('%a')+1;
-
-				$result['data'][]=array('text'=>$task_name,'start_date'=>$start_date,'hours'=>$duration,'duration'=>$days,'progress'=>$complete_percentage,'parent'=>$list['parent_id'],'id'=>$id,'owner'=>$resource_name,'resource'=>$resource_name,'enddate'=>$end_date,"open"=>"true");
+				
+				$parent_id=$this->get_parent_id($project_id);
+				
+				if($list['parent_id']==$parent_id){$open=false;}
+				else{$open=true;}
+				
+				$result['data'][]=array('text'=>$task_name,'start_date'=>$start_date,'hours'=>$duration,'duration'=>$days,'progress'=>$complete_percentage,'parent'=>$list['parent_id'],'id'=>$id,'owner'=>$resource_name,'resource'=>$resource_name,'enddate'=>$end_date,"open"=>$open);
 			}
 		}
 		echo json_encode($result);
 	}
-
+	
+	public function get_parent_id($project_id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $project_id);
+		$this->db->where('parent_id =', 0);
+		$query = $this->db->get();
+		$result=array();
+		if($query->num_rows() > 0 )
+		{
+			$row = $query->row_array();
+			return $row['id'];
+		}
+	}
+	
 	public function get_task_id($uid,$project_id)
 	{
 		$this->db->select('*');
@@ -173,7 +194,7 @@ class Gantt_chart extends crm_controller
 			
 			$this->updateParentProgress($id);
 			
-			//echo $id;exit;
+			echo $id;exit;
 		}
 	}
 

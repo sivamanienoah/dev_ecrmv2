@@ -264,10 +264,6 @@
 		{name: "date",type:"dhx_calendar",map_to:"auto",skin:'',date_format:'%d-%m-%Y'},
 	];
 	
-	gantt.attachEvent("onLoadEnd", function(){
-		var first = gantt.getTaskByTime()[0];
-		gantt.showLightbox(first.id);
-	});
 
 	gantt.attachEvent("onAfterTaskUpdate", function(id, task, is_new){
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
@@ -322,7 +318,7 @@
 		}) ;
 		return true;
 	});
-	gantt.attachEvent("onAfterTaskAdd", function(id,item){
+	gantt.attachEvent("onBeforeTaskAdd", function(id,item){
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
@@ -338,7 +334,7 @@
 			end_date:dateToStr(item.enddate),
 			resource:item.resource,
 		},function(data){
-			//gantt.changeTaskId(id, data);
+			gantt.changeTaskId(id, data);
 			refresh();
 		}) ;
 		return true;
