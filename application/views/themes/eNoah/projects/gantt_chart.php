@@ -269,7 +269,7 @@
 		gantt.showLightbox(first.id);
 	});
 
-	gantt.attachEvent("onBeforeTaskUpdate", function(id, task, is_new){
+	gantt.attachEvent("onAfterTaskUpdate", function(id, task, is_new){
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
@@ -310,7 +310,7 @@
 		gantt.parse(data);
 	}
 
-	gantt.attachEvent("onBeforeTaskDelete", function(id, task, is_new){
+	gantt.attachEvent("onAfterTaskDelete", function(id, task, is_new){
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
 		$.post(site_base_url+"projects/gantt_chart/deleteTask",{
@@ -322,7 +322,7 @@
 		}) ;
 		return true;
 	});
-	gantt.attachEvent("onBeforeTaskAdd", function(id,item){
+	gantt.attachEvent("onAfterTaskAdd", function(id,item){
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");

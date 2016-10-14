@@ -93,19 +93,16 @@ class Gantt_chart extends crm_controller
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'project_plan');
 		$this->db->where('project_id', $project_id);
+		$this->db->where('parent_id =',0);
 		$query = $this->db->get();
 		$result=array();
 		$row_count=$query->num_rows();
 		if($query->num_rows() > 0 )
 		{
-			$row = $query->result_array();
-			foreach($row as $list)
-			{
-				$total_percentage+=$list['complete_percentage'];
-				$progress=$total_percentage/$row_count;
-			}
+			$row = $query->row_array();
+			$progress=$row['complete_percentage'];
 		}
-		$result['response']=round($progress);
+		$result['response']=$progress;
 		echo json_encode($result);
 	}
 
@@ -145,6 +142,10 @@ class Gantt_chart extends crm_controller
 			//DELETE PARENT NODE
 			$sql="update ".$this->cfg['dbpref']."project_plan set status='1' WHERE id='$id' and project_id='$project_id'";
 			$exe=$this->db->query($sql);
+			
+			$this->updateParentHours($id);
+			
+			$this->updateParentProgress($id);
 		}
 	}
 
@@ -244,6 +245,7 @@ class Gantt_chart extends crm_controller
 			$this->db->select_sum('duration');
 			$this->db->from($this->cfg['dbpref'].'project_plan');
 			$this->db->where('parent_id', $parent_id);
+			$this->db->where('status = ', 0);
 			$sql = $this->db->get();
 			$row = $sql->row_array();
 			$total_hours=$row['duration'];
@@ -255,6 +257,7 @@ class Gantt_chart extends crm_controller
 			$this->db->from($this->cfg['dbpref'].'project_plan');
 			$this->db->where('id', $parent_id);
 			$this->db->where('parent_id != ', 0);
+			$this->db->where('status = ', 0);
 			$this->db->order_by("id", "desc");
 			$sql = $this->db->get();
 			if($sql->num_rows() > 0 )
@@ -283,6 +286,7 @@ class Gantt_chart extends crm_controller
 			$this->db->select('*');
 			$this->db->from($this->cfg['dbpref'].'project_plan');
 			$this->db->where('parent_id', $parent_id);
+			$this->db->where('status = ', 0);
 			$sql = $this->db->get();
 			
 			if($sql->num_rows() > 0 )
@@ -306,6 +310,7 @@ class Gantt_chart extends crm_controller
 				$this->db->from($this->cfg['dbpref'].'project_plan');
 				$this->db->where('id', $parent_id);
 				$this->db->where('parent_id != ', 0);
+				$this->db->where('status = ', 0);
 				$this->db->order_by("id", "desc");
 				$sql = $this->db->get();
 				if($sql->num_rows() > 0 )
