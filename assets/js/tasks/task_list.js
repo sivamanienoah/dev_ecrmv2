@@ -30,6 +30,11 @@ $(function() {
 
 $('.dataTables_filter label').css( "width", "auto");
 $(".dataTables_empty").css( "padding", "10px" );
+if( $('#welcome_view_quote').length )
+{
+$("#dashboardcount").css({"right": "14px", "top": "35px"});
+}
+
 });
 
 function btnActions(actionType,moduleName,methodName,itemId,formId) {
