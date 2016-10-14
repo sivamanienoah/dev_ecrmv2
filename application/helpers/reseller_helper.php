@@ -93,3 +93,49 @@ if ( ! function_exists('getResellerAgreementDate'))
 		}
 	}
 }
+
+if ( ! function_exists('getContractsUploadsFile'))
+{
+    function getContractsUploadsFile($id = false)
+	{
+		if($id) {
+			$CI  = get_instance();
+			$cfg = $CI->config->item('crm'); /// load config
+			
+			$CI->db->select('cu.id, cu.file_name');
+			$CI->db->from($CI->cfg['dbpref']."contracts_uploads_mapping as cum");
+			$CI->db->where('cum.contract_id', $id);
+			$CI->db->join($CI->cfg['dbpref']."contracts_uploads as cu", 'cu.id = cum.contract_file_upload_id', 'left');
+			$CI->db->order_by("cu.id", "asc");
+			$query = $CI->db->get();
+			// echo $CI->db->last_query(); exit;
+			$reseller = $query->result_array();	
+			return $reseller;
+		} else {
+			return false;
+		}
+    }
+}
+
+if ( ! function_exists('getCommissionUploadsFile'))
+{
+    function getCommissionUploadsFile($id = false)
+	{
+		if($id) {
+			$CI  = get_instance();
+			$cfg = $CI->config->item('crm'); /// load config
+			
+			$CI->db->select('cu.id, cu.file_name');
+			$CI->db->from($CI->cfg['dbpref']."commission_uploads_mapping as cmsn");
+			$CI->db->where('cmsn.commission_id', $id);
+			$CI->db->join($CI->cfg['dbpref']."commission_uploads as cu", 'cu.id = cmsn.commission_file_upload_id', 'left');
+			$CI->db->order_by("cu.id", "asc");
+			$query = $CI->db->get();
+			// echo $CI->db->last_query(); exit;
+			$reseller = $query->result_array();	
+			return $reseller;
+		} else {
+			return false;
+		}
+    }
+}

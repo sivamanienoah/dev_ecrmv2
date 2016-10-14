@@ -117,32 +117,44 @@ require (theme_url().'/tpl/header.php');
 			</div><!--rt-tab-3 - End -->
 			
 			<div id="rt-tab-4">
-				<div id='lead_filter' style="margin-top: 10px; position: relative;">
-					<?php $attributes = array('id'=>'lead_filter_form', 'name'=>'lead_filter_form'); ?>
+				<div id="lead_filter" style="width: 20% ! important; margin: 5px 0px; padding: 5px 0px;">
+					<?php $attributes = array('id'=>'reseller_project_form', 'name'=>'reseller_project_form'); ?>
 					<?php echo form_open_multipart("reseller/getResellerLeads", $attributes); ?>
-						<table>
-							<tr>
-								<td><input type="radio" name="filter_leads" value="active" checked="checked" /></td><td>Open Leads</td>
-								<td><input type="radio" name="filter_leads" value="all"></td><td>All Leads</td>
+					<table class="data-table leadAdvancedfiltertbl" cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr>		
+								<td align="left">
+									<label>Filter: </label>
+									<input type="radio" name="filter_leads" value="active" checked="checked" />&nbsp;Open Leads&nbsp;&nbsp;
+									<input type="radio" name="filter_leads" value="all">&nbsp;All Leads
+								</td>
 							</tr>
-						</table>
+						</tbody>
+					</table>
 					<?php form_close(); ?>
 				</div>
+				<div class="clear"></div>
 				<div id="reseller_lead_data"></div>
 			</div><!--rt-tab-4 - End -->
 			
 			<div id="rt-tab-5">
-				<div id='sale_filter' style="margin-top: 10px; position: relative;">
+				<div id="sale_filter" style="width: 20% ! important; margin: 5px 0px; padding: 5px 0px;">
 					<?php $attributes = array('id'=>'reseller_project_form', 'name'=>'reseller_project_form'); ?>
 					<?php echo form_open_multipart("reseller/getResellerJobs", $attributes); ?>
-						<table>
-							<tr>
-								<td><input type="radio" name="filter_projects" value="active" checked="checked" /></td><td>Active</td>
-								<td><input type="radio" name="filter_projects" value="all"></td><td>All</td>
+					<table class="data-table leadAdvancedfiltertbl" cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr>		
+								<td align="left">
+									<label>Filter: </label>
+									<input type="radio" name="filter_projects" value="active" checked="checked" />&nbsp;Active Projects&nbsp;&nbsp;
+									<input type="radio" name="filter_projects" value="all">&nbsp;All Projects
+								</td>
 							</tr>
-						</table>
+						</tbody>
+					</table>
 					<?php form_close(); ?>
 				</div>
+				<div class="clear"></div>
 				<div id="reseller_project_data"></div>
 			</div><!--rt-tab-5 - End -->
 			
@@ -167,7 +179,7 @@ require (theme_url().'/tpl/header.php');
 										if( is_array($users) && !empty($users) && count($users)>0) {
 											foreach($users as $ua) {
 											?>
-												<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'].' '.$ua['last_name']; ?></option>
+												<option value="<?php echo 'email-log-'.$ua['userid']; ?>"><?php echo $ua['first_name'].' '.$ua['last_name'].' - '.$ua['emp_id']; ?></option>
 											<?php
 											}
 										}

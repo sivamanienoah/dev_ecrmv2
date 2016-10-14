@@ -64,7 +64,7 @@ class Reseller extends crm_controller {
 	 * @access public
 	 * @param reseller user id
 	 */
-	public function view_reseller($update=false,$id=0)
+	public function view_reseller($update=false, $id=0)
 	{
 		$is_int = is_numeric($id);
 		if(!$is_int)
@@ -84,6 +84,7 @@ class Reseller extends crm_controller {
 		$data['users'] 				= $this->reseller_model->get_records('users', $wh_condn=array('inactive'=>0), $order=array('first_name'=>'asc'));
 		$data['contract_data'] 		= $this->reseller_model->get_contracts_details($id);
 		$data['commission_data'] 	= $this->reseller_model->get_commission_details($id);
+
 		//get the current financial year
 		$curFiscalYear 				= getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		//get the closed job ids
@@ -1229,7 +1230,7 @@ class Reseller extends crm_controller {
 				
 				$successful = $received_by = '';
 				
-				if ($emails != '' || isset($data_log['email_to_customer']))
+				if ($emails != '')
 				{
 					$emails = explode(':', $emails);
 					$mail_id = array();
@@ -1302,7 +1303,7 @@ class Reseller extends crm_controller {
 					}
 					else
 					{
-						$successful = '<br /><br />' . $successful;
+						$successful = '<br /><br />' . rtrim($successful, ',');
 					}
 				}
 			
@@ -1310,31 +1311,14 @@ class Reseller extends crm_controller {
 				// use this to update the view status
 				$ins['userid_fk'] = $upd['log_view_status'] = $data_log['reseller_id'];
 				$ins['date_created'] = date('Y-m-d H:i:s');
-				$ins['log_content'] = $ins['log_content'] . $successful;
+				$ins['log_content'] = $ins['log_content'] ."<br />Sent by<br />".$this->userdata['first_name']." ".$this->userdata['last_name']." ".$successful;
 				
 				// inset the new log
 				$this->db->insert($this->cfg['dbpref'] . 'logs', $ins);
                 
                 $log_content = nl2br(auto_link(special_char_cleanup(ascii_to_entities(htmlentities(str_ireplace('<br />', "\n", $data_log['log_content'])))), 'url', TRUE)) . $successful;
-                
-				$fancy_date = date('l, jS F y h:iA', strtotime($ins['date_created']));
-				
-$table = <<<HDOC
-<tr id="log" class="log">
-<td id="log" class="log">
-<p class="data">
-        <span>{$fancy_date}</span>
-    {$user_data['first_name']} {$user_data['last_name']}
-    </p>
-    <p class="desc">
-        {$log_content}
-    </p>
-</td>
-</tr>
-HDOC;
 				
                 $json['error'] = FALSE;
-                $json['html'] = $table;
 				
                 echo json_encode($json);
 				exit;

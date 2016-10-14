@@ -10,6 +10,7 @@
 			<th class="header">Contract Status</th>
 			<th class="header">Currency</th>
 			<th class="header">Tax</th>
+			<th class="header">Contract Document</th>
 			<th class="header">Action</th>
 		</tr>
 	</thead>
@@ -34,6 +35,27 @@
 					<td align="left"><?php echo $this->contract_status[$row['contract_status']]; ?></td>
 					<td align="right"><?php echo $currency_arr[$row['currency']];?></td>
 					<td align="right"><?php echo $row['tax']; ?></td>
+					<td align="right">
+						<?php
+							$con_files = array();
+							$con_files = getContractsUploadsFile($row['id']);
+							// echo "<pre>"; print_r($con_files); echo "</pre>";
+						?>	
+							<div id='existUploadedFile'>
+								<?php if(is_array($con_files) && !empty($con_files) && count($con_files)>0) { ?>
+									<?php $serial_id = 1; ?>
+									<?php foreach($con_files as $rec_file) { ?>
+										<div style="float: left; width: 100%; margin-top: 5px;">
+											<span style="float: left;">
+												<?php $file_id = base64_encode($rec_file['id']); ?>
+												<a onclick="download_files('<?php echo $file_id; ?>'); return false;"><?php echo $rec_file['file_name']; ?></a>
+											</span>
+										</div>
+									<?php $serial_id++; ?>
+									<?php } ?>
+								<?php } ?>
+							</div>
+					</td>
 					<td align="left">
 						<?php if($this->session->userdata('edit')==1) { ?>
 							<a title="Edit" onclick="editContractData(<?php echo $row['id']; ?>, <?php echo $row['contracter_id']; ?>, 'edit'); return false;"><img src="assets/img/edit.png" alt="edit"></a>

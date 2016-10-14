@@ -21,24 +21,27 @@ $(document).ready(function() {
 	
 	$( "#reseller_tabs" ).tabs({
 		beforeActivate: function( event, ui ) {
-			if (ui.newPanel[0].id=='rt-tab-1')
-				reset_add_form();
-				reset_commission_form();
-			if (ui.newPanel[0].id=='rt-tab-2') {
-				reset_add_form();
-				reset_commission_form();
-			}
-			if (ui.newPanel[0].id=='rt-tab-4') {
-				getAllJobs(reseller_id, '1');				
-			}
-			if (ui.newPanel[0].id=='rt-tab-5') {
-				getAllJobs(reseller_id, '2');
-			}
-			if (ui.newPanel[0].id=='rt-tab-6') {
-				getCustomerContact(reseller_id)
-			}
-			if (ui.newPanel[0].id=='rt-tab-7') {
-				getAuditHistory(reseller_id);
+			switch(ui.newPanel[0].id) {
+				case 'rt-tab-1':
+					reset_add_form();
+					reset_commission_form();
+				break;
+				case 'rt-tab-2':
+					reset_add_form();
+					reset_commission_form();
+				break;
+				case 'rt-tab-4':
+					getAllJobs(reseller_id, '1', 'active');
+				break;
+				case 'rt-tab-5':
+					getAllJobs(reseller_id, '2', 'active');
+				break;
+				case 'rt-tab-6':
+					getCustomerContact(reseller_id);
+				break;
+				case 'rt-tab-7':
+					getAuditHistory(reseller_id);
+				break;
 			}
 		}
 	});
@@ -169,8 +172,26 @@ function load_contract_grid(contracter_user_id)
 	});
 }
 
+/*
+*Filter for leads
+*Params reseller_id, 1-Leads, filter_type-Active or all Leads
+*/
+$('input[name="filter_leads"]').click(function() {
+	var filter_type = $(this).attr("value");
+	getAllJobs(reseller_id, '1', filter_type);
+});
+
+/*
+*Filter for Projects
+*Params reseller_id, 2-Projects, filter_type-Active or all Projects
+*/
+$('input[name="filter_projects"]').click(function() {
+	var filter_type = $(this).attr("value");
+	getAllJobs(reseller_id, '2', filter_type);
+});
+
 //get all the leads by reseller
-function getAllJobs(userid, type)
+function getAllJobs(userid, type, filter_type)
 {
 	var type_id = '';
 	if(type == 1) {
@@ -178,10 +199,10 @@ function getAllJobs(userid, type)
 	} else if(type == 2) {
 		type_id = 'reseller_project_data';
 	}
-		$.ajax({
+	$.ajax({
 		type: "POST",
 		url: site_base_url+'reseller/getResellerJobs/',
-		data: '&userid='+userid+'&type='+type+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: '&userid='+userid+'&type='+type+'&filter_type='+filter_type+'&'+csrf_token_name+'='+csrf_hash_token,
 		cache: false,
 		dataType:'html',
 		beforeSend:function() {
@@ -369,9 +390,9 @@ function deleteCommissionData(commission_id, contracter_user_id)
 					$('#csmn_'+commission_id).remove();
 					setTimeout('timerfadeout()', 4000);
 					// alert($('#list_commission_det tbody tr').length)
-					if($('#list_commission_det tbody tr').length==0){
+					/* if($('#list_commission_det tbody tr').length==0){
 						reset_commission_form();
-					}
+					} */
 				} else if(data.res == 'failure'){
 					$('#succes_add_commission_data').html("<span class='ajx_failure_msg'>Error in deleting commission.</span>");
 				}
@@ -440,7 +461,7 @@ function addLog()
 	}
 
 	var email_set = '';
-	$('.email-list input[type="hidden"]').each(function(){
+	$('.email-list input[type="hidden"]').each(function() {
 		email_set += $(this).attr('value') + ':';
 	});
 
