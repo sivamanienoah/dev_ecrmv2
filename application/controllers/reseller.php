@@ -72,6 +72,11 @@ class Reseller extends crm_controller {
 			redirect('reseller');
 		}
 		
+		if(($this->userdata['role_id'] == $this->reseller_role_id) && ($id!=$this->userdata['userid'])) {
+			redirect('reseller');
+			exit;
+		}
+		
 		$data['page_heading'] 	= "View Reseller Details";
 		$data['reseller_det'] 	= array();
 		$data['reseller_det'] 	= $this->reseller_model->get_reseller($id);
