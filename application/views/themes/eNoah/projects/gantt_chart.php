@@ -329,6 +329,7 @@
 		$.post(site_base_url+"projects/gantt_chart/addTask",{
 			ci_csrf_token:csrf_token,
 			id:id,
+			parent_id:item.parent,
 			project_id:project_id,
 			hours:item.hours,
 			task_name:item.text,

@@ -236,7 +236,6 @@ class Gantt_chart extends crm_controller
 		$this->db->where('parent_id != ', 0);
 		$this->db->order_by("id", "desc");
 		$sql = $this->db->get();
-		// echo $sql->num_rows();exit;
 		if($sql->num_rows() > 0 )
 		{
 			$row = $sql->row_array();
@@ -279,7 +278,7 @@ class Gantt_chart extends crm_controller
 		if($sql->num_rows() > 0 )
 		{
 			$row = $sql->row_array();
-			echo $parent_id=$row['parent_id'];
+			$parent_id=$row['parent_id'];
 			
 			$this->db->select('*');
 			$this->db->from($this->cfg['dbpref'].'project_plan');
