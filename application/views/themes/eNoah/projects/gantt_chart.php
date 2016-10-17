@@ -135,10 +135,10 @@
 		{name:"start_date",label:"Start Date",align:"center",width:80},
 		{name:"enddate",label:"End Date",align:"center",width:80},
 		{name:"hours",label:"Work hours",align:"center",width:80},
-		{name:"resource",label:"Resource Name &nbsp;&nbsp;&nbsp;",align:"left",width:120},
 		{name:"progress",label:"% Complete &nbsp;",template:function(obj){
 			var progress=obj.progress*100;return Math.round(progress);
 		},align:"right",width:80},
+		{name:"resource",label:"Resource Name &nbsp;&nbsp;&nbsp;",align:"left",width:120},
 		{name:"add",label:"",width:44}
 	];
 	gantt.config.grid_width = 380;
