@@ -1450,12 +1450,12 @@ class Reseller extends crm_controller {
 			$log_res = $this->reseller_model->insert_row_return_id("commission_history_log", $commission_log);
 			
 			//do logs in crm_logs table
-			$log_detail = "Commission Invoice Raised by: ".$this->userdata['first_name']." ".$this->userdata['last_name']."\n";
-			$log_detail .= "\nInvoice Raised Date: ".date('d-m-Y', strtotime($commission_log['commission_invoice_generate_on']));
+			$log_detail = "Release Commission Payment by: ".$this->userdata['first_name']." ".$this->userdata['last_name']."\n";
+			$log_detail .= "\nCommission Released Date: ".date('d-m-Y', strtotime($commission_log['commission_invoice_generate_on']));
 			$log_detail .= "\nProject Name: ".$project_details['lead_title'];
 			$log_detail .= "\nContract: ".$contract_details['contract_title'];
 			$log_detail .= "\nCommission Title: ".$commission_log['commission_title'];
-			$log_detail .= "\nPayment Advice date: ".date('d-m-Y', strtotime($commission_log['payment_advice_date']));
+			$log_detail .= "\nCommission Advice date: ".date('d-m-Y', strtotime($commission_log['payment_advice_date']));
 			$log_detail .= "\nFor the Month & Year: ".date('F Y', strtotime($commission_log['for_the_month_year']));
 			$log_detail .= "\nMilestone Name: ".$commission_log['commission_milestone_name'];
 			$log_detail .= "\nCurrency: ".$currency_arr[$commission_log['commission_currency']];
