@@ -55,9 +55,9 @@
 							<a title="Delete" onclick="deleteCommissionData(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/trash.png" alt="delete"></a>
 						<?php } ?>
 						<?php if(($this->session->userdata('edit')==1) && ($cmsn_row['commission_raised']==0)) { ?>
-						<a title="Generate Commission Invoice" href="javascript:void(0)" onclick="generate_commission_inv(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/generate_invoice.png" alt="Generate Commission Invoice"></a>
+						<a title="Release Commission Payment" href="javascript:void(0)" onclick="generate_commission_inv(<?php echo $cmsn_row['id']; ?>, <?php echo $cmsn_row['contracter_id']; ?>); return false;"><img src="assets/img/generate_invoice.png" alt="Release Commission Payment"></a>
 						<?php } else { ?>
-						<a title="Commission Invoice Raised" href="javascript:void(0)" class="readonly-status img-opacity"><img src="assets/img/generate_invoice.png" alt="Generate Invoice"></a>
+						<a title="Commission Released" href="javascript:void(0)" class="readonly-status img-opacity"><img src="assets/img/generate_invoice.png" alt="Generate Invoice"></a>
 						<?php } ?>
 					</td>
 				</tr>
