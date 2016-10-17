@@ -56,7 +56,7 @@ $(document).ready(function() {
 
 function chk_customers_contact() {
 	$('#name_msg').empty();
-	
+	var contact_error = false;
 	var customer_name=$("#customer_name").val();
 	var email=$("#email").val();
 	var position_title=$("#position_title").val();
@@ -69,10 +69,12 @@ function chk_customers_contact() {
 	if (customer_name == "") {
 		$('#name_msg').show();
 		$('#name_msg').append("<span class='ajx_failure_msg'>Name Required.</span>");
+		contact_error = true;
 	}
 	if (email == "") {
 		$('#email_msg').show();
 		$('#email_msg').append("<span class='ajx_failure_msg'>Email Required.</span>");
+		contact_error = true;
 	}
 	/* if (position_title == "") {
 		$('#position_msg').show();
@@ -81,20 +83,26 @@ function chk_customers_contact() {
 	if (phone == "") {
 		$('#phone_msg').show();
 		$('#phone_msg').append("<span class='ajx_failure_msg'>Phone No Required.</span>");
+		contact_error = true;
 	} 
-	if(customer_name!='' && email!= "" && phone!="")
+	if(contact_error == true){
+		return false;
+	}
+	/* if(customer_name!='' && email!= "" && phone!="")
 	{
 		$.ajax({
-			url: "customers_contact/update_contacts",
+			url: site_base_url+'customers_contact/update_contacts/',
 			data: params,
 			type: "POST",
 			dataType: 'json',
 			success: function(data) {
-				window.location.href = 'customers_contact';
+				alert(data.result);
+				if(data.result == 'success'){
+					window.location.href = site_base_url+'customers_contact/';
+				}
 			}		
 		});
-	}
-	return false;
+	} */
 }
 	
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
