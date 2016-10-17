@@ -2908,6 +2908,8 @@ $(function() {
                 } 
 		},
 		submitHandler: function(form) {
+			if(confirm("Uploaded file will replace the data in chart. Are you sure you want to proceed?"))
+			{
 			var formData = new FormData($("#upload-form")[0]);
 			var project_id=jQuery("#project_id").val();
 			$.ajax({
@@ -2941,6 +2943,7 @@ $(function() {
 				}
 			});
 			return false;
+			}
 		}
 	});
 });
