@@ -16,6 +16,8 @@
 class Upload extends crm_controller 
 {
 		
+		public $userdata;
+		
 		//initial declaration for the class
 		public function __construct() 
 		{ 
@@ -31,10 +33,31 @@ class Upload extends crm_controller
 			$project_id=$_GET['project_id'];
 			$return=array();
 			$sourcePath = $_FILES['xmlfile']['tmp_name'];       // Storing source path of the file in a variable
-			$targetPath = "crm_data/Project_plan/".$_FILES['xmlfile']['name']; // Target path where file is to be stored
+			
+			
+			//creating files folder name
+			$f_dir = UPLOAD_PATH.'files/';
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			//creating project_id folder name
+			$f_dir = $f_dir.$project_id;
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			$targetPath = UPLOAD_PATH.'files/'.$project_id.'/'.$_FILES['xmlfile']['name']; // Target path where file is to be stored
+		
 			if(move_uploaded_file($sourcePath,$targetPath))
 			{ 	
 				//if files moved to target path
+				
+				$this->insert_file_log($project_id,$_FILES['xmlfile']['name']);
+				//insert files log to database
+				
 				$file=$targetPath;
 				$strContents = file_get_contents($file);
 				$strDatas = $this->Xml2Array($strContents);
@@ -109,18 +132,6 @@ class Upload extends crm_controller
 							$i++;
 						}
 					}
-
-					//LOG HISTORY
-					$logs['jobid_fk']=$project_id;
-					$logs['userid_fk']=$this->userdata['userid'];
-					$logs['date_created']=date('Y-m-d H:i:s');
-
-					$condn = array("lead_id"=>$project_id);
-					$project_info = $this->request_model->get_record("leads", $condn);
-
-					$logs['log_content']="Project Name : ".$project_info['lead_title']." - ".$_FILES['xmlfile']['name'].' is uploaded for Gantt chart.';
-					$logs['attached_docs']=$_FILES['xmlfile']['name'];
-					$insert_logs=$this->request_model->insert_row('logs', $logs);
 
 					$return['result']='success';
 				}
@@ -334,6 +345,57 @@ class Upload extends crm_controller
 			}
 
 			return($xml_array);
+		}
+		
+		//insert file log and files directory
+		public function insert_file_log($project_id,$file_name)
+		{
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref'].'file_management');
+			$this->db->where('lead_id', $project_id);
+			$this->db->like('folder_name', 'Project Plans');
+			$sql = $this->db->get();
+			if($sql->num_rows() > 0 )
+			{//if array is not empty
+				$row = $sql->row_array();
+				$folder_id=$row['folder_id'];
+				//get project_plan folder id
+			}
+			else
+			{ //if array is empty
+				$this->db->select('*');
+				$this->db->from($this->cfg['dbpref'].'file_management');
+				$this->db->where('lead_id', $project_id);
+				$this->db->where('folder_name', $project_id);
+				$sql = $this->db->get();
+				if($sql->num_rows() > 0 )
+				{
+					$row = $sql->row_array();
+					$folder_id=$row['folder_id'];
+				}
+				//select root folder id
+			}
+			
+			
+			$lead_files['lead_files_name']		 = $file_name;
+			$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+			$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+			$lead_files['lead_id'] 				 = $project_id;
+			$lead_files['folder_id'] 			 = $folder_id; //get here folder id from file_management table.
+			$insert_file						 = $this->request_model->insert_new_row('lead_files', $lead_files); 
+			//insert rows to lead files
+			
+			//LOG HISTORY
+			$logs['jobid_fk']=$project_id;
+			$logs['userid_fk']=$this->userdata['userid'];
+			$logs['date_created']=date('Y-m-d H:i:s');
+
+			$condn = array("lead_id"=>$project_id);
+			$project_info = $this->request_model->get_record("leads", $condn);
+
+			$logs['log_content']=$file_name.' is uploaded for Gantt chart.';
+			$logs['attached_docs']=$file_name;
+			$insert_logs=$this->request_model->insert_row('logs', $logs);
 		}
 	} 
 ?>
