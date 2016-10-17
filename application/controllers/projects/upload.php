@@ -49,13 +49,16 @@ class Upload extends crm_controller
 				chmod($f_dir, 0777);
 			}
 			
-			$targetPath = UPLOAD_PATH.'files/'.$project_id.'/'.$_FILES['xmlfile']['name']; // Target path where file is to be stored
+			$file_name = preg_replace('/\s+/', '_', $_FILES['xmlfile']['name']);
+			//replace white spaces with "_"
+			
+			$targetPath = UPLOAD_PATH.'files/'.$project_id.'/'.$file_name; // Target path where file is to be stored
 		
 			if(move_uploaded_file($sourcePath,$targetPath))
 			{ 	
 				//if files moved to target path
 				
-				$this->insert_file_log($project_id,$_FILES['xmlfile']['name']);
+				$this->insert_file_log($project_id,$file_name);
 				//insert files log to database
 				
 				$file=$targetPath;
