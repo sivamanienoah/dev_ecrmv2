@@ -2222,23 +2222,23 @@
 			<!-------------------FILE IMPORT FOR GANTT CHART--------------------->
 				
 			<form action="" method="post" id="upload-form" novalidate="novalidate" enctype="multipart/form-data">
-			<div class="form_containerArea">
-				<div class="form_leftArea">
-				
-				 <input type="file" name="xmlfile" id="xmlfile" /> 
-				 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-				  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
-				</div>
-				<div class="form_rightArea">			
-					<input type="submit" value="upload" name="submit"/>
-				</div> 
-			 </div>
-			<div id="success_msg"></div>
+				<div class="form_containerArea">
+					<div class="form_leftArea file-upload">
+						 <input type="file" name="xmlfile" id="xmlfile" /> 
+						 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						  <input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
+					</div>
+					<div class="form_rightArea">			
+						<input type="submit" value="upload" name="submit"/>
+					</div>
+					<div id="upload_loading" style="display:none">
+						<img src = '<?php echo base_url().'assets/images/loader.gif'; ?>' width="54" />
+					</div>
+				 </div>
+				<div id="success_msg" class="m-b-10"></div>
 			</form> 
-			
-		
-			<div id="upload_loading" style="display:none">
-				<img src = '<?php echo base_url().'assets/images/ajax_loader.gif'; ?>' width="54" />
+			<div class="file-upload-hint m-b-10">
+				Task Name,Duration,Work,Start,Finish,Resource Names,% Complete are the required fields.
 			</div>
 		
 			<?php $this->load->view('projects/gantt_chart');?>
@@ -2254,6 +2254,8 @@
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
+.file-upload label.error{display: block; width: auto;}
+.m-b-10{margin-bottom:10px;}
 </style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>

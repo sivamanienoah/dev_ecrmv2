@@ -28,12 +28,12 @@
 	.gantt_hor_scroll { display: none !important;margin-bottom: 1px; }
 
 	.gantt_grid {
-		width: 436.25px !important;
+		width: 699px !important;
 		overflow-x: auto;
 		white-space: nowrap;
 	}
 	.gantt_task {
-		width: 699px !important;
+		width: 436.25px !important;
 		overflow-x: auto;
 		white-space: nowrap;
 	}
@@ -92,12 +92,13 @@
 		<input type="hidden" name="project_id" id="project_id" value="<?php echo $this->uri->segment('3'); ?>" />
 		<div class="col-md-10 col-md-pull-2">
 			<div class="gantt_wrapper panel" id="gantt_here" style="height:500px;"></div>
+			<!--gantt chart displays here-->
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	 
+	//get data as input for gantt chart 
 	var data = (function () {
 		var project_id=jQuery("#project_id").val();
 		var json = null;
@@ -112,7 +113,8 @@
 		});
 		return json;
 	})();
-
+	
+	//column date grid
 	gantt.config.date_grid = "%d-%m-%Y";
 	gantt.config.subscales = [
 		{ unit:"month", step:1, date:"%M"}
@@ -121,11 +123,13 @@
 	gantt.config.duration_unit = "day";
 	gantt.config.date_scale = "%d";
 	gantt.config.details_on_create = true;
-
+	//setting for column in right side of the chart
+	
 	gantt.templates.task_class = function(start, end, obj){
 		return "resource_"+obj.owner;
 	}
-
+	//return resource name in lightbox
+	
 	gantt.config.columns = [
 		{name:"text",label:"Task Name",width:300,tree:true},
 		{name:"start_date",label:"Start Date",align:"center",width:80},
@@ -139,19 +143,20 @@
 	];
 	gantt.config.grid_width = 380;
 
-	
+	//columns for left side of gantt chart data grid
 
 	gantt.templates.task_text=function(start,end,task){
 		var progress=task.progress*100;
 		progress=Math.round(progress);
 		return "("+(progress)+"%)"+" "+task.text;
 	};
-	
+	//progress status based on percentage completed
 	
 	var duration = function (a, b, c) {
 		var res = gantt.calculateDuration(a.getDate(false), b.getDate(false));
 		c.innerHTML = res + ' days';
 	};
+	//duration in days
 	var calendar_init = function (id, data, date) {
 		var obj = new dhtmlXCalendarObject(id);
 		obj.setDateFormat(data.date_format ? data.date_format : '');
@@ -208,6 +213,7 @@
 		focus: function (node) {
 		}
 	};
+	//calendar and datepicker for lightbox in chart
 	
 	gantt.form_blocks["dhx_slider"] = {
 		render: function (sns) {
@@ -249,12 +255,14 @@
 		focus: function (node) {
 		}
 	};
-
+	//progress control in lightbox 
+	
 	gantt.locale.labels["section_owner"] = "Resource";
 	gantt.locale.labels["section_time"] = "Start Date";
 	gantt.locale.labels["section_progress"] = "Progress";
 	gantt.locale.labels["section_date"] = "Date";
 	gantt.locale.labels["section_hours"] = "Duration";
+	//label name customization for lightbox
 	
 	gantt.config.lightbox.sections = [
 		{name: "description",height:38,map_to:"text",type:"textarea",focus:true},
@@ -263,7 +271,7 @@
 		{name: "hours",height:28,map_to:"hours",type:"textarea"},
 		{name: "date",type:"dhx_calendar",map_to:"auto",skin:'',date_format:'%d-%m-%Y'},
 	];
-	
+	//input field customization for lightbox
 
 	gantt.attachEvent("onAfterTaskUpdate", function(id, task, is_new){
 		var dateToStr = gantt.date.date_to_str("%Y-%m-%d %H:%i:%s");
@@ -284,9 +292,9 @@
 		}) ;
 		return true;
 	});
+	//event for after task update
 	
 	function refresh(){
-		
 		gantt.refreshData();
 		var data = (function () {
 		var project_id=jQuery("#project_id").val();
@@ -305,7 +313,8 @@
 		gantt.init("gantt_here");
 		gantt.parse(data);
 	}
-
+	//refresh chart after en event occured
+	
 	gantt.attachEvent("onAfterTaskDelete", function(id, task, is_new){
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
@@ -318,6 +327,8 @@
 		}) ;
 		return true;
 	});
+	//event for after task delete
+	
 	gantt.attachEvent("onBeforeTaskAdd", function(id,item){
 		var csrf_token=jQuery("#ci_csrf_token").val();
 		var project_id=jQuery("#project_id").val();
@@ -339,14 +350,16 @@
 		}) ;
 		return true;
 	});
+	//event for after task add
 	
 	gantt.config.order_branch = false;
 	gantt.config.drag_move = false;
 	gantt.config.drag_resize = false;
 	gantt.config.drag_progress = false;
 	gantt.config.drag_links = false;
+	//drag link resize set to default
 	
-	gantt.init("gantt_here");
+	gantt.init("gantt_here");//gantt chart display div
 	
-	gantt.parse(data);
+	gantt.parse(data);//pass data to gantt chart
 </script>

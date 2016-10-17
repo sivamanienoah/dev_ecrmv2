@@ -2930,6 +2930,10 @@ $(function() {
 							   location.reload(true); // then reload the page.(3)
 						  }, 3000); 
 					}
+					else if(data.result=='error')
+					{
+						jQuery("#success_msg").html('Please fill out all required fields');
+					}
 					else
 					{
 						jQuery("#success_msg").html('There was an error while uploading.Please try again..');
