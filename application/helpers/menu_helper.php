@@ -174,7 +174,7 @@ if ( ! function_exists('getSubtreeULMenu'))
 		$ci  = &get_instance();
 		$cfg = $ci->config->item('crm');
 		$userses = $ci->session->userdata('logged_in_user');
-		if( $subtreeRoot['id']==110 && in_array($userses['role_id'], array('8', '9', '11', '13'))){
+		if( $subtreeRoot['id']==110 && in_array($userses['role_id'], array('8', '9', '11', '13', '14'))){
 			$subtreeRoot['links_to'] = 'projects/dashboard/list';
 		}
 		if($subtreeRoot['id']==158 && ($userses['role_id'] == 14)){
@@ -268,16 +268,16 @@ if ( ! function_exists('formSubMenuList'))
 				if ($masterId == 51 && $submenu['masterid']==52 && $access['add']==0) {
 					continue;
 				}
-				if($submenu['masterid']==154 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+				if($submenu['masterid']==154 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
 					continue;
 				}
-				if($submenu['masterid']==155 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+				if($submenu['masterid']==155 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
 					continue;
 				}
-				if($submenu['masterid']==147 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+				if($submenu['masterid']==147 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
 					continue;
 				}
-				if($submenu['masterid']==148 && in_array($huserdata['role_id'], array('8', '9', '11', '13'))){
+				if($submenu['masterid']==148 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
 					continue;
 				}
 				if(($submenu['masterid']==159) && ($huserdata['role_id']==14)) {
