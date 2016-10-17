@@ -1488,6 +1488,7 @@ class Reseller extends crm_controller {
 			
 			//checking attaching attachment not exceed to 5 mb - (5mb == 5242880)
 			$file_size = 0;
+			$attachment_exists = false;
 			$attachment_array = array();
 			if(is_array($contract_files) && !empty($contract_files) && count($contract_files)>0){
 				$contract_file_path = UPLOAD_PATH.'contracts/'.$postdata['reseller_id'].'/';
@@ -1503,7 +1504,7 @@ class Reseller extends crm_controller {
 					$attachment_array[] = $commission_file_path.$comsn_file['file_name'];
 				}
 			}
-			// echo "<pre>"; print_r($attachment_array); exit;
+			// echo "<pre>".$file_size."<br/>"; print_r($attachment_array); exit;
 			
 			$user_name 		 = $this->userdata['first_name'].' '.$this->userdata['last_name'];
 			$print_fancydate = date('l, jS F y h:iA');
@@ -1529,12 +1530,16 @@ class Reseller extends crm_controller {
 			$commission_value 	 = $log_commission_data['commission_value'];
 			$remarks  			 = isset($log_commission_data['remarks']) ? $log_commission_data['remarks'] : '-';
 			//add remarks for file attachments
-			if($file_size != 0) {
-				if(5242880 < $file_size) {
-					$remarks .= "<br /><br /> <span style='color:red';>Attachments Size exceeds to 5 Mb. So attachments are not included in this mail.</span>";
-					$attachment_array = array();
+			if(is_array($attachment_array) && !empty($attachment_array) && count($attachment_array)>0) {
+				$attachment_exists = true;
+				if($file_size != 0 && $attachment_exists == true) {
+					if(5242880 < $file_size) {
+						$remarks .= "<br /><br /> <span style='color:red';>Attachments Size exceeds to 5 Mb. So attachments are not included in this mail.</span>";
+						$attachment_array = array();
+					}
 				}
-			}		
+			}
+				
 			
 			//email sent by email template
 			$param = array();
