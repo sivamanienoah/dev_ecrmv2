@@ -2904,7 +2904,7 @@ $(function() {
 		messages: {
 			 xmlfile:{
                     required: "Choose file",
-                    accept: "Only file type xml is allowed"
+                    accept: "Only xml file type is allowed"
                 } 
 		},
 		submitHandler: function(form) {
