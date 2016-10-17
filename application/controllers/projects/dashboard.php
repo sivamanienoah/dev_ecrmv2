@@ -28,7 +28,7 @@ class Dashboard extends crm_controller
 	
 	function index()
 	{
-		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		$data  				  = array();
@@ -197,7 +197,7 @@ class Dashboard extends crm_controller
 	
 	function trend_analysis()
 	{
-		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		// echo "<pre>"; print_r($_POST); exit;
@@ -951,7 +951,7 @@ class Dashboard extends crm_controller
 	
 	public function service_dashboard_old()
 	{
-		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		$data  				  = array();
@@ -1246,7 +1246,7 @@ class Dashboard extends crm_controller
 	
 	public function service_dashboard()
 	{
-		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		$data  				  = array();
@@ -1385,7 +1385,7 @@ class Dashboard extends crm_controller
 
 	public function service_dashboard_beta()
 	{
-		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13'))) {
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		$data  				  = array();
