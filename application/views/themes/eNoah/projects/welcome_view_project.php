@@ -2255,7 +2255,7 @@
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
 .file-upload label.error{display: block; width: auto;}
-.m-b-10{margin-bottom:10px;}
+.m-b-10{margin-bottom:10px;font-weight: bold;}
 </style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
