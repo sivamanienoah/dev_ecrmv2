@@ -1513,7 +1513,7 @@ class Reseller extends crm_controller {
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
 			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
-			$subject		 = 'Generate Commission Invoice Notification';
+			$subject		 = 'Release Commission Payment Notification';
 			// $customer_name   = $project_details['company'].' - '.$project_details['customer_name'];
 			// $project_name	  = word_limiter($project_details['lead_title'], 4);
 			$commission_title 	 = $log_commission_data['commission_title'];
@@ -1565,7 +1565,7 @@ class Reseller extends crm_controller {
 			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
 			$param['from_email']	  = 'webmaster@enoahprojects.com';
 			$param['from_email_name'] = 'Webmaster';
-			$param['template_name']	  = "Generate Commission Invoice Notification";
+			$param['template_name']	  = "Release Commission Payment Notification";
 			$param['subject'] 		  = $subject;
 			$param['attachments'] 	  = $attachment_array;
 			$param['job_id'] 		  = $pjtid;
@@ -1573,7 +1573,7 @@ class Reseller extends crm_controller {
 			$this->email_template_model->sent_email($param);
 		} else {
 			$output['error'] = true;
-			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
+			$output['errormsg'] = 'An error occured. Commission cannot be updated.';
 		}
 		echo json_encode($output);
 	}	
