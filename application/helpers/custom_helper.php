@@ -227,15 +227,15 @@ function get_current_financial_year($year=false,$month=false)
 	if($year && $month) {
 		$month = date('m', strtotime("$month $year"));
 		if($month < '04') {
-			$financial_year= ($year-1) ."-".$year;
+			$financial_year = ($year-1) ."-".$year;
 		} else {
-			$financial_year= $year."-".($year + 1);
+			$financial_year = $year."-".($year + 1);
 		}
 	} else {
 		if(date('m')<'04') {
-			$financial_year= date('Y',strtotime('-1 year'))."-".date('Y');
+			$financial_year = date('Y',strtotime('-1 year'))."-".date('Y');
 		} else {
-			$financial_year= date('Y')."-".date('Y',strtotime('+1 year'));
+			$financial_year = date('Y')."-".date('Y',strtotime('+1 year'));
 		}
 	}
 	
