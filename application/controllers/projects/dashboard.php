@@ -26,6 +26,9 @@ class Dashboard extends crm_controller
 		$this->userdata   = $this->session->userdata('logged_in_user');
 	}
 	
+	/*
+	* Utilization Metrics
+	*/
 	function index()
 	{
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
@@ -33,7 +36,7 @@ class Dashboard extends crm_controller
 		}
 		$data  				  = array();
 		$dept   			  = array();
-		$data['page_heading'] = "Project Dashboard";
+		$data['page_heading'] = "Utiliztion Metrics Dashboard";
 		
 		// $practices = $this->dashboard_model->get_practices();
 		// echo "<pre>"; print_r($this->input->post()); exit;
@@ -175,9 +178,7 @@ class Dashboard extends crm_controller
 		$check_user_array   = array();
 		$arr_depts1		    = array();
 		$arr_user_avail_set = array();
-		/* echo "<pre>";
-		print_r($data['resdata']);
-		echo "</pre>"; */
+		/* echo "<pre>"; print_r($data['resdata']); echo "</pre>"; */
 		
 		// get all departments from timesheet
 		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
