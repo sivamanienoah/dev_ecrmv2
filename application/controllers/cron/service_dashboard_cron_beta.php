@@ -320,7 +320,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
 			foreach($resdata as $rec) {		
-				$financialYear = get_current_financial_year($rec->yr,$rec->month_name);
+				$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
@@ -328,7 +328,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
 				
 				$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
-				$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 				//$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['cost'] = $rec->cost_per_hour;
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] =get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
@@ -584,7 +584,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		
 		// echo '<pre>';print_r($practice_arr);print_r($directcost); exit;
 		
-		$projects['direct_cost']   = $directcost;
+		$projects['direct_cost']    = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
 		$ins_array = array();
@@ -790,9 +790,15 @@ class Service_dashboard_cron_beta extends crm_controller
 				} else {
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours;
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost;
+				}				
+				if (isset($resarr[$practice_arr[$row->practice_id]]['totalhour'])) {
+					$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
+					$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+				} else {
+					$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $row->duration_hours;
+					$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $row->resource_duration_cost;
 				}
-				$resarr[$practice_arr[$row->practice_id]]['totalhour'] = $resarr[$practice_arr[$row->practice_id]]['totalhour'] + $row->duration_hours;
-				$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $resarr[$practice_arr[$row->practice_id]]['totalcost'] + $row->resource_duration_cost;
+				
 				if(!empty($start_date) && !empty($end_date)) {
 					if(!in_array($row->project_code, $resarr['project_code'])){
 						$resarr['project_code'][] = $row->project_code;
