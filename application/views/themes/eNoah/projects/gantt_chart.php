@@ -257,11 +257,11 @@
 	};
 	//progress control in lightbox 
 	
+	gantt.locale.labels["section_description"] = "Task Name";
 	gantt.locale.labels["section_owner"] = "Resource";
-	gantt.locale.labels["section_time"] = "Start Date";
 	gantt.locale.labels["section_progress"] = "Progress";
 	gantt.locale.labels["section_date"] = "Date";
-	gantt.locale.labels["section_hours"] = "Duration";
+	gantt.locale.labels["section_hours"] = "Work hours";
 	//label name customization for lightbox
 	
 	gantt.config.lightbox.sections = [
