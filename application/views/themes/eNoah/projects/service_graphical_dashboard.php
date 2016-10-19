@@ -54,11 +54,11 @@ table.bu-tbl-inr th{ text-align:center; }
 		<!--div class="leadstg_note">
 			"Infra Services" Practice Values are Merged With "Others" Practice.
 		</div-->
-		<?php echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
+		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		<script type="text/javascript">
-		// var all_graph_data = '<?php echo $graph_val ?>';
+		var all_graph_data = <?php echo $graph_val ?>;
 		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
-		var all_graph_data = <?php echo json_encode($graph_val) ?>;
+		// var all_graph_data = <?php echo json_encode($graph_val) ?>;
 		</script>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" class="proj-dash-table">
@@ -74,7 +74,12 @@ table.bu-tbl-inr th{ text-align:center; }
 				foreach($graph_val as $key=>$val) {
 				?>
 				<td>
-					<div style="position: relative; height: 300px; width: 400px;" id="<?php echo $key; ?>"></div>
+					<div style="position: relative; height: 300px; width: 400px;" ></div>
+					
+					<div class="pull-left dash-section left-canvas">
+						<h5 class="dash-tlt"><?php echo $val['']?></h5>
+						<div id="<?php echo $key; ?>" class="plot" style=""></div>
+					</div>					
 				</td>
 				<?php
 				if($i%2==0) {
