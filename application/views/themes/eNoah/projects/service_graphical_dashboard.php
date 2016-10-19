@@ -12,6 +12,20 @@ table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:85%; }
 table.bu-tbl-inr th{ text-align:center; }
 .jqplot-title { display: none; }
+.plot {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: #fff none repeat scroll 0 0;
+    border-color: #cecece;
+    border-image: none;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    box-shadow: 0 1px 3px #c2c2c2;
+    min-height: 345px !important;
+    width: 546px !important;
+}
 </style>
 <div id="content">
     <div class="inner">
