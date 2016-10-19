@@ -333,7 +333,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		
 		$ins_array = array();
 		$tot = array();
-		$tot_bill_eff = $tot_tot_bill_eff = 0;
+		$tot_bill_eff = $tot_tot_bill_eff = $tot_temp_ytd_uc = $tot_temp_billable_ytd_uc = 0;
 
 		if(!empty($practice_array)){
 			
@@ -360,15 +360,22 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
-						
-				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
-				$ins_array['ytd_billable_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round(($projects['direct_cost'][$parr]['total_billable_cost']/$temp_ytd_utilization_cost)*100) : '-';
-				
+				//for billable efforts
 				$bill_eff = 0;
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
 				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
+				//for billable utilization cost
+				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				if(isset($temp_ytd_utilization_cost) && !empty($temp_ytd_utilization_cost)) {
+					$bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
+				}
+				$ins_array['ytd_billable_utilization_cost'] = ($bill_ytd_uc != '') ? round($bill_ytd_uc) : '-';
+				if(isset($projects['direct_cost'][$parr]) && !empty($projects['direct_cost'][$parr])) {
+					$tot_temp_billable_ytd_uc  	+= $temp_ytd_utilization_cost;
+					$tot_temp_ytd_uc 			+= $projects['direct_cost'][$parr]['total_billable_cost'];
+				}
 				
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
@@ -381,7 +388,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$ins_array = array();
 			}
 			
-			$tot['ytd_billable'] 		 = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
+			$tot['ytd_billable'] 		 			= round(($tot_bill_eff/$tot_tot_bill_eff)*100);
+			$tot[' ytd_billable_utilization_cost '] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
 
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total'));
