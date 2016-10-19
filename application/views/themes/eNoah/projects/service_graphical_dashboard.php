@@ -62,7 +62,10 @@ table.bu-tbl-inr th{ text-align:center; }
 			<table cellspacing="0" cellpadding="0" border="0" class="proj-dash-table">
 				<tr>
 					<td align='center' colspan=2>
-						<div style="position: relative; height: 300px; width: 400px;" id="total"></div>
+						<div class="pull-left dash-section left-canvas">
+							<h5 class="dash-tlt">Total</h5>
+							<div id="total" class="plot" style=""></div>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -72,8 +75,6 @@ table.bu-tbl-inr th{ text-align:center; }
 				foreach($graph_val as $key=>$val) {
 				?>
 				<td>
-					<div style="position: relative; height: 300px; width: 400px;" ></div>
-					
 					<div class="pull-left dash-section left-canvas">
 						<h5 class="dash-tlt"><?php echo $val['practice_name']?></h5>
 						<div id="<?php echo $key; ?>" class="plot" style=""></div>
@@ -156,9 +157,6 @@ $.each(graph_data, function (index, value) {
 		}
 	});
 });
-
-
-   
 
 });
 </script>
