@@ -50,7 +50,7 @@
 		</div-->
 		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		<script type="text/javascript">
-		// var all_graph_data = <?php echo json_encode($graph_val) ?>;
+		var all_graph_data = <?php echo json_encode($graph_val) ?>;
 		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 		</script>
 		<div id="default_view">
