@@ -3,7 +3,10 @@
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <style>
 .jqplot-title { display: none; }
-.plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 345px !important; width: 546px !important; }
+.plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 460px !important; }
+.chlid_container { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; width: 680px !important; min-height: 343px !important;}
+.uc_container_wrap .chlid_container .graph_box { float:left; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; height: 150px !important; width: 204px !important; margin:10px; }
+.graph_box .jqplot-event-canvas { left: 0px !important; }
 </style>
 <div id="content">
     <div class="inner">
@@ -53,21 +56,35 @@
 		var all_graph_data = <?php echo json_encode($graph_val) ?>;
 		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 		</script>
-		<div id="default_view">
-			<table cellspacing="0" cellpadding="0" border="0" class="proj-dash-table">
-				<tr>
-					<td align='center' colspan=2>
-						<div class="pull-left dash-section left-canvas">
-							<h5 class="dash-tlt">Total</h5>
-							<div id="total" class="plot" style=""></div>
-						</div>
-					</td>
-				</tr>
-				<tr>
+		<div class="clearfix">
+			<div class="uc_container_wrap" id='uc_container'>
+				<div class="pull-left" id="overall_container">
+					<h5 class="dash-tlt">Over All - <?php echo $graph_val['total']['ytd_billable'] . "%"; ?></h5>
+					<div id="total" class="plot"></div>
+				</div>
+				<div class="pull-right chlid_container clearfix" id="child_container">
+				<h5 class="dash-tlt">Practice Wise</h5>
+					<?php
+					unset($graph_val['total']);
+					$i = 1;
+					foreach($graph_val as $key=>$val) {
+					?>
+					<div class="graph_box">
+						<div id="<?php echo $key; ?>" style="height: 150px !important; width: 202px !important;"></div>
+					</div>
+					<?php if($i == 3 || $i == 6) { ?>
+					<div class="clear"></div>
+					<?php } ?>
+					<?php
+					$i++;
+					}
+					?>
+				</div>
+			</div>
 				<?php 
 				unset($graph_val['total']);
 				$i = 1;
-				foreach($graph_val as $key=>$val) {
+				/* foreach($graph_val as $key=>$val) {
 				?>
 				<td>
 					<div class="pull-left dash-section left-canvas">
@@ -81,12 +98,8 @@
 				</tr>
 				<?php }
 				$i++;
-				}
+				} */
 			?>
-			</table>
-				
-			<div class="clearfix"></div>
-			<div id="chart4"></div>
 						
         <?php 
 		} else {
@@ -106,7 +119,7 @@ var graph_data = <?php echo json_encode($graph_val) ?>;
 /*Test Graph*/
 
 $(document).ready(function(){
-console.info(all_graph_data);
+// console.info(all_graph_data);
 // alert(all_graph_data.total.practice_name);
 
 /*for total utiliztion cost graph*/
@@ -119,12 +132,18 @@ plot1 = $.jqplot('total', [s2],{
 			label: all_graph_data.total.practice_name,
 			labelPosition: 'bottom',
 			labelHeightAdjust: -5,
-			intervalOuterRadius: 85,
+			intervalInnerRadius: 148,
+			intervalOuterRadius: 120,
+			background: "transparent",
+			ringColor: "#bbc6d0",
+			ringWidth: 1,
+			hubRadius: 6,
+			needleThickness: 5,
+			ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
 			min: 0,
 			max: 100,
-			// ticks: [1000, 2000, 3000, 4000, 5000],
-			intervals:[30, 70, 100],
-			intervalColors:['#cc6666', '#f79e62', '#66cc66' ],
+			intervals:[10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+			intervalColors:['#fa0002','#fb3915', '#f95d10', '#f59502', '#f7ac13', '#ffd107','#f3e219', '#d8ed22', '#b0d112', '#9eba1a' ],
 			smooth: true,
 			animation: { show: true }
 		}
@@ -138,15 +157,21 @@ $.each(graph_data, function (index, value) {
 		seriesDefaults: {
 			renderer: $.jqplot.MeterGaugeRenderer,
 			rendererOptions: {
-				label: value.practice_name,
+				label: value.practice_name+' - '+value.ytd_billable+' %',
 				labelPosition: 'bottom',
-				labelHeightAdjust: -5,
-				intervalOuterRadius: 85,
+				labelHeightAdjust: 5,
+				background: "transparent",
+				ringColor: "#bbc6d0",
+				ringWidth: 1,
+				hubRadius: 5,
+				needleThickness: 3,
+				intervalInnerRadius: 33,
+				intervalOuterRadius: 45,
+				ticks: [0, 20, 40, 60, 80, 100],
 				min: 0,
 				max: 100,
-				// ticks: [1000, 2000, 3000, 4000, 5000],
-				intervals:[30, 70, 100],
-				intervalColors:['#cc6666', '#f79e62', '#66cc66' ],
+				intervals:[10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+				intervalColors:['#fa0002','#fb3915', '#f95d10', '#f59502', '#f7ac13', '#ffd107','#f3e219', '#d8ed22', '#b0d112', '#9eba1a' ],
 				smooth: true,
 				animation: { show: true }
 			}
