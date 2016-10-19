@@ -9,6 +9,7 @@ class Service_graphical_dashboard extends crm_controller
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
+		$this->load->helper('form');
         $this->load->helper('custom');
 		$this->load->helper('lead_stage');
 		$this->load->helper('url'); 
@@ -33,18 +34,21 @@ class Service_graphical_dashboard extends crm_controller
 		$data  				  = array();
 		$data['page_heading'] = "Utilization Cost Dashboard";
 		
-		// echo "<pre>"; print_R($this->input->post());
+		$postdata = $this->input->post();
 		
+		// echo "<pre>"; print_R($postdata); exit;
+		$uc_filter_by = 'hour';
+		if(isset($postdata['uc_filter_by'])){
+			$uc_filter_by = $postdata['uc_filter_by'];
+		}
+
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
-		
-		//default billable_month
-		$month = date('Y-m-01 00:00:00');
 
-		$data['bill_month'] = $month;
-		$data['start_date'] = $start_date;
-		$data['end_date']   = $end_date;
+		$data['start_date'] 	= $start_date;
+		$data['end_date']   	= $end_date;
+		$data['uc_filter_by'] 	= $uc_filter_by;
 		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -56,11 +60,15 @@ class Service_graphical_dashboard extends crm_controller
 		$data['practice_data'] = $pquery->result();	
 
 		//get values from services dashboard table
-		$this->db->select('practice_name, ytd_billable');
-		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		if($uc_filter_by == 'hour') {
+			$this->db->select('practice_name, ytd_billable');
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		} else if ($uc_filter_by == 'cost') {
+			$this->db->select('practice_name, ytd_billable_utilization_cost as ytd_billable');
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		}
 		$sql = $this->db->get();
 		$graph_res = $sql->result_array();
-
 		$graph_val = array();
 		if(!empty($graph_res)){
 			foreach($graph_res as $key=>$val) {
@@ -69,17 +77,11 @@ class Service_graphical_dashboard extends crm_controller
 				}
 				$graph_id = strtolower($val['practice_name']);
 				$graph_id = str_replace(' ', '_', $graph_id);
-				// $graph_val[$graph_id] = $val['ytd_billable'];
 				$graph_val[$graph_id] = $val;
 			}
 		}
 		$data['graph_val'] = $graph_val;
-	
-		if($this->input->post("filter")!="") {
-			$this->load->view('projects/service_graphical_dashboard_view', $data);
-		} else {
-			$this->load->view('projects/service_graphical_dashboard', $data);
-		}
+		$this->load->view('projects/service_graphical_dashboard', $data);
 	}
 	
 	
