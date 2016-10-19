@@ -56,9 +56,7 @@ table.bu-tbl-inr th{ text-align:center; }
 		</div-->
 		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		<script type="text/javascript">
-		var all_graph_data = <?php echo $graph_val ?>;
-		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
-		// var all_graph_data = <?php echo json_encode($graph_val) ?>;
+		var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 		</script>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" class="proj-dash-table">
@@ -77,7 +75,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<div style="position: relative; height: 300px; width: 400px;" ></div>
 					
 					<div class="pull-left dash-section left-canvas">
-						<h5 class="dash-tlt"><?php echo $val['']?></h5>
+						<h5 class="dash-tlt"><?php echo $val['practice_name']?></h5>
 						<div id="<?php echo $key; ?>" class="plot" style=""></div>
 					</div>					
 				</td>
