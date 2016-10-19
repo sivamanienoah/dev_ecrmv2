@@ -2,7 +2,7 @@
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript">
-var all_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
@@ -98,25 +98,24 @@ table.bu-tbl-inr th{ text-align:center; }
 </div>
 
 <script type="text/javascript">
-var data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+var graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 
 <script type="text/javascript">
 /*Test Graph*/
 
 $(document).ready(function(){
-console.info(all_data);
-// console.info(graph_names);
-// alert(all_data.total.practice_name);
+console.info(all_graph_data);
+// alert(all_graph_data.total.practice_name);
 
 /*for total utiliztion cost graph*/
-var s2 = [all_data.total.ytd_billable];
+var s2 = [all_graph_data.total.ytd_billable];
 var plot1 = 'plot_total';
 plot1 = $.jqplot('total', [s2],{
 	seriesDefaults: {
 		renderer: $.jqplot.MeterGaugeRenderer,
 		rendererOptions: {
-			label: all_data.total.practice_name,
+			label: all_graph_data.total.practice_name,
 			labelPosition: 'bottom',
 			labelHeightAdjust: -5,
 			intervalOuterRadius: 85,
@@ -130,7 +129,7 @@ plot1 = $.jqplot('total', [s2],{
 		}
 	}
 });
-$.each(data, function (index, value) {
+$.each(graph_data, function (index, value) {
     // alert( index + ' ' + value.practice_name );
 	var s1 = [value.ytd_billable];
 	var plot = 'plot_'+index;
