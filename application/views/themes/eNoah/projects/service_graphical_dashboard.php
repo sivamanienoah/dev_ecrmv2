@@ -56,8 +56,8 @@ table.bu-tbl-inr th{ text-align:center; }
 		</div-->
 		<?php echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		<script type="text/javascript">
+		alert('test'); return false;
 		var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
-		console.info(all_graph_data);
 		</script>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" class="proj-dash-table">
