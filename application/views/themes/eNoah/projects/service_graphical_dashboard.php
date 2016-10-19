@@ -57,7 +57,8 @@ table.bu-tbl-inr th{ text-align:center; }
 		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		<script type="text/javascript">
 		// alert('test')
-		var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+		var all_graph_data = <?php echo json_encode($graph_val) ?>;
+		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 		</script>
 		<?php exit; ?>
 		<div id="default_view">
