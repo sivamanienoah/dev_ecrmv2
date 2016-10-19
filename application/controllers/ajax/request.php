@@ -375,11 +375,9 @@ class Request extends crm_controller {
 	 * @method get_project_files()
 	 * @param $job_id
 	 */
-	public function get_project_files($job_id, $fparent_id=0) {
-		
-		$this->load->helper('lead_helper'); 
-
-		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+	public function get_project_files($job_id, $fparent_id=0) 
+	{
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 4) {
 			$chge_access = 1;
 		} else {
 			$chge_access = get_del_access($job_id, $this->userdata['userid']);
