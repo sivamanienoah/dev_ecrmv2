@@ -374,8 +374,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 				$ins_array['ytd_billable_utilization_cost'] = ($bill_ytd_uc != '') ? round($bill_ytd_uc) : '-';
 				if(isset($projects['direct_cost'][$parr]) && !empty($projects['direct_cost'][$parr])) {
-					$tot_temp_billable_ytd_uc  	+= $temp_ytd_utilization_cost;
-					$tot_temp_ytd_uc 			+= $projects['direct_cost'][$parr]['total_billable_cost'];
+					$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
+					$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
 				}
 				
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
