@@ -18,7 +18,8 @@ Modified By     : Sriram.S
  * @author 		eNoah
  * @Controller
  */
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 class Service_graphical_dashboard_cron extends crm_controller 
 {	
     public function __construct()
