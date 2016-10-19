@@ -2,30 +2,8 @@
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <style>
-.hide-calendar .ui-datepicker-calendar { display: none; }
-button.ui-datepicker-current { display: none; }
-.ui-datepicker-calendar { display: none; }
-.dept_section{ width:100%; float:left; margin:20px 0 0 0; }
-.dept_section div{ width:49%; }
-.dept_section div:first-child{ margin-right:2% }
-table.bu-tbl th{ text-align:center; }
-table.bu-tbl{ width:85%; }
-table.bu-tbl-inr th{ text-align:center; }
 .jqplot-title { display: none; }
-.plot {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: #fff none repeat scroll 0 0;
-    border-color: #cecece;
-    border-image: none;
-    border-style: solid;
-    border-width: 0 1px 1px;
-    box-shadow: 0 1px 3px #c2c2c2;
-    min-height: 345px !important;
-    width: 546px !important;
-}
+.plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 345px !important; width: 546px !important; }
 </style>
 <div id="content">
     <div class="inner">
@@ -47,15 +25,16 @@ table.bu-tbl-inr th{ text-align:center; }
 		
 		<div id="filter_section">
 			<div class="clear"></div>
-			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
+			<div id="advance_search" style="padding-bottom:15px;">			
+				<?php $attributes = array('id' => 'filter_uc_dashboard','name' => 'filter_uc_dashboard'); ?>
+				<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
 					<div style="width:65% !important;">
 						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
-									<input <?php echo 'checked="checked"';?> type="radio" name="filter_by" value="1" />&nbsp;By Hour &nbsp;&nbsp;<input type="radio" name="filter_by" value="2" />&nbsp;By Cost
+									<input type="radio" name="uc_filter_by" value="hour" <?php if($uc_filter_by == 'hour') { echo 'checked="checked"'; }?> />&nbsp;By Hour &nbsp;&nbsp;
+									<input type="radio" name="uc_filter_by" value="cost" <?php if($uc_filter_by == 'cost') { echo 'checked="checked"'; }?> />&nbsp;By Cost
 								</td>
 								<td align="left">
 									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
@@ -63,7 +42,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							</tr>
 						</table>
 					</div>
-				</form>
+				<?php echo form_close(); ?>
 			</div>
 		</div>
 		<!--div class="leadstg_note">
