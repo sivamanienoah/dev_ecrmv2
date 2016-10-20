@@ -2,8 +2,8 @@
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript">
-var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
-// var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
+// var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <style>
 .jqplot-title { display: none; }
@@ -65,6 +65,24 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 			</div>
 			<div class="uc_container_wrap" id="uc_container">
 				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
+			</div>
+			<!--Utilization Cost Container-->
+			
+			<!--Revenue Share Dashboard Container-->
+			<div class="uc-head">
+				<h2 class="pull-left borderBtm">Revenue Share Dashboard</h2>
+				<div id="filter_section" class="pull-right">
+					<div class="clear"></div>
+					<div id="advance_search" style="padding-bottom:15px;">			
+						
+					</div>
+				</div>
+			</div>
+			<div class="revenue_container_wrap" id="revenue_container">
+				<?php #echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
+				<!--For Pie Charts-->
+				<div id="revenue_pie">
+				</div>
 			</div>
 			<!--Utilization Cost Container-->
         <?php 
