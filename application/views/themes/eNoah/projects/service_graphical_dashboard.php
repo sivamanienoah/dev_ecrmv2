@@ -16,7 +16,7 @@ var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		<div class="page-title-head">
-			<h2 class="pull-left borderBtm"><?php echo $page_heading . "(".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
+			<h2 class="pull-left borderBtm"><?php echo $page_heading . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
 
 			<!--a class="choice-box" onclick="advanced_filter();" >
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
