@@ -3,7 +3,7 @@
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript">
 var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
-// var uc_all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+// var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <style>
 .jqplot-title { display: none; }
@@ -64,7 +64,7 @@ var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
 				</div>
 			</div>
 			<div class="uc_container_wrap" id="uc_container">
-				<?php echo $this->load->view('projects/graphical_box_uc', $graph_val); ?>
+				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
 			</div>
 			<!--Utilization Cost Container-->
         <?php 
