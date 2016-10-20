@@ -24,4 +24,4 @@
 var uc_graph_data = <?php echo json_encode($graph_val) ?>;
 // var uc_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
-<script type="text/javascript" src="assets/js/projects/service_graphical_dashboard.js"></script>
+<script type="text/javascript" src="assets/js/projects/graphical_box_uc.js"></script>

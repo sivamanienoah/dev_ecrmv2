@@ -24,7 +24,6 @@ class Service_graphical_dashboard extends crm_controller
 		}
 		
 	}
-	
 
 	public function index()
 	{
