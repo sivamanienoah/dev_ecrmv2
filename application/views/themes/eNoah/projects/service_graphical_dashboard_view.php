@@ -1,9 +1,12 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
-<script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <script type="text/javascript">
-var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
-// var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
+// var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <style>
 .jqplot-title { display: none; }
@@ -12,6 +15,8 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 .uc_container_wrap .chlid_container .graph_box { float:left; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; height: 150px !important; width: 204px !important; margin:10px; }
 .graph_box .jqplot-event-canvas { left: 0px !important; }
 .uc-head { border-bottom: 1px solid #ccc; float: left; margin: 0 0 20px; width: 100%; }
+
+#revenue_pie .jqplot-table-legend {bottom: 2px !important;}
 </style>
 <div id="content">
     <div class="inner">
@@ -38,7 +43,7 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 				</div-->
 				<div id="filter_section" class="pull-right">
 					<div class="clear"></div>
-					<div id="advance_search" style="padding-bottom:15px;">			
+					<div id="advance_search" style="padding-bottom:5px;">			
 						<?php $attributes = array('id'=>'filter_uc_dashboard','name'=>'filter_uc_dashboard','method'=>'post'); ?>
 						<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
 
@@ -67,10 +72,10 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
 			</div>
 			<!--Utilization Cost Container-->
-			
+			<div class="clear"></div>
 			<!--Revenue Share Dashboard Container-->
 			<div class="uc-head">
-				<h2 class="pull-left borderBtm">Revenue Share Dashboard</h2>
+				<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Share Dashboard</h2>
 				<div id="filter_section" class="pull-right">
 					<div class="clear"></div>
 					<div id="advance_search" style="padding-bottom:15px;">			
@@ -78,10 +83,25 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 					</div>
 				</div>
 			</div>
+			<div class="clear"></div>
 			<div class="revenue_container_wrap" id="revenue_container">
+				<?php
+					$revenue_arr = array();
+					$revenue_values = '';
+					foreach($invoice_val as $practice_name=>$practice_value){
+						$revenue_arr[] = "['".$practice_name.'('.round($practice_value).')'."'".','.$practice_value."]";
+					}
+					$revenue_values = implode(',', $revenue_arr);
+				?>
+				
 				<?php #echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
 				<!--For Pie Charts-->
-				<div id="revenue_pie">
+				<div class="pull-left" id="overall_container">
+					<h5 class="dash-tlt"><?php echo "Revenue in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
+					<div id="revenue_pie" class="plot"></div>
+				</div>
+				<div class="pull-right chlid_container clearfix" id="child_container">
+					<h5 class="dash-tlt">Revenue Comparison with Past Year</h5>
 				</div>
 			</div>
 			<!--Utilization Cost Container-->
@@ -93,5 +113,9 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	var revenue_values = [<?php echo $revenue_values ?>];
+</script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
