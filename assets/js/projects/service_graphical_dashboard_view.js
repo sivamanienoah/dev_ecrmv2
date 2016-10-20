@@ -7,7 +7,7 @@ $("#filter_uc_dashboard").submit(function() {
 	
 	$.ajax({
 		type: "POST",
-		url: site_base_url+"projects/service_graphical_dashboard/get_uc_val",
+		url: site_base_url+"projects/service_graphical_dashboard/getUcVal",
 		dataType: "json",
 		data: form_data,
 		beforeSend:function() {
