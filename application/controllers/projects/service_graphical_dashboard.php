@@ -32,7 +32,9 @@ class Service_graphical_dashboard extends crm_controller
 			redirect('project');
 		}
 		$data  				  = array();
-		$data['page_heading'] = "Utilization Cost Dashboard";
+		$data['page_heading'] = "YTD Utilization Cost Dashboard";
+		$res 				  = array();
+		$res['result']		  = false;
 		
 		$postdata = $this->input->post();
 		
@@ -81,7 +83,14 @@ class Service_graphical_dashboard extends crm_controller
 			}
 		}
 		$data['graph_val'] = $graph_val;
-		$this->load->view('projects/service_graphical_dashboard', $data);
+		
+		if(isset($postdata['filter']) && $postdata['filter']=='filter') {
+			$res['result']  = true;
+			$res['html'] 	= $this->load->view('projects/graphical_box_uc', $data, true);
+			echo json_encode($res); exit;
+		} else {
+			$this->load->view('projects/service_graphical_dashboard', $data);
+		}
 	}
 	
 	
