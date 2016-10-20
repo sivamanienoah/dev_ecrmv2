@@ -87,7 +87,7 @@ class Service_graphical_dashboard extends crm_controller
 			$uc_filter_by = $postdata['uc_filter_by'];
 		}
 		
-		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->get_uc_details($uc_filter_by);
+		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by);
 		
 		$res['result']  = true;
 		$res['html'] 	= $this->load->view('projects/graphical_box_uc', $data, true);
