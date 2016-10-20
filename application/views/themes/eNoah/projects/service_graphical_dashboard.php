@@ -1,6 +1,10 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
+<script type="text/javascript">
+var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
+// var uc_all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+</script>
 <style>
 .jqplot-title { display: none; }
 .plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 460px !important; }
@@ -52,10 +56,7 @@
 			"Infra Services" Practice Values are Merged With "Others" Practice.
 		</div-->
 		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
-		<script type="text/javascript">
-		var all_graph_data = <?php echo json_encode($graph_val) ?>;
-		// var all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
-		</script>
+		
 		<div class="clearfix">
 			<div class="uc_container_wrap" id='uc_container'>
 				<div class="pull-left" id="overall_container">
@@ -63,73 +64,51 @@
 					<div id="total" class="plot"></div>
 				</div>
 				<div class="pull-right chlid_container clearfix" id="child_container">
-				<h5 class="dash-tlt">Practice Wise</h5>
+					<h5 class="dash-tlt">Practice Wise</h5>
 					<?php
-					unset($graph_val['total']);
-					$i = 1;
-					foreach($graph_val as $key=>$val) {
-					?>
-					<div class="graph_box">
-						<div id="<?php echo $key; ?>" style="height: 150px !important; width: 202px !important;"></div>
-					</div>
-					<?php if($i == 3 || $i == 6) { ?>
-					<div class="clear"></div>
-					<?php } ?>
-					<?php
-					$i++;
-					}
+						unset($graph_val['total']);
+						$i = 1;
+						foreach($graph_val as $key=>$val) {
+						?>
+						<div class="graph_box">
+							<div id="<?php echo $key; ?>" style="height: 150px !important; width: 202px !important;"></div>
+						</div>
+						<?php if($i == 3 || $i == 6) { ?>
+						<div class="clear"></div>
+						<?php } ?>
+						<?php
+						$i++;
+						}
 					?>
 				</div>
 			</div>
-				<?php 
-				unset($graph_val['total']);
-				$i = 1;
-				/* foreach($graph_val as $key=>$val) {
-				?>
-				<td>
-					<div class="pull-left dash-section left-canvas">
-						<h5 class="dash-tlt"><?php echo $val['practice_name']?></h5>
-						<div id="<?php echo $key; ?>" class="plot" style=""></div>
-					</div>					
-				</td>
-				<?php
-				if($i%2==0) {
-				?> 
-				</tr>
-				<?php }
-				$i++;
-				} */
-			?>
-						
         <?php 
 		} else {
 			echo "You have no rights to access this page";
-		} 
+		}
 		?>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-var graph_data = <?php echo json_encode($graph_val) ?>;
-// var graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+
 </script>
 
 <script type="text/javascript">
-/*Test Graph*/
-
+var uc_graph_data = <?php echo json_encode($graph_val) ?>;
+// var uc_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 $(document).ready(function(){
-// console.info(all_graph_data);
-// alert(all_graph_data.total.practice_name);
-
+console.info(uc_all_graph_data);
+alert(uc_all_graph_data.total.practice_name);
 /*for total utiliztion cost graph*/
-var s2 = [all_graph_data.total.ytd_billable];
+var s2 = [uc_all_graph_data.total.ytd_billable];
 var plot1 = 'plot_total';
 plot1 = $.jqplot('total', [s2],{
 	seriesDefaults: {
 		renderer: $.jqplot.MeterGaugeRenderer,
 		rendererOptions: {
-			label: all_graph_data.total.practice_name,
+			label: uc_all_graph_data.total.practice_name,
 			labelPosition: 'bottom',
 			labelHeightAdjust: -5,
 			intervalInnerRadius: 148,
@@ -149,7 +128,7 @@ plot1 = $.jqplot('total', [s2],{
 		}
 	}
 });
-$.each(graph_data, function (index, value) {
+$.each(uc_graph_data, function (index, value) {
     // alert( index + ' ' + value.practice_name );
 	var s1 = [value.ytd_billable];
 	var plot = 'plot_'+index;
