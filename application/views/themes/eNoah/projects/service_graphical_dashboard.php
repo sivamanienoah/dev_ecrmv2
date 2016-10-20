@@ -17,19 +17,16 @@ var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
-
 			<!--a class="choice-box" onclick="advanced_filter();" >
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 				<span>Advanced Filters</span>
 			</a>
-			
 			<div class="buttons export-to-excel">
 				<button type="button" class="positive" id="btnExportITServices">
 					Export to Excel
 				</button>
 			</div-->
 		</div>
-		
 		<div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px;">			
@@ -99,8 +96,8 @@ var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
 var uc_graph_data = <?php echo json_encode($graph_val) ?>;
 // var uc_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 $(document).ready(function(){
-console.info(uc_all_graph_data);
-alert(uc_all_graph_data.total.practice_name);
+// console.info(uc_all_graph_data);
+// alert(uc_all_graph_data.total.practice_name);
 /*for total utiliztion cost graph*/
 var s2 = [uc_all_graph_data.total.ytd_billable];
 var plot1 = 'plot_total';
