@@ -560,7 +560,13 @@
 			<?php endif; ?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>			
+				<?php 
+				if($show_gantt_chart==0 && $show_milestones==1)
+				{ //if gantt chart data not exists and milestones data exists then show milestones 
+				?>
+					<li><a href="<?php echo current_url() ?>#jv-tab-4-5">Milestones</a></li>			
+				<?php 
+				}?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-7">URLs</a></li>
 			<?php if($this->userdata['role_id'] != 8):?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-5">Customer</a></li>
@@ -1502,172 +1508,177 @@
 		
 	</div><!-- id: jv-tab-4 end -->
 
-	<div id="jv-tab-4-5">
-		<div id="milestone-top-view">
-		<h3>Milestones</h3>
-			<div style="color:red; margin:7px 0 0;" id="msErrNotifyFadeout"></div>
-			<div id="milestone-add-view">
-				<form id="milestone-management" onsubmit="return false;">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					<table class="milestone-table ms-toggler" style="display:none;">
-						<tr>
-							<td>
-								<?php $jobid = isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0; ?>
-								<input type="hidden" name="jobid_fk" id="jobid_fk" value=<?php echo $jobid; ?> />
-								<p>
-									Milestone name *
-									<input type="text" name="milestone_name" id="milestone_name" class="textfield" style="width:235px;" />
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
+	<?php 
+	if($show_gantt_chart==0 && $show_milestones==1)
+	{ //if gantt chart data not exists and milestones data exists then show milestones  ?>
+		<div id="jv-tab-4-5">
+			<div id="milestone-top-view">
+			<h3>Milestones</h3>
+				<div style="color:red; margin:7px 0 0;" id="msErrNotifyFadeout"></div>
+				<div id="milestone-add-view">
+					<form id="milestone-management" onsubmit="return false;">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<table class="milestone-table ms-toggler" style="display:none;">
+							<tr>
+								<td>
+									<?php $jobid = isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0; ?>
+									<input type="hidden" name="jobid_fk" id="jobid_fk" value=<?php echo $jobid; ?> />
+									<p>
+										Milestone name *
+										<input type="text" name="milestone_name" id="milestone_name" class="textfield" style="width:235px;" />
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p style="float: left;">
+										Planned Start Date * 
+										<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
+									</p>
+									<p style="float: left; margin: 0px 10px;">
+										Planned End Date *
+										<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p style="float: left;">
+										Actual Start Date
+										<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
+									</p>
+									<p style="float: left; margin: 0px 10px;">
+										Actual End Date
+										<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td colspan=2>
+									<p>
+										Efforts * (Numbers)
+										<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" id="ms_effort" class="textfield width60px" maxlength="5" />
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
 								<p style="float: left;">
-									Planned Start Date * 
-									<input type="text" name="ms_plan_st_date" id="ms_plan_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
+									Percentage of Completion
+									<select name="ms_percent" id="ms_percent" class="textfield width60px">
+										<?php
+											foreach($this->cfg['milestones_complete_status'] as $complete_key=>$complete_val) {
+												?>
+													<option value="<?php echo $complete_key; ?>"><?php echo $complete_val; ?></option>
+												<?php
+											}
+										?>
+									</select>
 								</p>
-								<p style="float: left; margin: 0px 10px;">
-									Planned End Date *
-									<input type="text" name="ms_plan_end_date" id="ms_plan_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p style="float: left;">
-									Actual Start Date
-									<input type="text" name="ms_act_st_date" id="ms_act_st_date" autocomplete="off" class="textfield width60px pick-date" readonly />
-								</p>
-								<p style="float: left; margin: 0px 10px;">
-									Actual End Date
-									<input type="text" name="ms_act_end_date" id="ms_act_end_date" autocomplete="off" class="textfield width60px pick-date" readonly />
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<td colspan=2>
-								<p>
-									Efforts * (Numbers)
-									<input onkeypress="return isNumberKey(event)" type="text" name="ms_effort" id="ms_effort" class="textfield width60px" maxlength="5" />
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-							<p style="float: left;">
-								Percentage of Completion
-								<select name="ms_percent" id="ms_percent" class="textfield width60px">
-									<?php
-										foreach($this->cfg['milestones_complete_status'] as $complete_key=>$complete_val) {
+								<p style="float: left; margin: 0px 15px;">
+									Status
+									<select name="milestone_status" class="textfield width100px">
+										<?php
+										foreach($this->cfg['milestones_status'] as $status_key=>$status_val) {
 											?>
-												<option value="<?php echo $complete_key; ?>"><?php echo $complete_val; ?></option>
+												<option value="<?php echo $status_key; ?>"><?php echo $status_val; ?></option>
 											<?php
 										}
-									?>
-								</select>
-							</p>
-							<p style="float: left; margin: 0px 15px;">
-								Status
-								<select name="milestone_status" class="textfield width100px">
-									<?php
-									foreach($this->cfg['milestones_status'] as $status_key=>$status_val) {
 										?>
-											<option value="<?php echo $status_key; ?>"><?php echo $status_val; ?></option>
-										<?php
-									}
-									?>
-								</select>
-							</p>
-							</td>
-						</tr>
-						<tr>
-							<td colspan=2>
-								<p>
-								<div class="buttons">
-									<button type="submit" class="positive" onclick="addMilestoneTerms(); return false;">Add</button>
-								</div>
-								<div class="buttons">
-									<button type="submit" onclick="$('.ms-toggler').slideToggle();">Cancel</button>
-								</div>
+									</select>
 								</p>
-							</td>
-						</tr>						
-					</table>
-				</form>
-			</div>
-			<?php if ($readonly_status == false) { ?>
-			<div class="buttons task-init ms-toggler" id="addNew-ms">
-				<button type="button" class="positive" onclick="$('.ms-toggler').slideToggle();" style="float:none;">Add New Milestone</button>
-			</div>
-			<?php } ?>
-			<p></p>
-			<div style="position: relative; z-index: 0;">
-				<a id="milestone-email" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
-				<a id="milestone-export" class="export-btn" name="msExport" style="color:#fff !important;">Export Timeline</a>
-			</div>
-			<?php
-			$output .= '<div class="milestone_view_det" id="milestone_view_det" style="display:block; margin-top:5px;">';
-			if(!empty($milestone_data))
-			{
-				$output .= "<table width='100%' class='payment_tbl'><tr><td colspan='3'><h6>Milestone Terms</h6></td></tr></table>";
-				$output .= "<table class='data-table' id='milestone-data' cellspacing = '0' cellpadding = '0' border = '0'>";
-				$output .= "<thead>";
-				$output .= "<tr align='left'>";
-				$output .= "<th class='header'>Milestone Name</th>";
-				$output .= "<th class='header'>Planned Start Date</th>";
-				$output .= "<th class='header'>Planned End Date</th>";
-				$output .= "<th class='header'>Actual Start Date</th>";
-				$output .= "<th class='header'>Actual End Date</th>";
-				$output .= "<th class='header'>Efforts</th>";
-				$output .= "<th class='header'>Completion(%)</th>";
-				$output .= "<th class='header'>Status</th>";
-				$output .= "<th class='header'>Action</th>";
-				$output .= "</tr>";
-				$output .= "</thead>";
-				foreach ($milestone_data as $ms_data)
+								</td>
+							</tr>
+							<tr>
+								<td colspan=2>
+									<p>
+									<div class="buttons">
+										<button type="submit" class="positive" onclick="addMilestoneTerms(); return false;">Add</button>
+									</div>
+									<div class="buttons">
+										<button type="submit" onclick="$('.ms-toggler').slideToggle();">Cancel</button>
+									</div>
+									</p>
+								</td>
+							</tr>						
+						</table>
+					</form>
+				</div>
+				<?php if ($readonly_status == false) { ?>
+				<div class="buttons task-init ms-toggler" id="addNew-ms">
+					<button type="button" class="positive" onclick="$('.ms-toggler').slideToggle();" style="float:none;">Add New Milestone</button>
+				</div>
+				<?php } ?>
+				<p></p>
+				<div style="position: relative; z-index: 0;">
+					<a id="milestone-email" class="export-btn" name="msE-mail" style="color:#fff !important;">E-Mail Milestone</a>
+					<a id="milestone-export" class="export-btn" name="msExport" style="color:#fff !important;">Export Timeline</a>
+				</div>
+				<?php
+				$output .= '<div class="milestone_view_det" id="milestone_view_det" style="display:block; margin-top:5px;">';
+				if(!empty($milestone_data))
 				{
-					switch($ms_data['milestone_status']){
-						case 0:
-						$ms_stat = 'Scheduled';
-						break;
-						case 1:
-						$ms_stat = 'In Progress';
-						break;
-						case 2:
-						$ms_stat = 'Completed';
-						break;
-					}
-					$ms_act_st = ($ms_data['ms_act_st_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_st_date'])) : '';
-					$ms_act_end = ($ms_data['ms_act_end_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_end_date'])) : '';
-					$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
-					$output .= "<tr>";
-					$output .= "<td align='left'>".$ms_data['milestone_name']."</td>";
-					$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_st_date']))."</td>";
-					$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_end_date']))."</td>";
-					$output .= "<td align='left'>".$ms_act_st."</td>";
-					$output .= "<td align='left'>".$ms_act_end."</td>";
-					$output .= "<td align='left'>".$ms_data['ms_effort']."</td>";
-					$output .= "<td align='left'>".$ms_data['ms_percent']."</td>";
-					$output .= "<td align='left'>".$ms_stat."</td>";
-					$output .= "<td align='left'>";
-					if ($readonly_status == false) {
-						$output .= "<a class='edit' title='Edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>";
-						$output .= "<a class='edit' title='Delete' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' ><img src='assets/img/trash.png' alt='delete'></a>";
-					} else {
-						$output .= "-";
-					}
-					$output .= "</td>";
+					$output .= "<table width='100%' class='payment_tbl'><tr><td colspan='3'><h6>Milestone Terms</h6></td></tr></table>";
+					$output .= "<table class='data-table' id='milestone-data' cellspacing = '0' cellpadding = '0' border = '0'>";
+					$output .= "<thead>";
+					$output .= "<tr align='left'>";
+					$output .= "<th class='header'>Milestone Name</th>";
+					$output .= "<th class='header'>Planned Start Date</th>";
+					$output .= "<th class='header'>Planned End Date</th>";
+					$output .= "<th class='header'>Actual Start Date</th>";
+					$output .= "<th class='header'>Actual End Date</th>";
+					$output .= "<th class='header'>Efforts</th>";
+					$output .= "<th class='header'>Completion(%)</th>";
+					$output .= "<th class='header'>Status</th>";
+					$output .= "<th class='header'>Action</th>";
 					$output .= "</tr>";
+					$output .= "</thead>";
+					foreach ($milestone_data as $ms_data)
+					{
+						switch($ms_data['milestone_status']){
+							case 0:
+							$ms_stat = 'Scheduled';
+							break;
+							case 1:
+							$ms_stat = 'In Progress';
+							break;
+							case 2:
+							$ms_stat = 'Completed';
+							break;
+						}
+						$ms_act_st = ($ms_data['ms_act_st_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_st_date'])) : '';
+						$ms_act_end = ($ms_data['ms_act_end_date'] != '0000-00-00 00:00:00') ? date('d-m-Y', strtotime($ms_data['ms_act_end_date'])) : '';
+						$expected_date = date('d-m-Y', strtotime($pd['expected_date']));
+						$output .= "<tr>";
+						$output .= "<td align='left'>".$ms_data['milestone_name']."</td>";
+						$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_st_date']))."</td>";
+						$output .= "<td align='left'>".date('d-m-Y', strtotime($ms_data['ms_plan_end_date']))."</td>";
+						$output .= "<td align='left'>".$ms_act_st."</td>";
+						$output .= "<td align='left'>".$ms_act_end."</td>";
+						$output .= "<td align='left'>".$ms_data['ms_effort']."</td>";
+						$output .= "<td align='left'>".$ms_data['ms_percent']."</td>";
+						$output .= "<td align='left'>".$ms_stat."</td>";
+						$output .= "<td align='left'>";
+						if ($readonly_status == false) {
+							$output .= "<a class='edit' title='Edit' onclick='milestoneEditTerm(".$ms_data['milestoneid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>";
+							$output .= "<a class='edit' title='Delete' onclick='milestoneDeleteTerm(".$ms_data['milestoneid'].");' ><img src='assets/img/trash.png' alt='delete'></a>";
+						} else {
+							$output .= "-";
+						}
+						$output .= "</td>";
+						$output .= "</tr>";
+					}
+					$output .= "</table>";
 				}
-				$output .= "</table>";
-			}
-			$output .= '</div>';
-			echo $output;
-			?>
-		</div> <!--end of milestone-top-view-->
+				$output .= '</div>';
+				echo $output;
+				?>
+			</div> <!--end of milestone-top-view-->
+		
+			<!------------------------------------------------------------------->
+		</div><!-- id: jv-tab-4-5 end -->
+	<?php } ?>
 	
-		<!------------------------------------------------------------------->
-	</div><!-- id: jv-tab-4-5 end -->
 	<div id="jv-tab-7">
 		<form id="set-urls" style="overflow:hidden; margin-bottom:15px; zoom:1;">
 		
@@ -2241,7 +2252,12 @@
 				Task Name,Duration,Work,Start,Finish,Resource Names,% Complete are the required fields.
 			</div>
 		
-			<?php $this->load->view('projects/gantt_chart');?>
+			<?php 
+			if($show_gantt_chart==1)
+			{ //if data exists then show gantt chart
+				$this->load->view('projects/gantt_chart');
+			}
+			?>
 			
 		</div><!-- id: jv-tab-11 end -->
 	

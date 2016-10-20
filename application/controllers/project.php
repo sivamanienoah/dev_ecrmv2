@@ -691,6 +691,17 @@ class Project extends crm_controller {
 				}
 				$support_db->close();	
 			}
+			
+			$gantt_chart_data=$this->check_gantt_chart_data($id);
+			
+			$milestones_data=$this->check_milestones_data($id);
+			
+			if($gantt_chart_data==0) $data['show_gantt_chart']=0;
+			else $data['show_gantt_chart']=1;
+			
+			if($milestones_data==0) $data['show_milestones']=0;
+			else $data['show_milestones']=1;
+			
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -5245,5 +5256,23 @@ HDOC;
 		}
 	}
 	
+	public function check_gantt_chart_data($id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $id);
+		$this->db->where('status', 0);
+		$query = $this->db->get();
+		return $query->num_rows();
+	}
+	
+	public function check_milestones_data($id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'milestones');
+		$this->db->where('jobid_fk', $id);
+		$query = $this->db->get();
+		return $query->num_rows();
+	}
 }
 ?>

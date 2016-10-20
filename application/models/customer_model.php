@@ -992,6 +992,7 @@ class Customer_model extends crm_model {
 																`start_date` = "'.date('Y-m-d', $strt_date).'",
 																`deadline` = "'.date('Y-m-d', $end_date).'",
 																`proj_status` = "'.$project_status.'",
+																`suspended` = "'.date('Y-m-d').'",
 																`project_code` = "'.$listProjects['pjt_id'].'",
 																`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';
 				// echo $timesheet_sql; exit;
