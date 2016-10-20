@@ -2,7 +2,7 @@
 <script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script class="include" type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript">
-var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
+var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 // var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <style>
