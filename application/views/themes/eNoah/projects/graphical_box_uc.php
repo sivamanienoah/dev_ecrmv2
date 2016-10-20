@@ -3,7 +3,7 @@
 	<div id="total" class="plot"></div>
 </div>
 <div class="pull-right chlid_container clearfix" id="child_container">
-	<h5 class="dash-tlt">practice wise</h5>
+	<h5 class="dash-tlt">Practice wise</h5>
 	<?php
 		unset($uc_graph_val['total']);
 		$i = 1;
