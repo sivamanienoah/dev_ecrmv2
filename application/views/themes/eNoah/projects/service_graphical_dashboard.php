@@ -5,9 +5,12 @@
 var uc_all_graph_data = <?php echo json_encode($graph_val) ?>;
 // var uc_all_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
-<style><!--For this page only-->
+<style>
 .jqplot-title { display: none; }
 .plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 460px !important; }
+.chlid_container { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; width: 680px !important; min-height: 343px !important;}
+.uc_container_wrap .chlid_container .graph_box { float:left; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; height: 150px !important; width: 204px !important; margin:10px; }
+.graph_box .jqplot-event-canvas { left: 0px !important; }
 .uc-head { border-bottom: 1px solid #ccc; float: left; margin: 0 0 20px; width: 100%; }
 </style>
 <div id="content">
