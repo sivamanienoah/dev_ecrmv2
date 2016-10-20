@@ -473,14 +473,14 @@ class Project extends crm_controller {
 						$team_mem[] = $teamMem['userid_fk'];
 					}
 				}
+				
 				if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					foreach($timesheet_users['username'] as $u_name) {
-						if(!empty($user_details[$u_name]['userid'])) {
+						if(!empty($user_details[strtolower($u_name)]['userid'])) {
 							$ts_team_members[] = $user_details[strtolower($u_name)]['userid'];
 						}
 					}
 				}
-				
 				//Set the Project Manager in our CRM DB.
 				/* if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
 					 
@@ -1332,25 +1332,27 @@ class Project extends crm_controller {
 		}
 		else
 		{
-			//update in crm			
-			
+			//update in crm
 			// delete the existing assigned users from the contract jobs table before inserting the new things.
 			$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $lead_id));
 			if($project_team_members)
 			{
 				$ins['jobid_fk'] = $lead_id;
 				$ptms = explode(",",$project_team_members);
+				
 				if(count($ptms)>0){
 					// query to get the username from the selected users in crm users table.
 					$this->db->select("username");
-					$this->db->where_in("userid",$ptms);
+					$this->db->where_in("userid", $ptms);
 					$res_cm_users = $this->db->get($this->cfg['dbpref']."users");
 					$rs_cm_users = $res_cm_users->result();
+					// echo "Select" . $this->db->last_query() . "<br>"; 
 										
 					//inserting the assigned users in the contract jobs table.
 					foreach($ptms as $pmembers){
 						$ins['userid_fk'] = $pmembers;
 						$insert = $this->project_model->insert_row('contract_jobs', $ins);
+						// echo "Insert" . $this->db->last_query() . "<br>";
 					}
 				}
 			}
@@ -1359,37 +1361,27 @@ class Project extends crm_controller {
 			// get the project id from project table of timesheet 
 			$timesheet_db = $this->load->database('timesheet', TRUE); 
 			$qry = $timesheet_db->get_where($timesheet_db->dbprefix('project'),array("project_code" => $project_code));
+			
 			if($qry->num_rows()) {
+				
+				// echo "I am here"; exit;
+				
+				// echo "select ".$this->db->last_query() . "<br>";
 				$res_t 				= $qry->row();
 				$timesheet_proj_id 	=  $res_t->proj_id;
 				$time_ins 			= array();
 				$time_ins_task		= array();
 				
-				/* //delete the existing assigned users in the timesheet assignment table, before inserting.
-				$timesheet_db->delete($timesheet_db->dbprefix("assignments"),array("proj_id" => $timesheet_proj_id));
-				$timesheet_db->delete($timesheet_db->dbprefix("task_assignments"),array("proj_id" => $timesheet_proj_id));
-				$time_ins['proj_id'] = $timesheet_proj_id;
-				if(count($rs_cm_users) > 0) {
-					foreach($rs_cm_users as $muser) {
-						$username= strtolower($muser->username);
-						$time_ins['username'] 	= strtolower($muser->username);
-						$time_ins['rate_id'] 	= 1;
-						$timesheet_db->insert($timesheet_db->dbprefix("assignments"), $time_ins);	
-						// Added all the task for assigned users in timesheet 10/7/2015
-						$this->project_model->task_timesheet_entry($timesheet_proj_id,$username);
-					}
-				} */
-				
 				/* changed on 23 Sep 2016 */
 				$ts_wh_condn = array('proj_id' => $timesheet_proj_id);
 				$ts_set_data = array('status' => 1);
 				$timesheet_db->update($timesheet_db->dbprefix("assignments"), $ts_set_data, $ts_wh_condn); /*Inactive all the members in the project*/
-				
+				// echo "Update ". $this->db->last_query() . "<br>";
 				/* // UPDATE enoah_project_billrate_type SET status='1' WHERE project_id='732'
 				$ts_wh_condn_pbr = array('proj_id' => $timesheet_proj_id);
 				$ts_set_data_pbr = array('status' => 1);
 				$timesheet_db->update($timesheet_db->dbprefix("project_billrate_type"), $ts_set_data_pbr, $ts_wh_condn_pbr); */
-				
+				exit;
 				if(count($rs_cm_users) > 0) { /*set active the current project members in the project*/
 					foreach($rs_cm_users as $muser) {
 						
