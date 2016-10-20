@@ -664,14 +664,13 @@ class Project_model extends crm_model
 		WHERE pj.project_code = '".$pjt_code."' AND assgn.status = 0
 		ORDER BY assgn.username";
 		
-		// echo $sql; exit;
 		$query = $timesheet_db->query($sql);
 		$res = $query->result_array();
 		
 		if(count($res) > 0) {
 			foreach($res as $row){
 				$users['name'][] = $row['first_name'] . ' ' .$row['last_name'];
-				$users['username'][] = $row['username'];
+				$users['username'][] = strtolower($row['username']);
 			}
 		}
 		return $users;
