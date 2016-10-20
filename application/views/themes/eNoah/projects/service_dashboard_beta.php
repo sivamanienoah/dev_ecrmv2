@@ -1,4 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
+<script language="javascript" type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
@@ -349,6 +350,8 @@ $practice_arr = array();
 			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
 			
 			</div>
+			
+			<div id="chart4"></div>
         <?php 
 		} else {
 			echo "You have no rights to access this page";
