@@ -1,13 +1,13 @@
 <div class="pull-left" id="overall_container">
-	<h5 class="dash-tlt">over all - <?php echo $graph_val['total']['ytd_billable'] . "%"; ?></h5>
+	<h5 class="dash-tlt">over all - <?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></h5>
 	<div id="total" class="plot"></div>
 </div>
 <div class="pull-right chlid_container clearfix" id="child_container">
 	<h5 class="dash-tlt">practice wise</h5>
 	<?php
-		unset($graph_val['total']);
+		unset($uc_graph_val['total']);
 		$i = 1;
-		foreach($graph_val as $key=>$val) {
+		foreach($uc_graph_val as $key=>$val) {
 		?>
 		<div class="graph_box">
 			<div id="<?php echo $key; ?>" style="height: 150px !important; width: 202px !important;"></div>
@@ -21,7 +21,7 @@
 	?>
 </div>
 <script type="text/javascript">
-var uc_graph_data = <?php echo json_encode($graph_val) ?>;
-// var uc_graph_data = <?php echo json_encode($graph_val, JSON_PRETTY_PRINT) ?>;
+var uc_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+// var uc_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
 </script>
 <script type="text/javascript" src="assets/js/projects/graphical_box_uc.js"></script>
