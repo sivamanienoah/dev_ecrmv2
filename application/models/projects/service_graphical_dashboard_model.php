@@ -9,18 +9,25 @@ class Service_graphical_dashboard_model extends crm_model {
 	
 	public function get_practices()
 	{
-    	$this->db->select('id, practices');
-		$this->db->where('status', 1);
-    	$this->db->order_by('id');
-		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
-		$res = $query->result_array();
-		$practices = array();
-		if(!empty($res)){
-			foreach($res as $row){
-				$practices[$row['id']] = $row['practices'];
+    	$res = array();		
+		
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		//BPO practice are not shown in IT Services Dashboard
+		$practice_not_in = array(6);
+		$this->db->where_not_in('p.id', $practice_not_in);
+		//$this->db->where_in('p.id', array(1));
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$res['practice_arr'][$prow->id] = $prow->practices;
+				$res['practice_array'][] = $prow->practices;
 			}
 		}
-		return $practices;
+		return $res;
     }
 	
 	/*
@@ -139,6 +146,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		//BPO practice are not shown in IT Services Dashboard
 		$practice_not_in = array(6);
 		$this->db->where_not_in('pr.id', $practice_not_in);
+		// $this->db->where_in('pr.id', 13);
 		$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($start_date)));
 		$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-t', strtotime($end_date)));
 		$query = $this->db->get();
