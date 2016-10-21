@@ -2927,3 +2927,6 @@ form#edit-folder-permissions { overflow:visible !important; }
     min-height: 342px !important;
     width: 100%;
 }
+#revenue_practice_compare_bar .jqplot-grid-canvas { margin: 0 6px; }
+#revenue_practice_compare_bar .jqplot-grid-canvas { top: 0 !important; }
+#revenue_practice_compare_bar table.jqplot-table-legend, table.jqplot-cursor-legend { background-color: rgba(255, 255, 255, 1) !important; }
