@@ -960,12 +960,15 @@ class Customer_model extends crm_model {
 				$client_code        = $this->get_filed_id_by_name('customers_company', 'companyid', $client_det[0]['companyid'], 'client_code');
 				$client             = $this->get_client_id_by_code_from_timesheet($client_code);
 				
+				$suspended = NULL; //suspended date set to null by default
+				
 				if($listProjects['pjt_status'] == 1) {
 					$project_status = "Started";
 				} else if($listProjects['pjt_status'] == 2) {
 					$project_status = "Complete";
 				} else if($listProjects['pjt_status'] == 3) {
 					$project_status = "Suspended";
+					$suspended = date('Y-m-d'); //suspended date set to current date of entry
 				} else if($listProjects['pjt_status'] == 4) {
 					$project_status = "Pending";
 				}
@@ -992,7 +995,7 @@ class Customer_model extends crm_model {
 																`start_date` = "'.date('Y-m-d', $strt_date).'",
 																`deadline` = "'.date('Y-m-d', $end_date).'",
 																`proj_status` = "'.$project_status.'",
-																`suspended` = "'.date('Y-m-d').'",
+																`suspended` = "'.$suspended.'",
 																`project_code` = "'.$listProjects['pjt_id'].'",
 																`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';
 				// echo $timesheet_sql; exit;
