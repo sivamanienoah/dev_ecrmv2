@@ -8,16 +8,13 @@ var params  = {};
 params[csrf_token_name] = csrf_hash_token;
 
 $(function() {
-	
 	// var bill_value  = [2, 6, 7];
 	// var inter_value = [10, 5, 3];
-	// var ticks       = ['May', 'June', 'July'];
-	var cur_name       = 'USD';
-	
-	var curr_yr_value  = curr_fiscal_value;
-	var last_yr_value  = last_fiscal_value;
-	var xticks         = line_x_axis_value;
-	// var cur_name = currency_name;
+	// var xticks       = ['May', 'June', 'July'];
+	var curr_yr_value  = curr_fiscal_inv_val;
+	var last_yr_value  = last_fiscal_inv_val;
+	var xticks         = line_x_axis_inv_val;
+	var cur_name 	   = default_currency_name;
 	var yaxis_label = 'Month';
 	
 	plot2 = $.jqplot('revenue_compare_line', [last_yr_value, curr_yr_value], {
