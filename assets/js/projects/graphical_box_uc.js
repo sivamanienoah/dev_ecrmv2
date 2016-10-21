@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	// console.info(uc_all_graph_data);
+	// alert( uc_all_graph_data.total.ytd_billable );
 	// alert(uc_all_graph_data.total.practice_name);
 	/*for total utiliztion cost graph*/
 	var s2 = [uc_all_graph_data.total.ytd_billable];
@@ -31,8 +31,8 @@ $(document).ready(function(){
 	$.each(uc_graph_data, function (index, value) {
 		// alert( index + ' ' + value.practice_name );
 		var s1 = [value.ytd_billable];
-		var plot = 'plot_'+index;
-		plot = $.jqplot(index, [s1],{
+		var plot3 = 'plot_'+index;
+		plot3 = $.jqplot(index, [s1],{
 			seriesDefaults: {
 				renderer: $.jqplot.MeterGaugeRenderer,
 				rendererOptions: {
