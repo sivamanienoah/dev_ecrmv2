@@ -76,9 +76,11 @@ class Service_graphical_dashboard extends crm_controller
 		//for last year 
 		$pract_curr_yr_val = $data['invoice_val'];
 		$pract_last_yr_val = $this->calcInvoiceDataByPractice($last_yr_invoice_data);
-		
 		if(!empty($data['practice_arr']['practice_array']) && count($data['practice_arr']['practice_array'])>0) {
 			foreach($data['practice_arr']['practice_array'] as $prac_name) {
+				if($prac_name == 'Infra Services') {
+					continue;
+				}
 				$data['prat_inv_compare']['practic_val'][] = $prac_name;
 				$data['prat_inv_compare']['curr_yr_val'][] = isset($pract_curr_yr_val[$prac_name]) ? $pract_curr_yr_val[$prac_name] : 0;
 				$data['prat_inv_compare']['last_yr_val'][] = isset($pract_last_yr_val[$prac_name]) ? $pract_last_yr_val[$prac_name] : 0;
