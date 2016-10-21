@@ -968,7 +968,7 @@ class Customer_model extends crm_model {
 					$project_status = "Complete";
 				} else if($listProjects['pjt_status'] == 3) {
 					$project_status = "Suspended";
-					$suspended = date('Y-m-d'); //suspended date set to current date of entry
+					$suspended = '"'.date('Y-m-d').'"'; //suspended date set to current date of entry
 				} else if($listProjects['pjt_status'] == 4) {
 					$project_status = "Pending";
 				}
