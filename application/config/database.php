@@ -112,9 +112,9 @@ $db['econnect']['stricton'] = FALSE;
 // Second Database
 $active_group = "timesheet";
 $active_record = TRUE;
-$db['timesheet']['hostname'] = 'localhost';
-$db['timesheet']['username'] = 'dev_timesheetv3';
-$db['timesheet']['password'] = 'T!mesHeetv3';
+$db['timesheet']['hostname'] = '10.0.9.38';
+$db['timesheet']['username'] = 'uat_timesheetv71';
+$db['timesheet']['password'] = 'UatT@1122';
 $db['timesheet']['database'] = 'dev_timesheetv3';
 // $db['timesheet']['username'] = 'root';
 // $db['timesheet']['password'] = '';
