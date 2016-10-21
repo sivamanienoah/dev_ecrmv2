@@ -960,7 +960,7 @@ class Customer_model extends crm_model {
 				$client_code        = $this->get_filed_id_by_name('customers_company', 'companyid', $client_det[0]['companyid'], 'client_code');
 				$client             = $this->get_client_id_by_code_from_timesheet($client_code);
 				
-				$suspended=NULL; //suspended date set to null by default
+				$suspended="NULL"; //suspended date set to null by default
 				
 				if($listProjects['pjt_status'] == 1) {
 					$project_status = "Started";
