@@ -298,6 +298,9 @@
 		gantt.refreshData();
 		var data = (function () {
 		var project_id=jQuery("#project_id").val();
+		
+		update_thermometer(project_id);
+		
 		var json = null;
 		$.ajax({
 			'async': false,
@@ -314,6 +317,24 @@
 		gantt.parse(data);
 	}
 	//refresh chart after en event occured
+	
+	function update_thermometer()
+	{
+		var project_id=jQuery("#project_id").val();
+		var json = null;
+		$.ajax({
+			'async': false,
+			'global': false,
+			'url': site_base_url+"projects/gantt_chart/getProgress_status?project_id="+project_id,
+			'dataType': "json",
+			'success': function (data) {
+				progress_data = data.response;
+				updateVisualStatus(progress_data);
+				//UPDATE project thermometer
+			}
+		});
+		return true;
+	}
 	
 	gantt.attachEvent("onAfterTaskDelete", function(id, task, is_new){
 		var csrf_token=jQuery("#ci_csrf_token").val();

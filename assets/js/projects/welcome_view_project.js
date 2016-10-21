@@ -1614,7 +1614,7 @@ function addURLtoJob()
 
 
 		if (project_complete_status!='') {
-			//updateVisualStatus(project_complete_status);
+			updateVisualStatus(project_complete_status);
 		}
 
 		
@@ -1798,7 +1798,7 @@ function addURLtoJob()
 					if (typeof(data) == 'object') {
 						if (data.error == false) {
 							pos_just_completed = true;
-							//updateVisualStatus(status);
+							updateVisualStatus(status);
 							// location.reload();
 						} else {
 							alert(data.error);

@@ -24,6 +24,7 @@ class Upload extends crm_controller
 			parent::__construct(); 
 			$this->userdata = $this->session->userdata('logged_in_user');
 			$this->load->model('request_model');
+			$this->load->model('projects/dashboard_model');
 			$this->load->helper(array('form', 'url')); 
 		}
 
@@ -125,6 +126,8 @@ class Upload extends crm_controller
 									//inserting xml data to table
 									$result=$this->db->query($sql);
 									//execute query
+									$this->dashboard_model->update_project_thermometer($project_id);
+									//update thermometer status
 								}
 							}
 							else

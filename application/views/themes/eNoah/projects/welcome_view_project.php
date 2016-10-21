@@ -2331,7 +2331,7 @@ $(function(){
 
 <script>
 <!-------------------LOAD VALUES FOR METER----------------------->
-var progress_data = (function () {
+/* var progress_data = (function () {
 	var project_id=jQuery("#project_id").val();
     var json = null;
     $.ajax({
@@ -2347,7 +2347,7 @@ var progress_data = (function () {
 })();
 
 updateVisualStatus(progress_data);
-
+ */
 <!------------------------------->
 
 $(document).ready(function(){

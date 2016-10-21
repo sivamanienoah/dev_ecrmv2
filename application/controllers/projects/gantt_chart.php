@@ -20,6 +20,7 @@ class Gantt_chart extends crm_controller
 	public function __construct() { 
 		parent::__construct(); 
 		$this->load->helper(array('form', 'url')); 
+		$this->load->model('projects/dashboard_model');
 	}
 	
 	//get task as input for the gantt chart
@@ -133,27 +134,6 @@ class Gantt_chart extends crm_controller
 		//convert result to json format
 	}
 	
-	//get project status
-	public function getProgress_status()
-	{
-		$progress=0;$result=array();
-		$project_id=$_GET['project_id'];
-		$this->db->select('*');
-		$this->db->from($this->cfg['dbpref'].'project_plan');
-		$this->db->where('project_id', $project_id);
-		$this->db->where('parent_id =',0);
-		$query = $this->db->get();
-		$result=array();
-		$row_count=$query->num_rows();
-		if($query->num_rows() > 0 )
-		{//if array is not empty
-			$row = $query->row_array();
-			$progress=$row['complete_percentage'];
-		}
-		$result['response']=$progress;
-		echo json_encode($result);
-		//convert result to json format
-	}
 	
 	//update task
 	public function updateTask()
@@ -178,6 +158,9 @@ class Gantt_chart extends crm_controller
 			
 			$this->updateParentProgress($id);
 			//update parent node in terms of progress
+			
+			$this->dashboard_model->update_project_thermometer($project_id);
+			//update thermometer status
 		}
 	}
 	
@@ -203,6 +186,9 @@ class Gantt_chart extends crm_controller
 			
 			$this->updateParentProgress($id);
 			//update parent node in terms of progress
+			
+			$this->dashboard_model->update_project_thermometer($project_id);
+			//update thermometer status
 		}
 	}
 	
@@ -233,6 +219,9 @@ class Gantt_chart extends crm_controller
 			
 			$this->updateParentProgress($id);
 			//update parent node in terms of progress
+			
+			$this->dashboard_model->update_project_thermometer($project_id);
+			//update thermometer status
 			
 			echo $id;exit;
 		}
@@ -369,6 +358,8 @@ class Gantt_chart extends crm_controller
 				$total_progress=$total_percentage/$total_work_hours;
 				//calculate total progress status 
 				
+				$total_progress=round($total_progress);
+				
 				$sql_query="update ".$this->cfg['dbpref']."project_plan set complete_percentage='$total_progress' WHERE id='$parent_id'";
 				$exe=$this->db->query($sql_query);
 				//update parent nodes
@@ -387,6 +378,26 @@ class Gantt_chart extends crm_controller
 				}
 			}
 		}
+	}
+	
+	//get project complete percentage
+	public function getProgress_status()
+	{
+		$result=array();
+		$project_id=$_GET['project_id'];
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'leads');
+		$this->db->where('lead_id', $project_id);
+		$query = $this->db->get();
+		$result=array();
+		$row_count=$query->num_rows();
+		if($query->num_rows() > 0 )
+		{//if array is not empty
+			$row = $query->row_array();
+			$result['response']=$row['complete_status'];
+		}
+		echo json_encode($result);
+		//convert result to json format
 	}
 } 
 ?>

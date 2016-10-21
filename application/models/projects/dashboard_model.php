@@ -57,5 +57,28 @@ class Dashboard_model extends crm_model
 		}
 		return $practices;
     } */
+	
+	//update project thermometer
+	public function update_project_thermometer($project_id)
+	{
+		$progress=0;$result=array();
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'project_plan');
+		$this->db->where('project_id', $project_id);
+		$this->db->where('parent_id =',0);
+		$query = $this->db->get();
+		$result=array();
+		$row_count=$query->num_rows();
+		if($query->num_rows() > 0 )
+		{//if array is not empty
+			$row = $query->row_array();
+			$progress=$row['complete_percentage'];
+		}
+		
+		$sql="update ".$this->cfg['dbpref']."leads set complete_status=".$progress." where lead_id=".$project_id;
+		$result=$this->db->query($sql);
+		
+		//update complete percentage in leads
+	}
 }
 ?>

@@ -3684,7 +3684,7 @@ HDOC;
 	{
 		$projectMeterStatus = $this->project_model->get_project_meter_status($jobid);
 		$meterStatus		= ($projectMeterStatus['actual_effort']/$projectMeterStatus['ms_effort'])*100;
-		return round($meterStatus, 2);
+		return round($meterStatus);
 	}
 	
 	function exportMilestoneTerms()
