@@ -1,4 +1,11 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
+<style>
+.jqplot-title { display: none; }
+</style>
+<?php
+//for total inv bar value charts
+$inv_tot_arr_val = '['.$inv_compare['curr_yr']['tot_inv_value'].','.'"Current Year"'.'],['.$inv_compare['last_yr']['tot_inv_value'].','.'"Last Year"'.']';
+?>
 <script type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
@@ -11,9 +18,15 @@
 <script type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
-<style>
-.jqplot-title { display: none; }
-</style>
+
+<script type="text/javascript">
+var default_currency_name = '<?php echo $this->default_cur_name; ?>';
+var curr_fiscal_inv_val = <?php echo json_encode($inv_compare['curr_yr']['mon_inv_value']) ?>;
+var last_fiscal_inv_val = <?php echo json_encode($inv_compare['last_yr']['mon_inv_value']) ?>;
+var line_x_axis_inv_val = <?php echo json_encode($this->fiscal_month_arr); ?>;
+var inv_tot_arr_val 	= [<?php echo $inv_tot_arr_val; ?>];
+</script>
+
 <div id="content">
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
@@ -93,12 +106,11 @@
 				<?php #echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
 				<!--For Pie Charts-->
 				<div class="pull-left overall_container">
-					<h5 class="dash-tlt"><?php echo "Revenue in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
+					<h5 class="dash-tlt"><?php echo "Revenues in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
 					<div id="revenue_pie" class="plot"></div>
 				</div>
-				<div class="pull-right revenue_chlid_container clearfix">
-					<h5 class="dash-tlt">Revenue Comparison with Past Year</h5>
-					<div id="revenue_compare_line" class="plot" style="position: relative; height: 320px; padding-bottom:22px;"></div>
+				<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
+					<?php echo $this->load->view('projects/graphical_box_inv_compare', $inv_filter_by); ?>
 				</div>
 			</div>
 			<!--Utilization Cost Container-->
@@ -110,14 +122,9 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript">
-var revenue_values = [<?php echo $revenue_values ?>];
-var default_currency_name = '<?php echo $this->default_cur_name; ?>';
-var curr_fiscal_value = <?php echo json_encode($inv_compare['cur_fiscal_yr_inv_value']) ?>;
-var last_fiscal_value = <?php echo json_encode($inv_compare['last_fiscal_yr_inv_value']) ?>;
-var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
+var revenue_values 			= [<?php echo $revenue_values ?>];
 </script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
-<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_compare.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
