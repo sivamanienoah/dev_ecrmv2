@@ -54,13 +54,14 @@ $(function() {
 		},
 		axes: {
 			xaxis: {
-				label:'Vaules(USD) --->',
+				label:yaxis_label+' --->',
 				renderer: $.jqplot.CategoryAxisRenderer,
+				marginBottom: "500px",
 				ticks: ticks
 			},
 			yaxis: {
 				min:0,
-				label:yaxis_label+' --->',
+				label:'Vaules(USD) --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
