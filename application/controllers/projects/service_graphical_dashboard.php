@@ -49,12 +49,19 @@ class Service_graphical_dashboard extends crm_controller
 		$data['end_date']   	= $end_date;
 		$data['uc_filter_by'] 	= $uc_filter_by;
 		$data['inv_filter_by'] 	= $inv_filter_by;
-
+		
+		//practice
+		$data['practice_arr'] = $this->service_graphical_dashboard_model->get_practices();
+		// $data['practice_arr']['practice_array']; //normal practice array
+		// $data['practice_arr']['practice_arr']; //key value practice array
+		
 		//get utilization cost values from service graphical dashboard table
 		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'hour');
+		
 		//get current fiscal ytd invoice records
 		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
 		$data['invoice_val'] = $this->calcInvoiceDataByPractice($invoice_data);
+		
 		//get last fiscal year invoice records
 		$curr_yr_inv_value = $this->calcInvoiceDataByMonthWise($invoice_data);
 		$data['inv_compare']['curr_yr']['mon_inv_value'] = $curr_yr_inv_value['allValuesArr'];
@@ -64,6 +71,23 @@ class Service_graphical_dashboard extends crm_controller
 		$data['inv_compare']['last_yr']['mon_inv_value'] = $last_yr_inv_value['allValuesArr'];
 		$data['inv_compare']['last_yr']['tot_inv_value'] = $last_yr_inv_value['total_value'];
 		// echo "<pre>"; print_r($data['inv_compare']); exit;
+		
+		//for last year 
+		$pract_curr_yr_val = $data['invoice_val'];
+		$pract_last_yr_val = $this->calcInvoiceDataByPractice($last_yr_invoice_data);
+		
+		if(!empty($data['practice_arr']['practice_array']) && count($data['practice_arr']['practice_array'])>0) {
+			foreach($data['practice_arr']['practice_array'] as $prac_name) {
+				$data['prat_inv_compare']['practic_val'][] = $prac_name;
+				$data['prat_inv_compare']['curr_yr_val'][] = isset($pract_curr_yr_val[$prac_name]) ? $pract_curr_yr_val[$prac_name] : 0;
+				$data['prat_inv_compare']['last_yr_val'][] = isset($pract_last_yr_val[$prac_name]) ? $pract_last_yr_val[$prac_name] : 0;
+			}
+		}
+		
+		
+		// echo "<pre>"; print_r($data['prat_inv_compare']); echo"</pre>"; exit;
+		
+		
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
 	
