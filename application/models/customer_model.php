@@ -998,7 +998,7 @@ class Customer_model extends crm_model {
 																`suspended` = "'.$suspended.'",
 																`project_code` = "'.$listProjects['pjt_id'].'",
 																`proj_total_hours` = "'.$listProjects['estimate_hour'].'"  '.$where.' ';
-				// echo $timesheet_sql; exit;
+				echo $timesheet_sql; exit;
 				$timesheet_ins = $timesheet_db->query($timesheet_sql);
 				
 				// update project leader in timesheet			
