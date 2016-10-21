@@ -11,13 +11,6 @@
 <script type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
-<script type="text/javascript">
-var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
-// var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
-var curr_fiscal_value = <?php echo json_encode($inv_compare['cur_fiscal_yr_inv_value']) ?>;
-var last_fiscal_value = <?php echo json_encode($inv_compare['last_fiscal_yr_inv_value']) ?>;
-var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
-</script>
 <style>
 .jqplot-title { display: none; }
 </style>
@@ -72,7 +65,7 @@ var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
 				</div>
 			</div>
 			<div class="uc_container_wrap" id="uc_container">
-				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
+				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val, true); ?>
 			</div>
 			<!--Utilization Cost Container-->
 			<div class="clear"></div>
@@ -117,10 +110,13 @@ var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	var revenue_values = [<?php echo $revenue_values ?>];
-</script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
+<script type="text/javascript">
+var revenue_values = [<?php echo $revenue_values ?>];
+var curr_fiscal_value = <?php echo json_encode($inv_compare['cur_fiscal_yr_inv_value']) ?>;
+var last_fiscal_value = <?php echo json_encode($inv_compare['last_fiscal_yr_inv_value']) ?>;
+var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
+</script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_compare.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
