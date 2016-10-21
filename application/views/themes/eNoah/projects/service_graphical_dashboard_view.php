@@ -113,6 +113,7 @@
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript">
 var revenue_values = [<?php echo $revenue_values ?>];
+var default_currency_name = '<?php echo $this->default_cur_name; ?>';
 var curr_fiscal_value = <?php echo json_encode($inv_compare['cur_fiscal_yr_inv_value']) ?>;
 var last_fiscal_value = <?php echo json_encode($inv_compare['last_fiscal_yr_inv_value']) ?>;
 var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
