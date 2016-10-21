@@ -25,6 +25,10 @@ var curr_fiscal_inv_val = <?php echo json_encode($inv_compare['curr_yr']['mon_in
 var last_fiscal_inv_val = <?php echo json_encode($inv_compare['last_yr']['mon_inv_value']) ?>;
 var line_x_axis_inv_val = <?php echo json_encode($this->fiscal_month_arr); ?>;
 var inv_tot_arr_val 	= [<?php echo $inv_tot_arr_val; ?>];
+//for practicewise invoice compare
+var prac_inv_practic_val = <?php echo json_encode($prat_inv_compare['practic_val']); ?>;
+var prac_inv_curr_yr_val = <?php echo json_encode($prat_inv_compare['curr_yr_val']); ?>;
+var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val']); ?>;
 </script>
 
 <div id="content">
@@ -112,8 +116,15 @@ var inv_tot_arr_val 	= [<?php echo $inv_tot_arr_val; ?>];
 				<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
 					<?php echo $this->load->view('projects/graphical_box_inv_compare', $inv_filter_by); ?>
 				</div>
+				<div class="clear"></div>
+				<div class="revenue_practicewise_chlid_container clearfix">
+					<h5 class="revenue_compare_head_bar">
+						<span class="forecast-heading">Practice Wise Revenue Comparison</span>
+					</h5>
+					<div id="revenue_practice_compare_bar" class="plot"></div>
+				</div>
 			</div>
-			<!--Utilization Cost Container-->
+			<!--Revenue Share Dashboard Container-->
         <?php 
 		} else {
 			echo "You have no rights to access this page";
@@ -127,4 +138,5 @@ var revenue_values 			= [<?php echo $revenue_values ?>];
 </script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_compare_bar.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
