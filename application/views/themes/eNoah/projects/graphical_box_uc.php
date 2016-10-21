@@ -1,8 +1,8 @@
-<div class="pull-left" id="overall_container">
+<div class="pull-left overall_container">
 	<h5 class="dash-tlt">over all - <?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></h5>
 	<div id="total" class="plot"></div>
 </div>
-<div class="pull-right chlid_container clearfix" id="child_container">
+<div class="pull-right chlid_container clearfix">
 	<h5 class="dash-tlt">Practice wise</h5>
 	<?php
 		unset($uc_graph_val['total']);

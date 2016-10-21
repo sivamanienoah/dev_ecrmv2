@@ -3,20 +3,23 @@
 <script type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.barRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.logAxisRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
 <script type="text/javascript">
-// var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
-var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
+var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+// var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT) ?>;
+var curr_fiscal_value = <?php echo json_encode($inv_compare['cur_fiscal_yr_inv_value']) ?>;
+var last_fiscal_value = <?php echo json_encode($inv_compare['last_fiscal_yr_inv_value']) ?>;
+var line_x_axis_value = <?php echo json_encode($this->fiscal_month_arr); ?>;
 </script>
 <style>
 .jqplot-title { display: none; }
-.plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 460px !important; }
-.chlid_container { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; width: 680px !important; min-height: 343px !important;}
-.uc_container_wrap .chlid_container .graph_box { float:left; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; height: 150px !important; width: 204px !important; margin:10px; }
-.graph_box .jqplot-event-canvas { left: 0px !important; }
-.uc-head { border-bottom: 1px solid #ccc; float: left; margin: 0 0 20px; width: 100%; }
-
-#revenue_pie .jqplot-table-legend {bottom: 2px !important;}
 </style>
 <div id="content">
     <div class="inner">
@@ -96,12 +99,13 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT)
 				
 				<?php #echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
 				<!--For Pie Charts-->
-				<div class="pull-left" id="overall_container">
+				<div class="pull-left overall_container">
 					<h5 class="dash-tlt"><?php echo "Revenue in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
 					<div id="revenue_pie" class="plot"></div>
 				</div>
-				<div class="pull-right chlid_container clearfix" id="child_container">
+				<div class="pull-right revenue_chlid_container clearfix">
 					<h5 class="dash-tlt">Revenue Comparison with Past Year</h5>
+					<div id="revenue_compare_line" class="plot" style="position: relative; height: 320px; padding-bottom:22px;"></div>
 				</div>
 			</div>
 			<!--Utilization Cost Container-->
@@ -118,4 +122,5 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val, JSON_PRETTY_PRINT)
 </script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_compare.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
