@@ -12,7 +12,7 @@ class Service_graphical_dashboard extends crm_controller
 		$this->load->helper('form');
         $this->load->helper('custom');
 		$this->load->helper('lead_stage');
-		$this->load->helper('url'); 
+		$this->load->helper('url');
 		$this->load->model('projects/service_graphical_dashboard_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
@@ -22,7 +22,7 @@ class Service_graphical_dashboard extends crm_controller
 			$this->default_cur_id   = '1';
 			$this->default_cur_name = 'USD';
 		}
-		
+		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
 	}
 
 	public function index()
@@ -91,7 +91,6 @@ class Service_graphical_dashboard extends crm_controller
 	*/
 	public function calcInvoiceDataByMonthWise($invoice_data)
 	{
-		$fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
 		$inv_array 			= array();
 		$valuesArr 			= array();
 		$allValuesArr 		= array();
@@ -113,8 +112,8 @@ class Service_graphical_dashboard extends crm_controller
 				$monthArr[] 	 = $mon;
 			}
 		}
-		foreach($fiscal_month_arr as $fis_mon){
-			$allValuesArr[$fis_mon] = isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
+		foreach($this->fiscal_month_arr as $fis_mon){
+			$allValuesArr[] = isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
 		}
 		// echo "<pre>"; print_r($allValuesArr); exit;
 		return $allValuesArr;
