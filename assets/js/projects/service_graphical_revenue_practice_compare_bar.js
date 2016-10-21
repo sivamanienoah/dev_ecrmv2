@@ -38,6 +38,7 @@ $(function() {
 			renderer: jQuery.jqplot.EnhancedLegendRenderer,
 			show: true,
 			placement: 'insideGrid',
+			marginTop: "-42px",
 			rendererOptions: {
 				numberRows: '1',
 			}

@@ -52,7 +52,6 @@ $(function() {
 			xaxis: {
 				label:yaxis_label+' --->',
 				renderer: $.jqplot.CategoryAxisRenderer,
-				marginBottom: "500px",
 				ticks: xticks
 			},
 			yaxis: {
