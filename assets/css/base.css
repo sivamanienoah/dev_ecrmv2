@@ -2889,3 +2889,12 @@ form#edit-folder-permissions { overflow:visible !important; }
 .notify-area .root{ padding:4px; }
 .custom-blue-btn { background-color: #3b5998 !important; color: #fff !important; }
 /*It Services Graphical Dashboard Css*/
+.overall_container .plot { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 460px !important; }
+.chlid_container { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; width: 680px !important; min-height: 343px !important;}
+.uc_container_wrap .chlid_container .graph_box { float:left; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; height: 150px !important; width: 204px !important; margin:10px; }
+.graph_box .jqplot-event-canvas { left: 0px !important; }
+.uc-head { border-bottom: 1px solid #ccc; float: left; margin: 0 0 20px; width: 100%; }
+#revenue_pie .jqplot-table-legend {bottom: 2px !important;}
+#revenue_compare_line { width: 680px !important; }
+.revenue_chlid_container { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: #fff none repeat scroll 0 0; border-color: #cecece; border-image: none; border-style: solid; border-width: 0 1px 1px; box-shadow: 0 1px 3px #c2c2c2; min-height: 342px !important; width: 680px !important; }
+#revenue_compare_line table.jqplot-table-legend, table.jqplot-cursor-legend { background-color: rgba(255, 255, 255, 1) !important; }
