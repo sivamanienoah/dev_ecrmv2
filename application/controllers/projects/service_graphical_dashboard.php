@@ -2,6 +2,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+error_reporting(E_ALL);
 class Service_graphical_dashboard extends crm_controller 
 {
 	function __construct()
@@ -26,7 +27,7 @@ class Service_graphical_dashboard extends crm_controller
 	}
 
 	public function index()
-	{
+	{	
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
@@ -41,11 +42,13 @@ class Service_graphical_dashboard extends crm_controller
 		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 		$last_yr_end_date   = date('Y-m-t', strtotime($last_yr_start_date.' +11 months'));
 		
-		$uc_filter_by  = 'hour';
+		$uc_filter_by   = 'hour'; //default_value
+		$inv_filter_by  = 'inv_month'; //default_value
 
 		$data['start_date'] 	= $start_date;
 		$data['end_date']   	= $end_date;
 		$data['uc_filter_by'] 	= $uc_filter_by;
+		$data['inv_filter_by'] 	= $inv_filter_by;
 
 		//get utilization cost values from service graphical dashboard table
 		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'hour');
@@ -53,9 +56,13 @@ class Service_graphical_dashboard extends crm_controller
 		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
 		$data['invoice_val'] = $this->calcInvoiceDataByPractice($invoice_data);
 		//get last fiscal year invoice records
-		$data['inv_compare']['cur_fiscal_yr_inv_value'] = $this->calcInvoiceDataByMonthWise($invoice_data);
+		$curr_yr_inv_value = $this->calcInvoiceDataByMonthWise($invoice_data);
+		$data['inv_compare']['curr_yr']['mon_inv_value'] = $curr_yr_inv_value['allValuesArr'];
+		$data['inv_compare']['curr_yr']['tot_inv_value'] = $curr_yr_inv_value['total_value'];
 		$last_yr_invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($last_yr_start_date, $last_yr_end_date);
-		$data['inv_compare']['last_fiscal_yr_inv_value'] = $this->calcInvoiceDataByMonthWise($last_yr_invoice_data);
+		$last_yr_inv_value = $this->calcInvoiceDataByMonthWise($last_yr_invoice_data);
+		$data['inv_compare']['last_yr']['mon_inv_value'] = $last_yr_inv_value['allValuesArr'];
+		$data['inv_compare']['last_yr']['tot_inv_value'] = $last_yr_inv_value['total_value'];
 		// echo "<pre>"; print_r($data['inv_compare']); exit;
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
@@ -91,10 +98,12 @@ class Service_graphical_dashboard extends crm_controller
 	*/
 	public function calcInvoiceDataByMonthWise($invoice_data)
 	{
+		$data 				= array();
 		$inv_array 			= array();
 		$valuesArr 			= array();
 		$allValuesArr 		= array();
 		$monthArr 			= array();
+		$totalSum 			= 0;
 		$bk_rates = get_book_keeping_rates();
 		if(is_array($invoice_data) && !empty($invoice_data) && count($invoice_data)>0) {
 			foreach($invoice_data as $ir) {
@@ -114,29 +123,54 @@ class Service_graphical_dashboard extends crm_controller
 		}
 		foreach($this->fiscal_month_arr as $fis_mon){
 			$allValuesArr[] = isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
+			$totalSum 	   += isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
 		}
-		// echo "<pre>"; print_r($allValuesArr); exit;
-		return $allValuesArr;
+		$data['total_value'] = $totalSum;
+		$data['allValuesArr'] = $allValuesArr;
+		return $data;
 	}
+	
 	/*
 	*@method getUcVal()
 	*@return json
 	*/
 	public function getUcVal()
 	{
+		$res = array('result'=>false);
+		
 		$postdata = $this->input->post();
+
 		$uc_filter_by = 'hour';
 		if(isset($postdata['uc_filter_by'])){
 			$uc_filter_by = $postdata['uc_filter_by'];
 		}
 		
 		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by);
+		// echo "<pre>"; print_r($data); exit;
 		
 		$res['result']  = true;
 		$res['html'] 	= $this->load->view('projects/graphical_box_uc', $data, true);
 		echo json_encode($res); exit;
 	}
-	
-	
+
+	/*
+	*@method getInvoiceFilter()
+	*@return json
+	*/
+	public function getInvoiceFilter()
+	{
+		$res = array('result'=>false);
+		
+		$postdata = $this->input->post();
+
+		$inv_filter_by = 'inv_month'; //default_value
+		if(isset($postdata['inv_filter_by'])){
+			$inv_filter_by = $postdata['inv_filter_by'];
+		}
+		$data['inv_filter_by'] = $inv_filter_by;
+		$res['result']  = true;
+		$res['html'] 	= $this->load->view('projects/graphical_box_inv_compare', $data, true);
+		echo json_encode($res); exit;
+	}
 }
 /* End of file */
