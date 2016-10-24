@@ -5256,6 +5256,7 @@ HDOC;
 		}
 	}
 	
+	//check gantt chart data exists for given project id
 	public function check_gantt_chart_data($id)
 	{
 		$this->db->select('*');
@@ -5266,6 +5267,7 @@ HDOC;
 		return $query->num_rows();
 	}
 	
+	//check milestones entries exists for given project id
 	public function check_milestones_data($id)
 	{
 		$this->db->select('*');
