@@ -42,6 +42,30 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
 		
 		<div class="clearfix">
+			<!--Summary Container - Start -->
+			<div class="uc-head">
+				<div class="it_service_summary_det_container clearfix">
+					<h5 class="revenue_compare_head_bar">
+						<span class="forecast-heading"><?php echo "Summary Details" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
+					</h5>
+					<div id="it_service_summary_det" class="it_service_summary_det">
+						<div class="summary_box">
+							<span class="summary_box_head">Contribution</span>
+							<span class="numberCircle" id="value_contribution"> 60 %</span>
+						</div>
+						<div class="summary_box">
+							<span class="summary_box_head">Revenue</span>
+							<span class="numberCircle" id="value_revenue"><?php echo round($inv_compare['curr_yr']['tot_inv_value']); ?></span>
+						</div>
+						<div class="summary_box">
+							<span class="summary_box_head">Utilization</span>
+							<span class="numberCircle" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Summary Container - End-->
+			<div class="clear"></div>
 			<!--Utilization Cost Container-->
 			<div class="uc-head">
 				<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
