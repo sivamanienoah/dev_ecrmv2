@@ -15,7 +15,7 @@ $(function() {
 	var last_yr_value  = last_fiscal_inv_val;
 	var xticks         = line_x_axis_inv_val;
 	var cur_name 	   = default_currency_name;
-	var yaxis_label = 'Month';
+	var yaxis_label    = 'Month';
 	
 	plot2 = $.jqplot('revenue_compare_line', [last_yr_value, curr_yr_value], {
 		// title: ' ',
