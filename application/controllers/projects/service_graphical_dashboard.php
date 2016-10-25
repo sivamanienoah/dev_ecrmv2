@@ -32,7 +32,7 @@ class Service_graphical_dashboard extends crm_controller
 			redirect('project');
 		}
 		$data  				  = array();
-		$data['page_heading'] = "YTD Utilization Cost Dashboard";
+		$data['page_heading'] = "IT Service Graphical Dashboard";
 		$res 				  = array();
 		$res['result']		  = false;
 
@@ -86,8 +86,7 @@ class Service_graphical_dashboard extends crm_controller
 				$data['prat_inv_compare']['last_yr_val'][] = isset($pract_last_yr_val[$prac_name]) ? $pract_last_yr_val[$prac_name] : 0;
 			}
 		}
-		
-		
+
 		// echo "<pre>"; print_r($data['prat_inv_compare']); echo"</pre>"; exit;
 		
 		
