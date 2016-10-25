@@ -44,7 +44,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 		<div class="clearfix">
 			<!--Utilization Cost Container-->
 			<div class="uc-head">
-				<h2 class="pull-left borderBtm"><?php echo $page_heading . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
+				<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
 				<!--a class="choice-box" onclick="advanced_filter();" >
 					<img src="assets/img/advanced_filter.png" class="icon leads" />
 					<span>Advanced Filters</span>
