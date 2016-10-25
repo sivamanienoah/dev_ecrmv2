@@ -2969,7 +2969,7 @@ form#edit-folder-permissions { overflow:visible !important; }
 	color:#fff;
 	line-height: 120px;
 }
-.summary_box .height_fix { margin-bottom: 10px; font-size: 16px; }
+.summary_box .height_fix { margin-bottom: 10px; font-size: 14px; }
 #value_contribution { background: #fb6a30; }
 #value_revenue { background: #00e143; }
 #value_utilization { background: #00a7e5; }
