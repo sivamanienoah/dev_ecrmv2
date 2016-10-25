@@ -59,7 +59,7 @@ $(function() {
 		},
 		axes: {
 			xaxis: {
-				label:'Month --->',
+				label:'Practice --->',
 				renderer: $.jqplot.CategoryAxisRenderer,
 				ticks: ticks
 			},
