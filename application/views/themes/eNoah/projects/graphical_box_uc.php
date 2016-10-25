@@ -1,5 +1,6 @@
 <script type="text/javascript">
 var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+
 </script>
 <div class="pull-left overall_container">
 	<h5 class="dash-tlt">Over all - <?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></h5>
@@ -25,5 +26,6 @@ var uc_all_graph_data = <?php echo json_encode($uc_graph_val) ?>;
 </div>
 <script type="text/javascript">
 var uc_graph_data = <?php echo json_encode($uc_graph_val) ?>;
+
 </script>
-<script type="text/javascript" src="assets/js/projects/graphical_box_uc.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_box_uc.js"></script>
