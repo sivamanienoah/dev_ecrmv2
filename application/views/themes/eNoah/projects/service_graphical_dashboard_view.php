@@ -50,16 +50,16 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					</h5>
 					<div id="it_service_summary_det" class="it_service_summary_det">
 						<div class="summary_box">
-							<span class="summary_box_head">Contribution</span>
-							<span class="numberCircle" id="value_contribution"> 60 %</span>
+							<div class="height_fix">Contribution</div>
+							<div class="numberCircle content" id="value_contribution">10000</div>
 						</div>
 						<div class="summary_box">
-							<span class="summary_box_head">Revenue</span>
-							<span class="numberCircle" id="value_revenue"><?php echo round($inv_compare['curr_yr']['tot_inv_value']); ?></span>
+							<div class="height_fix">Revenue</div>
+							<div class="numberCircle content" id="value_revenue"><?php echo round($inv_compare['curr_yr']['tot_inv_value'])." ".$this->default_cur_name; ?></div>
 						</div>
 						<div class="summary_box">
-							<span class="summary_box_head">Utilization</span>
-							<span class="numberCircle" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></span>
+							<div class="height_fix">Utilization</div>
+							<div class="numberCircle content" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></div>
 						</div>
 					</div>
 				</div>
