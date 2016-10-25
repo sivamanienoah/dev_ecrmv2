@@ -2930,3 +2930,44 @@ form#edit-folder-permissions { overflow:visible !important; }
 #revenue_practice_compare_bar .jqplot-grid-canvas { margin: 0 6px; }
 #revenue_practice_compare_bar .jqplot-grid-canvas { top: 0 !important; }
 #revenue_practice_compare_bar table.jqplot-table-legend, table.jqplot-cursor-legend { background-color: rgba(255, 255, 255, 1) !important; }
+
+.it_service_summary_det_container {
+	-moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: #fff none repeat scroll 0 0;
+    border-color: #cecece;
+    border-image: none;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    box-shadow: 0 1px 3px #c2c2c2;
+    margin-top: 10px;
+    min-height: 210px !important;
+    width: 100%;
+}
+.it_service_summary_det .summary_box{
+	float:left;
+	background: #fff none repeat scroll 0 0;
+	border-color: #cecece;
+	border-image: none;
+	border-style: solid;
+	border-width: 0 1px 1px;
+	box-shadow: 0 1px 3px #c2c2c2;
+	height: 150px !important; 
+	width: 204px !important;
+	margin:8px 0 0 130px;
+}
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+    font: 32px Arial, sans-serif;
+}
+#value_contribution { background: #e45d23; }
+#value_revenue { background: #00e143; }
+#value_utilization { background: #00a7e5; }
