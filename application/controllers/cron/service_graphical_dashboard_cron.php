@@ -469,21 +469,20 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
+				$mon_revenue = $mon_contrib = 0;
 				foreach($this->fiscal_month_arr as $fis_mon) {
 					$con_month = 'contri_'.$fis_mon;
-					$mon_revenue = $mon_contrib = '';
+					
 					$ins_array[$con_month] = 0;
-					$mon_revenue = isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon] : 0;
-					$mon_contrib = isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
+					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon] : 0;
+					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
-					// $ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
-					$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
 					if(date('M') == $fis_mon) { break; }
 				}
 				
