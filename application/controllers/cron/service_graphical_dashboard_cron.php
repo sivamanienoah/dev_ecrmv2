@@ -389,8 +389,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
 				//for contribution trend
-				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id]);
-				
+				if((isset($contribution_trend_project_arr[$prec->pjt_id])) && (isset($practice_arr[$prec->practice]))) {
+					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id]);
+				}
 			}
 		}
 		// echo '<pre>'; print_r($contribution_trend_arr); echo '</pre>'; exit;
