@@ -86,12 +86,34 @@ class Service_graphical_dashboard extends crm_controller
 				$data['prat_inv_compare']['last_yr_val'][] = isset($pract_last_yr_val[$prac_name]) ? $pract_last_yr_val[$prac_name] : 0;
 			}
 		}
-
-		// echo "<pre>"; print_r($data['prat_inv_compare']); echo"</pre>"; exit;
 		
+		//get the trend values from invoice & create an array based on practice wise & month wise
+		$trend_value 	 = calcInvoiceDataByPracticeWiseMonthWise($invoice_data, $this->default_cur_id);
+		$trend_pract_arr = array();
+		//allign trend array by practicewise then monthwise
+		if(!empty($data['practice_arr']['practice_array']) && count($data['practice_arr']['practice_array'])>0 && count($trend_value)>0) {
+			foreach($data['practice_arr']['practice_array'] as $prac_name) {
+				if($prac_name == 'Infra Services') {
+					continue;
+				}
+				$trend_pract_arr['practic_arr'][] = $prac_name;
+				foreach($this->fiscal_month_arr as $fis_mon) {
+					$trend_pract_arr['trend_pract_val_arr'][$prac_name][] = isset($trend_value[$prac_name][$fis_mon]) ? $trend_value[$prac_name][$fis_mon] : 0;
+					if(date('M') == $fis_mon) { break; }
+				}
+			}
+		}
+		foreach($this->fiscal_month_arr as $fis_mon) {
+			$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
+			if(date('M') == $fis_mon) { break; }
+		}
+		$data['trend_pract_month_val'] = $trend_pract_arr;
+		// echo "<pre>"; print_r($trend_pract_arr); exit;
+		// echo "<pre>"; print_r($data['prat_inv_compare']); echo"</pre>"; exit;
 		
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
+
 	
 	/*
 	*@method calcInvoiceDataByPractice()
