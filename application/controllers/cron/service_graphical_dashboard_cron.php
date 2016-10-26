@@ -452,7 +452,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
 				//for billable utilization cost
-				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				$temp_ytd_utilization_cost = '';
+				if(isset($projects['direct_cost'][$parr]['total_direct_cost']) && (isset($projects['other_cost'][$parr]))) {
+					$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				}
 				if(isset($temp_ytd_utilization_cost) && !empty($temp_ytd_utilization_cost)) {
 					$bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
 				}
