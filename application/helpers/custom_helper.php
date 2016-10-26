@@ -595,7 +595,7 @@ if ( ! function_exists('getOtherCostByProjectCodeByDateRangeByMonthWise'))
 					$conver_value  = 0;
 					$curFiscalYear = date('Y'); //set as default current year as fiscal year
 					$curFiscalYear = getFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
-					echo $convert_value[date('M', strtotime($rec['cost_incurred_date']))] = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]); exit;
+					$convert_value[date('M', strtotime($rec['cost_incurred_date']))] = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]);
 					$value[date('M', strtotime($rec['cost_incurred_date']))] += $convert_value;
 				}	
 				echo "<pre>"; print_r($value); exit;
