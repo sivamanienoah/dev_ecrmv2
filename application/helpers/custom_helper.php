@@ -602,10 +602,8 @@ if ( ! function_exists('getOtherCostByProjectCodeByDateRangeByMonthWise'))
 						$value[date('M', strtotime($rec['cost_incurred_date']))] = $convert_value;
 					}
 					
-				}	
-				echo "<pre>"; print_r($value); exit;
+				}
 			}
-			
 		}
 		return $value;
 	}
