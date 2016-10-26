@@ -379,12 +379,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 		if(!empty($project_res)) {
 			foreach($project_res as $prec) {
 				if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'])) {
-					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += isset($directcost1[$prec->pjt_id]['project_total_direct_cost']) ? $directcost1[$prec->pjt_id]['project_total_direct_cost'] : 0;
 				} else {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] = isset($directcost1[$prec->pjt_id]['project_total_direct_cost']) ? $directcost1[$prec->pjt_id]['project_total_direct_cost'] : 0;
 				}
 				if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'])) {
-					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] += $directcost1[$prec->pjt_id]['project_total_billable_cost'];
+					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] += isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				} else {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
@@ -394,7 +394,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
+		// echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
