@@ -362,7 +362,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6));
 		$project_res = $res->result();
 		
 		/*
