@@ -18,8 +18,8 @@ Modified By     : Sriram.S
  * @author 		eNoah
  * @Controller
  */
-// error_reporting(E_ALL);
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+error_reporting(E_ALL);
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 class Service_graphical_dashboard_cron extends crm_controller 
 {	
     public function __construct()
@@ -29,6 +29,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$this->load->helper('text');
 		$this->load->helper('custom');
 		$this->load->helper('url');
+		$this->load->model('projects/service_graphical_dashboard_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
 			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
@@ -37,6 +38,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 			$this->default_cur_id   = '1';
 			$this->default_cur_name = 'USD';
 		}
+		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
     }
 	
 	/*
@@ -59,9 +61,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 	{
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
-		$data  				  = array();
+		$data  		   = array();
 			
-		$bk_rates = get_book_keeping_rates();
+		$bk_rates 	   = get_book_keeping_rates();
 		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
@@ -78,9 +80,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 
 		$project_status = 1;
 		
-		$project_code = array();
-		$projects 	  = array();
-		$practice_arr = array();
+		$project_code 	= array();
+		$projects 	  	= array();
+		$practice_arr 	= array();
+		$practice_array = array();
 
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -88,7 +91,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		//BPO practice are not shown in IT Services Dashboard
 		$practice_not_in = array(6);
 		$this->db->where_not_in('p.id', $practice_not_in);
-		//$this->db->where_in('p.id', array(1));
+		// $this->db->where_in('p.id', array(1));
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
@@ -99,6 +102,30 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$practice_array[] = $prow->practices;
 			}
 		}
+		
+		//get current fiscal ytd invoice records
+		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
+		$trend_value 	 = calcInvoiceDataByPracticeWiseMonthWise($invoice_data, $this->default_cur_id);
+		$trend_pract_arr = array();
+		//allign trend array by practicewise then monthwise
+		if(!empty($practice_array) && count($practice_array)>0 && count($trend_value)>0) {
+			foreach($practice_array as $prac_name) {
+				if($prac_name == 'Infra Services') {
+					continue;
+				}
+				$trend_pract_arr['practic_arr'][] = $prac_name;
+				foreach($this->fiscal_month_arr as $fis_mon) {
+					$trend_pract_arr['trend_pract_val_arr'][$prac_name][$fis_mon] = isset($trend_value[$prac_name][$fis_mon]) ? $trend_value[$prac_name][$fis_mon] : 0;
+					if(date('M') == $fis_mon) { break; }
+				}
+			}
+		}
+		/* foreach($this->fiscal_month_arr as $fis_mon) {
+			$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
+			if(date('M') == $fis_mon) { break; }
+		} */
+		// echo "<pre>"; print_r($trend_pract_arr); exit;
+		$projects['trend_pract_arr'] = $trend_pract_arr;
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -112,13 +139,14 @@ class Service_graphical_dashboard_cron extends crm_controller
 		// $this->db->where_not_in("l.practice", 6);
 		$practice_not_in = array(6);
 		$this->db->where_not_in('l.practice', $practice_not_in);
-
+		// $this->db->where_in('l.practice', array(1)); //for temporary use
 		if($project_status){
 			if($project_status !=2)
 			$this->db->where_in("l.pjt_status", $project_status);
 		}
 
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
 		
 		// echo "<pre>"; print_r($res); die;
@@ -138,12 +166,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 		// echo "<pre>"; print_r($projects['billable_ytd']); exit;
 		$data['projects']           = $projects; //billable efforts
 		
-		//for utiliztion cost calculation -start
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		//for utiliztion cost calculation - start
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.start_time');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
-		// $this->db->where("l.pjt_id", 'ITS-LET-01-0516'); // temporary use
-	 
+		// $this->db->where_in("l.pjt_id", array('ITS-FRE-01-0916', 'ITS-LET-01-0516')); // for temporary use
+		
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
 			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
@@ -153,10 +181,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();		
+		// $this->db->limit(20); // for temporary use
+		$query = $this->db->get();
 		$resdata = $query->result();
 		// echo $this->db->last_query(); exit;
-		// echo '<pre>';print_r($resdata);
+		// echo '<pre>';print_r($resdata); exit;
 		## code starts here##
 		$tbl_data = array();
 		$sub_tot  = array();
@@ -176,26 +205,34 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$timesheet_data = array();
 		$resource_cost = array();	
 		
+		$contribution_trend_project_arr = array();
+		$contribution_trend_arr = array();
+		
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
-			foreach($resdata as $rec) {		
+			foreach($resdata as $rec) {
 				$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
-				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-				$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
-				$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+				$timesheet_data[$rec->username]['max_hours']   = $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['dept_name']   = $rec->dept_name;
 				
 				$rateCostPerHr = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 				$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+				
 				if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'])) {
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours']  += $rec->duration_hours;
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 				} else {
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] = $rec->duration_hours;
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours']   = $rec->duration_hours;
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 				}
-				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
-				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
+				$get_total_hours = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = $get_total_hours;
+				
 				if($rec->resoursetype == 'Billable') {
 					if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['billable_hours'])) {
 						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['billable_hours'] += $rec->duration_hours;
@@ -205,7 +242,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 
-			// echo '<pre>'; print_r($timesheet_data); echo "</pre>";
+			// echo '<pre>'; print_r($timesheet_data); echo "</pre>"; exit;
 			if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 				foreach($timesheet_data as $key1=>$value1) {
 					$resource_name = $key1;
@@ -257,6 +294,36 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}	 
 			}
 		}
+		// echo '<pre>'; print_r($resource_cost); echo "</pre>";
+		//for contribution trend
+		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)) {
+			foreach($resource_cost as $resourceKey => $resourceVal){
+				if(is_array($resourceVal) && count($resourceVal)>0 && !empty($resourceVal)) {
+					foreach($resourceVal as $yrKey => $yrVal) {
+						if(is_array($yrVal) && count($yrVal)>0 && !empty($yrVal)) {
+							foreach($yrVal as $monKey => $monVal) {
+								$shortMonKey 	 = substr($monKey,0,3);
+								$duration_hours1 = 0;
+								$total_cost1 	 = 0;
+								$total_dc_cost1  = 0;
+								foreach($monVal as $project_code => $project_val) {
+									$duration_hours1 = $project_val['duration_hours'];
+									$billable_cost1  = $project_val['billable_cost'];
+									$total_cost1	 = $project_val['total_cost'];
+									$total_dc_cost1  = $project_val['total_dc_cost'];
+									if(isset($contribution_trend_project_arr[$project_code][$shortMonKey]['project_total_direct_cost'])) {
+										$contribution_trend_project_arr[$project_code][$shortMonKey]['project_total_direct_cost'] += $total_cost1;
+									} else {
+										$contribution_trend_project_arr[$project_code][$shortMonKey]['project_total_direct_cost'] = $total_cost1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>";
 		
 		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
@@ -292,26 +359,41 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>';print_r($directcost1);exit;
+		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '','pjt_id'=>));
 		$project_res = $res->result();
+		
+		/*
+		// for temporary use		
+		$this->db->select("pjt_id,practice,lead_title");
+		$this->db->from($this->cfg['dbpref']. 'leads');
+		$this->db->where_in("pjt_id", array('ITS-FRE-01-0916', 'ITS-LET-01-0516')); 
+		$this->db->where("practice !=", "");
+		$query = $this->db->get();		
+		$project_res = $query->result(); 
+		*/
+		
 		$project_master = array();
-		if(!empty($project_res)){
+		if(!empty($project_res)) {
 			foreach($project_res as $prec) {
 				if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'])) {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
 				} else {
-					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] = $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] = isset($directcost1[$prec->pjt_id]['project_total_direct_cost']) ? $directcost1[$prec->pjt_id]['project_total_direct_cost'] : 0;
 				}
 				if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'])) {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] += $directcost1[$prec->pjt_id]['project_total_billable_cost'];
 				} else {
-					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = $directcost1[$prec->pjt_id]['project_total_billable_cost'];
+					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
+				//for contribution trend
+				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id]);
+				
 			}
 		}
-		// echo '<pre>';print_r($directcost2);exit;
+		// echo '<pre>'; print_r($contribution_trend_arr); echo '</pre>'; exit;
+		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
 				if(isset($directcost[$practiceId]['total_direct_cost'])) {
@@ -327,7 +409,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 			}
 		}
 		// echo '<pre>';print_r($directcost);exit;
-		$projects['direct_cost']    = $directcost;
+		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
 		// echo "<pre>"; print_r($projects['direct_cost']); exit;
@@ -383,10 +465,26 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
 				
+				// revenue_cost      - $projects['trend_pract_arr']
+				// contribution_cost - $projects['contribution_trend_arr']
+				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
+				foreach($this->fiscal_month_arr as $fis_mon) {
+					$ins_array['contri_'.$fis_mon] = 0;
+					$mon_revenue = isset($projects['trend_pract_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr'][$parr][$fis_mon] : 0;
+					$mon_contrib = isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
+					if(isset($mon_revenue) && $mon_revenue != 0) {
+						$ins_array['contri_'.$fis_mon] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
+					}
+					$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
+					if(date('M') == $fis_mon) { break; }
+				}
+				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
 				echo $this->db->last_query() . "<br />";
 				$ins_array = array();
+				
+				// $ins_contri_val = 
 			}
 			
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
@@ -399,7 +497,23 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 	}
 	
-
+	public function combine_contribution_project_arr($practice_name, $contr_trend_arr, $project_mon_arr)
+	{
+		// echo "asdf".$practice_name; exit;
+		$res_arr = array();
+		$res_arr = $contr_trend_arr;
+		if(!empty($project_mon_arr) && count($project_mon_arr)>0) {
+			foreach($this->fiscal_month_arr as $fis_mon) {
+				if(isset($res_arr[$practice_name][$fis_mon])) {
+					$res_arr[$practice_name][$fis_mon] += isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+				} else {
+					$res_arr[$practice_name][$fis_mon] = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+				}
+			}
+		}
+		// echo "<pre>"; print_r($res_arr); exit;
+		return $res_arr;
+	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
