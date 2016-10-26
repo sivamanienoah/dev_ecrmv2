@@ -559,3 +559,47 @@ if( ! function_exists('calcInvoiceDataByPracticeWiseMonthWise'))
 		return $trend_array;
 	}
 }
+
+/*
+*@method calcInvoiceDataByPracticeWiseMonthWise()
+*@param array
+*/
+if ( ! function_exists('getOtherCostByLeadIdByDateRangeByMonthWise'))
+{
+	function getOtherCostByLeadIdByDateRangeByMonthWise($lead_id = false, $default_curr = false, $start_date = false, $end_date = false)
+	{
+		$cur_bk_rate = get_book_keeping_rates();
+		$CI   	     = get_instance();
+		$cfg	     = $CI->config->item('crm'); /// load config
+		$result 	 = array();
+		$value 		 = array();
+		if(!empty($lead_id)) {
+			$CI->db->select("cost_incurred_date, currency_type, value");
+			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
+			$CI->db->where('project_id', $lead_id);
+			//cost_incurred_date
+			if(!empty($start_date)) {
+				$CI->db->where("cost_incurred_date >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+			}
+			if(!empty($end_date)) {
+				$CI->db->where("cost_incurred_date <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+			}
+			$CI->db->order_by('id', 'ASC');
+			$query  = $CI->db->get();
+			// echo $CI->db->last_query(); exit;
+			$result = $query->result_array();
+
+			if(count($result)>0 && !empty($result)) {
+				foreach($result as $rec) {
+					$conver_value  = 0;
+					$curFiscalYear = date('Y'); //set as default current year as fiscal year
+					$curFiscalYear = getFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+					$convert_value[date('M', strtotime($rec['cost_incurred_date']))] = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]);
+					$value[date('M', strtotime($rec['cost_incurred_date']))] += $convert_value;
+				}	
+			}
+			echo "<pre>"; print_r($value); exit;
+		}
+		return $value;
+	}
+}
