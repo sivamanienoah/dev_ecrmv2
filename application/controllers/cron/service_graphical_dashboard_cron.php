@@ -216,7 +216,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-				$timesheet_data[$rec->username]['max_hours']   = $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['max_hours']   = isset($max_hours_resource->practice_max_hours) ? $max_hours_resource->practice_max_hours : 0;
 				$timesheet_data[$rec->username]['dept_name']   = $rec->dept_name;
 				
 				$rateCostPerHr = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
@@ -471,12 +471,14 @@ class Service_graphical_dashboard_cron extends crm_controller
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
 				foreach($this->fiscal_month_arr as $fis_mon) {
 					$con_month = 'contri_'.$fis_mon;
+					$mon_revenue = $mon_contrib = '';
 					$ins_array[$con_month] = 0;
 					$mon_revenue = isset($projects['trend_pract_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr'][$parr][$fis_mon] : 0;
 					$mon_contrib = isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
-					if(isset($mon_revenue) && $mon_revenue != 0) {
+					/* if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
-					}
+					} */
+					$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
 					if(date('M') == $fis_mon) { break; }
 				}
