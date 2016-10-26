@@ -573,7 +573,7 @@ if ( ! function_exists('getOtherCostByProjectCodeByDateRangeByMonthWise'))
 		$cfg	     = $CI->config->item('crm'); /// load config
 		$result 	 = array();
 		$value 		 = array();
-		if(!empty($lead_id)) {
+		if(!empty($project_code)) {
 			$CI->db->select("description, cost_incurred_date, currency_type, value");
 			$CI->db->from($CI->cfg['dbpref'].'project_other_cost');
 			$CI->db->join($CI->cfg['dbpref'].'leads', 'lead_id = project_id');
