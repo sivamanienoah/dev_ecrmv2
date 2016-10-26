@@ -117,33 +117,33 @@ function updt_currency($frm, $to_Currency_id, $conversion_value)
 }
 
 function formatSizeUnits($bytes)
-    {
-        if ($bytes >= 1073741824)
-        {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        }
-        elseif ($bytes >= 1048576)
-        {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        }
-        elseif ($bytes >= 1024)
-        {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        }
-        elseif ($bytes > 1)
-        {
-            $bytes = $bytes . ' bytes';
-        }
-        elseif ($bytes == 1)
-        {
-            $bytes = $bytes . ' byte';
-        }
-        else
-        {
-            $bytes = '0 bytes';
-        }
+{
+	if ($bytes >= 1073741824)
+	{
+		$bytes = number_format($bytes / 1073741824, 2) . ' GB';
+	}
+	elseif ($bytes >= 1048576)
+	{
+		$bytes = number_format($bytes / 1048576, 2) . ' MB';
+	}
+	elseif ($bytes >= 1024)
+	{
+		$bytes = number_format($bytes / 1024, 2) . ' KB';
+	}
+	elseif ($bytes > 1)
+	{
+		$bytes = $bytes . ' bytes';
+	}
+	elseif ($bytes == 1)
+	{
+		$bytes = $bytes . ' byte';
+	}
+	else
+	{
+		$bytes = '0 bytes';
+	}
 
-        return $bytes;
+	return $bytes;
 }
 
 if ( ! function_exists('get_book_keeping_rates'))
@@ -527,5 +527,35 @@ if ( ! function_exists('getOtherCostByLeadIdBasedProjectCurrency'))
 			}
 		}
 		return $value;
+	}
+}
+
+/*
+*@method calcInvoiceDataByPracticeWiseMonthWise()
+*@param array
+*/
+if( ! function_exists('calcInvoiceDataByPracticeWiseMonthWise'))
+{
+	function calcInvoiceDataByPracticeWiseMonthWise($invoice_data, $default_cur)
+	{
+		$trend_array 		= array();
+		$bk_rates 			= get_book_keeping_rates();
+		
+		if(is_array($invoice_data) && !empty($invoice_data) && count($invoice_data)>0) {
+			foreach($invoice_data as $ir) {
+				if($ir['practices'] == 'Infra Services') { //infra services practices are merged with other practices
+					$ir['practices'] = 'Others';
+				}
+				$mon = date('M', strtotime($ir['for_month_year']));
+				$base_conversion_camt = converCurrency($ir['milestone_value'],$bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
+				if(isset($trend_array[$ir['practices']][$mon])){
+					$trend_array[$ir['practices']][$mon] += converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$default_cur]);
+				} else {
+					$trend_array[$ir['practices']][$mon] = converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$default_cur]);
+				}
+			}
+		}
+		// echo "<pre>"; print_r($trend_array); exit;
+		return $trend_array;
 	}
 }
