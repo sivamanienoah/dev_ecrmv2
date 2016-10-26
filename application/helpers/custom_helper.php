@@ -568,6 +568,7 @@ if ( ! function_exists('getOtherCostByProjectCodeByDateRangeByMonthWise'))
 {
 	function getOtherCostByProjectCodeByDateRangeByMonthWise($project_code = false, $default_curr = false, $start_date = false, $end_date = false)
 	{
+		echo $project_code; exit;
 		$cur_bk_rate = get_book_keeping_rates();
 		$CI   	     = get_instance();
 		$cfg	     = $CI->config->item('crm'); /// load config
