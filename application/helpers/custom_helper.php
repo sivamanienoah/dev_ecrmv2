@@ -597,8 +597,9 @@ if ( ! function_exists('getOtherCostByLeadIdByDateRangeByMonthWise'))
 					echo $convert_value[date('M', strtotime($rec['cost_incurred_date']))] = converCurrency($rec['value'], $cur_bk_rate[$curFiscalYear][$rec['currency_type']][$default_curr]); exit;
 					$value[date('M', strtotime($rec['cost_incurred_date']))] += $convert_value;
 				}	
+				echo "<pre>"; print_r($value); exit;
 			}
-			echo "<pre>"; print_r($value); exit;
+			
 		}
 		return $value;
 	}
