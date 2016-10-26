@@ -74,6 +74,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$month 		= date('Y-m-01 00:00:00');
 		$start_date = date("Y-m-01",strtotime($start_date));
 		$end_date 	= date("Y-m-d", strtotime($end_date));
+		
+		//for testing
+		$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise('ITS-MAG-01-0416', $this->default_cur_id, $start_date, $end_date);
+		exit;
 
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
