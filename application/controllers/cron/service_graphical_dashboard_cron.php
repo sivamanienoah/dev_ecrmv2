@@ -20,6 +20,7 @@ Modified By     : Sriram.S
  */
 error_reporting(E_ALL);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+ini_set('display_errors',1);
 class Service_graphical_dashboard_cron extends crm_controller 
 {	
     public function __construct()
@@ -102,7 +103,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$practice_array[] = $prow->practices;
 			}
 		}
-		
+
 		//get current fiscal ytd invoice records
 		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
 		$trend_value 	 = calcInvoiceDataByPracticeWiseMonthWise($invoice_data, $this->default_cur_id);
@@ -361,7 +362,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '','pjt_id'=>));
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
 		
 		/*
@@ -469,11 +470,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
 				foreach($this->fiscal_month_arr as $fis_mon) {
-					$ins_array['contri_'.$fis_mon] = 0;
+					$con_month = 'contri_'.$fis_mon;
+					$ins_array[$con_month] = 0;
 					$mon_revenue = isset($projects['trend_pract_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr'][$parr][$fis_mon] : 0;
 					$mon_contrib = isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
-						$ins_array['contri_'.$fis_mon] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
+						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
 					$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
 					if(date('M') == $fis_mon) { break; }
