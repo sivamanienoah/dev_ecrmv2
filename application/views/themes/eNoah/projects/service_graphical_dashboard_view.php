@@ -50,105 +50,140 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					</h5>
 					<div id="it_service_summary_det" class="it_service_summary_det">
 						<div class="summary_box">
-							<div class="height_fix">Contribution</div>
-							<div class="numberCircle content" id="value_contribution">10000</div>
+							<div class="height_fix"><h3>Contribution</h3></div>
+							<div class="numberCircle content" id="value_contribution"><?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?></div>
 						</div>
 						<div class="summary_box">
-							<div class="height_fix">Revenue</div>
-							<div class="numberCircle content" id="value_revenue"><?php echo round($inv_compare['curr_yr']['tot_inv_value'])." ".$this->default_cur_name; ?></div>
+							<?php
+							//converting to million
+							$curr_revenue = '';
+							if( $inv_compare['curr_yr']['tot_inv_value'] > 0 ) {
+								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
+							}
+							?>
+							<div class="height_fix"><h3>Revenue</h3></div>
+							<div class="numberCircle content" id="value_revenue">
+								<?php echo '$ '.round($curr_revenue, 1).' M '; ?><span class="cur_name"><?php echo $this->default_cur_name; ?></span>
+							</div>
 						</div>
 						<div class="summary_box">
-							<div class="height_fix">Utilization</div>
-							<div class="numberCircle content" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . "%"; ?></div>
+							<div class="height_fix"><h3>Utilization</h3></div>
+							<div class="numberCircle content" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?></div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!--Summary Container - End-->
 			<div class="clear"></div>
-			<!--Utilization Cost Container-->
-			<div class="uc-head">
-				<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
-				<!--a class="choice-box" onclick="advanced_filter();" >
-					<img src="assets/img/advanced_filter.png" class="icon leads" />
-					<span>Advanced Filters</span>
-				</a>
-				<div class="buttons export-to-excel">
-					<button type="button" class="positive" id="btnExportITServices">
-						Export to Excel
-					</button>
-				</div-->
-				<div id="filter_section" class="pull-right">
-					<div class="clear"></div>
-					<div id="advance_search" style="padding-bottom:5px;">			
-						<?php $attributes = array('id'=>'filter_uc_dashboard','name'=>'filter_uc_dashboard','method'=>'post'); ?>
-						<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
-
-							<input type="hidden" name="filter" id="filter" value="filter" />
-							<div style="width:65% !important;">
-								<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
-									<tr>
-										<td align="left">
-											<input type="radio" name="uc_filter_by" value="hour" <?php if($uc_filter_by == 'hour') { echo 'checked="checked"'; }?> />&nbsp;By Hour &nbsp;&nbsp;
-											<input type="radio" name="uc_filter_by" value="cost" <?php if($uc_filter_by == 'cost') { echo 'checked="checked"'; }?> />&nbsp;By Cost
-										</td>
-										<td align="left">
-											<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" />
-											<div id="load" style = "float:right;display:none;height:1px;">
-												<img src="<?php echo base_url().'assets/images/loading.gif'; ?>" width="54" />
-											</div>
-										</td>								
-									</tr>
-								</table>
-							</div>
-						<?php echo form_close(); ?>
+			<!--Utilization Cost Container - Start-->
+			<div id="uc_container_overall_wrap">
+				<div class="uc-head">
+					<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
+					<!--a class="choice-box" onclick="advanced_filter();" >
+						<img src="assets/img/advanced_filter.png" class="icon leads" />
+						<span>Advanced Filters</span>
+					</a>
+					<div class="buttons export-to-excel">
+						<button type="button" class="positive" id="btnExportITServices">
+							Export to Excel
+						</button>
+					</div-->
+					<div id="filter_section" class="pull-right">
+						<div class="clear"></div>
+						<div id="advance_search" style="padding-bottom:5px;">			
+							<?php $attributes = array('id'=>'filter_uc_dashboard','name'=>'filter_uc_dashboard','method'=>'post'); ?>
+							<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
+								<input type="hidden" name="filter" id="filter" value="filter" />
+								<div style="width:65% !important;">
+									<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+										<tr>
+											<td align="left">
+												<input type="radio" name="uc_filter_by" value="hour" <?php if($uc_filter_by == 'hour') { echo 'checked="checked"'; }?> />&nbsp;By Hour &nbsp;&nbsp;
+												<input type="radio" name="uc_filter_by" value="cost" <?php if($uc_filter_by == 'cost') { echo 'checked="checked"'; }?> />&nbsp;By Cost
+											</td>
+											<td align="left">
+												<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" />
+												<div id="load" style = "float:right;display:none;height:1px;">
+													<img src="<?php echo base_url().'assets/images/loading.gif'; ?>" width="54" />
+												</div>
+											</td>								
+										</tr>
+									</table>
+								</div>
+							<?php echo form_close(); ?>
+						</div>
 					</div>
 				</div>
+				<div class="uc_container_wrap" id="uc_container">
+					<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val, true); ?>
+				</div>
 			</div>
-			<div class="uc_container_wrap" id="uc_container">
-				<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val, true); ?>
-			</div>
-			<!--Utilization Cost Container-->
+			<!--Utilization Cost Container - End -->
 			<div class="clear"></div>
-			<!--Revenue Share Dashboard Container-->
-			<div class="uc-head">
-				<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Share Dashboard</h2>
-				<div id="filter_section" class="pull-right">
-					<div class="clear"></div>
-					<div id="advance_search" style="padding-bottom:15px;">			
-						
+			<!--Revenue Share Dashboard Container - Start -->
+			<div id="revenue_container_overall_wrap">
+				<div class="uc-head">
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Share Dashboard</h2>
+					<div id="filter_section" class="pull-right">
+						<div class="clear"></div>
+						<div id="advance_search" style="padding-bottom:15px;">			
+							
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div class="revenue_container_wrap" id="revenue_container">
-				<?php
-					$revenue_arr = array();
-					$revenue_values = '';
-					foreach($invoice_val as $practice_name=>$practice_value){
-						$revenue_arr[] = "['".$practice_name.'('.round($practice_value).')'."'".','.$practice_value."]";
-					}
-					$revenue_values = implode(',', $revenue_arr);
-				?>
-				
-				<?php #echo $this->load->view('projects/graphical_box_uc', $uc_graph_val); ?>
-				<!--For Pie Charts-->
-				<div class="pull-left overall_container">
-					<h5 class="dash-tlt"><?php echo "Revenues in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
-					<div id="revenue_pie" class="plot"></div>
-				</div>
-				<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
-					<?php echo $this->load->view('projects/graphical_box_inv_compare', $inv_filter_by); ?>
 				</div>
 				<div class="clear"></div>
-				<div class="revenue_practicewise_chlid_container clearfix">
-					<h5 class="revenue_compare_head_bar">
-						<span class="forecast-heading">Practice Wise Revenue Comparison</span>
-					</h5>
-					<div id="revenue_practice_compare_bar" class="plot"></div>
+				<div class="revenue_container_wrap" id="revenue_container">
+					<?php
+						$revenue_arr = array();
+						$revenue_values = '';
+						foreach($invoice_val as $practice_name=>$practice_value){
+							$revenue_arr[] = "['".$practice_name.'('.round($practice_value).')'."'".','.$practice_value."]";
+						}
+						$revenue_values = implode(',', $revenue_arr);
+					?>
+					<!--For Pie Charts-->
+					<div class="pull-left overall_container">
+						<h5 class="dash-tlt"><?php echo "Revenues in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
+						<div id="revenue_pie" class="plot"></div>
+					</div>
+					<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
+						<?php echo $this->load->view('projects/graphical_box_inv_compare', $inv_filter_by); ?>
+					</div>
+					<div class="clear"></div>
+					<div class="revenue_practicewise_chlid_container clearfix">
+						<h5 class="revenue_compare_head_bar">
+							<span class="forecast-heading">Practice Wise Revenue Comparison</span>
+						</h5>
+						<div id="revenue_practice_compare_bar" class="plot"></div>
+					</div>
 				</div>
 			</div>
-			<!--Revenue Share Dashboard Container-->
+			<!--Revenue Share Dashboard Container - End -->
+			<div class="clear"></div>
+			<div id="contribution_container_overall_wrap">
+				<div class="uc-head">
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Contribution Dashboard (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h2>
+					<div id="filter_section" class="pull-right">
+						<div class="clear"></div>
+						<div id="advance_search" style="padding-bottom:15px;">			
+							
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div id="contribution_container_wrap">				
+					<div class="pull-left contribution_chlid_container">
+						<h5 class="revenue_compare_head_bar"><span class="forecast-heading">Contribution Trend</span></h5>
+						<div id="contribution_trend" class="plot"></div>
+					</div>
+					<div class="pull-right contribution_chlid_container">
+						<h5 class="revenue_compare_head_bar"><span class="forecast-heading">Revenue Trend</span></h5>
+						<div id="revenue_trend" class="plot"></div>
+					</div>
+				</div>
+			</div>
+			
+			
         <?php 
 		} else {
 			echo "You have no rights to access this page";
@@ -157,10 +192,28 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 		</div>
 	</div>
 </div>
+<?php #echo "<pre>"; print_r($contri_graph_val); echo "</pre>"; ?>
 <script type="text/javascript">
-var revenue_values 			= [<?php echo $revenue_values ?>];
+var revenue_values 		= [<?php echo $revenue_values ?>];
+var tre_pra_month_label = <?php echo json_encode($trend_pract_month_val['practic_arr']) ?>;
+var tre_pra_month_x_val = <?php echo json_encode($trend_pract_month_val['trend_mont_arr']) ?>;
+var tre_pra_month_value = [];
+<?php foreach( $trend_pract_month_val['trend_pract_val_arr'] as $prac_mont_val ) { ?>
+	tre_pra_month_value[tre_pra_month_value.length] = <?php echo json_encode($prac_mont_val) ?>;
+<?php } ?>
+
+var con_pra_month_label = <?php echo json_encode($contri_graph_val['con_pr_name']) ?>;
+var con_pra_month_x_val = <?php echo json_encode($contri_graph_val['con_gr_x_val']) ?>;
+var con_pra_month_value = [];
+<?php foreach( $contri_graph_val['con_gr_val'] as $con_mont_val ) { ?>
+	con_pra_month_value[con_pra_month_value.length] = <?php echo json_encode($con_mont_val) ?>;
+<?php } ?>
+
+console.info(con_pra_month_value);
 </script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_compare_bar.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_month_line.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_contrib_practice_month_line.js"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
