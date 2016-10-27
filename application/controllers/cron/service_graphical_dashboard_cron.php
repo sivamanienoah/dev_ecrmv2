@@ -394,23 +394,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
 				//for contribution trend
-				
-				/* if((isset($contribution_trend_project_arr[$prec->pjt_id])) && (isset($practice_arr[$prec->practice]))) {
-					
-					
-					
-					$other_cos_arr = array();
-					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
-					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id], $other_cos_arr);
-				} */
-				// if(isset($practice_arr[$prec->practice])) {
-					
-					$other_cos_arr = array();
-					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);					
-					// echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
-					$go_merge_proj_arr = isset($contribution_trend_project_arr[$prec->pjt_id]) ? $contribution_trend_project_arr[$prec->pjt_id] : array();
-					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $go_merge_proj_arr, $other_cos_arr);
-				// }
+				$other_cos_arr = array();
+				$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);					
+				$go_merge_proj_arr = isset($contribution_trend_project_arr[$prec->pjt_id]) ? $contribution_trend_project_arr[$prec->pjt_id] : array();
+				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $go_merge_proj_arr, $other_cos_arr);
 			}
 		}
 		// echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
