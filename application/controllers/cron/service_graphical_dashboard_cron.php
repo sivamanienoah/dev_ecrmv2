@@ -141,8 +141,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
 		$practice_not_in = array(6);
-		// $this->db->where_not_in('l.practice', $practice_not_in);
-		$this->db->where_in('l.practice', array(12)); //for temporary use
+		$this->db->where_not_in('l.practice', $practice_not_in);
+		// $this->db->where_in('l.practice', array(12)); //for temporary use
 		if($project_status){
 			if($project_status !=2)
 			$this->db->where_in("l.pjt_status", $project_status);
@@ -174,7 +174,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		// $this->db->where_in("l.pjt_id", array('ITS-ULT-04-0916')); // for temporary use
-		$this->db->where_in("l.pjt_id", array("ITS-ERS-07-1016","ITS-SVM-03-0916","ITS-ULT-04-0916","ITS-SVM-02-0716","ITS-ULT-03-0716","COS-ENO-49-0616","COS-ENO-46-0616","COS-ENO-44-0616","COS-ENO-34-0616","ITS-PAW-01-0716","ITS-ULT-02-0416","ITS-SVM-01-0416","ITS-ULT-01-0416","ITS-MAG-01-0416","ITS-TON-01-0316","COS-NOA-05-0216","ITS-ENO-19-1015","ITS-ENO-09-0415","ITS-RPT-01-1115")); // for temporary use
+		// $this->db->where_in("l.pjt_id", array("ITS-ERS-07-1016","ITS-SVM-03-0916","ITS-ULT-04-0916","ITS-SVM-02-0716","ITS-ULT-03-0716","COS-ENO-49-0616","COS-ENO-46-0616","COS-ENO-44-0616","COS-ENO-34-0616","ITS-PAW-01-0716","ITS-ULT-02-0416","ITS-SVM-01-0416","ITS-ULT-01-0416","ITS-MAG-01-0416","ITS-TON-01-0316","COS-NOA-05-0216","ITS-ENO-19-1015","ITS-ENO-09-0415","ITS-RPT-01-1115")); // for temporary use
 		
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
@@ -365,7 +365,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6, "practice =" => 12)); //for temporary use
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$project_res = $res->result();
 		
 		// echo "<pre>"; print_r($project_res); exit;
