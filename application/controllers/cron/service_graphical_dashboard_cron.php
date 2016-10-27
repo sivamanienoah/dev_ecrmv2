@@ -174,7 +174,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		// $this->db->where_in("l.pjt_id", array('ITS-FRE-01-0916', 'ITS-LET-01-0516')); // for temporary use
-		$this->db->where_in("l.pjt_id", array(("ITS-ERS-07-1016","ITS-SVM-03-0916","ITS-ULT-04-0916","ITS-SVM-02-0716","ITS-ULT-03-0716","COS-ENO-49-0616","COS-ENO-46-0616","COS-ENO-44-0616","COS-ENO-34-0616","ITS-PAW-01-0716","ITS-ULT-02-0416","ITS-SVM-01-0416","ITS-ULT-01-0416","ITS-MAG-01-0416","ITS-TON-01-0316","COS-NOA-05-0216","ITS-ENO-19-1015","ITS-ENO-09-0415","ITS-RPT-01-1115"))); // for temporary use
+		$this->db->where_in("l.pjt_id", array("ITS-ERS-07-1016","ITS-SVM-03-0916","ITS-ULT-04-0916","ITS-SVM-02-0716","ITS-ULT-03-0716","COS-ENO-49-0616","COS-ENO-46-0616","COS-ENO-44-0616","COS-ENO-34-0616","ITS-PAW-01-0716","ITS-ULT-02-0416","ITS-SVM-01-0416","ITS-ULT-01-0416","ITS-MAG-01-0416","ITS-TON-01-0316","COS-NOA-05-0216","ITS-ENO-19-1015","ITS-ENO-09-0415","ITS-RPT-01-1115")); // for temporary use
 		
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
