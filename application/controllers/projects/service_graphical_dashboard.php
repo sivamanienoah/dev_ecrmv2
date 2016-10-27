@@ -49,7 +49,7 @@ class Service_graphical_dashboard extends crm_controller
 		$data['end_date']   	= $end_date;
 		$data['uc_filter_by'] 	= $uc_filter_by;
 		$data['inv_filter_by'] 	= $inv_filter_by;
-		
+
 		//practice
 		$data['practice_arr'] = $this->service_graphical_dashboard_model->get_practices();
 		// $data['practice_arr']['practice_array']; //normal practice array
@@ -110,6 +110,19 @@ class Service_graphical_dashboard extends crm_controller
 		$data['trend_pract_month_val'] = $trend_pract_arr;
 		// echo "<pre>"; print_r($trend_pract_arr); exit;
 		// echo "<pre>"; print_r($data['prat_inv_compare']); echo"</pre>"; exit;
+		//contribution values from services_graphical_dashboard table
+		//select field names
+		
+		$sel_values = 'practice_name,';
+		foreach($this->fiscal_month_arr as $fis_mons) {
+			$sel_values .= 'contri_'.$fis_mons.' AS '.$fis_mons;
+			if(date('M') == $fis_mons) { break; }
+			else { $sel_values .= ','; }
+		}
+		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values);
+		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
+		
+		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord();
 		
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
