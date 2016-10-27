@@ -537,10 +537,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$contr_value = $other_value = 0;
 				if(isset($res_arr[$practice_name][$fis_mon])) {
 					//contribution value
+					echo "IF";
 					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 					$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
 					$res_arr[$practice_name][$fis_mon] += $contr_value + $other_value;
 				} else {
+					echo "ELSE";
 					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 					$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
 					$res_arr[$practice_name][$fis_mon] = $contr_value + $other_value;
