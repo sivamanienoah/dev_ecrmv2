@@ -381,7 +381,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$project_master = array();
 		if(!empty($project_res)) {
 			foreach($project_res as $prec) {
-				/* if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'])) {
+				if(isset($directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'])) {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += isset($directcost1[$prec->pjt_id]['project_total_direct_cost']) ? $directcost1[$prec->pjt_id]['project_total_direct_cost'] : 0;
 				} else {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] = isset($directcost1[$prec->pjt_id]['project_total_direct_cost']) ? $directcost1[$prec->pjt_id]['project_total_direct_cost'] : 0;
@@ -390,7 +390,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] += isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				} else {
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
-				} */
+				}
 				
 				//for contribution trend
 				if(isset($practice_arr[$prec->practice])) {
@@ -481,7 +481,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
