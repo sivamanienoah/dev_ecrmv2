@@ -516,7 +516,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 	}
 	
-/* 	public function combineContributionProjectArr($practice_name, $project_mon_arr)
+	public function combineContributionProjectArr($practice_name, $project_mon_arr)
 	{
 		// echo "asdf".$practice_name; exit;
 		$res_arr = array();
@@ -538,9 +538,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo "<pre>"; print_r($res_arr); exit;
 		return $res_arr;
-	} */
+	}
 	
-/* 	public function combineOthercostContributionCost($practice_name, $exist_contr_proj_arr, $new_project_mon_arr, $other_cos_arr_val)
+	public function combineOthercostContributionCost($practice_name, $exist_contr_proj_arr, $new_project_mon_arr, $other_cos_arr_val)
 	{
 		// echo "asdf".$practice_name; exit;
 		$res_arr = array();
@@ -562,7 +562,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 
 		// echo "<pre>"; print_r($res_arr); exit;
 		return $res_arr;
-	} */
+	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
