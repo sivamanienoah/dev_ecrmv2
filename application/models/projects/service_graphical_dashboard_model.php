@@ -31,7 +31,7 @@ class Service_graphical_dashboard_model extends crm_model {
     }
 	
 	/*
-	*
+	*getUcRecords
 	*/
 	public function getUcRecords($uc_filter_by)
 	{
@@ -152,6 +152,54 @@ class Service_graphical_dashboard_model extends crm_model {
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		return $query->result_array();
+    }
+	
+	/*
+	*getContributionRecords
+	*/
+	public function getContributionRecords($select_values)
+	{
+    	$this->db->select($select_values);
+		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		$sql = $this->db->get();
+		$con_graph_res = $sql->result_array();
+		
+		$con_graph_val 					= array();
+		$con_graph_val['con_gr_x_val']  = array();
+		if(!empty($con_graph_res)){
+			foreach($con_graph_res as $key=>$val) {
+				if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Total'){
+					continue;
+				}
+				$con_graph_val['con_pr_name'][] = $val['practice_name'];
+				if(is_array($val) && !empty($val) && count($val)>0){
+					foreach($this->fiscal_month_arr as $fis_mon) {
+						if(!in_array($fis_mon, $con_graph_val['con_gr_x_val'])) {
+							$con_graph_val['con_gr_x_val'][] = $fis_mon;
+						}						
+						$con_graph_val['con_gr_val'][$val['practice_name']][] = $val[$fis_mon];
+						if(date('M') == $fis_mon) { break; }
+					}
+				}
+				
+			}
+		}
+		// echo "<pre>"; print_r($con_graph_val); exit;
+		return $con_graph_val;
+    }
+	
+	/*
+	*getTotalContributionRecord
+	*/
+	public function getTotalContributionRecord()
+	{
+    	$this->db->select('tot_contri');
+		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		$this->db->where('practice_name', 'Total');
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$con_res = $sql->row_array();
+		return $con_res;
     }
 
 }
