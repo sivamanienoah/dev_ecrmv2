@@ -140,10 +140,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		//BPO practice are not shown in IT Services Dashboard
-		// $this->db->where_not_in("l.practice", 6);
 		$practice_not_in = array(6);
-		$this->db->where_not_in('l.practice', $practice_not_in);
-		// $this->db->where_in('l.practice', array(1)); //for temporary use
+		// $this->db->where_not_in('l.practice', $practice_not_in);
+		$this->db->where_in('l.practice', array(12)); //for temporary use
 		if($project_status){
 			if($project_status !=2)
 			$this->db->where_in("l.pjt_status", $project_status);
@@ -408,7 +407,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
-		echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+		// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
 				if(isset($directcost[$practiceId]['total_direct_cost'])) {
