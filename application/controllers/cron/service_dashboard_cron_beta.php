@@ -59,7 +59,6 @@ class Service_dashboard_cron_beta extends crm_controller
 	
 	public function index() 
 	{
-		
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
 		$data  				  = array();
@@ -68,7 +67,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
+		// $end_date   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
 		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
 		
 		//default billable_month
@@ -101,6 +100,20 @@ class Service_dashboard_cron_beta extends crm_controller
 			foreach($pres as $prow) {
 				$practice_arr[$prow->id] = $prow->practices;
 				$practice_array[] = $prow->practices;
+			}
+		}
+		
+		//for othercost projects
+		$this->db->select("pjt_id,lead_id,practice,lead_title");
+		$ocres = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
+		$oc_res = $ocres->result();
+		if(!empty($oc_res)) {
+			foreach($oc_res as $ocrow) {
+				if(isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])){
+					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
+				} else {
+					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
+				}
 			}
 		}
 		
@@ -137,10 +150,10 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
-					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+					// $projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+					// $projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				}
 				if($row['rag_status'] == 1){
 					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
@@ -653,7 +666,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				// $dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
-				$ins_array['month_status'] = 1;
+				$ins_array['month_status'] 	   = 1;
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
 				$tot_Irval   += $projects['irval'][$parr];
