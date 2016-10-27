@@ -109,15 +109,15 @@ class Service_dashboard_cron_beta extends crm_controller
 		$oc_res = $ocres->result_array();
 		
 		if(!empty($oc_res)) {
-			foreach($oc_res as $ocrow) { echo $ocrow['practice']; exit;
-				if(isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])){
+			foreach($oc_res as $ocrow) {
+				if (isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])) {
 					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
 				} else {
-					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]] = $ocrow['lead_id'];
+					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
 				}
 			}
 		}
-		
+		echo "<pre>"; print_r($projects); exit;
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
 		$this->db->where("l.lead_id != ", 'null');
