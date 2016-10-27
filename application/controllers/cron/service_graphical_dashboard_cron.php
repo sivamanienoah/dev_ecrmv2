@@ -187,7 +187,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		// $this->db->limit(20); // for temporary use
 		$query = $this->db->get();
 		$resdata = $query->result();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		// echo '<pre>';print_r($resdata); exit;
 		## code starts here##
 		$tbl_data = array();
@@ -364,10 +364,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6));
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6, "practice =" => 12));
 		$project_res = $res->result();
 		
-		// echo "<pre>"; print_r($project_res); exit;
+		echo "<pre>"; print_r($project_res); exit;
 		
 		/*
 		// for temporary use		
