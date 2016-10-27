@@ -399,11 +399,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 					if(isset($contribution_trend_project_arr[$prec->pjt_id]))) {
 						$contribution_project_arr = $this->combineContributionProjectArr($practice_arr[$prec->practice], $contribution_trend_project_arr[$prec->pjt_id]);
 					}
+					echo '<pre>'; print_r($contribution_project_arr); echo '</pre>'; exit;
 					$contribution_trend_arr = combineOthercostContributionCost($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_project_arr, $other_cos_arr);
 				}
 			}
 		}
-		// echo '<pre>'; print_r($contribution_trend_arr); echo '</pre>'; exit;
+		
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
@@ -551,11 +552,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 				//contribution value
 				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-				$res_arr[$practice_name][$fis_mon] += $contr_value;
+				$res_arr[$practice_name][$fis_mon] += $contr_value + $other_value;
 			} else {
 				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-				$res_arr[$practice_name][$fis_mon] = $contr_value;
+				$res_arr[$practice_name][$fis_mon] = $contr_value + $other_value;
 			}
 		}
 
