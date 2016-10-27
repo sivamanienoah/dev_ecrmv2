@@ -368,7 +368,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6));
 		$project_res = $res->result();
 		
-		echo "<pre>"; print_r($project_res); exit;
+		// echo "<pre>"; print_r($project_res); exit;
 		
 		/*
 		// for temporary use		
