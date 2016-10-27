@@ -397,7 +397,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				
 				if((isset($contribution_trend_project_arr[$prec->pjt_id])) && (isset($practice_arr[$prec->practice]))) {
 					
-					echo "<pre>"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
+					echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
 					
 					$other_cos_arr = array();
 					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
