@@ -2183,7 +2183,22 @@ class Dashboard extends crm_controller
 				$data['end_date']   	= $end_date;
 				//*for other cost value projects only*//
 				$data['othercost_projects'] = array();
-				if(!empty($res) && count($res)>0) {
+				
+				$this->db->select("pjt_id, lead_id, practice, lead_title");
+				$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
+				$oc_res = $ocres->result_array();
+				
+				if(!empty($oc_res)) {
+					foreach($oc_res as $ocrow) {
+						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {						
+							$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
+						} else {
+							$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
+						}
+					}
+				}
+				
+				/* if(!empty($res) && count($res)>0) {
 					foreach($res as $row) {
 						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {
 							$data['othercost_projects'][$practice_arr[$practice]][] = $row['pjt_id'];
@@ -2191,7 +2206,7 @@ class Dashboard extends crm_controller
 							$data['othercost_projects'][$practice_arr[$practice]][] = $row['pjt_id'];
 						}
 					}
-				}
+				} */
 				//*for other cost value projects only*//
 				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
