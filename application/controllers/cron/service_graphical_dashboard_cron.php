@@ -392,13 +392,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				} */
 				
-				echo "test"; exit;
-				
 				//for contribution trend
 				if(isset($practice_arr[$prec->practice])) {
 					$contribution_project_arr = array();
 					$other_cos_arr = array();
 					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
+					echo "asdfasdf"; exit;
 					if(isset($contribution_trend_project_arr[$prec->pjt_id])) {
 						$contribution_project_arr = $this->combineContributionProjectArr($practice_arr[$prec->practice], $contribution_trend_project_arr[$prec->pjt_id]);
 					}
