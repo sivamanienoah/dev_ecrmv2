@@ -437,7 +437,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
-			
+			// for total contribution & total revenue
+			$overall_revenue = $overall_contrib = 0;
 			foreach($practice_array as $parr){
 				
 				/**other cost data*/
@@ -484,7 +485,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 					
 					$ins_array[$con_month] = 0;
 					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? $projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon] : 0;
+					$overall_revenue = $mon_revenue;
 					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? $projects['contribution_trend_arr'][$parr][$fis_mon] : 0;
+					$overall_contrib = $mon_contrib;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
@@ -495,12 +498,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
 				echo $this->db->last_query() . "<br />";
 				$ins_array = array();
-				
-				// $ins_contri_val = 
 			}
 			
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
 			$tot['ytd_billable_utilization_cost'] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
+			$tot['tot_contribution'] 			  = round(($overall_revenue-$overall_contrib/$overall_revenue)*100);
 
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total'));
