@@ -516,54 +516,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 	}
 	
-/* 	public function combineContributionProjectArr($practice_name, $project_mon_arr)
-	{
-		// echo "asdf".$practice_name; exit;
-		$res_arr = array();
-		$res_arr = $project_mon_arr;
-		if(!empty($project_mon_arr) && count($project_mon_arr)>0) {
-			foreach($this->fiscal_month_arr as $fis_mon) {
-				$contr_value = 0;
-				if(isset($res_arr[$practice_name][$fis_mon])) {
-					//contribution value
-					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
-					// $other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-					$res_arr[$practice_name][$fis_mon] += $contr_value;
-				} else {
-					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
-					// $other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-					$res_arr[$practice_name][$fis_mon] = $contr_value;
-				}
-			}
-		}
-		// echo "<pre>"; print_r($res_arr); exit;
-		return $res_arr;
-	} */
-	
-/* 	public function combineOthercostContributionCost($practice_name, $exist_contr_proj_arr, $new_project_mon_arr, $other_cos_arr_val)
-	{
-		// echo "asdf".$practice_name; exit;
-		$res_arr = array();
-		$res_arr = $exist_contr_proj_arr;
-
-		foreach($this->fiscal_month_arr as $fis_mon) {
-			$contr_value = $other_value = 0;
-			if(isset($res_arr[$practice_name][$fis_mon])) {
-				//contribution value
-				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
-				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-				$res_arr[$practice_name][$fis_mon] += $contr_value + $other_value;
-			} else {
-				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
-				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
-				$res_arr[$practice_name][$fis_mon] = $contr_value + $other_value;
-			}
-		}
-
-		// echo "<pre>"; print_r($res_arr); exit;
-		return $res_arr;
-	} */
-	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
 		// echo "<pre>"; print_r($practice_arr);
