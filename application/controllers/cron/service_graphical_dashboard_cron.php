@@ -404,9 +404,12 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id], $other_cos_arr);
 				} */
 				// if(isset($practice_arr[$prec->practice])) {
-					echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
+					
 					$other_cos_arr = array();
 					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
+					
+					echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
+					
 					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id], $other_cos_arr);
 				// }
 			}
