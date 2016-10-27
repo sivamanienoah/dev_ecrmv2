@@ -392,7 +392,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
 				//for contribution trend
-				if(isset($practice_arr[$prec->practice]) {
+				/* if(isset($practice_arr[$prec->practice]) {
 					$contribution_project_arr = array();
 					$other_cos_arr = array();
 					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
@@ -401,7 +401,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					} */
 					// echo '<pre>'; print_r($contribution_project_arr); echo '</pre>'; exit;
 					// $contribution_trend_arr = $this->combineOthercostContributionCost($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_project_arr, $other_cos_arr);
-				}
+				} */
 			}
 		}
 		
@@ -480,7 +480,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
@@ -515,6 +515,54 @@ class Service_graphical_dashboard_cron extends crm_controller
 			echo $this->db->last_query() . "<br />";
 		}
 	}
+	
+/* 	public function combineContributionProjectArr($practice_name, $project_mon_arr)
+	{
+		// echo "asdf".$practice_name; exit;
+		$res_arr = array();
+		$res_arr = $project_mon_arr;
+		if(!empty($project_mon_arr) && count($project_mon_arr)>0) {
+			foreach($this->fiscal_month_arr as $fis_mon) {
+				$contr_value = 0;
+				if(isset($res_arr[$practice_name][$fis_mon])) {
+					//contribution value
+					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+					// $other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
+					$res_arr[$practice_name][$fis_mon] += $contr_value;
+				} else {
+					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+					// $other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
+					$res_arr[$practice_name][$fis_mon] = $contr_value;
+				}
+			}
+		}
+		// echo "<pre>"; print_r($res_arr); exit;
+		return $res_arr;
+	} */
+	
+/* 	public function combineOthercostContributionCost($practice_name, $exist_contr_proj_arr, $new_project_mon_arr, $other_cos_arr_val)
+	{
+		// echo "asdf".$practice_name; exit;
+		$res_arr = array();
+		$res_arr = $exist_contr_proj_arr;
+
+		foreach($this->fiscal_month_arr as $fis_mon) {
+			$contr_value = $other_value = 0;
+			if(isset($res_arr[$practice_name][$fis_mon])) {
+				//contribution value
+				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
+				$res_arr[$practice_name][$fis_mon] += $contr_value + $other_value;
+			} else {
+				$contr_value = isset($new_project_mon_arr[$fis_mon]) ? $new_project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
+				$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
+				$res_arr[$practice_name][$fis_mon] = $contr_value + $other_value;
+			}
+		}
+
+		// echo "<pre>"; print_r($res_arr); exit;
+		return $res_arr;
+	} */
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
