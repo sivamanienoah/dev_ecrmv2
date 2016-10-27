@@ -43,6 +43,7 @@ define('PDF_TEMP_PATH',SITE_FILE_PATH.'/crm_data/pdf_temp'); //for exporting cha
 define('CONST_ZERO',0); 
 define('CONST_ONE',1); 
 define('CONST_HUNDRED',100); 
+define('CONST_TEN_LAKH',1000000); 
 
 
 /* End of file constants.php */
