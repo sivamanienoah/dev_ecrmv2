@@ -400,9 +400,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 					if(isset($contribution_trend_project_arr[$prec->pjt_id])) {
 						$contribution_project_arr = $this->combineContributionProjectArr($practice_arr[$prec->practice], $contribution_trend_project_arr[$prec->pjt_id]);
 					}
-					if(!empty($contribution_project_arr)){
-						echo '<pre>'; print_r($contribution_project_arr); echo '</pre>'; exit;
-					}
 					$contribution_trend_arr = $this->combineOthercostContributionCost($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_project_arr, $other_cos_arr);
 				}
 			}
