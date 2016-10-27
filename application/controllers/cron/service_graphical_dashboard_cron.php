@@ -365,10 +365,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
-		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6, "practice =" => 12));
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6, "practice =" => 12)); //for temporary use
 		$project_res = $res->result();
 		
-		echo "<pre>"; print_r($project_res); exit;
+		// echo "<pre>"; print_r($project_res); exit;
 		
 		/*
 		// for temporary use		
@@ -394,7 +394,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_billable_cost'] = isset($directcost1[$prec->pjt_id]['project_total_billable_cost']) ? $directcost1[$prec->pjt_id]['project_total_billable_cost'] : 0;
 				}
 				//for contribution trend
+				
 				if((isset($contribution_trend_project_arr[$prec->pjt_id])) && (isset($practice_arr[$prec->practice]))) {
+					
+					echo "<pre>"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); exit;
+					
 					$other_cos_arr = array();
 					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
 					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id], $other_cos_arr);
