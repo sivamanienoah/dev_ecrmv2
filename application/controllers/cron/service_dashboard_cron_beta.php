@@ -107,7 +107,8 @@ class Service_dashboard_cron_beta extends crm_controller
 		$this->db->select("pjt_id, lead_id, practice, lead_title");
 		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$oc_res = $ocres->result_array();
-		if(!empty($oc_res)) {
+		echo $this->db->last_query(); exit;
+		/* if(!empty($oc_res)) {
 			foreach($oc_res as $ocrow) {
 				if(isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])){
 					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
@@ -115,7 +116,7 @@ class Service_dashboard_cron_beta extends crm_controller
 					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]] = $ocrow['lead_id'];
 				}
 			}
-		}
+		} */
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
