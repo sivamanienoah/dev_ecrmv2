@@ -518,7 +518,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 	
 	public function combineContributionProjectArr($practice_name, $project_mon_arr)
 	{
-		// echo "asdf".$practice_name; exit;
+		echo "asdf".$practice_name; print_r($project_mon_arr); exit;
 		$res_arr = array();
 		$res_arr = $project_mon_arr;
 		if(!empty($project_mon_arr) && count($project_mon_arr)>0) {
