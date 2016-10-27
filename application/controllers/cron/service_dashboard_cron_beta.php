@@ -104,7 +104,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
 		
 		//for othercost projects
-		$this->db->select("pjt_id,lead_id,practice,lead_title");
+		/* $this->db->select("pjt_id,lead_id,practice,lead_title");
 		$ocres = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$oc_res = $ocres->result();
 		if(!empty($oc_res)) {
@@ -115,7 +115,7 @@ class Service_dashboard_cron_beta extends crm_controller
 					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
 				}
 			}
-		}
+		} */
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -150,10 +150,10 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				if (isset($projects['practicewise'][$practice_arr[$row['practice']]])) {
 					$projects['practicewise'][$practice_arr[$row['practice']]] += 1;
-					// $projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				} else {
 					$projects['practicewise'][$practice_arr[$row['practice']]]  = 1;  ///Initializing count
-					// $projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
+					$projects['othercost_projects'][$practice_arr[$row['practice']]][] = $row['lead_id'];
 				}
 				if($row['rag_status'] == 1){
 					if (isset($projects['rag_status'][$practice_arr[$row['practice']]])) {
