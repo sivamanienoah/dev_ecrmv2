@@ -531,7 +531,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($res_arr); exit;
+		echo "<pre>"; print_r($res_arr); exit;
 		return $res_arr;
 	}
 	
