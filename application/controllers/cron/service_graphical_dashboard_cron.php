@@ -399,7 +399,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
+		echo '<pre>'; print_r($contribution_trend_arr); echo '</pre>'; exit;
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
@@ -531,7 +531,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($res_arr); exit;
+		// echo "<pre>"; print_r($res_arr); exit;
 		return $res_arr;
 	}
 	
