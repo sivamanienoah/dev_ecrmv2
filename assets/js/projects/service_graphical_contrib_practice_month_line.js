@@ -52,7 +52,7 @@ $(function() {
 			},
 			yaxis: {
 				min:0,
-				label:'Vaules(USD) --->',
+				label:'Contribution (%) --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
