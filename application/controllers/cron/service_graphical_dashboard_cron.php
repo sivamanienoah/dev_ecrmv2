@@ -406,17 +406,15 @@ class Service_graphical_dashboard_cron extends crm_controller
 				// if(isset($practice_arr[$prec->practice])) {
 					
 					$other_cos_arr = array();
-					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
-					
-					echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";
-					
+					$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);					
+					// echo "<pre> $prec->pjt_id"; print_r($contribution_trend_project_arr[$prec->pjt_id]); echo "***<br>"; print_r($other_cos_arr); echo "</pre>";					
 					$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $contribution_trend_project_arr[$prec->pjt_id], $other_cos_arr);
 				// }
 			}
 		}
 		// echo '<pre>'; print_r($trend_pract_arr); echo '</pre>'; exit;
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
-		echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+		// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val){
 				if(isset($directcost[$practiceId]['total_direct_cost'])) {
@@ -537,12 +535,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$contr_value = $other_value = 0;
 				if(isset($res_arr[$practice_name][$fis_mon])) {
 					//contribution value
-					echo "IF";
 					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 					$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
 					$res_arr[$practice_name][$fis_mon] += $contr_value + $other_value;
 				} else {
-					echo "ELSE";
 					$contr_value = isset($project_mon_arr[$fis_mon]) ? $project_mon_arr[$fis_mon]['project_total_direct_cost'] : 0;
 					$other_value = isset($other_cos_arr_val[$fis_mon]) ? $other_cos_arr_val[$fis_mon] : 0;
 					$res_arr[$practice_name][$fis_mon] = $contr_value + $other_value;
