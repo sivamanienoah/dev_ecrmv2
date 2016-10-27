@@ -520,7 +520,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 	public function combineContributionProjectArr($practice_name, $project_mon_arr)
 	{
 		$res_arr = array();
-		$res_arr = $project_mon_arr;
 		if(!empty($project_mon_arr) && count($project_mon_arr)>0) {
 			foreach($this->fiscal_month_arr as $fis_mon) {
 				$contr_value = 0;
@@ -542,7 +541,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 	
 	public function combineOthercostContributionCost($practice_name, $exist_contr_proj_arr, $new_project_mon_arr, $other_cos_arr_val)
 	{
-		// echo "asdf".$practice_name; exit;
 		$res_arr = array();
 		$res_arr = $exist_contr_proj_arr;
 
