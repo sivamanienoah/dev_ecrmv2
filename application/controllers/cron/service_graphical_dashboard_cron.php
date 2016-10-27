@@ -187,7 +187,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		// $this->db->limit(20); // for temporary use
 		$query = $this->db->get();
 		$resdata = $query->result();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		// echo '<pre>';print_r($resdata); exit;
 		## code starts here##
 		$tbl_data = array();
