@@ -107,7 +107,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$this->db->select("pjt_id, lead_id, practice, lead_title");
 		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$oc_res = $ocres->result_array();
-		echo $this->db->last_query(); exit;
+		echo "<pre>"; print_r($oc_res); exit;
 		/* if(!empty($oc_res)) {
 			foreach($oc_res as $ocrow) {
 				if(isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])){
