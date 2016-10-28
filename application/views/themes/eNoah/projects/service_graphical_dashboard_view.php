@@ -46,7 +46,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<div class="uc-head">
 				<div class="it_service_summary_det_container clearfix">
 					<h5 class="revenue_compare_head_bar">
-						<span class="forecast-heading"><?php echo "Summary Details" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
+						<span class="forecast-heading"><?php echo "IT Performance Summary" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
 					</h5>
 					<div id="it_service_summary_det" class="it_service_summary_det">
 						<div class="summary_box">							
@@ -91,7 +91,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<!--Utilization Cost Container - Start-->
 			<div id="uc_container_overall_wrap">
 				<div class="uc-head fliter-section-wrap">
-					<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
+					<h2 class="pull-left borderBtm"><?php echo "Utilization Analysis" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
 					<!--a class="choice-box" onclick="advanced_filter();" >
 						<img src="assets/img/advanced_filter.png" class="icon leads" />
 						<span>Advanced Filters</span>
@@ -130,7 +130,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<!--Revenue Share Dashboard Container - Start -->
 			<div id="revenue_container_overall_wrap">
 				<div class="uc-head">
-					<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Share Dashboard</h2>
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Analysis</h2>
 					<div id="filter_section" class="pull-right">
 						<div class="clear"></div>
 						<div id="advance_search" style="padding-bottom:15px;">			
@@ -169,7 +169,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<div class="clear"></div>
 			<div id="contribution_container_overall_wrap">
 				<div class="uc-head">
-					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Contribution Dashboard (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h2>
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Contribution & Trend Analysis (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h2>
 					<div id="filter_section" class="pull-right">
 						<div class="clear"></div>
 						<div id="advance_search" style="padding-bottom:15px;">			
