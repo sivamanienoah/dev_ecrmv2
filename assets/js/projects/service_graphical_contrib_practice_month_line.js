@@ -87,7 +87,7 @@ $(function() {
 			shadow: false
 		},
 		highlighter: { show: false },
-		seriesColors: ["#48596a", "#027997", "#cc0000", "#c747a3", "#910000", "#66ffcc", "#bfdde5", "#cc99cc", "#492970", "#f0eded", "#0d233a", "#4bb2c5", "#a35b2e", "#4b5de4", "#422460", "#953579"],
+		seriesColors: ["#1a5a2e", "#027997", "#cc0000", "#c747a3", "#910000", "#66ffcc", "#bfdde5", "#cc99cc", "#492970", "#f0eded", "#0d233a", "#4bb2c5", "#a35b2e", "#4b5de4", "#422460", "#953579"],
 		highlighter: { show: true, tooltipAxes: 'y', formatString: '%s', lineWidthAdjust:5.5, tooltipOffset:8 },
 	});
 });
