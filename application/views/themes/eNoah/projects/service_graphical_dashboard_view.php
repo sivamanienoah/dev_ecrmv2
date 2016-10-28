@@ -72,7 +72,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 								<div class="numberCircle">
 									<?php echo '$ '.round($curr_revenue, 1); ?>
 								</div>
-								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo $this->default_cur_name . " in Million"; ?></span></div>								
+								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo '(Million '. $this->default_cur_name.')'; ?></span></div>								
 							</div>
 						</div>
 						<div class="summary_box">							
