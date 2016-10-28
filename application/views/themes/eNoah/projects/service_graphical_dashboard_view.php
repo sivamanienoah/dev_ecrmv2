@@ -154,7 +154,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 						<div id="revenue_pie" class="plot"></div>
 					</div>
 					<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
-						<?php echo $this->load->view('projects/graphical_box_inv_compare', $inv_filter_by); ?>
+						<?php echo $this->load->view('projects/service_graphical_box_inv_compare', $inv_filter_by); ?>
 					</div>
 					<div class="clear"></div>
 					<div class="revenue_practicewise_chlid_container clearfix">
