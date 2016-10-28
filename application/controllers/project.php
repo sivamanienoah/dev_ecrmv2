@@ -4412,6 +4412,7 @@ HDOC;
 		
 		if($updt_payment_ms) {
 			$project_details = $this->project_model->get_quote_data($pjtid);
+			
 			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
 			$attached_files  = $this->project_model->get_attached_files($eid);
 			
@@ -4422,7 +4423,23 @@ HDOC;
 			$from		  	 = $this->userdata['email'];
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
-			$cc_email		 = implode(',',$arrayEmails['account_emails_cc']);
+			switch($project_details[0]['practice']) {
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 10:
+				case 12:
+				case 13:
+					$cc_email = implode(',', $arrayEmails['eads_account_emails_cc']);
+				break;
+				case 6:
+					$cc_email = implode(',', $arrayEmails['bpo_account_emails_cc']);
+				break;
+				default:
+					$cc_email = implode(',', $arrayEmails['account_emails_cc']);
+				break;
+			}
 			$subject		 = 'Generate Invoice Notification';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['customer_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
