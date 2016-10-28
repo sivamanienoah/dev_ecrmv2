@@ -518,17 +518,21 @@ class Service_graphical_dashboard_cron extends crm_controller
 			
 			if($ins_result) {
 				$upload_status = "Updated successfully";
-				
 				$this->load->model('email_template_model');
-				
 				$param = array();
-
 				$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
-
 				$param['to_mail']    	  = 'ssriram@enoahisolution.com';
 				$param['template_name']   = "IT service graph dashboard data upload status";
 				$param['subject'] 		  = "IT service graph dashboard Cron On - ".date('d-m-Y'). " Status - ".$upload_status;
-				
+				$this->email_template_model->sent_email($param);
+			} else {
+				$upload_status = "Updation Failed";
+				$this->load->model('email_template_model');
+				$param = array();
+				$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>'', 'upload_status'=>$upload_status);
+				$param['to_mail']    	  = 'ssriram@enoahisolution.com';
+				$param['template_name']   = "IT service graph dashboard data upload status";
+				$param['subject'] 		  = "IT service graph dashboard Cron On - ".date('d-m-Y'). " Status - ".$upload_status;		
 				$this->email_template_model->sent_email($param);
 			}
 		}
