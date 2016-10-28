@@ -216,7 +216,7 @@ var con_pra_month_value = [];
 	con_pra_month_value[con_pra_month_value.length] = <?php echo json_encode($con_mont_val) ?>;
 <?php } ?>
 
-console.info(con_pra_month_value);
+// console.info(con_pra_month_value);
 </script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
