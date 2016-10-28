@@ -18,9 +18,9 @@ Modified By     : Sriram.S
  * @author 		eNoah
  * @Controller
  */
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-ini_set('display_errors',1);
+// ini_set('display_errors',1);
 class Service_graphical_dashboard_cron extends crm_controller 
 {	
     public function __construct()
@@ -88,6 +88,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$projects 	  	= array();
 		$practice_arr 	= array();
 		$practice_array = array();
+		
+		$started_at  = date("Y-m-d H:i:s");
 
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -509,7 +511,25 @@ class Service_graphical_dashboard_cron extends crm_controller
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total'));
 			$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $tot);
-			echo $this->db->last_query() . "<br />";
+			// echo $this->db->last_query() . "<br />";
+			
+			$ended_at = date("Y-m-d H:i:s");
+			
+			if($ins_result) {
+				$upload_status = "Updated successfully";
+				
+				$this->load->model('email_template_model');
+				
+				$param = array();
+
+				$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
+
+				$param['to_mail']    	  = 'ssriram@enoahisolution.com';
+				$param['template_name']   = "IT service graph dashboard data upload status";
+				$param['subject'] 		  = "IT service graph dashboard Cron On - ".date('d-m-Y'). " Status - ".$upload_status;
+				
+				$this->email_template_model->sent_email($param);
+			}
 		}
 	}
 	
