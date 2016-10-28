@@ -230,7 +230,7 @@ class Service_graphical_dashboard extends crm_controller
 		}
 		$data['inv_filter_by'] = $inv_filter_by;
 		$res['result']  = true;
-		$res['html'] 	= $this->load->view('projects/graphical_box_inv_compare', $data, true);
+		$res['html'] 	= $this->load->view('projects/service_graphical_box_inv_compare', $data, true);
 		echo json_encode($res); exit;
 	}
 }
