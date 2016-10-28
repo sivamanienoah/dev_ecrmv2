@@ -1,8 +1,6 @@
 //For Filters Utilization cost
 $("#filter_uc_dashboard").submit(function() {
 
-	$('#uc_filter_submit').hide();
-	$('#load').show();
 	var form_data = $('#filter_uc_dashboard').serialize();
 	
 	$.ajax({
@@ -16,8 +14,6 @@ $("#filter_uc_dashboard").submit(function() {
 		},
 		success: function(res) {
 			// console.info(res); return;
-			$('#load').hide();
-			$('#uc_filter_submit').show();
 			if(res.result) {
 				$('#uc_container').html(res.html);
 			} else {
@@ -27,6 +23,11 @@ $("#filter_uc_dashboard").submit(function() {
 	});
 	return false;  //stop the actual form post !important!
 });
+
+$( "#uc_advance_search" ).on( "click", ".uc_filter_by_cls", function() {
+	$("#filter_uc_dashboard").trigger('submit');
+});
+
 
 //filter for revenue
 $( "#inv_filter" ).on( "click", ".inv_filter_by", function() {
@@ -53,4 +54,4 @@ $( "#inv_filter" ).on( "click", ".inv_filter_by", function() {
 		}
 	});
 	return false;  //stop the actual form post !important!
-})
+});
