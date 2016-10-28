@@ -102,6 +102,14 @@ $config['crm']['account_emails'] = array(
 
 $config['crm']['account_emails_cc'] = array(
 									'mukesh' => 'ssriram@enoahisolution.com',
+								    );
+									
+$config['crm']['bpo_account_emails_cc'] = array(
+									'mukesh' => 'ssriram@enoahisolution.com',
+								    );
+
+$config['crm']['eads_account_emails_cc'] = array(
+									'mukesh' => 'ssriram@enoahisolution.com',
 								    );									
 									
 $config['crm']['crm_admin'] = array(
