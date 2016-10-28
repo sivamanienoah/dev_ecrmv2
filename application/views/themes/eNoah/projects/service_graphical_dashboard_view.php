@@ -49,9 +49,15 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 						<span class="forecast-heading"><?php echo "Summary Details" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
 					</h5>
 					<div id="it_service_summary_det" class="it_service_summary_det">
-						<div class="summary_box">
-							<div class="height_fix"><h3>Contribution</h3></div>
-							<div class="numberCircle content" id="value_contribution"><?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?></div>
+						<div class="summary_box">							
+							<div class="content clearfix" id="value_contribution">
+							<div class="numberCircle">
+								<?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?>
+							</div>
+							<div class="height_fix">
+								<p>Contribution</p>
+							</div>
+							</div>
 						</div>
 						<div class="summary_box">
 							<?php
@@ -61,23 +67,30 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
 							}
 							?>
-							<div class="height_fix"><h3>Revenue</h3></div>
-							<div class="numberCircle content" id="value_revenue">
-								<?php echo '$ '.round($curr_revenue, 1).' M '; ?><span class="cur_name"><?php echo $this->default_cur_name; ?></span>
+							
+							<div class="content clearfix" id="value_revenue">
+								<div class="numberCircle">
+									<?php echo '$ '.round($curr_revenue, 1); ?>
+								</div>
+								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo $this->default_cur_name . " in Million"; ?></span></div>								
 							</div>
 						</div>
-						<div class="summary_box">
-							<div class="height_fix"><h3>Utilization</h3></div>
-							<div class="numberCircle content" id="value_utilization"><?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?></div>
+						<div class="summary_box">							
+							<div class="content clearfix" id="value_utilization">							
+							<div class="numberCircle">
+								<?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?>
+							</div>
+							<div class="height_fix"><p>Utilization</p></div>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 			<!--Summary Container - End-->
 			<div class="clear"></div>
 			<!--Utilization Cost Container - Start-->
 			<div id="uc_container_overall_wrap">
-				<div class="uc-head">
+				<div class="uc-head fliter-section-wrap">
 					<h2 class="pull-left borderBtm"><?php echo "YTD Utilization Cost Dashboard" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
 					<!--a class="choice-box" onclick="advanced_filter();" >
 						<img src="assets/img/advanced_filter.png" class="icon leads" />
@@ -88,25 +101,19 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							Export to Excel
 						</button>
 					</div-->
-					<div id="filter_section" class="pull-right">
-						<div class="clear"></div>
-						<div id="advance_search" style="padding-bottom:5px;">			
+					<div id="filter_section" class="pull-right">						
+						<div id="uc_advance_search" style="padding-bottom:5px;">			
 							<?php $attributes = array('id'=>'filter_uc_dashboard','name'=>'filter_uc_dashboard','method'=>'post'); ?>
 							<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
 								<input type="hidden" name="filter" id="filter" value="filter" />
-								<div style="width:65% !important;">
-									<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+								<div>
+									<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 										<tr>
 											<td align="left">
-												<input type="radio" name="uc_filter_by" value="hour" <?php if($uc_filter_by == 'hour') { echo 'checked="checked"'; }?> />&nbsp;By Hour &nbsp;&nbsp;
-												<input type="radio" name="uc_filter_by" value="cost" <?php if($uc_filter_by == 'cost') { echo 'checked="checked"'; }?> />&nbsp;By Cost
+												<input type="radio" name="uc_filter_by" id="uc_hour" class="uc_filter_by_cls" value="hour" checked />&nbsp;By Hour &nbsp;&nbsp;
+												<input type="radio" name="uc_filter_by" id="uc_cost" class="uc_filter_by_cls" value="cost" />&nbsp;By Cost
 											</td>
-											<td align="left">
-												<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" />
-												<div id="load" style = "float:right;display:none;height:1px;">
-													<img src="<?php echo base_url().'assets/images/loading.gif'; ?>" width="54" />
-												</div>
-											</td>								
+											<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" style="display:none;"/>	
 										</tr>
 									</table>
 								</div>
@@ -115,7 +122,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					</div>
 				</div>
 				<div class="uc_container_wrap" id="uc_container">
-					<?php echo $this->load->view('projects/graphical_box_uc', $uc_graph_val, true); ?>
+					<?php echo $this->load->view('projects/service_graphical_box_uc', $uc_graph_val, true); ?>
 				</div>
 			</div>
 			<!--Utilization Cost Container - End -->
