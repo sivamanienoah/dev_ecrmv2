@@ -427,10 +427,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
-		echo "<pre>"; print_r($projects['direct_cost']); exit;
+		// echo "<pre>"; print_r($projects['direct_cost']); exit;
 		
-		$ins_array = array();
-		$tot = array();
+		$ins_array    = array();
+		$tot 		  = array();
 		$tot_bill_eff = $tot_tot_bill_eff = $tot_temp_ytd_uc = $tot_temp_billable_ytd_uc = 0;
 
 		if(!empty($practice_array)){
