@@ -49,7 +49,7 @@ $(function() {
 				show:true,
 				fontSize: '8pt',
 				rendererOptions: {
-					numberRows:5
+					numberRows:2
 				},
 				location: 's',
 				border: false
