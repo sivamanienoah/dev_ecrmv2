@@ -461,7 +461,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				/**other cost data*/
 				//for billable efforts
 				$bill_eff = 0;
-				echo "<pre>"; print_r($projects['billable_ytd'][$parr]);  . "<br>";
+				echo "<pre>  <br>"; print_r($projects['billable_ytd'][$parr]);
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
