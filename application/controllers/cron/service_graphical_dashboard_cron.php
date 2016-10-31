@@ -65,6 +65,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$data  		   = array();
 			
 		$bk_rates 	   = get_book_keeping_rates();
+		$ins_result	   = 0;
 		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
