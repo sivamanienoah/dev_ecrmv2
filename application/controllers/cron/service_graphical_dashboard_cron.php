@@ -288,9 +288,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 													$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] = $duration_hours;
 													$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 	   = ($duration_hours*$direct_rateperhr1);
 													$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost']  = ($duration_hours*$direct_rateperhr1);
-													$resource_cost[$resource_name][$year][$month][$key4]['billable_cost'] = ($billable_hours*$direct_rateperhr1);
+													$resource_cost[$resource_name][$year][$month][$key4]['billable_cost']  = ($billable_hours*$direct_rateperhr1);
 												}
-												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] 	 = ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
 											}
 										}
 									}
@@ -424,7 +424,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
-		// echo "<pre>"; print_r($projects['direct_cost']); exit;
+		echo "<pre>"; print_r($projects['direct_cost']); exit;
 		
 		$ins_array = array();
 		$tot = array();
