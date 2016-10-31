@@ -423,7 +423,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>';print_r($directcost);exit;
+		echo '<pre>';print_r($directcost); echo "</pre>";
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
