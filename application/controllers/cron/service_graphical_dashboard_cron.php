@@ -434,7 +434,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$tot_bill_eff = $tot_tot_bill_eff = $tot_temp_ytd_uc = $tot_temp_billable_ytd_uc = 0;
 
 		if(!empty($practice_array)){
-			
 			//truncate the table & inserting the practices name from table.
 			$this->db->truncate($this->cfg['dbpref'].'services_graphical_dashboard');
 			foreach($practice_array as $parr){
@@ -448,7 +447,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
 			foreach($practice_array as $parr){
-				
 				/**other cost data*/
 				$other_cost_val 	= 0;
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
@@ -456,9 +454,15 @@ class Service_graphical_dashboard_cron extends crm_controller
 						$val 			 = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
 						$other_cost_val += $val;
 					}
+					if($parr == 'Infra Services' || $parr == 'Testing') {
+						$parr = 'Others';
+					}
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					$parr = 'Others';
+				}
 				//for billable efforts
 				$bill_eff = 0;
 				echo "$parr"."<pre>  <br>"; print_r($projects['billable_ytd'][$parr]);
