@@ -682,7 +682,9 @@ class Service_dashboard_cron_beta extends crm_controller
 				$ins_array['month_status'] 	   = 1;
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
+				if($parr != 'Testing' || $parr != 'Infra Services') {
 				$tot_Irval   += $projects['irval'][$parr];
+				}
 				
 				// $tot_dc_values += $projects['irval'][$parr];
 				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
