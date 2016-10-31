@@ -1428,7 +1428,7 @@ class Dashboard extends crm_controller
 				// $month    	= date("Y-m-01 00:00:00", strtotime("-1 month"));
 			} else {
 				$end_date  	= date('Y-m-d');
-				$month    	= date("Y-m-01 00:00:00");				
+				$month    	= date("Y-m-01 00:00:00");
 			}			
 		} else {
 			$month_status = 1;

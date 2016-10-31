@@ -42,7 +42,7 @@ class Service_graphical_dashboard extends crm_controller
 		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 		$last_yr_end_date   = date('Y-m-t', strtotime($last_yr_start_date.' +11 months'));
 		
-		$uc_filter_by   = 'hour'; //default_value
+		$uc_filter_by   = 'cost'; //default_value
 		$inv_filter_by  = 'inv_month'; //default_value
 
 		$data['start_date'] 	= $start_date;
@@ -56,7 +56,7 @@ class Service_graphical_dashboard extends crm_controller
 		// $data['practice_arr']['practice_arr']; //key value practice array
 		
 		//get utilization cost values from service graphical dashboard table
-		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'hour');
+		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost');
 		// echo "<pre>"; print_r($data['uc_graph_val']); exit;
 		
 		//get current fiscal ytd invoice records
@@ -201,7 +201,7 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$postdata = $this->input->post();
 
-		$uc_filter_by = 'hour';
+		$uc_filter_by = 'cost';
 		if(isset($postdata['uc_filter_by'])){
 			$uc_filter_by = $postdata['uc_filter_by'];
 		}
