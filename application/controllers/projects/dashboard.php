@@ -1421,8 +1421,11 @@ class Dashboard extends crm_controller
 		$month_status = $this->input->post("month_status");
 		if(!empty($month_status)) {
 			if($month_status == 2) {
-				$end_date  	= date('Y-m-d', strtotime("-1 month"));
-				$month    	= date("Y-m-01 00:00:00", strtotime("-1 month"));				
+				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+				$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));
+				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+				// $end_date  	= date('Y-m-d', strtotime("-1 month"));
+				// $month    	= date("Y-m-01 00:00:00", strtotime("-1 month"));
 			} else {
 				$end_date  	= date('Y-m-d');
 				$month    	= date("Y-m-01 00:00:00");				
@@ -1777,14 +1780,17 @@ class Dashboard extends crm_controller
 		}
 		
 		$month_status = $this->input->post("month_status");
-		if(!empty($month_status)){
-			if($month_status==2){
-				$end_date  	   = date('Y-m-t', strtotime("-1 month"));
-				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
-			}else{
-				$end_date  	   = date('Y-m-d');
-				$month    = date("Y-m-01 00:00:00");				
-			}			
+		if(!empty($month_status)) {
+			if($month_status==2) {
+				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+				$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
+				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+				// $end_date  	   = date('Y-m-t', strtotime("-1 month"));
+				// $month    = date("Y-m-01 00:00:00", strtotime("-1 month"));
+			} else {
+				$end_date = date('Y-m-d');
+				$month    = date("Y-m-01 00:00:00");
+			}
 		}
  
 		$data['bill_month'] = $month;
@@ -2047,8 +2053,11 @@ class Dashboard extends crm_controller
 		$month_status = $this->input->post("month_status");
 		if(!empty($month_status)){
 			if($month_status==2){
-				$end_date  	   = date('Y-m-t', strtotime("-1 month"));
-				$month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
+				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+				$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
+				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+				// $end_date  	   = date('Y-m-t', strtotime("-1 month"));
+				// $month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
 			}else{
 				$end_date  	   = date('Y-m-d');
 				$month    = date("Y-m-01 00:00:00");				
