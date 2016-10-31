@@ -434,7 +434,7 @@ class Service_dashboard_cron_beta extends crm_controller
 			//$project_master[$prec->project_code] = $prec->title;
 
 		}
- 
+		echo '<pre>';print_r($directcost2); exit;
 		//echo '<pre>';print_r($practice_arr);echo 'directcost2'.'<br>';print_r($directcost2);echo 'cm_directcost2'.'<br>';print_r($cm_directcost2);exit;
 		foreach($directcost2 as $practiceId => $val1){
 			foreach($val1 as $pjtCode => $val){				
