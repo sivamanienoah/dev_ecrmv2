@@ -192,6 +192,9 @@ class Service_dashboard_cron_beta extends crm_controller
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
+				if($practice_arr[$ir['practice']] == 'Testing' || $practice_arr[$ir['practice']] == 'Infra Services'){
+					$practice_arr[$ir['practice']] = 'Others';
+				}
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 			}
