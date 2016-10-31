@@ -223,11 +223,11 @@ class Service_dashboard_cron_beta extends crm_controller
 
 		if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
 			foreach($cm_invoices_data as $cm_ir) {
-				if($practice_arr[$cm_ir['practice']] == 'Testing' || $practice_arr[$cm_ir['practice']] == 'Infra Services'){
+				if($practice_arr[$cm_ir['practice']] == 'Testing' || $practice_arr[$cm_ir['practice']] == 'Infra Services') {
 					$practice_arr[$cm_ir['practice']] = 'Others';
 				}
 				$base_conver_amt = $this->conver_currency($cm_ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['expect_worth_id']][$cm_ir['base_currency']]);
-				$projects['cm_irval'][] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
+				$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
 			}
 		}
 		
