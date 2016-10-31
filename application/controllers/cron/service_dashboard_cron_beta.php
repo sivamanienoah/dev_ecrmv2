@@ -434,9 +434,12 @@ class Service_dashboard_cron_beta extends crm_controller
 			//$project_master[$prec->project_code] = $prec->title;
 
 		}
-		echo '<pre>';print_r($directcost2); exit;
+		// echo '<pre>';print_r($directcost2); exit;
 		//echo '<pre>';print_r($practice_arr);echo 'directcost2'.'<br>';print_r($directcost2);echo 'cm_directcost2'.'<br>';print_r($cm_directcost2);exit;
 		foreach($directcost2 as $practiceId => $val1){
+			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+				$practiceId = 'Others';
+			}
 			foreach($val1 as $pjtCode => $val){				
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
@@ -588,6 +591,9 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
  
 		foreach($cm_directcost2 as $practiceId => $cval1){
+			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+				$practiceId = 'Others';
+			}
 			foreach($cval1 as $pjtCode => $cval){ 
 				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
 			}
@@ -623,8 +629,9 @@ class Service_dashboard_cron_beta extends crm_controller
 			//echo '<pre>';print_r($practice_array); 
 			
 			foreach($practice_array as $parr){
-				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';		
-				
+				if($parr == 'Testing' || $parr == 'Infra Services') {
+					$parr = 'Others';
+				}				
 				/**other cost data*/
 				$other_cost_val 	= 0;
 				$cm_other_cost_val  = 0;
