@@ -13,7 +13,7 @@ $(function() {
 		series_lbl[i] = { label: tre_pra_month_label[i] };
 	}
 	// console.info(series_lbl)
-alert(tre_pra_month_value)
+
 	var xticks         = tre_pra_month_x_val;
 	var cur_name 	   = default_currency_name;
 	var yaxis_label    = 'Month';
