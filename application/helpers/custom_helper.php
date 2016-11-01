@@ -543,7 +543,7 @@ if( ! function_exists('calcInvoiceDataByPracticeWiseMonthWise'))
 		
 		if(is_array($invoice_data) && !empty($invoice_data) && count($invoice_data)>0) {
 			foreach($invoice_data as $ir) {
-				if($ir['practices'] == 'Infra Services') { //infra services practices are merged with other practices
+				if($ir['practices'] == 'Infra Services' || $ir['practices'] == 'Testing') { //infra services & Testing practices values are merged with other practices
 					$ir['practices'] = 'Others';
 				}
 				$mon = date('M', strtotime($ir['for_month_year']));
