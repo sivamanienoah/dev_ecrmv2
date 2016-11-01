@@ -13,11 +13,7 @@ $(function() {
 		series_lbl[i] = { label: tre_pra_month_label[i] };
 	}
 	// console.info(series_lbl)
-	var curr_yr_value  = [2, 6, 7];
-	var last_yr_value  = [10, 5, 3];
-	// var xticks         = ['May', 'June', 'July'];
-	// var curr_yr_value  = curr_fiscal_inv_val;
-	// var last_yr_value  = last_fiscal_inv_val;
+alert(tre_pra_month_value)
 	var xticks         = tre_pra_month_x_val;
 	var cur_name 	   = default_currency_name;
 	var yaxis_label    = 'Month';
