@@ -40,6 +40,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 			$this->default_cur_name = 'USD';
 		}
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
+		
+		$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+		$ed_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
+		$this->upto_month = date('M', strtotime($ed_date));
     }
 	
 	/*
@@ -69,17 +73,18 @@ class Service_graphical_dashboard_cron extends crm_controller
 		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
+		// $end_date  	   = date('Y-m-d'); //eg.2014-03-01
+		$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+		$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
 		
 		//default billable_month
-		$month 		= date('Y-m-01 00:00:00');
+
 		$start_date = date("Y-m-01",strtotime($start_date));
-		$end_date 	= date("Y-m-d", strtotime($end_date));
+		$end_date 	= date("Y-m-t", strtotime($end_date));
 		
 		//for testing
 		// $other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise('ITS-MAG-01-0416', $this->default_cur_id, $start_date, $end_date); // exit;
 
-		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 
@@ -123,14 +128,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$trend_pract_arr['practic_arr'][] = $prac_name;
 				foreach($this->fiscal_month_arr as $fis_mon) {
 					$trend_pract_arr['trend_pract_val_arr'][$prac_name][$fis_mon] = isset($trend_value[$prac_name][$fis_mon]) ? $trend_value[$prac_name][$fis_mon] : 0;
-					if(date('M') == $fis_mon) { break; }
+					if($fis_mon == $this->upto_month) { break; }
 				}
 			}
 		}
-		/* foreach($this->fiscal_month_arr as $fis_mon) {
-			$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
-			if(date('M') == $fis_mon) { break; }
-		} */
+
 		// echo "<pre>"; print_r($trend_pract_arr); exit;
 		$projects['trend_pract_arr'] = $trend_pract_arr;
 		
@@ -504,7 +506,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
-					if(date('M') == $fis_mon) { break; }
+					if($fis_mon == $this->upto_month) { break; }
 				}
 				
 				$this->db->where(array('practice_name' => $parr));
