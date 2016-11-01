@@ -150,7 +150,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					?>
 					<!--For Pie Charts-->
 					<div class="pull-left overall_container">
-						<h5 class="dash-tlt"><?php echo "Revenue - Practice Wise ". $this->default_cur_name; ?></h5>
+						<h5 class="dash-tlt"><?php echo "Practice Wise - Revenue (".$this->default_cur_name.")"; ?></h5>
 						<div id="revenue_pie" class="plot"></div>
 					</div>
 					<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
@@ -167,7 +167,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							$revenue_entity_val = implode(',', $revenue_entity_arr);
 						?>
 					
-						<h5 class="dash-tlt"><?php echo "Revenue - Entity Wise ". $this->default_cur_name; ?></h5>
+						<h5 class="dash-tlt"><?php echo "Entity Wise - Revenue (".$this->default_cur_name.")"; ?></h5>
 						<div id="revenue_entity_pie" class="plot"></div>
 					</div>
 					<div class="pull-right revenue_chlid_container clearfix" style="margin-top: 10px;">
