@@ -53,9 +53,6 @@ $practice_arr = array();
 				</form>
 			</div>
 		</div>
-		<div class="leadstg_note">
-			"Infra Services" Practice Values are Merged With "Others" Practice.
-		</div>
 		<?php #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
@@ -348,6 +345,10 @@ $practice_arr = array();
 				</tr>
 			</table>
 				
+			<div class="clearfix"></div>
+			<div class="service_dash_notes">
+				<span class="red"> ** </span>Infra Services & Testing Practice Values are Merged With Others Practice.
+			</div>
 			<div class="clearfix"></div>
 			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
 			
