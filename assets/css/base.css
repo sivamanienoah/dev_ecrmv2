@@ -2984,9 +2984,9 @@ padding-bottom:15px !important;
     padding: 8px;
     position: relative;
     text-align: center;
-	float:left;
+	float:right;
 }
-.summary_box .height_fix { margin:29px 15px 10px 10px; /* font-size: 14px; */float:right;  }
+.summary_box .height_fix { margin:29px 15px 10px 10px; /* font-size: 14px; */float:left;  }
 .summary_box .height_fix p{
 	font-size: 14px; 
 	font-weight:bold;
@@ -2998,7 +2998,6 @@ padding-bottom:15px !important;
 }
 #content .inner  .fliter-section-wrap h2{
 	margin:10px 0 0 0;
-
 }
 .contribution_chlid_container {
     -moz-border-bottom-colors: none;
@@ -3021,3 +3020,11 @@ padding-bottom:15px !important;
 #revenue_trend .jqplot-grid-canvas { top: 0 !important; }
 #contribution_trend .jqplot-grid-canvas { top: 0 !important; }
 .contribution_chlid_container .forecast-heading { margin:0 0 0 8px !important; }
+.service_dash_notes { 
+	border: 1px solid #ddd;
+    color: #212121;
+    display: table;
+    font-size: 12px;
+    margin: 10px 0;
+    padding: 10px;
+}
