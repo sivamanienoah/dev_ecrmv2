@@ -12,12 +12,6 @@ $(function() {
 	for(var i = 0; i < con_pra_month_label.length; i++) {
 		series_lbl[i] = { label: con_pra_month_label[i] };
 	}
-	// console.info(series_lbl)
-	var curr_yr_value  = [2, 6, 7];
-	var last_yr_value  = [10, 5, 3];
-	// var xticks         = ['May', 'June', 'July'];
-	// var curr_yr_value  = curr_fiscal_inv_val;
-	// var last_yr_value  = last_fiscal_inv_val;
 	var xticks         = con_pra_month_x_val;
 	var cur_name 	   = default_currency_name;
 	var yaxis_label    = 'Month';
@@ -51,19 +45,11 @@ $(function() {
 				ticks: xticks
 			},
 			yaxis: {
-				min:0,
+				min:0, max: 100, Ticks: [[0],[10],[20],[30],[40],[50],[60],[70],[80],[90],[100]],
 				label:'Contribution (%) --->',
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
-		/* series: [{
-			markerOptions: {
-				show: true
-			},
-			rendererOptions: {
-				smooth: false
-			}
-		}], */
 		series:series_lbl,
 		legend:{
 			renderer: jQuery.jqplot.EnhancedLegendRenderer,
