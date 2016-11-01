@@ -650,9 +650,9 @@ echo $tot_Irval . "<br>";
 					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
 				/**other cost data*/			
-				if($parr == 'Testing' || $parr == 'Infra Services') {
+				/* if($parr == 'Testing' || $parr == 'Infra Services') {
 					$parr = 'Others';
-				}
+				} */
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				
@@ -682,9 +682,10 @@ echo $tot_Irval . "<br>";
 				$ins_array['month_status'] 	   = 1;
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
-				if($parr != 'Testing' || $parr != 'Infra Services') {
-				echo $parr." ". $tot_Irval   += $projects['irval'][$parr] . "<br />";
-				}
+				// if($parr != 'Testing' || $parr != 'Infra Services') {
+				echo $parr." ". $tot_Irval   += $projects['irval'][$parr];
+				echo "<br>";
+				// }
 				
 				// $tot_dc_values += $projects['irval'][$parr];
 				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
