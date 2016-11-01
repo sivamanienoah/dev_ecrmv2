@@ -286,11 +286,12 @@
 		</td>
 	</tr>
 </table>
-<div class="clearfix"></div>
-<div class="service_dash_notes">
-	<span class="red"> ** </span>Infra Services & Testing Practice Values are Merged With Others Practice.
-</div>
+
 <div class="clearfix"></div>
 <div id="drilldown_data" class="" style="margin:20px 0;display:none;">
 
+</div>
+<div class="clearfix"></div>
+<div class="service_dash_notes">
+	<span class="red"> ** </span>Infra Services & Testing Practice Values are Merged With Others Practice.
 </div>
