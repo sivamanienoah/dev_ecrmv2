@@ -4,7 +4,7 @@
 						<th>IT Services Dashboard</th>
 						<?php if(!empty($practice_data)) { ?>
 							<?php foreach($practice_data as $prac) { ?>
-								<?php if($prac->id != 7) { ?>
+								<?php if($prac->id != 7 || $prac->id != 13) { ?>
 									<th><?php echo $prac->practices; ?></th>
 									<?php $practice_arr[] = $prac->practices; ?>
 									<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
@@ -23,8 +23,9 @@
 								<?php
 									if($parr == 'Others') {
 										$infraProjects = isset($projects['practicewise']['Infra Services']) ? $projects['practicewise']['Infra Services'] : 0;
+										$testinProjects = isset($projects['practicewise']['Testing']) ? $projects['practicewise']['Testing'] : 0;
 										$otherProjects = isset($projects['practicewise']['Others']) ? $projects['practicewise']['Others'] : 0;
-										$noProjects = $infraProjects+$otherProjects;
+										$noProjects = $infraProjects+$otherProjects+$testinProjects;
 										$noProjects = isset($noProjects) ? $noProjects : '';
 									} else {
 										$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
@@ -50,9 +51,10 @@
 							<td align='right'>
 								<?php
 									if($parr == 'Others') {
-										$infraRAG = isset($projects['rag_status']['Infra Services']) ? $projects['rag_status']['Infra Services'] : 0;
-										$otherRAG = isset($projects['rag_status']['Others']) ? $projects['rag_status']['Others'] : 0;
-										$ragProjects = $infraRAG+$otherRAG;
+										$infraRAG   = isset($projects['rag_status']['Infra Services']) ? $projects['rag_status']['Infra Services'] : 0;
+										$testingRAG = isset($projects['rag_status']['Testing']) ? $projects['rag_status']['Testing'] : 0;
+										$otherRAG   = isset($projects['rag_status']['Others']) ? $projects['rag_status']['Others'] : 0;
+										$ragProjects = $infraRAG+$otherRAG+$testingRAG;
 										$rag = isset($ragProjects) ? $ragProjects : '';
 									} else {
 										$rag = isset($projects['rag_status'][$parr]) ? $projects['rag_status'][$parr] : '';
@@ -76,10 +78,10 @@
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php
-									if($parr == 'Others') {
-										$infraCMB = isset($dashboard_det['Infra Services']['billing_month']) ? $dashboard_det['Infra Services']['billing_month'] : 0;
-										$otherCMB = isset($dashboard_det['Others']['billing_month']) ? $dashboard_det['Others']['billing_month'] : 0;
+								<?php echo "asdfas".$dashboard_det['Infra Services']['billing_month']; exit;
+									if($parr == 'Others') { 
+										$infraCMB   = ($dashboard_det['Infra Services']['billing_month'] != '-') ? $dashboard_det['Infra Services']['billing_month'] : 0;
+										$otherCMB   = ($dashboard_det['Others']['billing_month'] != '-') ? $dashboard_det['Others']['billing_month'] : 0;
 										$CMBProjects = $infraCMB + $otherCMB;
 										$CMBProjects = isset($CMBProjects) ? $CMBProjects : '';
 										$cm_billing = isset($CMBProjects) ? round($CMBProjects) : '-';
