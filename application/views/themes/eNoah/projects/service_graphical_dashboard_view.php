@@ -4,7 +4,7 @@
 </style>
 <?php
 //for total inv bar value charts
-$inv_tot_arr_val = '['.$inv_compare['curr_yr']['tot_inv_value'].','.'"Current Year"'.'],['.$inv_compare['last_yr']['tot_inv_value'].','.'"Last Year"'.']';
+$inv_tot_arr_val = '['.round($inv_compare['curr_yr']['tot_inv_value']).','.'"Current Year"'.'],['.round($inv_compare['last_yr']['tot_inv_value']).','.'"Last Year"'.']';
 ?>
 <script type="text/javascript" src="assets/js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.meterGaugeRenderer.min.js"></script>
@@ -23,7 +23,7 @@ $inv_tot_arr_val = '['.$inv_compare['curr_yr']['tot_inv_value'].','.'"Current Ye
 var default_currency_name = '<?php echo $this->default_cur_name; ?>';
 var curr_fiscal_inv_val = <?php echo json_encode($inv_compare['curr_yr']['mon_inv_value']) ?>;
 var last_fiscal_inv_val = <?php echo json_encode($inv_compare['last_yr']['mon_inv_value']) ?>;
-var line_x_axis_inv_val = <?php echo json_encode($this->fiscal_month_arr); ?>;
+var line_x_axis_inv_val = <?php echo json_encode($inv_compare['fis_mon_upto_current']); ?>;
 var inv_tot_arr_val 	= [<?php echo $inv_tot_arr_val; ?>];
 //for practicewise invoice compare
 var prac_inv_practic_val = <?php echo json_encode($prat_inv_compare['practic_val']); ?>;
@@ -110,8 +110,8 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 									<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 										<tr>
 											<td align="left">
-												<input type="radio" name="uc_filter_by" id="uc_hour" class="uc_filter_by_cls" value="hour" checked />&nbsp;By Hour &nbsp;&nbsp;
-												<input type="radio" name="uc_filter_by" id="uc_cost" class="uc_filter_by_cls" value="cost" />&nbsp;By Cost
+												<input type="radio" name="uc_filter_by" id="uc_cost" class="uc_filter_by_cls" value="cost" checked />&nbsp;By Cost&nbsp;&nbsp;
+												<input type="radio" name="uc_filter_by" id="uc_hour" class="uc_filter_by_cls" value="hour" />&nbsp;By Hour 
 											</td>
 											<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" style="display:none;"/>	
 										</tr>
@@ -130,7 +130,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<!--Revenue Share Dashboard Container - Start -->
 			<div id="revenue_container_overall_wrap">
 				<div class="uc-head">
-					<h2 class="pull-left borderBtm" style="margin-top: 20px;">Revenue Analysis</h2>
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Revenue Analysis" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></h2>
 					<div id="filter_section" class="pull-right">
 						<div class="clear"></div>
 						<div id="advance_search" style="padding-bottom:15px;">			
@@ -150,18 +150,31 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					?>
 					<!--For Pie Charts-->
 					<div class="pull-left overall_container">
-						<h5 class="dash-tlt"><?php echo "Revenues in ". $this->default_cur_name." (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h5>
+						<h5 class="dash-tlt"><?php echo "Revenue - Practice Wise ". $this->default_cur_name; ?></h5>
 						<div id="revenue_pie" class="plot"></div>
 					</div>
 					<div class="pull-right revenue_chlid_container clearfix" id="inv_filter">
 						<?php echo $this->load->view('projects/service_graphical_box_inv_compare', $inv_filter_by); ?>
 					</div>
 					<div class="clear"></div>
-					<div class="revenue_practicewise_chlid_container clearfix">
+					<div class="pull-left overall_container" style="margin-top: 10px;">
+						<?php
+							$revenue_entity_arr = array();
+							$revenue_entity_val = '';
+							foreach($invoice_val_by_entity['entity_val'] as $entity_name=>$entity_value){
+								$revenue_entity_arr[] = "['".$entity_name.'('.round($entity_value).')'."'".','.$entity_value."]";
+							}
+							$revenue_entity_val = implode(',', $revenue_entity_arr);
+						?>
+					
+						<h5 class="dash-tlt"><?php echo "Revenue - Entity Wise ". $this->default_cur_name; ?></h5>
+						<div id="revenue_entity_pie" class="plot"></div>
+					</div>
+					<div class="pull-right revenue_chlid_container clearfix" style="margin-top: 10px;">
 						<h5 class="revenue_compare_head_bar">
 							<span class="forecast-heading">Practice Wise Revenue Comparison</span>
 						</h5>
-						<div id="revenue_practice_compare_bar" class="plot"></div>
+						<div id="revenue_practice_compare_bar" class="plot" style="position: relative; height: 320px; padding-bottom:22px;"></div>
 					</div>
 				</div>
 			</div>
@@ -169,7 +182,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<div class="clear"></div>
 			<div id="contribution_container_overall_wrap">
 				<div class="uc-head">
-					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Contribution & Trend Analysis (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h2>
+					<h2 class="pull-left borderBtm" style="margin-top: 20px;"><?php echo "Trend Analysis (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")"; ?></h2>
 					<div id="filter_section" class="pull-right">
 						<div class="clear"></div>
 						<div id="advance_search" style="padding-bottom:15px;">			
@@ -202,6 +215,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 <?php #echo "<pre>"; print_r($contri_graph_val); echo "</pre>"; ?>
 <script type="text/javascript">
 var revenue_values 		= [<?php echo $revenue_values ?>];
+var revenue_entity_val 	= [<?php echo $revenue_entity_val ?>];
 var tre_pra_month_label = <?php echo json_encode($trend_pract_month_val['practic_arr']) ?>;
 var tre_pra_month_x_val = <?php echo json_encode($trend_pract_month_val['trend_mont_arr']) ?>;
 var tre_pra_month_value = [];
@@ -215,11 +229,10 @@ var con_pra_month_value = [];
 <?php foreach( $contri_graph_val['con_gr_val'] as $con_mont_val ) { ?>
 	con_pra_month_value[con_pra_month_value.length] = <?php echo json_encode($con_mont_val) ?>;
 <?php } ?>
-
-// console.info(con_pra_month_value);
 </script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_dashboard_view.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_entity_pie.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_compare_bar.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_month_line.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_contrib_practice_month_line.js"></script>
