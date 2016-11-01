@@ -616,7 +616,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$ins_array = array();
 		$tot = array();
 		$totCM_Irval = $tot_Irval = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = $tot_actual_hr = $tot_estimated_hrs = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
-echo $tot_Irval . "<br>";
+
 		if(!empty($practice_array)){
 			
 			//truncate the table & inserting the practices name from table.
@@ -649,10 +649,7 @@ echo $tot_Irval . "<br>";
 					$projects['other_cost'][$parr] = $other_cost_val;
 					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
-				/**other cost data*/			
-				/* if($parr == 'Testing' || $parr == 'Infra Services') {
-					$parr = 'Others';
-				} */
+				/**other cost data*/
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				

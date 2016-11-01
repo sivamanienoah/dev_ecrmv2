@@ -195,6 +195,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		
 		if(!empty($invoices_data) && count($invoices_data)>0) {
 			foreach($invoices_data as $ir) {
+				if($practice_arr[$ir['practice']] == 'Testing' || $practice_arr[$ir['practice']] == 'Infra Services'){
+					$practice_arr[$ir['practice']] = 'Others';
+				}
 				$base_conver_amt = $this->conver_currency($ir['milestone_value'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
 				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 			}
@@ -223,6 +226,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 
 		if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
 			foreach($cm_invoices_data as $cm_ir) {
+				if($practice_arr[$cm_ir['practice']] == 'Testing' || $practice_arr[$cm_ir['practice']] == 'Infra Services') {
+					$practice_arr[$cm_ir['practice']] = 'Others';
+				}
 				$base_conver_amt = $this->conver_currency($cm_ir['milestone_value'],$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['expect_worth_id']][$cm_ir['base_currency']]);
 				$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
 			}
@@ -436,6 +442,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		}
  
 		foreach($directcost2 as $practiceId => $val1){
+			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+				$practiceId = 'Others';
+			}
 			foreach($val1 as $pjtCode => $val){
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
@@ -592,6 +601,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			}
 		} */
 		foreach($cm_directcost2 as $practiceId => $cval1){
+			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+				$practiceId = 'Others';
+			}
 			foreach($cval1 as $pjtCode => $cval){ 
 				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
 			}
