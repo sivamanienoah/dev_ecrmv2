@@ -616,7 +616,7 @@ class Service_dashboard_cron_beta extends crm_controller
 		$ins_array = array();
 		$tot = array();
 		$totCM_Irval = $tot_Irval = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = $tot_actual_hr = $tot_estimated_hrs = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
-
+echo $tot_Irval . "<br>";
 		if(!empty($practice_array)){
 			
 			//truncate the table & inserting the practices name from table.
@@ -683,7 +683,7 @@ class Service_dashboard_cron_beta extends crm_controller
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
 				if($parr != 'Testing' || $parr != 'Infra Services') {
-				echo $tot_Irval   += $projects['irval'][$parr];
+				echo $parr." ". $tot_Irval   += $projects['irval'][$parr] . "<br />";
 				}
 				
 				// $tot_dc_values += $projects['irval'][$parr];
