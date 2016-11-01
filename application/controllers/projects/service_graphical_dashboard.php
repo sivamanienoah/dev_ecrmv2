@@ -2,7 +2,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
 class Service_graphical_dashboard extends crm_controller 
 {
 	function __construct()
@@ -24,6 +24,10 @@ class Service_graphical_dashboard extends crm_controller
 			$this->default_cur_name = 'USD';
 		}
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
+		
+		$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+		$ed_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
+		$this->upto_month = date('M', strtotime($ed_date));
 	}
 
 	public function index()
@@ -38,7 +42,10 @@ class Service_graphical_dashboard extends crm_controller
 
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
+		// $end_date  	   = date('Y-m-d'); //eg.2014-03-01 
+		$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+		$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+		
 		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 		// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
 		$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
@@ -78,10 +85,8 @@ class Service_graphical_dashboard extends crm_controller
 		//for x values
 		foreach($this->fiscal_month_arr as $fis_mon){
 			$data['inv_compare']['fis_mon_upto_current'][] = $fis_mon;
-			if(date('M') == $fis_mon) { break; } //from current month only
-		}
-		// echo "<pre>"; print_r($data['inv_compare']); exit;
-		
+			if($this->upto_month == $fis_mon) { break; } //from current month only
+		}		
 		//for last year 
 		$pract_curr_yr_val = $data['invoice_val'];
 		$pract_last_yr_val = $this->calcInvoiceDataByPractice($last_yr_invoice_data);
@@ -108,13 +113,13 @@ class Service_graphical_dashboard extends crm_controller
 				$trend_pract_arr['practic_arr'][] = $prac_name;
 				foreach($this->fiscal_month_arr as $fis_mon) {
 					$trend_pract_arr['trend_pract_val_arr'][$prac_name][] = isset($trend_value[$prac_name][$fis_mon]) ? $trend_value[$prac_name][$fis_mon] : 0;
-					if(date('M') == $fis_mon) { break; }
+					if($this->upto_month == $fis_mon) { break; }
 				}
 			}
 		}
 		foreach($this->fiscal_month_arr as $fis_mon) {
 			$trend_pract_arr['trend_mont_arr'][] = $fis_mon;
-			if(date('M') == $fis_mon) { break; }
+			if($this->upto_month == $fis_mon) { break; }
 		}
 		$data['trend_pract_month_val'] = $trend_pract_arr;
 		// echo "<pre>"; print_r($trend_pract_arr); exit;
@@ -125,9 +130,10 @@ class Service_graphical_dashboard extends crm_controller
 		$sel_values = 'practice_name,';
 		foreach($this->fiscal_month_arr as $fis_mons) {
 			$sel_values .= 'contri_'.$fis_mons.' AS '.$fis_mons;
-			if(date('M') == $fis_mons) { break; }
+			if($this->upto_month == $fis_mons) { break; }
 			else { $sel_values .= ','; }
 		}
+		// echo $sel_values; exit;
 		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values);
 		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
 		
@@ -184,7 +190,6 @@ class Service_graphical_dashboard extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($inv_array); exit;
 		return $inv_array;
 	}
 		
@@ -220,7 +225,7 @@ class Service_graphical_dashboard extends crm_controller
 		foreach($this->fiscal_month_arr as $fis_mon){
 			$allValuesArr[] = isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
 			$totalSum 	   += isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
-			if(date('M') == $fis_mon) { break; } //from current month only
+			if($this->upto_month == $fis_mon) { break; } //from current month only
 		}
 		$data['total_value'] = $totalSum;
 		$data['allValuesArr'] = $allValuesArr;
