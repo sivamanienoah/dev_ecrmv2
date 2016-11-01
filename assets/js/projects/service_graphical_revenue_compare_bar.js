@@ -2,13 +2,12 @@
  *@Sales Forecast
  *@Sales Forecast Controller
 */
-// csrf_token_name,csrf_hash_token,site_base_url & accesspageis global js variable
+// csrf_token_name,csrf_hash_token,site_base_url & accesspage is global js variable
 
 var params  = {};
 params[csrf_token_name] = csrf_hash_token;
 
 $(function() {
-	var legendticks = ['Current Year', 'Last Year'];
 	plot1 = $.jqplot('revenue_compare_bar', [inv_tot_arr_val], {
 		// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
 		animate: !$.jqplot.use_excanvas,
@@ -69,12 +68,14 @@ $(function() {
 		}, */
 		axes: {
 			xaxis: {
+				min:0,
 				label:'Values ('+default_currency_name+')--->',
 				tickOptions:{
 					//fontFamily:'Arial',
 					//fontSize: '10pt',
 					//fontWeight:"bold",
 					//angle: -30,
+					// min:0,
 					show: false
 				}
 			},

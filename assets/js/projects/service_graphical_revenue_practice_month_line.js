@@ -56,14 +56,6 @@ $(function() {
 				labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 			}
 		},
-		/* series: [{
-			markerOptions: {
-				show: true
-			},
-			rendererOptions: {
-				smooth: false
-			}
-		}], */
 		series:series_lbl,
 		legend:{
 			renderer: jQuery.jqplot.EnhancedLegendRenderer,

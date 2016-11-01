@@ -42,8 +42,6 @@ $(function() {
 			rendererOptions: {
 				numberRows: '1',
 			}
-			// placement: 'outsideGrid',
-			// labels: ticks
 		},
 		axesDefaults: {
 			tickRenderer: $.jqplot.CanvasAxisTickRenderer ,         
