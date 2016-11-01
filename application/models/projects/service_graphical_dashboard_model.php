@@ -48,7 +48,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		$uc_graph_val = array();
 		if(!empty($uc_graph_res)){
 			foreach($uc_graph_res as $key=>$val) {
-				if($val['practice_name'] == 'Infra Services'){
+				if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Testing'){
 					continue;
 				}
 				$graph_id = strtolower($val['practice_name']);
@@ -131,7 +131,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		} */
 		// LEVEL BASED RESTIRCTION
 		
-		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, l.expect_worth_id, pr.practices, enti.base_currency, ew.expect_worth_name');
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, l.expect_worth_id, pr.practices, enti.base_currency, ew.expect_worth_name, enti.division_name');
 		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 		$this->db->join($this->cfg['dbpref'].'practices as pr', 'pr.id = l.practice');
@@ -168,7 +168,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		$con_graph_val['con_gr_x_val']  = array();
 		if(!empty($con_graph_res)){
 			foreach($con_graph_res as $key=>$val) {
-				if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Total'){
+				if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Testing' || $val['practice_name'] == 'Total'){
 					continue;
 				}
 				$con_graph_val['con_pr_name'][] = $val['practice_name'];
