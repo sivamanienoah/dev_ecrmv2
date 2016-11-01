@@ -2087,7 +2087,7 @@ class Dashboard extends crm_controller
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
 		if($practice) {
 			if($practice == 10) { //practice - others
-				$pr_arr = array(7, 10);
+				$pr_arr = array(7, 10, 13);
 				$this->db->where_in("l.practice", $pr_arr);
 			} else {
 				$this->db->where("l.practice", $practice);
@@ -2497,8 +2497,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
 		if(!empty($practice)) {
-			if($practice == 10){ //INFRA SERVICES practice values merged to other practice
-				$pra_arr = array(7, 10);
+			if($practice == 10){ //INFRA SERVICES & TESTING practice values are merged with OTHERS practice
+				$pra_arr = array(7, 10, 13);
 				$this->db->where_in("l.practice", $pra_arr);
 			} else {
 				$this->db->where("l.practice", $practice);
@@ -2552,8 +2552,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
 		$this->db->where("sfv.type", 'A');
 		if(!empty($practice)) {
-			if($practice == 10) { //infra service practice values can be merged with others practice
-				$pr_arra = array(7, 10);
+			if($practice == 10) { //INFRA SERVICE & TESTING practice values are merged with OTHERS practice
+				$pr_arra = array(7, 10, 13);
 				$this->db->where_in("l.practice", $pr_arra);
 			} else {
 				$this->db->where("l.practice", $practice);
