@@ -40,7 +40,8 @@ class Service_graphical_dashboard extends crm_controller
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
 		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
-		$last_yr_end_date   = date('Y-m-t', strtotime($last_yr_start_date.' +11 months'));
+		// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
+		$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
 		
 		$uc_filter_by   = 'cost'; //default_value
 		$inv_filter_by  = 'inv_month'; //default_value
@@ -63,6 +64,9 @@ class Service_graphical_dashboard extends crm_controller
 		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
 		$data['invoice_val'] = $this->calcInvoiceDataByPractice($invoice_data);
 		
+		//current_year revenue - entity wise
+		$data['invoice_val_by_entity'] = $this->calcInvoiceDataByEntity($invoice_data);
+		
 		//get last fiscal year invoice records
 		$curr_yr_inv_value = $this->calcInvoiceDataByMonthWise($invoice_data);
 		$data['inv_compare']['curr_yr']['mon_inv_value'] = $curr_yr_inv_value['allValuesArr'];
@@ -71,6 +75,11 @@ class Service_graphical_dashboard extends crm_controller
 		$last_yr_inv_value = $this->calcInvoiceDataByMonthWise($last_yr_invoice_data);
 		$data['inv_compare']['last_yr']['mon_inv_value'] = $last_yr_inv_value['allValuesArr'];
 		$data['inv_compare']['last_yr']['tot_inv_value'] = $last_yr_inv_value['total_value'];
+		//for x values
+		foreach($this->fiscal_month_arr as $fis_mon){
+			$data['inv_compare']['fis_mon_upto_current'][] = $fis_mon;
+			if(date('M') == $fis_mon) { break; } //from current month only
+		}
 		// echo "<pre>"; print_r($data['inv_compare']); exit;
 		
 		//for last year 
@@ -78,7 +87,7 @@ class Service_graphical_dashboard extends crm_controller
 		$pract_last_yr_val = $this->calcInvoiceDataByPractice($last_yr_invoice_data);
 		if(!empty($data['practice_arr']['practice_array']) && count($data['practice_arr']['practice_array'])>0) {
 			foreach($data['practice_arr']['practice_array'] as $prac_name) {
-				if($prac_name == 'Infra Services') {
+				if($prac_name == 'Infra Services' || $prac_name == 'Testing') {
 					continue;
 				}
 				$data['prat_inv_compare']['practic_val'][] = $prac_name;
@@ -93,7 +102,7 @@ class Service_graphical_dashboard extends crm_controller
 		//allign trend array by practicewise then monthwise
 		if(!empty($data['practice_arr']['practice_array']) && count($data['practice_arr']['practice_array'])>0 && count($trend_value)>0) {
 			foreach($data['practice_arr']['practice_array'] as $prac_name) {
-				if($prac_name == 'Infra Services') {
+				if($prac_name == 'Infra Services' || $prac_name == 'Testing') {
 					continue;
 				}
 				$trend_pract_arr['practic_arr'][] = $prac_name;
@@ -138,7 +147,7 @@ class Service_graphical_dashboard extends crm_controller
 		$bk_rates = get_book_keeping_rates();
 		if(is_array($invoice_data) && !empty($invoice_data) && count($invoice_data)>0) {
 			foreach($invoice_data as $ir) {
-				if($ir['practices'] == 'Infra Services') { //infra services practices are merged with other practices
+				if($ir['practices'] == 'Infra Services' || $ir['practices'] == 'Testing') { //infra services & Testing practice values are merged with other practices
 					$ir['practices'] = 'Others';
 				}
 				$base_conversion_camt = converCurrency($ir['milestone_value'],$bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
@@ -146,6 +155,32 @@ class Service_graphical_dashboard extends crm_controller
 					$inv_array[$ir['practices']] += converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 				} else {
 					$inv_array[$ir['practices']] = converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
+				}
+			}
+		}
+		// echo "<pre>"; print_r($inv_array); exit;
+		return $inv_array;
+	}
+	
+	/*
+	*@method calcInvoiceDataByEntity()
+	*@param array
+	*/
+	public function calcInvoiceDataByEntity($invoice_data)
+	{
+		$inv_array = array();
+		$inv_array['entity_name'] = array();
+		$bk_rates = get_book_keeping_rates();
+		if(is_array($invoice_data) && !empty($invoice_data) && count($invoice_data)>0) {
+			foreach($invoice_data as $ir) {
+				if(!in_array($ir['division_name'], $inv_array['entity_name'])){
+					$inv_array['entity_name'][] = $ir['division_name'];
+				}
+				$base_conversion_camt = converCurrency($ir['milestone_value'],$bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
+				if(isset($inv_array['entity_val'][$ir['division_name']])){
+					$inv_array['entity_val'][$ir['division_name']] += converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
+				} else {
+					$inv_array['entity_val'][$ir['division_name']] = converCurrency($base_conversion_camt, $bk_rates[getFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 				}
 			}
 		}
@@ -185,6 +220,7 @@ class Service_graphical_dashboard extends crm_controller
 		foreach($this->fiscal_month_arr as $fis_mon){
 			$allValuesArr[] = isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
 			$totalSum 	   += isset($valuesArr[$fis_mon]) ? $valuesArr[$fis_mon] : 0;
+			if(date('M') == $fis_mon) { break; } //from current month only
 		}
 		$data['total_value'] = $totalSum;
 		$data['allValuesArr'] = $allValuesArr;
