@@ -2701,8 +2701,8 @@ class Dashboard extends crm_controller
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
-		if($practice == 10) { //Infra services practive values merged to other practices 
-			$p_arr = array(7, 10);
+		if($practice == 10) { //Infra services & tecting practice values are merged with others practices
+			$p_arr = array(7, 10, 13);
 			$this->db->where_in("l.practice", $p_arr);
 		} else {
 			$this->db->where_in("l.practice", $practice);
