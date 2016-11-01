@@ -56,7 +56,7 @@ $practice_arr = array();
 		<div class="leadstg_note">
 			"Infra Services" Practice Values are Merged With "Others" Practice.
 		</div>
-		<?php echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
+		<?php #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
 		<div id="default_view">
 			<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
 				<tr>

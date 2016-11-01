@@ -78,7 +78,7 @@
 					<?php if(!empty($practice_arr)) { ?>
 						<?php foreach($practice_arr as $parr) { ?>
 							<td align='right'>
-								<?php echo "asdfas".$dashboard_det['Infra Services']['billing_month']; exit;
+								<?php
 									if($parr == 'Others') { 
 										$infraCMB   = ($dashboard_det['Infra Services']['billing_month'] != '-') ? $dashboard_det['Infra Services']['billing_month'] : 0;
 										$otherCMB   = ($dashboard_det['Others']['billing_month'] != '-') ? $dashboard_det['Others']['billing_month'] : 0;
