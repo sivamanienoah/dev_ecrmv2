@@ -4,7 +4,7 @@
 						<th>IT Services Dashboard</th>
 						<?php if(!empty($practice_data)) { ?>
 							<?php foreach($practice_data as $prac) { ?>
-								<?php if($prac->id != 7 || $prac->id != 13) { ?>
+								<?php if($prac->id != 7 && $prac->id != 13) { ?>
 									<th><?php echo $prac->practices; ?></th>
 									<?php $practice_arr[] = $prac->practices; ?>
 									<?php $practice_id_arr[$prac->practices] = $prac->id; ?>
