@@ -178,7 +178,7 @@ class Service_graphical_dashboard_model extends crm_model {
 							$con_graph_val['con_gr_x_val'][] = $fis_mon;
 						}						
 						$con_graph_val['con_gr_val'][$val['practice_name']][] = $val[$fis_mon];
-						if(date('M') == $fis_mon) { break; }
+						if($this->upto_month == $fis_mon) { break; }
 					}
 				}
 				
