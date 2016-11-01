@@ -710,7 +710,6 @@ echo $tot_Irval . "<br>";
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
 				$ins_array = array();
 			}
-			exit;
 			
 			$tot['billing_month'] 		 = $totCM_Irval;
 			$tot['ytd_billing']   		 = $tot_Irval;
