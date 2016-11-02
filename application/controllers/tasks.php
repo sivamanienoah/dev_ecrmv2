@@ -40,8 +40,6 @@ class Tasks extends crm_controller
 		}
 		$data['newarray']=$newarray;
 		
-		echo "<pre>"; print_r($data); exit;
-		
 		$this->load->view('tasks/full_view', $data);
 	}
 	
