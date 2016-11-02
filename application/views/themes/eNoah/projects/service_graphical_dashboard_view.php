@@ -50,12 +50,14 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					</h5>
 					<div id="it_service_summary_det" class="it_service_summary_det">
 						<div class="summary_box">							
-							<div class="content clearfix" id="value_contribution">
+							<div class="boxshadow">
+								<div class="content clearfix" id="value_contribution">
 							<div class="numberCircle">
 								<?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?>
 							</div>
 							<div class="height_fix">
 								<p>Contribution</p>
+							</div>
 							</div>
 							</div>
 						</div>
@@ -67,20 +69,23 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
 							}
 							?>
-							
+							<div class="boxshadow">
 							<div class="content clearfix" id="value_revenue">
 								<div class="numberCircle">
 									<?php echo '$ '.round($curr_revenue, 1); ?>
 								</div>
 								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo '(Million '. $this->default_cur_name.')'; ?></span></div>								
 							</div>
+							</div>
 						</div>
-						<div class="summary_box">							
+						<div class="summary_box">
+						<div class="boxshadow">
 							<div class="content clearfix" id="value_utilization">							
 							<div class="numberCircle">
 								<?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?>
 							</div>
 							<div class="height_fix"><p>Utilization</p></div>
+						</div>
 						</div>
 					</div>
 					
