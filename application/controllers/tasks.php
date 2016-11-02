@@ -24,7 +24,7 @@ class Tasks extends crm_controller
 	{	
 		$this->load->model('task_model');
 		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
-		$newarray=array();
+		$newarray = array();
 		$uidd = $this->session->userdata['logged_in_user']; 
 		$uid  = $uidd['userid'];
 		$search=array(
@@ -36,9 +36,11 @@ class Tasks extends crm_controller
 					);
 		foreach($data['category_listing_ls'] as $row) 
 		{
-			$newarray[]=$this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,'OR');
+			$newarray[]   = $this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,'OR');
+			echo "<pre>"; print_r($newarray);
 		}
-		$data['newarray']=$newarray;
+		exit;
+		$data['newarray'] = $newarray;
 		
 		$this->load->view('tasks/full_view', $data);
 	}
