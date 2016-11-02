@@ -39,6 +39,9 @@ class Tasks extends crm_controller
 			$newarray[]=$this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,'OR');
 		}
 		$data['newarray']=$newarray;
+		
+		echo "<pre>"; print_r($data); exit;
+		
 		$this->load->view('tasks/full_view', $data);
 	}
 	
