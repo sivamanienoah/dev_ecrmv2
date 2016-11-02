@@ -37,7 +37,7 @@ class Tasks extends crm_controller
 		foreach($data['category_listing_ls'] as $row) 
 		{
 			$newarray[]   = $this->task_model->taskCategoryQuery($row['id'],$row['task_category'],$search,'OR');
-			echo "<pre>"; print_r($newarray);
+			// echo "<pre>"; print_r($newarray);
 		}
 		exit;
 		$data['newarray'] = $newarray;
