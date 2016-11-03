@@ -200,7 +200,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					$monthly_content .= "<td ".$td_cp.">".$complete_stat."</td>";
 					if(($td_chk == true) && in_array('PT', $db_fields)) { $td_pt = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_pt.">".$project_type."</td>";
-					if(($td_chk == true) && in_array('RAG', $db_fields)) { $td_rag = 'style="display: table-cell;"'; }		
+					if(($td_chk == true) && in_array('RAG', $db_fields)) { $td_rag = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_rag.">".$ragStatus."</td>";
 					if(($td_chk == true) && in_array('PH', $db_fields)) { $td_ph = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_ph.">".$estimate_hour."</td>";
@@ -213,7 +213,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					if(($td_chk == true) && in_array('TUH', $db_fields)) { $td_tuh = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_tuh.">".$total_hours."</td>";
 					if(($td_chk == true) && in_array('PV', $db_fields)) { $td_pv = 'style="display: table-cell;"'; }
-					$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";					
+					$monthly_content .= "<td ".$td_pv.">".$actual_amt."</td>";
 					if(($td_chk == true) && in_array('RC', $db_fields)) { $td_dc = 'style="display: table-cell;"'; }
 					$monthly_content .= "<td ".$td_dc.">".$total_dc_hours."</td>";
 					if(($td_chk == true) && in_array('OC', $db_fields)) { $td_oc = 'style="display: table-cell;"'; }
