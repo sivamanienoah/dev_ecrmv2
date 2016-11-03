@@ -83,7 +83,7 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		echo "<pre>"; print_r($userCostArr); echo "</pre>"; exit;
+		echo "<pre>"; print_r($userCostArr); echo "</pre>";
 		
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -107,10 +107,10 @@ class Timesheet_data extends crm_controller
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
 						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
 						p.project_code is not null AND
-						p.project_code = 'COS-NOA-01-1115'
+						p.project_code = 'COS-NOA-01-1115' AND u.emp_id = 1392 AND 
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
-		// echo $times_sql; exit;
+		echo $times_sql; exit;
 
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
@@ -168,6 +168,7 @@ class Timesheet_data extends crm_controller
 						$costPerHour = $cost;
 						$directCostPerHour = $dcost;
 					} else {
+						
 						if(is_null($userCostArr['final_cost'][$val['emp_id']])){
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
