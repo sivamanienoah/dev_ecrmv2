@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 9;
+		$totalMonths  = 2;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
@@ -107,9 +107,10 @@ class Timesheet_data extends crm_controller
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
 						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
 						p.project_code is not null
+						p.project_code = 'COS-NOA-01-1115'
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
-		// echo $times_sql; exit;
+		echo $times_sql; exit;
 
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
@@ -117,10 +118,8 @@ class Timesheet_data extends crm_controller
 		// echo "<pre>"; print_r($times_result);
 		
 		if(!empty($times_result)) {
-		
-			// $del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
-			// echo $this->db->last_query();
-			
+			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date, 'project_code'=>'COS-NOA-01-1115'));
+			echo $this->db->last_query();
 		}
 		
 		//getting dept,skill,practice details
@@ -152,7 +151,7 @@ class Timesheet_data extends crm_controller
 		}
 		// echo "<pre>"; print_r($times_result); exit;
 		//getting dept,skill,practice details
-		$del_status = 1;
+		// $del_status = 1;
 		if($del_status) {
 		
 			foreach($times_result as $key=>$val) {
@@ -271,7 +270,7 @@ class Timesheet_data extends crm_controller
 			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
 			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
-			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
+			$param['subject'] 		  = "DEV Server - Timesheet data uploaded status On ".date('d-m-Y');
 			
 			$this->email_template_model->sent_email($param);
 			
