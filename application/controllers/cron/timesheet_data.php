@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 24;
+		$totalMonths  = 4;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
@@ -177,8 +177,8 @@ class Timesheet_data extends crm_controller
 							// sort($arr);
 							// echo "<pre>"; print_r($arr); exit;
 							// sort($darr);
-							echo $costPerHour = end($arr); exit;
-							$directCostPerHour = end($darr);
+							$costPerHour = end($arr);
+							echo "dfasdf". $directCostPerHour = end($darr); exit;
 							if(!is_null($costPerHour)){
 								$userCostArr['final_cost'][$val['emp_id']]       = $costPerHour;
 								$userDirectCostArr['final_cost'][$val['emp_id']] =  $directCostPerHour;
