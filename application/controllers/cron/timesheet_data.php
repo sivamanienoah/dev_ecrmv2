@@ -175,6 +175,7 @@ class Timesheet_data extends crm_controller
 							$arr = end($userCostArr[$val['emp_id']]);
 							$darr = end($userDirectCostArr[$val['emp_id']]);
 							sort($arr);
+							echo "<pre>"; print_r($arr); exit;
 							sort($darr);
 							echo $costPerHour = end($arr); exit;
 							$directCostPerHour = end($darr);
