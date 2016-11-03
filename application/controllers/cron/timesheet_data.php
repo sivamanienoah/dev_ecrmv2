@@ -298,7 +298,7 @@ class Timesheet_data extends crm_controller
 		}
 		ksort($userDirectCostArrr);
 		
-		echo "<pre>"; print_r($userDirectCostArrr); exit;
+		// echo "<pre>"; print_r($userDirectCostArrr); exit;
 		
 	}
 
