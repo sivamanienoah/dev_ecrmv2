@@ -152,10 +152,11 @@ class Timesheet_data extends crm_controller
 		}
 		// echo "<pre>"; print_r($times_result); exit;
 		//getting dept,skill,practice details
-		$del_status = 1;
+		// $del_status = 1;
 		if($del_status) {
 		
 			foreach($times_result as $key=>$val) {
+				echo "<pre>"; print_r($val);
 				echo $ts_month = date('m', strtotime($val['start_time'])); exit;
 				$costPerHour = 0;
 				$directCostPerHour = 0;
