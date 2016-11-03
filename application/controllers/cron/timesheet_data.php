@@ -106,7 +106,7 @@ class Timesheet_data extends crm_controller
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
 						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
 						p.project_code is not null AND
-						p.project_code = 'COS-NOA-01-1115'
+						p.project_code = 'COS-NOA-01-1115' AND u.emp_id = '1392' AND
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
 		// echo $times_sql; exit;
