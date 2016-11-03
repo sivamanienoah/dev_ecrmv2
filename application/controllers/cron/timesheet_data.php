@@ -228,10 +228,11 @@ class Timesheet_data extends crm_controller
 				// if($val['emp_id'] == '1392' && $val['entry_month'] == '') {
 					// echo $this->db->last_query() . "<br />";
 				// }
-				echo "<pre>"; print_r($userCostArr['final_cost']); echo "</pre>";
+				
 				$ins_result = true;
 			}
 		}
+		echo "<pre>"; print_r($userCostArr['final_cost']); echo "</pre>";
 		
 		echo "<br>End Time = ".date("Y-m-d H:i:s");
 		$ended_at = date("Y-m-d H:i:s");
