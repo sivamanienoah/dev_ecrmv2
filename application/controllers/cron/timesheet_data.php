@@ -39,9 +39,9 @@ class Timesheet_data extends crm_controller
 		
 		$totalMonths  = 7;
 		
-		// $monthYearArr = date('01-n-Y'); //For uploading last 4 months data
-		$monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
-		$startMonthYearArr = date('d-m-Y', strtotime('2015-06-01')); //For uploading old data
+		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
+		// $monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
+		// $startMonthYearArr = date('d-m-Y', strtotime('2015-06-01')); //For uploading old data
 		
 		$monthYearIn  = 0;
 		
@@ -50,13 +50,13 @@ class Timesheet_data extends crm_controller
 		
 		for($i=1;$i<=$totalMonths;$i++) {
 			$monthYear[] 	= $monthYearArr;
-			// $monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months')); //For uploading last 4 months data
-			$monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months', strtotime ( $startMonthYearArr ))); //For uploading old data
+			$monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months')); //For uploading last 4 months data
+			// $monthYearArr   = date('01-n-Y', strtotime('-'.$i.' months', strtotime ( $startMonthYearArr ))); //For uploading old data
 		}
 		
 		echo "<br> Start Date ".$start_date = date('Y-m-01',strtotime(end($monthYear)));
-		// $end_date   = date('Y-m-d'); //For uploading last 4 months data
-		echo "<br> End Date ".$end_date = date('Y-m-d', strtotime('2015-06-01')); //For uploading old data
+		$end_date   = date('Y-m-d'); //For uploading last 4 months data
+		// echo "<br> End Date ".$end_date = date('Y-m-d', strtotime('2015-06-01')); //For uploading old data
 		
 		// echo "<pre>"; print_r($monthYear);
 		
@@ -83,7 +83,7 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		// echo "<pre>"; print_r($userDirectCostArr); exit;
+		echo "<pre>"; print_r($userCostArr); exit;
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -162,7 +162,7 @@ class Timesheet_data extends crm_controller
 				
 				if( !empty($val['emp_id']) && !empty($val['entry_year']) && !empty($val['entry_month']) ) {
 				
-					$cost = $userCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']];
+					$cost  = $userCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']];
 					$dcost = $userDirectCostArr[$val['emp_id']][$val['entry_year']][$val['entry_month']];
 					
 					if(!empty($cost)) {
