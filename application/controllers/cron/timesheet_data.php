@@ -85,7 +85,7 @@ class Timesheet_data extends crm_controller
 		
 		echo "<pre>"; print_r($userCostArr); echo "</pre>";
 		
-		echo "<br>Started = ".date("Y-m-d H:i:s");
+		// echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
 		
 		$times_sql  = 	"SELECT  
@@ -119,7 +119,7 @@ class Timesheet_data extends crm_controller
 		
 		if(!empty($times_result)) {
 			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date, 'project_code'=>'COS-NOA-01-1115'));
-			echo $this->db->last_query();
+			// echo $this->db->last_query();
 		}
 		
 		//getting dept,skill,practice details
@@ -169,7 +169,6 @@ class Timesheet_data extends crm_controller
 						$directCostPerHour = $dcost;
 					} else {
 						if(is_null($userCostArr['final_cost'][$val['emp_id']])){
-							echo "ifasdf";
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
 							echo $arr = end($userCostArr[$val['emp_id']]); exit;
