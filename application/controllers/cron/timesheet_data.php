@@ -83,7 +83,8 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		echo "<pre>"; print_r($userCostArr); exit;
+		echo "<pre>"; print_r($userCostArr);
+		$userCostArr[1392][2016][8];  exit;
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
