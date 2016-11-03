@@ -152,7 +152,7 @@ class Timesheet_data extends crm_controller
 		}
 		// echo "<pre>"; print_r($practice_arr); exit;
 		//getting dept,skill,practice details
-		// $del_status = 1;
+		$del_status = 1;
 		if($del_status) {
 		
 			foreach($times_result as $key=>$val) {
