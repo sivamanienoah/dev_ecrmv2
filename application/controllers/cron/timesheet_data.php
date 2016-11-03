@@ -83,8 +83,7 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		// echo "<pre>"; print_r($userCostArr);
-		echo $userCostArr[1392][2016][8];  exit;
+		// echo "<pre>"; print_r($userCostArr); exit;
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -157,7 +156,7 @@ class Timesheet_data extends crm_controller
 		if($del_status) {
 		
 			foreach($times_result as $key=>$val) {
-				// echo "<pre>"; print_r($val); exit;
+				echo "<pre>"; print_r($val); exit;
 				$costPerHour = 0;
 				$directCostPerHour = 0;
 				
