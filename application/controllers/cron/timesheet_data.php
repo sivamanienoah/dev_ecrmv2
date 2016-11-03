@@ -110,7 +110,7 @@ class Timesheet_data extends crm_controller
 						p.project_code = 'COS-NOA-01-1115'
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
-		echo $times_sql; exit;
+		// echo $times_sql; exit;
 
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
