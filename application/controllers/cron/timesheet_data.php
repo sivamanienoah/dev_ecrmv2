@@ -64,7 +64,7 @@ class Timesheet_data extends crm_controller
 		
 		// echo "<pre>"; print_r($monthYearIn); exit;
 		
-		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') AND `uc`.`employee_id` AND uc.employee_id = 1392";
+		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') AND `uc`.`employee_id`";
 		
 		// echo $sql; #exit;
 		// echo "<br>";
@@ -83,9 +83,9 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		echo "<pre>"; print_r($userCostArr); echo "</pre>";
+		// echo "<pre>"; print_r($userCostArr); echo "</pre>";
 		
-		// echo "<br>Started = ".date("Y-m-d H:i:s");
+		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
 		
 		$times_sql  = 	"SELECT  
@@ -106,8 +106,7 @@ class Timesheet_data extends crm_controller
 						WHERE
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
 						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
-						p.project_code is not null AND
-						p.project_code = 'COS-NOA-01-1115' AND u.emp_id = 1392 
+						p.project_code is not null  
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
 		// echo $times_sql; exit;
@@ -224,17 +223,13 @@ class Timesheet_data extends crm_controller
 				$ins_row[$key]['skill_name'] 	= isset($skill_arr[$val['skill_id']]) ? $skill_arr[$val['skill_id']] : 0;
 				
 				// echo "<pre>"; print_r($ins_row[$key]); exit;
-				// if(!empty($ins_row['client_id'])) {
-					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
-				// }
-				// if($val['emp_id'] == '1392' && $val['entry_month'] == '') {
-					// echo $this->db->last_query() . "<br />";
-				// }
+
+				$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
+				// echo $this->db->last_query() . "<br />";
 				
 				$ins_result = true;
 			}
 		}
-		echo "<pre>"; print_r($userCostArr['final_cost']); echo "</pre>";
 		
 		echo "<br>End Time = ".date("Y-m-d H:i:s");
 		$ended_at = date("Y-m-d H:i:s");
