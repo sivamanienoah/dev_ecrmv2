@@ -83,7 +83,7 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		echo "<pre>"; print_r($userCostArr); echo "</pre>";
+		// echo "<pre>"; print_r($userCostArr); echo "</pre>";
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -150,7 +150,7 @@ class Timesheet_data extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($practice_arr); exit;
+		echo "<pre>"; print_r($times_result); exit;
 		//getting dept,skill,practice details
 		$del_status = 1;
 		if($del_status) {
