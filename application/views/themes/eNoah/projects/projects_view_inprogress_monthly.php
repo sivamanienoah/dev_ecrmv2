@@ -109,7 +109,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				$monthly_content .= "<td>".$profitloss."</td>";
 				$monthly_content .= "<td><span class=".$prof_clr.">".$profitlossPercent." %</span></td>";
 			} else {
-				if(($td_cn == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
+				if(($td_chk == true) && in_array('CN', $db_fields)) { $td_cn = 'style="display: table-cell;"'; }
 				$milestone_content .= "<td ".$td_cn.">".$customer_name."</td>";
 				if(($td_chk == true) && in_array('CP', $db_fields)) { $td_cp = 'style="display: table-cell;"'; }
 				$monthly_content .= "<td ".$td_cp.">".$complete_stat."</td>";
