@@ -110,7 +110,7 @@ class Timesheet_data extends crm_controller
 						p.project_code = 'COS-NOA-01-1115' AND u.emp_id = 1392 
 						order by p.client_id,t.proj_id,t.uid,t.start_time";
 		
-		echo $times_sql; exit;
+		// echo $times_sql; exit;
 
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
@@ -165,25 +165,25 @@ class Timesheet_data extends crm_controller
 					$dcost = $userDirectCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
 					
 					if(!empty($cost)) {
-						$costPerHour = $cost;
+						$costPerHour       = $cost;
 						$directCostPerHour = $dcost;
 					} else {
-						
 						if(is_null($userCostArr['final_cost'][$val['emp_id']])){
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
-							$arr = end($userCostArr[$val['emp_id']]);
+							echo $arr = end($userCostArr[$val['emp_id']]);
 							$darr = end($userDirectCostArr[$val['emp_id']]);
 							sort($arr);
 							sort($darr);
-							$costPerHour = end($arr);
+							echo $costPerHour = end($arr);
 							$directCostPerHour = end($darr);
 							if(!is_null($costPerHour)){
 								$userCostArr['final_cost'][$val['emp_id']]       = $costPerHour;
 								$userDirectCostArr['final_cost'][$val['emp_id']] =  $directCostPerHour;
 							}
+							echo "if ".$costPerHour; exit;
 						}else{
-							$costPerHour =  $userCostArr['final_cost'][$val['emp_id']];
+							echo "else ".$costPerHour       =  $userCostArr['final_cost'][$val['emp_id']];
 							$directCostPerHour =  $userDirectCostArr['final_cost'][$val['emp_id']];
 						}
 
