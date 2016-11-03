@@ -172,20 +172,18 @@ class Timesheet_data extends crm_controller
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
 							
-							$arr = end($userCostArr[$val['emp_id']]);
+							$arr  = end($userCostArr[$val['emp_id']]);
 							$darr = end($userDirectCostArr[$val['emp_id']]);
 							// sort($arr);
-							// echo "<pre>"; print_r($arr); exit;
 							// sort($darr);
 							$costPerHour = end($arr);
-							echo "dfasdf". $directCostPerHour = end($darr); exit;
+							$directCostPerHour = end($darr);
 							if(!is_null($costPerHour)){
 								$userCostArr['final_cost'][$val['emp_id']]       = $costPerHour;
 								$userDirectCostArr['final_cost'][$val['emp_id']] =  $directCostPerHour;
 							}
-							echo "if ".$costPerHour; exit;
 						}else{
-							echo "else ".$costPerHour       =  $userCostArr['final_cost'][$val['emp_id']];
+							$costPerHour       =  $userCostArr['final_cost'][$val['emp_id']];
 							$directCostPerHour =  $userDirectCostArr['final_cost'][$val['emp_id']];
 						}
 
