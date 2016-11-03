@@ -226,7 +226,9 @@ class Timesheet_data extends crm_controller
 				// if(!empty($ins_row['client_id'])) {
 					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
 				// }
-				echo $this->db->last_query() . "<br />";
+				if($val['emp_id'] == '1392') {
+					echo $this->db->last_query() . "<br />";
+				}
 				$ins_result = true;
 			}
 		}
