@@ -169,9 +169,10 @@ class Timesheet_data extends crm_controller
 						$directCostPerHour = $dcost;
 					} else {
 						if(is_null($userCostArr['final_cost'][$val['emp_id']])){
+							echo "ifasdf";
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
-							echo $arr = end($userCostArr[$val['emp_id']]);
+							echo $arr = end($userCostArr[$val['emp_id']]); exit;
 							$darr = end($userDirectCostArr[$val['emp_id']]);
 							sort($arr);
 							sort($darr);
