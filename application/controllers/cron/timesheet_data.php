@@ -83,8 +83,7 @@ class Timesheet_data extends crm_controller
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
 		
-		echo "<pre>"; print_r($userCostArr); echo "</pre>";
-
+		
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
 		
@@ -178,8 +177,8 @@ class Timesheet_data extends crm_controller
 							$costPerHour = end($arr);
 							$directCostPerHour = end($darr);
 							if(!is_null($costPerHour)){
-								$userCostArr['final_cost'][$val['emp_id']]=$costPerHour;
-								$userDirectCostArr['final_cost'][$val['emp_id']]=$directCostPerHour;
+								$userCostArr['final_cost'][$val['emp_id']]       = $costPerHour;
+								$userDirectCostArr['final_cost'][$val['emp_id']] =  $directCostPerHour;
 							}
 						}else{
 							$costPerHour =  $userCostArr['final_cost'][$val['emp_id']];
@@ -226,9 +225,10 @@ class Timesheet_data extends crm_controller
 				// if(!empty($ins_row['client_id'])) {
 					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
 				// }
-				if($val['emp_id'] == '1392') {
-					echo $this->db->last_query() . "<br />";
-				}
+				// if($val['emp_id'] == '1392' && $val['entry_month'] == '') {
+					// echo $this->db->last_query() . "<br />";
+				// }
+				echo "<pre>"; print_r($userCostArr); echo "</pre>";
 				$ins_result = true;
 			}
 		}
