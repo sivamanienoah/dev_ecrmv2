@@ -37,7 +37,7 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 24;
+		$totalMonths  = 4;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
@@ -172,11 +172,7 @@ class Timesheet_data extends crm_controller
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
 							$temp_arr = end($userCostArr[$val['emp_id']]);
-							echo $ar = end($temp_arr); exit;
-							echo "<pre>"; print_r(); exit;
-							foreach($temp_arr as $ka => $va){
-								echo $arr = end($va); exit;
-							}
+							echo $arr = end($temp_arr); exit;
 							// echo $arr = end($userCostArr[$val['emp_id']]); exit;
 							$darr = end($userDirectCostArr[$val['emp_id']]);
 							sort($arr);
