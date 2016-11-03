@@ -62,7 +62,7 @@ class Timesheet_data extends crm_controller
 		
 		$monthYearIn = implode("','",$monthYear);
 		
-		echo "<pre>"; print_r($monthYearIn); exit;
+		// echo "<pre>"; print_r($monthYearIn); exit;
 		
 		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') ";
 		
