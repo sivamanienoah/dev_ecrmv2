@@ -172,7 +172,8 @@ class Timesheet_data extends crm_controller
 							ksort($userCostArr[$val['emp_id']]);
 							ksort($userDirectCostArr[$val['emp_id']]);
 							$temp_arr = end($userCostArr[$val['emp_id']]);
-							echo "<pre>"; print_r($temp_arr); exit;
+							echo $ar = end($temp_arr); exit;
+							echo "<pre>"; print_r(); exit;
 							foreach($temp_arr as $ka => $va){
 								echo $arr = end($va); exit;
 							}
