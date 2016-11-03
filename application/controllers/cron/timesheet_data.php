@@ -71,7 +71,7 @@ class Timesheet_data extends crm_controller
 		$query  = $timesheet_db->query($sql);
 		$result = $query->result_array();
 		
-		// echo "<pre>"; print_r($result); exit;
+		echo "<pre>"; print_r($result); exit;
 		
 		if(!empty($result)) {
 			foreach($result as $row) {
