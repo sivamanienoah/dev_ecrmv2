@@ -449,11 +449,6 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 			}
 		}
-		/* foreach($cm_directcost2 as $practiceId => $cval1){
-			foreach($cval1 as $pjtCode => $cval){ 
-				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
-			}
-		} */
 		## code ends here##
 		
 		## code month contribution starts here##
@@ -596,11 +591,13 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
  
 		foreach($cm_directcost2 as $practiceId => $cval1){
-			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
-				$practiceId = 'Others';
-			}
-			foreach($cval1 as $pjtCode => $cval){ 
-				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+			if(!empty($practiceId)) {
+				if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+					$practiceId = 'Others';
+				}
+				foreach($cval1 as $pjtCode => $cval){ 
+					$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+				}
 			}
 		}
 		
@@ -649,6 +646,11 @@ class Service_dashboard_cron_beta extends crm_controller
 					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
 				/**other cost data*/
+				
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					$parr = 'Others';
+				}
+				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				
