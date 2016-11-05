@@ -447,7 +447,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
+		// echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
 		## code ends here##
 		
 		## code for month contribution starts here##
