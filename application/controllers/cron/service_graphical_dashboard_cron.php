@@ -472,7 +472,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
 				
-				echo $parr." ".$bill_eff."<br>";
+				// echo $parr." ".$bill_eff."<br>";
 				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
 				//for billable utilization cost
 				$temp_ytd_utilization_cost = '';
@@ -517,7 +517,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$ins_array = array();
 				$ins_result = 1;
 			}
-			exit;
+			// exit;
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
 			$tot['ytd_billable_utilization_cost'] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
 			$tot['tot_contri'] 			  		  = round((($overall_revenue-$overall_contrib)/$overall_revenue)*100);
