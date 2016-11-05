@@ -1,5 +1,5 @@
 <h5 class="revenue_compare_head_bar">
-	<span class="forecast-heading">Revenue Comparison with Past Year</span>
+	<span class="forecast-heading">Revenue Comparison with Last Year</span>
 	<span class="revenue_filter">
 		<input type="radio" name="inv_filter_by" class="inv_filter_by" value="inv_month" <?php if($inv_filter_by == 'inv_month') echo "checked='checked'"; ?> />&nbsp;By Month &nbsp;&nbsp;
 		<input type="radio" name="inv_filter_by" class="inv_filter_by" value="inv_year" <?php if($inv_filter_by == 'inv_year') echo "checked='checked'"; ?> />&nbsp;By Year
