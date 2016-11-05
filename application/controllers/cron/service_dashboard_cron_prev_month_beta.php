@@ -619,7 +619,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			$ins_data['practice_name'] = 'Total';
 			$ins_data['month_status']  = 2;
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
-			// echo '<pre>';print_r($practice_array); exit;
+			// echo '<pre>';print_r($practice_array); echo "<pre>";
 			foreach($practice_array as $parr){
 				
 				/**other cost data*/
@@ -637,6 +637,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
 				/**other cost data*/
+				
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					$parr = 'Others';
+				}
 				
 				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
