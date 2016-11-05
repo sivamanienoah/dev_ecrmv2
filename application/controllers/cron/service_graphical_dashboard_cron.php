@@ -423,7 +423,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		echo '<pre>';print_r($directcost); echo "</pre>"; exit;
+		// echo '<pre>';print_r($directcost); echo "</pre>"; exit;
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
@@ -488,7 +488,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
