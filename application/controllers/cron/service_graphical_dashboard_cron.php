@@ -189,7 +189,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
+		$this->db->where("l.dept_id is not null");
 		// $this->db->limit(20); // for temporary use
 		$query = $this->db->get();
 		$resdata = $query->result();
