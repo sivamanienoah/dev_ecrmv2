@@ -465,10 +465,11 @@ class Service_dashboard_cron_beta extends crm_controller
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
-		// $deptwhere = "t.dept_id IN ('10','11')";
-		// $this->db->where($deptwhere);
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();		
+		$query = $this->db->get();
+		echo $this->db->last_query(); exit;
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 
