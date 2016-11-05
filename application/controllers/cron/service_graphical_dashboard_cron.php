@@ -332,7 +332,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>";
+		echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>"; exit;
 		
 		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
