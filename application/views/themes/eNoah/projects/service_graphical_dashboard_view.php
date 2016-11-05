@@ -66,7 +66,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							//converting to million
 							$curr_revenue = '';
 							if( $inv_compare['curr_yr']['tot_inv_value'] > 0 ) {
-								echo $curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
+								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
 							}
 							?>
 							<div class="boxshadow">
