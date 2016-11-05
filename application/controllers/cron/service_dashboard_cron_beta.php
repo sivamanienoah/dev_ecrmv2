@@ -272,36 +272,6 @@ class Service_dashboard_cron_beta extends crm_controller
 		}
 		$projects['eff_var']   = $effvar;
 
-		/* $contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_month
-		FROM crm_timesheet_data 
-		WHERE start_time between '".$start_date."' and '".$end_date."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')";
-		
-		$sql1 = $this->db->query($contribution_query);
-		$contribution_data = $sql1->result();
-		$directcost_username = array();
-		if(!empty($contribution_data)) {
-			foreach($contribution_data as $cdrow){
-				$directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] = $directcost[$practice_arr[$cdrow->practice_id]]['total_direct_cost'] + $cdrow->resource_duration_direct_cost;
-				$directcost_username[$practice_arr[$cdrow->practice_id]][$cdrow->username][$cdrow->entry_month] += $cdrow->duration_hours;
-			}
-		} 
-		
- 
-		
-		$month_contribution_query = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost
-		FROM crm_timesheet_data 
-		WHERE start_time between '".date('Y-m-d', strtotime($month))."' and '".date('Y-m-t', strtotime($month))."' AND resoursetype != '' AND project_code NOT IN ('HOL','Leave')";
-		
-		$sql2 = $this->db->query($month_contribution_query);
-		$month_contribution_data = $sql2->result();
-		if(!empty($month_contribution_data)) {
-			foreach($month_contribution_data as $mcdrow) {
-				$cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] = $cm_directcost[$practice_arr[$mcdrow->practice_id]]['total_cm_direct_cost'] + $mcdrow->resource_duration_direct_cost;
-			}
-		} */
-		 
-		// 
-
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
@@ -467,11 +437,11 @@ class Service_dashboard_cron_beta extends crm_controller
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
 		$this->db->where($resrc);
-		$deptwhere1 = "t.dept_id IN ('10','11')";
-		$this->db->where($deptwhere1);
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$resdata = $query->result();
 		//echo '<pre>';print_r($resdata);exit;
 
