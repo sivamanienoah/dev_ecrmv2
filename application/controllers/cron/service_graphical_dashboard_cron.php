@@ -21,7 +21,7 @@ Modified By     : Sriram.S
 // error_reporting(E_ALL);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 // ini_set('display_errors',1);
-class Service_graphical_dashboard_cron extends crm_controller 
+class Service_graphical_dashboard_cron extends crm_controller
 {	
     public function __construct()
 	{
@@ -403,7 +403,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 				//for contribution trend
 				$other_cos_arr = array();
-				$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);					
+				$other_cos_arr = getOtherCostByProjectCodeByDateRangeByMonthWise($prec->pjt_id, $this->default_cur_id, $start_date, $end_date);
 				$go_merge_proj_arr = isset($contribution_trend_project_arr[$prec->pjt_id]) ? $contribution_trend_project_arr[$prec->pjt_id] : array();
 				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $go_merge_proj_arr, $other_cos_arr);
 			}
@@ -490,7 +490,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
