@@ -2085,8 +2085,6 @@ class Dashboard extends crm_controller
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
-		$deptwhere = "l.dept_id IN ('10','11')";
-		$this->db->where($deptwhere);
 		if($practice) {
 			if($practice == 10) { //practice - others
 				$pr_arr = array(7, 10, 13);
@@ -2702,6 +2700,8 @@ class Dashboard extends crm_controller
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
 		$resrc = 't.resoursetype IS NOT NULL';
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
 		$this->db->where($resrc);
 		if($practice == 10) { //Infra services & tecting practice values are merged with others practices
 			$p_arr = array(7, 10, 13);
