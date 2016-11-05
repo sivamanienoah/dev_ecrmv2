@@ -2085,6 +2085,8 @@ class Dashboard extends crm_controller
 		// $this->db->where("l.project_type", 1);
 		$client_not_in_arr = array('ENO','NOA');
 		$this->db->where_not_in("l.client_code", $client_not_in_arr);
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
 		if($practice) {
 			if($practice == 10) { //practice - others
 				$pr_arr = array(7, 10, 13);
