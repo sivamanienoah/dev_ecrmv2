@@ -613,12 +613,11 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$ins_data['practice_name'] = $parr;
 				$ins_data['month_status'] = 2;
 				$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
-				 				
 			}
 			$ins_data['practice_name'] = 'Total';
 			$ins_data['month_status']  = 2;
 			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
-			//echo '<pre>';print_r($practice_array); 
+			echo '<pre>';print_r($practice_array); exit;
 			foreach($practice_array as $parr){
 				
 				/**other cost data*/
