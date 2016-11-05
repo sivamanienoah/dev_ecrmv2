@@ -462,15 +462,16 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
-				if($parr == 'Infra Services' || $parr == 'Testing') {
+				/* if($parr == 'Infra Services' || $parr == 'Testing') {
 					$parr = 'Others';
-				}
+				} */
 				//for billable efforts
 				$bill_eff = 0;
 				// echo "$parr"."<pre>  <br>"; print_r($projects['billable_ytd'][$parr]);
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
+				echo $parr." ".$bill_eff."<br>";
 				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
 				//for billable utilization cost
 				$temp_ytd_utilization_cost = '';
