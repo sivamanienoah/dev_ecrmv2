@@ -433,7 +433,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$project_res = $res->result();
 		$project_master = array();
 		if(!empty($project_res)) {
-			
 			foreach($project_res as $prec) {
 				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
 			}
@@ -448,7 +447,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
+		echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
 		## code ends here##
 		
 		## code for month contribution starts here##
