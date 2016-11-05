@@ -66,13 +66,13 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							//converting to million
 							$curr_revenue = '';
 							if( $inv_compare['curr_yr']['tot_inv_value'] > 0 ) {
-								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
+								echo $curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
 							}
 							?>
 							<div class="boxshadow">
 							<div class="content clearfix" id="value_revenue">
 								<div class="numberCircle">
-									<?php echo '$ '.round($curr_revenue, 1); ?>
+									<?php echo '$ '.round($curr_revenue, 2); ?>
 								</div>
 								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo '(Million '. $this->default_cur_name.')'; ?></span></div>								
 							</div>
@@ -118,7 +118,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 												<input type="radio" name="uc_filter_by" id="uc_cost" class="uc_filter_by_cls" value="cost" checked />&nbsp;By Cost&nbsp;&nbsp;
 												<input type="radio" name="uc_filter_by" id="uc_hour" class="uc_filter_by_cls" value="hour" />&nbsp;By Hour 
 											</td>
-											<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" style="display:none;"/>	
+											<input type="submit" class="positive input-font" name="uc_filter_submit" id="uc_filter_submit" value="Search" style="display:none;"/>
 										</tr>
 									</table>
 								</div>
