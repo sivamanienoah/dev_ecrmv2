@@ -693,7 +693,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
 				$ins_array = array();
 			}
-			echo $tot_dc_vals; exit;
+			// echo $tot_dc_vals; exit;
 			$tot['billing_month'] = $totCM_Irval;
 			$tot['ytd_billing']   = $tot_Irval;
 			$tot['ytd_utilization_cost'] = $tot_dc_tots;
