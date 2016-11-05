@@ -2194,6 +2194,7 @@ class Dashboard extends crm_controller
 				$data['othercost_projects'] = array();
 				
 				$this->db->select("pjt_id, lead_id, practice, lead_title");
+				$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
 				$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice)); //for temporary use
 				$oc_res = $ocres->result_array();
 				
