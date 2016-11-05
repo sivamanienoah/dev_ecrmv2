@@ -427,17 +427,14 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		echo '<pre>'; print_r($directcost1); echo "</pre>"; exit;
+		// echo '<pre>'; print_r($directcost1); echo "</pre>"; exit;
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 		$project_res = $res->result();
 		$project_master = array();
-		if(!empty($project_res)){
-			foreach($project_res as $prec){
-			//$project_master[$prec->project_code] = $prec->title;
-			$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
-			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
-			//$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+		if(!empty($project_res)) {
+			foreach($project_res as $prec) {
+				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
 			}
 		}
  
@@ -588,12 +585,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$project_master = array();
 		if(!empty($project_res)){
 			foreach($project_res as $prec){
-			//$project_master[$prec->project_code] = $prec->title;
-			//$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
-			//$directhours[$practice_arr[$prec->practice]][$prec->pjt_id]['total_hours'] += $directcost1[$prec->pjt_id]['project_total_hours'];
-			$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
+				$cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];
 			}
 		}
+		echo "<pre>"; print_r($cm_directcost2); exit;
 		/* 
 		foreach($directcost2 as $practiceId => $val1){
 			foreach($val1 as $pjtCode => $val){

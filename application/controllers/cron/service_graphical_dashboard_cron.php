@@ -332,7 +332,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>"; exit;
+		// echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>"; exit;
 		
 		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
@@ -373,8 +373,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$project_res = $res->result();
 		
-		// echo "<pre>"; print_r($project_res); exit;
-		
 		/*
 		// for temporary use		
 		$this->db->select("pjt_id,practice,lead_title");
@@ -408,11 +406,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $go_merge_proj_arr, $other_cos_arr);
 			}
 		}
-		// echo '<pre>'; print_r($directcost2); echo '</pre>'; exit;
+		echo '<pre>'; print_r($directcost2); echo '</pre>'; exit;
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 		foreach($directcost2 as $practiceId => $val1) {
-			foreach($val1 as $pjtCode => $val){
+			foreach($val1 as $pjtCode => $val) {
 				if(isset($directcost[$practiceId]['total_direct_cost'])) {
 					$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 				} else {
