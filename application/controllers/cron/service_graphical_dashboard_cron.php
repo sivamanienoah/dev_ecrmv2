@@ -462,16 +462,16 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$projects['other_cost'][$parr] = $other_cost_val;
 				}
 				/**other cost data*/
-				
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					$parr = 'Others';
+				}
 				//for billable efforts
 				$bill_eff = 0;
 				// echo "$parr"."<pre>  <br>"; print_r($projects['billable_ytd'][$parr]);
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
-				if($parr == 'Infra Services' || $parr == 'Testing') {
-					$parr = 'Others';
-				}
+				
 				echo $parr." ".$bill_eff."<br>";
 				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
 				//for billable utilization cost
@@ -625,7 +625,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
-				// echo $row->practice_id . " " . $row->resoursetype; exit;
+				echo $row->practice_id . " " . $row->resoursetype; exit;
 				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
