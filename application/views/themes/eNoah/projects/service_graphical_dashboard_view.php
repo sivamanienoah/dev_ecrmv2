@@ -84,7 +84,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							<div class="numberCircle">
 								<?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?>
 							</div>
-							<div class="height_fix"><p>Utilization Cost</p></div>
+							<div class="height_fix"><p>Utilization</p><span class="cur_name"><?php echo '(Cost)'; ?></span></div>
 						</div>
 						</div>
 					</div>
