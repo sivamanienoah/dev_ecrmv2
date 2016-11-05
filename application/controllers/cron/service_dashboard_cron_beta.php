@@ -435,19 +435,18 @@ class Service_dashboard_cron_beta extends crm_controller
 		if(!empty($project_res)){
 			foreach($project_res as $prec){
 				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
-				// $cm_directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_cm_direct_cost'] += $cm_directcost1[$prec->pjt_id]['project_total_cm_direct_cost'];			
 			}
-			//$project_master[$prec->project_code] = $prec->title;
-
 		}
 		// echo '<pre>';print_r($directcost2); exit;
 		//echo '<pre>';print_r($practice_arr);echo 'directcost2'.'<br>';print_r($directcost2);echo 'cm_directcost2'.'<br>';print_r($cm_directcost2);exit;
 		foreach($directcost2 as $practiceId => $val1){
-			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
-				$practiceId = 'Others';
-			}
-			foreach($val1 as $pjtCode => $val){				
-				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
+			if(!empty($practiceId)) {
+				if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+					$practiceId = 'Others';
+				}
+				foreach($val1 as $pjtCode => $val){				
+					$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
+				}
 			}
 		}
 		/* foreach($cm_directcost2 as $practiceId => $cval1){
