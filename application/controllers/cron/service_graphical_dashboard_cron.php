@@ -406,7 +406,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$contribution_trend_arr = $this->combine_contribution_project_arr($practice_arr[$prec->practice], $contribution_trend_arr, $go_merge_proj_arr, $other_cos_arr);
 			}
 		}
-		echo '<pre>'; print_r($directcost2); echo '</pre>'; exit;
+		
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 		foreach($directcost2 as $practiceId => $val1) {
@@ -423,7 +423,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>';print_r($directcost); echo "</pre>";
+		echo '<pre>';print_r($directcost); echo "</pre>"; exit;
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
