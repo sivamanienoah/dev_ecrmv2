@@ -586,11 +586,13 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			}
 		}
 		foreach($cm_directcost2 as $practiceId => $cval1){
-			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
-				$practiceId = 'Others';
-			}
-			foreach($cval1 as $pjtCode => $cval){ 
-				$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+			if(!empty($practiceId)) {
+				if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+					$practiceId = 'Others';
+				}
+				foreach($cval1 as $pjtCode => $cval){ 
+					$cm_directcost[$practiceId]['total_cm_direct_cost'] += $cval['total_cm_direct_cost'];
+				}
 			}
 		}
 		
