@@ -216,9 +216,11 @@ $other_cost_arr['other_cost_total'] = 0;
 if(!empty($sub_tot)) {
 	foreach($sub_tot as $pname=>$pvals) {
 		$other_cost_val 					 = getOtherCostByProjectIdByDateRange($pname, $this->default_cur_id, $start_date, $end_date);
-		$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
-		$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
-		$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
+		if(!empty($other_cost_val) && is_array($other_cost_val) && count($other_cost_val)>0) {
+			$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
+			$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
+			$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
+		}
 	}
 }
 
