@@ -433,11 +433,14 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$project_res = $res->result();
 		$project_master = array();
 		if(!empty($project_res)) {
+			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+				$practiceId = 'Others';
+			}
 			foreach($project_res as $prec) {
 				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
 			}
 		}
-		echo "<pre>"; print_r($directcost2); echo "<pre>"; exit;
+		echo "<pre>"; print_r($directcost); echo "<pre>";
 		foreach($directcost2 as $practiceId => $val1){
 			foreach($val1 as $pjtCode => $val){
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
