@@ -625,7 +625,10 @@ class Service_graphical_dashboard_cron extends crm_controller
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
-				echo $row->practice_id . " " . $row->resoursetype; exit;
+				// echo $row->practice_id . " " . $row->resoursetype; exit;
+				if($row->practice_id == 7 || $row->practice_id == 13) {
+					$row->practice_id = 10;
+				}
 				if (isset($resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'])) {
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'] = $row->duration_hours + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['hour'];
 					$resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'] = $row->resource_duration_cost + $resarr[$practice_arr[$row->practice_id]][$row->resoursetype]['cost'];
