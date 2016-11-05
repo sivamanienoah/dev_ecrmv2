@@ -439,14 +439,11 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		}
  
 		foreach($directcost2 as $practiceId => $val1){
-			if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
-				$practiceId = 'Others';
-			}
 			foreach($val1 as $pjtCode => $val){
 				$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 			}
 		}
-		// echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
+		echo "<pre>"; print_r($directcost); echo "<pre>"; exit;
 		## code ends here##
 		
 		## code for month contribution starts here##
