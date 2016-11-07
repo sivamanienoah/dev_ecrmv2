@@ -622,8 +622,11 @@ class Service_dashboard_cron_beta extends crm_controller
 				}
 				/**other cost data*/
 				
-				if($parr == 'Infra Services' || $parr == 'Testing') {
+				/* if($parr == 'Infra Services' || $parr == 'Testing') {
 					$parr = 'Others';
+				} */
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					continue;
 				}
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
