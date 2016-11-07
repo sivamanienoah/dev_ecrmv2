@@ -280,6 +280,9 @@ if ( ! function_exists('formSubMenuList'))
 				if($submenu['masterid']==148 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
 					continue;
 				}
+				if($submenu['masterid']==160 && in_array($huserdata['role_id'], array('8', '9', '11', '13', '14'))){
+					continue;
+				}
 				if(($submenu['masterid']==159) && ($huserdata['role_id']==14)) {
 					continue;
 				}
