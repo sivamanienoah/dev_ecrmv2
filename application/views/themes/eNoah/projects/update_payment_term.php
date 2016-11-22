@@ -18,7 +18,7 @@
 		</tr>
 		<tr>
 			<td>Value *</td>
-			<td><input type="text" onkeypress="return isNumberKey(event)" name="sp_date_3" id="sp_date_3" value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
+			<td><input type="text" onkeypress="return isPaymentVal(event)" name="sp_date_3" id="sp_date_3" value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
 			<span style="color:red;">(Numbers only)</span>
 			</td>
 		</tr>
