@@ -136,5 +136,12 @@ function loadajaxwithurl(url)
 function resetpage()
 {
 	loadajaxwithurl('tasks/index/extend');
+}
+function isPaymentVal(evt) {
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	if (charCode != 45 && charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+	return false;
+	else
+	return true;
 }	
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////

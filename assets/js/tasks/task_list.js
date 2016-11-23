@@ -6,15 +6,15 @@ $(function() {
 		"aaSorting": [ ],
 		"iDisplayLength": 5,
 		"aoColumnDefs": [
-  {
-     bSortable: false,
-     aTargets: [ -1 ]
-  },
-    {
-     bSortable: false,
-     aTargets: [ -3 ]
-  }
-],
+			{
+				bSortable: false,
+				aTargets: [ -1 ]
+			},
+			{
+				bSortable: false,
+				aTargets: [ -3 ]
+			}
+		],
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
 		"bPaginate": true,
@@ -28,12 +28,12 @@ $(function() {
 		"bRetrieve": true,		
 	});
 
-$('.dataTables_filter label').css( "width", "auto");
-$(".dataTables_empty").css( "padding", "10px" );
-if( $('#welcome_view_quote').length )
-{
-$("#dashboardcount").css({"right": "14px", "top": "35px"});
-}
+	$('.dataTables_filter label').css( "width", "auto");
+	$(".dataTables_empty").css( "padding", "10px" );
+	if( $('#welcome_view_quote').length )
+	{
+		$("#dashboardcount").css({"right": "14px", "top": "35px"});
+	}
 
 });
 
@@ -60,7 +60,7 @@ btnActions.prototype.doAction = function() {
 			cache: false,
 			success: function (html){
 			 
-									$( ".ui-tabs-nav li" ).each(function( index ) {
+						$( ".ui-tabs-nav li" ).each(function( index ) {
 
 						if($( this ).attr('aria-controls')=='jv-tab-4')
 						{
@@ -74,7 +74,7 @@ btnActions.prototype.doAction = function() {
 				{
 					resetpage();
 				}
-			 }		
+		 }		
 	});
 };
 function deleteItem(actionType,moduleName,methodName,itemId,formId)
@@ -96,7 +96,7 @@ function valueassign(val)
 
 function refreshalltask(val)
 {
-				$("#taskcompleted").val(val);
-				loadExistingTasks();
+	$("#taskcompleted").val(val);
+	loadExistingTasks();
 	
 }

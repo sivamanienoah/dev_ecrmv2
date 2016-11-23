@@ -6,6 +6,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	remarks = $('#task-remarks').val(),	
 	user_label = $('#set-job-task select[name="task_user"] option:selected').text(),
 	task_hours = $('#set-job-task input[name="task_hours"]').val(),
+	task_estimated_hours = $('#set-job-task input[name="estimated_hours"]').val(),
 	task_mins = $('#set-job-task select[name="task_mins"]').val(),
 	task_start_date = $('#set-job-task input[name="task_start_date"]').val(),
 	task_end_date = $('#set-job-task input[name="task_end_date"]').val(),
@@ -15,6 +16,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	taskpriority = $("#taskpriority").val(),
 	require_qc = ($('#set-job-task input[name="require_qc"]').is(':checked')) ? 'YES' : 'NO';
 	priority = ($('#set-job-task input[name="priority"]').is(':checked')) ? 'YES' : 'NO';
+	
 	if (job_task == '')
 	{
 		errors.push('Task is required!');
@@ -68,7 +70,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 	
 	$.post(
 		'ajax/request/add_job_task' + random_task_url,
-		{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'task_category': taskCategory, 'task_priority': taskpriority,'ci_csrf_token': csrf_hasf},
+		{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hours,'ci_csrf_token': csrf_hasf},
 		function (data)
 		{
 			if (data.error)
@@ -91,7 +93,6 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				{
 					window.location.href = window.location.href;
 				}
-				
 				$('#set-job-task')[0].reset();
 			}
 			$("#taskToAlloc").val('').trigger("liszt:updated");
@@ -107,11 +108,10 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 var task_being_edited = 0;
 var random_task_edit;
 
-function openEditTask(taskid, random)
-{ 
-
-if( $('#search-job-task').length  ||  $('#dashboard').val()==1) 
-        // use this if you are using id to check
+function openEditTask(taskid, random) 
+{
+	
+if( $('#search-job-task').length  ||  $('#dashboard').val()==1)
 {
     var add=1;
 }
@@ -120,7 +120,7 @@ else
 	var add=0;
 }
 
- var tr= $("#"+taskid).closest('tr');
+ var tr = $("#"+taskid).closest('tr');
  var taskcategory = $("#"+taskid).closest('table').attr('rel');
  var taskdescvalue = tr[0].cells[sumint(0,add)].innerHTML;
  var Createduser = tr[0].cells[sumint(2,add)].innerHTML;
@@ -130,10 +130,8 @@ else
  var taskplEnddate = tr[0].cells[sumint(5,add)].innerHTML;
  var taskacStartdate = tr[0].cells[sumint(6,add)].innerHTML;
  var taskacEnddate = tr[0].cells[sumint(7,add)].innerHTML;
- var taskremarksvalue = tr[0].cells[sumint(9,add)].innerHTML;
- 
-
-
+ var taskremarksvalue = tr[0].cells[sumint(10,add)].innerHTML;
+ var taskEstimatedHour = tr[0].cells[sumint(8,add)].innerHTML;
 
  task_being_edited = taskid;
 	
@@ -146,11 +144,10 @@ else
 		random_task_edit = false;
 	}
 	
-	
 	$.blockUI({
-            message:$('#edit-job-task table'),			
-			css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
-        });
+		message:$('#edit-job-task table'),			
+		css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
+	});
 	// alert($('#task-table-' + taskid).length);
 	var the_task_el = $("#"+taskid).closest('table').attr('id');
 	console.log(the_task_el);
@@ -162,7 +159,6 @@ else
 	// workout the existing values and replace them
 
 	$('.edit-task-remarks', edit_table_el).val($.trim(taskremarksvalue));
-	
 
 		selectoptionassign('.edit-task-category',taskcategory)
 		selectoptionassign('.edit-task-allocate',Allocateduser)
@@ -181,7 +177,7 @@ else
 		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
 		$('.edit-end-date', edit_table_el).removeAttr('disabled', ($.trim(taskplEnddate)) );
 		$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
-	    $('.edit-actualend-date', edit_table_el).removeAttr('disabled', ($.trim(taskacEnddate)) )
+	    $('.edit-actualend-date', edit_table_el).removeAttr('disabled', ($.trim(taskacEnddate)) );
 	}
 	else
 	{
@@ -196,10 +192,10 @@ else
 		$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
 		$('.edit-end-date', edit_table_el).attr('disabled', ($.trim(taskplEnddate)) );
 		$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
-		$('.edit-actualend-date', edit_table_el).attr('disabled', ($.trim(taskacEnddate)) )
-	}	
-	
-	$('.edit-actualstart-date', edit_table_el).val($.trim(taskacStartdate));	;
+		$('.edit-actualend-date', edit_table_el).attr('disabled', ($.trim(taskacEnddate)) );
+	}
+	$('.edit-job-est-hr', edit_table_el).val($.trim(taskEstimatedHour));
+	$('.edit-actualstart-date', edit_table_el).val($.trim(taskacStartdate));
 	$('.edit-task-owner', edit_table_el).val($.trim(Createduser));
 	$('.task-require-qc', edit_table_el).attr('checked', ($.trim($('.task-require-qc', the_task_el).text()) == '0') ? false : true);
 	$('.priority', edit_table_el).attr('checked', ($.trim($('.priority', the_task_el).text()) == '0') ? false : true);	
@@ -228,6 +224,7 @@ function editTask()
 		task_end_date = $('.edit-end-date', edit_table_el).val(),
 		actualstart_date = $('.edit-actualstart-date', edit_table_el).val(),
 		task_end_hour = $('.edit-end-hour', edit_table_el).val(),
+		task_estimated_hour = $('.edit-job-est-hr', edit_table_el).val(),
 		require_qc = ($('.task-require-qc', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
 		priority = ($('.priority', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
 		
@@ -280,7 +277,7 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
-	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority };
+	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hour };
 	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,
@@ -348,7 +345,7 @@ function loadExistingTasks()
 		}
 	);
 	
-	tasks_loaded = true;
+	// tasks_loaded = true;
 }
 
 var _task_require_qc = false;
