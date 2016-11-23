@@ -1349,6 +1349,10 @@
 					</td>
 				</tr>
 				<tr>
+					<td>Estimated Hours</td>
+					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
+				</tr>
+				<tr>
 					<td>
 						Planned Start Date
 					</td>
@@ -1458,7 +1462,10 @@
 						</select>
 					</td>
 				</tr>
-				
+				<tr>
+					<td>Estimated Hours</td>
+					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
+				</tr>
 				<tr>
 					<td>
 						Planned Start Date

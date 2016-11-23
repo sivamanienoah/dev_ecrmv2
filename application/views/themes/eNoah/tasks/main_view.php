@@ -46,33 +46,33 @@ $(function(){
 							<textarea name="job_task" id="job-task-desc" class="width420px"></textarea>
 						</td>
 					</tr>
-				<tr >
-					<td style="padding-bottom:10px;" ><br/>Category</td>
-					<td>
-						<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
-							<option value=""></option>
-							<?php
-								foreach($category_listing_ls as $ua)
-								{
-									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
-								}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr >
-					<td style="padding-bottom:10px;">Priority</td>
-					<td>
-						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select" id="taskpriority" style="width:140px;">
-							<option value=""></option>
-							<option value="1">Critical</option>
-							<option value="2">High</option>
-							<option value="3">Medium</option>
-							<option value="4">Low</option>
-							
-						</select>
-					</td>
-				</tr>
+					<tr>
+						<td style="padding-bottom:10px;" ><br/>Category</td>
+						<td>
+							<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
+								<option value=""></option>
+								<?php
+									foreach($category_listing_ls as $ua)
+									{
+										echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+									}
+								?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-bottom:10px;">Priority</td>
+						<td>
+							<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select" id="taskpriority" style="width:140px;">
+								<option value=""></option>
+								<option value="1">Critical</option>
+								<option value="2">High</option>
+								<option value="3">Medium</option>
+								<option value="4">Low</option>
+								
+							</select>
+						</td>
+					</tr>
 					<tr>
 						<td >Allocate to</td>
 						<td style="padding: 5px 0;">
@@ -82,6 +82,10 @@ $(function(){
 							?>
 							</select>
 						</td>
+					</tr>
+					<tr>
+						<td>Estimated Hours</td>
+						<td><input type="text" name="estimated_hours" class="textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
 					</tr>
 					<tr>
 						<td>Start Date</td>
@@ -314,7 +318,6 @@ $(function(){
 							<option value="2">High</option>
 							<option value="3">Medium</option>
 							<option value="4">Low</option>
-							
 						</select>
 					</td>
 				</tr>
@@ -328,8 +331,11 @@ $(function(){
 							echo $remind_options, $remind_options_all;
 							?>						
 						</select>
-							
 					</td>
+				</tr>
+				<tr>
+					<td>Estimated Hours</td>
+					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
 				</tr>
 				<tr>
 					<td>

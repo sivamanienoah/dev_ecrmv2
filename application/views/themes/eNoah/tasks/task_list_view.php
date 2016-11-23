@@ -11,19 +11,20 @@ $permission =$this->session->all_userdata();
 	<?php 
 		$val="0";
 		$pendingtasks=0;
-	$table_head= array(
+		$table_head= array(
 						"Task Description"=>"12",
 						"Priority"=>"5",
 						"Task Owner"=>"8",
 						"Allocated to"=>"10",
-						"Planned Start Date"=>"10",
-						"Planned End Date"=>"10",
-						"Actual Start Date"=>"9",
-						"Actual End Date"=>"9",
-						"Status"=>"12",
-						"Remarks"=>"8",	
+						"Start Date(Plan)"=>"10",
+						"End Date(Plan)"=>"10",
+						"Start Date(Act)"=>"9",
+						"End Date(Act)"=>"9",
+						"Est.Hr"=>"4",
+						"Status"=>"13",
+						"Remarks"=>"4",	
 						"Action"=>"7",		
-						);		
+						);	
 	foreach($newarray as $row) 
 	{
 		

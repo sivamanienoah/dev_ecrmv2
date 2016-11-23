@@ -1607,6 +1607,7 @@ HDOC;
 		$ins['remarks'] 	= $_POST['remarks'];
 		$ins['task_category'] 	= $_POST['task_category'];
 		$ins['task_priority'] 	= $_POST['task_priority'];
+		$ins['estimated_hours'] = $_POST['estimated_hours'];
 		if($update == 'NO') {
 			$ins['approved'] = 1;
 		}

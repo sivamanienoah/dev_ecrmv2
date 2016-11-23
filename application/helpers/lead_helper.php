@@ -239,8 +239,6 @@ if ( ! function_exists('datatable_structure'))
 {
 function datatable_structure($task_category,$permission,$category_title,$category_id,$table_head,$additionalcolumn)
 {
-
-
 	$userid = $permission['logged_in_user']['userid'];
 	$userroleid = $permission['logged_in_user']['role_id'];
 	$project_td ="";
@@ -323,8 +321,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					$status_return =CONST_ZERO;
 				}
 	
-
-				echo '<tr >
+				echo '<tr>
 					'.$project_td.'					
 					<td style="padding:10px;">'. $row['task'].'</td>
 					<td style="padding:10px;" id="'.$row['task_priority'].'">'. priority_name_define($row['task_priority']).'</td>
@@ -334,6 +331,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					<td style="padding:10px;">'. date_format_readable($row['end_date']).'</td>
 					<td style="padding:10px;">'. date_format_readable($row['actualstart_date']).'</td>
 					<td style="padding:10px;">'. date_format_readable($row['actualend_date']).'</td>
+					<td class="est-hr" style="padding:10px;">'.$row['estimated_hours'].'</td>
 					<td style="padding:10px;">'.taskStatusForm($row['taskid'],$status_return,$row['status']).'</td>
 					<td style="padding:10px;">'. $row['remarks'].'</td>
 					<td style="padding:10px;" class="actions">';
