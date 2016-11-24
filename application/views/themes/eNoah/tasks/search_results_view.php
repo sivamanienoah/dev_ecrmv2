@@ -23,8 +23,8 @@ $permission =$this->session->all_userdata();
 			"Start Date(Act)"=>"9",
 			"End Date(Act)"=>"9",
 			"Est.Hr"=>"4",
-			"Status"=>"13",
-			"Remarks"=>"4",	
+			"Complete %"=>"13",
+			"Status"=>"5",
 			"Action"=>"7",		
 			);	
 

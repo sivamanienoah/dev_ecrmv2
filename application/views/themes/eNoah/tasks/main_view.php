@@ -210,16 +210,29 @@ $(function(){
 						</td>
 					</tr>
 					<tr>
+						<!--td>
+							Tasks Status
+						</td>
+						<td>
+							<?php #$arrayTask = $cfg['tasks_search']; ?>
+							<select id="task_search" name="task_search"   data-placeholder="Choose category."  class=" chzn-select textfield width118px">
+								<?php
+									/* foreach($arrayTask as $key => $value):
+										echo '<option value="'.$key.'">'.$value.'</option>';
+									endforeach; */
+								?>
+							</select>
+						</td-->
 						<td>
 							Tasks Status
 						</td>
 						<td>
-							<?php $arrayTask = $cfg['tasks_search']; ?>
-							<select id="task_search" name="task_search"   data-placeholder="Choose category."  class=" chzn-select textfield width118px">
+							<select id="task_search" name="task_search"   data-placeholder="Choose Status."  class=" chzn-select textfield width118px">
+								<option value=""></option>
 								<?php
-									foreach($arrayTask as $key => $value):
-										echo '<option value="'.$key.'">'.$value.'</option>';
-									endforeach;
+									foreach($task_stages as $tstag){
+										echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+									}
 								?>
 							</select>
 						</td>
@@ -309,7 +322,7 @@ $(function(){
 						</select>
 					</td>
 				</tr>
-				<tr >
+				<tr>
 					<td style="padding-bottom:10px;">Priority</td>
 					<td>
 						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority" id="taskpriority" style="width:140px;">
@@ -334,6 +347,21 @@ $(function(){
 					</td>
 				</tr>
 				<tr>
+					<td style="padding-bottom:10px;">Status</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Status." class="chzn-select edit-task-stages" id="taskstages" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($task_stages as $tstag)
+								{
+									echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+								}
+							?>
+						</select>
+						<input type="hidden" name="task_complete_status" id="edit_complete_status" class="edit-complete-status textfield width100px" />	
+					</td>
+				</tr>
+				<tr>
 					<td>Estimated Hours</td>
 					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
 				</tr>
@@ -347,8 +375,8 @@ $(function(){
 					<td>
 						Planned End Date
 					</td>
-					<td>								
-					<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />	
+					<td>
+						<input type="text" name="task_end_date" class="edit-end-date textfield pick-date width100px" />
 					</td>
 				</tr>
 				<tr>

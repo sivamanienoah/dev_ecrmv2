@@ -45,6 +45,7 @@ class Task_model extends crm_model
 		{
 			$query="";
 		}
+		
 		// if taskstartdate & taskenddate key exist in task_search array it enters the condition	
 		if (array_key_exists("taskstartdate",$task_search) && array_key_exists("taskenddate",$task_search))
 		{
@@ -60,14 +61,20 @@ class Task_model extends crm_model
 		{
 			$query_date="";
 		}
-	
+		$stgquery = '';
+		if (array_key_exists("task_stage", $task_search)) {
+			if( $task_search['task_stage']!="" )
+			{
+				$stgquery =" AND `".$this->cfg['dbpref']."tasks`.`task_stage` = '".$task_search['task_stage']."'";
+			}
+		}	
 		
 		$sql = "SELECT *, `".$this->cfg['dbpref']."tasks`.`start_date` AS `start_date`, CONCAT(`".$this->cfg['dbpref']."users`.`first_name`, ' ', `".$this->cfg['dbpref']."users`.`last_name`) AS `user_label`,`".$this->cfg['dbpref']."leads`.`lead_title` ,`".$this->cfg['dbpref']."tasks`.`created_by` as `taskcreated_by`,`".$this->cfg['dbpref']."leads`.`move_to_project_status` as `lead_or_project`".
 			"FROM `".$this->cfg['dbpref']."tasks`
 			LEFT JOIN  `".$this->cfg['dbpref']."users`ON`".$this->cfg['dbpref']."tasks`.`userid_fk` = `".$this->cfg['dbpref']."users`.`userid`
 			LEFT JOIN  `".$this->cfg['dbpref']."leads`ON`".$this->cfg['dbpref']."tasks`.`jobid_fk` = `".$this->cfg['dbpref']."leads`.`lead_id`
 			WHERE `".$this->cfg['dbpref']."tasks`.`task_category` = '".$category_id."'
-			AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date.$query_end_notify."
+			AND `".$this->cfg['dbpref']."tasks`.`is_complete` = '".$task_search['taskcomplete']."'".$query.$query_date.$query_end_notify.$stgquery."
 			AND (`".$this->cfg['dbpref']."tasks`.`userid_fk` = '".$task_search['taskallocateduser']."'
 			 ".$notify_query.")
 			ORDER BY `".$this->cfg['dbpref']."tasks`.`is_complete` asc, `".$this->cfg['dbpref']."tasks`.`status`, `".$this->cfg['dbpref']."tasks`.`start_date`";
@@ -76,6 +83,7 @@ class Task_model extends crm_model
 		$data['values'] = $category_name;
 		$data['categoryid'] = $category_id;
 		$data['rows'] = $q->num_rows();
+		// echo $this->db->last_query(); exit;
 		return $data;	
 	}
 	

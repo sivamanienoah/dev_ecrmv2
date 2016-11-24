@@ -741,6 +741,35 @@
 		<div style="color:red; margin:7px 0 0;" id="err_other_cost_data" class="succ_err_msg"></div>
 		<div style="margin:7px 0 0;" id="succes_other_cost_data" class="succ_err_msg"></div>
 		<div id="other_cost_data"> </div>
+		<!--File Upload--Start-->
+		<div id="oc_map_add_file" >
+			<div class="file-tabs-close-project" id="file-tabs-close"></div>
+			<div>
+				<ul id="oc_map_add_file-tabs">
+					<li><a href="<?php echo current_url() ?>#oc-map-tab-2">Select File</a></li>
+					<li><a href="<?php echo current_url() ?>#oc-map-tab-4">Add New File</a></li>
+				</ul>
+			</div>
+			<div id="oc-map-tab-2" style="height:260px; overflow:scroll;">
+				<div name='oc_all_file_list' id="oc_all_file_list" style="text-align: left;"></div>
+				<div style="padding: 10px 0px 0px;">
+					<button type="submit" class="positive" onclick="select_files()">Submit</button>
+				</div>
+			</div>
+			<div id="oc-map-tab-4" style="height:260px; overflow:scroll;">
+				<form name="othercost_ajax_file_upload" style="height: 35px;">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<div id="upload-container">
+						<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
+							<label>Browse file</label>
+							<input type="file" title='upload' class="textfield" multiple id="othercost_ajax_file_uploader" name="othercost_ajax_file_uploader[]" onchange="return runOtherCostAjaxFileUpload();"/>
+							<input type="hidden" id="oc_exp_type" value="">
+						<?php } ?>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--File Upload--END-->
 	</div><!--end of jv-tab-0-a-->
 	
 	<div id="jv-tab-1"><!--start of jv-tab-1-->
@@ -1460,6 +1489,21 @@
 								}
 							?>
 						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-bottom:10px;">Status</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Status." class="chzn-select edit-task-stages" id="taskstages" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($task_stages as $tstag)
+								{
+									echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+								}
+							?>
+						</select>
+						<input type="hidden" name="task_complete_status" id="edit_complete_status" class="edit-complete-status textfield width100px" />	
 					</td>
 				</tr>
 				<tr>

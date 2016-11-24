@@ -108,9 +108,8 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 var task_being_edited = 0;
 var random_task_edit;
 
-function openEditTask(taskid, random) 
+/* function openEditTask(taskid, random) 
 {
-	
 if( $('#search-job-task').length  ||  $('#dashboard').val()==1)
 {
     var add=1;
@@ -150,7 +149,7 @@ else
 	});
 	// alert($('#task-table-' + taskid).length);
 	var the_task_el = $("#"+taskid).closest('table').attr('id');
-	console.log(the_task_el);
+	// console.log(the_task_el);
 	var the_task_el1 = taskid;
 	var edit_table_el = $('.task-edit');
 	var createdbyid = $.trim($('.task-cid', the_task_el).text());
@@ -198,10 +197,113 @@ else
 	$('.edit-actualstart-date', edit_table_el).val($.trim(taskacStartdate));
 	$('.edit-task-owner', edit_table_el).val($.trim(Createduser));
 	$('.task-require-qc', edit_table_el).attr('checked', ($.trim($('.task-require-qc', the_task_el).text()) == '0') ? false : true);
-	$('.priority', edit_table_el).attr('checked', ($.trim($('.priority', the_task_el).text()) == '0') ? false : true);	
+	$('.priority', edit_table_el).attr('checked', ($.trim($('.priority', the_task_el).text()) == '0') ? false : true);
 	return false;
-}
+} */
+function openEditTask(taskid, random)
+{
+	if( $('#search-job-task').length  ||  $('#dashboard').val()==1) {
+		var add=1; 
+	} else {
+		var add=0;
+	}
+	
+	var tr 					= $("#"+taskid).closest('tr');
+	var taskcategory 		= $("#"+taskid).closest('table').attr('rel');
+	var taskdescvalue 		= tr[0].cells[sumint(0,add)].innerHTML;
+	var Createduser 		= tr[0].cells[sumint(2,add)].innerHTML;
+	var taskPriority 		= tr[0].cells[sumint(1,add)]['id'];
+	var Allocateduser 		= tr[0].cells[sumint(3,add)]['id'];
+	var taskplStartdate 	= tr[0].cells[sumint(4,add)].innerHTML;
+	var taskplEnddate 		= tr[0].cells[sumint(5,add)].innerHTML;
+	var taskacStartdate 	= tr[0].cells[sumint(6,add)].innerHTML;
+	var taskacEnddate 		= tr[0].cells[sumint(7,add)].innerHTML;
+	var taskremarksvalue 	= tr[0].cells[sumint(10,add)].innerHTML;
+	var taskEstimatedHour 	= tr[0].cells[sumint(8,add)].innerHTML;
+	var the_task_el 		= $("#"+taskid).closest('table').attr('id');
+	var edit_table_el 		= $('.task-edit');
+	var createdbyid   		= $.trim($('.task-cid', the_task_el).text());
+	var uid			  		= $.trim($('.task-uid', the_task_el).text());
+	
+	task_being_edited = taskid;
+	if (random == 'random') {
+		random_task_edit = true;
+	} else {
+		random_task_edit = false;
+	}
 
+	var params			    = {'taskid':taskid, 'random':random,};
+	params[csrf_token_name] = csrf_hash_token;
+
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/get_task_edit_form',
+		dataType: 'json',
+		data: params,
+		beforeSend: function() {
+
+		},
+		success: function(res) {
+			// alert(res.task_priority); return false;
+			/* $(".edit-task-category").val(res.task_category);
+			$(".edit-task-category").trigger("liszt:updated");
+			
+			$(".edit-task-allocate").val(res.created_by);
+			$(".edit-task-allocate").trigger("liszt:updated");
+			
+			$(".edit-task-priority").val(res.task_priority);
+			$(".edit-task-priority").trigger("liszt:updated"); */
+			
+			$.blockUI({
+				message:$('#edit-job-task table'),			
+				css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
+			});
+		
+			selectoptionassign('.edit-task-category',taskcategory)
+			selectoptionassign('.edit-task-allocate',Allocateduser)
+			selectoptionassign('.edit-task-priority',taskPriority)
+			
+			if (createdbyid == uid)
+			{
+				selectvalueassign('.edit-task-allocate',Allocateduser,edit_table_el);
+				selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
+				selectvalueassign('.edit-task-priority', taskPriority,edit_table_el);
+				
+				$('.edit-job-task-desc', edit_table_el).val($.trim(taskdescvalue));	
+				$('.edit-job-task-desc', edit_table_el).removeAttr('readonly', ($.trim(taskdescvalue)) );
+				$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
+				$('.edit-start-date', edit_table_el).removeAttr('disabled', ($.trim(taskplStartdate)) );
+				$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
+				$('.edit-end-date', edit_table_el).removeAttr('disabled', ($.trim(taskplEnddate)) );
+				$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
+				$('.edit-actualend-date', edit_table_el).removeAttr('disabled', ($.trim(taskacEnddate)) );
+			}
+			else
+			{
+				selectvalueassign('.edit-task-allocate',Allocateduser,edit_table_el);
+				selectvalueassign('.edit-task-category',taskcategory,edit_table_el);
+				selectvalueassign('.edit-task-priority',taskPriority,edit_table_el);
+				
+				$('.edit-job-task-desc', edit_table_el).val($.trim(taskdescvalue));	
+				$('.edit-job-task-desc', edit_table_el).attr('readonly', ($.trim(taskdescvalue)) );
+				$('.edit-start-date', edit_table_el).val($.trim(taskplStartdate));
+				$('.edit-start-date', edit_table_el).attr('disabled', ($.trim(taskplStartdate)) );
+				$('.edit-end-date', edit_table_el).val($.trim(taskplEnddate));
+				$('.edit-end-date', edit_table_el).attr('disabled', ($.trim(taskplEnddate)) );
+				$('.edit-actualend-date', edit_table_el).val($.trim(taskacEnddate));
+				$('.edit-actualend-date', edit_table_el).attr('disabled', ($.trim(taskacEnddate)) );
+			}
+			$('.edit-job-est-hr', edit_table_el).val($.trim(taskEstimatedHour));
+			$('.edit-actualstart-date', edit_table_el).val($.trim(taskacStartdate));
+			$('.edit-task-owner', edit_table_el).val($.trim(Createduser));
+			$('.task-require-qc', edit_table_el).attr('checked', ($.trim($('.task-require-qc', the_task_el).text()) == '0') ? false : true);
+			$('.priority', edit_table_el).attr('checked', ($.trim($('.priority', the_task_el).text()) == '0') ? false : true);
+			$('.edit-task-remarks', edit_table_el).val($.trim(res.remarks));
+			$('#edit_complete_status', edit_table_el).val($.trim(res.status));
+			selectvalueassign('#taskstages',res.task_stage,edit_table_el);
+		}
+	});
+}
 function editTask()
 {
 	if (task_being_edited == 0) return;
@@ -225,12 +327,19 @@ function editTask()
 		actualstart_date = $('.edit-actualstart-date', edit_table_el).val(),
 		task_end_hour = $('.edit-end-hour', edit_table_el).val(),
 		task_estimated_hour = $('.edit-job-est-hr', edit_table_el).val(),
+		task_stages = $('#taskstages', edit_table_el).val(),
+		task_complete_status = $('#edit_complete_status', edit_table_el).val(),
 		require_qc = ($('.task-require-qc', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
 		priority = ($('.priority', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
 		
 	if (job_task == '')
 	{
 		errors.push('Task is required!');
+	}
+	
+	if (task_stages == 14 && task_complete_status != 100)
+	{
+		errors.push('Task Completion Percentage Must be 100 %!');
 	}
 	
 	if ( ! /^[0-9]+$/.test(task_hours) && task_mins < 15)
@@ -277,7 +386,7 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
-	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hour };
+	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hour , 'task_stage': task_stages };
 	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,
@@ -352,19 +461,17 @@ var _task_require_qc = false;
 
 function setTaskStatus(taskid, el)
 {	
-
-
 	var params = {};
 
 	//dynamically bring the hostname and project folder name.
-	var hstname = window.location.host;
+	var hstname  = window.location.host;
 	var pathname = window.location.pathname;
-	var pth=pathname.split("/");
+	var pth      = pathname.split("/");
 	
 	$('#jv-tab-4').block({
-            message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-        });
+		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+	});
 	
 	/* just set as complete */
 	if (typeof el == 'string' && el == 'complete')

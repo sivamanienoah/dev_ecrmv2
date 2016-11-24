@@ -298,6 +298,7 @@ class Welcome extends crm_controller {
 			$data['job_cate'] = $this->welcome_model->get_lead_services();
 			$this->load->model('project_model');
 			$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
+			$data['task_stages'] 		 = $this->request_model->get_task_stages();
 			$this->load->view('leads/welcome_view_quote', $data);
         }
 		else 

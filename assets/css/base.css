@@ -2011,7 +2011,7 @@ button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container, #check-permissions, #popup-filter-section {
+#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container, #check-permissions, #popup-filter-section, #oc_map_add_file {
 	display: none;
 }
 /* file_breadcrumb */

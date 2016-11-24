@@ -1608,6 +1608,7 @@ HDOC;
 		$ins['task_category'] 	= $_POST['task_category'];
 		$ins['task_priority'] 	= $_POST['task_priority'];
 		$ins['estimated_hours'] = $_POST['estimated_hours'];
+		$ins['task_stage']	    = isset($_POST['task_stage']) ? $_POST['task_stage'] : 1;
 		if($update == 'NO') {
 			$ins['approved'] = 1;
 		}
@@ -1954,9 +1955,6 @@ HDOC;
 		
 		$data['newarray']=$newarray;
 		$this->load->view('tasks/task_list_view', $data);
-	
-		
-	
 	}
 	
 	/**
@@ -2233,6 +2231,7 @@ EOD;
 	
 	function set_task_status($type = 'job')
 	{
+		
 		$this->load->model('user_model');
 		$task_table = $this->cfg['dbpref'].'tasks';
 		$fk = 'jobid_fk';
@@ -2261,11 +2260,12 @@ EOD;
 				else
 				{
 					$upd = array();
-					$upd['is_complete'] = 1;
-					$upd['marked_complete'] = date('Y-m-d H:i:s');
+					$upd['is_complete'] 	 = 1;
+					$upd['marked_complete']  = date('Y-m-d H:i:s');
 					$upd['actualstart_date'] = date('Y-m-d H:i:s');
 					$this->db->where('taskid', $taskid);
 					$this->db->update($task_table, $upd);
+
 					$uid=$data->userid_fk;
 					$task_name=$data->task;
 					if($upd['is_complete']==1) {
@@ -2405,13 +2405,17 @@ EOD;
 				if ($upd['status'] == 100)
 				{
 				    $upd['actualend_date'] = date('Y-m-d H:i:s');
-					$upd['marked_100pct'] = date('Y-m-d H:i:s');
+					$upd['marked_100pct']  = date('Y-m-d H:i:s');
+					$upd['task_stage'] 	   = 14;
 					$json['marked_100pct'] = TRUE;
 				}else { // Added For task set completion
 					if($taskstat!='0'){
 					$task_table = $this->cfg['dbpref'].'tasks';
 					$ud = array();
-					$ud['status'] = $taskstat;
+					if($data->status == 100) {
+						$upd['task_stage'] 	= 11;
+					}
+					$ud['status'] 			= $taskstat;
 					$ud['actualstart_date'] = date('Y-m-d H:i:s');
 					$this->db->where('taskid', $taskid);
 					$this->db->update($task_table, $ud);
@@ -3357,7 +3361,7 @@ EOD;
 	    $this->db->from($this->cfg['dbpref'] . 'lead_folder_access');
 	    $this->db->where(array('lead_id'=>$lead_id, 'folder_id'=>$folder_id, 'user_id'=>$user_id));
 	    $sql = $this->db->get();
-	    return $sql->row_array();		
+	    return $sql->row_array();
 	}
 	
 	public function check_root_folder_read_access($root_folder_id)
@@ -3371,7 +3375,14 @@ EOD;
 		$arrFolderId = $this->request_model->getParentFfolderId($root_folder_id, 0); 
 		$filefolder_id = $arrFolderId['folder_id'];		
 		$checkFolderAccess= $this->request_model->check_lead_file_access($root_folder_id, 'folder_id', $filefolder_id, $user_data['userid']);		
-		echo $checkFolderAccess->lead_file_access_read; exit;	
+		echo $checkFolderAccess->lead_file_access_read; exit;
+	}
+	
+	public function get_task_edit_form()
+	{
+		$task_det = array();
+		$task_det = $this->request_model->get_task_info_by_id($this->input->post('taskid'));
+		echo json_encode($task_det); exit;
 	}
 	
 }

@@ -1256,6 +1256,21 @@ $(function(){
 					</td>
 				</tr>
 				<tr>
+					<td style="padding-bottom:10px;">Status</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Status." class="chzn-select edit-task-stages" id="taskstages" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($task_stages as $tstag)
+								{
+									echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+								}
+							?>
+						</select>
+						<input type="hidden" name="task_complete_status" id="edit_complete_status" class="edit-complete-status textfield width100px" />	
+					</td>
+				</tr>
+				<tr>
 					<td>Estimated Hours</td>
 					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
 				</tr>

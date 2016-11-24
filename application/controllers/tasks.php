@@ -14,6 +14,7 @@ class Tasks extends crm_controller
 		$this->load->helper('lead');
 		$this->load->model('task_model');
 		$this->load->model('project_model');
+		$this->load->model('request_model');
 		$this->login_model->check_login();
 		$this->load->helper('text');
 		$this->userdata = $this->session->userdata('logged_in_user');
@@ -69,8 +70,9 @@ class Tasks extends crm_controller
 			$data['user_accounts'] = $users['user'];
 		}
 		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
-		$data['project_listing_ls'] = $this->project_model->ListActiveprojects();
-		$data['created_by'] = $this->task_model->get_task_created_by();
+		$data['project_listing_ls']  = $this->project_model->ListActiveprojects();
+		$data['created_by'] 		 = $this->task_model->get_task_created_by();
+		$data['task_stages'] 		 = $this->request_model->get_task_stages();
 		$this->load->view('tasks/main_view', $data);			
 	}
 	
@@ -107,16 +109,17 @@ class Tasks extends crm_controller
 		$uid = $uidd['userid'];
 		$task_owner =element_value_check('task_owner_user');
 		$task_allocated =element_value_check('task_allocated_user');
-		$task_complete =element_value_check('task_search');
+		// $task_complete =element_value_check('task_search');
+		$task_stage =element_value_check('task_search');
 		// if Task_owner value is empty it enters the condition
 		if($task_owner=="")
 		{
 			$task_owner = $uid;
 		}
-		// if task_complete value is empty it enters the condition
-		if($task_complete=="")
+		// if task_stage value is empty it enters the condition
+		if($task_stage=="")
 		{
-			$task_complete = CONST_ZERO;
+			$task_stage = 1;
 		}
 		// if task owner and task allocated value exist it enters the condition
 		if(!empty($task_owner) &&!empty($task_allocated))
@@ -135,7 +138,7 @@ class Tasks extends crm_controller
 			$operation ='OR';
 		}
 		$search=array(
-					'taskcomplete'=>$task_complete,
+					'task_stage'=>$task_stage,
 					'taskowner'=> $task_owner,
 					'taskallocateduser'=>$task_allocated,
 					'task_end_notify'=>$task_end_notify,

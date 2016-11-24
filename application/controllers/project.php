@@ -507,12 +507,13 @@ class Project extends crm_controller {
 			}
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
-			$data['list_users'] = $this->project_model->get_list_users($id);
+			$data['list_users'] 		 = $this->project_model->get_list_users($id);
 			$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
+			$data['task_stages'] 		 = $this->request_model->get_task_stages();
 			
 			//For list the particular project team member in the welcome_view_project page.
-			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			$data['stake_holders']  = $this->project_model->get_stake_holders($id);
+			$data['contract_users'] 	= $this->project_model->get_contract_users($id);
+			$data['stake_holders']  	= $this->project_model->get_stake_holders($id);
 
 			$rates = $this->get_currency_rates();
 
@@ -4553,48 +4554,7 @@ HDOC;
 					$logs['date_created']  = date('Y-m-d H:i:s');
 					$logs['log_content']   = $file_up['file_name'].' is added.';
 					$logs['attached_docs'] = $file_up['file_name'];
-					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
-					
-					
-					/* #################  Permission add new file owner start here  ################## */
-				/* if($user_data['role_id'] != 1) {
-				$permissions_contents  = array('userid'=>$user_data['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>1,'lead_file_access_delete'=>1,'lead_file_access_write'=>1,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-				$insert_permissions   = $this->request_model->insert_new_row('lead_file_access', $permissions_contents); //Mani
-				} */
-				/* #################  Permission add new file owner end here  ################## */
-				
-				
-				/* #################  Assing permission to all users by lead id start here  ################## */
-					/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) { 
-		
-							foreach($arrProjectMembers as $members){
-								if($user_data['userid'] != $members['userid']) {
-								
-								$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($af_data['aflead_id'], 'folder_id', $res_insert, $members['userid']);						
-								if(empty($arrLeadExistFolderAccess)) {	
-								
-									$read_access = 0;
-									$write_access = 0;
-									$delete_access = 0;	 	
-					
-									// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-									if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-									$read_access = 1;
-									$write_access = 1;
-									$delete_access = 1;								
-									}
-	
-									$other_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$lead_id,'file_id'=>$insert_file,'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>$user_data['userid']);
-									$insert_other_users_permissions   = $this->request_model->insert_new_row('lead_file_access', $other_permissions_contents); //Mani
-										
-								}
-							}
-						}
-					} */
-				/* #################  Assing permission to all users by lead id end here  ################## */
-				
-				
-					
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);					
 					$i++;
 				  }
 			   }
@@ -4602,8 +4562,90 @@ HDOC;
 				$this->upload_error = strip_tags($this->upload->display_errors());
 				$json['error'] = TRUE;
 				$json['msg']   = $this->upload_error;
-				// return $this->upload_error;						
-				// exit;
+			}
+		}
+		echo json_encode($json); exit;
+	}
+	
+		/**
+	 * Uploads a file posted to a specified job
+	 * works with the Ajax file uploader
+	 */
+	public function othercost_file_upload($lead_id, $filefolder_id)
+	{
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['payment_ajax_file_uploader']['name']);
+		
+		$user_data = $this->session->userdata('logged_in_user');
+
+		/* $project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
+		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
+		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
+		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
+		$arrLeadInfo = $this->request_model->get_lead_info($lead_id); // This function to get a current lead informations. */		
+	
+		// CHANGES BY MANI START HERE
+		if($filefolder_id == 'Files') {
+			$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
+			$filefolder_id = $arrFolderId['folder_id'];
+		}
+		// CHANGES BY MANI END HERE
+
+		//creating files folder name
+		$f_dir = UPLOAD_PATH.'files/';
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		//creating lead_id folder name
+		$f_dir = $f_dir.$lead_id;
+		if (!is_dir($f_dir)) {
+			mkdir($f_dir);
+			chmod($f_dir, 0777);
+		}
+		
+		$this->upload->initialize(array(
+		   "upload_path" => $f_dir,
+		   "overwrite" => FALSE,
+		   "remove_spaces" => TRUE,
+		   "max_size" => 51000000,
+		   "allowed_types" => "*"
+		)); 
+		// $config['allowed_types'] = '*';
+		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
+		
+		$returnUpload = array();
+		$json  		  = array();
+		$res_file     = array();
+		if(!empty($_FILES['payment_ajax_file_uploader']['name'][0])) {
+			if ($this->upload->do_multi_upload("payment_ajax_file_uploader")) { 
+			   $returnUpload  = $this->upload->get_multi_upload_data();
+			   $json['error'] = FALSE;
+			   $json['msg']   = "File successfully uploaded!";
+			   $i = 1;
+			   if(!empty($returnUpload)) {
+				  foreach($returnUpload as $file_up) {
+					$lead_files['lead_files_name']		 = $file_up['file_name'];
+					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+					$lead_files['lead_id'] 				 = $lead_id;
+					$lead_files['folder_id'] 			 = $filefolder_id; //get here folder id from file_management table.
+					$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
+					$json['res_file'][]					 = $insert_file.'~'.$file_up['file_name'];
+					
+					$logs['jobid_fk']	   = $lead_id;
+					$logs['userid_fk']	   = $this->userdata['userid'];
+					$logs['date_created']  = date('Y-m-d H:i:s');
+					$logs['log_content']   = $file_up['file_name'].' is added.';
+					$logs['attached_docs'] = $file_up['file_name'];
+					$insert_logs 		   = $this->request_model->insert_row('logs', $logs);					
+					$i++;
+				  }
+			   }
+			} else {
+				$this->upload_error = strip_tags($this->upload->display_errors());
+				$json['error'] = TRUE;
+				$json['msg']   = $this->upload_error;
 			}
 		}
 		echo json_encode($json); exit;

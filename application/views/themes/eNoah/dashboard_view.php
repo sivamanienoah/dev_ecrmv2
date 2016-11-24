@@ -533,6 +533,21 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 				}
 				?>
 				<tr>
+					<td style="padding-bottom:10px;">Status</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Status." class="chzn-select edit-task-stages" id="taskstages" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($task_stages as $tstag)
+								{
+									echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+								}
+							?>
+						</select>
+						<input type="hidden" name="task_complete_status" id="edit_complete_status" class="edit-complete-status textfield width100px" />	
+					</td>
+				</tr>
+				<tr>
 					<td>
 						Planned Start Date
 					</td>

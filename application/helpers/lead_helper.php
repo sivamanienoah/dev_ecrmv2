@@ -239,6 +239,20 @@ if ( ! function_exists('datatable_structure'))
 {
 function datatable_structure($task_category,$permission,$category_title,$category_id,$table_head,$additionalcolumn)
 {
+	
+	$CI  = get_instance();
+	$cfg = $CI->config->item('crm'); // load config		
+	$CI->db->select('*');
+	$CI->db->where(array('status' => 1));
+	$sql = $CI->db->get($cfg['dbpref'].'task_stages');
+	$taskres = $sql->result_array();
+	$taskArr = array();
+	if(!empty($taskres) && count($taskres)>0) {
+		foreach($taskres as $ta) {
+			$taskArr[$ta['task_stage_id']] = $ta['task_stage_name'];
+		}
+	}
+	
 	$userid = $permission['logged_in_user']['userid'];
 	$userroleid = $permission['logged_in_user']['role_id'];
 	$project_td ="";
@@ -333,7 +347,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					<td style="padding:10px;">'. date_format_readable($row['actualend_date']).'</td>
 					<td class="est-hr" style="padding:10px;">'.$row['estimated_hours'].'</td>
 					<td style="padding:10px;">'.taskStatusForm($row['taskid'],$status_return,$row['status']).'</td>
-					<td style="padding:10px;">'. $row['remarks'].'</td>
+					<td style="padding:10px;">'.$taskArr[$row['task_stage']].'</td>
 					<td style="padding:10px;" class="actions">';
 					
 					// if is_complete value equals 1 it enters the condition
@@ -349,7 +363,6 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 							// if status value equals the 100  it enters the condition 
 							if(CONST_HUNDRED ==$row['status'])
 							{
-								
 								$s="setTaskStatus($taskid,'complete');return false";
 								echo'<a  onclick="'.$s.'"href="javascript:void(0);" title="Approve"><img src="assets/img/tick.png" alt="edit"> </a>';
 							}
@@ -357,8 +370,6 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 							echo'<a id='.$taskid.' onclick="openEditTask('.$taskid.'); return false;"href="javascript:void(0);" title="Edit"><img src="assets/img/edit.png" alt="edit"> </a>';
 							$s="deleteItem('delete','ajax','set_task_status',$taskid)";
 							echo'<a class="delete" href="javascript:void(0)" onclick="'.$s.'" title="Delete"> <img src="assets/img/trash.png" alt="delete"> </a>';
-						
-						
 						}
 						else if($userid ==$row['userid_fk'])
 						{

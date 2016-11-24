@@ -453,6 +453,8 @@ class Dashboard extends crm_controller {
 		//For Tasks access - End here
 		$this->load->model('project_model');
 		$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
+		$this->load->model('request_model');
+		$data['task_stages'] 		 = $this->request_model->get_task_stages();
 		$this->load->view('dashboard_view', $data);
     }
 	

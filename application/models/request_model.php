@@ -607,6 +607,15 @@ $this->db->where('userid', $userid);
 	    $sql = $this->db->get();		
 	    return $sql->result_array();
     }
+
+	public function get_task_stages() {
+		$this->db->select();
+	    $this->db->from($this->cfg['dbpref'] . 'task_stages');
+		$this->db->where('status', 1);
+		$this->db->order_by("task_sequence");
+	    $sql = $this->db->get();		
+	    return $sql->result_array();
+    }
 	
 	
 	/*
@@ -750,6 +759,14 @@ $this->db->where('userid', $userid);
 		$data['records'] = $q->result_array();
 		
 		return $data['records'][0]['count'];	
+	}
+	
+	public function get_task_info_by_id($task_id) {
+		$this->db->select();
+		$this->db->from($this->cfg['dbpref'] . 'tasks');	
+		$this->db->where('taskid', $task_id);	
+		$sql = $this->db->get();	
+		return $sql->row_array();
 	}
 	
 	
