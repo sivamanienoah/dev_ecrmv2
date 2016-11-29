@@ -243,7 +243,15 @@ class Project_model extends crm_model
 		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
 		$res1 = $sql->result_array();
 		if (empty($res1)) {
-			$chge_access = 0;
+			$chge_access = 0;			
+			$this->db->select('user_id');
+			$this->db->where('lead_id', $id);
+			$this->db->where('user_id', $uid);
+			$stake_holders = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+			$stake_acces = $stake_holders->row_array();
+			if(is_array($stake_acces) && count($stake_acces)>0 && !empty($stake_acces)) {
+				$chge_access = 1;
+			}		
 		} else {
 			$chge_access = 1;
 		}
