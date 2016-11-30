@@ -6,7 +6,13 @@
 	<table class="payment-table" style="margin: 10px 0px;">
 		<tr>
 			<td>Payment Milestone *</td>
-			<td><input type="text" name="sp_date_1" id="sp_date_1" value= "<?php echo $project_milestone_name; ?>" class="textfield width200px" /></td>
+			<td>
+				<?php if($invoice_status != 1) { ?>
+					<input type="text" name="sp_date_1" id="sp_date_1" value= "<?php echo $project_milestone_name; ?>" class="textfield width200px" />
+				<?php } else { ?>
+					<input type="text" name="sp_date_1" id="sp_date_1" readonly value= "<?php echo $project_milestone_name; ?>" class="textfield width200px" />
+				<?php } ?>
+			</td>
 		</tr>
 		<tr>
 			<td>Milestone date *</td>
@@ -20,6 +26,7 @@
 			<td>Value *</td>
 			<td>
 				<?php if($invoice_status != 1) { ?>
+				<?php ?>
 					<input type="text" onkeypress="return isPaymentVal(event)" name="sp_date_3" id="sp_date_3" value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
 				<span style="color:red;">(Numbers only)</span>
 				<?php } else { ?>
@@ -29,7 +36,13 @@
 		</tr>
 		<tr>
 			<td>Remarks </td>
-			<td><textarea name="payment_remark" id="payment_remark" class="textfield width200px" ><?php echo $payment_remark; ?></textarea></td>
+			<td>
+				<?php if($invoice_status != 1) { ?>
+					<textarea name="payment_remark" id="payment_remark" class="textfield width200px" ><?php echo $payment_remark; ?></textarea>
+				<?php } else { ?>
+					<textarea name="payment_remark" readonly id="payment_remark" class="textfield width200px" ><?php echo $payment_remark; ?></textarea>
+				<?php } ?>
+			</td>
 		</tr>
 		<tr>
 			<td>Attachment File </td>
