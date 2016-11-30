@@ -18,8 +18,13 @@
 		</tr>
 		<tr>
 			<td>Value *</td>
-			<td><input type="text" onkeypress="return isPaymentVal(event)" name="sp_date_3" id="sp_date_3" value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
-			<span style="color:red;">(Numbers only)</span>
+			<td>
+				<?php if($invoice_status != 1) { ?>
+					<input type="text" onkeypress="return isPaymentVal(event)" name="sp_date_3" id="sp_date_3" value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
+				<span style="color:red;">(Numbers only)</span>
+				<?php } else { ?>
+					<input type="text" onkeypress="return isPaymentVal(event)" name="sp_date_3" id="sp_date_3" readonly value= "<?php echo $project_milestone_amt; ?>" class="textfield width200px" />
+				<?php } ?>
 			</td>
 		</tr>
 		<tr>
@@ -60,12 +65,14 @@
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<?php // if ($readonly_status == false) { ?>
+				
 				<div class="buttons">
-					<!--button type="submit" class="positive" onclick="updateProjectPaymentTerms('<?php echo $expect_id; ?>'); return false;">Update Payment Terms</button-->
+				<?php if($invoice_status != 1) { ?>
 					<button type="submit" class="positive">Update Payment Terms</button>
+				<?php  } ?>
+					<button onclick="reset_paymentdata(); return false;" class="negative">Cancel</button>
 				</div>
-				<?php // } ?>
+
 				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="<?php echo $job_id; ?>" />
 				<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
 			</td>
@@ -74,6 +81,10 @@
 </form>
 
 <script>
+var showscript = 1;
+<?php if($invoice_status == 1) { ?>
+var showscript = 0;
+<?php } ?>
 $( document ).ajaxSuccess(function( event, xhr, settings ) {
 	if(settings.target=="#output2") {
 		$('.payment-profile-view:visible').slideUp(400);
@@ -90,46 +101,52 @@ $(function(){
 		success:      ''  // post-submit callback 
 	}; 
 	$('#update-payment-terms').ajaxForm(options_updt);
-	
-	$('#sp_date_2').datepicker({
-		dateFormat: 'dd-mm-yy', 
-		//minDate: '0',
-		beforeShow : function(input, inst) {
-			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
-		}
-	});
-	
-	$("#show_files").delegate("a.del_file","click",function() {
-		var str_delete = $(this).attr("id");
-		
-		var result = confirm("Are you sure you want to delete this attachment?");
-		if (result==true) {
-			$('#'+str_delete).parent("div").remove();
-		}
-	});
-	
-	$('#month_year').datepicker({
-		changeMonth: true,
-		changeYear: true,
-		dateFormat: 'MM yy',
-		showButtonPanel: true,
-		onClose: function(input, inst) {
-			var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-			var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-			$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
-		},
-		beforeShow: function(input, inst) {
-			if ((selDate = $(this).val()).length > 0) 
-			{
-				iYear = selDate.substring(selDate.length - 4, selDate.length);
-				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
-				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
-				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+	if(showscript == 1) {
+		$('#sp_date_2').datepicker({
+			dateFormat: 'dd-mm-yy', 
+			//minDate: '0',
+			beforeShow : function(input, inst) {
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 			}
-			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
-		}
-	});
-	
+		});
+		$("#show_files").delegate("a.del_file","click",function() {
+			var str_delete = $(this).attr("id");
+			
+			var result = confirm("Are you sure you want to delete this attachment?");
+			if (result==true) {
+				$('#'+str_delete).parent("div").remove();
+			}
+		});
+		$("#show_files").delegate("a.del_file","click",function() {
+			var str_delete = $(this).attr("id");
+			
+			var result = confirm("Are you sure you want to delete this attachment?");
+			if (result==true) {
+				$('#'+str_delete).parent("div").remove();
+			}
+		});
+		$('#month_year').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'MM yy',
+			showButtonPanel: true,
+			onClose: function(input, inst) {
+				var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			},
+			beforeShow: function(input, inst) {
+				if ((selDate = $(this).val()).length > 0) 
+				{
+					iYear = selDate.substring(selDate.length - 4, selDate.length);
+					iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+					$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+					$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+				}
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+	}
 });
 function isNumberKey(evt)
 {
