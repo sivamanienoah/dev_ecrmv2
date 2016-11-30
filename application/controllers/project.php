@@ -2174,11 +2174,6 @@ class Project extends crm_controller {
 				} else {
 					$output .= "<td align='left'>".$invoice_stat."</td>";
 				}
-				$output .= "<td align='left'>
-						<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
-						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
-						".$invoice_stat."
-					</td>";
 				$output .= "</tr>";
 				$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
 				$expi ++;
