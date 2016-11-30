@@ -158,7 +158,7 @@ $(function(){
 							Project
 						</td>
 						<td>
-							<select name="task_project" data-placeholder="Choose Projects" class="chzn-select" id="taskCategory" style="width:140px;">
+							<select name="task_project" data-placeholder="Choose Projects" class="chzn-select clr-czn" id="taskCategory" style="width:140px;">
 							<option value=""></option>
 							<?php
 							foreach($project_listing_ls as $ua)
@@ -172,7 +172,7 @@ $(function(){
 							Category
 						</td>
 						<td>
-							<select name="task_category" data-placeholder="Choose category." class="chzn-select" id="taskCategory" style="width:140px;">
+							<select name="task_category" data-placeholder="Choose category" class="chzn-select clr-czn" id="taskCategory" style="width:140px;">
 							<option value=""></option>
 							<?php
 							foreach($category_listing_ls as $ua)
@@ -190,7 +190,7 @@ $(function(){
 							Task Owner
 						</td>
 						<td>
-							<select name="task_owner_user" class="chzn-select textfield width100px" >
+							<select name="task_owner_user" class="chzn-select clr-czn textfield width100px" >
 							
 <?php						
 							echo $remind_options, $remind_options_all;
@@ -201,7 +201,7 @@ $(function(){
 							Allocated Member
 						</td>
 						<td>
-						<select name="task_allocated_user" class="chzn-select textfield width100px" >
+						<select name="task_allocated_user" class="chzn-select clr-czn textfield width100px" >
 							<option value=""></option>
 							<?php						
 							echo $remind_options, $remind_options_all;
@@ -227,7 +227,7 @@ $(function(){
 							Tasks Status
 						</td>
 						<td>
-							<select id="task_search" name="task_search" data-placeholder="Choose Status" class=" chzn-select textfield width118px">
+							<select id="task_search" name="task_search" data-placeholder="Choose Status" class="chzn-select clr-czn textfield width118px">
 								<option value=""></option>
 								<?php
 									foreach($task_stages as $tstag){
@@ -240,7 +240,7 @@ $(function(){
 							Task Priority
 						</td>
 						<td>
-							<select name="task_priority" data-placeholder="Choose Priority" class="chzn-select" id="taskpriority" style="width:140px;">
+							<select name="task_priority" data-placeholder="Choose Priority" class="chzn-select clr-czn" id="taskpriority" style="width:140px;">
 							<option value=""></option>
 							<option value="1">Critical</option>
 							<option value="2">High</option>
