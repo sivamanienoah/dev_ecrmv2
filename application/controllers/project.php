@@ -2146,20 +2146,22 @@ class Project extends crm_controller {
 					$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-pending.jpg" alt="pending" />';
 				}
 				if ($readonly_status == false) {
-					if ($pd['invoice_status'] == 0) {
-						$invoice_stat = "<a title='Edit' onclick='paymentProfileEdit(".$pd['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a><a title='Delete' href='javascript:void(0)' onclick='paymentProfileDelete(".$pd['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
-						<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_inv(".$pd['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
-					} else if ($pd['invoice_status'] == 1) {
+					if ($exp['invoice_status'] == 0) {
+						$invoice_stat = "<a title='Edit' onclick='paymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
+						<a title='Delete' onclick='paymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+						<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
+					} else if ($exp['invoice_status'] == 1) {
 						$invoice_stat = "<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
 						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
 						<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 					}
 				} else {
 					$invoice_stat = "<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
-						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a><a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+					<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+					<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
 				}
 				$att = "";
-				if($attachments>0){
+				if($attachments>0) {
 					$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
 				}
 				$output .= "<tr>";
