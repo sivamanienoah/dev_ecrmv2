@@ -135,6 +135,8 @@ function loadajaxwithurl(url)
 
 function resetpage()
 {
+	$('#search-job-task')[0].reset();
+	$('.clr-czn').val('').trigger('liszt:updated');
 	loadajaxwithurl('tasks/index/extend');
 }
 function isPaymentVal(evt) {
