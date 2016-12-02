@@ -32,6 +32,18 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Attachment File </td>
+				<td>
+					<a title="Add Files" href='javascript:void(0)' onclick="open_files_othercost(<?php echo $project_id; ?>,'set'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+					<div id="oc_show_files"></div>
+					<div id="oc_add_newfile"></div>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><div id="uploadOcFile"></div></td>
+			</tr>
+			<tr>
 				<td colspan='2'>
 					<?php //if ($readonly_status == false) { ?>
 					<div class="buttons">
@@ -50,6 +62,7 @@
 			<tr align="left">
 				<th class="header">Description</th>
 				<th class="header">Cost Incurred Date</th>
+				<th class="header">Attachments</th>
 				<th class="header">Value</th>
 				<th class="header">Action</th>
 			</tr>
@@ -58,8 +71,18 @@
 			<?php if(!empty($other_cost_data) && count($other_cost_data)>0) { ?>
 				<?php foreach($other_cost_data as $row) { ?>
 					<tr id="cost_<?php echo $row['id']; ?>">
+						<?php $oc_attchments = getOtherCostFiles($row['id']); ?>
 						<td align="left"><?php echo $row['description']; ?></td>
 						<td align="left"><?php echo ($row['cost_incurred_date']!='0000-00-00 00:00:00') ? date('d-m-Y', strtotime($row['cost_incurred_date'])) : '';?></td>
+						<td align="center">
+							<?php
+								$att = '';
+								if($oc_attchments==true){
+									$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
+								}
+								echo $att;
+							?>
+						</td>
 						<td align="right"><?php echo $currency_arr[$row['currency_type']].' '.number_format($row['value'], 2, '.', ',');?></td>
 						<td align="left">
 							<a title="Edit" onclick="editOtherCostData(<?php echo $row['id']; ?>, <?php echo $project_id?>); return false;"><img src="assets/img/edit.png" alt="edit"> </a>
@@ -68,7 +91,7 @@
 					</tr>
 				<?php } ?>
 			<?php } else { ?>
-				<tr><td colspan='4'> No Records Available. </td></tr>
+				<tr><td colspan='5'> No Records Available. </td></tr>
 			<?php } ?>
 		</tbody>
 	</table>
@@ -79,6 +102,7 @@ var project_id = '<?php echo $project_id ?>';
 		if(settings.target=="#output1") {
 			if(xhr.responseText=='success') {
 				$('#add-other-cost')[0].reset();
+				$('#oc_show_files').empty();
 				$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Other Cost Added Successfully.</span>");
 			} else if(xhr.responseText == 'error') {
 				$('#succes_other_cost_data').html("<span class='ajx_failure_msg'>Error in adding other cost.</span>");

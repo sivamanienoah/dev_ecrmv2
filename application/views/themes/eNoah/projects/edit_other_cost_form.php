@@ -37,6 +37,32 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Attachment File </td>
+			<td>
+				<a title="Add Files" href='javascript:void(0)' onclick="open_files_othercost(<?php echo $project_id; ?>,'set'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+				<div id="oc_show_files">
+				<?php
+					foreach($attached_file as $att_file){
+				?>
+						<div style="float: left; width: 100%;">
+							<input type="hidden" value="<?php echo $att_file['file_id']; ?>" name="file_id[]" />
+							<span style="float: left;"><a onclick="download_files('<?php echo $project_id; ?>','<?php echo $att_file['lead_files_name']; ?>'); return false;"><?php echo $att_file['lead_files_name']; ?></a></span>
+							<?php if($invoice_status!=1) { ?>
+							<a class="del_oc_file" id="<?php echo $att_file['file_id']; ?>"> </a>
+							<?php } ?>
+						</div>
+				<?php
+					}
+				?>
+				</div>
+				<div id="oc_add_newfile"></div>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div id="uploadOcFile"></div></td>
+		</tr>
+		<tr>
 			<td colspan='2'>
 				<div class="buttons">
 					<button type="submit" class="positive">Edit</button>

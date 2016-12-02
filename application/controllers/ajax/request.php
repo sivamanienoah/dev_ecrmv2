@@ -1070,7 +1070,7 @@ class Request extends crm_controller {
 		$result  = $this->request_model->get_tree_file_list_number($data['leadid'],$parentId=0,$counter=0);
 		$res     = array();
 		$html 	 = '';
-		// echo "<pre>"; print_r($result); exit;
+
 		if(!empty($result)) {
 			foreach($result as $folder_id=>$folder_name) {
 			
@@ -1082,23 +1082,53 @@ class Request extends crm_controller {
 					$folder_name = "&nbsp;root";
 				}
 				$html .="<ul>";
-				// CHECK ACCESS PERMISSIONS START HERE //		
-				// $check_permissions =  $this->check_access_permissions($data['leadid'], 'folder_id', $folder_id, 'read');
-				// if($check_permissions == 1 || $this->userdata['role_id'] == 1) {
-					$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
-				// }
 
+				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
+				
 				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
 				
 				if(!empty($res)) {
 					foreach($res as $fname) {
-						// CHECK ACCESS PERMISSIONS START HERE //		
-						// $check_file_permissions =  $this->check_access_permissions($data['leadid'], 'file_id', $fname['file_id'], 'read');	
-						// if($check_file_permissions == 1 || $this->userdata['role_id'] == 1) {
-							$html .= "<li>";
-							$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
-							$html .= "</li>";
-						// }
+						$html .= "<li>";
+						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
+						$html .= "</li>";
+					}
+				}
+				$html .="</ul>";
+			}
+		}
+		echo $html;
+		exit;
+	}
+	
+	public function get_files_tree_structure_for_other_cost() 
+	{
+		$data    = real_escape_array($this->input->post());
+		$result  = $this->request_model->get_tree_file_list_number($data['leadid'],$parentId=0,$counter=0);
+		$res     = array();
+		$html 	 = '';
+
+		if(!empty($result)) {
+			foreach($result as $folder_id=>$folder_name) {
+			
+				$exp         = explode("~", $folder_name);
+				$counters    = $exp[0];
+				$folder_name = $exp[1];
+				
+				if(is_numeric($folder_name)) {
+					$folder_name = "&nbsp;root";
+				}
+				$html .="<ul>";
+
+				$html .= str_repeat("&nbsp;&nbsp;", $counters)."<img alt='directory' src='assets/img/directory.png'>".$folder_name;
+				
+				$res = $this->request_model->getAssociateFiles($data['leadid'], $folder_id);
+				
+				if(!empty($res)) {
+					foreach($res as $fname) {
+						$html .= "<li>";
+						$html .= "&nbsp;".str_repeat("&nbsp;&nbsp;", $counters)."&nbsp;&nbsp;"."<input type='checkbox' class='oc_attach_file' value='".$fname['file_id']."~".$fname['lead_files_name']."'>&nbsp;<a onclick=download_files('".$data['leadid']."','".$fname['lead_files_name']."'); return false;>".$fname['lead_files_name']."</a>";						
+						$html .= "</li>";
 					}
 				}
 				$html .="</ul>";
@@ -1304,70 +1334,6 @@ class Request extends crm_controller {
 		return $res;
 	}
 	
-	/**
-	 * Deletes a files based on a above function delete_files() request
-	 */
-	/* public function del_file_all($jobid,$array_file_id) {
-		$f_data = real_escape_array($this->input->post());
-		$user_data = $this->session->userdata('logged_in_user');
-		
-		foreach($array_file_id as $file_id) {
-			$condn = array("lead_id"=>$jobid,"file_id"=>$file_id);
-			$get_file_data = $this->request_model->get_record("lead_files", $condn);
-			
-			// CHECK ACCESS PERMISSIONS START HERE //		
-			
-		
-			$arrLeadInfo = $this->request_model->get_lead_info($jobid);
-			$check_permissions =  $this->check_access_permissions($jobid, 'file_id', $file_id, 'delete');	
-			
-			if($check_permissions == 0 && $user_data['role_id'] != 1) {
-			
-				$res[] = 'You don\'t have a permissions to delete '.$get_file_data['lead_files_name'].' file.';
-				return $res;
-				break;
-			
-			}
-			// CHECK ACCESS PERMISSIONS END HERE //	
-		
-			$fcpath = UPLOAD_PATH; 
-			$f_dir = $fcpath . 'files/' . $jobid . '/' . $get_file_data['lead_files_name'];
-	
-			//if (isset($f_dir))
-			//{
-				$file_condn          = array('file_id'=>$file_id);
-				$file_check_status   = $this->request_model->checkStatus('expected_payments_attach_file', $file_condn);
-				if ($file_check_status)
-				{
-				@unlink($f_dir);
-					//if (@unlink($f_dir))
-					//{
-						$file_del_access = array('lead_id'=>$jobid,'file_id'=>$file_id); //Mani.S
-						$this->request_model->delete_row('lead_file_access', $file_del_access); //Mani.S
-						
-						$wh_condn = array('file_id' => $file_id, 'lead_id' => $jobid);
-						$del_file = $this->request_model->delete_row('lead_files', $wh_condn);
-						
-						$logs['jobid_fk']	   = $jobid;
-						$logs['userid_fk']	   = $this->userdata['userid'];
-						$logs['date_created']  = date('Y-m-d H:i:s');
-						$logs['log_content']   = $get_file_data['lead_files_name'].' is deleted.';
-						$logs['attached_docs'] = $get_file_data['lead_files_name'];
-						$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
-						
-						$res[] 		  		   = $get_file_data['lead_files_name'].' is deleted.';
-					//} else {
-						//$res[]		  		   = $get_file_data['lead_files_name'].' file cannot be deleted.';
-					//}
-				} else {
-					$res[]		  		   	   = $get_file_data['lead_files_name'].' file cannot be deleted. It is linked with the Payment milestones.';
-				}
-		//	} else {
-				//$res[]		  		           = $get_file_data['lead_files_name'].' file cannot be deleted.';
-			//}
-		}
-		return $res;
-	} */
 	
 	public function del_file_all($jobid,$array_file_id) {
 		$f_data = real_escape_array($this->input->post());

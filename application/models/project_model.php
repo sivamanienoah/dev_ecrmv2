@@ -853,6 +853,21 @@ class Project_model extends crm_model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
+	/*
+	 *@Method get_attached_files
+	 *@Param expect id
+	 */
+	function get_oc_attached_files($oc_id)
+	{
+		$wh_condn = array('other_cost_id' => $oc_id);
+		$this->db->select('lf.lead_files_name, lf.file_id');
+		$this->db->from($this->cfg['dbpref'].'other_cost_attach_file as ocf');
+		$this->db->join($this->cfg['dbpref'].'lead_files as lf', 'lf.file_id = ocf.file_id');
+		$this->db->where($wh_condn);
+		$query = $this->db->get();
+		return $query->result_array();
+	}
 	
 	/*
 	 *@Database timesheet

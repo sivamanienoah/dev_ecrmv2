@@ -608,3 +608,19 @@ if ( ! function_exists('getOtherCostByProjectCodeByDateRangeByMonthWise'))
 		return $value;
 	}
 }
+
+function getOtherCostFiles($other_cost_id)
+{
+	$res = false;
+	$CI   	     = get_instance();
+	$cfg	     = $CI->config->item('crm'); /// load config
+	$CI->db->select("*");
+	$CI->db->from($CI->cfg['dbpref'].'other_cost_attach_file');
+	$CI->db->where('other_cost_id', $other_cost_id);
+	$query  = $CI->db->get();
+	$result = $query->result_array();
+	if(!empty($result) && count($result)>0) {
+		$res = true;
+	}
+	return $res;
+}

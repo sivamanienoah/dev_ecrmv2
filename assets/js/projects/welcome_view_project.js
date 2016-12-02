@@ -634,6 +634,61 @@ function runPaymentAjaxFileUpload() {
 	return false;
 }
 
+function runOtherCostAjaxFileUpload()
+{
+	var _uid				 = new Date().getTime();
+	var params 				 = {};
+	params[csrf_token_name]  = csrf_hash_token;
+	var ffid				 = $('#filefolder_id').val();
+
+	$.ajaxFileUpload({
+		url: 'project/othercost_file_upload/'+curr_job_id+'/'+ffid,
+		secureuri: false,
+		fileElementId: 'othercost_ajax_file_uploader',
+		dataType: 'json',
+		data: params,
+		success: function (data, status) {
+			if(typeof(data.error) != 'undefined') {
+				if(data.error != '') {
+					if (window.console) {
+						console.log(data);
+					}
+					if (data.msg) {
+						alert(data.msg);
+					} else {
+						alert('File upload failed!');
+					}
+				} else {	
+					if(data.msg == 'File successfully uploaded!') {
+						// alert(data.msg);				
+						$.each(data.res_file, function(i, item) {
+							var res = item.split("~",2);
+							// alert(res[0]+res[1]);	
+							var name = '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+res[0]+'"><span style="float: left;">'+res[1]+'</span><a id="'+res[0]+'" class="del_oc_file"> </a></div>';
+							$("#uploadOcFile").append(name);
+						});
+						$.unblockUI();
+					}
+				}
+			}
+		},
+		error: function (data, status, e)
+		{
+			alert('Sorry, the upload failed due to an error!');
+			$('#'+_uid).hide('slow').remove();
+			if (window.console)
+			{
+				console.log('ajax error\n' + e + '\n' + data + '\n' + status);
+				for (i in e) {
+				  console.log(e[i]);
+				}
+			}
+		}
+	});
+	$('#othercost_ajax_file_uploader').val('');
+	return false;
+}
+
 function addURLtoJob() 
 {
 	var url = $.trim($('#job-add-url').val());
@@ -1557,15 +1612,15 @@ function addURLtoJob()
 					$('.payment-received-mini-view1').hide();
 				}
 				if (ui.newPanel[0].id=='jv-tab-3') {				
-					// checkRootReadAccess();						
-					// loadExistingFiles(0);	
-					// showBreadCrumbs('Files');
-					// $('#filefolder_id').val('Files');
 					loadExistingFiles($('#filefolder_id').val());
 					showBreadCrumbs($('#filefolder_id').val());
 				}
 				if (ui.newPanel[0].id=='jv-tab-0') {
 					updtActualProjectValue(project_jobid);
+				}
+				if (ui.newPanel[0].id=='jv-tab-1') {
+					$('.payment-terms-mini-view1').html('');
+					loadPayment();
 				}
 				if (ui.newPanel[0].id=='jv-tab-0-a') {
 					viewOtherCost(project_jobid);
@@ -1580,6 +1635,7 @@ function addURLtoJob()
 		});
 		
 		$( "#map_add_file" ).tabs();
+		$( "#oc_map_add_file" ).tabs();
 
 		$('#job-url-list li a:not(.file-delete)').livequery(function(){
 			$(this).click(function(){
@@ -2689,6 +2745,7 @@ function generate_inv(eid) {
 				} else {
 					$('#rec_paymentfadeout').html('<span class=ajx_success_msg>Status Updated</span>');
 					loadPayment();
+					reset_paymentdata();
 				}
 				$.unblockUI();
 			}
@@ -2725,6 +2782,28 @@ function open_files(leadid,type) {
 	return false;
 }
 
+function open_files_othercost(leadid,type) {
+	var params				= {'leadid':leadid};
+	params[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/get_files_tree_structure_for_other_cost',
+		// dataType: 'json',
+		data: params,
+		success: function(data) {
+			// console.info(data);
+			$('#oc_all_file_list').html(data);
+			$('#oc_exp_type').val(type);
+			$.blockUI({
+				message: $('#oc_map_add_file'),
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top: ($(window).height() + 400) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '400px',position: 'absolute', maxHeight: '450px', 'overflow-y':'auto', 'overflow-x':'hidden'}			
+			});
+			$( "#oc_map_add_file" ).parent().addClass( "no-scroll" );
+		}
+	});
+	return false;
+}
+
 function select_files() {
 	var data = '';
 	var id = '';
@@ -2738,8 +2817,28 @@ function select_files() {
 	$.unblockUI();
 	return false;
 }
+function select_othercost_files() {
+	var data = '';
+	var id   = '';
+	jQuery.each( $(".oc_attach_file:checked"), function( i, val ) {
+		filename = $(this).val().split('~');
+		id += filename[0] + ',';
+		data += '<div style="float: left; width: 100%;"><input type="hidden" name="file_id[]" value="'+filename[0]+'"><span style="float: left;">'+filename[1]+'</span> <a id="'+filename[0]+'" class="del_oc_file"> </a></div>';
+	});
+
+	$('#oc_show_files').append(data);
+	$.unblockUI();
+	return false;
+}
 
 $(function() {
+	$(document).delegate("a.del_oc_file","click",function() {
+		var str_delete = $(this).attr("id");
+		var result = confirm("Are you sure you want to delete this attachment?");
+		if (result==true) {
+			$('#'+str_delete).parent("div").remove();
+		}
+	});
 	$("#show_files").delegate("a.del_file","click",function() {
 		var str_delete = $(this).attr("id");
 		var result = confirm("Are you sure you want to delete this attachment?");
@@ -2747,6 +2846,7 @@ $(function() {
 			$('#'+str_delete).parent("div").remove();
 		}
 	});
+	
 	$("#uploadFile").delegate("a.del_file","click",function() {
 		var str_delete = $(this).attr("id");
 		var result = confirm("Are you sure you want to delete this attachment?");
@@ -2754,7 +2854,7 @@ $(function() {
 			$('#'+str_delete).parent("div").remove();
 		}
 	});
-	$("#file-tabs-close").click(function() {
+	$(".file-tabs-close-project").click(function() {
 		$.unblockUI();
 		return false;
 	});
@@ -2853,6 +2953,23 @@ function viewOtherCost(project_id)
 			$('#other_cost_data').html(data);
 		}
 	});
+}
+
+function reset_paymentdata() 
+{
+	$("#uploadFile").empty();
+	var params = {};
+	params[csrf_token_name] = csrf_hash_token;
+	$.post( 
+		site_base_url+'project/agreedPaymentView/'+curr_job_id,params,
+		function(data) {
+			if (data.error) {
+				alert(data.errormsg);
+			} else {
+				$('.payment-profile-view').html(data);
+			}
+		}
+	);
 }
 
 function loadCustomer(id) 

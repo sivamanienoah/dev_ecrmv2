@@ -806,7 +806,7 @@ class Project extends crm_controller {
 		$ins_val['created_on'] 			= date('Y-m-d H:i:s');
 		$ins_val['modified_by'] 		= $this->userdata['userid'];
 		$ins_val['modified_on'] 		= date('Y-m-d H:i:s');
-		$insert_cost = $this->project_model->insert_row('project_other_cost', $ins_val);
+		$insert_cost = $this->project_model->return_insert_id('project_other_cost', $ins_val);
 		if($insert_cost) {
 			//do log
 			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
@@ -815,6 +815,17 @@ class Project extends crm_controller {
 					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
 				}
 			}
+			
+			//map uploaded file, if exists
+			if(!empty($this->input->post('file_id')) && count($this->input->post('file_id'))>0) {
+				$oc_file 					= array();
+				$oc_file['other_cost_id'] 	= $insert_cost;
+				foreach($this->input->post('file_id') as $file_id) {
+					$oc_file['file_id'] 	= $file_id;
+					$this->project_model->insert_row("other_cost_attach_file", $oc_file);
+				}
+			}
+			
 			$log_detail = "Added Other Cost: \n";
 			$log_detail .= "\nDescription: ".$this->input->post('description');
 			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
@@ -824,7 +835,7 @@ class Project extends crm_controller {
 			$log['userid_fk']     = $this->userdata['userid'];
 			$log['date_created']  = date('Y-m-d H:i:s');
 			$log['log_content']   = $log_detail;
-			$log_res = $this->project_model->insert_row("logs", $log);
+			$this->project_model->insert_row("logs", $log);
 			echo "success";
 		} else {
 			echo "error";
@@ -843,8 +854,9 @@ class Project extends crm_controller {
 		$editdata['cost_data'] 	 = $this->project_model->get_data_by_id('project_other_cost', $wh_condn);
 		if(!empty($editdata['cost_data']) && count($editdata['cost_data'])>0) 
 		{
-			$editdata['project_id'] = $this->input->post('projectid');
-			$editdata['currencies'] = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			$editdata['project_id']    = $this->input->post('projectid');
+			$editdata['attached_file'] = $this->project_model->get_oc_attached_files($this->input->post('costid'));
+			$editdata['currencies']    = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 			$data['res'] = $this->load->view("projects/edit_other_cost_form", $editdata, true);
 			$data['msg'] = 'success';
 		}
@@ -865,7 +877,15 @@ class Project extends crm_controller {
 		$updt_val['modified_by'] 		= $this->userdata['userid'];
 		$updt_val['modified_on'] 		= date('Y-m-d H:i:s');
 		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
+		$this->project_model->delete_row('other_cost_attach_file', array("other_cost_id"=>$this->input->post('cost_id')));
 		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
+		if(!empty($this->input->post('file_id'))){
+			$attach_updt['other_cost_id'] 	= $this->input->post('cost_id');
+			foreach($this->input->post('file_id') as $ocfile) {
+				$attach_updt['file_id'] 	= $ocfile;
+				$this->project_model->insert_row('other_cost_attach_file', $attach_updt);
+			}
+		}
 		
 		if($update_cost){
 			echo "success";
@@ -4569,17 +4589,12 @@ HDOC;
 	 * works with the Ajax file uploader
 	 */
 	public function othercost_file_upload($lead_id, $filefolder_id)
-	{
-		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['payment_ajax_file_uploader']['name']);
+	{		
+		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['othercost_ajax_file_uploader']['name']);
 		
 		$user_data = $this->session->userdata('logged_in_user');
 
-		/* $project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
-		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
-		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
-		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-		$arrLeadInfo = $this->request_model->get_lead_info($lead_id); // This function to get a current lead informations. */		
-	
+
 		// CHANGES BY MANI START HERE
 		if($filefolder_id == 'Files') {
 			$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
@@ -4608,14 +4623,12 @@ HDOC;
 		   "max_size" => 51000000,
 		   "allowed_types" => "*"
 		)); 
-		// $config['allowed_types'] = '*';
-		// "allowed_types" => "gif|png|jpeg|jpg|bmp|tiff|tif|txt|text|doc|docs|docx|oda|class|xls|xlsx|pdf|mpp|ppt|pptx|hqx|cpt|csv|psd|pdf|mif|gtar|gz|zip|tar|html|htm|css|shtml|rtx|rtf|xml|xsl|smi|smil|tgz|xhtml|xht"
-		
+	
 		$returnUpload = array();
 		$json  		  = array();
 		$res_file     = array();
-		if(!empty($_FILES['payment_ajax_file_uploader']['name'][0])) {
-			if ($this->upload->do_multi_upload("payment_ajax_file_uploader")) { 
+		if(!empty($_FILES['othercost_ajax_file_uploader']['name'][0])) {
+			if ($this->upload->do_multi_upload("othercost_ajax_file_uploader")) { 
 			   $returnUpload  = $this->upload->get_multi_upload_data();
 			   $json['error'] = FALSE;
 			   $json['msg']   = "File successfully uploaded!";

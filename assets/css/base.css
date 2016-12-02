@@ -2021,7 +2021,7 @@ button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
 #upload-decoy {cursor:pointer;}
 .pad-right{ padding-right:15px; padding-top:3px;}
 .icon-width{ width:20px;}
-a.del_file{ background: url("../img/cross2.png") no-repeat 0 0 !important; width:16px; height:16px; float:left; }
+a.del_oc_file, a.del_file{ background: url("../img/cross2.png") no-repeat 0 0 !important; width:16px; height:16px; float:left; }
 .file-tabs-close-project {
 	background: url("../img/icon-close-circle.png") no-repeat 0 0 !important; 
 	width:24px; 
