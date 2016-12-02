@@ -5,7 +5,7 @@ class Project extends crm_controller {
 	public $cfg;
 	public $userdata;
 	
-	function __construct() {
+	function __construct() { echo "test"; exit;
 		parent::__construct();
 		
 		$this->login_model->check_login();
