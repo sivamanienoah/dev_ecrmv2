@@ -222,8 +222,7 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
-		// echo "query".$this->db->last_query(); exit;
-		// echo "<pre>"; print_r($getProjects); die;
+
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 		// echo "<pre>"; print_r($data['pjts_data']); die;
 		//for field restriction
@@ -5231,6 +5230,5 @@ HDOC;
 		return $query->num_rows();
 	}
 
-	
 }
 ?>
