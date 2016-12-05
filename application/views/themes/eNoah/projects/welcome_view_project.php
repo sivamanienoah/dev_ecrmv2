@@ -753,7 +753,7 @@
 			<div id="oc-map-tab-2" style="height:260px; overflow:scroll;">
 				<div name='oc_all_file_list' id="oc_all_file_list" style="text-align: left;"></div>
 				<div style="padding: 10px 0px 0px;">
-					<button type="submit" class="positive" onclick="select_files()">Submit</button>
+					<button type="submit" class="positive" onclick="select_othercost_files()">Submit</button>
 				</div>
 			</div>
 			<div id="oc-map-tab-4" style="height:260px; overflow:scroll;">
