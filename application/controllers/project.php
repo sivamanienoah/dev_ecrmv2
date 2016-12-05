@@ -851,7 +851,7 @@ class Project extends crm_controller {
 	*/
 	public function editOtherCost()
 	{
-		/* $updt_val = array();
+		$updt_val = array();
 		$updt_val['description'] 		= $this->input->post('description');
 		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
 		$updt_val['currency_type'] 		= $this->input->post('currency_type');
@@ -861,13 +861,13 @@ class Project extends crm_controller {
 		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
 		$this->project_model->delete_row('other_cost_attach_file', array("other_cost_id"=>$this->input->post('cost_id')));
 		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
-		if(!empty($this->input->post('file_id'))){
+		/* if(!empty($this->input->post('file_id'))){
 			$attach_updt['other_cost_id'] 	= $this->input->post('cost_id');
 			foreach($this->input->post('file_id') as $ocfile) {
 				$attach_updt['file_id'] 	= $ocfile;
 				$this->project_model->insert_row('other_cost_attach_file', $attach_updt);
 			}
-		}
+		} */
 		
 		if($update_cost){
 			echo "success";
@@ -891,7 +891,7 @@ class Project extends crm_controller {
 		} else {
 			echo "error";
 		}
-		exit; */
+		exit;
 	}
 	
 		/*
