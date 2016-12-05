@@ -839,6 +839,28 @@ class Project extends crm_controller {
 		} */
 	}
 	
+	/*
+	* editing the other cost
+	*/
+	public function getEditOtherCostData()
+	{
+		$data 		 = array();
+		$editdata 	 = array();
+		$data['msg'] = 'error'; 
+		$wh_condn	 = array('id'=>$this->input->post('costid'),'project_id'=>$this->input->post('projectid'));
+		$editdata['cost_data'] 	 = $this->project_model->get_data_by_id('project_other_cost', $wh_condn);
+		if(!empty($editdata['cost_data']) && count($editdata['cost_data'])>0) 
+		{
+			$editdata['project_id']    = $this->input->post('projectid');
+			$editdata['attached_file'] = $this->project_model->get_oc_attached_files($this->input->post('costid'));
+			$editdata['currencies']    = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			$data['res'] = $this->load->view("projects/edit_other_cost_form", $editdata, true);
+			$data['msg'] = 'success';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
 
 	
 }
