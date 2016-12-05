@@ -7,7 +7,6 @@ class Project extends crm_controller {
 	
 	function __construct() 
 	{
-		echo "test"; exit;
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
@@ -43,6 +42,34 @@ class Project extends crm_controller {
 			$this->default_cur_name = 'USD';
 		}
 	}
+	
+	/*
+	 * List all the Leads based on levels
+	 * @access public
+	 */
+	public function index()
+	{
+		echo "index"; exit;
+		$data['page_heading'] = "Projects - Lists";
+		$data['pm_accounts'] = array();
+		$pjt_managers		 = $this->project_model->get_user_byrole(3);
+		if(!empty($pjt_managers))
+		$data['pm_accounts'] = $pjt_managers;
+		$data['customers']   = $this->project_model->get_customers();
+		$data['services']    = $this->project_model->get_services();
+		$data['practices']   = $this->project_model->get_practices();
+		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
+		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
+		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		if(!empty($db_fields) && count($db_fields)>0) {
+			foreach($db_fields as $record) {
+				$data['db_fields'][] = $record['column_name'];
+			}
+		}
+		$this->load->view('projects/projects_view', $data);
+    }
+	
+	
 	
 }
 ?>
