@@ -797,16 +797,16 @@ class Project extends crm_controller {
 					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
 				}
 			}
-			
-			/* //map uploaded file, if exists
-			if(!empty($this->input->post('file_id')) && count($this->input->post('file_id'))>0) {
+			$uploaded_file = $this->input->post('file_id');
+			//map uploaded file, if exists
+			if(!empty($uploaded_file) && count($uploaded_file)>0) {
 				$oc_file 					= array();
 				$oc_file['other_cost_id'] 	= $insert_cost;
-				foreach($this->input->post('file_id') as $file_id) {
+				foreach($uploaded_file as $file_id) {
 					$oc_file['file_id'] 	= $file_id;
 					$this->project_model->insert_row("other_cost_attach_file", $oc_file);
 				}
-			} */
+			}
 			
 			$log_detail = "Added Other Cost: \n";
 			$log_detail .= "\nDescription: ".$this->input->post('description');
