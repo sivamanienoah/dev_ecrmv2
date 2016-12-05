@@ -1157,6 +1157,32 @@ class Project extends crm_controller {
 		$data['log_html'] .= '</tbody></table>';
 		echo $data['log_html'];
 	}
+	
+	/*
+	*@method set_practices
+	*/
+	public function update_title()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['lead_title'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$data     = array('lead_title'=>$updt['lead_title']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id){				
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+	}
 
 	
 }
