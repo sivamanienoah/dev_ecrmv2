@@ -861,6 +861,53 @@ class Project extends crm_controller {
 		exit;
 	}
 	
+	/*
+	* editing the other cost data
+	*/
+	public function editOtherCost()
+	{
+		$updt_val = array();
+		$updt_val['description'] 		= $this->input->post('description');
+		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
+		$updt_val['currency_type'] 		= $this->input->post('currency_type');
+		$updt_val['value'] 				= $this->input->post('value');
+		$updt_val['modified_by'] 		= $this->userdata['userid'];
+		$updt_val['modified_on'] 		= date('Y-m-d H:i:s');
+		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
+		$this->project_model->delete_row('other_cost_attach_file', array("other_cost_id"=>$this->input->post('cost_id')));
+		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
+		if(!empty($this->input->post('file_id'))){
+			$attach_updt['other_cost_id'] 	= $this->input->post('cost_id');
+			foreach($this->input->post('file_id') as $ocfile) {
+				$attach_updt['file_id'] 	= $ocfile;
+				$this->project_model->insert_row('other_cost_attach_file', $attach_updt);
+			}
+		}
+		
+		if($update_cost){
+			echo "success";
+			//do log
+			$currencies = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+			if(!empty($currencies)) {
+				foreach($currencies as $curr){
+					$all_cur[$curr['expect_worth_id']] = $curr['expect_worth_name'];
+				}
+			}
+			$log_detail = "Updated the Other Cost: \n";
+			$log_detail .= "\nDescription: ".$updt_val['description'];
+			$log_detail .= "\nCost Incurred Date: ".$this->input->post('cost_incurred_date');
+			$log_detail .= "\nValue: ".$all_cur[$updt_val['currency_type']].' '.number_format($updt_val['value'], 2);
+			$log = array();
+			$log['jobid_fk']      = $this->input->post('project_id');
+			$log['userid_fk']     = $this->userdata['userid'];
+			$log['date_created']  = date('Y-m-d H:i:s');
+			$log['log_content']   = $log_detail;
+			$log_res = $this->project_model->insert_row("logs", $log);
+		} else {
+			echo "error";
+		}
+		exit;
+	}
 
 	
 }
