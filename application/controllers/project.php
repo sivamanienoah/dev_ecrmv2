@@ -861,13 +861,14 @@ class Project extends crm_controller {
 		$condn = array('id'=>$this->input->post('cost_id'), 'project_id'=>$this->input->post('project_id'));
 		$this->project_model->delete_row('other_cost_attach_file', array("other_cost_id"=>$this->input->post('cost_id')));
 		$update_cost = $this->project_model->update_row('project_other_cost', $updt_val, $condn);
-		/* if(!empty($this->input->post('file_id'))){
+		$up_file = $this->input->post('file_id');
+		if(!empty($up_file)){
 			$attach_updt['other_cost_id'] 	= $this->input->post('cost_id');
-			foreach($this->input->post('file_id') as $ocfile) {
+			foreach($up_file as $ocfile) {
 				$attach_updt['file_id'] 	= $ocfile;
 				$this->project_model->insert_row('other_cost_attach_file', $attach_updt);
 			}
-		} */
+		}
 		
 		if($update_cost){
 			echo "success";
