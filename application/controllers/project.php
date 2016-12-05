@@ -224,7 +224,7 @@ class Project extends crm_controller {
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
 
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
-		// echo "<pre>"; print_r($data['pjts_data']); die;
+
 		//for field restriction
 		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
 		if(!empty($db_fields) && count($db_fields)>0) {
@@ -311,8 +311,6 @@ class Project extends crm_controller {
 			$metrics_date = '';
 		}
 		
-		// echo "asdf<pre>"; print_r($inputData); exit;
-		
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
@@ -349,8 +347,6 @@ class Project extends crm_controller {
 		}
 		
 		$result = $this->project_model->get_quote_data($id);
-		
-		// echo '<pre>';print_r($result[0]);exit;
 		
 		if(!empty($result)) {
 			
@@ -441,7 +437,7 @@ class Project extends crm_controller {
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
-				// echo '<pre>'; print_r($timesheet); exit;
+
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$timesheet_users = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
@@ -474,16 +470,6 @@ class Project extends crm_controller {
 						}
 					}
 				}
-				//Set the Project Manager in our CRM DB.
-				/* if(!empty($timesheet_users['username']) && count($timesheet_users['username'])>0) {
-					 
-					$proj_team_members = $user_details[$data['timesheetProjectLead']['proj_leader']]['userid'];
-					if($proj_leader != $data['quote_data']['assigned_to']){
-						$condn = array('lead_id' => $data['quote_data']['lead_id']);
-						$updt  = array('assigned_to' => $proj_leader);
-						$setPM = $this->project_model->update_row('leads', $updt, $condn);
-					}
-				} */
 				
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
@@ -792,7 +778,7 @@ class Project extends crm_controller {
 	*/
 	public function addOtherCost()
 	{
-		/* $ins_val = array();
+		$ins_val = array();
 		$ins_val['project_id'] 			= $this->input->post('project_id');
 		$ins_val['description'] 		= $this->input->post('description');
 		$ins_val['cost_incurred_date'] 	= ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
@@ -812,7 +798,7 @@ class Project extends crm_controller {
 				}
 			}
 			
-			//map uploaded file, if exists
+			/* //map uploaded file, if exists
 			if(!empty($this->input->post('file_id')) && count($this->input->post('file_id'))>0) {
 				$oc_file 					= array();
 				$oc_file['other_cost_id'] 	= $insert_cost;
@@ -820,7 +806,7 @@ class Project extends crm_controller {
 					$oc_file['file_id'] 	= $file_id;
 					$this->project_model->insert_row("other_cost_attach_file", $oc_file);
 				}
-			}
+			} */
 			
 			$log_detail = "Added Other Cost: \n";
 			$log_detail .= "\nDescription: ".$this->input->post('description');
@@ -835,7 +821,7 @@ class Project extends crm_controller {
 			echo "success";
 		} else {
 			echo "error";
-		} */
+		}
 	}
 	
 	/*
