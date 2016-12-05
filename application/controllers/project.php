@@ -5,9 +5,10 @@ class Project extends crm_controller {
 	public $cfg;
 	public $userdata;
 	
-	function __construct() {
+	function __construct() 
+	{
+		echo "test"; exit;
 		parent::__construct();
-		
 		$this->login_model->check_login();
 		$this->userdata = $this->session->userdata('logged_in_user');
 		$this->load->model('project_model');
@@ -41,9 +42,7 @@ class Project extends crm_controller {
 			$this->default_cur_id   = '1';
 			$this->default_cur_name = 'USD';
 		}
-
 	}
-	
 	
 }
 ?>
