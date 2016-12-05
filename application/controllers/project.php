@@ -727,7 +727,65 @@ class Project extends crm_controller {
 		} else {
 			$result = $this->load->view("projects/add_other_cost", $data, true);
 		}
-		echo $result; exit;
+		echo $result;
+		exit;
+	}
+	
+		
+	/*
+	* Get the Actual cost details(utilization cost + other cost) for the project
+	*/
+	public function getAcutalCostDataForProject()
+	{
+		$project_id			= $this->input->post('project_id');
+		$data				= array();
+		$cost_value			= array();
+		$result 			= $this->project_model->get_quote_data($project_id);
+		$data['quote_data'] = $result[0];
+		$pjt_id 			= $data['quote_data']['pjt_id'];
+		$bill_type 			= $data['quote_data']['billing_type'];
+		$timesheet 			= $this->project_model->get_timesheet_data($pjt_id, $project_id, $bill_type, '', $groupby_type=2);
+		$data['timesheet_data'] = array();
+		
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				if(isset($ts['cost'])) {
+					$financialYear = get_current_financial_year($ts['yr'],$ts['month_name']);
+					$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
+					
+					$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
+					$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $ts['cost'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+					
+					$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
+				}
+			}
+		}
+		
+		if(!empty($data['timesheet_data'])) {
+			/*changed based on user max hours calculation*/
+			$res = $this->calcActualProjectCostBaseCurrency($data['timesheet_data'], $data['quote_data']['expect_worth_id']);
+			if($res['total_cost']>0) {
+				$cost_value['utilization_cost'] = $res['total_cost'];
+			}
+			if($res['total_hours']>0) {
+				$cost_value['actual_hour_data'] = $res['total_hours'];
+			}
+		}
+
+		$data['othercost_val'] = getOtherCostByLeadIdBasedProjectCurrency($project_id, $data['quote_data']['expect_worth_id']);
+		
+		$cost_value['other_cost'] 			= (!empty($data['othercost_val'])) ? sprintf('%0.2f', $data['othercost_val']) : 0;
+		$cost_value['utilization_cost'] 	= (!empty($cost_value['utilization_cost'])) ? sprintf('%0.2f', $cost_value['utilization_cost']) : 0;
+		$cost_value['project_cost'] 		= $cost_value['utilization_cost'] + $cost_value['other_cost'];
+		$varianceProjectVal 				= $data['quote_data']['actual_worth_amount'] - $cost_value['project_cost'];
+		$cost_value['varianceProjectVal'] 	= sprintf('%0.2f', $varianceProjectVal);
+		
+		echo json_encode($cost_value);
+		exit;
 	}
 	
 }
