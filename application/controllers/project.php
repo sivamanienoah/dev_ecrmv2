@@ -706,5 +706,29 @@ class Project extends crm_controller {
         }
     }
 	
+	/*
+	* Get the Other Cost details
+	*/
+	public function getOtherCostData($project_id, $grid=false)
+	{
+		$data['currency_arr'] 	 = array();
+		$data['project_id'] 	 = $project_id;
+		$project_det 			 = $this->project_model->get_lead_det($project_id);
+		$data['base_currency'] 	 = $project_det['expect_worth_id'];
+		$data['currencies'] 	 = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
+		if(!empty($data['currencies'])) {
+			foreach($data['currencies'] as $curr){
+				$data['currency_arr'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
+			}
+		}
+		$data['other_cost_data'] = $this->project_model->getOtherCost($project_id);
+		if($grid==true){
+			$result = $this->load->view("projects/add_other_cost_grid", $data, true);
+		} else {
+			$result = $this->load->view("projects/add_other_cost", $data, true);
+		}
+		echo $result; exit;
+	}
+	
 }
 ?>
