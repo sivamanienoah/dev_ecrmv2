@@ -162,7 +162,7 @@ class email_template_model extends crm_model {
 		$email_from 	 = "webmaster@enoahprojects.com";
 		$email_from_name = 'Webmaster';
 		
-		$email_subject = $data['subject'];
+		$email_subject = $data['subject'] . " - Mail from DEV Server";;
 		
 		if(count($data['email_data'])>0) {
 			foreach($data['email_data'] as $key=>$value) {
@@ -211,6 +211,7 @@ class email_template_model extends crm_model {
 		// return true;
 		// $this->email->send();
 		// echo $this->email->print_debugger();exit;
+		return true;
 		if($this->email->send()) { 
 			return true;
 		} else {
