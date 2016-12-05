@@ -866,7 +866,7 @@ class Project extends crm_controller {
 	*/
 	public function editOtherCost()
 	{
-		$updt_val = array();
+		/* $updt_val = array();
 		$updt_val['description'] 		= $this->input->post('description');
 		$updt_val['cost_incurred_date'] = ($this->input->post('cost_incurred_date')!='') ? date('Y-m-d H:i:s', strtotime($this->input->post('cost_incurred_date'))) : '';
 		$updt_val['currency_type'] 		= $this->input->post('currency_type');
@@ -906,7 +906,7 @@ class Project extends crm_controller {
 		} else {
 			echo "error";
 		}
-		exit;
+		exit; */
 	}
 
 	
