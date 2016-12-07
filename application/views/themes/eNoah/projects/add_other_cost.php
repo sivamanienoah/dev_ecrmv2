@@ -103,6 +103,7 @@ var project_id = '<?php echo $project_id ?>';
 			if(xhr.responseText=='success') {
 				$('#add-other-cost')[0].reset();
 				$('#oc_show_files').empty();
+				$('#uploadOcFile').empty();
 				$('#succes_other_cost_data').html("<span class='ajx_success_msg'>Other Cost Added Successfully.</span>");
 			} else if(xhr.responseText == 'error') {
 				$('#succes_other_cost_data').html("<span class='ajx_failure_msg'>Error in adding other cost.</span>");
