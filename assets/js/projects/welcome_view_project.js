@@ -985,7 +985,8 @@ function addURLtoJob()
 	}
 	
 	//Set the Project Practices//
-	function setPractices() {
+	function setPractices()
+	{
 		$('#resmsg_practice').empty();
 		var practice = $('#practice').val();
 		
@@ -1013,6 +1014,38 @@ function addURLtoJob()
 			}
 		});
 		$('#remsg_practice').fadeOut(2000);
+	}
+	
+	//Set the Project Currency//
+	function setProjectCurny()
+	{
+		$('#resmsg_currency').empty();
+		var currency = $('#currency').val();
+		
+		if(currency == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_currency/',
+			dataType: 'json',
+			data: 'currency='+currency+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				if (data.error == false) {
+					$('#resmsg_currency').html("<span class='ajx_success_msg'>Currency Updated</span>");
+				} else {
+					$('#resmsg_currency').show();
+					$('#resmsg_currency').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$.unblockUI();
+			}
+		});
+		$('#resmsg_currency').fadeOut(4000);
 	}
 	/*
 	*@Method setDepartments
