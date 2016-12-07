@@ -576,6 +576,8 @@ class Project extends crm_controller {
 					$data['base_currency'][$curr['expect_worth_id']] = $curr['expect_worth_name'];
 				}
 			}
+			
+			$data['currencies'] = $this->project_model->get_records('expect_worth', $wh_condn=array('status'=>1), $order=array('expect_worth_id'=>'asc'));
 
 			/**
 			get the project variance report from timesheet
@@ -1219,6 +1221,33 @@ class Project extends crm_controller {
 		} else {
 			$wh_condn = array('lead_id' => $updt['lead_id']);
 			$data = array('practice' => $updt['practice']);
+			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
+			if($updt_id) {
+				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
+				$this->customer_model->update_project_details($project_code); //Update project title to timesheet and e-connect
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+	}
+
+	/*
+	*@method set_practices
+	*
+	*/
+	public function set_currency()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['currency'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Error in Updation';
+		} else {
+			$wh_condn = array('lead_id' => $updt['lead_id']);
+			$data = array('expect_worth_id' => $updt['currency']);
 			$updt_id = $this->project_model->update_practice('leads', $data, $wh_condn);
 			if($updt_id) {
 				$project_code = $this->customer_model->get_filed_id_by_name('leads', 'lead_id', $updt['lead_id'], 'pjt_id');
