@@ -349,17 +349,39 @@
 			<div class="clear"></div>
 			<div class="pull-left">
 				<label class="project-id">Entity</label>
-				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $quote_data['division_name'] ?>" readonly style="width: 125px;" />
+				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $quote_data['division_name']; ?>" readonly style="width: 125px;" />
 			</div>
 			<div class="clear"></div>
 			<div class="pull-left">
 				<label class="project-id">Base Currency</label>
-				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['base_currency']] ?>" readonly style="width: 125px;" />
+				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['base_currency']]; ?>" readonly style="width: 125px;" />
 			</div>
 			<div class="clear"></div>
 			<div class="pull-left">
 				<label class="project-id">Project Currency</label>
-				<input class="textfield" type="text" name="pjtId" id="pjtId" maxlength="20" value="<?php echo $base_currency[$quote_data['expect_worth_id']] ?>" readonly style="width: 125px;" />
+				<select name="currency" id="currency" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
+					<option value="">Select Currency</option>
+					<?php if(!empty($currencies)) {
+						foreach($currencies as $curny) {
+							$selectedCurny = '';
+							if($curny['expect_worth_id'] == $quote_data['expect_worth_id']) {
+								$selectedCurny = 'selected="selected"';
+							}
+					?>
+							<option value="<?php echo $curny['expect_worth_id']; ?>" <?php echo $selectedCurny; ?>><?php echo $curny['expect_worth_name']; ?></option>
+					<?php
+						}
+					} 
+					?>
+				</select>
+			</div>
+			<div>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+					<div class="buttons">
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setProjectCurny(); return false;">Set</button>
+					</div>
+					<div id="resmsg_currency" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
 			</div>
 			<div class="clear"></div>			<form>
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
