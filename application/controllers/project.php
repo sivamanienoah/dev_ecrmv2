@@ -4357,8 +4357,8 @@ HDOC;
 		exit;
 	}
 	
-	public function generateInvoice($eid, $pjtid) {
-
+	public function generateInvoice($eid, $pjtid) 
+	{
 		$wh_condn		 = array('expectid' => $eid,'jobid_fk'=>$pjtid);
 		$updt			 = array('invoice_status'=>1,'invoice_generate_notify_date'=>date('Y-m-d H:i:s'));
 		
