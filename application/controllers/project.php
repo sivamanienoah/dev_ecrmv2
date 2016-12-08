@@ -4380,6 +4380,19 @@ HDOC;
 			$from		  	 = $this->userdata['email'];
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['account_emails']);
+			
+			//checking attaching attachment not exceed to 5 mb - (5mb == 5242880)
+			$file_size = 0;
+			$attachment_exists = false;
+			$attachment_array = array();
+			if(is_array($attached_files) && !empty($attached_files) && count($attached_files)>0){
+				$attach_file_path = UPLOAD_PATH.'files/'.$pjtid.'/';
+				foreach($attached_files as $att_file) {
+					$file_size += filesize($attach_file_path.$att_file['lead_files_name']);
+					$attachment_array[] = $attach_file_path.$att_file['lead_files_name'];
+				}
+			}
+
 			switch($project_details[0]['practice']) {
 				case 1:
 				case 3:
@@ -4404,8 +4417,26 @@ HDOC;
 			$project_code	 = $project_details[0]['pjt_id'];
 			$milestone_name  = $payment_details['project_milestone_name'];
 			$month_year  	 = date('F Y', strtotime($payment_details['month_year']));
-			$milestone_value = $payment_details['expect_worth_name'] . ' - ' . $payment_details['amount'];
+			$payment_type	 = '';
+			$inv_amt['sign'] = '';
+			$inv_amt 	  	 = array('value' => abs($payment_details['amount']));
+			if ($payment_details['amount'] < 0)
+			{
+				$inv_amt['sign'] = '-';
+				$payment_type = ' (Negative Invoice)';
+			}			
+			$milestone_value = $inv_amt['sign'].' '.$payment_details['expect_worth_name'] . ' ' . $inv_amt['value'] . $payment_type;
 			$payment_remark  = isset($payment_details['payment_remark']) ? $payment_details['payment_remark'] : '-';
+			if(is_array($attachment_array) && !empty($attachment_array) && count($attachment_array)>0) {
+				$attachment_exists = true;
+				if($file_size != 0 && $attachment_exists == true) {
+					if(5242880 < $file_size) {
+						$payment_remark .= "<br /><br /> <span style='color:red';>Attachments Size exceeds to 5 Mb. So attachments are not included in this mail.</span>";
+						$attached_files = array();
+					}
+				}
+			}
+
 			//email sent by email template
 			$param = array();
 			
@@ -4438,29 +4469,19 @@ HDOC;
 		$f_name = preg_replace('/[^a-z0-9\.]+/i', '-', $_FILES['payment_ajax_file_uploader']['name']);
 		
 		$user_data = $this->session->userdata('logged_in_user');
-		
-		
 
 		$project_members = $this->request_model->get_project_members($lead_id); // This array to get a project normal members(Developers) details.
 		$project_leaders = $this->request_model->get_project_leads($lead_id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
 		$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
 		$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
 		$arrLeadInfo = $this->request_model->get_lead_info($lead_id); // This function to get a current lead informations.		
-
-				
-		
-		// echo "<pre>"; print_r($_FILES); exit;
-		
-		/*$filefolder_id - first we check whether filefolder_id is a Parent or Child*/
 		
 		// CHANGES BY MANI START HERE
 		if($filefolder_id == 'Files') {
-		$arrFolderId = $this->request_model->getParentFfolderId($lead_id, 0); 
-		$filefolder_id = $arrFolderId['folder_id'];
+			$arrFolderId   = $this->request_model->getParentFfolderId($lead_id, 0); 
+			$filefolder_id = $arrFolderId['folder_id'];
 		}
 		// CHANGES BY MANI END HERE
-	
-		
 
 		//creating files folder name
 		$f_dir = UPLOAD_PATH.'files/';
@@ -4523,7 +4544,7 @@ HDOC;
 		echo json_encode($json); exit;
 	}
 	
-		/**
+	/**
 	 * Uploads a file posted to a specified job
 	 * works with the Ajax file uploader
 	 */
@@ -4618,7 +4639,6 @@ HDOC;
 	*@ Usage Display Client and project details with model window
 	*
 	*/
-	
 	public function getCurentLeadsDetails()
 	{
 	
