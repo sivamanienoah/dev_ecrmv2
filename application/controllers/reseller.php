@@ -97,6 +97,11 @@ class Reseller extends crm_controller {
 		
 		$data['sales']				= $this->calcClosedJobs($closed_sale_data, $curFiscalYear);
 		$data['curFiscalYear']		= $curFiscalYear;
+		$user_id =$this->userdata['userid'];
+		$data['email_templates'] = $this->reseller_model->get_user_email_templates($user_id);
+		$data['email_signatures'] = $this->reseller_model->get_user_email_signatures($user_id);
+		$data['default_signature'] = $this->reseller_model->get_user_default_signature($user_id);
+		
 		// echo "<pre>"; print_r($data['sales']); echo "</pre>";
 		
 		$this->load->view('reseller/reseller_view', $data);
@@ -678,7 +683,7 @@ class Reseller extends crm_controller {
 				
 				$table ='<tr id="log" class="log'.$stick_class.'"><td id="log" class="log'.$stick_class.'">
 						 <p class="data log'.$stick_class.'"><span class="log'.$stick_class.'">'.$fancy_date.'</span>'.$job_name.'</p>
-						 <p class="desc log'.$stick_class.'">'.$log_content.'</p></td></tr>';
+						 <p class="desc log'.$stick_class.'">'.$ld['log_content'].'</p></td></tr>';
 				$data['log_html'] .= $table;
 				unset($table, $job_name, $user, $log_content);
 			}
@@ -1260,11 +1265,18 @@ class Reseller extends crm_controller {
 		
 		$data_log = real_escape_array($this->input->post());
 		
-		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
+		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		$data_log['log_content'] = str_replace('\\', "", $data_log['log_content']);
 		$ins['log_content'] 	 = str_replace('\n', "", $data_log['log_content']);
 		
 		$break = 120;
-		$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+		//$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+		
+		$data_log['sign_content'] = str_replace('\n', "", $data_log['sign_content']);
+		$data_log['sign_content'] = str_replace('\\', "", $data_log['sign_content']);
+		
+		//$data_log['sign_content'] =  implode(PHP_EOL, str_split($data_log['sign_content'], $break));
+		//echo ($data_log['log_content']); exit;
         if (isset($data_log['reseller_id']) && isset($data_log['log_content'])) {
 
 			$user_details = $this->reseller_model->get_data_by_id('users', $wh_condn = array('userid'=>$data_log['reseller_id']));
@@ -1315,7 +1327,7 @@ class Reseller extends crm_controller {
 
 					$print_fancydate = date('l, jS F y h:iA');
 
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$user_details['first_name'], 'last_name'=>$user_details['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$user_details['first_name'], 'last_name'=>$user_details['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$data_log['sign_content']);
 					
 					foreach($send_to as $recps) 
 					{
@@ -1594,6 +1606,18 @@ class Reseller extends crm_controller {
 		} else {
 			echo "Email Not Sent";
 		}
+	}
+	public function get_template_content()
+	{
+		$temp_id = $this->input->post('temp_id');
+		$temp_content =$this->reseller_model->get_template_content($temp_id);
+		 echo json_encode($temp_content);
+	}
+	public function get_signature_content()
+	{
+		$sign_id = $this->input->post('sign_id');
+		$sign_content =$this->reseller_model->get_signature_content($sign_id);
+		 echo json_encode($sign_content);
 	}
 	
 }

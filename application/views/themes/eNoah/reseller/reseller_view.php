@@ -3,6 +3,12 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 // echo "<pre>"; print_r($reseller_det); echo "</pre>";
 ?>
+<style>
+table.spaceunder {
+    border-collapse: separate;
+    border-spacing: 0 1em;
+}
+</style>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <div id="content">
 	<div class="inner">	
@@ -170,7 +176,7 @@ require (theme_url().'/tpl/header.php');
 				<div id="send_email_data">
 					<form id="comm-log-form">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<table>
+						<table class="spaceunder">
 							<tr>
 								<td><label>Email To:</label></td>
 								<td class="email-list">
@@ -188,12 +194,41 @@ require (theme_url().'/tpl/header.php');
 								</td>
 							</tr>
 							<tr>
+								<td><label class="normal">Templates:</label></td>
+								<td>
+								<select id="email_templates" name="email_templates" onchange="getTemplate(this.value)" class="textfield width200px required">
+							<option value="0">Select Template</option>
+							<?php
+							if(count($email_templates>0)) {
+								foreach ($email_templates as $email_template) { ?>
+									<option value="<?php echo $email_template['temp_id'] ?>"><?php echo $email_template['temp_name']; ?></option>
+								<?php } ?>
+							<?php } ?>
+						</select>
+								</td>
+							</tr>
+							<tr>
 								<td><label class="normal">Message:</label></td>
 								<td><textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea></td>
 							</tr>
 							<tr>
+								<td><label class="normal">Signaures:</label></td>
+								<td>
+								<select id="email_signatures" name="email_signatures" onchange="getSignature(this.value)" class="textfield width200px required">
+							<option value="0">Select Signature</option>
+							<?php
+							if(count($email_signatures>0)) {
+								foreach ($email_signatures as $email_signature) { ?>
+									<option value="<?php echo $email_signature['sign_id'] ?>"><?php echo $email_signature['sign_name']; ?></option>
+								<?php } ?>
+							<?php } ?>
+						</select>
+								</td>
+							</tr>
+							<tr>
 								<td><label class="normal">Signature:</label></td>
-								<td><textarea name="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;"><?php echo $this->userdata['signature'] ?></textarea></td>
+								<td><textarea name="signature" id="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;">
+								<?php if(!empty($default_signature)) echo $default_signature['sign_content']; else echo $this->userdata['signature'] ?></textarea></td>
 							</tr>
 							<tr>
 								<td colspan=2 align="right">
@@ -227,6 +262,8 @@ var project_request_url = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['R
 <script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/reseller/reseller_view.js"></script>
+<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce_script.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

@@ -472,4 +472,50 @@ class Reseller_model extends crm_model
 	    $sql = $this->db->get();
 	    return $sql->row_array();
 	}
+	function get_user_email_templates($user_id)
+	{
+		$this->db->select('*');
+		$this->db->where('user_id',$user_id);
+		$this->db->from($this->cfg['dbpref'].'custom_email_template');
+		$query = $this->db->get();
+		$templt =  $query->result_array();
+		return $templt;
+	}
+	function get_user_email_signatures($user_id)
+	{
+		$this->db->select('*');
+		$this->db->where('user_id',$user_id);
+		$this->db->from($this->cfg['dbpref'].'signatures');
+		$query = $this->db->get();
+		$templt =  $query->result_array();
+		return $templt;
+	}
+   function get_template_content($temp_id)
+	{
+		$this->db->select('temp_content');
+		$this->db->where('temp_id',$temp_id);
+		$this->db->from($this->cfg['dbpref'].'custom_email_template');
+		$query = $this->db->get();
+		$templt =  $query->row_array();
+		return $templt;
+	}
+  function get_signature_content($sign_id)
+	{
+		$this->db->select('sign_content');
+		$this->db->where('sign_id',$sign_id);
+		$this->db->from($this->cfg['dbpref'].'signatures');
+		$query = $this->db->get();
+		$templt =  $query->row_array();
+		return $templt;
+	}
+	function get_user_default_signature($user_id)
+	{
+		$whr=array('is_default'=>1,'user_id'=>$user_id);
+		$this->db->select('sign_content');
+		$this->db->where($whr);
+		$this->db->from($this->cfg['dbpref'].'signatures');
+		$query = $this->db->get();
+		$templt =  $query->row_array();
+		return $templt;
+	}
 }
