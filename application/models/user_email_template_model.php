@@ -29,6 +29,7 @@ class user_email_template_model extends crm_model {
 		$user_id =$ses_data['logged_in_user']['userid'];
 		$this->db->select('*');
 		$this->db->where('user_id',$user_id);
+		$this->db->where('is_default',0);
 		$this->db->from($this->cfg['dbpref'].'custom_email_template');
 		$query = $this->db->get();
 		$templt =  $query->result_array();
