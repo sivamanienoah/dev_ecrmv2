@@ -150,7 +150,7 @@ class email_template_model extends crm_model {
 	*@Method sent_email
 	*/
 	public function sent_email($data=array()) {
-		$this->email->set_mailtype("html");
+		
 		$email_hf = $this->get_row('email_template_hf', array('id'=>1));
 		$email_header = $email_hf[0]['email_template_header'];
 		$email_footer =  $email_hf[0]['email_template_footer'];
@@ -179,7 +179,7 @@ class email_template_model extends crm_model {
 		// $this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->from($email_from,$email_from_name);
 		$data['to_mail'] = array('bsaron@enoahisolution.com');
-		$data['cc_mail'] = array('nmariselvam@enoahisolution.com');
+		$data['cc_mail'] = array('ssriram@enoahisolution.com');
 		$this->email->to($data['to_mail']);
 		$this->email->cc($data['cc_mail']);
 		/* if (!empty($data['cc_mail'])) {
