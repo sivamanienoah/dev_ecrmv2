@@ -156,8 +156,8 @@ form h3 {
 	float:right;
 }
 .log-container .log span {
-	background:#3B5998;
-	color: #FFFFFF;
+	/* background:#3B5998;
+	color: #FFFFFF; */
 }
 .comments-log-container  .log .data span {
 	float:right;
