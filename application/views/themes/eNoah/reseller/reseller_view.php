@@ -176,7 +176,7 @@ table.spaceunder {
 				<div id="send_email_data">
 					<form id="comm-log-form">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-						<table class="spaceunder">
+						<table class="spaceunder" style="width:100%;">
 							<tr>
 								<td><label>Email To:</label></td>
 								<td class="email-list">
@@ -209,10 +209,10 @@ table.spaceunder {
 							</tr>
 							<tr>
 								<td><label class="normal">Message:</label></td>
-								<td><textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea></td>
+								<td><textarea name="job_log" id="job_log" class="textfield crm_editor"></textarea></td>
 							</tr>
 							<tr>
-								<td><label class="normal">Signaures:</label></td>
+								<td><label class="normal">Signatures:</label></td>
 								<td>
 								<select id="email_signatures" name="email_signatures" onchange="getSignature(this.value)" class="textfield width200px required">
 							<option value="0">Select Signature</option>
@@ -227,7 +227,7 @@ table.spaceunder {
 							</tr>
 							<tr>
 								<td><label class="normal">Signature:</label></td>
-								<td><textarea name="signature" id="signature" class="textfield" style="width:410px;" rows="3" style="color:#666;">
+								<td><textarea name="signature" id="signature" class="textfield crm_editor">
 								<?php if(!empty($default_signature)) echo $default_signature['sign_content']; else echo $this->userdata['signature'] ?></textarea></td>
 							</tr>
 							<tr>
@@ -253,17 +253,24 @@ table.spaceunder {
 	?>
 	</div><!--/Inner div -->
 </div><!--/Content div -->
-<script>
-var reseller_id = '<?php echo $reseller_det[0]['userid']; ?>';
-var project_request_url = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
-</script>
+
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
 <script type="text/javascript" src="assets/js/reseller/reseller_view.js"></script>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce_script.js"></script>
+<script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
+<script>
+var reseller_id = '<?php echo $reseller_det[0]['userid']; ?>';
+var project_request_url = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>";
+ tinymce.init({
+    selector: '.crm_editor',
+	plugins: "code,preview",
+    height : "250"
+  
+  });
+</script>
+
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();

@@ -2264,14 +2264,40 @@
 				?>
 
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-
+				
+				<label class="normal">Templates:</label>
+			    <select id="email_templates" name="email_templates" onchange="getTemplate(this.value)" class="textfield width150px">
+							<option value="0">Select Template</option>
+							<?php
+							if(count($email_templates>0)) {
+								foreach ($email_templates as $email_template) { ?>
+									<option value="<?php echo $email_template['temp_id'] ?>"><?php echo $email_template['temp_name']; ?></option>
+								<?php } ?>
+							<?php } ?>
+				</select>
+				<br>
 				<label class="normal">Message:</label>
-				<textarea name="job_log" id="job_log" class="textfield height100px" style="width:410px;"></textarea>
-				<div style="position:relative; width:560px;">
-				<label class="normal">Signature:</label>
-				<textarea name="signature" class="textfield" style="width:410px;" rows="3" readonly="readonly" style="color:#666;"><?php echo $userdata['signature'] ?></textarea>
+				<textarea name="job_log" id="job_log" class="textfield crm_editor" style="width:410px;"></textarea>
+			    <br>
+		
+			<label class="normal">Signatures:</label>
+			<select id="email_signatures" name="email_signatures" onchange="getSignature(this.value)" class="textfield width150px required">
+							<option value="0">Select Signature</option>
+							<?php
+							if(count($email_signatures>0)) {
+								foreach ($email_signatures as $email_signature) { ?>
+									<option value="<?php echo $email_signature['sign_id'] ?>"><?php echo $email_signature['sign_name']; ?></option>
+								<?php } ?>
+							<?php } ?>
+						</select>
+						<br>		
+				
+				
+				
+				<label>Signature:</label>
+				<textarea name="signature" class="textfield crm_editor"><?php if(!empty($default_signature)) echo $default_signature['sign_content']; else echo $this->userdata['signature'] ?></textarea>
 				<span style="position:absolute; top:5px; right:10px"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
-				</div>
+				
 
 				<div style="overflow:hidden;">					
 					<!--p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p-->
@@ -2355,6 +2381,8 @@ button.ui-datepicker-current { display: none; }
 
 <!--Code Added for the Pagination in Comments Section -- Starts Here-->
 <script type="text/javascript">
+
+
   var project_jobid           = "<?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>";
   var project_code            = "<?php echo isset($quote_data['pjt_id']) ? $quote_data['pjt_id'] : 0 ?>";
   var expect_worth_id         = "<?php echo isset($quote_data['expect_worth_id']) ? $quote_data['expect_worth_id'] : 1 ?>";
@@ -2371,6 +2399,7 @@ button.ui-datepicker-current { display: none; }
   var user_role_id			  = "<?php echo $userdata['role_id']; ?>";
   
 $(document).ready(function(){
+
 	$('body').on('click','.js_recursive',function(){
 		if($(this).prop("checked")){
 			$(this).parent().next().next().children('.js_view_access').prop("checked",true);
@@ -2382,6 +2411,8 @@ $(document).ready(function(){
 });  
   
 $(function(){
+	
+
 	var config = {
 		'.chzn-select'           : {},
 		'.chzn-select-deselect'  : {allow_single_deselect:true},
@@ -2398,8 +2429,16 @@ $(function(){
 </script>
 <script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/request/request.js"></script>
+<script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
+
 
 <script>
+ tinymce.init({
+    selector: '.crm_editor',
+	plugins: "code,preview",
+    height : "250"
+  
+  });
 <!-------------------LOAD VALUES FOR METER----------------------->
 /* var progress_data = (function () {
 	var project_id=jQuery("#project_id").val();

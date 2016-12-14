@@ -684,6 +684,11 @@ class Project extends crm_controller {
 			if($milestones_data==0) $data['show_milestones']=0;
 			else $data['show_milestones']=1;
 			
+			$user_id =$this->userdata['userid'];
+		$data['email_templates'] = $this->project_model->get_user_email_templates($user_id);
+		$data['email_signatures'] = $this->project_model->get_user_email_signatures($user_id);
+		$data['default_signature'] = $this->project_model->get_user_default_signature($user_id);
+			
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -2854,11 +2859,16 @@ class Project extends crm_controller {
 	{
 		$data_log = real_escape_array($this->input->post());
 		
-		$data_log['log_content'] = str_replace('\n', "<br />", $data_log['log_content']);
-		$ins['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
+		$data_log['log_content'] = str_replace('\\', "", $data_log['log_content']);
+		$ins['log_content'] 	 = str_replace('\n', "", $data_log['log_content']);
 		
 		$break = 120;
-		$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+		//$data_log['log_content'] =  implode(PHP_EOL, str_split($data_log['log_content'], $break));
+		
+		$data_log['sign_content'] = str_replace('\n', "", $data_log['sign_content']);
+		$data_log['sign_content'] = str_replace('\\', "", $data_log['sign_content']);
+		
         if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
 			$this->load->helper('fix_text');
@@ -2911,7 +2921,7 @@ class Project extends crm_controller {
 					//email sent by email template
 					$param = array();
 
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$data_log['sign_content']);
 
 					$param['to_mail'] = $senders;
 					$param['bcc_mail'] = $admin_mail;
@@ -5264,6 +5274,18 @@ HDOC;
 		$this->db->where('jobid_fk', $id);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+   public function get_template_content()
+	{
+		$temp_id = $this->input->post('temp_id');
+		$temp_content =$this->project_model->get_template_content($temp_id);
+		 echo json_encode($temp_content);
+	}
+	public function get_signature_content()
+	{
+		$sign_id = $this->input->post('sign_id');
+		$sign_content =$this->project_model->get_signature_content($sign_id);
+		 echo json_encode($sign_content);
 	}
 
 }

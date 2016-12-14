@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce_script.js"></script>
+<script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
 <div id="content">
     <div class="inner">
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
@@ -14,7 +13,7 @@
             </div>
             <?php } ?>
             <p>All mandatory fields marked * must be filled in correctly.</p>
-			<table class="layout">
+			<table class="layout" style="width:100%">
 				<tr>
 					<td>Template Name : *</td>
 					<td><input type="text" size="50" name="temp_name" id="temp_name" value="<?php echo $this->validation->temp_name; ?>" class="textfield" /></td>
@@ -34,7 +33,7 @@
 			    <tr>
 					<td>Template Content : *</td>
 					<td>
-						<textarea name="temp_content" id="temp_content" cols="110" rows="15">
+						<textarea name="temp_content" id="temp_content" class="crm_editor" cols="110" rows="15">
 							<?php echo $this->validation->temp_content; ?>
 						</textarea>
 					</td>
@@ -77,5 +76,12 @@ function getTemplate(temp_id)
 			}
 		});
 }
+
+ tinymce.init({
+    selector: '.crm_editor',
+	plugins: "code,preview",
+    height : "250"
+  
+  });
 </script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
