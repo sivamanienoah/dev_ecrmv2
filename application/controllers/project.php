@@ -2856,7 +2856,7 @@ class Project extends crm_controller {
 	
 	//adding log
 	function pjt_add_log()
-	{
+	{ 
 		$data_log = real_escape_array($this->input->post());
 		
 		$data_log['log_content'] = str_replace('\n', "", $data_log['log_content']);
@@ -2868,6 +2868,7 @@ class Project extends crm_controller {
 		
 		$data_log['sign_content'] = str_replace('\n', "", $data_log['sign_content']);
 		$data_log['sign_content'] = str_replace('\\', "", $data_log['sign_content']);
+		
 		
         if (isset($data_log['lead_id']) && isset($data_log['userid']) && isset($data_log['log_content'])) {
 			$this->load->helper('text');
@@ -2922,7 +2923,7 @@ class Project extends crm_controller {
 					$param = array();
 
 					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$data_log['sign_content']);
-
+                     
 					$param['to_mail'] = $senders;
 					$param['bcc_mail'] = $admin_mail;
 					$param['from_email'] = $user_data[0]['email'];
@@ -2974,7 +2975,7 @@ class Project extends crm_controller {
 					//email sent by email template
 					$param = array();
 
-					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$this->userdata['signature']);
+					$param['email_data'] = array('print_fancydate'=>$print_fancydate, 'first_name'=>$client[0]['first_name'], 'last_name'=>$client[0]['last_name'], 'log_content'=>$data_log['log_content'], 'received_by'=>$received_by, 'signature'=>$data_log['sign_content']);
 
 					$param['to_mail'] = $senders;
 					$param['bcc_mail'] = $admin_mail;
@@ -2982,8 +2983,16 @@ class Project extends crm_controller {
 					$param['from_email_name'] = $user_data[0]['first_name'];
 					$param['template_name'] = "Project Notification Message";
 					$param['subject'] = $log_subject;
-
-					if($this->email_template_model->sent_email($param))
+                   
+					if($data_log['client_emails'] =='true')
+					{ 
+						$sent_mail = $this->project_model->sent_email_client($param);
+					}
+					else
+					{
+						$sent_mail = $this->email_template_model->sent_email($param);
+					}
+					if($sent_mail)
 					{
 						$successful .= trim($received_by, ', ');
 					}

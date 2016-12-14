@@ -162,7 +162,7 @@ class email_template_model extends crm_model {
 		$email_from 	 = "webmaster@enoahprojects.com";
 		$email_from_name = 'Webmaster';
 		
-		$email_subject = $data['subject'] . " - Mail from DEV Server";;
+		$email_subject = $data['subject'] . " - Mail from DEV Server";
 		
 		if(count($data['email_data'])>0) {
 			foreach($data['email_data'] as $key=>$value) {

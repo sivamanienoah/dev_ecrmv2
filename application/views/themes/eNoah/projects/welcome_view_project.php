@@ -2289,16 +2289,13 @@
 									<option value="<?php echo $email_signature['sign_id'] ?>"><?php echo $email_signature['sign_name']; ?></option>
 								<?php } ?>
 							<?php } ?>
-						</select>
+						</select><span><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
 						<br>		
 				
 				
 				
 				<label>Signature:</label>
 				<textarea name="signature" class="textfield crm_editor"><?php if(!empty($default_signature)) echo $default_signature['sign_content']; else echo $this->userdata['signature'] ?></textarea>
-				<span style="position:absolute; top:5px; right:10px"><a href="#comm-log-form" onclick="whatIsSignature(); return false;">What is this?</a></span>
-				
-
 				<div style="overflow:hidden;">					
 					<!--p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p-->
 					<div class="button-container">

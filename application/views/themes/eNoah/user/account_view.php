@@ -33,12 +33,14 @@
 							<input type="text" name="email" value="<?php echo  $this->validation->email ?>" class="textfield width200px" /> &nbsp; (This is your login email)
 						</td>
 					</tr>
+					<!--
 					<tr>
 						<td>Signature:</td>
 						<td colspan="3">
-							<textarea name="signature" class="textfield width300px" rows="6"><?php echo  $this->validation->signature ?></textarea>
+							<textarea name="signature" class="textfield width300px" rows="6"><?php //echo  $this->validation->signature ?></textarea>
 						</td>
 					</tr>
+					-->
 					<tr>
 						<td>Old Password:</td>
 						<td><input type="password" name="oldpassword" value="" class="textfield width200px" autocomplete="off"/></td>

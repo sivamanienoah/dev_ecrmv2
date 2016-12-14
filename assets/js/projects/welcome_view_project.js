@@ -195,7 +195,7 @@
 			});
 
 
-		var form_data 			   = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set,'sign_content':the_sign}
+		var form_data 			   = {'userid':userid, 'lead_id':quote_id, 'log_content':the_log, 'emailto':email_set,'sign_content':the_sign,'client_emails':$('#email_to_customer').is(':checked')}
 		form_data[csrf_token_name] = csrf_hash_token;
 		
 		if ($('#log_stickie').is(':checked')) {
@@ -1553,7 +1553,7 @@ function addURLtoJob()
 	}
 
 	function whatIsSignature() {
-		var msg = 'This is your signature!\nThis will be attached to any log that you email through.\nGo to "My Account" page to set your signature.';
+		var msg = 'This is your signature!\nThis will be attached to any log that you email through.\nGo to "Manage Signature" page to set your signature.';
 		alert(msg);
 		return false;
 	}
