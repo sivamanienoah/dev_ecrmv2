@@ -1142,7 +1142,7 @@ class Project extends crm_controller {
 				
 				$table ='<tr id="log" class="log'.$stick_class.'"><td id="log" class="log'.$stick_class.'">
 						 <p class="data log'.$stick_class.'"><span class="log'.$stick_class.'">'.$fancy_date.'</span>'.$user_data[0]['first_name'].' '.$user_data[0]['last_name'].'</p>
-						 <p class="desc log'.$stick_class.'">'.$log_content.'</p></td></tr>';
+						 <p class="desc log'.$stick_class.'">'.$ld['log_content'].'</p></td></tr>';
 				$data['log_html'] .= $table;
 				unset($table, $user_data, $user, $log_content);
 			}
