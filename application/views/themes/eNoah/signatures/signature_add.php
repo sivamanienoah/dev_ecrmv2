@@ -1,6 +1,5 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="assets/js/tiny_mce/tiny_mce_script.js"></script>
+<script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
 <div id="content">
     <div class="inner">
     	<form action="<?php echo  $this->uri->uri_string() ?>" method="post">
@@ -14,7 +13,7 @@
             </div>
             <?php } ?>
             <p>All mandatory fields marked * must be filled in correctly.</p>
-			<table class="layout">
+			<table class="layout" style="width:100%;">
 				<tr>
 					<td>Signature Name : *</td>
 					<td><input type="text" size="50" name="sign_name" id="sing_name" value="<?php echo $this->validation->sign_name; ?>" class="textfield" /></td>
@@ -22,7 +21,7 @@
 			    <tr>
 					<td>Signature Content : *</td>
 					<td>
-						<textarea name="sign_content" id="sign_content" cols="110" rows="15">
+						<textarea name="sign_content" id="sign_content" class="crm_editor" cols="110" rows="15">
 							<?php echo $this->validation->sign_content; ?>
 						</textarea>
 					</td>
@@ -48,4 +47,12 @@
 		</form>
 	</div><!--Inner div close-->
 </div><!--Content div close-->
+<script>
+ tinymce.init({
+    selector: '.crm_editor',
+	plugins: "code,preview",
+    height : "250"
+  
+  });
+</script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>
