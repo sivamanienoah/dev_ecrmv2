@@ -1024,7 +1024,8 @@ class Project_model extends crm_model
 		
 		$email_from 	 = "webmaster@enoahprojects.com";
 		$email_from_name = 'Webmaster';
-		$email_template = $data['email_data']['log_content'];
+		$email_template = $data['email_data']['log_content'].'<br />'.$data['email_data']['signature'];
+		echo $email_template;exit;
         $email_subject = $data['subject'] . " - Mail from DEV Server";
 		// $this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->from($email_from,$email_from_name);
