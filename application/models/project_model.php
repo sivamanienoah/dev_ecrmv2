@@ -228,7 +228,7 @@ class Project_model extends crm_model
 		$this->db->order_by("j.lead_id", "desc");
 		// $this->db->limit(5);
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();
 		//echo '<pre>';print_r($pjts);exit;
 		return $pjts;
@@ -1025,8 +1025,7 @@ class Project_model extends crm_model
 		$email_from 	 = "webmaster@enoahprojects.com";
 		$email_from_name = 'Webmaster';
 		$email_template = $data['email_data']['log_content'].'<br />'.$data['email_data']['signature'];
-		echo $email_template;exit;
-        $email_subject = $data['subject'] . " - Mail from DEV Server";
+		$email_subject = $data['subject'] . " - Mail from DEV Server";
 		// $this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->from($email_from,$email_from_name);
 		//$data['to_mail'] = array('bsaron@enoahisolution.com');
