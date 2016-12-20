@@ -147,8 +147,8 @@ if ($this->session->userdata('logged_in') == TRUE) {
 						<ul class="root">
 							<li><a class="my-profile" href="<?php echo base_url() ?>myaccount/">My Profile</a></li>
 							<li><a class="notifications" href="<?php echo base_url() ?>notifications/">Manage Notifications</a></li>
-							<li><a class="my-profile" href="<?php echo base_url() ?>user_email_template/">Email Templates</a></li>
-							<li><a class="my-profile" href="<?php echo base_url() ?>signatures/">Manage Signatures</a></li>
+							<li><a class="email-template" href="<?php echo base_url() ?>user_email_template/">Email Templates</a></li>
+							<li><a class="manage-signature" href="<?php echo base_url() ?>signatures/">Manage Signatures</a></li>
 							<li><a class="sign-out" href="<?php echo base_url() ?>userlogin/logout">Sign Out</a></li>
 						</ul>
 					</div>

@@ -2086,9 +2086,13 @@ div.submenu{background: #fff;position: absolute;/* top: -12px;left: -20px; */rig
 .dropdown li a:hover{color: #FFFFFF;text-decoration: none;}
 .my-profile{background:url("../img/profile-non-hover.png") no-repeat 6px 11px;}
 .my-profile:hover{background:url("../img/profile-on-hover.png") #4b6fb9 no-repeat 6px 11px;}
-
 .notifications{background:url("../img/bell-inactive.png") no-repeat 6px 11px;}
 .notifications:hover{background:url("../img/bell-active.png") #4b6fb9 no-repeat 6px 11px;}
+
+.email-template{background:url("../img/email-template-icon.png") no-repeat 6px 11px;}
+.email-template:hover{background:url("../img/email-template-icon.png") #4b6fb9 no-repeat 6px 11px;}
+.manage-signature{background:url("../img/signature-icon.png") no-repeat 6px 11px;}
+.manage-signature:hover{background:url("../img/signature-icon.png") #4b6fb9 no-repeat 6px 11px;}
 
 .sign-out{background:url("../img/sign-out-non-hover.png") no-repeat 7px 12px ;}
 .sign-out:hover{background:url("../img/sign-out-hover.png") #4b6fb9 no-repeat 7px 12px;}
