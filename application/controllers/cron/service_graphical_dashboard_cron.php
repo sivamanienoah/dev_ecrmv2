@@ -476,21 +476,21 @@ class Service_graphical_dashboard_cron extends crm_controller
 				//for billable utilization cost
 				$temp_ytd_utilization_cost = '';
 				if(isset($projects['direct_cost'][$parr]['total_direct_cost']) && (isset($projects['other_cost'][$parr]))) {
-					echo "<br>".$parr ." ". ' temp_ytd_utilization_cost '. $temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+					$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				}
 				
 				if(isset($temp_ytd_utilization_cost) && !empty($temp_ytd_utilization_cost)) {
-					echo '<br>bill_ytd_uc '. $bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
+					$bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
 				}
 				$ins_array['ytd_billable_utilization_cost'] = ($bill_ytd_uc != '') ? round($bill_ytd_uc) : '-';
 				if(isset($projects['direct_cost'][$parr]) && !empty($projects['direct_cost'][$parr])) {
-					echo "<br>tot_temp_ytd_uc ".$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
-					echo "<br>tot_temp_billable_ytd_uc ".$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
+					$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
+					$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
 				}
 				
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
-					echo "<br>tot_bill_eff ".$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
-					echo "<br>tot_tot_bill_eff ".$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
+					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
+					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
 				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
@@ -502,9 +502,9 @@ class Service_graphical_dashboard_cron extends crm_controller
 					
 					$ins_array[$con_month] = 0;
 					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					echo $parr ."<br>overall_revenue".$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
 					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
-					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					echo "<br>overall_contrib ".$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
