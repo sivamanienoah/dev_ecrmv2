@@ -2295,7 +2295,7 @@
 				
 				
 				<label>Signature:</label>
-				<textarea name="signature" class="textfield crm_editor"><?php if(!empty($default_signature)) echo $default_signature['sign_content']; else echo $this->userdata['signature'] ?></textarea>
+				<textarea name="signature" class="textfield crm_editor"><?php if(!empty($default_signature)) echo $default_signature['sign_content'];?></textarea>
 				<div style="overflow:hidden;">					
 					<!--p class="right" style="padding-top:5px;">Mark as a <a href="#was" onclick="whatAreStickies(); return false;">stickie</a> <input type="checkbox" name="log_stickie" id="log_stickie" /></p-->
 					<div class="button-container">
