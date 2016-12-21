@@ -445,7 +445,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 			//exit;
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
-			//echo '<pre>';print_r($practice_array); 
+
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
 			foreach($practice_array as $parr){
@@ -476,21 +476,21 @@ class Service_graphical_dashboard_cron extends crm_controller
 				//for billable utilization cost
 				$temp_ytd_utilization_cost = '';
 				if(isset($projects['direct_cost'][$parr]['total_direct_cost']) && (isset($projects['other_cost'][$parr]))) {
-					$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+					echo "<br>".$parr ." ". ' temp_ytd_utilization_cost '. $temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				}
 				
 				if(isset($temp_ytd_utilization_cost) && !empty($temp_ytd_utilization_cost)) {
-					$bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
+					echo '<br>bill_ytd_uc '. $bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
 				}
 				$ins_array['ytd_billable_utilization_cost'] = ($bill_ytd_uc != '') ? round($bill_ytd_uc) : '-';
 				if(isset($projects['direct_cost'][$parr]) && !empty($projects['direct_cost'][$parr])) {
-					$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
-					$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
+					echo "<br>tot_temp_ytd_uc ".$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
+					echo "<br>tot_temp_billable_ytd_uc ".$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
 				}
 				
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
-					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
-					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
+					echo "<br>tot_bill_eff ".$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
+					echo "<br>tot_tot_bill_eff ".$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
 				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
@@ -577,7 +577,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{
-		// echo "<pre>"; print_r($practice_arr);
 		$prs = array();
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -585,7 +584,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$pract = $pquery->result();
-		if(!empty($pract) && count($pract)>0){
+		if(!empty($pract) && count($pract)>0) {
 			foreach($pract as $pr){
 				$prs[] = $pr->id;
 			}
@@ -618,14 +617,11 @@ class Service_graphical_dashboard_cron extends crm_controller
 		// echo $this->db->last_query(); die;
 		$timesheet_data = $query2->result();
 		
-		// echo "<pre>"; print_r($timesheet_data); die;
-		
 		$resarr = array();
 		$resarr['project_code'] = array();
 
 		if(count($timesheet_data)>0) {
 			foreach($timesheet_data as $row) {
-				// echo $row->practice_id . " " . $row->resoursetype; exit;
 				if($row->practice_id == 7 || $row->practice_id == 13) {
 					$row->practice_id = 10;
 				}
@@ -644,8 +640,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$resarr[$practice_arr[$row->practice_id]]['totalcost'] = $row->resource_duration_cost;
 				}				
 				if(!empty($start_date) && !empty($end_date)) {
-					
-					if(!in_array($row->project_code, $resarr['project_code'])){
+					if(!in_array($row->project_code, $resarr['project_code'])) {
 						$resarr['project_code'][] = $row->project_code;
 					}
 				}
