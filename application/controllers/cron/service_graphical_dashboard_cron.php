@@ -437,14 +437,14 @@ class Service_graphical_dashboard_cron extends crm_controller
 
 		if(!empty($practice_array)){
 			//truncate the table & inserting the practices name from table.
-			$this->db->truncate($this->cfg['dbpref'].'services_graphical_dashboard');
+			// $this->db->truncate($this->cfg['dbpref'].'services_graphical_dashboard');
 			foreach($practice_array as $parr){
 				$ins_data['practice_name'] = $parr;
-				$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
+				// $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
 			}
 			//exit;
 			$ins_data['practice_name'] = 'Total';
-			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
+			// $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
 			//echo '<pre>';print_r($practice_array); 
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
@@ -492,7 +492,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
-				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
+				echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 				// revenue_cost      - $projects['trend_pract_arr']
 				// contribution_cost - $projects['contribution_trend_arr']
 				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
