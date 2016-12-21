@@ -1020,21 +1020,14 @@ class Project_model extends crm_model
 		return $templt;
 	}
 	public function sent_email_client($data=array()) {
-		//echo '<pre>'.print_r($data); exit;
 		
-		$email_from 	 = "webmaster@enoahprojects.com";
-		$email_from_name = 'Webmaster';
 		$email_template = $data['email_data']['log_content'].'<br />'.$data['email_data']['signature'];
-		$email_subject = $data['subject'] . " - Mail from DEV Server";
-		// $this->email->from($data['from_email'],$data['from_email_name']);
-		$this->email->from($email_from,$email_from_name);
-		//$data['to_mail'] = array('bsaron@enoahisolution.com');
-		//$data['cc_mail'] = array('rkumaran@enoahisolution.com');
-		if (!empty($data['to_mail'])) {
+		$email_subject = $data['subject'];
+		$this->email->from($data['from_email'],$data['from_email_name']);
+	    if (!empty($data['to_mail'])) {
 		$this->email->to($data['to_mail']);
 		}
-		
-		 if (!empty($data['cc_mail'])) {
+		if (!empty($data['cc_mail'])) {
 			$this->email->cc($data['cc_mail']);
 		}
 		if (!empty($data['bcc_mail'])) {
@@ -1060,11 +1053,7 @@ class Project_model extends crm_model
 				$this->email->attach($att_row);
 			}
 		}		
-		// return true;
-		// $this->email->send();
-		// echo $this->email->print_debugger();exit;
-		//return true;
-		//echo $email_template; exit;
+	
 		if($this->email->send()) { 
 			return true;
 		} else {
