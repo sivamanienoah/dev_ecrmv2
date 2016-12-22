@@ -496,9 +496,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$financialYear 		= get_current_financial_year($rec->yr,$rec->month_name);
 				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 				
-				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-				$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
-				$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+				$timesheet_data[$rec->username]['practice_id'] 	= $rec->practice_id;
+				$timesheet_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['dept_name'] 	= $rec->dept_name;
 				
 				$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 				$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
@@ -671,15 +671,11 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
-				// $dc_val = (($projects['irval'][$parr] - $projects['direct_cost'][$parr]['total_direct_cost'])/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				$ins_array['month_status'] = 2;
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
 				$tot_Irval   += $projects['irval'][$parr];
-				
-				// $tot_dc_values += $projects['irval'][$parr];
-				// $tot_dc_totals += $projects['direct_cost'][$parr]['total_direct_cost'];
 				
 				$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 				$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
@@ -691,12 +687,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_estimated_hrs += $projects['eff_var'][$parr]['tot_estimate_hrs'];
 				
 				$tot_cm_irvals += $projects['cm_irval'][$parr];
-				// $tot_cm_dc_tot += $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'];
 				$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
-				$tot_dc_vals += $projects['irval'][$parr];
-				// $tot_dc_tots += $projects['direct_cost'][$parr]['total_direct_cost'];
-				$tot_dc_tots += $temp_ytd_utilization_cost;
+				echo "<br>tot_dc_vals " .$tot_dc_vals += $projects['irval'][$parr];
+				echo "<br>tot_dc_tots " .$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				//$tot_ytd_billable_hrs += $projects['direct_cost'][$parr]['total_hours'];
 				
@@ -704,22 +698,21 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
 				$ins_array = array();
 			}
-			// echo $tot_dc_tots; exit;
-			$tot['billing_month'] = $totCM_Irval;
-			$tot['ytd_billing']   = $tot_Irval;
-			$tot['ytd_utilization_cost'] = $tot_dc_tots;
-			//$tot['ytd_billable_hrs'] = $tot_ytd_billable_hrs;
-			$tot['billable_month'] = round(($tot_billhour/$tot_tothours)*100);
-			$tot['ytd_billable'] = round(($tot_billval/$tot_totbillval)*100);
+
+			$tot['billing_month'] 			= $totCM_Irval;
+			$tot['ytd_billing']   			= $tot_Irval;
+			$tot['ytd_utilization_cost'] 	= $tot_dc_tots;
+
+			$tot['billable_month'] 	= round(($tot_billhour/$tot_tothours)*100);
+			$tot['ytd_billable'] 	= round(($tot_billval/$tot_totbillval)*100);
 			$tot['effort_variance'] = round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
 			$cmonth='-';
 			if($tot_cm_dc_tot){
 				$cmonth = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
 			}
-			$tot['contribution_month'] = $cmonth;			
-			//$tot['contribution_month'] = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);
-			$tot['ytd_contribution'] = round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
-			$tot['month_status'] = 2;
+			$tot['contribution_month'] 	= $cmonth;			
+			echo "<br>ytd_contribution".$tot['ytd_contribution'] 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
+			$tot['month_status'] 		= 2;
 
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total','month_status' => 2));
@@ -821,9 +814,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		/* if(!empty($start_date) && !empty($end_date)) {
-			echo "<pre>"; print_r($resarr); die;
-		} */
 		return $resarr;
 	}
 	
