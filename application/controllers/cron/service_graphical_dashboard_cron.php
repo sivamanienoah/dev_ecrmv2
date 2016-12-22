@@ -253,7 +253,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 
-			// echo '<pre>'; print_r($timesheet_data); echo "</pre>"; exit;
 			if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 				foreach($timesheet_data as $key1=>$value1) {
 					$resource_name = $key1;
@@ -277,8 +276,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 												$direct_rateperhr	 	 = $value4['direct_rateperhr'];
 												$rate1 					 = $rate;
 												$direct_rateperhr1 		 = $direct_rateperhr;
-												if($individual_billable_hrs > $max_hours){
-													//echo 'max'.$max_hours.'<br>';
+												if($individual_billable_hrs > $max_hours) {
 													$percentage 		= ($max_hours/$individual_billable_hrs);
 													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
@@ -305,7 +303,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}	 
 			}
 		}
-		// echo '<pre>'; print_r($resource_cost); echo "</pre>";
 		//for contribution trend
 		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)) {
 			foreach($resource_cost as $resourceKey => $resourceVal){
@@ -334,7 +331,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>'; print_r($contribution_trend_project_arr); echo "</pre>"; exit;
 		
 		if(is_array($resource_cost) && count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
@@ -370,7 +366,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>'; print_r($directcost1); echo '</pre>'; 
 		$this->db->select("pjt_id,practice,lead_title");
 		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
 		$project_res = $res->result();
@@ -410,7 +405,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 		
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
-		// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
 		foreach($directcost2 as $practiceId => $val1) {
 			foreach($val1 as $pjtCode => $val) {
 				if(isset($directcost[$practiceId]['total_direct_cost'])) {
@@ -425,11 +419,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 			}
 		}
-		// echo '<pre>';print_r($directcost); echo "</pre>"; exit;
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
-		
-		// echo "<pre>"; print_r($projects['direct_cost']); exit;
 		
 		$ins_array    = array();
 		$tot 		  = array();
@@ -442,7 +433,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				$ins_data['practice_name'] = $parr;
 				$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
 			}
-			//exit;
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_data);
 
@@ -467,7 +457,6 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 				//for billable efforts
 				$bill_eff = 0;
-				// echo "$parr"."<pre>  <br>"; print_r($projects['billable_ytd'][$parr]);
 				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
 					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
 				}
@@ -493,18 +482,15 @@ class Service_graphical_dashboard_cron extends crm_controller
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}
 				// echo "<pre>"; print_r($projects['trend_pract_arr']); echo "<br />***<br />"; print_r($projects['contribution_trend_arr']); echo "</pre>"; exit;
-				// revenue_cost      - $projects['trend_pract_arr']
-				// contribution_cost - $projects['contribution_trend_arr']
-				// contribution %    = ((revenue_cost - contribution_cost)/revenue_cost)*100
 				$mon_revenue = $mon_contrib = 0;
 				foreach($this->fiscal_month_arr as $fis_mon) {
 					$con_month = 'contri_'.$fis_mon;
 					
 					$ins_array[$con_month] = 0;
 					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					echo $parr ."<br>overall_revenue".$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
 					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
-					echo "<br>overall_contrib ".$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
@@ -513,7 +499,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
-				echo $this->db->last_query() . "<br />";
+				// echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
 			}
