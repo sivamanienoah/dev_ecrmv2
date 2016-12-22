@@ -643,8 +643,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				/**other cost data*/
 				
 				if($parr == 'Infra Services' || $parr == 'Testing') {
-					// $parr = 'Others';
-					continue;
+					$parr = 'Others';
+					// continue;
 				}
 				
 				//echo $projects['direct_cost'][$parr]['total_direct_cost'].'<br>';				
