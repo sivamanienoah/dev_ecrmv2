@@ -3,14 +3,36 @@
 */
 
 $('#excel').click(function() {
-	//mychanges
-	var sturl = site_base_url+"welcome/excelExport/";
-	document.location.href = sturl;
+	document.location.href = site_base_url+"welcome/excelExport/";
 	return false;
 });
 
 $(function() {
 	dtTable();
+	
+	/*for lead field customize*/
+	var show_lead_field_msg = '<div class="show-leads-fields">Loading Content.<br />';
+	show_lead_field_msg += '<img src="assets/img/indicator.gif" alt="wait" /><br /> Thank you for your patience!</div>';
+	  $('.modal-custom-fields').click(function(){
+	   $.blockUI({
+					message:show_lead_field_msg,
+					css: {width: '690px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+					overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
+				});
+		$.get(
+			site_base_url+'welcome/get_lead_fields',
+			{},
+			function(data){
+				$('.show-leads-fields').slideUp(500, function(){
+					$(this).parent().css({backgroundColor: '#fff', color: '#333'});
+					$(this).css('text-align', 'left').html(data).slideDown(500, function(){
+						$('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
+					});
+				})
+			}
+		);
+		return false;
+	});
 });	
 
 function deleteLeads(id) {
@@ -19,9 +41,6 @@ function deleteLeads(id) {
 		css:{width:'440px'}
 	});
 }
-/* function processDelete(id) {
-	window.location.href = site_base_url+'welcome/delete_quote/'+id;
-} */
 function processDelete(id) {
 		var formdata = {};
 		formdata['id'] = id;
@@ -42,21 +61,6 @@ function processDelete(id) {
 						css:{width:'440px'}
 					});
 					$('#'+id).remove();
-					/* var leng = $("select[name=DataTables_Table_0_length]").val();
-					$('.data-tbl').dataTable({
-						"aaSorting": [[ 1, "desc" ]],
-						"iDisplayLength": leng,
-						"sPaginationType": "full_numbers",
-						"bInfo": true,
-						"bPaginate": true,
-						"bProcessing": true,
-						"bServerSide": false,
-						"bLengthChange": true,
-						"bSort": true,
-						"bFilter": false,
-						"bAutoWidth": false,
-						"bDestroy": true
-					}); */
 					setTimeout('timerfadeout()', 3000);
 				} else {
 					alert(response['msg']);
