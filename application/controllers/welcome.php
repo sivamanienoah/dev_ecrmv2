@@ -179,6 +179,13 @@ class Welcome extends crm_controller {
 		$data['lead_status']  = $lead_status;
 		$data['lead_indi']    = $lead_indi;
 		$data['keyword'] 	  = $keyword;
+		
+		$db_fields 			  = $this->welcome_model->get_lead_dashboard_field($this->userdata['userid']);
+		if(!empty($db_fields) && count($db_fields)>0) {
+			foreach($db_fields as $record) {
+				$data['db_fields'][] = $record['column_name'];
+			}
+		}
 
 		$this->load->view('leads/advance_filter_view', $data);
 	}
@@ -3163,6 +3170,70 @@ HDOC;
 			$res['base_cur'] = $result['base_currency'];
 		}
 		echo json_encode($res);
+		exit;
+	}
+	
+	public function get_lead_fields()
+	{
+		$fields 		= array();
+		$fields['CN'] 	= 'Customer Name';
+		$fields['EW'] 	= 'Expected Worth';
+		$fields['REG'] 	= 'Region';
+		$fields['LO'] 	= 'Lead Owner';
+		$fields['LAT'] 	= 'Lead Assigned To';
+		$fields['STG'] 	= 'Lead Stage';
+		$fields['IND'] 	= 'Lead Indicator';
+		$fields['STAT'] = 'Status';		
+		$data['fields'] = $fields;
+		
+		$oldfields  = $this->welcome_model->get_lead_dashboard_field($this->userdata['userid']);
+		$remove_select = array();
+
+		$old_select = $base_select = '';
+		if(!empty($oldfields) && count($oldfields)>0){
+			$cl_checked1 = ' selected="selected"';
+			foreach($oldfields as $record) {
+				$old_select .= '<option value="'.$record['column_name'].'"' .$cl_checked1.'>' . $fields[$record['column_name']].'</option>';
+				$remove_select[] = $record['column_name'];
+			}
+		}
+
+		foreach($fields as $key=>$val) {
+			if(!in_array($key, $remove_select)){
+				$base_select .= '<option value="'.$key.'">' . $val.'</option>';
+			}
+		}
+		$data['base_select'] = $base_select;
+		$data['old_select']  = $old_select;
+		
+		$this->load->view('leads/set_lead_fields', $data);
+	}
+	
+	function save_lead_fields()
+	{
+		$existfields  = $this->welcome_model->get_records('lead_dashboard_fields', $arr=array('user_id'=>$this->userdata['userid']), $ord=array('column_order'=>'ASC'));
+		
+		$i=0;
+		$res = array();
+		$wh_condn = array('user_id'=>$this->userdata['userid']);
+		$del = $this->db->delete($this->cfg['dbpref'].'lead_dashboard_fields', $wh_condn);
+		$newselect = $this->input->post('new_select');
+		
+		if(!empty($newselect) && count($newselect)>0){
+			foreach($newselect as $rec){
+				$ins_arr = array('user_id'=>$this->userdata['userid']);
+				$ins_arr['column_name'] = $rec;
+				$ins_arr['column_order'] = $i;
+				$i++;
+				$insert = $this->welcome_model->insert_row('lead_dashboard_fields', $ins_arr);
+			}
+		}
+		if($insert){
+			$res['result'] = 'success';
+		} else {
+			$res['result'] = 'error';
+		}
+		echo json_encode($res); 
 		exit;
 	}
 }

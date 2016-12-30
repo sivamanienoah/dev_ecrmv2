@@ -1652,6 +1652,31 @@ class Welcome_model extends crm_model {
 		// echo $this->db->last_query();
 		return $query->row_array();
 	}
+	
+	public function get_records($tbl, $wh_condn='', $order='') {
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
+	
+	public function get_lead_dashboard_field($id)
+	{
+		$this->db->select("column_name");
+		$this->db->from($this->cfg['dbpref'].'lead_dashboard_fields');
+		$this->db->where('user_id', $id);
+		$this->db->order_by('column_order', 'ASC');
+		$query = $this->db->get();
+		return $query->result_array();
+	}
 }
 
 ?>
