@@ -652,7 +652,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$ins_array['month_status'] = 2;
 				
 				$totCM_Irval += $projects['cm_irval'][$parr];
-				echo $parr ." " . $tot_Irval   += $projects['irval'][$parr]  . "<br>";
+				echo "<br>" . $parr ." " . $tot_Irval   += $projects['irval'][$parr];
 				
 				$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 				$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
