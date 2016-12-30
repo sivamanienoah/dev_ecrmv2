@@ -622,6 +622,10 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 					$projects['other_cost'][$parr] = $other_cost_val;
 					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
 				}
+				if($parr != 'Infra Services' || $parr != 'Testing') {
+					$totCM_Irval += $projects['cm_irval'][$parr];
+					$tot_Irval   += $projects['irval'][$parr];
+				}
 				/**other cost data*/
 				if($parr == 'Infra Services' || $parr == 'Testing') {
 					$parr = 'Others';
@@ -650,11 +654,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				$ins_array['month_status'] = 2;
-				
-				if($parr != 'Infra Services' || $parr != 'Testing') {
-					$totCM_Irval += $projects['cm_irval'][$parr];
-					$tot_Irval   += $projects['irval'][$parr];
-				}
 
 				$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 				$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
