@@ -597,16 +597,16 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		if(!empty($practice_array)){
 			
 			//delete the old records & inserting the practices name from table.	
-			// $this->db->where('month_status', 2);
-			// $this->db->delete($this->cfg['dbpref'].'services_dashboard_beta');
+			$this->db->where('month_status', 2);
+			$this->db->delete($this->cfg['dbpref'].'services_dashboard_beta');
 			foreach($practice_array as $parr){
 				$ins_data['practice_name'] = $parr;
 				$ins_data['month_status'] = 2;
-				// $this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
+				$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			}
 			$ins_data['practice_name'] = 'Total';
 			$ins_data['month_status']  = 2;
-			// $this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
+			$this->db->insert($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_data);
 			foreach($practice_array as $parr) {
 				
 				/**other cost data*/
@@ -670,8 +670,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_dc_vals += $projects['irval'][$parr];
 				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
-				// $this->db->where(array('practice_name' => $parr,'month_status' => 2));
-				// $this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
+				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
+				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
 				$ins_array = array();
 			}
 
@@ -691,8 +691,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			$tot['month_status'] 		= 2;
 
 			//updating the total values
-			// $this->db->where(array('practice_name' => 'Total','month_status' => 2));
-			// $this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $tot);
+			$this->db->where(array('practice_name' => 'Total','month_status' => 2));
+			$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $tot);
 		}
 	}
 	
