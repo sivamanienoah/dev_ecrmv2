@@ -624,8 +624,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 				/**other cost data*/
 				if($parr == 'Infra Services' || $parr == 'Testing') {
-					// $parr = 'Others';
-					continue;
+					$parr = 'Others';
 				}
 								
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
@@ -652,9 +651,11 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				$ins_array['month_status'] = 2;
 				
-				$totCM_Irval += $projects['cm_irval'][$parr];
-				echo "<br>" . $parr ." " . $tot_Irval   += $projects['irval'][$parr];
-				
+				if($parr != 'Infra Services' || $parr != 'Testing') {
+					$totCM_Irval += $projects['cm_irval'][$parr];
+					$tot_Irval   += $projects['irval'][$parr];
+				}
+
 				$tot_billhour += $projects['billable_month'][$parr]['Billable']['hour'];
 				$tot_tothours += $projects['billable_month'][$parr]['totalhour'];
 				
