@@ -552,8 +552,7 @@ class Service_dashboard_cron_beta extends crm_controller
 
 		if(!empty($practice_array)){
 			
-			//truncate the table & inserting the practices name from table.
-			//$this->db->truncate($this->cfg['dbpref'].'services_dashboard_beta');	
+			//delete the old records & inserting the practices name from table.	
 			$this->db->where('month_status', 1);
 			$this->db->delete($this->cfg['dbpref'].'services_dashboard_beta');			
 			foreach($practice_array as $parr){
