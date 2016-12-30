@@ -38,13 +38,13 @@ $userdata = $this->session->userdata('logged_in_user');
 			<tr id='<?php echo $filter_result['lead_id'] ?>'>
 				<td class="actions" align="center">
 					<?php if ($this->session->userdata('viewlead')==1) { ?>
-						<a href="<?php echo $view_url;?>" title='View'>
+						<a target="_blank" href="<?php echo $view_url;?>" title='View'>
 							<img src="assets/img/view.png" alt='view' >
 						</a>
 					<?php } ?>
 					<?php 
 					if (($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) && $filter_result['pjt_status']==0) { ?>					
-						<a href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
+						<a target="_blank" href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
 							<img src="assets/img/edit.png" alt='edit' >
 						</a>
 					<?php } ?> 
@@ -53,12 +53,9 @@ $userdata = $this->session->userdata('logged_in_user');
 						<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 					<?php } ?>
 				</td>
-				<td>		
-				<a href="<?php echo $view_lead_url;?>">		
-				<?php echo $filter_result['invoice_no']; ?></a> 
-				</td>
-				<td> <a href="<?php echo $view_lead_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
-					<td><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
+				<td><a target="_blank" href="<?php echo $view_lead_url;?>"><?php echo $filter_result['invoice_no']; ?></a></td>
+				<td><a target="_blank" href="<?php echo $view_lead_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
+				<td><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
 				<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
 				<td><?php echo $filter_result['region_name']; ?></td>
 				<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
