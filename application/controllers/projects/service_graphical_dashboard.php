@@ -129,7 +129,7 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$sel_values = 'practice_name,';
 		foreach($this->fiscal_month_arr as $fis_mons) {
-			$sel_values .= 'contri_'.$fis_mons.' AS '.$fis_mons;
+			$sel_values .= 'contri_'.$fis_mons.' AS "'.$fis_mons.'"';
 			if($this->upto_month == $fis_mons) { break; }
 			else { $sel_values .= ','; }
 		}
