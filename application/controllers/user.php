@@ -164,6 +164,19 @@ class User extends crm_controller {
 				{
 					if($post_data['role_id'] == $post_data['role_change_mail']) 
 					{
+						//insert log
+						$usr_data = $this->user_model->get_user($id);
+						$ins_data					= array();
+						$ins_data['emp_id'] 		= $usr_data[0]['emp_id'];
+						$ins_data['user_id'] 		= $id;
+						$ins_data['username'] 		= $usr_data[0]['username'];
+						$ins_data['role_id'] 		= $update_data['role_id'];
+						$ins_data['skill_id'] 		= $usr_data[0]['skill_id'];
+						$ins_data['department_id'] 	= $usr_data[0]['department_id'];
+						$ins_data['active'] 		= $usr_data[0]['inactive'];
+						$ins_data['created_on'] 	= date('Y-m-d H:i:s');
+						$this->db->insert($this->cfg['dbpref'] . 'users_logs', $ins_data);
+						
 						$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 						$dis['date_created'] = date('Y-m-d H:i:s');
 						$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
