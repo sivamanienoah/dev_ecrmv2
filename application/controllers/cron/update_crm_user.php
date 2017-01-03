@@ -44,7 +44,6 @@ class Update_crm_user extends crm_controller
 		$this->db->where('v.skill_id is NOT NULL', NULL, FALSE);
 		$this->db->where('v.department is NOT NULL', NULL, FALSE);
 		$sql = $this->db->get();
-		//echo $this->db->last_query();
 		$econnect_users = $sql->result_array();
 		
 		foreach($econnect_users as $eusers) {			
@@ -75,7 +74,6 @@ class Update_crm_user extends crm_controller
 					$ins_data['active'] 		= $updt_array['inactive'];
 					$ins_data['created_on'] 	= date('Y-m-d H:i:s');
 					$this->db->insert($this->cfg['dbpref'] . 'users_logs', $ins_data);
-					echo $this->db->last_query(); echo "<br>";
 				}
 			}
 		}	
