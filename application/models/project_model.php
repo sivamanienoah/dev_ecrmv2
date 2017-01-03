@@ -566,8 +566,8 @@ class Project_model extends crm_model
 		}
 
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
-		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
+		ts.empname, ts.username, duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, ts.`resource_duration_cost` as duration_cost, ts.direct_cost_per_hour as direct_cost, ts.`resource_duration_direct_cost` as duration_direct_cost,resource_total_hours');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');
 		$this->db->where("ts.project_code",$pjt_code);
 		$this->db->where("DATE(ts.start_time) >= ",$start_date);
 		$this->db->where("DATE(ts.end_time) <= ",$end_date);
@@ -583,6 +583,46 @@ class Project_model extends crm_model
 		
 		return $query->result_array();
 	}
+	
+	public function get_timesheet_data_updated_original($pjt_code, $lead_id, $bill_type, $st_date=false, $groupby_type)
+	{
+		//$bill_type == 3 for view the particular month metrics data
+		$start_date = $end_date = '';
+		switch($bill_type){
+			case 1:	
+				$start_date = '2006-01-01';
+				$end_date   = date('Y-m-d');
+			break;
+			case 2:
+				$start_date = date('Y-m-01');
+				$end_date   = date('Y-m-d');
+			break;
+			case 3:
+				$start_date = $st_date;
+				$end_date   = date(('Y-m-t'), strtotime($st_date));
+			break;
+		}
+
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
+		ts.empname, ts.username, ts.duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, ts.`resource_duration_cost` as duration_cost, ts.direct_cost_per_hour as direct_cost, ts.`resource_duration_direct_cost` as duration_direct_cost,resource_total_hours');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');//timesheet_month_data
+		$this->db->where("ts.project_code",$pjt_code);
+		$this->db->where("DATE(ts.start_time) >= ",$start_date);
+		$this->db->where("DATE(ts.end_time) <= ",$end_date);
+		if($groupby_type == 1) {
+			$this->db->group_by(array("ts.resoursetype"));
+		} else if($groupby_type == 2) {
+			$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		}
+		
+		$query = $this->db->get();
+		/* if($pjt_code =='ITS-WIN-19-1216')
+		{
+			echo $this->db->last_query() . "<br />"; exit;
+		}*/
+		
+		return $query->result_array();
+	}	
 	
 	public function get_timesheet_data_updated($pjt_code, $lead_id, $bill_type, $st_date=false, $groupby_type)
 	{
@@ -604,19 +644,19 @@ class Project_model extends crm_model
 		}
 
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, sum( ts.`resource_duration_cost`) as duration_cost, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost');
-		$this->db->from($this->cfg['dbpref'] . 'timesheet_data as ts');
-		$this->db->where("ts.project_code",$pjt_code);
+		ts.empname, ts.username, ts.duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, ts.`resource_duration_cost` as duration_cost, ts.direct_cost_per_hour as direct_cost, ts.`resource_duration_direct_cost` as duration_direct_cost,resource_total_hours,ts.project_code');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');//timesheet_month_data
+		$this->db->where_in("ts.project_code",$pjt_code);
 		$this->db->where("DATE(ts.start_time) >= ",$start_date);
 		$this->db->where("DATE(ts.end_time) <= ",$end_date);
 		if($groupby_type == 1) {
 			$this->db->group_by(array("ts.resoursetype"));
 		} else if($groupby_type == 2) {
-			$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+			$this->db->group_by(array("ts.project_code","ts.username", "yr", "month_name", "ts.resoursetype"));
 		}
 		
 		$query = $this->db->get();
-		
+		//echo $this->db->last_query() . "<br />"; exit;
 		return $query->result_array();
 	}	
 	
@@ -925,6 +965,25 @@ class Project_model extends crm_model
 		}
 		return false;
 	}
+	public function get_invoice_total_by_lead($lead_id_array)
+	{
+		$this->db->select("SUM(amount) as invoice_amount,SUM(tax_price) as tax_amount,jobid_fk");
+		$this->db->group_by("jobid_fk");
+		$this->db->where("invoice_status",1);
+		$this->db->where_in("jobid_fk", $lead_id_array);
+		$qry = $this->db->get($this->cfg['dbpref']."expected_payments");
+		if($qry->num_rows()>0){
+			$res = $qry->result_array();
+			$amt_array=array();
+			foreach($res as $result)
+			{
+				$amt_array[$result['jobid_fk']]=$result;
+			}
+			//print_r($amt_array); exit;
+			return $amt_array;
+		}
+		return false;
+	}
 	
 	public function get_dashboard_field($id)
 	{
@@ -944,6 +1003,27 @@ class Project_model extends crm_model
 		$this->db->order_by('id', 'ASC');
 		$query = $this->db->get();
 		return $query->result_array();
+	}
+	public function get_other_cost_by_all_lead($lead_id_array)
+	{
+		$this->db->select("id, description, cost_incurred_date, currency_type, value,project_id");
+		$this->db->from($this->cfg['dbpref'].'project_other_cost');
+		$this->db->where_in('project_id', $lead_id_array);
+		$this->db->order_by('id', 'ASC');
+		$query = $this->db->get();
+		$data=$query->result_array();
+		if(!empty($data))
+		{
+			$other_cost_array=array();
+			foreach($data as $row)
+			{
+				$other_cost_array[$row['project_id']][] =$row;
+			}
+			
+			//echo "<pre>";print_r($other_cost_array); exit;
+			return $other_cost_array;
+		}
+		
 	}
 	
 	function get_data_by_id($table, $wh_condn) {
@@ -1058,6 +1138,48 @@ class Project_model extends crm_model
 			return true;
 		} else {
 			return false;
+		}
+	}
+	public function get_project_calculation($proj_id)
+	{
+		$result = $this->db->query('select * from crm_project_calculation where pjt_id=?',array($proj_id));
+		return $result->row_array();
+	}
+	public function get_practice_id_year()
+	{
+		
+		$this->db->select('practice_id,practice_max_hours,financial_year');
+		$this->db->from($this->cfg['dbpref'].'practice_max_hours_history');
+		$this->db->order_by('id','desc');
+		$query = $this->db->get();
+		$data =  $query->result_array();
+		if(!empty($data))
+		{
+			$id_year_arr =array();
+			foreach($data as $row)
+			{
+				$id_year_arr[$row['practice_id']][$row['financial_year']] = $row['practice_max_hours'];
+			}
+			return $id_year_arr;
+		}
+		
+	}
+	public function get_practice_id()
+	{
+		$this->db->select('practice_id,practice_max_hours');
+		$this->db->from($this->cfg['dbpref'].'practice_max_hours_history');
+		$this->db->order_by('id','desc');
+		$query = $this->db->get();
+		$data =  $query->result_array();
+		if(!empty($data))
+		{
+			$id_arr =array();
+			foreach($data as $row)
+			{
+				$id_arr[$row['practice_id']] = $row['practice_max_hours'];
+			}
+			
+			return $id_arr;
 		}
 	}
 }

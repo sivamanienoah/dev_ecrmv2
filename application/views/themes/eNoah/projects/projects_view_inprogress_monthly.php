@@ -24,7 +24,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 		$total_pv_amt = 0;
 		$total_uc_amt = 0;
 		$total_pl_amt = 0;
+		$full_total_amount_inv_raised='';
 		foreach($pjts_data as $record){
+			
 			$title		   = character_limiter($record['lead_title'], 30);
 			$customer_name = character_limiter($record['customer_name'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
@@ -41,11 +43,20 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$total_temp_cost = $other_cost + $record['total_cost'];
 			$total_cost    	 = (isset($total_temp_cost)) ? (round($total_temp_cost)) : '0'; //total cost = utilization cost+other cost
 			$total_dc_hours  = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
-			$contributePercent = round((($total_amount_inv_raised - $total_cost)/$total_amount_inv_raised)*100);
+			if($total_amount_inv_raised!=0)
+			{
+				$contributePercent = round((($total_amount_inv_raised - $total_cost)/$total_amount_inv_raised)*100);
+				$profitloss    = round($total_amount_inv_raised - $total_cost);
+			   $profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
+			}
+			else
+			{
+				$contributePercent =0;$profitloss =0;$profitlossPercent=0;
+			}
+			
 			//$profitloss    = round($record['actual_worth_amt']-$total_cost);
 			//$profitlossPercent = round(($profitloss/$record['actual_worth_amt'])*100);
-			$profitloss    = round($total_amount_inv_raised - $total_cost);
-			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
+			
 			
 			
 			if( round($profitlossPercent, 0) <= 0 )
@@ -151,7 +162,8 @@ if(!empty($db_fields) && count($db_fields)>0){
 				$total_pl_amt += $profitloss;
 
 			$complete_stat = $project_type = $estimate_hour = '';
-		}
+		
+	}
 	}
 ?>
 <table border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable" id='monthly-data'>

@@ -29,6 +29,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 		$total_mile_uc_amt = 0;
 		$total_mile_pl_amt = 0;	
 		foreach($pjts_data as $record){
+			
 			$title		   = character_limiter($record['lead_title'], 30);
 			$customer_name = character_limiter($record['customer_name'], 30);
 			$complete_stat = (isset($record['complete_status'])) ? ($record['complete_status']) . ' %' : '-';
@@ -46,9 +47,17 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$total_temp_cost = $other_cost + $record['total_cost'];
 			$total_cost    	 = (isset($total_temp_cost)) ? (round($total_temp_cost)) : '0'; //total cost = utilization cost+other cost
 			$total_dc_hours  = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
-			$contributePercent = round((($total_amount_inv_raised - $total_cost)/$total_amount_inv_raised)*100);
-			$profitloss        = round($total_amount_inv_raised - $total_cost);
-			$profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
+			if($total_amount_inv_raised !=0)
+			{
+				$contributePercent = round((($total_amount_inv_raised - $total_cost)/$total_amount_inv_raised)*100);
+				$profitloss        = round($total_amount_inv_raised - $total_cost);
+			    $profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
+			}
+			else{
+				$contributePercent=0;$profitloss=0;$profitlossPercent=0;
+			}
+			
+			
 			
 			if($eff_variance<=0)
 			$ev_clr = 'green-clr';
@@ -92,7 +101,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 			}
 			
 			$bill_type = $record['billing_type'];
-			
+			$full_total_mile_amount_inv_raised='';
 			if($bill_type == 1) {
 				$milestone_content .= '<tr bgcolor='.$rag_color.'>';
 				$milestone_content .= "<td class='actions' align='center'>";
@@ -237,6 +246,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				
 			}
 			$complete_stat = $project_type = $estimate_hour = '';
+		
 		}
 	}
 ?>
