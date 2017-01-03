@@ -55,6 +55,7 @@ $this->userdata = $this->session->userdata('logged_in_user');
                         </select> 
 						<div class="error" style="color:red;" id="error3">Required</div>
 						<input type="hidden" value="0" id="role_change_mail" name="role_change_mail"/>
+						<input type="hidden" value="<?php echo $this->validation->role_id; ?>" id="exist_role_id" name="exist_role_id" />
 						<script>
 							$('#role_id').change(function() {
 								var assign_mail = $('#role_id').val();
@@ -139,25 +140,27 @@ $this->userdata = $this->session->userdata('logged_in_user');
 				<tr>
 					<td>Skill</td>
 					<td>
-						<select name="skill_id" id="skill_id" disabled class="textfield width200px">
+						<select name="hidden_skill_id" id="hidden_skill_id" disabled class="textfield width200px">
 							<option value="">Please Select</option>
 						<?php if(!empty($skill_arr) && count($skill_arr)) { ?>
 							<?php foreach($skill_arr as $sk) { ?>						
-								<option value="<?php echo $this->validation->skill_id; ?>" <?php echo ($this->validation->skill_id == $sk['id']) ? ' selected="selected"' : '' ?>><?php echo $sk['name']; ?></option>
+								<option value="<?php echo $sk['id']; ?>" <?php echo ($this->validation->skill_id == $sk['id']) ? ' selected="selected"' : '' ?>><?php echo $sk['name']; ?></option>
 							<?php } ?>
 						<?php } ?>
 						</select>
+						<input type="hidden" name="skill_id" value="<?php echo $this->validation->skill_id; ?>" />
 					</td>
 					<td>Department</td>
 					<td>
-						<select name="department_id" id="department_id" disabled class="textfield width200px">
+						<select name="hidden_department_id" id="hidden_department_id" disabled class="textfield width200px">
 							<option value="">Please Select</option>
 						<?php if(!empty($dept_arr) && count($dept_arr)) { ?>
 							<?php foreach($dept_arr as $dpt) { ?>						
-								<option value="<?php echo $this->validation->department_id; ?>" <?php echo ($this->validation->department_id == $dpt['department_id']) ? ' selected="selected"' : '' ?>><?php echo $dpt['department_name']; ?></option>
+								<option value="<?php echo $dpt['department_id']; ?>" <?php echo ($this->validation->department_id == $dpt['department_id']) ? ' selected="selected"' : '' ?>><?php echo $dpt['department_name']; ?></option>
 							<?php } ?>
 						<?php } ?>
 						</select>
+						<input type="hidden" name="department_id" value="<?php echo $this->validation->department_id; ?>" />
 					</td>
 				</tr>
 				<?php } ?>
