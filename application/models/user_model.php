@@ -892,6 +892,24 @@ class User_model extends crm_model {
 		$query = $this->db->get();
  		return $query->result_array();
 	}
+	
+	function getSkill()
+	{
+		$this->db->select('id, name');
+		$this->db->from($this->cfg['dbpref'].'skills_set');
+		$this->db->order_by('id');
+		$query = $this->db->get();
+ 		return $query->result_array();
+	}
+	
+	function getDept()
+	{
+		$this->db->select('department_id, department_name');
+		$this->db->from($this->cfg['dbpref'].'department');
+		$this->db->order_by('department_id');
+		$query = $this->db->get();
+ 		return $query->result_array();
+	}
   
 }
 

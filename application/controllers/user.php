@@ -61,6 +61,8 @@ class User extends crm_controller {
 		$fields['contract_manager'] = "Contract Manager";
 		$fields['password']    = "Password";
 		$fields['level']       = "User Level";
+		$fields['skill_id']    = "Skill";
+		$fields['department_id'] = "Department";
 		$fields['inactive']    = 'Inactive';
 		$fields['auth_type']   = 'Login Authentication';
 		
@@ -84,9 +86,11 @@ class User extends crm_controller {
 			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		}
 		
-        $data['roles']	= $this->role_model->active_role_list();
-		$data['levels'] = $this->user_model->get_levels();
-		$data['users'] 	= $this->user_model->getUserLists($type='active');
+        $data['roles']		= $this->role_model->active_role_list();
+		$data['levels'] 	= $this->user_model->get_levels();
+		$data['users'] 		= $this->user_model->getUserLists($type='active');
+		$data['skill_arr'] 	= $this->user_model->getSkill();
+		$data['dept_arr'] 	= $this->user_model->getDept();
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_user'])) {
             $customer = $this->user_model->get_user($id); /*get the user details*/
 			$data['users'] 			 = $this->user_model->getUserLists($type='all');

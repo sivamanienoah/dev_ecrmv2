@@ -116,20 +116,14 @@ $this->userdata = $this->session->userdata('logged_in_user');
 						<?php } ?>
 					</td>
                     <td>
-						<?php 
-						if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) {
-						?>
+						<?php if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { ?>
 							Update Password
 					</td>
 					<td>
 							<input type="checkbox" name="update_password" value="1" /> 
-						<?php 
-						} else { 
-						?>
+						<?php } else { ?>
 							<input type="hidden" name="new_user" value="1" />
-						<?php 
-						} 
-						?>
+						<?php } ?>
 					</td>					
 				</tr>
 				<tr>
@@ -141,6 +135,32 @@ $this->userdata = $this->session->userdata('logged_in_user');
 						<input <?php echo ($this->validation->auth_type == 1) ? ' checked="checked"' : '' ?> id="auth-ldap" type="radio" name="auth_type" value="1"/>
 					</td>
 				</tr>
+				<?php if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { ?>
+				<tr>
+					<td>Skill</td>
+					<td>
+						<select name="skill_id" id="skill_id" disabled class="textfield width200px">
+							<option value="">Please Select</option>
+						<?php if(!empty($skill_arr) && count($skill_arr)) { ?>
+							<?php foreach($skill_arr as $sk) { ?>						
+								<option value="<?php echo $this->validation->skill_id; ?>" <?php echo ($this->validation->skill_id == $sk['id']) ? ' selected="selected"' : '' ?>><?php echo $sk['name']; ?></option>
+							<?php } ?>
+						<?php } ?>
+						</select>
+					</td>
+					<td>Department</td>
+					<td>
+						<select name="department_id" id="department_id" disabled class="textfield width200px">
+							<option value="">Please Select</option>
+						<?php if(!empty($dept_arr) && count($dept_arr)) { ?>
+							<?php foreach($dept_arr as $dpt) { ?>						
+								<option value="<?php echo $this->validation->department_id; ?>" <?php echo ($this->validation->department_id == $dpt['department_id']) ? ' selected="selected"' : '' ?>><?php echo $dpt['department_name']; ?></option>
+							<?php } ?>
+						<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<?php } ?>
 				<tr>
 				<!-- Levels and region settings starts here -->
 					<td>Level: *</td>
@@ -172,20 +192,16 @@ $this->userdata = $this->session->userdata('logged_in_user');
 						<input type="hidden" value="0" id="level_change_mail" name="level_change_mail"/>
 					</td>
 					<!-- Levels and region settings ends here -->	
-					<?php 
-					if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { 
-					?>
-					<td>Inactive User:</td>
-					<td colspan="3">
-						<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
-						<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
-						<?php if ($cb_status != 0) echo "One or more Leads currently assigned for this User. This cannot be made Inactive."; ?>
-						<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the User need to be Inactive."; ?>
-						<?php if ($this->validation->inactive != 0) echo "Uncheck if the User need to be Active."; ?>						
-					</td>
-					<?php 
-					} 
-					?>
+					<?php if (($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))) && ($this->session->userdata('edit')==1)) { ?>
+						<td>Inactive User:</td>
+						<td colspan="3"> 
+							<input type="checkbox" name="inactive" value="1" <?php if ($this->validation->inactive == 1) echo ' checked="checked"' ?>
+							<?php if ($cb_status != 0) echo 'disabled="disabled"' ?>> 
+							<?php if ($cb_status != 0) echo "One or more Leads currently assigned for this User. This cannot be made Inactive."; ?>
+							<?php if (($this->validation->inactive == 0) && ($cb_status == 0)) echo "Check if the User need to be Inactive."; ?>
+							<?php if ($this->validation->inactive != 0) echo "Uncheck if the User need to be Active."; ?>
+						</td>
+					<?php } ?>
 				</tr>
 				<tr>
 				<td colspan="5">
