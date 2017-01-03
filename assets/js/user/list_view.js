@@ -46,4 +46,34 @@ function timerfadeout() {
 	$('.dialog-err').fadeOut();
 }
 
+function view_user_logs(id) {
+	var params  = {};
+	params[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		url : site_base_url + 'user/get_user_logs/'+id,
+		cache: false,
+		type: "POST",
+		data:params,
+		success : function(response) {
+			$('#view-log-container').html(response);
+			$.blockUI({
+				message:$('#view-log-container'),
+				css:{ 
+					border: '2px solid #999',
+					color:'#333',
+					padding:'8px',
+					top:  '250px',
+					left: ($(window).width() - 700) /2 + 'px',
+					width: '765px',
+					position: 'absolute',
+					'overflow-y':'auto',
+					'overflow-x':'hidden',
+					position: 'absolute'
+				}
+			});
+			$( "#view-log-container" ).parent().addClass( "no-scroll" );
+		}
+	});
+}
+
 /////////////////

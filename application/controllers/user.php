@@ -671,6 +671,27 @@ class User extends crm_controller {
 		$data =	real_escape_array($this->input->post());
 		$this->user_model->check_username($data['username'],$data['updatedata']);
 	}
+	
+	/*
+	*@For Get the logs for User
+	*@Method get_user_logs
+	*/
+	public function get_user_logs($id) 
+	{	
+		$error = false;
+
+		if (preg_match('/^[0-9]+$/', $id)) {
+			$data['log_data'] = $this->user_model->get_logs($id);
+		} else {
+			$error = true;
+		}
+		
+		if($error==true) {
+			return false;
+		} else {
+			$this->load->view('user/user_log_view', $data);
+		}
+	}
 
 }
 

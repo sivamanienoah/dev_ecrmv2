@@ -28,21 +28,25 @@ class User_model extends crm_model {
 			$search = urldecode($search);
 			$where = "(CONCAT_WS(' ', `first_name`, `last_name`) LIKE '%$search%' OR `first_name` LIKE '%$search%' OR `last_name` LIKE '%$search%') ORDER BY a.first_name";
 
-			$this->db->select('a.*,b.level_id,b.level_name,c.id,c.name');
+			$this->db->select('a.*, b.level_id, b.level_name, c.id, c.name, d.department_name, s.name as skill_name');
 			$this->db->from($this->cfg['dbpref']."users as a");
 			$this->db->join($this->cfg['dbpref'].'levels as b', 'b.level_id = a.level', 'left');
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
+			$this->db->join($this->cfg['dbpref'].'department as d', 'd.department_id = a.department_id', 'left');
+			$this->db->join($this->cfg['dbpref'].'skills_set as s', 's.id = a.skill_id', 'left');
 			$this->db->where($where); 
         } else {			
             $offset = $this->db->escape_str($offset);
-			$this->db->select('a.*,b.level_id,b.level_name,c.id,c.name');
+			$this->db->select('a.*, b.level_id, b.level_name, c.id, c.name, d.department_name, s.name as skill_name');
 			$this->db->from($this->cfg['dbpref']."users as a");
 			$this->db->join($this->cfg['dbpref'].'levels as b', 'b.level_id = a.level', 'left');
 			$this->db->join($this->cfg['dbpref'].'roles as c', 'c.id = a.role_id', 'left');
-			$this->db->order_by("a.first_name", "asc"); 
-		}	
-
-		$query = $this->db->get();		
+			$this->db->join($this->cfg['dbpref'].'department as d', 'd.department_id = a.department_id', 'left');
+			$this->db->join($this->cfg['dbpref'].'skills_set as s', 's.id = a.skill_id', 'left');
+		}
+		$this->db->order_by("a.first_name", "asc");
+		$this->db->order_by("a.inactive", "desc");
+		$query = $this->db->get();
 		$customers = $query->result_array();	
         return $customers;
     }
@@ -870,6 +874,23 @@ class User_model extends crm_model {
 		echo 'userOk';
 		else 
 		echo 'userNo';
+	}
+	
+	/*
+	*@Get Logs for User
+	*@Method get_logs
+	*/
+	function get_logs($id)
+	{
+		$this->db->select('ul.username, ul.emp_id, ul.active, ul.created_on, r.name, d.department_name, s.name as skill_name');
+		$this->db->from($this->cfg['dbpref'].'users_logs as ul');
+		$this->db->join($this->cfg['dbpref'].'roles as r', 'r.id = ul.role_id', 'left');
+		$this->db->join($this->cfg['dbpref'].'department as d', 'd.department_id = ul.department_id', 'left');
+		$this->db->join($this->cfg['dbpref'].'skills_set as s', 's.id = ul.skill_id', 'left');
+		$this->db->where('ul.user_id', $id);
+		$this->db->order_by('created_on', 'asc');
+		$query = $this->db->get();
+ 		return $query->result_array();
 	}
   
 }

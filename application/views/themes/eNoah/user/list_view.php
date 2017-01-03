@@ -29,9 +29,10 @@
                     <th>User Name</th>
                     <th>Emp ID</th>
                     <th>Email</th>
-                    <th>Phone</th>
                     <th>Roles</th>
                     <th>Level</th>
+					<th>Skill</th>
+					<th>Department</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -42,7 +43,7 @@
                     <?php foreach ($customers as $customer) { ?>
                     <tr>
                         <td>
-							<?php if($this->session->userdata('edit')==1){ ?><a href="user/add_user/update/<?php echo  $customer['userid'] ?>"><?php echo  $customer['first_name'] . ' ' . $customer['last_name'] ?></a><?php } else { echo $customer['first_name'] . ' ' . $customer['last_name']; } ?>
+							<?php if($this->session->userdata('edit')==1){ ?><a href="user/add_user/update/<?php echo $customer['userid'] ?>"><?php echo trim($customer['first_name']) . ' ' . trim($customer['last_name']) ?></a><?php } else { echo trim($customer['first_name']) . ' ' . trim($customer['last_name']); } ?>
 						</td>
                         <td><?php echo $customer['username']; ?></td>
 						<td><?php echo $customer['emp_id']; ?></td>
@@ -54,10 +55,10 @@
 							}
 						?>
 						</td>
-                        <td><?php echo  $customer['phone']; ?></td>
-                        <td><?php echo  $customer['name']; ?></td>
-                        <!--<td><?php //echo $customer['level'] ?></td>-->
-                        <td><?php echo  $customer['level_name']; ?></td>
+                        <td><?php echo $customer['name']; ?></td>
+                        <td><?php echo $customer['level_name']; ?></td>
+						<td><?php echo $customer['skill_name']; ?></td>
+						<td><?php echo $customer['department_name']; ?></td>
                         <td><?php if ($customer['inactive'] == 0) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?></td>
 						<td>
 							<?php if($this->session->userdata('edit')==1) { ?>
@@ -67,12 +68,14 @@
 								<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $customer['userid']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a> 
 							<?php } ?>
 							<?php if(($this->session->userdata('delete')!=1) && ($this->session->userdata('edit')!=1)) echo '-'; ?>
+							<a class="delete" href="javascript:void(0)" onclick="return view_user_logs(<?php echo $customer['userid']; ?>);" title='View Logs'> <img src="assets/img/log-icon.png" alt='Logs'> </a>
 						</td>
                     </tr>
                     <?php } ?>
                 <?php } ?>
             </tbody>
         </table>
+		<div id="view-log-container"></div>
         <?php } else {
 			echo "You have no rights to access this page";
 		} ?>
