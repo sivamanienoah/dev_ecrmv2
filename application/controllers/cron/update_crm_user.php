@@ -28,15 +28,34 @@ class Update_crm_user extends crm_controller
     public function __construct()
 	{
         parent::__construct();
-		$this->load->library('email');
 		$this->load->helper('text');
     }
 	
 	public function index() 
 	{
-		$user_failed  	= array();
-		$user_success 	= array();
+		//update the skill set master
+		$this->db->select('id,name,status');
+		$this->db->from($this->cfg['dbpref'].'view_econnect_skills_set');
+		$skill_sql 		= $this->db->get();
+		$econnect_skill = $skill_sql->result_array();
+		if(!empty($econnect_skill) && count($econnect_skill>0)) {
+			$this->db->truncate($this->cfg['dbpref'].'skills_set');
+			$skill_updt_sql		= "REPLACE INTO ".$this->cfg['dbpref']."skills_set(id,name,status,created_on,modified_on) SELECT id,name,status,created_on,modified_on FROM ".$this->cfg['dbpref']."view_econnect_skills_set";
+			$skill_updt_query	= $this->db->query($skill_updt_sql);
+		}
 		
+		//update the department master
+		$this->db->select('department_id,department_name,active');
+		$this->db->from($this->cfg['dbpref'].'view_econnect_department_master');
+		$dept_sql 	   = $this->db->get();
+		$econnect_dept = $dept_sql->result_array();
+		if(!empty($econnect_dept) && count($econnect_dept>0)) {
+			$this->db->truncate($this->cfg['dbpref'].'department');
+			$dept_updt_sql		= "REPLACE INTO ".$this->cfg['dbpref']."department(department_id, department_name, department_description, active, created_on, modified_on) SELECT department_id, department_name, department_description, active, created_on, modified_on FROM ".$this->cfg['dbpref']."view_econnect_department_master";
+			$dept_updt_query	= $this->db->query($dept_updt_sql);
+		}
+
+		//update the crm user skill set & department
 		$this->db->select('v.autoid,v.username,v.EmpID,v.email,v.active,v.first_name,v.last_name,v.skill_id,v.department');
 		$this->db->from($this->cfg['dbpref'].'view_econnect_mas as v');
 		$this->db->where('v.username !=', '');
@@ -46,7 +65,7 @@ class Update_crm_user extends crm_controller
 		$sql = $this->db->get();
 		$econnect_users = $sql->result_array();
 		
-		foreach($econnect_users as $eusers) {			
+		foreach($econnect_users as $eusers) {	
 			$updt_array 				 = array();
 			$updt_array['skill_id'] 	 = $eusers['skill_id'];
 			$updt_array['department_id'] = $eusers['department'];
