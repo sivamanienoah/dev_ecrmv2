@@ -646,9 +646,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 				$cm_dc_val = '-';
 				
-				$temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr];
+				echo $temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr] . "<br>";
 				if($temp_cm_utd_cost){
-					$cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
+					echo $cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
 				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
@@ -672,6 +672,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
+				echo $this->db->last_query() . "<br>";
 				$ins_array = array();
 			}
 
