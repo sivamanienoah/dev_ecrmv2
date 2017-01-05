@@ -470,7 +470,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->where("l.practice is not null");
 		$query = $this->db->get();		
 		$resdata = $query->result();
-		echo '<pre>';print_r($resdata);exit;
+		echo '<pre> test';print_r($resdata);exit;
 		
 		$tbl_data = array();
 		$sub_tot  = array();
