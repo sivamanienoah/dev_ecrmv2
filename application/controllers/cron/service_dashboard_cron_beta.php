@@ -332,8 +332,8 @@ class Service_dashboard_cron_beta extends crm_controller
 							$year = $key2;
 							if(count($value2)>0 && !empty($value2)){
 								foreach($value2 as $key3=>$value3) {
-									$individual_billable_hrs		= 0;
-									$month		 	  = $key3;
+									$individual_billable_hrs = 0;
+									$ts_month		 	  	 = $key3;
 									if(count($value3)>0 && !empty($value3)){
 										foreach($value3 as $key4=>$value4) {
 											if($key4 != 'total_hours'){ 
@@ -348,10 +348,10 @@ class Service_dashboard_cron_beta extends crm_controller
 													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 												}
-												$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
-												$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
-												$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] 	 = ($duration_hours*$rate1);
-												$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
 											}
 										}
 									}
@@ -369,7 +369,7 @@ class Service_dashboard_cron_beta extends crm_controller
 					foreach($array1 as $year => $array2){
 						if($year !='dept_name'){
 							if(count($array2)>0 && !empty($array2)){
-								foreach($array2 as $month => $array3){
+								foreach($array2 as $rs_month => $array3){
 									$duration_hours = 0;
 									$total_cost = 0;
 									$total_dc_cost = 0;
@@ -476,7 +476,7 @@ class Service_dashboard_cron_beta extends crm_controller
 						if(count($value2)>0 && !empty($value2)){
 							foreach($value2 as $key3=>$value3) {
 								$individual_billable_hrs		= 0;
-								$month		 	  = $key3;
+								$tsh_month		 	  = $key3;
 								if(count($value3)>0 && !empty($value3)){
 									foreach($value3 as $key4=>$value4) {
 										if($key4 != 'total_hours'){ 
@@ -489,7 +489,7 @@ class Service_dashboard_cron_beta extends crm_controller
 												$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 												$direct_rateperhr1 	= number_format(($percentage*$direct_rateperhr),2);
 											}
-											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+											$resource_cost[$resource_name][$year][$tsh_month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
 										}
 									}
 								}
@@ -507,7 +507,7 @@ class Service_dashboard_cron_beta extends crm_controller
 					foreach($array1 as $year => $array2){
 						if($year !='dept_name'){
 							if(count($array2)>0 && !empty($array2)){
-								foreach($array2 as $month => $array3){
+								foreach($array2 as $rsc_month => $array3){
 									$total_dc_cost = 0;
 									foreach($array3 as $project_code => $array4){
 										$total_dc_cost = $array4['total_dc_cost'];
