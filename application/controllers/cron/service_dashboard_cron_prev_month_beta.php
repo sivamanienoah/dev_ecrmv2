@@ -73,7 +73,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		// $end_date  	   = date('Y-m-d',strtotime("-1 month")); //eg.2014-03-01
 		
 		//default billable_month
-		echo $month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+		$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
 		// $month = date('Y-m-01 00:00:00',strtotime("-1 month"));
 		$start_date = date("Y-m-01",strtotime($start_date));
 		$end_date   = date("Y-m-t", strtotime($end_date));
@@ -358,7 +358,6 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] = $rateCostPerHr;
 			}
 
-		//echo '<pre>';print_r($timesheet_data);exit;
 		if(count($timesheet_data)>0 && !empty($timesheet_data)){
 			foreach($timesheet_data as $key1=>$value1) {
 				$resource_name = $key1;
@@ -399,7 +398,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			}	 
 		}
 		}
-		//echo '<pre>';print_r($resource_cost);exit;
+
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -450,7 +449,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
-	 echo $month; exit;
+
 		if(!empty($month)) {
 			$this->db->where("t.start_time >= ", date('Y-m-01 H:i:s', strtotime($month)));
 			$this->db->where("t.start_time <= ", date('Y-m-t H:i:s', strtotime($month)));
@@ -463,9 +462,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
 		$query = $this->db->get();
-echo $this->db->last_query(); exit;	
 		$resdata = $query->result();
-		echo '<pre> test';print_r($resdata);exit;
 		
 		$tbl_data = array();
 		$sub_tot  = array();
@@ -503,7 +500,7 @@ echo $this->db->last_query(); exit;
 				
 			}
 
-		echo '<pre>';print_r($timesheet_data);exit;
+		// echo '<pre>';print_r($timesheet_data);exit;
 		if(count($timesheet_data)>0 && !empty($timesheet_data)){
 			foreach($timesheet_data as $key1=>$value1) {
 				$resource_name = $key1;
