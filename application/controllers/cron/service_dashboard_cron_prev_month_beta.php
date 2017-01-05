@@ -468,7 +468,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$deptwhere = "t.dept_id IN ('10','11')";
 		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
-		$query = $this->db->get();		
+		$query = $this->db->get();
+echo $this->db->last_query(); exit;		
 		$resdata = $query->result();
 		echo '<pre> test';print_r($resdata);exit;
 		
