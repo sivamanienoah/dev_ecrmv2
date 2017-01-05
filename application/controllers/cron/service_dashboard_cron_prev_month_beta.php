@@ -518,9 +518,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 									foreach($value3 as $key4=>$value4) {
 										if($key4 != 'total_hours'){ 
 											$individual_billable_hrs = $value3['total_hours'];
-											$duration_hours			= $value4['duration_hours'];
-											$direct_rateperhr	 = $value4['direct_rateperhr'];
-											$direct_rateperhr1 = $direct_rateperhr;
+											$duration_hours			 = $value4['duration_hours'];
+											$direct_rateperhr	     = $value4['direct_rateperhr'];
+											$direct_rateperhr1       = $direct_rateperhr;
 											if($individual_billable_hrs>$max_hours){
 												$percentage = ($max_hours/$individual_billable_hrs);
 												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
@@ -576,7 +576,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($cm_directcost); exit;
+		// echo "<pre>"; print_r($cm_directcost); exit;
 		## code for month contribution ends here##
 
 		$projects['direct_cost']    = $directcost;
