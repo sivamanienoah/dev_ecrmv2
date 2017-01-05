@@ -645,7 +645,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 				$cm_dc_val = '-';
-				
+				echo "<pre>"; print_r($projects['cm_direct_cost']); exit;
 				echo $temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr] . "<br>";
 				if($temp_cm_utd_cost){
 					echo $cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
