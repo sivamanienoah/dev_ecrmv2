@@ -456,7 +456,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
-	 
+	 echo $month; exit;
 		if(!empty($month)) {
 			$this->db->where("t.start_time >= ", date('Y-m-01 H:i:s', strtotime($month)));
 			$this->db->where("t.start_time <= ", date('Y-m-t H:i:s', strtotime($month)));
