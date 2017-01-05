@@ -584,7 +584,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 			}
 		}
-		
+		echo "<pre>"; print_r($cm_directcost); exit;
 		## code for month contribution ends here##
 
 		$projects['direct_cost']    = $directcost;
