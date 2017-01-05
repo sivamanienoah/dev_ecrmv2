@@ -370,8 +370,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 						$year = $key2;
 						if(count($value2)>0 && !empty($value2)){
 							foreach($value2 as $key3=>$value3) {
-								$individual_billable_hrs		= 0;
-								$month		 	  = $key3;
+								$individual_billable_hrs = 0;
+								$ts_month 				 = $key3;
 								if(count($value3)>0 && !empty($value3)){
 									foreach($value3 as $key4=>$value4) {
 										if($key4 != 'total_hours'){ 
@@ -382,16 +382,13 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 											$rate1 = $rate;
 											$direct_rateperhr1 = $direct_rateperhr;
 											if($individual_billable_hrs>$max_hours){
-												//echo 'max'.$max_hours.'<br>';
-												$percentage = ($max_hours/$individual_billable_hrs);
-												// $rate1 = number_format(($percentage*$rate),2);
+												$percentage 	   = ($max_hours/$individual_billable_hrs);
 												$rate1 			   = number_format(($percentage*$direct_rateperhr),2);
 												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
 											}
-											$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
-											$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] += ($duration_hours*$direct_rateperhr1);
-											$resource_cost[$resource_name][$year][$month][$key4]['practice_id'] = ($duration_hours*$rate1);
-											//$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+											$resource_cost[$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
+											$resource_cost[$resource_name][$year][$ts_month][$key4]['total_cost']     += ($duration_hours*$direct_rateperhr1);
+											$resource_cost[$resource_name][$year][$ts_month][$key4]['practice_id']     = ($duration_hours*$rate1);
 										}
 									}
 								}
@@ -410,17 +407,14 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 					foreach($array1 as $year => $array2){
 						if($year !='dept_name'){
 							if(count($array2)>0 && !empty($array2)){
-								foreach($array2 as $month => $array3){
+								foreach($array2 as $rs_month => $array3){
 									$duration_hours = 0;
 									$total_cost = 0;
 									$total_dc_cost = 0;
 									foreach($array3 as $project_code => $array4){
-										//$available_projects[] = $project_code;
 										$duration_hours = $array4['duration_hours'];
 										$total_cost = $array4['total_cost'];
-										// $total_dc_cost = $array4['total_dc_cost'];
 										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
-										// $cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
 									}
 								}
 							}
@@ -469,7 +463,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$this->db->where($deptwhere);
 		$this->db->where("l.practice is not null");
 		$query = $this->db->get();
-echo $this->db->last_query(); exit;		
+echo $this->db->last_query(); exit;	
 		$resdata = $query->result();
 		echo '<pre> test';print_r($resdata);exit;
 		
@@ -521,8 +515,8 @@ echo $this->db->last_query(); exit;
 						$year = $key2;
 						if(count($value2)>0 && !empty($value2)){
 							foreach($value2 as $key3=>$value3) {
-								$individual_billable_hrs		= 0;
-								$month		 	  = $key3;
+								$individual_billable_hrs = 0;
+								$tsh_month		 	  	 = $key3;
 								if(count($value3)>0 && !empty($value3)){
 									foreach($value3 as $key4=>$value4) {
 										if($key4 != 'total_hours'){ 
@@ -534,7 +528,7 @@ echo $this->db->last_query(); exit;
 												$percentage = ($max_hours/$individual_billable_hrs);
 												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
 											}
-											$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
+											$resource_cost[$resource_name][$year][$tsh_month][$key4]['total_dc_cost'] += ($duration_hours*$direct_rateperhr1);
 										}
 									}
 								}
@@ -545,7 +539,7 @@ echo $this->db->last_query(); exit;
 			}	 
 		}
 		}
-		echo '<pre>';print_r($resource_cost);exit;
+		// echo '<pre>';print_r($resource_cost);exit;
 		if(count($resource_cost)>0 && !empty($resource_cost)){
 			foreach($resource_cost as $resourceName => $array1){
 				$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -553,7 +547,7 @@ echo $this->db->last_query(); exit;
 					foreach($array1 as $year => $array2){
 						if($year !='dept_name'){
 							if(count($array2)>0 && !empty($array2)){
-								foreach($array2 as $month => $array3){
+								foreach($array2 as $rsc_month => $array3){
 									foreach($array3 as $project_code => $array4){
 										$total_dc_cost = $array4['total_dc_cost'];
 										$cm_directcost1[$project_code]['project_total_cm_direct_cost'] += $total_dc_cost;
@@ -585,7 +579,7 @@ echo $this->db->last_query(); exit;
 				}
 			}
 		}
-		echo "<pre>"; print_r($cm_directcost); exit;
+		// echo "<pre>"; print_r($cm_directcost); exit;
 		## code for month contribution ends here##
 
 		$projects['direct_cost']    = $directcost;
@@ -646,10 +640,10 @@ echo $this->db->last_query(); exit;
 				$eff_var = (($projects['eff_var'][$parr]['total_actual_hrs'] - $projects['eff_var'][$parr]['tot_estimate_hrs'])/$projects['eff_var'][$parr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 				$cm_dc_val = '-';
-				echo "<pre>"; print_r($projects['cm_direct_cost']); exit;
-				echo $temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr] . "<br>";
+				
+				$temp_cm_utd_cost = $projects['cm_direct_cost'][$parr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$parr];
 				if($temp_cm_utd_cost){
-					echo $cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
+					$cm_dc_val = (($projects['cm_irval'][$parr] - $temp_cm_utd_cost)/$projects['cm_irval'][$parr]) * 100;
 				}
 				$ins_array['contribution_month'] = ($cm_dc_val != 0) ? round($cm_dc_val) : '-';
 				$dc_val = (($projects['irval'][$parr] - $temp_ytd_utilization_cost)/$projects['irval'][$parr]) * 100;
@@ -673,7 +667,7 @@ echo $this->db->last_query(); exit;
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
-				echo $this->db->last_query() . "<br>";
+				// echo $this->db->last_query() . "<br>";
 				$ins_array = array();
 			}
 
