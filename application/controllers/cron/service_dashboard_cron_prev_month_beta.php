@@ -508,7 +508,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				
 			}
 
-		//echo '<pre>';print_r($timesheet_data);exit;
+		echo '<pre>';print_r($timesheet_data);exit;
 		if(count($timesheet_data)>0 && !empty($timesheet_data)){
 			foreach($timesheet_data as $key1=>$value1) {
 				$resource_name = $key1;
