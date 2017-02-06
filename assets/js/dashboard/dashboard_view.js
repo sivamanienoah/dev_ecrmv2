@@ -1015,9 +1015,16 @@ if(viewlead==1) {
 			});
 			return false;
 		});
+		var pie3legendTable = $('#pie3').find('.jqplot-table-legend').first();  
+		// alert(pie3legendTable.length);
+		pie3legendTable.css('display','block');
+		pie3legendTable.css('z-index',100);
+		pie3legendTable.css('height','400px');
+		pie3legendTable.css('top','20px');
+		pie3legendTable.css('overflow-y','scroll');
 		} else { 
 			$('#pie3').html("<div align='center' style='padding:20px; font-size: 15px; font-weight: bold; line-height: 20px;'>No Data Available...</div>");
-		} 
+		}
 	});
 	
 	$(document).ready(function() {
@@ -2396,7 +2403,7 @@ function show_search_results(search_id) {
 
 function loadajaxwithurl(url)
 {
-		var params    		     = {};	
+	var params    		     = {};	
 	params[csrf_token_name]  = csrf_hash_token;
 	
 	//$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, check());
