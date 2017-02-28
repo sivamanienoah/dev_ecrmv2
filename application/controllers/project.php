@@ -344,6 +344,7 @@ class Project extends crm_controller {
 	 */
 	public function view_project($id = 0)
 	{
+		ini_set("display_errors",1);error_reporting(1);
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
@@ -693,9 +694,9 @@ class Project extends crm_controller {
 			else $data['show_milestones']=1;
 			
 			$user_id =$this->userdata['userid'];
-		$data['email_templates'] = $this->project_model->get_user_email_templates($user_id);
-		$data['email_signatures'] = $this->project_model->get_user_email_signatures($user_id);
-		$data['default_signature'] = $this->project_model->get_user_default_signature($user_id);
+			$data['email_templates'] = $this->project_model->get_user_email_templates($user_id);
+			$data['email_signatures'] = $this->project_model->get_user_email_signatures($user_id);
+			$data['default_signature'] = $this->project_model->get_user_default_signature($user_id);
 			
             $this->load->view('projects/welcome_view_project', $data);
         }
@@ -4588,8 +4589,9 @@ HDOC;
 	
 	public function generateInvoice($eid, $pjtid) 
 	{
+		$inv_gen_time	 = date('Y-m-d H:i:s');
 		$wh_condn		 = array('expectid' => $eid,'jobid_fk'=>$pjtid);
-		$updt			 = array('invoice_status'=>1,'invoice_generate_notify_date'=>date('Y-m-d H:i:s'));
+		$updt			 = array('invoice_status'=>1, 'invoice_generate_notify_date'=>$inv_gen_time);
 		
 		$output['error'] = FALSE;
 		
@@ -4598,6 +4600,21 @@ HDOC;
 		
 		if($updt_payment_ms) {
 			$project_details = $this->project_model->get_quote_data($pjtid);
+			$pm_inv_cc_mail = '';
+			if( $this->userdata['userid'] != $project_details[0]['assigned_to'] ) {
+				//get user details
+				$cc_wh_condn 	= array('userid'=>$project_details[0]['assigned_to']);
+				$cc_user_data 	= $this->project_model->get_user_data_by_id('users', $cc_wh_condn);
+				$pm_inv_cc_mail = isset($cc_user_data[0]['email']) ? $cc_user_data[0]['email'] : '';
+			}
+			
+			//insert log
+			$ins_log = array();
+			$ins_log['log_content'] 	= 'Invoice has raised & request has been sent to Finance Team on '. date('d-m-Y', strtotime($inv_gen_time));
+			$ins_log['jobid_fk']    	= $pjtid;
+			$ins_log['date_created'] 	= $inv_gen_time;
+			$ins_log['userid_fk']   	= $this->userdata['userid'];
+			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
 			
 			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
 			$attached_files  = $this->project_model->get_attached_files($eid);
@@ -4672,7 +4689,7 @@ HDOC;
 			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'month_year'=>$month_year,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'project_code'=>$project_code,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
 
 			$param['to_mail'] 		  = $to;
-			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email;
+			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$pm_inv_cc_mail;
 			// $param['bcc_mail'] 	  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahprojects.com';
 			$param['from_email_name'] = 'Webmaster';
