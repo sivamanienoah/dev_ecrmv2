@@ -4608,14 +4608,6 @@ HDOC;
 				$pm_inv_cc_mail = isset($cc_user_data[0]['email']) ? $cc_user_data[0]['email'] : '';
 			}
 			
-			//insert log
-			$ins_log = array();
-			$ins_log['log_content'] 	= 'Invoice has raised & request has been sent to Finance Team on '. date('d-m-Y', strtotime($inv_gen_time));
-			$ins_log['jobid_fk']    	= $pjtid;
-			$ins_log['date_created'] 	= $inv_gen_time;
-			$ins_log['userid_fk']   	= $this->userdata['userid'];
-			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
-			
 			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
 			$attached_files  = $this->project_model->get_attached_files($eid);
 			
@@ -4697,6 +4689,14 @@ HDOC;
 			$param['subject'] 		  = $subject;
 			$param['attach'] 		  = $attached_files;
 			$param['job_id'] 		  = $pjtid;
+			
+			//insert log
+			$ins_log = array();
+			$ins_log['log_content'] 	= 'Invoice has been raised for the milestone "'.$payment_details['project_milestone_name'].'" & for the Month & Year "'.$month_year.'".<br /> Invoice Amount - '.trim($milestone_value).'.';
+			$ins_log['jobid_fk']    	= $pjtid;
+			$ins_log['date_created'] 	= $inv_gen_time;
+			$ins_log['userid_fk']   	= $this->userdata['userid'];
+			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
 
 			$this->email_template_model->sent_email($param);
 		} else {
