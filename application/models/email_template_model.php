@@ -163,12 +163,20 @@ class email_template_model extends crm_model {
 		$email_from_name = 'Webmaster';
 		
 		$email_subject = $data['subject'] . " - Mail from DEV Server";
+		//print_r($data['email_data']);
 		
 		if(count($data['email_data'])>0) {
 			foreach($data['email_data'] as $key=>$value) {
 				$key = "{{".$key."}}";
 				$email_content = str_replace($key, $value, $email_content);
 			}
+		}
+		
+		//Changed Email title for timesheet
+		if($data['subject']=="New User List from Timesheet"){
+			echo "title".$email_title = str_replace('eConnect', 'Timesheet', $email_title);
+		}elseif($data['subject']=="Failed User List from Timesheet"){
+			echo "title1".$email_title = str_replace('eConnect', 'Timesheet', $email_title);
 		}
 		
 		$email_template = $email_header . $email_title .'<div style="padding:10px;" id="body">'.$email_content.'</div>'. $email_footer;
@@ -190,7 +198,7 @@ class email_template_model extends crm_model {
 		} */
 		$this->email->subject($email_subject);
 		$this->email->message($email_template);
-		
+
 		if(!empty($data['attach'])) {
 			$file_path = UPLOAD_PATH.'files/'.$data['job_id'].'/';
 			foreach ($data['attach'] as $attach){
