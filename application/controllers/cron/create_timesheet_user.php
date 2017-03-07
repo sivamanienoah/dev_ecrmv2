@@ -56,6 +56,8 @@ class Create_timesheet_user extends crm_controller
 		$timesheet_db->from($timesheet_db->dbprefix('user'));	
 		$timesheet_db->where('authentication','ldb');		
 		$timesheet_db->where('status','ACTIVE');	
+		$timesheet_db->where('username != ','admin');	
+		$timesheet_db->where('email_address != ','');	
 		$time_sheet_query = $timesheet_db->get();
 		$timesheet_users  = $time_sheet_query->result_array();
 		
@@ -86,12 +88,10 @@ class Create_timesheet_user extends crm_controller
 					   'signature' => '',
 					   'inactive' => 0
 					);
-					if($eusers['email_address']!='' && $eusers['username']!='admin'){
-						if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
-							$user_success[] = $eusers['uid'].' => '.$eusers['username'];
-							$crm_email[] = $eusers['email_address'];
-						}
-					}	
+					if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
+						$user_success[] = $eusers['uid'].' => '.$eusers['username'];
+						$crm_email[] = $eusers['email_address'];
+					}
 				} else {
 					//econnect user cannot be created. Email already exist.
 					$user_failed[] = $eusers['uid'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
@@ -120,6 +120,9 @@ class Create_timesheet_user extends crm_controller
 				$user_list .= '<tr><td style="font-family: Arial,Helvetica,sans-serif; font-size:12px">'.$empid.'</td><td style="font-family: Arial,Helvetica,sans-serif; font-size:12px">'.$username.'</td></tr>';
 			}
 			$user_list .= '</table>';
+			
+			echo $user_list;
+			
 			//email sent by email template
 			$param = array();
 			
