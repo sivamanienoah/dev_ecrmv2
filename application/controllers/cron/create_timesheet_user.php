@@ -86,7 +86,7 @@ class Create_timesheet_user extends crm_controller
 					   'signature' => '',
 					   'inactive' => 0
 					);
-					if($eusers['email_address']!=''){
+					if($eusers['email_address']!='' && $eusers['username']!='admin'){
 						if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
 							$user_success[] = $eusers['uid'].' => '.$eusers['username'];
 							$crm_email[] = $eusers['email_address'];
