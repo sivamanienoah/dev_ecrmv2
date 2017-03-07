@@ -130,7 +130,7 @@ class Create_timesheet_user extends crm_controller
 
 			$param['to_mail'] 		  = $to;
 			//$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			$param['template_name']	  = 'New User List from Timesheet';
+			$param['template_name']	  = 'New User List from eConnect';
 			$param['subject'] 		  = $subject;
 
 			$this->load->model('email_template_model');
@@ -157,7 +157,7 @@ class Create_timesheet_user extends crm_controller
 
 			$param['to_mail'] 		  = $to;
 			//$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			$param['template_name']	  = 'Failed User List from Timesheet';
+			$param['template_name']	  = 'Failed User List from eConnect';
 			$param['subject'] 		  = $subject;
 
 			$this->load->model('email_template_model');
