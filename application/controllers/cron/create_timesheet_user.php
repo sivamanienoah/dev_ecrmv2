@@ -103,9 +103,10 @@ class Create_timesheet_user extends crm_controller
 				}
 			}
 		}
-		
+		echo "<pre>";
+		print_r($user_success);
 		//Sending email to CRM Admin
-		if(!empty($user_success)){
+		/* if(!empty($user_success)){
 			$from		  	 = 'webmaster@enoahprojects.com';
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',', $arrayEmails['crm_admin']);
@@ -120,8 +121,6 @@ class Create_timesheet_user extends crm_controller
 				$user_list .= '<tr><td style="font-family: Arial,Helvetica,sans-serif; font-size:12px">'.$empid.'</td><td style="font-family: Arial,Helvetica,sans-serif; font-size:12px">'.$username.'</td></tr>';
 			}
 			$user_list .= '</table>';
-			
-			echo $user_list;
 			
 			//email sent by email template
 			$param = array();
@@ -162,7 +161,7 @@ class Create_timesheet_user extends crm_controller
 
 			$this->load->model('email_template_model');
 			$this->email_template_model->sent_email($param);
-		}	
+		} */
 	}
 
 }
