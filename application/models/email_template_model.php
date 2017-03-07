@@ -174,9 +174,9 @@ class email_template_model extends crm_model {
 		
 		//Changed Email title for timesheet
 		if($data['subject']=="New User List from Timesheet"){
-			echo "title".$email_title = str_replace('eConnect', 'Timesheet', $email_title);
+			$email_title = str_replace('eConnect', 'Timesheet', $email_title);
 		}elseif($data['subject']=="Failed User List from Timesheet"){
-			echo "title1".$email_title = str_replace('eConnect', 'Timesheet', $email_title);
+			$email_title = str_replace('eConnect', 'Timesheet', $email_title);
 		}
 		
 		$email_template = $email_header . $email_title .'<div style="padding:10px;" id="body">'.$email_content.'</div>'. $email_footer;
