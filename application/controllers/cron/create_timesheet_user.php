@@ -128,8 +128,8 @@ class Create_timesheet_user extends crm_controller
 			//$param['to_mail'] 		  = $to;
 			$param['to_mail'] 		  = "pdhanapal@enoahisolution.com";
 			//$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			// $param['from_email']	  = 'webmaster@enoahisolultion.com';
-			// $param['from_email_name'] = 'Webmaster';
+			$param['from_email']	  = 'webmaster@enoahprojects.com';
+			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'New User List from eConnect';
 			$param['subject'] 		  = $subject;
 
@@ -158,8 +158,8 @@ class Create_timesheet_user extends crm_controller
 			//$param['to_mail'] 		  = $to;
 			$param['to_mail'] 		  = "pdhanapal@enoahisolution.com";
 			//$param['bcc_mail'] 		  = 'ssriram@enoahisolution.com';
-			// $param['from_email']	  = 'webmaster@enoahisolultion.com';
-			// $param['from_email_name'] = 'Webmaster';
+			$param['from_email']	  = 'webmaster@enoahprojects.com';
+			$param['from_email_name'] = 'Webmaster';
 			$param['template_name']	  = 'Failed User List from eConnect';
 			$param['subject'] 		  = $subject;
 
