@@ -99,24 +99,21 @@ class Create_timesheet_user extends crm_controller
 				} else {
 					
 					//Update ecrm user status
-					if($eusers['status']=="INACTIVE"){
-						$this->update_crm_users($eusers);
-					}else{
+					if($eusers['status']=="ACTIVE"){
 						//econnect user cannot be created. Email already exist.
 						$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 					}
+					$this->update_crm_users($eusers);
 					
 				}
 			} else {
 				if(strtolower($eusers['email_address']) != $res['email_address']) {
 					//Update ecrm user status
-					if($eusers['status']=="INACTIVE"){
-						$this->update_crm_users($eusers);
-					}else{
+					if($eusers['status']=="ACTIVE"){
 						//econnect user cannot be created. username already exists.
 						$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
 					}
-					
+					$this->update_crm_users($eusers);
 				}
 			}
 		}
@@ -184,6 +181,7 @@ class Create_timesheet_user extends crm_controller
 	public function update_crm_users($eusers){
 		
 		$updt_array['inactive'] 	 = ($eusers['status']=="INACTIVE") ? 1 : 0;
+		$updt_array['password'] 	 = $eusers['password'];
 		$this->db->where(array('username' => $eusers['username'], 'email' => $eusers['email_address']));
 		$this->db->update($this->cfg['dbpref'] . 'users', $updt_array);
 	}
