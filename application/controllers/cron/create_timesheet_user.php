@@ -49,19 +49,20 @@ class Create_timesheet_user extends crm_controller
 			}
 		}
 		
-		
+		//get timesheet users
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
 		$timesheet_db->select('*');
 		$timesheet_db->from($timesheet_db->dbprefix('user'));	
 		$timesheet_db->where('authentication','ldb');		
-		$timesheet_db->where('status','ACTIVE');	
+		//$timesheet_db->where('status','ACTIVE');	
 		$timesheet_db->where('username != ','admin');	
 		$timesheet_db->where('email_address != ','');	
 		$time_sheet_query = $timesheet_db->get();
 		$timesheet_users  = $time_sheet_query->result_array();
 	
 		foreach($timesheet_users as $eusers){
+			
 			//1.check whether the username exists or not in CRM DB.
 			$this->db->select('u.username,u.email');
 			$this->db->from($this->cfg['dbpref'].'users as u');
@@ -95,11 +96,23 @@ class Create_timesheet_user extends crm_controller
 				} else {
 					//econnect user cannot be created. Email already exist.
 					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
+					
+					//Update ecrm user status
+					if($eusers['status']=="INACTIVE"){
+						$this->update_crm_users($eusers);
+					}
 				}
 			} else {
 				if(strtolower($eusers['email_address']) != $res['email_address']) {
+					
 					//econnect user cannot be created. username already exists.
 					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
+					
+					//Update ecrm user status
+					if($eusers['status']=="INACTIVE"){
+						$this->update_crm_users($eusers);
+					}
+					
 				}
 			}
 		}
@@ -161,6 +174,12 @@ class Create_timesheet_user extends crm_controller
 			$this->load->model('email_template_model');
 			$this->email_template_model->sent_email($param);
 		}
+	}
+	
+	public function update_crm_users($eusers){
+		$updt_array['inactive'] 	 = ($eusers['status']=="INACTIVE") ? 1 : 0;
+		$this->db->where(array('username' => $eusers['username'], 'email' => $eusers['email_address']));
+		$this->db->update($this->cfg['dbpref'] . 'users', $updt_array);
 	}
 }
 ?>
