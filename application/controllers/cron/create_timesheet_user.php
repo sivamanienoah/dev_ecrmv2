@@ -71,7 +71,7 @@ class Create_timesheet_user extends crm_controller
 			$res = $query->row_array();
 			
 			if($query->num_rows() == 0) { 
-			//check email
+				//check email and status
 				if(!in_array($eusers['email_address'], $crm_email) && $eusers['status']=="ACTIVE") {
 					//insert into crm db
 					$data = array(
@@ -97,23 +97,24 @@ class Create_timesheet_user extends crm_controller
 					
 					
 				} else {
-					//econnect user cannot be created. Email already exist.
-					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 					
 					//Update ecrm user status
 					if($eusers['status']=="INACTIVE"){
 						$this->update_crm_users($eusers);
+					}else{
+						//econnect user cannot be created. Email already exist.
+						$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 					}
+					
 				}
 			} else {
 				if(strtolower($eusers['email_address']) != $res['email_address']) {
-					
-					//econnect user cannot be created. username already exists.
-					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
-					
 					//Update ecrm user status
 					if($eusers['status']=="INACTIVE"){
 						$this->update_crm_users($eusers);
+					}else{
+						//econnect user cannot be created. username already exists.
+						$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
 					}
 					
 				}
