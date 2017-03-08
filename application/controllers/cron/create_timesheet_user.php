@@ -72,7 +72,7 @@ class Create_timesheet_user extends crm_controller
 			
 			if($query->num_rows() == 0) { 
 			//check email
-				if(!in_array($eusers['email_address'], $crm_email)) {
+				if(!in_array($eusers['email_address'], $crm_email) && $eusers['status']=="ACTIVE") {
 					//insert into crm db
 					$data = array(
 					   'role_id' => 8,
@@ -89,10 +89,13 @@ class Create_timesheet_user extends crm_controller
 					   'signature' => '',
 					   'inactive' => 0
 					);
+					
 					if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
 						$user_success[] = $eusers['emp_id'].' => '.$eusers['username'];
 						$crm_email[] = $eusers['email_address'];
 					}
+					
+					
 				} else {
 					//econnect user cannot be created. Email already exist.
 					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
