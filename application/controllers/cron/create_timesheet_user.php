@@ -60,7 +60,7 @@ class Create_timesheet_user extends crm_controller
 		$timesheet_db->where('email_address != ','');	
 		$time_sheet_query = $timesheet_db->get();
 		$timesheet_users  = $time_sheet_query->result_array();
-		
+	
 		foreach($timesheet_users as $eusers){
 			//1.check whether the username exists or not in CRM DB.
 			$this->db->select('u.username,u.email');
@@ -71,14 +71,14 @@ class Create_timesheet_user extends crm_controller
 			
 			if($query->num_rows() == 0) { 
 			//check email
-				if(!in_array($eusers['email'], $crm_email)) {
+				if(!in_array($eusers['email_address'], $crm_email)) {
 					//insert into crm db
 					$data = array(
 					   'role_id' => 8,
 					   'first_name' => $eusers['first_name'],
 					   'last_name' => $eusers['last_name'],
 					   'username' => $eusers['username'],
-					   'emp_id' => $eusers['uid'],
+					   'emp_id' => $eusers['emp_id'],
 					   'password' => $eusers['password'],
 					   'email' => $eusers['email_address'],
 					   'phone' => '',
@@ -89,24 +89,23 @@ class Create_timesheet_user extends crm_controller
 					   'inactive' => 0
 					);
 					if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
-						$user_success[] = $eusers['uid'].' => '.$eusers['username'];
+						$user_success[] = $eusers['emp_id'].' => '.$eusers['username'];
 						$crm_email[] = $eusers['email_address'];
 					}
 				} else {
 					//econnect user cannot be created. Email already exist.
-					$user_failed[] = $eusers['uid'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
+					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => Email ID already exists. This user cannot be created.";
 				}
 			} else {
 				if(strtolower($eusers['email_address']) != $res['email_address']) {
 					//econnect user cannot be created. username already exists.
-					$user_failed[] = $eusers['uid'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
+					$user_failed[] = $eusers['emp_id'].' => '.$eusers['username']." => User Name already exists. This user cannot be created.";
 				}
 			}
 		}
-		echo "<pre>";
-		print_r($user_success);
+		
 		//Sending email to CRM Admin
-		/* if(!empty($user_success)){
+		if(!empty($user_success)){
 			$from		  	 = 'webmaster@enoahprojects.com';
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',', $arrayEmails['crm_admin']);
@@ -161,8 +160,7 @@ class Create_timesheet_user extends crm_controller
 
 			$this->load->model('email_template_model');
 			$this->email_template_model->sent_email($param);
-		} */
+		}
 	}
-
 }
 ?>
