@@ -152,6 +152,7 @@ class Create_timesheet_user extends crm_controller
 			$this->email_template_model->sent_email($param);
 		}
 		if(!empty($user_failed)){
+			
 			$from		  	 = 'webmaster@enoahprojects.com';
 			$arrayEmails   	 = $this->config->item('crm');
 			$to				 = implode(',',$arrayEmails['crm_admin']);
@@ -181,6 +182,7 @@ class Create_timesheet_user extends crm_controller
 	}
 	
 	public function update_crm_users($eusers){
+		
 		$updt_array['inactive'] 	 = ($eusers['status']=="INACTIVE") ? 1 : 0;
 		$this->db->where(array('username' => $eusers['username'], 'email' => $eusers['email_address']));
 		$this->db->update($this->cfg['dbpref'] . 'users', $updt_array);
