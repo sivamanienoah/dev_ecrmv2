@@ -173,10 +173,10 @@ class email_template_model extends crm_model {
 		}
 		
 		//Changed Email title for timesheet
-		/* if($data['subject']=="New User List from Timesheet" || $data['subject']=="Failed User List from Timesheet"){
+		if($data['subject']=="New User List from Timesheet" || $data['subject']=="Failed User List from Timesheet"){
 			$email_title = str_replace('eConnect', 'Timesheet', $email_title);
 		}
-		 */
+		 
 		$email_template = $email_header . $email_title .'<div style="padding:10px;" id="body">'.$email_content.'</div>'. $email_footer;
 		
 		$email_outer_content = $this->email_outer_content();
@@ -184,7 +184,7 @@ class email_template_model extends crm_model {
 
 		// $this->email->from($data['from_email'],$data['from_email_name']);
 		$this->email->from($email_from,$email_from_name);
-		$data['to_mail'] = array('pdhanapal@enoahisolution.com');
+		$data['to_mail'] = array('pdhanapal@enoahisolution.com','ssubbiah@enoahisolution.com');
 		$data['cc_mail'] = array('ssriram@enoahisolution.com');
 		$this->email->to($data['to_mail']);
 		$this->email->cc($data['cc_mail']);
@@ -218,7 +218,7 @@ class email_template_model extends crm_model {
 		// $this->email->send();
 		// echo $this->email->print_debugger();exit;
 		//return true;
-	
+		//echo $email_template;
 		if($this->email->send()) { 
 			return true;
 		} else {
