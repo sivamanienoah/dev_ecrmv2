@@ -68,16 +68,21 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
-		$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-		$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));
-		// $end_date  	   = date('Y-m-d',strtotime("-1 month")); //eg.2014-03-01
 		
+		$lastMonthArrCalcNoForEndmonth = array('04', '05');
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$end_date = date('Y-m-t');
+			$month 	  = date('Y-m-01 00:00:00');
+		} else {
+			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+			$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));// changed upto last month only
+			$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+		}		
 		//default billable_month
-		$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+		
 		// $month = date('Y-m-01 00:00:00',strtotime("-1 month"));
 		$start_date = date("Y-m-01",strtotime($start_date));
 		$end_date   = date("Y-m-t", strtotime($end_date));
-		
  
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;

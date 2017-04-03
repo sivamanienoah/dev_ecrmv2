@@ -40,9 +40,14 @@ class Service_graphical_dashboard_cron extends crm_controller
 			$this->default_cur_name = 'USD';
 		}
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
+		$lastMonthArrCalcNoForEndmonth = array('04', '05');
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$ed_date = date('Y-m-t');
+		} else {
+			$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+			$ed_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
+		}
 		
-		$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-		$ed_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
 		$this->upto_month = date('M', strtotime($ed_date));
     }
 	
@@ -73,10 +78,14 @@ class Service_graphical_dashboard_cron extends crm_controller
 		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		// $end_date  	   = date('Y-m-d'); //eg.2014-03-01
-		$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-		$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
 		
+		$lastMonthArrCalcNoForEndmonth = array('04', '05');
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$ed_date = date('Y-m-t');
+		} else {
+			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+		}
 		//default billable_month
 
 		$start_date = date("Y-m-01",strtotime($start_date));
