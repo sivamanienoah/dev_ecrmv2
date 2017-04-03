@@ -46,12 +46,12 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 		
-		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+		/* if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
 			$end_date = date('Y-m-t');
 		} else {
 			$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 			$end_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
-		}
+		} */
 		
 		$this->upto_month = date('M', strtotime($end_date));
     }
