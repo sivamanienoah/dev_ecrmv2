@@ -10,6 +10,7 @@ if ( ! function_exists('get_default_currency'))
 		$CI->db->where('is_default', 1);
 		$query = $CI->db->get($CI->cfg['dbpref'].'expect_worth');
 		$num = $query->num_rows();
+		$CI->db->reconnect();
 		if ($num<1)
 			return false;
 		else 
@@ -240,6 +241,24 @@ function get_current_financial_year($year=false,$month=false)
 	}
 	
 	return $financial_year;
+}
+
+// get last financial year
+function getLastFiscalYear() 
+{
+    $currentYear = date('Y');
+    // Check if it happened this year, AND it's not in the future.
+    $today = new DateTime();
+    if (checkdate(3, 31, $currentYear) && $today->getTimestamp() > mktime(0, 0, 0, 3, 31, $currentYear)) {
+        return $currentYear;
+    }
+
+    while (--$currentYear) {
+        if (checkdate(3, 31, $currentYear)) {
+            return $currentYear;
+        }
+    }
+    return false;
 }
 
 /*Get practice max hours based on practice id*/
