@@ -25,8 +25,14 @@ class Service_graphical_dashboard extends crm_controller
 		}
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
 		
-		$bas_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-		$ed_date = date('Y-m-t', strtotime('-1 month', $bas_mon));
+		$lastMonthArrCalcNoForEndmonth = array('04', '05');
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$ed_date = date('Y-m-t');
+		} else {
+			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+		}
+		
 		$this->upto_month = date('M', strtotime($ed_date));
 	}
 
@@ -43,13 +49,23 @@ class Service_graphical_dashboard extends crm_controller
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $end_date  	   = date('Y-m-d'); //eg.2014-03-01 
-		$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-		$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+		
+		$lastMonthArrCalcNoForEndmonth = array('04', '05');
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$end_date = date('Y-m-t');
+		} else {
+			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+		}
 		
 		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 		// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
-		$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
-		
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$last_yr_end_date = date('Y-m-t');
+		} else {
+			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
+		}
+
 		$uc_filter_by   = 'cost'; //default_value
 		$inv_filter_by  = 'inv_month'; //default_value
 
@@ -138,7 +154,7 @@ class Service_graphical_dashboard extends crm_controller
 		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
 		
 		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord();
-		
+		// echo "<pre>"; print_r($data); exit;
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
 
