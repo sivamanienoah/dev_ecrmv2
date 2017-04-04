@@ -35,11 +35,28 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		
-		<!--div class="leadstg_note">
-			"Infra Services" Practice Values are Merged With "Others" Practice.
-		</div-->
-
-		<?php #echo "<pre>"; print_r($graph_val); echo "</pre>"; ?>
+		<div id="filter_section">
+			<div class="clear"></div>
+			<div id="advance_search" style="padding-bottom:15px;">
+				<form name="service_graph_dashboard" action="projects/dashboard/sevice_graph_dashboard" method="post">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					
+					<div style="width:65% !important;">
+						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+							<tr>
+								<td align="left">
+									<input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;
+									<input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="last" />&nbsp;Last Financial Year
+								</td>
+								<td align="left">
+								<input type="submit" class="positive input-font" name="advance" value="Search" />
+								</td>								
+							</tr>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
 		
 		<div class="clearfix">
 			<!--Summary Container - Start -->
