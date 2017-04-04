@@ -41,7 +41,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 				<form name="service_graph_dashboard" action="projects/dashboard/sevice_graph_dashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
-					<div style="width:65% !important;">
+					<div style="width:85% !important;">
 						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
