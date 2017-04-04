@@ -10,8 +10,7 @@ class Dashboard extends crm_controller
 		$this->login_model->check_login();
         $this->load->helper('custom');
         $this->load->library('validation');
-		$this->load->helper('custom_helper');
-		$this->load->helper('lead_stage_helper');
+		$this->load->helper('lead_stage');
 		$this->load->helper('url'); 
 		$this->load->model('projects/dashboard_model');
 		$this->load->model('report/report_lead_region_model');
@@ -114,64 +113,99 @@ class Dashboard extends crm_controller
 		$skill_ids = $this->input->post("skill_ids");
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$sids = implode(",",$skill_ids);
-			if(count($skill_ids)>0 && !empty($skill_ids)){
+			if(count($skill_ids)>0 && !empty($skill_ids))
+			{
 				$data['skill_ids'] = $skill_ids;
 				$where .= " and skill_id in ($sids)";
 			}
 			
-			if($this->input->post("department_ids")) {
-			$ids = $this->input->post("department_ids");
-			$dids = implode(',',$ids);
-			
-			$p_ids = $practice_ids;
-			$pids = implode(',',$p_ids);
-			// $start_date = $this->input->post("start_date");
-			// $end_date   = $this->input->post("end_date");
-			
-			// echo "<pre>"; print_R($_POST); exit;
+			if($this->input->post("department_ids")) 
+			{
+				$ids = $this->input->post("department_ids");
+				$dids = implode(',',$ids);
+				
+				$p_ids = $practice_ids;
+				$pids = implode(',',$p_ids);
+				// $start_date = $this->input->post("start_date");
+				// $end_date   = $this->input->post("end_date");
+				
+				// echo "<pre>"; print_R($_POST); exit;
 
-			$this->db->select('t.skill_id, t.skill_name as name');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-			$this->db->where("t.practice_id !=", 0);
-			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-			if(!empty($ids))
-			$this->db->where_in("t.dept_id", $ids);
-			if(!empty($p_ids))
-			$this->db->where_in("t.practice_id", $practice_ids);
-			$this->db->group_by('t.skill_id');
-			$this->db->order_by('t.skill_name');
-			$query = $this->db->get();
-			// echo $this->db->last_query(); exit;
-	
-			$data['skill_ids_selected'] = $query->result();
+				$this->db->select('t.skill_id, t.skill_name as name');
+				$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+				$this->db->where("t.practice_id !=", 0);
+				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+				if(!empty($ids))
+				$this->db->where_in("t.dept_id", $ids);
+				if(!empty($p_ids))
+				$this->db->where_in("t.practice_id", $practice_ids);
+				$this->db->group_by('t.skill_id');
+				$this->db->order_by('t.skill_name');
+				$query = $this->db->get();
+				// echo $this->db->last_query(); exit;
+				$data['skill_ids_selected'] = $query->result();
 			}
 			// $data['skill_ids_selected'] = $qry->result();
 		}
 
 		$member_ids = $this->input->post("member_ids");
-		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)) {
-			
+		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)) 
+		{
 			$mids = "'".implode("','",$member_ids)."'";
 			if(count($member_ids)>0 && !empty($member_ids)) {
 				$data['member_ids'] = $member_ids;
 				$where .= " and username in ($mids)";
 			}
-			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");			
+			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");	
+			
 			$data['member_ids_selected'] = $qry1->result();			
 		}
 		
 		
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
-		$json = '';
+		$json 				= '';
 		
 		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM crm_timesheet_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
-		// echo $getITDataQry; exit;
+		echo $getITDataQry;	
 		$sql = $this->db->query($getITDataQry);
+		
+		
+		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, cost_per_hour, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost, entry_year, entry_month');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data');
+		$this->db->where("resoursetype !=", 0);
+		$this->db->where("(start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+		$this->db->where("(start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			// $this->db->where("project_code !=", 'Leave');
+			$this->db->where_not_in("project_code", array('Leave'));
+			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			// $this->db->where("project_code !=", 'HOL');
+			$this->db->where_not_in("project_code", array('HOL'));
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			// $where .= " and project_code NOT IN ('HOL','Leave')";
+			$this->db->where_not_in("project_code", array('HOL','Leave'));
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("dept_id", $department_ids);
+			}
+		}
+		$query = $this->db->get();
+		
+		// echo "<br>****<br>" . $this->db->last_query();
+		
 		$data['resdata'] = $sql->result();
 		$arr_depts          = array();
 		$check_array 	    = array();
@@ -1432,6 +1466,15 @@ class Dashboard extends crm_controller
 			}			
 		} else {
 			$month_status = 1;
+		}
+		
+		$current_month 		= date('m');
+		$fiscalStartMonth 	= '04';
+		
+		if($fiscalStartMonth == $current_month) {
+			$curFiscalYear 	= getLastFiscalYear();
+			$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 		}
 		
 		$data['bill_month'] = $month;
