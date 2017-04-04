@@ -33,15 +33,22 @@ class Service_graphical_dashboard_model extends crm_model {
 	/*
 	*getUcRecords
 	*/
-	public function getUcRecords($uc_filter_by)
+	public function getUcRecords($uc_filter_by, $fiscal_year_status)
 	{
-    	if($uc_filter_by == 'hour') {
+		if($uc_filter_by == 'hour') {
 			$this->db->select('practice_name, ytd_billable');
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
 		} else if ($uc_filter_by == 'cost') {
 			$this->db->select('practice_name, ytd_billable_utilization_cost as ytd_billable');
+		}
+		
+		if($fiscal_year_status == 'current') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		} else if($fiscal_year_status == 'last') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		} else {
 			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
 		}
+		
 		$sql = $this->db->get();
 		$uc_graph_res = $sql->result_array();
 		
