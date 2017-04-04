@@ -38,19 +38,17 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 		<div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="service_graph_dashboard" action="projects/dashboard/sevice_graph_dashboard" method="post">
+				<form name="service_graph_dashboard" id="fiscal_year_filter" action="projects/dashboard/sevice_graph_dashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
-					<div style="width:75% !important;">
-						<table style="width:370px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+					<div class="pull-right">
+						<table style="width:300px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
-									<label><input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;</label>
-									<label><input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="last" />&nbsp;Last Financial Year</label>
+									<label><input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;</label>
+									<label><input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="last" />&nbsp;Last Financial Year</label>
 								</td>
-								<td align="left">
-								<input type="submit" class="positive input-font" name="advance" value="Search" />
-								</td>								
+								<input type="submit" class="positive input-font" name="advance" id="fiscal_year_filter_submit" value="Search" style="display:none;"/>							
 							</tr>
 						</table>
 					</div>
