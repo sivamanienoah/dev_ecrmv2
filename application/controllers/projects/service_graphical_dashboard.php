@@ -169,7 +169,7 @@ class Service_graphical_dashboard extends crm_controller
 		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values, $data['fiscal_year_status']);
 		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
 		
-		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord();
+		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord($data['fiscal_year_status']);
 		// echo "<pre>"; print_r($data); exit;
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
