@@ -30,28 +30,24 @@ $practice_arr = array();
 					Export to Excel
 				</button>
 			</div>
-		</div>
-		
-		<div id="filter_section">
-			<div class="clear"></div>
-			<div id="advance_search" style="padding-bottom:15px;">
-				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
-					<div style="width:95% !important;">
-						<table style="width:360px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
-							<tr>
-								<td align="left">
-									<label><input <?php echo ($month_status==1)?'checked="checked"':'';?> type="radio" name="filter_by" value="1" />&nbsp;Upto Current Date&nbsp;&nbsp;</label>
-									<label><input <?php echo ($month_status==2)?'checked="checked"':'';?> type="radio" name="filter_by" value="2" />&nbsp;Upto Previous month</label>
-								</td>
-								<td align="left">
-									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
-								</td>								
-							</tr>
-						</table>
-					</div>
-				</form>
+			<div id="filter_section">
+				<div id="advance_search" class="buttons">
+					<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						
+						<div class="pull-right">
+							<table style="width:285px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+								<tr>
+									<td align="left">
+										<label><input <?php echo ($month_status==1)?'checked="checked"':'';?> type="radio" class="mon_stat" name="filter_by" value="1" />&nbsp;Upto Current Date&nbsp;&nbsp;</label>
+										<label><input <?php echo ($month_status==2)?'checked="checked"':'';?> type="radio" class="mon_stat" name="filter_by" value="2" />&nbsp;Upto Previous month</label>
+									</td>
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" style="display:none;"/>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 		<?php #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
@@ -415,10 +411,13 @@ $( "#billable_month" ).datepicker({
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
+$( "#filter_section" ).on( "click", ".mon_stat", function() {
+	$("#advanceFilterServiceDashboard").trigger('submit');
+});
 //For Advance Filters functionality.
 $("#advanceFilterServiceDashboard").submit(function() {
-	$('#advance').hide();
-	$('#load').show();
+	// $('#advance').hide();
+	// $('#load').show();
 	// var entity        		 = $("#entity").val();
 	// var project_status 		 = $("#project_status").val();
 	var month_year_from_date = $("#month_year_from_date").val();
@@ -428,8 +427,8 @@ $("#advanceFilterServiceDashboard").submit(function() {
 
 	// if(entity == null && project_status == null && month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
 	if(month_year_from_date == "" && month_year_to_date == "" && billable_month == ""){
-		$('#advance').show();
-		$('#load').hide();
+		// $('#advance').show();
+		// $('#load').hide();
 		return false;
 	}
 
@@ -444,9 +443,9 @@ $("#advanceFilterServiceDashboard").submit(function() {
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(res) {
-			$('#advance').show();
+			// $('#advance').show();
 			$('#default_view').html(res);
-			$('#load').hide();
+			// $('#load').hide();
 		}
 	});
 	return false;  //stop the actual form post !important!
