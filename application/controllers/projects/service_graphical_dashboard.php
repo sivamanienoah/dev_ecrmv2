@@ -27,13 +27,13 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$lastMonthArrCalcNoForEndmonth = array('04', '05');
 		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
-			$ed_date = date('Y-m-t');
+			$end_date = date('Y-m-t');
 		} else {
 			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
 		}
 		
-		$this->upto_month = date('M', strtotime($ed_date));
+		$this->upto_month = date('M', strtotime($end_date));
 	}
 
 	public function index()
@@ -41,29 +41,45 @@ class Service_graphical_dashboard extends crm_controller
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
+		
 		$data  				  = array();
+		$data['fiscal_year_status'] = 'current';
 		$data['page_heading'] = "IT Service Graphical Dashboard";
+		if ($this->input->server('REQUEST_METHOD') === 'POST')
+        {
+			$post_data = real_escape_array($this->input->post());
+			$data['fiscal_year_status'] = $post_data['fiscal_year_status'];
+		}
 		$res 				  = array();
 		$res['result']		  = false;
-
-		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		// $end_date  	   = date('Y-m-d'); //eg.2014-03-01 
 		
-		$lastMonthArrCalcNoForEndmonth = array('04', '05');
-		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
-			$end_date = date('Y-m-t');
-		} else {
-			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
-		}
-		
-		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
-		// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
-		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
-			$last_yr_end_date = date('Y-m-t');
-		} else {
-			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
+		if($data['fiscal_year_status']=='current') {
+			$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+			$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			
+			$lastMonthArrCalcNoForEndmonth = array('04', '05');
+			if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+				$end_date = date('Y-m-t');
+			} else {
+				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+				$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
+			}
+			
+			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
+			// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
+			if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+				$last_yr_end_date = date('Y-m-t');
+			} else {
+				$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
+			}
+		} else if($data['fiscal_year_status']=='last') {
+			$curFiscalYear = getLastFiscalYear();
+			$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			$end_date 	   = $curFiscalYear.'-03-31';
+			
+			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year')); 
+			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
+			$this->upto_month   = date('M', strtotime($end_date));
 		}
 
 		$uc_filter_by   = 'cost'; //default_value
@@ -150,7 +166,7 @@ class Service_graphical_dashboard extends crm_controller
 			else { $sel_values .= ','; }
 		}
 		// echo $sel_values; exit;
-		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values);
+		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values, $data['fiscal_year_status']);
 		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
 		
 		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord();
