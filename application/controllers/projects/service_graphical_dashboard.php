@@ -279,7 +279,7 @@ class Service_graphical_dashboard extends crm_controller
 			$uc_filter_by = $postdata['uc_filter_by'];
 		}
 		
-		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by);
+		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by, $postdata['fiscal_year_status']);
 		// echo "<pre>"; print_r($data); exit;
 		
 		$res['result']  = true;
