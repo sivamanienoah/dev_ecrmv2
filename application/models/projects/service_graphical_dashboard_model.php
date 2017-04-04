@@ -64,7 +64,7 @@ class Service_graphical_dashboard_model extends crm_model {
 	*@method get_variance_records_for_dashboard
 	*@table crm_view_sales_forecast_variance
 	*/
-	public function getInvoiceRecords($start_date, $end_date) 
+	public function getInvoiceRecords($start_date, $end_date)
 	{
 		$job_ids = array();
 	
@@ -157,10 +157,17 @@ class Service_graphical_dashboard_model extends crm_model {
 	/*
 	*getContributionRecords
 	*/
-	public function getContributionRecords($select_values)
+	public function getContributionRecords($select_values, $fiscal_year_status)
 	{
     	$this->db->select($select_values);
-		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		if($fiscal_year_status == 'current') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		} else if($fiscal_year_status == 'last') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		} else {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		}
+		
 		$sql = $this->db->get();
 		$con_graph_res = $sql->result_array();
 		
@@ -191,10 +198,16 @@ class Service_graphical_dashboard_model extends crm_model {
 	/*
 	*getTotalContributionRecord
 	*/
-	public function getTotalContributionRecord()
+	public function getTotalContributionRecord($fiscal_year_status)
 	{
     	$this->db->select('tot_contri');
-		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		if($fiscal_year_status == 'current') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		} else if($fiscal_year_status == 'last') {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		} else {
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
+		}
 		$this->db->where('practice_name', 'Total');
 		$sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
