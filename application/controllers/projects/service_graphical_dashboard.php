@@ -96,7 +96,7 @@ class Service_graphical_dashboard extends crm_controller
 		// $data['practice_arr']['practice_arr']; //key value practice array
 		
 		//get utilization cost values from service graphical dashboard table
-		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost');
+		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
 		// echo "<pre>"; print_r($data['uc_graph_val']); exit;
 		
 		//get current fiscal ytd invoice records
