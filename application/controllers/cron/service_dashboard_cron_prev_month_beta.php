@@ -61,29 +61,30 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 	{
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
-		$data  				  = array();
-			
-		$bk_rates = get_book_keeping_rates();
+		$data  				= array();	
+		$bk_rates 			= get_book_keeping_rates();
 		
-		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
+		$curFiscalYear 		= $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		
-		$lastMonthArrCalcNoForEndmonth = array('04', '05');
-		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
-			$end_date = date('Y-m-t');
-			$month 	  = date('Y-m-01 00:00:00');
-		} else {
-			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-			$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));// changed upto last month only
-			$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
-		}		
+		$current_month 		= date('m');
+		$fiscalStartMonth 	= '04';
+		
+		$base_mon 			= strtotime(date('Y-m',time()) . '-01 00:00:01');
+		$end_date 			= date('Y-m-d', strtotime('-1 month', $base_mon));// changed upto last month only
+		$month 	  			= date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
 		//default billable_month
 		
-		// $month = date('Y-m-01 00:00:00',strtotime("-1 month"));
-		$start_date = date("Y-m-01",strtotime($start_date));
-		$end_date   = date("Y-m-t", strtotime($end_date));
- 
+		// $month 			= date('Y-m-01 00:00:00',strtotime("-1 month"));
+		$start_date 		= date("Y-m-01",strtotime($start_date));
+		$end_date   		= date("Y-m-t", strtotime($end_date));
+		
+		if($fiscalStartMonth == $current_month) {
+			$curFiscalYear 	= getLastFiscalYear();
+			$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+		}
+		
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
