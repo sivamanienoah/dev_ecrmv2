@@ -45,8 +45,8 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
-									<input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;
-									<input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="last" />&nbsp;Last Financial Year
+									<label><input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;</label>
+									<label><input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" value="last" />&nbsp;Last Financial Year</label>
 								</td>
 								<td align="left">
 								<input type="submit" class="positive input-font" name="advance" value="Search" />
