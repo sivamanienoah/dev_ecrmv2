@@ -38,14 +38,15 @@ $practice_arr = array();
 				<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					
-					<div style="width:65% !important;">
-						<table style="width:340px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
+					<div style="width:95% !important;">
+						<table style="width:360px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
-									<input <?php echo ($month_status==1)?'checked="checked"':'';?> type="radio" name="filter_by" value="1" />&nbsp;Upto Current Date &nbsp;&nbsp;<input <?php echo ($month_status==2)?'checked="checked"':'';?> type="radio" name="filter_by" value="2" />&nbsp;Upto Previous month
+									<label><input <?php echo ($month_status==1)?'checked="checked"':'';?> type="radio" name="filter_by" value="1" />&nbsp;Upto Current Date&nbsp;&nbsp;</label>
+									<label><input <?php echo ($month_status==2)?'checked="checked"':'';?> type="radio" name="filter_by" value="2" />&nbsp;Upto Previous month</label>
 								</td>
 								<td align="left">
-								<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
+									<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
 								</td>								
 							</tr>
 						</table>
