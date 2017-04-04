@@ -28,6 +28,10 @@ $( "#uc_advance_search" ).on( "click", ".uc_filter_by_cls", function() {
 	$("#filter_uc_dashboard").trigger('submit');
 });
 
+$( "#advance_search" ).on( "click", ".fiscal_year_status", function() {
+	$("#fiscal_year_filter").trigger('submit');
+});
+
 
 //filter for revenue
 $( "#inv_filter" ).on( "click", ".inv_filter_by", function() {
