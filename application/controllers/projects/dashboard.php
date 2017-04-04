@@ -2051,21 +2051,11 @@ class Dashboard extends crm_controller
 	{
 		$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		// $end_date  	   = $curFiscalYear."-".date('m-d'); //eg.2014-03-01
 		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
 		
 		//default billable_month
 		$month = date('Y-m-01 00:00:00');
 		
-		/* if($this->input->post("month_year_from_date")) {
-			$start_date = $this->input->post("month_year_from_date");
-			$start_date = date("Y-m-01",strtotime($start_date));
-		}
-		if($this->input->post("month_year_to_date")) {
-			$end_date = $this->input->post("month_year_to_date");
-			$end_date = date("Y-m-t", strtotime($end_date));
-			$month    = date("Y-m-01 00:00:00", strtotime($end_date));
-		} */
 		if($this->input->post("billable_month")) {
 			$bill_month = $this->input->post("billable_month");
 			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
@@ -2078,7 +2068,30 @@ class Dashboard extends crm_controller
 		}
 		
 		$month_status = $this->input->post("month_status");
-		if(!empty($month_status)){
+		
+		$current_month 		= date('m');
+		$fiscalStartMonth 	= '04';
+		
+		$month_status = $this->input->post("month_status");
+		
+		if(!empty($month_status)) {
+			if($month_status == 2) {
+				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
+				if($fiscalStartMonth == $current_month) {
+					$curFiscalYear 	= getLastFiscalYear();
+					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+				} else {
+					$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));
+				}
+				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
+			} else {
+				$end_date  	= date('Y-m-d');
+				$month    	= date("Y-m-01 00:00:00");
+			}
+		}
+
+		/* if(!empty($month_status)){
 			if($month_status==2){
 				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 				$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
@@ -2089,7 +2102,7 @@ class Dashboard extends crm_controller
 				$end_date  	   = date('Y-m-d');
 				$month    = date("Y-m-01 00:00:00");				
 			}			
-		}
+		} */
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
