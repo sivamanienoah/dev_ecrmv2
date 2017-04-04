@@ -81,7 +81,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		
 		$lastMonthArrCalcNoForEndmonth = array('04', '05');
 		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
-			$ed_date = date('Y-m-t');
+			$end_date = date('Y-m-t');
 		} else {
 			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
@@ -117,7 +117,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
 				
-		if(!empty($pres) && count($pres)>0){
+		if(!empty($pres) && count($pres)>0) {
 			foreach($pres as $prow) {
 				$practice_arr[$prow->id] = $prow->practices;
 				$practice_array[] = $prow->practices;
@@ -125,7 +125,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		}
 
 		//get current fiscal ytd invoice records
-		$invoice_data = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
+		$invoice_data 	 = $this->service_graphical_dashboard_model->getInvoiceRecords($start_date, $end_date);
 		$trend_value 	 = calcInvoiceDataByPracticeWiseMonthWise($invoice_data, $this->default_cur_id);
 		$trend_pract_arr = array();
 		//allign trend array by practicewise then monthwise
