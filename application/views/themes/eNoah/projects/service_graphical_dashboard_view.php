@@ -128,6 +128,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							<?php $attributes = array('id'=>'filter_uc_dashboard','name'=>'filter_uc_dashboard','method'=>'post'); ?>
 							<?php echo form_open_multipart("projects/service_graphical_dashboard", $attributes); ?>
 								<input type="hidden" name="filter" id="filter" value="filter" />
+								<input type="hidden" name="fiscal_year_status" value="<?php echo $fiscal_year_status; ?>" />
 								<div>
 									<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 										<tr>
