@@ -508,7 +508,9 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 				$ins_array = array();
 				$ins_result = 1;
 			}
-			exit;
+			
+			echo .'overall_revenue -'.$overall_revenue . " - overall_contrib " . $overall_contrib; exit;
+			
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
 			$tot['ytd_billable_utilization_cost'] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
 			$tot['tot_contri'] 			  		  = round((($overall_revenue-$overall_contrib)/$overall_revenue)*100);
