@@ -627,13 +627,15 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				}
 				/**other cost data*/
 				if($parr == 'Infra Services' || $parr == 'Testing') {
-					$parr = 'Others';
+					// $parr = 'Others';
+					continue;
 				}
 								
 				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				$temp_ytd_utilization_cost 	= $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
+				
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
 				$cm_billval = (($projects['billable_month'][$parr]['Billable']['hour'])/$projects['billable_month'][$parr]['totalhour'])*100;
 				$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
