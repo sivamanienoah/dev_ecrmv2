@@ -588,6 +588,9 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$projects['direct_cost']    = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
 		$data['projects']           = $projects; 
+		
+		echo "<pre>"; print_r($data['projects']); exit;
+		
 		$ins_array = array();
 		$tot = array();
 		$totCM_Irval = $tot_Irval = $tot_billhour = $tot_tothours = $tot_billval = $tot_totbillval = $tot_actual_hr = $tot_estimated_hrs = $tot_cm_irvals = $tot_cm_dc_tot = $tot_dc_vals = $tot_dc_tots = 0;
