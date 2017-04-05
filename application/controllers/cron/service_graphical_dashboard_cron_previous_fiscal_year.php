@@ -494,6 +494,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
 					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
 					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					echo $parr . " - ". $overall_contrib . "<br>";
 					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
