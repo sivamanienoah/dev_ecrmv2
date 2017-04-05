@@ -18,9 +18,9 @@ Modified By     : Sriram.S
  * @author 		eNoah
  * @Controller
  */
-//error_reporting(E_ALL);
+// error_reporting(E_ALL);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-//ini_set('display_errors',1);
+// ini_set('display_errors',1);
 class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controller
 {	
     public function __construct()
@@ -458,7 +458,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					}
 					$this->db->where(array('practice_name' => $parr));
 					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array);
-					echo $this->db->last_query() . "<br />";
+					// echo $this->db->last_query() . "<br />";
 					$inse_array = array();
 					if($fis_mon == $this->upto_month) { break; }
 				}
