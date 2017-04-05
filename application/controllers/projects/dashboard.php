@@ -772,8 +772,8 @@ class Dashboard extends crm_controller
 				// echo "<pre>"; print_r($updata_data); exit;
 				$wh_condn = array('username'=>$user_row->username);
 				$this->db->update($this->cfg['dbpref'].'timesheet_data', $updata_data, $wh_condn);
-				echo $this->db->last_query();
-				echo "<br>";
+				// echo $this->db->last_query();
+				// echo "<br>";
 			}
 		}
 	}
