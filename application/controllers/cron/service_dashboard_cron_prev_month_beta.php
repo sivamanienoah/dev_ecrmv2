@@ -667,7 +667,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
 				$tot_dc_vals += $projects['irval'][$parr];
-				echo "<br>".$tot_dc_tots += $temp_ytd_utilization_cost;
+				echo $parr . " - ".$temp_ytd_utilization_cost."<br>";
+				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
 				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
