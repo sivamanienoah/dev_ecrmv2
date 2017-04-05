@@ -443,7 +443,23 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 			$overall_revenue = $overall_contrib = 0;
 			
 			foreach($practice_array as $parr){
-				echo $parr . '<br>'; 
+				$mon_revenue = $mon_contrib = 0;
+				foreach($this->fiscal_month_arr as $fis_mon) {
+					$con_month = 'contri_'.$fis_mon;
+					
+					$ins_array[$con_month] = 0;
+					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					echo $parr ." - ".$fis_mon." - ";
+					echo $overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					echo "<br>";
+					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					echo $parr . " - ". $overall_contrib . "<br>";
+					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					if(isset($mon_revenue) && $mon_revenue != 0) {
+						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
+					}
+					if($fis_mon == $this->upto_month) { break; }
+				}
 			}
 			
 			echo 'overall_revenue -'.$overall_revenue . " - overall_contrib " . $overall_contrib; exit;
