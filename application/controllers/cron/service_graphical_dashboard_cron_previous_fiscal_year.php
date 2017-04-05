@@ -441,9 +441,9 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
-			// quick fix
-			unset($practice_array['Infra Services']);
-			unset($practice_array['Testing']);
+			
+			echo "<pre>"; print_r($practice_array); exit;
+			
 			foreach($practice_array as $parr){
 				/**other cost data*/
 				$other_cost_val 	= 0;
