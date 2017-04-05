@@ -457,6 +457,11 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
 					if($fis_mon == $this->upto_month) { break; }
+					
+					$this->db->where(array('practice_name' => $parr));
+					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_array);
+					// echo $this->db->last_query() . "<br />";
+					$ins_array = array();
 				}
 			}
 
