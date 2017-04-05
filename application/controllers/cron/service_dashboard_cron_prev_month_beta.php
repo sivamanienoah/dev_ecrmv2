@@ -630,7 +630,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 					$parr = 'Others';
 				}
 								
-				/* $ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
+				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				$temp_ytd_utilization_cost 	= $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
@@ -667,15 +667,15 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
 				$tot_dc_vals += $projects['irval'][$parr];
-				$tot_dc_tots += $temp_ytd_utilization_cost;
+				echo "<br>".$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
-				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array); */
+				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
 				// echo $this->db->last_query() . "<br>";
 				$ins_array = array();
 			}
-			
-			echo "<pre>"; print_r($projects['other_cost']); exit;
+			exit;
+			// echo "<pre>"; print_r($projects['other_cost']); exit;
 
 			$tot['billing_month'] 			= $totCM_Irval;
 			$tot['ytd_billing']   			= $tot_Irval;
@@ -688,7 +688,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 			if($tot_cm_dc_tot){
 				$cmonth = round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
 			}
-			$tot['contribution_month'] 	= $cmonth;			
+			$tot['contribution_month'] 	= $cmonth;
 			$tot['ytd_contribution'] 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 			$tot['month_status'] 		= 2;
 
