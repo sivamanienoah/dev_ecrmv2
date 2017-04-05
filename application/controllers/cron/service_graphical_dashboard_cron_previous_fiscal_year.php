@@ -438,6 +438,27 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 			}
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
+			
+			// for total contribution & total revenue
+			$overall_revenue = $overall_contrib = 0;
+			foreach($practice_array as $parr){
+				$mon_revenue = $mon_contrib = 0;
+				foreach($this->fiscal_month_arr as $fis_mon) {
+					$con_month = 'contri_'.$fis_mon;
+					
+					$ins_array[$con_month] = 0;
+					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					// echo $parr ." - ".$fis_mon." - ".$overall_revenue. "<br>";
+					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					// echo $parr . " - ". $overall_contrib . "<br>";
+					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
+					if(isset($mon_revenue) && $mon_revenue != 0) {
+						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
+					}
+					if($fis_mon == $this->upto_month) { break; }
+				}
+			}
 
 			foreach($practice_array as $parr){
 				/**other cost data*/
@@ -489,27 +510,6 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 				// echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
-			}
-			
-			// for total contribution & total revenue
-			$overall_revenue = $overall_contrib = 0;
-			foreach($practice_array as $parr){
-				$mon_revenue = $mon_contrib = 0;
-				foreach($this->fiscal_month_arr as $fis_mon) {
-					$con_month = 'contri_'.$fis_mon;
-					
-					$ins_array[$con_month] = 0;
-					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					// echo $parr ." - ".$fis_mon." - ".$overall_revenue. "<br>";
-					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
-					// echo $parr . " - ". $overall_contrib . "<br>";
-					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
-					if(isset($mon_revenue) && $mon_revenue != 0) {
-						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
-					}
-					if($fis_mon == $this->upto_month) { break; }
-				}
 			}
 			
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
