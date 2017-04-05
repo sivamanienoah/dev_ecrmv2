@@ -439,9 +439,60 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 			$ins_data['practice_name'] = 'Total';
 			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
 
+			foreach($practice_array as $parr){
+				/**other cost data*/
+				$other_cost_val 	= 0;
+				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
+					foreach($projects['othercost_projects'][$parr] as $pro_id) {
+						$val 			 = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
+						$other_cost_val += $val;
+					}
+					if($parr == 'Infra Services' || $parr == 'Testing') {
+						$parr = 'Others';
+					}
+					$projects['other_cost'][$parr] = $other_cost_val;
+				}
+				/**other cost data*/
+				if($parr == 'Infra Services' || $parr == 'Testing') {
+					// $parr = 'Others';
+					continue;
+				}
+				//for billable efforts
+				$bill_eff = 0;
+				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
+					$bill_eff = (($projects['billable_ytd'][$parr]['Billable']['hour'])/$projects['billable_ytd'][$parr]['totalhour'])*100;		
+				}
+				
+				$ins_array['ytd_billable']   = ($bill_eff != 0) ? round($bill_eff) : '-';
+				//for billable utilization cost
+				$temp_ytd_utilization_cost = '';
+				if(isset($projects['direct_cost'][$parr]['total_direct_cost']) && (isset($projects['other_cost'][$parr]))) {
+					$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				}
+				
+				if(isset($temp_ytd_utilization_cost) && !empty($temp_ytd_utilization_cost)) {
+					$bill_ytd_uc = (($projects['direct_cost'][$parr]['total_billable_cost'])/$temp_ytd_utilization_cost)*100;
+				}
+				$ins_array['ytd_billable_utilization_cost'] = ($bill_ytd_uc != '') ? round($bill_ytd_uc) : '-';
+				if(isset($projects['direct_cost'][$parr]) && !empty($projects['direct_cost'][$parr])) {
+					$tot_temp_ytd_uc  			+= $temp_ytd_utilization_cost;
+					$tot_temp_billable_ytd_uc 	+= $projects['direct_cost'][$parr]['total_billable_cost'];
+				}
+				
+				if(isset($projects['billable_ytd'][$parr]) && !empty($projects['billable_ytd'][$parr])) {
+					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
+					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
+				}			
+				
+				$this->db->where(array('practice_name' => $parr));
+				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_array);
+				// echo $this->db->last_query() . "<br />";
+				$ins_array = array();
+				$ins_result = 1;
+			}
+			
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
-			
 			foreach($practice_array as $parr){
 				$mon_revenue = $mon_contrib = 0;
 				foreach($this->fiscal_month_arr as $fis_mon) {
@@ -449,11 +500,10 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					
 					$ins_array[$con_month] = 0;
 					$mon_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					echo $parr ." - ".$fis_mon." - ";
-					echo $overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
-					echo "<br>";
+					$overall_revenue += isset($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon]) ? round($projects['trend_pract_arr']['trend_pract_val_arr'][$parr][$fis_mon], 2) : 0;
+					// echo $parr ." - ".$fis_mon." - ".$overall_revenue. "<br>";
 					$mon_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
-					echo $parr . " - ". $overall_contrib . "<br>";
+					// echo $parr . " - ". $overall_contrib . "<br>";
 					$overall_contrib += isset($projects['contribution_trend_arr'][$parr][$fis_mon]) ? round($projects['contribution_trend_arr'][$parr][$fis_mon], 2) : 0;
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$ins_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
@@ -461,8 +511,6 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					if($fis_mon == $this->upto_month) { break; }
 				}
 			}
-			
-			echo 'overall_revenue -'.$overall_revenue . " - overall_contrib " . $overall_contrib; exit;
 			
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
 			$tot['ytd_billable_utilization_cost'] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
