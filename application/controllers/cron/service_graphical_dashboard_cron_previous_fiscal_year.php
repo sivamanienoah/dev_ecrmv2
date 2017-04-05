@@ -136,7 +136,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 			}
 		}
 
-		// echo "<pre>"; print_r($trend_pract_arr); exit;
+		echo "<pre>"; print_r($trend_pract_arr); exit;
 		$projects['trend_pract_arr'] = $trend_pract_arr;
 		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
