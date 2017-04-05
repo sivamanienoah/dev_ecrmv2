@@ -669,7 +669,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
 				$tot_dc_vals += $projects['irval'][$parr];
-				echo $parr . " - ".$temp_ytd_utilization_cost."<br>";
+				// echo $parr . " - ".$temp_ytd_utilization_cost."<br>";
 				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
@@ -677,7 +677,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				// echo $this->db->last_query() . "<br>";
 				$ins_array = array();
 			}
-			exit;
+			// exit;
 			// echo "<pre>"; print_r($projects['other_cost']); exit;
 
 			$tot['billing_month'] 			= $totCM_Irval;
