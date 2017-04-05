@@ -587,9 +587,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 
 		$projects['direct_cost']    = $directcost;
 		$projects['cm_direct_cost'] = $cm_directcost;
-		$data['projects']           = $projects; 
-		
-		echo "<pre>"; print_r($data['projects']); exit;
+		$data['projects']           = $projects;
 		
 		$ins_array = array();
 		$tot = array();
@@ -620,8 +618,8 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 						$other_cost_val += $val;
 						$cm_other_cost_val += $cm_val;
 					}
-					$projects['other_cost'][$parr] = $other_cost_val;
-					$projects['cm_other_cost'][$parr] = $cm_other_cost_val;
+					$projects['other_cost'][$parr] 		= $other_cost_val;
+					$projects['cm_other_cost'][$parr] 	= $cm_other_cost_val;
 				}
 				if($parr != 'Infra Services' || $parr != 'Testing') {
 					$totCM_Irval += $projects['cm_irval'][$parr];
@@ -632,7 +630,7 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 					$parr = 'Others';
 				}
 								
-				$ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
+				/* $ins_array['billing_month'] = ($projects['cm_irval'][$parr] != '') ? round($projects['cm_irval'][$parr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
 				$temp_ytd_utilization_cost 	= $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
@@ -672,10 +670,12 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$this->db->where(array('practice_name' => $parr,'month_status' => 2));
-				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array);
+				$this->db->update($this->cfg['dbpref'] . 'services_dashboard_beta', $ins_array); */
 				// echo $this->db->last_query() . "<br>";
 				$ins_array = array();
 			}
+			
+			echo "<pre>"; print_r($projects['other_cost']); exit;
 
 			$tot['billing_month'] 			= $totCM_Irval;
 			$tot['ytd_billing']   			= $tot_Irval;
