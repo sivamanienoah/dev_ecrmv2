@@ -456,7 +456,8 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 				}
 				/**other cost data*/
 				if($parr == 'Infra Services' || $parr == 'Testing') {
-					$parr = 'Others';
+					// $parr = 'Others';
+					continue;
 				}
 				//for billable efforts
 				$bill_eff = 0;

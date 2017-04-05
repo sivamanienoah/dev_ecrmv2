@@ -462,7 +462,8 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}
 				/**other cost data*/
 				if($parr == 'Infra Services' || $parr == 'Testing') {
-					$parr = 'Others';
+					// $parr = 'Others';
+					continue;
 				}
 				//for billable efforts
 				$bill_eff = 0;
