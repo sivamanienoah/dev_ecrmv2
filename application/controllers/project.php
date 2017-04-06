@@ -222,6 +222,8 @@ class Project extends crm_controller {
 			$keyword = 'null';
 		}
 		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
+		
+		echo $this->db->last_query(); die;
 
 		$data['pjts_data'] = $this->getProjectsDataByDefaultCurrency($getProjects);
 
@@ -5489,6 +5491,7 @@ HDOC;
 		} else {
 			echo "Email Not Sent";
 		}
+		echo $this->email->print_debugger();
 	}
 	
 	//check gantt chart data exists for given project id
