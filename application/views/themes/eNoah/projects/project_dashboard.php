@@ -51,6 +51,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							<tr>
 								<td class="tblheadbg">MONTH & YEAR</td>
 								<td class="tblheadbg">EXCLUDE</td>
+								<td class="tblheadbg">ENTITY</td>
 								<td class="tblheadbg">DEPARTMENT</td>
 								<td class="tblheadbg">PRACTICE</td>
 								<td class="tblheadbg">SKILL</td>
@@ -70,8 +71,15 @@ table.bu-tbl-inr th{ text-align:center; }
 									<br />
 									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
 									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
-									
-									
+								</td>
+								<td class="proj-dash-select">
+									<select title="Select Entity" id="entity_ids" name="entity_ids[]" multiple="multiple">
+									<?php if(count($entitys)>0 && !empty($entitys)) { ?>
+										<?php foreach($entitys as $enty) { ?>
+											<option <?php echo in_array($enty->div_id, $entity_ids) ? 'selected="selected"' : '';?> value="<?php echo $enty->div_id;?>"><?php echo $enty->division_name; ?></option>
+										<?php } ?>
+									<?php } ?>
+									</select>
 								</td>
 								<td class="proj-dash-select">
 									<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
@@ -109,7 +117,7 @@ table.bu-tbl-inr th{ text-align:center; }
 								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="6">
+								<td colspan="7">
 									<input type="hidden" id="start_date" name="start_date" value="" />
 									<input type="hidden" id="end_date" name="end_date" value="" />
 									<input type="hidden" id="filter_area_status" name="filter_area_status" value="" />
@@ -169,19 +177,19 @@ table.bu-tbl-inr th{ text-align:center; }
 								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
 							}
-							$financialYear = get_current_financial_year($row->entry_year,$row->entry_month);
-							$max_hours_resources = get_practice_max_hour_by_financial_year($row->practice_id,$financialYear);
+							$financialYear 			= get_current_financial_year($row->entry_year,$row->entry_month);
+							$max_hours_resources 	= get_practice_max_hour_by_financial_year($row->practice_id,$financialYear);
 							
 							$max_hours_resource=$max_hours_resources->practice_max_hours;
 							$duration_hours=get_timesheet_hours_by_user($row->username,$row->entry_year,$row->entry_month,array('Leave','Hol'));
 							
 							$max_hours[$row->username][$row->entry_year][$row->entry_month]['max_hours']=$max_hours_resource;
 							$max_hours[$row->username][$row->entry_year][$row->entry_month]['duration_hours']=$duration_hours;
-							$rate=$row->cost_per_hour;
-							$rate1 =$rate;
+							$rate	= $row->cost_per_hour;
+							$rate1 	= $rate;
 							if($duration_hours>$max_hours_resource){
 								$percentage = ($max_hours_resource/$duration_hours);
-								$rate1 = number_format(($percentage*$rate),2);
+								$rate1 		= number_format(($percentage*$rate),2);
 							}
 							
 							$bu_arr['totalhour'] = $bu_arr['totalhour'] + $row->duration_hours;
