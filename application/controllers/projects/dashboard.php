@@ -477,7 +477,8 @@ class Dashboard extends crm_controller
 		WHERE start_time between '$start_date' and '$end_date' $where"; */
 		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		if(!empty($resource_type))
@@ -524,6 +525,11 @@ class Dashboard extends crm_controller
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
 			$this->db->where_in("t.practice_id", $pids);
+		}
+		$entity_ids = $this->input->post("entity_ids");
+		if(!empty($entity_ids)) {
+			$entys = explode(',', $entity_ids);
+			$this->db->where_in('t.entity_id', $entys);
 		}
 		switch($dept_type) {
 			case 1:
