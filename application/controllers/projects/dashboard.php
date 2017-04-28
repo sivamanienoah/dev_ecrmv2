@@ -554,7 +554,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		$data['heading'] 	   = $heading;
