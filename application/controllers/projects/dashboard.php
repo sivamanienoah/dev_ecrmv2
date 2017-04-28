@@ -40,7 +40,7 @@ class Dashboard extends crm_controller
 		// $practices = $this->dashboard_model->get_practices();
 		// echo "<pre>"; print_r($this->input->post()); exit;
 		
-		$timesheet_db = $this->load->database("timesheet",true);
+		$timesheet_db = $this->load->database("timesheet", true);
 				
 		$start_date = date("Y-m-1");
 		$end_date   = date("Y-m-d");
@@ -73,6 +73,8 @@ class Dashboard extends crm_controller
 			$data['exclude_holiday'] = 1;
 		}
 		
+		$entity_ids = $this->input->post("entity_ids");
+		
 		$department_ids = $this->input->post("department_ids");
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
@@ -86,7 +88,8 @@ class Dashboard extends crm_controller
 		
 		//for practices
 		$this->db->select('t.practice_id, t.practice_name');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("t.practice_id !=", 0);
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -132,7 +135,8 @@ class Dashboard extends crm_controller
 				// echo "<pre>"; print_R($_POST); exit;
 
 				$this->db->select('t.skill_id, t.skill_name as name');
-				$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+				// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 				$this->db->where("t.practice_id !=", 0);
 				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -167,8 +171,12 @@ class Dashboard extends crm_controller
 		$data['end_date']   = $end_date;
 		$json 				= '';
 		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
+		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM crm_timesheet_data 
+		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where"; */
+		
+		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
+		FROM ".$this->cfg['dbpref']."timesheet_month_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
 		// echo $getITDataQry;
@@ -176,7 +184,8 @@ class Dashboard extends crm_controller
 		
 		
 		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, cost_per_hour, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost, entry_year, entry_month');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_data');
+		// $this->db->from($this->cfg['dbpref']. 'timesheet_data');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data');
 		$this->db->where("resoursetype !=", 0);
 		$this->db->where("(start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -202,6 +211,11 @@ class Dashboard extends crm_controller
 				$this->db->where_in("dept_id", $department_ids);
 			}
 		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$data['entity_ids'] = $entity_ids;
+			$this->db->where_in('entity_id', $entity_ids);
+		}
+		
 		$query = $this->db->get();
 		
 		// echo "<br>****<br>" . $this->db->last_query();
@@ -221,6 +235,11 @@ class Dashboard extends crm_controller
 		}
 		$data['departments'] = $depts_res;
 		$timesheet_db->close();
+		
+		$this->db->select('div_id, division_name');
+		$this->db->where("status", 1);
+		$entity_query 		= $this->db->get($this->cfg['dbpref'].'sales_divisions');
+		$data['entitys'] 	= $entity_query->result();
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
