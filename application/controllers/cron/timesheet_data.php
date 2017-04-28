@@ -290,34 +290,28 @@ class Timesheet_data extends crm_controller
 		}
 	}
 	
-	public function	updt_direct_cost()
-	{
-		@set_time_limit(-1); //disable the mysql query maximum execution time
-		$timesheet_db = $this->load->database('timesheet', TRUE);
-		
-		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc)";
-		
-		$query  = $timesheet_db->query($sql);
-		$result = $query->result_array();
-		
-		$userDirectCostArrr = array();
-		
-		if(!empty($result)) {
-			foreach($result as $row) {
-				// $userCostArr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'] + $row['overheads_cost'];
-				$userDirectCostArrr[$row['employee_id']][$row['year']][$row['month']] = $row['direct_cost'];
-			}
-		}
-		ksort($userDirectCostArrr);
-		
-		// echo "<pre>"; print_r($userDirectCostArrr); exit;
-		
-	}
-	
 	public function month_wise() 
 	{
 		echo "<br>Start :".date("Y-m-d H:i;s");
-		@set_time_limit(-1); 
+		@set_time_limit(-1);
+
+		$this->db->select('l.pjt_id, l.division, l.move_to_project_status, sd.division_name');
+		$this->db->from($this->cfg['dbpref'].'leads l');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
+		$this->db->where('l.pjt_id != ', '');
+		$this->db->where('l.move_to_project_status', 1);
+		$pjt_query 	 = $this->db->get();
+		$crm_res 	 = $pjt_query->result();
+		
+		$projEntityArr = array();
+		if(!empty($crm_res) && count($crm_res)>0) {
+			foreach($crm_res as $enty) {
+				$projEntityArr[$enty->pjt_id]['entity_id'] = $enty->division;
+				$projEntityArr[$enty->pjt_id]['entity_name'] = $enty->division_name;
+			}
+		}
+		
+		// echo "<pre>"; print_r($projEntityArr); die;
 		 
 	    $times_sql = "SELECT td.client_id,td.client_code,td.project_code,td.username,td.empname,td.resoursetype,td.entry_year,td.entry_month,td.start_time,td.end_time,td.duration,sum(td.duration_hours) as duration_hours,td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost,td.direct_cost_per_hour,sum(td.resource_duration_direct_cost) as resource_duration_direct_cost,td.added_by,td.added_date,td.modified_by,td.modified_date,td.dept_id,td.dept_name,td.practice_id,td.practice_name,td.skill_id,td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where td.start_time >='2004-06-01' AND td.end_time <= CURDATE() GROUP by project_code,username,resoursetype,entry_year,entry_month";
 		
@@ -325,44 +319,46 @@ class Timesheet_data extends crm_controller
 		$times_result = $times_query->result_array();
 		if(!empty($times_result))
 		{  
-	    $this->db->truncate($this->cfg['dbpref'].'timesheet_month_data');
-	    $hours_details = array();
-		foreach($times_result as $key=>$ts)
-		{ 
-		/** To calculate total hours used by a resource **/
-		if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours']))
-		{
-		    $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'];
-		}	
-		else
-		{
-			$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = get_timesheet_hours_by_user_modified($ts['username'],$ts['entry_year'],$ts['entry_month'],array('Leave','Hol'));
-		}
-		/** To calculate total leave hours of a resource **/
-		if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours']))
-		{
-		    $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'];
-		}
-		else
-		{
-			$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'] = get_leave_hours_by_user($ts['username'],$ts['entry_year'],$ts['entry_month']);
-		}
-		/** To calculate total holiday hours of a resource **/
-		if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours']))
-		{
-		    $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'];
-		}
-		else
-		{
-			$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'] = get_hoilday_hours_by_user($ts['username'],$ts['entry_year'],$ts['entry_month']);
-		}
-		
-		$ts['resource_total_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'];
-		$ts['resource_leave_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'];
-		$ts['resource_holiday_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'];
-		
-	    $this->db->insert($this->cfg['dbpref'].'timesheet_month_data',$ts);
-		}
+			$this->db->truncate($this->cfg['dbpref'].'timesheet_month_data');
+			$hours_details = array();
+			foreach($times_result as $key=>$ts)
+			{ 
+				/** To calculate total hours used by a resource **/
+				if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours']))
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'];
+				}	
+				else
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = get_timesheet_hours_by_user_modified($ts['username'],$ts['entry_year'],$ts['entry_month'],array('Leave','Hol'));
+				}
+				/** To calculate total leave hours of a resource **/
+				if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours']))
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'];
+				}
+				else
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'] = get_leave_hours_by_user($ts['username'],$ts['entry_year'],$ts['entry_month']);
+				}
+				/** To calculate total holiday hours of a resource **/
+				if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours']))
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'];
+				}
+				else
+				{
+					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'] = get_hoilday_hours_by_user($ts['username'],$ts['entry_year'],$ts['entry_month']);
+				}
+				
+				$ts['resource_total_hours'] 	= $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'];
+				$ts['resource_leave_hours'] 	= $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['leave_hours'];
+				$ts['resource_holiday_hours'] 	= $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['holiday_hours'];
+				$ts['entity_id']	= isset($projEntityArr[$ts['project_code']]['entity_id']) ? $projEntityArr[$ts['project_code']]['entity_id'] : '';
+				$ts['entity_name']	= isset($projEntityArr[$ts['project_code']]['entity_name']) ? $projEntityArr[$ts['project_code']]['entity_name'] : '';
+				
+				$this->db->insert($this->cfg['dbpref'].'timesheet_month_data', $ts);
+			}
 		}
 		echo "<br>End :".date("Y-m-d H:i;s");
 	}
