@@ -662,8 +662,8 @@ $('#filter_reset').click(function() {
 	 $("#member_ids").html('');
 	 // $("#month_year_from_date, #month_year_to_date").val(cur_mon);
 	 // $("#entity_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
-	 $("option:selected").prop("selected", false)
-	 // $("#department_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
+	 $('select#entity_ids option').removeAttr("selected");
+	 $("#department_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
 });
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
