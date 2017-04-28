@@ -448,6 +448,10 @@ $(function() {
 	$('#exclude_leave, #exclude_holiday').click(function() {
         $("#filter_area_status").val('1');
     });
+	
+	$('#entity_ids').change(function(){
+		$("#filter_area_status").val('1');
+	});
 });	
 $(document).ready(function(){
 	
@@ -570,7 +574,6 @@ $(document).ready(function(){
 		return false;		
 	});
 	
-	
 	$('body').on('change','#skill_ids',function(){
 		var dids       = $('#department_ids').val();
 		var start_date = $('#month_year_from_date').val();
@@ -653,6 +656,7 @@ $('#filter_reset').click(function() {
 	 $("#skill_ids").html('');
 	 $("#member_ids").html('');
 	 // $("#month_year_from_date, #month_year_to_date").val(cur_mon);
+	 $("#entity_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
 	 $("#department_ids").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
 });
 </script>
