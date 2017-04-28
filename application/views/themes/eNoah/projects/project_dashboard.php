@@ -32,6 +32,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				<input type="hidden" name="month_year_to_date" value="" id="hmonth_to_year" />
 				<input type="hidden" name="department_ids" value="" id="hdept_ids" />
 				<input type="hidden" name="practice_ids" value="" id="hprac_ids" />
+				<input type="hidden" name="entity_ids" value="" id="henty_ids" />
 				<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
 				<input type="hidden" name="member_ids" value="" id="hmember_ids" />
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -56,7 +57,6 @@ table.bu-tbl-inr th{ text-align:center; }
 								<td class="tblheadbg">PRACTICE</td>
 								<td class="tblheadbg">SKILL</td>
 								<td class="tblheadbg">RESOURCE</td>
-								
 							</tr>
 							<tr>	
 								<td class="month-year">
@@ -617,6 +617,11 @@ function getData(resource_type, dept_type)
 		$('#hprac_ids').val('');
 	} else {
 		$('#hprac_ids').val($('#practice_ids').val());
+	}
+	if($('#entity_ids').val() == null) {
+		$('#henty_ids').val('');
+	} else {
+		$('#henty_ids').val($('#entity_ids').val());
 	}
 	$('#hmonth_year').val($('#month_year_from_date').val());
 	$('#hmonth_to_year').val($('#month_year_to_date').val());
