@@ -74,6 +74,11 @@ class Dashboard extends crm_controller
 		}
 		
 		$entity_ids = $this->input->post("entity_ids");
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$entis = implode(",",$entity_ids);
+			$data['entity_ids'] = $entity_ids;
+			$where .= " and entity_id in ($entis)";
+		}
 		
 		$department_ids = $this->input->post("department_ids");
 		if(count($department_ids)>0 && !empty($department_ids)) {
@@ -183,24 +188,21 @@ class Dashboard extends crm_controller
 		$sql = $this->db->query($getITDataQry);
 		
 		
-		$this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, cost_per_hour, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost, entry_year, entry_month');
+		/* $this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, cost_per_hour, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost, entry_year, entry_month');
 		// $this->db->from($this->cfg['dbpref']. 'timesheet_data');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data');
 		$this->db->where("resoursetype !=", 0);
 		$this->db->where("(start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
-			// $this->db->where("project_code !=", 'Leave');
 			$this->db->where_not_in("project_code", array('Leave'));
 			$data['exclude_leave'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
-			// $this->db->where("project_code !=", 'HOL');
 			$this->db->where_not_in("project_code", array('HOL'));
 			$data['exclude_holiday'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
-			// $where .= " and project_code NOT IN ('HOL','Leave')";
 			$this->db->where_not_in("project_code", array('HOL','Leave'));
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
@@ -216,7 +218,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in('entity_id', $entity_ids);
 		}
 		
-		$query = $this->db->get();
+		$query = $this->db->get(); */
 		
 		echo "<br>****<br>" . $this->db->last_query();
 		
