@@ -345,7 +345,8 @@ table.bu-tbl-inr th{ text-align:center; }
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-									echo $resource_cost['tot']['over_all']['total_hour']; die;
+								$overAllTotHour = $resource_cost['tot']['over_all']['total_hour'];
+								$overAllTotCost = $resource_cost['tot']['over_all']['totalcost'];
 							?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
@@ -353,14 +354,14 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td align="right"><?php echo round($rtval['head_count'], 2); ?></td>
 									<td align="right"><?php echo round($rtval['total_cost'],0); ?></td>
 									<td align="right"><?php echo round($rtval['total_dc_cost'],0); ?></td>
-									<td align="right"><?php echo round(($rtval['duration_hours']/$resource_cost['tot']['over_all']['total_hour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['total_cost']/$resource_cost['tot']['over_all']['totalcost']) * 100, 0) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['total_dc_cost']/$resource_cost['tot']['over_all']['totalcost']) * 100, 0) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['duration_hours']/$overAllTotHour) * 100, 1) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['total_cost']/$overAllTotCost) * 100, 0) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['total_dc_cost']/$overAllTotCost) * 100, 0) . ' %'; ?></td>
 								</tr>
 							<?php
-								$percent_hour += ($rtval['duration_hours']/$resource_cost['tot']['over_all']['total_hour']) * 100;
-								$percent_cost += ($rtval['total_cost']/$resource_cost['tot']['over_all']['totalcost']) * 100;
-								$percent_directcost += ($rtval['total_dc_cost']/$resource_cost['tot']['over_all']['totalcost']) * 100;
+								$percent_hour += ($rtval['duration_hours']/$overAllTotHour) * 100;
+								$percent_cost += ($rtval['total_cost']/$overAllTotCost) * 100;
+								$percent_directcost += ($rtval['total_dc_cost']/$overAllTotCost) * 100;
 							}
 						}
 					?>
