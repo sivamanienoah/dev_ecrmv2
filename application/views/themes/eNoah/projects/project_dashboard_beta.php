@@ -341,13 +341,14 @@ table.bu-tbl-inr th{ text-align:center; }
 					</tr>
 					<?php
 						//echo "<pre>"; print_r($max_hours); //die;
+						$overAllTotHour = $tot_arr['over_all']['total_hour'];
+						$overAllTotCost = $tot_arr['over_all']['totalcost'];
 						$percent_hour = $percent_cost = 0;
 						ksort($resource_cost['over_all']);
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-								$overAllTotHour = $tot_arr['over_all']['total_hour'];
-								$overAllTotCost = $tot_arr['over_all']['totalcost'];
+								
 							?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
