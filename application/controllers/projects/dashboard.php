@@ -417,27 +417,27 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		$this->db->where("t.resoursetype !=", 0);
 		if(!empty($start_date) && !empty($end_date)) {
-			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
-			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+			$this->db->where("DATE(t.start_time) >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("DATE(t.start_time) <= ", date('Y-m-d', strtotime($end_date)));
 		}
 		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere); */
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
-			$this->db->where_not_in("project_code", array('Leave'));
+			$this->db->where_not_in("t.project_code", array('Leave'));
 			$data['exclude_leave'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
-			$this->db->where_not_in("project_code", array('HOL'));
+			$this->db->where_not_in("t.project_code", array('HOL'));
 			$data['exclude_holiday'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
-			$this->db->where_not_in("project_code", array('HOL','Leave'));
+			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
 		}
 		if(!empty($entity_ids) && count($entity_ids)>0) {
 			$data['entity_ids'] = $entity_ids;
-			$this->db->where_in('entity_id', $entity_ids);
+			$this->db->where_in('t.entity_id', $entity_ids);
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
