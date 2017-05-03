@@ -345,18 +345,10 @@ table.bu-tbl-inr th{ text-align:center; }
 							foreach($resource_cost['over_all'] as $resrc_type_arr) {
 								ksort($resrc_type_arr);
 								if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
+									echo "<pre>"; print_r($resrc_type_arr); die;
 									foreach($resrc_type_arr as $rtval) {
 							?>
-										<tr>
-											<td><?= $rt; ?></td>
-											<td align="right"><?= round($rtval['hour'],1); ?></td>
-											<td align="right"><?= round($rtval['headcount'],2); ?></td>
-											<td align="right"><?= round($rtval['cost'],0); ?></td>
-											<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
-											<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
-											<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
-											<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
-										</tr>
+										
 							<?php
 									$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
 									$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
