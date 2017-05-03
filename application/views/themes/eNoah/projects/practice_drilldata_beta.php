@@ -110,7 +110,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); 
+	// echo "<pre>"; print_r($timesheet_data); 
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$prac_arr) {
@@ -168,7 +168,7 @@ if(!empty($resdata)) {
 		}		
 	}
 		
-		echo "<pre>"; print_r($tbl_data); die;
+		echo "<pre>"; print_r($tbl_data); echo "</pre>"; die;
 		
 		if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
