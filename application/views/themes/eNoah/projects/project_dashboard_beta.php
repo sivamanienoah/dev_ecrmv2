@@ -264,7 +264,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						
 						
 						if(count($timesheet_data)>0 && !empty($timesheet_data)) {
-							foreach($timesheet_data as $dept_key=>$resource_type_arr) {
+							foreach($timesheet_data as $dept_key=>$resource_type_arr) { echo $dept_key; die;
 								if(!empty($resource_type_arr) && count($resource_type_arr)>0) {
 									foreach($resource_type_arr as $resource_type_key=>$resource_arr) {
 										if(!empty($resource_arr) && count($resource_arr)>0) {
