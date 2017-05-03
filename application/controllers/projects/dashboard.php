@@ -452,7 +452,7 @@ class Dashboard extends crm_controller
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
-		// echo "<br>****<br>" . $this->db->last_query();
+		echo "<br>****<br>" . $this->db->last_query();
 		
 		// echo "<pre>"; print_r($data['resdata']); die;
 
@@ -936,13 +936,6 @@ class Dashboard extends crm_controller
 			break;
 		}
 		if(!empty($skill_ids) && !empty($department_ids) && !empty($member_ids)) {
-			/* $pre_mids = implode(",",$member_ids);
-			if(!empty($pre_mids)) {
-				$mids = "'".implode("','",$member_ids)."'";
-				if(!empty($mids)) {
-					$where .= " and t.username in ($mids)";
-				}
-			} */
 			$mids = explode(',', $member_ids);
 			$this->db->where_in("t.username", $mids);
 		}
