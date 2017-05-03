@@ -228,7 +228,6 @@ table.bu-tbl-inr th{ text-align:center; }
 					$user_data = array();
 					$resource_cost = array();
 					$head_count_arr = array();
-					$tot_arr = array();
 							
 					if(count($resdata)>0) {
 						$rates = $conversion_rates;
@@ -292,8 +291,8 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$resource_cost[$dept_key][$resource_type_key]['head_count'] = 1;
 																			}
 																			//total_hour,total_cost based on dept
-																			$tot_arr[$dept_key]['total_hour'] += $duration_hours;
-																			$tot_arr[$dept_key]['total_cost'] += ($duration_hours*$direct_rateperhr1);
+																			$resource_cost['tot'][$dept_key]['total_hour'] += $duration_hours;
+																			$resource_cost['tot'][$dept_key]['total_cost'] += ($duration_hours*$direct_rateperhr1);
 																			//for overall
 																			$resource_cost['over_all'][$resource_type_key]['duration_hours'] += $duration_hours;
 																			$resource_cost['over_all'][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
@@ -305,8 +304,8 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$resource_cost['over_all'][$resource_type_key]['head_count'] = 1;
 																			}
 																			//total_hour,total_cost based on overall
-																			$tot_arr['over_all']['total_hour'] += $duration_hours;
-																			$tot_arr['over_all']['total_cost'] += ($duration_hours*$direct_rateperhr1);
+																			$resource_cost['tot']['over_all']['total_hour'] += $duration_hours;
+																			$resource_cost['tot']['over_all']['total_cost'] += ($duration_hours*$direct_rateperhr1);
 																		}
 																	}
 																}
@@ -341,14 +340,12 @@ table.bu-tbl-inr th{ text-align:center; }
 					</tr>
 					<?php
 						//echo "<pre>"; print_r($max_hours); //die;
-						$overAllTotHour = $tot_arr['over_all']['total_hour'];
-						$overAllTotCost = $tot_arr['over_all']['totalcost'];
 						$percent_hour = $percent_cost = 0;
 						ksort($resource_cost['over_all']);
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-								
+									// echo $resource_cost['tot']['over_all']['total_hour']; die;
 							?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
@@ -356,23 +353,23 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td align="right"><?php echo round($rtval['head_count'], 2); ?></td>
 									<td align="right"><?php echo round($rtval['total_cost'],0); ?></td>
 									<td align="right"><?php echo round($rtval['total_dc_cost'],0); ?></td>
-									<td align="right"><?php echo round(($rtval['duration_hours']/$overAllTotHour) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['total_cost']/$overAllTotCost) * 100, 0) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['total_dc_cost']/$overAllTotCost) * 100, 0) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['duration_hours']/$resource_cost['tot']['over_all']['total_hour']) * 100, 1) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['total_cost']/$resource_cost['tot']['over_all']['total_cost']) * 100, 0) . ' %'; ?></td>
+									<td align="right"><?php echo round(($rtval['total_dc_cost']/$resource_cost['tot']['over_all']['total_cost']) * 100, 0) . ' %'; ?></td>
 								</tr>
 							<?php
-								$percent_hour += ($rtval['duration_hours']/$overAllTotHour) * 100;
-								$percent_cost += ($rtval['total_cost']/$overAllTotCost) * 100;
-								$percent_directcost += ($rtval['total_dc_cost']/$overAllTotCost) * 100;
+								$percent_hour += ($rtval['duration_hours']/$resource_cost['tot']['over_all']['total_hour']) * 100;
+								$percent_cost += ($rtval['total_cost']/$resource_cost['tot']['over_all']['total_cost']) * 100;
+								$percent_directcost += ($rtval['total_dc_cost']/$resource_cost['tot']['over_all']['total_cost']) * 100;
 							}
 						}
 					?>
 							<tr>
 								<td align="right"><b>Total:</b></td>
-								<td align="right"><?= round($overAllTotHour, 1); ?></td>
+								<td align="right"><?= round($resource_cost['tot']['over_all']['total_hour'],1); ?></td>
 								<td align="right"></td>
-								<td align="right"><?= round($overAllTotCost, 0); ?></td>
-								<td align="right"><?= round($overAllTotCost, 0); ?></td>
+								<td align="right"><?= round($resource_cost['tot']['over_all']['total_cost'],0); ?></td>
+								<td align="right"><?= round($resource_cost['tot']['over_all']['total_cost'],0); ?></td>
 								<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
 								<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
 								<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
