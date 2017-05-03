@@ -417,8 +417,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		$this->db->where("t.resoursetype !=", 0);
 		if(!empty($start_date) && !empty($end_date)) {
-			$this->db->where("DATE(t.start_time) >= ", date('Y-m-d', strtotime($start_date)));
-			$this->db->where("DATE(t.start_time) <= ", date('Y-m-d', strtotime($end_date)));
+			$this->db->where("(start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		}
 		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere); */
