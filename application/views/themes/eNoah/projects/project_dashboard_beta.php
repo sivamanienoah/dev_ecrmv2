@@ -273,7 +273,7 @@ table.bu-tbl-inr th{ text-align:center; }
 												$resource_name 	= $resrc_name;
 												$max_hours 		= $user_data[$resrc_name]['max_hours'];
 												$dept_name 		= $user_data[$resrc_name]['dept_name'];
-												$resource_cost[$resource_name]['dept_name'] = $dept_name;
+												// $resource_cost[$resource_name]['dept_name'] = $dept_name;
 												if(count($resrc_data)>0 && !empty($resrc_data)){
 													foreach($resrc_data as $key2=>$value2) {
 														$year = $key2;
