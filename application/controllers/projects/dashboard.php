@@ -244,8 +244,8 @@ class Dashboard extends crm_controller
 		
 		$timesheet_db = $this->load->database("timesheet", true);
 				
-		$start_date = date("Y-m-1");
-		$end_date   = date("Y-m-d");
+		echo $start_date = date("Y-m-1");
+		echo $end_date   = date("Y-m-d"); exit;
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -451,10 +451,10 @@ class Dashboard extends crm_controller
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
-		echo "<pre>"; print_r($data['resdata']); die;
+		echo "<pre>"; print_r($data['resdata']); 
 		
 		
-		// echo "<br>****<br>" . $this->db->last_query();
+		echo "<br>****<br>" . $this->db->last_query();die;
 		
 		// $data['resdata'] = $sql->result();
 		$arr_depts          = array();
