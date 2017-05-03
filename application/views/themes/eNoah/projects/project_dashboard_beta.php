@@ -242,6 +242,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					$tot_cost = 0;
 					$tot_directcost = 0;		
 					$timesheet_data = array();
+					$user_data = array();
 					$resource_cost = array();
 							
 					if(count($resdata)>0) {
@@ -250,9 +251,9 @@ table.bu-tbl-inr th{ text-align:center; }
 							$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 							$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 							
-							$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-							$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
-							$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+							$user_data[$rec->username]['practice_id'] 	= $rec->practice_id;
+							$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
+							$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
 							
 							$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 							$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
