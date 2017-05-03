@@ -465,7 +465,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				<!--new-->
 				<?php if(!empty($resource_cost) && count($resource_cost)>0) { ?>
 					<?php ksort($resource_cost); ?>
-					<?php foreach($resource_cost as $dept_name=>$resrcArr)>0) { ?>
+					<?php foreach($resource_cost as $dept_name=>$resrcArr) { ?>
 						<h4><?php echo $dept_name; ?></h4>
 							<?php if(!empty($resrcArr) && count($resrcArr)>0) { ?>
 							<?php ksort($resrcArr); ?>
