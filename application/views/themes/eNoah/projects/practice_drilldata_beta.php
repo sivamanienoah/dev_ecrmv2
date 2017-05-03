@@ -110,12 +110,12 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); echo "</pre>";
+	echo "<pre>"; print_r($timesheet_data); 
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$prac_arr) {
 			if(!empty($prac_arr) && count($prac_arr)>0) {
-				foreach($prac_arr as $prac_key=>$skill_arr) { echo $dept_key . " ".$prac_key; print_r($skill_arr); die;
+				foreach($prac_arr as $prac_key=>$skill_arr) { echo $dept_key . " ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
 					if(!empty($skill_arr) && count($skill_arr)>0) {
 						foreach($skill_arr as $resrc_name=>$resrc_data) {
 							$resource_name 	= $resrc_name;
