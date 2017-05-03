@@ -456,7 +456,7 @@ class Dashboard extends crm_controller
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
-		// echo "<br>****<br>" . $this->db->last_query();
+		echo "<br>****<br>" . $this->db->last_query();
 		
 		// echo "<pre>"; print_r($data['resdata']); die;
 
@@ -869,13 +869,7 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$entity_ids 	= $this->input->post("entity_ids");
 		
-		
-		/* $qry = "SELECT t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.project_code, t.empname
-		FROM crm_timesheet_data t
-		WHERE start_time between '$start_date' and '$end_date' $where"; */
-		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
-		// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
