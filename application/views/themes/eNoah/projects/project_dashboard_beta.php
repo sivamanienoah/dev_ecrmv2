@@ -311,7 +311,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					echo "<pre>"; print_r($resource_cost); echo "</pre>";
 				?>	
 			<div id="default_view">
-				<h4>IT</h4>
+				<!--<h4>IT</h4>
 				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 					<tr>
 						<thead>
@@ -335,7 +335,6 @@ table.bu-tbl-inr th{ text-align:center; }
 							foreach($bval as $rt=>$rtval){
 					?>
 								<tr>
-									<!--td><a onclick="getData(<?php #echo "'".$rt."'"; ?>,'1');return false;"><?php #echo $rt; ?></a></td-->
 									<td><?= $rt; ?></td>
 									<td align="right"><?= round($rtval['hour'],1); ?></td>
 									<td align="right"><?= round($rtval['headcount'],2); ?></td>
@@ -362,7 +361,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
 							<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 							</tr>
-				</table>
+				</table>-->
 				<div class="dept_section">
 					<div class="dept_sec_inner pull-left">
 						<h4>EADS</h4>
