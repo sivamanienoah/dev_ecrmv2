@@ -295,10 +295,14 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																			}
-																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
+																			/* $resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
 																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
 																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
-																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
+																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1); */
+																			$resource_cost[$dept_key][$resource_type_key]['duration_hours'] += $duration_hours;
+																			$resource_cost[$dept_key][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
+																			// $resource_cost[$dept_key][$resource_type_key]['practice_id'] 	 = ($duration_hours*$rate1);
+																			$resource_cost[$dept_key][$resource_type_key]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
 																		}
 																	}
 																}
@@ -313,6 +317,12 @@ table.bu-tbl-inr th{ text-align:center; }
 							}	
 						}
 					}
+					
+					/* if(!empty($resource_cost) && count($resource_cost)>0) {
+						foreach($resource_cost as )
+						
+					} */
+					
 					//Applying max hours calculation//
 					echo "<pre>"; print_r($resource_cost); echo "</pre>";
 				?>	
