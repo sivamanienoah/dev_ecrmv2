@@ -410,16 +410,15 @@ class Dashboard extends crm_controller
 		}
 		
 		$query = $this->db->get(); */
-		
-		echo "asdfa"; die;
+
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
 		$this->db->where("t.resoursetype !=", 0);
-		/* if(!empty($start_date) && !empty($end_date)) {
+		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-		} */
+		}
 		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere); */
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
@@ -452,10 +451,12 @@ class Dashboard extends crm_controller
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
+		echo "<br>****<br>" . $this->db->last_query();
+		
 		echo "<pre>"; print_r($data['resdata']); die;
 		
 		
-		echo "<br>****<br>" . $this->db->last_query();
+		
 		
 		// $data['resdata'] = $sql->result();
 		$arr_depts          = array();
