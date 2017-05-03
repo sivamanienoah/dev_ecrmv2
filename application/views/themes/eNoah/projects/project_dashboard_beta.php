@@ -343,7 +343,27 @@ table.bu-tbl-inr th{ text-align:center; }
 						$percent_hour = $percent_cost = 0;
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							foreach($resource_cost['over_all'] as $resrc_type_arr) {
-								echo "<pre>"; print_r($resrc_type_arr); die;
+								ksort($resrc_type_arr);
+								if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
+									foreach($resrc_type_arr as $rtval) {
+							?>
+										<tr>
+											<td><?= $rt; ?></td>
+											<td align="right"><?= round($rtval['hour'],1); ?></td>
+											<td align="right"><?= round($rtval['headcount'],2); ?></td>
+											<td align="right"><?= round($rtval['cost'],0); ?></td>
+											<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
+											<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
+										</tr>
+							<?php
+									$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
+									$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
+									$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
+									}
+								}
+							}
 						}
 					?>
 							<tr>
@@ -454,71 +474,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						</table>
 					</div>
 				</div>-->
-				
-				
-				
-				<!--new-->
-				<?php if(!empty($resource_cost) && count($resource_cost)>0) { ?>
-					<?php ksort($resource_cost); ?>
-					<?php foreach($resource_cost as $dept_name=>$resrcArr) { ?>
-						<h4><?php echo $dept_name; ?></h4>
-							<?php if(!empty($resrcArr) && count($resrcArr)>0) { ?>
-							<?php ksort($resrcArr); ?>
-							<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
-								<tr>
-									<thead>
-										<th>Billablity</th>
-										<th>Hours</th>
-										<th># Head Count *</th>
-										<th>Total Cost</th>
-										<th>Total Direct Cost</th>
-										<th>% of Hours</th>
-										<th>% of Cost</th>
-										<th>% of Direct Cost</th>
-									</thead>
-								</tr>
-								<?php
-									$total_hour   = 0;
-									$percent_hour = 0;
-									$percent_cost = 0;
-										
-										foreach($resrcArr as $rtval){
-								?>
-											<tr>
-												<td><?= $rt; ?></td>
-												<td align="right"><?= round($rtval['duration_hours'],1); ?></td>
-												<td align="right"><?= round($rtval['head_count'],2); ?></td>
-												<td align="right"><?= round($rtval['total_cost'],0); ?></td>
-												<td align="right"><?= round($rtval['total_dc_cost'],0); ?></td>
-												<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
-												<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
-												<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
-											</tr>
-								<?php
-										$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
-										$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
-										$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
-										}
-								?>
-										<tr>
-										<td align="right"><b>Total:</b></td>
-										<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
-										<td align="right"></td>
-										<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
-										<td align="right"><?= round($bu_arr['totaldirectcost'],0); ?></td>
-										<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
-										<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
-										<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
-										</tr>
-							</table>
-						<?php } ?>
-					<?php } ?>
-				<?php } ?>
-				
-				<!--new-->
-				
-				
-				
+								
 				<div class="clearfix"></div>
 				<div style="margin:20px 0">
 					<fieldset>
