@@ -243,8 +243,6 @@ table.bu-tbl-inr th{ text-align:center; }
 					$tot_directcost = 0;		
 					$timesheet_data = array();
 					$resource_cost = array();
-					
-					echo "<pre>"; print_r($resdata); echo "</pre>";
 							
 					if(count($resdata)>0) {
 						$rates = $conversion_rates;
