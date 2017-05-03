@@ -140,7 +140,7 @@ table.bu-tbl-inr th{ text-align:center; }
 			</div>
 				<?php 
 				 //echo "<pre>"; print_r($resdata); die;
-					$master      = array();
+					/* $master      = array();
 					$user_arr    = array();
 					$project_arr = array();
 					$bu_arr      = array();
@@ -152,10 +152,10 @@ table.bu-tbl-inr th{ text-align:center; }
 					$max_hours   = array();
 					$bu_arr['totalhour'] = 0;
 					$bu_arr['totalhead'] = 0;
-					$bu_arr['totalcost'] = 0;
+					$bu_arr['totalcost'] = 0; */
 					
 					
-					if(!empty($resdata)) {
+					/* if(!empty($resdata)) {
 						foreach($resdata as $row){
 							// for business unit based
 							if (!in_array($row->username, $usercnt[$row->resoursetype])) {
@@ -168,6 +168,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									$bu_arr['it'][$row->resoursetype]['headcount'] = 1;
 								}
 							}
+
 							if (isset($bu_arr['it'][$row->resoursetype]['hour'])) {
 								$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
 								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
@@ -177,14 +178,15 @@ table.bu-tbl-inr th{ text-align:center; }
 								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost;
 								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
 							}
-							$financialYear 			= get_current_financial_year($row->entry_year,$row->entry_month);
-							$max_hours_resources 	= get_practice_max_hour_by_financial_year($row->practice_id,$financialYear);
 							
-							$max_hours_resource=$max_hours_resources->practice_max_hours;
-							$duration_hours=get_timesheet_hours_by_user($row->username,$row->entry_year,$row->entry_month,array('Leave','Hol'));
+							$financialYear 			= get_current_financial_year($row->entry_year, $row->entry_month);
+							$max_hours_resources 	= get_practice_max_hour_by_financial_year($row->practice_id, $financialYear);
 							
-							$max_hours[$row->username][$row->entry_year][$row->entry_month]['max_hours']=$max_hours_resource;
-							$max_hours[$row->username][$row->entry_year][$row->entry_month]['duration_hours']=$duration_hours;
+							$max_hours_resource		= $max_hours_resources->practice_max_hours;
+							$duration_hours			= get_timesheet_hours_by_user($row->username,$row->entry_year,$row->entry_month,array('Leave','Hol'));
+							
+							$max_hours[$row->username][$row->entry_year][$row->entry_month]['max_hours']		= $max_hours_resource;
+							$max_hours[$row->username][$row->entry_year][$row->entry_month]['duration_hours']	= $duration_hours;
 							$rate	= $row->cost_per_hour;
 							$rate1 	= $rate;
 							if($duration_hours>$max_hours_resource){
@@ -219,7 +221,92 @@ table.bu-tbl-inr th{ text-align:center; }
 							$dept_arr[$row->dept_name]['totaldirectcost'] = $dept_arr[$row->dept_name]['totaldirectcost'] + $row->resource_duration_direct_cost;
 							//for dept based
 						}
+					} */
+					
+					
+					//Applying max hours calculation//
+					
+					$tbl_data = array();
+					$sub_tot  = array();
+					$cost_arr = array();
+					$directcost_arr = array();
+					$usercnt  = array();
+					$prjt_hr  = array();
+					$prjt_cst = array();
+					$prjt_directcst = array();
+					$prac = array();
+					$dept = array();
+					$skil = array();
+					$proj = array();
+					$tot_hour = 0;
+					$tot_cost = 0;
+					$tot_directcost = 0;		
+					$timesheet_data = array();
+					$resource_cost = array();
+							
+					if(count($resdata)>0) {
+						$rates = $conversion_rates;
+						foreach($resdata as $rec) {		
+							$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
+							$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+							
+							$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
+							$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
+							$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
+							
+							$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+							$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+							$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+							$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+							$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+							$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
+						}
+
+						if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+							foreach($timesheet_data as $key1=>$value1) {
+								$resource_name = $key1;
+								$max_hours = $value1['max_hours'];
+								$dept_name = $value1['dept_name'];
+								$resource_cost[$resource_name]['dept_name'] = $dept_name;
+								if(count($value1)>0 && !empty($value1)){
+									foreach($value1 as $key2=>$value2) {
+										$year = $key2;
+										if(count($value2)>0 && !empty($value2)){
+											foreach($value2 as $key3=>$value3) {
+												$individual_billable_hrs = 0;
+												$ts_month		 	  	 = $key3;
+												if(count($value3)>0 && !empty($value3)){
+													foreach($value3 as $key4=>$value4) {
+														if($key4 != 'total_hours'){ 
+															$individual_billable_hrs = $value3['total_hours'];
+															$duration_hours			 = $value4['duration_hours'];
+															$rate				 	 = $value4['rateperhr'];
+															$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+															$rate1 					 = $rate;
+															$direct_rateperhr1 		 = $direct_rateperhr;
+															if($individual_billable_hrs>$max_hours) {
+																$percentage 		= ($max_hours/$individual_billable_hrs);
+																$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+																$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+															}
+															$resource_cost[$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
+															$resource_cost[$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
+															$resource_cost[$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
+															$resource_cost[$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}	 
+						}
 					}
+					
+					echo "<pre>"; print_r($resource_cost); die;
+					
+					//Applying max hours calculation//
 				?>	
 			<div id="default_view">
 				<h4>IT</h4>
@@ -395,6 +482,22 @@ table.bu-tbl-inr th{ text-align:center; }
 		?>
 	</div>
 </div>
+
+<?php
+	/*
+	*method : get_currency_rates
+	*/
+	function get_currency_rates() {
+		$currency_rates = $this->report_lead_region_model->get_currency_rate();
+		$rates 			= array();
+		if(!empty($currency_rates)) {
+			foreach ($currency_rates as $currency) {
+				$rates[$currency->from][$currency->to] = $currency->value;
+			}
+		}
+		return $rates;
+	}
+?>
 
 <script type="text/javascript">
 var cur_mon = '<?php echo date('F Y') ?>';
