@@ -128,7 +128,7 @@ if(!empty($resdata)) {
 										foreach($resrc_data as $key2=>$value2) {
 											$year = $key2;
 											if(count($value2)>0 && !empty($value2)){
-												foreach($value2 as $key3=>$value3) { echo "<pre>"; print_r($value3); die;
+												foreach($value2 as $key3=>$value3) {
 													$individual_billable_hrs = 0;
 													$ts_month		 	  	 = $key3;
 													if(count($value3)>0 && !empty($value3)) {
