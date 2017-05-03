@@ -343,9 +343,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						$percent_hour = $percent_cost = 0;
 						ksort($resource_cost['over_all']);
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
-							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-									// echo $resource_cost['tot']['over_all']['total_hour']; die;
 							?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
@@ -375,7 +373,7 @@ table.bu-tbl-inr th{ text-align:center; }
 								<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 							</tr>
 				</table>
-				<!--<div class="dept_section">
+				<div class="dept_section">
 					<div class="dept_sec_inner pull-left">
 						<h4>EADS</h4>
 						<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
@@ -392,34 +390,35 @@ table.bu-tbl-inr th{ text-align:center; }
 								</thead>
 							</tr>
 							<?php
-								ksort($dept_arr['dept']['eADS']);
-								foreach($dept_arr['dept']['eADS'] as $adskey=>$adsval) {
+								$percent_hour = $percent_cost = 0;
+								ksort($resource_cost['eADS']);
+								foreach($resource_cost['eADS'] as $resrc_type_name=>$rtval) {
 							?>
 										<tr>
-											<td><a onclick="getData(<?php echo "'".$adskey."'"; ?>,'2');return false;"><?= $adskey; ?></a></td>
-											<td align="right"><?= round($adsval['hour'],1); ?></td>
-											<td align="right"><?= round($adsval['headcount'],2); ?></td>
-											<td align="right"><?= round($adsval['cost'],0); ?></td>
-											<td align="right"><?= round($adsval['direct_cost'],0); ?></td>
-											<td align="right"><?php echo round(($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100, 1) . ' %'; ?></td>
-											<td align="right"><?php echo round(($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100, 0) . ' %'; ?></td>
-											<td align="right"><?php echo round(($adsval['direct_cost']/$dept_arr['eADS']['totaldirectcost']) * 100, 0) . ' %'; ?></td>
+											<td><a onclick="getData(<?php echo "'".$resrc_type_name."'"; ?>,'2');return false;"><?= $resrc_type_name; ?></a></td>
+											<td align="right"><?php echo round($rtval['duration_hours'], 1); ?></td>
+											<td align="right"><?php echo round($rtval['head_count'], 2); ?></td>
+											<td align="right"><?php echo round($rtval['total_cost'],0); ?></td>
+											<td align="right"><?php echo round($rtval['total_dc_cost'],0); ?></td>
+											<td align="right"><?php echo round(($rtval['duration_hours']/$resource_cost['tot']['eADS']['total_hour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['total_cost']/$resource_cost['tot']['eADS']['total_cost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['total_dc_cost']/$resource_cost['tot']['eADS']['total_cost']) * 100, 0) . ' %'; ?></td>
 										</tr>
 							<?php
-									$percent_adshour += ($adsval['hour']/$dept_arr['eADS']['totalhour']) * 100;
-									$percent_adscost += ($adsval['cost']/$dept_arr['eADS']['totalcost']) * 100;
-									$percent_adsdirectcost += ($adsval['direct_cost']/$dept_arr['eADS']['totaldirectcost']) * 100;
+									$percent_hour += ($rtval['duration_hours']/$resource_cost['tot']['eADS']['total_hour']) * 100;
+									$percent_cost += ($rtval['total_cost']/$resource_cost['tot']['eADS']['total_cost']) * 100;
+									$percent_directcost += ($rtval['total_dc_cost']/$resource_cost['tot']['eADS']['total_cost']) * 100;
 									}
 							?>
 									<tr>
-									<td align="right"><b>Total:</b></td>
-									<td align="right"><?= round($dept_arr['eADS']['totalhour'],1); ?></td>
-									<td align="right"></td>
-									<td align="right"><?= round($dept_arr['eADS']['totalcost'],0); ?></td>
-									<td align="right"><?= round($dept_arr['eADS']['totaldirectcost'],0); ?></td>
-									<td align="right"><?= round($percent_adshour, 1) . ' %'; ?></td>
-									<td align="right"><?= round($percent_adscost, 0) . ' %'; ?></td>
-									<td align="right"><?= round($percent_adsdirectcost, 0) . ' %'; ?></td>
+										<td align="right"><b>Total:</b></td>
+										<td align="right"><?= round($resource_cost['tot']['eADS']['total_hour'],1); ?></td>
+										<td align="right"></td>
+										<td align="right"><?= round($resource_cost['tot']['eADS']['total_cost'],0); ?></td>
+										<td align="right"><?= round($resource_cost['tot']['eADS']['total_cost'],0); ?></td>
+										<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
+										<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
+										<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 									</tr>
 						</table>
 					</div>
@@ -471,7 +470,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									</tr>
 						</table>
 					</div>
-				</div>-->
+				</div>
 								
 				<div class="clearfix"></div>
 				<div style="margin:20px 0">
