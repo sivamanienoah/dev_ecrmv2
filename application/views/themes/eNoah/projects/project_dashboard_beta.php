@@ -468,7 +468,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<?php foreach($resource_cost as $dept_name=>$resrcArr) { ?>
 						<h4><?php echo $dept_name; ?></h4>
 							<?php if(!empty($resrcArr) && count($resrcArr)>0) { ?>
-							<?php ksort($resrcArr); ?>
+							<?php ksort($resrcArr); echo "<pre>"; print_r($resrcArr); die; ?>
 							<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 								<tr>
 									<thead>
