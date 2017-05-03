@@ -342,10 +342,10 @@ table.bu-tbl-inr th{ text-align:center; }
 						//echo "<pre>"; print_r($max_hours); //die;
 						$percent_hour = $percent_cost = 0;
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
-							foreach($resource_cost['over_all'] as $resrc_type_arr) {
+							foreach($resource_cost['over_all'] as $key=>$resrc_type_arr) {
 								ksort($resrc_type_arr);
 								if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
-									echo "<pre>"; print_r($resrc_type_arr); die;
+									echo $key."<pre>"; print_r($resrc_type_arr); die;
 									foreach($resrc_type_arr as $rtval) {
 							?>
 										
