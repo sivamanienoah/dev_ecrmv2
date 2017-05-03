@@ -279,13 +279,10 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																			}
-																			/* $resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
-																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
-																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
+																			/* $resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
 																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1); */
 																			$resource_cost[$dept_key][$resource_type_key]['duration_hours'] += $duration_hours;
 																			$resource_cost[$dept_key][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
-																			// $resource_cost[$dept_key][$resource_type_key]['practice_id'] 	 = ($duration_hours*$rate1);
 																			$resource_cost[$dept_key][$resource_type_key]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
 																			//head count
 																			if(isset($resource_cost[$dept_key][$resource_type_key]['head_count'])) {
@@ -293,6 +290,22 @@ table.bu-tbl-inr th{ text-align:center; }
 																			} else {
 																				$resource_cost[$dept_key][$resource_type_key]['head_count'] = 1;
 																			}
+																			//total_hour,total_cost based on dept
+																			$resource_cost[$dept_key]['total_hour'] += $duration_hours;
+																			$resource_cost[$dept_key]['total_cost'] += ($duration_hours*$direct_rateperhr1);
+																			//for overall
+																			$resource_cost['over_all'][$resource_type_key]['duration_hours'] += $duration_hours;
+																			$resource_cost['over_all'][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
+																			$resource_cost['over_all'][$resource_type_key]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
+																			//head count
+																			if(isset($resource_cost['over_all'][$resource_type_key]['head_count'])) {
+																				$resource_cost['over_all'][$resource_type_key]['head_count'] += 1; 
+																			} else {
+																				$resource_cost['over_all'][$resource_type_key]['head_count'] = 1;
+																			}
+																			//total_hour,total_cost based on overall
+																			$resource_cost['over_all']['total_hour'] += $duration_hours;
+																			$resource_cost['over_all']['total_cost'] += ($duration_hours*$direct_rateperhr1);
 																		}
 																	}
 																}
@@ -311,7 +324,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					echo "<pre>"; print_r($resource_cost); echo "</pre>";
 				?>	
 			<div id="default_view">
-				<!--<h4>IT</h4>
+				<h4>IT</h4>
 				<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 					<tr>
 						<thead>
@@ -327,41 +340,43 @@ table.bu-tbl-inr th{ text-align:center; }
 					</tr>
 					<?php
 						//echo "<pre>"; print_r($max_hours); //die;
-						$total_hour   = 0;
-						$percent_hour = 0;
-						$percent_cost = 0;
-						foreach($bu_arr as $bkey=>$bval) {
-							ksort($bval);
-							foreach($bval as $rt=>$rtval){
-					?>
-								<tr>
-									<td><?= $rt; ?></td>
-									<td align="right"><?= round($rtval['hour'],1); ?></td>
-									<td align="right"><?= round($rtval['headcount'],2); ?></td>
-									<td align="right"><?= round($rtval['cost'],0); ?></td>
-									<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
-									<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
-									<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
-								</tr>
-					<?php
-							$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
-							$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
-							$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
+						$percent_hour = $percent_cost = 0;
+						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
+							foreach($resource_cost['over_all'] as $resrc_type_arr) {
+								ksort($resrc_type_arr);
+								if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
+									foreach($resrc_type_arr as $rt=>$rtval) {
+							?>
+										<tr>
+											<td><?= $rt; ?></td>
+											<td align="right"><?= round($rtval['hour'],1); ?></td>
+											<td align="right"><?= round($rtval['headcount'],2); ?></td>
+											<td align="right"><?= round($rtval['cost'],0); ?></td>
+											<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
+											<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
+										</tr>
+							<?php
+									$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
+									$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
+									$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
+									}
+								}
 							}
 						}
 					?>
 							<tr>
-							<td align="right"><b>Total:</b></td>
-							<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
-							<td align="right"></td>
-							<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
-							<td align="right"><?= round($bu_arr['totaldirectcost'],0); ?></td>
-							<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
-							<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
-							<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
+								<td align="right"><b>Total:</b></td>
+								<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
+								<td align="right"></td>
+								<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
+								<td align="right"><?= round($bu_arr['totaldirectcost'],0); ?></td>
+								<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
+								<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
+								<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 							</tr>
-				</table>-->
+				</table>
 				<!--<div class="dept_section">
 					<div class="dept_sec_inner pull-left">
 						<h4>EADS</h4>
@@ -468,7 +483,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<?php foreach($resource_cost as $dept_name=>$resrcArr) { ?>
 						<h4><?php echo $dept_name; ?></h4>
 							<?php if(!empty($resrcArr) && count($resrcArr)>0) { ?>
-							<?php ksort($resrcArr); echo "<pre>"; print_r($resrcArr); die; ?>
+							<?php ksort($resrcArr); ?>
 							<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
 								<tr>
 									<thead>
@@ -491,10 +506,10 @@ table.bu-tbl-inr th{ text-align:center; }
 								?>
 											<tr>
 												<td><?= $rt; ?></td>
-												<td align="right"><?= round($rtval['hour'],1); ?></td>
-												<td align="right"><?= round($rtval['headcount'],2); ?></td>
-												<td align="right"><?= round($rtval['cost'],0); ?></td>
-												<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
+												<td align="right"><?= round($rtval['duration_hours'],1); ?></td>
+												<td align="right"><?= round($rtval['head_count'],2); ?></td>
+												<td align="right"><?= round($rtval['total_cost'],0); ?></td>
+												<td align="right"><?= round($rtval['total_dc_cost'],0); ?></td>
 												<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
 												<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
 												<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
@@ -548,22 +563,6 @@ table.bu-tbl-inr th{ text-align:center; }
 		?>
 	</div>
 </div>
-
-<?php
-	/*
-	*method : get_currency_rates
-	*/
-	function get_currency_rates() {
-		$currency_rates = $this->report_lead_region_model->get_currency_rate();
-		$rates 			= array();
-		if(!empty($currency_rates)) {
-			foreach ($currency_rates as $currency) {
-				$rates[$currency->from][$currency->to] = $currency->value;
-			}
-		}
-		return $rates;
-	}
-?>
 
 <script type="text/javascript">
 var cur_mon = '<?php echo date('F Y') ?>';
