@@ -259,9 +259,9 @@ table.bu-tbl-inr th{ text-align:center; }
 												$dept_name 		= $user_data[$resrc_name]['dept_name'];
 												//head count
 												if(isset($head_count[$resource_type_key][$resource_name]['head_count'])) {
-													$head_count[$resource_type_key][$resource_name]['head_count'] += 1; 
+													$head_count[$dept_key][$resource_type_key][$resource_name]['head_count'] += 1; 
 												} else {
-													$head_count[$resource_type_key][$resource_name]['head_count'] = 1;
+													$head_count[$dept_key][$resource_type_key][$resource_name]['head_count'] = 1;
 												}
 												
 												if(count($resrc_data)>0 && !empty($resrc_data)){
