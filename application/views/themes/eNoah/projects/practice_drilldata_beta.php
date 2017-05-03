@@ -145,11 +145,17 @@ if(!empty($resdata)) {
 																	$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																	$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																}
-																
+																//hour
 																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
 																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $duration_hours;
 																} else {
 																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour']  = $duration_hours;
+																}
+																//cost
+																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'])) {
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] += $direct_rateperhr1;
+																} else {
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] = $direct_rateperhr1;
 																}
 																
 															}
@@ -170,11 +176,11 @@ if(!empty($resdata)) {
 		
 		echo "<pre>"; print_r($tbl_data); echo "</pre>"; die;
 		
-		if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
+		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
 		} else {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
-		}
+		} */
 		if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['cost'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['cost'] += $rec->resource_duration_cost;
 		} else {
