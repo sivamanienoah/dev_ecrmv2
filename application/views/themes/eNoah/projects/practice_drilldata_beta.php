@@ -180,7 +180,7 @@ if(!empty($resdata)) {
 		}		
 	}
 		
-		echo "<pre>"; print_r($tbl_data); echo "</pre>"; die;
+		// echo "<pre>"; print_r($tbl_data); echo "</pre>"; die;
 		
 		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
