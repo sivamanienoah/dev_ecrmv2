@@ -304,7 +304,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						}
 					}
 					
-					// echo "<pre>"; print_r($resource_cost); die;
+					echo "<pre>"; print_r($resource_cost); echo "</pre>";
 					
 					//Applying max hours calculation//
 				?>	
