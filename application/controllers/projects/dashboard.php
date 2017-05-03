@@ -371,10 +371,6 @@ class Dashboard extends crm_controller
 			$data['member_ids_selected'] = $qry1->result();			
 		}
 		
-		$data['start_date'] = $start_date;
-		$data['end_date']   = $end_date;
-		$json 				= '';
-		
 		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM ".$this->cfg['dbpref']."timesheet_month_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
