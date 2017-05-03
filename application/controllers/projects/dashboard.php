@@ -439,6 +439,10 @@ class Dashboard extends crm_controller
 			$data['entity_ids'] = $entity_ids;
 			$this->db->where_in('t.entity_id', $entity_ids);
 		}
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$data['practice_ids'] = $practice_ids;
+			$this->db->where_in('l.practice', $practice_ids);
+		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
 			if(!empty($dids)) {
