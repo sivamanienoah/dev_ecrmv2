@@ -416,10 +416,10 @@ class Dashboard extends crm_controller
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		$this->db->where("t.resoursetype !=", 0);
-		if(!empty($start_date) && !empty($end_date)) {
-			$this->db->where("(start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-		}
+		/* if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		} */
 		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere); */
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
