@@ -463,6 +463,6 @@ $(document).ready(function () {
 });
 </script>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
-<script type="text/javascript" src="assets/js/projects/project_drilldown_data.js"></script>
+<script type="text/javascript" src="assets/js/projects/project_drilldown_data_beta.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
