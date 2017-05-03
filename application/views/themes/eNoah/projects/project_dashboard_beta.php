@@ -288,7 +288,7 @@ table.bu-tbl-inr th{ text-align:center; }
 																			// $resource_cost[$dept_key][$resource_type_key]['practice_id'] 	 = ($duration_hours*$rate1);
 																			$resource_cost[$dept_key][$resource_type_key]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
 																			//head count
-																			if(isset($resource_cost[$dept_key][$resource_type_key][$resource_name]['head_count'])) {
+																			if(isset($resource_cost[$dept_key][$resource_type_key]['head_count'])) {
 																				$resource_cost[$dept_key][$resource_type_key]['head_count'] += 1; 
 																			} else {
 																				$resource_cost[$dept_key][$resource_type_key]['head_count'] = 1;
