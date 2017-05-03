@@ -439,34 +439,35 @@ table.bu-tbl-inr th{ text-align:center; }
 								</thead>
 							</tr>
 							<?php
-								ksort($dept_arr['dept']['eQAD']);
-								foreach($dept_arr['dept']['eQAD'] as $qadkey=>$qadval) {
+								$percent_hour = $percent_cost = 0;
+								ksort($resource_cost['eQAD']);
+								foreach($resource_cost['eQAD'] as $qadkey=>$qadval) {
 							?>
 										<tr>
-											<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'3');return false;"><?= $qadkey; ?></a></td>
-											<td align="right"><?= round($qadval['hour'],1); ?></td>
-											<td align="right"><?= round($qadval['headcount'],2); ?></td>
-											<td align="right"><?= round($qadval['cost'],0); ?></td>
-											<td align="right"><?= round($qadval['direct_cost'],0); ?></td>
-											<td align="right"><?php echo round(($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100, 1) . ' %'; ?></td>
-											<td align="right"><?php echo round(($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100, 0) . ' %'; ?></td>
-											<td align="right"><?php echo round(($qadval['direct_cost']/$dept_arr['eQAD']['totaldirectcost']) * 100, 0) . ' %'; ?></td>
+											<td><a onclick="getData(<?php echo "'".$qadkey."'"; ?>,'2');return false;"><?= $qadkey; ?></a></td>
+											<td align="right"><?php echo round($qadval['duration_hours'], 1); ?></td>
+											<td align="right"><?php echo round($qadval['head_count'], 2); ?></td>
+											<td align="right"><?php echo round($qadval['total_cost'],0); ?></td>
+											<td align="right"><?php echo round($qadval['total_dc_cost'],0); ?></td>
+											<td align="right"><?php echo round(($qadval['duration_hours']/$resource_cost['tot']['eQAD']['total_hour']) * 100, 1) . ' %'; ?></td>
+											<td align="right"><?php echo round(($qadval['total_cost']/$resource_cost['tot']['eQAD']['total_cost']) * 100, 0) . ' %'; ?></td>
+											<td align="right"><?php echo round(($qadval['total_dc_cost']/$resource_cost['tot']['eQAD']['total_cost']) * 100, 0) . ' %'; ?></td>
 										</tr>
 							<?php
-									$percent_qadhour += ($qadval['hour']/$dept_arr['eQAD']['totalhour']) * 100;
-									$percent_qadcost += ($qadval['cost']/$dept_arr['eQAD']['totalcost']) * 100;
-									$percent_qaddirectcost += ($qadval['direct_cost']/$dept_arr['eQAD']['totaldirectcost']) * 100;
+									$percent_hour += ($qadval['duration_hours']/$resource_cost['tot']['eQAD']['total_hour']) * 100;
+									$percent_cost += ($qadval['total_cost']/$resource_cost['tot']['eQAD']['total_cost']) * 100;
+									$percent_directcost += ($qadval['total_dc_cost']/$resource_cost['tot']['eQAD']['total_cost']) * 100;
 									}
 							?>
 									<tr>
-									<td align="right"><b>Total:</b></td>
-									<td align="right"><?= round($dept_arr['eQAD']['totalhour'],1); ?></td>
-									<td align="right"></td>
-									<td align="right"><?= round($dept_arr['eQAD']['totalcost'],0); ?></td>
-									<td align="right"><?= round($dept_arr['eQAD']['totaldirectcost'],0); ?></td>
-									<td align="right"><?= round($percent_qadhour, 1) . ' %'; ?></td>
-									<td align="right"><?= round($percent_qadcost, 0) . ' %'; ?></td>
-									<td align="right"><?= round($percent_qaddirectcost, 0) . ' %'; ?></td>
+										<td align="right"><b>Total:</b></td>
+										<td align="right"><?= round($resource_cost['tot']['eQAD']['total_hour'],1); ?></td>
+										<td align="right"></td>
+										<td align="right"><?= round($resource_cost['tot']['eQAD']['total_cost'],0); ?></td>
+										<td align="right"><?= round($resource_cost['tot']['eQAD']['total_cost'],0); ?></td>
+										<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
+										<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
+										<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 									</tr>
 						</table>
 					</div>
