@@ -291,8 +291,8 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$resource_cost[$dept_key][$resource_type_key]['head_count'] = 1;
 																			}
 																			//total_hour,total_cost based on dept
-																			$resource_cost[$dept_key]['total_hour'] += $duration_hours;
-																			$resource_cost[$dept_key]['total_cost'] += ($duration_hours*$direct_rateperhr1);
+																			$resource_cost['tot'][$dept_key]['total_hour'] += $duration_hours;
+																			$resource_cost['tot'][$dept_key]['total_cost'] += ($duration_hours*$direct_rateperhr1);
 																			//for overall
 																			$resource_cost['over_all'][$resource_type_key]['duration_hours'] += $duration_hours;
 																			$resource_cost['over_all'][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
@@ -304,8 +304,8 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$resource_cost['over_all'][$resource_type_key]['head_count'] = 1;
 																			}
 																			//total_hour,total_cost based on overall
-																			$resource_cost['over_all']['total_hour'] += $duration_hours;
-																			$resource_cost['over_all']['total_cost'] += ($duration_hours*$direct_rateperhr1);
+																			$resource_cost['tot']['over_all']['total_hour'] += $duration_hours;
+																			$resource_cost['tot']['over_all']['total_cost'] += ($duration_hours*$direct_rateperhr1);
 																		}
 																	}
 																}
