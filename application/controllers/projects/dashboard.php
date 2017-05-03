@@ -242,9 +242,6 @@ class Dashboard extends crm_controller
 		$dept   			  = array();
 		$data['page_heading'] = "Utiliztion Metrics Dashboard";
 		
-		// $practices = $this->dashboard_model->get_practices();
-		// echo "<pre>"; print_r($this->input->post()); exit;
-		
 		$timesheet_db = $this->load->database("timesheet", true);
 				
 		$start_date = date("Y-m-1");
@@ -298,7 +295,6 @@ class Dashboard extends crm_controller
 		
 		//for practices
 		$this->db->select('t.practice_id, t.practice_name');
-		// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("t.practice_id !=", 0);
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -314,15 +310,14 @@ class Dashboard extends crm_controller
 			$data['practice_ids'] = $practice_ids;
 			$where .= " and practice_id in ($pids)";
 		}
-		
 		$this->db->group_by('t.practice_id');
 		$this->db->order_by('t.practice_name');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
+		
 		if($query->num_rows()>0) {
 			$data['practice_ids_selected'] = $query->result();
 		}
-		
 		$skill_ids = $this->input->post("skill_ids");
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$sids = implode(",",$skill_ids);
@@ -376,14 +371,9 @@ class Dashboard extends crm_controller
 			$data['member_ids_selected'] = $qry1->result();			
 		}
 		
-		
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 		$json 				= '';
-		
-		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
-		FROM crm_timesheet_data 
-		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where"; */
 		
 		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM ".$this->cfg['dbpref']."timesheet_month_data 
@@ -425,14 +415,56 @@ class Dashboard extends crm_controller
 		
 		$query = $this->db->get(); */
 		
+		
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
+		$this->db->where("t.resoursetype !=", 0);
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere); */
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			$this->db->where_not_in("project_code", array('Leave'));
+			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			$this->db->where_not_in("project_code", array('HOL'));
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			$this->db->where_not_in("project_code", array('HOL','Leave'));
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$data['entity_ids'] = $entity_ids;
+			$this->db->where_in('entity_id', $entity_ids);
+		}
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		}
+		/* $deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere); */
+		$this->db->where("l.practice is not null");
+		$query 			 = $this->db->get();		
+		$data['resdata'] = $query->result();
+		
+		
 		// echo "<br>****<br>" . $this->db->last_query();
 		
-		$data['resdata'] = $sql->result();
+		// $data['resdata'] = $sql->result();
 		$arr_depts          = array();
 		$check_array 	    = array();
 		$check_user_array   = array();
 		$arr_depts1		    = array();
 		$arr_user_avail_set = array();
+		$data['conversion_rates'] = $this->get_currency_rates();
 		/* echo "<pre>"; print_r($data['resdata']); echo "</pre>"; */
 		
 		// get all departments from timesheet
@@ -452,6 +484,7 @@ class Dashboard extends crm_controller
 		$data['end_date']   	  = $end_date;
 		$data['results']    	  = $arr_depts;
 		$data['filter_area_status'] = $this->input->post("filter_area_status");
+		
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/project_dashboard_beta", $data);
 	}
