@@ -362,7 +362,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
 							</tr>
 				</table>-->
-				<div class="dept_section">
+				<!--<div class="dept_section">
 					<div class="dept_sec_inner pull-left">
 						<h4>EADS</h4>
 						<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl-inr">
@@ -458,7 +458,72 @@ table.bu-tbl-inr th{ text-align:center; }
 									</tr>
 						</table>
 					</div>
-				</div>
+				</div>-->
+				
+				
+				
+				<!--new-->
+				<?php if(!empty($resource_cost) && count($resource_cost)>0) { ?>
+					<?php ksort($resource_cost); ?>
+					<?php foreach($resource_cost as $dept_name=>$resrcArr)>0) { ?>
+						<h4><?php echo $dept_name; ?></h4>
+							<?php if(!empty($resrcArr) && count($resrcArr)>0) { ?>
+							<?php ksort($resrcArr); ?>
+							<table cellspacing="0" cellpadding="0" border="0" class="data-table proj-dash-table bu-tbl">
+								<tr>
+									<thead>
+										<th>Billablity</th>
+										<th>Hours</th>
+										<th># Head Count *</th>
+										<th>Total Cost</th>
+										<th>Total Direct Cost</th>
+										<th>% of Hours</th>
+										<th>% of Cost</th>
+										<th>% of Direct Cost</th>
+									</thead>
+								</tr>
+								<?php
+									$total_hour   = 0;
+									$percent_hour = 0;
+									$percent_cost = 0;
+										
+										foreach($resrcArr as $rtval){
+								?>
+											<tr>
+												<td><?= $rt; ?></td>
+												<td align="right"><?= round($rtval['hour'],1); ?></td>
+												<td align="right"><?= round($rtval['headcount'],2); ?></td>
+												<td align="right"><?= round($rtval['cost'],0); ?></td>
+												<td align="right"><?= round($rtval['direct_cost'],0); ?></td>
+												<td align="right"><?php echo round(($rtval['hour']/$bu_arr['totalhour']) * 100, 1) . ' %'; ?></td>
+												<td align="right"><?php echo round(($rtval['cost']/$bu_arr['totalcost']) * 100, 0) . ' %'; ?></td>
+												<td align="right"><?php echo round(($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100, 0) . ' %'; ?></td>
+											</tr>
+								<?php
+										$percent_hour += ($rtval['hour']/$bu_arr['totalhour']) * 100;
+										$percent_cost += ($rtval['cost']/$bu_arr['totalcost']) * 100;
+										$percent_directcost += ($rtval['direct_cost']/$bu_arr['totaldirectcost']) * 100;
+										}
+								?>
+										<tr>
+										<td align="right"><b>Total:</b></td>
+										<td align="right"><?= round($bu_arr['totalhour'],1); ?></td>
+										<td align="right"></td>
+										<td align="right"><?= round($bu_arr['totalcost'],0); ?></td>
+										<td align="right"><?= round($bu_arr['totaldirectcost'],0); ?></td>
+										<td align="right"><?= round($percent_hour,1) . ' %'; ?></td>
+										<td align="right"><?= round($percent_cost,0) . ' %'; ?></td>
+										<td align="right"><?= round($percent_directcost,0) . ' %'; ?></td>
+										</tr>
+							</table>
+						<?php } ?>
+					<?php } ?>
+				<?php } ?>
+				
+				<!--new-->
+				
+				
+				
 				<div class="clearfix"></div>
 				<div style="margin:20px 0">
 					<fieldset>
