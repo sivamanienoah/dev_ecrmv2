@@ -375,12 +375,12 @@ class Dashboard extends crm_controller
 		$data['end_date']   = $end_date;
 		$json 				= '';
 		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
+		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours,cost_per_hour,resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost,entry_year,entry_month
 		FROM ".$this->cfg['dbpref']."timesheet_month_data 
 		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
 		
 		// echo $getITDataQry;
-		$sql = $this->db->query($getITDataQry);
+		$sql = $this->db->query($getITDataQry); */
 		
 		
 		/* $this->db->select('dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, cost_per_hour, resource_duration_cost, project_code, direct_cost_per_hour, resource_duration_direct_cost, entry_year, entry_month');
@@ -456,7 +456,7 @@ class Dashboard extends crm_controller
 		$data['resdata'] = $query->result();
 		
 		
-		// echo "<br>****<br>" . $this->db->last_query();
+		echo "<br>****<br>" . $this->db->last_query();
 		
 		// $data['resdata'] = $sql->result();
 		$arr_depts          = array();
