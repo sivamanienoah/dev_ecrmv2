@@ -456,7 +456,7 @@ class Dashboard extends crm_controller
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
-		echo "<br>****<br>" . $this->db->last_query();
+		// echo "<br>****<br>" . $this->db->last_query();
 		
 		// echo "<pre>"; print_r($data['resdata']); die;
 
