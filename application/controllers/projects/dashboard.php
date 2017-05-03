@@ -444,9 +444,10 @@ class Dashboard extends crm_controller
 			if(!empty($dids)) {
 				$this->db->where_in("t.dept_id", $department_ids);
 			}
+		} else {
+			$deptwhere = "t.dept_id IN ('10','11')";
+			$this->db->where($deptwhere);
 		}
-		/* $deptwhere = "t.dept_id IN ('10','11')";
-		$this->db->where($deptwhere); */
 		$this->db->where("l.practice is not null");
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
