@@ -267,9 +267,9 @@ table.bu-tbl-inr th{ text-align:center; }
 						if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 							foreach($timesheet_data as $dept_key=>$resource_type_arr) {
 								if(!empty($resource_type_arr) && count($resource_type_arr)>0) {
-									foreach($resource_type_arr as $resource_type_key=>$resource_arr) { echo $resource_type_key."<pre>"; print_r($resource_arr); die;
+									foreach($resource_type_arr as $resource_type_key=>$resource_arr) {
 										if(!empty($resource_arr) && count($resource_arr)>0) {
-											foreach($resource_arr as $key1=>$value1) {
+											foreach($resource_arr as $key1=>$value1) {echo $key1."<pre>"; print_r($value1); die;
 												$resource_name 	= $key1;
 												$max_hours 		= $value1['max_hours'];
 												$dept_name 		= $value1['dept_name'];
