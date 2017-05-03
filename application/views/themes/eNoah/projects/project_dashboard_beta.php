@@ -345,7 +345,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							foreach($resource_cost['over_all'] as $resrc_type_arr) {
 								ksort($resrc_type_arr);
 								if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
-									foreach($resrc_type_arr as $rt=>$rtval) {
+									foreach($resrc_type_arr as $rtval) {
 							?>
 										<tr>
 											<td><?= $rt; ?></td>
