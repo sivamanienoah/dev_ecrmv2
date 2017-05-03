@@ -223,27 +223,11 @@ table.bu-tbl-inr th{ text-align:center; }
 						}
 					} */
 					
-					
-					//Applying max hours calculation//
-					
-					$tbl_data = array();
-					$sub_tot  = array();
-					$cost_arr = array();
-					$directcost_arr = array();
-					$usercnt  = array();
-					$prjt_hr  = array();
-					$prjt_cst = array();
-					$prjt_directcst = array();
-					$prac = array();
-					$dept = array();
-					$skil = array();
-					$proj = array();
-					$tot_hour = 0;
-					$tot_cost = 0;
-					$tot_directcost = 0;		
+					//Applying max hours calculation//	
 					$timesheet_data = array();
 					$user_data = array();
 					$resource_cost = array();
+					$head_count = array();
 							
 					if(count($resdata)>0) {
 						$rates = $conversion_rates;
@@ -273,7 +257,13 @@ table.bu-tbl-inr th{ text-align:center; }
 												$resource_name 	= $resrc_name;
 												$max_hours 		= $user_data[$resrc_name]['max_hours'];
 												$dept_name 		= $user_data[$resrc_name]['dept_name'];
-												// $resource_cost[$resource_name]['dept_name'] = $dept_name;
+												//head count
+												if(isset($head_count[$resource_type_key][$resource_name]['head_count'])) {
+													$head_count[$resource_type_key][$resource_name]['head_count'] += 1; 
+												} else {
+													$head_count[$resource_type_key][$resource_name]['head_count'] = 1;
+												}
+												
 												if(count($resrc_data)>0 && !empty($resrc_data)){
 													foreach($resrc_data as $key2=>$value2) {
 														$year = $key2;
@@ -317,12 +307,6 @@ table.bu-tbl-inr th{ text-align:center; }
 							}	
 						}
 					}
-					
-					/* if(!empty($resource_cost) && count($resource_cost)>0) {
-						foreach($resource_cost as )
-						
-					} */
-					
 					//Applying max hours calculation//
 					echo "<pre>"; print_r($resource_cost); echo "</pre>";
 				?>	
