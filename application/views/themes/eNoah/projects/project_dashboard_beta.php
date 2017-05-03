@@ -256,10 +256,10 @@ table.bu-tbl-inr th{ text-align:center; }
 							
 							$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 							$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
-							$timesheet_data[$row->dept_name][$row->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-							$timesheet_data[$row->dept_name][$row->resoursetype][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
-							$timesheet_data[$row->dept_name][$row->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-							$timesheet_data[$row->dept_name][$row->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
+							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 						}
 						echo "<pre>"; print_r($timesheet_data); echo "</pre>"; die;
 						if(count($timesheet_data)>0 && !empty($timesheet_data)) {
