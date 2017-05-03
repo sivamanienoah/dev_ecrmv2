@@ -269,13 +269,13 @@ table.bu-tbl-inr th{ text-align:center; }
 								if(!empty($resource_type_arr) && count($resource_type_arr)>0) {
 									foreach($resource_type_arr as $resource_type_key=>$resource_arr) {
 										if(!empty($resource_arr) && count($resource_arr)>0) {
-											foreach($resource_arr as $key1=>$value1) {echo $key1."<pre>"; print_r($value1); die;
-												$resource_name 	= $key1;
-												$max_hours 		= $value1['max_hours'];
-												$dept_name 		= $value1['dept_name'];
+											foreach($resource_arr as $resrc_name=>$resrc_data) {
+												$resource_name 	= $resrc_name;
+												$max_hours 		= $user_data[$resrc_name]['max_hours'];
+												$dept_name 		= $user_data[$resrc_name]['dept_name'];
 												$resource_cost[$resource_name]['dept_name'] = $dept_name;
-												if(count($value1)>0 && !empty($value1)){
-													foreach($value1 as $key2=>$value2) {
+												if(count($resrc_data)>0 && !empty($resrc_data)){
+													foreach($resrc_data as $key2=>$value2) {
 														$year = $key2;
 														if(count($value2)>0 && !empty($value2)){
 															foreach($value2 as $key3=>$value3) {
