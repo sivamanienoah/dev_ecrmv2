@@ -115,41 +115,45 @@ if(!empty($resdata)) {
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$prac_arr) {
 			if(!empty($prac_arr) && count($prac_arr)>0) {
-				foreach($prac_arr as $prac_key=>$skill_arr) { echo $dept_key . " ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
+				foreach($prac_arr as $prac_key=>$skill_arr) { //echo $dept_key . " ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
 					if(!empty($skill_arr) && count($skill_arr)>0) {
-						foreach($skill_arr as $resrc_name=>$resrc_data) {
-							$resource_name 	= $resrc_name;
-							$emp_name 		= $user_data[$resrc_name]['emp_name'];
-							$max_hours 		= $user_data[$resrc_name]['max_hours'];
-							$dept_name 		= $user_data[$resrc_name]['dept_name'];
-							if(count($resrc_data)>0 && !empty($resrc_data)){
-								foreach($resrc_data as $key2=>$value2) {
-									$year = $key2;
-									if(count($value2)>0 && !empty($value2)){
-										foreach($value2 as $key3=>$value3) {
-											$individual_billable_hrs = 0;
-											$ts_month		 	  	 = $key3;
-											if(count($value3)>0 && !empty($value3)){
-												foreach($value3 as $key4=>$value4) {
-													if($key4 != 'total_hours'){ 
-														$individual_billable_hrs = $value3['total_hours'];
-														$duration_hours			 = $value4['duration_hours'];
-														$rate				 	 = $value4['rateperhr'];
-														$direct_rateperhr	 	 = $value4['direct_rateperhr'];
-														$rate1 					 = $rate;
-														$direct_rateperhr1 		 = $direct_rateperhr;
-														if($individual_billable_hrs>$max_hours) {
-															$percentage 		= ($max_hours/$individual_billable_hrs);
-															$rate1 				= number_format(($percentage*$direct_rateperhr),2);
-															$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+						foreach($skill_arr as $skill_key=>$resrc_data) {
+							if(!empty($resrc_data) && count($resrc_data)>0) {
+								foreach($resrc_data as $resrc_name=>$resrc_data) {
+									$resource_name 	= $resrc_name;
+									$emp_name 		= $user_data[$resrc_name]['emp_name'];
+									$max_hours 		= $user_data[$resrc_name]['max_hours'];
+									$dept_name 		= $user_data[$resrc_name]['dept_name'];
+									if(count($resrc_data)>0 && !empty($resrc_data)){
+										foreach($resrc_data as $key2=>$value2) {
+											$year = $key2;
+											if(count($value2)>0 && !empty($value2)){
+												foreach($value2 as $key3=>$value3) {
+													$individual_billable_hrs = 0;
+													$ts_month		 	  	 = $key3;
+													if(count($value3)>0 && !empty($value3)) {
+														foreach($value3 as $key4=>$value4) { echo $key2 . " ".$key3 . " ".$key4; print_r($value2); print_r($value3); print_r($value4); echo "</pre>"; die;
+															if($key4 != 'total_hours'){ 
+																$individual_billable_hrs = $value3['total_hours'];
+																$duration_hours			 = $value4['duration_hours'];
+																$rate				 	 = $value4['rateperhr'];
+																$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+																$rate1 					 = $rate;
+																$direct_rateperhr1 		 = $direct_rateperhr;
+																if($individual_billable_hrs>$max_hours) {
+																	$percentage 		= ($max_hours/$individual_billable_hrs);
+																	$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+																	$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+																}
+																
+																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$rec->project_code]['hour'])) {
+																	$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
+																} else {
+																	$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
+																}
+																
+															}
 														}
-														
-														if(isset($tbl_data[$dept_key][$prac_key][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
-															$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
-														} else {
-															$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
-														}
-														
 													}
 												}
 											}
