@@ -833,6 +833,7 @@ class Dashboard extends crm_controller
 		$dept_type      = $this->input->post("dept_type");
 		$skill_ids 		= $this->input->post("skill_ids");
 		$member_ids		= $this->input->post("member_ids");
+		$entity_ids 	= $this->input->post("entity_ids");
 		
 		
 		/* $qry = "SELECT t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.project_code, t.empname
@@ -889,7 +890,6 @@ class Dashboard extends crm_controller
 			$pids = explode(',', $practice_ids);
 			$this->db->where_in("t.practice_id", $pids);
 		}
-		$entity_ids = $this->input->post("entity_ids");
 		if(!empty($entity_ids)) {
 			$entys = explode(',', $entity_ids);
 			$this->db->where_in('t.entity_id', $entys);
@@ -955,16 +955,16 @@ class Dashboard extends crm_controller
 	
 		switch($this->input->post("filter_group_by")){
 			case 0:
-				$this->load->view('projects/practice_drilldata', $data);
+				$this->load->view('projects/practice_drilldata_beta', $data);
 			break;
 			case 1:
-				$this->load->view('projects/skill_drilldata', $data);
+				$this->load->view('projects/skill_drilldata_beta', $data);
 			break;
 			case 2:
-				$this->load->view('projects/prjt_drilldata', $data);
+				$this->load->view('projects/prjt_drilldata_beta', $data);
 			break;
 			case 3:
-				$this->load->view('projects/resource_drilldata', $data);
+				$this->load->view('projects/resource_drilldata_beta', $data);
 			break;
 		}
 	}
