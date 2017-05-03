@@ -132,8 +132,8 @@ if(!empty($resdata)) {
 													$individual_billable_hrs = 0;
 													$ts_month		 	  	 = $key3;
 													if(count($value3)>0 && !empty($value3)) {
-														foreach($value3 as $key4=>$value4) { echo $key2 . " ".$key3 . " ".$key4; print_r($value2); print_r($value3); print_r($value4); echo "</pre>"; die;
-															if($key4 != 'total_hours'){ 
+														foreach($value3 as $pjt_code=>$value4) {
+															if($pjt_code != 'total_hours'){ 
 																$individual_billable_hrs = $value3['total_hours'];
 																$duration_hours			 = $value4['duration_hours'];
 																$rate				 	 = $value4['rateperhr'];
@@ -146,10 +146,10 @@ if(!empty($resdata)) {
 																	$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																}
 																
-																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$rec->project_code]['hour'])) {
-																	$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
+																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $rec->duration_hours;
 																} else {
-																	$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] = $rec->duration_hours;
 																}
 																
 															}
@@ -168,6 +168,7 @@ if(!empty($resdata)) {
 		}		
 	}
 		
+		echo "<pre>"; print_r($tbl_data); die;
 		
 		if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
