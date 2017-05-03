@@ -343,7 +343,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						$percent_hour = $percent_cost = 0;
 						ksort($resource_cost['over_all']);
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
-							echo "<pre>"; print_r($resource_cost['over_all']); die;
+							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
 									// echo $resrc_type_name."<pre>"; print_r($resrc_type_arr); die;
 							?>
