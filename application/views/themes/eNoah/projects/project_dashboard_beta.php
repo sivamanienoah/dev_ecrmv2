@@ -345,7 +345,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							// echo "<pre>"; print_r($resource_cost['over_all']); die;
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-									// echo $resrc_type_name."<pre>"; print_r($resrc_type_arr); die;
+									echo $resource_cost['tot']['over_all']['total_hour']; die;
 							?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
