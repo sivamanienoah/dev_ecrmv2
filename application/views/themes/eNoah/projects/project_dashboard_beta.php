@@ -350,7 +350,7 @@ table.bu-tbl-inr th{ text-align:center; }
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
 									<td align="right"><?php echo round($rtval['duration_hours'], 1); ?></td>
-									<td align="right"><?php echo round($rtval['headcount'], 2); ?></td>
+									<td align="right"><?php echo round($rtval['head_count'], 2); ?></td>
 									<td align="right"><?php echo round($rtval['total_cost'],0); ?></td>
 									<td align="right"><?php echo round($rtval['total_dc_cost'],0); ?></td>
 									<td align="right"><?php echo round(($rtval['duration_hours']/$resource_cost['tot']['over_all']['total_hour']) * 100, 1) . ' %'; ?></td>
