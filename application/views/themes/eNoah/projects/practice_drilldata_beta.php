@@ -145,6 +145,9 @@ if(!empty($resdata)) {
 																	$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																	$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																}
+																/*calc*/
+																$rateHour = $duration_hours * $direct_rateperhr1;
+																//hour
 																//hour
 																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
 																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $duration_hours;
@@ -153,15 +156,15 @@ if(!empty($resdata)) {
 																}
 																//cost
 																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'])) {
-																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] += $direct_rateperhr1;
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] += $rateHour;
 																} else {
-																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] = $direct_rateperhr1;
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] = $rateHour;
 																}
 																//direct_cost
 																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'])) {
-																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'] += $direct_rateperhr1;
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'] += $rateHour;
 																} else {
-																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'] = $direct_rateperhr1;
+																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'] = $rateHour;
 																}
 																//for sub total
 																if(isset($sub_tot[$dept_key][$prac_key]['sub_tot_hour'])){
@@ -170,14 +173,14 @@ if(!empty($resdata)) {
 																	$sub_tot[$dept_key][$prac_key]['sub_tot_hour'] =  $duration_hours;
 																}
 																if(isset($sub_tot[$dept_key][$prac_key]['sub_tot_cost'])){
-																	$sub_tot[$dept_key][$prac_key]['sub_tot_cost'] +=  $direct_rateperhr1;
+																	$sub_tot[$dept_key][$prac_key]['sub_tot_cost'] +=  $rateHour;
 																} else {
-																	$sub_tot[$dept_key][$prac_key]['sub_tot_cost'] =  $direct_rateperhr1;
+																	$sub_tot[$dept_key][$prac_key]['sub_tot_cost'] =  $rateHour;
 																}
 																if(isset($sub_tot[$dept_key][$prac_key]['sub_tot_directcost'])){
-																	$sub_tot[$dept_key][$prac_key]['sub_tot_directcost'] +=  $direct_rateperhr1;
+																	$sub_tot[$dept_key][$prac_key]['sub_tot_directcost'] +=  $rateHour;
 																} else {
-																	$sub_tot[$dept_key][$prac_key]['sub_tot_directcost'] =  $direct_rateperhr1;
+																	$sub_tot[$dept_key][$prac_key]['sub_tot_directcost'] =  $rateHour;
 																}
 																if(isset($skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_hour'])) {
 																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_hour'] += $duration_hours;
@@ -185,89 +188,91 @@ if(!empty($resdata)) {
 																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_hour'] = $duration_hours;
 																}															
 																if(isset($skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_cost'])) {
-																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_cost'] += $direct_rateperhr1;
+																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_cost'] += $rateHour;
 																} else {
-																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_cost'] = $direct_rateperhr1;
+																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_cost'] = $rateHour;
 																}
 																if(isset($skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_directcost'])) {
-																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_directcost'] += $direct_rateperhr1;
+																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_directcost'] += $rateHour;
 																} else {
-																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_directcost'] = $direct_rateperhr1;
+																	$skil_sub_tot[$dept_key][$prac_key][$skill_key]['skil_sub_tot_directcost'] = $rateHour;
 																}
 																//for sub total
 																
 																//for practicewise - sorting-hour
 																if(isset($sub_tot_hr[$dept_key][$prac_key])) {
-																	$sub_tot_hr[$dept_key][$prac_key] +=  $direct_rateperhr1;
+																	$sub_tot_hr[$dept_key][$prac_key] +=  $rateHour;
 																} else {
-																	$sub_tot_hr[$dept_key][$prac_key] =  $direct_rateperhr1;
+																	$sub_tot_hr[$dept_key][$prac_key] =  $rateHour;
 																}
 																//for practicewise sorting-cost
 																if(isset($sub_tot_cst[$dept_key][$prac_key])) {
-																	$sub_tot_cst[$dept_key][$prac_key] +=  $direct_rateperhr1;
+																	$sub_tot_cst[$dept_key][$prac_key] +=  $rateHour;
 																} else {
-																	$sub_tot_cst[$dept_key][$prac_key] =  $direct_rateperhr1;
+																	$sub_tot_cst[$dept_key][$prac_key] =  $rateHour;
 																}
 																if(isset($sub_tot_directcst[$dept_key][$prac_key])) {
-																	$sub_tot_directcst[$dept_key][$prac_key] +=  $direct_rateperhr1;
+																	$sub_tot_directcst[$dept_key][$prac_key] +=  $rateHour;
 																} else {
-																	$sub_tot_directcst[$dept_key][$prac_key] =  $direct_rateperhr1;
+																	$sub_tot_directcst[$dept_key][$prac_key] =  $rateHour;
 																}
 																
 																//for skillwise - sorting-hour
 																if(isset($skil_sort_hr[$dept_key][$prac_key][$skill_key])) {
-																	$skil_sort_hr[$dept_key][$prac_key][$skill_key] += $direct_rateperhr1;
+																	$skil_sort_hr[$dept_key][$prac_key][$skill_key] += $rateHour;
 																} else {
-																	$skil_sort_hr[$dept_key][$prac_key][$skill_key] = $direct_rateperhr1;
+																	$skil_sort_hr[$dept_key][$prac_key][$skill_key] = $rateHour;
 																}
 																
 																//for skillwise - sorting-cost
 																if(isset($skil_sort_cst[$dept_key][$prac_key][$skill_key])) {
-																	$skil_sort_cst[$dept_key][$prac_key][$skill_key] += $direct_rateperhr1;
+																	$skil_sort_cst[$dept_key][$prac_key][$skill_key] += $rateHour;
 																} else {
-																	$skil_sort_cst[$dept_key][$prac_key][$skill_key] = $direct_rateperhr1;
+																	$skil_sort_cst[$dept_key][$prac_key][$skill_key] = $rateHour;
 																}
 																
 																//for skillwise - sorting-directcost
 																if(isset($skil_sort_directcst[$dept_key][$prac_key][$skill_key])) {
-																	$skil_sort_directcst[$dept_key][$prac_key][$skill_key] += $direct_rateperhr1;
+																	$skil_sort_directcst[$dept_key][$prac_key][$skill_key] += $rateHour;
 																} else {
-																	$skil_sort_directcst[$dept_key][$prac_key][$skill_key] = $direct_rateperhr1;
+																	$skil_sort_directcst[$dept_key][$prac_key][$skill_key] = $rateHour;
 																}
 																//for userwise - sorting-hour
 																if(isset($user_hr[$dept_key][$prac_key][$skill_key][$emp_name])) {
-																	$user_hr[$dept_key][$prac_key][$skill_key][$emp_name] += $direct_rateperhr1;
+																	$user_hr[$dept_key][$prac_key][$skill_key][$emp_name] += $rateHour;
 																} else {
-																	$user_hr[$dept_key][$prac_key][$skill_key][$emp_name] = $direct_rateperhr1;
+																	$user_hr[$dept_key][$prac_key][$skill_key][$emp_name] = $rateHour;
 																}
 																//for userwise - sorting-hour
 																if(isset($user_cst[$dept_key][$prac_key][$skill_key][$emp_name])) {
-																	$user_cst[$dept_key][$prac_key][$skill_key][$emp_name] += $direct_rateperhr1;
+																	$user_cst[$dept_key][$prac_key][$skill_key][$emp_name] += $rateHour;
 																} else {
-																	$user_cst[$dept_key][$prac_key][$skill_key][$emp_name] = $direct_rateperhr1;
+																	$user_cst[$dept_key][$prac_key][$skill_key][$emp_name] = $rateHour;
 																}
 																//for userwise - sorting-hour
 																if(isset($user_directcst[$dept_key][$prac_key][$skill_key][$emp_name])) {
-																	$user_directcst[$dept_key][$prac_key][$skill_key][$emp_name] += $direct_rateperhr1;
+																	$user_directcst[$dept_key][$prac_key][$skill_key][$emp_name] += $rateHour;
 																} else {
-																	$user_directcst[$dept_key][$prac_key][$skill_key][$emp_name] = $direct_rateperhr1;
+																	$user_directcst[$dept_key][$prac_key][$skill_key][$emp_name] = $rateHour;
 																}
 																
 																//total
-																$tot_hour = $tot_hour + $duration_hours;
-																$tot_cost = $tot_cost + $direct_rateperhr1;
-																$tot_directcost = $tot_directcost + $direct_rateperhr1;
+																$tot_hour 		= $tot_hour + $duration_hours;
+																$tot_cost 		= $tot_cost + $rateHour;
+																$tot_directcost = $tot_directcost + $rateHour;
 																
 																//cost
-																$cost_arr[$emp_name] = $direct_rateperhr1;
-																$directcost_arr[$emp_name] = $direct_rateperhr1;
+																$cost_arr[$emp_name] 		= $rateHour;
+																$directcost_arr[$emp_name] 	= $rateHour;
 																
 																//usercount
-																if (!in_array($emp_name, $pr_usercnt[$dept_key][$prac_key]))
-																$pr_usercnt[$dept_key][$prac_key][] = $emp_name;
+																if (!in_array($emp_name, $pr_usercnt[$dept_key][$prac_key])) {
+																	$pr_usercnt[$dept_key][$prac_key][] = $emp_name;
+																}
 															
-																if (!in_array($emp_name, $sk_usercnt[$dept_key][$prac_key][$skill_key]))
-																$sk_usercnt[$dept_key][$prac_key][$skill_key][] = $emp_name;
+																if (!in_array($emp_name, $sk_usercnt[$dept_key][$prac_key][$skill_key])) {
+																	$sk_usercnt[$dept_key][$prac_key][$skill_key][] = $emp_name;
+																}
 															}
 														}
 													}
