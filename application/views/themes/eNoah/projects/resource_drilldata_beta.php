@@ -161,14 +161,13 @@ if(!empty($resdata)) {
 		foreach($timesheet_data as $dept_key=>$user_arr) {
 			if(!empty($user_arr) && count($user_arr)>0) {
 				foreach($user_arr as $resrc_name=>$prjt_arr) {
-					echo $resource_name 	= $resrc_name;
-					echo $emp_name 		= $user_data[$resrc_name]['emp_name'];
-					echo $max_hours 		= $user_data[$resrc_name]['max_hours']; die;
-					$dept_name 		= $user_data[$resrc_name]['dept_name'];
 					if(!empty($prjt_arr) && count($prjt_arr)>0) {
 						foreach($prjt_arr as $prjt_key=>$recval_data) {
 							if(count($recval_data)>0 && !empty($recval_data)) {
 								foreach($recval_data as $key2=>$value2) {
+									$resource_name 	= $resrc_name;
+									$emp_name 		= $user_data[$resrc_name]['emp_name'];
+									$max_hours 		= $user_data[$resrc_name]['max_hours'];
 									$year = $key2;
 									if(count($value2)>0 && !empty($value2)) {
 										foreach($value2 as $key3=>$value3) {
@@ -188,67 +187,7 @@ if(!empty($resdata)) {
 											$rateHour = $duration_hours * $direct_rateperhr1;
 											
 											//create array
-											if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['hour'])) {
-												$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] += $duration_hours;
-											} else {
-												$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] = $duration_hours;
-											}
-											if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['cost'])){
-												$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] += $rateHour;
-												$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] += $rateHour;
-											} else {
-												$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] = $rateHour;
-												$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] = $rateHour;
-											}
-
-											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_hour'])) {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] +=  $duration_hours;
-											} else {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] =  $duration_hours;
-											}
 											
-											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_cost'])) {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] +=  $rateHour;
-											} else {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] =  $rateHour;
-											}
-										
-											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_directcost'])) {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] +=  $rateHour;
-											} else {
-												$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] =  $rateHour;
-											}
-										
-											$tot_hour = $tot_hour + $duration_hours;
-											$tot_cost = $tot_cost + $rateHour;
-											$tot_directcost = $tot_directcost + $rateHour;
-											
-											$cost_arr[$emp_name] = $direct_rateperhr1;
-											$directcost_arr[$emp_name] = $direct_rateperhr1;
-											
-											//head count
-											if (!in_array($emp_name, $usercnt[$dept_key][$proj_key])) {
-												$usercnt[$dept_key][$proj_key][] = $emp_name;
-											}
-										
-											//for project_code - sorting-hour
-											if(isset($prjt_hr[$dept_key][$proj_key])) {
-												$prjt_hr[$dept_key][$proj_key] += $duration_hours;
-											} else {
-												$prjt_hr[$dept_key][$proj_key] = $duration_hours;
-											}
-											//for project_code - sorting-cost
-											if(isset($prjt_cst[$dept_key][$proj_key])) {
-												$prjt_cst[$dept_key][$proj_key] += $rateHour;
-											} else {
-												$prjt_cst[$dept_key][$proj_key] = $rateHour;
-											}
-										
-											if(isset($prjt_directcst[$dept_key][$proj_key])) {
-												$prjt_directcst[$dept_key][$proj_key] += $rateHour;
-											} else {
-												$prjt_directcst[$dept_key][$proj_key] = $rateHour;
-											}
 										}
 									}
 								}
