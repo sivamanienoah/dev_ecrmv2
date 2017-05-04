@@ -7,6 +7,7 @@
 		<label>Group By</label>
 		<select name="filter_group_by" id="filter_group_by">
 			<option value='0' <?php if($filter_group_by == 0) echo "selected='selected'"; ?>>Practice</option>
+			<option value='4' <?php if($filter_group_by == 4) echo "selected='selected'"; ?>>Entity</option>
 			<option value='1' <?php if($filter_group_by == 1) echo "selected='selected'"; ?>>Skill</option>
 			<option value='2' <?php if($filter_group_by == 2) echo "selected='selected'"; ?>>Project</option>
 			<option value='3' <?php if($filter_group_by == 3) echo "selected='selected'"; ?>>Resource</option>
@@ -88,8 +89,8 @@ $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
-$user_data 			= array();
-$$timesheet_data 	= array();
+$user_data 		= array();
+$timesheet_data = array();
 $tot_hour = 0;
 $tot_cost = 0;
 if(!empty($resdata)) {
@@ -147,7 +148,6 @@ if(!empty($resdata)) {
 																}
 																/*calc*/
 																$rateHour = $duration_hours * $direct_rateperhr1;
-																//hour
 																//hour
 																if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
 																	$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $duration_hours;

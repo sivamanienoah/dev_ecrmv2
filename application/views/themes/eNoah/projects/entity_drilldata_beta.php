@@ -7,7 +7,7 @@
 		<label>Group By</label>
 		<select name="filter_group_by" id="filter_group_by">
 			<option value='0' <?php if($filter_group_by == 0) echo "selected='selected'"; ?>>Practice</option>
-			<option value='0' <?php if($filter_group_by == 4) echo "selected='selected'"; ?>>Entity</option>
+			<option value='4' <?php if($filter_group_by == 4) echo "selected='selected'"; ?>>Entity</option>
 			<option value='1' <?php if($filter_group_by == 1) echo "selected='selected'"; ?>>Skill</option>
 			<option value='2' <?php if($filter_group_by == 2) echo "selected='selected'"; ?>>Project</option>
 			<option value='3' <?php if($filter_group_by == 3) echo "selected='selected'"; ?>>Resource</option>

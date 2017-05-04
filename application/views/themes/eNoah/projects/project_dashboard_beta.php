@@ -231,7 +231,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							
 					if(count($resdata)>0) {
 						$rates = $conversion_rates;
-						foreach($resdata as $rec) {		
+						foreach($resdata as $rec) {
 							$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 							$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 							
@@ -258,10 +258,10 @@ table.bu-tbl-inr th{ text-align:center; }
 												$max_hours 		= $user_data[$resrc_name]['max_hours'];
 												$dept_name 		= $user_data[$resrc_name]['dept_name'];
 												
-												if(count($resrc_data)>0 && !empty($resrc_data)){
+												if(count($resrc_data)>0 && !empty($resrc_data)) {
 													foreach($resrc_data as $key2=>$value2) {
 														$year = $key2;
-														if(count($value2)>0 && !empty($value2)){
+														if(count($value2)>0 && !empty($value2)) {
 															foreach($value2 as $key3=>$value3) {
 																$individual_billable_hrs = 0;
 																$ts_month		 	  	 = $key3;

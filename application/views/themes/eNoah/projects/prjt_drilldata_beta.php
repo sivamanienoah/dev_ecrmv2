@@ -6,6 +6,7 @@
 		<label>Group By</label>
 		<select name="filter_group_by" id="filter_group_by">
 			<option value='0' <?php if($filter_group_by == 0) echo "selected='selected'"; ?>>Practice</option>
+			<option value='4' <?php if($filter_group_by == 4) echo "selected='selected'"; ?>>Entity</option>
 			<option value='1' <?php if($filter_group_by == 1) echo "selected='selected'"; ?>>Skill</option>
 			<option value='2' <?php if($filter_group_by == 2) echo "selected='selected'"; ?>>Project</option>
 			<option value='3' <?php if($filter_group_by == 3) echo "selected='selected'"; ?>>Resource</option>
@@ -86,7 +87,9 @@ $skil = array();
 $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
-$tot_directcost= 0;
+$tot_directcost = 0;
+$user_data 		= array();
+$timesheet_data = array();
 if(!empty($resdata)) {
 	/* foreach($resdata as $rec) {
 		if(isset($tbl_data[$rec->dept_name][$rec->project_code][$rec->empname]['hour'])) {
@@ -156,7 +159,6 @@ if(!empty($resdata)) {
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		
-		
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['duration_hours'] += $rec->duration_hours;
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['direct_rateperhr'] = $directrateCostPerHr;	
@@ -188,7 +190,6 @@ if(!empty($resdata)) {
 													$direct_rateperhr	 	 = $value3['direct_rateperhr'];
 													$rate1 					 = $rate;
 													$direct_rateperhr1 		 = $direct_rateperhr;
-													// echo $individual_billable_hrs ." ". $max_hours . "<br>";
 													if($individual_billable_hrs>$max_hours) {
 														$percentage 		= ($max_hours/$individual_billable_hrs);
 														$rate1 				= number_format(($percentage*$direct_rateperhr),2);
