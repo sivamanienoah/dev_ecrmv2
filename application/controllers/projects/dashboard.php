@@ -922,7 +922,7 @@ class Dashboard extends crm_controller
 		// if(!empty($practice_ids) && !empty($department_ids)) {
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
-			$this->db->where_in("t.practice_id", $pids);
+			$this->db->where_in("l.practice", $pids);
 		}
 		if(!empty($entity_ids)) {
 			$entys = explode(',', $entity_ids);
