@@ -124,10 +124,10 @@ if(!empty($resdata)) {
 									$emp_name 		= $user_data[$resrc_name]['emp_name'];
 									$max_hours 		= $user_data[$resrc_name]['max_hours'];
 									$dept_name 		= $user_data[$resrc_name]['dept_name'];
-									if(count($recval_data)>0 && !empty($recval_data)){
+									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
 											$year = $key2;
-											if(count($value2)>0 && !empty($value2)){
+											if(count($value2)>0 && !empty($value2)) {
 												foreach($value2 as $key3=>$value3) {
 													$individual_billable_hrs = 0;
 													$ts_month		 	  	 = $key3;
@@ -289,7 +289,7 @@ if(!empty($resdata)) {
 		}		
 	}
 		
-		echo "<pre>"; print_r($tbl_data); echo "</pre>";
+		// echo "<pre>"; print_r($tbl_data); echo "</pre>";
 		
 		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
