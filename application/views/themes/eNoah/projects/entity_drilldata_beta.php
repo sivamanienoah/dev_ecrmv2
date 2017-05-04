@@ -296,7 +296,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
+echo "<pre>"; print_r($tbl_data); echo "</pre>"; die;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Entity</h2>
@@ -417,15 +417,6 @@ if(!empty($tbl_data)) {
 			foreach($skill_sort_arr as $skkey=>$skval) {
 				$sk_arr = $prac_ar[$pkey][$skkey];
 				$i = 1;
-				/* $sk_cnt = 0;
-				$sk_tot_cost = 0;
-				$sub_tot_sk_cost = 0;
-				$sk_cnt = count($sk_usercnt[$dept][$pkey][$skkey]);
-				$sub_tot_sk_hr   = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_hour']/(160*$sk_cnt)) * 100;
-				foreach($sk_usercnt[$dept][$pkey][$skkey] as $usr) {
-					$sk_tot_cost += $cost_arr[$usr]*160;
-				}
-				$sub_tot_sk_cost = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost']/$sk_tot_cost)*100; */
 				$sub_tot_sk_hr   = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
 				$sub_tot_sk_cost = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
 				$sub_tot_sk_directcost = ($skil_sub_tot[$dept][$pkey][$skkey]['skil_sub_tot_directcost']/$tot_directcost)*100;
@@ -520,12 +511,6 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
-	/* $perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
-	$overall_cost = 0;
-	foreach($cost_arr as $cs){
-		$overall_cost += $cs * 160;
-	}
-	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
 	echo "<tr data-depth='0' class='project-dash-total' style='text-align:right'>
 			<td width='80%' colspan='4' align='right'><b>TOTAL:</b></td>
 			<td width='5%' align='right'><b>".round($calc_tot_hour, 1)."</b></td>
