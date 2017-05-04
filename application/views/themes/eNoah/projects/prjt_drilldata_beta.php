@@ -172,9 +172,9 @@ if(!empty($resdata)) {
 							if(!empty($resrc_data) && count($resrc_data)>0) {
 								foreach($resrc_data as $resrc_name=>$recval_data) {
 									$resource_name 	= $resrc_name; 
-									echo $emp_name 		= $user_data[$resrc_name]['emp_name'];
-									echo $max_hours 		= $user_data[$resrc_name]['max_hours'];
-									echo $dept_name 		= $user_data[$resrc_name]['dept_name']; die;
+									$emp_name 		= $user_data[$resrc_name]['emp_name'];
+									$max_hours 		= $user_data[$resrc_name]['max_hours'];
+									$dept_name 		= $user_data[$resrc_name]['dept_name'];
 									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
 											$year = $key2;
