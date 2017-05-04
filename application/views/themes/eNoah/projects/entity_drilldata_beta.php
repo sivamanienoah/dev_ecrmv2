@@ -359,7 +359,8 @@ if(!empty($tbl_data)) {
 				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		}
-		echo "<tr data-depth='".$i."' class='collapse'>
+		$a = 0;
+		echo "<tr data-depth='".$a."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'></th>
 						<th width='12%'></th>
