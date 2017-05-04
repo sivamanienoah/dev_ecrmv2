@@ -178,7 +178,18 @@ if(!empty($resdata)) {
 												foreach($value2 as $key3=>$value3) {
 													$individual_billable_hrs = 0;
 													$ts_month 				 = $key3;
-													echo "<pre>"; print_r($value3); echo "</pre>";
+													$individual_billable_hrs = $value3['total_hours'];
+													$duration_hours			 = $value3['duration_hours'];
+													$rate				 	 = $value3['rateperhr'];
+													$direct_rateperhr	 	 = $value3['direct_rateperhr'];
+													$rate1 					 = $rate;
+													$direct_rateperhr1 		 = $direct_rateperhr;
+													echo $individual_billable_hrs ." ". $max_hours . "<br>";
+													if($individual_billable_hrs>$max_hours) {
+														$percentage 		= ($max_hours/$individual_billable_hrs);
+														$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+														$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+													}
 												}
 											}
 										}
