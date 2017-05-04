@@ -82,6 +82,8 @@ $emp_hr   = array();
 $emp_cst  = array();
 $tot_hour = 0;
 $tot_cost = 0;
+$user_data 		= array();
+$timesheet_data = array();
 if(!empty($resdata)) {
 	/* foreach($resdata as $rec) {
 		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'])) {
@@ -152,6 +154,110 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['total_hours'] 	= get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['direct_rateperhr'] = $directrateCostPerHr;	
 		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['rateperhr']        = $rateCostPerHr;
+	}
+	
+	//create array
+	if(!empty($timesheet_data) && count($timesheet_data)>0) {
+		foreach($timesheet_data as $dept_key=>$user_arr) {
+			if(!empty($user_arr) && count($user_arr)>0) {
+				foreach($user_arr as $resrc_name=>$prjt_arr) {
+					echo $resource_name 	= $resrc_name;
+					echo $emp_name 		= $user_data[$resrc_name]['emp_name'];
+					echo $max_hours 		= $user_data[$resrc_name]['max_hours']; die;
+					$dept_name 		= $user_data[$resrc_name]['dept_name'];
+					if(!empty($prjt_arr) && count($prjt_arr)>0) {
+						foreach($prjt_arr as $prjt_key=>$recval_data) {
+							if(count($recval_data)>0 && !empty($recval_data)) {
+								foreach($recval_data as $key2=>$value2) {
+									$year = $key2;
+									if(count($value2)>0 && !empty($value2)) {
+										foreach($value2 as $key3=>$value3) {
+											$individual_billable_hrs = 0;
+											$ts_month 				 = $key3;
+											$individual_billable_hrs = $value3['total_hours'];
+											$duration_hours			 = $value3['duration_hours'];
+											$rate				 	 = $value3['rateperhr'];
+											$direct_rateperhr	 	 = $value3['direct_rateperhr'];
+											$rate1 					 = $rate;
+											$direct_rateperhr1 		 = $direct_rateperhr;
+											if($individual_billable_hrs>$max_hours) {
+												$percentage 		= ($max_hours/$individual_billable_hrs);
+												$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+												$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+											}
+											$rateHour = $duration_hours * $direct_rateperhr1;
+											
+											//create array
+											if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['hour'])) {
+												$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] += $duration_hours;
+											} else {
+												$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] = $duration_hours;
+											}
+											if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['cost'])){
+												$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] += $rateHour;
+												$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] += $rateHour;
+											} else {
+												$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] = $rateHour;
+												$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] = $rateHour;
+											}
+
+											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_hour'])) {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] +=  $duration_hours;
+											} else {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] =  $duration_hours;
+											}
+											
+											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_cost'])) {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] +=  $rateHour;
+											} else {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] =  $rateHour;
+											}
+										
+											if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_directcost'])) {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] +=  $rateHour;
+											} else {
+												$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] =  $rateHour;
+											}
+										
+											$tot_hour = $tot_hour + $duration_hours;
+											$tot_cost = $tot_cost + $rateHour;
+											$tot_directcost = $tot_directcost + $rateHour;
+											
+											$cost_arr[$emp_name] = $direct_rateperhr1;
+											$directcost_arr[$emp_name] = $direct_rateperhr1;
+											
+											//head count
+											if (!in_array($emp_name, $usercnt[$dept_key][$proj_key])) {
+												$usercnt[$dept_key][$proj_key][] = $emp_name;
+											}
+										
+											//for project_code - sorting-hour
+											if(isset($prjt_hr[$dept_key][$proj_key])) {
+												$prjt_hr[$dept_key][$proj_key] += $duration_hours;
+											} else {
+												$prjt_hr[$dept_key][$proj_key] = $duration_hours;
+											}
+											//for project_code - sorting-cost
+											if(isset($prjt_cst[$dept_key][$proj_key])) {
+												$prjt_cst[$dept_key][$proj_key] += $rateHour;
+											} else {
+												$prjt_cst[$dept_key][$proj_key] = $rateHour;
+											}
+										
+											if(isset($prjt_directcst[$dept_key][$proj_key])) {
+												$prjt_directcst[$dept_key][$proj_key] += $rateHour;
+											} else {
+												$prjt_directcst[$dept_key][$proj_key] = $rateHour;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 echo "<pre>"; print_r($timesheet_data); echo "</pre>";
