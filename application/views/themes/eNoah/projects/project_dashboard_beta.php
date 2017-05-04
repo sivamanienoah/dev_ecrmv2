@@ -65,7 +65,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
 								</td>
 								<td class="by-exclusion">
-									<?php $leaveChecked ='checked="checked"'; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } else if($exclude_leave==0) { $leaveChecked =''; }?>
+									<?php $leaveChecked ='checked="checked"'; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } else if($exclude_leave==0) { $leaveChecked =''; } echo $leaveChecked; exit; ?>
 									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
 																		
 									<br />
