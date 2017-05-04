@@ -365,25 +365,25 @@ if(!empty($tbl_data)) {
 	foreach($tbl_data as $entiy=>$entiy_ar) { #echo $entiy . "<br>";
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
-				asort($sub_tot_hr[$entiy]);
-				$entiy_ar = $sub_tot_hr[$entiy];
+				asort($sub_tot_entity_hr[$entiy]);
+				$entiy_ar = $sub_tot_entity_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
-				asort($sub_tot_cst[$entiy]);
-				$entiy_ar = $sub_tot_cst[$entiy];
+				asort($sub_tot_entity_cst[$entiy]);
+				$entiy_ar = $sub_tot_entity_cst[$entiy];
 			} else if($filter_sort_val=='directcost') {
-				asort($sub_tot_directcst[$entiy]);
-				$entiy_ar = $sub_tot_directcst[$entiy];
+				asort($sub_tot_entity_dircst[$entiy]);
+				$entiy_ar = $sub_tot_entity_dircst[$entiy];
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
-				arsort($sub_tot_hr[$entiy]);
-				$entiy_ar = $sub_tot_hr[$entiy];
+				arsort($sub_tot_entity_hr[$entiy]);
+				$entiy_ar = $sub_tot_entity_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
-				arsort($sub_tot_cst[$entiy]);
-				$entiy_ar = $sub_tot_cst[$entiy];
+				arsort($sub_tot_entity_cst[$entiy]);
+				$entiy_ar = $sub_tot_entity_cst[$entiy];
 			} else if($filter_sort_val=='directcost') {
-				arsort($sub_tot_directcst[$entiy]);
-				$entiy_ar = $sub_tot_directcst[$entiy];
+				arsort($sub_tot_entity_dircst[$entiy]);
+				$entiy_ar = $sub_tot_entity_dircst[$entiy];
 			}
 		}
 		$i = 0;
