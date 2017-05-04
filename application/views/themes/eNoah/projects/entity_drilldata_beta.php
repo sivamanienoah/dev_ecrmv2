@@ -476,7 +476,7 @@ if(!empty($tbl_data)) {
 							$skill_sort_arr = $skil_sort_hr[$entiy][$dept][$pkey];
 						} else if($filter_sort_val=='cost') {
 							arsort($skil_sort_cst[$entiy][$dept][$pkey]);
-							$skill_sort_arr = $skil_sort_cst[$dept][$pkey];
+							$skill_sort_arr = $skil_sort_cst[$entiy][$dept][$pkey];
 						} else if($filter_sort_val=='directcost') {
 							arsort($skil_sort_directcst[$entiy][$dept][$pkey]);
 							$skill_sort_arr = $skil_sort_directcst[$entiy][$dept][$pkey];
@@ -485,7 +485,7 @@ if(!empty($tbl_data)) {
 					
 					$sk_arr = array();
 					foreach($skill_sort_arr as $skkey=>$skval) {
-						$sk_arr = $prac_ar[$pkey][$skkey]; echo $pkey . " ".$skkey; die;
+						$sk_arr = $prac_ar[$pkey][$skkey]; echo "<pre>"; print_r($sk_arr); die;
 						$i = 2;
 						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
 						$sub_tot_sk_cost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
