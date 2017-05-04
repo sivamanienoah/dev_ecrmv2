@@ -529,7 +529,7 @@ if(!empty($tbl_data)) {
 							}
 						}
 						$proj_arr = array();
-						echo "<pre>"; print_r($sk_arr); die;
+						// echo "<pre>"; print_r($sk_arr); die;
 						foreach($user_sort_arr as $ukey=>$uval){
 							$proj_arr = $sk_arr[$ukey];
 							echo "<tr data-depth='".$i."' class='collapse'>
