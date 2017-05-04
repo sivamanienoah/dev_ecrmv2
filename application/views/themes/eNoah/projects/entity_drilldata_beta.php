@@ -365,25 +365,25 @@ if(!empty($tbl_data)) {
 	foreach($tbl_data as $entiy=>$entiy_ar) { #echo $entiy . "<br>";
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
-				asort($sub_tot_entity_hr[$entiy]);
-				$entiy_ar = $sub_tot_entity_hr[$entiy];
+				asort($sub_tot_hr[$entiy]);
+				$entiy_ar = $sub_tot_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
-				asort($sub_tot_entity_cst[$entiy]);
-				$entiy_ar = $sub_tot_entity_cst[$entiy];
+				asort($sub_tot_cst[$entiy]);
+				$entiy_ar = $sub_tot_cst[$entiy];
 			} else if($filter_sort_val=='directcost') {
-				asort($sub_tot_entity_dircst[$entiy]);
-				$entiy_ar = $sub_tot_entity_dircst[$entiy];
+				asort($sub_tot_directcst[$entiy]);
+				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
-				arsort($sub_tot_entity_hr[$entiy]);
-				$entiy_ar = $sub_tot_entity_hr[$entiy];
+				arsort($sub_tot_hr[$entiy]);
+				$entiy_ar = $sub_tot_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
-				arsort($sub_tot_entity_cst[$entiy]);
-				$entiy_ar = $sub_tot_entity_cst[$entiy];
+				arsort($sub_tot_cst[$entiy]);
+				$entiy_ar = $sub_tot_cst[$entiy];
 			} else if($filter_sort_val=='directcost') {
-				arsort($sub_tot_entity_dircst[$entiy]);
-				$entiy_ar = $sub_tot_entity_dircst[$entiy];
+				arsort($sub_tot_directcst[$entiy]);
+				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		}
 		$i = 0;
@@ -393,9 +393,9 @@ if(!empty($tbl_data)) {
 						<th width='12%'></th>
 						<th width='15%'></th>
 						<th width='15%' align='right' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_hr[$entiy]['enti_hour'], 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_cst[$entiy]['enti_cost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_dircst[$entiy]['enti_directcost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'], 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
@@ -425,7 +425,7 @@ if(!empty($tbl_data)) {
 						$sort_ar = $sub_tot_directcst[$entiy][$dept];
 					}
 				}
-				// echo "<pre>"; print_r($sort_ar); die;
+				echo "<pre>"; print_r($sort_ar); die;
 				foreach($sort_ar as $pkey=>$sortval) {
 					$i = 1;
 					$sub_tot_pr_cost = 0;
