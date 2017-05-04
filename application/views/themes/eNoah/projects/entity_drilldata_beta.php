@@ -359,7 +359,7 @@ if(!empty($tbl_data)) {
 				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		}
-		$a = 0;
+		$i = 0;
 		echo "<tr data-depth='".$a."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'></th>
@@ -399,7 +399,7 @@ if(!empty($tbl_data)) {
 					}
 				}
 				foreach($sort_ar as $pkey=>$sortval) {
-					$i = 0;
+					$i = 1;
 					$sub_tot_pr_cost = 0;
 					$sub_tot_pr_hr    = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
 					$sub_tot_pr_cost  = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
@@ -454,7 +454,7 @@ if(!empty($tbl_data)) {
 					$sk_arr = array();
 					foreach($skill_sort_arr as $skkey=>$skval) {
 						$sk_arr = $prac_ar[$pkey][$skkey];
-						$i = 1;
+						$i = 2;
 						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
 						$sub_tot_sk_cost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
 						$sub_tot_sk_directcost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_directcost']/$tot_directcost)*100;
