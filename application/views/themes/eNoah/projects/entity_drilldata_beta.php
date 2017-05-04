@@ -560,7 +560,7 @@ $(document).ready(function () {
 		$("#project_dash").btechco_excelexport({
 			containerid: "project_dash"
 		   , datatype: $datatype.Table
-		   , filename: 'entitywisedata'
+		   , filename: 'entity_wise_data'
 		});
 	});
 });
