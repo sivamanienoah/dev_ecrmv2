@@ -204,7 +204,7 @@ if(!empty($resdata)) {
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$proj_arr) {
 			if(!empty($proj_arr) && count($proj_arr)>0) {
-				foreach($proj_arr as $proj_key=>$skill_arr) {
+				foreach($proj_arr as $prjt_key=>$skill_arr) {
 					if(!empty($skill_arr) && count($skill_arr)>0) {
 						foreach($skill_arr as $skill_key=>$resrc_data) {
 							if(!empty($resrc_data) && count($resrc_data)>0) {
