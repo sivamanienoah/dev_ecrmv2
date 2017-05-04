@@ -335,7 +335,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of COST</th>
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
-	foreach($tbl_data as $entiy=>$entiy_ar) { echo $entiy . "<br>";
+	foreach($tbl_data as $entiy=>$entiy_ar) { #echo $entiy . "<br>";
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
 				asort($sub_tot_hr[$entiy]);
@@ -359,6 +359,7 @@ if(!empty($tbl_data)) {
 				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		}
+		echo "<pre>"; print_r($entiy_ar); die;
 		$i = 0;
 		echo "<tr data-depth='".$a."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
