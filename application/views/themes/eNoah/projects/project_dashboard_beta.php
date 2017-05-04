@@ -705,6 +705,9 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$("input[name=exclude_leave]").prop("checked",true);
+	$("input[name=exclude_holiday]").prop("checked",true);
 });
 
 function getData(resource_type, dept_type)
