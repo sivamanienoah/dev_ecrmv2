@@ -177,7 +177,8 @@ if(!empty($resdata)) {
 											if(count($value2)>0 && !empty($value2)) {
 												foreach($value2 as $key3=>$value3) {
 													$individual_billable_hrs = 0;
-													echo $ts_month 				 = $key3;
+													$ts_month 				 = $key3;
+													echo "<pre>"; print_r($value3); echo "</pre>";
 												}
 											}
 										}
