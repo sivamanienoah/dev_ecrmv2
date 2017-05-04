@@ -173,8 +173,13 @@ if(!empty($resdata)) {
 								foreach($resrc_data as $resrc_name=>$recval_data) {
 									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
-											echo $year = $key2;
-											// echo "<pre>"; print_r($value2);
+											$year = $key2;
+											if(count($value2)>0 && !empty($value2)) {
+												foreach($value2 as $key3=>$value3) {
+													$individual_billable_hrs = 0;
+													echo $ts_month 				 = $key3;
+												}
+											}
 										}
 									}
 								}
