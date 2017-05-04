@@ -994,6 +994,9 @@ class Dashboard extends crm_controller
 			case 3:
 				$this->load->view('projects/resource_drilldata_beta', $data);
 			break;
+			case 4:
+				$this->load->view('projects/entity_drilldata_beta', $data);
+			break;
 		}
 	}
 	
