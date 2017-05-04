@@ -390,8 +390,8 @@ if(!empty($tbl_data)) {
 		$sub_tot_enti_cost = 0;
 		$sub_tot_enti_hr    = ($sub_tot_entity_hr[$entiy]['enti_hour']/$tot_hour)*100;
 		$sub_tot_enti_cost  = ($sub_tot_entity_cst[$entiy]['enti_cost']/$tot_cost)*100;
-		$sub_tot_enti_directcost= ($sub_tot_entity_dircst[$entiy]['enti_directcost']/$tot_directcost)*100;
-		echo "<tr data-depth='".$a."' class='collapse'>
+		$sub_tot_enti_directcost = ($sub_tot_entity_dircst[$entiy]['enti_directcost']/$tot_directcost)*100;
+		echo "<tr data-depth='".$i."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'></th>
 						<th width='12%'></th>
@@ -400,9 +400,9 @@ if(!empty($tbl_data)) {
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_hr[$entiy]['enti_hour'], 1)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_cst[$entiy]['enti_cost'], 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_dircst[$entiy]['enti_directcost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_hr, 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_cost, 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_directcost, 2)."</th>
 					</tr>";
 		if(!empty($entiy_ar) && count($entiy_ar)>0) {
 			foreach($entiy_ar as $dept=>$prac_ar) {
