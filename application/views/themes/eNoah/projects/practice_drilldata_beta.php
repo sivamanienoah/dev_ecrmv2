@@ -119,13 +119,13 @@ if(!empty($resdata)) {
 					if(!empty($skill_arr) && count($skill_arr)>0) {
 						foreach($skill_arr as $skill_key=>$resrc_data) {
 							if(!empty($resrc_data) && count($resrc_data)>0) {
-								foreach($resrc_data as $resrc_name=>$resrc_data) {
+								foreach($resrc_data as $resrc_name=>$recval_data) {
 									$resource_name 	= $resrc_name;
 									$emp_name 		= $user_data[$resrc_name]['emp_name'];
 									$max_hours 		= $user_data[$resrc_name]['max_hours'];
 									$dept_name 		= $user_data[$resrc_name]['dept_name'];
-									if(count($resrc_data)>0 && !empty($resrc_data)){
-										foreach($resrc_data as $key2=>$value2) {
+									if(count($recval_data)>0 && !empty($recval_data)){
+										foreach($recval_data as $key2=>$value2) {
 											$year = $key2;
 											if(count($value2)>0 && !empty($value2)){
 												foreach($value2 as $key3=>$value3) {
