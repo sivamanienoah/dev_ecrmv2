@@ -215,15 +215,15 @@ if(!empty($resdata)) {
 									$dept_name 		= $user_data[$resrc_name]['dept_name'];
 									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
-											echo $year = $key2;
+											echo "1x ". $year = $key2;
 											if(count($value2)>0 && !empty($value2)) {
 												foreach($value2 as $key3=>$value3) {
 													$individual_billable_hrs = 0;
-													echo $ts_month 				 = $key3;
-													echo $individual_billable_hrs = $value3['total_hours'];
-													echo $duration_hours			 = $value3['duration_hours'];
+													echo "2x ".$ts_month 				 = $key3;
+													echo "3x ".$individual_billable_hrs = $value3['total_hours'];
+													echo "4x ".$duration_hours			 = $value3['duration_hours'];
 													$rate				 	 = $value3['rateperhr'];
-													echo $direct_rateperhr	 	 = $value3['direct_rateperhr'];
+													echo "5x ".$direct_rateperhr	 	 = $value3['direct_rateperhr'];
 													$rate1 					 = $rate;
 													$direct_rateperhr1 		 = $direct_rateperhr;
 													if($individual_billable_hrs>$max_hours) {
@@ -231,7 +231,7 @@ if(!empty($resdata)) {
 														$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 														$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 													}
-													echo $rateHour = $duration_hours * $direct_rateperhr1; die;
+													echo "6x ".$rateHour = $duration_hours * $direct_rateperhr1; die;
 													
 													//create array
 													if(isset($tbl_data[$dept_key][$skill_key][$prjt_key][$rec->empname]['hour'])) {
