@@ -2,6 +2,9 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 </style>
+<?php 
+ini_set('display_errors', 1);
+?>
 <div id="drildown_filter_area" class="group-section">
 	<div class="pull-left">
 		<label>Group By</label>
@@ -268,12 +271,12 @@ if(!empty($resdata)) {
 																		$directcost_arr[$emp_name] 	= $rateHour;
 																		
 																		//usercount
-																		if (!in_array($emp_name, $pr_usercnt[$dept_key][$prac_key])) {
-																			$pr_usercnt[$dept_key][$prac_key][] = $emp_name;
+																		if (!in_array($emp_name, $pr_usercnt[$entity_key][$dept_key][$prac_key])) {
+																			$pr_usercnt[$entity_key][$dept_key][$prac_key][] = $emp_name;
 																		}
 																	
-																		if (!in_array($emp_name, $sk_usercnt[$dept_key][$prac_key][$skill_key])) {
-																			$sk_usercnt[$dept_key][$prac_key][$skill_key][] = $emp_name;
+																		if (!in_array($emp_name, $sk_usercnt[$entity_key][$dept_key][$prac_key][$skill_key])) {
+																			$sk_usercnt[$entity_key][$dept_key][$prac_key][$skill_key][] = $emp_name;
 																		}
 																	}
 																}
