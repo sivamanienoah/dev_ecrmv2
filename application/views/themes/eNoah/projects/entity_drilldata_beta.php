@@ -484,7 +484,7 @@ if(!empty($tbl_data)) {
 					}
 					$sk_arr = array();
 					foreach($skill_sort_arr as $skkey=>$skval) {
-						// $sk_arr = $prac_ar[$pkey][$skkey];
+						echo "<pre>"; print_r($sk_arr); die;
 						$sk_arr = $prac_ar[$entiy][$dept][$pkey][$skkey];
 						$i = 2;
 						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
@@ -529,7 +529,7 @@ if(!empty($tbl_data)) {
 							}
 						}
 						$proj_arr = array();
-						// echo "<pre>"; print_r($sk_arr); die;
+						
 						foreach($user_sort_arr as $ukey=>$uval){
 							$proj_arr = $sk_arr[$ukey];
 							echo "<tr data-depth='".$i."' class='collapse'>
