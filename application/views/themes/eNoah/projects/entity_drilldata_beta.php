@@ -405,6 +405,7 @@ if(!empty($tbl_data)) {
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_directcost, 2)."</th>
 					</tr>";
 		if(!empty($entiy_ar) && count($entiy_ar)>0) {
+			echo "<pre>123"; print_r($entiy_ar); echo "</pre>";
 			foreach($entiy_ar as $dept=>$prac_ar) {
 				if($filter_sort_by=='asc') {
 					if($filter_sort_val=='hour') {
