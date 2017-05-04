@@ -186,7 +186,7 @@ if(!empty($resdata)) {
 		}
 	}
 	
-	echo "<pre>"; print_r($timesheet_data);
+	// echo "<pre>"; print_r($timesheet_data);
 }
 ?>
 <div class="page-title-head">
