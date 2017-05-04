@@ -164,7 +164,7 @@ if(!empty($resdata)) {
 		
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); die;
+	echo "<pre>123"; print_r($timesheet_data); die;
 }
 ?>
 <div class="page-title-head">
