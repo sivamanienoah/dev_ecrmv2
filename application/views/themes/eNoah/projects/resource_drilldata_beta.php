@@ -257,7 +257,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($timesheet_data); echo "</pre>";
+// echo "<pre>"; print_r($timesheet_data); echo "</pre>";
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Resource</h2>
