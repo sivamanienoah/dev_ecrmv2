@@ -384,7 +384,7 @@ if(!empty($tbl_data)) {
 						$sort_ar = $sub_tot_directcst[$entiy][$dept];
 					}
 				}
-				echo "<tr data-depth='".$i."' class='collapse'>
+				/* echo "<tr data-depth='".$i."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'></th>
 						<th width='12%'></th>
@@ -396,7 +396,7 @@ if(!empty($tbl_data)) {
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
-					</tr>";
+					</tr>"; */
 				foreach($sort_ar as $pkey=>$sortval) {
 					$i = 0;
 					$sub_tot_pr_cost = 0;
@@ -413,7 +413,7 @@ if(!empty($tbl_data)) {
 					$perc_tot_cost   += $sub_tot_pr_cost;
 					$perc_tot_directcost   += $sub_tot_pr_directcost;
 					echo "<tr data-depth='".$i."' class='collapse'>
-						<th width='16%' align='left' class='collapse lft-ali'></th>
+						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($pkey)."</b></span></th>
 						<th width='12%'></th>
 						<th width='15%'></th>
