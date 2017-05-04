@@ -359,6 +359,19 @@ if(!empty($tbl_data)) {
 				$entiy_ar = $sub_tot_directcst[$entiy];
 			}
 		}
+		echo "<tr data-depth='".$i."' class='collapse'>
+						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
+						<th width='16%' align='left' class='collapse lft-ali'></th>
+						<th width='12%'></th>
+						<th width='15%' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
+						<th width='15%' align='right'></th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'], 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
+					</tr>";
 		if(!empty($entiy_ar) && count($entiy_ar)>0) {
 			foreach($entiy_ar as $dept=>$prac_ar) {
 				if($filter_sort_by=='asc') {
@@ -384,19 +397,6 @@ if(!empty($tbl_data)) {
 						$sort_ar = $sub_tot_directcst[$entiy][$dept];
 					}
 				}
-				/* echo "<tr data-depth='".$i."' class='collapse'>
-						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
-						<th width='16%' align='left' class='collapse lft-ali'></th>
-						<th width='12%'></th>
-						<th width='15%' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
-						<th width='15%' align='right'></th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'], 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
-					</tr>"; */
 				foreach($sort_ar as $pkey=>$sortval) {
 					$i = 0;
 					$sub_tot_pr_cost = 0;
@@ -413,7 +413,7 @@ if(!empty($tbl_data)) {
 					$perc_tot_cost   += $sub_tot_pr_cost;
 					$perc_tot_directcost   += $sub_tot_pr_directcost;
 					echo "<tr data-depth='".$i."' class='collapse'>
-						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
+						<th width='16%' align='left' class='collapse lft-ali'></th>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($pkey)."</b></span></th>
 						<th width='12%'></th>
 						<th width='15%'></th>
