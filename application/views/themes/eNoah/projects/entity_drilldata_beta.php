@@ -556,6 +556,7 @@ if(!empty($tbl_data)) {
 									$prj_arr = array_sort($proj_arr, 'cost', 'SORT_DESC');
 								}
 							}
+							echo "<pre>"; print_r($prj_arr); die;
 							foreach($prj_arr as $p_name=>$pval) {
 								$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
 								$directrate_pr_hr = isset($directcost_arr[$ukey])?$directcost_arr[$ukey]:0;
