@@ -484,7 +484,7 @@ if(!empty($tbl_data)) {
 					}
 					$sk_arr = array();
 					foreach($skill_sort_arr as $skkey=>$skval) {
-						$sk_arr = $prac_ar[$entiy][$pkey][$skkey];
+						$sk_arr = $entiy_ar[$entiy][$pkey][$skkey];
 						echo "test<pre>"; print_r($sk_arr); die;
 						$i = 2;
 						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
