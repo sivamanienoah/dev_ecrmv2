@@ -208,7 +208,7 @@ if(!empty($resdata)) {
 					if(!empty($skill_arr) && count($skill_arr)>0) {
 						foreach($skill_arr as $skill_key=>$resrc_data) {
 							if(!empty($resrc_data) && count($resrc_data)>0) {
-								foreach($resrc_data as $resrc_name=>$recval_data) {
+								foreach($resrc_data as $resrc_name=>$recval_data) { echo $resrc_name; die;
 									$resource_name 	= $resrc_name; 
 									$emp_name 		= $user_data[$resrc_name]['emp_name'];
 									$max_hours 		= $user_data[$resrc_name]['max_hours'];
