@@ -174,7 +174,7 @@ if(!empty($resdata)) {
 									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
 											$year = $key2;
-											echo "<pre>"; print_r($value2); die;
+											echo "<pre>"; print_r($value2);
 										}
 									}
 								}
@@ -186,7 +186,7 @@ if(!empty($resdata)) {
 		}
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); die;
+	echo "<pre>"; print_r($timesheet_data);
 }
 ?>
 <div class="page-title-head">
