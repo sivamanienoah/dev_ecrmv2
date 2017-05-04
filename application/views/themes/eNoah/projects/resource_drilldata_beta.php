@@ -83,7 +83,7 @@ $emp_cst  = array();
 $tot_hour = 0;
 $tot_cost = 0;
 if(!empty($resdata)) {
-	foreach($resdata as $rec) {
+	/* foreach($resdata as $rec) {
 		if(isset($tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'])) {
 			$tbl_data[$rec->dept_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
 		} else {
@@ -135,9 +135,26 @@ if(!empty($resdata)) {
 		$emp_directcst[$rec->dept_name][$rec->empname] += $rec->resource_duration_direct_cost;
 		else 
 		$emp_directcst[$rec->dept_name][$rec->empname] = $rec->resource_duration_direct_cost;
+	} */
+	foreach($resdata as $rec) {
+		$rates 				= $conversion_rates;
+		$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
+		$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+		
+		$user_data[$rec->username]['emp_name'] 		= $rec->empname;
+		$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
+		$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+		
+		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
+		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+		
+		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['duration_hours'] += $rec->duration_hours;
+		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['total_hours'] 	= get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
+		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['direct_rateperhr'] = $directrateCostPerHr;	
+		$timesheet_data[$rec->dept_name][$rec->username][$rec->project_code][$rec->yr][$rec->month_name]['rateperhr']        = $rateCostPerHr;
 	}
 }
-// echo "<pre>"; print_r($emp_hr); echo "</pre>";
+echo "<pre>"; print_r($timesheet_data); echo "</pre>";
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Resource</h2>
