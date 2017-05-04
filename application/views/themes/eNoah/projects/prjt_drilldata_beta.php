@@ -161,10 +161,27 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['direct_rateperhr'] = $directrateCostPerHr;	
 		$timesheet_data[$rec->dept_name][$rec->project_code][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['rateperhr']        = $rateCostPerHr;
-		
 	}
 	
-	echo "<pre>123"; print_r($timesheet_data); die;
+	if(!empty($timesheet_data) && count($timesheet_data)>0) {
+		foreach($timesheet_data as $dept_key=>$proj_arr) {
+			if(!empty($proj_arr) && count($proj_arr)>0) {
+				foreach($proj_arr as $proj_key=>$skill_arr) {
+					if(!empty($skill_arr) && count($skill_arr)>0) {
+						foreach($skill_arr as $skill_key=>$resrc_data) {
+							if(!empty($resrc_data) && count($resrc_data)>0) {
+								foreach($resrc_data as $resrc_name=>$recval_data) {
+									echo "<pre>"; print_r($recval_data); die;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	echo "<pre>"; print_r($timesheet_data); die;
 }
 ?>
 <div class="page-title-head">
