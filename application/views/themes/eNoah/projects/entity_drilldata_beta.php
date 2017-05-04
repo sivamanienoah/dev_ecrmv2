@@ -293,7 +293,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Entity</h2>
@@ -359,193 +359,187 @@ if(!empty($tbl_data)) {
 				$sort_ar = $sub_tot_directcst[$entiy];
 			}
 		}
-	if(!empty($entiy_ar) && count($entiy_ar)>0) {
-		foreach($entiy_ar as $dept=>$prac_ar) {
-			if($filter_sort_by=='asc') {
-				if($filter_sort_val=='hour') {
-					asort($sub_tot_hr[$entiy][$dept]);
-					$sort_ar = $sub_tot_hr[$entiy][$dept];
-				} else if($filter_sort_val=='cost') {
-					asort($sub_tot_cst[$entiy][$dept]);
-					$sort_ar = $sub_tot_cst[$entiy][$dept];
-				} else if($filter_sort_val=='directcost') {
-					asort($sub_tot_directcst[$entiy][$dept]);
-					$sort_ar = $sub_tot_directcst[$entiy][$dept];
-				}
-			} else if($filter_sort_by=='desc') {
-				if($filter_sort_val=='hour') {
-					arsort($sub_tot_hr[$entiy][$dept]);
-					$sort_ar = $sub_tot_hr[$entiy][$dept];
-				} else if($filter_sort_val=='cost') {
-					arsort($sub_tot_cst[$entiy][$dept]);
-					$sort_ar = $sub_tot_cst[$entiy][$dept];
-				} else if($filter_sort_val=='directcost') {
-					arsort($sub_tot_directcst[$entiy][$dept]);
-					$sort_ar = $sub_tot_directcst[$entiy][$dept];
-				}
-			}
-			foreach($sort_ar as $pkey=>$sortval) {
-				$i = 0;
-				$sub_tot_pr_cost = 0;
-				$sub_tot_pr_hr    = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
-				$sub_tot_pr_cost  = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
-				$sub_tot_pr_directcost= ($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost']/$tot_directcost)*100;
-				$calc_tot_hour   += $sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'];
-				$calc_tot_cost   += $sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'];
-				$calc_tot_directcost += $sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'];
-				$sub_tot_pr_hr    = $sub_tot_pr_hr;
-				$sub_tot_pr_cost  = $sub_tot_pr_cost;
-				$sub_tot_pr_directcost= $sub_tot_pr_directcost;
-				$perc_tot_hr	 += $sub_tot_pr_hr;
-				$perc_tot_cost   += $sub_tot_pr_cost;
-				$perc_tot_directcost   += $sub_tot_pr_directcost;
-				echo "<tr data-depth='".$i."' class='collapse'>
-					<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($entiy)."</b></span></th>
-					<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($pkey)."</b></span></th>
-					<th width='12%'></th>
-					<th width='15%'></th>
-					<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'], 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
-				</tr>";
-				
+		if(!empty($entiy_ar) && count($entiy_ar)>0) {
+			foreach($entiy_ar as $dept=>$prac_ar) {
 				if($filter_sort_by=='asc') {
 					if($filter_sort_val=='hour') {
-						asort($skil_sort_hr[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_hr[$entiy][$dept][$pkey];
+						asort($sub_tot_hr[$entiy][$dept]);
+						$sort_ar = $sub_tot_hr[$entiy][$dept];
 					} else if($filter_sort_val=='cost') {
-						asort($skil_sort_cst[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_cst[$entiy][$dept][$pkey];
+						asort($sub_tot_cst[$entiy][$dept]);
+						$sort_ar = $sub_tot_cst[$entiy][$dept];
 					} else if($filter_sort_val=='directcost') {
-						asort($skil_sort_directcst[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_directcst[$entiy][$dept][$pkey];
+						asort($sub_tot_directcst[$entiy][$dept]);
+						$sort_ar = $sub_tot_directcst[$entiy][$dept];
 					}
 				} else if($filter_sort_by=='desc') {
 					if($filter_sort_val=='hour') {
-						arsort($skil_sort_hr[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_hr[$entiy][$dept][$pkey];
+						arsort($sub_tot_hr[$entiy][$dept]);
+						$sort_ar = $sub_tot_hr[$entiy][$dept];
 					} else if($filter_sort_val=='cost') {
-						arsort($skil_sort_cst[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_cst[$dept][$pkey];
+						arsort($sub_tot_cst[$entiy][$dept]);
+						$sort_ar = $sub_tot_cst[$entiy][$dept];
 					} else if($filter_sort_val=='directcost') {
-						arsort($skil_sort_directcst[$entiy][$dept][$pkey]);
-						$skill_sort_arr = $skil_sort_directcst[$entiy][$dept][$pkey];
+						arsort($sub_tot_directcst[$entiy][$dept]);
+						$sort_ar = $sub_tot_directcst[$entiy][$dept];
 					}
 				}
-				
-				$sk_arr = array();
-				foreach($skill_sort_arr as $skkey=>$skval) {
-					$sk_arr = $prac_ar[$pkey][$skkey];
-					$i = 1;
-					$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
-					$sub_tot_sk_cost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
-					$sub_tot_sk_directcost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_directcost']/$tot_directcost)*100;
+				foreach($sort_ar as $pkey=>$sortval) {
+					$i = 0;
+					$sub_tot_pr_cost = 0;
+					$sub_tot_pr_hr    = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour']/$tot_hour)*100;
+					$sub_tot_pr_cost  = ($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost']/$tot_cost)*100;
+					$sub_tot_pr_directcost= ($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost']/$tot_directcost)*100;
+					$calc_tot_hour   += $sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'];
+					$calc_tot_cost   += $sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'];
+					$calc_tot_directcost += $sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'];
+					$sub_tot_pr_hr    = $sub_tot_pr_hr;
+					$sub_tot_pr_cost  = $sub_tot_pr_cost;
+					$sub_tot_pr_directcost= $sub_tot_pr_directcost;
+					$perc_tot_hr	 += $sub_tot_pr_hr;
+					$perc_tot_cost   += $sub_tot_pr_cost;
+					$perc_tot_directcost   += $sub_tot_pr_directcost;
 					echo "<tr data-depth='".$i."' class='collapse'>
-							<td width='16%'></td>
-							<td width='16%'></td>
-							<td align='left' width='12%'><b><span class='toggle'> ".$skkey."</b></span></td>
-							<td width='15%'></td>
-							<td align='right'><b>SUB TOTAL(SKILL WISE):</b></td>
-							<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour'], 1)."</b></td>
-							<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost'], 2)."</b></td>
-							<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_directcost'], 2)."</b></td>
-							<td class='rt-ali'><b>".round($sub_tot_sk_hr, 1)."</b></td>
-							<td class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></td>
-							<td class='rt-ali'><b>".round($sub_tot_sk_directcost, 2)."</b></td>
-						</tr>";
-					$i++;
+						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($entiy)."</b></span></th>
+						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($pkey)."</b></span></th>
+						<th width='12%'></th>
+						<th width='15%'></th>
+						<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PRACTICE WISE):</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_hour'], 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
+					</tr>";
 					
 					if($filter_sort_by=='asc') {
 						if($filter_sort_val=='hour') {
-							asort($user_hr[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_hr[$entiy][$dept][$pkey][$skkey];
+							asort($skil_sort_hr[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_hr[$entiy][$dept][$pkey];
 						} else if($filter_sort_val=='cost') {
-							asort($user_cst[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_cst[$entiy][$dept][$pkey][$skkey];
+							asort($skil_sort_cst[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_cst[$entiy][$dept][$pkey];
 						} else if($filter_sort_val=='directcost') {
-							asort($user_directcst[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_directcst[$entiy][$dept][$pkey][$skkey];
+							asort($skil_sort_directcst[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_directcst[$entiy][$dept][$pkey];
 						}
 					} else if($filter_sort_by=='desc') {
 						if($filter_sort_val=='hour') {
-							arsort($user_hr[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_hr[$entiy][$dept][$pkey][$skkey];
+							arsort($skil_sort_hr[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_hr[$entiy][$dept][$pkey];
 						} else if($filter_sort_val=='cost') {
-							arsort($user_cst[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_cst[$entiy][$dept][$pkey][$skkey];
+							arsort($skil_sort_cst[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_cst[$dept][$pkey];
 						} else if($filter_sort_val=='directcost') {
-							arsort($user_directcst[$entiy][$dept][$pkey][$skkey]);
-							$user_sort_arr = $user_directcst[$entiy][$dept][$pkey][$skkey];
+							arsort($skil_sort_directcst[$entiy][$dept][$pkey]);
+							$skill_sort_arr = $skil_sort_directcst[$entiy][$dept][$pkey];
 						}
 					}
-					$proj_arr = array();
-					foreach($user_sort_arr as $ukey=>$uval){
-						$proj_arr = $sk_arr[$ukey];
+					
+					$sk_arr = array();
+					foreach($skill_sort_arr as $skkey=>$skval) {
+						$sk_arr = $prac_ar[$pkey][$skkey];
+						$i = 1;
+						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
+						$sub_tot_sk_cost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
+						$sub_tot_sk_directcost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_directcost']/$tot_directcost)*100;
 						echo "<tr data-depth='".$i."' class='collapse'>
-							<td width='16%'></td>
-							<td width='16%'></td>
-							<td width='12%'></td>
-							<td align='left' width='15%'>".$ukey."</td>
-							<td width='15%'></td>
-							<td width='5%'></td>
-							<td width='5%'></td>
-							<td width='5%'></td>
-							<td width='5%'></td>
-						</tr>";
+								<td width='16%'></td>
+								<td width='16%'></td>
+								<td align='left' width='12%'><b><span class='toggle'> ".$skkey."</b></span></td>
+								<td width='15%'></td>
+								<td align='right'><b>SUB TOTAL(SKILL WISE):</b></td>
+								<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour'], 1)."</b></td>
+								<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost'], 2)."</b></td>
+								<td class='rt-ali'><b>".round($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_directcost'], 2)."</b></td>
+								<td class='rt-ali'><b>".round($sub_tot_sk_hr, 1)."</b></td>
+								<td class='rt-ali'><b>".round($sub_tot_sk_cost, 2)."</b></td>
+								<td class='rt-ali'><b>".round($sub_tot_sk_directcost, 2)."</b></td>
+							</tr>";
 						$i++;
+						
 						if($filter_sort_by=='asc') {
 							if($filter_sort_val=='hour') {
-								$prj_arr = array_sort($proj_arr, 'hour', 'SORT_ASC');
+								asort($user_hr[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_hr[$entiy][$dept][$pkey][$skkey];
 							} else if($filter_sort_val=='cost') {
-								$prj_arr = array_sort($proj_arr, 'cost', 'SORT_ASC');
+								asort($user_cst[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_cst[$entiy][$dept][$pkey][$skkey];
+							} else if($filter_sort_val=='directcost') {
+								asort($user_directcst[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_directcst[$entiy][$dept][$pkey][$skkey];
 							}
 						} else if($filter_sort_by=='desc') {
 							if($filter_sort_val=='hour') {
-								$prj_arr = array_sort($proj_arr, 'hour', 'SORT_DESC');
+								arsort($user_hr[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_hr[$entiy][$dept][$pkey][$skkey];
 							} else if($filter_sort_val=='cost') {
-								$prj_arr = array_sort($proj_arr, 'cost', 'SORT_DESC');
+								arsort($user_cst[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_cst[$entiy][$dept][$pkey][$skkey];
+							} else if($filter_sort_val=='directcost') {
+								arsort($user_directcst[$entiy][$dept][$pkey][$skkey]);
+								$user_sort_arr = $user_directcst[$entiy][$dept][$pkey][$skkey];
 							}
 						}
-						foreach($prj_arr as $p_name=>$pval) {
-							$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
-							$directrate_pr_hr = isset($directcost_arr[$ukey])?$directcost_arr[$ukey]:0;
-							$per_hr     = ($pval['hour']/160) * 100;
-							$per_cost   = (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
-							$per_directcost   = (($pval['hour']*$directrate_pr_hr)/(160*$pval['hour'])) * 100;
-							echo "<tr data-depth='".$i."' class='collapse '>
+						$proj_arr = array();
+						foreach($user_sort_arr as $ukey=>$uval){
+							$proj_arr = $sk_arr[$ukey];
+							echo "<tr data-depth='".$i."' class='collapse'>
 								<td width='16%'></td>
 								<td width='16%'></td>
 								<td width='12%'></td>
+								<td align='left' width='15%'>".$ukey."</td>
 								<td width='15%'></td>
-								<td width='15%'>".$project_master[$p_name]."</td>
-								<td width='5%' align='right' width='5%'>".round($pval['hour'], 1)."</td>
-								<td width='5%' align='right' width='5%'>".round($pval['cost'], 2)."</td>
-								<td width='5%' align='right' width='5%'>".round($pval['directcost'], 2)."</td>
-								<td width='5%' align='right' width='5%'>".round($per_hr, 1)."</td>
-								<td width='5%' align='right' width='5%'>".round($per_cost, 2)."</td>
-								<td width='5%' align='right' width='5%'>".round($per_directcost, 2)."</td>
+								<td width='5%'></td>
+								<td width='5%'></td>
+								<td width='5%'></td>
+								<td width='5%'></td>
 							</tr>";
-							$per_hr     = '';
-							$rate_pr_hr = 0;
 							$i++;
-							$prj_arr = array();
-						}
-					}		
+							if($filter_sort_by=='asc') {
+								if($filter_sort_val=='hour') {
+									$prj_arr = array_sort($proj_arr, 'hour', 'SORT_ASC');
+								} else if($filter_sort_val=='cost') {
+									$prj_arr = array_sort($proj_arr, 'cost', 'SORT_ASC');
+								}
+							} else if($filter_sort_by=='desc') {
+								if($filter_sort_val=='hour') {
+									$prj_arr = array_sort($proj_arr, 'hour', 'SORT_DESC');
+								} else if($filter_sort_val=='cost') {
+									$prj_arr = array_sort($proj_arr, 'cost', 'SORT_DESC');
+								}
+							}
+							foreach($prj_arr as $p_name=>$pval) {
+								$rate_pr_hr = isset($cost_arr[$ukey])?$cost_arr[$ukey]:0;
+								$directrate_pr_hr = isset($directcost_arr[$ukey])?$directcost_arr[$ukey]:0;
+								$per_hr     = ($pval['hour']/160) * 100;
+								$per_cost   = (($pval['hour']*$rate_pr_hr)/(160*$pval['hour'])) * 100;
+								$per_directcost   = (($pval['hour']*$directrate_pr_hr)/(160*$pval['hour'])) * 100;
+								echo "<tr data-depth='".$i."' class='collapse '>
+									<td width='16%'></td>
+									<td width='16%'></td>
+									<td width='12%'></td>
+									<td width='15%'></td>
+									<td width='15%'>".$project_master[$p_name]."</td>
+									<td width='5%' align='right' width='5%'>".round($pval['hour'], 1)."</td>
+									<td width='5%' align='right' width='5%'>".round($pval['cost'], 2)."</td>
+									<td width='5%' align='right' width='5%'>".round($pval['directcost'], 2)."</td>
+									<td width='5%' align='right' width='5%'>".round($per_hr, 1)."</td>
+									<td width='5%' align='right' width='5%'>".round($per_cost, 2)."</td>
+									<td width='5%' align='right' width='5%'>".round($per_directcost, 2)."</td>
+								</tr>";
+								$per_hr     = '';
+								$rate_pr_hr = 0;
+								$i++;
+								$prj_arr = array();
+							}
+						}		
+					}
 				}
 			}
 		}
 	}
-	}
-	/* $perc_tot_hr = ($tot_hour/(160*count($cost_arr)))*100;
-	$overall_cost = 0;
-	foreach($cost_arr as $cs){
-		$overall_cost += $cs * 160;
-	}
-	$perc_tot_cost = ($tot_cost/$overall_cost)*100; */
 	echo "<tr data-depth='0' class='project-dash-total' style='text-align:right'>
 			<td width='80%' colspan='5' align='right'><b>TOTAL:</b></td>
 			<td width='5%' align='right'><b>".round($calc_tot_hour, 1)."</b></td>
