@@ -65,11 +65,11 @@ table.bu-tbl-inr th{ text-align:center; }
 									<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
 								</td>
 								<td class="by-exclusion">
-									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
+									<?php $leaveChecked ='checked="checked"'; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } else if($exclude_leave==0) { $leaveChecked =''; }?>
 									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
 																		
 									<br />
-									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
+									<?php $holidayChecked ='checked="checked"'; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } else if($exclude_holiday==0) { $holidayChecked =''; }?>
 									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
 								</td>
 								<td class="proj-dash-select">
