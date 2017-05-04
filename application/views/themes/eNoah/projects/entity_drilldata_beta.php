@@ -362,10 +362,10 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of COST</th>
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
-	foreach($tbl_data as $entiy=>$entiy_ar) { #echo $entiy . "<br>";
+	foreach($tbl_data as $entiy=>$entiy_ar) { echo $entiy . "<br>"; print_r($entiy_ar); die;
 		if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
-				asort($sub_tot_hr[$entiy]);
+				asort($sub_tot_entity_hr[$entiy]);
 				$entiy_ar = $sub_tot_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
 				asort($sub_tot_cst[$entiy]);
@@ -376,7 +376,7 @@ if(!empty($tbl_data)) {
 			}
 		} else if($filter_sort_by=='desc') {
 			if($filter_sort_val=='hour') {
-				arsort($sub_tot_hr[$entiy]);
+				arsort($sub_tot_entity_hr[$entiy]);
 				$entiy_ar = $sub_tot_hr[$entiy];
 			} else if($filter_sort_val=='cost') {
 				arsort($sub_tot_cst[$entiy]);
@@ -405,7 +405,7 @@ if(!empty($tbl_data)) {
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_directcost, 2)."</th>
 					</tr>";
 		if(!empty($entiy_ar) && count($entiy_ar)>0) {
-			foreach($entiy_ar as $dept=>$prac_ar) { echo "<pre>"; print_r($entiy_ar); die;
+			foreach($entiy_ar as $dept=>$prac_ar) {
 				if($filter_sort_by=='asc') {
 					if($filter_sort_val=='hour') {
 						asort($sub_tot_hr[$entiy][$dept]);
@@ -483,10 +483,8 @@ if(!empty($tbl_data)) {
 						}
 					}
 					$sk_arr = array();
-					
 					foreach($skill_sort_arr as $skkey=>$skval) {
-						$sk_arr = $prac_ar[$entiy][$pkey][$skkey]; echo "<pre>".$pkey." ".$skkey." ".$entiy; print_r($sk_arr); die;
-						
+						$sk_arr = $entiy_ar[$entiy][$pkey][$skkey];
 						$i = 2;
 						$sub_tot_sk_hr   = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_hour']/$tot_hour)*100;
 						$sub_tot_sk_cost = ($skil_sub_tot[$entiy][$dept][$pkey][$skkey]['skil_sub_tot_cost']/$tot_cost)*100;
