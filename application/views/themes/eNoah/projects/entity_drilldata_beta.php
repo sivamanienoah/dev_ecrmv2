@@ -394,8 +394,8 @@ if(!empty($tbl_data)) {
 						<th width='15%'></th>
 						<th width='15%' align='right' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_hr[$entiy]['enti_hour'], 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_cost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$entiy][$dept][$pkey]['sub_tot_directcost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_cst[$entiy]['enti_cost'], 2)."</th>
+						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_dircst[$entiy]['enti_directcost'], 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_hr, 1)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_cost, 2)."</th>
 						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pr_directcost, 2)."</th>
