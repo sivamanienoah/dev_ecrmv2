@@ -363,7 +363,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
 	foreach($tbl_data as $entiy=>$entiy_ar) {
-		if($filter_sort_by=='asc') {
+		/* if($filter_sort_by=='asc') {
 			if($filter_sort_val=='hour') {
 				asort($sub_tot_entity_hr[$entiy]);
 				$entiy_ar = $sub_tot[$entiy];
@@ -385,7 +385,7 @@ if(!empty($tbl_data)) {
 				arsort($sub_tot_entity_dircst[$entiy]);
 				$entiy_ar = $sub_tot_entity_dircst[$entiy];
 			}
-		}
+		} */
 		$i = 0;
 		$sub_tot_enti_cost = 0;
 		$sub_tot_enti_hr    = ($sub_tot_entity_hr[$entiy]['enti_hour']/$tot_hour)*100;
