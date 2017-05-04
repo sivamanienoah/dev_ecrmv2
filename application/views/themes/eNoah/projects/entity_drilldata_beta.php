@@ -151,16 +151,16 @@ if(!empty($resdata)) {
 																		/*calc*/
 																		$rateHour = $duration_hours * $direct_rateperhr1;
 																		//hour
-																		if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
-																			$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $duration_hours;
+																		if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'])) {
+																			$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour'] += $duration_hours;
 																		} else {
-																			$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour']  = $duration_hours;
+																			$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['hour']  = $duration_hours;
 																		}
 																		//cost
-																		if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'])) {
-																			$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] += $rateHour;
+																		if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'])) {
+																			$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] += $rateHour;
 																		} else {
-																			$tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] = $rateHour;
+																			$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['cost'] = $rateHour;
 																		}
 																		//direct_cost
 																		if(isset($tbl_data[$dept_key][$prac_key][$skill_key][$emp_name][$pjt_code]['directcost'])) {
