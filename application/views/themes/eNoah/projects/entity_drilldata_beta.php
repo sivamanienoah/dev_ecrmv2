@@ -527,7 +527,7 @@ if(!empty($tbl_data)) {
 								$user_sort_arr = $user_directcst[$entiy][$dept][$pkey][$skkey];
 							}
 						}
-						echo "<pre>"; print_r($user_sort_arr); die;
+						echo "<pre>"; print_r($sk_arr); die;
 						$proj_arr = array();
 						foreach($user_sort_arr as $ukey=>$uval){
 							$proj_arr = $sk_arr[$ukey];
