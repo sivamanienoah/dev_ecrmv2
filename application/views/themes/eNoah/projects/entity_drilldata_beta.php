@@ -387,6 +387,10 @@ if(!empty($tbl_data)) {
 			}
 		}
 		$i = 0;
+		$sub_tot_enti_cost = 0;
+		$sub_tot_enti_hr    = ($sub_tot_entity_hr[$entiy]['enti_hour']/$tot_hour)*100;
+		$sub_tot_enti_cost  = ($sub_tot_entity_cst[$entiy]['enti_cost']/$tot_cost)*100;
+		$sub_tot_enti_directcost= ($sub_tot_entity_dircst[$entiy]['enti_directcost']/$tot_directcost)*100;
 		echo "<tr data-depth='".$a."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
 						<th width='16%' align='left' class='collapse lft-ali'></th>
