@@ -530,7 +530,7 @@ if(!empty($tbl_data)) {
 						}
 						$proj_arr = array();
 						foreach($user_sort_arr as $ukey=>$uval){
-							$proj_arr = $sk_arr[$ukey];
+							$proj_arr = $sk_arr[$entiy][$ukey];
 							echo "<tr data-depth='".$i."' class='collapse'>
 								<td width='16%'></td>
 								<td width='16%'></td>
