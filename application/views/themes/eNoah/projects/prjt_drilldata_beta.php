@@ -194,6 +194,70 @@ if(!empty($resdata)) {
 														$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 														$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 													}
+													$rateHour = $duration_hours * $direct_rateperhr1;
+													
+													//create array
+													if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['hour'])) {
+														$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] += $duration_hours;
+													} else {
+														$tbl_data[$dept_key][$proj_key][$emp_name]['hour'] = $duration_hours;
+													}
+													if(isset($tbl_data[$dept_key][$proj_key][$emp_name]['cost'])){
+														$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] += $rateHour;
+														$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] += $rateHour;
+													} else {
+														$tbl_data[$dept_key][$proj_key][$emp_name]['cost'] = $rateHour;
+														$tbl_data[$dept_key][$proj_key][$emp_name]['directcost'] = $rateHour;
+													}
+
+													if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_hour'])) {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] +=  $duration_hours;
+													} else {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_hour'] =  $duration_hours;
+													}
+													
+													if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_cost'])) {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] +=  $rateHour;
+													} else {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_cost'] =  $rateHour;
+													}
+												
+													if(isset($sub_tot[$dept_key][$proj_key]['sub_tot_directcost'])) {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] +=  $rateHour;
+													} else {
+														$sub_tot[$dept_key][$proj_key]['sub_tot_directcost'] =  $rateHour;
+													}
+												
+													$tot_hour = $tot_hour + $duration_hours;
+													$tot_cost = $tot_cost + $rateHour;
+													$tot_directcost = $tot_directcost + $rateHour;
+													
+													$cost_arr[$emp_name] = $direct_rateperhr1;
+													$directcost_arr[$emp_name] = $direct_rateperhr1;
+													
+													//head count
+													if (!in_array($emp_name, $usercnt[$dept_key][$proj_key])) {
+														$usercnt[$dept_key][$proj_key][] = $emp_name;
+													}
+												
+													//for project_code - sorting-hour
+													if(isset($prjt_hr[$dept_key][$proj_key])) {
+														$prjt_hr[$dept_key][$proj_key] += $duration_hours;
+													} else {
+														$prjt_hr[$dept_key][$proj_key] = $duration_hours;
+													}
+													//for project_code - sorting-cost
+													if(isset($prjt_cst[$dept_key][$proj_key])) {
+														$prjt_cst[$dept_key][$proj_key] += $rateHour;
+													} else {
+														$prjt_cst[$dept_key][$proj_key] = $rateHour;
+													}
+												
+													if(isset($prjt_directcst[$dept_key][$proj_key])) {
+														$prjt_directcst[$dept_key][$proj_key] += $rateHour;
+													} else {
+														$prjt_directcst[$dept_key][$proj_key] = $rateHour;
+													}
 												}
 											}
 										}
@@ -206,7 +270,6 @@ if(!empty($resdata)) {
 			}
 		}
 	}
-	
 	// echo "<pre>"; print_r($timesheet_data);
 }
 ?>
