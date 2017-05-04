@@ -187,7 +187,65 @@ if(!empty($resdata)) {
 											$rateHour = $duration_hours * $direct_rateperhr1;
 											
 											//create array
+											if(isset($tbl_data[$dept_key][$emp_name][$prjt_key]['hour'])) {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['hour'] += $duration_hours;
+											} else {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['hour'] = $duration_hours;
+											}
+											if(isset($tbl_data[$dept_key][$emp_name][$prjt_key]['cost'])) {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['cost'] += $rateHour;
+											} else {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['cost'] = $rateHour;
+											}
+										
+											if(isset($tbl_data[$dept_key][$emp_name][$prjt_key]['directcost'])) {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['directcost'] += $rateHour;
+											} else {
+												$tbl_data[$dept_key][$emp_name][$prjt_key]['directcost'] = $rateHour;
+											}
+										
+											if(isset($sub_tot[$dept_key][$emp_name]['sub_tot_hour'])) {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_hour'] +=  $duration_hours;
+											} else {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_hour'] =  $duration_hours;
+											}
 											
+											if(isset($sub_tot[$dept_key][$emp_name]['sub_tot_cost'])) {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_cost'] +=  $rateHour;
+											} else {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_cost'] =  $rateHour;
+											}
+										
+											if(isset($sub_tot[$dept_key][$emp_name]['sub_tot_directcost'])) {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_directcost'] +=  $rateHour;
+											} else {
+												$sub_tot[$dept_key][$emp_name]['sub_tot_directcost'] =  $rateHour;
+											}
+											//total
+											$tot_hour = $tot_hour + $duration_hours;
+											$tot_cost = $tot_cost + $rateHour;
+											$tot_directcost = $tot_directcost + $rateHour;
+											//user
+											$cost_arr[$emp_name] = $direct_rateperhr1;
+											$directcost_arr[$emp_name] = $direct_rateperhr1;
+											//for empname - sorting-hour
+											if(isset($emp_hr[$dept_key][$emp_name])) {
+												$emp_hr[$dept_key][$emp_name] += $duration_hours;
+											} else {
+												$emp_hr[$dept_key][$emp_name] = $duration_hours;
+											}
+											//for empname - sorting-cost
+											if(isset($emp_cst[$dept_key][$emp_name])) {
+												$emp_cst[$dept_key][$emp_name] += $rateHour;
+											} else {
+												$emp_cst[$dept_key][$emp_name] = $rateHour;
+											}
+										
+											if(isset($emp_directcst[$dept_key][$emp_name])){
+												$emp_directcst[$dept_key][$emp_name] += $rateHour;
+											} else {
+												$emp_directcst[$dept_key][$emp_name] = $rateHour;
+											}
 										}
 									}
 								}
