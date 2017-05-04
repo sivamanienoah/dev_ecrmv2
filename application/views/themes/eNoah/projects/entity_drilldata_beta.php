@@ -114,7 +114,7 @@ if(!empty($resdata)) {
 	// echo "<pre>"; print_r($timesheet_data);
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
-		foreach($timesheet_data as $entity_key=>$entity_arr) { echo "<pre>"; print_R($entity_arr); die;
+		foreach($timesheet_data as $entity_key=>$entity_arr) {
 			if(!empty($entity_arr) && count($entity_arr)>0) {
 				foreach($entity_arr as $dept_key=>$prac_arr) {
 					if(!empty($prac_arr) && count($prac_arr)>0) {
@@ -293,6 +293,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
+echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Entity</h2>
