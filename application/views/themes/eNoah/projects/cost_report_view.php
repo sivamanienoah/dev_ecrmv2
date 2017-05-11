@@ -141,7 +141,7 @@ table.bu-tbl-inr th{ text-align:center; }
 			</div>
 		
 			<div id="default_view">
-				<?php echo $this->load->view('projects/cost_report', $res_data, true);  ?>
+				<?php echo $this->load->view('projects/cost_report_grid', $res_data, true); ?>
 			</div>
 			<div class="clearfix"></div>
 			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
