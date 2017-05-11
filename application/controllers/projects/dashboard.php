@@ -3465,10 +3465,13 @@ class Dashboard extends crm_controller
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		}
-		if(!empty($resource_type))
-		$this->db->where('t.resoursetype', $resource_type);
-		if(!empty($department_ids))
-		$this->db->where_in("t.dept_id", $department_ids);
+		if(!empty($resource_type)) {
+			$this->db->where('t.resoursetype', $resource_type);
+		}
+		if(!empty($department_ids)) {
+			$this->db->where_in("t.dept_id", $department_ids);
+		}
+		
 		if(!empty($skill_ids)){
 			$skill = @explode(',',$skill_ids);
 			$this->db->where_in("t.skill_id", $skill);
@@ -3490,22 +3493,18 @@ class Dashboard extends crm_controller
 			}
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
-			// $where .= " and project_code NOT IN ('Leave')";
 			$this->db->where_not_in("t.project_code", 'Leave');
 			$data['exclude_leave'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
-			// $where .= " and project_code NOT IN ('HOL')";
 			$this->db->where_not_in("t.project_code", 'HOL');
 			$data['exclude_holiday'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
-			// $where .= " and project_code NOT IN ('HOL','Leave')";
 			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
 		}
-		// if(!empty($practice_ids) && !empty($department_ids)) {
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
 			$this->db->where_in("l.practice", $pids);
@@ -3530,7 +3529,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   		= $query->result();
 		$data['heading'] 	   		= $heading;
