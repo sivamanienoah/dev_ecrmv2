@@ -45,7 +45,6 @@ $route['scaffolding_trigger'] = "";
 $route['projects/dashboard/list'] = "project";
 $route['projects/dashboard/utilization_metrics'] = "projects/dashboard";
 $route['projects/dashboard/sevice_graph_dashboard'] = "projects/service_graphical_dashboard";
-$route['projects/dashboard/cost_report'] = "projects/cost_report";
 
 // $route['invoice'] = "welcome/quotation/approved";
 // $route['invoice/([a-z]+)(/.+)?'] = "welcome/quotation/$1$2";
