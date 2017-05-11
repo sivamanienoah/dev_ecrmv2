@@ -32,7 +32,7 @@ class Dashboard_model extends crm_model
 		$this->db->where('status', 1);
     	$this->db->order_by('id');
 		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
-		return $query->result_array();
+		return $query->result();
     }
 	
 	//update project thermometer
