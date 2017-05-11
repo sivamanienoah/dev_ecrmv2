@@ -3424,6 +3424,7 @@ class Dashboard extends crm_controller
 	*/
 	public function cost_report()
 	{
+		echo "tst"; die;
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
