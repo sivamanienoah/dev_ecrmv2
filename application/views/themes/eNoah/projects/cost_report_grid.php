@@ -285,28 +285,6 @@ if(!empty($resdata)) {
 }
 // echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
-<div class="page-title-head">
-	<h2 class="pull-left borderBtm"><?php echo $heading; ?> :: Group By - Entity</h2>
-	<div class="section-right">
-		<div class="buttons add-new-button">
-			<button id='expand_tr' class="positive" type="button">
-				Expand
-			</button>
-		</div>
-		<div class="buttons collapse-button">
-			<button id='collapse_tr' class="positive" type="button">
-				Collapse
-			</button>
-		</div>
-		<div class="buttons export-to-excel">
-			<button type="button" class="positive" id="btnExport">
-				Export to Excel
-			</button>
-		</div>
-	</div>
-	<div class="clearfix"></div>
-</div>
-<div class="clearfix"></div>
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
