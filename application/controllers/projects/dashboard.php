@@ -3524,12 +3524,16 @@ class Dashboard extends crm_controller
 		}
 		$data['project_master']  = $project_master;
 		
-		
-		
-		$this->db->select('department_id, department_name');
+		/* $this->db->select('department_id, department_name');
 		$this->db->where_in('department_id', array('10','11'));
 		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
-		$data['departments'] = $dept->result();
+		$data['departments'] = $dept->result(); */
+		$depts_res = array();
+		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
+		if($dept->num_rows()>0){
+			$depts_res = $dept->result();
+		}
+		$data['departments'] = $depts_res;
 		
 		$timesheet_db->close();
 		
