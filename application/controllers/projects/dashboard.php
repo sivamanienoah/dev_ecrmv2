@@ -3433,8 +3433,10 @@ class Dashboard extends crm_controller
 		
 		$timesheet_db = $this->load->database("timesheet", true);
 		
-		$start_date = date("Y-m-1");
-		$end_date   = date("Y-m-d");
+		// $start_date = date("Y-m-1");
+		// $end_date   = date("Y-m-d");
+		$start_date = date("Y-m-d", strtotime('01-04-2017'));
+		$end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
