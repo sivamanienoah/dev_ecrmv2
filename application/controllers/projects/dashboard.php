@@ -3637,7 +3637,7 @@ class Dashboard extends crm_controller
 		$data['filter_area_status'] = $this->input->post("filter_area_status");
 		
 		// echo "<pre>"; print_r($data); die;
-		$this->load->view("projects/cost_report", $data);
+		$this->load->view("projects/cost_report_view", $data);
 	}
 }
 /* End of dms resource_availability file */
