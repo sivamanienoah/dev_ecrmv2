@@ -109,9 +109,9 @@ table.bu-tbl-inr th{ text-align:center; }
 									</td>
 									<td class="proj-dash-select">
 										<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
-											<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)) { ?>
-													<?php foreach($practice_ids_selected as $prac) {?>
-														<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
+											<?php if(count($practice_ids)>0 && !empty($practice_ids)) { ?>
+													<?php foreach($practice_ids as $prac) {?>
+														<option <?php echo in_array($prac->id, $sel_practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->id;?>"><?php echo $prac->practices;?></option>
 											<?php } } ?>
 										</select>
 									</td>
