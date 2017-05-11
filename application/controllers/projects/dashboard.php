@@ -3431,8 +3431,6 @@ class Dashboard extends crm_controller
 		$dept   			  = array();
 		$data['page_heading'] = "IT Cost Report";
 		
-		$timesheet_db = $this->load->database("timesheet", true);
-		
 		// $start_date = date("Y-m-1");
 		// $end_date   = date("Y-m-d");
 		$start_date = date("Y-m-d", strtotime('01-04-2017'));
@@ -3527,21 +3525,7 @@ class Dashboard extends crm_controller
 		$data['project_master']  = $project_master;
 		$timesheet_db->close();
 		
-		$filter_group_by = $this->input->post("filter_group_by");
-		$filter_sort_by  = $this->input->post("filter_sort_by");
-		$filter_sort_val = $this->input->post("filter_sort_val");
-		
-		$data['filter_group_by'] = $this->input->post("filter_group_by");
-		if(isset($filter_sort_by) && !empty($filter_sort_by))
-		$data['filter_sort_by'] = $this->input->post("filter_sort_by");
-		else
-		$data['filter_sort_by'] = 'desc';
-	
-		if(isset($filter_sort_val) && !empty($filter_sort_val)) {
-			$data['filter_sort_val'] = $this->input->post("filter_sort_val");
-		} else {
-			$data['filter_sort_val'] = 'hour';
-		}
+		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
