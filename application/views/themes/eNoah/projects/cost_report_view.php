@@ -21,7 +21,6 @@ table.bu-tbl-inr th{ text-align:center; }
 					<span>Advanced Filters</span>
 				</a>
 				
-				<div class="clearfix"></div>
 				<div class="section-right">
 					<div class="buttons add-new-button">
 						<button id='expand_tr' class="positive" type="button">
