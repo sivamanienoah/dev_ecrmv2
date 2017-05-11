@@ -16,25 +16,6 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 			<div class="page-title-head">
 				<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
-				<div class="clearfix"></div>
-				<div class="section-right">
-					<div class="buttons add-new-button">
-						<button id='expand_tr' class="positive" type="button">
-							Expand
-						</button>
-					</div>
-					<div class="buttons collapse-button">
-						<button id='collapse_tr' class="positive" type="button">
-							Collapse
-						</button>
-					</div>
-					<div class="buttons export-to-excel">
-						<button type="button" class="positive" id="btnExport">
-							Export to Excel
-						</button>
-					</div>
-				</div>
-				<div class="clearfix"></div>
 				<a class="choice-box" onclick="advanced_filter();" >
 					<img src="assets/img/advanced_filter.png" class="icon leads" />
 					<span>Advanced Filters</span>
