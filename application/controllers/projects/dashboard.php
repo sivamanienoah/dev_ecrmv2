@@ -3523,6 +3523,14 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
+		
+		
+		
+		$this->db->select('department_id, department_name');
+		$this->db->where_in('department_id', array('10','11'));
+		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
+		$data['departments'] = $dept->result();
+		
 		$timesheet_db->close();
 		
 		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
