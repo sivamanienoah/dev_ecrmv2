@@ -3464,8 +3464,8 @@ class Dashboard extends crm_controller
 		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
 		$this->db->where("t.resoursetype !=", '');
 		if(!empty($start_date) && !empty($end_date)) {
-			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
 			$this->db->where_not_in("t.project_code", array('Leave'));
