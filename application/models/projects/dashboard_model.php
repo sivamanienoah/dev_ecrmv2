@@ -34,6 +34,14 @@ class Dashboard_model extends crm_model
 		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
 		return $query->result();
     }
+
+	public function get_entities()
+	{
+    	$this->db->select('div_id, division_name');
+		$this->db->where("status", 1);
+		$entity_query = $this->db->get($this->cfg['dbpref'].'sales_divisions');
+		return $entity_query->result();
+    }
 	
 	//update project thermometer
 	public function update_project_thermometer($project_id)
