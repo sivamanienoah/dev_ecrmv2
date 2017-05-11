@@ -16,6 +16,7 @@ table.bu-tbl-inr th{ text-align:center; }
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 			<div class="page-title-head">
 				<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
+				<div class="clearfix"></div>
 				<div class="section-right">
 					<div class="buttons add-new-button">
 						<button id='expand_tr' class="positive" type="button">
