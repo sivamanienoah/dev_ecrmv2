@@ -3416,5 +3416,228 @@ class Dashboard extends crm_controller
 			$objWriter->save('php://output');
 		}
 	}
+	
+	
+	/*
+	* Cost Report
+	* Based on timesheet data(Like timesheet utilization report)
+	*/
+	public function cost_report()
+	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
+			redirect('project');
+		}
+		$data  				  = array();
+		$dept   			  = array();
+		$data['page_heading'] = "Cost Report";
+		
+		// $timesheet_db = $this->load->database("timesheet", true);
+				
+		$start_date = date("Y-m-1");
+		$end_date   = date("Y-m-d");
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
+			}
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		}
+		
+		$where = '';
+		// echo $start_date.' '.$end_date; exit;
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			$where .= " and project_code NOT IN ('Leave')";
+			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			$where .= " and project_code NOT IN ('HOL')";
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			$where .= " and project_code NOT IN ('HOL','Leave')";
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
+		
+		$entity_ids = $this->input->post("entity_ids");
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$entis = implode(",",$entity_ids);
+			$data['entity_ids'] = $entity_ids;
+			$where .= " and entity_id in ($entis)";
+		}
+		
+		$department_ids = $this->input->post("department_ids");
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			$data['department_ids'] = $department_ids;
+			$where .= " and dept_id in ($dids)";
+		} else {
+			$where .= " and dept_id in ('10','11')";
+		}
+		
+		$practice_ids = $this->input->post("practice_ids");
+		
+		//for practices
+		$this->db->select('t.practice_id, t.practice_name');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->where("t.practice_id !=", 0);
+		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		}
+		if(count($practice_ids)>0 && !empty($practice_ids)) {
+			$pids = implode(",",$practice_ids);
+			$data['practice_ids'] = $practice_ids;
+			$where .= " and practice_id in ($pids)";
+		}
+		$this->db->group_by('t.practice_id');
+		$this->db->order_by('t.practice_name');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		
+		if($query->num_rows()>0) {
+			$data['practice_ids_selected'] = $query->result();
+		}
+		$skill_ids = $this->input->post("skill_ids");
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$sids = implode(",",$skill_ids);
+			if(count($skill_ids)>0 && !empty($skill_ids))
+			{
+				$data['skill_ids'] = $skill_ids;
+				$where .= " and skill_id in ($sids)";
+			}
+			
+			if($this->input->post("department_ids")) 
+			{
+				$ids = $this->input->post("department_ids");
+				$dids = implode(',',$ids);
+				
+				$p_ids = $practice_ids;
+				$pids = implode(',',$p_ids);
+
+				$this->db->select('t.skill_id, t.skill_name as name');
+				// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+				$this->db->where("t.practice_id !=", 0);
+				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+				if(!empty($ids))
+				$this->db->where_in("t.dept_id", $ids);
+				if(!empty($p_ids))
+				$this->db->where_in("t.practice_id", $practice_ids);
+				$this->db->group_by('t.skill_id');
+				$this->db->order_by('t.skill_name');
+				$query = $this->db->get();
+				// echo $this->db->last_query(); exit;
+				$data['skill_ids_selected'] = $query->result();
+			}
+		}
+
+		$member_ids = $this->input->post("member_ids");
+		if(count($skill_ids)>0 && !empty($skill_ids) && count($department_ids)>0 && !empty($department_ids)) 
+		{
+			$mids = "'".implode("','",$member_ids)."'";
+			if(count($member_ids)>0 && !empty($member_ids)) {
+				$data['member_ids'] = $member_ids;
+				$where .= " and username in ($mids)";
+			}
+			$qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and v.skill_id in ($sids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");	
+			
+			$data['member_ids_selected'] = $qry1->result();			
+		}
+
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, l.practice as practice_id, p.practices as practice_name');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
+		$this->db->where("t.resoursetype !=", '');
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		}
+		/* $excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere); */
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			$this->db->where_not_in("t.project_code", array('Leave'));
+			$data['exclude_leave'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			$this->db->where_not_in("t.project_code", array('HOL'));
+			$data['exclude_holiday'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$data['entity_ids'] = $entity_ids;
+			$this->db->where_in('t.entity_id', $entity_ids);
+		}
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$data['practice_ids'] = $practice_ids;
+			$this->db->where_in('l.practice', $practice_ids);
+		}
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		} else {
+			$deptwhere = "t.dept_id IN ('10','11')";
+			$this->db->where($deptwhere);
+		}
+		if(count($skill_ids)>0 && !empty($skill_ids)) {
+			$this->db->where_in('t.skill_id', $skill_ids);
+		}
+		if(count($member_ids)>0 && !empty($member_ids)) {
+			$this->db->where_in('t.username', $member_ids);
+		}
+		$this->db->where('l.practice is not null');
+		$query 			 = $this->db->get();		
+		$data['resdata'] = $query->result();
+		
+		// echo $this->db->last_query(); die;
+		
+		// echo "<pre>"; print_r($data['resdata']); die;
+
+		$arr_depts          = array();
+		$check_array 	    = array();
+		$check_user_array   = array();
+		$arr_depts1		    = array();
+		$arr_user_avail_set = array();
+		$data['conversion_rates'] = $this->get_currency_rates();
+		/* echo "<pre>"; print_r($data['resdata']); echo "</pre>"; */
+		
+		// get all departments from timesheet
+		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
+		if($dept->num_rows()>0){
+			$depts_res = $dept->result();
+		}
+		$data['departments'] = $depts_res;
+		$timesheet_db->close();
+		
+		$this->db->select('div_id, division_name');
+		$this->db->where("status", 1);
+		$entity_query 		= $this->db->get($this->cfg['dbpref'].'sales_divisions');
+		$data['entitys'] 	= $entity_query->result();
+
+		$data['start_date'] 	  = $start_date;
+		$data['end_date']   	  = $end_date;
+		$data['results']    	  = $arr_depts;
+		$data['filter_area_status'] = $this->input->post("filter_area_status");
+		
+		// echo "<pre>"; print_r($data); die;
+		$this->load->view("projects/cost_report", $data);
+	}
 }
 /* End of dms resource_availability file */
