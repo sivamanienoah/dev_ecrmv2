@@ -3424,7 +3424,6 @@ class Dashboard extends crm_controller
 	*/
 	public function cost_report()
 	{
-		echo "tst"; die;
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
@@ -3432,7 +3431,7 @@ class Dashboard extends crm_controller
 		$dept   			  = array();
 		$data['page_heading'] = "Cost Report";
 		
-		// $timesheet_db = $this->load->database("timesheet", true);
+		$timesheet_db = $this->load->database("timesheet", true);
 				
 		$start_date = date("Y-m-1");
 		$end_date   = date("Y-m-d");
