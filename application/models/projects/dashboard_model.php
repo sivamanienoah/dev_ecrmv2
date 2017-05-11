@@ -32,31 +32,8 @@ class Dashboard_model extends crm_model
 		$this->db->where('status', 1);
     	$this->db->order_by('id');
 		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
-		$res = $query->result_array();
-		$practices = array();
-		if(!empty($res)){
-			foreach($res as $row){
-				$practices[$row['id']] = $row['practices'];
-			}
-		}
-		return $practices;
+		return $query->result_array();
     }
-	
-/* 	public function get_practices()
-	{
-    	$this->db->select('id, practices');
-		$this->db->where('status', 1);
-    	$this->db->order_by('id');
-		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
-		$res = $query->result_array();
-		$practices = array();
-		if(!empty($res)){
-			foreach($res as $row){
-				$practices[$row['id']] = $row['practices'];
-			}
-		}
-		return $practices;
-    } */
 	
 	//update project thermometer
 	public function update_project_thermometer($project_id)
