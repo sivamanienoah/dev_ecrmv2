@@ -3962,14 +3962,14 @@ HDOC;
 	
 	public function getProjectsDataByDefaultCurrency($records,$project_billing_type=false,$metrics_date=false)
 	{   
-		$rates = $this->get_currency_rates();
+		$rates 					= $this->get_currency_rates();
 		$practice_id_year_array = $this->project_model->get_practice_id_year();
-		$practice_id_array = $this->project_model->get_practice_id();
-		$book_keeping_rates =get_book_keeping_rates();
-		$data['project_record'] = array();
-		$arr_billing_type_projects = array();
-		$arr_billing_type_project_codes = array();
-		$arr_billing_type_project_lead_ids = array();
+		$practice_id_array  	= $this->project_model->get_practice_id();
+		$book_keeping_rates 	= get_book_keeping_rates();
+		$data['project_record'] 			= array();
+		$arr_billing_type_projects 			= array();
+		$arr_billing_type_project_codes 	= array();
+		$arr_billing_type_project_lead_ids 	= array();
 		/** Making billing type vice project details and project codes **/
 		foreach($records as $rec) {
 			$arr_billing_type_projects[$rec['billing_type']][]						= $rec;
@@ -4081,9 +4081,9 @@ HDOC;
 											$rate1 = $rate;
 											$direct_rateperhr1 = $direct_rateperhr;
 											if($individual_billable_hrs>$max_hours){												
-												$percentage = ($max_hours/$individual_billable_hrs);												
-												$rate1 = number_format(($percentage*$rate),2);
-												$direct_rateperhr1 = number_format(($percentage*$direct_rateperhr),2);
+												$percentage 		= ($max_hours/$individual_billable_hrs);												
+												$rate1 				= number_format(($percentage*$rate),2);
+												$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 											}
 										 
 											$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;											

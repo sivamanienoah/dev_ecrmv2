@@ -976,10 +976,11 @@ class Dashboard extends crm_controller
 		else
 		$data['filter_sort_by'] = 'desc';
 	
-		if(isset($filter_sort_val) && !empty($filter_sort_val))
-		$data['filter_sort_val'] = $this->input->post("filter_sort_val");
-		else
-		$data['filter_sort_val'] = 'hour';
+		if(isset($filter_sort_val) && !empty($filter_sort_val)) {
+			$data['filter_sort_val'] = $this->input->post("filter_sort_val");
+		} else {
+			$data['filter_sort_val'] = 'hour';
+		}
 	
 		switch($this->input->post("filter_group_by")) {
 			case 0:

@@ -151,8 +151,8 @@ class Userlogin extends crm_controller {
 			}
 			if($userdata[0]['auth_type']=='0') $loggedType="ldb"; else $loggedType="ldap";
             $array = array(
-						'logged_in' => TRUE,
-						'logged_in_user' => $userdata[0],
+						'logged_in'=>TRUE,
+						'logged_in_user'=>$userdata[0],
 						'loggedType'=>$loggedType,
 						'SSO_Status'=>$SSO_Status
                         );

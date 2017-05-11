@@ -34,9 +34,9 @@ class Create_new_user extends crm_controller
 	
 	public function index() {
 	
-		$crm_email = array();
-		$user_failed  = array();
-		$user_success = array();
+		$crm_email 		= array();
+		$user_failed  	= array();
+		$user_success 	= array();
 		
 		//get crm users emails
 		$this->db->select('u.email');
@@ -52,24 +52,25 @@ class Create_new_user extends crm_controller
 		
 		$this->db->select('v.autoid,v.username,v.EmpID,v.email,v.active,v.first_name,v.last_name');
 		$this->db->from($this->cfg['dbpref'].'view_econnect_mas as v');
-		$this->db->where('v.active',1);
-		$this->db->where('v.username !=','');
+		$this->db->where('v.active', 1);
+		$this->db->where('v.username !=', '');
 		$sql = $this->db->get();
 		//echo $this->db->last_query();
 		$econnect_users = $sql->result_array();
+		
 		foreach($econnect_users as $eusers){
 			//1.check whether the username exists or not in CRM DB.
-			$this->db->select('u.username,u.email');
+			$this->db->select('u.username, u.email');
 			$this->db->from($this->cfg['dbpref'].'users as u');
-			$this->db->where('u.username',$eusers['username']);
+			$this->db->where('u.username', $eusers['username']);
 			$query = $this->db->get();
 			$res = $query->row_array();
 			
 			if($query->num_rows() == 0) { 
-			//check email
-				if(!in_array($eusers['email'],$crm_email)) {
+				//check email
+				if(!in_array($eusers['email'], $crm_email)) {
 					//insert into crm db
-					$data = array(
+					$data = array (
 					   'role_id' => 8,
 					   'first_name' => $eusers['first_name'],
 					   'last_name' => $eusers['last_name'],
@@ -85,7 +86,6 @@ class Create_new_user extends crm_controller
 					   'inactive' => 0
 					);
 					if($this->db->insert($this->cfg['dbpref'].'users', $data)) {
-						// $user_success[] = $eusers['empid'].' - '.$eusers['username']." - New user created.";
 						$user_success[] = $eusers['EmpID'].' => '.$eusers['username'];
 						$crm_email[] = $eusers['email'];
 					}
