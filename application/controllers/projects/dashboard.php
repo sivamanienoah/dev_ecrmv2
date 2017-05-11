@@ -952,11 +952,11 @@ class Dashboard extends crm_controller
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		
-		$data['resdata'] 	   = $query->result();
-		$data['heading'] 	   = $heading;
-		$data['dept_type']     = $dept_type;
-		$data['resource_type'] = $resource_type;
-		$data['conversion_rates'] = $this->get_currency_rates();
+		$data['resdata'] 	   		= $query->result();
+		$data['heading'] 	   		= $heading;
+		$data['dept_type']     		= $dept_type;
+		$data['resource_type'] 		= $resource_type;
+		$data['conversion_rates'] 	= $this->get_currency_rates();
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
