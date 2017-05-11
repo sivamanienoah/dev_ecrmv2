@@ -256,7 +256,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <script type="text/javascript">
 var cur_mon = '<?php echo date('F Y') ?>';
 var filter_area_status = '<?php echo $filter_area_status; ?>';
-if(filter_area_status==1){
+if(filter_area_status==1) {
 	$('#advance_search').show();
 }
 $(function() {
@@ -268,8 +268,8 @@ $(function() {
 		maxDate: 0,
 		showButtonPanel: true,	
 		onClose: function(dateText, inst) {
-			var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-			var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
+			var month 	= $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+			var year 	= $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
 			$(this).datepicker('setDate', new Date(year, month, 1));
 		},
 		beforeShow : function(input, inst) {
