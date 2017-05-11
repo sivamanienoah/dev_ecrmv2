@@ -3526,6 +3526,7 @@ class Dashboard extends crm_controller
 		$timesheet_db->close();
 		
 		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
+		echo "<pre>"; print_r($data['practice_ids']); exit;
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
