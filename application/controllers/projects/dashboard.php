@@ -3429,7 +3429,7 @@ class Dashboard extends crm_controller
 		}
 		$data  				  = array();
 		$dept   			  = array();
-		$data['page_heading'] = "Cost Report";
+		$data['page_heading'] = "IT Cost Report";
 		
 		$timesheet_db = $this->load->database("timesheet", true);
 		
