@@ -459,7 +459,7 @@ class Dashboard extends crm_controller
 		if(count($member_ids)>0 && !empty($member_ids)) {
 			$this->db->where_in('t.username', $member_ids);
 		}
-		$this->db->where("l.practice is not null");
+		$this->db->where('l.practice is not null');
 		$query 			 = $this->db->get();		
 		$data['resdata'] = $query->result();
 		
@@ -950,7 +950,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.username", $mids);
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		
 		$data['resdata'] 	   = $query->result();
 		$data['heading'] 	   = $heading;
