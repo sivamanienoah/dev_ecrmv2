@@ -3458,7 +3458,7 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$entity_ids 	= $this->input->post("entity_ids");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, l.practice as practice_id, p.practices as practice_name');
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, l.practice as practice_id, p.practices as practice_name');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
 		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
@@ -3467,39 +3467,12 @@ class Dashboard extends crm_controller
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		}
-		if(!empty($resource_type)) {
-			$this->db->where('t.resoursetype', $resource_type);
-		}
-		if(!empty($department_ids)) {
-			$this->db->where_in("t.dept_id", $department_ids);
-		}
-		
-		if(!empty($skill_ids)){
-			$skill = @explode(',',$skill_ids);
-			$this->db->where_in("t.skill_id", $skill);
-		}
-		if(empty($department_ids) && !empty($dept_type)) {
-			switch($dept_type) {
-				case 1:
-				$type = array(10, 11);
-				$this->db->where_in("t.dept_id", $type);
-				break;
-				case 2:
-				$type = array(10);
-				$this->db->where_in("t.dept_id", $type);
-				break;
-				case 3:
-				$type = array(11);
-				$this->db->where_in("t.dept_id", $type);
-				break;
-			}
-		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
-			$this->db->where_not_in("t.project_code", 'Leave');
+			$this->db->where_not_in("t.project_code", array('Leave'));
 			$data['exclude_leave'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
-			$this->db->where_not_in("t.project_code", 'HOL');
+			$this->db->where_not_in("t.project_code", array('HOL'));
 			$data['exclude_holiday'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
@@ -3507,32 +3480,32 @@ class Dashboard extends crm_controller
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
 		}
-		if(!empty($practice_ids)) {
-			$pids = explode(',', $practice_ids);
-			$this->db->where_in("l.practice", $pids);
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$data['entity_ids'] = $entity_ids;
+			$this->db->where_in('t.entity_id', $entity_ids);
 		}
-		if(!empty($entity_ids)) {
-			$entys = explode(',', $entity_ids);
-			$this->db->where_in('t.entity_id', $entys);
-		}		
-		switch($dept_type) {
-			case 1:
-			$heading = 'IT - '.$resource_type;
-			break;
-			case 2:
-			$heading = 'eADS - '.$resource_type;
-			break;
-			case 3:
-			$heading = 'eQAD - '.$resource_type;
-			break;
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$data['practice_ids'] = $practice_ids;
+			$this->db->where_in('l.practice', $practice_ids);
 		}
-		if(!empty($skill_ids) && !empty($department_ids) && !empty($member_ids)) {
-			$mids = explode(',', $member_ids);
-			$this->db->where_in("t.username", $mids);
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		} else {
+			$deptwhere = "t.dept_id IN ('10','11')";
+			$this->db->where($deptwhere);
 		}
-		$query = $this->db->get();
+		if(count($skill_ids)>0 && !empty($skill_ids)) {
+			$this->db->where_in('t.skill_id', $skill_ids);
+		}
+		if(count($member_ids)>0 && !empty($member_ids)) {
+			$this->db->where_in('t.username', $member_ids);
+		}
+		$this->db->where('l.practice is not null');
+		$query 						= $this->db->get();		
 		echo $this->db->last_query(); exit;
-		
 		$data['resdata'] 	   		= $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
