@@ -3505,8 +3505,9 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();
+		
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
