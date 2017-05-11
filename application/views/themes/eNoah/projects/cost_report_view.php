@@ -20,6 +20,26 @@ table.bu-tbl-inr th{ text-align:center; }
 					<img src="assets/img/advanced_filter.png" class="icon leads" />
 					<span>Advanced Filters</span>
 				</a>
+				
+				<div class="clearfix"></div>
+				<div class="section-right">
+					<div class="buttons add-new-button">
+						<button id='expand_tr' class="positive" type="button">
+							Expand
+						</button>
+					</div>
+					<div class="buttons collapse-button">
+						<button id='collapse_tr' class="positive" type="button">
+							Collapse
+						</button>
+					</div>
+					<div class="buttons export-to-excel">
+						<button type="button" class="positive" id="btnExport">
+							Export to Excel
+						</button>
+					</div>
+				</div>
+				<div class="clearfix"></div>
 				<div class="buttons">
 					<form name="fliter_data" id="fliter_data" method="post">
 					<!--button  type="submit" id="excel-1" class="positive">
