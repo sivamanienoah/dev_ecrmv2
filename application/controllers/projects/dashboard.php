@@ -3574,7 +3574,7 @@ class Dashboard extends crm_controller
 		$data['results']    	  = $arr_depts;
 		$data['filter_area_status'] = $this->input->post("filter_area_status");
 		
-		echo "<pre>"; print_r($data); die;
+		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/cost_report_view", $data);
 	}
 }
