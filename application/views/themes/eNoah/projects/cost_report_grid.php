@@ -2,43 +2,6 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 </style>
-<div id="drildown_filter_area" class="group-section">
-	<div class="pull-left">
-		<label>Group By</label>
-		<select name="filter_group_by" id="filter_group_by">
-			<option value='0' <?php if($filter_group_by == 0) echo "selected='selected'"; ?>>Practice</option>
-			<option value='4' <?php if($filter_group_by == 4) echo "selected='selected'"; ?>>Entity</option>
-			<option value='1' <?php if($filter_group_by == 1) echo "selected='selected'"; ?>>Skill</option>
-			<option value='2' <?php if($filter_group_by == 2) echo "selected='selected'"; ?>>Project</option>
-			<option value='3' <?php if($filter_group_by == 3) echo "selected='selected'"; ?>>Resource</option>
-		</select>
-	</div>
-	<div class="pull-left" style="margin:0 15px;;">
-		<label>Sort By</label>
-		<select name="filter_sort_by" id="filter_sort_by">
-			<option value='desc' <?php if($filter_sort_by == 'desc') echo "selected='selected'"; ?>>DESC</option>
-			<option value='asc' <?php if($filter_sort_by == 'asc') echo "selected='selected'"; ?>>ASC</option>
-		</select>
-	</div>
-	<div class="pull-left" style="margin:0 15px 0 0;">
-		<label>Sort Value</label>
-		<select name="filter_sort_val" id="filter_sort_val">
-			<option value='hour' <?php if($filter_sort_val == 'hour') echo "selected='selected'"; ?>>Hour</option>
-			<option value='cost' <?php if($filter_sort_val == 'cost') echo "selected='selected'"; ?>>Cost</option>
-			<option value='directcost' <?php if($filter_sort_val == 'directcost') echo "selected='selected'"; ?>>Direct Cost</option>
-		</select>
-	</div>
-	<div class="pull-left" style="margin:0 15px;;">
-		<input type='hidden' name="dept_type" id="dept_type" value="<?php echo $dept_type; ?>" />
-		<input type='hidden' name="resource_type" id="resource_type" value="<?php echo $resource_type; ?>" />
-	</div>
-	<div class="bttn-area" style="margin:0 15px;">
-		<div class="bttons">
-			<input style="height:auto;" type="button" class="positive input-font" name="refine_drilldown_data" id="refine_drilldown_data" value="Go" />
-			<input style="height:auto;" type="button" class="positive input-font" name="reset_drilldown" id="reset_drilldown" value="Reset" />
-		</div>								
-	</div>
-</div>
 <div class="clear"></div>
 <?php
 function array_sort($array, $on, $order='SORT_ASC')
