@@ -2,16 +2,11 @@ $(function() {
 	
 	//export
 	$("#btnExport").click(function () {
-		$('#it_cost_grid_filter').hide();
-		/* $("#it_cost_grid").btechco_excelexport({
+		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
 		   , filename: 'cost_report'
-		}); */
-		$('#it_cost_grid_filter').show();
-		
-		window.open('data:application/vnd.ms-excel,' + $('.tst').html());
-		e.preventDefault();
+		});
 	});
 	
 	$("#reset_drilldown").click(function(){
@@ -21,7 +16,7 @@ $(function() {
 	});
 	
 	//data table
-	$('#it_cost_grid').dataTable({
+	/* $('#it_cost_grid').dataTable({
 		"bInfo": false,
 		"bPaginate": false,
 		"bProcessing": false,
@@ -29,22 +24,7 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
-		/* "oTableTools": {
-        "aButtons": [
-        {
-        'sExtends':'csv',
-        "sFileName": "subscribers.csv",
-        'mColumns':[0,1]
-        },
-        {
-        'sExtends':'pdf',
-        "sFileName": "subscribers.pdf",
-        'mColumns':[0,1] 
-        },
-    ]
-    },
-    "sDom": '<"H"Tlfr>tip<"F">', */
-	});
+	}); */
 	
 });
 if(filter_area_status==1) {
