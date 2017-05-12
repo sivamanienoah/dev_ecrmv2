@@ -3430,6 +3430,7 @@ class Dashboard extends crm_controller
 		$data  				  = array();
 		$dept   			  = array();
 		$data['page_heading'] = "IT Cost Report";
+		$data['filter_area_status'] = $this->input->post("filter_area_status");
 		
 		$start_date = date("Y-m-1");
 		$end_date   = date("Y-m-d");
@@ -3468,10 +3469,12 @@ class Dashboard extends crm_controller
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
 			$this->db->where_not_in("t.project_code", array('Leave'));
 			$data['exclude_leave'] = 1;
+			$data['filter_area_status'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
 			$this->db->where_not_in("t.project_code", array('HOL'));
 			$data['exclude_holiday'] = 1;
+			$data['filter_area_status'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
 			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
@@ -3480,14 +3483,17 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($entity_ids) && count($entity_ids)>0) {
 			$data['entity_ids'] = $entity_ids;
+			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.entity_id', $entity_ids);
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
 			$data['sel_practice_ids'] = $practice_ids;
+			$data['filter_area_status'] = 1;
 			$this->db->where_in('l.practice', $practice_ids);
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$data['department_ids'] = $department_ids;
+			$data['filter_area_status'] = 1;
 			$dids = implode(",",$department_ids);
 			if(!empty($dids)) {
 				$this->db->where_in("t.dept_id", $department_ids);
@@ -3498,10 +3504,12 @@ class Dashboard extends crm_controller
 		}
 		if(count($skill_ids)>0 && !empty($skill_ids)) {
 			$data['skill_ids'] = $skill_ids;
+			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.skill_id', $skill_ids);
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
 			$data['member_ids'] = $member_ids;
+			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.username', $member_ids);
 		}
 		$this->db->where('l.practice is not null');
@@ -3565,7 +3573,7 @@ class Dashboard extends crm_controller
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
 		$data['results']    	  = $arr_depts;
-		$data['filter_area_status'] = $this->input->post("filter_area_status");
+		
 		
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/cost_report_view", $data);
