@@ -26,10 +26,21 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
-		"sDom": 'Bfrtip',
-        'oTableTools' : {
-			'aButtons': ['copy', 'csv', 'pdf', 'print']
-		}
+		"oTableTools": {
+        "aButtons": [
+        {
+        'sExtends':'csv',
+        "sFileName": "subscribers.csv",
+        'mColumns':[0,1]
+        },
+        {
+        'sExtends':'pdf',
+        "sFileName": "subscribers.pdf",
+        'mColumns':[0,1] 
+        },
+    ]
+    },
+    "sDom": '<"H"Tlfr>tip<"F">',
 	});
 	
 });
