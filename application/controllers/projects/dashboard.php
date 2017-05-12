@@ -3596,7 +3596,6 @@ class Dashboard extends crm_controller
 				$this->db->where_in("t.skill_id", $data['member_ids']);
 			} */
 			$this->db->group_by('t.empname');
-			$this->db->order_by('t.empname');
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
 		}
