@@ -1375,10 +1375,26 @@ class Dashboard extends crm_controller
 			}
 			
 			if(!empty($sids)) {
-				$timesheet_db = $this->load->database("timesheet",true);
-				$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where t.start_time between '$start_date' and '$end_date' ".$where." group by v.username order by v.username asc");
-				// echo $qry; exit;
-				$timesheet_db->close();
+				
+				$this->db->select("CONCAT(t.first_name, ' ', t.last_name) AS emp_name", FALSE);
+				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+				$this->db->where("t.practice_id !=", 0);
+				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+				if(!empty($ids)) {
+					$this->db->where_in("t.dept_id", $ids);
+				}				
+				if(!empty($p_ids)){
+					$this->db->where_in("t.practice_id", $p_ids);
+				}
+				if(!empty($sids)) {
+					$this->db->where_in("t.skill_id", $sids);
+				}
+				$this->db->group_by('t.username');
+				$this->db->order_by('t.username');
+				$qry = $this->db->get();
+				echo $this->db->last_query(); die;
+				/* $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where t.start_time between '$start_date' and '$end_date' ".$where." group by v.username order by v.username asc"); */
 				if($qry->num_rows()>0){
 					$res = $qry->result();
 					echo json_encode($res); exit;
