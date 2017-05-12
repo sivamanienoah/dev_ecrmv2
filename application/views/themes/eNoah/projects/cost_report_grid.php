@@ -222,9 +222,9 @@ if(!empty($tbl_data)) {
 						<td width='5%'>".$yrMonKey."</td>
 						<td width='15%'>".$pjt_nme."</td>
 						<td width='7%'>".$resrcNmeKey."</td>
-						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['hour']."</td>
-						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['cost']."</td>
-						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['directcost']."</td>
+						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['hour'], 1)."</td>
+						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
+						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['directcost'], 2)."</td>
 					</tr>"; $i++;
 															}
 														}
