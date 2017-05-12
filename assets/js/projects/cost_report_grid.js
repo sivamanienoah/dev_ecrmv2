@@ -16,3 +16,6 @@ $(function() {
 	});
 	
 });
+if(filter_area_status==1) {
+	$('#advance_search').show();
+}
