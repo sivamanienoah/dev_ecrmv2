@@ -218,9 +218,9 @@ if(!empty($tbl_data)) {
 						<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
 						<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
 						<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
-						<td width='5%' align='right' class='rt-ali'>".$yrMonKey."</td>
-						<td width='15%' align='right' class='rt-ali'>".$pjtCdeKey."</td>
-						<td width='7%' align='right' class='rt-ali'>".$resrcNmeKey."</td>
+						<td width='5%'>".$yrMonKey."</td>
+						<td width='15%'>".$pjtCdeKey."</td>
+						<td width='7%'>".$resrcNmeKey."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['hour']."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['cost']."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['directcost']."</td>
@@ -240,7 +240,6 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
-
 	echo "</table>";
 }
 ?>
