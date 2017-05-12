@@ -94,7 +94,9 @@ if(!empty($resdata)) {
 					if(!empty($prac_arr) && count($prac_arr)>0) {
 						foreach($prac_arr as $prac_key=>$skill_arr) { #echo "dept key " .$dept_key . " practice ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
 							if(!empty($skill_arr) && count($skill_arr)>0) {
-								foreach($skill_arr as $skill_key=>$resrc_data) {
+								foreach($skill_arr as $skill_key=>$resrc_type_arr) {
+									if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
+										foreach($resrc_type_arr as $resrc_type_key=>$resrc_data) {
 									if(!empty($resrc_data) && count($resrc_data)>0) {
 										foreach($resrc_data as $resrc_name=>$recval_data) {
 											$resource_name 	= $resrc_name;
@@ -170,6 +172,8 @@ if(!empty($resdata)) {
 												}
 											}
 										}
+									}
+									}
 									}
 								}
 							}
