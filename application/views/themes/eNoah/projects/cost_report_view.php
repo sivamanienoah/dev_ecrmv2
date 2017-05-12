@@ -107,7 +107,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<?php } }?>
 										</select>
 									</td>
-									<td class="proj-dash-select">
+									<td class="proj-dash-select"><?php echo "<pre>"; print_r($practice_ids); echo "</pre>"; ?>
 										<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
 											<?php if(count($practice_ids)>0 && !empty($practice_ids)) { ?>
 													<?php foreach($practice_ids as $prac) {?>
