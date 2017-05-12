@@ -3543,11 +3543,11 @@ class Dashboard extends crm_controller
 		
 		if(!empty($data['departments']) && count($data['departments'])>0) {
 			$this->db->select('t.skill_id, t.skill_name as name');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->where("t.practice_id !=", 0);
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-			if(!empty($data['departments']) && count($data['departments'])>0) {
+			if(!empty($data['departments']) && count($data['departments'])>0) { echo "<pre>"; print_r($data['departments']); echo "</pre>";
 				$this->db->where_in("t.dept_id", $data['departments']);
 			}
 			if(!empty($practice_ids) && count($practice_ids)>0) {
@@ -3555,8 +3555,8 @@ class Dashboard extends crm_controller
 			}
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
-			$query = $this->db->get();
-			$data['skill_ids_selected'] = $query->result();
+			$skquery = $this->db->get();
+			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
 		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
