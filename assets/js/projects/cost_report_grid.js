@@ -28,7 +28,7 @@ $(function() {
 		"bDestroy": true,
         'oTableTools' : {
 			'aButtons': ['copy', 'csv', 'pdf', 'print']
-		};
+		}
 	});
 	
 });
