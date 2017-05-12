@@ -15,6 +15,29 @@ $(function() {
 		$('#filter_sort_val').prop('selectedIndex','hour');
 	});
 	
+	//data table
+/* 	$('.data-tbl').dataTable({
+		"aaSorting": [[ 1, "desc" ]],
+		"iDisplayLength": 10,
+		"sPaginationType": "full_numbers",
+		"bInfo": true,
+		"bPaginate": true,
+		"bProcessing": true,
+		"bServerSide": false,
+		"bLengthChange": true,
+		"bSort": true,
+		"bFilter": false,
+		"bAutoWidth": false,
+		"bDestroy": true
+	}); */
+	
+	$('#it_cost_grid').DataTable( {
+        "bPaginate":   false,
+        "ordering": false,
+        "info":     false,
+        "bSort": true,
+    } );
+	
 });
 if(filter_area_status==1) {
 	$('#advance_search').show();
