@@ -215,7 +215,7 @@ if(!empty($tbl_data)) {
 															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
 																if(!empty($resrcNmeArr) && count($resrcNmeArr)>0) {
 																	foreach($resrcNmeArr as $val) {
-																		echo $resrcNmeKey.'-'.$val['hour'].'-'.$val['cost']."<br>";
+																		echo "<pre>"; print_r($resrcNmeArr); echo "</pre><br>";
 																	}
 																}
 															}
