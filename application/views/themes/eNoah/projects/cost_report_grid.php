@@ -184,14 +184,14 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
-			<th class='prac-dt' width='16%'>ENTITY NAME</th>
-			<th class='prac-dt' width='16%'>DEPARTMENT NAME</th>
-			<th class='prac-dt' width='16%'>PRACTICE NAME</th>
-			<th class='prac-dt' width='12%'>SKILL NAME</th>
+			<th class='prac-dt' width='16%'>ENTITY</th>
+			<th class='prac-dt' width='16%'>DEPARTMENT</th>
+			<th class='prac-dt' width='16%'>PRACTICE</th>
+			<th class='prac-dt' width='12%'>SKILL</th>
 			<th class='prac-dt' width='15%'>RESOURCE TYPE</th>
 			<th class='prac-dt' width='5%'>Month Year</th>
-			<th class='prac-dt' width='15%'>PROJECT NAME</th>
-			<th class='prac-dt' width='15%'>USER NAME</th>
+			<th class='prac-dt' width='15%'>PROJECT</th>
+			<th class='prac-dt' width='15%'>USER</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
@@ -213,14 +213,14 @@ if(!empty($tbl_data)) {
 															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
 																$i=0;
 																echo "<tr data-depth='".$i."' class='collapse'>
-						<td width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiyKey)."</b></span></td>
-						<td width='16%' align='left' class='collapse lft-ali'>".$deptKey."</td>
-						<td width='16%' align='left' class='collapse lft-ali'>".$pracKey."</td>
-						<td width='16%' align='left' class='collapse lft-ali'>".$skilKey."</td>
-						<td width='16%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
-						<td width='15%' align='right' class='rt-ali'>".$yrMonKey."</td>
-						<td width='5%' align='right' class='rt-ali'>".$pjtCdeKey."</td>
-						<td width='5%' align='right' class='rt-ali'>".$resrcNmeKey."</td>
+						<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiyKey)."</b></span></td>
+						<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
+						<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
+						<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
+						<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
+						<td width='5%' align='right' class='rt-ali'>".$yrMonKey."</td>
+						<td width='15%' align='right' class='rt-ali'>".$pjtCdeKey."</td>
+						<td width='7%' align='right' class='rt-ali'>".$resrcNmeKey."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['hour']."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['cost']."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['directcost']."</td>
