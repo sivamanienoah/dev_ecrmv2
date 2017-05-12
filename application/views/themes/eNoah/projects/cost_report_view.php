@@ -22,7 +22,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				</a>
 				
 				<div class="section-right">
-					<!--<div class="buttons add-new-button">
+					<div class="buttons add-new-button">
 						<button id='expand_tr' class="positive" type="button">
 							Expand
 						</button>
@@ -31,7 +31,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						<button id='collapse_tr' class="positive" type="button">
 							Collapse
 						</button>
-					</div>-->
+					</div>
 					<div class="buttons export-to-excel">
 						<button type="button" class="positive" id="btnExport">
 							Export to Excel
