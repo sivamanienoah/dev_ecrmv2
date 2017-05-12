@@ -219,7 +219,7 @@ if(!empty($tbl_data)) {
 						<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
 						<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
 						<td width='5%'>".$yrMonKey."</td>
-						<td width='15%'>".$project_master[$pjtCdeKey]."</td>
+						<td width='15%'>".isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey."</td>
 						<td width='7%'>".$resrcNmeKey."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['hour']."</td>
 						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['cost']."</td>
