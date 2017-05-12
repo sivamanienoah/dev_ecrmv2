@@ -198,24 +198,40 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of COST</th>
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
-	foreach($tbl_data as $entiy=>$entiy_ar) {
-		
-		$i = 0;		
-		
-		echo "<tr data-depth='".$i."' class='collapse'>
-						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
-						<th width='16%' align='left' class='collapse lft-ali'>".$entiy."</th>
-						<th width='12%'></th>
-						<th width='15%'></th>
-						<th width='15%' align='right' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_hr[$entiy]['enti_hour'], 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_cst[$entiy]['enti_cost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_entity_dircst[$entiy]['enti_directcost'], 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_hr, 1)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_cost, 2)."</th>
-						<th width='5%' align='right' class='rt-ali'>".round($sub_tot_enti_directcost, 2)."</th>
-					</tr>";
-
+	foreach($tbl_data as $entiyKey=>$entiyArr) {
+		if(!empty($entiyArr) && count($entiyArr)>0) {
+			foreach($entiyArr as $deptKey=>$deptArr) {
+				if(!empty($deptArr) && count($deptArr)>0) {
+					foreach($deptArr as $pracKey=>$pracArr) {
+						if(!empty($pracArr) && count($pracArr)>0) {
+							foreach($pracArr as $skilKey=>$skilArr) {
+								if(!empty($skilArr) && count($skilArr)>0) {
+									foreach($skilArr as $resrcTypeKey=>$resrcTypeArr) {
+										if(!empty($resrcTypeArr) && count($resrcTypeArr)>0) {
+											foreach($resrcTypeArr as $yrMonKey=>$yrMonArr) {
+												if(!empty($yrMonArr) && count($yrMonArr)>0) {
+													foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
+														if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
+															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
+																if(!empty($resrcNmeArr) && count($resrcNmeArr)>0) {
+																	foreach($resrcNmeArr as $key=>$val) {
+																		echo $resrcNmeKey.'-'.$key.'-'.$val."<br>";
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	echo "</table>";
