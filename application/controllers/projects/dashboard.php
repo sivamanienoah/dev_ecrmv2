@@ -3580,7 +3580,7 @@ class Dashboard extends crm_controller
 			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
-		if(!empty($data['member_ids']) && count($data['member_ids'])>0) {
+		if(!empty($data['member_ids']) && count($data['member_ids'])>0) { echo "test"; die;
 			$this->db->select("t.empname as emp_name, t.username");
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->where("t.practice_id !=", 0);
