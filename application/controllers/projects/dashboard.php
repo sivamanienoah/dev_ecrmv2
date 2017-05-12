@@ -3547,7 +3547,7 @@ class Dashboard extends crm_controller
 			$this->db->where("t.practice_id !=", 0);
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-			if(!empty($department_ids) && count($department_ids)>0) { echo "<pre>"; print_r($department_ids); echo "</pre>";
+			if(!empty($department_ids) && count($department_ids)>0) {
 				$this->db->where_in("t.dept_id", $department_ids);
 			}
 			if(!empty($practice_ids) && count($practice_ids)>0) {
