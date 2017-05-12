@@ -1393,7 +1393,7 @@ class Dashboard extends crm_controller
 				$this->db->group_by('t.empname');
 				$this->db->order_by('t.empname');
 				$qry = $this->db->get();
-				echo $this->db->last_query(); die;
+				// echo $this->db->last_query(); die;
 				/* $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where t.start_time between '$start_date' and '$end_date' ".$where." group by v.username order by v.username asc"); */
 				if($qry->num_rows()>0){
 					$res = $qry->result();
