@@ -3531,6 +3531,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in('department_id', array('10','11'));
 		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
 		$data['departments'] = $dept->result(); */
+		
 		$depts_res = array();
 		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
 		if($dept->num_rows()>0){
@@ -3539,6 +3540,24 @@ class Dashboard extends crm_controller
 		$data['departments'] = $depts_res;
 		
 		$timesheet_db->close();
+		
+		if(!empty($data['departments']) && count($data['departments'])>0) {
+			$this->db->select('t.skill_id, t.skill_name as name');
+			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($data['departments'])) {
+				$this->db->where_in("t.dept_id", $data['departments']);
+			}
+			if(!empty($practice_ids) && count($practice_ids)>0) {
+				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			$this->db->group_by('t.skill_id');
+			$this->db->order_by('t.skill_name');
+			$query = $this->db->get();
+			$data['skill_ids_selected'] = $query->result();
+		}
 		
 		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
 		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
