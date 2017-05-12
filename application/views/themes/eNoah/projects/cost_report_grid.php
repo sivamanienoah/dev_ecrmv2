@@ -214,7 +214,7 @@ if(!empty($tbl_data)) {
 																$i=0;
 																$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																echo "<tr data-depth='".$i."'>
-						<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiyKey)."</b></span></td>
+						<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
 						<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
 						<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
 						<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
