@@ -197,7 +197,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
 			</tr>";
-			echo "</thead><tbody>"
+			echo "</thead><tbody>";
 	foreach($tbl_data as $entiyKey=>$entiyArr) {
 		if(!empty($entiyArr) && count($entiyArr)>0) {
 			foreach($entiyArr as $deptKey=>$deptArr) {
