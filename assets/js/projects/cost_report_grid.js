@@ -32,10 +32,8 @@ $(function() {
 	}); */
 	
 	$('#it_cost_grid').dataTable({
-        "bPaginate": false,
-        "bInfo": false,
-        "bSort": true,
-    } );
+        
+    });
 	
 });
 if(filter_area_status==1) {
