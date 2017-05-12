@@ -213,11 +213,7 @@ if(!empty($tbl_data)) {
 													foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
 														if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
 															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
-																if(!empty($resrcNmeArr) && count($resrcNmeArr)>0) {
-																	foreach($resrcNmeArr as $val) {
-																		echo "<pre>"; print_r($resrcNmeArr); echo "</pre><br>";
-																	}
-																}
+																echo "<pre>"; print_r($resrcNmeArr); echo "</pre><br>";
 															}
 														}
 													}
