@@ -26,7 +26,7 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
-		"sDom": '<"H"Tfr>t<"F"ip>',
+		"sDom": 'Bfrtip',
         "oTableTools": {
              "aButtons": [ "xls" ]
         },
