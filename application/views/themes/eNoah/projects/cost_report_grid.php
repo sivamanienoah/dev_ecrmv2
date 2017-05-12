@@ -189,14 +189,12 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='16%'>PRACTICE NAME</th>
 			<th class='prac-dt' width='12%'>SKILL NAME</th>
 			<th class='prac-dt' width='15%'>RESOURCE TYPE</th>
+			<th class='prac-dt' width='5%'>Month Year</th>
 			<th class='prac-dt' width='15%'>PROJECT NAME</th>
 			<th class='prac-dt' width='15%'>USER NAME</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
-			<th class='prac-dt' width='5%'>% of HOUR</th>
-			<th class='prac-dt' width='5%'>% of COST</th>
-			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
 	foreach($tbl_data as $entiyKey=>$entiyArr) {
 		if(!empty($entiyArr) && count($entiyArr)>0) {
@@ -213,7 +211,20 @@ if(!empty($tbl_data)) {
 													foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
 														if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
 															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
-																echo "<pre>"; print_r($resrcNmeArr); echo "</pre><br>";
+																$i=0;
+																echo "<tr data-depth='".$i."' class='collapse'>
+						<td width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiyKey)."</b></span></td>
+						<td width='16%' align='left' class='collapse lft-ali'>".$deptKey."</td>
+						<td width='16%' align='left' class='collapse lft-ali'>".$pracKey."</td>
+						<td width='16%' align='left' class='collapse lft-ali'>".$skilKey."</td>
+						<td width='16%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
+						<td width='15%' align='right' class='rt-ali'>".$yrMonKey."</td>
+						<td width='5%' align='right' class='rt-ali'>".$pjtCdeKey."</td>
+						<td width='5%' align='right' class='rt-ali'>".$resrcNmeKey."</td>
+						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['hour']."</td>
+						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['cost']."</td>
+						<td width='5%' align='right' class='rt-ali'>".$resrcNmeArr['directcost']."</td>
+					</tr>"; $i++;
 															}
 														}
 													}
