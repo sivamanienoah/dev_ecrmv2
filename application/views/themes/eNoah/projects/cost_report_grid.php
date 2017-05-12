@@ -176,7 +176,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
 <div>
 <?php
