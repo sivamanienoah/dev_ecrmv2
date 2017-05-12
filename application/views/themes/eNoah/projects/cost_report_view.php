@@ -111,7 +111,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
 											<?php if(count($practice_ids)>0 && !empty($practice_ids)) { ?>
 													<?php foreach($practice_ids as $prac) {?>
-														<option <?php echo in_array($prac->id, $sel_practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->id;?>"><?php echo $prac->practices;?></option>
+														<option <?php echo in_array($prac->id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->id;?>"><?php echo $prac->practices;?></option>
 											<?php } } ?>
 										</select>
 									</td>
