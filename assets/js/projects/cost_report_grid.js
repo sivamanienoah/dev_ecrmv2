@@ -17,17 +17,12 @@ $(function() {
 	
 	//data table
 	$('#it_cost_grid').dataTable({
-		"aaSorting": [[ 1, "desc" ]],
-		"iDisplayLength": 10,
-		"sPaginationType": "full_numbers",
-		"bInfo": true,
-		"bPaginate": true,
-		"bProcessing": true,
+		"bInfo": false,
+		"bPaginate": false,
+		"bProcessing": false,
 		"bServerSide": false,
-		"bLengthChange": true,
+		"bLengthChange": false,
 		"bSort": true,
-		"bFilter": false,
-		"bAutoWidth": false,
 		"bDestroy": true
 	});
 	
