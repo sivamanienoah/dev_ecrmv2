@@ -183,6 +183,7 @@ if(!empty($resdata)) {
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='it_cost_grid' class='proj-dash-table data-table proj-table-odd-even'>
+			<thead>
 			<tr>
 			<th class='prac-dt' width='10%'>ENTITY</th>
 			<th class='prac-dt' width='6%'>DEPARTMENT</th>
@@ -196,6 +197,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
 			</tr>";
+			echo "</thead><tbody>"
 	foreach($tbl_data as $entiyKey=>$entiyArr) {
 		if(!empty($entiyArr) && count($entiyArr)>0) {
 			foreach($entiyArr as $deptKey=>$deptArr) {
@@ -247,7 +249,7 @@ if(!empty($tbl_data)) {
 		<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		<td width='5%' align='right' class='rt-ali'>".round($tot_directcost, 2)."</td>
 	</tr>";
-	echo "</table>";
+	echo "</tbody></table>";
 }
 ?>
 </div>
