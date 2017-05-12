@@ -243,12 +243,12 @@ if(!empty($tbl_data)) {
 			}
 		}
 	}
-	/* echo "<tr>
+	echo "<tfoot><tr>
 		<td colspan='8' align='right' class='rt-ali'><b>Total:</b></td>
 		<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 		<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		<td width='5%' align='right' class='rt-ali'>".round($tot_directcost, 2)."</td>
-	</tr>"; */
+	</tr></tfoot>";
 	echo "</tbody></table>";
 }
 ?>
