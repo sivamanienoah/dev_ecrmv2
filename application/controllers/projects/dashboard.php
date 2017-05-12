@@ -3431,10 +3431,10 @@ class Dashboard extends crm_controller
 		$dept   			  = array();
 		$data['page_heading'] = "IT Cost Report";
 		
-		// $start_date = date("Y-m-1");
-		// $end_date   = date("Y-m-d");
-		$start_date = date("Y-m-d", strtotime('01-04-2017'));
-		$end_date   = date("Y-m-d", strtotime('30-04-2017'));
+		$start_date = date("Y-m-1");
+		$end_date   = date("Y-m-d");
+		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
+		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
