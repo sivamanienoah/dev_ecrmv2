@@ -181,7 +181,7 @@ if(!empty($resdata)) {
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
-if(!empty($tbl_data)) {
+
 	echo "<table id='it_cost_grid' class='proj-dash-table data-table proj-table-odd-even'>
 			<thead>
 			<tr>
@@ -198,36 +198,38 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
 			</tr>";
 			echo "</thead><tbody>";
-	foreach($tbl_data as $entiyKey=>$entiyArr) {
-		if(!empty($entiyArr) && count($entiyArr)>0) {
-			foreach($entiyArr as $deptKey=>$deptArr) {
-				if(!empty($deptArr) && count($deptArr)>0) {
-					foreach($deptArr as $pracKey=>$pracArr) {
-						if(!empty($pracArr) && count($pracArr)>0) {
-							foreach($pracArr as $skilKey=>$skilArr) {
-								if(!empty($skilArr) && count($skilArr)>0) {
-									foreach($skilArr as $resrcTypeKey=>$resrcTypeArr) {
-										if(!empty($resrcTypeArr) && count($resrcTypeArr)>0) {
-											foreach($resrcTypeArr as $yrMonKey=>$yrMonArr) {
-												if(!empty($yrMonArr) && count($yrMonArr)>0) {
-													foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
-														if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
-															foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
-																$i=0;
-																$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
-																echo "<tr data-depth='".$i."'>
-						<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
-						<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
-						<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
-						<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
-						<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
-						<td width='5%'>".$yrMonKey."</td>
-						<td width='15%'>".$pjt_nme."</td>
-						<td width='7%'>".$resrcNmeKey."</td>
-						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['hour'], 1)."</td>
-						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
-						<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['directcost'], 2)."</td>
-					</tr>"; $i++;
+	if(!empty($tbl_data) && count($tbl_data)>0) {
+		foreach($tbl_data as $entiyKey=>$entiyArr) {
+			if(!empty($entiyArr) && count($entiyArr)>0) {
+				foreach($entiyArr as $deptKey=>$deptArr) {
+					if(!empty($deptArr) && count($deptArr)>0) {
+						foreach($deptArr as $pracKey=>$pracArr) {
+							if(!empty($pracArr) && count($pracArr)>0) {
+								foreach($pracArr as $skilKey=>$skilArr) {
+									if(!empty($skilArr) && count($skilArr)>0) {
+										foreach($skilArr as $resrcTypeKey=>$resrcTypeArr) {
+											if(!empty($resrcTypeArr) && count($resrcTypeArr)>0) {
+												foreach($resrcTypeArr as $yrMonKey=>$yrMonArr) {
+													if(!empty($yrMonArr) && count($yrMonArr)>0) {
+														foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
+															if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
+																foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
+																	$i=0;
+																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
+																	echo "<tr data-depth='".$i."'>
+							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
+							<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
+							<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
+							<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
+							<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
+							<td width='5%'>".$yrMonKey."</td>
+							<td width='15%'>".$pjt_nme."</td>
+							<td width='7%'>".$resrcNmeKey."</td>
+							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['hour'], 1)."</td>
+							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
+							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['directcost'], 2)."</td>
+						</tr>"; $i++;
+																}
 															}
 														}
 													}
@@ -242,15 +244,14 @@ if(!empty($tbl_data)) {
 				}
 			}
 		}
+		echo "<tfoot><tr>
+			<td colspan='8' align='right' class='rt-ali'><b>Total:</b></td>
+			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
+			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
+			<td width='5%' align='right' class='rt-ali'>".round($tot_directcost, 2)."</td>
+		</tr></tfoot>";
 	}
-	echo "<tfoot><tr>
-		<td colspan='8' align='right' class='rt-ali'><b>Total:</b></td>
-		<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
-		<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
-		<td width='5%' align='right' class='rt-ali'>".round($tot_directcost, 2)."</td>
-	</tr></tfoot>";
 	echo "</tbody></table>";
-}
 ?>
 </div>
 <script>
