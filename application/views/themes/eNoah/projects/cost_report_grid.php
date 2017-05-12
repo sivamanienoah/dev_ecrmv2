@@ -191,7 +191,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='6%'>RESOURCE TYPE</th>
 			<th class='prac-dt' width='5%'>Month Year</th>
 			<th class='prac-dt' width='15%'>PROJECT</th>
-			<th class='prac-dt' width='7%'>USER</th>
+			<th class='prac-dt' width='7%'>RESOURCE</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
