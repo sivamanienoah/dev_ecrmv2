@@ -204,7 +204,7 @@ if(!empty($tbl_data)) {
 		
 		echo "<tr data-depth='".$i."' class='collapse'>
 						<th width='16%' align='left' class='collapse lft-ali'><span class='toggle'>".strtoupper($entiy)."</b></span></th>
-						<th width='16%' align='left' class='collapse lft-ali'>".."</th>
+						<th width='16%' align='left' class='collapse lft-ali'>".$entiy."</th>
 						<th width='12%'></th>
 						<th width='15%'></th>
 						<th width='15%' align='right' class='rt-ali'>SUB TOTAL(ENTITY WISE):</th>
