@@ -16,7 +16,7 @@ $(function() {
 	});
 	
 	//data table
-/* 	$('.data-tbl').dataTable({
+	$('#it_cost_grid').dataTable({
 		"aaSorting": [[ 1, "desc" ]],
 		"iDisplayLength": 10,
 		"sPaginationType": "full_numbers",
@@ -29,9 +29,7 @@ $(function() {
 		"bFilter": false,
 		"bAutoWidth": false,
 		"bDestroy": true
-	}); */
-	
-	$('#it_cost_grid').dataTable();
+	});
 	
 });
 if(filter_area_status==1) {
