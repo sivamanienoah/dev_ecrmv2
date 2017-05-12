@@ -2,7 +2,7 @@ $(function() {
 	
 	//export
 	$("#btnExport").click(function () {
-		$('#it_cost_grid_filter').empty();
+		$('#it_cost_grid_filter').hide();
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
