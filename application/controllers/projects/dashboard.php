@@ -3487,6 +3487,7 @@ class Dashboard extends crm_controller
 			$this->db->where_in('l.practice', $practice_ids);
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
+			$data['department_ids'] = $department_ids;
 			$dids = implode(",",$department_ids);
 			if(!empty($dids)) {
 				$this->db->where_in("t.dept_id", $department_ids);
@@ -3496,9 +3497,11 @@ class Dashboard extends crm_controller
 			$this->db->where($deptwhere);
 		}
 		if(count($skill_ids)>0 && !empty($skill_ids)) {
+			$data['skill_ids'] = $skill_ids;
 			$this->db->where_in('t.skill_id', $skill_ids);
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
+			$data['member_ids'] = $member_ids;
 			$this->db->where_in('t.username', $member_ids);
 		}
 		$this->db->where('l.practice is not null');
