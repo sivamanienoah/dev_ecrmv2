@@ -26,6 +26,7 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
+		"sDom": 'Bfrtip',
         'oTableTools' : {
 			'aButtons': ['copy', 'csv', 'pdf', 'print']
 		}
