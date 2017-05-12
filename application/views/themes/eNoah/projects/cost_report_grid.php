@@ -59,7 +59,7 @@ $sub_tot_entity_cst 	= array();
 $sub_tot_entity_dircst 	= array();
 $tot_hour = 0;
 $tot_cost = 0;
-echo "<pre>"; print_r($resdata); echo "</pre>";
+// echo "<pre>"; print_r($resdata); echo "</pre>";
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
 		$rates 				= $conversion_rates;
@@ -72,10 +72,11 @@ if(!empty($resdata)) {
 		
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
-		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code][$rec->resoursetype]['duration_hours'] += $rec->duration_hours;
+		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code][$rec->resoursetype]['direct_rateperhr'] = $directrateCostPerHr;	
+		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code][$rec->resoursetype]['rateperhr']        = $rateCostPerHr;
+		
 		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
-		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
 	echo "<pre>"; print_r($timesheet_data); echo "</pre>";
