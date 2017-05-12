@@ -31,10 +31,9 @@ $(function() {
 		"bDestroy": true
 	}); */
 	
-	$('#it_cost_grid').DataTable( {
-        "bPaginate":   false,
-        "ordering": false,
-        "info":     false,
+	$('#it_cost_grid').dataTable({
+        "bPaginate": false,
+        "bInfo": false,
         "bSort": true,
     } );
 	
