@@ -3580,6 +3580,27 @@ class Dashboard extends crm_controller
 			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
+		if(!empty($data['member_ids']) && count($data['member_ids'])>0) {
+			$this->db->select("t.empname as emp_name, t.username");
+			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($department_ids) && count($department_ids)>0) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}				
+			if(!empty($practice_ids) && count($practice_ids)>0) {
+				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			/* if(!empty($data['member_ids'])) {
+				$this->db->where_in("t.skill_id", $data['member_ids']);
+			} */
+			$this->db->group_by('t.empname');
+			$this->db->order_by('t.empname');
+			$mem_qry = $this->db->get();
+			$data['member_ids_selected'] = $skquery->result();
+		}
+		
 		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
 		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
 
