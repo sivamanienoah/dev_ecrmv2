@@ -5,7 +5,7 @@ $(function() {
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
-		   , filename: 'cost_report.xls'
+		   , filename: 'cost_report'
 		});
 	});
 	
