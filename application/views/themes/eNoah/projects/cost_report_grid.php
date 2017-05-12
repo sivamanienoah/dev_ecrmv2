@@ -247,7 +247,6 @@ if(!empty($tbl_data)) {
 </div>
 <script>
 var filter_area_status = '<?php echo $filter_area_status; ?>';
-alert(filter_area_status);
 </script>
 <script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
 <script type="text/javascript" src="assets/js/projects/cost_report_grid.js"></script>
