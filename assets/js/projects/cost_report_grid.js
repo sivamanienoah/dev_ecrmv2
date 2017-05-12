@@ -25,7 +25,11 @@ $(function() {
 		"bServerSide": false,
 		"bLengthChange": false,
 		"bSort": true,
-		"bDestroy": true
+		"bDestroy": true,
+		"sDom": '<"H"Tfr>t<"F"ip>',
+        "oTableTools": {
+             "aButtons": [ "xls" ]
+        },
 	});
 	
 });
