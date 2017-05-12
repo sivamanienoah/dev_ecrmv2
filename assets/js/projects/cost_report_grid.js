@@ -31,9 +31,7 @@ $(function() {
 		"bDestroy": true
 	}); */
 	
-	$('#it_cost_grid').dataTable({
-        
-    });
+	$('#it_cost_grid').dataTable();
 	
 });
 if(filter_area_status==1) {
