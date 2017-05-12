@@ -283,7 +283,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-// echo "<pre>"; print_r($tbl_data); echo "</pre>";
+echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
 <div>
 <?php
@@ -292,9 +292,11 @@ if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
 			<th class='prac-dt' width='16%'>ENTITY NAME</th>
+			<th class='prac-dt' width='16%'>DEPARTMENT NAME</th>
 			<th class='prac-dt' width='16%'>PRACTICE NAME</th>
 			<th class='prac-dt' width='12%'>SKILL NAME</th>
 			<th class='prac-dt' width='15%'>USER NAME</th>
+			<th class='prac-dt' width='15%'>RESOURCE TYPE</th>
 			<th class='prac-dt' width='15%'>PROJECT NAME</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
@@ -304,29 +306,7 @@ if(!empty($tbl_data)) {
 			<th class='prac-dt' width='5%'>% of DIRECT COST</th>
 			</tr>";
 	foreach($tbl_data as $entiy=>$entiy_ar) {
-		/* if($filter_sort_by=='asc') {
-			if($filter_sort_val=='hour') {
-				asort($sub_tot_entity_hr[$entiy]);
-				$entiy_ar = $sub_tot[$entiy];
-			} else if($filter_sort_val=='cost') {
-				asort($sub_tot_entity_cst[$entiy]);
-				$entiy_ar = $sub_tot_entity_cst[$entiy];
-			} else if($filter_sort_val=='directcost') {
-				asort($sub_tot_entity_dircst[$entiy]);
-				$entiy_ar = $sub_tot_entity_dircst[$entiy];
-			}
-		} else if($filter_sort_by=='desc') {
-			if($filter_sort_val=='hour') {
-				arsort($sub_tot_entity_hr[$entiy]);
-				$entiy_ar = $sub_tot_entity_hr[$entiy];
-			} else if($filter_sort_val=='cost') {
-				arsort($sub_tot_entity_cst[$entiy]);
-				$entiy_ar = $sub_tot_entity_cst[$entiy];
-			} else if($filter_sort_val=='directcost') {
-				arsort($sub_tot_entity_dircst[$entiy]);
-				$entiy_ar = $sub_tot_entity_dircst[$entiy];
-			}
-		} */
+		
 		$i = 0;
 		$sub_tot_enti_cost = 0;
 		$sub_tot_enti_hr    = ($sub_tot_entity_hr[$entiy]['enti_hour']/$tot_hour)*100;
