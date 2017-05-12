@@ -184,14 +184,14 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
-			<th class='prac-dt' width='16%'>ENTITY</th>
-			<th class='prac-dt' width='16%'>DEPARTMENT</th>
-			<th class='prac-dt' width='16%'>PRACTICE</th>
+			<th class='prac-dt' width='10%'>ENTITY</th>
+			<th class='prac-dt' width='6%'>DEPARTMENT</th>
+			<th class='prac-dt' width='10%'>PRACTICE</th>
 			<th class='prac-dt' width='12%'>SKILL</th>
-			<th class='prac-dt' width='15%'>RESOURCE TYPE</th>
+			<th class='prac-dt' width='6%'>RESOURCE TYPE</th>
 			<th class='prac-dt' width='5%'>Month Year</th>
 			<th class='prac-dt' width='15%'>PROJECT</th>
-			<th class='prac-dt' width='15%'>USER</th>
+			<th class='prac-dt' width='7%'>USER</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
 			<th class='prac-dt' width='5%'>DIRECT COST</th>
