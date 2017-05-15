@@ -113,7 +113,7 @@ if(!empty($resdata)) {
 																	if(count($value3)>0 && !empty($value3)) {
 																		foreach($value3 as $pjt_code=>$value4) {
 																			if($pjt_code != 'total_hours'){ 
-																				$individual_billable_hrs = $value3['total_hours'];
+																				echo "in ".$individual_billable_hrs = $value3['total_hours'];
 																				$duration_hours			 = $value4['duration_hours'];
 																				$rate				 	 = $value4['rateperhr'];
 																				$direct_rateperhr	 	 = $value4['direct_rateperhr'];
@@ -125,7 +125,7 @@ if(!empty($resdata)) {
 																					$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																				}
 																				/*calc*/
-																				$rateHour = $duration_hours * $direct_rateperhr1;
+																				echo $rateHour = $duration_hours * $direct_rateperhr1; die;
 
 																				//hour$email_shortname = ;
 																				if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
@@ -179,6 +179,7 @@ if(!empty($resdata)) {
 // echo "<pre>"; print_r($tbl_data); echo "</pre>";
 ?>
 <div>
+<div class="tst">
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 
@@ -253,6 +254,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 	}
 	echo "</tbody></table>";
 ?>
+</div>
 </div>
 <script>
 var filter_area_status = '<?php echo $filter_area_status; ?>';
