@@ -103,7 +103,7 @@ if(!empty($resdata)) {
 													$emp_name 		= $user_data[$resrc_name]['emp_name'];
 													$max_hours 		= $user_data[$resrc_name]['max_hours'];
 													$dept_name 		= $user_data[$resrc_name]['dept_name'];
-													if(count($recval_data)>0 && !empty($recval_data)) {
+													if(count($recval_data)>0 && !empty($recval_data)) { echo "<pre>"; print_r($recval_data); die;
 														foreach($recval_data as $key2=>$value2) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
