@@ -268,7 +268,7 @@ table.bu-tbl-inr th{ text-align:center; }
 																if(count($value3)>0 && !empty($value3)){
 																	foreach($value3 as $key4=>$value4) {
 																		if($key4 != 'total_hours'){ 
-																			echo $individual_billable_hrs = $value3['total_hours']; die;
+																			$individual_billable_hrs = $value3['total_hours'];
 																			$duration_hours			 = $value4['duration_hours'];
 																			$rate				 	 = $value4['rateperhr'];
 																			$direct_rateperhr	 	 = $value4['direct_rateperhr'];
