@@ -209,14 +209,14 @@ class Regionsettings_model extends crm_model {
 	*/
 	public function level_map($id,$usid) {
 
-		switch($id){
-
+		switch($id)
+		{
 		  case 1:
 				$this->db->select('lrg.region_id,vre.region_name,vce.country_name,vce.countryid,vst.state_name,vst.stateid,vloc.locationid,vloc.location_name');
-				$this->db->from($this->cfg['dbpref'] . 'users as lev'); // Changed the Level table name to Users table
+				$this->db->from($this->cfg['dbpref']. 'users as lev'); //Changed the Level table name to Users table
 				$this->db->join($this->cfg['dbpref']. 'levels_region as lrg','lrg.level_id='.'lev.level','left');
 				$this->db->join($this->cfg['dbpref']. 'region as vre','vre.regionid='.'lrg.region_id','left');
-				$this->db->join($this->cfg['dbpref'] . 'levels_country AS con','con.level_id='.'lev.level','left');
+				$this->db->join($this->cfg['dbpref']. 'levels_country AS con','con.level_id='.'lev.level','left');
 				$this->db->join($this->cfg['dbpref']. 'country AS vce','vce.countryid='.'con.country_id','left');
 				$this->db->join($this->cfg['dbpref']. 'levels_state AS st','st.level_id='.'lev.level','left');
 				$this->db->join($this->cfg['dbpref']. 'state AS vst','vst.stateid='.'st.state_id','left');

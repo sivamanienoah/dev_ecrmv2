@@ -41,9 +41,9 @@ if ($this->session->userdata('logged_in') == TRUE) {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 	<?php
-	if (isset($quote_data['lead_title']) && is_string($quote_data['lead_title'])) echo htmlentities($quote_data['lead_title'], ENT_QUOTES), ' - ';
-	if (isset($page_heading) && is_string($page_heading)) echo $page_heading, ' - ';
-	echo $cfg['app_full_name'];
+		if (isset($quote_data['lead_title']) && is_string($quote_data['lead_title'])) echo htmlentities($quote_data['lead_title'], ENT_QUOTES), ' - ';
+		if (isset($page_heading) && is_string($page_heading)) echo $page_heading, ' - ';
+		echo $cfg['app_full_name'];
 	?>
 </title>
 <link rel="shortcut icon" href="favicon.ico" />

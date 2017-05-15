@@ -239,11 +239,11 @@ var revenue_values 		= [<?php echo $revenue_values ?>];
 var revenue_entity_val 	= [<?php echo $revenue_entity_val ?>];
 var tre_pra_month_label = <?php echo json_encode($trend_pract_month_val['practic_arr']) ?>;
 var tre_pra_month_x_val = <?php echo json_encode($trend_pract_month_val['trend_mont_arr']) ?>;
+
 var tre_pra_month_value = [];
 <?php foreach( $trend_pract_month_val['trend_pract_val_arr'] as $prac_mont_val ) { ?>
 	tre_pra_month_value[tre_pra_month_value.length] = <?php echo json_encode($prac_mont_val) ?>;
 <?php } ?>
-
 var con_pra_month_label = <?php echo json_encode($contri_graph_val['con_pr_name']) ?>;
 var con_pra_month_x_val = <?php echo json_encode($contri_graph_val['con_gr_x_val']) ?>;
 var con_pra_month_value = [];

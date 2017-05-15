@@ -3,11 +3,10 @@ require (theme_url().'/tpl/header.php');
 ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <?php
-$userdata = $this->session->userdata('logged_in_user');
-$this->load->helper('custom_helper');
-$dmsAccess = get_dms_access($type=0);
-// echo $this->session->userdata('add');
-$show_disable = true;
+$userdata 		= $this->session->userdata('logged_in_user');
+$this->load->helper('custom');
+$dmsAccess 		= get_dms_access($type=0);
+$show_disable 	= true;
 ?>
 <div id="content">
 	<div class="inner inner-manageView">

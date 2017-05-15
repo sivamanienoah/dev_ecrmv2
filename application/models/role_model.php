@@ -18,8 +18,8 @@ class Role_model extends crm_model {
 	*@construct
 	*@Role Model
 	*/
-    function Role_model() {        
-        parent::__construct();     
+    function Role_model() {
+        parent::__construct();
     }
 
 	/*

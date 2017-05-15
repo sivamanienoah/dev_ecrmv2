@@ -42,11 +42,10 @@
 	</div><!--Inner div close-->
 </div><!--Content div close-->
 <script>
- tinymce.init({
+tinymce.init({
     selector: '.crm_editor',
 	plugins: "code,preview",
     height : "250"
-  
-  });
+});
 </script>
 <?php require (theme_url(). '/tpl/footer.php'); ?>

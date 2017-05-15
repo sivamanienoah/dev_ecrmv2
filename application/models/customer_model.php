@@ -1090,7 +1090,7 @@ class Customer_model extends crm_model {
 				
 				$arrBillCategory = $this->get_billing_type_by_id($listProjects['resource_type']);
 				$project_center = $this->get_filed_id_by_name('profit_center', 'id', $listProjects['project_center'], 'profit_center');
-				$cost_center = $this->get_filed_id_by_name('cost_center', 'id', $listProjects['cost_center'], 'cost_center');
+				$cost_center 	= $this->get_filed_id_by_name('cost_center', 'id', $listProjects['cost_center'], 'cost_center');
 				$bill_currency = $this->get_filed_id_by_name('expect_worth', 'expect_worth_id', $listProjects['expect_worth_id'], 'expect_worth_name');
 				
 				if($listProjects['project_category'] == 1) {

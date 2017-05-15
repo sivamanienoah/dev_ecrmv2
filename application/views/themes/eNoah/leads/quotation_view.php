@@ -70,8 +70,6 @@ require (theme_url().'/tpl/header.php');
 				</div>
 				<!--export-->
 			</div>
-			
-			
 		</div>
 	
 		<?php if($this->session->userdata('accesspage')==1) { ?>
