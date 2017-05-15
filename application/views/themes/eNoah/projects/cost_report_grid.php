@@ -87,7 +87,7 @@ if(!empty($resdata)) {
 	
 	// echo "<pre>"; print_r($timesheet_data); echo "</pre>";
 	
-	if(!empty($timesheet_data) && count($timesheet_data)>0) { echo "<pre>"; print_r($timesheet_data); die;
+	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
 			if(!empty($entity_arr) && count($entity_arr)>0) {
 				foreach($entity_arr as $dept_key=>$prac_arr) {
