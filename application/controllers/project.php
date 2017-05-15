@@ -4116,7 +4116,7 @@ HDOC;
 				{
 					if(array_key_exists($lead_id_array[$i], $other_cost_array))
 					{
-						echo "<pre>"; print_R($lead_id_array); die;
+						echo "<pre>"; print_R($lead_id_array[$i]); die;
 						$other_cost_values = $this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
 						
 					}
