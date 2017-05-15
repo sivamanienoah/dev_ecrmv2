@@ -47,14 +47,12 @@ if(!empty($db_fields) && count($db_fields)>0){
 			$total_temp_cost = $other_cost + $record['total_cost'];
 			$total_cost    	 = (isset($total_temp_cost)) ? (round($total_temp_cost)) : '0'; //total cost = utilization cost+other cost
 			$total_dc_hours  = (isset($record['total_dc_hours'])) ? (round($record['total_dc_hours'])) : '0';
-			if($total_amount_inv_raised !=0)
-			{
+			if($total_amount_inv_raised !=0) {
 				$contributePercent = round((($total_amount_inv_raised - $total_cost)/$total_amount_inv_raised)*100);
 				$profitloss        = round($total_amount_inv_raised - $total_cost);
 			    $profitlossPercent = round(($profitloss/$total_amount_inv_raised)*100);
-			}
-			else{
-				$contributePercent=0;$profitloss=0;$profitlossPercent=0;
+			} else {
+				$contributePercent=0; $profitloss=0; $profitlossPercent=0;
 			}
 			
 			
