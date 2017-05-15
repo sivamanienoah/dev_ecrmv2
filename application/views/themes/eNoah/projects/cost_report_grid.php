@@ -87,7 +87,7 @@ if(!empty($resdata)) {
 	
 	// echo "<pre>"; print_r($timesheet_data); echo "</pre>";
 	
-	if(!empty($timesheet_data) && count($timesheet_data)>0) {
+	if(!empty($timesheet_data) && count($timesheet_data)>0) { echo "<pre>"; print_r($timesheet_data); die;
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
 			if(!empty($entity_arr) && count($entity_arr)>0) {
 				foreach($entity_arr as $dept_key=>$prac_arr) {
@@ -103,7 +103,7 @@ if(!empty($resdata)) {
 													$emp_name 		= $user_data[$resrc_name]['emp_name'];
 													$max_hours 		= $user_data[$resrc_name]['max_hours'];
 													$dept_name 		= $user_data[$resrc_name]['dept_name'];
-													if(count($recval_data)>0 && !empty($recval_data)) { echo "<pre>"; print_r($recval_data); die;
+													if(count($recval_data)>0 && !empty($recval_data)) { 
 														foreach($recval_data as $key2=>$value2) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
