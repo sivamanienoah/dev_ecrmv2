@@ -109,7 +109,7 @@ if(!empty($resdata)) {
 															if(count($value2)>0 && !empty($value2)) {
 																foreach($value2 as $key3=>$value3) {
 																	$individual_billable_hrs = 0;
-																	echo "<pre>"; print_r($value2); die;
+																	echo "<pre>"; print_r($recval_data); die;
 																	echo "in ".$individual_billable_hrs = $value2[$resrc_name][$year][$ts_month]['total_hours']; die;
 																	$ts_month		 	  	 = $key3;
 																	if(count($value3)>0 && !empty($value3)) { 
