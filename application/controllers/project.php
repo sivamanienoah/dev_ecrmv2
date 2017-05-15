@@ -1419,9 +1419,9 @@ class Project extends crm_controller {
 	
 	public function set_stake_holders()
 	{
-		$data['error'] = FALSE;
-		$stake_members = $this->input->post("stake_members");
-		$lead_id = $this->input->post("lead_id");
+		$data['error'] 	= FALSE;
+		$stake_members 	= $this->input->post("stake_members");
+		$lead_id 		= $this->input->post("lead_id");
 		
 		if ($stake_members == "")
 		{
@@ -4114,9 +4114,10 @@ HDOC;
 				$other_cost_values = 0;
 				if(!empty($other_cost_array))
 				{
-					if(array_key_exists($lead_id_array[$i],$other_cost_array))
+					if(array_key_exists($lead_id_array[$i], $other_cost_array))
 					{
-						$other_cost_values =$this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
+						$other_cost_values = $this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
+						echo "<pre>"; print_R($other_cost_array); die;
 					}
 				}
 				
