@@ -2457,8 +2457,8 @@ updateVisualStatus(progress_data);
 <!------------------------------->
 
 $(document).ready(function(){
-  var gantHiet= $(".gantt_task").height();
-  var getmHiet=$(".gantt_grid").height();
+  var gantHiet = $(".gantt_task").height();
+  var getmHiet = $(".gantt_grid").height();
   $(".gantt_task").css("height",gantHiet+20);
   $(".gantt_grid").css("height",gantHiet+20);
 });
