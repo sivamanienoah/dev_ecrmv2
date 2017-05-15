@@ -4116,9 +4116,7 @@ HDOC;
 				{
 					if(array_key_exists($lead_id_array[$i], $other_cost_array))
 					{
-						echo "<pre>"; print_R($other_cost_array[$lead_id_array[$i]]); die;
 						$other_cost_values = $this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
-						
 					}
 				}
 				
@@ -4196,7 +4194,7 @@ HDOC;
 				$convert_value = $this->conver_currency($rec['value'], $bk_rates[$curFiscalYear][$rec['currency_type']][$this->default_cur_id]);
 				$value += $convert_value;
 			}
-		}		
+		}	
 		return $value;
 	}
 	
