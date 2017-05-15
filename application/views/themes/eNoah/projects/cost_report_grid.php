@@ -87,7 +87,7 @@ if(!empty($resdata)) {
 	
 	// echo "<pre>"; print_r($timesheet_data); echo "</pre>";
 	
-	if(!empty($timesheet_data) && count($timesheet_data)>0) { echo "<pre>"; print_r($timesheet_data); die;
+	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
 			if(!empty($entity_arr) && count($entity_arr)>0) {
 				foreach($entity_arr as $dept_key=>$prac_arr) {
@@ -101,7 +101,7 @@ if(!empty($resdata)) {
 												foreach($resrc_data as $resrc_name=>$recval_data) {
 													$resource_name 	= $resrc_name;
 													$emp_name 		= $user_data[$resrc_name]['emp_name'];
-													$max_hours 		= $user_data[$resrc_name]['max_hours'];
+													echo $max_hours 		= $user_data[$resrc_name]['max_hours']; die;
 													$dept_name 		= $user_data[$resrc_name]['dept_name'];
 													if(count($recval_data)>0 && !empty($recval_data)) { 
 														foreach($recval_data as $key2=>$value2) {
