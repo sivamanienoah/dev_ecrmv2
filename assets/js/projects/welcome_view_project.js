@@ -11,11 +11,6 @@
 		$('#project_lead').change( function() {
 		});
 
-		// $("#show-con").hide();
-		// $("#show-btn").click(function(){
-			// $("#show-con").slideToggle("slow"); 
-			// return false;
-		// });
 		$('.payment-profile-button').click(function() {
 			$('#rec_paymentfadeout').hide();
 			$('.payment-profile-view').slideToggle(); 
@@ -34,26 +29,6 @@
 			loadPaymentTerms(); 
 			return false;
 		});
-		
-		/* $('#edit-folder-permissions').on('click', '#save_folder_permissions', function(){
-			$.ajax({
-				url    : site_base_url+'project/save_folder_permissions',
-				method : 'POST',
-				data   : $("form").serialize(),
-				beforeSend: function(){
-					$('#save_folder_permissions').text('Saving..');
-					$('#save_folder_permissions').prop('disabled', true);
-				},
-				success: function(response) {
-					$('#save_folder_permissions').text('Save');
-					$('#save_folder_permissions').prop('disabled', false);
-					if(response=='true')
-					$.unblockUI();
-					else
-					alert(response);
-				}
-			})
-		}); */
 
 		$(document).on('change', '.all-chk', function(event){
 			var type = $(this).attr('id');
@@ -118,9 +93,6 @@
 	}
 
  ////////////////////////----------------------------X---------------------////////////////////////////
- 
-	var lead_services = [];
-	lead_services['not_select'] = '';
 
 	var quote_id        = project_jobid;
 	var ex_cust_id      = 0;
@@ -949,6 +921,43 @@ function addURLtoJob()
 			}
 		});
 		setTimeout('timerfadeout()', 2000);
+	}
+	
+	/*
+	*@Method setServiceRequirement
+	*@parameters department_id_fk, lead_id
+	*@Use update department for particular leads
+	*@Author eNoah - Sriram.S
+	*/
+	function setServiceRequirement() {
+		$('#resmsg_serv_req').empty();
+		var lead_service = $('#lead_service').val();
+		
+		if(lead_service == '') {
+			return false;
+		}
+
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'project/set_service_req/',
+			dataType: 'json',
+			data: 'lead_service='+lead_service+'&lead_id='+curr_job_id+'&'+csrf_token_name+'='+csrf_hash_token,
+			success: function(data) {
+				
+				if (data.error == false) {
+					$('#resmsg_serv_req').html("<span class='ajx_success_msg'>Updated.</span>");
+				} else {
+					$('#resmsg_serv_req').show();
+					$('#resmsg_serv_req').html("<span class='ajx_failure_msg'>"+data.error+"</span>");
+				}
+				$("#resmsg_serv_req").delay(3000).fadeOut("slow");
+				$.unblockUI();
+			}
+		});
 	}
 	
 	function setCustomer() {
@@ -2089,7 +2098,7 @@ function addURLtoJob()
 		}
 
 		function timerfadeout()
-		{
+		{alert(123)
 			$('#paymentfadeout').fadeOut();
 			$('#rec_paymentfadeout').fadeOut();
 			$('#pjt_lead_errormsg').fadeOut();
@@ -2102,6 +2111,7 @@ function addURLtoJob()
 			$('#errmsg_bill_type').fadeOut();
 			$('#resmsg_practice').empty();
 			$('.succ_err_msg').empty();
+			$('.ajx_success_msg').empty();
 			$('#resmsg').empty();
 		}
 

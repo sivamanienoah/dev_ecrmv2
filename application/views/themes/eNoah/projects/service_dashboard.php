@@ -31,7 +31,7 @@ $practice_arr = array();
 				</button>
 			</div>
 		</div>
-		<?/*
+		<?php/*
 		<div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px;">

@@ -110,24 +110,32 @@
 				<?php } ?>
 				</div>
 			</form>
-			<!--form>
-				<input type="hidden" name="<?php #echo $this->security->get_csrf_token_name(); ?>" value="<?php #echo $this->security->get_csrf_hash(); ?>" />
+			<form>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<div class="pull-left">
-					<label class="customer">Customer</label>					
-					<input type="text" style="width:180px;" name="customer_company_name" id="customer_company_name" class="textfield width300px" value="<?php #echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" <?php #if ($readonly_status == true) { ?> disabled <?php #} ?> />
-					<input type="hidden" name="customer_id" id="customer_id" value="<?php #echo $quote_data['custid_fk'] ?>" />
-					<input type="hidden" name="customer_id_old" id="customer_id_old" value="<?php #echo $quote_data['custid_fk'] ?>" />
-					<input type="hidden" name="customer_company_name_old" id="customer_company_name_old" class="textfield width300px" value="<?php #echo $quote_data['company'].' - '.$quote_data['customer_name'] ?>" />
+					<label class="lead_service">Service Requirement</label>
+					<select name="lead_service" id="lead_service" class="textfield" <?php if ($readonly_status == true) { ?> disabled <?php } ?> style="width: 190px;">
+						<option value="">Select Service</option>
+						<?php if(!empty($lead_services)) {
+							foreach($lead_services as $serv_row) {
+								$selectedPractice = ($serv_row['sid'] == $quote_data['lead_service']) ? 'selected="selected"' : '';
+						?>
+								<option value="<?php echo $serv_row['sid']; ?>" <?php echo $selectedPractice; ?>><?php echo $serv_row['services']; ?></option>
+						<?php
+							}
+						}
+						?>
+					</select>
 				</div>
 				<div>
-				<?php #if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
-						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setCustomer(); return false;">Set</button>
+						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="setServiceRequirement(); return false;">Set</button>
 					</div>
-					<div id="resmsg_customer" class='succ_err_msg' style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
-				<?php #} ?>
+					<div id="resmsg_serv_req" style="margin: 5px 0px 0px 5px; display: inline-block;"></div>
+				<?php } ?>
 				</div>
-			</form-->
+			</form>
 			
 			<?php if($quote_data['project_category'] == 1) { ?>			
 			<form>

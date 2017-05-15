@@ -261,7 +261,7 @@ class Project_model extends crm_model
 	//get overall details for lead or project
 	function get_quote_data($id)
 	{
-    	$this->db->select('*,jbcat.services as lead_service');
+    	$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].'customers as cus');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cus.company_id');
 		$this->db->join($this->cfg['dbpref'].'leads as jb', 'jb.custid_fk = cus.custid', 'left');
@@ -377,6 +377,14 @@ class Project_model extends crm_model
 		$this->db->where('status', 1);
     	$this->db->order_by('id');
 		$query = $this->db->get($this->cfg['dbpref'] . 'practices');
+		return $query->result_array();
+    }
+	
+	public function get_lead_services()
+	{
+    	$this->db->select('sid, services');
+    	$this->db->order_by('services');
+		$query = $this->db->get($this->cfg['dbpref'] . 'lead_services');
 		return $query->result_array();
     }
 	

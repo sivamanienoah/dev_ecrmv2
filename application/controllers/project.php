@@ -385,7 +385,8 @@ class Project extends crm_controller {
 				}
 			}
 			
-			$data['practices'] 	 = $this->project_model->get_practices();
+			$data['practices'] 		 = $this->project_model->get_practices();
+			$data['lead_services'] 	 = $this->project_model->get_lead_services();
 			
 			$data['pm_accounts'] = array();
 			$pjt_managers = $this->project_model->get_user_byrole(3);
@@ -4022,146 +4023,143 @@ HDOC;
 				}
 			}
 			
-			// if(count($timesheet_data)>0 && !empty($timesheet_data)) {
-					$i		= 0; 
-					$keys	= array();
-					foreach($exp_proj_codes as $proj_key) {
-						$total_billable_hrs		= 0;
-						$total_non_billable_hrs = 0;
-						$total_internal_hrs		= 0;
-						$total_cost				= 0;
-						$total_hours			= 0;
-						$total_dc_hours			= 0;
-						$total_amount_inv_raised= 0;
-						$other_cost_values		= 0;
-						if(array_key_exists($proj_key, $timesheet_data))
-						{
-							$projects_arr = $timesheet_data[$proj_key];
-							foreach($projects_arr as $key1=>$value1) {
-								$resource_name = $key1;
-								$max_hours = $value1['max_hours'];
-								foreach($value1 as $key2=>$value2) {
-									$year = $key2;										
-									if(!empty($value2) && is_array($value2)){
-										foreach($value2 as $key3=>$value3) {
-											$individual_billable_hrs		= 0;
-											$month		 	  = $key3;
-											$billable_hrs	  = 0;
-											$non_billable_hrs = 0;
-											$internal_hrs	  = 0;
-											foreach($value3 as $key4=>$value4) {
-												
-												switch($key4) {
-													case 'Billable':
-														$rate				 = $value4['rateperhr'];
-														$direct_rateperhr	 = $value4['direct_rateperhr'];
-														$billable_hrs		 = $value4['duration'];
-														$direct_billable_hrs = $value4['duration_direct_cost'];
-														$total_billable_hrs += $billable_hrs;
-													break;
-													case 'Non-Billable':
-														$rate				 	 = $value4['rateperhr'];
-														$direct_rateperhr	 	 = $value4['direct_rateperhr'];
-														$non_billable_hrs		 = $value4['duration'];
-														$direct_non_billable_hrs = $value4['duration_direct_cost'];
-														$total_non_billable_hrs += $non_billable_hrs;
-													break;
-													case 'Internal':
-														$rate				 = $value4['rateperhr'];
-														$direct_rateperhr	 = $value4['direct_rateperhr'];
-														$internal_hrs 		 = $value4['duration'];
-														$direct_internal_hrs = $value4['duration_direct_cost'];
-														$total_internal_hrs += $internal_hrs;
-													break;
-												}
+				$i		= 0; 
+				$keys	= array();
+				foreach($exp_proj_codes as $proj_key) {
+					$total_billable_hrs		= 0;
+					$total_non_billable_hrs = 0;
+					$total_internal_hrs		= 0;
+					$total_cost				= 0;
+					$total_hours			= 0;
+					$total_dc_hours			= 0;
+					$total_amount_inv_raised= 0;
+					$other_cost_values		= 0;
+					if(array_key_exists($proj_key, $timesheet_data))
+					{
+						$projects_arr = $timesheet_data[$proj_key];
+						foreach($projects_arr as $key1=>$value1) {
+							$resource_name = $key1;
+							$max_hours = $value1['max_hours'];
+							foreach($value1 as $key2=>$value2) {
+								$year = $key2;										
+								if(!empty($value2) && is_array($value2)){
+									foreach($value2 as $key3=>$value3) {
+										$individual_billable_hrs		= 0;
+										$month		 	  = $key3;
+										$billable_hrs	  = 0;
+										$non_billable_hrs = 0;
+										$internal_hrs	  = 0;
+										foreach($value3 as $key4=>$value4) {
+											
+											switch($key4) {
+												case 'Billable':
+													$rate				 = $value4['rateperhr'];
+													$direct_rateperhr	 = $value4['direct_rateperhr'];
+													$billable_hrs		 = $value4['duration'];
+													$direct_billable_hrs = $value4['duration_direct_cost'];
+													$total_billable_hrs += $billable_hrs;
+												break;
+												case 'Non-Billable':
+													$rate				 	 = $value4['rateperhr'];
+													$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+													$non_billable_hrs		 = $value4['duration'];
+													$direct_non_billable_hrs = $value4['duration_direct_cost'];
+													$total_non_billable_hrs += $non_billable_hrs;
+												break;
+												case 'Internal':
+													$rate				 = $value4['rateperhr'];
+													$direct_rateperhr	 = $value4['direct_rateperhr'];
+													$internal_hrs 		 = $value4['duration'];
+													$direct_internal_hrs = $value4['duration_direct_cost'];
+													$total_internal_hrs += $internal_hrs;
+												break;
 											}
-										
-											$individual_billable_hrs = $value3['total_hours'];											 
-											/* calculation for the utilization cost based on the master hours entered. */
-											$rate1 = $rate;
-											$direct_rateperhr1 = $direct_rateperhr;
-											if($individual_billable_hrs>$max_hours){												
-												$percentage 		= ($max_hours/$individual_billable_hrs);												
-												$rate1 				= number_format(($percentage*$rate),2);
-												$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
-											}
-										 
-											$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;											
-											$total_dc_hours += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
-											$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);				
 										}
+									
+										$individual_billable_hrs = $value3['total_hours'];											 
+										/* calculation for the utilization cost based on the master hours entered. */
+										$rate1 = $rate;
+										$direct_rateperhr1 = $direct_rateperhr;
+										if($individual_billable_hrs>$max_hours){												
+											$percentage 		= ($max_hours/$individual_billable_hrs);												
+											$rate1 				= number_format(($percentage*$rate),2);
+											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+										}
+									 
+										$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;											
+										$total_dc_hours += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
+										$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);				
 									}
 								}
 							}
 						}
-					$proj = $arr_billing_type_projects[$key_billing_type][$i];
-					$amt_converted = $this->conver_currency($proj['actual_worth_amount'], $rates[$proj['expect_worth_id']][$this->default_cur_id]);
-					$total_amount_inv_raised = 0;
-					$invoice_amount=0;
-					if(!empty($invoice_amount_array))
+					}
+				$proj = $arr_billing_type_projects[$key_billing_type][$i];
+				$amt_converted = $this->conver_currency($proj['actual_worth_amount'], $rates[$proj['expect_worth_id']][$this->default_cur_id]);
+				$total_amount_inv_raised = 0;
+				$invoice_amount=0;
+				if(!empty($invoice_amount_array))
+				{
+					if(array_key_exists($lead_id_array[$i],$invoice_amount_array))
 					{
-						if(array_key_exists($lead_id_array[$i],$invoice_amount_array))
-						{
-							$invoice_amount = $invoice_amount_array[$lead_id_array[$i]];
-							if(count($invoice_amount)>0 && !empty($invoice_amount)){
-								$total_amount_inv_raised = $invoice_amount['invoice_amount']+$invoice_amount['tax_amount'];
-							}
+						$invoice_amount = $invoice_amount_array[$lead_id_array[$i]];
+						if(count($invoice_amount)>0 && !empty($invoice_amount)){
+							$total_amount_inv_raised = $invoice_amount['invoice_amount']+$invoice_amount['tax_amount'];
 						}
 					}
-					/* calculation for UC based on the max hours ends */
-					$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$proj['expect_worth_id']][$this->default_cur_id]);
-					/* get the other cost details for the project. */
-					$other_cost_values = 0;
-					if(!empty($other_cost_array))
-					{
-						if(array_key_exists($lead_id_array[$i],$other_cost_array))
-						{
-						$other_cost_values =$this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
-						}
-					}
-					
-				   /* for company name */
-					$company = $proj['company'];
-					if($rec['cfname']!=''){
-						$company .= ' - '.$proj['cfname'];
-					} 	
-				
-					/** Building resultant array **/
-					$data['project_record'][$proj_key]['lead_id'] 			= $proj['lead_id'];
-					$data['project_record'][$proj_key]['invoice_no'] 		= $proj['invoice_no'];
-					$data['project_record'][$proj_key]['division'] 			= $proj['division'];
-					$data['project_record'][$proj_key]['lead_title']		= $proj['lead_title'];
-					$data['project_record'][$proj_key]['customer_name']		= $company;
-					$data['project_record'][$proj_key]['actual_worth_amt']  = number_format($amt_converted, 2, '.', '');
-					$data['project_record'][$proj_key]['lead_stage']		= $proj['lead_stage'];
-					$data['project_record'][$proj_key]['pjt_id']			= $proj['pjt_id'];
-					$data['project_record'][$proj_key]['assigned_to'] 		= $proj['assigned_to'];
-					$data['project_record'][$proj_key]['date_start'] 		= $proj['date_start'];
-					$data['project_record'][$proj_key]['date_due'] 			= $proj['date_due'];
-					$data['project_record'][$proj_key]['complete_status'] 	= $proj['complete_status'];
-					$data['project_record'][$proj_key]['pjt_status'] 		= $proj['pjt_status'];
-					$data['project_record'][$proj_key]['estimate_hour'] 	= $proj['estimate_hour'];
-					$data['project_record'][$proj_key]['project_type']	 	= $proj['project_billing_type'];
-					$data['project_record'][$proj_key]['rag_status'] 		= $proj['rag_status'];
-					$data['project_record'][$proj_key]['cfname'] 			= $proj['cfname'];
-					$data['project_record'][$proj_key]['clname'] 			= '';
-					$data['project_record'][$proj_key]['company'] 			= $proj['company'];
-					$data['project_record'][$proj_key]['fnm'] 				= $proj['fnm'];
-					$data['project_record'][$proj_key]['lnm'] 				= $proj['lnm'];
-					$data['project_record'][$proj_key]['billing_type'] 		= $proj['billing_type'];
-					$data['project_record'][$proj_key]['bill_hr'] 			= $total_billable_hrs;
-					$data['project_record'][$proj_key]['int_hr'] 			= $total_internal_hrs;
-					$data['project_record'][$proj_key]['nbil_hr'] 			= $total_non_billable_hrs;
-					$data['project_record'][$proj_key]['other_cost'] 		= $other_cost_values;
-					$data['project_record'][$proj_key]['total_hours'] 		= $total_hours;
-					$data['project_record'][$proj_key]['total_dc_hours'] 	= $total_dc_hours;
-					$data['project_record'][$proj_key]['total_amount_inv_raised'] = $total_amount_inv_raised;
-					$data['project_record'][$proj_key]['total_cost'] 		= number_format($total_cost, 2, '.', '');
-					$i++;
 				}
-			// } //timesheet_data if condition end
-	   }
-		
+				/* calculation for UC based on the max hours ends */
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$proj['expect_worth_id']][$this->default_cur_id]);
+				/* get the other cost details for the project. */
+				$other_cost_values = 0;
+				if(!empty($other_cost_array))
+				{
+					if(array_key_exists($lead_id_array[$i],$other_cost_array))
+					{
+						$other_cost_values =$this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]],$book_keeping_rates);
+					}
+				}
+				
+			   /* for company name */
+				$company = $proj['company'];
+				if($rec['cfname']!=''){
+					$company .= ' - '.$proj['cfname'];
+				} 	
+			
+				/** Building resultant array **/
+				$data['project_record'][$proj_key]['lead_id'] 			= $proj['lead_id'];
+				$data['project_record'][$proj_key]['invoice_no'] 		= $proj['invoice_no'];
+				$data['project_record'][$proj_key]['division'] 			= $proj['division'];
+				$data['project_record'][$proj_key]['lead_title']		= $proj['lead_title'];
+				$data['project_record'][$proj_key]['customer_name']		= $company;
+				$data['project_record'][$proj_key]['actual_worth_amt']  = number_format($amt_converted, 2, '.', '');
+				$data['project_record'][$proj_key]['lead_stage']		= $proj['lead_stage'];
+				$data['project_record'][$proj_key]['pjt_id']			= $proj['pjt_id'];
+				$data['project_record'][$proj_key]['assigned_to'] 		= $proj['assigned_to'];
+				$data['project_record'][$proj_key]['date_start'] 		= $proj['date_start'];
+				$data['project_record'][$proj_key]['date_due'] 			= $proj['date_due'];
+				$data['project_record'][$proj_key]['complete_status'] 	= $proj['complete_status'];
+				$data['project_record'][$proj_key]['pjt_status'] 		= $proj['pjt_status'];
+				$data['project_record'][$proj_key]['estimate_hour'] 	= $proj['estimate_hour'];
+				$data['project_record'][$proj_key]['project_type']	 	= $proj['project_billing_type'];
+				$data['project_record'][$proj_key]['rag_status'] 		= $proj['rag_status'];
+				$data['project_record'][$proj_key]['cfname'] 			= $proj['cfname'];
+				$data['project_record'][$proj_key]['clname'] 			= '';
+				$data['project_record'][$proj_key]['company'] 			= $proj['company'];
+				$data['project_record'][$proj_key]['fnm'] 				= $proj['fnm'];
+				$data['project_record'][$proj_key]['lnm'] 				= $proj['lnm'];
+				$data['project_record'][$proj_key]['billing_type'] 		= $proj['billing_type'];
+				$data['project_record'][$proj_key]['bill_hr'] 			= $total_billable_hrs;
+				$data['project_record'][$proj_key]['int_hr'] 			= $total_internal_hrs;
+				$data['project_record'][$proj_key]['nbil_hr'] 			= $total_non_billable_hrs;
+				$data['project_record'][$proj_key]['other_cost'] 		= $other_cost_values;
+				$data['project_record'][$proj_key]['total_hours'] 		= $total_hours;
+				$data['project_record'][$proj_key]['total_dc_hours'] 	= $total_dc_hours;
+				$data['project_record'][$proj_key]['total_amount_inv_raised'] = $total_amount_inv_raised;
+				$data['project_record'][$proj_key]['total_cost'] 		= number_format($total_cost, 2, '.', '');
+				$i++;
+			}
+		}
 		return $data['project_record'];
 	}
 	
@@ -4976,9 +4974,36 @@ HDOC;
 	}
 	
 	/*
+	*@method set_service_req
+	*@Use update lead service to project
+	*@Author eNoah - Sriram.S
+	*/
+	public function set_service_req()
+	{
+		$updt = real_escape_array($this->input->post());
+		
+		$data['error'] = FALSE;
+
+		if (($updt['lead_service'] == "") or ($updt['lead_id'] == "")) {
+			$data['error'] = 'Value Missing';
+		} else {
+			$wh_condn 	= array('lead_id' => $updt['lead_id']);
+			$data 		= array('lead_service' => $updt['lead_service']);
+			
+			if($this->db->update($this->cfg['dbpref'] . 'leads', $data, $wh_condn)) {
+				$data['error'] = FALSE;
+			} else {
+				$data['error'] = 'Error in Updation';
+			}
+		}
+		echo json_encode($data);
+		exit;
+	}
+	
+	/*
 	*@method set_departments
 	*@Use update department to leads
-	*@Author eNoah - Mani.S
+	*@Author eNoah - Sriram.S
 	*/
 	public function set_departments()
 	{
@@ -5001,7 +5026,7 @@ HDOC;
 			}
 		}
 		echo json_encode($data);
-	}	
+	}
 	
 	/*
 	*@method set_project_types
