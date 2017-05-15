@@ -110,7 +110,7 @@ if(!empty($resdata)) {
 																foreach($value2 as $key3=>$value3) {
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
-																	if(count($value3)>0 && !empty($value3)) {
+																	if(count($value3)>0 && !empty($value3)) { echo "<pre>"; print_r($value3); die;
 																		foreach($value3 as $pjt_code=>$value4) {
 																			if($pjt_code != 'total_hours'){ 
 																				echo "in ".$individual_billable_hrs = $value3['total_hours'];
