@@ -126,7 +126,7 @@ if(!empty($resdata)) {
 																					$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																				}
 																				/*calc*/
-																				echo $rateHour = $duration_hours * $direct_rateperhr1; die;
+																				$rateHour = $duration_hours * $direct_rateperhr1;
 
 																				//hour$email_shortname = ;
 																				if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
