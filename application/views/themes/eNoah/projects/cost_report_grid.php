@@ -1,6 +1,7 @@
 <style>
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
+.tr_othercost { background-color:#fcf8e3 !important; }
 </style>
 <div class="clear"></div>
 <?php
@@ -184,7 +185,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($tbl_data); echo "</pre><br>***************<br>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre><br>***************<br>";
 // echo "<pre>"; print_r(array_unique($otherCostIncludedProjects)); echo "</pre>";
 foreach($other_cost_arr as $ocprjkey=>$va) {
 	$pjtOcArr[] = $ocprjkey;
@@ -210,7 +211,7 @@ if(!empty($needAddOtherCostArr)) {
 			}
 		}
 	}
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>";
 }
 
 ?>
@@ -253,9 +254,13 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 																	$i=0;
 																	$tempSkilKey 	= $skilKey;
 																	$tempResrcHour 	= round($resrcNmeArr['hour'], 1);
-																	if('Other Cost'==$resrcNmeKey) { $tempSkilKey = $tempResrcHour = '-'; }
+																	$tempCls		= '';
+																	if('Other Cost'==$resrcNmeKey) {
+																		$tempSkilKey = $tempResrcHour = '-'; 
+																		$tempCls	 = 'tr_othercost'; 
+																	}
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
-																	echo "<tr data-depth='".$i."'>
+																	echo "<tr class='".$tempCls."' data-depth='".$i."'>
 							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
 							<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
 							<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
