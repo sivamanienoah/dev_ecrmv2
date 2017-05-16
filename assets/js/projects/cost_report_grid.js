@@ -26,8 +26,7 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
-		'bAutoWidth': true,
-		"sDom": '<"top"i>rt<"bottom"flp><"clear">'
+		'bAutoWidth': true
 	});
 	
 });
