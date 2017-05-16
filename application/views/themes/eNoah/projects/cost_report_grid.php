@@ -231,9 +231,9 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 																foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
 																	$i=0;
 																	$tempSkilKey = $skilKey;
-																	if('Other Cost'==$resrcNmeKey) {
-																		$tempSkilKey = '-';
-																	}
+																	if('Other Cost'==$resrcNmeKey) { $tempSkilKey = '-'; }
+																	$tempResrcHour = round($resrcNmeArr['hour'], 1);
+																	if(0==$resrcNmeArr['hour']) { $tempResrcHour = '-'; }
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																	echo "<tr data-depth='".$i."'>
 							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
@@ -244,7 +244,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 							<td width='5%'>".$yrMonKey."</td>
 							<td width='15%'>".$pjt_nme."</td>
 							<td width='7%'>".$resrcNmeKey."</td>
-							<td width='5%' align='right' class='rt-ali'>".($resrcNmeArr['hour']!=0) ? round($resrcNmeArr['hour'], 1) : '-'."</td>
+							<td width='5%' align='right' class='rt-ali'>".$tempResrcHour."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
 						</tr>"; $i++;
 																}
