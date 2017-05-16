@@ -16,15 +16,16 @@ $(function() {
 	});
 	
 	//data table
-	/* $('#it_cost_grid').dataTable({
+	$('#it_cost_grid').dataTable({
 		"bInfo": false,
+		"bFilter": false,
 		"bPaginate": false,
 		"bProcessing": false,
 		"bServerSide": false,
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
-	}); */
+	});
 	
 });
 if(filter_area_status==1) {
