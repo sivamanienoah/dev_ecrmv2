@@ -126,6 +126,13 @@ if(!empty($resdata)) {
 																			}
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
+																			
+																			//other cost
+																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) {
+																				echo $year . " " .$ts_month. "OC Inner<br>";
+																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month]['oc_val'];
+																			}
+																			//other cost
 
 																			//hour;
 																			if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
@@ -144,14 +151,7 @@ if(!empty($resdata)) {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] += $rateHour;
 																			} else {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] = $rateHour;
-																			}
-																			echo $pjt_code . ' '. $year . " " .$ts_month. "Bottom<br>";
-																			//other cost
-																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) {
-																				echo $year . " " .$ts_month. "OC Inner<br>";
-																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month];
-																			}
-																			//other cost
+																			}																			
 																			
 																			//total
 																			$tot_hour 		= $tot_hour + $duration_hours;
