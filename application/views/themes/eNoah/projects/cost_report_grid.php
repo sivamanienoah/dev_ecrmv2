@@ -257,7 +257,8 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 																	$tempCls		= '';
 																	if('Other Cost'==$resrcNmeKey) {
 																		$tempSkilKey = $tempResrcHour = '-'; 
-																		$tempCls	 = 'tr_othercost'; 
+																		$tempCls	 = 'tr_othercost';
+																		$tot_cost	 += $resrcNmeArr['cost'];
 																	}
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																	echo "<tr class='".$tempCls."' data-depth='".$i."'>
