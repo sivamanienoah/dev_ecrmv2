@@ -3623,7 +3623,7 @@ class Dashboard extends crm_controller
 		$this->db->where("t.practice_id !=", 0);
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-		$this->db->where_in("t.dept_id", $ids);
+		$this->db->where_in("t.dept_id", array(10,11));
 		$this->db->group_by('t.practice_id');
 		$query = $this->db->get();
 		return $query->result();
