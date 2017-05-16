@@ -1216,8 +1216,8 @@ class Project_model extends crm_model
 			}
 			
 			echo "<pre>";print_r($other_cost_array); exit;
-			return $other_cost_array;
 		}
+		return $other_cost_array;
 	}
 }
 ?>
