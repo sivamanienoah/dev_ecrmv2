@@ -152,6 +152,7 @@ if(!empty($resdata)) {
 																				foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
 																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
 																				}
+																				$otherCostIncludedProjects[] = $pjt_code; 
 																			}
 																			//other cost
 																			
@@ -183,7 +184,8 @@ if(!empty($resdata)) {
 		}
 	}
 }
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
+// echo "<pre>"; print_r($tbl_data); echo "</pre>";
+echo "<pre>"; print_r($otherCostIncludedProjects); echo "</pre>";
 ?>
 <div>
 <div class="tst">
