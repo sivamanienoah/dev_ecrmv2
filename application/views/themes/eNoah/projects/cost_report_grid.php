@@ -231,15 +231,16 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 															if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
 																foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
 																	$i=0;
+																	$tempSkilKey = $skilKey;
 																	if('Other Cost'==$resrcNmeKey) {
-																		$skilKey = '-';
+																		$tempSkilKey = '-';
 																	}
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																	echo "<tr data-depth='".$i."'>
 							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
 							<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
 							<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
-							<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
+							<td width='12%' align='left' class='collapse lft-ali'>".$tempSkilKey."</td>
 							<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
 							<td width='5%'>".$yrMonKey."</td>
 							<td width='15%'>".$pjt_nme."</td>
