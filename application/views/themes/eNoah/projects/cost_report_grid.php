@@ -244,7 +244,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 							<td width='5%'>".$yrMonKey."</td>
 							<td width='15%'>".$pjt_nme."</td>
 							<td width='7%'>".$resrcNmeKey."</td>
-							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['hour'], 1)."</td>
+							<td width='5%' align='right' class='rt-ali'>".($resrcNmeArr['hour']!=0) ? round($resrcNmeArr['hour'], 1) : '-'."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
 						</tr>"; $i++;
 																}
