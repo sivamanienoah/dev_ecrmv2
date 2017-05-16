@@ -84,6 +84,7 @@ class Dashboard_model extends crm_model
 		}
 		$query 	= $this->db->get();
 		$data	= $query->result();
+		echo $this->db->last_query(); die;
 		echo "<pre>";print_r($data); exit;
 		if(!empty($data)) {
 			$other_cost_array = array();
