@@ -234,7 +234,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
 			</tr>";
-			echo "</thead><tbody><tfoot></tfoot>";
+			echo "</thead><tbody><tfoot><tr></tr></tfoot>";
 	if(!empty($tbl_data) && count($tbl_data)>0) {
 		foreach($tbl_data as $entiyKey=>$entiyArr) {
 			if(!empty($entiyArr) && count($entiyArr)>0) {
