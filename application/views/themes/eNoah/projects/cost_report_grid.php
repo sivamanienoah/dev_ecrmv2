@@ -155,7 +155,7 @@ if(!empty($resdata)) {
 																			//other cost
 																			if(isset($other_cost_arr[$pjt_code])) {
 																				foreach($other_cost_arr[$pjt_code] as $oc_row) {
-																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $oc_row['value']
+																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $oc_row['value'];
 																				}
 																			}
 																		}
