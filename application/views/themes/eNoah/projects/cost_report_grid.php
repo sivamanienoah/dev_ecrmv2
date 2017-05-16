@@ -126,7 +126,7 @@ if(!empty($resdata)) {
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
 
-																			//hour$email_shortname = ;
+																			//hour;
 																			if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'] += $duration_hours;
 																			} else {
@@ -147,9 +147,9 @@ if(!empty($resdata)) {
 																			
 																			//other cost
 																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) { echo $year . " " .$ts_month. "<br>";
-																				foreach($other_cost_arr[$pjt_code][$year][$ts_month] as $oc_row) {
+																				// foreach($other_cost_arr[$pjt_code][$year][$ts_month] as $oc_row) {
 																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month];
-																				}
+																				// }
 																			}
 																			//other cost
 																			
