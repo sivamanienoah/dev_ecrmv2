@@ -92,7 +92,7 @@ class Dashboard_model extends crm_model
 				$other_cost_array[$row['pjt_id']][date('Y', strtotime($row['cost_incurred_date']))][date('F', strtotime($row['cost_incurred_date']))]['oc_val'] = $this->conver_currency($row['value'], $bk_rates[date('Y', strtotime($row['cost_incurred_date']))][$row['currency_type']][$us_currenty_type]);
 			}
 			// echo "<pre>"; print_r($bk_rates); echo "<br>****<br>";
-			// echo "<pre>"; print_r($other_cost_array); die;
+			echo "<pre>"; print_r($other_cost_array); die;
 		}
 		return $other_cost_array;
 	}
