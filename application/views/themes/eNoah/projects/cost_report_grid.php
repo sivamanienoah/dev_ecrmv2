@@ -211,7 +211,6 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			<th class='prac-dt' width='7%'>RESOURCE</th>
 			<th class='prac-dt' width='5%'>HOUR</th>
 			<th class='prac-dt' width='5%'>COST</th>
-			<th class='prac-dt' width='5%'>DIRECT COST</th>
 			</tr>";
 			echo "</thead><tbody>";
 	if(!empty($tbl_data) && count($tbl_data)>0) {
@@ -247,7 +246,6 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 							<td width='7%'>".$resrcNmeKey."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['hour'], 1)."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
-							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['directcost'], 2)."</td>
 						</tr>"; $i++;
 																}
 															}
