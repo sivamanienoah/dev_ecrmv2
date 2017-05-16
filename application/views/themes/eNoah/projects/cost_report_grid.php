@@ -111,9 +111,9 @@ if(!empty($resdata)) {
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
 																	$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
-																	if(count($value3)>0 && !empty($value3)) {
+																	if(is_array($value3) && count($value3)>0 && !empty($value3)) {
 																		foreach($value3 as $pjt_code=>$value4) {
-																			echo $year . " " .$ts_month. "<br>";
+																			echo $year . " " .$ts_month. "Top<br>";
 																			$duration_hours			 = $value4['duration_hours'];
 																			$rate				 	 = $value4['rateperhr'];
 																			$direct_rateperhr	 	 = $value4['direct_rateperhr'];
@@ -145,12 +145,11 @@ if(!empty($resdata)) {
 																			} else {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] = $rateHour;
 																			}
-																			
+																			echo $year . " " .$ts_month. "Bottom<br>";
 																			//other cost
-																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) { 
-																				// foreach($other_cost_arr[$pjt_code][$year][$ts_month] as $oc_row) {
-																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month];
-																				// }
+																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) {
+																				echo $year . " " .$ts_month. "OC Inner<br>";
+																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month];
 																			}
 																			//other cost
 																			
@@ -162,7 +161,6 @@ if(!empty($resdata)) {
 																			//cost
 																			$cost_arr[$emp_name] 		= $rateHour;
 																			$directcost_arr[$emp_name] 	= $rateHour;
-																			
 																		}
 																	}
 																}
