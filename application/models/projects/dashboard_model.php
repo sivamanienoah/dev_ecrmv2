@@ -65,5 +65,35 @@ class Dashboard_model extends crm_model
 		
 		//update complete percentage in leads
 	}
+	
+	//for IT cost report
+	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
+	{
+		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
+		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(oc.cost_incurred_date >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+			$this->db->where("(oc.cost_incurred_date <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$this->db->where_in('l.division', $entity_ids);
+		}
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$this->db->where_in('l.practice', $practice_ids);
+		}
+		$query 	= $this->db->get();
+		$data	= $query->result();
+		echo "<pre>";print_r($data); exit;
+		if(!empty($data)) {
+			$other_cost_array = array();
+			foreach($data as $row) {
+				$other_cost_array[$row->pjt_id][] = $row;
+			}
+			
+			// echo "<pre>";print_r($other_cost_array); exit;
+		}
+		return $other_cost_array;
+	}
 }
 ?>
