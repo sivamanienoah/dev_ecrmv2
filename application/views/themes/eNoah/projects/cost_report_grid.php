@@ -113,7 +113,7 @@ if(!empty($resdata)) {
 																	$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
 																	if(is_array($value3) && count($value3)>0 && !empty($value3)) {
 																		foreach($value3 as $pjt_code=>$value4) {
-																			echo $year . " " .$ts_month. "Top<br>";
+																			echo $pjt_code . " " .$year." ".$ts_month."Top<br>";
 																			$duration_hours			 = $value4['duration_hours'];
 																			$rate				 	 = $value4['rateperhr'];
 																			$direct_rateperhr	 	 = $value4['direct_rateperhr'];
@@ -126,11 +126,11 @@ if(!empty($resdata)) {
 																			}
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
-																			// echo $other_cost_arr['ITS-AIM-01-0317']['2017']['February']['oc_val']; die;
+																			echo $pjt_code . " " .$year." ".$ts_month."1Top<br>";
 																			//other cost
 																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month]['oc_val'])) {
 																			// if(isset($other_cost_arr[$pjt_code])) {
-																				echo $year . " " .$ts_month. "OC Inner<br>";
+																				echo $pjt_code . " " .$year." ".$ts_month."OC inner<br>";
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ts_month),0,3).' '.trim($year)][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][trim($year)][trim($ts_month)]['oc_val'];
 																			}
 																			//other cost
