@@ -126,9 +126,9 @@ if(!empty($resdata)) {
 																			}
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
-																			echo $other_cost_arr['ITS-AIM-01-0317']['2017']['February']['oc_val']; die;
+																			// echo $other_cost_arr['ITS-AIM-01-0317']['2017']['February']['oc_val']; die;
 																			//other cost
-																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month]['oc_val'])) {
+																			if(isset($other_cost_arr[$pjt_code][trim($year)][trim($ts_month)]['oc_val'])) {
 																				echo $year . " " .$ts_month. "OC Inner<br>";
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month]['oc_val'];
 																			}
