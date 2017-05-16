@@ -85,7 +85,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 	}
 	
-	// echo "<pre>"; print_r($timesheet_data); echo "</pre>";
+	echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; die;
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
@@ -145,7 +145,7 @@ if(!empty($resdata)) {
 																			} else {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] = $rateHour;
 																			}
-																			echo $year . " " .$ts_month. "Bottom<br>";
+																			echo $pjt_code . ' '. $year . " " .$ts_month. "Bottom<br>";
 																			//other cost
 																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) {
 																				echo $year . " " .$ts_month. "OC Inner<br>";
