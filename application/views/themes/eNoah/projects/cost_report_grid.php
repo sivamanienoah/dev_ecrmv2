@@ -2,6 +2,9 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 .tr_othercost { background-color:#f2dede !important; }
+table { position: relative; }
+tfoot { position: absolute; top: 50px; }
+tbody { position: absolute; top: 25px; }
 </style>
 <div class="clear"></div>
 <?php
