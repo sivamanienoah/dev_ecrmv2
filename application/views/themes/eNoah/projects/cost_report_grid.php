@@ -1,7 +1,7 @@
 <style>
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
-.tr_othercost { background-color:#fcf8e3 !important; }
+.tr_othercost { background-color:#f2dede !important; }
 </style>
 <div class="clear"></div>
 <?php
