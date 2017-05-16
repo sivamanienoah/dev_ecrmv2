@@ -190,8 +190,18 @@ foreach($other_cost_arr as $ocprjkey=>$va) {
 	$pjtOcArr[] = $ocprjkey;
 }
 // echo "<pre>"; print_r(array_unique($pjtOcArr)); echo "</pre>";
-$result = array_diff($pjtOcArr, $otherCostIncludedProjects);
-echo "<pre>"; print_r($result); echo "</pre>";
+$needAddOtherCostArr = array_diff($pjtOcArr, $otherCostIncludedProjects);
+echo "<pre>"; print_r($needAddOtherCostArr); echo "</pre>";
+
+//append other cost projects in tbl_data array
+if(!empty($needAddOtherCostArr)) {
+	foreach($needAddOtherCostArr as $row) {
+		print_r($other_cost_arr[$row]);
+		// $tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost']
+	}
+	die;
+}
+
 ?>
 <div>
 <div class="tst">
