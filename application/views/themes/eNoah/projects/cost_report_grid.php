@@ -113,7 +113,7 @@ if(!empty($resdata)) {
 																	$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
 																	if(count($value3)>0 && !empty($value3)) { 
 																		foreach($value3 as $pjt_code=>$value4) {
-																			echo "<pre>"; print_r($recval_data); die;
+																			echo "<pre>"; print_r($resrc_data); die;
 																			if($pjt_code != 'total_hours'){ 
 																				
 																				$duration_hours			 = $value4['duration_hours'];
