@@ -125,7 +125,7 @@ if(!empty($resdata)) {
 																			}
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
-
+																			
 																			//hour;
 																			if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'] += $duration_hours;
@@ -153,8 +153,6 @@ if(!empty($resdata)) {
 																			//cost
 																			$cost_arr[$emp_name] 		= $rateHour;
 																			$directcost_arr[$emp_name] 	= $rateHour;
-																		}
-																		// echo $pjt_code; die;
 																		}
 																	}
 																}
