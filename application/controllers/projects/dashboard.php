@@ -3602,8 +3602,9 @@ class Dashboard extends crm_controller
 		
 		//get other costs
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-		
-		$data['practice_ids'] 	  = $this->dashboard_model->get_practices();
+
+		//for practices		
+		$data['practice_ids'] 	  = $this->dashboard_model->get_default_practices($start_date, $end_date);
 		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
 
 		$data['start_date'] 	  = $start_date;
@@ -3613,6 +3614,19 @@ class Dashboard extends crm_controller
 		
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/cost_report_view", $data);
+	}
+	
+	private function get_default_practices($start_date, $end_date)
+	{
+		$this->db->select('t.practice_id as id, t.practice_name as practices');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->where("t.practice_id !=", 0);
+		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		$this->db->where_in("t.dept_id", $ids);
+		$this->db->group_by('t.practice_id');
+		$query = $this->db->get();
+		return $query->result();
 	}
 }
 /* End of dms resource_availability file */
