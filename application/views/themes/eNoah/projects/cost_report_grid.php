@@ -190,7 +190,7 @@ foreach($other_cost_arr as $ocprjkey=>$va) {
 	$pjtOcArr[] = $ocprjkey;
 }
 // echo "<pre>"; print_r(array_unique($pjtOcArr)); echo "</pre>";
-$result = array_diff($pjtOcArr,$otherCostIncludedProjects);
+$result = array_diff($pjtOcArr, $otherCostIncludedProjects);
 echo "<pre>"; print_r($result); echo "</pre>";
 ?>
 <div>
@@ -236,7 +236,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
 							<td width='6%' align='left' class='collapse lft-ali'>".$deptKey."</td>
 							<td width='10%' align='left' class='collapse lft-ali'>".$pracKey."</td>
-							<td width='12%' align='left' class='collapse lft-ali'>".$skilKey."</td>
+							<td width='12%' align='left' class='collapse lft-ali'>".($resrcNmeKey=='Other Cost') ? '-' : $skilKey."</td>
 							<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
 							<td width='5%'>".$yrMonKey."</td>
 							<td width='15%'>".$pjt_nme."</td>
