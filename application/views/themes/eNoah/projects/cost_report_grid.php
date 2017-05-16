@@ -143,7 +143,15 @@ if(!empty($resdata)) {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] += $rateHour;
 																			} else {
 																				$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] = $rateHour;
-																			}																			
+																			}
+																			
+																			//other cost
+																			if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
+																				foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
+																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
+																				}
+																			}
+																			//other cost
 																			
 																			//total
 																			$tot_hour 		= $tot_hour + $duration_hours;
@@ -159,11 +167,11 @@ if(!empty($resdata)) {
 																}
 															}
 															//other cost
-															if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
+															/* if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
 																foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
 																	$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
 																}
-															}
+															} */
 															//other cost
 														}
 													}
