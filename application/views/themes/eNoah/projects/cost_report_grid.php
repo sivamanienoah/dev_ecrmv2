@@ -108,12 +108,12 @@ if(!empty($resdata)) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
 																foreach($value2 as $key3=>$value3) {
-																	echo $year . " " .$ts_month. "<br>";
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
 																	$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
-																	if(count($value3)>0 && !empty($value3)) { 
+																	if(count($value3)>0 && !empty($value3)) {
 																		foreach($value3 as $pjt_code=>$value4) {
+																			echo $year . " " .$ts_month. "<br>";
 																			$duration_hours			 = $value4['duration_hours'];
 																			$rate				 	 = $value4['rateperhr'];
 																			$direct_rateperhr	 	 = $value4['direct_rateperhr'];
