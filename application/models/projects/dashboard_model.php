@@ -84,15 +84,11 @@ class Dashboard_model extends crm_model
 		}
 		$query 	= $this->db->get();
 		$data	= $query->result_array();
-		// echo $this->db->last_query(); die;
-		// echo "<pre>";print_r($data); exit;
 		if(!empty($data)) {
 			$other_cost_array = array();
 			foreach($data as $row) {
 				$other_cost_array[$row['pjt_id']][] = $row;
 			}
-			
-			echo "<pre>";print_r($other_cost_array); exit;
 		}
 		return $other_cost_array;
 	}
