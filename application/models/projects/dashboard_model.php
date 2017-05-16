@@ -70,7 +70,6 @@ class Dashboard_model extends crm_model
 	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
 	{
 		$bk_rates = get_book_keeping_rates();
-		echo "<pre>"; print_r($bk_rates); die;
 		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
@@ -89,8 +88,9 @@ class Dashboard_model extends crm_model
 		if(!empty($data)) {
 			$other_cost_array = array();
 			foreach($data as $row) {
-				$other_cost_array[$row['pjt_id']][] = $row;
+				$other_cost_array[$row['pjt_id']][date('Y', strtotime($row['cost_incurred_date']))] = $row;
 			}
+			echo "<pre>"; print_r($other_cost_array); die;
 		}
 		return $other_cost_array;
 	}
