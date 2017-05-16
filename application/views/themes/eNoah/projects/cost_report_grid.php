@@ -220,7 +220,7 @@ if(!empty($needAddOtherCostArr)) {
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 
-	echo "<table id='it_cost_grid' class='proj-dash-table proj-table-odd-even data-tbl dashboard-heads dataTable'>
+	echo "<table id='it_cost_grid' class='data-table proj-table-odd-even data-tbl dashboard-heads dataTable'>
 			<thead>
 			<tr>
 			<th class='prac-dt' width='10%'>ENTITY</th>
