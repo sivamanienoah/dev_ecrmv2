@@ -150,10 +150,11 @@ if(!empty($resdata)) {
 																				foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
 																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
 																				}
+																				echo "<pre>"; print_r($tbl_data); die();
 																			}
 																			//other cost
 																			
-																			echo "<pre>"; print_r($tbl_data); die();
+																			
 																			
 																			//total
 																			$tot_hour 		= $tot_hour + $duration_hours;
