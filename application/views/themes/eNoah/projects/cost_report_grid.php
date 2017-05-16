@@ -185,7 +185,7 @@ if(!empty($resdata)) {
 	}
 }
 // echo "<pre>"; print_r($tbl_data); echo "</pre>";
-echo "<pre>"; print_r($otherCostIncludedProjects); echo "</pre>";
+echo "<pre>"; print_r(array_unique($otherCostIncludedProjects)); echo "</pre>";
 ?>
 <div>
 <div class="tst">
