@@ -1196,7 +1196,7 @@ class Project_model extends crm_model
 	{
 		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
-		$this->db->join($this->cfg['dbpref'].'leads as l');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("(oc.cost_incurred_date >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
 			$this->db->where("(oc.cost_incurred_date <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
