@@ -154,7 +154,7 @@ if(!empty($resdata)) {
 																			$cost_arr[$emp_name] 		= $rateHour;
 																			$directcost_arr[$emp_name] 	= $rateHour;
 																		}
-																		echo $pjt_code; die;
+																		// echo $pjt_code; die;
 																		}
 																	}
 																}
