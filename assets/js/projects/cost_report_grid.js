@@ -24,7 +24,7 @@ $(function() {
 		"bProcessing": false,
 		"bServerSide": false,
 		"bLengthChange": false,
-		"bSort": true,
+		"bSortable": true,
 		"bDestroy": true,
 		'bAutoWidth': true
 	});
