@@ -69,6 +69,7 @@ class Dashboard_model extends crm_model
 	//for IT cost report
 	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
 	{
+		$us_currenty_type = 1;
 		$bk_rates = get_book_keeping_rates();
 		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
@@ -88,12 +89,16 @@ class Dashboard_model extends crm_model
 		if(!empty($data)) {
 			$other_cost_array = array();
 			foreach($data as $row) {
-				$other_cost_array[$row['pjt_id']][date('Y', strtotime($row['cost_incurred_date']))][date('F', strtotime($row['cost_incurred_date']))] = $row;
+				$other_cost_array[$row['pjt_id']][date('Y', strtotime($row['cost_incurred_date']))][date('F', strtotime($row['cost_incurred_date']))]['oc_val'] = $this->conver_currency($row['value'], $bk_rates[date('Y', strtotime($row['cost_incurred_date']))][$row['currency_type']][$us_currenty_type]);
 			}
-			echo "<pre>"; print_r($bk_rates); echo "<br>****<br>";
+			// echo "<pre>"; print_r($bk_rates); echo "<br>****<br>";
 			echo "<pre>"; print_r($other_cost_array); die;
 		}
 		return $other_cost_array;
+	}
+	
+	public function conver_currency($amount, $val) {
+		return round($amount*$val, 2);
 	}
 }
 ?>
