@@ -196,7 +196,7 @@ echo "<pre>"; print_r($needAddOtherCostArr); echo "</pre>";
 //append other cost projects in tbl_data array
 if(!empty($needAddOtherCostArr)) {
 	foreach($needAddOtherCostArr as $row) {
-		print_r($other_cost_arr[$row]);
+		echo "<pre>"; print_r($other_cost_arr[$row]);
 		// $tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost']
 	}
 	die;
