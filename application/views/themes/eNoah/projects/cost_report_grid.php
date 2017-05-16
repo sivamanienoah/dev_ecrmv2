@@ -154,10 +154,17 @@ if(!empty($resdata)) {
 																			$cost_arr[$emp_name] 		= $rateHour;
 																			$directcost_arr[$emp_name] 	= $rateHour;
 																		}
-																		echo $pjt_code; die;
+																		
 																	}
 																}
 															}
+															//other cost
+															if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
+																foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
+																	$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
+																}
+															}
+															//other cost
 														}
 													}
 												}
