@@ -147,14 +147,13 @@ if(!empty($resdata)) {
 																			
 																			//other cost
 																			if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
+																				//other cost resource type as billable
+																				$other_cost_resrc_type = 'Billable';
 																				foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
-																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
+																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
 																				}
-																				echo "<pre>"; print_r($tbl_data); die();
 																			}
 																			//other cost
-																			
-																			
 																			
 																			//total
 																			$tot_hour 		= $tot_hour + $duration_hours;
