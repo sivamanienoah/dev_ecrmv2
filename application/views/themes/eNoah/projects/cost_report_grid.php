@@ -153,6 +153,8 @@ if(!empty($resdata)) {
 																			}
 																			//other cost
 																			
+																			echo "<pre>"; print_r($tbl_data); die();
+																			
 																			//total
 																			$tot_hour 		= $tot_hour + $duration_hours;
 																			$tot_cost 		= $tot_cost + $rateHour;
@@ -166,13 +168,6 @@ if(!empty($resdata)) {
 																	}
 																}
 															}
-															//other cost
-															/* if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
-																foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
-																	$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
-																}
-															} */
-															//other cost
 														}
 													}
 												}
