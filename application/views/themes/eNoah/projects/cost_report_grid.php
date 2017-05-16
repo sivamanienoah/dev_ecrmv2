@@ -289,7 +289,14 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			}
 		}
 		echo "<tr>
-			<td colspan='8' align='right' class='rt-ali'><b>Total:</b></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'><b>Total:</b></td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		</tr>";
