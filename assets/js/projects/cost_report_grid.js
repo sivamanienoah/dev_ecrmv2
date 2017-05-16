@@ -25,6 +25,7 @@ $(function() {
 		"bLengthChange": false,
 		"bSort": true,
 		"bDestroy": true,
+		'bAutoWidth': true
 	});
 	
 });
