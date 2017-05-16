@@ -1012,6 +1012,7 @@ class Project_model extends crm_model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+	
 	public function get_other_cost_by_all_lead($lead_id_array)
 	{
 		$this->db->select("id, description, cost_incurred_date, currency_type, value,project_id");
