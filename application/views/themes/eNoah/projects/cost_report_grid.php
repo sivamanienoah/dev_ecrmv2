@@ -114,7 +114,7 @@ if(!empty($resdata)) {
 																	if(count($value3)>0 && !empty($value3)) { 
 																		foreach($value3 as $pjt_code=>$value4) {
 																			// echo "<pre>"; print_r($resrc_data); die;
-																			if($pjt_code != 'total_hours'){ 
+																			// if($pjt_code != 'total_hours'){ 
 																				
 																				$duration_hours			 = $value4['duration_hours'];
 																				$rate				 	 = $value4['rateperhr'];
@@ -158,7 +158,7 @@ if(!empty($resdata)) {
 																				$cost_arr[$emp_name] 		= $rateHour;
 																				$directcost_arr[$emp_name] 	= $rateHour;
 																				
-																			}
+																			// }
 																		}
 																	}
 																}
