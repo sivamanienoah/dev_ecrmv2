@@ -3618,7 +3618,7 @@ class Dashboard extends crm_controller
 	
 	private function get_default_practices($start_date, $end_date)
 	{
-		$this->db->select('t.practice_id as id, t.practice_name as practices');
+		/* $this->db->select('t.practice_id as id, t.practice_name as practices');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("t.practice_id !=", 0);
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -3626,7 +3626,7 @@ class Dashboard extends crm_controller
 		$this->db->where_in("t.dept_id", array(10,11));
 		$this->db->group_by('t.practice_id');
 		$query = $this->db->get();
-		return $query->result();
+		return $query->result(); */
 	}
 }
 /* End of dms resource_availability file */
