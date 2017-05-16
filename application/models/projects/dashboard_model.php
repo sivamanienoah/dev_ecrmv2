@@ -26,6 +26,13 @@ class Dashboard_model extends crm_model
 	    return $customers;
 	}
 
+	public function get_departments()
+	{
+    	$this->db->select('department_id, department_name');
+		$query = $this->db->get($this->cfg['dbpref'] . 'department');
+		return $query->result();
+    }
+
 	public function get_practices()
 	{
     	$this->db->select('id, practices');
@@ -71,7 +78,7 @@ class Dashboard_model extends crm_model
 	{
 		$us_currenty_type = 1;
 		$bk_rates = get_book_keeping_rates();
-		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
+		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id, l.department_id_fk, l.division, l.practice");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
 		if(!empty($start_date) && !empty($end_date)) {
@@ -86,15 +93,43 @@ class Dashboard_model extends crm_model
 		}
 		$query 	= $this->db->get();
 		$data	= $query->result_array();
+		
+		$departments 	= $this->get_departments();
+		$deptArr		= array();
+		if(!empty($departments) && count($departments)>0) {
+			foreach($departments as $dept_row) {
+				$deptArr[$dept_row->department_id] = $dept_row->department_name;
+			}
+		}
+
+		$entities 	= $this->get_entities();
+		$entiArr	= array();
+		if(!empty($entities) && count($entities)>0) {
+			foreach($entities as $enti_row) {
+				$entiArr[$enti_row->div_id] = $enti_row->division_name;
+			}
+		}
+		
+		$practices 	= $this->get_practices();
+		$practArr	= array();
+		if(!empty($practices) && count($practices)>0) {
+			foreach($practices as $pract_row) {
+				$practArr[$pract_row->id] = $pract_row->practices;
+			}
+		}
+		
 		if(!empty($data)) {
 			$other_cost_array = array();
 			foreach($data as $row) {
 				$year_no 	= trim(date('Y', strtotime($row['cost_incurred_date'])));
 				$month_name = trim(date('F', strtotime($row['cost_incurred_date'])));
 				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_val'] = $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_entity'] 	= $deptArr[$row['division']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_dept'] 	= $deptArr[$row['department_id_fk']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_practice'] = $deptArr[$row['practice']];
 			}
 			// echo "<pre>"; print_r($bk_rates); echo "<br>****<br>";
-			// echo "<pre>"; print_r($other_cost_array); die;
+			echo "<pre>"; print_r($other_cost_array); die;
 		}
 		return $other_cost_array;
 	}
