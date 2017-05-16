@@ -108,6 +108,7 @@ if(!empty($resdata)) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
 																foreach($value2 as $key3=>$value3) {
+																	echo $year . " " .$ts_month. "<br>";
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
 																	$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
@@ -146,7 +147,7 @@ if(!empty($resdata)) {
 																			}
 																			
 																			//other cost
-																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) { echo $year . " " .$ts_month. "<br>";
+																			if(isset($other_cost_arr[$pjt_code][$year][$ts_month])) { 
 																				// foreach($other_cost_arr[$pjt_code][$year][$ts_month] as $oc_row) {
 																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key]['Other Cost'][substr($ts_month,0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $other_cost_arr[$pjt_code][$year][$ts_month];
 																				// }
