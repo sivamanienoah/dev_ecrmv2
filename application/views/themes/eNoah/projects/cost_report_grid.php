@@ -186,6 +186,10 @@ if(!empty($resdata)) {
 }
 // echo "<pre>"; print_r($tbl_data); echo "</pre>";
 echo "<pre>"; print_r(array_unique($otherCostIncludedProjects)); echo "</pre>";
+foreach($other_cost_arr as $ocprjkey=>$va) {
+	$pjtOcArr[] = $ocprjkey;
+}
+echo "<pre>"; print_r(array_unique($pjtOcArr)); echo "</pre>";
 ?>
 <div>
 <div class="tst">
