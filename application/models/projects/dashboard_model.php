@@ -90,6 +90,7 @@ class Dashboard_model extends crm_model
 			foreach($data as $row) {
 				$other_cost_array[$row['pjt_id']][date('Y', strtotime($row['cost_incurred_date']))][date('F', strtotime($row['cost_incurred_date']))] = $row;
 			}
+			echo "<pre>"; print_r($bk_rates); echo "<br>****<br>";
 			echo "<pre>"; print_r($other_cost_array); die;
 		}
 		return $other_cost_array;
