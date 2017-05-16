@@ -1194,7 +1194,8 @@ class Project_model extends crm_model
 	//for IT cost report
 	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
 	{
-		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
+		echo "test"; die;
+		/* $this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
 		if(!empty($start_date) && !empty($end_date)) {
@@ -1218,7 +1219,7 @@ class Project_model extends crm_model
 			
 			// echo "<pre>";print_r($other_cost_array); exit;
 		}
-		return $other_cost_array;
+		return $other_cost_array; */
 	}
 }
 ?>
