@@ -276,9 +276,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 																	$tempResrcHour 	 = round($resrcNmeArr['hour'], 1);
 																	$tempCls		 = '';
 																	if('Other Cost'==$resrcTypeKey) {
-																		$tempSkilKey 	 = 'Other Cost';
-																		$tempResrcHour 	 = '-'; 
-																		$tempresrcNmeKey = '-'; 
+																		$tempSkilKey 	 = $tempResrcHour = '-';
 																		$tempCls	 	 = 'tr_othercost';
 																		$tot_cost	    += $resrcNmeArr['cost'];
 																	}
