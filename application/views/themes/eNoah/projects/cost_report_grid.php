@@ -2,6 +2,18 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 .tr_othercost { background-color:#f2dede !important; }
+.it_cost_sub_grid {
+	border:1px solid #ddd;
+	border:0px
+	padding:3px 5px;
+}
+.it_cost_sub_grid td{	
+	border-right:1px solid #ddd;
+	
+}
+.it_cost_sub_grid td:last-child{
+	border-right:0px;
+}
 </style>
 <div class="clear"></div>
 <?php
@@ -290,7 +302,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 		}
 	}
 	echo "</tbody></table>";
-	echo "<table><tr>
+	echo "<table class='it_cost_sub_grid'><tr>
 			<td width='80%' align='right' class='collapse lft-ali'>Total:</b></td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
