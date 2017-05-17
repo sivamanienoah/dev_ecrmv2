@@ -237,7 +237,7 @@ if(!empty($needAddOtherCostArr)) {
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 
-	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable'>
+	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
 			<th class='prac-dt' width='10%'>ENTITY</th>
@@ -307,7 +307,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 		}
 	}
 	echo "</tbody></table>";
-	echo "<table class='it_cost_sub_grid'><tr>
+	echo "<table class='it_cost_sub_grid it_cost_grid'><tr>
 			<td width='75%' align='right' class=''><span><b>Total:</b></span></td>
 			<td width='5%' align='right' class='rt-ali'><span>".round($tot_hour, 1)."</span></td>
 			<td width='5%' align='right' class='rt-ali'><span>".round($tot_cost, 2)."</span></td>
