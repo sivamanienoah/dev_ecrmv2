@@ -23,6 +23,9 @@
 .it_cost_sub_grid td:last-child{
 	border-right:0px;
 }
+.hide_text {
+	display: none !important;
+}
 </style>
 <div class="clear"></div>
 <?php
@@ -329,13 +332,13 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 		*/
 	echo "</tbody></table>";
 	echo "<table class='data-tbl dashboard-heads dataTable it_cost_grid it_cost_sub_grid'><tr>
-			<td width='10%' class=''></td>
-			<td width='6%'></td>
-			<td width='10%' align='left' class='collapse lft-ali'></td>
-			<td width='12%' align='left' class='collapse lft-ali'></td>
-			<td width='6%' align='left' class='collapse lft-ali'></td>
-			<td width='5%'></td>
-			<td width='15%'></td>
+			<td width='10%' class=''><span class='hide_text'>eNoah iSolution US</span></td>
+			<td width='6%'><span class='hide_text'>eADS</span></td>
+			<td width='10%' align='left' class='collapse lft-ali'><span class='hide_text'>Web</span></td>
+			<td width='12%' align='left' class='collapse lft-ali'><span class='hide_text'>PHP & MY SQL</span></td>
+			<td width='6%' align='left' class='collapse lft-ali'><span class='hide_text'>Other Cost</span></td>
+			<td width='5%'><span class='hide_text'>3HM Group Portal - Fee Calculator</span></td>
+			<td width='15%'><span class='hide_text'>Saron Benny Edward B</span></td>
 			<td width='7%'><b>Total</b></td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
