@@ -20,8 +20,7 @@ $(function() {
 		$("#it_cost_grid thead tr th").addClass("desc_opt");
 		//$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 			if($(this).hasClass('desc_asc_opt')){
-				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
-				
+				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");				
 			}else{
 				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 				$(this).addClass("desc_asc_opt");
