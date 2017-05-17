@@ -322,7 +322,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		</tr></tfoot>"; */
 	echo "</tbody></table>";
-	echo "<table class='data-tbl dashboard-heads dataTable it_cost_grid'><tr>
+	echo "<table class='it_cost_sub_grid'><tr>
 			<td width='75%' align='right' class=''><span><b>Total:</b></span></td>
 			<td width='5%' align='right' class='rt-ali'><span>".round($tot_hour, 1)."</span></td>
 			<td width='5%' align='right' class='rt-ali'><span>".round($tot_cost, 2)."</span></td>
