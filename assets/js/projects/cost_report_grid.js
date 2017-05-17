@@ -18,7 +18,8 @@ $(function() {
 	
 	$("#it_cost_grid thead tr th").click(function(){
 		$("#it_cost_grid thead tr th").addClass("desc_opt");
-		$(this).removeClass("desc_opt").addClass("desc_asc_opt");
+		$(this).removeClass("desc_opt");
+		$(this).addClass("desc_asc_opt");
 	});
 	
 	
