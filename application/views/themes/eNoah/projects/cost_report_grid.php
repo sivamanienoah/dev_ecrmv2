@@ -306,7 +306,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			}
 		}
 	}
-	echo "<tr>
+	echo "<tfoot><tr>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
@@ -317,7 +317,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			<td align='right' class='rt-ali'><b>Total:</b></td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
-		</tr>";
+		</tr></tfoot>";
 	echo "</tbody></table>";
 	/* echo "<table class='it_cost_sub_grid'><tr>
 			<td width='75%' align='right' class=''><span><b>Total:</b></span></td>
