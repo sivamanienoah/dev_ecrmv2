@@ -168,9 +168,9 @@ if(!empty($resdata)) {
 																			//other cost
 																			if(is_array($other_cost_arr[$pjt_code][$year]) && !empty($other_cost_arr[$pjt_code][$year])) {
 																				//other cost resource type as billable
-																				$other_cost_resrc_type = 'Billable';
+																				$other_cost_resrc_type = 'Other Cost';
 																				foreach($other_cost_arr[$pjt_code][$year] as $ocMonKey=>$ocVal) {
-																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code]['Other Cost']['cost'] = $ocVal['oc_val'];
+																					$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$other_cost_resrc_type][substr(trim($ocMonKey),0,3).' '.$year][$pjt_code][$ocVal['oc_descrptn']]['cost'] = $ocVal['oc_val'];
 																				}
 																				$otherCostIncludedProjects[] = $pjt_code; 
 																			}
@@ -223,8 +223,8 @@ if(!empty($needAddOtherCostArr)) {
 						$oc_dept_key 	= $ocArrRow['oc_dept'];
 						$oc_prac_key 	= $ocArrRow['oc_practice'];
 						$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$oc_year;
-						$oc_other_cost_resrc_type = 'Billable';
-						$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$row]['Other Cost']['cost'] = $ocArrRow['oc_val'];
+						$oc_other_cost_resrc_type = 'Other Cost';
+						$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$row][$ocArrRow['oc_descrptn']]['cost'] = $ocArrRow['oc_val'];
 					}
 				}
 			}
@@ -270,14 +270,17 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 														foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
 															if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
 																foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
-																	$i=0;
-																	$tempSkilKey 	= $skilKey;
-																	$tempResrcHour 	= round($resrcNmeArr['hour'], 1);
-																	$tempCls		= '';
+																	$i				 = 0;
+																	$tempSkilKey 	 = $skilKey;
+																	$tempresrcNmeKey = $resrcNmeKey;
+																	$tempResrcHour 	 = round($resrcNmeArr['hour'], 1);
+																	$tempCls		 = '';
 																	if('Other Cost'==$resrcNmeKey) {
-																		$tempSkilKey = $tempResrcHour = '-'; 
-																		$tempCls	 = 'tr_othercost';
-																		$tot_cost	 += $resrcNmeArr['cost'];
+																		$tempSkilKey 	 = 'Other Cost';
+																		$tempResrcHour 	 = '-'; 
+																		$tempresrcNmeKey = '-'; 
+																		$tempCls	 	 = 'tr_othercost';
+																		$tot_cost	    += $resrcNmeArr['cost'];
 																	}
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																	echo "<tr class='".$tempCls."' data-depth='".$i."'>
@@ -288,7 +291,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 							<td width='6%' align='left' class='collapse lft-ali'>".$resrcTypeKey."</td>
 							<td width='5%'>".$yrMonKey."</td>
 							<td width='15%'>".$pjt_nme."</td>
-							<td width='7%'>".$resrcNmeKey."</td>
+							<td width='7%'>".$tempresrcNmeKey."</td>
 							<td width='5%' align='right' class='rt-ali'>".$tempResrcHour."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
 						</tr>"; $i++;
