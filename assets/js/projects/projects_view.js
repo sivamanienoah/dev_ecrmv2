@@ -320,6 +320,7 @@ function show_search_results(search_id) {
 			$("#ad_filter" ).show();
 			$('#load').hide();
 			$("#val_export").val(search_id);
+			$(".saved-search-criteria").slideUp();
 		}
 	});
 }
