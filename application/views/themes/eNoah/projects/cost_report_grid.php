@@ -314,7 +314,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 			}
 		}
 	}
-	echo "<tfoot><tr>
+	echo "<tfoot id='exp_hide'><tr>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
