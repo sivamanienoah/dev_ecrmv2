@@ -183,9 +183,9 @@ class email_template_model extends crm_model {
 		$email_template = str_replace('{{main_body_content}}', $email_template, $email_outer_content);
 
 		// $this->email->from($data['from_email'],$data['from_email_name']);
-		$this->email->from($email_from,$email_from_name);
-		$data['to_mail'] = array('pdhanapal@enoahisolution.com');
-		$data['cc_mail'] = array('ssriram@enoahisolution.com');
+		$this->email->from($email_from, $email_from_name);
+		$data['to_mail'] = array('ssriram@enoahisolution.com');
+		$data['cc_mail'] = array();
 		$this->email->to($data['to_mail']);
 		$this->email->cc($data['cc_mail']);
 		/* if (!empty($data['cc_mail'])) {
