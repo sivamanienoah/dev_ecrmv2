@@ -78,7 +78,7 @@ class Dashboard_model extends crm_model
 	{
 		$us_currenty_type = 1;
 		$bk_rates = get_book_keeping_rates();
-		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, l.pjt_id, l.department_id_fk, l.division, l.practice");
+		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, oc.description, l.pjt_id, l.department_id_fk, l.division, l.practice");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
 		if(!empty($start_date) && !empty($end_date)) {
@@ -127,6 +127,7 @@ class Dashboard_model extends crm_model
 				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_entity'] 	= $entiArr[$row['division']];
 				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_dept'] 	= $deptArr[$row['department_id_fk']];
 				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_practice'] = $practArr[$row['practice']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_descrptn'] = $practArr[$row['description']];
 			}
 			// echo "<pre>"; print_r($other_cost_array); die;
 		}
