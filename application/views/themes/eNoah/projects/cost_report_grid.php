@@ -105,7 +105,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 	}
 	
-	// echo "<pre>"; print_r($timesheet_data); echo "</pre>"; die;
+	echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
