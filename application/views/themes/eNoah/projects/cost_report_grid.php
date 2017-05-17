@@ -4,7 +4,7 @@
 .tr_othercost { background-color:#f2dede !important; }
 .it_cost_sub_grid {
 	border:1px solid #ddd;
-	border:0px
+	border-top:0px;
 	padding:3px 5px;
 	width:100%;
 }
