@@ -3,11 +3,13 @@ $(function() {
 	//export
 	$("#btnExport").click(function () {
 		// document.getElementById("it_cost_grid").deleteTFoot();
+		$('#exp_hide').hide();
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
 		   , filename: 'cost_report'
 		});
+		// $('#exp_hide').hide();
 	});
 	
 	$("#reset_drilldown").click(function(){
