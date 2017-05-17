@@ -6,9 +6,10 @@
 	border-bottom:0px;
 }
 .it_cost_sub_grid {
-	border:1px solid #ddd;
-	border-top:0px;	
-	width:99.9%;
+	    border: 1px solid #ddd;
+    border-top: 0px;
+    width: 99.8%;
+    margin-top: -2px;
 }
 .it_cost_sub_grid tr td span{	
 	float: right;
