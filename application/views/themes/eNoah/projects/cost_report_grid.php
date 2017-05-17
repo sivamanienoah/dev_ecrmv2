@@ -348,7 +348,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 <script>
 var filter_area_status = '<?php echo $filter_area_status; ?>';
 </script>
-<script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
+<script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/projects/cost_report_grid.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
