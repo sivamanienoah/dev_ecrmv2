@@ -105,7 +105,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 	}
 	
-	echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
+	// echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
@@ -275,7 +275,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 																	$tempresrcNmeKey = $resrcNmeKey;
 																	$tempResrcHour 	 = round($resrcNmeArr['hour'], 1);
 																	$tempCls		 = '';
-																	if('Other Cost'==$skilKey) {
+																	if('Other Cost'==$resrcTypeKey) {
 																		$tempSkilKey 	 = 'Other Cost';
 																		$tempResrcHour 	 = '-'; 
 																		$tempresrcNmeKey = '-'; 
