@@ -3074,6 +3074,6 @@ padding-bottom:15px !important;
 .desc_opt {
     background: rgba(0, 0, 0, 0) url("../images/sort_desc.png") no-repeat scroll 100% 35%;
 }
-.desc__asc_opt {
+.desc_asc_opt {
     background: rgba(0, 0, 0, 0) url("../images/sort_asc.png") no-repeat scroll 100% 35%;
 }
