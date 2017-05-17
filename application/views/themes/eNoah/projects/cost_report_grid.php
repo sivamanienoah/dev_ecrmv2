@@ -8,7 +8,7 @@
 .it_cost_sub_grid {
 	border:1px solid #ddd;
 	border-top:0px;	
-	width:100%;
+	width:99.9%;
 }
 .it_cost_sub_grid tr td span{	
 	float: right;
