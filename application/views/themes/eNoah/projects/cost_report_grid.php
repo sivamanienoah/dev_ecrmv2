@@ -233,7 +233,7 @@ if(!empty($needAddOtherCostArr)) {
 
 ?>
 <div>
-<div class="tst it_cost_grid">
+<div class="tst it_cost_grid_div">
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 
