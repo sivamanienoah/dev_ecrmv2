@@ -1214,7 +1214,7 @@ class Project_model extends crm_model
 		//email sent by email template
 		$param = array();
 
-		$param['email_data'] 	= array('print_fancydate'=>$print_fancydate, 'first_name'=>$first_name, 'log_email_content'=>$log_email_content);
+		$param['email_data'] 	= array('print_fancydate'=>$print_fancydate, 'first_name'=>$first_name, 'email_content'=>$log_email_content);
 
 		$param['to_mail'] 		= $send_to;
 		$param['template_name'] = "Project Stake Holder Notification";
