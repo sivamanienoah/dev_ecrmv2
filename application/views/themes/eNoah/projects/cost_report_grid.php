@@ -326,7 +326,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 	echo "<table class='it_cost_sub_grid'><tr>
 			<td width='75%' align='right' class=''><span><b>Total:</b></span></td>
 			<td width='4%' align='right' class='rt-ali'><span>".round($tot_hour, 1)."</span></td>
-			<td width='3%' align='right' class='rt-ali'><span>".round($tot_cost, 2)."</span></td>
+			<td style='width:25px;' align='right' class='rt-ali'><span>".round($tot_cost, 2)."</span></td>
 		</tr></table>";
 ?>
 </div>
