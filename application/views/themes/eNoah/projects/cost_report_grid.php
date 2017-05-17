@@ -5,26 +5,8 @@
 #it_cost_grid{
 	border-bottom:0px;
 }
-.it_cost_sub_grid {
-	    border: 1px solid #ddd;
-    border-top: 0px;
-    width: 99.8%;
-    margin-top: -2px;
-	table-layout: fixed;
-}
-.it_cost_sub_grid tr td span{	
-	float: right;
-    padding: 5px;
-}
-.it_cost_sub_grid td{	
-	border-right:1px solid #ddd;
-	
-}
-.it_cost_sub_grid td:last-child{
-	border-right:0px;
-}
-.hide_text {
-	display: none !important;
+.desc_opt {
+    background: rgba(0, 0, 0, 0) url("../images/sort_desc.png") no-repeat scroll right center;
 }
 </style>
 <div class="clear"></div>
@@ -247,16 +229,16 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
-			<th class='prac-dt' width='10%'>ENTITY</th>
-			<th class='prac-dt' width='6%'>DEPARTMENT</th>
-			<th class='prac-dt' width='10%'>PRACTICE</th>
-			<th class='prac-dt' width='12%'>SKILL</th>
-			<th class='prac-dt' width='6%'>RESOURCE TYPE</th>
-			<th class='prac-dt' width='5%'>Month Year</th>
-			<th class='prac-dt' width='15%'>PROJECT</th>
-			<th class='prac-dt' width='7%'>RESOURCE</th>
-			<th class='prac-dt' width='5%'>HOUR</th>
-			<th class='prac-dt' width='5%'>COST</th>
+			<th class='prac-dt' width='10%' class='desc_opt'>ENTITY</th>
+			<th class='prac-dt' width='6%' class='desc_opt'>DEPARTMENT</th>
+			<th class='prac-dt' width='10%' class='desc_opt'>PRACTICE</th>
+			<th class='prac-dt' width='12%' class='desc_opt'>SKILL</th>
+			<th class='prac-dt' width='6%' class='desc_opt'>RESOURCE TYPE</th>
+			<th class='prac-dt' width='5%' class='desc_opt'>Month Year</th>
+			<th class='prac-dt' width='15%' class='desc_opt'>PROJECT</th>
+			<th class='prac-dt' width='7%' class='desc_opt'>RESOURCE</th>
+			<th class='prac-dt' width='5%' class='desc_opt'>HOUR</th>
+			<th class='prac-dt' width='5%' class='desc_opt'>COST</th>
 			</tr>";
 			echo "</thead><tbody>";
 	if(!empty($tbl_data) && count($tbl_data)>0) {
