@@ -5,9 +5,7 @@
 #it_cost_grid{
 	border-bottom:0px;
 }
-.desc_opt {
-    background: rgba(0, 0, 0, 0) url("../assets/images/sort_desc.png") no-repeat scroll right center;
-}
+
 </style>
 <div class="clear"></div>
 <?php
