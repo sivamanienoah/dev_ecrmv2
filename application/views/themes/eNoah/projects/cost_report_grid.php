@@ -6,6 +6,10 @@
 	border:1px solid #ddd;
 	border:0px
 	padding:3px 5px;
+	width:100%;
+}
+.it_cost_sub_grid tr{	
+	padding:10px;
 }
 .it_cost_sub_grid td{	
 	border-right:1px solid #ddd;
@@ -303,9 +307,9 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 	}
 	echo "</tbody></table>";
 	echo "<table class='it_cost_sub_grid it_cost_grid'><tr>
-			<td width='80%' align='right' class='collapse lft-ali'>Total:</b></td>
-			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
-			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
+			<td width='75%' align='right' class='collapse lft-ali'>Total:</b></td>
+			<td width='15%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
+			<td width='10%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		</tr></table>";
 ?>
 </div>
