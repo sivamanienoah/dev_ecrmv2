@@ -2,6 +2,9 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 .tr_othercost { background-color:#f2dede !important; }
+#it_cost_grid{
+	border-bottom:0px;
+}
 .it_cost_sub_grid {
 	border:1px solid #ddd;
 	border-top:0px;	
