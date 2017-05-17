@@ -3071,3 +3071,6 @@ padding-bottom:15px !important;
     margin: 10px 0;
     padding: 10px;
 }
+.desc_opt {
+    background: rgba(0, 0, 0, 0) url("../images/sort_desc.png") no-repeat scroll right center;
+}
