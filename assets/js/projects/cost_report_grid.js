@@ -21,7 +21,7 @@ $(function() {
 		$(this).removeClass("desc_opt").addClass("desc_asc_opt");
 	});
 	
-	desc_asc_opt
+	
 	
 	//data table
 /* 	$('#it_cost_grid').dataTable({
