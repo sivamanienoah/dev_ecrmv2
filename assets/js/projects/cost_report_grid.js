@@ -17,7 +17,7 @@ $(function() {
 	});
 	
 	$("#it_cost_grid thead tr th").click(function(){
-		$("#it_cost_grid thead tr th").addClass("desc_opt");
+		$("#it_cost_grid thead tr th").removeClass("desc_opt");
 		$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 		$(this).toggleClass("desc_asc_opt");
 	});
