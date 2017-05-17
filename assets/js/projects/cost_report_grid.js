@@ -16,6 +16,13 @@ $(function() {
 		$('#filter_sort_val').prop('selectedIndex','hour');
 	});
 	
+	$("#it_cost_grid thead tr th").click(function(){
+		$("#it_cost_grid thead tr th").addClass("desc_opt");
+		$(this).removeClass("desc_opt").addClass("desc_asc_opt");
+	});
+	
+	desc_asc_opt
+	
 	//data table
 /* 	$('#it_cost_grid').dataTable({
 		"bInfo": false,
