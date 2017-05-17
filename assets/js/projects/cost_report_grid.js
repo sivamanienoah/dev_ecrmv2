@@ -23,6 +23,7 @@ $(function() {
 				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 				
 			}else{
+				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 				$(this).addClass("desc_asc_opt");
 			}
 	});
