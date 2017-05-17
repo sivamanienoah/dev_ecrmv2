@@ -17,7 +17,7 @@ $(function() {
 	});
 	
 	//data table
-	$('#it_cost_grid').dataTable({
+/* 	$('#it_cost_grid').dataTable({
 		"bInfo": false,
 		"bFilter": false,
 		"bPaginate": false,
@@ -26,7 +26,12 @@ $(function() {
 		"bLengthChange": false,
 		"bDestroy": true,
 		'bAutoWidth': true
-	});
+	}); */
+	
+	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+		$('.data-table tr, .data-table th').hover(
+		function() { $(this).addClass('over'); },
+		function() { $(this).removeClass('over'); });
 	
 });
 if(filter_area_status==1) {
