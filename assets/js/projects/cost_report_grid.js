@@ -19,6 +19,9 @@ $(function() {
 	$("#it_cost_grid thead tr th").click(function(){
 		$("#it_cost_grid thead tr th").addClass("desc_opt");
 		$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
+			if($(this).hasClass('desc_asc_opt')){
+				alert("yes");
+			}
 		$(this).addClass("desc_asc_opt");
 		
 	});
