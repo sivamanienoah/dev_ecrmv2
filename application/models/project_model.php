@@ -1175,6 +1175,7 @@ class Project_model extends crm_model
 		}
 		
 	}
+	
 	public function get_practice_id()
 	{
 		$this->db->select('practice_id,practice_max_hours');
@@ -1182,15 +1183,45 @@ class Project_model extends crm_model
 		$this->db->order_by('id','desc');
 		$query = $this->db->get();
 		$data =  $query->result_array();
-		if(!empty($data))
-		{
+		if(!empty($data)) {
 			$id_arr =array();
-			foreach($data as $row)
-			{
+			foreach($data as $row) {
 				$id_arr[$row['practice_id']] = $row['practice_max_hours'];
 			}
-			
 			return $id_arr;
+		}
+	}
+	
+	public function sent_stake_holder_email($mail, $first_name, $mail_type, $lead_id)
+	{
+		$project_name = $this->project_model->get_lead_det($lead_id);
+		$project_name['lead_title'] = word_limiter($project_name['lead_title'], 4);
+		$log_subject = $log_email_content = '';
+		if($mail_type == 'new') {
+			$log_subject 		= 'Stake Holder Access Notification';
+			$log_email_content 	= 'You are included as one of the stake holders in the project - '.$project_name['lead_title'].'<br />';
+		} else {
+			$log_subject 		= 'Stake Holder Access Removal Notification';
+			$log_email_content 	= 'Your stake holders access has been removed from this project - '.$project_name['lead_title'].'<br />';
+		}
+		
+		$successful = '';
+		
+		$send_to = $mail;
+		
+		$print_fancydate = date('l, jS F y h:iA', strtotime(date('Y-m-d H:i:s')));
+		
+		//email sent by email template
+		$param = array();
+
+		$param['email_data'] 	= array('print_fancydate'=>$print_fancydate, 'first_name'=>$first_name, 'log_email_content'=>$log_email_content);
+
+		$param['to_mail'] 		= $send_to;
+		$param['template_name'] = "Project Stake Holder Notification";
+		$param['subject'] 		= $log_subject;
+		
+		if($this->email_template_model->sent_email($param)){
+			$successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
 	}
 }

@@ -1444,26 +1444,56 @@ class Project extends crm_controller {
 	public function set_stake_holders()
 	{
 		$data['error'] 	= FALSE;
+		$new_stake_holder_insert = array();
+		$new_stake_holder_delete = array();
 		$stake_members 	= $this->input->post("stake_members");
 		$lead_id 		= $this->input->post("lead_id");
 		
-		if ($stake_members == "")
-		{
+		if ($stake_members == "") {
 			$data['error'] = 'Stake Holders must not be Null value!';
+			echo json_encode($data);
+			exit;
+		}
+		$post_stake_members = @explode(",", $stake_members);
+		
+		$wh_condn 			= array("lead_id" => $lead_id);
+		$exist_stake_member = $this->project_model->get_user_data_by_id('stake_holders', $wh_condn);
+		if(is_array($exist_stake_member) && !empty($exist_stake_member) && (count($exist_stake_member)>0)) {
+			foreach ($exist_stake_member as $exist_row) {
+				$exist_stake_member_arr[] = $exist_row['user_id'];
+			}
 		}
 		
-		$stms = explode(",",$stake_members);
-		$ins = array();
-		$this->db->delete($this->cfg['dbpref']."stake_holders",array("lead_id" => $lead_id));
-		if(count($stms) > 0){
+		if(is_array($exist_stake_member_arr) && !empty($exist_stake_member_arr) && count($exist_stake_member_arr)>0) {
+			$new_stake_holder_insert = array_diff($post_stake_members, $exist_stake_member_arr);
+			$new_stake_holder_delete = array_diff($exist_stake_member_arr, $post_stake_members);
+			$new_stake_holder_delete = array_values($new_stake_holder_delete);
+		}
+		
+		$ins  = array();
+		$this->db->delete($this->cfg['dbpref']."stake_holders", $wh_condn);
+		if(count($post_stake_members) > 0) {
 			$ins['lead_id'] = $lead_id;
-			foreach($stms as $sm){
+			foreach($post_stake_members as $sm){
 				$ins['user_id'] = $sm;
 				$this->project_model->insert_row("stake_holders", $ins);				 
 			}
 		}
 		
-		echo json_encode($data);	
+		if(!empty($new_stake_holder_insert) && count($new_stake_holder_insert)>0) {
+			$get_mail_ids = $this->project_model->get_userlist($new_stake_holder_insert);
+			foreach ($get_mail_ids as $m_row) {
+				$ntfy_email = $this->project_model->sent_stake_holder_email($m_row['email'], $m_row['first_name'] .' '.$m_row['last_name'], $type='new', $lead_id);
+			}
+		}
+		if(!empty($new_stake_holder_delete) && count($new_stake_holder_delete)>0) {
+			$de_get_mail_ids = $this->project_model->get_userlist($new_stake_holder_delete);
+			foreach ($de_get_mail_ids as $de_row) {
+				$ntfy_email = $this->project_model->sent_stake_holder_email($de_row['email'], $de_row['first_name'] .' '.$de_row['last_name'], $type='delete', $lead_id);
+			}
+		}
+		echo json_encode($data);
+		exit;
 	}
 	
 	function chkPjtIdFromdb()

@@ -2,7 +2,7 @@
 <script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <?php
-	$this->load->helper('custom_helper');
+	$this->load->helper('custom');
 	if (get_default_currency()) {
 		$default_currency 	= get_default_currency();
 		$default_cur_id 	= $default_currency['expect_worth_id'];
@@ -12,7 +12,7 @@
 		$default_cur_name 	= 'USD';
 	}
 	
-	$this->load->helper('lead_helper'); 
+	$this->load->helper('lead'); 
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 ?>
 <?php $ff_id = isset($parent_ffolder_id) ? $parent_ffolder_id : ''; ?>
