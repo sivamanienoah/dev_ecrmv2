@@ -8,8 +8,8 @@
 	padding:3px 5px;
 	width:100%;
 }
-.it_cost_sub_grid tr{	
-	padding:10px;
+.it_cost_sub_grid tr td span{	
+	padding:3px;
 }
 .it_cost_sub_grid td{	
 	border-right:1px solid #ddd;
