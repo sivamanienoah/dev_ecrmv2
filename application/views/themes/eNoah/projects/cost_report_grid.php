@@ -291,15 +291,16 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 	}
 	echo "</tbody></table>";
 	echo "<table><tr>
-			<td width='10%' align='right' class='rt-ali'></td>
-			<td width='6%' align='right' class='rt-ali'></td>
-			<td width='10%' align='right' class='rt-ali'></td>
-			<td width='12%' align='right' class='rt-ali'></td>
-			<td width='6%' align='right' class='rt-ali'></td>
-			<td width='5%' align='right' class='rt-ali'></td>
-			<td width='15%' align='right' class='rt-ali'></td>
-			<td width='7%' align='right' class='rt-ali'><b>Total:</b></td>
-			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
+	
+	<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'></b></span></td>
+							<td width='6%' align='left' class='collapse lft-ali'></td>
+							<td width='10%' align='left' class='collapse lft-ali'></td>
+							<td width='12%' align='left' class='collapse lft-ali'></td>
+							<td width='6%' align='left' class='collapse lft-ali'></td>
+							<td width='5%'></td>
+							<td width='15%'></td>
+							<td width='7%'><b>Total:</b></td>
+							<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
 			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
 		</tr></table>";
 ?>
