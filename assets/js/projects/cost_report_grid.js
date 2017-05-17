@@ -3,8 +3,8 @@ $(function() {
 	//export
 	$("#btnExport").click(function () {
 		// document.getElementById("it_cost_grid").deleteTFoot();
-		$(".it_cost_grid_div").btechco_excelexport({
-			containerclass: "it_cost_grid"
+		$("#it_cost_grid").btechco_excelexport({
+			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
 		   , filename: 'cost_report'
 		});
